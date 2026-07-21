@@ -1,10 +1,8 @@
 # MineOcclude B→A Intervention Request Contract
 
-Current implementation version: `0.1-draft`
+Current implementation version: `1.0`
 
-Target frozen version: `1.0`
-
-Status: Phase 1 draft pending final cross-role sign-off in Step 1.8.
+Status: frozen for Phase 1 by the Step 1.8 internal schema sign-off.
 
 ## Purpose
 
@@ -234,7 +232,8 @@ For the current contract:
 * `near_zero_residual_detected` must be false
 * `contains_cap_reduced_doses` must exactly match the alpha table
 
-The final required truth value of `time_orthogonalization_checked` is deferred to Step 1.8.
+Schema v1.0 requires `time_orthogonalization_checked = true`. An unchecked
+request is rejected before generation rather than repaired or interpreted.
 
 ## No automatic repair
 
@@ -318,8 +317,7 @@ Step 1.5 passes when:
 
 ## Versioning status
 
-The current implementation remains:
-
-`0.1-draft`
-
-Final schema `1.0` is frozen only during Step 1.8 after all Phase 1 interfaces have been exercised together and approved.
+The current implementation is frozen schema `1.0`. Result-changing changes to
+direction space, intervention location, alpha/cap semantics, validation flags,
+split rules, or manifest meaning require a versioned migration and a new run
+identity.

@@ -9,7 +9,7 @@ from pathlib import Path
 
 OUTPUT_DIR = Path(__file__).parent
 
-SCHEMA_VERSION = "0.1-draft"
+SCHEMA_VERSION = "1.0"
 
 SHA_A = "a" * 64
 SHA_B = "b" * 64
@@ -256,6 +256,7 @@ def write_json(
     with path.open(
         "w",
         encoding="utf-8",
+        newline="\n",
     ) as file:
         json.dump(
             value,

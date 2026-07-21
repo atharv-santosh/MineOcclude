@@ -1,10 +1,8 @@
 # MineOcclude C→A Trajectory Contract
 
-Current implementation version: `0.1-draft`
+Current implementation version: `1.0`
 
-Target frozen version: `1.0`
-
-Status: Phase 1 draft pending cross-role compatibility review and final schema v1.0 sign-off in Step 1.8.
+Status: frozen for Phase 1 by the Step 1.8 internal schema sign-off.
 
 ## Purpose
 
@@ -50,9 +48,7 @@ Every trajectory package requires:
 
 The current package schema version is:
 
-`0.1-draft`
-
-Final schema version `1.0` is frozen only after Phase 1 Step 1.8 sign-off.
+`1.0`
 
 ## Media requirement
 
@@ -175,7 +171,8 @@ Required format:
 
 This records the visibility state associated with every capture identity.
 
-The final controlled visibility values are frozen with the relevant owners before schema v1.0 sign-off.
+Visibility is a non-empty, configuration-declared value whose vocabulary and
+meaning are bound to the package `config_hash`.
 
 ### Capture configuration
 
@@ -290,7 +287,10 @@ Each row must contain:
 
 Every current normalized-action component must be represented as an integer.
 
-The final semantic ranges and exact correspondence to the pinned MineWorld action converter must be confirmed before final schema v1.0 sign-off.
+Schema v1.0 freezes these fields as explicit integers produced by the converter
+identified by the package's code/config/preprocess hashes. The contract does
+not infer, clip, or silently convert values. Changing component meaning or
+converter semantics is result-affecting and requires migration.
 
 ### `server_state`
 
@@ -300,7 +300,9 @@ Each row must contain:
 
 `state` must be a non-empty mapping.
 
-The exact authoritative state fields are finalized with the relevant data and methods owners before schema v1.0 sign-off.
+The non-empty `state` mapping is the authoritative producer payload. Its
+experiment-specific keys and meanings are configuration-declared and hash
+bound; changing them in a result-affecting way requires migration.
 
 ### `client_tick_log`
 
@@ -318,7 +320,8 @@ Each row must contain:
 
 `visibility` must be a non-empty string.
 
-The final controlled visibility vocabulary is frozen before schema v1.0 sign-off.
+The visibility value uses the same configuration-declared, hash-bound
+vocabulary as the universal identity contract.
 
 ### `seed_noise`
 
@@ -645,8 +648,6 @@ Those are defined in their respective later Phase 1 steps.
 
 ## Versioning status
 
-The current implementation is `0.1-draft`.
-
-It must not be described as frozen schema v1.0.
-
-Final schema v1.0 is created only after the remaining Phase 1 contracts, units, allowed values, cardinality rules, migration policy, and cross-role approvals are completed and signed off in Step 1.8.
+The current implementation is frozen schema `1.0`. Result-changing changes to
+fields, units, allowed values, filters, cardinality, or meaning require a
+versioned migration and a new run identity under the Phase 1 signed record.

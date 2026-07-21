@@ -1,10 +1,8 @@
 # MineOcclude A→B Activation Contract
 
-Current implementation version: `0.1-draft`
+Current implementation version: `1.0`
 
-Target frozen version: `1.0`
-
-Status: Phase 1 draft pending cross-role compatibility review and final schema v1.0 sign-off in Step 1.8.
+Status: frozen for Phase 1 by the Step 1.8 internal schema sign-off.
 
 ## Purpose
 
@@ -86,9 +84,7 @@ Every activation handoff requires:
 
 The current activation contract uses:
 
-`0.1-draft`
-
-The final schema version becomes `1.0` only after Step 1.8 cross-role sign-off.
+`1.0`
 
 ## Handoff identity
 
@@ -844,21 +840,17 @@ The synthetic compatibility test must succeed without relying on row ordering.
 
 ## Scope boundary
 
-Completing Step 1.4 does not yet freeze schema v1.0.
+Step 1.4 originally introduced this contract as a draft. Steps 1.5 through 1.7
+subsequently exercised it across the synthetic pipeline, and Step 1.8 froze
+the interface without adding Person B scientific logic.
 
 The following Phase 1 work remains separate:
 
-* Step 1.5 — B→A intervention request contract
-* Step 1.6 — A→E rollout and run/artifact registry contracts
-* Step 1.7 — cross-role synthetic pipeline
-* Step 1.8 — final schema v1.0 freeze and sign-off
+Those steps remain separate in ownership and evidence even though their Phase 1
+interfaces are now collectively frozen.
 
 ## Versioning status
 
-The current implementation is:
-
-`0.1-draft`
-
-It must not yet be described as final schema v1.0.
-
-Final schema v1.0 is frozen only after all Phase 1 interfaces have been tested together and approved in Step 1.8.
+The current implementation is frozen schema `1.0`. Result-changing changes to
+selection rules, token layout, row identity, vector meaning, allowed values,
+or cardinality require a versioned migration and a new run identity.

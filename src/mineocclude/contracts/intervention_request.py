@@ -1490,6 +1490,21 @@ def validate_intervention_request(
             if flags_are_boolean:
                 if (
                     validation_flags[
+                        "time_orthogonalization_checked"
+                    ]
+                    is not True
+                ):
+                    _add_rejection(
+                        rejections,
+                        InterventionRejectionCode.INVALID_VALIDATION_FLAGS,
+                        (
+                            "Time orthogonalization must be checked "
+                            "before generation."
+                        ),
+                    )
+
+                if (
+                    validation_flags[
                         "raw_space_equivalence_verified"
                     ]
                     is not True

@@ -314,6 +314,30 @@ class TestInterventionRequestContract(
             after,
         )
 
+    def test_unchecked_time_orthogonalization_is_rejected(self):
+        """Schema v1.0 requires the time-projection audit before generation."""
+
+        request = load_fixture(
+            "accepted_intervention_request.json"
+        )
+
+        request["validation_flags"][
+            "time_orthogonalization_checked"
+        ] = False
+
+        result = validate_intervention_request(
+            request
+        )
+
+        self.assertFalse(
+            result.accepted
+        )
+
+        self.assertIn(
+            InterventionRejectionCode.INVALID_VALIDATION_FLAGS,
+            rejection_codes(result),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

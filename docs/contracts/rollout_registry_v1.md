@@ -1,10 +1,8 @@
 # MineOcclude A-to-E Rollout and A/E Registry Contract
 
-Current implementation version: `0.1-draft`
+Current implementation version: `1.0`
 
-Target frozen version: `1.0`
-
-Status: Phase 1 draft pending final cross-role sign-off in Step 1.8.
+Status: frozen for Phase 1 by the Step 1.8 internal schema sign-off.
 
 ## Purpose
 
@@ -25,7 +23,7 @@ scientific measurements.
 
 Both documents require:
 
-* `schema_version = "0.1-draft"`
+* `schema_version = "1.0"`
 * the same non-empty `handoff_id`
 
 The rollout document also requires `manifest_id`. The registry requires
@@ -224,7 +222,7 @@ The registry's `artifacts` list contains:
 * `exclusion_reason`
 * `superseded_by`
 
-Supported draft artifact types are:
+Supported schema v1.0 artifact types are:
 
 * `input_context`
 * `intervention_request`
@@ -343,20 +341,27 @@ Incompatible records must be corrected at the producer and resubmitted.
 
 This Step 1.6 implementation defines interchange and provenance only. It does
 not implement detection, homography, displacement, SSIM, persistence scoring,
-or other Person E scientific evaluation logic. It also does not construct the
-Step 1.7 cross-role synthetic pipeline or freeze/sign schema version 1.0.
+or other Person E scientific evaluation logic. Step 1.7 supplies only synthetic
+interface evidence; it does not extend this contract into evaluation logic.
 
-## Draft assumptions pending Step 1.8
+## Frozen v1.0 decisions
 
-The following remain draft choices for cross-role approval:
+* Control types are `intervention`, `alpha_zero`, and `random_direction`.
+* Artifact types are `input_context`, `intervention_request`, `rollout_clip`,
+  `partial_rollout`, and `diagnostic_log`.
+* Run and artifact identities are immutable non-empty strings; UUID syntax is
+  not required by schema v1.0.
+* `owner` is a non-empty producer identifier. Project-specific owner names are
+  configuration-declared and hash bound.
+* URIs must contain an explicit scheme. Production schemes and storage roots
+  are deployment configuration, not scientific identity inferred from a path.
+* Run statuses are `completed`, `completed_with_failures`, and `failed`.
+  `completed_with_failures` is the explicit partial-success state.
+* Requested/applied alpha equivalence uses relative and absolute tolerances of
+  `1e-12`, matching the validator. Cap-reduced rows remain explicit.
+* Lifecycle states are `accepted`, `excluded`, and `superseded`; parent and
+  supersession lineage remain auditable.
 
-* final control-type and artifact-type vocabularies
-* whether run and artifact IDs must adopt a UUID format
-* the final owner vocabulary
-* the allowed production URI schemes and storage roots
-* final run-status vocabulary and partial-success policy
-* final numeric tolerance for requested/applied alpha equivalence
-* approvers, migration rules, and the version-1.0 freeze record
-
-Changing any of these result-affecting meanings after freeze will require the
-Step 1.8 migration and run-identity policy.
+Changing any result-affecting field, unit, vocabulary, tolerance, lineage, or
+meaning after this freeze requires a versioned migration and a new run
+identity under the signed Phase 1 policy.

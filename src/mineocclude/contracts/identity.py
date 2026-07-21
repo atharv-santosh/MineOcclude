@@ -14,8 +14,8 @@ from enum import Enum
 from typing import Any, Iterable, Mapping, Sequence
 
 
-# This remains a draft until the cross-role sign-off in Phase 1, Step 1.8.
-SCHEMA_VERSION = "0.1-draft"
+# Frozen by the Phase 1, Step 1.8 internal schema sign-off.
+SCHEMA_VERSION = "1.0"
 
 # Shared frame-level identity used across model-analysis tables.
 FRAME_KEY = (
@@ -35,9 +35,9 @@ SHA256_FIELDS = (
     "preprocess_hash",
 )
 
-# Condition fields currently represented as scalar numeric values.
-# Exact units and final scientific ranges are frozen with the relevant
-# interface owners before schema v1.0 sign-off in Step 1.8.
+# Condition fields represented as scalar numeric values. Their frozen units
+# and semantic policy are recorded in docs/contracts/identity_v1.md and the
+# Phase 1 schema v1.0 signed record.
 NUMERIC_CONDITION_FIELDS = (
     "tau",
     "v",

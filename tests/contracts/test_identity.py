@@ -175,7 +175,7 @@ class TestUniversalIdentity(unittest.TestCase):
             load_fixture_rows()[0]
         )
 
-        row["schema_version"] = "1.0"
+        row["schema_version"] = "0.1-draft"
 
         with self.assertRaises(
             IdentityValidationError

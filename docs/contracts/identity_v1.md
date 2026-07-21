@@ -1,10 +1,8 @@
 # MineOcclude Universal Identity Contract
 
-Current implementation version: `0.1-draft`
+Current implementation version: `1.0`
 
-Target frozen version: `1.0`
-
-Status: Phase 1 draft pending final cross-role sign-off in Step 1.8.
+Status: frozen for Phase 1 by the Step 1.8 internal schema sign-off.
 
 ## Purpose
 
@@ -84,19 +82,25 @@ Claim-bearing rows currently retain:
 - `q`
 - `duration`
 
-The current draft validator requires:
+The frozen validator requires:
 
 - `layout_id`, `regime`, and `visibility` to be non-empty strings.
 - `tau`, `v`, `q`, and `duration` to be non-null finite numeric values.
 - `tau` to be non-negative.
 - `duration` to be non-negative.
 
-Exact scientific units, semantic ranges, and final allowed condition values
-remain subject to approval by the relevant interface owners before Step 1.8
-freezes schema v1.0.
+The frozen units are:
 
-The final controlled vocabularies for fields such as `regime` and `visibility`
-must also be recorded before final schema v1.0 sign-off.
+- `tau`: seconds.
+- `v`: blocks per second.
+- `q`: blocks squared per second.
+- `duration`: seconds.
+
+`layout_id`, `regime`, and `visibility` are non-empty, configuration-declared
+identifiers. Their project-specific vocabularies are bound to `config_hash`
+rather than duplicated in this universal contract. A result-affecting change
+to a vocabulary or its meaning requires the migration policy and a new run
+identity.
 
 ## Provenance
 
@@ -168,7 +172,7 @@ silently deleted.
 
 ## Nullability
 
-The universal fields defined by the current draft contract must always exist.
+The universal fields defined by the frozen contract must always exist.
 
 The following fields are conditionally nullable:
 
@@ -179,11 +183,8 @@ The following fields are conditionally nullable:
 
 `superseded_by` is null except for superseded records.
 
-The current draft requires `tau`, `v`, `q`, and `duration` to contain explicit
+The frozen contract requires `tau`, `v`, `q`, and `duration` to contain explicit
 finite numeric values rather than null values.
-
-Any broader scientific nullability rules must be approved before Step 1.8
-freezes schema v1.0.
 
 ## Uniqueness
 
@@ -232,10 +233,7 @@ synthetic pipeline required by Steps 1.3 through 1.7.
 
 ## Versioning status
 
-The current implementation is `0.1-draft`.
-
-It must not be described as frozen schema v1.0.
-
-Final schema v1.0 is created only after the required cross-role contracts,
-units, allowed values, cardinality rules, migration policy, and owner approvals
-are completed and signed off in Step 1.8.
+The current implementation is frozen schema `1.0`. Result-changing changes to
+fields, units, allowed values, cardinality, or meaning require a versioned
+migration and a new run identity. The authoritative approval and migration
+record is `docs/contracts/schema_v1_0_signed_record.md`.

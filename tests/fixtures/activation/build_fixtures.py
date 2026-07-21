@@ -21,7 +21,7 @@ CHECKPOINT_HASH = "2" * 64
 PREPROCESS_HASH = "3" * 64
 MANIFEST_HASH = "5" * 64
 
-SCHEMA_VERSION = "0.1-draft"
+SCHEMA_VERSION = "1.0"
 
 TRAJECTORY_ID = "synthetic_trajectory_0001"
 EPISODE_ID = "synthetic_episode_0001"
@@ -369,6 +369,7 @@ def write_json(
     with path.open(
         "w",
         encoding="utf-8",
+        newline="\n",
     ) as file:
         file.write(
             serialize_json(

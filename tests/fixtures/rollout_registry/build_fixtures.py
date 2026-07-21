@@ -9,7 +9,7 @@ from typing import Any
 
 
 OUTPUT_DIR = Path(__file__).parent
-SCHEMA_VERSION = "0.1-draft"
+SCHEMA_VERSION = "1.0"
 
 CODE_SHA = "0" * 40
 CONFIG_HASH = "1" * 64

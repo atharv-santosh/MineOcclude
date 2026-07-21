@@ -143,7 +143,7 @@ def make_accepted_package() -> dict:
     ]
 
     return {
-        "schema_version": "0.1-draft",
+        "schema_version": "1.0",
         "episode_id": "synthetic_episode_0001",
         "trajectory_id": "synthetic_trajectory_0001",
         "seed": 42,
@@ -239,6 +239,7 @@ def write_fixture(
     with path.open(
         "w",
         encoding="utf-8",
+        newline="\n",
     ) as file:
         json.dump(
             package,
