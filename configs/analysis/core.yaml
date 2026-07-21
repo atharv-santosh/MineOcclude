@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "analysis_config_version": "person-b-phase1-v0.1",
+  "status": "frozen_before_live_results",
+  "targets": {
+    "mu_oracle_blocks": {
+      "unit": "blocks",
+      "source": "primary_regime_a_oracle",
+      "use": "probe_target",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "var_oracle_blocks2": {
+      "unit": "blocks_squared",
+      "source": "primary_regime_a_oracle",
+      "use": "oracle_audit",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "sigma_oracle_blocks": {
+      "unit": "blocks",
+      "source": "sqrt(var_oracle_blocks2)",
+      "use": "calibration",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "log_sigma_oracle": {
+      "unit": "dimensionless",
+      "source": "ln(sigma_oracle_blocks / 1 block)",
+      "use": "hidden_row_probe_target",
+      "eligibility": "accepted_hidden_positive_spread_rows",
+      "null_policy": "null_outside_eligibility"
+    },
+    "x_true_blocks": {
+      "unit": "blocks",
+      "source": "authoritative_server_state",
+      "use": "scoring_only",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "tau": {
+      "unit": "seconds",
+      "source": "schema_v1_identity",
+      "use": "oracle_input_and_time_control",
+      "eligibility": "accepted_post_first_seen_rows"
+    }
+  },
+  "filters": {
+    "allowed_status": ["accepted"],
+    "required_activation_run_status": "completed",
+    "exclude_pre_first_seen": true,
+    "reject_manifest_mismatch": true,
+    "preserve_nonfinite_failures": true,
+    "silent_clipping_forbidden": true
+  },
+  "cross_validation": {
+    "strategy": "layout_grouped",
+    "fold_count": 5,
+    "split_seed": 20260719,
+    "fit_scaler_on_training_fold_only": true,
+    "test_layout_may_select_preprocessing": false,
+    "test_layout_may_select_alpha": false,
+    "test_layout_may_select_layer": false,
+    "test_layout_may_select_intervention_direction": false
+  },
+  "ridge": {
+    "alpha_grid": [0.1, 1.0, 10.0, 100.0],
+    "selection_scope": "training_validation_only"
+  },
+  "mlp": {
+    "hidden_layers": [256, 128],
+    "activation": "relu",
+    "output_dim": 1,
+    "eligible_layer_count": 3,
+    "eligibility_source": "predeclared_ridge_validation"
+  },
+  "resampling": {
+    "permutation_count_mvp": 999,
+    "bootstrap_count_mvp": 1000,
+    "bootstrap_count_final_minimum": 2000,
+    "hierarchy": ["layout_id", "trajectory_id"],
+    "permutation_seed": 20260720,
+    "bootstrap_seed": 20260721
+  },
+  "coverage_levels": [0.5, 0.8, 0.95],
+  "outputs": {
+    "U1": ["r2", "mae", "grouped_permutation", "baseline_comparison"],
+    "U2": ["partial_correlation_controlling_tau", "coverage", "ece", "z_diagnostics"],
+    "U3": ["hidden_growth", "oracle_slope_ratio", "reveal_snapback"],
+    "U4": ["raw_space_direction", "time_projection_audit", "alpha_to_blocks", "norm_cap"]
+  }
+}
