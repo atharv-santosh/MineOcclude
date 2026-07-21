@@ -1,0 +1,342 @@
+{
+  "registry": {
+    "artifacts": [
+      {
+        "artifact_id": "synthetic_input_context_artifact_001",
+        "artifact_type": "input_context",
+        "exclusion_reason": null,
+        "producer_run_id": "synthetic_input_registration_run_001",
+        "schema_version": "0.1-draft",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "status": "accepted",
+        "superseded_by": null,
+        "uri": "synthetic://step-1-6/contexts/context-001.json"
+      },
+      {
+        "artifact_id": "synthetic_intervention_request_artifact_001",
+        "artifact_type": "intervention_request",
+        "exclusion_reason": null,
+        "producer_run_id": "synthetic_input_registration_run_001",
+        "schema_version": "0.1-draft",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "status": "accepted",
+        "superseded_by": null,
+        "uri": "synthetic://step-1-6/requests/request-001.json"
+      },
+      {
+        "artifact_id": "synthetic_rollout_clip_artifact_000",
+        "artifact_type": "rollout_clip",
+        "exclusion_reason": null,
+        "producer_run_id": "synthetic_rollout_run_000",
+        "schema_version": "0.1-draft",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "status": "superseded",
+        "superseded_by": "synthetic_rollout_clip_artifact_001",
+        "uri": "synthetic://step-1-6/rollouts/old-continuation-000.mp4"
+      },
+      {
+        "artifact_id": "synthetic_rollout_clip_artifact_001",
+        "artifact_type": "rollout_clip",
+        "exclusion_reason": null,
+        "producer_run_id": "synthetic_rollout_run_001",
+        "schema_version": "0.1-draft",
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "status": "accepted",
+        "superseded_by": null,
+        "uri": "synthetic://step-1-6/rollouts/continuation-001.mp4"
+      },
+      {
+        "artifact_id": "synthetic_rollout_clip_artifact_002",
+        "artifact_type": "rollout_clip",
+        "exclusion_reason": null,
+        "producer_run_id": "synthetic_rollout_run_001",
+        "schema_version": "0.1-draft",
+        "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "status": "accepted",
+        "superseded_by": null,
+        "uri": "synthetic://step-1-6/rollouts/non-persistence-002.mp4"
+      },
+      {
+        "artifact_id": "synthetic_partial_rollout_artifact_003",
+        "artifact_type": "partial_rollout",
+        "exclusion_reason": "incomplete_generation_not_measurable",
+        "producer_run_id": "synthetic_rollout_run_002",
+        "schema_version": "0.1-draft",
+        "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "status": "excluded",
+        "superseded_by": null,
+        "uri": "synthetic://step-1-6/rollouts/partial-003.mp4"
+      },
+      {
+        "artifact_id": "synthetic_diagnostic_artifact_003",
+        "artifact_type": "diagnostic_log",
+        "exclusion_reason": null,
+        "producer_run_id": "synthetic_rollout_run_002",
+        "schema_version": "0.1-draft",
+        "sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+        "status": "accepted",
+        "superseded_by": null,
+        "uri": "synthetic://step-1-6/diagnostics/failure-003.json"
+      }
+    ],
+    "fixture_metadata": {
+      "scientific_use": "forbidden",
+      "synthetic": true
+    },
+    "handoff_id": "synthetic_step_1_6_handoff_001",
+    "registry_id": "synthetic_run_artifact_registry_001",
+    "runs": [
+      {
+        "code_sha": "0000000000000000000000000000000000000000",
+        "command": [
+          "mineocclude",
+          "register-inputs",
+          "--synthetic"
+        ],
+        "config_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+        "execution_status": "completed",
+        "failure_reason": null,
+        "input_artifact_ids": [],
+        "model_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+        "output_artifact_ids": [
+          "synthetic_input_context_artifact_001",
+          "synthetic_intervention_request_artifact_001"
+        ],
+        "owner": "person_a",
+        "parent_run_id": "synthetic_rollout_run_002",
+        "preprocess_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "run_id": "synthetic_input_registration_run_001"
+      },
+      {
+        "code_sha": "0000000000000000000000000000000000000000",
+        "command": [
+          "mineocclude",
+          "rollout",
+          "--synthetic",
+          "--revision",
+          "0"
+        ],
+        "config_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+        "execution_status": "completed",
+        "failure_reason": null,
+        "input_artifact_ids": [
+          "synthetic_input_context_artifact_001",
+          "synthetic_intervention_request_artifact_001"
+        ],
+        "model_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+        "output_artifact_ids": [
+          "synthetic_rollout_clip_artifact_000"
+        ],
+        "owner": "person_a",
+        "parent_run_id": "synthetic_input_registration_run_001",
+        "preprocess_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "run_id": "synthetic_rollout_run_000"
+      },
+      {
+        "code_sha": "0000000000000000000000000000000000000000",
+        "command": [
+          "mineocclude",
+          "rollout",
+          "--synthetic",
+          "--revision",
+          "1"
+        ],
+        "config_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+        "execution_status": "completed",
+        "failure_reason": null,
+        "input_artifact_ids": [
+          "synthetic_input_context_artifact_001",
+          "synthetic_intervention_request_artifact_001"
+        ],
+        "model_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+        "output_artifact_ids": [
+          "synthetic_rollout_clip_artifact_001",
+          "synthetic_rollout_clip_artifact_002"
+        ],
+        "owner": "person_a",
+        "parent_run_id": "synthetic_rollout_run_000",
+        "preprocess_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "run_id": "synthetic_rollout_run_001"
+      },
+      {
+        "code_sha": "0000000000000000000000000000000000000000",
+        "command": [
+          "mineocclude",
+          "rollout",
+          "--synthetic",
+          "--event",
+          "003"
+        ],
+        "config_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+        "execution_status": "failed",
+        "failure_reason": "synthetic_decoder_failure",
+        "input_artifact_ids": [
+          "synthetic_input_context_artifact_001",
+          "synthetic_intervention_request_artifact_001"
+        ],
+        "model_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+        "output_artifact_ids": [
+          "synthetic_partial_rollout_artifact_003",
+          "synthetic_diagnostic_artifact_003"
+        ],
+        "owner": "person_a",
+        "parent_run_id": "synthetic_rollout_run_001",
+        "preprocess_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "run_id": "synthetic_rollout_run_002"
+      }
+    ],
+    "schema_version": "0.1-draft"
+  },
+  "rollout_manifest": {
+    "fixture_metadata": {
+      "scientific_use": "forbidden",
+      "synthetic": true
+    },
+    "handoff_id": "synthetic_step_1_6_handoff_001",
+    "manifest_id": "synthetic_rollout_manifest_001",
+    "rollout_rows": [
+      {
+        "action_idx": 41,
+        "alpha_applied": 0.0,
+        "alpha_requested": 0.0,
+        "cap_reduced": false,
+        "code_sha": "0000000000000000000000000000000000000000",
+        "config_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+        "control_type": "alpha_zero",
+        "direction_version": "synthetic_direction_v1",
+        "dose_id": "control",
+        "duration": 1.0,
+        "episode_id": "synthetic_episode_001",
+        "event_id": "synthetic_heldout_event_001",
+        "exclusion_reason": null,
+        "hook_site": "residual_stream",
+        "input_context_artifact_id": "synthetic_input_context_artifact_001",
+        "input_context_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "input_context_id": "synthetic_context_window_001",
+        "intended_block_shift": 0.0,
+        "intervention_request_artifact_id": "synthetic_intervention_request_artifact_001",
+        "layer_idx": 12,
+        "layout_id": "synthetic_layout_heldout_01",
+        "measurable": true,
+        "model_frame_idx": 8,
+        "model_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+        "outcome": "measurable_continuation",
+        "outcome_detail": null,
+        "output_artifact_id": "synthetic_rollout_clip_artifact_001",
+        "output_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "output_uri": "synthetic://step-1-6/rollouts/continuation-001.mp4",
+        "preprocess_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "q": 0.5,
+        "regime": "synthetic_occlusion",
+        "render_frame_idx": 41,
+        "rollout_id": "synthetic_rollout_001",
+        "run_id": "synthetic_rollout_run_001",
+        "schema_version": "0.1-draft",
+        "seed": 101,
+        "server_tick": 201,
+        "status": "accepted",
+        "superseded_by": null,
+        "tau": 2.0,
+        "timestep_idx": 8,
+        "trajectory_id": "synthetic_heldout_trajectory_001",
+        "v": 1.0,
+        "visibility": "synthetic_visible_at_intervention"
+      },
+      {
+        "action_idx": 42,
+        "alpha_applied": 0.5,
+        "alpha_requested": 0.5,
+        "cap_reduced": false,
+        "code_sha": "0000000000000000000000000000000000000000",
+        "config_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+        "control_type": "intervention",
+        "direction_version": "synthetic_direction_v1",
+        "dose_id": "positive_low",
+        "duration": 1.0,
+        "episode_id": "synthetic_episode_002",
+        "event_id": "synthetic_heldout_event_002",
+        "exclusion_reason": null,
+        "hook_site": "residual_stream",
+        "input_context_artifact_id": "synthetic_input_context_artifact_001",
+        "input_context_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "input_context_id": "synthetic_context_window_002",
+        "intended_block_shift": 1.0,
+        "intervention_request_artifact_id": "synthetic_intervention_request_artifact_001",
+        "layer_idx": 12,
+        "layout_id": "synthetic_layout_heldout_01",
+        "measurable": false,
+        "model_frame_idx": 8,
+        "model_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+        "outcome": "non_persistence",
+        "outcome_detail": "Synthetic target ceased to persist before the measurement endpoint; no displacement value is defined.",
+        "output_artifact_id": "synthetic_rollout_clip_artifact_002",
+        "output_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "output_uri": "synthetic://step-1-6/rollouts/non-persistence-002.mp4",
+        "preprocess_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "q": 0.5,
+        "regime": "synthetic_occlusion",
+        "render_frame_idx": 42,
+        "rollout_id": "synthetic_rollout_002",
+        "run_id": "synthetic_rollout_run_001",
+        "schema_version": "0.1-draft",
+        "seed": 102,
+        "server_tick": 202,
+        "status": "accepted",
+        "superseded_by": null,
+        "tau": 2.0,
+        "timestep_idx": 8,
+        "trajectory_id": "synthetic_heldout_trajectory_002",
+        "v": 1.0,
+        "visibility": "synthetic_visible_at_intervention"
+      },
+      {
+        "action_idx": 43,
+        "alpha_applied": 5.0,
+        "alpha_requested": 6.0,
+        "cap_reduced": true,
+        "code_sha": "0000000000000000000000000000000000000000",
+        "config_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+        "control_type": "intervention",
+        "direction_version": "synthetic_direction_v1",
+        "dose_id": "positive_capped",
+        "duration": 1.0,
+        "episode_id": "synthetic_episode_003",
+        "event_id": "synthetic_heldout_event_003",
+        "exclusion_reason": "generation_failed_before_complete_clip",
+        "hook_site": "residual_stream",
+        "input_context_artifact_id": "synthetic_input_context_artifact_001",
+        "input_context_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "input_context_id": "synthetic_context_window_003",
+        "intended_block_shift": 2.0,
+        "intervention_request_artifact_id": "synthetic_intervention_request_artifact_001",
+        "layer_idx": 12,
+        "layout_id": "synthetic_layout_heldout_01",
+        "measurable": false,
+        "model_frame_idx": 8,
+        "model_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+        "outcome": "generation_failure",
+        "outcome_detail": "Synthetic decoder failure before clip persistence.",
+        "output_artifact_id": null,
+        "output_hash": null,
+        "output_uri": null,
+        "preprocess_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "q": 0.5,
+        "regime": "synthetic_occlusion",
+        "render_frame_idx": 43,
+        "rollout_id": "synthetic_rollout_003",
+        "run_id": "synthetic_rollout_run_002",
+        "schema_version": "0.1-draft",
+        "seed": 103,
+        "server_tick": 203,
+        "status": "excluded",
+        "superseded_by": null,
+        "tau": 2.0,
+        "timestep_idx": 8,
+        "trajectory_id": "synthetic_heldout_trajectory_003",
+        "v": 1.0,
+        "visibility": "synthetic_visible_at_intervention"
+      }
+    ],
+    "schema_version": "0.1-draft"
+  }
+}
