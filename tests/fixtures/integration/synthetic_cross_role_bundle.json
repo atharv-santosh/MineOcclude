@@ -1,0 +1,94 @@
+{
+  "documented_integrity_links": [
+    "expected_activation_sites_to_activation_rows",
+    "token_map_positions_to_mineworld_layout",
+    "fit_manifest_hash_to_file_bytes",
+    "validation_manifest_hash_to_file_bytes",
+    "request_manifest_metadata_to_manifest_files",
+    "input_context_hash_to_file_bytes",
+    "intervention_request_hash_to_file_bytes",
+    "logical_input_context_rows_to_rollouts",
+    "rollout_measurement_failure_semantics",
+    "orphaned_claim_bearing_row_enumeration"
+  ],
+  "expected_activation_sites": [
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 5
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 12
+    }
+  ],
+  "explicit_join_keys": {
+    "contexts_to_rollouts": [
+      "input_context_id"
+    ],
+    "request_alpha_table_to_rollouts": [
+      "dose_id"
+    ],
+    "request_heldout_events_to_rollouts": [
+      "event_id"
+    ],
+    "rollouts_to_input_context_artifacts": [
+      "input_context_artifact_id",
+      "artifact_id"
+    ],
+    "rollouts_to_intervention_request_artifacts": [
+      "intervention_request_artifact_id",
+      "artifact_id"
+    ],
+    "rollouts_to_measurements": [
+      "rollout_id"
+    ],
+    "rollouts_to_output_artifacts": [
+      "output_artifact_id",
+      "artifact_id"
+    ],
+    "rollouts_to_runs": [
+      "run_id"
+    ],
+    "targets_to_activations": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "targets_to_baselines": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "trajectory_to_normalized_actions": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "trajectory_to_targets": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "trajectory_to_token_map": [
+      "trajectory_id",
+      "model_frame_idx"
+    ]
+  },
+  "fixture_metadata": {
+    "scientific_use": "forbidden",
+    "synthetic": true
+  },
+  "integration_id": "synthetic_cross_role_pipeline_001",
+  "schema_version": "1.0",
+  "sources": {
+    "activation_handoff": "../activation/accepted_activation_handoff.json",
+    "baseline_predictions": "synthetic_baseline_predictions.json",
+    "fit_manifest": "synthetic_fit_manifest.json",
+    "input_contexts": "synthetic_input_contexts.json",
+    "intervention_request": "synthetic_intervention_request.json",
+    "measurements": "synthetic_measurements.json",
+    "oracle_targets": "synthetic_oracle_targets.json",
+    "registry": "synthetic_registry.json",
+    "rollout_manifest": "synthetic_rollout_manifest.json",
+    "token_map": "synthetic_token_map.json",
+    "trajectory_package": "../trajectory/accepted_package.json",
+    "validation_manifest": "synthetic_validation_manifest.json"
+  },
+  "synthetic_marker_scope": "document_and_nested_records"
+}
