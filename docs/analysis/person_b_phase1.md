@@ -1,6 +1,7 @@
 # Person B Phase 1: Scientific Methods Foundation
 
-Status: implemented against universal schema `1.0`; frozen before live results.
+Status: v0.2 foundation implemented against universal schema `1.0`; no live
+results have been produced.
 
 ## Scope
 
@@ -11,8 +12,10 @@ before real activation fitting:
 - two independent exact Regime A oracle implementations;
 - synthetic state and target evidence;
 - an explicit-key A-to-B activation/target join;
-- deterministic five-fold layout grouping; and
-- tests that fail closed on leakage, cardinality, unit, and manifest errors.
+- deterministic five-fold layout grouping;
+- tests that fail closed on leakage, cardinality, unit, and manifest errors;
+- ordered filter/count audits and tamper-evident analysis artifacts;
+- leakage-safe ridge/MLP, U1-U3, resampling, and U4 producer foundations.
 
 The Phase 1 A-to-B activation and B-to-A intervention contracts are not edited.
 The Person A placeholder oracle rows remain synthetic integration evidence.
@@ -30,10 +33,17 @@ Person B's scalar wall-parallel targets are a separate B-owned table joined by
 | `x_true_blocks` | blocks | authoritative server state | scoring only |
 | `tau` | seconds | schema-v1 identity | oracle input and time control |
 
-The remaining required inputs inherit their frozen universal names directly:
+The full field/type/source/use dictionary is frozen in
+`docs/contracts/person_b_oracle_target_v0_1.md`. The remaining required inputs
+inherit their frozen universal names directly:
 `visibility`, `v` (blocks/s), `q` (blocks squared/s), `duration` (seconds),
 `layout_id`, and `trajectory_id`. Person B does not introduce aliases for
 these fields.
+
+`duration` remains numeric seconds; B does not add `duration_id`.
+`hidden_ticks` is derived from `tau / 0.05 seconds` and is not a second stored
+time field. `log_sigma_oracle` eligibility is explicit: hidden rows with
+positive spread receive a finite value; every other row receives null.
 
 Visible primary-oracle rows have zero spread and no log-spread target. Hidden
 truth is copied only after the posterior is computed and is absent from both
@@ -65,6 +75,9 @@ validator-backed C/A-to-B adapter is still required before real state logs are
 used; any missing real-data field or meaning must be handled as an explicit
 adapter or migration decision, never by silent repair.
 
+Live state inputs additionally require a content-hashed coordinate frame with
+an origin and positive world-space unit vector signed by Persons B and C.
+
 The checked B oracle fixture uses physically coherent consecutive 20 Hz ticks.
 The A-to-B compatibility test separately derives non-scientific target inputs
 from Person A's frozen activation fixture, without editing that fixture.
@@ -82,6 +95,30 @@ from Person A's frozen activation fixture, without editing that fixture.
 
 Exact seeds, counts, alpha grid, MLP shape, coverage levels, exclusions, and
 U1-U4 output names are frozen in `configs/analysis/core.yaml`.
+
+The v0.2 config also freezes filter order, inner grouped validation, MLP
+optimizer settings, exact-duration bins, central inclusive Gaussian coverage,
+near-zero reporting, add-one permutation p-values, artifact hashing, and the
+3-fit/1-validation/2-test U4 development partition algorithm.
+
+## Artifact-independent analysis foundations
+
+The branch now supplies reusable code for:
+
+- literal config-byte hashes;
+- stable filter rejection codes and pre/post counts;
+- saved fold/U4-partition/scaler/ridge-fit/prediction/result manifests;
+- grouped inner ridge selection and OOF predictions;
+- validation-only MLP layer eligibility and deterministic OOF training;
+- U1 regression/binning, U2 calibration/partial correlation, and U3 grouped
+  growth/reveal calculations;
+- layout→trajectory bootstrap and whole-trajectory permutations;
+- raw-space conversion, elapsed-time projection, alpha mapping/caps, and a
+  B→A producer that self-validates against the frozen Person A contract; and
+- C/D/E consumer validators that remain blocked from live use until their
+  producer-owned artifacts and signoffs exist.
+
+None of these foundations creates real results without external artifacts.
 
 ## Phase 1 evidence
 
@@ -101,8 +138,10 @@ completed Person A run and a complete frame-by-layer/site grid.
 
 Phase 1 verification on July 21, 2026:
 
-- the original 112 schema-v1 contract/integration tests still pass;
-- 34 Person B config, oracle, CLI, join, split, and leakage tests pass;
+- the full 182-test repository suite passes;
+- all original schema-v1 contract and integration tests remain unchanged;
+- the new B foundation tests cover config, filters, artifacts, intake,
+  leakage-safe fits, metrics, resampling, and intervention production;
 - 250 seeded oracle parameter combinations agree within `1e-6`;
 - command-line target generation matches the checked synthetic fixture; and
 - the SVG audit plot shows truth, last visible position, posterior mean, and

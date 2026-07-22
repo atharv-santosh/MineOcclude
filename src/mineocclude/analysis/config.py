@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -59,7 +60,30 @@ FROZEN_TARGETS = {
 }
 
 FROZEN_SECTIONS = {
+    "coordinate_contract": {
+        "quantity": "signed_wall_parallel_position",
+        "unit": "blocks",
+        "coordinate_frame_fields": [
+            "coordinate_frame_id",
+            "coordinate_frame_hash",
+            "wall_parallel_origin_world_xyz",
+            "wall_parallel_positive_unit_vector_world_xyz",
+        ],
+        "positive_direction_rule": (
+            "increasing dot(world_position - origin, positive_unit_vector)"
+        ),
+        "unit_vector_norm_tolerance": 1e-9,
+        "requires_person_c_adapter_signoff_before_live_use": True,
+        "silent_axis_inference_forbidden": True,
+    },
     "filters": {
+        "ordered_steps": [
+            "required_fields",
+            "lifecycle_status",
+            "finite_numeric_values",
+            "post_first_seen",
+            "accepted_manifest_match",
+        ],
         "allowed_status": ["accepted"],
         "required_activation_run_status": "completed",
         "exclude_pre_first_seen": True,
@@ -71,11 +95,21 @@ FROZEN_SECTIONS = {
         "strategy": "layout_grouped",
         "fold_count": 5,
         "split_seed": DEFAULT_SPLIT_SEED,
+        "fold_schema_version": "person-b-fold-v0.1",
+        "persist_membership": True,
+        "inner_strategy": "layout_grouped",
+        "inner_fold_count": 4,
         "fit_scaler_on_training_fold_only": True,
         "test_layout_may_select_preprocessing": False,
         "test_layout_may_select_alpha": False,
         "test_layout_may_select_layer": False,
         "test_layout_may_select_intervention_direction": False,
+        "u4_development_partition": {
+            "fit_layout_count": 3,
+            "validation_layout_count": 1,
+            "test_layout_count": 2,
+            "selection_source": "layout_manifest_only",
+        },
     },
     "ridge": {
         "alpha_grid": [0.1, 1.0, 10.0, 100.0],
@@ -87,6 +121,21 @@ FROZEN_SECTIONS = {
         "output_dim": 1,
         "eligible_layer_count": 3,
         "eligibility_source": "predeclared_ridge_validation",
+        "optimizer": "adam",
+        "learning_rate": 0.001,
+        "maximum_epochs": 200,
+        "early_stopping_patience": 20,
+        "batch_size": 64,
+        "training_seed": 20260722,
+    },
+    "metric_rules": {
+        "duration_binning": "exact_duration_seconds",
+        "coverage_interval": "central_gaussian_inclusive",
+        "ece_aggregation": "mean_absolute_nominal_empirical_gap",
+        "near_zero_sigma_threshold_blocks": 1e-12,
+        "nonfinite_policy": "count_and_fail_result_no_clipping",
+        "partial_correlation_controls": ["tau"],
+        "reveal_window_seconds": [-1.0, 1.0],
     },
     "resampling": {
         "permutation_count_mvp": 999,
@@ -95,6 +144,16 @@ FROZEN_SECTIONS = {
         "hierarchy": ["layout_id", "trajectory_id"],
         "permutation_seed": 20260720,
         "bootstrap_seed": 20260721,
+        "permutation_unit": "whole_trajectory_block",
+        "permutation_p_value": "add_one_greater_or_equal",
+    },
+    "artifact_policy": {
+        "schema_version": "person-b-analysis-artifact-v0.1",
+        "hash_algorithm": "sha256",
+        "hash_serialization": "canonical_json_utf8",
+        "config_hash_source": "literal_config_file_bytes",
+        "corrections_are_append_only": True,
+        "result_affecting_change_requires_new_run": True,
     },
     "outputs": {
         "U1": ["r2", "mae", "grouped_permutation", "baseline_comparison"],
@@ -140,7 +199,7 @@ def validate_core_analysis_config(config: Mapping[str, Any]) -> None:
         raise AnalysisConfigError("Top-level analysis config fields have changed.")
     if config.get("schema_version") != SCHEMA_VERSION:
         raise AnalysisConfigError(f"Expected schema version {SCHEMA_VERSION!r}.")
-    if config.get("analysis_config_version") != "person-b-phase1-v0.1":
+    if config.get("analysis_config_version") != "person-b-phase1-v0.2":
         raise AnalysisConfigError("Analysis config version has changed.")
     if config.get("status") != "frozen_before_live_results":
         raise AnalysisConfigError("Analysis config must remain frozen before live results.")
@@ -165,9 +224,9 @@ def load_core_analysis_config(path: Path | str = DEFAULT_CONFIG_PATH) -> dict[st
 
     config_path = Path(path)
     try:
-        with config_path.open("r", encoding="utf-8") as handle:
-            config = json.load(handle)
-    except (OSError, json.JSONDecodeError) as error:
+        payload = config_path.read_bytes()
+        config = json.loads(payload.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
         raise AnalysisConfigError(
             f"Could not load analysis config {config_path}: {error}"
         ) from error
@@ -177,3 +236,24 @@ def load_core_analysis_config(path: Path | str = DEFAULT_CONFIG_PATH) -> dict[st
 
     validate_core_analysis_config(config)
     return config
+
+
+def hash_core_analysis_config(path: Path | str = DEFAULT_CONFIG_PATH) -> str:
+    """Return the SHA-256 of the exact validated config-file bytes.
+
+    Hashing happens only after parsing and validating the same byte payload, so
+    callers cannot attach a syntactically valid but unrelated hash to a run.
+    """
+
+    config_path = Path(path)
+    try:
+        payload = config_path.read_bytes()
+        config = json.loads(payload.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise AnalysisConfigError(
+            f"Could not load analysis config {config_path}: {error}"
+        ) from error
+    if not isinstance(config, dict):
+        raise AnalysisConfigError("Analysis config must contain one mapping.")
+    validate_core_analysis_config(config)
+    return hashlib.sha256(payload).hexdigest()

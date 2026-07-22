@@ -6,6 +6,7 @@ import math
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from mineocclude.contracts.identity import (
@@ -335,3 +336,54 @@ def validate_oracle_target_rows(rows: Iterable[Mapping[str, Any]]) -> None:
                     "tau must increase throughout an occluded run before reveal."
                 )
             previous_hidden_tau = tau
+
+
+def validate_oracle_target_document(
+    document: Mapping[str, Any],
+    *,
+    analysis_config_path: Path | str | None = None,
+) -> None:
+    """Validate the target envelope, coordinate frame, and all target rows."""
+
+    if not isinstance(document, Mapping):
+        raise OracleValidationError("Oracle target document must be a mapping.")
+    if document.get("schema_version") != SCHEMA_VERSION:
+        raise OracleValidationError("Oracle target document schema mismatch.")
+    if document.get("target_schema_version") != ORACLE_TARGET_SCHEMA_VERSION:
+        raise OracleValidationError("Oracle target document version mismatch.")
+    if document.get("join_key") != ["trajectory_id", "model_frame_idx"]:
+        raise OracleValidationError("Oracle target document join_key is invalid.")
+    rows = document.get("rows")
+    if not isinstance(rows, list):
+        raise OracleValidationError("Oracle target document requires a rows list.")
+    metadata = document.get("fixture_metadata")
+    is_non_scientific_fixture = (
+        isinstance(metadata, Mapping)
+        and metadata.get("synthetic") is True
+        and metadata.get("scientific_use") == "forbidden"
+    )
+    if not is_non_scientific_fixture:
+        from mineocclude.analysis.coordinates import (
+            CoordinateContractError,
+            validate_coordinate_frame,
+        )
+        from mineocclude.analysis.config import (
+            DEFAULT_CONFIG_PATH,
+            hash_core_analysis_config,
+        )
+
+        try:
+            validate_coordinate_frame(document.get("coordinate_frame"))
+        except CoordinateContractError as error:
+            raise OracleValidationError(
+                f"Oracle target coordinate frame is invalid: {error}"
+            ) from error
+        bound_config_hash = hash_core_analysis_config(
+            analysis_config_path or DEFAULT_CONFIG_PATH
+        )
+        if any(row.get("config_hash") != bound_config_hash for row in rows):
+            raise OracleValidationError(
+                "Oracle targets are not bound to the current literal analysis "
+                "config bytes."
+            )
+    validate_oracle_target_rows(rows)

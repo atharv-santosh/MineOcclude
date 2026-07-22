@@ -1,13 +1,75 @@
 """Person B probe preparation utilities."""
 
-from .join import ActivationTargetJoinError, JoinedActivationTarget, join_activation_targets
-from .splits import GroupedSplitError, annotate_grouped_folds, assign_layout_grouped_folds
+from .join import (
+    ActivationTargetJoinError,
+    JoinedActivationTarget,
+    join_activation_target_document,
+    join_activation_targets,
+)
+from .ridge import (
+    ProbeFitError,
+    RidgeModel,
+    RidgeOOFResult,
+    StandardScaler,
+    fit_ridge,
+    fit_ridge_oof,
+    fit_standard_scaler,
+    select_ridge_alpha_grouped,
+)
+from .mlp import (
+    MLPFoldFit,
+    MLPModel,
+    MLPOOFResult,
+    MLPTrainingSpec,
+    MLPValidationFit,
+    build_mlp_fit_artifact,
+    fit_mlp,
+    fit_mlp_grouped_validation,
+    fit_mlp_oof,
+    select_mlp_eligible_layers,
+)
+from .splits import (
+    GroupedSplitError,
+    annotate_grouped_folds,
+    assign_layout_grouped_folds,
+    assign_u4_development_partition,
+    build_fold_manifest,
+    build_grouped_inner_folds,
+    build_u4_partition_manifest,
+    validate_fold_manifest,
+    validate_u4_partition_manifest,
+)
 
 __all__ = [
     "ActivationTargetJoinError",
+    "MLPModel",
+    "MLPFoldFit",
+    "MLPOOFResult",
+    "MLPTrainingSpec",
+    "MLPValidationFit",
+    "ProbeFitError",
+    "RidgeModel",
+    "RidgeOOFResult",
+    "StandardScaler",
     "GroupedSplitError",
     "JoinedActivationTarget",
     "annotate_grouped_folds",
     "assign_layout_grouped_folds",
+    "assign_u4_development_partition",
+    "build_fold_manifest",
+    "build_grouped_inner_folds",
+    "build_u4_partition_manifest",
+    "build_mlp_fit_artifact",
+    "fit_mlp",
+    "fit_mlp_grouped_validation",
+    "fit_mlp_oof",
+    "fit_ridge",
+    "fit_ridge_oof",
+    "fit_standard_scaler",
     "join_activation_targets",
+    "join_activation_target_document",
+    "select_mlp_eligible_layers",
+    "select_ridge_alpha_grouped",
+    "validate_fold_manifest",
+    "validate_u4_partition_manifest",
 ]

@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
+from pathlib import Path
 from typing import Any
 
 from mineocclude.contracts.identity import (
@@ -15,6 +16,11 @@ from mineocclude.contracts.identity import (
     assert_trajectory_consistency,
     assert_unique,
     validate_identity,
+)
+from mineocclude.analysis.config import DEFAULT_CONFIG_PATH, hash_core_analysis_config
+from mineocclude.analysis.coordinates import (
+    CoordinateContractError,
+    validate_coordinate_frame,
 )
 
 from .closed_form import closed_form_posterior
@@ -33,6 +39,7 @@ from .schema import (
     OracleValidationError,
     is_sha256,
     require_finite_number,
+    validate_oracle_target_document,
     validate_oracle_target_rows,
 )
 
@@ -148,7 +155,7 @@ def _validate_document_envelope(state_document: Mapping[str, Any]) -> list[Any]:
     return rows
 
 
-def build_regime_a_targets(
+def _build_regime_a_targets_with_hash(
     state_rows: Iterable[Mapping[str, Any]],
     *,
     oracle_run_id: str,
@@ -157,7 +164,11 @@ def build_regime_a_targets(
 ) -> list[dict[str, Any]]:
     """Build exact-oracle rows without using hidden truth as an input."""
 
-    rows = [dict(row) for row in state_rows]
+    rows: list[dict[str, Any]] = []
+    for index, row in enumerate(state_rows):
+        if not isinstance(row, Mapping):
+            raise OracleValidationError(f"State row {index} must be a mapping.")
+        rows.append(dict(row))
     if not rows:
         raise OracleValidationError("At least one state row is required.")
     for row in rows:
@@ -263,20 +274,96 @@ def build_regime_a_targets(
     return targets
 
 
+def build_regime_a_targets(
+    state_rows: Iterable[Mapping[str, Any]],
+    *,
+    oracle_run_id: str,
+    oracle_code_sha: str,
+    coordinate_frame: Mapping[str, Any],
+    analysis_config_path: Path | str = DEFAULT_CONFIG_PATH,
+) -> list[dict[str, Any]]:
+    """Build validated rows; claim-bearing joins still require the document."""
+
+    try:
+        validate_coordinate_frame(coordinate_frame)
+        config_hash = hash_core_analysis_config(analysis_config_path)
+    except (CoordinateContractError, ValueError) as error:
+        raise OracleValidationError(
+            f"Target construction metadata is invalid: {error}"
+        ) from error
+    return _build_regime_a_targets_with_hash(
+        state_rows,
+        oracle_run_id=oracle_run_id,
+        oracle_code_sha=oracle_code_sha,
+        oracle_config_hash=config_hash,
+    )
+
+
 def build_regime_a_target_document(
     state_document: Mapping[str, Any],
     *,
     oracle_run_id: str,
     oracle_code_sha: str,
-    oracle_config_hash: str,
+    oracle_config_hash: str | None = None,
+    analysis_config_path: Path | str | None = None,
 ) -> dict[str, Any]:
     """Build targets from a B-owned state table with schema-v1 row identity."""
 
     if not isinstance(state_document, Mapping):
         raise OracleValidationError("State document must be a mapping.")
     rows = _validate_document_envelope(state_document)
+    fixture_metadata = state_document.get("fixture_metadata")
+    is_non_scientific_fixture = (
+        isinstance(fixture_metadata, Mapping)
+        and fixture_metadata.get("synthetic") is True
+        and fixture_metadata.get("scientific_use") == "forbidden"
+    )
+    coordinate_frame: Mapping[str, Any] | None = None
+    if not is_non_scientific_fixture:
+        coordinate_frame = state_document.get("coordinate_frame")
+        try:
+            validate_coordinate_frame(coordinate_frame)
+        except CoordinateContractError as error:
+            raise OracleValidationError(
+                f"Live state document has an invalid coordinate frame: {error}"
+            ) from error
 
-    targets = build_regime_a_targets(
+    if oracle_config_hash is not None and analysis_config_path is not None:
+        raise OracleValidationError(
+            "Supply analysis_config_path or oracle_config_hash, not both."
+        )
+    if oracle_config_hash is None:
+        try:
+            oracle_config_hash = hash_core_analysis_config(
+                analysis_config_path or DEFAULT_CONFIG_PATH
+            )
+        except ValueError as error:
+            raise OracleValidationError(
+                f"Analysis configuration is invalid: {error}"
+            ) from error
+    else:
+        metadata = state_document.get("fixture_metadata")
+        explicitly_non_scientific = (
+            isinstance(metadata, Mapping)
+            and metadata.get("synthetic") is True
+            and metadata.get("scientific_use") == "forbidden"
+            and all(
+                isinstance(row, Mapping)
+                and row.get("synthetic") is True
+                and row.get("scientific_use") == "forbidden"
+                for row in rows
+            )
+        )
+        if not explicitly_non_scientific:
+            raise OracleValidationError(
+                "Claim-bearing target generation must hash the actual analysis "
+                "config file; explicit hashes are restricted to legacy "
+                "non-scientific fixtures."
+            )
+        if not is_sha256(oracle_config_hash):
+            raise OracleValidationError("oracle_config_hash must be SHA-256.")
+
+    targets = _build_regime_a_targets_with_hash(
         rows,
         oracle_run_id=oracle_run_id,
         oracle_code_sha=oracle_code_sha,
@@ -288,10 +375,16 @@ def build_regime_a_target_document(
         "join_key": ["trajectory_id", "model_frame_idx"],
         "rows": targets,
     }
+    if coordinate_frame is not None:
+        document["coordinate_frame"] = dict(coordinate_frame)
     if "fixture_metadata" in state_document:
         document["fixture_metadata"] = dict(state_document["fixture_metadata"])
         if any(row.get("synthetic") is not True for row in targets):
             raise OracleValidationError(
                 "Every row in a synthetic fixture must set synthetic=true."
             )
+    validate_oracle_target_document(
+        document,
+        analysis_config_path=analysis_config_path,
+    )
     return document

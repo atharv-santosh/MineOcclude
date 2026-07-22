@@ -8,9 +8,11 @@ Full details: [`PERSON_B_MVP_ROADMAP.md`](./PERSON_B_MVP_ROADMAP.md)
 
 ## Current blockers
 
-- [x] Receive activation index, layer metadata, and synthetic activation fixture from Person A.
+- [ ] Receive a completed real activation handoff from Person A; the frozen
+  contract and compatibility evidence are already merged.
 - [ ] Receive authoritative state schema, manifest, and pilot logs from Person C.
-- [ ] Receive baseline prediction contract from Person D.
+- [ ] Produce Person D baseline artifacts against B's frozen consumer contract
+  (the same owner now holds B and D).
 - [ ] Receive registry and U4 measurement schemas from Person E.
 
 ## MVP work
@@ -24,6 +26,16 @@ Full details: [`PERSON_B_MVP_ROADMAP.md`](./PERSON_B_MVP_ROADMAP.md)
   - [x] Add variance-growth, `q`-sensitivity, and reveal-reset tests.
 - [x] Create synthetic state logs, expected targets, and an oracle validation plot.
 - [x] Prove each Person A activation layer/site row joins exactly one frame target, with complete-grid, cardinality, and leakage audits.
+- [x] Implement the artifact-independent B analysis foundation.
+  - [x] Bind claim-bearing runs to literal config bytes.
+  - [x] Add signed wall-parallel coordinate requirements.
+  - [x] Add ordered filters, stable rejection codes, and count audits.
+  - [x] Add saved fold/scaler/fit/prediction/result manifests and hashes.
+  - [x] Add grouped inner selection, ridge/MLP OOF fitting, and MLP eligibility.
+  - [x] Add U1-U3 metric functions and known-answer tests.
+  - [x] Add hierarchical bootstrap and whole-trajectory permutation functions.
+  - [x] Add raw-space/time-projected direction and B→A producer plumbing.
+  - [x] Add C/D/E intake validators; producer signoff/artifacts remain pending.
 - [ ] Run the no-wall visible positive-control probe before interpreting hidden-state results.
 - [ ] Run the per-layer analysis.
   - [ ] U1: posterior-mean decoding, grouped permutations, controls, and MLP comparison.

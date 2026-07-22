@@ -11,6 +11,7 @@ from mineocclude.contracts.activation import validate_activation_handoff
 from mineocclude.contracts.identity import FRAME_KEY, IdentityValidationError, get_key
 from mineocclude.oracle.schema import (
     OracleValidationError,
+    validate_oracle_target_document,
     validate_oracle_target_rows,
 )
 
@@ -53,7 +54,7 @@ class JoinedActivationTarget:
         return get_key(self.target_row, FRAME_KEY)
 
 
-def join_activation_targets(
+def _join_activation_targets(
     activation_package: Mapping[str, Any],
     target_rows: Iterable[Mapping[str, Any]],
 ) -> list[JoinedActivationTarget]:
@@ -150,3 +151,42 @@ def join_activation_targets(
             item.activation_index_row["hook_site"],
         ),
     )
+
+
+def join_activation_targets(
+    activation_package: Mapping[str, Any],
+    target_rows: Iterable[Mapping[str, Any]],
+) -> list[JoinedActivationTarget]:
+    """Compatibility join for explicitly non-scientific target rows.
+
+    Claim-bearing joins must use :func:`join_activation_target_document` so the
+    signed coordinate frame cannot be discarded before fitting.
+    """
+
+    materialized = list(target_rows)
+    if any(
+        not isinstance(row, Mapping)
+        or row.get("synthetic") is not True
+        or row.get("scientific_use") != "forbidden"
+        for row in materialized
+    ):
+        raise ActivationTargetJoinError(
+            "Claim-bearing joins require the full oracle target document and "
+            "its signed coordinate frame."
+        )
+    return _join_activation_targets(activation_package, materialized)
+
+
+def join_activation_target_document(
+    activation_package: Mapping[str, Any],
+    target_document: Mapping[str, Any],
+) -> list[JoinedActivationTarget]:
+    """Join a full target document, including its signed coordinate frame."""
+
+    try:
+        validate_oracle_target_document(target_document)
+    except OracleValidationError as error:
+        raise ActivationTargetJoinError(
+            f"Invalid oracle target document: {error}"
+        ) from error
+    return _join_activation_targets(activation_package, target_document["rows"])
