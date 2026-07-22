@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mineocclude.local/schemas/person_c/layouts_v0_1.schema.json",
+  "title": "MineOcclude Person C layouts v0.1",
+  "type": "object",
+  "required": ["schema_version", "person_c_contract_version", "layout_schema_version", "config_version", "common_arena_grammar", "conditions", "layouts"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "person_c_contract_version": {"const": "0.1"},
+    "layout_schema_version": {"const": "0.1"},
+    "config_version": {"const": "person-c-layout-config-v0.1"},
+    "common_arena_grammar": {
+      "type": "object",
+      "required": ["world_type", "superflat_preset", "arena_width_blocks", "arena_depth_blocks", "arena_floor_block", "wall_height_blocks", "wall_block", "lane_relation", "marker_count", "marker_restriction", "coordinate_system", "scalar_axis_unit", "reset_policy"],
+      "properties": {
+        "world_type": {"const": "superflat"},
+        "superflat_preset": {"type": "object"},
+        "arena_width_blocks": {"type": "integer", "const": 40, "x-unit": "blocks"},
+        "arena_depth_blocks": {"type": "integer", "const": 20, "x-unit": "blocks"},
+        "arena_floor_block": {"type": "string", "minLength": 1},
+        "wall_height_blocks": {"type": "integer", "const": 3, "x-unit": "blocks"},
+        "wall_block": {"const": "minecraft:stone"},
+        "lane_relation": {"const": "wall_parallel"},
+        "marker_count": {"type": "integer", "const": 4, "x-unit": "dimensionless count"},
+        "marker_restriction": {"const": "non_magenta_ground_markers"},
+        "coordinate_system": {"const": "minecraft_world_x_y_z"},
+        "scalar_axis_unit": {"const": "blocks"},
+        "reset_policy": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "conditions": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/condition"},
+      "allOf": [
+        {"contains": {"type": "object", "required": ["condition"], "properties": {"condition": {"const": "core"}}}, "minContains": 1, "maxContains": 1},
+        {"contains": {"type": "object", "required": ["condition"], "properties": {"condition": {"const": "no_wall_visible"}}}, "minContains": 1, "maxContains": 1},
+        {"contains": {"type": "object", "required": ["condition"], "properties": {"condition": {"const": "occluder_only_no_sheep"}}}, "minContains": 1, "maxContains": 1}
+      ]
+    },
+    "layouts": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/layout"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "horizontalBounds": {
+      "type": "object",
+      "required": ["min_x", "max_x", "min_z", "max_z"],
+      "properties": {
+        "min_x": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"},
+        "max_x": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"},
+        "min_z": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"},
+        "max_z": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"}
+      },
+      "additionalProperties": false
+    },
+    "arena": {
+      "type": "object",
+      "required": ["min_x", "max_x", "min_z", "max_z", "floor_y"],
+      "properties": {
+        "min_x": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"},
+        "max_x": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"},
+        "min_z": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"},
+        "max_z": {"type": "integer", "minimum": -30000000, "maximum": 30000000, "x-unit": "world blocks"},
+        "floor_y": {"type": "integer", "minimum": 0, "maximum": 254, "x-unit": "world blocks"}
+      },
+      "additionalProperties": false
+    },
+    "wall": {
+      "type": "object",
+      "required": ["axis", "block", "min_x", "max_x", "min_y", "max_y", "min_z", "max_z", "height_blocks"],
+      "properties": {
+        "axis": {"enum": ["x", "z"]},
+        "block": {"const": "minecraft:stone"},
+        "min_x": {"type": "integer", "x-unit": "world blocks"},
+        "max_x": {"type": "integer", "x-unit": "world blocks"},
+        "min_y": {"type": "integer", "minimum": 0, "maximum": 255, "x-unit": "world blocks"},
+        "max_y": {"type": "integer", "minimum": 0, "maximum": 255, "x-unit": "world blocks"},
+        "min_z": {"type": "integer", "x-unit": "world blocks"},
+        "max_z": {"type": "integer", "x-unit": "world blocks"},
+        "height_blocks": {"type": "integer", "const": 3, "x-unit": "blocks"}
+      },
+      "additionalProperties": false
+    },
+    "lane": {
+      "type": "object",
+      "required": ["axis", "fixed_coordinate_blocks", "min_scalar_blocks", "max_scalar_blocks", "y_blocks", "width_blocks"],
+      "properties": {
+        "axis": {"enum": ["x", "z"]},
+        "fixed_coordinate_blocks": {"type": "integer", "x-unit": "world blocks"},
+        "min_scalar_blocks": {"type": "integer", "x-unit": "world blocks"},
+        "max_scalar_blocks": {"type": "integer", "x-unit": "world blocks"},
+        "y_blocks": {"type": "integer", "minimum": 0, "maximum": 255, "x-unit": "world blocks"},
+        "width_blocks": {"type": "integer", "const": 1, "x-unit": "blocks"}
+      },
+      "additionalProperties": false
+    },
+    "region3d": {
+      "type": "object",
+      "required": ["min_x", "max_x", "min_y", "max_y", "min_z", "max_z"],
+      "properties": {
+        "min_x": {"type": "integer", "x-unit": "world blocks"},
+        "max_x": {"type": "integer", "x-unit": "world blocks"},
+        "min_y": {"type": "integer", "minimum": 0, "maximum": 255, "x-unit": "world blocks"},
+        "max_y": {"type": "integer", "minimum": 0, "maximum": 255, "x-unit": "world blocks"},
+        "min_z": {"type": "integer", "x-unit": "world blocks"},
+        "max_z": {"type": "integer", "x-unit": "world blocks"}
+      },
+      "additionalProperties": false
+    },
+    "position": {
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": {"type": "number", "x-unit": "world blocks"},
+        "y": {"type": "number", "x-unit": "world blocks"},
+        "z": {"type": "number", "x-unit": "world blocks"}
+      },
+      "additionalProperties": false
+    },
+    "rotation": {
+      "type": "object",
+      "required": ["yaw", "pitch", "roll"],
+      "properties": {
+        "yaw": {"type": "number", "minimum": -180, "maximum": 180, "x-unit": "degrees"},
+        "pitch": {"type": "number", "minimum": -90, "maximum": 90, "x-unit": "degrees"},
+        "roll": {"type": "number", "const": 0, "x-unit": "degrees"}
+      },
+      "additionalProperties": false
+    },
+    "camera": {
+      "type": "object",
+      "required": ["anchor_world_blocks", "position_blocks", "rotation_degrees"],
+      "properties": {
+        "anchor_world_blocks": {"$ref": "#/$defs/position"},
+        "position_blocks": {"$ref": "#/$defs/position"},
+        "rotation_degrees": {"$ref": "#/$defs/rotation"}
+      },
+      "additionalProperties": false
+    },
+    "canonicalPose": {
+      "type": "object",
+      "required": ["pose_id", "position_blocks", "rotation_degrees", "fov_degrees"],
+      "properties": {
+        "pose_id": {"type": "string", "minLength": 1},
+        "position_blocks": {"$ref": "#/$defs/position"},
+        "rotation_degrees": {"$ref": "#/$defs/rotation"},
+        "fov_degrees": {"type": "number", "minimum": 30, "maximum": 110, "x-unit": "degrees"}
+      },
+      "additionalProperties": false
+    },
+    "marker": {
+      "type": "object",
+      "required": ["marker_id", "block", "color", "world_blocks", "intended_visible", "visibility_evidence"],
+      "properties": {
+        "marker_id": {"type": "string", "minLength": 1},
+        "block": {"type": "string", "minLength": 1},
+        "color": {"type": "string", "minLength": 1, "not": {"const": "magenta"}},
+        "world_blocks": {"$ref": "#/$defs/position"},
+        "intended_visible": {"const": true},
+        "visibility_evidence": {"const": "RUNTIME EVIDENCE REQUIRED LATER"}
+      },
+      "additionalProperties": false
+    },
+    "runtimeEvidence": {
+      "type": "object",
+      "required": ["reference_screenshot", "minecraft_launch_manifest", "coordinate_check", "clean_reconstruction", "second_operator_reconstruction"],
+      "properties": {
+        "reference_screenshot": {"const": "RUNTIME EVIDENCE REQUIRED LATER"},
+        "minecraft_launch_manifest": {"const": "RUNTIME EVIDENCE REQUIRED LATER"},
+        "coordinate_check": {"const": "RUNTIME EVIDENCE REQUIRED LATER"},
+        "clean_reconstruction": {"const": "RUNTIME EVIDENCE REQUIRED LATER"},
+        "second_operator_reconstruction": {"const": "RUNTIME EVIDENCE REQUIRED LATER"}
+      },
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "required": ["entity_type", "color_id", "color_name", "no_ai", "silent", "persistence_required"],
+      "properties": {
+        "entity_type": {"const": "minecraft:sheep"},
+        "color_id": {"type": "integer", "const": 2, "x-unit": "dimensionless Minecraft color ID"},
+        "color_name": {"const": "magenta"},
+        "no_ai": {"const": true},
+        "silent": {"const": true},
+        "persistence_required": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "condition": {
+      "type": "object",
+      "required": ["condition", "identity_source", "wall_count", "wall_present", "target_count", "target"],
+      "properties": {
+        "condition": {"enum": ["core", "no_wall_visible", "occluder_only_no_sheep"]},
+        "identity_source": {"const": "explicit_condition_field"},
+        "wall_count": {"type": "integer", "minimum": 0, "maximum": 1, "x-unit": "dimensionless count"},
+        "wall_present": {"type": "boolean"},
+        "target_count": {"type": "integer", "minimum": 0, "maximum": 1, "x-unit": "dimensionless count"},
+        "target": {"oneOf": [{"$ref": "#/$defs/target"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"condition": {"const": "core"}}, "required": ["condition"]},
+          "then": {"properties": {"wall_count": {"const": 1}, "wall_present": {"const": true}, "target_count": {"const": 1}, "target": {"$ref": "#/$defs/target"}}}
+        },
+        {
+          "if": {"properties": {"condition": {"const": "no_wall_visible"}}, "required": ["condition"]},
+          "then": {"properties": {"wall_count": {"const": 0}, "wall_present": {"const": false}, "target_count": {"const": 1}, "target": {"$ref": "#/$defs/target"}}}
+        },
+        {
+          "if": {"properties": {"condition": {"const": "occluder_only_no_sheep"}}, "required": ["condition"]},
+          "then": {"properties": {"wall_count": {"const": 1}, "wall_present": {"const": true}, "target_count": {"const": 0}, "target": {"type": "null"}}}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "scalarAxis": {
+      "type": "object",
+      "required": ["world_axis", "origin_world_coordinate_blocks", "positive_world_direction", "unit"],
+      "properties": {
+        "world_axis": {"enum": ["x", "z"]},
+        "origin_world_coordinate_blocks": {"type": "integer", "x-unit": "world blocks"},
+        "positive_world_direction": {"enum": ["+x", "+z"]},
+        "unit": {"const": "blocks"}
+      },
+      "additionalProperties": false
+    },
+    "layout": {
+      "type": "object",
+      "required": ["layout_id", "config_version", "arena", "wall", "lane", "sheep_start_region", "shadow", "motion_sign", "scalar_axis", "camera", "canonical_pose", "markers", "reset_area", "safe_area", "runtime_evidence"],
+      "properties": {
+        "layout_id": {"enum": ["layout_01", "layout_02", "layout_03", "layout_04", "layout_05", "layout_06"]},
+        "config_version": {"const": "person-c-layout-config-v0.1"},
+        "arena": {"$ref": "#/$defs/arena"},
+        "wall": {"$ref": "#/$defs/wall"},
+        "lane": {"$ref": "#/$defs/lane"},
+        "sheep_start_region": {"$ref": "#/$defs/region3d"},
+        "shadow": {"$ref": "#/$defs/horizontalBounds"},
+        "motion_sign": {"type": "integer", "enum": [-1, 1], "x-unit": "dimensionless sign"},
+        "scalar_axis": {"$ref": "#/$defs/scalarAxis"},
+        "camera": {"$ref": "#/$defs/camera"},
+        "canonical_pose": {"$ref": "#/$defs/canonicalPose"},
+        "markers": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/marker"}},
+        "reset_area": {"$ref": "#/$defs/horizontalBounds"},
+        "safe_area": {"$ref": "#/$defs/horizontalBounds"},
+        "runtime_evidence": {"$ref": "#/$defs/runtimeEvidence"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
