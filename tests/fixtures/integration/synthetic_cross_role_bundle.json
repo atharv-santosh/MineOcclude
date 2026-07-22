@@ -1,4 +1,15 @@
 {
+  "authenticated_a_b_bridge": {
+    "activation_chunk_source": "activation_chunk",
+    "activation_source": "activation_handoff",
+    "fixture_metadata": {
+      "scientific_use": "forbidden",
+      "synthetic": true
+    },
+    "fold_count": 5,
+    "layout_count": 5,
+    "target_name": "mu_oracle_blocks"
+  },
   "documented_integrity_links": [
     "expected_activation_sites_to_activation_rows",
     "token_map_positions_to_mineworld_layout",
@@ -9,7 +20,8 @@
     "intervention_request_hash_to_file_bytes",
     "logical_input_context_rows_to_rollouts",
     "rollout_measurement_failure_semantics",
-    "orphaned_claim_bearing_row_enumeration"
+    "orphaned_claim_bearing_row_enumeration",
+    "authenticated_a_b_probe_bridge"
   ],
   "expected_activation_sites": [
     {
@@ -77,6 +89,7 @@
   "integration_id": "synthetic_cross_role_pipeline_001",
   "schema_version": "1.0",
   "sources": {
+    "activation_chunk": "../activation/synthetic_activation_chunk.json",
     "activation_handoff": "../activation/accepted_activation_handoff.json",
     "baseline_predictions": "synthetic_baseline_predictions.json",
     "fit_manifest": "synthetic_fit_manifest.json",

@@ -216,5 +216,25 @@ literal core-config hash, and a SHA over the B-owned bridge/split/ridge source
 bytes. They record the frozen alpha grid, inner-fold count, outer-fold seed,
 selected alpha per outer fold, scaler metadata, and exact training/test
 memberships. This is interface evidence only. End-to-end MLP, bridged U2/U3,
-the main multi-role synthetic integration runner, live/runtime evidence, and
-cross-role signoffs remain pending.
+live/runtime evidence, and cross-role signoffs remain pending.
+
+## Step 1.7 authenticated A-to-B runner connection
+
+Repair Chunk 3 makes the authenticated ridge bridge a required part of the
+machine-readable Step 1.7 runner. The integration bundle now loads the literal
+Person A synthetic activation chunk as a named source and authenticates both
+the parsed handoff and chunk document against their exact fixture-byte hashes.
+It deterministically derives the five non-scientific layouts needed by the
+frozen grouped split, builds the B target document, frame table, sealed fold
+manifest, layer/site matrices, OOF ridge predictions, and U1 results through
+the production bridge APIs.
+
+The join report records source/correction lineage, frame and fold evidence,
+matrix hashes, complete OOF prediction/metric rows, sealed prediction and U1
+artifact hashes, and hashes of the scaler-heavy fold-fit records retained by
+the in-memory artifacts.
+`authenticated_a_b_probe_bridge` is a required integrity check: stale source
+bytes, invalid bridge metadata, or any fail-closed bridge rejection fails the
+overall Step 1.7 status. All derived evidence remains `synthetic = true` and
+`scientific_use = forbidden`; this connection does not create runtime or
+scientific evidence and does not add MLP or U2/U3 execution.

@@ -5,15 +5,26 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+from copy import deepcopy
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
 from mineocclude.contracts.activation import validate_activation_handoff
+from mineocclude.contracts.identity import REQUIRED_FIELDS
 from mineocclude.contracts.intervention_request import validate_intervention_request
 from mineocclude.contracts.rollout_registry import validate_rollout_registry_bundle
 from mineocclude.contracts.trajectory import validate_trajectory_package
+from mineocclude.oracle.schema import OracleValidationError
+from mineocclude.oracle.targets import build_regime_a_target_document
+from mineocclude.probes.bridge import (
+    ProbeBridgeError,
+    build_frame_fold_manifest,
+    build_joined_frame_table,
+    build_probe_ready_matrices,
+    run_ridge_oof_probe,
+)
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -30,6 +41,17 @@ FIXTURE_MARKER = {
     "synthetic": True,
     "scientific_use": "forbidden",
 }
+
+AUTHENTICATED_BRIDGE_SPEC = {
+    "activation_source": "activation_handoff",
+    "activation_chunk_source": "activation_chunk",
+    "layout_count": 5,
+    "fold_count": 5,
+    "target_name": "mu_oracle_blocks",
+    "fixture_metadata": FIXTURE_MARKER,
+}
+
+AUTHENTICATED_BRIDGE_VERSION = "step-1.7-authenticated-a-b-bridge-v0.1"
 
 JOIN_FIELD_TYPES = {
     "trajectory_id": "str",
@@ -50,6 +72,20 @@ def sha256_bytes(value: bytes) -> str:
     """Return the SHA-256 digest for one byte payload."""
 
     return hashlib.sha256(value).hexdigest()
+
+
+def deterministic_json_bytes(value: Any) -> bytes:
+    """Serialize synthetic evidence exactly as the fixture writers do."""
+
+    return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
+
+class AuthenticatedBridgeInputError(ValueError):
+    """One stable rejection at the Step 1.7 authenticated-bridge boundary."""
+
+    def __init__(self, code: str, message: str) -> None:
+        self.code = code
+        super().__init__(message)
 
 
 def parse_json_bytes(path: Path) -> tuple[dict[str, Any], str]:
@@ -112,6 +148,431 @@ def load_pipeline_inputs(
         source_hashes[source_name] = source_hash
 
     return bundle, documents, source_hashes
+
+
+def _authenticate_loaded_source(
+    source_name: str,
+    document: Any,
+    source_hashes: Mapping[str, str],
+) -> str:
+    """Bind an in-memory source document back to its exact fixture hash."""
+
+    if not isinstance(document, Mapping):
+        raise AuthenticatedBridgeInputError(
+            "invalid_bridge_source",
+            f"Authenticated bridge source {source_name!r} must be a mapping.",
+        )
+    declared_hash = source_hashes.get(source_name)
+    if not isinstance(declared_hash, str):
+        raise AuthenticatedBridgeInputError(
+            "missing_bridge_source_hash",
+            f"Authenticated bridge source {source_name!r} has no loaded hash.",
+        )
+    actual_hash = sha256_bytes(deterministic_json_bytes(document))
+    if actual_hash != declared_hash:
+        raise AuthenticatedBridgeInputError(
+            "stale_bridge_source_hash",
+            f"Authenticated bridge source {source_name!r} differs from its loaded bytes.",
+        )
+    return actual_hash
+
+
+def build_authenticated_probe_bridge_inputs(
+    bundle: Mapping[str, Any],
+    documents: Mapping[str, Any],
+    source_hashes: Mapping[str, str],
+) -> tuple[
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, bytes],
+    dict[str, Any],
+]:
+    """Derive the five-layout probe fixture from authenticated A evidence."""
+
+    if bundle.get("authenticated_a_b_bridge") != AUTHENTICATED_BRIDGE_SPEC:
+        raise AuthenticatedBridgeInputError(
+            "invalid_bridge_spec",
+            "The bundle's authenticated A+B bridge specification is missing or changed.",
+        )
+
+    activation_source_name = AUTHENTICATED_BRIDGE_SPEC["activation_source"]
+    chunk_source_name = AUTHENTICATED_BRIDGE_SPEC["activation_chunk_source"]
+    source_package = documents.get(activation_source_name)
+    source_chunk = documents.get(chunk_source_name)
+    source_activation_hash = _authenticate_loaded_source(
+        activation_source_name,
+        source_package,
+        source_hashes,
+    )
+    source_chunk_hash = _authenticate_loaded_source(
+        chunk_source_name,
+        source_chunk,
+        source_hashes,
+    )
+
+    activation_validation = validate_activation_handoff(source_package)
+    if not activation_validation.accepted:
+        rejection_codes = sorted(
+            {rejection.code.value for rejection in activation_validation.rejections}
+        )
+        raise AuthenticatedBridgeInputError(
+            "invalid_source_activation_handoff",
+            "The A source activation handoff was rejected: "
+            + ", ".join(rejection_codes),
+        )
+
+    descriptors = source_package.get("chunks")
+    source_chunk_id = source_chunk.get("chunk_id")
+    if not isinstance(descriptors, list) or not isinstance(source_chunk_id, str):
+        raise AuthenticatedBridgeInputError(
+            "invalid_source_activation_chunk",
+            "The A source chunk or its descriptor list is malformed.",
+        )
+    matching_descriptors = [
+        descriptor
+        for descriptor in descriptors
+        if isinstance(descriptor, Mapping)
+        and descriptor.get("chunk_id") == source_chunk_id
+    ]
+    if len(matching_descriptors) != 1:
+        raise AuthenticatedBridgeInputError(
+            "invalid_source_activation_chunk",
+            "The A source chunk must resolve to exactly one descriptor by chunk ID.",
+        )
+    source_descriptor = matching_descriptors[0]
+    if source_descriptor.get("sha256") != source_chunk_hash:
+        raise AuthenticatedBridgeInputError(
+            "stale_source_activation_chunk",
+            "The literal A chunk hash differs from its handoff descriptor.",
+        )
+
+    source_index_rows = source_package.get("index_rows")
+    if not isinstance(source_index_rows, list) or not source_index_rows:
+        raise AuthenticatedBridgeInputError(
+            "invalid_source_activation_handoff",
+            "The A source activation handoff has no index rows.",
+        )
+    source_frame_rows: dict[int, Mapping[str, Any]] = {}
+    for row in source_index_rows:
+        if not isinstance(row, Mapping):
+            raise AuthenticatedBridgeInputError(
+                "invalid_source_activation_handoff",
+                "Every A source activation index row must be a mapping.",
+            )
+        model_frame_idx = row.get("model_frame_idx")
+        if not isinstance(model_frame_idx, int) or isinstance(model_frame_idx, bool):
+            raise AuthenticatedBridgeInputError(
+                "invalid_source_activation_handoff",
+                "Every A source activation row needs an integer model frame index.",
+            )
+        source_frame_rows.setdefault(model_frame_idx, row)
+
+    layout_count = AUTHENTICATED_BRIDGE_SPEC["layout_count"]
+    lineage_body = {
+        "bridge_version": AUTHENTICATED_BRIDGE_VERSION,
+        "source_activation_sha256": source_activation_hash,
+        "source_chunk_sha256": source_chunk_hash,
+        "layout_count": layout_count,
+        "fold_count": AUTHENTICATED_BRIDGE_SPEC["fold_count"],
+        "target_name": AUTHENTICATED_BRIDGE_SPEC["target_name"],
+        "fixture_metadata": FIXTURE_MARKER,
+    }
+    lineage_hash = sha256_bytes(deterministic_json_bytes(lineage_body))
+    accepted_manifest_hash = sha256_bytes(
+        deterministic_json_bytes(
+            {
+                "artifact_type": "synthetic_probe_bridge_accepted_manifest",
+                "lineage_hash": lineage_hash,
+            }
+        )
+    )
+    identity_suffix = lineage_hash[:12]
+
+    package = deepcopy(source_package)
+    package["handoff_id"] = f"synthetic_probe_bridge_handoff_{identity_suffix}"
+    package["run_id"] = f"synthetic_probe_bridge_activation_run_{identity_suffix}"
+    package["accepted_manifest_hash"] = accepted_manifest_hash
+    package["fixture_metadata"] = deepcopy(FIXTURE_MARKER)
+    package["source_fixture_lineage"] = {
+        **lineage_body,
+        "lineage_hash": lineage_hash,
+        "source_handoff_id": source_package.get("handoff_id"),
+        "source_run_id": source_package.get("run_id"),
+    }
+
+    derived_descriptors: list[dict[str, Any]] = []
+    derived_index_rows: list[dict[str, Any]] = []
+    chunk_payloads: dict[str, bytes] = {}
+    state_rows: list[dict[str, Any]] = []
+
+    for layout_index in range(layout_count):
+        layout_id = f"synthetic_probe_layout_{layout_index:02d}"
+        trajectory_id = f"synthetic_probe_trajectory_{layout_index:02d}"
+        episode_id = f"synthetic_probe_episode_{layout_index:02d}"
+        chunk_id = f"synthetic_probe_chunk_{identity_suffix}_{layout_index:02d}"
+
+        chunk = deepcopy(source_chunk)
+        chunk["chunk_id"] = chunk_id
+        chunk["fixture_metadata"] = deepcopy(FIXTURE_MARKER)
+        payload = deterministic_json_bytes(chunk)
+        chunk_payloads[chunk_id] = payload
+
+        descriptor = deepcopy(dict(source_descriptor))
+        descriptor.update(
+            {
+                "chunk_id": chunk_id,
+                "path": f"operational_locator_only_{layout_index:02d}.json",
+                "sha256": sha256_bytes(payload),
+            }
+        )
+        derived_descriptors.append(descriptor)
+
+        for source_row in source_index_rows:
+            row = deepcopy(dict(source_row))
+            row.update(
+                {
+                    "episode_id": episode_id,
+                    "trajectory_id": trajectory_id,
+                    "layout_id": layout_id,
+                    "run_id": package["run_id"],
+                    "accepted_manifest_hash": accepted_manifest_hash,
+                    "activation_chunk_id": chunk_id,
+                }
+            )
+            derived_index_rows.append(row)
+
+        visible_anchor = 10.0 + (2.0 * layout_index)
+        for model_frame_idx, source_row in sorted(source_frame_rows.items()):
+            identity = dict(source_row)
+            identity.update(
+                {
+                    "episode_id": episode_id,
+                    "trajectory_id": trajectory_id,
+                    "layout_id": layout_id,
+                    "run_id": f"synthetic_probe_state_run_{identity_suffix}",
+                    "accepted_manifest_hash": accepted_manifest_hash,
+                }
+            )
+            state = {field: identity[field] for field in REQUIRED_FIELDS}
+            visible = source_row.get("visibility") == "visible"
+            state.update(
+                {
+                    "accepted_manifest_hash": accepted_manifest_hash,
+                    "observed_position_blocks": visible_anchor if visible else None,
+                    "x_true_blocks": (
+                        visible_anchor
+                        if visible
+                        else visible_anchor + (0.04 * model_frame_idx)
+                    ),
+                    "synthetic": True,
+                    "scientific_use": "forbidden",
+                }
+            )
+            state_rows.append(state)
+
+    rows_per_layer = Counter(
+        str(row["layer_idx"])
+        for row in source_index_rows
+        if isinstance(row, Mapping) and isinstance(row.get("layer_idx"), int)
+    )
+    derived_rows_by_layer = {
+        layer: count * layout_count
+        for layer, count in sorted(rows_per_layer.items())
+    }
+    activation_row_count = len(source_index_rows) * layout_count
+    package["chunks"] = derived_descriptors
+    package["index_rows"] = derived_index_rows
+    package["cardinality_report"] = {
+        "accepted_manifest_rows": len(source_frame_rows) * layout_count,
+        "expected_activation_rows": activation_row_count,
+        "actual_activation_rows": activation_row_count,
+        "expected_rows_by_layer": derived_rows_by_layer,
+        "actual_rows_by_layer": deepcopy(derived_rows_by_layer),
+    }
+
+    derived_validation = validate_activation_handoff(package)
+    if not derived_validation.accepted:
+        rejection_codes = sorted(
+            {rejection.code.value for rejection in derived_validation.rejections}
+        )
+        raise AuthenticatedBridgeInputError(
+            "invalid_derived_activation_handoff",
+            "The derived synthetic activation handoff was rejected: "
+            + ", ".join(rejection_codes),
+        )
+
+    state_document = {
+        "schema_version": "1.0",
+        "join_key": ["trajectory_id", "model_frame_idx"],
+        "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "rows": state_rows,
+    }
+    target_code_sha = hashlib.sha1(
+        (ROOT / "src" / "mineocclude" / "oracle" / "targets.py").read_bytes()
+    ).hexdigest()
+    target_document = build_regime_a_target_document(
+        state_document,
+        oracle_run_id=f"synthetic_probe_target_run_{identity_suffix}",
+        oracle_code_sha=target_code_sha,
+    )
+    lineage = {
+        **lineage_body,
+        "lineage_hash": lineage_hash,
+        "accepted_manifest_hash": accepted_manifest_hash,
+        "source_handoff_id": source_package.get("handoff_id"),
+        "source_run_id": source_package.get("run_id"),
+        "derived_handoff_id": package["handoff_id"],
+        "derived_run_id": package["run_id"],
+        "source_chunk_id": source_chunk_id,
+        "derived_chunk_hashes": {
+            descriptor["chunk_id"]: descriptor["sha256"]
+            for descriptor in derived_descriptors
+        },
+    }
+    return package, target_document, chunk_payloads, lineage
+
+
+def compact_sealed_artifact(artifact: Mapping[str, Any]) -> dict[str, Any]:
+    """Keep checked artifact evidence compact without weakening its seal."""
+
+    compact = {
+        key: deepcopy(value)
+        for key, value in artifact.items()
+        if key != "fold_fit_records"
+    }
+    fold_fit_records = artifact.get("fold_fit_records")
+    if isinstance(fold_fit_records, list):
+        compact["fold_fit_records_count"] = len(fold_fit_records)
+        compact["fold_fit_records_sha256"] = sha256_bytes(
+            deterministic_json_bytes(fold_fit_records)
+        )
+    return compact
+
+
+def run_authenticated_a_b_probe_bridge(
+    bundle: Mapping[str, Any],
+    documents: Mapping[str, Any],
+    source_hashes: Mapping[str, str],
+) -> dict[str, Any]:
+    """Run and serialize the authenticated A-to-B OOF ridge proof."""
+
+    try:
+        package, target_document, chunk_payloads, lineage = (
+            build_authenticated_probe_bridge_inputs(
+                bundle,
+                documents,
+                source_hashes,
+            )
+        )
+        frame_table = build_joined_frame_table(package, target_document)
+        fold_manifest = build_frame_fold_manifest(
+            frame_table,
+            artifact_id="synthetic_step_1_7_frame_folds_001",
+            n_splits=AUTHENTICATED_BRIDGE_SPEC["fold_count"],
+        )
+        matrices = build_probe_ready_matrices(
+            package,
+            target_document,
+            frame_table,
+            fold_manifest,
+            chunk_payloads,
+            target_name=AUTHENTICATED_BRIDGE_SPEC["target_name"],
+        )
+        probe_runs = []
+        for matrix in matrices:
+            artifact_prefix = (
+                "synthetic_step_1_7_ridge_"
+                f"layer_{matrix.layer_idx}_{matrix.hook_site}"
+            )
+            execution = run_ridge_oof_probe(
+                matrix,
+                artifact_id_prefix=artifact_prefix,
+            )
+            probe_runs.append(
+                {
+                    "layer_idx": matrix.layer_idx,
+                    "hook_site": matrix.hook_site,
+                    "target_name": matrix.target_name,
+                    "matrix_hash": matrix.matrix_hash,
+                    "row_count": len(matrix.metadata_rows),
+                    "feature_count": len(matrix.features[0]),
+                    "folds": sorted(set(matrix.outer_folds)),
+                    "activation_chunk_hashes": [
+                        {"chunk_id": chunk_id, "sha256": chunk_hash}
+                        for chunk_id, chunk_hash in matrix.activation_chunk_hashes
+                    ],
+                    "prediction_artifact": compact_sealed_artifact(
+                        execution.prediction_artifact
+                    ),
+                    "u1_result_artifact": compact_sealed_artifact(
+                        execution.u1_result_artifact
+                    ),
+                    "synthetic": True,
+                    "scientific_use": "forbidden",
+                }
+            )
+    except (AuthenticatedBridgeInputError, ProbeBridgeError, OracleValidationError) as error:
+        code = getattr(error, "code", "invalid_authenticated_bridge_input")
+        if hasattr(code, "value"):
+            code = code.value
+        return {
+            "bridge_version": AUTHENTICATED_BRIDGE_VERSION,
+            "status": "failed",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+            "rejections": [{"code": str(code), "message": str(error)}],
+        }
+    except (KeyError, IndexError, TypeError, ValueError, OSError) as error:
+        return {
+            "bridge_version": AUTHENTICATED_BRIDGE_VERSION,
+            "status": "failed",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+            "rejections": [
+                {
+                    "code": "invalid_authenticated_bridge_input",
+                    "message": str(error),
+                }
+            ],
+        }
+
+    return {
+        "bridge_version": AUTHENTICATED_BRIDGE_VERSION,
+        "status": "passed",
+        "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "rejections": [],
+        "lineage": lineage,
+        "frame_table": frame_table,
+        "fold_manifest": fold_manifest,
+        "probe_runs": probe_runs,
+        "summary": {
+            "frame_rows": len(frame_table["rows"]),
+            "fold_count": fold_manifest["n_splits"],
+            "matrix_count": len(matrices),
+            "prediction_rows": sum(
+                len(run["prediction_artifact"]["rows"])
+                for run in probe_runs
+            ),
+            "sealed_prediction_artifacts": len(probe_runs),
+            "sealed_u1_result_artifacts": len(probe_runs),
+        },
+    }
+
+
+def check_authenticated_a_b_probe_bridge(
+    bridge_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Turn the authenticated probe execution into a required report check."""
+
+    passed = bridge_report.get("status") == "passed"
+    summary = bridge_report.get("summary")
+    return integrity_check(
+        "authenticated_a_b_probe_bridge",
+        passed,
+        {
+            "bridge_version": bridge_report.get("bridge_version"),
+            "rejections": bridge_report.get("rejections", []),
+            "summary": summary if isinstance(summary, Mapping) else {},
+        },
+    )
 
 
 def key_value_is_valid(field: str, value: Any) -> bool:
@@ -342,6 +803,13 @@ def check_fixture_markers(
     if bundle.get("synthetic_marker_scope") != "document_and_nested_records":
         mismatches.append("bundle.synthetic_marker_scope")
 
+    bridge_spec = bundle.get("authenticated_a_b_bridge")
+    if (
+        not isinstance(bridge_spec, Mapping)
+        or bridge_spec.get("fixture_metadata") != FIXTURE_MARKER
+    ):
+        mismatches.append("bundle.authenticated_a_b_bridge.fixture_metadata")
+
     for name in generated_names:
         document = documents.get(name)
 
@@ -399,6 +867,7 @@ def expected_integrity_links() -> list[str]:
         "logical_input_context_rows_to_rollouts",
         "rollout_measurement_failure_semantics",
         "orphaned_claim_bearing_row_enumeration",
+        "authenticated_a_b_probe_bridge",
     ]
 
 
@@ -1124,6 +1593,11 @@ def run_synthetic_pipeline_from_documents(
     artifact_rows = registry["artifacts"]
 
     expected_activation_sites, activation_site_errors = read_expected_activation_sites(bundle)
+    authenticated_bridge_report = run_authenticated_a_b_probe_bridge(
+        bundle,
+        documents,
+        source_hashes,
+    )
 
     joins = [
         join_report(
@@ -1278,6 +1752,7 @@ def run_synthetic_pipeline_from_documents(
         check_intervention_rollout_alignment(request, rollout_manifest),
         check_context_resolution(documents["input_contexts"], rollout_manifest),
         check_measurement_semantics(rollout_manifest, documents["measurements"]),
+        check_authenticated_a_b_probe_bridge(authenticated_bridge_report),
     ]
 
     orphaned_rows = collect_orphaned_claim_bearing_rows(documents)
@@ -1297,6 +1772,7 @@ def run_synthetic_pipeline_from_documents(
         "contract_validations": contract_validations,
         "joins": joins,
         "integrity_checks": integrity_checks,
+        "authenticated_a_b_probe_bridge": authenticated_bridge_report,
         "orphaned_claim_bearing_rows": orphaned_rows,
         "summary": {
             "contracts_passed": sum(

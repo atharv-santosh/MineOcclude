@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import unittest
 from copy import deepcopy
 
 from mineocclude.integration.synthetic_pipeline import (
+    DEFAULT_REPORT_PATH,
     join_report,
     load_pipeline_inputs,
     run_synthetic_pipeline,
@@ -83,6 +85,136 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
         """The complete Step 1.7 integration proof must pass."""
 
         self.assertEqual(self.report["overall_status"], "passed")
+
+    def test_authenticated_a_b_probe_bridge_is_part_of_step_1_7(self):
+        """The report must execute A handoff through B's sealed OOF ridge path."""
+
+        bridge = self.report["authenticated_a_b_probe_bridge"]
+
+        self.assertEqual(bridge["status"], "passed")
+        self.assertEqual(bridge["fixture_metadata"], {
+            "synthetic": True,
+            "scientific_use": "forbidden",
+        })
+        self.assertEqual(bridge["summary"], {
+            "frame_rows": 15,
+            "fold_count": 5,
+            "matrix_count": 2,
+            "prediction_rows": 30,
+            "sealed_prediction_artifacts": 2,
+            "sealed_u1_result_artifacts": 2,
+        })
+        self.assertEqual(
+            bridge["lineage"]["source_handoff_id"],
+            self.documents["activation_handoff"]["handoff_id"],
+        )
+        self.assertEqual(
+            bridge["lineage"]["source_activation_sha256"],
+            self.source_hashes["activation_handoff"],
+        )
+        self.assertEqual(
+            bridge["lineage"]["source_chunk_sha256"],
+            self.source_hashes["activation_chunk"],
+        )
+        self.assertEqual(len(bridge["lineage"]["derived_chunk_hashes"]), 5)
+
+    def test_authenticated_bridge_outputs_are_sealed_and_non_scientific(self):
+        """Every bridge output must retain identity, hashes, and use restrictions."""
+
+        bridge = self.report["authenticated_a_b_probe_bridge"]
+        self.assertTrue(bridge["frame_table"]["synthetic"])
+        self.assertEqual(bridge["frame_table"]["scientific_use"], "forbidden")
+        self.assertTrue(bridge["fold_manifest"]["synthetic"])
+        self.assertEqual(bridge["fold_manifest"]["scientific_use"], "forbidden")
+
+        expected_sites = {(5, "residual_stream"), (12, "residual_stream")}
+        actual_sites = {
+            (run["layer_idx"], run["hook_site"])
+            for run in bridge["probe_runs"]
+        }
+        self.assertEqual(actual_sites, expected_sites)
+
+        for run in bridge["probe_runs"]:
+            with self.subTest(layer=run["layer_idx"], site=run["hook_site"]):
+                self.assertEqual(run["row_count"], 15)
+                self.assertEqual(run["feature_count"], 2048)
+                self.assertEqual(run["folds"], [0, 1, 2, 3, 4])
+                self.assertTrue(run["synthetic"])
+                self.assertEqual(run["scientific_use"], "forbidden")
+                for artifact_name in ("prediction_artifact", "u1_result_artifact"):
+                    artifact = run[artifact_name]
+                    self.assertTrue(artifact["synthetic"])
+                    self.assertEqual(artifact["scientific_use"], "forbidden")
+                    self.assertEqual(artifact["matrix_hash"], run["matrix_hash"])
+                    self.assertEqual(len(artifact["artifact_hash"]), 64)
+                    self.assertEqual(artifact["fold_fit_records_count"], 5)
+                    self.assertEqual(len(artifact["fold_fit_records_sha256"]), 64)
+                    self.assertNotIn("fold_fit_records", artifact)
+
+                prediction_rows = run["prediction_artifact"]["rows"]
+                self.assertEqual(len(prediction_rows), 15)
+                for row in prediction_rows:
+                    self.assertEqual(row["layer_idx"], run["layer_idx"])
+                    self.assertEqual(row["hook_site"], run["hook_site"])
+                    self.assertIn("trajectory_id", row)
+                    self.assertIn("model_frame_idx", row)
+
+    def test_stale_a_activation_chunk_bytes_fail_the_step_1_7_gate(self):
+        """Mutated vectors cannot pass under the checked A chunk hash."""
+
+        def mutate(_bundle, documents, _hashes):
+            documents["activation_chunk"]["rows"][0]["vector"][0] += 1.0
+
+        report = self.mutated_report(mutate)
+        bridge = report["authenticated_a_b_probe_bridge"]
+
+        self.assertEqual(report["overall_status"], "failed")
+        self.assertEqual(bridge["status"], "failed")
+        self.assertEqual(
+            bridge["rejections"][0]["code"],
+            "stale_bridge_source_hash",
+        )
+        self.assertIn("authenticated_a_b_probe_bridge", failed_check_names(report))
+
+    def test_mutated_a_handoff_cannot_reuse_its_loaded_source_hash(self):
+        """A valid-looking handoff edit must receive new authenticated lineage."""
+
+        def mutate(_bundle, documents, _hashes):
+            documents["activation_handoff"]["handoff_id"] = (
+                "valid_looking_but_unauthenticated_handoff"
+            )
+
+        report = self.mutated_report(mutate)
+        bridge = report["authenticated_a_b_probe_bridge"]
+
+        self.assertEqual(report["overall_status"], "failed")
+        self.assertEqual(bridge["status"], "failed")
+        self.assertEqual(
+            bridge["rejections"][0]["code"],
+            "stale_bridge_source_hash",
+        )
+        self.assertIn("authenticated_a_b_probe_bridge", failed_check_names(report))
+
+    def test_pipeline_does_not_mutate_authenticated_bridge_inputs(self):
+        """Bridge derivation and fitting must leave all submitted evidence unchanged."""
+
+        bundle = deepcopy(self.bundle)
+        documents = deepcopy(self.documents)
+        source_hashes = deepcopy(self.source_hashes)
+        before_bundle = deepcopy(bundle)
+        before_documents = deepcopy(documents)
+        before_hashes = deepcopy(source_hashes)
+
+        report = run_synthetic_pipeline_from_documents(
+            bundle,
+            documents,
+            source_hashes,
+        )
+
+        self.assertEqual(report["overall_status"], "passed")
+        self.assertEqual(bundle, before_bundle)
+        self.assertEqual(documents, before_documents)
+        self.assertEqual(source_hashes, before_hashes)
 
     def test_oracle_targets_follow_corrected_activation_timebase_and_lineage(self):
         """Integration targets must resolve to the corrected A handoff."""
@@ -425,6 +557,13 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
         second_report = run_synthetic_pipeline()
 
         self.assertEqual(self.report, second_report)
+
+    def test_checked_machine_readable_report_matches_fresh_execution(self):
+        """The saved Step 1.7 evidence must not lag behind the actual runner."""
+
+        checked_report = json.loads(DEFAULT_REPORT_PATH.read_text(encoding="utf-8"))
+
+        self.assertEqual(checked_report, self.report)
 
 
 if __name__ == "__main__":
