@@ -1,0 +1,389 @@
+{
+  "artifact_nodes": [
+    {
+      "artifact_id": "artifact_activation",
+      "artifact_schema_version": "synthetic-activation-v0.1",
+      "artifact_type": "activation",
+      "creator_run_id": "run_activation",
+      "direct_input_artifact_ids": [
+        "artifact_model_input"
+      ],
+      "schema_version": "1.0",
+      "sha256": "a61c8f29877a0591f1dc6a63c9e5217a19432d490e5195c4078e225ed26acd24",
+      "size_bytes": 24,
+      "status": "accepted",
+      "status_authority": "person_a",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-phase1/activation"
+    },
+    {
+      "artifact_id": "artifact_figure_input",
+      "artifact_schema_version": "person-e-figure-input-v0.2",
+      "artifact_type": "figure_input",
+      "creator_run_id": "run_figure_input",
+      "direct_input_artifact_ids": [
+        "artifact_metric"
+      ],
+      "schema_version": "1.0",
+      "sha256": "18bdeb5ee0cf3678c676943026f59d6999fde5ba46a660cfe0d9676b8596436e",
+      "size_bytes": 1656,
+      "status": "accepted",
+      "status_authority": "person_e",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-phase1/figure-input"
+    },
+    {
+      "artifact_id": "artifact_metric",
+      "artifact_schema_version": "synthetic-metric-table-v0.1",
+      "artifact_type": "metric_table",
+      "creator_run_id": "run_metric",
+      "direct_input_artifact_ids": [
+        "artifact_prediction"
+      ],
+      "schema_version": "1.0",
+      "sha256": "26b2a2147573596334e92a7fae79badd4854d66a7fa1ccf3e82ddb076b8234d7",
+      "size_bytes": 26,
+      "status": "accepted",
+      "status_authority": "person_b",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-phase1/metric-table"
+    },
+    {
+      "artifact_id": "artifact_model_input",
+      "artifact_schema_version": "synthetic-model-input-v0.1",
+      "artifact_type": "model_input",
+      "creator_run_id": "run_model_input",
+      "direct_input_artifact_ids": [
+        "artifact_raw_trajectory"
+      ],
+      "schema_version": "1.0",
+      "sha256": "e2ec03a15b12afbf816b0bf983ea34ca5fb7a1eca43ea873fcd30f9fee447cf8",
+      "size_bytes": 25,
+      "status": "accepted",
+      "status_authority": "person_a",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-phase1/model-input"
+    },
+    {
+      "artifact_id": "artifact_prediction",
+      "artifact_schema_version": "synthetic-prediction-v0.1",
+      "artifact_type": "prediction",
+      "creator_run_id": "run_probe",
+      "direct_input_artifact_ids": [
+        "artifact_activation"
+      ],
+      "schema_version": "1.0",
+      "sha256": "0aa37b70b57a14017343c87780ce303354028f9734e35d6ca0910b550637f8f4",
+      "size_bytes": 24,
+      "status": "accepted",
+      "status_authority": "person_b",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-phase1/prediction"
+    },
+    {
+      "artifact_id": "artifact_raw_trajectory",
+      "artifact_schema_version": "synthetic-raw-trajectory-v0.1",
+      "artifact_type": "raw_trajectory",
+      "creator_run_id": "run_capture",
+      "direct_input_artifact_ids": [],
+      "schema_version": "1.0",
+      "sha256": "fe9e054ebae0ea51013634a566ff027467782b935e6c9357d3270776f3d7450b",
+      "size_bytes": 28,
+      "status": "accepted",
+      "status_authority": "person_c",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-phase1/raw-trajectory"
+    }
+  ],
+  "direct_input_edges": [
+    {
+      "input_artifact_id": "artifact_activation",
+      "output_artifact_id": "artifact_prediction"
+    },
+    {
+      "input_artifact_id": "artifact_metric",
+      "output_artifact_id": "artifact_figure_input"
+    },
+    {
+      "input_artifact_id": "artifact_model_input",
+      "output_artifact_id": "artifact_activation"
+    },
+    {
+      "input_artifact_id": "artifact_prediction",
+      "output_artifact_id": "artifact_metric"
+    },
+    {
+      "input_artifact_id": "artifact_raw_trajectory",
+      "output_artifact_id": "artifact_model_input"
+    }
+  ],
+  "lineage_trace_schema_version": "person-e-phase1-lineage-trace-v1.0",
+  "phase1_chain_artifact_ids": {
+    "activation_or_oracle": "artifact_activation",
+    "figure_input": "artifact_figure_input",
+    "metric": "artifact_metric",
+    "model_input": "artifact_model_input",
+    "prediction_or_baseline": "artifact_prediction",
+    "raw_trajectory": "artifact_raw_trajectory"
+  },
+  "provenance": {
+    "checkpoint_hashes": [
+      "1111111111111111111111111111111111111111111111111111111111111111",
+      "1212121212121212121212121212121212121212121212121212121212121212",
+      "1717171717171717171717171717171717171717171717171717171717171717",
+      "3333333333333333333333333333333333333333333333333333333333333333",
+      "6666666666666666666666666666666666666666666666666666666666666666",
+      "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    ],
+    "code_shas": [
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "cccccccccccccccccccccccccccccccccccccccc",
+      "dddddddddddddddddddddddddddddddddddddddd",
+      "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "ffffffffffffffffffffffffffffffffffffffff"
+    ],
+    "config_snapshot_hashes": [
+      "1313131313131313131313131313131313131313131313131313131313131313",
+      "1818181818181818181818181818181818181818181818181818181818181818",
+      "2222222222222222222222222222222222222222222222222222222222222222",
+      "7777777777777777777777777777777777777777777777777777777777777777",
+      "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "da05329029cb7119f0c48cfed12657d1a2e4ae6b7d0cb6dcd3b8353292b95a56"
+    ],
+    "environment_hashes": [
+      "1515151515151515151515151515151515151515151515151515151515151515",
+      "2020202020202020202020202020202020202020202020202020202020202020",
+      "4444444444444444444444444444444444444444444444444444444444444444",
+      "6666666666666666666666666666666666666666666666666666666666666666",
+      "9999999999999999999999999999999999999999999999999999999999999999",
+      "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    ],
+    "preprocess_hashes": [
+      "1616161616161616161616161616161616161616161616161616161616161616",
+      "2121212121212121212121212121212121212121212121212121212121212121",
+      "5555555555555555555555555555555555555555555555555555555555555555",
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    ],
+    "seeds_by_run_id": {
+      "run_activation": {
+        "activation": 303
+      },
+      "run_capture": {
+        "capture": 101
+      },
+      "run_figure_input": {
+        "figure_input": 606
+      },
+      "run_metric": {
+        "bootstrap": 505
+      },
+      "run_model_input": {
+        "model": 202
+      },
+      "run_probe": {
+        "probe": 404
+      }
+    },
+    "source_data_identity_hash": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "registry_id": "synthetic_person_e_phase1_trace_registry",
+  "run_nodes": [
+    {
+      "checkpoint_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "code_sha": "cccccccccccccccccccccccccccccccccccccccc",
+      "command": [
+        "synthetic-activation"
+      ],
+      "config_snapshot_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-01-01T00:00:05Z",
+      "environment_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_model_input"
+      ],
+      "output_artifact_ids": [
+        "artifact_activation"
+      ],
+      "owner": "person_a",
+      "parent_run_id": "run_model_input",
+      "preprocess_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "run_id": "run_activation",
+      "schema_version": "1.0",
+      "seeds": {
+        "activation": 303
+      },
+      "started_at": "2026-01-01T00:00:04Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+      "code_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "command": [
+        "synthetic-capture"
+      ],
+      "config_snapshot_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+      "data_identity_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+      "ended_at": "2026-01-01T00:00:01Z",
+      "environment_hash": "4444444444444444444444444444444444444444444444444444444444444444",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [],
+      "output_artifact_ids": [
+        "artifact_raw_trajectory"
+      ],
+      "owner": "person_c",
+      "parent_run_id": null,
+      "preprocess_hash": "5555555555555555555555555555555555555555555555555555555555555555",
+      "run_id": "run_capture",
+      "schema_version": "1.0",
+      "seeds": {
+        "capture": 101
+      },
+      "started_at": "2026-01-01T00:00:00Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+      "code_sha": "ffffffffffffffffffffffffffffffffffffffff",
+      "command": [
+        "synthetic-figure-input"
+      ],
+      "config_snapshot_hash": "da05329029cb7119f0c48cfed12657d1a2e4ae6b7d0cb6dcd3b8353292b95a56",
+      "data_identity_hash": "4444444444444444444444444444444444444444444444444444444444444444",
+      "ended_at": "2026-01-01T00:00:11Z",
+      "environment_hash": "6666666666666666666666666666666666666666666666666666666666666666",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_metric"
+      ],
+      "output_artifact_ids": [
+        "artifact_figure_input"
+      ],
+      "owner": "person_e",
+      "parent_run_id": "run_metric",
+      "preprocess_hash": "5555555555555555555555555555555555555555555555555555555555555555",
+      "run_id": "run_figure_input",
+      "schema_version": "1.0",
+      "seeds": {
+        "figure_input": 606
+      },
+      "started_at": "2026-01-01T00:00:10Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "1717171717171717171717171717171717171717171717171717171717171717",
+      "code_sha": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "command": [
+        "synthetic-metric"
+      ],
+      "config_snapshot_hash": "1818181818181818181818181818181818181818181818181818181818181818",
+      "data_identity_hash": "1919191919191919191919191919191919191919191919191919191919191919",
+      "ended_at": "2026-01-01T00:00:09Z",
+      "environment_hash": "2020202020202020202020202020202020202020202020202020202020202020",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_prediction"
+      ],
+      "output_artifact_ids": [
+        "artifact_metric"
+      ],
+      "owner": "person_b",
+      "parent_run_id": "run_probe",
+      "preprocess_hash": "2121212121212121212121212121212121212121212121212121212121212121",
+      "run_id": "run_metric",
+      "schema_version": "1.0",
+      "seeds": {
+        "bootstrap": 505
+      },
+      "started_at": "2026-01-01T00:00:08Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "6666666666666666666666666666666666666666666666666666666666666666",
+      "code_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "command": [
+        "synthetic-model-input"
+      ],
+      "config_snapshot_hash": "7777777777777777777777777777777777777777777777777777777777777777",
+      "data_identity_hash": "8888888888888888888888888888888888888888888888888888888888888888",
+      "ended_at": "2026-01-01T00:00:03Z",
+      "environment_hash": "9999999999999999999999999999999999999999999999999999999999999999",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_raw_trajectory"
+      ],
+      "output_artifact_ids": [
+        "artifact_model_input"
+      ],
+      "owner": "person_a",
+      "parent_run_id": "run_capture",
+      "preprocess_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "run_id": "run_model_input",
+      "schema_version": "1.0",
+      "seeds": {
+        "model": 202
+      },
+      "started_at": "2026-01-01T00:00:02Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "1212121212121212121212121212121212121212121212121212121212121212",
+      "code_sha": "dddddddddddddddddddddddddddddddddddddddd",
+      "command": [
+        "synthetic-probe"
+      ],
+      "config_snapshot_hash": "1313131313131313131313131313131313131313131313131313131313131313",
+      "data_identity_hash": "1414141414141414141414141414141414141414141414141414141414141414",
+      "ended_at": "2026-01-01T00:00:07Z",
+      "environment_hash": "1515151515151515151515151515151515151515151515151515151515151515",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_activation"
+      ],
+      "output_artifact_ids": [
+        "artifact_prediction"
+      ],
+      "owner": "person_b",
+      "parent_run_id": "run_activation",
+      "preprocess_hash": "1616161616161616161616161616161616161616161616161616161616161616",
+      "run_id": "run_probe",
+      "schema_version": "1.0",
+      "seeds": {
+        "probe": 404
+      },
+      "started_at": "2026-01-01T00:00:06Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    }
+  ],
+  "schema_version": "1.0",
+  "scientific_use": "forbidden",
+  "subject_artifact_id": "artifact_figure_input",
+  "synthetic": true,
+  "trace_hash": "eb475f7a93ac5f91b7daf2e3de1194a26921d3d9b5e0979e4313a9c3ff8f506a"
+}
