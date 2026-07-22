@@ -6,14 +6,90 @@ Own MineOcclude's oracle, probes, statistical analysis, U1-U4 interpretation, an
 
 Full details: [`PERSON_B_MVP_ROADMAP.md`](./PERSON_B_MVP_ROADMAP.md)
 
+## Phase 0 evidence and current checkpoint
+
+This file is the Person B command-center authority. The current integrated
+checkpoint is `integration/mvp` at
+`0d5f979e14e5c5f41f59233f1222db822d30cdd6`. Git and current files establish
+the repository state below. They do not prove a person's historical branch
+inspection, private access, hardware capacity, or reading history; those items
+are explicitly `UNVERIFIED` rather than reconstructed as facts.
+
+### Responsibility inventory
+
+| Area | Authoritative location | Current state |
+|---|---|---|
+| Oracle and target production | `src/mineocclude/oracle/` | AVAILABLE; synthetic Phase 1 evidence only |
+| Filtering/legal row selection | `src/mineocclude/analysis/filters.py` and frozen consumer contracts | AVAILABLE |
+| Grouped splits | `src/mineocclude/probes/splits.py` | AVAILABLE |
+| Ridge and MLP | `src/mineocclude/probes/ridge.py`, `src/mineocclude/probes/mlp.py` | AVAILABLE; real fits not claimed |
+| Join/vector bridge | `src/mineocclude/probes/join.py`, `src/mineocclude/probes/bridge.py` | AVAILABLE |
+| U1/U2/U3 metrics | `src/mineocclude/metrics/u1_mean.py`, `src/mineocclude/metrics/u2_calibration.py`, `src/mineocclude/metrics/u3_dynamics.py` | AVAILABLE and synthetically composed |
+| Calibration | `src/mineocclude/metrics/u2_calibration.py` | AVAILABLE |
+| Bootstrap/permutation | `src/mineocclude/metrics/resampling.py` | AVAILABLE |
+| Directions/doses/request production | `src/mineocclude/intervention/directions.py`, `src/mineocclude/intervention/doses.py`, `src/mineocclude/intervention/producer.py` | AVAILABLE |
+| Artifacts/results/config | `src/mineocclude/analysis/manifests.py`, `src/mineocclude/analysis/outputs.py`, `configs/analysis/core.yaml` | AVAILABLE |
+| Full Phase 1 synthetic analysis chain | `src/mineocclude/analysis/synthetic_chain.py` | CURRENT CPU-only contract evidence |
+
+These locations consume A/C/D/E authorities; they do not transfer ownership
+of activation extraction, capture truth, baseline logic, or measurement.
+
+### Upstream dependencies and resources
+
+| Dependency/resource | Status | Evidence or limitation | Owner | Needed before |
+|---|---|---|---|---|
+| A activation/intervention/rollout contracts | AVAILABLE | Frozen schema `1.0` and synthetic fixtures | A | Real activation analysis needs real A artifacts |
+| C capture and C-to-B projection | AVAILABLE synthetically | C validator and consumer-side adapter are tested; real capture absent | C source, B projection | Real oracle targets |
+| D baseline handoff | AVAILABLE synthetically | Current D exporter/harness and B intake are connected | D | Real comparisons need accepted D output |
+| E measurement handoff | AVAILABLE synthetically | Hash-bound E evidence and B intake are connected | E | Real U4 needs accepted A/E output |
+| Local CPU execution | AVAILABLE | Synthetic repository suite | Project environment | Phase 1 proof |
+| GPU/AWS/account access | UNVERIFIED | No repository permission or capacity record | Project owner | Real/scale execution |
+| Durable storage/quota | UNVERIFIED | Hash/URI contracts exist; deployment capacity is not evidenced | Project owner/E | Claim-bearing artifacts |
+| Human scientific/interface approval | UNVERIFIED | Passing tests are not approval | A/B/C/D/E approvers | Formal freeze/signoff |
+
+### Controlling requirements trace
+
+| Requirement | Repository evidence | Status |
+|---|---|---|
+| Targets, units, legal/scoring-only information | `docs/contracts/person_b_oracle_target_v0_1.md`, `configs/analysis/core.yaml` | TECHNICALLY VERIFIED |
+| Identity and deterministic filters | Frozen schema `1.0`, `analysis/filters.py` | TECHNICALLY VERIFIED |
+| Layout-grouped folds and selection hierarchy | `probes/splits.py`, analysis config | TECHNICALLY VERIFIED |
+| Metrics, calibration, bootstrap, permutation | `analysis/metrics.py`, `analysis/calibration.py`, `analysis/resampling.py` | TECHNICALLY VERIFIED |
+| A/B/C/D/E intake expectations | `docs/contracts/person_b_analysis_inputs_v0_1.md` and current validators | TECHNICALLY VERIFIED |
+| Synthetic state-to-result/request proof | `analysis/synthetic_chain.py` and saved fixture/tests | TECHNICALLY VERIFIED, NON-SCIENTIFIC |
+| Historical roadmap reading and human approval | No reliable repository evidence | UNVERIFIED |
+
+### Dependency and decision register
+
+| Issue | Safe current rule | Owner / approver | Resolve before |
+|---|---|---|---|
+| Real coordinate frame and capture identity | Reject unsigned/mismatched projection | B/C | First real C-to-B handoff |
+| No-object capture use | Not oracle-target eligible; preserve source for D/E controls | B/C/D/E | First such real control |
+| Real activation/fold/target manifests | Validate exact hashes and identity; no placeholder promotion | A/B | Real probe fitting |
+| U4 measurement/statistical method approval | E measures; B owns inference and claims | B/E | Real U4 analysis |
+| Compute/access/storage | Remain `UNVERIFIED`; do not infer availability | Project owner | Scale plan |
+| Formal Phase 0/1 approval | Do not infer approval from tests | Role owners/approver | Formal checkpoint declaration |
+
+### Command center
+
+| Work | State | Output/pass condition |
+|---|---|---|
+| Repository and ownership inventory | CURRENT/RECORDED | This file names one authoritative location per B responsibility |
+| Phase 1 contracts and synthetic chain | COMPLETED TECHNICALLY | Deterministic synthetic validators, folds, OOF fits, U1/U2/U3, direction/request, result bundle pass |
+| Cross-role synthetic validation | CURRENT | Shared runner validates C/A/B/D/E boundaries |
+| Formal approvals | BLOCKED/UNVERIFIED | Actual dated owners approve |
+| Real scientific execution | NEXT LATER PHASE | Accepted real upstream artifacts and runtime/access gates exist |
+
 ## Current blockers
 
 - [ ] Receive a completed real activation handoff from Person A; the frozen
   contract and compatibility evidence are already merged.
-- [ ] Receive authoritative state schema, manifest, and pilot logs from Person C.
-- [ ] Produce Person D baseline artifacts against B's frozen consumer contract
-  (the same owner now holds B and D).
-- [ ] Receive registry and U4 measurement schemas from Person E.
+- [ ] Receive accepted real state/capture artifacts from Person C; the current
+  C schema and synthetic C-to-B adapter already exist.
+- [ ] Receive real Person D baseline artifacts; D's current contract and
+  synthetic handoff already validate against B.
+- [ ] Receive real Person E measurements; E's registry/evidence contract and
+  synthetic E-to-B handoff already validate against B.
 
 ## MVP work
 
@@ -35,7 +111,10 @@ Full details: [`PERSON_B_MVP_ROADMAP.md`](./PERSON_B_MVP_ROADMAP.md)
   - [x] Add U1-U3 metric functions and known-answer tests.
   - [x] Add hierarchical bootstrap and whole-trajectory permutation functions.
   - [x] Add raw-space/time-projected direction and B→A producer plumbing.
-  - [x] Add C/D/E intake validators; producer signoff/artifacts remain pending.
+  - [x] Add and synthetically exercise C/D/E intake validators; formal owner
+    signoff and real artifacts remain pending.
+  - [x] Compose state through oracle, grouped OOF ridge, U1/U2/U3, directions,
+    intervention request, and sealed result evidence in one CPU-only chain.
 - [ ] Run the no-wall visible positive-control probe before interpreting hidden-state results.
 - [ ] Run the per-layer analysis.
   - [ ] U1: posterior-mean decoding, grouped permutations, controls, and MLP comparison.

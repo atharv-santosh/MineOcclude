@@ -21,7 +21,12 @@
     "logical_input_context_rows_to_rollouts",
     "rollout_measurement_failure_semantics",
     "orphaned_claim_bearing_row_enumeration",
-    "authenticated_a_b_probe_bridge"
+    "authenticated_a_b_probe_bridge",
+    "authoritative_c_to_b_state_handoff",
+    "person_b_full_synthetic_analysis_chain",
+    "authoritative_d_to_b_baseline_handoff",
+    "hash_bound_e_to_b_measurement_handoff",
+    "versioned_c_e_marker_mapping"
   ],
   "expected_activation_sites": [
     {
@@ -34,6 +39,10 @@
     }
   ],
   "explicit_join_keys": {
+    "b_chain_targets_to_d_baselines": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
     "contexts_to_rollouts": [
       "input_context_id"
     ],
@@ -65,10 +74,6 @@
       "trajectory_id",
       "model_frame_idx"
     ],
-    "targets_to_baselines": [
-      "trajectory_id",
-      "model_frame_idx"
-    ],
     "trajectory_to_normalized_actions": [
       "trajectory_id",
       "model_frame_idx"
@@ -91,11 +96,11 @@
   "sources": {
     "activation_chunk": "../activation/synthetic_activation_chunk.json",
     "activation_handoff": "../activation/accepted_activation_handoff.json",
-    "baseline_predictions": "synthetic_baseline_predictions.json",
+    "capture_package": "../person_c/episode/accepted_episode.json",
     "fit_manifest": "synthetic_fit_manifest.json",
     "input_contexts": "synthetic_input_contexts.json",
     "intervention_request": "synthetic_intervention_request.json",
-    "measurements": "synthetic_measurements.json",
+    "layout_config": "../../../configs/scenes/layouts.yaml",
     "oracle_targets": "synthetic_oracle_targets.json",
     "registry": "synthetic_registry.json",
     "rollout_manifest": "synthetic_rollout_manifest.json",

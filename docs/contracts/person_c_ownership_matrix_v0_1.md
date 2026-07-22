@@ -1,6 +1,11 @@
 # Person C Ownership Matrix v0.1
 
-Status: `C0_SYNTHETIC_INTERFACE_IMPLEMENTED_PENDING_CROSS_ROLE_SIGNOFF`
+Status: `C0_C1_STRUCTURALLY_INTEGRATED_PENDING_HUMAN_AND_RUNTIME_SIGNOFF`
+
+Current repository checkpoint: `integration/mvp` at
+`0d5f979e14e5c5f41f59233f1222db822d30cdd6`. The ownership statements below
+describe current authorities; they do not imply human approval or real-runtime
+qualification.
 
 This matrix separates ownership from consultation. A missing upstream decision
 is recorded rather than selected privately by Person C.
@@ -14,13 +19,13 @@ is recorded rather than selected privately by Person C.
 | Server authoritative state and full x/z coordinates | Person C | Persons A/B | C0 minimum payload defined. |
 | Client tick log and packet-receipt evidence | Person C | Person A | Structural row defined; real timing evidence required later. |
 | Frame map and capture-key alignment | Person C | Persons A/B | Implemented and tested synthetically. |
-| Visibility labels | Person C | Persons B/E | Non-empty capture value defined; control vocabulary unresolved. |
+| Visibility labels | Person C | Persons B/E | Capture vocabulary is structurally defined. `visible`/`occluded` are B oracle eligible; no-object controls are explicitly rejected from oracle-target production rather than assigned a fabricated visibility/target. |
 | Episode manifest and exclusion ledger | Person C | Persons A/B/E | Implemented and tested synthetically. |
 | RNG schedule generation and schedule hashing | Person C | Persons A/B | PCG64 design recorded; exact compatible NumPy version unresolved. |
 | `q`, oracle information set, target fields, scoring use | Person B | Persons A/C | Frozen B meaning is referenced; B repair is not imported. |
-| C/A-to-B state adapter | Persons A/B boundary; C supplies source | Persons A/B/C | Unresolved and not implemented in this pass. |
-| Marker restrictions, detector output, homography metadata | Person E | Person C | No E-owned repository contract found; unresolved. |
-| Layout geometry, condition variants, environment lock | Person C | Persons B/E | Phase C1; not started. |
+| C-to-B state adapter | B owns scientific projection; C supplies authoritative source; A supplies model/preprocess provenance | Persons A/B/C | Implemented synthetically in `src/mineocclude/analysis/coordinates.py`; complete C validation and exact capture-key joins precede projection into B's frozen input. Formal human approval and real rows remain pending. |
+| Marker identity/roles and homography | C owns stable IDs/world geometry; E owns image observations and homography | Persons C/E | C layout v0.2 adds a stable-ID-to-canonical-role mapping; E homography v1.1 consumes it by explicit ID. E v1.0 remains supported. Formal real-camera qualification remains pending. |
+| Layout geometry, condition variants, environment lock | Person C | Persons B/E | C1 structurally implemented for six layouts and three conditions; real environment/reconstruction evidence remains required. |
 | Minecraft/Fabric runtime, reset, capture, screenshots | Person C | Persons A/E | Out of C0; runtime evidence required later. |
 | MineWorld loading, preprocessing, inference, model-frame mapping | Person A | Person C | Adapter remains a skeleton; unresolved implementation details. |
 
@@ -36,5 +41,6 @@ is recorded rather than selected privately by Person C.
 
 ## Signoff gate
 
-Repository implementation of the synthetic C0 interface is not equivalent to
-A/B/E approval. Signoff remains pending for every row marked unresolved above.
+Repository implementation and the current synthetic C-to-B/C-to-E tests are
+not equivalent to A/B/E approval. Human signoff and every real-runtime item
+remain pending or unverified as stated above.

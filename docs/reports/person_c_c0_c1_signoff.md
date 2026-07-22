@@ -1,20 +1,27 @@
 # Person C C0/C1 signoff record
 
-Status: C0 committed; C1 structural implementation pending review; runtime stop gate open.
+Status: C0 and C1 are structurally integrated at
+`integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`; current compatibility
+repairs add repository-only C-to-B and C-to-E evidence. Human review and the
+runtime stop gate remain open.
 
 ## Frozen inputs and scope
 
 - Person A Phase 1 schema remains `schema_version = "1.0"`.
 - Person C C0 capture contract version remains `person_c_contract_version = "0.1"` at commit `b9c58f6`.
-- C1 adds layout and environment-lock contract version `0.1`; it does not replace or reinterpret A or C0 fields.
+- C1 originally added layout and environment-lock contract version `0.1`.
+  Additive layout schema `0.2` preserves every stable marker ID and adds an
+  explicit canonical geometric role for C-to-E homography correspondence; it
+  does not replace or reinterpret A or C0 fields, and v0.1 remains immutable.
 - This change contains C1 configs, schemas, validators, tests, a read-only checker, and report/runbook templates only.
-- C2, C3, C4, and C5 are not started by this change.
+- C2, C3, C4, and C5 runtime/collection work is not claimed by this record.
 
 ## C0 status
 
 - Interface packet, ownership matrix, RNG/tick lifecycle decision, synthetic accepted/rejected episodes, validator, and tests: committed at `b9c58f6`.
 - C0 protected artifacts modified during C1: no.
-- C0 regression result: record after the complete test suite is run.
+- C0 regression result is established by the current repository test run; the
+  exact final repair count is recorded in the repair handoff, not invented here.
 
 ## C1 structural status
 
@@ -22,7 +29,16 @@ Status: C0 committed; C1 structural implementation pending review; runtime stop 
 - Common grammar: superflat 40-by-20 arena, three-block-high stone wall, parallel lane, start/shadow/reset/safe regions, camera/canonical pose, four non-magenta markers, scalar axis, and full world coordinates.
 - Explicit conditions: `core`, `no_wall_visible`, `occluder_only_no_sheep`.
 - Environment lock: structurally checkable template with unresolved observed versions/provenance.
-- Automated test result: record after review verification.
+- C-to-B: `build_state_input_from_capture_package` validates the complete C
+  package, performs explicit capture-key joins, applies a validated B
+  coordinate frame, binds A provenance, and emits the existing B state schema.
+  No-object controls fail oracle-target handoff explicitly and remain available
+  to their control consumers.
+- C-to-E: layout v0.2 maps stable physical marker IDs to unique canonical
+  roles; E homography v1.1 joins observations by stable ID and does not infer
+  correspondence from order or image quadrant.
+- Automated structural/compatibility tests exist. They are synthetic evidence,
+  not runtime evidence.
 
 ## Runtime stop gate
 
@@ -40,14 +56,19 @@ No scientific episode may be collected until the applicable runtime and reconstr
 
 ## Upstream review still required
 
-- Person A: confirm canonical-pose/capture settings and future model-frame capture use remain compatible with the frozen trajectory/identity contract.
-- Person B: confirm layout grouping, scientific condition fields, inclusion/exclusion use, and shadow/event interpretation after the Role B repair is current.
-- Person E: confirm marker colors/blocks/coordinates, visibility at reveal, detector columns/provenance, and per-layout homography metadata.
+- Person A: formal review of canonical-pose/capture settings and future real
+  model-frame capture remains unverified; repository identity compatibility is
+  synthetically tested.
+- Person B: formal review remains unverified; the repository now tests C-to-B
+  projection, 20 Hz timing, visibility, no-object gating, and oracle intake.
+- Person E: formal review remains unverified; the repository now tests the
+  versioned stable-marker-ID to canonical-role homography boundary.
 - Runtime owner: pin the observed Java/Fabric/Yarn/API/Gradle/Loom/launcher/mod versions, world seed, packs, and client graphics values without silently editing an approved lock.
 
 ## Signoff
 
-- Structural C1 author/date:
+- Structural C1 repository evidence: `4b72432` plus the current additive v0.2
+  compatibility repair; human author approval/date remains unverified.
 - Person A boundary review/date:
 - Person B boundary review/date:
 - Person E boundary review/date:

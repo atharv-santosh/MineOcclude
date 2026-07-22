@@ -31,7 +31,7 @@ All fixtures under `tests/fixtures/person_c/` are synthetic, set
 |---|---|---|---|
 | `episode_id` | Immutable source capture episode | non-empty string | Assigned before capture; identical across package and row streams. |
 | `trajectory_id` | Immutable model-analysis trajectory derived from one episode | non-empty string | One trajectory belongs to exactly one episode. |
-| `layout_id` | Immutable versioned base scene identity | non-empty string | A condition is not encoded in or inferred from this value. C1 vocabulary is unresolved. |
+| `layout_id` | Immutable versioned base scene identity | non-empty string | A condition is not encoded in or inferred from this value. C1 freezes six stable layout IDs; layout schema v0.2 adds marker roles without changing this identity. |
 | `server_tick` | Authoritative server time | non-negative integer ticks at 20 Hz | Unique per accepted trajectory and consecutive when ordered by explicit tick. |
 | `render_frame_idx` | Frame position in declared capture media | zero-based integer frames | Unique and complete from `0` through `frame_count - 1`. |
 | `action_idx` | Action snapshot paired with one model transition | zero-based integer actions | Unique and complete; `action_i` is intended between `visual_i` and `visual_(i+1)`. Real impulse evidence is required later. |
@@ -135,9 +135,12 @@ minimum state payload contains:
 - `velocity_x_blocks_per_second`, `velocity_y_blocks_per_second`,
   `velocity_z_blocks_per_second`: finite blocks/second.
 
-Full world coordinates are preserved. A future explicit C/A-to-B adapter must
-emit B's exact `x_true_blocks` and `observed_position_blocks` fields; it must not
-silently reinterpret the raw state mapping.
+Full world coordinates are preserved. The consumer-side
+`build_state_input_from_capture_package` adapter validates the complete C
+package, binds an externally supplied B coordinate frame and A model/preprocess
+hashes, projects B's exact `x_true_blocks`, and emits
+`observed_position_blocks` only for legally visible rows. It verifies any
+C-declared wall-parallel value and never silently reinterprets state.
 
 ### Client-tick row
 
@@ -148,9 +151,10 @@ ticks.
 ### Visibility row
 
 Requires the capture key and a non-empty `visibility` string. The Regime A
-derived table accepts `visible` and `occluded`. Visibility for control
-conditions, especially no-object data, remains a B-owned unresolved boundary
-decision.
+derived table accepts `visible` and `occluded`. A package with
+`target_present = false`, including the no-sheep control, is explicitly
+`no_object_not_oracle_eligible`; the adapter does not fabricate position,
+visibility, or a zero target and does not mutate the original C package.
 
 ### Seed/noise row
 
@@ -221,9 +225,10 @@ original schema-v1.0 rejection code and message.
 | Official raw-action vocabulary and conversion | Persons A/C | `UNRESOLVED` |
 | Real camera component orientation and transition impulse proof | Person A with C evidence | `RUNTIME EVIDENCE REQUIRED LATER` |
 | Exact NumPy package version compatible with the final Python/MineWorld lock | Persons A/C | `UNRESOLVED` |
-| B adapter field mapping and no-object visibility policy | Person B | `UNRESOLVED` |
-| Marker/detector/homography fields and provenance | Person E | `UNRESOLVED` |
-| Layout IDs, geometry, conditions, and environment lock | Person C Phase C1 | `NOT STARTED` |
+| B adapter field mapping and no-object visibility policy | Person B | `STRUCTURALLY IMPLEMENTED`; formal owner approval and real evidence unverified |
+| Stable marker ID to canonical geometric role | Persons C/E | `STRUCTURALLY IMPLEMENTED` in C layout v0.2 / E homography v1.1; real-camera qualification pending |
+| Detector thresholds and empirical visibility evidence | Person E; C owns final visibility | `RUNTIME/CALIBRATION EVIDENCE REQUIRED LATER` |
+| Layout IDs, geometry, conditions, and environment lock | Person C Phase C1 | `STRUCTURALLY IMPLEMENTED`; runtime/reconstruction evidence required later |
 
 C0 is not externally signed off until the unresolved owner decisions are
 recorded. No real scientific collection is authorized by this packet.

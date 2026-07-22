@@ -7,12 +7,21 @@ import unittest
 from copy import deepcopy
 
 from mineocclude.analysis.manifests import validate_sealed_artifact
+from mineocclude.contracts.analysis_inputs import (
+    validate_baseline_input,
+    validate_measurement_input,
+)
 from mineocclude.integration.synthetic_pipeline import (
     DEFAULT_REPORT_PATH,
     join_report,
     load_pipeline_inputs,
     run_synthetic_pipeline,
     run_synthetic_pipeline_from_documents,
+)
+from mineocclude.vision.measurement import (
+    MeasurementError,
+    build_measurement_document,
+    validate_measurement_evidence,
 )
 
 
@@ -21,7 +30,7 @@ EXPECTED_JOIN_NAMES = {
     "trajectory_to_token_map",
     "trajectory_to_targets",
     "targets_to_activations",
-    "targets_to_baselines",
+    "b_chain_targets_to_d_baselines",
     "request_heldout_events_to_rollouts",
     "request_alpha_table_to_rollouts",
     "contexts_to_rollouts",
@@ -296,6 +305,10 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
                 "activation",
                 "intervention_request",
                 "rollout_registry",
+                "c_to_b_state",
+                "d_to_b_baseline",
+                "e_to_b_measurement",
+                "b_to_a_chain_request",
             },
         )
 
@@ -303,8 +316,8 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
             with self.subTest(contract=name):
                 self.assertTrue(result["accepted"], msg=result["rejections"])
 
-        self.assertEqual(self.report["summary"]["contracts_passed"], 4)
-        self.assertEqual(self.report["summary"]["contracts_total"], 4)
+        self.assertEqual(self.report["summary"]["contracts_passed"], 8)
+        self.assertEqual(self.report["summary"]["contracts_total"], 8)
 
     def test_all_required_cross_role_joins_are_exercised(self):
         """The report must contain every required Step 1.7 join."""
@@ -534,60 +547,131 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
 
     def test_generation_failure_zero_displacement_fails(self):
         """Generation failure must not become zero displacement."""
-
-        def mutate(_bundle, documents, _hashes):
-            for measurement in documents["measurements"]["rows"]:
-                if measurement["outcome"] == "generation_failure":
-                    measurement["displacement_blocks"] = 0.0
-
-        report = self.mutated_report(mutate)
-
-        self.assertEqual(report["overall_status"], "failed")
-        self.assertIn(
-            "measurement_failure_semantics_are_preserved",
-            failed_check_names(report),
+        document = deepcopy(
+            self.report["person_e_measurement_handoff"]["measurement_document"]
         )
+        row = next(
+            row for row in document["rows"] if row["measurement_status"] == "generation_failure"
+        )
+        row["displacement_blocks"] = 0.0
+        with self.assertRaises(MeasurementError):
+            build_measurement_document(
+                document["rows"],
+                rollout_manifest=self.documents["rollout_manifest"],
+                registry=self.documents["registry"],
+                accepted_rollout_manifest_hash=document[
+                    "accepted_rollout_manifest_hash"
+                ],
+                accepted_registry_hash=document["accepted_registry_hash"],
+                measurement_evidence=document["measurement_evidence"],
+                result_scope="known_answer",
+            )
 
     def test_non_persistence_zero_displacement_fails(self):
         """Non-persistence must not become zero displacement."""
 
-        def mutate(_bundle, documents, _hashes):
-            for measurement in documents["measurements"]["rows"]:
-                if measurement["outcome"] == "non_persistence":
-                    measurement["displacement_blocks"] = 0.0
-
-        report = self.mutated_report(mutate)
-
-        self.assertEqual(report["overall_status"], "failed")
-        self.assertIn(
-            "measurement_failure_semantics_are_preserved",
-            failed_check_names(report),
+        document = deepcopy(
+            self.report["person_e_measurement_handoff"]["measurement_document"]
         )
+        row = next(
+            row for row in document["rows"] if row["measurement_status"] == "non_persistence"
+        )
+        row["displacement_blocks"] = 0.0
+        result = validate_measurement_input(
+            document,
+            rollout_manifest=self.documents["rollout_manifest"],
+            registry=self.documents["registry"],
+        )
+        self.assertFalse(result.accepted)
 
     def test_missing_measurement_fails(self):
         """Every rollout must receive exactly one measurement row."""
 
-        def mutate(_bundle, documents, _hashes):
-            documents["measurements"]["rows"].pop()
-
-        report = self.mutated_report(mutate)
-
-        self.assertEqual(report["overall_status"], "failed")
-        self.assertIn("rollouts_to_measurements", failed_join_names(report))
-        self.assertGreater(report["summary"]["orphaned_claim_bearing_rows"], 0)
+        document = deepcopy(
+            self.report["person_e_measurement_handoff"]["measurement_document"]
+        )
+        document["rows"].pop()
+        result = validate_measurement_input(
+            document,
+            rollout_manifest=self.documents["rollout_manifest"],
+            registry=self.documents["registry"],
+        )
+        self.assertFalse(result.accepted)
 
     def test_duplicate_measurement_fails(self):
         """Duplicate rollout measurements must not pass."""
 
-        def mutate(_bundle, documents, _hashes):
-            documents["measurements"]["rows"].append(
-                deepcopy(documents["measurements"]["rows"][0])
+        document = deepcopy(
+            self.report["person_e_measurement_handoff"]["measurement_document"]
+        )
+        document["rows"].append(deepcopy(document["rows"][0]))
+        result = validate_measurement_input(
+            document,
+            rollout_manifest=self.documents["rollout_manifest"],
+            registry=self.documents["registry"],
+        )
+        self.assertFalse(result.accepted)
+
+    def test_current_d_and_e_boundaries_use_real_validators(self):
+        d = self.report["person_d_baseline_handoff"]
+        e = self.report["person_e_measurement_handoff"]
+        self.assertEqual(d["status"], "passed")
+        self.assertEqual(d["prediction_counts"], {"last_seen": 15, "constant_velocity": 15})
+        self.assertEqual(
+            d["heldout_identity_hashes"]["last_seen"],
+            d["heldout_identity_hashes"]["constant_velocity"],
+        )
+        self.assertTrue(d["b_validation"]["accepted"])
+        self.assertEqual(e["status"], "passed")
+        self.assertTrue(e["validation"]["accepted"])
+        self.assertEqual(len(e["evidence_documents"]), 3)
+        for evidence in e["evidence_documents"]:
+            validate_measurement_evidence(evidence)
+
+    def test_d_illegal_feature_fold_and_stale_provenance_fail(self):
+        document = deepcopy(
+            self.report["person_d_baseline_handoff"]["baseline_document"]
+        )
+        expected = {
+            (row["trajectory_id"], row["model_frame_idx"]): row["fold_idx"]
+            for row in document["rows"]
+        }
+        illegal = deepcopy(document)
+        illegal["feature_access"].append("x_true_blocks")
+        self.assertFalse(
+            validate_baseline_input(illegal, expected_fold_by_frame=expected).accepted
+        )
+        wrong_fold = deepcopy(document)
+        wrong_fold["rows"][0]["fold_idx"] = (wrong_fold["rows"][0]["fold_idx"] + 1) % 5
+        self.assertFalse(
+            validate_baseline_input(wrong_fold, expected_fold_by_frame=expected).accepted
+        )
+        stale = deepcopy(document)
+        stale["fit_manifest_hash"] = "stale"
+        self.assertFalse(
+            validate_baseline_input(stale, expected_fold_by_frame=expected).accepted
+        )
+
+    def test_e_evidence_payload_and_reference_hash_tampering_fail(self):
+        handoff = self.report["person_e_measurement_handoff"]
+        evidence = deepcopy(handoff["evidence_documents"][0])
+        evidence["payload"]["outcome"] = "tampered"
+        with self.assertRaises(MeasurementError):
+            validate_measurement_evidence(evidence)
+        document = deepcopy(handoff["measurement_document"])
+        document["measurement_evidence"][0]["sha256"] = "0" * 64
+        with self.assertRaises(MeasurementError):
+            build_measurement_document(
+                document["rows"],
+                rollout_manifest=self.documents["rollout_manifest"],
+                registry=self.documents["registry"],
+                accepted_rollout_manifest_hash=document[
+                    "accepted_rollout_manifest_hash"
+                ],
+                accepted_registry_hash=document["accepted_registry_hash"],
+                measurement_evidence=document["measurement_evidence"],
+                result_scope="known_answer",
             )
-
-        report = self.mutated_report(mutate)
-
-        self.assertEqual(report["overall_status"], "failed")
-        self.assertIn("rollouts_to_measurements", failed_join_names(report))
 
     def test_pipeline_report_is_deterministic(self):
         """Running the same synthetic evidence twice must give the same report."""

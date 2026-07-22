@@ -17,6 +17,20 @@ from mineocclude.analysis.manifests import (
     sha256_value,
     validate_sealed_artifact,
 )
+from mineocclude.analysis.coordinates import (
+    build_state_input_from_capture_package,
+    coordinate_frame_hash,
+)
+from mineocclude.analysis.synthetic_chain import run_synthetic_analysis_chain
+from mineocclude.baselines.export import build_baseline_document, validate_document
+from mineocclude.baselines.harness import run_synthetic_baseline_harness
+from mineocclude.baselines.interface import BaselineRow
+from mineocclude.baselines.spec import supported_baseline_spec
+from mineocclude.contracts.analysis_inputs import (
+    validate_baseline_input,
+    validate_measurement_input,
+    validate_state_input,
+)
 from mineocclude.contracts.activation import validate_activation_handoff
 from mineocclude.contracts.identity import REQUIRED_FIELDS
 from mineocclude.contracts.intervention_request import validate_intervention_request
@@ -31,6 +45,18 @@ from mineocclude.probes.bridge import (
     build_probe_ready_matrices,
     run_ridge_oof_probe,
 )
+from mineocclude.probes.splits import build_fold_manifest
+from mineocclude.vision.homography import validate_homography_fixture
+from mineocclude.data.layout_contract import validate_layout_config
+from mineocclude.vision.measurement import (
+    FrameLocalization,
+    build_measurement_document,
+    build_measurement_evidence,
+    build_measurement_row,
+    find_reappearance,
+    validate_measurement_evidence,
+)
+from mineocclude.vision.ssim import SsimResult
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -188,6 +214,7 @@ def build_authenticated_probe_bridge_inputs(
     documents: Mapping[str, Any],
     source_hashes: Mapping[str, str],
 ) -> tuple[
+    dict[str, Any],
     dict[str, Any],
     dict[str, Any],
     dict[str, bytes],
@@ -435,7 +462,7 @@ def build_authenticated_probe_bridge_inputs(
             for descriptor in derived_descriptors
         },
     }
-    return package, target_document, chunk_payloads, lineage
+    return package, state_document, target_document, chunk_payloads, lineage
 
 
 def compact_sealed_artifact(
@@ -513,7 +540,7 @@ def run_authenticated_a_b_probe_bridge(
     """Run and serialize the authenticated A-to-B OOF ridge proof."""
 
     try:
-        package, target_document, chunk_payloads, lineage = (
+        package, _state_document, target_document, chunk_payloads, lineage = (
             build_authenticated_probe_bridge_inputs(
                 bundle,
                 documents,
@@ -632,6 +659,375 @@ def check_authenticated_a_b_probe_bridge(
             "summary": summary if isinstance(summary, Mapping) else {},
         },
     )
+
+
+def run_c_to_b_boundary(
+    capture_package: Mapping[str, Any],
+    activation_package: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Execute C capture truth through B's frozen state-input validator."""
+
+    manifest = capture_package["episode_manifest"]
+    frame_document = {
+        "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+        "coordinate_frame_id": "synthetic_shared_runner_c_to_b_x_axis_v1",
+        "wall_parallel_origin_world_xyz": [0.0, 0.0, 0.0],
+        "wall_parallel_positive_unit_vector_world_xyz": [1.0, 0.0, 0.0],
+        "source_layout_manifest_hash": manifest["layout_config_hash"],
+        "adapter_signoff": {"person_b": True, "person_c": True},
+    }
+    frame_document["coordinate_frame_hash"] = coordinate_frame_hash(frame_document)
+    activation_row = activation_package["index_rows"][0]
+    state_document = build_state_input_from_capture_package(
+        capture_package,
+        coordinate_frame=frame_document,
+        model_hash=activation_row["model_hash"],
+        preprocess_hash=activation_row["preprocess_hash"],
+    )
+    state_validation = validate_state_input(state_document)
+    target_document = build_regime_a_target_document(
+        state_document,
+        oracle_run_id="synthetic_shared_runner_c_to_b_oracle_v1",
+        oracle_code_sha=hashlib.sha1(
+            (ROOT / "src" / "mineocclude" / "oracle" / "targets.py").read_bytes()
+        ).hexdigest(),
+    )
+    return {
+        "status": "passed" if state_validation.accepted else "failed",
+        "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "state_document": state_document,
+        "target_document_hash": sha256_value(target_document),
+        "target_row_count": len(target_document["rows"]),
+        "validation": serialize_validation_result(state_validation),
+    }
+
+
+def run_c_e_marker_boundary(layout_document: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate C v0.2 stable marker IDs through E's v1.1 homography."""
+
+    layout_validation = validate_layout_config(layout_document)
+    if not layout_validation.accepted:
+        raise ValueError("C layout document failed before C-to-E marker mapping.")
+    layout = layout_document["layouts"][0]
+    image_by_id = {
+        "m1_blue": [500.0, 300.0],
+        "m2_yellow": [500.0, 60.0],
+        "m3_lime": [100.0, 300.0],
+        "m4_white": [100.0, 60.0],
+    }
+    fixture = {
+        "schema_version": "1.0",
+        "homography_fixture_schema_version": "person-e-homography-fixture-v1.1",
+        "fixture_id": "synthetic_shared_runner_c_e_marker_v1",
+        **FIXTURE_MARKER,
+        "layout_id": layout["layout_id"],
+        "canonical_camera_pose_id": layout["canonical_pose"]["pose_id"],
+        "resolution_id": "synthetic_640x360",
+        "image_width_px": 640,
+        "image_height_px": 360,
+        "image_coordinate_system": "pixel_center_xy_zero_based",
+        "world_coordinate_system": "ground_plane_world_xz_blocks",
+        "marker_correspondences": [
+            {
+                "marker_id": marker["marker_id"],
+                "marker_role": marker["marker_role"],
+                "marker_kind": "non_magenta_geometry_marker",
+                "image_xy": image_by_id[marker["marker_id"]],
+                "world_xz_blocks": [
+                    marker["world_blocks"]["x"],
+                    marker["world_blocks"]["z"],
+                ],
+            }
+            for marker in reversed(layout["markers"])
+        ],
+        "expected_probe": {
+            "image_xy": [300.0, 180.0],
+            "world_xz_blocks": [
+                (layout["arena"]["min_x"] + layout["arena"]["max_x"]) / 2.0,
+                (layout["arena"]["min_z"] + layout["arena"]["max_z"]) / 2.0,
+            ],
+            "absolute_tolerance_blocks": 1e-9,
+        },
+    }
+    homography = validate_homography_fixture(fixture)
+    return {
+        "status": "passed",
+        "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "layout_id": layout["layout_id"],
+        "stable_marker_ids": sorted(
+            marker["marker_id"] for marker in fixture["marker_correspondences"]
+        ),
+        "canonical_roles": sorted(
+            marker["marker_role"] for marker in fixture["marker_correspondences"]
+        ),
+        "homography_fit_hash": homography.fit_hash,
+        "fixture": fixture,
+    }
+
+
+def run_d_to_b_boundary(
+    b_chain: Mapping[str, Any],
+    activation_package: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Run two D baselines through D's harness and B's current intake."""
+
+    target_document = b_chain["target_document"]
+    chain_fold_manifest = b_chain["fold_manifest"]
+    target_hash = b_chain["target_document_hash"]
+    target_rows = sorted(
+        target_document["rows"],
+        key=lambda row: (row["trajectory_id"], row["model_frame_idx"]),
+    )
+    accepted_manifest_hash = b_chain["frame_table"]["accepted_manifest_hash"]
+    # D consumes a B-produced saved fold artifact.  B's probe bridge seals the
+    # same memberships against the joined frame table; D's frozen provenance
+    # contract binds its fold input to the accepted data manifest, so build the
+    # D-facing artifact with B's authoritative splitter and unchanged seed.
+    fold_manifest = build_fold_manifest(
+        b_chain["frame_table"]["rows"],
+        artifact_id="synthetic_shared_runner_d_fold_manifest_v1",
+        code_sha=b_chain["frame_table"]["probe_code_sha"],
+        config_hash=b_chain["frame_table"]["analysis_config_hash"],
+        input_manifest_hash=accepted_manifest_hash,
+        n_splits=chain_fold_manifest["n_splits"],
+        seed=chain_fold_manifest["seed"],
+    )
+    memberships = fold_manifest["memberships"]
+    membership_by_key = {
+        (row["trajectory_id"], row["model_frame_idx"]): row for row in memberships
+    }
+    provenance = {
+        "schema_version": "1.0",
+        "accepted_manifest_hash": accepted_manifest_hash,
+        "fold_manifest_hash": fold_manifest["artifact_hash"],
+        "target_manifest_hash": target_hash,
+        "analysis_config_hash": b_chain["frame_table"]["analysis_config_hash"],
+        "preprocess_hash": activation_package["index_rows"][0]["preprocess_hash"],
+        "code_sha": b_chain["frame_table"]["probe_code_sha"],
+    }
+    harness_targets = [
+        {
+            "trajectory_id": row["trajectory_id"],
+            "model_frame_idx": row["model_frame_idx"],
+            "target_name": "mu_oracle_blocks",
+            "target_value": row["mu_oracle_blocks"],
+            "status": "accepted",
+            "target_manifest_hash": target_hash,
+            "accepted_manifest_hash": accepted_manifest_hash,
+        }
+        for row in target_rows
+    ]
+    predictions_by_baseline: dict[str, list[Any]] = {}
+    fit_metadata_by_baseline: dict[str, list[Mapping[str, Any]]] = {}
+    for baseline_name in ("last_seen", "constant_velocity"):
+        input_rows = []
+        for row in target_rows:
+            item = {
+                "trajectory_id": row["trajectory_id"],
+                "model_frame_idx": row["model_frame_idx"],
+                "last_visible_position_blocks": row["last_visible_position_blocks"],
+                "tau": row["tau"],
+                "visibility": row["visibility"],
+            }
+            if baseline_name == "constant_velocity":
+                item["estimated_velocity_blocks_per_s"] = 1.0
+            input_rows.append(item)
+        baseline_predictions = []
+        fit_records = []
+        for fold_idx in sorted({row["fold_idx"] for row in memberships}):
+            requested = [
+                key
+                for key, membership in membership_by_key.items()
+                if membership["fold_idx"] == fold_idx
+            ]
+            result = run_synthetic_baseline_harness(
+                supported_baseline_spec(baseline_name),
+                input_rows=input_rows,
+                target_rows=harness_targets,
+                fold_manifest=fold_manifest,
+                requested_test_keys=requested,
+                provenance=provenance,
+            )
+            baseline_predictions.extend(result.predictions)
+            fit_records.append(result.fit_metadata)
+        predictions_by_baseline[baseline_name] = baseline_predictions
+        fit_metadata_by_baseline[baseline_name] = fit_records
+
+    export_rows = []
+    for prediction in predictions_by_baseline["last_seen"]:
+        key = prediction.frame_key
+        source = next(
+            row
+            for row in target_rows
+            if (row["trajectory_id"], row["model_frame_idx"]) == key
+        )
+        membership = membership_by_key[key]
+        export_rows.append(
+            BaselineRow(
+                trajectory_id=key[0],
+                layout_id=membership["layout_id"],
+                model_frame_idx=key[1],
+                fold=membership["fold_idx"],
+                regime="A",
+                target_name="mu_oracle_blocks",
+                baseline_name="last_seen",
+                prediction=prediction.prediction,
+                applicable=True,
+                visibility=source["visibility"] == "visible",
+                tau_seconds=source["tau"],
+                v_scripted_blocks_per_s=None,
+                q_scripted_blocks2_per_s=None,
+                duration_seconds=source["duration"],
+                config_hash=provenance["analysis_config_hash"],
+                seed=source["seed"],
+                fit_metadata={"fit_id": prediction.fit_id},
+            )
+        )
+    fit_hash = sha256_value(fit_metadata_by_baseline["last_seen"])
+    baseline_document = build_baseline_document(
+        export_rows,
+        target_name="mu_oracle_blocks",
+        baseline_id="synthetic_shared_runner_last_seen_v1",
+        baseline_family="last_seen",
+        config_hash=provenance["analysis_config_hash"],
+        input_manifest_hash=accepted_manifest_hash,
+        fold_manifest_hash=fold_manifest["artifact_hash"],
+        fit_manifest_hash=fit_hash,
+        fit_id_by_key={
+            prediction.frame_key: prediction.fit_id
+            for prediction in predictions_by_baseline["last_seen"]
+        },
+    )
+    baseline_document.update(FIXTURE_MARKER)
+    expected_folds = {
+        key: membership["fold_idx"] for key, membership in membership_by_key.items()
+    }
+    d_validation = validate_document(
+        baseline_document, expected_fold_by_frame=expected_folds
+    )
+    b_validation = validate_baseline_input(
+        baseline_document, expected_fold_by_frame=expected_folds
+    )
+    return {
+        "status": "passed" if d_validation.accepted and b_validation.accepted else "failed",
+        "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "baseline_document": baseline_document,
+        "d_validation": serialize_validation_result(d_validation),
+        "b_validation": serialize_validation_result(b_validation),
+        "prediction_counts": {
+            name: len(rows) for name, rows in predictions_by_baseline.items()
+        },
+        "fit_metadata_hashes": {
+            name: sha256_value(rows) for name, rows in fit_metadata_by_baseline.items()
+        },
+        "heldout_identity_hashes": {
+            name: sha256_value(
+                sorted([list(prediction.frame_key) for prediction in rows])
+            )
+            for name, rows in predictions_by_baseline.items()
+        },
+    }
+
+
+def _synthetic_reappearance(offset: float) -> Any:
+    return find_reappearance(
+        [
+            FrameLocalization(9, None, False, rejection_reason="pre_reveal"),
+            FrameLocalization(10, 4.0 + offset, True),
+            FrameLocalization(11, 5.0 + offset, True),
+            FrameLocalization(12, 6.0 + offset, True),
+        ],
+        reveal_frame_idx=9,
+    )
+
+
+def run_e_to_b_boundary(
+    rollout_manifest: Mapping[str, Any],
+    registry: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Build E's hash-bound evidence and validate its frozen B handoff."""
+
+    rollout_hash = sha256_value(rollout_manifest)
+    registry_hash = sha256_value(registry)
+    code_sha = hashlib.sha1(
+        (ROOT / "src" / "mineocclude" / "vision" / "measurement.py").read_bytes()
+    ).hexdigest()
+    evidence_documents = []
+    evidence_references = []
+    measurement_rows = []
+    ssim = SsimResult(
+        full_frame_ssim=0.95,
+        background_masked_ssim=0.99,
+        full_frame_pixel_count=36,
+        background_pixel_count=28,
+        data_range=255.0,
+    )
+    for rollout in sorted(rollout_manifest["rollout_rows"], key=lambda row: row["rollout_id"]):
+        evidence = build_measurement_evidence(
+            {
+                "rollout_id": rollout["rollout_id"],
+                "event_id": rollout["event_id"],
+                "outcome": rollout["outcome"],
+                "synthetic": True,
+                "scientific_use": "forbidden",
+            },
+            evidence_id=f"evidence:{rollout['rollout_id']}",
+            rollout_id=rollout["rollout_id"],
+            producer_run_id=rollout["run_id"],
+            code_sha=code_sha,
+            accepted_rollout_manifest_hash=rollout_hash,
+            accepted_registry_hash=registry_hash,
+        )
+        validate_measurement_evidence(evidence)
+        persisted_hash = sha256_bytes(deterministic_json_bytes(evidence))
+        evidence_documents.append(evidence)
+        evidence_references.append(
+            {
+                "evidence_id": evidence["evidence_id"],
+                "rollout_id": rollout["rollout_id"],
+                "uri": f"memory://synthetic-evidence/{rollout['rollout_id']}",
+                "sha256": persisted_hash,
+                "producer_run_id": rollout["run_id"],
+            }
+        )
+        kwargs = {}
+        if rollout["outcome"] == "measurable_continuation":
+            kwargs = {
+                "baseline_rollout_id": rollout["rollout_id"],
+                "pushed_reappearance": _synthetic_reappearance(0.0),
+                "baseline_reappearance": _synthetic_reappearance(0.0),
+                "ssim_result": ssim,
+            }
+        measurement_rows.append(
+            build_measurement_row(
+                rollout,
+                measurement_id=f"measurement:{rollout['rollout_id']}",
+                measurement_artifact_hash=persisted_hash,
+                **kwargs,
+            )
+        )
+    document = build_measurement_document(
+        measurement_rows,
+        rollout_manifest=rollout_manifest,
+        registry=registry,
+        accepted_rollout_manifest_hash=rollout_hash,
+        accepted_registry_hash=registry_hash,
+        measurement_evidence=evidence_references,
+        result_scope="known_answer",
+    )
+    document.update(FIXTURE_MARKER)
+    validation = validate_measurement_input(
+        document, rollout_manifest=rollout_manifest, registry=registry
+    )
+    return {
+        "status": "passed" if validation.accepted else "failed",
+        "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "measurement_document": document,
+        "evidence_documents": evidence_documents,
+        "validation": serialize_validation_result(validation),
+        "evidence_payload_hashes": [item["payload_hash"] for item in evidence_documents],
+        "evidence_persisted_hashes": [item["sha256"] for item in evidence_references],
+    }
 
 
 def key_value_is_valid(field: str, value: Any) -> bool:
@@ -844,14 +1240,12 @@ def check_fixture_markers(
     generated_names = {
         "token_map",
         "oracle_targets",
-        "baseline_predictions",
         "fit_manifest",
         "validation_manifest",
         "intervention_request",
         "input_contexts",
         "rollout_manifest",
         "registry",
-        "measurements",
     }
 
     mismatches: list[str] = []
@@ -894,7 +1288,7 @@ def expected_join_metadata() -> dict[str, list[str]]:
         "trajectory_to_token_map": ["trajectory_id", "model_frame_idx"],
         "trajectory_to_targets": ["trajectory_id", "model_frame_idx"],
         "targets_to_activations": ["trajectory_id", "model_frame_idx"],
-        "targets_to_baselines": ["trajectory_id", "model_frame_idx"],
+        "b_chain_targets_to_d_baselines": ["trajectory_id", "model_frame_idx"],
         "request_heldout_events_to_rollouts": ["event_id"],
         "request_alpha_table_to_rollouts": ["dose_id"],
         "contexts_to_rollouts": ["input_context_id"],
@@ -927,6 +1321,11 @@ def expected_integrity_links() -> list[str]:
         "rollout_measurement_failure_semantics",
         "orphaned_claim_bearing_row_enumeration",
         "authenticated_a_b_probe_bridge",
+        "authoritative_c_to_b_state_handoff",
+        "person_b_full_synthetic_analysis_chain",
+        "authoritative_d_to_b_baseline_handoff",
+        "hash_bound_e_to_b_measurement_handoff",
+        "versioned_c_e_marker_mapping",
     ]
 
 
@@ -1386,7 +1785,7 @@ def check_measurement_semantics(
     rollout_manifest: dict[str, Any],
     measurements: dict[str, Any],
 ) -> dict[str, Any]:
-    """Verify Person E placeholders preserve all outcome semantics."""
+    """Verify current E measurement rows preserve A rollout outcomes."""
 
     rollout_by_id = {
         row["rollout_id"]: row
@@ -1417,13 +1816,20 @@ def check_measurement_semantics(
             )
             continue
 
-        for field in ("event_id", "run_id", "output_artifact_id", "outcome"):
-            if measurement[field] != rollout[field]:
+        comparisons = {
+            "event_id": "event_id",
+            "rollout_run_id": "run_id",
+            "direction_version": "direction_version",
+            "control_type": "control_type",
+            "dose_id": "dose_id",
+        }
+        for measurement_field, rollout_field in comparisons.items():
+            if measurement.get(measurement_field) != rollout.get(rollout_field):
                 mismatches.append(
                     {
                         "measurement_id": measurement_id,
                         "reason": "rollout_measurement_identity_mismatch",
-                        "field": field,
+                        "field": measurement_field,
                     }
                 )
 
@@ -1446,7 +1852,7 @@ def check_measurement_semantics(
 
         elif outcome == "non_persistence":
             if (
-                measurement["measurement_status"] != "not_measurable_non_persistence"
+                measurement["measurement_status"] != "non_persistence"
                 or displacement is not None
             ):
                 mismatches.append(
@@ -1457,7 +1863,7 @@ def check_measurement_semantics(
                 )
 
         elif outcome == "generation_failure":
-            if measurement["measurement_status"] != "generation_failed" or displacement is not None:
+            if measurement["measurement_status"] != "generation_failure" or displacement is not None:
                 mismatches.append(
                     {
                         "measurement_id": measurement_id,
@@ -1474,6 +1880,10 @@ def check_measurement_semantics(
 
 def collect_orphaned_claim_bearing_rows(
     documents: dict[str, dict[str, Any]],
+    *,
+    b_target_document: Mapping[str, Any],
+    d_baseline_document: Mapping[str, Any],
+    e_measurement_document: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
     """Explicitly enumerate claim-bearing rows that fail key provenance links."""
 
@@ -1492,9 +1902,14 @@ def collect_orphaned_claim_bearing_rows(
         for row in documents["oracle_targets"]["rows"]
     }
 
+    b_target_keys = {
+        make_key(row, ("trajectory_id", "model_frame_idx"))
+        for row in b_target_document["rows"]
+    }
+
     baseline_keys = {
         make_key(row, ("trajectory_id", "model_frame_idx"))
-        for row in documents["baseline_predictions"]["rows"]
+        for row in d_baseline_document["rows"]
     }
 
     run_ids = {
@@ -1523,7 +1938,7 @@ def collect_orphaned_claim_bearing_rows(
 
     measurement_rollout_ids = {
         row["rollout_id"]
-        for row in documents["measurements"]["rows"]
+        for row in e_measurement_document["rows"]
         if isinstance(row, Mapping) and isinstance(row.get("rollout_id"), str)
     }
 
@@ -1538,18 +1953,15 @@ def collect_orphaned_claim_bearing_rows(
         if key not in activation_keys:
             orphans.append({"table": "oracle_targets", "id": target.get("target_id"), "missing": "activation_rows"})
 
-        if key not in baseline_keys:
-            orphans.append({"table": "oracle_targets", "id": target.get("target_id"), "missing": "baseline_prediction"})
-
-    for baseline in documents["baseline_predictions"]["rows"]:
+    for baseline in d_baseline_document["rows"]:
         key = make_key(baseline, ("trajectory_id", "model_frame_idx"))
 
-        if key not in target_keys:
+        if key not in b_target_keys:
             orphans.append(
                 {
-                    "table": "baseline_predictions",
-                    "id": baseline.get("baseline_prediction_id"),
-                    "missing": "oracle_target",
+                    "table": "d_baseline_predictions",
+                    "id": baseline.get("fit_id"),
+                    "missing": "b_oracle_target",
                 }
             )
 
@@ -1604,7 +2016,7 @@ def collect_orphaned_claim_bearing_rows(
                 }
             )
 
-    for measurement in documents["measurements"]["rows"]:
+    for measurement in e_measurement_document["rows"]:
         if measurement.get("rollout_id") not in rollout_ids:
             orphans.append(
                 {
@@ -1630,12 +2042,82 @@ def run_synthetic_pipeline_from_documents(
     rollout_manifest = documents["rollout_manifest"]
     registry = documents["registry"]
 
+    boundary_error: Exception | None = None
+    try:
+        derived_activation, derived_state, _derived_targets, derived_chunks, _lineage = (
+            build_authenticated_probe_bridge_inputs(bundle, documents, source_hashes)
+        )
+        b_chain = run_synthetic_analysis_chain(
+            state_document=derived_state,
+            activation_package=derived_activation,
+            chunk_payloads_by_id=derived_chunks,
+        )
+        d_boundary = run_d_to_b_boundary(b_chain, derived_activation)
+    except Exception as error:  # converted to a required machine-readable gate below
+        boundary_error = error
+        b_chain = {
+            "status": "failed",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+            "rejections": [{"code": "b_chain_rejected", "message": str(error)}],
+        }
+        d_boundary = {
+            "status": "failed",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+            "rejections": [{"code": "upstream_b_chain_rejected", "message": str(error)}],
+        }
+
+    try:
+        c_to_b_boundary = run_c_to_b_boundary(
+            documents["capture_package"], activation
+        )
+    except Exception as error:
+        c_to_b_boundary = {
+            "status": "failed",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+            "rejections": [{"code": "c_to_b_rejected", "message": str(error)}],
+        }
+    try:
+        c_e_boundary = run_c_e_marker_boundary(documents["layout_config"])
+    except Exception as error:
+        c_e_boundary = {
+            "status": "failed",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+            "rejections": [{"code": "c_e_marker_rejected", "message": str(error)}],
+        }
+    try:
+        e_boundary = run_e_to_b_boundary(rollout_manifest, registry)
+    except Exception as error:
+        e_boundary = {
+            "status": "failed",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+            "rejections": [{"code": "e_to_b_rejected", "message": str(error)}],
+        }
+
     contract_validations = {
         "trajectory": serialize_validation_result(validate_trajectory_package(trajectory)),
         "activation": serialize_validation_result(validate_activation_handoff(activation)),
         "intervention_request": serialize_validation_result(validate_intervention_request(request)),
         "rollout_registry": serialize_validation_result(
             validate_rollout_registry_bundle(rollout_manifest, registry)
+        ),
+        "c_to_b_state": c_to_b_boundary.get(
+            "validation",
+            {"accepted": False, "rejections": c_to_b_boundary.get("rejections", [])},
+        ),
+        "d_to_b_baseline": d_boundary.get(
+            "b_validation",
+            {"accepted": False, "rejections": d_boundary.get("rejections", [])},
+        ),
+        "e_to_b_measurement": e_boundary.get(
+            "validation",
+            {"accepted": False, "rejections": e_boundary.get("rejections", [])},
+        ),
+        "b_to_a_chain_request": (
+            serialize_validation_result(
+                validate_intervention_request(b_chain["intervention_request"])
+            )
+            if b_chain.get("status") == "passed"
+            else {"accepted": False, "rejections": b_chain.get("rejections", [])}
         ),
     }
 
@@ -1644,10 +2126,23 @@ def run_synthetic_pipeline_from_documents(
     token_rows = documents["token_map"]["rows"]
     target_rows = documents["oracle_targets"]["rows"]
     activation_rows = activation["index_rows"]
-    baseline_rows = documents["baseline_predictions"]["rows"]
+    b_target_rows = (
+        b_chain.get("target_document", {}).get("rows", [])
+        if isinstance(b_chain, Mapping)
+        else []
+    )
+    baseline_rows = (
+        d_boundary.get("baseline_document", {}).get("rows", [])
+        if isinstance(d_boundary, Mapping)
+        else []
+    )
     rollout_rows = rollout_manifest["rollout_rows"]
     context_rows = documents["input_contexts"]["rows"]
-    measurement_rows = documents["measurements"]["rows"]
+    measurement_rows = (
+        e_boundary.get("measurement_document", {}).get("rows", [])
+        if isinstance(e_boundary, Mapping)
+        else []
+    )
     run_rows = registry["runs"]
     artifact_rows = registry["artifacts"]
 
@@ -1697,10 +2192,10 @@ def run_synthetic_pipeline_from_documents(
             expected_right_per_left=len(expected_activation_sites),
         ),
         join_report(
-            name="targets_to_baselines",
-            left_name="oracle_targets.rows",
-            right_name="baseline_predictions.rows",
-            left_rows=target_rows,
+            name="b_chain_targets_to_d_baselines",
+            left_name="b_chain.target_document.rows",
+            right_name="d_baseline_document.rows",
+            left_rows=b_target_rows,
             right_rows=baseline_rows,
             left_key_fields=("trajectory_id", "model_frame_idx"),
             relationship="one_to_one",
@@ -1810,11 +2305,51 @@ def run_synthetic_pipeline_from_documents(
         check_registry_input_hashes(rollout_manifest, registry, source_hashes),
         check_intervention_rollout_alignment(request, rollout_manifest),
         check_context_resolution(documents["input_contexts"], rollout_manifest),
-        check_measurement_semantics(rollout_manifest, documents["measurements"]),
+        check_measurement_semantics(
+            rollout_manifest,
+            e_boundary.get("measurement_document", {"rows": []}),
+        ),
         check_authenticated_a_b_probe_bridge(authenticated_bridge_report),
+        integrity_check(
+            "authoritative_c_to_b_state_handoff",
+            c_to_b_boundary.get("status") == "passed",
+            {"status": c_to_b_boundary.get("status")},
+        ),
+        integrity_check(
+            "person_b_full_synthetic_analysis_chain",
+            b_chain.get("status") == "passed",
+            {"status": b_chain.get("status"), "error": str(boundary_error) if boundary_error else None},
+        ),
+        integrity_check(
+            "authoritative_d_to_b_baseline_handoff",
+            d_boundary.get("status") == "passed",
+            {"status": d_boundary.get("status")},
+        ),
+        integrity_check(
+            "hash_bound_e_to_b_measurement_handoff",
+            e_boundary.get("status") == "passed",
+            {"status": e_boundary.get("status")},
+        ),
+        integrity_check(
+            "versioned_c_e_marker_mapping",
+            c_e_boundary.get("status") == "passed",
+            {"status": c_e_boundary.get("status")},
+        ),
     ]
 
-    orphaned_rows = collect_orphaned_claim_bearing_rows(documents)
+    orphaned_rows = (
+        collect_orphaned_claim_bearing_rows(
+            documents,
+            b_target_document=b_chain["target_document"],
+            d_baseline_document=d_boundary["baseline_document"],
+            e_measurement_document=e_boundary["measurement_document"],
+        )
+        if all(
+            boundary.get("status") == "passed"
+            for boundary in (b_chain, d_boundary, e_boundary)
+        )
+        else [{"table": "cross_role_boundaries", "missing": "validated_boundary_output"}]
+    )
 
     contracts_pass = all(result["accepted"] for result in contract_validations.values())
     joins_pass = all(report["status"] == "passed" for report in joins)
@@ -1832,6 +2367,11 @@ def run_synthetic_pipeline_from_documents(
         "joins": joins,
         "integrity_checks": integrity_checks,
         "authenticated_a_b_probe_bridge": authenticated_bridge_report,
+        "person_b_synthetic_analysis_chain": b_chain,
+        "person_d_baseline_handoff": d_boundary,
+        "person_e_measurement_handoff": e_boundary,
+        "person_c_to_b_handoff": c_to_b_boundary,
+        "person_c_e_marker_compatibility": c_e_boundary,
         "orphaned_claim_bearing_rows": orphaned_rows,
         "summary": {
             "contracts_passed": sum(

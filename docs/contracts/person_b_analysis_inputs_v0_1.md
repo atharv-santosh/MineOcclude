@@ -16,8 +16,16 @@ and a signed wall-parallel coordinate frame. The intake rejects ambiguous
 orientation, unsigned adapters, duplicate frames, manifest mixing, nonfinite
 truth, hidden observed positions, and visible rows without an observation.
 
-This contract can be validated now. Actual adapter approval and real rows
-require Person C.
+The repository-side consumer adapter is
+`mineocclude.analysis.coordinates.build_state_input_from_capture_package`.
+It first validates the complete C package, joins by the explicit six-field
+capture key, binds the C layout hash to an externally supplied validated B
+coordinate frame, requires explicit A model/preprocess hashes, and validates
+its exact output with this frozen schema. It derives `tau` from explicit 20 Hz
+ticks and visibility transitions and rejects no-object controls as
+`no_object_not_oracle_eligible` rather than fabricating a target. Synthetic
+C-to-B-to-oracle tests now exercise this boundary. Human approval and real
+rows still require their owners.
 
 ## D → B baseline predictions
 
@@ -40,8 +48,10 @@ renamed, or unknown features fail closed. The document also declares a
 be false and must exactly match the family contract; caller-declared false
 flags do not authorize an unrecognized feature.
 
-Person B owns this consumer contract. Baseline implementations and their real
-prediction artifacts remain Person D work.
+Person B owns this consumer contract. The shared synthetic runner now executes
+Person D's current BaselineSpec/firewall/harness/exporter and validates a
+synthetic `last_seen` handoff here. Real baseline prediction artifacts remain
+Person D work.
 
 ## E → B U4 measurements
 
@@ -63,8 +73,10 @@ truth. A measured row has finite displacement in blocks, persistence in
 Generation failure, non-persistence, and excluded outcomes carry null
 measurements plus a reason; they are never encoded as zero displacement.
 
-The B validator is ready, but Person E must review and sign the payload names
-and produce the real measurement artifacts before U4 analysis.
+The shared synthetic runner now builds E's separately hash-bound measurement
+evidence from A's synthetic rollout rows, constructs E's handoff, and validates
+it here against the actual A manifest/registry. Formal review and real
+measurement artifacts remain required before U4 analysis.
 
 ## Stable intake rejection codes
 

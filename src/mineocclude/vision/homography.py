@@ -16,6 +16,10 @@ class HomographyError(ValueError):
 
 HOMOGRAPHY_ALGORITHM_VERSION = "four_point_projective_gauss_jordan_v0.1"
 HOMOGRAPHY_FIXTURE_SCHEMA_VERSION = "person-e-homography-fixture-v1.0"
+HOMOGRAPHY_FIXTURE_SCHEMA_VERSION_V1_1 = "person-e-homography-fixture-v1.1"
+SUPPORTED_HOMOGRAPHY_FIXTURE_SCHEMA_VERSIONS = frozenset(
+    {HOMOGRAPHY_FIXTURE_SCHEMA_VERSION, HOMOGRAPHY_FIXTURE_SCHEMA_VERSION_V1_1}
+)
 PERCENTILE_METHOD = "linear_interpolation_rank_n_minus_1"
 CANONICAL_MARKER_ROLES = frozenset(
     {"north_west", "north_east", "south_east", "south_west"}
@@ -366,7 +370,8 @@ def validate_homography_fixture(
         raise HomographyError("Homography fixture fields have changed.")
     if document["schema_version"] != "1.0":
         raise HomographyError("schema_version must remain '1.0'.")
-    if document["homography_fixture_schema_version"] != HOMOGRAPHY_FIXTURE_SCHEMA_VERSION:
+    fixture_version = document["homography_fixture_schema_version"]
+    if fixture_version not in SUPPORTED_HOMOGRAPHY_FIXTURE_SCHEMA_VERSIONS:
         raise HomographyError("Unsupported homography fixture schema.")
     for field in (
         "fixture_id",
@@ -417,8 +422,10 @@ def validate_homography_fixture(
     if not isinstance(markers, list) or len(markers) != 4:
         raise HomographyError("Exactly four marker correspondences are required.")
     marker_ids: list[str] = []
+    marker_roles: list[str] = []
     image_points: dict[str, tuple[float, float]] = {}
     world_points: dict[str, tuple[float, float]] = {}
+    marker_id_by_role: dict[str, str] = {}
     for index, marker in enumerate(markers):
         if not isinstance(marker, Mapping) or set(marker) != {
             "marker_id",
@@ -430,17 +437,18 @@ def validate_homography_fixture(
             raise HomographyError(f"marker_correspondences[{index}] fields changed.")
         marker_id = marker["marker_id"]
         role = marker["marker_role"]
-        if (
-            not isinstance(marker_id, str)
-            or not marker_id
-            or role not in CANONICAL_MARKER_ROLES
-            or marker_id != role
-        ):
+        if not isinstance(marker_id, str) or not marker_id or marker_id != marker_id.strip():
+            raise HomographyError("marker_id must be a non-empty stable identity.")
+        if role not in CANONICAL_MARKER_ROLES:
+            raise HomographyError("Unknown canonical marker_role.")
+        if fixture_version == HOMOGRAPHY_FIXTURE_SCHEMA_VERSION and marker_id != role:
             raise HomographyError("Marker IDs must use the canonical corner roles.")
         if marker["marker_kind"] != "non_magenta_geometry_marker":
             raise HomographyError("Homography markers must be explicitly non-magenta.")
         if marker_id in marker_ids:
             raise HomographyError(f"Duplicate marker_id {marker_id!r}.")
+        if role in marker_roles:
+            raise HomographyError(f"Duplicate marker_role {role!r}.")
         image_point = _finite_pair(marker["image_xy"], f"marker {marker_id} image_xy")
         world_point = _finite_pair(
             marker["world_xz_blocks"], f"marker {marker_id} world_xz_blocks"
@@ -451,10 +459,14 @@ def validate_homography_fixture(
         ):
             raise HomographyError(f"Marker {marker_id!r} lies outside the image.")
         marker_ids.append(marker_id)
+        marker_roles.append(role)
+        marker_id_by_role[role] = marker_id
         image_points[marker_id] = image_point
         world_points[marker_id] = world_point
-    if set(marker_ids) != CANONICAL_MARKER_ROLES:
+    if set(marker_roles) != CANONICAL_MARKER_ROLES:
         raise HomographyError("All four canonical marker roles are required.")
+    if fixture_version == HOMOGRAPHY_FIXTURE_SCHEMA_VERSION and set(marker_ids) != CANONICAL_MARKER_ROLES:
+        raise HomographyError("All four canonical marker IDs are required by v1.0.")
 
     def require_corner_roles(points: Mapping[str, tuple[float, float]], name: str) -> None:
         center_x = sum(point[0] for point in points.values()) / 4.0
@@ -472,12 +484,26 @@ def validate_homography_fixture(
                     f"{name} marker correspondence for {marker_id!r} is inconsistent."
                 )
 
-    require_corner_roles(image_points, "Image")
-    require_corner_roles(world_points, "World")
+    image_points_by_role = {
+        role: image_points[marker_id_by_role[role]] for role in CANONICAL_MARKER_ROLES
+    }
+    world_points_by_role = {
+        role: world_points[marker_id_by_role[role]] for role in CANONICAL_MARKER_ROLES
+    }
+    # The legacy v1.0 fixture explicitly encoded screen-corner semantics.  In
+    # v1.1 marker_role is a world-geometric role; a rotated camera may place a
+    # role in any image quadrant, so only world geometry is role-constrained.
+    if fixture_version == HOMOGRAPHY_FIXTURE_SCHEMA_VERSION:
+        require_corner_roles(image_points_by_role, "Image")
+    require_corner_roles(world_points_by_role, "World")
+    ordered_marker_ids = tuple(
+        marker_id_by_role[role]
+        for role in ("north_west", "north_east", "south_east", "south_west")
+    )
     homography = fit_marker_homography(
         image_points,
         world_points,
-        marker_ids=("north_west", "north_east", "south_east", "south_west"),
+        marker_ids=ordered_marker_ids,
         layout_id=document["layout_id"],
         canonical_camera_pose_id=document["canonical_camera_pose_id"],
     )

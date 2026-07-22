@@ -14,8 +14,10 @@ from mineocclude.contracts.identity import SCHEMA_VERSION
 from mineocclude.data.capture_contract import PERSON_C_CONTRACT_VERSION
 
 
-LAYOUT_SCHEMA_VERSION = "0.1"
-LAYOUT_CONFIG_VERSION = "person-c-layout-config-v0.1"
+LEGACY_LAYOUT_SCHEMA_VERSION = "0.1"
+LEGACY_LAYOUT_CONFIG_VERSION = "person-c-layout-config-v0.1"
+LAYOUT_SCHEMA_VERSION = "0.2"
+LAYOUT_CONFIG_VERSION = "person-c-layout-config-v0.2"
 RUNTIME_EVIDENCE_REQUIRED = "RUNTIME EVIDENCE REQUIRED LATER"
 
 EXPECTED_LAYOUT_IDS = (
@@ -45,6 +47,9 @@ CONDITION_FIELDS = frozenset(
 )
 
 MARKER_COUNT = 4
+CANONICAL_MARKER_ROLES = frozenset(
+    {"north_west", "north_east", "south_east", "south_west"}
+)
 FORBIDDEN_MARKER_COLORS = frozenset({"magenta"})
 RUNTIME_EVIDENCE_FIELDS = (
     "reference_screenshot",
@@ -567,6 +572,7 @@ def _validate_markers(
         )
         return
     marker_ids: list[Any] = []
+    marker_roles: list[Any] = []
     coordinates: list[tuple[Any, Any, Any]] = []
     for index, marker in enumerate(markers):
         label = f"{layout_id}.markers[{index}]"
@@ -578,6 +584,7 @@ def _validate_markers(
             )
             continue
         marker_ids.append(marker.get("marker_id"))
+        marker_roles.append(marker.get("marker_role"))
         coordinate = marker.get("world_blocks")
         if isinstance(coordinate, Mapping):
             coordinates.append(
@@ -625,6 +632,13 @@ def _validate_markers(
             rejections,
             LayoutRejectionCode.DUPLICATE_MARKER,
             f"{layout_id} marker IDs and coordinates must be unique.",
+        )
+    if set(marker_roles) != CANONICAL_MARKER_ROLES or _duplicates(marker_roles):
+        _reject(
+            rejections,
+            LayoutRejectionCode.INVALID_GEOMETRY,
+            f"{layout_id} must map its four stable marker IDs to each canonical "
+            "geometric role exactly once.",
         )
 
 
@@ -773,7 +787,7 @@ def validate_layout_config(document: Mapping[str, Any]) -> LayoutValidationResul
         _reject(
             rejections,
             LayoutRejectionCode.INVALID_LAYOUT_SCHEMA_VERSION,
-            "Person C/layout/config versions do not match C1 v0.1.",
+            "Person C/layout/config versions do not match C1 layout v0.2.",
         )
 
     grammar = document["common_arena_grammar"]
