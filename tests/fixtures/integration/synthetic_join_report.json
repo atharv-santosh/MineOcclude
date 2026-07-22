@@ -1,0 +1,692 @@
+{
+  "contract_validations": {
+    "activation": {
+      "accepted": true,
+      "rejections": []
+    },
+    "intervention_request": {
+      "accepted": true,
+      "rejections": []
+    },
+    "rollout_registry": {
+      "accepted": true,
+      "rejections": []
+    },
+    "trajectory": {
+      "accepted": true,
+      "rejections": []
+    }
+  },
+  "fixture_metadata": {
+    "scientific_use": "forbidden",
+    "synthetic": true
+  },
+  "integration_id": "synthetic_cross_role_pipeline_001",
+  "integrity_checks": [
+    {
+      "details": {
+        "marker_mismatches": []
+      },
+      "name": "all_generated_evidence_is_explicitly_synthetic",
+      "passed": true
+    },
+    {
+      "details": {
+        "actual_integrity_links": [
+          "expected_activation_sites_to_activation_rows",
+          "token_map_positions_to_mineworld_layout",
+          "fit_manifest_hash_to_file_bytes",
+          "validation_manifest_hash_to_file_bytes",
+          "request_manifest_metadata_to_manifest_files",
+          "input_context_hash_to_file_bytes",
+          "intervention_request_hash_to_file_bytes",
+          "logical_input_context_rows_to_rollouts",
+          "rollout_measurement_failure_semantics",
+          "orphaned_claim_bearing_row_enumeration"
+        ],
+        "actual_join_keys": {
+          "contexts_to_rollouts": [
+            "input_context_id"
+          ],
+          "request_alpha_table_to_rollouts": [
+            "dose_id"
+          ],
+          "request_heldout_events_to_rollouts": [
+            "event_id"
+          ],
+          "rollouts_to_input_context_artifacts": [
+            "input_context_artifact_id",
+            "artifact_id"
+          ],
+          "rollouts_to_intervention_request_artifacts": [
+            "intervention_request_artifact_id",
+            "artifact_id"
+          ],
+          "rollouts_to_measurements": [
+            "rollout_id"
+          ],
+          "rollouts_to_output_artifacts": [
+            "output_artifact_id",
+            "artifact_id"
+          ],
+          "rollouts_to_runs": [
+            "run_id"
+          ],
+          "targets_to_activations": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "targets_to_baselines": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "trajectory_to_normalized_actions": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "trajectory_to_targets": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "trajectory_to_token_map": [
+            "trajectory_id",
+            "model_frame_idx"
+          ]
+        },
+        "expected_integrity_links": [
+          "expected_activation_sites_to_activation_rows",
+          "token_map_positions_to_mineworld_layout",
+          "fit_manifest_hash_to_file_bytes",
+          "validation_manifest_hash_to_file_bytes",
+          "request_manifest_metadata_to_manifest_files",
+          "input_context_hash_to_file_bytes",
+          "intervention_request_hash_to_file_bytes",
+          "logical_input_context_rows_to_rollouts",
+          "rollout_measurement_failure_semantics",
+          "orphaned_claim_bearing_row_enumeration"
+        ],
+        "expected_join_keys": {
+          "contexts_to_rollouts": [
+            "input_context_id"
+          ],
+          "request_alpha_table_to_rollouts": [
+            "dose_id"
+          ],
+          "request_heldout_events_to_rollouts": [
+            "event_id"
+          ],
+          "rollouts_to_input_context_artifacts": [
+            "input_context_artifact_id",
+            "artifact_id"
+          ],
+          "rollouts_to_intervention_request_artifacts": [
+            "intervention_request_artifact_id",
+            "artifact_id"
+          ],
+          "rollouts_to_measurements": [
+            "rollout_id"
+          ],
+          "rollouts_to_output_artifacts": [
+            "output_artifact_id",
+            "artifact_id"
+          ],
+          "rollouts_to_runs": [
+            "run_id"
+          ],
+          "targets_to_activations": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "targets_to_baselines": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "trajectory_to_normalized_actions": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "trajectory_to_targets": [
+            "trajectory_id",
+            "model_frame_idx"
+          ],
+          "trajectory_to_token_map": [
+            "trajectory_id",
+            "model_frame_idx"
+          ]
+        }
+      },
+      "name": "explicit_join_keys_and_integrity_links_are_documented",
+      "passed": true
+    },
+    {
+      "details": {
+        "expected_sites": [
+          {
+            "hook_site": "residual_stream",
+            "layer_idx": 5
+          },
+          {
+            "hook_site": "residual_stream",
+            "layer_idx": 12
+          }
+        ],
+        "mismatches": [],
+        "site_errors": []
+      },
+      "name": "exact_activation_site_coverage",
+      "passed": true
+    },
+    {
+      "details": {
+        "mismatches": []
+      },
+      "name": "token_map_matches_mineworld_layout",
+      "passed": true
+    },
+    {
+      "details": {
+        "mismatches": {}
+      },
+      "name": "request_manifest_metadata_resolves",
+      "passed": true
+    },
+    {
+      "details": {
+        "mismatches": []
+      },
+      "name": "registry_input_hashes_match_actual_file_bytes",
+      "passed": true
+    },
+    {
+      "details": {
+        "mismatches": []
+      },
+      "name": "intervention_request_matches_rollouts",
+      "passed": true
+    },
+    {
+      "details": {
+        "mismatches": []
+      },
+      "name": "logical_input_contexts_resolve_exactly",
+      "passed": true
+    },
+    {
+      "details": {
+        "mismatches": []
+      },
+      "name": "measurement_failure_semantics_are_preserved",
+      "passed": true
+    }
+  ],
+  "joins": [
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "left_table": "trajectory.frame_map",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "trajectory_to_normalized_actions",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "right_table": "trajectory.normalized_actions",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "left_table": "trajectory.frame_map",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "trajectory_to_token_map",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "right_table": "token_map.rows",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "left_table": "trajectory.frame_map",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "trajectory_to_targets",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "right_table": "oracle_targets.rows",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [
+        {
+          "count": 2,
+          "key": [
+            "synthetic_trajectory_0001",
+            0
+          ]
+        },
+        {
+          "count": 2,
+          "key": [
+            "synthetic_trajectory_0001",
+            1
+          ]
+        },
+        {
+          "count": 2,
+          "key": [
+            "synthetic_trajectory_0001",
+            2
+          ]
+        }
+      ],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 6,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "left_table": "oracle_targets.rows",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "targets_to_activations",
+      "no_common_key_failure": false,
+      "relationship": "one_to_many",
+      "right_input_rows": 6,
+      "right_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "right_table": "activation.index_rows",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "left_table": "oracle_targets.rows",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "targets_to_baselines",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "right_table": "baseline_predictions.rows",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "event_id"
+      ],
+      "left_table": "intervention_request.heldout_events",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "request_heldout_events_to_rollouts",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "event_id"
+      ],
+      "right_table": "rollout_manifest.rollout_rows",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 4,
+      "left_join_fields": [
+        "dose_id"
+      ],
+      "left_table": "intervention_request.alpha_table",
+      "missing_from_left": [],
+      "missing_from_right": [
+        [
+          "negative_low"
+        ]
+      ],
+      "name": "request_alpha_table_to_rollouts",
+      "no_common_key_failure": false,
+      "relationship": "one_to_many",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "dose_id"
+      ],
+      "right_table": "rollout_manifest.rollout_rows",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "input_context_id"
+      ],
+      "left_table": "input_contexts.rows",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "contexts_to_rollouts",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "input_context_id"
+      ],
+      "right_table": "rollout_manifest.rollout_rows",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 2,
+      "duplicate_left_keys": [
+        {
+          "count": 2,
+          "key": [
+            "synthetic_rollout_run_001"
+          ]
+        }
+      ],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "run_id"
+      ],
+      "left_table": "rollout_manifest.rollout_rows",
+      "missing_from_left": [
+        [
+          "synthetic_input_registration_run_001"
+        ],
+        [
+          "synthetic_rollout_run_000"
+        ]
+      ],
+      "missing_from_right": [],
+      "name": "rollouts_to_runs",
+      "no_common_key_failure": false,
+      "relationship": "many_to_one",
+      "right_input_rows": 4,
+      "right_join_fields": [
+        "run_id"
+      ],
+      "right_table": "registry.runs",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 1,
+      "duplicate_left_keys": [
+        {
+          "count": 3,
+          "key": [
+            "synthetic_input_context_artifact_001"
+          ]
+        }
+      ],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "input_context_artifact_id"
+      ],
+      "left_table": "rollout_manifest.rollout_rows",
+      "missing_from_left": [
+        [
+          "synthetic_diagnostic_artifact_003"
+        ],
+        [
+          "synthetic_intervention_request_artifact_001"
+        ],
+        [
+          "synthetic_partial_rollout_artifact_003"
+        ],
+        [
+          "synthetic_rollout_clip_artifact_000"
+        ],
+        [
+          "synthetic_rollout_clip_artifact_001"
+        ],
+        [
+          "synthetic_rollout_clip_artifact_002"
+        ]
+      ],
+      "missing_from_right": [],
+      "name": "rollouts_to_input_context_artifacts",
+      "no_common_key_failure": false,
+      "relationship": "many_to_one",
+      "right_input_rows": 7,
+      "right_join_fields": [
+        "artifact_id"
+      ],
+      "right_table": "registry.artifacts",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 1,
+      "duplicate_left_keys": [
+        {
+          "count": 3,
+          "key": [
+            "synthetic_intervention_request_artifact_001"
+          ]
+        }
+      ],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "intervention_request_artifact_id"
+      ],
+      "left_table": "rollout_manifest.rollout_rows",
+      "missing_from_left": [
+        [
+          "synthetic_diagnostic_artifact_003"
+        ],
+        [
+          "synthetic_input_context_artifact_001"
+        ],
+        [
+          "synthetic_partial_rollout_artifact_003"
+        ],
+        [
+          "synthetic_rollout_clip_artifact_000"
+        ],
+        [
+          "synthetic_rollout_clip_artifact_001"
+        ],
+        [
+          "synthetic_rollout_clip_artifact_002"
+        ]
+      ],
+      "missing_from_right": [],
+      "name": "rollouts_to_intervention_request_artifacts",
+      "no_common_key_failure": false,
+      "relationship": "many_to_one",
+      "right_input_rows": 7,
+      "right_join_fields": [
+        "artifact_id"
+      ],
+      "right_table": "registry.artifacts",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 2,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 2,
+      "left_input_rows": 2,
+      "left_join_fields": [
+        "output_artifact_id"
+      ],
+      "left_table": "output-bearing rollout rows",
+      "missing_from_left": [
+        [
+          "synthetic_diagnostic_artifact_003"
+        ],
+        [
+          "synthetic_input_context_artifact_001"
+        ],
+        [
+          "synthetic_intervention_request_artifact_001"
+        ],
+        [
+          "synthetic_partial_rollout_artifact_003"
+        ],
+        [
+          "synthetic_rollout_clip_artifact_000"
+        ]
+      ],
+      "missing_from_right": [],
+      "name": "rollouts_to_output_artifacts",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 7,
+      "right_join_fields": [
+        "artifact_id"
+      ],
+      "right_table": "registry.artifacts",
+      "status": "passed"
+    },
+    {
+      "cardinality_mismatches": [],
+      "common_key_count": 3,
+      "duplicate_left_keys": [],
+      "duplicate_right_keys": [],
+      "empty_input_failure": false,
+      "invalid_left_rows": [],
+      "invalid_right_rows": [],
+      "joined_rows": 3,
+      "left_input_rows": 3,
+      "left_join_fields": [
+        "rollout_id"
+      ],
+      "left_table": "rollout_manifest.rollout_rows",
+      "missing_from_left": [],
+      "missing_from_right": [],
+      "name": "rollouts_to_measurements",
+      "no_common_key_failure": false,
+      "relationship": "one_to_one",
+      "right_input_rows": 3,
+      "right_join_fields": [
+        "rollout_id"
+      ],
+      "right_table": "measurements.rows",
+      "status": "passed"
+    }
+  ],
+  "orphaned_claim_bearing_rows": [],
+  "overall_status": "passed",
+  "schema_version": "1.0",
+  "summary": {
+    "contracts_passed": 4,
+    "contracts_total": 4,
+    "integrity_checks_passed": 9,
+    "integrity_checks_total": 9,
+    "joins_passed": 13,
+    "joins_total": 13,
+    "orphaned_claim_bearing_rows": 0
+  }
+}

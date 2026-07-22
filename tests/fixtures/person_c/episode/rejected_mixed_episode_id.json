@@ -1,0 +1,496 @@
+{
+  "artifacts": {
+    "client_tick_log": {
+      "format": "jsonl",
+      "path": "synthetic/person_c/client_tick_log.jsonl",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "config": {
+      "format": "json",
+      "path": "synthetic/person_c/config.json",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "diagnostics": {
+      "format": "json",
+      "path": "synthetic/person_c/diagnostics.json",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "frame_map": {
+      "format": "jsonl",
+      "path": "synthetic/person_c/frame_map.jsonl",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "normalized_actions": {
+      "format": "jsonl",
+      "path": "synthetic/person_c/normalized_actions.jsonl",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "raw_actions": {
+      "format": "jsonl",
+      "path": "synthetic/person_c/raw_actions.jsonl",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "seed_noise": {
+      "format": "jsonl",
+      "path": "synthetic/person_c/seed_noise.jsonl",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "server_state": {
+      "format": "jsonl",
+      "path": "synthetic/person_c/server_state.jsonl",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "visibility": {
+      "format": "jsonl",
+      "path": "synthetic/person_c/visibility.jsonl",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    }
+  },
+  "condition": "synthetic_contract_test",
+  "episode_id": "synthetic_person_c_episode_0001",
+  "episode_manifest": {
+    "code_sha": "0000000000000000000000000000000000000000",
+    "condition": "synthetic_contract_test",
+    "config_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "dt_seconds": 0.05,
+    "duration": 0.2,
+    "environment_lock_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "episode_id": "synthetic_person_c_episode_0001",
+    "layout_config_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "layout_id": "synthetic_layout_pending_c1",
+    "lifecycle_version": "person-c-tick-lifecycle-v0.1",
+    "noise_schedule_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "person_c_contract_version": "0.1",
+    "q": 0.2,
+    "regime": "synthetic_contract_test",
+    "rng": {
+      "bit_generator": "PCG64",
+      "immutable_schedule": true,
+      "java_consumption": "stored_draws_in_draw_idx_order",
+      "numpy_version": "PIN_REQUIRED_BEFORE_RUNTIME",
+      "producer": "numpy.random.Generator"
+    },
+    "run_id": "synthetic_person_c_capture_run_0001",
+    "schema_version": "1.0",
+    "seed": 20260721,
+    "status": "accepted",
+    "tick_rate_hz": 20.0,
+    "trajectory_id": "synthetic_person_c_trajectory_0001",
+    "v": 1.0
+  },
+  "exclusion_ledger": [],
+  "impulse_orientation": {
+    "camera_component_0_observed_effect": "synthetic_positive_component_0_only",
+    "camera_component_1_observed_effect": "synthetic_no_component_1_effect",
+    "evidence_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "evidence_scope": "synthetic_contract_only",
+    "fixture_id": "synthetic_person_c_camera_impulse_0001",
+    "status": "verified"
+  },
+  "layout_id": "synthetic_layout_pending_c1",
+  "media": {
+    "fps": 20.0,
+    "frame_count": 4,
+    "height": 360,
+    "mode": "mp4",
+    "path": "synthetic/person_c/scene.mp4",
+    "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "width": 640
+  },
+  "person_c_contract_version": "0.1",
+  "run_id": "synthetic_person_c_capture_run_0001",
+  "schema_version": "1.0",
+  "scientific_use": "forbidden",
+  "seed": 20260721,
+  "streams": {
+    "client_tick_log": [
+      {
+        "action_idx": 2,
+        "client_tick": 502,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 2,
+        "render_frame_idx": 2,
+        "server_tick": 102,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 1,
+        "client_tick": 501,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 1,
+        "render_frame_idx": 1,
+        "server_tick": 101,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 3,
+        "client_tick": 503,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 3,
+        "render_frame_idx": 3,
+        "server_tick": 103,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 0,
+        "client_tick": 500,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 0,
+        "render_frame_idx": 0,
+        "server_tick": 100,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      }
+    ],
+    "frame_map": [
+      {
+        "action_idx": 2,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 2,
+        "render_frame_idx": 2,
+        "server_tick": 102,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 0,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 0,
+        "render_frame_idx": 0,
+        "server_tick": 100,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 3,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 3,
+        "render_frame_idx": 3,
+        "server_tick": 103,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 1,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 1,
+        "render_frame_idx": 1,
+        "server_tick": 101,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      }
+    ],
+    "normalized_actions": [
+      {
+        "action_idx": 3,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 3,
+        "normalized_action": {
+          "camera_component_0": 0,
+          "camera_component_1": 0,
+          "drop_pick_item": 0,
+          "forward_back": 0,
+          "hotbar": 0,
+          "jump": 0,
+          "left_right": 0,
+          "sprint_sneak": 0,
+          "use_attack": 0
+        },
+        "render_frame_idx": 3,
+        "server_tick": 103,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 0,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 0,
+        "normalized_action": {
+          "camera_component_0": 0,
+          "camera_component_1": 0,
+          "drop_pick_item": 0,
+          "forward_back": 0,
+          "hotbar": 0,
+          "jump": 0,
+          "left_right": 0,
+          "sprint_sneak": 0,
+          "use_attack": 0
+        },
+        "render_frame_idx": 0,
+        "server_tick": 100,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 2,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 2,
+        "normalized_action": {
+          "camera_component_0": 0,
+          "camera_component_1": 0,
+          "drop_pick_item": 0,
+          "forward_back": 0,
+          "hotbar": 0,
+          "jump": 0,
+          "left_right": 0,
+          "sprint_sneak": 0,
+          "use_attack": 0
+        },
+        "render_frame_idx": 2,
+        "server_tick": 102,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 1,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 1,
+        "normalized_action": {
+          "camera_component_0": 1,
+          "camera_component_1": 0,
+          "drop_pick_item": 0,
+          "forward_back": 0,
+          "hotbar": 0,
+          "jump": 0,
+          "left_right": 0,
+          "sprint_sneak": 0,
+          "use_attack": 0
+        },
+        "render_frame_idx": 1,
+        "server_tick": 101,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      }
+    ],
+    "raw_actions": [
+      {
+        "action_idx": 1,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 1,
+        "raw_action": {
+          "source_vocabulary": "UNRESOLVED_A_C_RAW_ACTION_VOCABULARY",
+          "synthetic_action_code": "camera_impulse"
+        },
+        "render_frame_idx": 1,
+        "server_tick": 101,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 3,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 3,
+        "raw_action": {
+          "source_vocabulary": "UNRESOLVED_A_C_RAW_ACTION_VOCABULARY",
+          "synthetic_action_code": "no_op"
+        },
+        "render_frame_idx": 3,
+        "server_tick": 103,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 0,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 0,
+        "raw_action": {
+          "source_vocabulary": "UNRESOLVED_A_C_RAW_ACTION_VOCABULARY",
+          "synthetic_action_code": "no_op"
+        },
+        "render_frame_idx": 0,
+        "server_tick": 100,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 2,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 2,
+        "raw_action": {
+          "source_vocabulary": "UNRESOLVED_A_C_RAW_ACTION_VOCABULARY",
+          "synthetic_action_code": "no_op"
+        },
+        "render_frame_idx": 2,
+        "server_tick": 102,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      }
+    ],
+    "seed_noise": [
+      {
+        "action_idx": 1,
+        "draw_idx": 1,
+        "dt_seconds": 0.05,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 1,
+        "noise_draw": 0.05,
+        "noise_std_blocks": 0.1,
+        "q": 0.2,
+        "render_frame_idx": 1,
+        "seed": 20260721,
+        "server_tick": 101,
+        "standard_normal_draw": 0.5,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 0,
+        "draw_idx": 0,
+        "dt_seconds": 0.05,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 0,
+        "noise_draw": -0.1,
+        "noise_std_blocks": 0.1,
+        "q": 0.2,
+        "render_frame_idx": 0,
+        "seed": 20260721,
+        "server_tick": 100,
+        "standard_normal_draw": -1.0,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 3,
+        "draw_idx": 3,
+        "dt_seconds": 0.05,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 3,
+        "noise_draw": -0.07500000000000001,
+        "noise_std_blocks": 0.1,
+        "q": 0.2,
+        "render_frame_idx": 3,
+        "seed": 20260721,
+        "server_tick": 103,
+        "standard_normal_draw": -0.75,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 2,
+        "draw_idx": 2,
+        "dt_seconds": 0.05,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 2,
+        "noise_draw": 0.125,
+        "noise_std_blocks": 0.1,
+        "q": 0.2,
+        "render_frame_idx": 2,
+        "seed": 20260721,
+        "server_tick": 102,
+        "standard_normal_draw": 1.25,
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      }
+    ],
+    "server_state": [
+      {
+        "action_idx": 0,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 0,
+        "render_frame_idx": 0,
+        "server_tick": 100,
+        "state": {
+          "position_x_blocks": 10.0,
+          "position_y_blocks": 64.0,
+          "position_z_blocks": 5.0,
+          "target_entity_id": "synthetic_target_0001",
+          "target_present": true,
+          "velocity_x_blocks_per_second": 1.0,
+          "velocity_y_blocks_per_second": 0.0,
+          "velocity_z_blocks_per_second": 0.0,
+          "wall_parallel_position_blocks": 10.0
+        },
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 3,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 3,
+        "render_frame_idx": 3,
+        "server_tick": 103,
+        "state": {
+          "position_x_blocks": 10.15,
+          "position_y_blocks": 64.0,
+          "position_z_blocks": 5.0,
+          "target_entity_id": "synthetic_target_0001",
+          "target_present": true,
+          "velocity_x_blocks_per_second": 1.0,
+          "velocity_y_blocks_per_second": 0.0,
+          "velocity_z_blocks_per_second": 0.0,
+          "wall_parallel_position_blocks": 10.15
+        },
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 1,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 1,
+        "render_frame_idx": 1,
+        "server_tick": 101,
+        "state": {
+          "position_x_blocks": 10.05,
+          "position_y_blocks": 64.0,
+          "position_z_blocks": 5.0,
+          "target_entity_id": "synthetic_target_0001",
+          "target_present": true,
+          "velocity_x_blocks_per_second": 1.0,
+          "velocity_y_blocks_per_second": 0.0,
+          "velocity_z_blocks_per_second": 0.0,
+          "wall_parallel_position_blocks": 10.05
+        },
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      },
+      {
+        "action_idx": 2,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 2,
+        "render_frame_idx": 2,
+        "server_tick": 102,
+        "state": {
+          "position_x_blocks": 10.1,
+          "position_y_blocks": 64.0,
+          "position_z_blocks": 5.0,
+          "target_entity_id": "synthetic_target_0001",
+          "target_present": true,
+          "velocity_x_blocks_per_second": 1.0,
+          "velocity_y_blocks_per_second": 0.0,
+          "velocity_z_blocks_per_second": 0.0,
+          "wall_parallel_position_blocks": 10.1
+        },
+        "trajectory_id": "synthetic_person_c_trajectory_0001"
+      }
+    ],
+    "visibility": [
+      {
+        "action_idx": 3,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 3,
+        "render_frame_idx": 3,
+        "server_tick": 103,
+        "trajectory_id": "synthetic_person_c_trajectory_0001",
+        "visibility": "occluded"
+      },
+      {
+        "action_idx": 2,
+        "episode_id": "synthetic_wrong_episode",
+        "model_frame_idx": 2,
+        "render_frame_idx": 2,
+        "server_tick": 102,
+        "trajectory_id": "synthetic_person_c_trajectory_0001",
+        "visibility": "occluded"
+      },
+      {
+        "action_idx": 0,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 0,
+        "render_frame_idx": 0,
+        "server_tick": 100,
+        "trajectory_id": "synthetic_person_c_trajectory_0001",
+        "visibility": "visible"
+      },
+      {
+        "action_idx": 1,
+        "episode_id": "synthetic_person_c_episode_0001",
+        "model_frame_idx": 1,
+        "render_frame_idx": 1,
+        "server_tick": 101,
+        "trajectory_id": "synthetic_person_c_trajectory_0001",
+        "visibility": "occluded"
+      }
+    ]
+  },
+  "synthetic": true,
+  "temporal_alignment": {
+    "action_idx": 1,
+    "effect_server_tick": 102,
+    "evidence_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "evidence_scope": "synthetic_contract_only",
+    "status": "verified",
+    "visual_after_model_frame_idx": 2,
+    "visual_before_model_frame_idx": 1
+  },
+  "trajectory_id": "synthetic_person_c_trajectory_0001"
+}
