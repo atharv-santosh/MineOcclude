@@ -10,6 +10,7 @@ from pathlib import Path
 from mineocclude.contracts.identity import SCHEMA_VERSION
 from mineocclude.data.capture_contract import PERSON_C_CONTRACT_VERSION
 from mineocclude.data.layout_contract import (
+    CANONICAL_MARKER_ROLES,
     EXPECTED_CONDITIONS,
     EXPECTED_LAYOUT_IDS,
     LAYOUT_SCHEMA_VERSION,
@@ -23,7 +24,8 @@ from mineocclude.data.layout_contract import (
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG_PATH = ROOT / "configs" / "scenes" / "layouts.yaml"
-SCHEMA_PATH = ROOT / "schemas" / "person_c" / "layouts_v0_1.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "person_c" / "layouts_v0_2.schema.json"
+LEGACY_SCHEMA_PATH = ROOT / "schemas" / "person_c" / "layouts_v0_1.schema.json"
 
 
 def load_config() -> dict:
@@ -71,6 +73,10 @@ class TestPersonCLayoutContract(unittest.TestCase):
                 }
                 self.assertEqual(len(markers), 4)
                 self.assertEqual(len({marker["marker_id"] for marker in markers}), 4)
+                self.assertEqual(
+                    {marker["marker_role"] for marker in markers},
+                    set(CANONICAL_MARKER_ROLES),
+                )
                 self.assertEqual(len(coordinates), 4)
                 self.assertNotIn(
                     "magenta",
@@ -206,6 +212,23 @@ class TestPersonCLayoutContract(unittest.TestCase):
             "0.1",
         )
         self.assertEqual(missing_units, [])
+
+        legacy = json.loads(LEGACY_SCHEMA_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(legacy["properties"]["layout_schema_version"]["const"], "0.1")
+
+    def test_duplicate_missing_and_unknown_marker_roles_fail_closed(self) -> None:
+        for mutation in ("duplicate", "missing", "unknown"):
+            with self.subTest(mutation=mutation):
+                document = deepcopy(load_config())
+                if mutation == "duplicate":
+                    document["layouts"][0]["markers"][1]["marker_role"] = "north_west"
+                elif mutation == "missing":
+                    document["layouts"][0]["markers"][1].pop("marker_role")
+                else:
+                    document["layouts"][0]["markers"][1]["marker_role"] = "screen_top_right"
+                result = validate_layout_config(document)
+                self.assertFalse(result.accepted)
+                self.assertIn(LayoutRejectionCode.INVALID_GEOMETRY, rejection_codes(result))
 
 
 if __name__ == "__main__":

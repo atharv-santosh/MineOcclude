@@ -463,7 +463,6 @@ def main() -> None:
 
     token_map = build_token_map(trajectory, activation)
     oracle_targets = build_oracle_targets(trajectory, activation)
-    baseline_predictions = build_baseline_predictions(oracle_targets)
 
     fit_manifest, validation_manifest = build_probe_manifests(oracle_targets)
 
@@ -518,14 +517,10 @@ def main() -> None:
         validate_rollout_registry_bundle(rollout_manifest, registry),
     )
 
-    measurements = build_measurements(rollout_manifest)
-
     write_json("synthetic_token_map.json", token_map)
     write_json("synthetic_oracle_targets.json", oracle_targets)
-    write_json("synthetic_baseline_predictions.json", baseline_predictions)
     write_json("synthetic_rollout_manifest.json", rollout_manifest)
     write_json("synthetic_registry.json", registry)
-    write_json("synthetic_measurements.json", measurements)
 
     bundle = {
         "schema_version": SCHEMA_VERSION,
@@ -554,23 +549,23 @@ def main() -> None:
             "trajectory_package": "../trajectory/accepted_package.json",
             "activation_handoff": "../activation/accepted_activation_handoff.json",
             "activation_chunk": "../activation/synthetic_activation_chunk.json",
+            "capture_package": "../person_c/episode/accepted_episode.json",
+            "layout_config": "../../../configs/scenes/layouts.yaml",
             "token_map": "synthetic_token_map.json",
             "oracle_targets": "synthetic_oracle_targets.json",
-            "baseline_predictions": "synthetic_baseline_predictions.json",
             "fit_manifest": "synthetic_fit_manifest.json",
             "validation_manifest": "synthetic_validation_manifest.json",
             "intervention_request": "synthetic_intervention_request.json",
             "input_contexts": "synthetic_input_contexts.json",
             "rollout_manifest": "synthetic_rollout_manifest.json",
             "registry": "synthetic_registry.json",
-            "measurements": "synthetic_measurements.json",
         },
         "explicit_join_keys": {
             "trajectory_to_normalized_actions": ["trajectory_id", "model_frame_idx"],
             "trajectory_to_token_map": ["trajectory_id", "model_frame_idx"],
             "trajectory_to_targets": ["trajectory_id", "model_frame_idx"],
             "targets_to_activations": ["trajectory_id", "model_frame_idx"],
-            "targets_to_baselines": ["trajectory_id", "model_frame_idx"],
+            "b_chain_targets_to_d_baselines": ["trajectory_id", "model_frame_idx"],
             "request_heldout_events_to_rollouts": ["event_id"],
             "request_alpha_table_to_rollouts": ["dose_id"],
             "contexts_to_rollouts": ["input_context_id"],
@@ -598,6 +593,11 @@ def main() -> None:
             "rollout_measurement_failure_semantics",
             "orphaned_claim_bearing_row_enumeration",
             "authenticated_a_b_probe_bridge",
+            "authoritative_c_to_b_state_handoff",
+            "person_b_full_synthetic_analysis_chain",
+            "authoritative_d_to_b_baseline_handoff",
+            "hash_bound_e_to_b_measurement_handoff",
+            "versioned_c_e_marker_mapping",
         ],
     }
 

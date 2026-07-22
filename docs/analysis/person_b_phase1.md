@@ -70,11 +70,12 @@ identities, and malformed document envelopes.
 ## Input boundary
 
 The JSON consumed by `build_oracle_targets.py` is a B-owned derived-state
-table that carries the frozen schema-v1 universal row identity. It is not a
-claim that Person C's raw trajectory package already has this flat shape. A
-validator-backed C/A-to-B adapter is still required before real state logs are
-used; any missing real-data field or meaning must be handled as an explicit
-adapter or migration decision, never by silent repair.
+table that carries the frozen schema-v1 universal row identity. Person C's raw
+package retains its own authoritative shape. The validator-backed consumer
+adapter `build_state_input_from_capture_package` now validates that source,
+joins through explicit capture identity, applies the B coordinate frame, binds
+A provenance, and emits this exact flat schema. Missing real-data fields or
+meanings remain rejection/migration decisions, never silent repairs.
 
 Live state inputs additionally require a content-hashed coordinate frame with
 an origin and positive world-space unit vector signed by Persons B and C.
@@ -188,9 +189,10 @@ scientific identity. This path is marked `synthetic = true` and
 `scientific_use = forbidden` and cannot be used as runtime or scientific
 evidence.
 
-Chunk 2 does not connect MLP fitting end to end; the existing MLP harness
-remains separately tested. U2/U3 scientific analyses, real activation loading,
-the C-to-A adapter, runtime evidence, and final approvals remain pending in
+Chunk 2 did not connect MLP fitting end to end; the existing MLP harness
+remains separately tested. The later Phase 1 synthetic-chain composition now
+connects U2/U3 contract evidence. Real U2/U3 scientific analyses, real
+activation loading, runtime evidence, and final approvals remain pending in
 their assigned later work.
 
 ## Authenticated synthetic probe provenance
@@ -215,8 +217,8 @@ Synthetic ridge predictions and U1 results are bound to the matrix hash, the
 literal core-config hash, and a SHA over the B-owned bridge/split/ridge source
 bytes. They record the frozen alpha grid, inner-fold count, outer-fold seed,
 selected alpha per outer fold, scaler metadata, and exact training/test
-memberships. This is interface evidence only. End-to-end MLP, bridged U2/U3,
-live/runtime evidence, and cross-role signoffs remain pending.
+memberships. This is interface evidence only. End-to-end MLP, live/runtime
+evidence, real scientific U2/U3 results, and cross-role signoffs remain pending.
 
 ## Step 1.7 authenticated A-to-B runner connection
 
@@ -240,4 +242,30 @@ prediction-artifact hash.
 bytes, invalid bridge metadata, or any fail-closed bridge rejection fails the
 overall Step 1.7 status. All derived evidence remains `synthetic = true` and
 `scientific_use = forbidden`; this connection does not create runtime or
-scientific evidence and does not add MLP or U2/U3 execution.
+scientific evidence and does not add MLP execution. U2/U3 execution is now
+provided only by the separate B-owned synthetic chain described below.
+
+## Complete Phase 1 synthetic analysis chain
+
+`mineocclude.analysis.synthetic_chain.run_synthetic_analysis_chain` composes
+the current authoritative components into one deterministic CPU-only proof:
+state to oracle targets, activation join, saved layout-grouped folds, OOF
+ridge, U1, reconstructed-spread U2, hidden/reveal U3, allowed-evidence
+direction derivation, time orthogonalization, dose construction, the existing
+B-to-A intervention request, and a sealed result bundle.
+
+The fixture includes explicitly labeled decodable-mean, decodable-log-spread,
+time-only diagnostic, and pure-noise diagnostic dimensions. It uses train-only
+preprocessing and layout-disjoint OOF fits. Visible/null-spread rows and every
+eligible hidden row are recorded in a deterministic eligibility ledger rather
+than silently dropped. Hidden truth is never a feature. Pure-noise behavior is
+checked against a predeclared near-chance range.
+
+U1/U2/U3 outputs, predictions, request inputs, and the final bundle bind source,
+fold, matrix, config, and code provenance and carry `synthetic = true` plus
+`scientific_use = forbidden`. The saved evidence is
+`tests/fixtures/person_b/synthetic_analysis_chain_v1.json`; fresh execution,
+row-order independence, non-mutation, OOF group separation, stale hashes,
+duplicate identities, and missing-layer failures are tested in
+`tests/analysis/test_synthetic_analysis_chain.py`. This proves the Phase 1
+contract only; it is not a real result and does not add MLP to the chain.

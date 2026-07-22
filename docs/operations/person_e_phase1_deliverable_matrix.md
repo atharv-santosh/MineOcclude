@@ -1,11 +1,12 @@
 # Person E Phase 0/1 status and current-state inventory
 
-Status: current Person E status authority for `repair/person-e-phase1`.
+Status: current Person E Phase 0/1 status authority at `integration/mvp`.
 
-This record is based on the frozen A+B+C+D foundation at `integration/mvp`,
-commit `ede97db`. The repair branch is not merged, signed off, or frozen. The
-current Phase 1 verification is `86 passed, 43 subtests passed`; the current
-full-repository checkpoint is `400 passed, 215 subtests passed`.
+The validated integrated checkpoint is
+`0d5f979e14e5c5f41f59233f1222db822d30cdd6`. Its recorded historical test
+evidence is `400 passed, 215 subtests passed`; those numbers are not presented
+as a new run. Person E's repository-side Phase 0/1 technical work is integrated.
+Formal human signoff, real calibration, and real measurement remain pending.
 
 Allowed status values in this inventory are `Done`, `In progress`, `Blocked`,
 `Not started`, and `Unverified`. A `Done` entry means only the stated
@@ -22,7 +23,7 @@ scientific result exists.
 | Phase 0 incompatible/outdated-work list | Done | The superseded assumptions are recorded below without restoring stale shared files. |
 | Phase 0 blocker/dependency list | Done | The dependency table below names the responsible owner and resolution deadline. |
 | Phase 0 earliest unmet gate | Done | The repository-side Phase 1 technical gate is complete; formal human approval and A orchestration adoption remain explicit integration dependencies. |
-| Phase 0 exact integration checkpoint | Done | Base is `integration/mvp` at `ede97db`; this repair branch is explicitly not merged or frozen. |
+| Phase 0 exact integration checkpoint | Done | Integrated at `integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`; historical checkpoint tests were 400 passed and 215 subtests passed. |
 | Phase 1.1 complete interface and ownership map | Done | `docs/contracts/person_e_interface_ownership_v0_1.md`; unresolved boundaries are decision records in `docs/decisions/person_e_phase1_decision_log.md`. |
 | Phase 1.2 complete immutable shared registry contract | Done | `validate_immutable_run_artifact_registry` in `src/mineocclude/contracts/rollout_registry.py`, the delegating E wrapper, `tests/fixtures/person_e/immutable_registry_v1.json`, and `tests/experiments/test_immutable_registry_contract.py`. Frozen A rollout schema `1.0` remains accepted unchanged. |
 | Phase 1.3 contract-level vision and synthetic measurement fixtures | Done | `docs/contracts/person_e_phase1_synthetic_contracts_v1.md`, `tests/fixtures/person_e/`, and `tests/vision/test_phase1_contracts.py` cover split calibration, detection, homography, A/D-compatible rollout scenarios, measurements, and fail-closed rejection evidence. |
@@ -73,7 +74,8 @@ measurement, figures, or scientific claims are complete.
 - Superseded: E's older copies of
   `src/mineocclude/analysis/manifests.py` and
   `src/mineocclude/contracts/rollout_registry.py` were not restored. The files
-  from `integration/mvp@ede97db` remain authoritative.
+  integrated through `integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`
+  remain authoritative.
 - Superseded: caller-supplied rollout facts are not trusted by E measurement
   production. The current path passes the actual A manifest and registry to
   B's validator.

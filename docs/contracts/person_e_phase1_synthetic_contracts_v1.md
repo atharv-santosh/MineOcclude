@@ -1,7 +1,7 @@
 # Person E Phase 1.3 synthetic vision and lineage contracts
 
-Status: repository-side technical contract complete on
-`repair/person-e-phase1`. All evidence described here is synthetic and carries
+Status: repository-side technical contract integrated at
+`integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`. All evidence described here is synthetic and carries
 `scientific_use=forbidden`. It is not detector calibration, a real homography,
 U4 measurement evidence, or a final figure.
 
@@ -32,14 +32,19 @@ replace C's final `visible_flag`.
 
 ## Homography evidence
 
-`validate_homography_fixture` freezes
-`person-e-homography-fixture-v1.0` around the existing four-point numerical
-implementation. It requires four explicitly non-magenta canonical markers,
-marker IDs/roles, image coordinates, world-XZ block coordinates, layout,
-camera pose, decoded resolution, and coordinate conventions. A known synthetic
-probe must be recovered. Degenerate or inconsistent marker geometry fails.
-Reuse under another layout, camera pose, resolution, or coordinate system is
-rejected explicitly.
+`validate_homography_fixture` preserves
+`person-e-homography-fixture-v1.0` and adds the compatible
+`person-e-homography-fixture-v1.1` interpretation around the existing
+four-point numerical implementation. Version 1.0 retains its canonical-marker
+behavior. Version 1.1 separates C's stable physical `marker_id` from the
+canonical `marker_role` (`north_west`, `north_east`, `south_east`,
+`south_west`). It requires four unique IDs and the complete unique role set,
+joins image observations to C world geometry by stable ID, and sorts only by
+explicit role for deterministic computation. It never treats list order or an
+image-screen quadrant as correspondence under a rotated camera. A known
+synthetic probe must be recovered; missing, duplicate, ambiguous, degenerate,
+or role-inconsistent geometry fails. Reuse under another layout, camera pose,
+resolution, or coordinate system is rejected explicitly.
 
 ## Rollout and measurement scenarios
 

@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "person_c_contract_version": "0.1",
-  "layout_schema_version": "0.1",
-  "config_version": "person-c-layout-config-v0.1",
+  "layout_schema_version": "0.2",
+  "config_version": "person-c-layout-config-v0.2",
   "common_arena_grammar": {
     "world_type": "superflat",
     "superflat_preset": {
@@ -69,7 +69,7 @@
   "layouts": [
     {
       "layout_id": "layout_01",
-      "config_version": "person-c-layout-config-v0.1",
+      "config_version": "person-c-layout-config-v0.2",
       "arena": {"min_x": 0, "max_x": 39, "min_z": 0, "max_z": 19, "floor_y": 63},
       "wall": {"axis": "x", "block": "minecraft:stone", "min_x": 8, "max_x": 31, "min_y": 64, "max_y": 66, "min_z": 9, "max_z": 9, "height_blocks": 3},
       "lane": {"axis": "x", "fixed_coordinate_blocks": 11, "min_scalar_blocks": 5, "max_scalar_blocks": 34, "y_blocks": 64, "width_blocks": 1},
@@ -89,10 +89,10 @@
         "fov_degrees": 70.0
       },
       "markers": [
-        {"marker_id": "m1_blue", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 2, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m2_yellow", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 37, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m3_lime", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 2, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m4_white", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 37, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
+        {"marker_id": "m1_blue", "marker_role": "north_west", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 2, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m2_yellow", "marker_role": "north_east", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 37, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m3_lime", "marker_role": "south_west", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 2, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m4_white", "marker_role": "south_east", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 37, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
       ],
       "reset_area": {"min_x": 0, "max_x": 4, "min_z": 0, "max_z": 19},
       "safe_area": {"min_x": 35, "max_x": 39, "min_z": 0, "max_z": 19},
@@ -100,7 +100,7 @@
     },
     {
       "layout_id": "layout_02",
-      "config_version": "person-c-layout-config-v0.1",
+      "config_version": "person-c-layout-config-v0.2",
       "arena": {"min_x": 64, "max_x": 103, "min_z": 0, "max_z": 19, "floor_y": 63},
       "wall": {"axis": "x", "block": "minecraft:stone", "min_x": 72, "max_x": 95, "min_y": 64, "max_y": 66, "min_z": 9, "max_z": 9, "height_blocks": 3},
       "lane": {"axis": "x", "fixed_coordinate_blocks": 11, "min_scalar_blocks": 69, "max_scalar_blocks": 98, "y_blocks": 64, "width_blocks": 1},
@@ -120,10 +120,10 @@
         "fov_degrees": 70.0
       },
       "markers": [
-        {"marker_id": "m1_blue", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 66, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m2_yellow", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 101, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m3_lime", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 66, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m4_white", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 101, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
+        {"marker_id": "m1_blue", "marker_role": "north_west", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 66, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m2_yellow", "marker_role": "north_east", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 101, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m3_lime", "marker_role": "south_west", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 66, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m4_white", "marker_role": "south_east", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 101, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
       ],
       "reset_area": {"min_x": 64, "max_x": 68, "min_z": 0, "max_z": 19},
       "safe_area": {"min_x": 99, "max_x": 103, "min_z": 0, "max_z": 19},
@@ -131,7 +131,7 @@
     },
     {
       "layout_id": "layout_03",
-      "config_version": "person-c-layout-config-v0.1",
+      "config_version": "person-c-layout-config-v0.2",
       "arena": {"min_x": 128, "max_x": 167, "min_z": 0, "max_z": 19, "floor_y": 63},
       "wall": {"axis": "z", "block": "minecraft:stone", "min_x": 148, "max_x": 148, "min_y": 64, "max_y": 66, "min_z": 3, "max_z": 16, "height_blocks": 3},
       "lane": {"axis": "z", "fixed_coordinate_blocks": 150, "min_scalar_blocks": 2, "max_scalar_blocks": 17, "y_blocks": 64, "width_blocks": 1},
@@ -151,10 +151,10 @@
         "fov_degrees": 70.0
       },
       "markers": [
-        {"marker_id": "m1_blue", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 130, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m2_yellow", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 165, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m3_lime", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 130, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m4_white", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 165, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
+        {"marker_id": "m1_blue", "marker_role": "north_west", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 130, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m2_yellow", "marker_role": "north_east", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 165, "y": 64, "z": 2}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m3_lime", "marker_role": "south_west", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 130, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m4_white", "marker_role": "south_east", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 165, "y": 64, "z": 17}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
       ],
       "reset_area": {"min_x": 128, "max_x": 167, "min_z": 0, "max_z": 1},
       "safe_area": {"min_x": 128, "max_x": 167, "min_z": 18, "max_z": 19},
@@ -162,7 +162,7 @@
     },
     {
       "layout_id": "layout_04",
-      "config_version": "person-c-layout-config-v0.1",
+      "config_version": "person-c-layout-config-v0.2",
       "arena": {"min_x": 0, "max_x": 39, "min_z": 64, "max_z": 83, "floor_y": 63},
       "wall": {"axis": "z", "block": "minecraft:stone", "min_x": 19, "max_x": 19, "min_y": 64, "max_y": 66, "min_z": 67, "max_z": 80, "height_blocks": 3},
       "lane": {"axis": "z", "fixed_coordinate_blocks": 21, "min_scalar_blocks": 66, "max_scalar_blocks": 81, "y_blocks": 64, "width_blocks": 1},
@@ -182,10 +182,10 @@
         "fov_degrees": 70.0
       },
       "markers": [
-        {"marker_id": "m1_blue", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 2, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m2_yellow", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 37, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m3_lime", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 2, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m4_white", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 37, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
+        {"marker_id": "m1_blue", "marker_role": "north_west", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 2, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m2_yellow", "marker_role": "north_east", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 37, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m3_lime", "marker_role": "south_west", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 2, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m4_white", "marker_role": "south_east", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 37, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
       ],
       "reset_area": {"min_x": 0, "max_x": 39, "min_z": 64, "max_z": 65},
       "safe_area": {"min_x": 0, "max_x": 39, "min_z": 82, "max_z": 83},
@@ -193,7 +193,7 @@
     },
     {
       "layout_id": "layout_05",
-      "config_version": "person-c-layout-config-v0.1",
+      "config_version": "person-c-layout-config-v0.2",
       "arena": {"min_x": 64, "max_x": 103, "min_z": 64, "max_z": 83, "floor_y": 63},
       "wall": {"axis": "x", "block": "minecraft:stone", "min_x": 72, "max_x": 95, "min_y": 64, "max_y": 66, "min_z": 73, "max_z": 73, "height_blocks": 3},
       "lane": {"axis": "x", "fixed_coordinate_blocks": 75, "min_scalar_blocks": 69, "max_scalar_blocks": 98, "y_blocks": 64, "width_blocks": 1},
@@ -213,10 +213,10 @@
         "fov_degrees": 70.0
       },
       "markers": [
-        {"marker_id": "m1_blue", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 66, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m2_yellow", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 101, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m3_lime", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 66, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m4_white", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 101, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
+        {"marker_id": "m1_blue", "marker_role": "north_west", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 66, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m2_yellow", "marker_role": "north_east", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 101, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m3_lime", "marker_role": "south_west", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 66, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m4_white", "marker_role": "south_east", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 101, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
       ],
       "reset_area": {"min_x": 64, "max_x": 68, "min_z": 64, "max_z": 83},
       "safe_area": {"min_x": 99, "max_x": 103, "min_z": 64, "max_z": 83},
@@ -224,7 +224,7 @@
     },
     {
       "layout_id": "layout_06",
-      "config_version": "person-c-layout-config-v0.1",
+      "config_version": "person-c-layout-config-v0.2",
       "arena": {"min_x": 128, "max_x": 167, "min_z": 64, "max_z": 83, "floor_y": 63},
       "wall": {"axis": "z", "block": "minecraft:stone", "min_x": 148, "max_x": 148, "min_y": 64, "max_y": 66, "min_z": 67, "max_z": 80, "height_blocks": 3},
       "lane": {"axis": "z", "fixed_coordinate_blocks": 150, "min_scalar_blocks": 66, "max_scalar_blocks": 81, "y_blocks": 64, "width_blocks": 1},
@@ -244,10 +244,10 @@
         "fov_degrees": 70.0
       },
       "markers": [
-        {"marker_id": "m1_blue", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 130, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m2_yellow", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 165, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m3_lime", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 130, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
-        {"marker_id": "m4_white", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 165, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
+        {"marker_id": "m1_blue", "marker_role": "north_west", "block": "minecraft:blue_concrete", "color": "blue", "world_blocks": {"x": 130, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m2_yellow", "marker_role": "north_east", "block": "minecraft:yellow_concrete", "color": "yellow", "world_blocks": {"x": 165, "y": 64, "z": 66}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m3_lime", "marker_role": "south_west", "block": "minecraft:lime_concrete", "color": "lime", "world_blocks": {"x": 130, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"},
+        {"marker_id": "m4_white", "marker_role": "south_east", "block": "minecraft:white_concrete", "color": "white", "world_blocks": {"x": 165, "y": 64, "z": 81}, "intended_visible": true, "visibility_evidence": "RUNTIME EVIDENCE REQUIRED LATER"}
       ],
       "reset_area": {"min_x": 128, "max_x": 167, "min_z": 64, "max_z": 65},
       "safe_area": {"min_x": 128, "max_x": 167, "min_z": 82, "max_z": 83},
