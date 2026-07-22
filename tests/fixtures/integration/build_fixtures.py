@@ -208,6 +208,11 @@ def build_oracle_targets(
     return {
         "schema_version": SCHEMA_VERSION,
         "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "source_activation": {
+            "handoff_id": activation["handoff_id"],
+            "run_id": activation["run_id"],
+            "accepted_manifest_hash": activation["accepted_manifest_hash"],
+        },
         "join_key": ["trajectory_id", "model_frame_idx"],
         "rows": rows,
     }

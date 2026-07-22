@@ -150,5 +150,10 @@ Phase 1 verification on July 21, 2026:
 - the SVG audit plot shows truth, last visible position, posterior mean, and
   the one/two-sigma bands across a reveal.
 
-No frozen Person A contract, field, unit, join key, validator, or fixture was
-modified. No schema migration was required for this B-owned downstream table.
+Person A subsequently corrected its non-scientific activation fixture from
+`tau = 0, 1, 2` to the frozen 20 Hz values `tau = 0, 0.05, 0.10`. Person A owns
+that compatibility correction and records its replacement handoff, run, and
+accepted-manifest identities in the schema decision log and generated lineage
+fixture. No Person A contract, field, unit, join key, or validator changed, and
+no schema migration was required for either the correction or this B-owned
+downstream table.

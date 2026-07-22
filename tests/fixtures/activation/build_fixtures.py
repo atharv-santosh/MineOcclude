@@ -19,15 +19,19 @@ CODE_SHA = "0" * 40
 CONFIG_HASH = "1" * 64
 CHECKPOINT_HASH = "2" * 64
 PREPROCESS_HASH = "3" * 64
-MANIFEST_HASH = "5" * 64
+OLD_MANIFEST_HASH = "5" * 64
+MANIFEST_HASH = "6" * 64
 
 SCHEMA_VERSION = "1.0"
 
 TRAJECTORY_ID = "synthetic_trajectory_0001"
 EPISODE_ID = "synthetic_episode_0001"
 
-RUN_ID = "synthetic_activation_run_001"
-HANDOFF_ID = "synthetic_activation_handoff_001"
+OLD_RUN_ID = "synthetic_activation_run_001"
+OLD_HANDOFF_ID = "synthetic_activation_handoff_001"
+
+RUN_ID = "synthetic_activation_run_002"
+HANDOFF_ID = "synthetic_activation_handoff_002"
 
 HOOK_SITE = "residual_stream"
 
@@ -342,6 +346,48 @@ def make_synthetic_targets() -> list[dict]:
     return targets
 
 
+def make_timebase_correction_lineage() -> dict:
+    """Record the A-owned supersession of stale synthetic timing evidence."""
+
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "correction_id": "activation_fixture_20hz_timebase_correction_001",
+        "owner": "person_a",
+        "correction_type": "synthetic_fixture_compatibility_correction",
+        "synthetic": True,
+        "scientific_use": "forbidden",
+        "reason": (
+            "Consecutive model frames and server ticks must advance tau by "
+            "0.05 seconds at the frozen 20 Hz timebase."
+        ),
+        "superseded_evidence": {
+            "handoff_id": OLD_HANDOFF_ID,
+            "run_id": OLD_RUN_ID,
+            "accepted_manifest_hash": OLD_MANIFEST_HASH,
+            "tau_seconds_by_model_frame_idx": {
+                "0": 0.0,
+                "1": 1.0,
+                "2": 2.0,
+            },
+        },
+        "replacement_evidence": {
+            "handoff_id": HANDOFF_ID,
+            "run_id": RUN_ID,
+            "accepted_manifest_hash": MANIFEST_HASH,
+            "tau_seconds_by_model_frame_idx": {
+                "0": 0.0,
+                "1": 0.05,
+                "2": 0.10,
+            },
+        },
+        "schema_migration": False,
+        "supersession_policy": (
+            "The old synthetic handoff, run, and accepted-manifest identity "
+            "must not be reused for corrected evidence."
+        ),
+    }
+
+
 def serialize_json(value) -> str:
     """Return the canonical on-disk JSON representation for fixtures."""
 
@@ -402,6 +448,11 @@ def main() -> None:
     write_json(
         "synthetic_targets.json",
         make_synthetic_targets(),
+    )
+
+    write_json(
+        "timebase_correction_lineage.json",
+        make_timebase_correction_lineage(),
     )
 
     # --------------------------------------------------------------

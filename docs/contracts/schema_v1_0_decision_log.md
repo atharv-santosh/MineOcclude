@@ -70,3 +70,45 @@ work may broaden the orphan enumeration for clearer reporting.
   teammate methods.
 
 Approval: `APPROVED_FOR_PHASE_1_INTERNAL_SCHEMA_FREEZE`.
+
+## activation-fixture-20hz-timebase-correction-001
+
+Date: 2026-07-21
+
+Owner: Person A
+
+Status: `SUPERSEDED_SYNTHETIC_EVIDENCE_REPLACED`
+
+### Context
+
+The original accepted synthetic activation fixture used `tau = 0, 1, 2`
+seconds for consecutive `model_frame_idx = 0, 1, 2` and `server_tick = 100,
+101, 102`. Those values contradicted the frozen 20 Hz timebase. Correcting the
+values to `tau = 0, 0.05, 0.10` changed the meaning and bytes of the accepted
+synthetic handoff, so retaining its original evidence identities would have
+silently rewritten frozen evidence.
+
+### Correction and lineage
+
+Person A replaced the synthetic evidence identities together with the timing
+correction:
+
+| Evidence field | Superseded value | Replacement value |
+|---|---|---|
+| `handoff_id` | `synthetic_activation_handoff_001` | `synthetic_activation_handoff_002` |
+| `run_id` | `synthetic_activation_run_001` | `synthetic_activation_run_002` |
+| `accepted_manifest_hash` | 64 repetitions of `5` | 64 repetitions of `6` |
+
+The generated machine-readable record is
+`tests/fixtures/activation/timebase_correction_lineage.json`. All accepted and
+intentionally rejected activation fixtures now derive from the replacement
+identity. The Step 1.7 synthetic oracle target fixture continues to derive its
+time fields from the corrected activation handoff.
+
+### Schema consequence
+
+This is an A-owned compatibility correction to non-scientific synthetic
+evidence, not a B-owned rewrite and not a schema migration. The already frozen
+contract defines `tau` in seconds at 20 Hz, so `schema_version` remains `1.0`.
+The superseded identity remains auditable in this decision log, the generated
+lineage record, and Git history; it must not be reused for corrected evidence.
