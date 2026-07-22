@@ -1,9 +1,11 @@
 # Person E Phase 1 decision log
 
-Status: the repository-side Person E Phase 0/1 technical foundation is
-complete on `repair/person-e-phase1` against `integration/mvp@ede97db`.
-A runner integration, formal cross-role approval, live calibration, and real
-measurement remain pending.
+Status: the repository-side Person E Phase 0/1 technical foundation and
+cross-role interface compatibility are approved at
+`integration/mvp@80d41c5ca0e341263a7b0c683fae4b51be376c55`. Central human signoff
+evidence is `docs/contracts/schema_v1_0_signed_record.md`. A runner integration,
+live calibration, real measurement, final results, and later-phase method
+approvals remain pending.
 
 ## Sources of authority
 

@@ -2,11 +2,12 @@
 
 Status: current Person E Phase 0/1 status authority at `integration/mvp`.
 
-The validated integrated checkpoint is
-`0d5f979e14e5c5f41f59233f1222db822d30cdd6`. Its recorded historical test
-evidence is `400 passed, 215 subtests passed`; those numbers are not presented
-as a new run. Person E's repository-side Phase 0/1 technical work is integrated.
-Formal human signoff, real calibration, and real measurement remain pending.
+The approved Phase 0/1 interface checkpoint is
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`. The project coordinator confirms
+that all five role owners approved the relevant Phase 0/1 interface meanings
+and compatibility at that exact checkpoint. Person E's repository-side Phase
+0/1 technical work is integrated. Real calibration, real measurement, final
+scientific results, and later-phase method approvals remain pending.
 
 Allowed status values in this inventory are `Done`, `In progress`, `Blocked`,
 `Not started`, and `Unverified`. A `Done` entry means only the stated
@@ -22,8 +23,8 @@ scientific result exists.
 | Phase 0 preserved-work list | Done | The evidence-backed list below distinguishes retained Phase 0/1 work from early future implementation. |
 | Phase 0 incompatible/outdated-work list | Done | The superseded assumptions are recorded below without restoring stale shared files. |
 | Phase 0 blocker/dependency list | Done | The dependency table below names the responsible owner and resolution deadline. |
-| Phase 0 earliest unmet gate | Done | The repository-side Phase 1 technical gate is complete; formal human approval and A orchestration adoption remain explicit integration dependencies. |
-| Phase 0 exact integration checkpoint | Done | Integrated at `integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`; historical checkpoint tests were 400 passed and 215 subtests passed. |
+| Phase 0 earliest unmet gate | Done | The repository-side Phase 1 technical gate and checkpoint-scoped human interface approval are complete; A orchestration adoption and real-runtime gates remain later dependencies. |
+| Phase 0 exact integration checkpoint | Done | Phase 0/1 interfaces approved at `integration/mvp@80d41c5ca0e341263a7b0c683fae4b51be376c55`; central evidence is `docs/contracts/schema_v1_0_signed_record.md`. |
 | Phase 1.1 complete interface and ownership map | Done | `docs/contracts/person_e_interface_ownership_v0_1.md`; unresolved boundaries are decision records in `docs/decisions/person_e_phase1_decision_log.md`. |
 | Phase 1.2 complete immutable shared registry contract | Done | `validate_immutable_run_artifact_registry` in `src/mineocclude/contracts/rollout_registry.py`, the delegating E wrapper, `tests/fixtures/person_e/immutable_registry_v1.json`, and `tests/experiments/test_immutable_registry_contract.py`. Frozen A rollout schema `1.0` remains accepted unchanged. |
 | Phase 1.3 contract-level vision and synthetic measurement fixtures | Done | `docs/contracts/person_e_phase1_synthetic_contracts_v1.md`, `tests/fixtures/person_e/`, and `tests/vision/test_phase1_contracts.py` cover split calibration, detection, homography, A/D-compatible rollout scenarios, measurements, and fail-closed rejection evidence. |
@@ -32,7 +33,7 @@ scientific result exists.
 | Real homography qualification | Not started | Requires C marker/camera records and real held-out localization evidence. |
 | Real U4 rollout measurement | Blocked | Requires accepted A rollouts, C geometry, a live E config, and B/E method approval. |
 | Real figures, paper population, and release QA | Blocked | Requires accepted B/D/E scientific result artifacts plus approved orchestration/registration against the Phase 1.2 contract. Planning utilities are not result evidence. |
-| Formal cross-role approval of E Phase 1 | Unverified | No repository evidence establishes human A/B/C/D/E approval. |
+| Formal cross-role approval of E Phase 1 interfaces | Done | Coordinator-confirmed A/B/C/D/E approval for `80d41c5ca0e341263a7b0c683fae4b51be376c55`; central evidence is `docs/contracts/schema_v1_0_signed_record.md`. Real calibration, measurement, results, and later-phase methods are not included. |
 
 ## Preserved work
 
@@ -74,7 +75,7 @@ measurement, figures, or scientific claims are complete.
 - Superseded: E's older copies of
   `src/mineocclude/analysis/manifests.py` and
   `src/mineocclude/contracts/rollout_registry.py` were not restored. The files
-  integrated through `integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`
+  present at `integration/mvp@80d41c5ca0e341263a7b0c683fae4b51be376c55`
   remain authoritative.
 - Superseded: caller-supplied rollout facts are not trusted by E measurement
   production. The current path passes the actual A manifest and registry to
@@ -94,7 +95,7 @@ measurement, figures, or scientific claims are complete.
 | Final `visible_flag` derivation | C remains authoritative; E emits empirical detections only | C, reviewed by E/B | Any real use of detection as visibility evidence |
 | U4 metric/statistical interpretation and final SSIM rule | Pending approval | B owns statistics/claims; E owns measurement implementation | Real U4 analysis or claim-bearing figure |
 | Baseline/control IDs and outputs | Repository contract exists; real outputs unavailable | D, consumed by E/B | Real control-matrix measurement and figure assembly |
-| Formal cross-role signoff | Unverified | A/B/C/D/E and project approver | Declaring the Phase 1 checkpoint formally approved |
+| Formal cross-role Phase 0/1 interface signoff | Complete for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | A/B/C/D/E role owners; coordinator confirmation | Re-review before a result-changing interface revision |
 
 ## Compatibility and duplication report
 
@@ -123,7 +124,8 @@ measurement, figures, or scientific claims are complete.
 
 ## Earliest unmet gate
 
-No repository-side Person E Phase 0/1 technical gate remains unmet. Formal
-human cross-role approval is unverified, and A orchestration adoption of the
-shared registry remains a later integration dependency. Neither is fabricated
-as completed by the synthetic Phase 1 evidence.
+No repository-side Person E Phase 0/1 technical gate remains unmet. Human
+cross-role interface approval is recorded for the exact checkpoint above. A
+orchestration adoption of the shared registry, real calibration/measurement,
+and final scientific approval remain later dependencies and are not implied by
+the Phase 0/1 signoff.

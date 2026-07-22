@@ -10,7 +10,7 @@ Full details: [`PERSON_B_MVP_ROADMAP.md`](./PERSON_B_MVP_ROADMAP.md)
 
 This file is the Person B command-center authority. The current integrated
 checkpoint is `integration/mvp` at
-`0d5f979e14e5c5f41f59233f1222db822d30cdd6`. Git and current files establish
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`. Git and current files establish
 the repository state below. They do not prove a person's historical branch
 inspection, private access, hardware capacity, or reading history; those items
 are explicitly `UNVERIFIED` rather than reconstructed as facts.
@@ -45,7 +45,8 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Local CPU execution | AVAILABLE | Synthetic repository suite | Project environment | Phase 1 proof |
 | GPU/AWS/account access | UNVERIFIED | No repository permission or capacity record | Project owner | Real/scale execution |
 | Durable storage/quota | UNVERIFIED | Hash/URI contracts exist; deployment capacity is not evidenced | Project owner/E | Claim-bearing artifacts |
-| Human scientific/interface approval | UNVERIFIED | Passing tests are not approval | A/B/C/D/E approvers | Formal freeze/signoff |
+| Phase 0/1 schema, analysis-config, and interface approval | COMPLETE at `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Coordinator-confirmed five-role signoff in `docs/contracts/schema_v1_0_signed_record.md` | A/B/C/D/E role owners | New approval required for a result-changing revision |
+| Runtime and final scientific-result approval | PENDING | The Phase 0/1 signoff does not approve real execution or results | Applicable later-phase owners | Applicable runtime or result gate |
 
 ### Controlling requirements trace
 
@@ -57,7 +58,8 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Metrics, calibration, bootstrap, permutation | `analysis/metrics.py`, `analysis/calibration.py`, `analysis/resampling.py` | TECHNICALLY VERIFIED |
 | A/B/C/D/E intake expectations | `docs/contracts/person_b_analysis_inputs_v0_1.md` and current validators | TECHNICALLY VERIFIED |
 | Synthetic state-to-result/request proof | `analysis/synthetic_chain.py` and saved fixture/tests | TECHNICALLY VERIFIED, NON-SCIENTIFIC |
-| Historical roadmap reading and human approval | No reliable repository evidence | UNVERIFIED |
+| Historical roadmap reading | No reliable repository evidence | UNVERIFIED |
+| B1.9 Phase 0/1 human approval | `docs/contracts/schema_v1_0_signed_record.md` at `80d41c5ca0e341263a7b0c683fae4b51be376c55` | COMPLETE FOR THAT CHECKPOINT |
 
 ### Dependency and decision register
 
@@ -68,7 +70,7 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Real activation/fold/target manifests | Validate exact hashes and identity; no placeholder promotion | A/B | Real probe fitting |
 | U4 measurement/statistical method approval | E measures; B owns inference and claims | B/E | Real U4 analysis |
 | Compute/access/storage | Remain `UNVERIFIED`; do not infer availability | Project owner | Scale plan |
-| Formal Phase 0/1 approval | Do not infer approval from tests | Role owners/approver | Formal checkpoint declaration |
+| Formal Phase 0/1 interface approval | Complete only for `80d41c5ca0e341263a7b0c683fae4b51be376c55`; do not extend it to real execution or results | A/B/C/D/E role owners; coordinator confirmation | Re-review before a result-changing contract/config revision |
 
 ### Command center
 
@@ -77,7 +79,7 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Repository and ownership inventory | CURRENT/RECORDED | This file names one authoritative location per B responsibility |
 | Phase 1 contracts and synthetic chain | COMPLETED TECHNICALLY | Deterministic synthetic validators, folds, OOF fits, U1/U2/U3, direction/request, result bundle pass |
 | Cross-role synthetic validation | CURRENT | Shared runner validates C/A/B/D/E boundaries |
-| Formal approvals | BLOCKED/UNVERIFIED | Actual dated owners approve |
+| B1.9 schema/config/interface signoff | COMPLETE for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Central signoff record; runtime and result approvals remain pending |
 | Real scientific execution | NEXT LATER PHASE | Accepted real upstream artifacts and runtime/access gates exist |
 
 ## Current blockers
@@ -111,8 +113,9 @@ of activation extraction, capture truth, baseline logic, or measurement.
   - [x] Add U1-U3 metric functions and known-answer tests.
   - [x] Add hierarchical bootstrap and whole-trajectory permutation functions.
   - [x] Add raw-space/time-projected direction and B→A producer plumbing.
-  - [x] Add and synthetically exercise C/D/E intake validators; formal owner
-    signoff and real artifacts remain pending.
+  - [x] Add and synthetically exercise C/D/E intake validators; Phase 0/1
+    owner signoff is recorded for the approved checkpoint, while real artifacts
+    remain pending.
   - [x] Compose state through oracle, grouped OOF ridge, U1/U2/U3, directions,
     intervention request, and sealed result evidence in one CPU-only chain.
 - [ ] Run the no-wall visible positive-control probe before interpreting hidden-state results.

@@ -8,6 +8,9 @@ Freeze status: `FROZEN_FOR_PHASE_1`
 
 Approval status: `APPROVED_FOR_PHASE_1_FREEZE`
 
+Human interface signoff checkpoint:
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`
+
 Previous version: `0.1-draft`
 
 Freeze date: 2026-07-21
@@ -175,16 +178,24 @@ in place to appear compliant with the new contract.
 
 ## Approval and sign-off
 
+The project coordinator confirms that all five role owners reviewed the exact
+`integration/mvp` checkpoint
+`80d41c5ca0e341263a7b0c683fae4b51be376c55` and approved the Phase 0/1
+interface and contract meanings relevant to their roles. This section is the
+central evidence for the role-specific records below.
+
 | Role | Approval recorded for Phase 1 interface meaning |
 |---|---|
-| Person A | `APPROVED_FOR_PHASE_1_FREEZE` |
-| Person B | `APPROVED_FOR_PHASE_1_FREEZE` for activation/request interface meaning and units |
-| Person C | `CONFIRMED_PRODUCER_CONSUMER_COMPATIBILITY` for trajectory production |
-| Person D | `CONFIRMED_PRODUCER_CONSUMER_COMPATIBILITY` for synthetic baseline joins |
-| Person E | `CONFIRMED_PRODUCER_CONSUMER_COMPATIBILITY` for rollout, registry, and measurement consumption |
+| Person A | `APPROVED_FOR_PHASE_0_1_INTERFACE_CHECKPOINT` (A1.8 schema/interface signoff) |
+| Person B | `APPROVED_FOR_PHASE_0_1_INTERFACE_CHECKPOINT` (B1.9 schema and analysis-config signoff) |
+| Person C | `APPROVED_FOR_PHASE_0_1_INTERFACE_CHECKPOINT` (consumer compatibility plus RNG/event-order contract review) |
+| Person D | `APPROVED_FOR_PHASE_0_1_INTERFACE_CHECKPOINT` (D1.5 A/B handshake) |
+| Person E | `APPROVED_FOR_PHASE_0_1_INTERFACE_CHECKPOINT` (cross-role interface compatibility) |
 
-These role labels record the repository's internal Phase 1 contract approval.
-They do not represent external mentor, ethics, publication, or empirical-result
-approval.
+These human approvals are scoped to Phase 0/1 interface meanings and
+compatibility at the exact checkpoint above. They do not approve C1 Minecraft
+runtime validation, real layout reconstruction, MineWorld runtime, real
+captures or activations, final scientific results, later-phase methods,
+external mentor review, ethics, or publication.
 
 Approval declaration: `APPROVED_FOR_PHASE_1_FREEZE`.

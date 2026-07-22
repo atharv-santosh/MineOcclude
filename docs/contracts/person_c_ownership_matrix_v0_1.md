@@ -1,11 +1,12 @@
 # Person C Ownership Matrix v0.1
 
-Status: `C0_C1_STRUCTURALLY_INTEGRATED_PENDING_HUMAN_AND_RUNTIME_SIGNOFF`
+Status: `C0_C1_STRUCTURALLY_INTEGRATED_PHASE_0_1_INTERFACE_SIGNOFF_COMPLETE_RUNTIME_PENDING`
 
 Current repository checkpoint: `integration/mvp` at
-`0d5f979e14e5c5f41f59233f1222db822d30cdd6`. The ownership statements below
-describe current authorities; they do not imply human approval or real-runtime
-qualification.
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`. The ownership statements below
+are included in the coordinator-confirmed five-role Phase 0/1 interface
+approval recorded in `docs/contracts/schema_v1_0_signed_record.md`. That
+approval does not imply real-runtime qualification.
 
 This matrix separates ownership from consultation. A missing upstream decision
 is recorded rather than selected privately by Person C.
@@ -23,7 +24,7 @@ is recorded rather than selected privately by Person C.
 | Episode manifest and exclusion ledger | Person C | Persons A/B/E | Implemented and tested synthetically. |
 | RNG schedule generation and schedule hashing | Person C | Persons A/B | PCG64 design recorded; exact compatible NumPy version unresolved. |
 | `q`, oracle information set, target fields, scoring use | Person B | Persons A/C | Frozen B meaning is referenced; B repair is not imported. |
-| C-to-B state adapter | B owns scientific projection; C supplies authoritative source; A supplies model/preprocess provenance | Persons A/B/C | Implemented synthetically in `src/mineocclude/analysis/coordinates.py`; complete C validation and exact capture-key joins precede projection into B's frozen input. Formal human approval and real rows remain pending. |
+| C-to-B state adapter | B owns scientific projection; C supplies authoritative source; A supplies model/preprocess provenance | Persons A/B/C | Implemented synthetically in `src/mineocclude/analysis/coordinates.py`; Phase 0/1 interface compatibility is approved at the checkpoint above. Complete C validation and exact capture-key joins precede projection into B's frozen input; real rows remain pending. |
 | Marker identity/roles and homography | C owns stable IDs/world geometry; E owns image observations and homography | Persons C/E | C layout v0.2 adds a stable-ID-to-canonical-role mapping; E homography v1.1 consumes it by explicit ID. E v1.0 remains supported. Formal real-camera qualification remains pending. |
 | Layout geometry, condition variants, environment lock | Person C | Persons B/E | C1 structurally implemented for six layouts and three conditions; real environment/reconstruction evidence remains required. |
 | Minecraft/Fabric runtime, reset, capture, screenshots | Person C | Persons A/E | Out of C0; runtime evidence required later. |

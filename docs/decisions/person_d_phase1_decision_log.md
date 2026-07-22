@@ -7,8 +7,9 @@ append-only; a correction never edits a prior entry in place.
 **Current architecture notice (2026-07-22):** the merge/vendoring entries
 below are retained only as historical decision evidence and are superseded by
 the final correction at the end of this log. The current
-`repair/person-d-phase1` branch is based on `integration/mvp` at `d38835c`.
-D consumes the authoritative A/B/C implementations from that base and does
+current integrated authority is `integration/mvp` at
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`.
+D consumes the authoritative A/B/C/E implementations from that checkpoint and does
 not own or vendor copies of their contracts, folds, probes, analysis code, or
 intervention mathematics.
 
@@ -219,6 +220,23 @@ row-order independence, non-mutation, two-baseline identical held-out keys,
 strict predictions, and direct B metric invocation. The repository-side
 interface review is `docs/baselines/person_d_schema_v1_review.md`.
 
-**Approval status:** repository compatibility is **TECHNICALLY VERIFIED**.
-Formal human approval from Persons A and B is **PENDING**; this decision does
-not invent or imply that approval.
+**Approval status at the time of this entry:** repository compatibility was
+**TECHNICALLY VERIFIED** and formal human approval from Persons A and B was
+**PENDING**. The following entry records the later checkpoint-scoped approval;
+this historical entry did not invent or imply it early.
+
+## 2026-07-22 -- Record D1.5 human handshake approval
+
+**Decision:** Record the project coordinator's confirmation that Persons A and
+B, together with the other role owners, reviewed and approved the Phase 0/1
+interface meanings and compatibility at
+`integration/mvp@80d41c5ca0e341263a7b0c683fae4b51be376c55`.
+
+**Evidence:** the central checkpoint-scoped record is
+`docs/contracts/schema_v1_0_signed_record.md`; the technical D review remains
+`docs/baselines/person_d_schema_v1_review.md`.
+
+**Scope:** this completes the D1.5 A/B handshake for that exact Phase 0/1
+checkpoint. It does not approve real-data baseline execution, final scientific
+comparisons, or later-phase methods. The earlier pending statements above are
+retained as historical status at the time they were written.

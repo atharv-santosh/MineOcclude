@@ -2,8 +2,10 @@
 
 Date: 2026-07-21
 
-Status: implemented before live results; B-owned review/signoff pending. C and
-E intake semantics require their producer-owner signoff before live use.
+Status: implemented before live results. B1.9 schema/config and cross-role
+Phase 0/1 interface signoff is complete for
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`. Live producer artifacts,
+runtime qualification, and result approval remain pending.
 
 ## Decision
 
@@ -49,10 +51,16 @@ correction log explicitly records that no result-affecting field changed.
 
 ## Signoff record
 
-- Person B scientific/config owner: pending repository review.
-- Person C coordinate/state producer: pending real adapter review.
-- Person D baseline producer: B consumer contract frozen; producer work not yet
-  executed.
-- Person E measurement producer: pending measurement-payload review.
+- Central evidence: `docs/contracts/schema_v1_0_signed_record.md`.
+- Person B scientific/config owner: approved the Phase 0/1 schema and analysis
+  configuration at `80d41c5ca0e341263a7b0c683fae4b51be376c55`.
+- Person A activation/request producer-consumer boundary: approved for the same
+  Phase 0/1 checkpoint.
+- Person C coordinate/state producer boundary: approved for the same Phase 0/1
+  checkpoint; real adapter/runtime evidence remains pending.
+- Person D baseline producer boundary: approved for the same Phase 0/1
+  checkpoint; real baseline outputs remain pending.
+- Person E measurement producer boundary: approved for the same Phase 0/1
+  checkpoint; real measurement and U4 method/result approval remain pending.
 
-No pending signoff is treated as approval.
+This signoff does not approve live scientific results or later-phase methods.

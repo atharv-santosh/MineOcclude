@@ -2,25 +2,27 @@
 
 Record date: 2026-07-22
 
-Current branch: `repair/person-d-phase1`
+Current branch: `integration/mvp`
 
-Base: `integration/mvp` at `d38835c` (`Integrate finalized Phase 0-1 for
-Roles A B and C`). Person D's files are layered onto that integration base;
-Person D does not vendor or own copies of A-, B-, or C-owned authorities.
+Approved Phase 0/1 interface checkpoint:
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`. Person D is integrated with the
+A/B/C/E foundation and does not vendor or own copies of other roles'
+authorities.
 
-Formal Person A/Person B human signoff of the D handoff is **pending and
-unverified**. Repository contract compatibility and passing synthetic tests
-are engineering evidence, not a substitute for human approval.
+Formal Person A/Person B human signoff of the D1.5 Phase 0/1 handshake is
+**COMPLETE** for that exact checkpoint, as recorded centrally in
+`docs/contracts/schema_v1_0_signed_record.md`. This approval does not cover
+real-data baselines, final comparisons, or later-phase methods.
 
 ## Phase 0.1 -- Evidence-backed milestone status
 
 | Milestone | Status | Evidence and boundary |
 |---|---|---|
-| Branch/base and ownership inventory | READY | This record; `docs/baselines/person_d_phase1.md`; `git` base `d38835c` verified on 2026-07-22. |
+| Branch/base and ownership inventory | READY | This record; `docs/baselines/person_d_phase1.md`; approved integration checkpoint `80d41c5ca0e341263a7b0c683fae4b51be376c55`. |
 | D-to-B baseline document compatibility | READY | `src/mineocclude/baselines/export.py`; `tests/baselines/test_export.py`; current B validator at `src/mineocclude/contracts/analysis_inputs.py`. |
 | Authoritative-fold consumption | READY for synthetic Phase 1 evidence | D validates and consumes B's sealed manifest without assigning folds. Evidence: `tests/fixtures/person_d/synthetic_b_fold_manifest.json` and `tests/baselines/test_export.py`. A real accepted-run fold manifest has not been produced. |
 | D synthetic baseline/control checks | READY | `src/mineocclude/baselines/`; `tests/baselines/`; 67 tests passed on 2026-07-22. This is synthetic evidence only. |
-| A/B compatibility handshake | TECHNICALLY VERIFIED / HUMAN APPROVAL PENDING | `docs/baselines/person_d_schema_v1_review.md` records the repository-side review. No D-specific human approval record from A and B exists. |
+| A/B compatibility handshake | COMPLETE FOR PHASE 0/1 CHECKPOINT | `docs/baselines/person_d_schema_v1_review.md` records the technical review; `docs/contracts/schema_v1_0_signed_record.md` records the A/B human approval at the exact checkpoint. |
 | Real-data baselines and scientific comparisons | BLOCKED / NOT STARTED | No real accepted rows, real fold manifest, real target table, or final experimental result is claimed here. |
 
 ## Phase 0.2 -- File scope and ownership
@@ -75,7 +77,7 @@ dependency even synthetically.
 
 | Issue | Current safe default | Owner / required approver | Resolve before |
 |---|---|---|---|
-| D-specific A/B schema-v1.0 handshake | Repository compatibility is technically verified in `person_d_schema_v1_review.md`; do not claim human approval. | Persons A and B approve; D records. | Any real D artifact is accepted for scientific comparison. |
+| D-specific A/B schema-v1.0 handshake | Phase 0/1 technical compatibility and human approval are complete only for `80d41c5ca0e341263a7b0c683fae4b51be376c55`; require new review for result-changing changes. | Persons A and B approve; D records. | Any result-changing contract revision or real scientific acceptance decision. |
 | Additional D baseline families in B intake | Fail closed. The current B contract accepts only its declared family/target/feature allowlists. | Person B owns intake; Person D proposes producer fields. | Exporting any family not already accepted by B. |
 | Real scientific fold membership | Use only a validated, saved B fold manifest; never reconstruct membership in D. Synthetic fixture remains non-scientific. | Person B produces/approves; Person D consumes. | Any real fitting or prediction. |
 | Real accepted target rows | Use synthetic rows only and make no scientific claim. | Persons B and C for target/source compatibility; D consumes. | Any real baseline fit or comparison. |

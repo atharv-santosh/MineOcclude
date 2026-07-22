@@ -2,17 +2,20 @@
 
 Review date: 2026-07-22
 
-Branch/base reviewed: `repair/person-d-phase1` layered on the finalized A+B+C
-`integration/mvp` checkpoint `d38835c`.
+Current approval checkpoint: `integration/mvp` at
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`.
 
 Status: **TECHNICALLY VERIFIED**
 
-Formal Person A approval: **PENDING / UNVERIFIED**
+Formal Person A Phase 0/1 interface approval: **COMPLETE AT THE APPROVAL CHECKPOINT**
 
-Formal Person B approval: **PENDING / UNVERIFIED**
+Formal Person B Phase 0/1 interface approval: **COMPLETE AT THE APPROVAL CHECKPOINT**
 
-Passing code and synthetic tests are engineering evidence only. This record
-does not claim either person supplied human approval.
+Central human signoff evidence is
+`docs/contracts/schema_v1_0_signed_record.md`. Passing code and synthetic tests
+remain engineering evidence only; the human approval is independently limited
+to the reviewed Phase 0/1 interface and contract meanings at the exact
+checkpoint above.
 
 ## D schema reviewed
 
@@ -30,7 +33,7 @@ does not claim either person supplied human approval.
 |---|---|---|
 | A | `src/mineocclude/contracts/identity.py` (`SCHEMA_VERSION`, `FRAME_KEY`, SHA formats) | D imports schema/key constants and requires accepted-manifest and preprocessing provenance. |
 | A | `src/mineocclude/contracts/activation.py` and `docs/contracts/activation_v1.md` | Review confirms the same frame key, accepted-manifest identity, and `preprocess_hash` vocabulary used by future D frame features. |
-| A | `docs/contracts/schema_v1_0_signed_record.md` | Evidence that project schema `1.0` is the frozen repository contract; not evidence of D-specific human approval. |
+| A | `docs/contracts/schema_v1_0_signed_record.md` | Evidence that project schema `1.0` is frozen and that the D1.5 A/B handshake was human-approved for the exact checkpoint recorded above. |
 | B | `configs/analysis/core.yaml` through `analysis.config.load_core_analysis_config` | D validates target names by reading B's current target authority; D does not redefine units or target semantics. |
 | B | `src/mineocclude/probes/splits.py` (`validate_fold_manifest`) | D validates and consumes saved memberships unchanged, requires exact key coverage, and never assigns scientific folds. |
 | B | `src/mineocclude/metrics/u1_mean.py` (`regression_metrics`) | The common harness calls B's metric implementation directly. |
@@ -56,15 +59,15 @@ does not claim either person supplied human approval.
 
 ## Unresolved items
 
-1. Formal D-specific human approval by Person A is pending.
-2. Formal D-specific human approval by Person B is pending.
-3. Real accepted manifests, target tables, fold manifests, and preprocessed
+1. Real accepted manifests, target tables, fold manifests, and preprocessed
    frames do not yet exist for D consumption. This is later execution work,
    not a Phase 1 synthetic-contract mismatch.
-4. B's current baseline-input allowlist accepts only declared families. D
+2. B's current baseline-input allowlist accepts only declared families. D
    fails closed for any additional family until B explicitly adds it; this
    does not alter the two-baseline internal synthetic proof.
 
 There is no unresolved technical row-key, fold-field, target-name, metric-API,
 accepted-manifest-field, or preprocessing-identity mismatch in the repository
-review. Formal human signoff remains deliberately separate and pending.
+review. Formal A/B approval is complete only for the Phase 0/1 handshake at
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`; real-data execution and final
+scientific-result approval remain pending.

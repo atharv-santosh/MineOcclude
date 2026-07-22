@@ -225,10 +225,12 @@ original schema-v1.0 rejection code and message.
 | Official raw-action vocabulary and conversion | Persons A/C | `UNRESOLVED` |
 | Real camera component orientation and transition impulse proof | Person A with C evidence | `RUNTIME EVIDENCE REQUIRED LATER` |
 | Exact NumPy package version compatible with the final Python/MineWorld lock | Persons A/C | `UNRESOLVED` |
-| B adapter field mapping and no-object visibility policy | Person B | `STRUCTURALLY IMPLEMENTED`; formal owner approval and real evidence unverified |
+| B adapter field mapping and no-object visibility policy | Person B | `APPROVED_FOR_PHASE_0_1_INTERFACE_CHECKPOINT` at `80d41c5ca0e341263a7b0c683fae4b51be376c55`; real evidence pending |
 | Stable marker ID to canonical geometric role | Persons C/E | `STRUCTURALLY IMPLEMENTED` in C layout v0.2 / E homography v1.1; real-camera qualification pending |
 | Detector thresholds and empirical visibility evidence | Person E; C owns final visibility | `RUNTIME/CALIBRATION EVIDENCE REQUIRED LATER` |
 | Layout IDs, geometry, conditions, and environment lock | Person C Phase C1 | `STRUCTURALLY IMPLEMENTED`; runtime/reconstruction evidence required later |
 
-C0 is not externally signed off until the unresolved owner decisions are
-recorded. No real scientific collection is authorized by this packet.
+C0 Phase 0/1 consumer compatibility and RNG/event-order interface review is
+signed off for `80d41c5ca0e341263a7b0c683fae4b51be376c55`; central evidence is
+`docs/contracts/schema_v1_0_signed_record.md`. Unresolved runtime decisions
+remain gated, and no real scientific collection is authorized by this packet.

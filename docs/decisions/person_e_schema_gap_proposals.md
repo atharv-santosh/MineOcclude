@@ -5,8 +5,10 @@ provenance, direct artifact inputs, checksum/size evidence, status authority,
 and supersession are implemented by the compatible
 `mineocclude-immutable-registry-v1.0` sub-schema in the authoritative shared
 `src/mineocclude/contracts/rollout_registry.py`. The frozen A rollout bundle
-schema and validator remain unchanged. A orchestration integration and formal
-A/E approval remain pending.
+schema and validator remain unchanged. Phase 0/1 A/E interface approval is
+recorded for `80d41c5ca0e341263a7b0c683fae4b51be376c55` in
+`docs/contracts/schema_v1_0_signed_record.md`; A orchestration integration and
+real-runtime qualification remain pending.
 
 The sections below preserve the original proposals and record their current
 resolution. They are not authority over the implemented validator.

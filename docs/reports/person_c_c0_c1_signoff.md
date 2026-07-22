@@ -1,9 +1,9 @@
 # Person C C0/C1 signoff record
 
-Status: C0 and C1 are structurally integrated at
-`integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`; current compatibility
-repairs add repository-only C-to-B and C-to-E evidence. Human review and the
-runtime stop gate remain open.
+Status: C0 and C1 are structurally integrated, and the five role owners have
+approved the Phase 0/1 interface meanings and compatibility at
+`integration/mvp@80d41c5ca0e341263a7b0c683fae4b51be376c55`. The runtime stop gate
+remains open.
 
 ## Frozen inputs and scope
 
@@ -54,23 +54,27 @@ The following claims have not been made and must remain **RUNTIME EVIDENCE REQUI
 
 No scientific episode may be collected until the applicable runtime and reconstruction evidence is approved.
 
-## Upstream review still required
+## Phase 0/1 review record and later requirements
 
-- Person A: formal review of canonical-pose/capture settings and future real
-  model-frame capture remains unverified; repository identity compatibility is
-  synthetically tested.
-- Person B: formal review remains unverified; the repository now tests C-to-B
-  projection, 20 Hz timing, visibility, no-object gating, and oracle intake.
-- Person E: formal review remains unverified; the repository now tests the
-  versioned stable-marker-ID to canonical-role homography boundary.
+- Person A: Phase 0/1 identity, capture-interface, RNG/event-order, and consumer
+  compatibility review is approved at the checkpoint above. Future real
+  canonical-pose/model-frame capture still requires runtime evidence.
+- Person B: Phase 0/1 C-to-B projection, 20 Hz timing, visibility, no-object
+  gating, RNG/event-order, and oracle-intake compatibility is approved at the
+  checkpoint above. Real adapter rows and scientific results remain pending.
+- Person E: Phase 0/1 stable-marker-ID to canonical-role and capture/measurement
+  compatibility is approved at the checkpoint above. Real-camera calibration
+  and homography qualification remain pending.
 - Runtime owner: pin the observed Java/Fabric/Yarn/API/Gradle/Loom/launcher/mod versions, world seed, packs, and client graphics values without silently editing an approved lock.
 
 ## Signoff
 
-- Structural C1 repository evidence: `4b72432` plus the current additive v0.2
-  compatibility repair; human author approval/date remains unverified.
-- Person A boundary review/date:
-- Person B boundary review/date:
-- Person E boundary review/date:
+- Central Phase 0/1 human signoff evidence:
+  `docs/contracts/schema_v1_0_signed_record.md`.
+- Person C interface/contract approval: recorded for
+  `80d41c5ca0e341263a7b0c683fae4b51be376c55`.
+- Person A boundary review: recorded for the same checkpoint.
+- Person B boundary review: recorded for the same checkpoint.
+- Person E boundary review: recorded for the same checkpoint.
 - Runtime reconstruction review/date: **RUNTIME EVIDENCE REQUIRED LATER**
-- Final C1 stop-gate decision: not approved
+- Final C1 runtime stop-gate decision: not approved

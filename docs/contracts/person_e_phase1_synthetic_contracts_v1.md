@@ -88,5 +88,8 @@ The deterministic builder is
 Real calibration requires C capture/geometry evidence. Real U4 measurements
 require A rollouts, B method approval, D controls, and a calibrated E config.
 A orchestration adoption of the shared immutable registry remains an
-integration dependency and is not claimed here. Formal human cross-role
-approval remains unverified.
+integration dependency and is not claimed here. Human cross-role Phase 0/1
+interface approval is recorded for
+`80d41c5ca0e341263a7b0c683fae4b51be376c55` in
+`docs/contracts/schema_v1_0_signed_record.md`; real calibration, measurement,
+and later-phase method approval remain pending.

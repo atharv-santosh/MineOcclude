@@ -191,9 +191,10 @@ evidence.
 
 Chunk 2 did not connect MLP fitting end to end; the existing MLP harness
 remains separately tested. The later Phase 1 synthetic-chain composition now
-connects U2/U3 contract evidence. Real U2/U3 scientific analyses, real
-activation loading, runtime evidence, and final approvals remain pending in
-their assigned later work.
+connects U2/U3 contract evidence. Phase 0/1 interface/config approval is
+recorded for `80d41c5ca0e341263a7b0c683fae4b51be376c55`; real U2/U3 scientific
+analyses, real activation loading, runtime evidence, and final-result approvals
+remain pending in their assigned later work.
 
 ## Authenticated synthetic probe provenance
 
@@ -217,8 +218,10 @@ Synthetic ridge predictions and U1 results are bound to the matrix hash, the
 literal core-config hash, and a SHA over the B-owned bridge/split/ridge source
 bytes. They record the frozen alpha grid, inner-fold count, outer-fold seed,
 selected alpha per outer fold, scaler metadata, and exact training/test
-memberships. This is interface evidence only. End-to-end MLP, live/runtime
-evidence, real scientific U2/U3 results, and cross-role signoffs remain pending.
+memberships. This is interface evidence only. Cross-role Phase 0/1 signoff is
+recorded for `80d41c5ca0e341263a7b0c683fae4b51be376c55`; end-to-end MLP,
+live/runtime evidence, real scientific U2/U3 results, and later result approval
+remain pending.
 
 ## Step 1.7 authenticated A-to-B runner connection
 

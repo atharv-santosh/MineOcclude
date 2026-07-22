@@ -6,8 +6,8 @@ does not manufacture a retrospective pass or a human approval.
 
 ## Verified checkpoint and history
 
-- Current integrated checkpoint: `integration/mvp` at
-  `0d5f979e14e5c5f41f59233f1222db822d30cdd6`.
+- Current approved Phase 0/1 interface checkpoint: `integration/mvp` at
+  `80d41c5ca0e341263a7b0c683fae4b51be376c55`.
 - Current repair work is based on that checkpoint. The branch name itself is
   operational state, not scientific identity.
 - Existing Person A history includes `9dec159` (owned skeleton boundaries),
@@ -49,7 +49,8 @@ external account or hardware access.
 | AWS/account permissions | UNVERIFIED | No permission evidence in repository | Project owner | Save non-secret access check |
 | Durable artifact storage and quota | UNVERIFIED | URI conventions are frozen; deployment root/quota are not | Project owner/E | Record approved root, quota, and retention |
 | Real Minecraft/C capture input | BLOCKED | Assigned to later C runtime/capture phases | C | Accepted real package exists |
-| Human interface/scientific approval | UNVERIFIED | No signed human evidence | A/B/C/D/E approvers | Dated approval record |
+| Phase 0/1 interface approval | COMPLETE at `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Coordinator-confirmed five-role signoff in `docs/contracts/schema_v1_0_signed_record.md` | A/B/C/D/E role owners | New approval required for any result-changing contract revision |
+| Runtime, experimental, and final scientific approval | PENDING | No real-runtime or result evidence is claimed by the Phase 0/1 signoff | Applicable later-phase owners | Applicable runtime or result gate |
 
 ## Pinned MineWorld reading checklist
 
@@ -75,7 +76,7 @@ exists, not evidence of a person's historical reading.
 | Camera-component orientation | Require controlled impulse evidence | A with C | First real trajectory acceptance |
 | GPU/AWS/storage availability | Treat as `UNVERIFIED`; do not schedule scale work from assumptions | Project owner | Runtime planning |
 | Shared registry orchestration adoption | A integrates; E owns lineage behavior; no second registry | A/E | First orchestration registry snapshot |
-| Formal Phase 0/1 approval | Do not infer from passing tests | Role owners/approver | Formal checkpoint declaration |
+| Formal Phase 0/1 interface approval | Complete only for checkpoint `80d41c5ca0e341263a7b0c683fae4b51be376c55`; do not extend it to runtime or results | A/B/C/D/E role owners; coordinator confirmation | Re-review before any result-changing contract revision |
 
 ## Command center
 
@@ -84,5 +85,5 @@ exists, not evidence of a person's historical reading.
 | Repository/ownership reconstruction | COMPLETED from current evidence | A | This file and `docs/architecture/person_a_file_map.md` | Locations and Git evidence are explicit |
 | Frozen Phase 1 interfaces | COMPLETED technically | A with consumers | `src/mineocclude/contracts/`, `docs/contracts/` | Schema-v1 tests pass |
 | Cross-role synthetic integration | CURRENT | A integration boundary | `src/mineocclude/integration/synthetic_pipeline.py`, saved report | Current validators pass deterministically |
-| Human approval | BLOCKED/UNVERIFIED | A/B/C/D/E approvers | Dated signoff record | Actual approvers sign |
+| A1.8 Phase 0/1 interface signoff | COMPLETED for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | A/B/C/D/E role owners | `docs/contracts/schema_v1_0_signed_record.md` | Re-open only for a result-changing contract revision |
 | Real MineWorld/runtime work | NEXT LATER PHASE | A with C/runtime owners | Future run artifacts | Access, pins, and runtime gates are evidenced first |

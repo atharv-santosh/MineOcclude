@@ -1,7 +1,10 @@
 # Person E Phase 1.1 interface and ownership map v0.1
 
-Status: repository-side ownership map current against
-`integration/mvp@0d5f979e14e5c5f41f59233f1222db822d30cdd6`; formal human approval remains unverified.
+Status: repository-side ownership map and cross-role Phase 0/1 interface
+compatibility approved at
+`integration/mvp@80d41c5ca0e341263a7b0c683fae4b51be376c55`; central human signoff
+evidence is `docs/contracts/schema_v1_0_signed_record.md`. Real-runtime and
+experimental qualification remain pending.
 
 This is the authoritative Person E Phase 1.1 map. A path or filename is never
 scientific identity. "Allowed E extensions" means a separate versioned,

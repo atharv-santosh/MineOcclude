@@ -2,6 +2,10 @@
 
 Decision status: `APPROVED_FOR_SYNTHETIC_CONTRACT_TESTING`
 
+Human Phase 0/1 interface review: `APPROVED` at
+`80d41c5ca0e341263a7b0c683fae4b51be376c55`; central evidence is
+`docs/contracts/schema_v1_0_signed_record.md`.
+
 Runtime status: `RUNTIME EVIDENCE REQUIRED LATER`
 
 Shared schema version remains `1.0`; this record is additive Person C contract
@@ -79,4 +83,6 @@ runtime impulse capture reviewed by Person A.
 - Java byte-for-byte schedule verification and consumption log.
 - Real one-tick camera/action impulse evidence.
 - Server/client tick and render timing diagnostics.
-- A/B approval of the real schedule and transition interpretation.
+- Approval of the observed real schedule and transition implementation after
+  runtime evidence. The Phase 0/1 RNG/event-order interface meaning itself is
+  already approved at the checkpoint recorded above.
