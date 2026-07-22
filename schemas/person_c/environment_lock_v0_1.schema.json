@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mineocclude.local/schemas/person_c/environment_lock_v0_1.schema.json",
+  "title": "MineOcclude Person C environment lock template v0.1",
+  "type": "object",
+  "required": ["schema_version", "person_c_contract_version", "environment_lock_version", "template", "runtime_status", "versions", "server_launcher", "installed_mods", "world", "client", "runtime_evidence"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "person_c_contract_version": {"const": "0.1"},
+    "environment_lock_version": {"const": "0.1"},
+    "template": {"type": "boolean"},
+    "runtime_status": {"enum": ["RUNTIME EVIDENCE REQUIRED LATER", "runtime_verified"]},
+    "versions": {
+      "type": "object",
+      "required": ["minecraft", "java", "fabric_loader", "yarn", "fabric_api", "gradle", "loom"],
+      "properties": {
+        "minecraft": {"const": "1.16.5"},
+        "java": {"$ref": "#/$defs/versionString"},
+        "fabric_loader": {"$ref": "#/$defs/versionString"},
+        "yarn": {"$ref": "#/$defs/versionString"},
+        "fabric_api": {"$ref": "#/$defs/versionString"},
+        "gradle": {"$ref": "#/$defs/versionString"},
+        "loom": {"$ref": "#/$defs/versionString"}
+      },
+      "additionalProperties": false
+    },
+    "server_launcher": {
+      "type": "object",
+      "required": ["launcher_type", "version", "artifact_uri", "sha256", "status"],
+      "properties": {
+        "launcher_type": {"const": "fabric_dedicated_server"},
+        "version": {"$ref": "#/$defs/versionString"},
+        "artifact_uri": {"type": ["string", "null"]},
+        "sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "status": {"$ref": "#/$defs/versionString"}
+      },
+      "additionalProperties": false
+    },
+    "installed_mods": {
+      "type": "object",
+      "required": ["status", "entries"],
+      "properties": {
+        "status": {"$ref": "#/$defs/versionString"},
+        "entries": {"type": "array", "items": {"$ref": "#/$defs/modEntry"}}
+      },
+      "additionalProperties": false
+    },
+    "world": {"$ref": "#/$defs/world"},
+    "client": {"$ref": "#/$defs/client"},
+    "runtime_evidence": {"$ref": "#/$defs/runtimeEvidence"}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"template": {"const": true}}, "required": ["template"]},
+      "then": {"properties": {"runtime_status": {"const": "RUNTIME EVIDENCE REQUIRED LATER"}}}
+    }
+  ],
+  "$defs": {
+    "versionString": {"type": "string", "minLength": 1},
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "modEntry": {
+      "type": "object",
+      "required": ["mod_id", "version", "sha256"],
+      "properties": {
+        "mod_id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "world": {
+      "type": "object",
+      "required": ["world_seed", "world_type", "server_properties", "difficulty", "gamerules", "time", "weather", "resource_packs"],
+      "properties": {
+        "world_seed": {"oneOf": [{"type": "integer", "x-unit": "dimensionless Minecraft seed"}, {"const": "RUNTIME EVIDENCE REQUIRED LATER"}]},
+        "world_type": {"const": "superflat"},
+        "server_properties": {
+          "type": "object",
+          "required": ["source_file_sha256", "properties"],
+          "properties": {
+            "source_file_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+            "properties": {
+              "type": "object",
+              "required": ["level-type", "generate-structures", "spawn-animals", "spawn-monsters", "allow-flight", "view-distance", "pvp"],
+              "properties": {
+                "level-type": {"const": "flat"},
+                "generate-structures": {"type": "boolean"},
+                "spawn-animals": {"type": "boolean"},
+                "spawn-monsters": {"type": "boolean"},
+                "allow-flight": {"type": "boolean"},
+                "view-distance": {"type": "integer", "minimum": 2, "x-unit": "chunks"},
+                "pvp": {"type": "boolean"}
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "difficulty": {"const": "peaceful"},
+        "gamerules": {
+          "type": "object",
+          "required": ["doMobSpawning", "doWeatherCycle", "doDaylightCycle", "mobGriefing", "randomTickSpeed", "doFireTick", "keepInventory"],
+          "properties": {
+            "doMobSpawning": {"type": "boolean"},
+            "doWeatherCycle": {"type": "boolean"},
+            "doDaylightCycle": {"type": "boolean"},
+            "mobGriefing": {"type": "boolean"},
+            "randomTickSpeed": {"type": "integer", "minimum": 0, "x-unit": "random ticks per chunk section"},
+            "doFireTick": {"type": "boolean"},
+            "keepInventory": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        },
+        "time": {
+          "type": "object",
+          "required": ["mode", "ticks"],
+          "properties": {
+            "mode": {"const": "fixed"},
+            "ticks": {"type": "integer", "minimum": 0, "maximum": 23999, "x-unit": "Minecraft day ticks"}
+          },
+          "additionalProperties": false
+        },
+        "weather": {
+          "type": "object",
+          "required": ["mode", "rain", "thunder"],
+          "properties": {
+            "mode": {"const": "clear"},
+            "rain": {"const": false},
+            "thunder": {"const": false}
+          },
+          "additionalProperties": false
+        },
+        "resource_packs": {
+          "type": "object",
+          "required": ["server_pack_uri", "server_pack_sha256", "client_packs", "status"],
+          "properties": {
+            "server_pack_uri": {"type": ["string", "null"]},
+            "server_pack_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+            "client_packs": {"type": "array"},
+            "status": {"$ref": "#/$defs/versionString"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "client": {
+      "type": "object",
+      "required": ["resolution", "fov_degrees", "graphics"],
+      "properties": {
+        "resolution": {
+          "type": "object",
+          "required": ["width_pixels", "height_pixels", "fullscreen"],
+          "properties": {
+            "width_pixels": {"type": "integer", "const": 640, "x-unit": "pixels"},
+            "height_pixels": {"type": "integer", "const": 360, "x-unit": "pixels"},
+            "fullscreen": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        },
+        "fov_degrees": {"type": "number", "minimum": 30, "maximum": 110, "x-unit": "degrees"},
+        "graphics": {
+          "type": "object",
+          "required": ["graphics_mode", "render_distance_chunks", "entity_distance_scaling", "particles", "clouds", "smooth_lighting", "vsync", "max_fps", "mipmap_levels", "biome_blend_radius", "view_bobbing", "dynamic_fov", "capture_affecting_mod_settings"],
+          "properties": {
+            "graphics_mode": {"type": "string"},
+            "render_distance_chunks": {"type": "integer", "minimum": 2, "x-unit": "chunks"},
+            "entity_distance_scaling": {"type": "number", "minimum": 0, "x-unit": "dimensionless ratio"},
+            "particles": {"type": "string"},
+            "clouds": {"type": "string"},
+            "smooth_lighting": {"type": "string"},
+            "vsync": {"type": "boolean"},
+            "max_fps": {"type": "integer", "minimum": 1, "x-unit": "frames per second"},
+            "mipmap_levels": {"type": "integer", "minimum": 0, "x-unit": "dimensionless level"},
+            "biome_blend_radius": {"type": "integer", "minimum": 0, "x-unit": "blocks"},
+            "view_bobbing": {"type": "boolean"},
+            "dynamic_fov": {"type": "boolean"},
+            "capture_affecting_mod_settings": {"$ref": "#/$defs/versionString"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtimeEvidence": {
+      "type": "object",
+      "required": ["fresh_launch_manifest", "server_runtime_check", "client_runtime_check", "pixel_stability_check", "installed_mod_hash_check"],
+      "properties": {
+        "fresh_launch_manifest": {"$ref": "#/$defs/versionString"},
+        "server_runtime_check": {"$ref": "#/$defs/versionString"},
+        "client_runtime_check": {"$ref": "#/$defs/versionString"},
+        "pixel_stability_check": {"$ref": "#/$defs/versionString"},
+        "installed_mod_hash_check": {"$ref": "#/$defs/versionString"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
