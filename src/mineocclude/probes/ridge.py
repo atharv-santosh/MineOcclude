@@ -192,11 +192,29 @@ def fit_ridge(
     standardized = fitted_scaler.transform(matrix)
     target_mean = float(target.mean())
     centered_target = target - target_mean
-    gram = standardized.T @ standardized
-    system = gram + float(alpha) * np.eye(gram.shape[0], dtype=np.float64)
-    rhs = standardized.T @ centered_target
     try:
-        coefficients = np.linalg.solve(system, rhs)
+        if standardized.shape[1] > standardized.shape[0]:
+            # Activation vectors are wide (2,048 dimensions) even in the tiny
+            # CPU fixture. The dual ridge system is algebraically equivalent
+            # and keeps the solve proportional to training-row count.
+            dual_system = (
+                standardized @ standardized.T
+                + float(alpha)
+                * np.eye(standardized.shape[0], dtype=np.float64)
+            )
+            dual_coefficients = np.linalg.solve(
+                dual_system,
+                centered_target,
+            )
+            coefficients = standardized.T @ dual_coefficients
+        else:
+            gram = standardized.T @ standardized
+            system = gram + float(alpha) * np.eye(
+                gram.shape[0],
+                dtype=np.float64,
+            )
+            rhs = standardized.T @ centered_target
+            coefficients = np.linalg.solve(system, rhs)
     except np.linalg.LinAlgError as error:
         raise ProbeFitError("Ridge system could not be solved.") from error
     return RidgeModel(

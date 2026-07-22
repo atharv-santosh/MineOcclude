@@ -157,3 +157,36 @@ accepted-manifest identities in the schema decision log and generated lineage
 fixture. No Person A contract, field, unit, join key, or validator changed, and
 no schema migration was required for either the correction or this B-owned
 downstream table.
+
+## Synthetic A-to-B probe bridge
+
+Repair Chunk 2 connects the existing frozen interfaces through a CPU-only,
+non-scientific probe path. `mineocclude.probes.bridge` now:
+
+- validates Person A's activation handoff and Person B's target document with
+  their authoritative validators, then creates one canonical frame row per
+  `trajectory_id + model_frame_idx`;
+- builds the existing layout-grouped fold manifest at frame granularity and
+  propagates its `outer_fold_idx`, hash, version, and config hash to every
+  layer/site activation row for that frame;
+- resolves vectors exclusively by `activation_chunk_id + chunk_row_idx`, while
+  checking the literal chunk bytes against the declared SHA-256, dtype, shape,
+  row bounds, and exact claim coverage; and
+- builds one deterministic matrix per layer/site and sends the checked Person
+  A synthetic vectors, joined `mu_oracle_blocks` targets, and propagated folds
+  through the existing OOF ridge harness and sealed prediction/U1 result
+  artifacts.
+
+The five-layout test evidence is derived from the checked Person A synthetic
+activation chunk because the original three-frame fixture has only one layout
+and cannot exercise five grouped outer folds. The copied rows receive new
+explicitly synthetic test identities; the vector values remain the literal
+Person A fixture values. Chunk filenames and physical row order are never
+scientific identity. This path is marked `synthetic = true` and
+`scientific_use = forbidden` and cannot be used as runtime or scientific
+evidence.
+
+Chunk 2 does not connect MLP fitting end to end; the existing MLP harness
+remains separately tested. U2/U3 scientific analyses, real activation loading,
+the C-to-A adapter, runtime evidence, and final approvals remain pending in
+their assigned later work.
