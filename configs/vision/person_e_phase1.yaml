@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "config_schema_version": "person-e-phase1-config-schema-v0.1",
+  "config_instance_version": "person-e-phase1-foundation-v0.1",
+  "status": "foundation_pending_upstream_calibration",
+  "coordinate_contract": {
+    "quantity": "signed_wall_parallel_position",
+    "unit": "blocks",
+    "image_point_convention": "pixel_center_xy_zero_based",
+    "world_ground_plane_axes": ["world_x", "world_z"],
+    "positive_direction_source": "signed_person_b_person_c_coordinate_frame",
+    "silent_axis_inference_forbidden": true
+  },
+  "registry": {
+    "schema_version": "1.0",
+    "hash_algorithm": "sha256",
+    "hash_source": "literal_file_bytes",
+    "completed_runs_are_immutable": true,
+    "corrections_supersede_instead_of_overwrite": true,
+    "filenames_are_identity": false
+  },
+  "detector": {
+    "color_space": "hsv_h_degrees_sv_unit_interval",
+    "threshold_status": "pending_person_c_calibration",
+    "threshold_version": null,
+    "calibration_dataset_hash": null,
+    "heldout_report_hash": null,
+    "hsv_ranges": [],
+    "morphology": {
+      "open_iterations": 0,
+      "close_iterations": 0,
+      "radius_pixels": 1
+    },
+    "blob": {
+      "connectivity": 8,
+      "min_area_pixels": null,
+      "max_area_pixels": null,
+      "selection": "largest_valid_area_then_top_left"
+    },
+    "heldout_gates": {
+      "minimum_precision": 0.95,
+      "minimum_recall": 0.95
+    }
+  },
+  "homography": {
+    "marker_count": 4,
+    "matrix_shape": [3, 3],
+    "fit_scope": "layout_and_canonical_camera_pose",
+    "singular_pivot_tolerance": 1e-12,
+    "maximum_median_wall_parallel_error_blocks": 0.2,
+    "maximum_p95_wall_parallel_error_blocks": 0.5,
+    "minimum_shift_error_multiplier_on_gate_failure": 2.0
+  },
+  "measurement": {
+    "post_reveal_comparison": "frame_idx_strictly_greater_than_reveal_frame_idx",
+    "primary_valid_consecutive_frames": 2,
+    "sensitivity_first_valid_frames": 3,
+    "baseline_control_type": "alpha_zero",
+    "baseline_match_keys": ["event_id", "seed"],
+    "displacement_unit": "blocks",
+    "displacement_rule": "pushed_wall_coordinate_minus_alpha_zero_wall_coordinate",
+    "persistence_score_rule": "one_for_valid_primary_reappearance_null_otherwise",
+    "non_persistence_is_zero": false,
+    "generation_failure_is_zero": false,
+    "silent_interpolation_forbidden": true
+  },
+  "ssim": {
+    "algorithm": "global_ssim_per_channel_mean_v0.1",
+    "ssim_version": null,
+    "data_range": 255.0,
+    "channel_handling": "rgb_per_channel_mean",
+    "sample_covariance": true,
+    "k1": 0.01,
+    "k2": 0.03,
+    "alignment": "exact_frame_identity_and_equal_dimensions",
+    "background_mask": "exclude_union_of_pushed_and_baseline_boxes_plus_margin",
+    "background_mask_margin_pixels": null,
+    "mask_status": "pending_person_b_person_e_signoff"
+  },
+  "measurement_output": {
+    "consumer_schema_version": "person-b-u4-measurement-input-v0.1",
+    "producer_role": "person_e",
+    "one_row_per_rollout": true,
+    "allowed_statuses": [
+      "measured",
+      "non_persistence",
+      "generation_failure",
+      "excluded"
+    ]
+  }
+}

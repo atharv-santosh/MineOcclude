@@ -8,9 +8,11 @@ measurement outputs.
 
 from __future__ import annotations
 
+import hashlib
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from typing import Any
 from urllib.parse import urlparse
@@ -1403,3 +1405,1047 @@ def validate_rollout_registry_bundle(
         accepted=not rejections,
         rejections=tuple(rejections),
     )
+
+
+# Compatible Phase 1.2 extension. The frozen A-to-E rollout bundle above
+# remains schema 1.0 and keeps its existing validator. This sub-schema is the
+# one shared authority for richer immutable run/artifact lineage; E owns its
+# data model while A orchestration may call it without redefining rollout
+# identity.
+IMMUTABLE_REGISTRY_SCHEMA_VERSION = "mineocclude-immutable-registry-v1.0"
+
+IMMUTABLE_RUN_STATUSES = frozenset({"in_progress", "completed", "failed"})
+IMMUTABLE_ARTIFACT_STATUSES = frozenset(
+    {"accepted", "excluded", "superseded"}
+)
+
+IMMUTABLE_ARTIFACT_TYPES = frozenset(
+    {
+        # Phase 1 roadmap catalog.
+        "raw_trajectory",
+        "model_input",
+        "oracle_target",
+        "activation",
+        "fitted_probe",
+        "prediction",
+        "baseline",
+        "rollout",
+        "detection",
+        "metric_table",
+        "figure",
+        # Existing A rollout-registry types retained for compatibility.
+        "input_context",
+        "intervention_request",
+        "rollout_clip",
+        "partial_rollout",
+        "diagnostic_log",
+        # E-owned lineage products represented without implementing producers.
+        "detector_calibration",
+        "homography",
+        "localization",
+        "ssim",
+        "measurement",
+        "figure_input",
+    }
+)
+
+_IMMUTABLE_REGISTRY_FIELDS = frozenset(
+    {
+        "schema_version",
+        "immutable_registry_schema_version",
+        "registry_id",
+        "synthetic",
+        "scientific_use",
+        "runs",
+        "artifacts",
+    }
+)
+
+_IMMUTABLE_RUN_FIELDS = frozenset(
+    {
+        "schema_version",
+        "run_id",
+        "code_sha",
+        "git_dirty",
+        "config_snapshot_hash",
+        "checkpoint_hash",
+        "data_identity_hash",
+        "preprocess_hash",
+        "environment_hash",
+        "seeds",
+        "command",
+        "owner",
+        "started_at",
+        "ended_at",
+        "status",
+        "parent_run_id",
+        "input_artifact_ids",
+        "output_artifact_ids",
+        "failure_reason",
+        "supersedes_run_id",
+        "supersession_reason",
+    }
+)
+
+_IMMUTABLE_ARTIFACT_FIELDS = frozenset(
+    {
+        "schema_version",
+        "artifact_schema_version",
+        "artifact_id",
+        "direct_input_artifact_ids",
+        "creator_run_id",
+        "artifact_type",
+        "uri",
+        "sha256",
+        "size_bytes",
+        "status",
+        "status_authority",
+        "status_reason",
+        "superseded_by",
+    }
+)
+
+
+class ImmutableRegistryRejectionCode(str, Enum):
+    """Stable rejection codes for the shared immutable registry."""
+
+    INVALID_DOCUMENT = "invalid_document"
+    MISSING_REQUIRED_FIELD = "missing_required_field"
+    UNVERSIONED_SCHEMA_CHANGE = "unversioned_schema_change"
+    UNSUPPORTED_SCHEMA_VERSION = "unsupported_schema_version"
+    MISSING_RUN_ID = "missing_run_id"
+    MISSING_ARTIFACT_ID = "missing_artifact_id"
+    DUPLICATE_RUN_ID = "duplicate_run_id"
+    DUPLICATE_ARTIFACT_ID = "duplicate_artifact_id"
+    INVALID_RUN = "invalid_run"
+    INVALID_ARTIFACT = "invalid_artifact"
+    BROKEN_DIRECT_INPUT = "broken_direct_input"
+    MISSING_CREATOR_RUN = "missing_creator_run"
+    CHECKSUM_MISMATCH = "checksum_mismatch"
+    ILLEGAL_RUN_STATUS_TRANSITION = "illegal_run_status_transition"
+    COMPLETED_RUN_MUTATION = "completed_run_mutation"
+    IMMUTABLE_ARTIFACT_MUTATION = "immutable_artifact_mutation"
+    MALFORMED_SUPERSESSION = "malformed_supersession"
+    AMBIGUOUS_LINEAGE = "ambiguous_lineage"
+
+
+@dataclass(frozen=True)
+class ImmutableRegistryRejection:
+    code: ImmutableRegistryRejectionCode
+    message: str
+    record_id: str | None = None
+
+
+@dataclass(frozen=True)
+class ImmutableRegistryValidationResult:
+    accepted: bool
+    rejections: tuple[ImmutableRegistryRejection, ...]
+
+
+def _immutable_reject(
+    rejections: list[ImmutableRegistryRejection],
+    code: ImmutableRegistryRejectionCode,
+    message: str,
+    record_id: str | None = None,
+) -> None:
+    rejections.append(ImmutableRegistryRejection(code, message, record_id))
+
+
+def _strict_hex(value: Any, length: int) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == length
+        and all(character in "0123456789abcdefABCDEF" for character in value)
+    )
+
+
+def _strict_id_list(value: Any) -> bool:
+    return (
+        isinstance(value, list)
+        and all(_is_non_empty_string(item) for item in value)
+        and len(value) == len(set(value))
+    )
+
+
+def _utc_timestamp(value: Any) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        return None
+
+
+def _check_exact_fields(
+    value: Mapping[str, Any],
+    expected: frozenset[str],
+    label: str,
+    rejections: list[ImmutableRegistryRejection],
+    record_id: str | None = None,
+) -> bool:
+    string_fields = {field for field in value if isinstance(field, str)}
+    non_string_fields = [repr(field) for field in value if not isinstance(field, str)]
+    missing = sorted(expected - string_fields)
+    extra = sorted(string_fields - expected)
+    if missing:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_REQUIRED_FIELD,
+            f"{label} is missing: {', '.join(missing)}.",
+            record_id,
+        )
+    if extra:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.UNVERSIONED_SCHEMA_CHANGE,
+            f"{label} has unversioned fields: {', '.join(extra)}.",
+            record_id,
+        )
+    if non_string_fields:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.UNVERSIONED_SCHEMA_CHANGE,
+            f"{label} has non-string fields: {', '.join(non_string_fields)}.",
+            record_id,
+        )
+    return not missing and not extra and not non_string_fields
+
+
+def _has_reference_cycle(
+    start: str,
+    parent_by_id: Mapping[str, str | None],
+) -> bool:
+    seen: set[str] = set()
+    current: str | None = start
+    while current is not None:
+        if current in seen:
+            return True
+        seen.add(current)
+        current = parent_by_id.get(current)
+    return False
+
+
+def _artifact_lineage_has_cycle(
+    start: str,
+    direct_inputs_by_id: Mapping[str, tuple[str, ...]],
+) -> bool:
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(artifact_id: str) -> bool:
+        if artifact_id in visiting:
+            return True
+        if artifact_id in visited:
+            return False
+        visiting.add(artifact_id)
+        for input_id in direct_inputs_by_id.get(artifact_id, ()):
+            if visit(input_id):
+                return True
+        visiting.remove(artifact_id)
+        visited.add(artifact_id)
+        return False
+
+    return visit(start)
+
+
+def _validate_run_record(
+    run: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    run_id = run.get("run_id") if isinstance(run.get("run_id"), str) else None
+    if not _check_exact_fields(
+        run, _IMMUTABLE_RUN_FIELDS, "Run record", rejections, run_id
+    ):
+        return False
+    if not _is_non_empty_string(run["run_id"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_RUN_ID,
+            "run_id must be a non-empty immutable identifier.",
+            run_id,
+        )
+    if run["schema_version"] != SCHEMA_VERSION:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.UNSUPPORTED_SCHEMA_VERSION,
+            "Run schema_version is unsupported.",
+            run_id,
+        )
+    if not _strict_hex(run["code_sha"], 40):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run code_sha must be an exact full hexadecimal Git SHA.",
+            run_id,
+        )
+    if not isinstance(run["git_dirty"], bool):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run git_dirty must be boolean.",
+            run_id,
+        )
+    for field in (
+        "config_snapshot_hash",
+        "checkpoint_hash",
+        "data_identity_hash",
+        "preprocess_hash",
+        "environment_hash",
+    ):
+        if not _strict_hex(run[field], 64):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                f"Run {field} must be SHA-256.",
+                run_id,
+            )
+    seeds = run["seeds"]
+    if (
+        not isinstance(seeds, Mapping)
+        or not seeds
+        or any(not _is_non_empty_string(key) for key in seeds)
+        or any(
+            not isinstance(seed, int) or isinstance(seed, bool)
+            for seed in seeds.values()
+        )
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run seeds must be a non-empty mapping of names to integers.",
+            run_id,
+        )
+    command = run["command"]
+    if (
+        not isinstance(command, list)
+        or not command
+        or any(not _is_non_empty_string(part) for part in command)
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run command must be a non-empty list of strings.",
+            run_id,
+        )
+    if not _is_non_empty_string(run["owner"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run owner must be non-empty.",
+            run_id,
+        )
+    started_at = _utc_timestamp(run["started_at"])
+    ended_at = None if run["ended_at"] is None else _utc_timestamp(run["ended_at"])
+    if started_at is None:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run started_at must be an explicit UTC timestamp.",
+            run_id,
+        )
+    status = run["status"]
+    if not isinstance(status, str) or status not in IMMUTABLE_RUN_STATUSES:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run status is unsupported.",
+            run_id,
+        )
+    elif status == "in_progress":
+        if run["ended_at"] is not None or run["failure_reason"] is not None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "In-progress runs require null ended_at and failure_reason.",
+                run_id,
+            )
+    else:
+        if ended_at is None or (
+            started_at is not None and ended_at < started_at
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Terminal runs require an ordered UTC ended_at.",
+                run_id,
+            )
+        if status == "failed" and not _is_non_empty_string(run["failure_reason"]):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Failed runs require a failure_reason.",
+                run_id,
+            )
+        if status == "completed" and run["failure_reason"] is not None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Completed runs require null failure_reason.",
+                run_id,
+            )
+    for field in ("input_artifact_ids", "output_artifact_ids"):
+        if not _strict_id_list(run[field]):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Run {field} must be a duplicate-free ID list.",
+                run_id,
+            )
+    for field in ("parent_run_id", "supersedes_run_id"):
+        if run[field] is not None and not _is_non_empty_string(run[field]):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                f"Run {field} must be null or a non-empty ID.",
+                run_id,
+            )
+    if run["supersedes_run_id"] is None:
+        if run["supersession_reason"] is not None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                "A run without supersedes_run_id requires null supersession_reason.",
+                run_id,
+            )
+    elif not _is_non_empty_string(run["supersession_reason"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+            "A superseding run requires a non-empty supersession_reason.",
+            run_id,
+        )
+    return True
+
+
+def _validate_artifact_record(
+    artifact: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    artifact_id = (
+        artifact.get("artifact_id")
+        if isinstance(artifact.get("artifact_id"), str)
+        else None
+    )
+    if not _check_exact_fields(
+        artifact,
+        _IMMUTABLE_ARTIFACT_FIELDS,
+        "Artifact record",
+        rejections,
+        artifact_id,
+    ):
+        return False
+    if not _is_non_empty_string(artifact["artifact_id"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_ARTIFACT_ID,
+            "artifact_id must be a non-empty immutable identifier.",
+            artifact_id,
+        )
+    if artifact["schema_version"] != SCHEMA_VERSION:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.UNSUPPORTED_SCHEMA_VERSION,
+            "Artifact schema_version is unsupported.",
+            artifact_id,
+        )
+    if not _is_non_empty_string(artifact["artifact_schema_version"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "artifact_schema_version must be explicit.",
+            artifact_id,
+        )
+    if (
+        not isinstance(artifact["artifact_type"], str)
+        or artifact["artifact_type"] not in IMMUTABLE_ARTIFACT_TYPES
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact type is outside the closed catalog.",
+            artifact_id,
+        )
+    if not _is_uri(artifact["uri"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact uri must be explicit and cannot be a bare filename.",
+            artifact_id,
+        )
+    if not _strict_hex(artifact["sha256"], 64):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact sha256 must be exact hexadecimal SHA-256.",
+            artifact_id,
+        )
+    if not _is_non_negative_integer(artifact["size_bytes"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact size_bytes must be a non-negative integer.",
+            artifact_id,
+        )
+    if not _is_non_empty_string(artifact["creator_run_id"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_CREATOR_RUN,
+            "Artifact creator_run_id must be non-empty.",
+            artifact_id,
+        )
+    if not _strict_id_list(artifact["direct_input_artifact_ids"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+            "Artifact direct inputs must be a duplicate-free ID list.",
+            artifact_id,
+        )
+    if (
+        not isinstance(artifact["status"], str)
+        or artifact["status"] not in IMMUTABLE_ARTIFACT_STATUSES
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact status is unsupported.",
+            artifact_id,
+        )
+    if not _is_non_empty_string(artifact["status_authority"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact status_authority must be explicit.",
+            artifact_id,
+        )
+    status = artifact["status"]
+    if status == "accepted":
+        valid_lifecycle = (
+            artifact["status_reason"] is None
+            and artifact["superseded_by"] is None
+        )
+    elif status == "excluded":
+        valid_lifecycle = (
+            _is_non_empty_string(artifact["status_reason"])
+            and artifact["superseded_by"] is None
+        )
+    else:
+        valid_lifecycle = (
+            _is_non_empty_string(artifact["status_reason"])
+            and _is_non_empty_string(artifact["superseded_by"])
+        )
+    if not valid_lifecycle:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+            "Artifact lifecycle fields disagree with status.",
+            artifact_id,
+        )
+    return True
+
+
+def validate_immutable_run_artifact_registry(
+    document: Any,
+    *,
+    previous_registry: Any = None,
+    artifact_bytes_by_id: Mapping[str, bytes] | None = None,
+) -> ImmutableRegistryValidationResult:
+    """Validate the shared immutable registry without mutating submitted data.
+
+    ``previous_registry`` authenticates lifecycle transitions and append-only
+    behavior. ``artifact_bytes_by_id`` optionally binds literal artifact bytes
+    to the recorded checksum and size. Identity is always explicit; paths,
+    filenames, directory order, and physical row order are never consulted.
+    """
+
+    rejections: list[ImmutableRegistryRejection] = []
+    if not isinstance(document, Mapping):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "Immutable registry must be a mapping.",
+        )
+        return ImmutableRegistryValidationResult(False, tuple(rejections))
+    if not _check_exact_fields(
+        document,
+        _IMMUTABLE_REGISTRY_FIELDS,
+        "Immutable registry",
+        rejections,
+    ):
+        return ImmutableRegistryValidationResult(False, tuple(rejections))
+    if (
+        document["schema_version"] != SCHEMA_VERSION
+        or document["immutable_registry_schema_version"]
+        != IMMUTABLE_REGISTRY_SCHEMA_VERSION
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.UNSUPPORTED_SCHEMA_VERSION,
+            "Immutable registry schema version is unsupported.",
+        )
+    if not _is_non_empty_string(document["registry_id"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "registry_id must be non-empty.",
+        )
+    if not isinstance(document["synthetic"], bool):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "synthetic must be boolean.",
+        )
+    if (
+        not isinstance(document["scientific_use"], str)
+        or document["scientific_use"] not in {"forbidden", "permitted"}
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "scientific_use must be forbidden or permitted.",
+        )
+    if document["synthetic"] is True and document["scientific_use"] != "forbidden":
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "Synthetic registry evidence must forbid scientific use.",
+        )
+    runs = document["runs"]
+    artifacts = document["artifacts"]
+    if not isinstance(runs, list) or not runs:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_REQUIRED_FIELD,
+            "Immutable registry requires a non-empty runs list.",
+        )
+        runs = []
+    if not isinstance(artifacts, list) or not artifacts:
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_REQUIRED_FIELD,
+            "Immutable registry requires a non-empty artifacts list.",
+        )
+        artifacts = []
+
+    run_by_id: dict[str, Mapping[str, Any]] = {}
+    seen_run_ids: set[str] = set()
+    for index, run in enumerate(runs):
+        if not isinstance(run, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                f"Run record {index} must be a mapping.",
+            )
+            continue
+        shape_valid = _validate_run_record(run, rejections)
+        run_id = run.get("run_id")
+        if not _is_non_empty_string(run_id):
+            if "run_id" not in run:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MISSING_RUN_ID,
+                    f"Run record {index} is missing run_id.",
+                )
+            continue
+        if run_id in seen_run_ids:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.DUPLICATE_RUN_ID,
+                f"Duplicate run_id {run_id!r}.",
+                run_id,
+            )
+        else:
+            seen_run_ids.add(run_id)
+            if shape_valid:
+                run_by_id[run_id] = run
+
+    artifact_by_id: dict[str, Mapping[str, Any]] = {}
+    seen_artifact_ids: set[str] = set()
+    for index, artifact in enumerate(artifacts):
+        if not isinstance(artifact, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+                f"Artifact record {index} must be a mapping.",
+            )
+            continue
+        shape_valid = _validate_artifact_record(artifact, rejections)
+        artifact_id = artifact.get("artifact_id")
+        if not _is_non_empty_string(artifact_id):
+            if "artifact_id" not in artifact:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MISSING_ARTIFACT_ID,
+                    f"Artifact record {index} is missing artifact_id.",
+                )
+            continue
+        if artifact_id in seen_artifact_ids:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.DUPLICATE_ARTIFACT_ID,
+                f"Duplicate artifact_id {artifact_id!r}.",
+                artifact_id,
+            )
+        else:
+            seen_artifact_ids.add(artifact_id)
+            if shape_valid:
+                artifact_by_id[artifact_id] = artifact
+
+    parent_by_id: dict[str, str | None] = {}
+    superseded_run_by_id: dict[str, str | None] = {}
+    superseders_by_target: dict[str, list[str]] = {}
+    for run_id, run in run_by_id.items():
+        parent_id = run.get("parent_run_id")
+        supersedes_id = run.get("supersedes_run_id")
+        parent_ref = parent_id if isinstance(parent_id, str) else None
+        supersedes_ref = supersedes_id if isinstance(supersedes_id, str) else None
+        parent_by_id[run_id] = parent_ref
+        superseded_run_by_id[run_id] = supersedes_ref
+        if parent_ref is not None and parent_ref not in run_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Run {run_id!r} references unknown parent run.",
+                run_id,
+            )
+        if supersedes_ref is not None:
+            superseders_by_target.setdefault(supersedes_ref, []).append(run_id)
+            target = run_by_id.get(supersedes_ref)
+            if (
+                supersedes_ref == run_id
+                or target is None
+                or target.get("status") != "completed"
+                or target.get("owner") != run.get("owner")
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                    f"Run {run_id!r} has an invalid supersedes_run_id.",
+                    run_id,
+                )
+        if _has_reference_cycle(run_id, parent_by_id):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Run parent lineage containing {run_id!r} has a cycle.",
+                run_id,
+            )
+    for run_id in superseded_run_by_id:
+        if _has_reference_cycle(run_id, superseded_run_by_id):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                f"Run supersession containing {run_id!r} has a cycle.",
+                run_id,
+            )
+    for target_id, superseder_ids in superseders_by_target.items():
+        if len(superseder_ids) > 1:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Run {target_id!r} has multiple superseding runs.",
+                target_id,
+            )
+
+    direct_inputs_by_artifact: dict[str, tuple[str, ...]] = {}
+    superseded_artifact_by_id: dict[str, str | None] = {}
+    for artifact_id, artifact in artifact_by_id.items():
+        creator_id = artifact.get("creator_run_id")
+        creator = run_by_id.get(creator_id) if isinstance(creator_id, str) else None
+        if creator is None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MISSING_CREATOR_RUN,
+                f"Artifact {artifact_id!r} references a nonexistent creator run.",
+                artifact_id,
+            )
+        elif artifact_id not in creator.get("output_artifact_ids", []):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Creator run does not list artifact {artifact_id!r} as output.",
+                artifact_id,
+            )
+        elif creator.get("status") == "in_progress":
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Artifact {artifact_id!r} cannot be published by an in-progress run.",
+                artifact_id,
+            )
+        elif (
+            artifact.get("status") == "accepted"
+            and creator.get("status") != "completed"
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Accepted artifact {artifact_id!r} requires a completed creator run.",
+                artifact_id,
+            )
+        direct_inputs = artifact.get("direct_input_artifact_ids")
+        if _strict_id_list(direct_inputs):
+            direct_inputs_by_artifact[artifact_id] = tuple(direct_inputs)
+            for input_id in direct_inputs:
+                source = artifact_by_id.get(input_id)
+                if input_id == artifact_id or source is None:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.BROKEN_DIRECT_INPUT,
+                        f"Artifact {artifact_id!r} has a missing or self direct input.",
+                        artifact_id,
+                    )
+                if creator is not None and input_id not in creator.get(
+                    "input_artifact_ids", []
+                ):
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                        f"Artifact {artifact_id!r} direct input is absent from its creator run.",
+                        artifact_id,
+                    )
+                if (
+                    artifact.get("status") == "accepted"
+                    and source is not None
+                    and source.get("status") != "accepted"
+                ):
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                        f"Accepted artifact {artifact_id!r} depends on a non-accepted input.",
+                        artifact_id,
+                )
+        replacement_id = artifact.get("superseded_by")
+        superseded_artifact_by_id[artifact_id] = (
+            replacement_id if isinstance(replacement_id, str) else None
+        )
+        if replacement_id is not None and not isinstance(replacement_id, str):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                f"Artifact {artifact_id!r} replacement ID is malformed.",
+                artifact_id,
+            )
+        elif replacement_id is not None:
+            replacement = artifact_by_id.get(replacement_id)
+            replacement_creator_id = (
+                replacement.get("creator_run_id")
+                if replacement is not None
+                and isinstance(replacement.get("creator_run_id"), str)
+                else None
+            )
+            replacement_creator = (
+                run_by_id.get(replacement_creator_id)
+                if replacement_creator_id is not None
+                else None
+            )
+            if (
+                replacement_id == artifact_id
+                or replacement is None
+                or replacement.get("artifact_type") != artifact.get("artifact_type")
+                or replacement.get("status") != "accepted"
+                or replacement.get("status_authority")
+                != artifact.get("status_authority")
+                or replacement_creator is None
+                or replacement_creator.get("supersedes_run_id")
+                != artifact.get("creator_run_id")
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                    f"Artifact {artifact_id!r} has an invalid replacement.",
+                    artifact_id,
+                )
+    for artifact_id in direct_inputs_by_artifact:
+        if _artifact_lineage_has_cycle(artifact_id, direct_inputs_by_artifact):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Artifact direct-input lineage containing {artifact_id!r} has a cycle.",
+                artifact_id,
+            )
+    for artifact_id in superseded_artifact_by_id:
+        if _has_reference_cycle(artifact_id, superseded_artifact_by_id):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                f"Artifact supersession containing {artifact_id!r} has a cycle.",
+                artifact_id,
+            )
+
+    for run_id, run in run_by_id.items():
+        run_inputs = run.get("input_artifact_ids")
+        run_outputs = run.get("output_artifact_ids")
+        for input_id in run_inputs if _strict_id_list(run_inputs) else []:
+            if input_id not in artifact_by_id:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.BROKEN_DIRECT_INPUT,
+                    f"Run {run_id!r} references missing input artifact {input_id!r}.",
+                    run_id,
+                )
+        for output_id in run_outputs if _strict_id_list(run_outputs) else []:
+            output = artifact_by_id.get(output_id)
+            if output is None or output.get("creator_run_id") != run_id:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                    f"Run {run_id!r} has an unresolved or foreign output {output_id!r}.",
+                    run_id,
+                )
+
+    if artifact_bytes_by_id is not None:
+        if not isinstance(artifact_bytes_by_id, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.CHECKSUM_MISMATCH,
+                "artifact_bytes_by_id must be a mapping when supplied.",
+            )
+        else:
+            for artifact_id, payload in artifact_bytes_by_id.items():
+                artifact = artifact_by_id.get(artifact_id)
+                if artifact is None or not isinstance(payload, bytes):
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.CHECKSUM_MISMATCH,
+                        f"Checksum evidence for {artifact_id!r} is malformed.",
+                        artifact_id if isinstance(artifact_id, str) else None,
+                    )
+                    continue
+                digest = hashlib.sha256(payload).hexdigest()
+                if digest != artifact.get("sha256") or len(payload) != artifact.get(
+                    "size_bytes"
+                ):
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.CHECKSUM_MISMATCH,
+                        f"Artifact {artifact_id!r} checksum or size mismatches supplied bytes.",
+                        artifact_id,
+                    )
+
+    if previous_registry is not None:
+        previous_result = validate_immutable_run_artifact_registry(previous_registry)
+        if not previous_result.accepted or not isinstance(previous_registry, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+                "previous_registry must itself be a valid immutable registry.",
+            )
+        else:
+            if (
+                previous_registry.get("registry_id") != document["registry_id"]
+                or previous_registry.get("schema_version") != document["schema_version"]
+                or previous_registry.get("immutable_registry_schema_version")
+                != document["immutable_registry_schema_version"]
+                or previous_registry.get("synthetic") != document["synthetic"]
+                or previous_registry.get("scientific_use")
+                != document["scientific_use"]
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.UNVERSIONED_SCHEMA_CHANGE,
+                    "Registry identity, version, or scope changed in place.",
+                )
+            previous_runs = {
+                run["run_id"]: run
+                for run in previous_registry["runs"]
+                if isinstance(run, Mapping) and isinstance(run.get("run_id"), str)
+            }
+            for run_id, prior in previous_runs.items():
+                current = run_by_id.get(run_id)
+                if current is None:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.COMPLETED_RUN_MUTATION,
+                        f"Existing run {run_id!r} was removed.",
+                        run_id,
+                    )
+                    continue
+                prior_status = prior["status"]
+                current_status = current["status"]
+                if prior_status in {"completed", "failed"}:
+                    if current_status != prior_status:
+                        _immutable_reject(
+                            rejections,
+                            ImmutableRegistryRejectionCode.ILLEGAL_RUN_STATUS_TRANSITION,
+                            f"Terminal run {run_id!r} cannot change status.",
+                            run_id,
+                        )
+                    if current != prior:
+                        _immutable_reject(
+                            rejections,
+                            ImmutableRegistryRejectionCode.COMPLETED_RUN_MUTATION,
+                            f"Terminal run {run_id!r} was mutated in place.",
+                            run_id,
+                        )
+                elif current_status not in {"in_progress", "completed", "failed"}:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.ILLEGAL_RUN_STATUS_TRANSITION,
+                        f"Run {run_id!r} has an illegal status transition.",
+                        run_id,
+                    )
+                elif current_status == "in_progress" and current != prior:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.ILLEGAL_RUN_STATUS_TRANSITION,
+                        f"In-progress run {run_id!r} changed without a terminal transition.",
+                        run_id,
+                    )
+                elif current_status in {"completed", "failed"}:
+                    mutable_at_terminal = {
+                        "status",
+                        "ended_at",
+                        "output_artifact_ids",
+                        "failure_reason",
+                    }
+                    for field in _IMMUTABLE_RUN_FIELDS - mutable_at_terminal:
+                        if current[field] != prior[field]:
+                            _immutable_reject(
+                                rejections,
+                                ImmutableRegistryRejectionCode.ILLEGAL_RUN_STATUS_TRANSITION,
+                                f"Run {run_id!r} changed immutable field {field!r}.",
+                                run_id,
+                            )
+            previous_artifacts = {
+                artifact["artifact_id"]: artifact
+                for artifact in previous_registry["artifacts"]
+                if isinstance(artifact, Mapping)
+                and isinstance(artifact.get("artifact_id"), str)
+            }
+            for artifact_id, prior in previous_artifacts.items():
+                current = artifact_by_id.get(artifact_id)
+                if current is None:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.IMMUTABLE_ARTIFACT_MUTATION,
+                        f"Existing artifact {artifact_id!r} was removed.",
+                        artifact_id,
+                    )
+                    continue
+                if current == prior:
+                    continue
+                lifecycle_fields = {"status", "status_reason", "superseded_by"}
+                unchanged = all(
+                    current[field] == prior[field]
+                    for field in _IMMUTABLE_ARTIFACT_FIELDS - lifecycle_fields
+                )
+                if not (
+                    prior["status"] == "accepted"
+                    and current["status"] == "superseded"
+                    and unchanged
+                ):
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.IMMUTABLE_ARTIFACT_MUTATION,
+                        f"Artifact {artifact_id!r} was mutated outside supersession.",
+                        artifact_id,
+                    )
+                elif current["superseded_by"] in previous_artifacts:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.IMMUTABLE_ARTIFACT_MUTATION,
+                        f"Artifact {artifact_id!r} must point to a newly appended replacement.",
+                        artifact_id,
+                    )
+
+    return ImmutableRegistryValidationResult(not rejections, tuple(rejections))
