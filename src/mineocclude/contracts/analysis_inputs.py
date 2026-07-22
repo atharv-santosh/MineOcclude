@@ -30,6 +30,24 @@ STATE_INPUT_SCHEMA_VERSION = "person-b-state-input-v0.1"
 BASELINE_INPUT_SCHEMA_VERSION = "person-b-baseline-input-v0.1"
 MEASUREMENT_INPUT_SCHEMA_VERSION = "person-b-u4-measurement-input-v0.1"
 
+ALLOWED_BASELINE_FAMILIES = frozenset({"last_seen"})
+ALLOWED_BASELINE_TARGETS = frozenset({"mu_oracle_blocks"})
+BASELINE_LEGAL_INFORMATION_FIELDS = frozenset(
+    {
+        "uses_hidden_truth",
+        "uses_future_information",
+        "uses_scripted_q",
+    }
+)
+FORBIDDEN_BASELINE_FEATURES = frozenset(
+    {
+        "hidden_truth",
+        "q",
+        "scripted_q",
+        "x_true_blocks",
+    }
+)
+
 
 class AnalysisInputRejectionCode(str, Enum):
     MISSING_REQUIRED_FIELD = "missing_required_field"
@@ -45,6 +63,11 @@ class AnalysisInputRejectionCode(str, Enum):
     FOLD_MISMATCH = "fold_mismatch"
     NON_OOF_PREDICTION = "non_oof_prediction"
     OUTCOME_CONFLATION = "outcome_conflation"
+    UNSUPPORTED_BASELINE_FAMILY = "unsupported_baseline_family"
+    LEGAL_INFORMATION_VIOLATION = "legal_information_violation"
+    MIXED_EPISODE_ID = "mixed_episode_id"
+    NONCONSECUTIVE_SERVER_TICK = "nonconsecutive_server_tick"
+    TIMEBASE_MISMATCH = "timebase_mismatch"
 
 
 @dataclass(frozen=True)
@@ -101,7 +124,10 @@ def _require_envelope(
             "Input document is missing: " + ", ".join(missing),
         )
         return rejections, None
-    if document.get("schema_version") != SCHEMA_VERSION or document.get(version_field) != version:
+    if (
+        document.get("schema_version") != SCHEMA_VERSION
+        or document.get(version_field) != version
+    ):
         _reject(
             rejections,
             AnalysisInputRejectionCode.INVALID_SCHEMA_VERSION,
@@ -158,6 +184,14 @@ def validate_state_input(document: Any) -> AnalysisInputValidationResult:
             AnalysisInputRejectionCode.INVALID_HASH,
             "accepted_manifest_hash must be SHA-256.",
         )
+    # Import locally to keep the public contracts package independent from the
+    # oracle package's builder imports during module initialization.
+    from mineocclude.oracle.schema import (
+        OracleRejectionCode,
+        OracleValidationError,
+        validate_trajectory_timebase_rows,
+    )
+
     try:
         validate_coordinate_frame(document.get("coordinate_frame"))
     except CoordinateContractError as error:
@@ -167,6 +201,7 @@ def validate_state_input(document: Any) -> AnalysisInputValidationResult:
             str(error),
         )
     seen: set[tuple[Any, ...]] = set()
+    identity_valid_rows: list[Mapping[str, Any]] = []
     for index, row in enumerate(rows):
         if not isinstance(row, Mapping):
             _reject(
@@ -187,6 +222,7 @@ def validate_state_input(document: Any) -> AnalysisInputValidationResult:
                 index,
             )
             continue
+        identity_valid_rows.append(row)
         if key in seen:
             _reject(
                 rejections,
@@ -240,6 +276,25 @@ def validate_state_input(document: Any) -> AnalysisInputValidationResult:
                 "x_true_blocks must be finite scoring-only truth.",
                 index,
             )
+    try:
+        validate_trajectory_timebase_rows(identity_valid_rows)
+    except OracleValidationError as error:
+        code_map = {
+            OracleRejectionCode.MIXED_EPISODE_ID: (
+                AnalysisInputRejectionCode.MIXED_EPISODE_ID
+            ),
+            OracleRejectionCode.NONCONSECUTIVE_SERVER_TICK: (
+                AnalysisInputRejectionCode.NONCONSECUTIVE_SERVER_TICK
+            ),
+            OracleRejectionCode.TIMEBASE_MISMATCH: (
+                AnalysisInputRejectionCode.TIMEBASE_MISMATCH
+            ),
+        }
+        _reject(
+            rejections,
+            code_map.get(error.code, AnalysisInputRejectionCode.INVALID_VALUE),
+            str(error),
+        )
     return AnalysisInputValidationResult(not rejections, tuple(rejections))
 
 
@@ -257,6 +312,8 @@ def validate_baseline_input(
         "baseline_id",
         "baseline_family",
         "target_name",
+        "feature_access",
+        "legal_information",
         "config_hash",
         "input_manifest_hash",
         "fold_manifest_hash",
@@ -291,6 +348,79 @@ def validate_baseline_input(
                 AnalysisInputRejectionCode.MISSING_REQUIRED_FIELD,
                 f"{field} must be non-empty.",
             )
+    baseline_family = document.get("baseline_family")
+    if (
+        isinstance(baseline_family, str)
+        and baseline_family.strip()
+        and baseline_family not in ALLOWED_BASELINE_FAMILIES
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.UNSUPPORTED_BASELINE_FAMILY,
+            f"Unsupported baseline_family={baseline_family!r}.",
+        )
+    target_name = document.get("target_name")
+    if (
+        isinstance(target_name, str)
+        and target_name.strip()
+        and target_name not in ALLOWED_BASELINE_TARGETS
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            "Baseline targets cannot expose scoring-only hidden truth.",
+        )
+
+    feature_access = document.get("feature_access")
+    if (
+        not isinstance(feature_access, list)
+        or not feature_access
+        or any(
+            not isinstance(field, str) or not field.strip()
+            for field in feature_access
+        )
+        or len(feature_access) != len(set(feature_access))
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.INVALID_VALUE,
+            "feature_access must be a non-empty list of unique field names.",
+        )
+    else:
+        forbidden_features = sorted(
+            field
+            for field in feature_access
+            if field.lower() in FORBIDDEN_BASELINE_FEATURES
+            or field.lower().startswith(("future_", "next_", "hidden_"))
+        )
+        if forbidden_features:
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+                "Baseline feature access is illegal: "
+                + ", ".join(forbidden_features),
+            )
+
+    legal_information = document.get("legal_information")
+    if (
+        not isinstance(legal_information, Mapping)
+        or set(legal_information) != BASELINE_LEGAL_INFORMATION_FIELDS
+        or any(
+            not isinstance(legal_information.get(field), bool)
+            for field in BASELINE_LEGAL_INFORMATION_FIELDS
+        )
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.INVALID_VALUE,
+            "legal_information must explicitly declare all access flags as booleans.",
+        )
+    elif any(legal_information[field] for field in BASELINE_LEGAL_INFORMATION_FIELDS):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            "Hidden truth, future information, and scripted q are forbidden inputs.",
+        )
     seen: set[tuple[str, int]] = set()
     for index, row in enumerate(rows):
         if not isinstance(row, Mapping):
@@ -382,6 +512,7 @@ def validate_measurement_input(
     document: Any,
     *,
     expected_rollouts_by_id: Mapping[str, Mapping[str, Any]] | None = None,
+    expected_rollout_manifest_hash: str | None = None,
 ) -> AnalysisInputValidationResult:
     """Validate the minimal E-to-B U4 measurement table B will consume."""
 
@@ -418,6 +549,34 @@ def validate_measurement_input(
                 AnalysisInputRejectionCode.INVALID_HASH,
                 f"{field} must be SHA-256.",
             )
+    if expected_rollouts_by_id is not None:
+        if not is_hex_digest(expected_rollout_manifest_hash, 64):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+                "A validated rollout manifest hash is required with rollout rows.",
+            )
+        elif (
+            document.get("accepted_rollout_manifest_hash")
+            != expected_rollout_manifest_hash
+        ):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+                "Measurement envelope names a different rollout manifest.",
+            )
+    elif expected_rollout_manifest_hash is not None:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            "A rollout manifest hash cannot be checked without its rollout rows.",
+        )
+    else:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            "Validated A rollout/registry context is required for measurements.",
+        )
     allowed_statuses = {
         "measured",
         "non_persistence",
@@ -533,6 +692,28 @@ def validate_measurement_input(
                     index,
                 )
             else:
+                expected_fields = (
+                    "event_id",
+                    "direction_version",
+                    "control_type",
+                    "alpha_applied",
+                    "outcome",
+                    "measurable",
+                    "status",
+                    "execution_status",
+                )
+                missing_expected = [
+                    field for field in expected_fields if field not in expected
+                ]
+                if missing_expected:
+                    _reject(
+                        rejections,
+                        AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+                        "Rollout registry entry is missing: "
+                        + ", ".join(missing_expected),
+                        index,
+                    )
+                    expected = {}
                 for field in ("event_id", "direction_version", "control_type"):
                     if row[field] != expected.get(field):
                         _reject(
@@ -549,11 +730,70 @@ def validate_measurement_input(
                         "Rollout registry alpha must be finite.",
                         index,
                     )
-                elif _finite(row["alpha_applied"]) and not math.isclose(
-                    float(row["alpha_applied"]),
-                    float(expected_alpha),
-                    rel_tol=1e-10,
-                    abs_tol=1e-12,
+                outcome = expected.get("outcome")
+                measurable = expected.get("measurable")
+                lifecycle = expected.get("status")
+                execution_status = expected.get("execution_status")
+                expected_measurement_status: str | None = None
+                lifecycle_is_coherent = False
+                if outcome == "generation_failure":
+                    lifecycle_is_coherent = (
+                        measurable is False
+                        and lifecycle == "excluded"
+                        and execution_status in ("failed", "completed_with_failures")
+                    )
+                    expected_measurement_status = "generation_failure"
+                elif lifecycle in ("excluded", "superseded"):
+                    lifecycle_is_coherent = (
+                        measurable is False
+                        and execution_status in ("completed", "completed_with_failures")
+                        and outcome in ("measurable_continuation", "non_persistence")
+                    )
+                    expected_measurement_status = "excluded"
+                elif outcome == "measurable_continuation":
+                    lifecycle_is_coherent = (
+                        measurable is True
+                        and lifecycle == "accepted"
+                        and execution_status in ("completed", "completed_with_failures")
+                    )
+                    expected_measurement_status = "measured"
+                elif outcome == "non_persistence":
+                    lifecycle_is_coherent = (
+                        measurable is False
+                        and lifecycle == "accepted"
+                        and execution_status in ("completed", "completed_with_failures")
+                    )
+                    expected_measurement_status = "non_persistence"
+
+                if not lifecycle_is_coherent:
+                    _reject(
+                        rejections,
+                        AnalysisInputRejectionCode.INVALID_LIFECYCLE,
+                        (
+                            "Rollout outcome, lifecycle, measurable flag, "
+                            "and run status conflict."
+                        ),
+                        index,
+                    )
+                elif row["measurement_status"] != expected_measurement_status:
+                    _reject(
+                        rejections,
+                        AnalysisInputRejectionCode.OUTCOME_CONFLATION,
+                        (
+                            "Measurement status contradicts the producing "
+                            "rollout outcome."
+                        ),
+                        index,
+                    )
+                if (
+                    _finite(expected_alpha)
+                    and _finite(row["alpha_applied"])
+                    and not math.isclose(
+                        float(row["alpha_applied"]),
+                        float(expected_alpha),
+                        rel_tol=1e-10,
+                        abs_tol=1e-12,
+                    )
                 ):
                     _reject(
                         rejections,

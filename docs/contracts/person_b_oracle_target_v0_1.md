@@ -73,7 +73,10 @@ introduced.
 - A trajectory cannot mix source runs.
 - The last-visible position remains fixed through an occluded run.
 - `v` and `q` cannot change during an occluded run.
-- Hidden `tau` strictly increases until reveal; reveal resets `tau` and spread.
+- Server ticks and model frames are consecutive within each trajectory.
+- One trajectory cannot mix `episode_id` values.
+- Hidden `tau` equals elapsed ticks/frames at exactly 20 Hz; reveal resets
+  `tau` and spread.
 - Hidden truth is copied only after posterior construction and remains
   scoring-only.
 - Claim-bearing generation hashes the actual analysis config file bytes.

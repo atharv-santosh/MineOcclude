@@ -41,6 +41,7 @@ from .schema import (
     require_finite_number,
     validate_oracle_target_document,
     validate_oracle_target_rows,
+    validate_trajectory_timebase_rows,
 )
 
 
@@ -173,6 +174,7 @@ def _build_regime_a_targets_with_hash(
         raise OracleValidationError("At least one state row is required.")
     for row in rows:
         _validate_state_row(row)
+    validate_trajectory_timebase_rows(rows)
     try:
         assert_unique(rows)
         assert_trajectory_consistency(rows)

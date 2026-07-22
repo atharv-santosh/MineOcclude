@@ -10,6 +10,7 @@ from pathlib import Path
 from mineocclude.oracle.closed_form import closed_form_posterior
 from mineocclude.oracle.primary_scalar_kalman import scalar_kalman_posterior
 from mineocclude.oracle.schema import (
+    OracleRejectionCode,
     OracleValidationError,
     validate_oracle_target,
     validate_oracle_target_rows,
@@ -122,8 +123,45 @@ class TestRegimeAOracle(unittest.TestCase):
     def test_hidden_tau_cannot_stall_or_decrease_before_reveal(self) -> None:
         invalid = copy.deepcopy(self.state_document)
         invalid["rows"][2]["tau"] = invalid["rows"][1]["tau"]
-        with self.assertRaisesRegex(OracleValidationError, "tau must increase"):
+        with self.assertRaisesRegex(OracleValidationError, "tau progression"):
             build_regime_a_target_document(invalid, **self.build_kwargs)
+
+    def test_source_timebase_and_episode_fail_closed_with_stable_codes(self) -> None:
+        cases = (
+            (
+                "server_tick_skip",
+                lambda document: document["rows"][2].update({"server_tick": 103}),
+                OracleRejectionCode.NONCONSECUTIVE_SERVER_TICK,
+            ),
+            (
+                "mixed_episode",
+                lambda document: document["rows"][2].update(
+                    {"episode_id": "different_episode"}
+                ),
+                OracleRejectionCode.MIXED_EPISODE_ID,
+            ),
+            (
+                "tau_mismatch",
+                lambda document: document["rows"][2].update({"tau": 0.15}),
+                OracleRejectionCode.TIMEBASE_MISMATCH,
+            ),
+        )
+        for name, mutate, expected_code in cases:
+            with self.subTest(name=name):
+                invalid = copy.deepcopy(self.state_document)
+                mutate(invalid)
+                with self.assertRaises(OracleValidationError) as raised:
+                    build_regime_a_target_document(invalid, **self.build_kwargs)
+                self.assertEqual(raised.exception.code, expected_code)
+
+    def test_source_row_order_is_not_used_as_time(self) -> None:
+        reversed_document = copy.deepcopy(self.state_document)
+        reversed_document["rows"].reverse()
+        actual = build_regime_a_target_document(
+            reversed_document,
+            **self.build_kwargs,
+        )
+        self.assertEqual(actual, self.expected_document)
 
     def test_v_and_q_cannot_change_within_an_occluded_run(self) -> None:
         for field, value in (("v", 2.0), ("q", 0.75)):

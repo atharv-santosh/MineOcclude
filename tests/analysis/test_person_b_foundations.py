@@ -166,6 +166,46 @@ class TestOrderedFilters(unittest.TestCase):
         validate_sealed_artifact(audit, expected_type="filter_audit")
         self.assertEqual(audit["accepted_count"], 2)
 
+    def test_wrong_manifest_visible_row_cannot_anchor_occluded_row(self) -> None:
+        rows = [
+            {
+                "trajectory_id": "trajectory_1",
+                "model_frame_idx": model_frame_idx,
+                "layout_id": "layout_1",
+                "visibility": visibility,
+                "status": "accepted",
+                "accepted_manifest_hash": manifest_hash,
+                "tau": tau,
+                "v": 1.0,
+                "q": 0.1,
+                "duration": 1.0,
+            }
+            for model_frame_idx, visibility, manifest_hash, tau in (
+                (0, "visible", "d" * 64, 0.0),
+                (1, "occluded", MANIFEST_HASH, 0.05),
+            )
+        ]
+        original = copy.deepcopy(rows)
+
+        result = apply_ordered_filters(
+            rows,
+            accepted_manifest_hash=MANIFEST_HASH,
+        )
+
+        self.assertEqual(result.accepted_count, 0)
+        self.assertEqual(
+            [rejection.code for rejection in result.rejections],
+            [
+                FilterRejectionCode.ACCEPTED_MANIFEST_MISMATCH,
+                FilterRejectionCode.NO_VISIBLE_ANCHOR,
+            ],
+        )
+        self.assertEqual(
+            [step.step for step in result.steps][-2:],
+            ["accepted_manifest_match", "post_first_seen"],
+        )
+        self.assertEqual(rows, original)
+
 
 class TestFoldAndCorrectionArtifacts(unittest.TestCase):
     def setUp(self) -> None:

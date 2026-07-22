@@ -63,8 +63,9 @@ The primary oracle uses only:
 `closed_form.py` independently evaluates `mu=x_last+v*tau` and
 `P=P_last+q*tau`. Target construction stops if they differ by more than
 `1e-6`. It also rejects unknown visibility states, non-increasing hidden
-`tau`, changes to `v` or `q` within an occluded run, mixed manifests, mixed
-model/preprocess identities, and malformed document envelopes.
+`tau`, nonconsecutive server ticks/model frames, mixed episode IDs, changes to
+`v` or `q` within an occluded run, mixed manifests, mixed model/preprocess
+identities, and malformed document envelopes.
 
 ## Input boundary
 
@@ -80,7 +81,8 @@ an origin and positive world-space unit vector signed by Persons B and C.
 
 The checked B oracle fixture uses physically coherent consecutive 20 Hz ticks.
 The A-to-B compatibility test separately derives non-scientific target inputs
-from Person A's frozen activation fixture, without editing that fixture.
+from Person A's activation fixture. Its synthetic `tau` values follow the same
+consecutive 20 Hz frame/tick invariant as claim-bearing inputs.
 
 ## Grouping and resampling plan
 
@@ -96,7 +98,8 @@ from Person A's frozen activation fixture, without editing that fixture.
 Exact seeds, counts, alpha grid, MLP shape, coverage levels, exclusions, and
 U1-U4 output names are frozen in `configs/analysis/core.yaml`.
 
-The v0.2 config also freezes filter order, inner grouped validation, MLP
+The v0.2 config also freezes accepted-manifest membership before visible-anchor
+eligibility in the filter order, inner grouped validation, MLP
 optimizer settings, exact-duration bins, central inclusive Gaussian coverage,
 near-zero reporting, add-one permutation p-values, artifact hashing, and the
 3-fit/1-validation/2-test U4 development partition algorithm.
