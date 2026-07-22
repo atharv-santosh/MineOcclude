@@ -607,6 +607,20 @@ class TestSyntheticProbeBridge(unittest.TestCase):
             propagated_rows=excluded,
         )
 
+    def test_malformed_target_name_rejects_with_stable_code(self):
+        for malformed in ([], {}, None, 7, True):
+            with self.subTest(target_name=malformed):
+                self.assert_bridge_code(
+                    ProbeBridgeRejectionCode.MISSING_TARGET,
+                    build_probe_ready_matrices,
+                    self.activation,
+                    self.targets,
+                    self.frame_table,
+                    self.fold_manifest,
+                    self.chunk_payloads,
+                    target_name=malformed,
+                )
+
     def test_matrix_rebuild_rejects_post_join_target_and_vector_changes(self):
         altered_target = [dict(row) for row in self.propagated]
         altered_target[0]["mu_oracle_blocks"] += 1.0

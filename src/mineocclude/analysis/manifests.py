@@ -95,7 +95,9 @@ def _validate_base_fields(document: Mapping[str, Any]) -> None:
         if not isinstance(document[field], str) or not document[field].strip():
             raise AnalysisArtifactError(f"{field} must be a non-empty string.")
     if not is_hex_digest(document["code_sha"], CODE_SHA_LENGTH):
-        raise AnalysisArtifactError("code_sha must be a full hexadecimal Git SHA.")
+        raise AnalysisArtifactError(
+            "code_sha must be a 40-character hexadecimal code-provenance digest."
+        )
     for field in ("config_hash", "input_manifest_hash"):
         if not is_hex_digest(document[field], SHA256_LENGTH):
             raise AnalysisArtifactError(f"{field} must be a SHA-256 digest.")

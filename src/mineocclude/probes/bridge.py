@@ -999,7 +999,7 @@ def build_probe_ready_matrices(
 ) -> tuple[ProbeReadyMatrix, ...]:
     """Rebuild and authenticate exact A/B evidence before constructing X/y."""
 
-    if target_name not in SUPPORTED_TARGETS:
+    if not isinstance(target_name, str) or target_name not in SUPPORTED_TARGETS:
         _fail(
             ProbeBridgeRejectionCode.MISSING_TARGET,
             f"Unsupported probe target {target_name!r}.",

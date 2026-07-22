@@ -8,7 +8,7 @@ Every B-owned analysis artifact carries:
 
 - `artifact_schema_version = "person-b-analysis-artifact-v0.1"`
 - `artifact_type` and `artifact_id`
-- full `code_sha`
+- 40-character hexadecimal `code_sha` derived from the producing code bytes
 - literal-file `config_hash`
 - `input_manifest_hash`
 - `artifact_hash`
@@ -16,6 +16,10 @@ Every B-owned analysis artifact carries:
 The artifact hash is SHA-256 over canonical UTF-8 JSON containing every other
 field. Nonfinite floats are not serializable. Any alteration invalidates the
 artifact.
+
+Within B-owned bridge artifacts, `code_sha` is byte-level code provenance, not
+a claim that the value names a Git commit. The producing code defines the
+exact ordered source-byte set used to derive it.
 
 ## Ordered filters
 

@@ -260,6 +260,20 @@ class TestFoldAndCorrectionArtifacts(unittest.TestCase):
         self.assertNotIn(0, {row["fold_idx"] for row in inner})
         self.assertEqual({row["inner_fold_idx"] for row in inner}, {0, 1, 2, 3})
 
+    def test_invalid_code_provenance_wording_is_not_git_specific(self) -> None:
+        with self.assertRaises(AnalysisArtifactError) as raised:
+            seal_artifact(
+                {
+                    "artifact_type": "test_manifest",
+                    "artifact_id": "invalid_code_provenance",
+                    "code_sha": "not-a-digest",
+                    "config_hash": CONFIG_HASH,
+                    "input_manifest_hash": MANIFEST_HASH,
+                }
+            )
+        self.assertIn("code-provenance digest", str(raised.exception))
+        self.assertNotIn("Git SHA", str(raised.exception))
+
     def test_u4_partition_is_fixed_from_layout_identity_only(self) -> None:
         partition = assign_u4_development_partition(list("abcdef"))
         self.assertEqual(list(partition.values()).count("fit"), 3)
