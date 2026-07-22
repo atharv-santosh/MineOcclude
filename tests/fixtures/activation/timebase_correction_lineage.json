@@ -1,0 +1,31 @@
+{
+  "correction_id": "activation_fixture_20hz_timebase_correction_001",
+  "correction_type": "synthetic_fixture_compatibility_correction",
+  "owner": "person_a",
+  "reason": "Consecutive model frames and server ticks must advance tau by 0.05 seconds at the frozen 20 Hz timebase.",
+  "replacement_evidence": {
+    "accepted_manifest_hash": "6666666666666666666666666666666666666666666666666666666666666666",
+    "handoff_id": "synthetic_activation_handoff_002",
+    "run_id": "synthetic_activation_run_002",
+    "tau_seconds_by_model_frame_idx": {
+      "0": 0.0,
+      "1": 0.05,
+      "2": 0.1
+    }
+  },
+  "schema_migration": false,
+  "schema_version": "1.0",
+  "scientific_use": "forbidden",
+  "superseded_evidence": {
+    "accepted_manifest_hash": "5555555555555555555555555555555555555555555555555555555555555555",
+    "handoff_id": "synthetic_activation_handoff_001",
+    "run_id": "synthetic_activation_run_001",
+    "tau_seconds_by_model_frame_idx": {
+      "0": 0.0,
+      "1": 1.0,
+      "2": 2.0
+    }
+  },
+  "supersession_policy": "The old synthetic handoff, run, and accepted-manifest identity must not be reused for corrected evidence.",
+  "synthetic": true
+}
