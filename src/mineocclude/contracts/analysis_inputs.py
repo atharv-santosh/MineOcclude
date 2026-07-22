@@ -16,7 +16,11 @@ from mineocclude.analysis.coordinates import (
     CoordinateContractError,
     validate_coordinate_frame,
 )
-from mineocclude.analysis.manifests import is_hex_digest
+from mineocclude.analysis.manifests import (
+    AnalysisArtifactError,
+    is_hex_digest,
+    sha256_value,
+)
 from mineocclude.contracts.identity import (
     FRAME_KEY,
     SCHEMA_VERSION,
@@ -30,8 +34,6 @@ STATE_INPUT_SCHEMA_VERSION = "person-b-state-input-v0.1"
 BASELINE_INPUT_SCHEMA_VERSION = "person-b-baseline-input-v0.1"
 MEASUREMENT_INPUT_SCHEMA_VERSION = "person-b-u4-measurement-input-v0.1"
 
-ALLOWED_BASELINE_FAMILIES = frozenset({"last_seen"})
-ALLOWED_BASELINE_TARGETS = frozenset({"mu_oracle_blocks"})
 BASELINE_LEGAL_INFORMATION_FIELDS = frozenset(
     {
         "uses_hidden_truth",
@@ -39,14 +41,23 @@ BASELINE_LEGAL_INFORMATION_FIELDS = frozenset(
         "uses_scripted_q",
     }
 )
-FORBIDDEN_BASELINE_FEATURES = frozenset(
-    {
-        "hidden_truth",
-        "q",
-        "scripted_q",
-        "x_true_blocks",
+BASELINE_FAMILY_CONTRACTS = {
+    "last_seen": {
+        "target_names": frozenset({"mu_oracle_blocks"}),
+        "feature_access": frozenset(
+            {
+                "last_visible_position_blocks",
+                "tau",
+                "visibility",
+            }
+        ),
+        "legal_information": {
+            "uses_hidden_truth": False,
+            "uses_future_information": False,
+            "uses_scripted_q": False,
+        },
     }
-)
+}
 
 
 class AnalysisInputRejectionCode(str, Enum):
@@ -68,6 +79,8 @@ class AnalysisInputRejectionCode(str, Enum):
     MIXED_EPISODE_ID = "mixed_episode_id"
     NONCONSECUTIVE_SERVER_TICK = "nonconsecutive_server_tick"
     TIMEBASE_MISMATCH = "timebase_mismatch"
+    INVALID_ROLLOUT_REGISTRY_BUNDLE = "invalid_rollout_registry_bundle"
+    ROLLOUT_LOOKUP_MISMATCH = "rollout_lookup_mismatch"
 
 
 @dataclass(frozen=True)
@@ -352,23 +365,29 @@ def validate_baseline_input(
     if (
         isinstance(baseline_family, str)
         and baseline_family.strip()
-        and baseline_family not in ALLOWED_BASELINE_FAMILIES
+        and baseline_family not in BASELINE_FAMILY_CONTRACTS
     ):
         _reject(
             rejections,
             AnalysisInputRejectionCode.UNSUPPORTED_BASELINE_FAMILY,
             f"Unsupported baseline_family={baseline_family!r}.",
         )
+    family_contract = (
+        BASELINE_FAMILY_CONTRACTS.get(baseline_family)
+        if isinstance(baseline_family, str)
+        else None
+    )
     target_name = document.get("target_name")
     if (
-        isinstance(target_name, str)
+        family_contract is not None
+        and isinstance(target_name, str)
         and target_name.strip()
-        and target_name not in ALLOWED_BASELINE_TARGETS
+        and target_name not in family_contract["target_names"]
     ):
         _reject(
             rejections,
             AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
-            "Baseline targets cannot expose scoring-only hidden truth.",
+            f"target_name={target_name!r} is not allowed for {baseline_family!r}.",
         )
 
     feature_access = document.get("feature_access")
@@ -386,19 +405,17 @@ def validate_baseline_input(
             AnalysisInputRejectionCode.INVALID_VALUE,
             "feature_access must be a non-empty list of unique field names.",
         )
-    else:
-        forbidden_features = sorted(
-            field
-            for field in feature_access
-            if field.lower() in FORBIDDEN_BASELINE_FEATURES
-            or field.lower().startswith(("future_", "next_", "hidden_"))
-        )
-        if forbidden_features:
+    elif family_contract is not None:
+        declared_features = frozenset(feature_access)
+        allowed_features = family_contract["feature_access"]
+        if declared_features != allowed_features:
+            unexpected = sorted(declared_features - allowed_features)
+            missing = sorted(allowed_features - declared_features)
             _reject(
                 rejections,
                 AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
-                "Baseline feature access is illegal: "
-                + ", ".join(forbidden_features),
+                "feature_access does not exactly match the family allowlist. "
+                f"Unexpected: {unexpected}. Missing: {missing}.",
             )
 
     legal_information = document.get("legal_information")
@@ -415,11 +432,14 @@ def validate_baseline_input(
             AnalysisInputRejectionCode.INVALID_VALUE,
             "legal_information must explicitly declare all access flags as booleans.",
         )
-    elif any(legal_information[field] for field in BASELINE_LEGAL_INFORMATION_FIELDS):
+    elif (
+        family_contract is not None
+        and dict(legal_information) != family_contract["legal_information"]
+    ):
         _reject(
             rejections,
             AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
-            "Hidden truth, future information, and scripted q are forbidden inputs.",
+            "legal_information does not match the baseline-family contract.",
         )
     seen: set[tuple[str, int]] = set()
     for index, row in enumerate(rows):
@@ -511,16 +531,23 @@ def validate_baseline_input(
 def validate_measurement_input(
     document: Any,
     *,
+    rollout_manifest: Any = None,
+    registry: Any = None,
     expected_rollouts_by_id: Mapping[str, Mapping[str, Any]] | None = None,
-    expected_rollout_manifest_hash: str | None = None,
 ) -> AnalysisInputValidationResult:
-    """Validate the minimal E-to-B U4 measurement table B will consume."""
+    """Validate E measurements against an actual validated A handoff bundle.
+
+    ``expected_rollouts_by_id`` is accepted only as an untrusted compatibility
+    assertion. Scientific expectations are always derived internally from the
+    validated rollout manifest and registry.
+    """
 
     required = (
         "schema_version",
         "measurement_input_schema_version",
         "producer_role",
         "accepted_rollout_manifest_hash",
+        "accepted_registry_hash",
         "measurement_config_hash",
         "rows",
     )
@@ -533,49 +560,113 @@ def validate_measurement_input(
     )
     if rows is None or not isinstance(document, Mapping):
         return AnalysisInputValidationResult(False, tuple(rejections))
-    if expected_rollouts_by_id is not None and not isinstance(
-        expected_rollouts_by_id, Mapping
+    claimed_rollouts_by_id = expected_rollouts_by_id
+    if claimed_rollouts_by_id is not None and not isinstance(
+        claimed_rollouts_by_id, Mapping
     ):
         _reject(
             rejections,
             AnalysisInputRejectionCode.INVALID_VALUE,
             "expected_rollouts_by_id must be a mapping when supplied.",
         )
-        expected_rollouts_by_id = None
-    for field in ("accepted_rollout_manifest_hash", "measurement_config_hash"):
+        claimed_rollouts_by_id = None
+    for field in (
+        "accepted_rollout_manifest_hash",
+        "accepted_registry_hash",
+        "measurement_config_hash",
+    ):
         if not is_hex_digest(document.get(field), 64):
             _reject(
                 rejections,
                 AnalysisInputRejectionCode.INVALID_HASH,
                 f"{field} must be SHA-256.",
             )
-    if expected_rollouts_by_id is not None:
-        if not is_hex_digest(expected_rollout_manifest_hash, 64):
-            _reject(
-                rejections,
-                AnalysisInputRejectionCode.MANIFEST_MISMATCH,
-                "A validated rollout manifest hash is required with rollout rows.",
-            )
-        elif (
-            document.get("accepted_rollout_manifest_hash")
-            != expected_rollout_manifest_hash
-        ):
-            _reject(
-                rejections,
-                AnalysisInputRejectionCode.MANIFEST_MISMATCH,
-                "Measurement envelope names a different rollout manifest.",
-            )
-    elif expected_rollout_manifest_hash is not None:
-        _reject(
-            rejections,
-            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
-            "A rollout manifest hash cannot be checked without its rollout rows.",
+
+    derived_rollouts_by_id: dict[str, dict[str, Any]] = {}
+    bundle_valid = False
+    try:
+        from mineocclude.contracts.rollout_registry import (
+            validate_rollout_registry_bundle,
         )
-    else:
+
+        bundle_result = validate_rollout_registry_bundle(
+            rollout_manifest,
+            registry,
+        )
+    except (AttributeError, KeyError, TypeError, ValueError) as error:
         _reject(
             rejections,
-            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
-            "Validated A rollout/registry context is required for measurements.",
+            AnalysisInputRejectionCode.INVALID_ROLLOUT_REGISTRY_BUNDLE,
+            f"A rollout/registry validation failed safely: {error}",
+        )
+        bundle_result = None
+
+    if bundle_result is None or not bundle_result.accepted:
+        if bundle_result is not None:
+            rejection_codes = sorted(
+                {item.code.value for item in bundle_result.rejections}
+            )
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_ROLLOUT_REGISTRY_BUNDLE,
+                "A rollout/registry bundle is invalid: "
+                + ", ".join(rejection_codes),
+            )
+    else:
+        try:
+            rollout_manifest_hash = sha256_value(rollout_manifest)
+            registry_hash = sha256_value(registry)
+        except AnalysisArtifactError as error:
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_ROLLOUT_REGISTRY_BUNDLE,
+                str(error),
+            )
+        else:
+            bundle_valid = True
+            if (
+                document.get("accepted_rollout_manifest_hash")
+                != rollout_manifest_hash
+            ):
+                _reject(
+                    rejections,
+                    AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+                    "Measurement envelope names a different rollout manifest.",
+                )
+            if document.get("accepted_registry_hash") != registry_hash:
+                _reject(
+                    rejections,
+                    AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+                    "Measurement envelope names a different rollout registry.",
+                )
+
+            run_by_id = {run["run_id"]: run for run in registry["runs"]}
+            derived_rollouts_by_id = {
+                rollout["rollout_id"]: {
+                    "event_id": rollout["event_id"],
+                    "direction_version": rollout["direction_version"],
+                    "control_type": rollout["control_type"],
+                    "alpha_applied": rollout["alpha_applied"],
+                    "outcome": rollout["outcome"],
+                    "measurable": rollout["measurable"],
+                    "status": rollout["status"],
+                    "run_id": rollout["run_id"],
+                    "execution_status": run_by_id[rollout["run_id"]][
+                        "execution_status"
+                    ],
+                }
+                for rollout in rollout_manifest["rollout_rows"]
+            }
+
+    if (
+        bundle_valid
+        and claimed_rollouts_by_id is not None
+        and claimed_rollouts_by_id != derived_rollouts_by_id
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.ROLLOUT_LOOKUP_MISMATCH,
+            "Caller-supplied rollout facts differ from the validated A bundle.",
         )
     allowed_statuses = {
         "measured",
@@ -597,6 +688,7 @@ def validate_measurement_input(
         required_row = (
             "measurement_id",
             "rollout_id",
+            "rollout_run_id",
             "event_id",
             "direction_version",
             "control_type",
@@ -652,6 +744,7 @@ def validate_measurement_input(
             continue
         for field in (
             "rollout_id",
+            "rollout_run_id",
             "event_id",
             "direction_version",
             "control_type",
@@ -675,8 +768,8 @@ def validate_measurement_input(
                 "Unknown control_type.",
                 index,
             )
-        if expected_rollouts_by_id is not None and isinstance(rollout_id, str):
-            expected = expected_rollouts_by_id.get(rollout_id)
+        if bundle_valid and isinstance(rollout_id, str):
+            expected = derived_rollouts_by_id.get(rollout_id)
             if expected is None:
                 _reject(
                     rejections,
@@ -700,6 +793,7 @@ def validate_measurement_input(
                     "outcome",
                     "measurable",
                     "status",
+                    "run_id",
                     "execution_status",
                 )
                 missing_expected = [
@@ -714,12 +808,18 @@ def validate_measurement_input(
                         index,
                     )
                     expected = {}
-                for field in ("event_id", "direction_version", "control_type"):
-                    if row[field] != expected.get(field):
+                compared_fields = (
+                    ("event_id", "event_id"),
+                    ("direction_version", "direction_version"),
+                    ("control_type", "control_type"),
+                    ("rollout_run_id", "run_id"),
+                )
+                for row_field, expected_field in compared_fields:
+                    if row[row_field] != expected.get(expected_field):
                         _reject(
                             rejections,
                             AnalysisInputRejectionCode.MANIFEST_MISMATCH,
-                            f"Measurement {field} differs from the rollout registry.",
+                            f"Measurement {row_field} differs from the A bundle.",
                             index,
                         )
                 expected_alpha = expected.get("alpha_applied")
@@ -862,10 +962,7 @@ def validate_measurement_input(
                     "Unmeasured outcomes require outcome_detail.",
                     index,
                 )
-    if (
-        expected_rollouts_by_id is not None
-        and seen_rollouts != set(expected_rollouts_by_id)
-    ):
+    if bundle_valid and seen_rollouts != set(derived_rollouts_by_id):
         _reject(
             rejections,
             AnalysisInputRejectionCode.MANIFEST_MISMATCH,

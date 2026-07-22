@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import copy
-import hashlib
 import json
 import unittest
 from pathlib import Path
 
 from mineocclude.analysis.coordinates import coordinate_frame_hash
 from mineocclude.analysis.config import hash_core_analysis_config
+from mineocclude.analysis.manifests import sha256_value
 from mineocclude.contracts.analysis_inputs import (
     AnalysisInputRejectionCode,
     validate_baseline_input,
@@ -63,32 +63,19 @@ def baseline_document() -> dict[str, object]:
     }
 
 
-def measurement_context() -> tuple[dict, dict, str]:
+def measurement_context() -> tuple[dict, dict, dict]:
     fixture_dir = ROOT / "tests" / "fixtures" / "rollout_registry"
-    manifest_path = fixture_dir / "accepted_rollout_manifest.json"
-    rollout_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    rollout_manifest = json.loads(
+        (fixture_dir / "accepted_rollout_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
     registry = json.loads(
         (fixture_dir / "accepted_registry.json").read_text(encoding="utf-8")
     )
     validation = validate_rollout_registry_bundle(rollout_manifest, registry)
     if not validation.accepted:
         raise AssertionError(validation.rejections)
-
-    run_by_id = {run["run_id"]: run for run in registry["runs"]}
-    expected = {
-        rollout["rollout_id"]: {
-            "event_id": rollout["event_id"],
-            "direction_version": rollout["direction_version"],
-            "control_type": rollout["control_type"],
-            "alpha_applied": rollout["alpha_applied"],
-            "outcome": rollout["outcome"],
-            "measurable": rollout["measurable"],
-            "status": rollout["status"],
-            "execution_status": run_by_id[rollout["run_id"]]["execution_status"],
-        }
-        for rollout in rollout_manifest["rollout_rows"]
-    }
-    manifest_hash = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
 
     measurement_rows = []
     for index, rollout in enumerate(rollout_manifest["rollout_rows"], start=1):
@@ -98,6 +85,7 @@ def measurement_context() -> tuple[dict, dict, str]:
             {
                 "measurement_id": f"measurement_{index}",
                 "rollout_id": rollout["rollout_id"],
+                "rollout_run_id": rollout["run_id"],
                 "event_id": rollout["event_id"],
                 "direction_version": rollout["direction_version"],
                 "control_type": rollout["control_type"],
@@ -116,11 +104,34 @@ def measurement_context() -> tuple[dict, dict, str]:
         "schema_version": "1.0",
         "measurement_input_schema_version": "person-b-u4-measurement-input-v0.1",
         "producer_role": "person_e",
-        "accepted_rollout_manifest_hash": manifest_hash,
+        "accepted_rollout_manifest_hash": sha256_value(rollout_manifest),
+        "accepted_registry_hash": sha256_value(registry),
         "measurement_config_hash": "a" * 64,
         "rows": measurement_rows,
     }
-    return document, expected, manifest_hash
+    return document, rollout_manifest, registry
+
+
+def rollout_lookup(rollout_manifest: dict, registry: dict) -> dict:
+    """Build a caller assertion for adversarial boundary tests only."""
+
+    run_by_id = {run["run_id"]: run for run in registry["runs"]}
+    return {
+        rollout["rollout_id"]: {
+            "event_id": rollout["event_id"],
+            "direction_version": rollout["direction_version"],
+            "control_type": rollout["control_type"],
+            "alpha_applied": rollout["alpha_applied"],
+            "outcome": rollout["outcome"],
+            "measurable": rollout["measurable"],
+            "status": rollout["status"],
+            "run_id": rollout["run_id"],
+            "execution_status": run_by_id[rollout["run_id"]][
+                "execution_status"
+            ],
+        }
+        for rollout in rollout_manifest["rollout_rows"]
+    }
 
 
 def coordinate_frame() -> dict[str, object]:
@@ -279,6 +290,54 @@ class TestAnalysisInputs(unittest.TestCase):
                 AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
             ),
             (
+                "renamed_hidden_truth",
+                {
+                    "feature_access": [
+                        "last_visible_position_blocks",
+                        "tau",
+                        "visibility",
+                        "authoritative_server_position_blocks",
+                    ]
+                },
+                AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            ),
+            (
+                "renamed_future_information",
+                {
+                    "feature_access": [
+                        "last_visible_position_blocks",
+                        "tau",
+                        "visibility",
+                        "position_at_next_frame",
+                    ]
+                },
+                AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            ),
+            (
+                "renamed_scripted_q",
+                {
+                    "feature_access": [
+                        "last_visible_position_blocks",
+                        "tau",
+                        "visibility",
+                        "q_blocks2_per_second",
+                    ]
+                },
+                AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            ),
+            (
+                "unknown_feature",
+                {
+                    "feature_access": [
+                        "last_visible_position_blocks",
+                        "tau",
+                        "visibility",
+                        "apparently_safe_but_unknown",
+                    ]
+                },
+                AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            ),
+            (
                 "malformed_feature_access",
                 {"feature_access": ["last_visible_position_blocks", []]},
                 AnalysisInputRejectionCode.INVALID_VALUE,
@@ -306,12 +365,12 @@ class TestAnalysisInputs(unittest.TestCase):
                 self.assertEqual(document, original)
 
     def test_measurement_intake_never_encodes_failures_as_zero(self) -> None:
-        document, expected, manifest_hash = measurement_context()
+        document, rollout_manifest, registry = measurement_context()
         self.assertTrue(
             validate_measurement_input(
                 document,
-                expected_rollouts_by_id=expected,
-                expected_rollout_manifest_hash=manifest_hash,
+                rollout_manifest=rollout_manifest,
+                registry=registry,
             ).accepted
         )
         invalid = copy.deepcopy(document)
@@ -324,36 +383,44 @@ class TestAnalysisInputs(unittest.TestCase):
         self.assertFalse(
             validate_measurement_input(
                 invalid,
-                expected_rollouts_by_id=expected,
-                expected_rollout_manifest_hash=manifest_hash,
+                rollout_manifest=rollout_manifest,
+                registry=registry,
             ).accepted
         )
 
     def test_measurement_intake_matches_the_accepted_rollout_registry(self) -> None:
-        document, expected, manifest_hash = measurement_context()
+        document, rollout_manifest, registry = measurement_context()
         original = copy.deepcopy(document)
+        original_manifest = copy.deepcopy(rollout_manifest)
+        original_registry = copy.deepcopy(registry)
         result = validate_measurement_input(
             document,
-            expected_rollouts_by_id=expected,
-            expected_rollout_manifest_hash=manifest_hash,
+            rollout_manifest=rollout_manifest,
+            registry=registry,
         )
         self.assertTrue(result.accepted, result.rejections)
         self.assertEqual(document, original)
+        self.assertEqual(rollout_manifest, original_manifest)
+        self.assertEqual(registry, original_registry)
         missing_context = validate_measurement_input(document)
         self.assertFalse(missing_context.accepted)
         self.assertIn(
-            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            AnalysisInputRejectionCode.INVALID_ROLLOUT_REGISTRY_BUNDLE,
             {item.code for item in missing_context.rejections},
         )
 
     def test_measurement_intake_rejects_rollout_outcome_contradictions(self) -> None:
         for outcome in ("non_persistence", "generation_failure"):
             with self.subTest(outcome=outcome):
-                document, expected, manifest_hash = measurement_context()
+                document, rollout_manifest, registry = measurement_context()
+                rollout_by_id = {
+                    rollout["rollout_id"]: rollout
+                    for rollout in rollout_manifest["rollout_rows"]
+                }
                 row = next(
                     row
                     for row in document["rows"]
-                    if expected[row["rollout_id"]]["outcome"] == outcome
+                    if rollout_by_id[row["rollout_id"]]["outcome"] == outcome
                 )
                 row.update(
                     {
@@ -365,8 +432,8 @@ class TestAnalysisInputs(unittest.TestCase):
                 )
                 result = validate_measurement_input(
                     document,
-                    expected_rollouts_by_id=expected,
-                    expected_rollout_manifest_hash=manifest_hash,
+                    rollout_manifest=rollout_manifest,
+                    registry=registry,
                 )
                 self.assertFalse(result.accepted)
                 self.assertIn(
@@ -374,47 +441,154 @@ class TestAnalysisInputs(unittest.TestCase):
                     {item.code for item in result.rejections},
                 )
 
-    def test_measurement_intake_binds_manifest_event_and_registry_types(self) -> None:
+    def test_measurement_intake_binds_manifest_registry_event_and_run(self) -> None:
         cases = (
             (
                 "stale_manifest_hash",
-                lambda document, _expected: document.update(
+                lambda document, _manifest, _registry: document.update(
                     {"accepted_rollout_manifest_hash": "f" * 64}
                 ),
             ),
             (
+                "stale_registry_hash",
+                lambda document, _manifest, _registry: document.update(
+                    {"accepted_registry_hash": "f" * 64}
+                ),
+            ),
+            (
                 "wrong_event",
-                lambda document, _expected: document["rows"][0].update(
+                lambda document, _manifest, _registry: document["rows"][0].update(
                     {"event_id": "different_event"}
                 ),
             ),
             (
+                "wrong_producing_run",
+                lambda document, _manifest, _registry: document["rows"][0].update(
+                    {"rollout_run_id": "different_run"}
+                ),
+            ),
+            (
                 "malformed_registry_lifecycle",
-                lambda document, expected: expected[
-                    document["rows"][0]["rollout_id"]
-                ].update({"execution_status": []}),
+                lambda _document, _manifest, registry: registry["runs"][0].update(
+                    {"execution_status": []}
+                ),
             ),
         )
         for name, mutate in cases:
             with self.subTest(name=name):
-                document, expected, manifest_hash = measurement_context()
-                mutate(document, expected)
+                document, rollout_manifest, registry = measurement_context()
+                mutate(document, rollout_manifest, registry)
                 result = validate_measurement_input(
                     document,
-                    expected_rollouts_by_id=expected,
-                    expected_rollout_manifest_hash=manifest_hash,
+                    rollout_manifest=rollout_manifest,
+                    registry=registry,
                 )
                 self.assertFalse(result.accepted)
 
+    def test_fake_lookup_cannot_make_non_persistence_measurable(self) -> None:
+        document, rollout_manifest, registry = measurement_context()
+        claimed = rollout_lookup(rollout_manifest, registry)
+        row = next(
+            row
+            for row in document["rows"]
+            if claimed[row["rollout_id"]]["outcome"] == "non_persistence"
+        )
+        row.update(
+            {
+                "measurement_status": "measured",
+                "displacement_blocks": 0.0,
+                "persistence_score": 0.0,
+                "ssim": 0.0,
+                "outcome_detail": "",
+            }
+        )
+        claimed[row["rollout_id"]].update(
+            {
+                "outcome": "measurable_continuation",
+                "measurable": True,
+            }
+        )
+
+        result = validate_measurement_input(
+            document,
+            rollout_manifest=rollout_manifest,
+            registry=registry,
+            expected_rollouts_by_id=claimed,
+        )
+
+        self.assertFalse(result.accepted)
+        self.assertIn(
+            AnalysisInputRejectionCode.ROLLOUT_LOOKUP_MISMATCH,
+            {item.code for item in result.rejections},
+        )
+        self.assertIn(
+            AnalysisInputRejectionCode.OUTCOME_CONFLATION,
+            {item.code for item in result.rejections},
+        )
+
+    def test_fake_lookup_cannot_override_real_rollout_outcome(self) -> None:
+        document, rollout_manifest, registry = measurement_context()
+        claimed = rollout_lookup(rollout_manifest, registry)
+        rollout_id = next(
+            rollout_id
+            for rollout_id, facts in claimed.items()
+            if facts["outcome"] == "non_persistence"
+        )
+        claimed[rollout_id].update(
+            {
+                "outcome": "measurable_continuation",
+                "measurable": True,
+            }
+        )
+
+        result = validate_measurement_input(
+            document,
+            rollout_manifest=rollout_manifest,
+            registry=registry,
+            expected_rollouts_by_id=claimed,
+        )
+
+        self.assertFalse(result.accepted)
+        self.assertIn(
+            AnalysisInputRejectionCode.ROLLOUT_LOOKUP_MISMATCH,
+            {item.code for item in result.rejections},
+        )
+
+    def test_real_hashes_do_not_authenticate_a_mutated_lookup(self) -> None:
+        document, rollout_manifest, registry = measurement_context()
+        claimed = rollout_lookup(rollout_manifest, registry)
+        rollout_id = next(iter(claimed))
+        claimed[rollout_id].update(
+            {
+                "outcome": "non_persistence",
+                "measurable": False,
+                "status": "excluded",
+                "execution_status": "failed",
+            }
+        )
+
+        result = validate_measurement_input(
+            document,
+            rollout_manifest=rollout_manifest,
+            registry=registry,
+            expected_rollouts_by_id=claimed,
+        )
+
+        self.assertFalse(result.accepted)
+        self.assertIn(
+            AnalysisInputRejectionCode.ROLLOUT_LOOKUP_MISMATCH,
+            {item.code for item in result.rejections},
+        )
+
     def test_measurement_intake_rejects_malformed_types_without_crashing(self) -> None:
-        document, expected, manifest_hash = measurement_context()
+        document, rollout_manifest, registry = measurement_context()
         document["rows"][0]["control_type"] = []
         document["rows"][0]["measurement_status"] = []
         self.assertFalse(
             validate_measurement_input(
                 document,
-                expected_rollouts_by_id=expected,
-                expected_rollout_manifest_hash=manifest_hash,
+                rollout_manifest=rollout_manifest,
+                registry=registry,
             ).accepted
         )
 
