@@ -11,6 +11,12 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from mineocclude.analysis.manifests import (
+    AnalysisArtifactError,
+    seal_artifact,
+    sha256_value,
+    validate_sealed_artifact,
+)
 from mineocclude.contracts.activation import validate_activation_handoff
 from mineocclude.contracts.identity import REQUIRED_FIELDS
 from mineocclude.contracts.intervention_request import validate_intervention_request
@@ -432,21 +438,71 @@ def build_authenticated_probe_bridge_inputs(
     return package, target_document, chunk_payloads, lineage
 
 
-def compact_sealed_artifact(artifact: Mapping[str, Any]) -> dict[str, Any]:
-    """Keep checked artifact evidence compact without weakening its seal."""
+def compact_sealed_artifact(
+    artifact: Mapping[str, Any],
+    *,
+    prediction_manifest_hashes: Sequence[str] | None = None,
+) -> dict[str, Any]:
+    """Compact one valid artifact and seal the exact saved representation."""
 
+    validate_sealed_artifact(artifact)
+    original_artifact_hash = artifact["artifact_hash"]
     compact = {
         key: deepcopy(value)
         for key, value in artifact.items()
-        if key != "fold_fit_records"
+        if key not in {"artifact_hash", "fold_fit_records"}
     }
     fold_fit_records = artifact.get("fold_fit_records")
     if isinstance(fold_fit_records, list):
+        fold_summaries: list[dict[str, Any]] = []
+        for record in fold_fit_records:
+            if not isinstance(record, Mapping):
+                raise AnalysisArtifactError(
+                    "fold_fit_records must contain only mappings."
+                )
+            training_membership = record.get("training_membership")
+            test_membership = record.get("test_membership")
+            training_indices = record.get("training_indices")
+            test_indices = record.get("test_indices")
+            scaler = record.get("scaler")
+            if (
+                not isinstance(training_membership, list)
+                or not isinstance(test_membership, list)
+                or not isinstance(training_indices, list)
+                or not isinstance(test_indices, list)
+                or not isinstance(scaler, Mapping)
+            ):
+                raise AnalysisArtifactError(
+                    "Fold-fit records require memberships, indices, and scaler metadata."
+                )
+            fold_summaries.append(
+                {
+                    "outer_fold_idx": record.get("outer_fold_idx"),
+                    "selected_alpha": record.get("selected_alpha"),
+                    "mean_mse_by_alpha": deepcopy(record.get("mean_mse_by_alpha")),
+                    "inner_fold_count": record.get("inner_fold_count"),
+                    "training_row_count": len(training_membership),
+                    "test_row_count": len(test_membership),
+                    "training_indices_hash": sha256_value(training_indices),
+                    "test_indices_hash": sha256_value(test_indices),
+                    "training_membership_hash": sha256_value(training_membership),
+                    "test_membership_hash": sha256_value(test_membership),
+                    "scaler": deepcopy(dict(scaler)),
+                }
+            )
         compact["fold_fit_records_count"] = len(fold_fit_records)
-        compact["fold_fit_records_sha256"] = sha256_bytes(
-            deterministic_json_bytes(fold_fit_records)
-        )
-    return compact
+        compact["fold_fit_records_hash"] = sha256_value(fold_fit_records)
+        compact["fold_fit_summaries"] = fold_summaries
+    compact["uncompacted_artifact_hash"] = original_artifact_hash
+    compact["compaction_version"] = "step-1.7-artifact-compaction-v0.1"
+    if prediction_manifest_hashes is not None:
+        original_prediction_hashes = compact.get("prediction_manifest_hashes")
+        if original_prediction_hashes != list(prediction_manifest_hashes):
+            compact["uncompacted_prediction_manifest_hashes"] = deepcopy(
+                original_prediction_hashes
+            )
+        compact["prediction_manifest_hashes"] = list(prediction_manifest_hashes)
+    return seal_artifact(compact)
 
 
 def run_authenticated_a_b_probe_bridge(
@@ -488,6 +544,13 @@ def run_authenticated_a_b_probe_bridge(
                 matrix,
                 artifact_id_prefix=artifact_prefix,
             )
+            prediction_artifact = compact_sealed_artifact(
+                execution.prediction_artifact
+            )
+            u1_result_artifact = compact_sealed_artifact(
+                execution.u1_result_artifact,
+                prediction_manifest_hashes=[prediction_artifact["artifact_hash"]],
+            )
             probe_runs.append(
                 {
                     "layer_idx": matrix.layer_idx,
@@ -501,12 +564,8 @@ def run_authenticated_a_b_probe_bridge(
                         {"chunk_id": chunk_id, "sha256": chunk_hash}
                         for chunk_id, chunk_hash in matrix.activation_chunk_hashes
                     ],
-                    "prediction_artifact": compact_sealed_artifact(
-                        execution.prediction_artifact
-                    ),
-                    "u1_result_artifact": compact_sealed_artifact(
-                        execution.u1_result_artifact
-                    ),
+                    "prediction_artifact": prediction_artifact,
+                    "u1_result_artifact": u1_result_artifact,
                     "synthetic": True,
                     "scientific_use": "forbidden",
                 }

@@ -6,6 +6,7 @@ import json
 import unittest
 from copy import deepcopy
 
+from mineocclude.analysis.manifests import validate_sealed_artifact
 from mineocclude.integration.synthetic_pipeline import (
     DEFAULT_REPORT_PATH,
     join_report,
@@ -143,13 +144,50 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
                 self.assertEqual(run["scientific_use"], "forbidden")
                 for artifact_name in ("prediction_artifact", "u1_result_artifact"):
                     artifact = run[artifact_name]
+                    validate_sealed_artifact(artifact)
                     self.assertTrue(artifact["synthetic"])
                     self.assertEqual(artifact["scientific_use"], "forbidden")
                     self.assertEqual(artifact["matrix_hash"], run["matrix_hash"])
                     self.assertEqual(len(artifact["artifact_hash"]), 64)
+                    self.assertNotEqual(
+                        artifact["artifact_hash"],
+                        artifact["uncompacted_artifact_hash"],
+                    )
                     self.assertEqual(artifact["fold_fit_records_count"], 5)
-                    self.assertEqual(len(artifact["fold_fit_records_sha256"]), 64)
+                    self.assertEqual(len(artifact["fold_fit_records_hash"]), 64)
+                    self.assertEqual(len(artifact["fold_fit_summaries"]), 5)
                     self.assertNotIn("fold_fit_records", artifact)
+
+                    for fold_summary in artifact["fold_fit_summaries"]:
+                        self.assertIn(fold_summary["outer_fold_idx"], range(5))
+                        self.assertIn(
+                            fold_summary["selected_alpha"],
+                            artifact["probe_parameters"]["alpha_grid"],
+                        )
+                        self.assertGreater(fold_summary["training_row_count"], 0)
+                        self.assertGreater(fold_summary["test_row_count"], 0)
+                        self.assertEqual(
+                            fold_summary["scaler"]["fit_scope"],
+                            "outer_training_rows_only",
+                        )
+                        for hash_name in (
+                            "training_indices_hash",
+                            "test_indices_hash",
+                            "training_membership_hash",
+                            "test_membership_hash",
+                        ):
+                            self.assertEqual(len(fold_summary[hash_name]), 64)
+
+                self.assertEqual(
+                    run["u1_result_artifact"]["prediction_manifest_hashes"],
+                    [run["prediction_artifact"]["artifact_hash"]],
+                )
+                self.assertEqual(
+                    run["u1_result_artifact"][
+                        "uncompacted_prediction_manifest_hashes"
+                    ],
+                    [run["prediction_artifact"]["uncompacted_artifact_hash"]],
+                )
 
                 prediction_rows = run["prediction_artifact"]["rows"]
                 self.assertEqual(len(prediction_rows), 15)
@@ -564,6 +602,27 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
         checked_report = json.loads(DEFAULT_REPORT_PATH.read_text(encoding="utf-8"))
 
         self.assertEqual(checked_report, self.report)
+
+    def test_every_saved_compact_artifact_validates_exactly_as_stored(self):
+        """Checked prediction and U1 projections must carry hashes over saved bytes."""
+
+        checked_report = json.loads(DEFAULT_REPORT_PATH.read_text(encoding="utf-8"))
+
+        for run in checked_report["authenticated_a_b_probe_bridge"]["probe_runs"]:
+            for artifact_name in ("prediction_artifact", "u1_result_artifact"):
+                with self.subTest(
+                    layer=run["layer_idx"],
+                    site=run["hook_site"],
+                    artifact=artifact_name,
+                ):
+                    artifact = run[artifact_name]
+                    validate_sealed_artifact(artifact)
+                    self.assertNotEqual(
+                        artifact["artifact_hash"],
+                        artifact["uncompacted_artifact_hash"],
+                    )
+                    self.assertTrue(artifact["synthetic"])
+                    self.assertEqual(artifact["scientific_use"], "forbidden")
 
 
 if __name__ == "__main__":

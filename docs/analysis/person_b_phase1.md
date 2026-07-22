@@ -231,8 +231,11 @@ the production bridge APIs.
 
 The join report records source/correction lineage, frame and fold evidence,
 matrix hashes, complete OOF prediction/metric rows, sealed prediction and U1
-artifact hashes, and hashes of the scaler-heavy fold-fit records retained by
-the in-memory artifacts.
+artifacts, and resealed per-fold summaries of selected alpha, exact membership
+hashes, fold identities, and scaler metadata. Compact saved artifacts carry
+new hashes over their exact stored contents and retain the uncompacted artifact
+hash only as explicitly named lineage; U1 artifacts reference the final saved
+prediction-artifact hash.
 `authenticated_a_b_probe_bridge` is a required integrity check: stale source
 bytes, invalid bridge metadata, or any fail-closed bridge rejection fails the
 overall Step 1.7 status. All derived evidence remains `synthetic = true` and
