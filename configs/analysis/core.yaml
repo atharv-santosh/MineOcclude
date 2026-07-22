@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0",
+  "analysis_config_version": "person-b-phase1-v0.2",
+  "status": "frozen_before_live_results",
+  "targets": {
+    "mu_oracle_blocks": {
+      "unit": "blocks",
+      "source": "primary_regime_a_oracle",
+      "use": "probe_target",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "var_oracle_blocks2": {
+      "unit": "blocks_squared",
+      "source": "primary_regime_a_oracle",
+      "use": "oracle_audit",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "sigma_oracle_blocks": {
+      "unit": "blocks",
+      "source": "sqrt(var_oracle_blocks2)",
+      "use": "calibration",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "log_sigma_oracle": {
+      "unit": "dimensionless",
+      "source": "ln(sigma_oracle_blocks / 1 block)",
+      "use": "hidden_row_probe_target",
+      "eligibility": "accepted_hidden_positive_spread_rows",
+      "null_policy": "null_outside_eligibility"
+    },
+    "x_true_blocks": {
+      "unit": "blocks",
+      "source": "authoritative_server_state",
+      "use": "scoring_only",
+      "eligibility": "accepted_post_first_seen_rows"
+    },
+    "tau": {
+      "unit": "seconds",
+      "source": "schema_v1_identity",
+      "use": "oracle_input_and_time_control",
+      "eligibility": "accepted_post_first_seen_rows"
+    }
+  },
+  "coordinate_contract": {
+    "quantity": "signed_wall_parallel_position",
+    "unit": "blocks",
+    "coordinate_frame_fields": [
+      "coordinate_frame_id",
+      "coordinate_frame_hash",
+      "wall_parallel_origin_world_xyz",
+      "wall_parallel_positive_unit_vector_world_xyz"
+    ],
+    "positive_direction_rule": "increasing dot(world_position - origin, positive_unit_vector)",
+    "unit_vector_norm_tolerance": 1e-9,
+    "requires_person_c_adapter_signoff_before_live_use": true,
+    "silent_axis_inference_forbidden": true
+  },
+  "filters": {
+    "ordered_steps": [
+      "required_fields",
+      "lifecycle_status",
+      "finite_numeric_values",
+      "accepted_manifest_match",
+      "post_first_seen"
+    ],
+    "allowed_status": ["accepted"],
+    "required_activation_run_status": "completed",
+    "exclude_pre_first_seen": true,
+    "reject_manifest_mismatch": true,
+    "preserve_nonfinite_failures": true,
+    "silent_clipping_forbidden": true
+  },
+  "cross_validation": {
+    "strategy": "layout_grouped",
+    "fold_count": 5,
+    "split_seed": 20260719,
+    "fold_schema_version": "person-b-fold-v0.1",
+    "persist_membership": true,
+    "inner_strategy": "layout_grouped",
+    "inner_fold_count": 4,
+    "fit_scaler_on_training_fold_only": true,
+    "test_layout_may_select_preprocessing": false,
+    "test_layout_may_select_alpha": false,
+    "test_layout_may_select_layer": false,
+    "test_layout_may_select_intervention_direction": false,
+    "u4_development_partition": {
+      "fit_layout_count": 3,
+      "validation_layout_count": 1,
+      "test_layout_count": 2,
+      "selection_source": "layout_manifest_only"
+    }
+  },
+  "ridge": {
+    "alpha_grid": [0.1, 1.0, 10.0, 100.0],
+    "selection_scope": "training_validation_only"
+  },
+  "mlp": {
+    "hidden_layers": [256, 128],
+    "activation": "relu",
+    "output_dim": 1,
+    "eligible_layer_count": 3,
+    "eligibility_source": "predeclared_ridge_validation",
+    "optimizer": "adam",
+    "learning_rate": 0.001,
+    "maximum_epochs": 200,
+    "early_stopping_patience": 20,
+    "batch_size": 64,
+    "training_seed": 20260722
+  },
+  "metric_rules": {
+    "duration_binning": "exact_duration_seconds",
+    "coverage_interval": "central_gaussian_inclusive",
+    "ece_aggregation": "mean_absolute_nominal_empirical_gap",
+    "near_zero_sigma_threshold_blocks": 1e-12,
+    "nonfinite_policy": "count_and_fail_result_no_clipping",
+    "partial_correlation_controls": ["tau"],
+    "reveal_window_seconds": [-1.0, 1.0]
+  },
+  "resampling": {
+    "permutation_count_mvp": 999,
+    "bootstrap_count_mvp": 1000,
+    "bootstrap_count_final_minimum": 2000,
+    "hierarchy": ["layout_id", "trajectory_id"],
+    "permutation_seed": 20260720,
+    "bootstrap_seed": 20260721,
+    "permutation_unit": "whole_trajectory_block",
+    "permutation_p_value": "add_one_greater_or_equal"
+  },
+  "artifact_policy": {
+    "schema_version": "person-b-analysis-artifact-v0.1",
+    "hash_algorithm": "sha256",
+    "hash_serialization": "canonical_json_utf8",
+    "config_hash_source": "literal_config_file_bytes",
+    "corrections_are_append_only": true,
+    "result_affecting_change_requires_new_run": true
+  },
+  "coverage_levels": [0.5, 0.8, 0.95],
+  "outputs": {
+    "U1": ["r2", "mae", "grouped_permutation", "baseline_comparison"],
+    "U2": ["partial_correlation_controlling_tau", "coverage", "ece", "z_diagnostics"],
+    "U3": ["hidden_growth", "oracle_slope_ratio", "reveal_snapback"],
+    "U4": ["raw_space_direction", "time_projection_audit", "alpha_to_blocks", "norm_cap"]
+  }
+}

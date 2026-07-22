@@ -84,6 +84,36 @@ class TestSyntheticCrossRolePipeline(unittest.TestCase):
 
         self.assertEqual(self.report["overall_status"], "passed")
 
+    def test_oracle_targets_follow_corrected_activation_timebase_and_lineage(self):
+        """Integration targets must resolve to the corrected A handoff."""
+
+        activation = self.documents["activation_handoff"]
+        targets = self.documents["oracle_targets"]
+
+        self.assertEqual(targets["schema_version"], "1.0")
+        self.assertEqual(
+            targets["source_activation"],
+            {
+                "handoff_id": activation["handoff_id"],
+                "run_id": activation["run_id"],
+                "accepted_manifest_hash": activation["accepted_manifest_hash"],
+            },
+        )
+
+        activation_by_frame = {}
+        for row in activation["index_rows"]:
+            activation_by_frame.setdefault(
+                (row["trajectory_id"], row["model_frame_idx"]),
+                row,
+            )
+
+        for target in targets["rows"]:
+            activation_row = activation_by_frame[
+                (target["trajectory_id"], target["model_frame_idx"])
+            ]
+            self.assertEqual(target["server_tick"], activation_row["server_tick"])
+            self.assertEqual(target["tau"], activation_row["tau"])
+
     def test_all_existing_contracts_validate(self):
         """Every contract used by the integration fixture must pass."""
 
