@@ -88,7 +88,7 @@ def make_base_identity(
         "layout_id": "synthetic_layout_01",
         "regime": "synthetic_test",
         "visibility": visibility,
-        "tau": float(model_frame_idx),
+        "tau": model_frame_idx * 0.05,
         "v": 1.0,
         "q": 0.5,
         "duration": 3.0,
