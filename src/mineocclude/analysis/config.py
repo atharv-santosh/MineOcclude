@@ -18,6 +18,7 @@ DEFAULT_CONFIG_PATH = (
     / "core.yaml"
 )
 DEFAULT_SPLIT_SEED = 20260719
+ANALYSIS_CONFIG_VERSION = "person-b-phase1-v0.2"
 
 FROZEN_TARGETS = {
     "mu_oracle_blocks": {
@@ -199,7 +200,7 @@ def validate_core_analysis_config(config: Mapping[str, Any]) -> None:
         raise AnalysisConfigError("Top-level analysis config fields have changed.")
     if config.get("schema_version") != SCHEMA_VERSION:
         raise AnalysisConfigError(f"Expected schema version {SCHEMA_VERSION!r}.")
-    if config.get("analysis_config_version") != "person-b-phase1-v0.2":
+    if config.get("analysis_config_version") != ANALYSIS_CONFIG_VERSION:
         raise AnalysisConfigError("Analysis config version has changed.")
     if config.get("status") != "frozen_before_live_results":
         raise AnalysisConfigError("Analysis config must remain frozen before live results.")

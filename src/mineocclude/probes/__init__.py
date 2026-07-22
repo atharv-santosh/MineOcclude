@@ -2,6 +2,7 @@
 
 from .bridge import (
     FRAME_TABLE_VERSION,
+    MATRIX_VERSION,
     ProbeBridgeError,
     ProbeBridgeRejectionCode,
     ProbeReadyMatrix,
@@ -9,6 +10,7 @@ from .bridge import (
     build_frame_fold_manifest,
     build_joined_frame_table,
     build_probe_ready_matrices,
+    derive_probe_code_sha,
     load_activation_vectors,
     propagate_frame_folds,
     run_ridge_oof_probe,
@@ -58,6 +60,7 @@ from .splits import (
 __all__ = [
     "ActivationTargetJoinError",
     "FRAME_TABLE_VERSION",
+    "MATRIX_VERSION",
     "MLPModel",
     "MLPFoldFit",
     "MLPOOFResult",
@@ -83,6 +86,7 @@ __all__ = [
     "build_mlp_fit_artifact",
     "build_joined_frame_table",
     "build_probe_ready_matrices",
+    "derive_probe_code_sha",
     "fit_mlp",
     "fit_mlp_grouped_validation",
     "fit_mlp_oof",

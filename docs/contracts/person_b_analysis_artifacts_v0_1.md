@@ -24,8 +24,8 @@ Filters run once in this order:
 1. required fields and unique frame identity;
 2. accepted lifecycle;
 3. finite numeric values;
-4. post-first-seen eligibility;
-5. accepted-manifest equality.
+4. accepted-manifest equality;
+5. post-first-seen eligibility.
 
 Each input receives at most one first-failure code. Every step records input,
 rejected, and output counts. Rows are never clipped, repaired, or silently

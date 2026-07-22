@@ -141,8 +141,10 @@ completed Person A run and a complete frame-by-layer/site grid.
 
 Phase 1 verification on July 21, 2026:
 
-- the full 182-test repository suite passes;
-- all original schema-v1 contract and integration tests remain unchanged;
+- the then-current full repository suite passed, and later compatibility
+  repairs are checked by rerunning the current full suite;
+- frozen schema-v1 behavior is covered alongside the versioned A-owned
+  fixture correction and B-owned compatibility tests;
 - the new B foundation tests cover config, filters, artifacts, intake,
   leakage-safe fits, metrics, resampling, and intervention production;
 - 250 seeded oracle parameter combinations agree within `1e-6`;
@@ -190,3 +192,29 @@ Chunk 2 does not connect MLP fitting end to end; the existing MLP harness
 remains separately tested. U2/U3 scientific analyses, real activation loading,
 the C-to-A adapter, runtime evidence, and final approvals remain pending in
 their assigned later work.
+
+## Authenticated synthetic probe provenance
+
+Repair Chunk 2B closes the remaining provenance gaps in the synthetic ridge
+bridge. Matrix construction now accepts the original A activation handoff,
+the original B target document, the sealed frame/fold evidence, and the
+literal activation-chunk bytes. It rebuilds the join, fold propagation, and
+vector loading internally. A canonical `matrix_hash` authenticates the exact
+X vectors, y values, folds, layer/site identity, frame identity, source hashes,
+and synthetic-use markers; caller-modified intermediate rows or vectors are
+rejected rather than trusted.
+
+Fold validation is bound to the literal `configs/analysis/core.yaml` hash and
+version and recomputes the deterministic seeded layout assignment. A different
+valid-looking grouping, seed, fold count, strategy, or config cannot be
+resealed and accepted. Synthetic frame tables, fold manifests, propagated
+rows, matrices, predictions, and results all retain `synthetic = true` and
+`scientific_use = forbidden`.
+
+Synthetic ridge predictions and U1 results are bound to the matrix hash, the
+literal core-config hash, and a SHA over the B-owned bridge/split/ridge source
+bytes. They record the frozen alpha grid, inner-fold count, outer-fold seed,
+selected alpha per outer fold, scaler metadata, and exact training/test
+memberships. This is interface evidence only. End-to-end MLP, bridged U2/U3,
+the main multi-role synthetic integration runner, live/runtime evidence, and
+cross-role signoffs remain pending.

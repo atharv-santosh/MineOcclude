@@ -20,6 +20,7 @@ from mineocclude.analysis.filters import (
 )
 from mineocclude.analysis.manifests import (
     AnalysisArtifactError,
+    seal_artifact,
     validate_sealed_artifact,
 )
 from mineocclude.analysis.outputs import (
@@ -224,7 +225,7 @@ class TestFoldAndCorrectionArtifacts(unittest.TestCase):
             self.rows,
             artifact_id="fold_manifest_v1",
             code_sha=CODE_SHA,
-            config_hash=CONFIG_HASH,
+            config_hash=hash_core_analysis_config(DEFAULT_CONFIG_PATH),
             input_manifest_hash=MANIFEST_HASH,
         )
         validate_fold_manifest(manifest)
@@ -232,6 +233,27 @@ class TestFoldAndCorrectionArtifacts(unittest.TestCase):
         altered["memberships"][0]["fold_idx"] = 4
         with self.assertRaises(GroupedSplitError):
             validate_fold_manifest(altered)
+
+        resealed_alternative = copy.deepcopy(manifest)
+        resealed_alternative.pop("artifact_hash")
+        for membership in resealed_alternative["memberships"]:
+            if membership["fold_idx"] in {0, 1}:
+                membership["fold_idx"] = 1 - membership["fold_idx"]
+        for assignment in resealed_alternative["layout_assignments"]:
+            if assignment["fold_idx"] in {0, 1}:
+                assignment["fold_idx"] = 1 - assignment["fold_idx"]
+        resealed_alternative = seal_artifact(resealed_alternative)
+        with self.assertRaises(GroupedSplitError):
+            validate_fold_manifest(resealed_alternative)
+
+        with self.assertRaises(GroupedSplitError):
+            build_fold_manifest(
+                self.rows,
+                artifact_id="fold_manifest_wrong_config",
+                code_sha=CODE_SHA,
+                config_hash=CONFIG_HASH,
+                input_manifest_hash=MANIFEST_HASH,
+            )
 
         annotated = annotate_grouped_folds(self.rows)
         inner = build_grouped_inner_folds(annotated, outer_fold_idx=0)

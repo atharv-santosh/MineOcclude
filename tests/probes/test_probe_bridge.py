@@ -6,8 +6,15 @@ import copy
 import hashlib
 import json
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
+from mineocclude.analysis.config import (
+    ANALYSIS_CONFIG_VERSION,
+    DEFAULT_CONFIG_PATH,
+    hash_core_analysis_config,
+    load_core_analysis_config,
+)
 from mineocclude.analysis.manifests import seal_artifact, validate_sealed_artifact
 from mineocclude.contracts.identity import REQUIRED_FIELDS
 from mineocclude.oracle.targets import build_regime_a_target_document
@@ -17,6 +24,7 @@ from mineocclude.probes.bridge import (
     build_frame_fold_manifest,
     build_joined_frame_table,
     build_probe_ready_matrices,
+    derive_probe_code_sha,
     load_activation_vectors,
     propagate_frame_folds,
     run_ridge_oof_probe,
@@ -207,8 +215,13 @@ class TestSyntheticProbeBridge(unittest.TestCase):
             cls.chunk_payloads,
         )
         cls.matrices = build_probe_ready_matrices(
-            cls.propagated,
-            cls.loaded_vectors,
+            cls.activation,
+            cls.targets,
+            cls.frame_table,
+            cls.fold_manifest,
+            cls.chunk_payloads,
+            propagated_rows=cls.propagated,
+            loaded_vectors=cls.loaded_vectors,
         )
 
     def assert_bridge_code(self, expected, callable_, *args, **kwargs):
@@ -219,6 +232,18 @@ class TestSyntheticProbeBridge(unittest.TestCase):
     def test_a_handoff_and_b_targets_build_one_frame_row_per_key(self):
         validate_joined_frame_table(self.frame_table)
         self.assertEqual(self.frame_table["schema_version"], "1.0")
+        self.assertEqual(
+            self.frame_table["analysis_config_hash"],
+            hash_core_analysis_config(DEFAULT_CONFIG_PATH),
+        )
+        self.assertEqual(
+            self.frame_table["analysis_config_version"],
+            ANALYSIS_CONFIG_VERSION,
+        )
+        self.assertEqual(
+            self.frame_table["probe_code_sha"], derive_probe_code_sha()
+        )
+        self.assertEqual(self.frame_table["target_config_hash"], TARGET_CONFIG_HASH)
         self.assertEqual(len(self.frame_table["rows"]), LAYOUT_COUNT * 3)
         keys = {
             (row["trajectory_id"], row["model_frame_idx"])
@@ -242,6 +267,33 @@ class TestSyntheticProbeBridge(unittest.TestCase):
                 "target_run_id",
             ):
                 self.assertIn(field, row)
+
+    def test_literal_analysis_config_and_probe_code_are_not_caller_claims(self):
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.CONFIG_HASH_MISMATCH,
+            build_joined_frame_table,
+            self.activation,
+            self.targets,
+            analysis_config_hash="f" * 64,
+        )
+
+        stale_code = dict(self.frame_table)
+        stale_code["probe_code_sha"] = "c" * 40
+        unhashed = dict(stale_code)
+        unhashed.pop("frame_table_hash")
+        stale_code["frame_table_hash"] = hashlib.sha256(
+            json.dumps(
+                unhashed,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+        ).hexdigest()
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.PROBE_CODE_MISMATCH,
+            validate_joined_frame_table,
+            stale_code,
+        )
 
     def test_frame_table_rejects_duplicate_and_inconsistent_source_rows(self):
         duplicate_targets = copy.deepcopy(self.targets)
@@ -279,7 +331,10 @@ class TestSyntheticProbeBridge(unittest.TestCase):
                 self.fold_manifest["artifact_hash"],
             )
             self.assertEqual(row["fold_version"], "person-b-fold-v0.1")
-            self.assertEqual(row["fold_config_hash"], TARGET_CONFIG_HASH)
+            self.assertEqual(
+                row["fold_config_hash"],
+                hash_core_analysis_config(DEFAULT_CONFIG_PATH),
+            )
         self.assertTrue(all(len(folds) == 1 for folds in folds_by_frame.values()))
         self.assertTrue(all(len(folds) == 1 for folds in layout_folds.values()))
         self.assertEqual(
@@ -412,6 +467,72 @@ class TestSyntheticProbeBridge(unittest.TestCase):
             conflicting,
         )
 
+    def test_resealed_alternative_fold_grouping_and_markers_fail_closed(self):
+        alternative = copy.deepcopy(self.fold_manifest)
+        alternative.pop("artifact_hash")
+        for membership in alternative["memberships"]:
+            if membership["fold_idx"] in {0, 1}:
+                membership["fold_idx"] = 1 - membership["fold_idx"]
+        for assignment in alternative["layout_assignments"]:
+            if assignment["fold_idx"] in {0, 1}:
+                assignment["fold_idx"] = 1 - assignment["fold_idx"]
+        alternative = seal_artifact(alternative)
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.INVALID_FOLD_MANIFEST,
+            propagate_frame_folds,
+            self.activation,
+            self.targets,
+            self.frame_table,
+            alternative,
+        )
+
+        stale_seed = dict(self.fold_manifest)
+        stale_seed.pop("artifact_hash")
+        stale_seed["seed"] += 1
+        stale_seed = seal_artifact(stale_seed)
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.INVALID_FOLD_MANIFEST,
+            propagate_frame_folds,
+            self.activation,
+            self.targets,
+            self.frame_table,
+            stale_seed,
+        )
+
+        for marker in ("synthetic", "scientific_use"):
+            missing_marker = dict(self.fold_manifest)
+            missing_marker.pop("artifact_hash")
+            missing_marker.pop(marker)
+            missing_marker = seal_artifact(missing_marker)
+            self.assert_bridge_code(
+                ProbeBridgeRejectionCode.INVALID_SYNTHETIC_MARKING,
+                propagate_frame_folds,
+                self.activation,
+                self.targets,
+                self.frame_table,
+                missing_marker,
+            )
+
+        for field, replacement in (
+            ("config_hash", "f" * 64),
+            ("analysis_config_version", "stale-config-version"),
+            ("fold_schema_version", "stale-fold-version"),
+            ("n_splits", 4),
+            ("strategy", "caller_selected"),
+        ):
+            stale_metadata = dict(self.fold_manifest)
+            stale_metadata.pop("artifact_hash")
+            stale_metadata[field] = replacement
+            stale_metadata = seal_artifact(stale_metadata)
+            self.assert_bridge_code(
+                ProbeBridgeRejectionCode.INVALID_FOLD_MANIFEST,
+                propagate_frame_folds,
+                self.activation,
+                self.targets,
+                self.frame_table,
+                stale_metadata,
+            )
+
     def test_row_order_shuffle_produces_identical_bridge_outputs(self):
         activation = copy.deepcopy(self.activation)
         targets = copy.deepcopy(self.targets)
@@ -431,7 +552,15 @@ class TestSyntheticProbeBridge(unittest.TestCase):
             fold_manifest,
         )
         loaded = load_activation_vectors(activation, self.chunk_payloads)
-        matrices = build_probe_ready_matrices(propagated, loaded)
+        matrices = build_probe_ready_matrices(
+            activation,
+            targets,
+            frame_table,
+            fold_manifest,
+            self.chunk_payloads,
+            propagated_rows=propagated,
+            loaded_vectors=loaded,
+        )
 
         self.assertEqual(frame_table, self.frame_table)
         self.assertEqual(fold_manifest, self.fold_manifest)
@@ -443,27 +572,96 @@ class TestSyntheticProbeBridge(unittest.TestCase):
         missing_target = [dict(row) for row in self.propagated]
         del missing_target[0]["mu_oracle_blocks"]
         self.assert_bridge_code(
-            ProbeBridgeRejectionCode.MISSING_TARGET,
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
             build_probe_ready_matrices,
-            missing_target,
-            self.loaded_vectors,
+            self.activation,
+            self.targets,
+            self.frame_table,
+            self.fold_manifest,
+            self.chunk_payloads,
+            propagated_rows=missing_target,
         )
 
         incomplete = list(self.propagated[:-1])
         self.assert_bridge_code(
-            ProbeBridgeRejectionCode.INCOMPLETE_LAYER_SITE_GRID,
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
             build_probe_ready_matrices,
-            incomplete,
-            self.loaded_vectors,
+            self.activation,
+            self.targets,
+            self.frame_table,
+            self.fold_manifest,
+            self.chunk_payloads,
+            propagated_rows=incomplete,
         )
 
         excluded = [dict(row) for row in self.propagated]
         excluded[0]["status"] = "excluded"
         self.assert_bridge_code(
-            ProbeBridgeRejectionCode.INVALID_LIFECYCLE,
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
             build_probe_ready_matrices,
-            excluded,
-            self.loaded_vectors,
+            self.activation,
+            self.targets,
+            self.frame_table,
+            self.fold_manifest,
+            self.chunk_payloads,
+            propagated_rows=excluded,
+        )
+
+    def test_matrix_rebuild_rejects_post_join_target_and_vector_changes(self):
+        altered_target = [dict(row) for row in self.propagated]
+        altered_target[0]["mu_oracle_blocks"] += 1.0
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
+            build_probe_ready_matrices,
+            self.activation,
+            self.targets,
+            self.frame_table,
+            self.fold_manifest,
+            self.chunk_payloads,
+            propagated_rows=altered_target,
+        )
+
+        altered_vectors = dict(self.loaded_vectors)
+        claim = next(iter(sorted(altered_vectors)))
+        vector = list(altered_vectors[claim])
+        vector[0] += 1.0
+        altered_vectors[claim] = tuple(vector)
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
+            build_probe_ready_matrices,
+            self.activation,
+            self.targets,
+            self.frame_table,
+            self.fold_manifest,
+            self.chunk_payloads,
+            loaded_vectors=altered_vectors,
+        )
+
+    def test_matrix_hash_authenticates_exact_x_y_fold_and_identity(self):
+        matrix = self.matrices[0]
+        self.assertEqual(len(matrix.matrix_hash), 64)
+        self.assertIs(matrix.synthetic, True)
+        self.assertEqual(matrix.scientific_use, "forbidden")
+
+        altered_targets = list(matrix.targets)
+        altered_targets[0] += 1.0
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.MATRIX_HASH_MISMATCH,
+            run_ridge_oof_probe,
+            replace(matrix, targets=tuple(altered_targets)),
+            artifact_id_prefix="synthetic_probe_bridge_altered_target",
+        )
+
+        altered_features = [list(vector) for vector in matrix.features]
+        altered_features[0][0] += 1.0
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.MATRIX_HASH_MISMATCH,
+            run_ridge_oof_probe,
+            replace(
+                matrix,
+                features=tuple(tuple(vector) for vector in altered_features),
+            ),
+            artifact_id_prefix="synthetic_probe_bridge_altered_vector",
         )
 
     def test_oof_ridge_uses_real_vectors_and_propagated_folds(self):
@@ -528,9 +726,92 @@ class TestSyntheticProbeBridge(unittest.TestCase):
         ):
             self.assertIs(artifact["synthetic"], True)
             self.assertEqual(artifact["scientific_use"], "forbidden")
+            self.assertEqual(artifact["code_sha"], derive_probe_code_sha())
+            self.assertEqual(
+                artifact["config_hash"],
+                hash_core_analysis_config(DEFAULT_CONFIG_PATH),
+            )
+            self.assertEqual(artifact["input_manifest_hash"], matrix.matrix_hash)
+            self.assertEqual(artifact["matrix_hash"], matrix.matrix_hash)
+            self.assertEqual(
+                artifact["analysis_config_version"], ANALYSIS_CONFIG_VERSION
+            )
         self.assertEqual(
             execution.u1_result_artifact["prediction_manifest_hashes"],
             [execution.prediction_artifact["artifact_hash"]],
+        )
+        frozen_config = load_core_analysis_config(DEFAULT_CONFIG_PATH)
+        self.assertEqual(
+            execution.prediction_artifact["probe_parameters"],
+            {
+                "alpha_grid": [0.1, 1.0, 10.0, 100.0],
+                "inner_fold_count": 4,
+                "outer_fold_seed": frozen_config["cross_validation"][
+                    "split_seed"
+                ],
+            },
+        )
+        fit_records = execution.prediction_artifact["fold_fit_records"]
+        self.assertEqual(len(fit_records), 5)
+        for record in fit_records:
+            self.assertEqual(record["inner_fold_count"], 4)
+            self.assertIn(record["selected_alpha"], [0.1, 1.0, 10.0, 100.0])
+            self.assertEqual(
+                set(record["training_indices"]).intersection(
+                    record["test_indices"]
+                ),
+                set(),
+            )
+            self.assertEqual(
+                record["scaler"]["training_row_count"],
+                len(record["training_indices"]),
+            )
+            self.assertEqual(record["scaler"]["feature_count"], 2048)
+            self.assertEqual(len(record["scaler"]["mean_hash"]), 64)
+            self.assertEqual(len(record["scaler"]["scale_hash"]), 64)
+            for index, membership in zip(
+                record["training_indices"], record["training_membership"]
+            ):
+                self.assertEqual(
+                    membership,
+                    {
+                        "trajectory_id": matrix.metadata_rows[index][
+                            "trajectory_id"
+                        ],
+                        "model_frame_idx": matrix.metadata_rows[index][
+                            "model_frame_idx"
+                        ],
+                        "layout_id": matrix.layout_ids[index],
+                    },
+                )
+            for index, membership in zip(
+                record["test_indices"], record["test_membership"]
+            ):
+                self.assertEqual(
+                    membership,
+                    {
+                        "trajectory_id": matrix.metadata_rows[index][
+                            "trajectory_id"
+                        ],
+                        "model_frame_idx": matrix.metadata_rows[index][
+                            "model_frame_idx"
+                        ],
+                        "layout_id": matrix.layout_ids[index],
+                    },
+                )
+        self.assertEqual(
+            execution.u1_result_artifact["fold_fit_records"], fit_records
+        )
+        self.assertEqual(
+            execution.u1_result_artifact["fold_fit_records_hash"],
+            hashlib.sha256(
+                json.dumps(
+                    fit_records,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ).encode("utf-8")
+            ).hexdigest(),
         )
 
         repeated = run_ridge_oof_probe(
@@ -539,20 +820,53 @@ class TestSyntheticProbeBridge(unittest.TestCase):
         )
         self.assertEqual(execution, repeated)
 
-        malformed = copy.deepcopy(matrix)
-        object.__setattr__(malformed, "metadata_rows", malformed.metadata_rows[:-1])
+        for kwargs in (
+            {"alpha_grid": (0.2, 1.0, 10.0, 100.0)},
+            {"inner_fold_count": 3},
+            {"seed": 99},
+            {"alpha_grid": ("not-a-number",)},
+        ):
+            self.assert_bridge_code(
+                ProbeBridgeRejectionCode.FROZEN_PROBE_CONFIG_MISMATCH,
+                run_ridge_oof_probe,
+                matrix,
+                artifact_id_prefix="synthetic_probe_bridge_wrong_config",
+                **kwargs,
+            )
+
+        malformed = replace(matrix, metadata_rows=matrix.metadata_rows[:-1])
         self.assert_bridge_code(
-            ProbeBridgeRejectionCode.PROBE_FIT_FAILED,
+            ProbeBridgeRejectionCode.MATRIX_HASH_MISMATCH,
             run_ridge_oof_probe,
             malformed,
             artifact_id_prefix="synthetic_probe_bridge_bad_metadata",
+        )
+
+        malformed_type = replace(matrix, metadata_rows=(42,))
+        self.assert_bridge_code(
+            ProbeBridgeRejectionCode.MATRIX_HASH_MISMATCH,
+            run_ridge_oof_probe,
+            malformed_type,
+            artifact_id_prefix="synthetic_probe_bridge_bad_type",
         )
 
     def test_bridge_does_not_mutate_submitted_evidence(self):
         activation = copy.deepcopy(self.activation)
         targets = copy.deepcopy(self.targets)
         payloads = dict(self.chunk_payloads)
-        originals = (copy.deepcopy(activation), copy.deepcopy(targets), dict(payloads))
+        frame_table_input = copy.deepcopy(self.frame_table)
+        fold_manifest_input = copy.deepcopy(self.fold_manifest)
+        propagated_input = copy.deepcopy(self.propagated)
+        loaded_input = copy.deepcopy(self.loaded_vectors)
+        originals = (
+            copy.deepcopy(activation),
+            copy.deepcopy(targets),
+            dict(payloads),
+            copy.deepcopy(frame_table_input),
+            copy.deepcopy(fold_manifest_input),
+            copy.deepcopy(propagated_input),
+            copy.deepcopy(loaded_input),
+        )
 
         frame_table = build_joined_frame_table(activation, targets)
         fold_manifest = build_frame_fold_manifest(
@@ -566,11 +880,23 @@ class TestSyntheticProbeBridge(unittest.TestCase):
             fold_manifest,
         )
         loaded = load_activation_vectors(activation, payloads)
-        build_probe_ready_matrices(propagated, loaded)
+        build_probe_ready_matrices(
+            activation,
+            targets,
+            frame_table_input,
+            fold_manifest_input,
+            payloads,
+            propagated_rows=propagated_input,
+            loaded_vectors=loaded_input,
+        )
 
         self.assertEqual(activation, originals[0])
         self.assertEqual(targets, originals[1])
         self.assertEqual(payloads, originals[2])
+        self.assertEqual(frame_table_input, originals[3])
+        self.assertEqual(fold_manifest_input, originals[4])
+        self.assertEqual(propagated_input, originals[5])
+        self.assertEqual(loaded_input, originals[6])
 
 
 if __name__ == "__main__":
