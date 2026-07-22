@@ -192,18 +192,11 @@ def _is_finite_number(value: Any) -> bool:
 def _is_hex(value: Any, length: int) -> bool:
     """Return True for hexadecimal strings of an exact length."""
 
-    if (
-        not isinstance(value, str)
-        or len(value) != length
-    ):
-        return False
-
-    try:
-        int(value, 16)
-    except ValueError:
-        return False
-
-    return True
+    return (
+        isinstance(value, str)
+        and len(value) == length
+        and all(character in "0123456789abcdefABCDEF" for character in value)
+    )
 
 
 def _is_sha256(value: Any) -> bool:

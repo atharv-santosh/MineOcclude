@@ -19,13 +19,13 @@ class AnalysisArtifactError(ValueError):
 
 
 def is_hex_digest(value: Any, length: int) -> bool:
-    if not isinstance(value, str) or len(value) != length:
-        return False
-    try:
-        int(value, 16)
-    except ValueError:
-        return False
-    return True
+    """Return whether *value* is exactly an ASCII hexadecimal digest."""
+
+    return (
+        isinstance(value, str)
+        and len(value) == length
+        and all(character in "0123456789abcdefABCDEF" for character in value)
+    )
 
 
 def canonical_json_bytes(value: Any) -> bytes:
