@@ -6,6 +6,7 @@ import math
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
@@ -35,8 +36,26 @@ ORACLE_INFORMATION_SET = (
 )
 
 
+class OracleRejectionCode(str, Enum):
+    """Stable codes for cross-row oracle/source-timing failures."""
+
+    MIXED_EPISODE_ID = "mixed_episode_id"
+    NONCONSECUTIVE_SERVER_TICK = "nonconsecutive_server_tick"
+    TIMEBASE_MISMATCH = "timebase_mismatch"
+
+
 class OracleValidationError(ValueError):
     """Raised when an oracle target violates Person B's Phase 1 contract."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        code: OracleRejectionCode | None = None,
+    ) -> None:
+        self.code = code
+        rendered = f"{code.value}: {message}" if code is not None else message
+        super().__init__(rendered)
 
 
 def require_finite_number(name: str, value: Any) -> float:
@@ -60,6 +79,91 @@ def is_sha256(value: Any) -> bool:
     except ValueError:
         return False
     return True
+
+
+def validate_trajectory_timebase_rows(
+    rows: Iterable[Mapping[str, Any]],
+) -> None:
+    """Require one episode and a consecutive 20 Hz frame/tick timebase.
+
+    Callers validate each universal identity before this cross-row check. Rows
+    are grouped and sorted by explicit identity; input order is never timing.
+    """
+
+    grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[row["trajectory_id"]].append(row)
+
+    for trajectory_id, trajectory_rows in grouped.items():
+        if len({row["episode_id"] for row in trajectory_rows}) != 1:
+            raise OracleValidationError(
+                f"Trajectory {trajectory_id!r} contains multiple episode IDs.",
+                code=OracleRejectionCode.MIXED_EPISODE_ID,
+            )
+
+        ordered = sorted(
+            trajectory_rows,
+            key=lambda item: item["model_frame_idx"],
+        )
+        previous_model_frame_idx: int | None = None
+        previous_server_tick: int | None = None
+        last_visible_model_frame_idx: int | None = None
+        last_visible_server_tick: int | None = None
+
+        for row in ordered:
+            model_frame_idx = row["model_frame_idx"]
+            server_tick = row["server_tick"]
+            if (
+                previous_model_frame_idx is not None
+                and model_frame_idx != previous_model_frame_idx + 1
+            ):
+                raise OracleValidationError(
+                    f"Trajectory {trajectory_id!r} has nonconsecutive model frames.",
+                    code=OracleRejectionCode.TIMEBASE_MISMATCH,
+                )
+            if (
+                previous_server_tick is not None
+                and server_tick != previous_server_tick + 1
+            ):
+                raise OracleValidationError(
+                    f"Trajectory {trajectory_id!r} has nonconsecutive server ticks.",
+                    code=OracleRejectionCode.NONCONSECUTIVE_SERVER_TICK,
+                )
+
+            tau = float(row["tau"])
+            if row["visibility"] == VISIBLE:
+                if not math.isclose(tau, 0.0, rel_tol=0.0, abs_tol=1e-12):
+                    raise OracleValidationError(
+                        "Visible rows must reset tau on the 20 Hz timebase.",
+                        code=OracleRejectionCode.TIMEBASE_MISMATCH,
+                    )
+                last_visible_model_frame_idx = model_frame_idx
+                last_visible_server_tick = server_tick
+            elif (
+                last_visible_model_frame_idx is not None
+                and last_visible_server_tick is not None
+            ):
+                frame_ticks = model_frame_idx - last_visible_model_frame_idx
+                server_ticks = server_tick - last_visible_server_tick
+                expected_tau = server_ticks * REGIME_A_DT_SECONDS
+                if frame_ticks != server_ticks or not math.isclose(
+                    tau,
+                    expected_tau,
+                    rel_tol=0.0,
+                    abs_tol=1e-12,
+                ):
+                    raise OracleValidationError(
+                        "tau progression disagrees with the 20 Hz frame/tick timebase.",
+                        code=OracleRejectionCode.TIMEBASE_MISMATCH,
+                    )
+            else:
+                raise OracleValidationError(
+                    "An occluded row cannot precede its visible timebase anchor.",
+                    code=OracleRejectionCode.TIMEBASE_MISMATCH,
+                )
+
+            previous_model_frame_idx = model_frame_idx
+            previous_server_tick = server_tick
 
 
 @dataclass(frozen=True)
@@ -256,6 +360,8 @@ def validate_oracle_target_rows(rows: Iterable[Mapping[str, Any]]) -> None:
         if key in seen_keys:
             raise OracleValidationError(f"Duplicate oracle target key: {key}.")
         seen_keys.add(key)
+
+    validate_trajectory_timebase_rows(materialized)
 
     for field in (
         "run_id",

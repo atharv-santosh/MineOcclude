@@ -7,7 +7,12 @@ from collections import Counter
 from collections.abc import Iterable, Mapping
 from typing import Any
 
-from mineocclude.analysis.config import DEFAULT_SPLIT_SEED
+from mineocclude.analysis.config import (
+    ANALYSIS_CONFIG_VERSION,
+    DEFAULT_SPLIT_SEED,
+    hash_core_analysis_config,
+    load_core_analysis_config,
+)
 from mineocclude.analysis.manifests import (
     AnalysisArtifactError,
     seal_artifact,
@@ -202,12 +207,29 @@ def build_fold_manifest(
     *,
     artifact_id: str,
     code_sha: str,
-    config_hash: str,
+    config_hash: str | None = None,
     input_manifest_hash: str,
     n_splits: int = 5,
     seed: int = DEFAULT_SPLIT_SEED,
 ) -> dict[str, Any]:
     """Persist exact frame membership and provenance for grouped folds."""
+
+    frozen_config = load_core_analysis_config()
+    frozen_cv = frozen_config["cross_validation"]
+    expected_config_hash = hash_core_analysis_config()
+    if config_hash is not None and config_hash != expected_config_hash:
+        raise GroupedSplitError(
+            "Fold config_hash does not match the literal frozen analysis config."
+        )
+    if (
+        n_splits != frozen_cv["fold_count"]
+        or seed != frozen_cv["split_seed"]
+        or frozen_cv["strategy"] != "layout_grouped"
+        or frozen_cv["fold_schema_version"] != FOLD_SCHEMA_VERSION
+    ):
+        raise GroupedSplitError(
+            "Fold count, seed, strategy, or version disagrees with the frozen config."
+        )
 
     annotated = annotate_grouped_folds(rows, n_splits=n_splits, seed=seed)
     memberships = [
@@ -242,8 +264,9 @@ def build_fold_manifest(
             "artifact_type": "fold_manifest",
             "artifact_id": artifact_id,
             "code_sha": code_sha,
-            "config_hash": config_hash,
+            "config_hash": expected_config_hash,
             "input_manifest_hash": input_manifest_hash,
+            "analysis_config_version": ANALYSIS_CONFIG_VERSION,
             "fold_schema_version": FOLD_SCHEMA_VERSION,
             "strategy": "layout_grouped",
             "n_splits": n_splits,
@@ -263,9 +286,19 @@ def validate_fold_manifest(document: Mapping[str, Any]) -> None:
         raise GroupedSplitError(f"Invalid fold artifact: {error}") from error
     if document.get("fold_schema_version") != FOLD_SCHEMA_VERSION:
         raise GroupedSplitError("Fold schema version mismatch.")
+    frozen_config = load_core_analysis_config()
+    frozen_cv = frozen_config["cross_validation"]
+    if document.get("config_hash") != hash_core_analysis_config():
+        raise GroupedSplitError(
+            "Fold config hash does not match the literal frozen analysis config."
+        )
+    if document.get("analysis_config_version") != ANALYSIS_CONFIG_VERSION:
+        raise GroupedSplitError("Fold analysis config version mismatch.")
     n_splits = document.get("n_splits")
     if not isinstance(n_splits, int) or isinstance(n_splits, bool) or n_splits < 2:
         raise GroupedSplitError("Fold manifest n_splits is invalid.")
+    if n_splits != frozen_cv["fold_count"]:
+        raise GroupedSplitError("Fold count disagrees with the frozen config.")
     memberships = document.get("memberships")
     if not isinstance(memberships, list) or not memberships:
         raise GroupedSplitError("Fold manifest requires frame memberships.")
@@ -291,10 +324,24 @@ def validate_fold_manifest(document: Mapping[str, Any]) -> None:
         if previous != fold_idx:
             raise GroupedSplitError("One layout appears in multiple folds.")
     declared = document.get("layout_assignments")
+    seed = document.get("seed")
+    if not isinstance(seed, int) or isinstance(seed, bool):
+        raise GroupedSplitError("Fold manifest seed must be an integer.")
+    if seed != frozen_cv["split_seed"]:
+        raise GroupedSplitError("Fold seed disagrees with the frozen config.")
+    expected_layout_fold = _assign_validated_rows(
+        validated_memberships,
+        n_splits=n_splits,
+        seed=seed,
+    )
+    if layout_fold != expected_layout_fold:
+        raise GroupedSplitError(
+            "Fold memberships differ from the deterministic seeded assignment."
+        )
     expected = sorted(
         (
             {"layout_id": layout_id, "fold_idx": fold_idx}
-            for layout_id, fold_idx in layout_fold.items()
+            for layout_id, fold_idx in expected_layout_fold.items()
         ),
         key=lambda item: item["layout_id"],
     )
@@ -304,8 +351,8 @@ def validate_fold_manifest(document: Mapping[str, Any]) -> None:
         raise GroupedSplitError("Fold manifest does not populate every fold index.")
     if document.get("strategy") != "layout_grouped":
         raise GroupedSplitError("Fold manifest strategy is not layout_grouped.")
-    if not isinstance(document.get("seed"), int) or isinstance(document.get("seed"), bool):
-        raise GroupedSplitError("Fold manifest seed must be an integer.")
+    if document.get("strategy") != frozen_cv["strategy"]:
+        raise GroupedSplitError("Fold strategy disagrees with the frozen config.")
 
 
 def assign_u4_development_partition(

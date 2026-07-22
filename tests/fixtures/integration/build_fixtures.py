@@ -208,6 +208,11 @@ def build_oracle_targets(
     return {
         "schema_version": SCHEMA_VERSION,
         "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        "source_activation": {
+            "handoff_id": activation["handoff_id"],
+            "run_id": activation["run_id"],
+            "accepted_manifest_hash": activation["accepted_manifest_hash"],
+        },
         "join_key": ["trajectory_id", "model_frame_idx"],
         "rows": rows,
     }
@@ -537,9 +542,18 @@ def main() -> None:
                 "hook_site": "residual_stream",
             },
         ],
+        "authenticated_a_b_bridge": {
+            "activation_source": "activation_handoff",
+            "activation_chunk_source": "activation_chunk",
+            "layout_count": 5,
+            "fold_count": 5,
+            "target_name": "mu_oracle_blocks",
+            "fixture_metadata": deepcopy(FIXTURE_MARKER),
+        },
         "sources": {
             "trajectory_package": "../trajectory/accepted_package.json",
             "activation_handoff": "../activation/accepted_activation_handoff.json",
+            "activation_chunk": "../activation/synthetic_activation_chunk.json",
             "token_map": "synthetic_token_map.json",
             "oracle_targets": "synthetic_oracle_targets.json",
             "baseline_predictions": "synthetic_baseline_predictions.json",
@@ -583,6 +597,7 @@ def main() -> None:
             "logical_input_context_rows_to_rollouts",
             "rollout_measurement_failure_semantics",
             "orphaned_claim_bearing_row_enumeration",
+            "authenticated_a_b_probe_bridge",
         ],
     }
 

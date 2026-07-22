@@ -21,6 +21,14 @@ FIXTURE_DIR = (
     / "activation"
 )
 
+OLD_HANDOFF_ID = "synthetic_activation_handoff_001"
+OLD_RUN_ID = "synthetic_activation_run_001"
+OLD_MANIFEST_HASH = "5" * 64
+
+CORRECTED_HANDOFF_ID = "synthetic_activation_handoff_002"
+CORRECTED_RUN_ID = "synthetic_activation_run_002"
+CORRECTED_MANIFEST_HASH = "6" * 64
+
 
 def load_fixture(filename: str):
     """Load one Step 1.4 JSON fixture."""
@@ -74,6 +82,137 @@ class TestActivationContract(
             result.rejections,
             (),
         )
+
+    def test_accepted_fixture_has_coherent_20hz_timebase(
+        self,
+    ):
+        package = load_fixture(
+            "accepted_activation_handoff.json"
+        )
+
+        rows_by_frame = {}
+
+        for row in package["index_rows"]:
+            key = row["model_frame_idx"]
+            identity = (
+                row["server_tick"],
+                row["tau"],
+            )
+
+            if key in rows_by_frame:
+                self.assertEqual(
+                    rows_by_frame[key],
+                    identity,
+                )
+            else:
+                rows_by_frame[key] = identity
+
+        first_frame = min(rows_by_frame)
+        first_tick, first_tau = rows_by_frame[first_frame]
+
+        for model_frame_idx, (server_tick, tau) in rows_by_frame.items():
+            frame_delta = model_frame_idx - first_frame
+
+            self.assertEqual(
+                server_tick - first_tick,
+                frame_delta,
+            )
+            self.assertAlmostEqual(
+                tau - first_tau,
+                frame_delta * 0.05,
+            )
+
+    def test_timebase_correction_has_new_identity_and_lineage(
+        self,
+    ):
+        package = load_fixture(
+            "accepted_activation_handoff.json"
+        )
+        lineage = load_fixture(
+            "timebase_correction_lineage.json"
+        )
+
+        self.assertEqual(package["schema_version"], "1.0")
+        self.assertEqual(package["handoff_id"], CORRECTED_HANDOFF_ID)
+        self.assertEqual(package["run_id"], CORRECTED_RUN_ID)
+        self.assertEqual(
+            package["accepted_manifest_hash"],
+            CORRECTED_MANIFEST_HASH,
+        )
+
+        self.assertEqual(
+            lineage["superseded_evidence"],
+            {
+                "handoff_id": OLD_HANDOFF_ID,
+                "run_id": OLD_RUN_ID,
+                "accepted_manifest_hash": OLD_MANIFEST_HASH,
+                "tau_seconds_by_model_frame_idx": {
+                    "0": 0.0,
+                    "1": 1.0,
+                    "2": 2.0,
+                },
+            },
+        )
+        self.assertEqual(
+            lineage["replacement_evidence"]["handoff_id"],
+            CORRECTED_HANDOFF_ID,
+        )
+        self.assertEqual(
+            lineage["replacement_evidence"]["run_id"],
+            CORRECTED_RUN_ID,
+        )
+        self.assertEqual(
+            lineage["replacement_evidence"]["accepted_manifest_hash"],
+            CORRECTED_MANIFEST_HASH,
+        )
+        self.assertFalse(lineage["schema_migration"])
+        self.assertEqual(lineage["schema_version"], "1.0")
+
+        serialized_package = json.dumps(package, sort_keys=True)
+        self.assertNotIn(OLD_HANDOFF_ID, serialized_package)
+        self.assertNotIn(OLD_RUN_ID, serialized_package)
+        self.assertNotIn(OLD_MANIFEST_HASH, serialized_package)
+
+        for row in package["index_rows"]:
+            self.assertEqual(row["schema_version"], "1.0")
+            self.assertEqual(row["run_id"], CORRECTED_RUN_ID)
+            self.assertEqual(
+                row["accepted_manifest_hash"],
+                CORRECTED_MANIFEST_HASH,
+            )
+
+    def test_stale_manifest_identity_is_rejected_not_repaired(
+        self,
+    ):
+        package = load_fixture(
+            "accepted_activation_handoff.json"
+        )
+        package["accepted_manifest_hash"] = OLD_MANIFEST_HASH
+        original = deepcopy(package)
+
+        result = validate_activation_handoff(package)
+
+        self.assertFalse(result.accepted)
+        self.assertIn(
+            ActivationRejectionCode.METADATA_MISMATCH,
+            rejection_codes(result),
+        )
+        self.assertEqual(package, original)
+
+    def test_corrected_handoff_validation_is_row_order_independent(
+        self,
+    ):
+        package = load_fixture(
+            "accepted_activation_handoff.json"
+        )
+        package["index_rows"] = list(reversed(package["index_rows"]))
+        original = deepcopy(package)
+
+        result = validate_activation_handoff(package)
+
+        self.assertTrue(result.accepted)
+        self.assertEqual(result.rejections, ())
+        self.assertEqual(package, original)
 
     def test_target_label_selection_is_forbidden(
         self,

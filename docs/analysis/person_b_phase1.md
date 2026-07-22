@@ -63,8 +63,9 @@ The primary oracle uses only:
 `closed_form.py` independently evaluates `mu=x_last+v*tau` and
 `P=P_last+q*tau`. Target construction stops if they differ by more than
 `1e-6`. It also rejects unknown visibility states, non-increasing hidden
-`tau`, changes to `v` or `q` within an occluded run, mixed manifests, mixed
-model/preprocess identities, and malformed document envelopes.
+`tau`, nonconsecutive server ticks/model frames, mixed episode IDs, changes to
+`v` or `q` within an occluded run, mixed manifests, mixed model/preprocess
+identities, and malformed document envelopes.
 
 ## Input boundary
 
@@ -80,7 +81,8 @@ an origin and positive world-space unit vector signed by Persons B and C.
 
 The checked B oracle fixture uses physically coherent consecutive 20 Hz ticks.
 The A-to-B compatibility test separately derives non-scientific target inputs
-from Person A's frozen activation fixture, without editing that fixture.
+from Person A's activation fixture. Its synthetic `tau` values follow the same
+consecutive 20 Hz frame/tick invariant as claim-bearing inputs.
 
 ## Grouping and resampling plan
 
@@ -96,7 +98,8 @@ from Person A's frozen activation fixture, without editing that fixture.
 Exact seeds, counts, alpha grid, MLP shape, coverage levels, exclusions, and
 U1-U4 output names are frozen in `configs/analysis/core.yaml`.
 
-The v0.2 config also freezes filter order, inner grouped validation, MLP
+The v0.2 config also freezes accepted-manifest membership before visible-anchor
+eligibility in the filter order, inner grouped validation, MLP
 optimizer settings, exact-duration bins, central inclusive Gaussian coverage,
 near-zero reporting, add-one permutation p-values, artifact hashing, and the
 3-fit/1-validation/2-test U4 development partition algorithm.
@@ -138,8 +141,10 @@ completed Person A run and a complete frame-by-layer/site grid.
 
 Phase 1 verification on July 21, 2026:
 
-- the full 182-test repository suite passes;
-- all original schema-v1 contract and integration tests remain unchanged;
+- the then-current full repository suite passed, and later compatibility
+  repairs are checked by rerunning the current full suite;
+- frozen schema-v1 behavior is covered alongside the versioned A-owned
+  fixture correction and B-owned compatibility tests;
 - the new B foundation tests cover config, filters, artifacts, intake,
   leakage-safe fits, metrics, resampling, and intervention production;
 - 250 seeded oracle parameter combinations agree within `1e-6`;
@@ -147,5 +152,92 @@ Phase 1 verification on July 21, 2026:
 - the SVG audit plot shows truth, last visible position, posterior mean, and
   the one/two-sigma bands across a reveal.
 
-No frozen Person A contract, field, unit, join key, validator, or fixture was
-modified. No schema migration was required for this B-owned downstream table.
+Person A subsequently corrected its non-scientific activation fixture from
+`tau = 0, 1, 2` to the frozen 20 Hz values `tau = 0, 0.05, 0.10`. Person A owns
+that compatibility correction and records its replacement handoff, run, and
+accepted-manifest identities in the schema decision log and generated lineage
+fixture. No Person A contract, field, unit, join key, or validator changed, and
+no schema migration was required for either the correction or this B-owned
+downstream table.
+
+## Synthetic A-to-B probe bridge
+
+Repair Chunk 2 connects the existing frozen interfaces through a CPU-only,
+non-scientific probe path. `mineocclude.probes.bridge` now:
+
+- validates Person A's activation handoff and Person B's target document with
+  their authoritative validators, then creates one canonical frame row per
+  `trajectory_id + model_frame_idx`;
+- builds the existing layout-grouped fold manifest at frame granularity and
+  propagates its `outer_fold_idx`, hash, version, and config hash to every
+  layer/site activation row for that frame;
+- resolves vectors exclusively by `activation_chunk_id + chunk_row_idx`, while
+  checking the literal chunk bytes against the declared SHA-256, dtype, shape,
+  row bounds, and exact claim coverage; and
+- builds one deterministic matrix per layer/site and sends the checked Person
+  A synthetic vectors, joined `mu_oracle_blocks` targets, and propagated folds
+  through the existing OOF ridge harness and sealed prediction/U1 result
+  artifacts.
+
+The five-layout test evidence is derived from the checked Person A synthetic
+activation chunk because the original three-frame fixture has only one layout
+and cannot exercise five grouped outer folds. The copied rows receive new
+explicitly synthetic test identities; the vector values remain the literal
+Person A fixture values. Chunk filenames and physical row order are never
+scientific identity. This path is marked `synthetic = true` and
+`scientific_use = forbidden` and cannot be used as runtime or scientific
+evidence.
+
+Chunk 2 does not connect MLP fitting end to end; the existing MLP harness
+remains separately tested. U2/U3 scientific analyses, real activation loading,
+the C-to-A adapter, runtime evidence, and final approvals remain pending in
+their assigned later work.
+
+## Authenticated synthetic probe provenance
+
+Repair Chunk 2B closes the remaining provenance gaps in the synthetic ridge
+bridge. Matrix construction now accepts the original A activation handoff,
+the original B target document, the sealed frame/fold evidence, and the
+literal activation-chunk bytes. It rebuilds the join, fold propagation, and
+vector loading internally. A canonical `matrix_hash` authenticates the exact
+X vectors, y values, folds, layer/site identity, frame identity, source hashes,
+and synthetic-use markers; caller-modified intermediate rows or vectors are
+rejected rather than trusted.
+
+Fold validation is bound to the literal `configs/analysis/core.yaml` hash and
+version and recomputes the deterministic seeded layout assignment. A different
+valid-looking grouping, seed, fold count, strategy, or config cannot be
+resealed and accepted. Synthetic frame tables, fold manifests, propagated
+rows, matrices, predictions, and results all retain `synthetic = true` and
+`scientific_use = forbidden`.
+
+Synthetic ridge predictions and U1 results are bound to the matrix hash, the
+literal core-config hash, and a SHA over the B-owned bridge/split/ridge source
+bytes. They record the frozen alpha grid, inner-fold count, outer-fold seed,
+selected alpha per outer fold, scaler metadata, and exact training/test
+memberships. This is interface evidence only. End-to-end MLP, bridged U2/U3,
+live/runtime evidence, and cross-role signoffs remain pending.
+
+## Step 1.7 authenticated A-to-B runner connection
+
+Repair Chunk 3 makes the authenticated ridge bridge a required part of the
+machine-readable Step 1.7 runner. The integration bundle now loads the literal
+Person A synthetic activation chunk as a named source and authenticates both
+the parsed handoff and chunk document against their exact fixture-byte hashes.
+It deterministically derives the five non-scientific layouts needed by the
+frozen grouped split, builds the B target document, frame table, sealed fold
+manifest, layer/site matrices, OOF ridge predictions, and U1 results through
+the production bridge APIs.
+
+The join report records source/correction lineage, frame and fold evidence,
+matrix hashes, complete OOF prediction/metric rows, sealed prediction and U1
+artifacts, and resealed per-fold summaries of selected alpha, exact membership
+hashes, fold identities, and scaler metadata. Compact saved artifacts carry
+new hashes over their exact stored contents and retain the uncompacted artifact
+hash only as explicitly named lineage; U1 artifacts reference the final saved
+prediction-artifact hash.
+`authenticated_a_b_probe_bridge` is a required integrity check: stale source
+bytes, invalid bridge metadata, or any fail-closed bridge rejection fails the
+overall Step 1.7 status. All derived evidence remains `synthetic = true` and
+`scientific_use = forbidden`; this connection does not create runtime or
+scientific evidence and does not add MLP or U2/U3 execution.

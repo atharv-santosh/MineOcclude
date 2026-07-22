@@ -8,7 +8,7 @@ Every B-owned analysis artifact carries:
 
 - `artifact_schema_version = "person-b-analysis-artifact-v0.1"`
 - `artifact_type` and `artifact_id`
-- full `code_sha`
+- 40-character hexadecimal `code_sha` derived from the producing code bytes
 - literal-file `config_hash`
 - `input_manifest_hash`
 - `artifact_hash`
@@ -17,6 +17,10 @@ The artifact hash is SHA-256 over canonical UTF-8 JSON containing every other
 field. Nonfinite floats are not serializable. Any alteration invalidates the
 artifact.
 
+Within B-owned bridge artifacts, `code_sha` is byte-level code provenance, not
+a claim that the value names a Git commit. The producing code defines the
+exact ordered source-byte set used to derive it.
+
 ## Ordered filters
 
 Filters run once in this order:
@@ -24,8 +28,8 @@ Filters run once in this order:
 1. required fields and unique frame identity;
 2. accepted lifecycle;
 3. finite numeric values;
-4. post-first-seen eligibility;
-5. accepted-manifest equality.
+4. accepted-manifest equality;
+5. post-first-seen eligibility.
 
 Each input receives at most one first-failure code. Every step records input,
 rejected, and output counts. Rows are never clipped, repaired, or silently

@@ -20,6 +20,7 @@ from mineocclude.analysis.filters import (
 )
 from mineocclude.analysis.manifests import (
     AnalysisArtifactError,
+    seal_artifact,
     validate_sealed_artifact,
 )
 from mineocclude.analysis.outputs import (
@@ -166,6 +167,46 @@ class TestOrderedFilters(unittest.TestCase):
         validate_sealed_artifact(audit, expected_type="filter_audit")
         self.assertEqual(audit["accepted_count"], 2)
 
+    def test_wrong_manifest_visible_row_cannot_anchor_occluded_row(self) -> None:
+        rows = [
+            {
+                "trajectory_id": "trajectory_1",
+                "model_frame_idx": model_frame_idx,
+                "layout_id": "layout_1",
+                "visibility": visibility,
+                "status": "accepted",
+                "accepted_manifest_hash": manifest_hash,
+                "tau": tau,
+                "v": 1.0,
+                "q": 0.1,
+                "duration": 1.0,
+            }
+            for model_frame_idx, visibility, manifest_hash, tau in (
+                (0, "visible", "d" * 64, 0.0),
+                (1, "occluded", MANIFEST_HASH, 0.05),
+            )
+        ]
+        original = copy.deepcopy(rows)
+
+        result = apply_ordered_filters(
+            rows,
+            accepted_manifest_hash=MANIFEST_HASH,
+        )
+
+        self.assertEqual(result.accepted_count, 0)
+        self.assertEqual(
+            [rejection.code for rejection in result.rejections],
+            [
+                FilterRejectionCode.ACCEPTED_MANIFEST_MISMATCH,
+                FilterRejectionCode.NO_VISIBLE_ANCHOR,
+            ],
+        )
+        self.assertEqual(
+            [step.step for step in result.steps][-2:],
+            ["accepted_manifest_match", "post_first_seen"],
+        )
+        self.assertEqual(rows, original)
+
 
 class TestFoldAndCorrectionArtifacts(unittest.TestCase):
     def setUp(self) -> None:
@@ -184,7 +225,7 @@ class TestFoldAndCorrectionArtifacts(unittest.TestCase):
             self.rows,
             artifact_id="fold_manifest_v1",
             code_sha=CODE_SHA,
-            config_hash=CONFIG_HASH,
+            config_hash=hash_core_analysis_config(DEFAULT_CONFIG_PATH),
             input_manifest_hash=MANIFEST_HASH,
         )
         validate_fold_manifest(manifest)
@@ -193,10 +234,45 @@ class TestFoldAndCorrectionArtifacts(unittest.TestCase):
         with self.assertRaises(GroupedSplitError):
             validate_fold_manifest(altered)
 
+        resealed_alternative = copy.deepcopy(manifest)
+        resealed_alternative.pop("artifact_hash")
+        for membership in resealed_alternative["memberships"]:
+            if membership["fold_idx"] in {0, 1}:
+                membership["fold_idx"] = 1 - membership["fold_idx"]
+        for assignment in resealed_alternative["layout_assignments"]:
+            if assignment["fold_idx"] in {0, 1}:
+                assignment["fold_idx"] = 1 - assignment["fold_idx"]
+        resealed_alternative = seal_artifact(resealed_alternative)
+        with self.assertRaises(GroupedSplitError):
+            validate_fold_manifest(resealed_alternative)
+
+        with self.assertRaises(GroupedSplitError):
+            build_fold_manifest(
+                self.rows,
+                artifact_id="fold_manifest_wrong_config",
+                code_sha=CODE_SHA,
+                config_hash=CONFIG_HASH,
+                input_manifest_hash=MANIFEST_HASH,
+            )
+
         annotated = annotate_grouped_folds(self.rows)
         inner = build_grouped_inner_folds(annotated, outer_fold_idx=0)
         self.assertNotIn(0, {row["fold_idx"] for row in inner})
         self.assertEqual({row["inner_fold_idx"] for row in inner}, {0, 1, 2, 3})
+
+    def test_invalid_code_provenance_wording_is_not_git_specific(self) -> None:
+        with self.assertRaises(AnalysisArtifactError) as raised:
+            seal_artifact(
+                {
+                    "artifact_type": "test_manifest",
+                    "artifact_id": "invalid_code_provenance",
+                    "code_sha": "not-a-digest",
+                    "config_hash": CONFIG_HASH,
+                    "input_manifest_hash": MANIFEST_HASH,
+                }
+            )
+        self.assertIn("code-provenance digest", str(raised.exception))
+        self.assertNotIn("Git SHA", str(raised.exception))
 
     def test_u4_partition_is_fixed_from_layout_identity_only(self) -> None:
         partition = assign_u4_development_partition(list("abcdef"))

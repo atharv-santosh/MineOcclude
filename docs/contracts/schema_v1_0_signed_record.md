@@ -145,8 +145,11 @@ Non-persistence and generation failure never imply zero displacement.
 - Person E synthetic measurements resolve exactly once to rollouts. Measurable
   continuation may have numeric displacement; non-persistence and generation
   failure require null displacement.
-- The Step 1.7 acceptance gate is 4 real contracts, 13 explicit joins, 9
-  integrity checks, and zero explicitly enumerated orphan claim-bearing rows.
+- The original Step 1.7 freeze gate recorded 4 real contracts, 13 explicit
+  joins, 9 integrity checks, and zero explicitly enumerated orphan
+  claim-bearing rows. Repair Chunk 3 adds one B-owned authenticated A-to-B
+  probe-bridge integrity check, so the current checked report requires 10/10
+  integrity checks without changing schema v1.0 fields or meanings.
 
 ## Rejection policy
 

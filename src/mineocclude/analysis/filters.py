@@ -232,6 +232,25 @@ def apply_ordered_filters(
 
     current = run_step("finite_numeric_values", current, finite_rejection)
 
+    def manifest_rejection(_index: int, row: Mapping[str, Any]) -> Any:
+        value = row["accepted_manifest_hash"]
+        if not is_sha256(value):
+            return (
+                FilterRejectionCode.INVALID_MANIFEST_HASH,
+                "accepted_manifest_hash is not SHA-256.",
+            )
+        if value != accepted_manifest_hash:
+            return (
+                FilterRejectionCode.ACCEPTED_MANIFEST_MISMATCH,
+                "Row belongs to a different accepted manifest.",
+            )
+        return None
+
+    current = run_step("accepted_manifest_match", current, manifest_rejection)
+
+    # Visible-history eligibility is derived only from rows that belong to the
+    # accepted source manifest. Otherwise a visible row from a rejected source
+    # can incorrectly make an accepted occluded row look post-first-seen.
     first_visible: dict[str, int] = {}
     by_trajectory: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for _index, row in current:
@@ -268,22 +287,6 @@ def apply_ordered_filters(
         return None
 
     current = run_step("post_first_seen", current, seen_rejection)
-
-    def manifest_rejection(_index: int, row: Mapping[str, Any]) -> Any:
-        value = row["accepted_manifest_hash"]
-        if not is_sha256(value):
-            return (
-                FilterRejectionCode.INVALID_MANIFEST_HASH,
-                "accepted_manifest_hash is not SHA-256.",
-            )
-        if value != accepted_manifest_hash:
-            return (
-                FilterRejectionCode.ACCEPTED_MANIFEST_MISMATCH,
-                "Row belongs to a different accepted manifest.",
-            )
-        return None
-
-    current = run_step("accepted_manifest_match", current, manifest_rejection)
     return FilterResult(
         accepted_rows=tuple(row for _index, row in current),
         rejections=tuple(rejections),
