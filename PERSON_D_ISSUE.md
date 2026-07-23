@@ -86,6 +86,16 @@ the current A/B/C authorities and does not vendor copies of them.
       timestep; completeness (no omitted/duplicated control), norm-matching,
       and orthogonality-to-the-real-direction checks. D verifies this matrix;
       it does not fit the real direction (B) or inject it (A).
+- [x] Consolidated missingness/exclusion audit
+      (`mineocclude.baselines.missingness`): tabulates accepted/missing counts
+      by baseline, target, layout, regime, and duration bin, and flags any
+      non-applicable row lacking an explicit reason code as a silent
+      exclusion. Also fixed: `shuffled.py` now aligns donor/recipient frames
+      by explicit `model_frame_idx` (not list position, which could
+      misalign when donor/recipient have different excluded-frame
+      patterns) and always records a reason for non-applicable rows;
+      `visible_history_q.py` now raises rather than silently resolving a
+      trajectory with conflicting fold assignments.
 - [ ] Run all of the above against real accepted rows/folds/targets once
       C/B/A hand off real data -- everything above is currently exercised
       only against synthetic fixtures (`tests/baselines/`).

@@ -21,7 +21,7 @@ real-data baselines, final comparisons, or later-phase methods.
 | Branch/base and ownership inventory | READY | This record; `docs/baselines/person_d_phase1.md`; approved integration checkpoint `80d41c5ca0e341263a7b0c683fae4b51be376c55`. |
 | D-to-B baseline document compatibility | READY | `src/mineocclude/baselines/export.py`; `tests/baselines/test_export.py`; current B validator at `src/mineocclude/contracts/analysis_inputs.py`. |
 | Authoritative-fold consumption | READY for synthetic Phase 1 evidence | D validates and consumes B's sealed manifest without assigning folds. Evidence: `tests/fixtures/person_d/synthetic_b_fold_manifest.json` and `tests/baselines/test_export.py`. A real accepted-run fold manifest has not been produced. |
-| D synthetic baseline/control checks | READY | `src/mineocclude/baselines/`; `tests/baselines/`; 67 tests passed on 2026-07-22. This is synthetic evidence only. |
+| D synthetic baseline/control checks | READY | `src/mineocclude/baselines/`; `tests/baselines/`; 74 tests passed on 2026-07-22 (includes explicit donor-frame-identity alignment, conflicting-fold rejection, and a consolidated missingness/exclusion audit added the same day -- see the decision log). This is synthetic evidence only. |
 | A/B compatibility handshake | COMPLETE FOR PHASE 0/1 CHECKPOINT | `docs/baselines/person_d_schema_v1_review.md` records the technical review; `docs/contracts/schema_v1_0_signed_record.md` records the A/B human approval at the exact checkpoint. |
 | Real-data baselines and scientific comparisons | BLOCKED / NOT STARTED | No real accepted rows, real fold manifest, real target table, or final experimental result is claimed here. |
 

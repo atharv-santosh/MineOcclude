@@ -34,6 +34,11 @@ from mineocclude.baselines.leakage import (
     audit_layout_fold_isolation,
     check_metadata_predictability,
 )
+from mineocclude.baselines.missingness import (
+    MissingnessCell,
+    MissingnessExclusionReport,
+    build_missingness_exclusion_report,
+)
 from mineocclude.baselines.random_weight import fit_predict_random_weight
 from mineocclude.baselines.raw_pixel import fit_predict_raw_pixel
 from mineocclude.baselines.spec import (
@@ -58,7 +63,10 @@ from mineocclude.baselines.u4_control_matrix import (
     audit_random_direction_norm_matched,
     build_control_matrix,
 )
-from mineocclude.baselines.visible_history_q import fit_predict_visible_history_q
+from mineocclude.baselines.visible_history_q import (
+    VisibleHistoryQError,
+    fit_predict_visible_history_q,
+)
 
 __all__ = [
     "BaselineRow",
@@ -72,6 +80,7 @@ __all__ = [
     "fit_predict_explicit_feature",
     "fit_predict_raw_pixel",
     "fit_predict_visible_history_q",
+    "VisibleHistoryQError",
     "predict_known_q_analytic",
     "attach_b_fold_assignments",
     "build_baseline_document",
@@ -106,4 +115,7 @@ __all__ = [
     "audit_control_matrix_completeness",
     "audit_random_direction_norm_matched",
     "audit_orthogonal_to_real_direction",
+    "MissingnessCell",
+    "MissingnessExclusionReport",
+    "build_missingness_exclusion_report",
 ]

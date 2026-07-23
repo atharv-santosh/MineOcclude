@@ -5,7 +5,12 @@ from __future__ import annotations
 import math
 from dataclasses import replace
 
-from mineocclude.baselines.visible_history_q import fit_predict_visible_history_q
+import pytest
+
+from mineocclude.baselines.visible_history_q import (
+    VisibleHistoryQError,
+    fit_predict_visible_history_q,
+)
 from tests.baselines.conftest import build_trajectory_contexts
 
 
@@ -95,3 +100,18 @@ def test_fit_predict_visible_history_q_handles_missing_fold_residuals():
     ]
     assert hidden_log_sigma
     assert all(not row.applicable and row.prediction is None for row in hidden_log_sigma)
+
+
+def test_fit_predict_visible_history_q_rejects_conflicting_fold_assignments():
+    # One trajectory can never legitimately span two folds under B's
+    # layout-grouped splits; a caller bug that produces this must be
+    # surfaced loudly, not silently resolved to whichever fold value
+    # happened to appear first (PDF Step 3.4 remaining gap).
+    contexts, visible_positions_by_trajectory = _build_two_fold_fixture()
+    conflicting = list(contexts)
+    conflicting[-1] = replace(conflicting[-1], fold=99)
+
+    with pytest.raises(VisibleHistoryQError, match="conflicting fold"):
+        fit_predict_visible_history_q(
+            conflicting, visible_positions_by_trajectory, dt_seconds=1.0
+        )

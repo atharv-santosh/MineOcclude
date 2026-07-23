@@ -240,3 +240,96 @@ interface meanings and compatibility at
 checkpoint. It does not approve real-data baseline execution, final scientific
 comparisons, or later-phase methods. The earlier pending statements above are
 retained as historical status at the time they were written.
+
+## 2026-07-22 -- Reconciled local branch after an out-of-session history rewrite
+
+**Context found:** between the 2026-07-21 session and this one, `origin/
+role/person-d-baselines` was force-updated to match `integration/mvp`
+(current tip `a699797`, "Record Phase 0-1 cross-role signoffs"), replacing
+the vendored-file commit pushed at the end of the prior session. That prior
+commit is preserved, not lost, at `origin/backup/person-d-before-final-sync`.
+A parallel `origin/repair/person-d-phase1` branch shows the new Phase 0/1
+foundation (`BaselineSpec`, legal-input firewall, common harness) was built
+independently of the prior session's work.
+
+**Decision:** adopt the current official state as-is. Local
+`role/person-d-baselines` was reset (`git reset --hard
+origin/role/person-d-baselines`) to match; the prior session's vendored-file
+commit is not merged forward or reconciled against this one. Confirmed with
+the user before resetting, since this discards a locally-committed history
+in favor of the remote's, though nothing of the prior work is actually lost
+(it remains reachable via the backup branch if ever needed).
+
+**Why:** the new foundation is the one the rest of the team (and whatever
+integration/repair process ran) is building on top of; maintaining two
+divergent Person D implementations would only create confusion at the next
+real integration point.
+
+## 2026-07-22 -- Isolated all current test failures to a Python-version mismatch
+
+**Finding:** a full-suite run on the current official state showed 23
+failing tests. Traced every one to two root causes, both 3.10-only syntax
+running under this machine's Python 3.9: `zip(..., strict=True)` in
+`mineocclude.analysis.synthetic_chain` (Person B) and
+`mineocclude.vision.homography`/`ssim` (Person E), and `Path.write_text(...,
+newline=...)` in a Person B plotting script. None of the 23 failures are in
+Person D's own code; the one D-relevant integration test
+(`test_current_d_and_e_boundaries_use_real_validators`) fails only because it
+depends on B's `run_synthetic_analysis_chain`, which hits the same `zip`
+issue upstream of D's own boundary check.
+
+**Attempted fix:** installed `python@3.10` via Homebrew, but the resulting
+interpreter's `pyexpat` module fails to load (`_XML_SetAllocTrackerActivationThreshold`
+symbol missing from the system `libexpat`), traced to this machine's Command
+Line Tools being older than its macOS version. Fixing that needs `sudo` and
+an Apple Command Line Tools update -- deferred rather than done silently as
+a side effect of chasing test failures; the user can update Command Line
+Tools independently via System Settings whenever convenient.
+
+**Effect:** none of Person D's own code needed a Python-version fix. The
+three real gaps fixed below were found by reading the code directly, not
+from the pytest failures.
+
+## 2026-07-22 -- Fixed the three PDF-flagged Phase 2-4 gaps
+
+**Step 2.1 (grouped shuffled-label floor):** `shuffled.py` aligned a
+recipient frame to its donor by *position within a locally sorted list*,
+not by explicit `model_frame_idx`. If donor and recipient trajectories ever
+have different excluded/missing-frame patterns, positional alignment
+silently pairs the wrong frames. Fixed: `TrajectoryTargets` is now keyed by
+explicit `model_frame_idx` (`Mapping[str, Mapping[int, Optional[float]]]`,
+was `Mapping[str, Sequence[Optional[float]]]`) and a donor missing that
+exact frame index now correctly falls out as not applicable, with a reason
+code (previously missing entirely). This is a breaking change to
+`apply_grouped_shuffle`'s second argument shape; nothing else in the repo
+called it yet, so no other caller needed updating.
+
+**Step 3.4 (visible-history-q spread baseline):** `visible_history_q.py`
+silently took whichever `fold` value it saw first per trajectory
+(`dict.setdefault`), masking any upstream bug that assigned one trajectory
+to two folds. Fixed: added `VisibleHistoryQError`, raised the moment a
+trajectory's contexts disagree on `fold`, rather than silently resolving to
+the first-seen value.
+
+**Step 4.5 (missingness/exclusion audit):** no consolidated tabulation
+existed across baselines/conditions; only scattered per-row reason strings.
+Added `mineocclude.baselines.missingness.build_missingness_exclusion_report`,
+which tabulates accepted/missing counts by (baseline, target, layout,
+regime, duration bin) and flags any non-applicable row whose
+`fit_metadata` carries no `reason` key as a silent exclusion. Running it
+against every real D baseline over a synthetic multi-layout fixture found
+one such silent exclusion -- `shuffled.py`'s non-applicable rows never
+carried a reason -- fixed in the same pass as the Step 2.1 change above.
+
+**Evidence:** `tests/baselines/test_shuffled.py`,
+`tests/baselines/test_visible_history_q.py`
+(`test_fit_predict_visible_history_q_rejects_conflicting_fold_assignments`),
+`tests/baselines/test_missingness.py`. Full baseline suite passing after
+these changes; no regressions in the wider repo suite (same 23
+pre-existing, unrelated failures before and after).
+
+**Scope note:** Phase 5 (Steps 5.1-5.4, the real end-to-end pilot) remains
+blocked on external data -- an accepted real trajectory, Person B's real
+folds/targets, and Person A's real frames/activations do not exist yet. No
+amount of D-side code changes substitutes for that; the three fixes above
+are the finishable, non-blocked portion of the outstanding gaps.

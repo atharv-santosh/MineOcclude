@@ -7,12 +7,22 @@ preserving temporal structure."
 We shuffle at the *trajectory* level: every trajectory is assigned a
 different "donor" trajectory (a seeded derangement, so no trajectory
 is ever paired with itself), and each frame's shuffled target is taken
-from the donor trajectory's target sequence at the same
-within-trajectory position. This breaks the true feature/target link
-while preserving each trajectory's internal temporal ordering, per the
+from the donor trajectory's target value at the *same explicit
+model_frame_idx*. This breaks the true feature/target link while
+preserving each trajectory's internal temporal ordering, per the
 roadmap's explicit requirement -- a plain global row shuffle would
 scramble temporal structure and make the floor too weak (an
 unrealistically low bar).
+
+Donor alignment is keyed by ``model_frame_idx`` explicitly, not by a
+row's position within a locally sorted list. Positional alignment
+would silently misalign frames whenever the recipient and donor
+trajectories have different excluded/missing-frame patterns (e.g. the
+donor is missing frame 2 but the recipient is not) -- the donor's Nth
+*remaining* frame is not necessarily model_frame_idx N. Keying by the
+explicit frame identity instead means a donor simply has no value for
+a frame index it lacks, which correctly falls out as not applicable
+rather than a silent off-by-one alignment.
 """
 
 from __future__ import annotations
@@ -31,10 +41,11 @@ from mineocclude.baselines.interface import (
 
 BASELINE_NAME = "grouped_shuffled"
 
-#: Per-trajectory target sequences, in ascending model_frame_idx order,
-#: keyed by target name. ``None`` entries mean "not applicable at this
-#: position" and must not be treated as zero.
-TrajectoryTargets = Mapping[str, Sequence[Optional[float]]]
+#: Per-trajectory target values, keyed explicitly by model_frame_idx
+#: (never by sequential list position), keyed in turn by target name.
+#: A missing model_frame_idx key or a ``None`` value both mean "not
+#: applicable at this frame" and must not be treated as zero.
+TrajectoryTargets = Mapping[str, Mapping[int, Optional[float]]]
 
 
 def make_shuffle_permutation(trajectory_ids: Sequence[str], seed: int) -> dict[str, str]:
@@ -75,18 +86,18 @@ def apply_grouped_shuffle(
     """Produce grouped-shuffled predictions for every context.
 
     Each trajectory in ``contexts`` is assigned a distinct donor
-    trajectory via :func:`make_shuffle_permutation`. Frame ``i`` (0-
-    indexed by ascending ``model_frame_idx`` within its trajectory)
-    receives the donor's target value at the same index ``i``. If the
-    donor trajectory is shorter, the excess frames are marked not
-    applicable rather than padded with a value from the wrong context.
+    trajectory via :func:`make_shuffle_permutation`. Every recipient
+    frame receives the donor's target value at that *same explicit
+    model_frame_idx* -- never at the same position-in-list, since a
+    donor's Nth remaining frame is not necessarily model_frame_idx N
+    once either trajectory has excluded/missing frames. If the donor
+    has no value recorded for that exact frame index, the row is
+    marked not applicable rather than borrowing a neighboring frame.
     """
 
     grouped: dict[str, list[TrajectoryContext]] = defaultdict(list)
     for ctx in contexts:
         grouped[ctx.trajectory_id].append(ctx)
-    for ctx_list in grouped.values():
-        ctx_list.sort(key=lambda c: c.model_frame_idx)
 
     permutation = make_shuffle_permutation(list(grouped.keys()), seed)
 
@@ -94,23 +105,35 @@ def apply_grouped_shuffle(
     for trajectory_id, ctx_list in grouped.items():
         donor_id = permutation[trajectory_id]
         donor_targets = trajectory_targets.get(donor_id, {})
-        for position, ctx in enumerate(ctx_list):
+        for ctx in ctx_list:
             for target_name in TARGET_NAMES:
-                sequence = donor_targets.get(target_name, ())
-                applicable = position < len(sequence) and sequence[position] is not None
-                prediction = sequence[position] if applicable else None
+                donor_sequence = donor_targets.get(target_name, {})
+                value = donor_sequence.get(ctx.model_frame_idx)
+                applicable = value is not None
                 rows.append(
                     make_baseline_row(
                         ctx,
                         baseline_name=BASELINE_NAME,
                         target_name=target_name,
-                        prediction=prediction,
+                        prediction=value if applicable else None,
                         applicable=applicable,
-                        fit_metadata={
-                            "donor_trajectory_id": donor_id,
-                            "donor_position": position,
-                            "seed": seed,
-                        },
+                        fit_metadata=(
+                            {
+                                "donor_trajectory_id": donor_id,
+                                "donor_model_frame_idx": ctx.model_frame_idx,
+                                "seed": seed,
+                            }
+                            if applicable
+                            else {
+                                "donor_trajectory_id": donor_id,
+                                "donor_model_frame_idx": ctx.model_frame_idx,
+                                "seed": seed,
+                                "reason": (
+                                    "donor trajectory has no target value at this "
+                                    "explicit model_frame_idx"
+                                ),
+                            }
+                        ),
                     )
                 )
     return rows
