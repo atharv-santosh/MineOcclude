@@ -1,195 +1,225 @@
-# Person A Phase 2.1 — official environment evidence
+# Person A Phase 2.1 - Official Environment Evidence
 
-Status: PARTIAL PASS (local CPU environment verified; GPU runtime still pending)
+**Status: PASS - Phase 2.1 complete**
 
-Date: 2026-07-23
+**Qualification date:** 2026-07-24
 
 ## Objective
 
-Reproduce the pinned official MineWorld software environment before introducing project-only changes.
+Reproduce and verify the pinned MineWorld software environment before introducing project-specific model changes.
 
-## Environment
+Qualification used two environments:
 
-- Conda environment name: `mineworld`
-- Python version: `3.10.20`
-- Environment python path: `C:\Users\lollo\miniconda3\envs\mineworld\python.exe`
+1. A local Windows CPU environment for dependency reproduction, source inspection, and non-GPU development.
+2. An AWS SageMaker NVIDIA GPU environment for final CUDA runtime qualification.
 
-## Upstream requirements source
+## Upstream basis
 
-- Upstream checkout: `C:\Users\lollo\MineWorld-Upstream`
-- Requirements file: `requirements.txt`
-- Pinned upstream revision already recorded separately: `9f49efbcc68a5f0cf60e78f0abc566eac409282f`
+- Official upstream repository: `https://github.com/microsoft/mineworld.git`
+- Pinned upstream revision: `9f49efbcc68a5f0cf60e78f0abc566eac409282f`
+- Dependency source: pinned upstream `requirements.txt`
+- Project branch qualified: `role/person-a-model`
+- MineOcclude commit before this update:
+  `9eb37bc97063e293e0321debca460ddc0b14706a`
 
-## Installed pinned packages verified
+## Required software versions
 
-- torch: `2.6.0+cpu`
-- torchvision: `0.21.0+cpu`
+The validator checks:
+
+- Python: `3.10`
+- torch: base version `2.6.0`
+- torchvision: base version `0.21.0`
+- omegaconf: `2.3.0`
 - transformers: `4.48.1`
+- opencv-python: `4.11.0.86`
+- attrs: `25.3.0`
 - diffusers: `0.32.2`
 - gradio: `5.24.0`
-- omegaconf: import passed
-- opencv-python / cv2: import passed
-- einops: import passed
-- scipy: import passed
-- scikit-learn: import passed
-
-## Integrity checks
-
-- `python -m pip check` result: `No broken requirements found.`
-- Import verification: PASSED
-
-## CUDA / compute status
-
-- `torch.cuda.is_available()`: `False`
-- This laptop does not provide the intended CUDA runtime.
-- Therefore this step is only a local software-environment verification, not the final GPU runtime qualification.
-
-## Interpretation
-
-Local MineWorld dependency reproduction is successful and usable for:
-- source reading,
-- interface tracing,
-- configuration inspection,
-- non-GPU checks.
-
-Local machine is not sufficient for:
-- final official GPU smoke test,
-- teacher-forced GPU runtime verification,
-- memory/capacity measurement for the target 700M runtime.
-
-## Remaining blocker to fully close A2.1
-
-A CUDA-capable runtime must still be recorded on AWS or another approved NVIDIA machine, including:
-- CUDA availability,
-- GPU model,
-- driver/runtime details,
-- successful imports in that environment.
-
-## Pass classification
-
-- Local software environment reproduction: PASS
-- Final target-runtime qualification: PENDING
-
----
-
-## Local environment qualification update
-
-The local non-GPU portion of Phase 2.1 has now been completed and machine-checked.
-
-### Official local environment
-
-- Conda environment: `mineworld`
-- Python: `3.10.20`
-- Python executable: `C:\Users\lollo\miniconda3\envs\mineworld\python.exe`
-- Platform: Windows AMD64
-- Python compiler: `MSC v.1942 64 bit (AMD64)`
-
-### MineWorld dependency verification
-
-The pinned MineWorld dependency set imports successfully and `pip check` reports:
-
-`No broken requirements found.`
-
-Verified key versions include:
-
-- torch: `2.6.0+cpu`
-- torchvision: `0.21.0+cpu`
-- transformers: `4.48.1`
-- diffusers: `0.32.2`
-- gradio: `5.24.0`
-
-### ModelScope client
-
-The official `mineworld` environment now contains:
-
+- einops: `0.8.1`
+- scipy: `1.15.2`
+- torch-fidelity: `0.3.0`
+- gym3: `0.3.3`
+- gym: `0.26.2`
+- scikit-learn: `1.6.1`
 - modelscope: `1.38.1`
 - modelscope-hub: `0.1.8`
 
-The package state was captured before and after installation.
+CUDA build suffixes such as `+cu126` are accepted only for `torch` and
+`torchvision` when their pinned base versions match.
 
-The only observed additions were:
+A run using `--require-cuda` still fails unless CUDA is actually available.
 
-- `modelscope==1.38.1`
-- `modelscope-hub==0.1.8`
+## Local CPU qualification
 
-The pinned MineWorld model stack did not change.
+### Runtime
 
-The ModelScope download client import succeeded:
+- Operating system: Windows AMD64
+- Conda environment: `mineworld`
+- Python: `3.10.20`
+- Python executable:
+  `C:\Users\lollo\miniconda3\envs\mineworld\python.exe`
+- Python compiler: `MSC v.1942 64 bit (AMD64)`
 
-`from modelscope.hub.snapshot_download import snapshot_download`
+### PyTorch stack
 
-### Saved environment evidence
+- torch: `2.6.0+cpu`
+- torchvision: `0.21.0+cpu`
+- CUDA available: `False`
 
-Environment export:
+### Result
 
-`configs/environments/mineworld_local_cpu.yml`
+The pinned dependencies imported successfully.
 
-Pre-ModelScope package snapshot:
+`python -m pip check` returned:
 
-`docs/status/person_a_phase2_packages_before_modelscope.txt`
+    No broken requirements found.
 
-Post-ModelScope package snapshot:
+The local validator returned:
 
-`docs/status/person_a_phase2_packages_after_modelscope.txt`
+    PASS: Software environment validated. CUDA was not required for this run.
 
-Environment validation script:
+The local machine is qualified for:
 
-`scripts/check_env.py`
+- source and configuration inspection;
+- interface tracing;
+- contract and non-GPU tests;
+- development that does not require MineWorld inference.
 
-Raw local validation report:
+It is not the final target runtime because it has no NVIDIA CUDA device.
 
-`docs/status/person_a_phase2_check_env_local.txt`
+### Local evidence
 
-### Local check-env result
+- Environment export:
+  `configs/environments/mineworld_local_cpu.yml`
+- Pre-ModelScope package snapshot:
+  `docs/status/person_a_phase2_packages_before_modelscope.txt`
+- Post-ModelScope package snapshot:
+  `docs/status/person_a_phase2_packages_after_modelscope.txt`
+- Raw validation report:
+  `docs/status/person_a_phase2_check_env_local.txt`
 
-The local environment checker completed with:
+## AWS GPU qualification
 
-`PASS: Software environment validated. CUDA was not required for this run.`
+### AWS runtime
 
-The checker recorded:
+- Service: AWS SageMaker AI JupyterLab
+- Instance class: `ml.g6.xlarge`
+- Conda environment: `mineworld`
+- Python executable:
+  `/home/sagemaker-user/.conda/envs/mineworld/bin/python`
+- Python version: `3.10.20`
+- Platform: Linux x86_64
+- Runtime libc: glibc `2.39`
 
-- operating system
-- architecture
-- processor information
-- Python executable and version
-- Python compiler/runtime information
-- Conda environment
-- expected and observed package versions
-- dependency imports
-- `pip check`
-- PyTorch build
-- CUDA availability
-- CUDA device count
-- cuDNN availability
-- NVIDIA driver availability
-- CUDA toolkit availability
-- compiler command availability
+### Linux system libraries
 
-### GPU qualification status
+The SageMaker image required these operating-system libraries for the official
+`opencv-python` package:
 
-The current laptop does not provide the intended NVIDIA CUDA runtime.
+- `libgl1`
+- `libglib2.0-0t64`
 
-This is expected and is not treated as a local environment failure.
+The official `opencv-python==4.11.0.86` dependency was preserved. It was not
+replaced with `opencv-python-headless`.
 
-Final Phase 2.1 acceptance remains pending until the same environment-validation procedure is run on the official AWS GPU machine with:
+### CUDA PyTorch stack
 
-`python scripts/check_env.py --require-cuda`
+- torch: `2.6.0+cu126`
+- torchvision: `0.21.0+cu126`
+- PyTorch compiled CUDA runtime: `12.6`
+- CUDA available: `True`
+- CUDA device count: `1`
+- cuDNN version: `90501`
 
-That AWS run must record and verify:
+### GPU and driver
 
-- CUDA-enabled PyTorch
-- CUDA runtime version
-- NVIDIA GPU identity
-- GPU memory
-- NVIDIA driver version
-- CUDA device count
-- CUDA availability
-- relevant AWS OS/runtime details
+- GPU: NVIDIA L4
+- GPU memory reported by PyTorch: `23661248512` bytes
+- GPU memory reported by `nvidia-smi`: `23034 MiB`
+- Compute capability: `8.9`
+- NVIDIA driver: `595.71.05`
 
-### Current Phase 2.1 classification
+A real CUDA matrix multiplication completed successfully on `cuda:0`.
 
-**LOCAL NON-GPU REQUIREMENTS: PASS**
+### Dependency integrity
 
-**FINAL AWS GPU QUALIFICATION: PENDING**
+Every required package:
 
-Phase 2.1 is therefore not yet globally complete, but no remaining local blocker prevents proceeding with AWS setup.
+- matched its exact pinned version or approved CUDA build version;
+- imported successfully;
+- remained inside the isolated `mineworld` environment.
+
+ModelScope was installed without dependency resolution:
+
+    modelscope==1.38.1
+    modelscope-hub==0.1.8
+
+The before-and-after package comparison showed only those two additions. The
+CUDA PyTorch and torchvision installations did not change.
+
+`python -m pip check` returned:
+
+    No broken requirements found.
+
+### Repository validator result
+
+The final command was:
+
+    python scripts/check_env.py --require-cuda
+
+The result was:
+
+    PASS: Official CUDA-capable environment validated.
+
+The exit status was:
+
+    0
+
+### CUDA toolkit note
+
+The final activated environment reported:
+
+    nvcc: NOT FOUND
+
+This is recorded as an environment fact and is not a Phase 2.1 blocker.
+
+MineWorld currently uses the CUDA runtime libraries supplied by the pinned
+PyTorch wheel. Phase 2.1 does not require compilation of a custom CUDA
+extension.
+
+CUDA availability, the NVIDIA driver, the L4 GPU, cuDNN, and real GPU tensor
+computation were all verified.
+
+Any future component that compiles custom CUDA code must reassess whether
+`nvcc` is required.
+
+### AWS evidence
+
+- Environment export:
+  `configs/environments/mineworld_aws_l4.yml`
+- Raw validation report:
+  `docs/status/person_a_phase2_check_env_aws_l4.txt`
+- Environment validation implementation:
+  `scripts/check_env.py`
+
+The Conda export includes pip-installed packages under its `pip:` section.
+Conda emitted an informational warning that it cannot independently guarantee
+reproducibility for pip packages. The exact observed pip versions, including
+CUDA component wheels, are still preserved in the export.
+
+## Final acceptance classification
+
+- Local dependency reproduction: **PASS**
+- Local non-GPU environment validation: **PASS**
+- AWS CUDA environment validation: **PASS**
+- NVIDIA L4 detection: **PASS**
+- Real CUDA computation: **PASS**
+- Package import checks: **PASS**
+- Dependency conflict check: **PASS**
+- ModelScope installation isolation: **PASS**
+
+# Phase 2.1 final result: PASS
+
+The official MineWorld software environment has been reproduced and qualified
+on the approved AWS NVIDIA runtime. Person A may proceed to the model and asset
+runtime steps that depend on this environment.

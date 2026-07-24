@@ -39,6 +39,24 @@ EXPECTED_PACKAGES = {
     "modelscope-hub": "0.1.8",
 }
 
+LOCAL_BUILD_SUFFIX_PACKAGES = frozenset({"torch", "torchvision"})
+
+
+def package_version_matches(
+    package_name: str,
+    actual_version: str,
+    expected_version: str,
+) -> bool:
+    """Compare pinned versions while permitting approved CUDA build suffixes."""
+    if actual_version == expected_version:
+        return True
+
+    return (
+        package_name in LOCAL_BUILD_SUFFIX_PACKAGES
+        and actual_version.partition("+")[0] == expected_version
+    )
+
+
 IMPORT_CHECKS = {
     "torch": "torch",
     "torchvision": "torchvision",
@@ -111,7 +129,7 @@ def main() -> int:
     for package_name, expected_version in EXPECTED_PACKAGES.items():
         try:
             actual_version = importlib.metadata.version(package_name)
-            matches = actual_version == expected_version
+            matches = package_version_matches(package_name, actual_version, expected_version)
             print(
                 f"{package_name}: installed={actual_version} "
                 f"expected={expected_version} match={matches}"
