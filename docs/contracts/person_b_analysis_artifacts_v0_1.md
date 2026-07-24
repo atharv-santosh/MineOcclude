@@ -64,6 +64,9 @@ sample unit, metric unit, and `valid`/`invalid` status. Invalid metrics use
 The compatible Phase 6 implementation adds sealed artifacts without changing
 the frozen targets, folds, metrics, or selection rules:
 
+- `capture_intake_report`, which authenticates literal C package bytes,
+  records signed coordinate projections and no-object quarantine, and remains
+  explicitly pending A provenance/activations;
 - `oracle_target_document` and `oracle_audit`;
 - `joined_frame_table`, `filter_audit`, and `pilot_intake_receipt`;
 - `analysis_selection_manifest` and `fold_manifest`;

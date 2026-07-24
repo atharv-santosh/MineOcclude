@@ -81,25 +81,35 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Phase 1 contracts and synthetic chain | COMPLETED TECHNICALLY | Deterministic synthetic validators, folds, OOF fits, U1/U2/U3, direction/request, result bundle pass |
 | Cross-role synthetic validation | CURRENT | Shared runner validates C/A/B/D/E boundaries |
 | B1.9 schema/config/interface signoff | COMPLETE for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Central signoff record; runtime and result approvals remain pending |
-| Real scientific execution | NEXT LATER PHASE | Accepted real upstream artifacts and runtime/access gates exist |
-| Phase 6.1-6.6 pilot tooling | IMPLEMENTED, NOT EXECUTED | `analysis/pilot.py`, `analysis/selection.py`, `analysis/handoffs.py`, and the pilot scripts fail closed until accepted real inputs exist |
+| Real scientific execution | PARTIALLY UNBLOCKED | C's real capture/coordinate side is authenticated; A activations and provenance still block A-bound targets, joins, controls, and probes |
+| Phase 6.1-6.6 pilot tooling | C-ONLY INTAKE EXECUTED | `data/person_b/phase6_c_intake/capture_intake_report.json` records 12 accepted C packages, 11 signed frames, and the remaining fail-closed dependencies |
 
 ## Current blockers
 
 - [ ] Receive a completed real activation handoff from Person A; the frozen
   contract and compatibility evidence are already merged.
-- [ ] Receive accepted real state/capture artifacts from Person C; the current
-  C schema and synthetic C-to-B adapter already exist.
+- [x] Receive and authenticate Person C's 12 real pilot capture packages.
+  B re-ran C's validator, verified every checksum, co-signed 11 unambiguous
+  coordinate frames, quarantined the no-sheep control from oracle targets, and
+  froze 1,656 source-selection rows. The sealed intake artifact is
+  `aabcf1fcbeb40bc1d284608e183752a846fa56aefdedbc154dbb7ce558ca57f7`.
+- [ ] Receive at least four additional no-wall visible-control layouts, or a
+  recorded scientific decision approving a different held-out pilot rule.
+  The current single no-wall layout is plumbing-only under five-fold grouped
+  OOF evaluation.
 - [ ] Receive real Person D baseline artifacts; D's current contract and
   synthetic handoff already validate against B.
-- [ ] Receive real Person E measurements; E's registry/evidence contract and
-  synthetic E-to-B handoff already validate against B.
+- [ ] Receive Person E's validation/append receipt for the real B pilot
+  artifacts. Real E measurements are later U4 work, not Step 6.6.
 
-Artifact-independent preparation for these blockers is complete: the real
-C-to-B state writer, signed-target intake, literal activation-chunk checks,
-ordered filter receipt, grouped folds, source-manifest row selection, real
-ridge/permutation path, explicit positive-control gate, D request packet, and
-E registration request are implemented. See
+The C-dependent preparation is now also complete: authoritative packages and
+sidecars are imported, coordinate projections are signed, the no-object
+control is rejected from oracle use, the condition source is frozen, and the
+real C-only recursive/closed-form audit passes with zero disagreement and no
+invariant failures. The real C-to-B state writer, literal activation-chunk
+checks, ordered filter receipt, grouped folds, real ridge/permutation path,
+explicit positive-control gate, D request packet, and E registration request
+remain ready for A-bound execution. See
 `docs/analysis/person_b_pilot_runbook.md`. None of these preparation artifacts
 is a substitute for an upstream producer artifact or handoff receipt.
 

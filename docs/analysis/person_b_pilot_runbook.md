@@ -1,33 +1,59 @@
 # Person B real-pilot runbook through Step 6.6
 
-Status: implementation-ready; execution remains blocked on accepted real
-Person C state/capture evidence and matching completed Person A activations.
+Status: Person C's real capture/coordinate intake is complete. A-bound state
+inputs, final oracle targets, joins, controls, and probes remain blocked on a
+completed matching Person A activation handoff and authoritative A
+model/preprocess hashes.
+
+## Completed C intake evidence
+
+- Source: `role/person-c-data@0e5f5adf94cd7039528c097f0260abddcaea8b68`.
+- Imported: ten target-present Regime A core packages across six layouts, one
+  corrected 200/200-visible no-wall control, and one no-sheep control.
+- Every literal capture SHA-256 matches C's checksum sidecar and all 12
+  packages pass C's frozen `0.1` validator.
+- B verified 11 unique signed projections: positive X for layouts
+  00/02/03/04 and positive Z for layouts 01/05. The no-sheep control has no
+  identifiable target axis and is explicitly `no_object_not_oracle_eligible`.
+- The C-only real oracle math audit covers 11 applicable packages, has zero
+  recursive/closed-form disagreement, no invariant failures, and 187 passing
+  fixed-time q comparisons. It does not create or promote an A-bound target
+  artifact.
+- Person B accepts C's `person-c-event-stability-v0.1` two-consecutive-frame
+  rule for future C-produced occlusion/reveal event IDs. This does not alter
+  the preserved raw visibility stream; Person E's acknowledgement remains a
+  Step 6.6 receipt.
+- Sealed intake:
+  `data/person_b/phase6_c_intake/capture_intake_report.json`, artifact hash
+  `aabcf1fcbeb40bc1d284608e183752a846fa56aefdedbc154dbb7ce558ca57f7`.
+- Frozen source selection:
+  `data/person_b/phase6_c_intake/condition_selection_source.json`, containing
+  1,456 hidden core rows and 200 visible no-wall rows.
 
 ## Immutable execution order
 
-1. Build B state input from C's accepted capture package and the signed B/C
-   coordinate frame with `scripts/build_person_b_state_input.py`.
-2. Build oracle targets with `scripts/build_oracle_targets.py`. Both writers
+1. Reproduce C intake with `scripts/intake_person_c_pilot.py`; do not use C's
+   draft state outputs or placeholder A hashes.
+2. After A supplies authoritative hashes, build B state input from each
+   accepted capture package and its matching signed coordinate frame with
+   `scripts/build_person_b_state_input.py`.
+3. Build oracle targets with `scripts/build_oracle_targets.py`. Both writers
    refuse to overwrite an existing artifact.
-3. Prepare an accepted
-   `person-b-condition-selection-source-v0.1` JSON with
-   `selection_policy = predeclared_before_probe_results`. Each accepted row
-   contains `trajectory_id`, `model_frame_idx`, `layout_id`,
-   `condition_role`, and an `analysis_scopes` list. Result, prediction, and
-   outcome fields are rejected.
-4. Run `visible_no_wall_control` with `scripts/run_person_b_pilot.py`.
-5. Review its sealed scope bundle. Record `pass` or `stop_for_diagnosis` with
+4. Use the frozen `person-b-condition-selection-source-v0.1` JSON produced by
+   Step 1. Result, prediction, and outcome fields are rejected.
+5. Run `visible_no_wall_control` with `scripts/run_person_b_pilot.py`.
+6. Review its sealed scope bundle. Record `pass` or `stop_for_diagnosis` with
    `scripts/record_person_b_control_gate.py`. The code does not invent an
    unfrozen numeric threshold or auto-approve this scientific gate.
-6. Only after a passing gate, run `hidden_mean` and `hidden_spread`.
-7. Give D the exact hidden-mean row/fold request produced by
+7. Only after a passing gate, run `hidden_mean` and `hidden_spread`.
+8. Give D the exact hidden-mean row/fold request produced by
    `scripts/build_person_b_d_request.py`.
-8. Package the resulting B artifacts into E-validatable registry records with
+9. Package the resulting B artifacts into E-validatable registry records with
    `scripts/build_person_b_e_registration.py`. Include the sealed oracle
    target, joined frame table, matrix, scaler, fit, prediction, metric, and
    failure/control artifacts. Supply E's existing upstream hash-to-artifact-ID
    mapping with `--external-artifact-map` when available.
-9. Build the A/D/E outgoing-packet report with
+10. Build the A/D/E outgoing-packet report with
    `scripts/build_person_b_phase6_handoff_report.py`. It deliberately leaves
    every acknowledgement receipt null until the corresponding role responds.
 
@@ -47,6 +73,10 @@ rows fail closed.
 
 - Fewer than five layouts yields an intake receipt labeled
   `plumbing_only_insufficient_layouts`; grouped OOF evidence is not emitted.
+- The hidden core source spans six layouts, but the received no-wall control
+  spans only `layout_02`. It remains plumbing-only for the visible-control
+  scope until four more control layouts arrive or an approved scientific
+  decision changes the held-out pilot rule.
 - Real grouped permutations always use the count and seed in
   `configs/analysis/core.yaml`. Reduced counts are accepted only for evidence
   already marked synthetic and forbidden for scientific use.
@@ -59,10 +89,14 @@ rows fail closed.
 
 ## Still requires upstream artifacts or action
 
-- C: accepted real capture/state package, accepted condition manifest, and
-  B/C-signed wall-parallel coordinate frame.
 - A: completed matching activation handoff and literal activation chunks.
+- A: authoritative `model_hash` and `preprocess_hash`; C's draft state outputs
+  explicitly used placeholders and are not accepted as B evidence.
+- C: four additional no-wall visible-control layouts, unless the relevant
+  scientific owners approve and record a different pilot-control rule.
 - D: actual time-only, last-seen, and shuffled OOF response artifacts.
 - E: registry validation/append and a returned receipt.
+- E: acknowledgement of C's two-frame event-stability rule before
+  event-derived evidence is promoted.
 - A/B/C/D/E owners: cross-role acknowledgement that the exact pilot identities,
   units, hashes, and run relationships were consumed.

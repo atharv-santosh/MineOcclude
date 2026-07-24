@@ -105,3 +105,36 @@ plumbing only. Frozen targets, legal information, row filters, folds, alpha
 selection, metric definitions, permutation rule/count, and scientific gates
 are unchanged. No real producer artifact or scientific result existed when
 this implementation was added.
+
+## 2026-07-24 real Person C pilot intake
+
+Classification: `COMPATIBLE_INPUT_AUTHENTICATION_NO_JOINED_RESULT`
+
+Person B imported the 12 capture packages explicitly selected from
+`role/person-c-data@0e5f5adf94cd7039528c097f0260abddcaea8b68`.
+Every package matches its literal checksum sidecar and passes Person C's
+frozen capture validator. B independently verified the declared scalar
+wall-parallel coordinate against one unique signed horizontal world axis for
+all 11 target-present packages and recorded joint C-declaration/B-verification
+evidence. The no-sheep control is retained but cannot manufacture an oracle
+target or coordinate direction.
+
+The C-only recursive/closed-form real-state audit passes with zero maximum
+disagreement, no invariant failures, and 187 successful fixed-time q
+comparisons. This audit deliberately emits no A-bound target rows. C's
+reference state documents name their A hashes as placeholders, so final state
+inputs and target artifacts remain blocked on authoritative Person A
+`model_hash`/`preprocess_hash` and matching activations.
+
+The ten core trajectories span six layouts, but the corrected no-wall
+positive control spans one layout. Under the frozen grouped-OOF gate it is
+plumbing-only. Person B does not silently reuse core-visible rows or switch to
+random row splits; additional no-wall layouts or a recorded scientific
+decision are required.
+
+Person B accepts C's `person-c-event-stability-v0.1` rule requiring two
+consecutive frames before a visibility-state transition is registered for
+C-produced event IDs. This is an interface-compatibility signoff, not a
+rewrite of raw visibility rows or B's frozen U3 metric. Person E's independent
+acknowledgement remains required before event-derived cross-role evidence is
+promoted at Step 6.6.
