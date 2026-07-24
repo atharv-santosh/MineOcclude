@@ -14,8 +14,9 @@ Every B-owned analysis artifact carries:
 - `artifact_hash`
 
 The artifact hash is SHA-256 over canonical UTF-8 JSON containing every other
-field. Nonfinite floats are not serializable. Any alteration invalidates the
-artifact.
+field. Finite floats are published at 12 decimal places so final-bit BLAS
+differences cannot change evidence identity; nonfinite floats are not
+serializable. Any alteration invalidates the artifact.
 
 Within B-owned bridge artifacts, `code_sha` is byte-level code provenance, not
 a claim that the value names a Git commit. The producing code defines the
@@ -57,6 +58,25 @@ training/test row indices. Prediction manifests require every row to be
 `out_of_fold` or `held_out`. Result manifests require explicit sample count,
 sample unit, metric unit, and `valid`/`invalid` status. Invalid metrics use
 `value = null` and retain a diagnostic; they are not deleted.
+
+## Real-pilot artifact chain
+
+The compatible Phase 6 implementation adds sealed artifacts without changing
+the frozen targets, folds, metrics, or selection rules:
+
+- `oracle_target_document` and `oracle_audit`;
+- `joined_frame_table`, `filter_audit`, and `pilot_intake_receipt`;
+- `analysis_selection_manifest` and `fold_manifest`;
+- `probe_matrix_manifest`, `scaler_manifest`, and `ridge_fit_manifest`;
+- `prediction_manifest`, `result_manifest`, `probe_scope_bundle`, and
+  `u2_calibration_bundle`;
+- `positive_control_gate` and `pilot_failure`;
+- `baseline_request_manifest` and `cross_role_schema_report`.
+
+The matrix, scaler, fit, prediction, and result chain contains direct artifact
+hashes suitable for E's immutable registry. Failure outcomes use null, never a
+scientific zero. D/E/A request packets remain requests until their separately
+owned acknowledgements exist.
 
 ## Correction policy
 

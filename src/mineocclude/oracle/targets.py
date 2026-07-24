@@ -18,6 +18,7 @@ from mineocclude.contracts.identity import (
     validate_identity,
 )
 from mineocclude.analysis.config import DEFAULT_CONFIG_PATH, hash_core_analysis_config
+from mineocclude.analysis.manifests import seal_artifact, sha256_value
 from mineocclude.analysis.coordinates import (
     CoordinateContractError,
     validate_coordinate_frame,
@@ -385,8 +386,30 @@ def build_regime_a_target_document(
             raise OracleValidationError(
                 "Every row in a synthetic fixture must set synthetic=true."
             )
+    normalized_state_document = dict(state_document)
+    normalized_state_document["rows"] = sorted(
+        (dict(row) for row in rows),
+        key=lambda row: (
+            row["trajectory_id"],
+            row["model_frame_idx"],
+        ),
+    )
+    document.update(
+        {
+            "artifact_type": "oracle_target_document",
+            "artifact_id": f"{oracle_run_id}:oracle_targets",
+            "code_sha": oracle_code_sha,
+            "config_hash": oracle_config_hash,
+            "input_manifest_hash": sha256_value(normalized_state_document),
+            "synthetic": is_non_scientific_fixture,
+            "scientific_use": (
+                "forbidden" if is_non_scientific_fixture else "permitted"
+            ),
+        }
+    )
+    sealed = seal_artifact(document)
     validate_oracle_target_document(
-        document,
+        sealed,
         analysis_config_path=analysis_config_path,
     )
-    return document
+    return sealed

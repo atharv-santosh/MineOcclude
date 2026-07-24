@@ -58,7 +58,7 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Metrics, calibration, bootstrap, permutation | `analysis/metrics.py`, `analysis/calibration.py`, `analysis/resampling.py` | TECHNICALLY VERIFIED |
 | A/B/C/D/E intake expectations | `docs/contracts/person_b_analysis_inputs_v0_1.md` and current validators | TECHNICALLY VERIFIED |
 | Synthetic state-to-result/request proof | `analysis/synthetic_chain.py` and saved fixture/tests | TECHNICALLY VERIFIED, NON-SCIENTIFIC |
-| Historical roadmap reading | No reliable repository evidence | UNVERIFIED |
+| Current proposal/roadmap reading | `docs/analysis/person_b_scientific_reading_signoff.md` | COMPLETED for the 2026-07-23 implementation review; no claim about undocumented earlier reading |
 | B1.9 Phase 0/1 human approval | `docs/contracts/schema_v1_0_signed_record.md` at `80d41c5ca0e341263a7b0c683fae4b51be376c55` | COMPLETE FOR THAT CHECKPOINT |
 
 ### Dependency and decision register
@@ -77,10 +77,12 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Work | State | Output/pass condition |
 |---|---|---|
 | Repository and ownership inventory | CURRENT/RECORDED | This file names one authoritative location per B responsibility |
+| B0.4 controlling scientific evidence review | COMPLETED | Current requirement-to-code/test trace is recorded in `docs/analysis/person_b_scientific_reading_signoff.md` |
 | Phase 1 contracts and synthetic chain | COMPLETED TECHNICALLY | Deterministic synthetic validators, folds, OOF fits, U1/U2/U3, direction/request, result bundle pass |
 | Cross-role synthetic validation | CURRENT | Shared runner validates C/A/B/D/E boundaries |
 | B1.9 schema/config/interface signoff | COMPLETE for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Central signoff record; runtime and result approvals remain pending |
 | Real scientific execution | NEXT LATER PHASE | Accepted real upstream artifacts and runtime/access gates exist |
+| Phase 6.1-6.6 pilot tooling | IMPLEMENTED, NOT EXECUTED | `analysis/pilot.py`, `analysis/selection.py`, `analysis/handoffs.py`, and the pilot scripts fail closed until accepted real inputs exist |
 
 ## Current blockers
 
@@ -92,6 +94,14 @@ of activation extraction, capture truth, baseline logic, or measurement.
   synthetic handoff already validate against B.
 - [ ] Receive real Person E measurements; E's registry/evidence contract and
   synthetic E-to-B handoff already validate against B.
+
+Artifact-independent preparation for these blockers is complete: the real
+C-to-B state writer, signed-target intake, literal activation-chunk checks,
+ordered filter receipt, grouped folds, source-manifest row selection, real
+ridge/permutation path, explicit positive-control gate, D request packet, and
+E registration request are implemented. See
+`docs/analysis/person_b_pilot_runbook.md`. None of these preparation artifacts
+is a substitute for an upstream producer artifact or handoff receipt.
 
 ## MVP work
 

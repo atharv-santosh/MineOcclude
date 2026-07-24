@@ -1,5 +1,6 @@
 """Person B oracle implementations and target construction."""
 
+from .audit import build_oracle_audit, derive_oracle_code_sha
 from .closed_form import closed_form_posterior
 from .primary_scalar_kalman import scalar_kalman_posterior
 from .schema import (
@@ -21,10 +22,12 @@ from .visible_history_sensitivity import (
 __all__ = [
     "ScalarPosterior",
     "OracleValidationError",
+    "build_oracle_audit",
     "OracleRejectionCode",
     "build_regime_a_target_document",
     "build_regime_a_targets",
     "closed_form_posterior",
+    "derive_oracle_code_sha",
     "scalar_kalman_posterior",
     "validate_oracle_target",
     "validate_oracle_target_document",

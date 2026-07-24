@@ -64,3 +64,44 @@ correction log explicitly records that no result-affecting field changed.
   checkpoint; real measurement and U4 method/result approval remain pending.
 
 This signoff does not approve live scientific results or later-phase methods.
+
+## 2026-07-23 portable numerical evidence correction
+
+Classification: `NO_SCIENTIFIC_RESULT_IMPACT_COMPATIBILITY_CORRECTION`
+
+Fresh Windows and bundled-runtime executions exposed final-bit differences in
+NumPy/BLAS ridge outputs. The differences were many orders of magnitude below
+the frozen numerical and scientific tolerances, but raw JSON float rendering
+caused cascading artifact-hash changes and made two checked-evidence tests
+platform-dependent.
+
+Person B evidence publication now normalizes finite floating-point values to
+12 decimal places before canonical JSON hashing and before returning sealed
+artifacts. Calculations, fitting, targets, folds, alpha selection, metrics,
+thresholds, and accepted rows are unchanged. Twelve decimal places remain
+strictly finer than the `1e-10` raw-space equivalence tolerance and the
+`1e-6` oracle equivalence tolerance.
+
+Existing non-scientific checked fixtures are regenerated under this portable
+serialization rule. No live result exists, schema/config meanings are
+unchanged, and no prior scientific result is migrated.
+
+## 2026-07-23 Phase 6 execution-readiness implementation
+
+Classification: `COMPATIBLE_IMPLEMENTATION_DETAIL_NO_RESULT`
+
+The previously synthetic-only authenticated A/B bridge now derives its
+evidence scope from the validated target document: checked fixtures remain
+`synthetic=true, scientific_use=forbidden`; signed live targets become
+`synthetic=false, scientific_use=permitted`. A caller cannot supply or promote
+this scope.
+
+The real-pilot path now saves target/oracle/join/filter/fold/selection/matrix/
+scaler/fit/prediction/metric/permutation evidence, enforces the visible
+no-wall control before hidden interpretation, distinguishes one-layout
+plumbing from five-layout grouped OOF evaluation, and prepares D/E/A outgoing
+packets without claiming receipts. This adds execution and provenance
+plumbing only. Frozen targets, legal information, row filters, folds, alpha
+selection, metric definitions, permutation rule/count, and scientific gates
+are unchanged. No real producer artifact or scientific result existed when
+this implementation was added.

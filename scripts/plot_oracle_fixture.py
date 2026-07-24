@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from mineocclude.contracts.identity import FRAME_KEY, SCHEMA_VERSION  # noqa: E402
+from mineocclude.experiments.registry import write_bytes_exclusive  # noqa: E402
 from mineocclude.oracle.schema import (  # noqa: E402
     ORACLE_TARGET_SCHEMA_VERSION,
     OracleValidationError,
@@ -205,14 +206,24 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("input", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument(
+        "--trajectory-id",
+        help="Select one trajectory from a multi-trajectory target document.",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     document = json.loads(args.input.read_text(encoding="utf-8"))
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(build_svg(document), encoding="utf-8", newline="\n")
+    if args.trajectory_id is not None:
+        document = dict(document)
+        document["rows"] = [
+            row
+            for row in document.get("rows", [])
+            if row.get("trajectory_id") == args.trajectory_id
+        ]
+    write_bytes_exclusive(args.output, build_svg(document).encode("utf-8"))
 
 
 if __name__ == "__main__":

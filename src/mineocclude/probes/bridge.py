@@ -1,4 +1,9 @@
-"""Fail-closed bridge from A activation handoffs to B OOF probe inputs."""
+"""Fail-closed bridge from A activation handoffs to B OOF probe inputs.
+
+The same authenticated implementation serves both checked non-scientific
+fixtures and real signed inputs.  Evidence scope is derived from the target
+document; callers cannot promote fixture data by changing a flag.
+"""
 
 from __future__ import annotations
 
@@ -19,10 +24,12 @@ from mineocclude.analysis.config import (
     load_core_analysis_config,
 )
 from mineocclude.analysis.manifests import (
+    ANALYSIS_ARTIFACT_SCHEMA_VERSION,
     AnalysisArtifactError,
     is_hex_digest,
     seal_artifact,
     sha256_value,
+    validate_sealed_artifact,
 )
 from mineocclude.analysis.outputs import (
     build_prediction_artifact,
@@ -31,13 +38,24 @@ from mineocclude.analysis.outputs import (
 from mineocclude.contracts.activation import validate_activation_handoff
 from mineocclude.contracts.identity import FRAME_KEY, SCHEMA_VERSION
 from mineocclude.metrics.u1_mean import U1MetricError, regression_metrics
+from mineocclude.metrics.resampling import (
+    ResamplingError,
+    permutation_p_value,
+    permute_trajectory_blocks,
+)
 
 from .join import (
     ActivationTargetJoinError,
     JoinedActivationTarget,
     join_activation_target_document,
 )
-from .ridge import ProbeFitError, RidgeOOFResult, fit_ridge_oof
+from .ridge import (
+    ProbeFitError,
+    RidgeOOFResult,
+    build_ridge_fit_artifact,
+    build_scaler_artifact,
+    fit_ridge_oof,
+)
 from .splits import (
     FOLD_SCHEMA_VERSION,
     GroupedSplitError,
@@ -48,7 +66,13 @@ from .splits import (
 
 FRAME_TABLE_VERSION = "person-b-joined-frame-v0.1"
 MATRIX_VERSION = "person-b-probe-matrix-v0.1"
-SUPPORTED_TARGETS = frozenset({"mu_oracle_blocks"})
+SUPPORTED_TARGETS = frozenset(
+    {
+        "mu_oracle_blocks",
+        "log_sigma_oracle",
+        "x_true_blocks",
+    }
+)
 FLOAT32_MAX = 3.4028234663852886e38
 
 
@@ -89,7 +113,7 @@ class ProbeBridgeRejectionCode(str, Enum):
 
 
 class ProbeBridgeError(ValueError):
-    """One stable fail-closed rejection from the synthetic probe bridge."""
+    """One stable fail-closed rejection from the probe bridge."""
 
     def __init__(self, code: ProbeBridgeRejectionCode, message: str) -> None:
         self.code = code
@@ -111,6 +135,7 @@ class ProbeReadyMatrix:
     metadata_rows: tuple[Mapping[str, Any], ...]
     accepted_manifest_hash: str
     frame_table_hash: str
+    frame_table_artifact_hash: str
     fold_manifest_hash: str
     fold_version: str
     analysis_config_hash: str
@@ -120,6 +145,8 @@ class ProbeReadyMatrix:
     activation_handoff_hash: str
     target_document_hash: str
     activation_chunk_hashes: tuple[tuple[str, str], ...]
+    analysis_scope: str
+    selection_manifest_hash: str | None
     matrix_hash: str
     synthetic: bool
     scientific_use: str
@@ -130,8 +157,21 @@ class RidgeProbeExecution:
     """OOF ridge output plus sealed prediction and U1 result artifacts."""
 
     oof_result: RidgeOOFResult
+    matrix_artifact: Mapping[str, Any]
+    scaler_artifacts: tuple[Mapping[str, Any], ...]
+    fit_artifacts: tuple[Mapping[str, Any], ...]
     prediction_artifact: Mapping[str, Any]
     u1_result_artifact: Mapping[str, Any]
+
+
+@dataclass(frozen=True)
+class RidgePermutationExecution:
+    """Full-pipeline grouped-label null distribution for one probe matrix."""
+
+    observed_r2: float | None
+    null_r2: tuple[float, ...]
+    p_value: float | None
+    result_artifact: Mapping[str, Any]
 
 
 def _fail(code: ProbeBridgeRejectionCode, message: str) -> None:
@@ -139,24 +179,67 @@ def _fail(code: ProbeBridgeRejectionCode, message: str) -> None:
 
 
 def derive_probe_code_sha() -> str:
-    """Hash the literal B-owned bridge, split, and ridge implementation bytes."""
+    """Hash literal B-owned code that can affect pilot probe evidence."""
 
     digest = hashlib.sha1()
-    directory = Path(__file__).resolve().parent
-    for filename in ("bridge.py", "ridge.py", "splits.py"):
-        path = directory / filename
+    source_root = Path(__file__).resolve().parents[1]
+    relative_paths = (
+        Path("probes/bridge.py"),
+        Path("probes/join.py"),
+        Path("probes/ridge.py"),
+        Path("probes/splits.py"),
+        Path("analysis/filters.py"),
+        Path("analysis/handoffs.py"),
+        Path("analysis/manifests.py"),
+        Path("analysis/outputs.py"),
+        Path("analysis/pilot.py"),
+        Path("analysis/selection.py"),
+        Path("metrics/resampling.py"),
+        Path("metrics/u1_mean.py"),
+    )
+    for relative_path in relative_paths:
+        path = source_root / relative_path
         try:
             payload = path.read_bytes()
         except OSError as error:
             _fail(
                 ProbeBridgeRejectionCode.PROBE_CODE_MISMATCH,
-                f"Could not read probe code component {filename!r}: {error}",
+                f"Could not read probe code component {str(relative_path)!r}: {error}",
             )
-        digest.update(filename.encode("utf-8"))
+        digest.update(relative_path.as_posix().encode("utf-8"))
         digest.update(b"\0")
         digest.update(payload)
         digest.update(b"\0")
     return digest.hexdigest()
+
+
+def _evidence_scope(target_document: Mapping[str, Any]) -> tuple[bool, str]:
+    """Derive immutable scientific-use markers from the validated target."""
+
+    fixture_metadata = target_document.get("fixture_metadata")
+    if fixture_metadata is None:
+        return False, "permitted"
+    if (
+        isinstance(fixture_metadata, Mapping)
+        and fixture_metadata.get("synthetic") is True
+        and fixture_metadata.get("scientific_use") == "forbidden"
+    ):
+        return True, "forbidden"
+    _fail(
+        ProbeBridgeRejectionCode.INVALID_SYNTHETIC_MARKING,
+        "Target fixture metadata is malformed or attempts scientific promotion.",
+    )
+
+
+def _validate_evidence_scope(synthetic: Any, scientific_use: Any) -> None:
+    if (synthetic, scientific_use) not in {
+        (True, "forbidden"),
+        (False, "permitted"),
+    }:
+        _fail(
+            ProbeBridgeRejectionCode.INVALID_SYNTHETIC_MARKING,
+            "Evidence must be synthetic/forbidden or real/permitted.",
+        )
 
 
 def _frame_key(row: Mapping[str, Any]) -> tuple[str, int]:
@@ -208,6 +291,28 @@ def _normalized_handoff_hash(document: Mapping[str, Any]) -> str:
 
 
 def _normalized_target_hash(document: Mapping[str, Any]) -> str:
+    if document.get("artifact_type") == "oracle_target_document":
+        normalized_artifact = dict(document)
+        rows = document.get("rows")
+        if isinstance(rows, list):
+            normalized_artifact["rows"] = sorted(
+                (dict(row) for row in rows),
+                key=lambda row: (
+                    row.get("trajectory_id"),
+                    row.get("model_frame_idx"),
+                ),
+            )
+        try:
+            validate_sealed_artifact(
+                normalized_artifact,
+                expected_type="oracle_target_document",
+            )
+        except AnalysisArtifactError as error:
+            _fail(
+                ProbeBridgeRejectionCode.INVALID_JOIN,
+                f"Target artifact seal is invalid: {error}",
+            )
+        return normalized_artifact["artifact_hash"]
     normalized = dict(document)
     rows = document.get("rows")
     if not isinstance(rows, list):
@@ -279,15 +384,7 @@ def build_joined_frame_table(
             ProbeBridgeRejectionCode.CONFIG_HASH_MISMATCH,
             "Caller-supplied analysis config hash does not match literal core.yaml.",
         )
-    fixture_metadata = target_document.get("fixture_metadata")
-    if not isinstance(fixture_metadata, Mapping) or (
-        fixture_metadata.get("synthetic") is not True
-        or fixture_metadata.get("scientific_use") != "forbidden"
-    ):
-        _fail(
-            ProbeBridgeRejectionCode.INVALID_JOIN,
-            "Repair Chunk 2 accepts only explicitly non-scientific target fixtures.",
-        )
+    synthetic, scientific_use = _evidence_scope(target_document)
     joined = _join(activation_package, target_document)
     rows_by_frame: dict[tuple[str, int], dict[str, Any]] = {}
 
@@ -356,6 +453,22 @@ def build_joined_frame_table(
         )
 
     body = {
+        "artifact_schema_version": ANALYSIS_ARTIFACT_SCHEMA_VERSION,
+        "artifact_type": "joined_frame_table",
+        "artifact_id": (
+            f"{activation_package.get('handoff_id')}:{next(iter(target_run_ids))}:"
+            "joined_frames"
+        ),
+        "code_sha": derive_probe_code_sha(),
+        "config_hash": literal_config_hash,
+        "input_manifest_hash": sha256_value(
+            {
+                "activation_handoff_hash": _normalized_handoff_hash(
+                    activation_package
+                ),
+                "target_document_hash": _normalized_target_hash(target_document),
+            }
+        ),
         "schema_version": SCHEMA_VERSION,
         "frame_table_version": FRAME_TABLE_VERSION,
         "join_key": list(FRAME_KEY),
@@ -369,11 +482,11 @@ def build_joined_frame_table(
         "target_code_sha": next(iter(target_code_shas)),
         "probe_code_sha": derive_probe_code_sha(),
         "target_run_id": next(iter(target_run_ids)),
-        "synthetic": True,
-        "scientific_use": "forbidden",
+        "synthetic": synthetic,
+        "scientific_use": scientific_use,
         "rows": rows,
     }
-    return {**body, "frame_table_hash": sha256_value(body)}
+    return seal_artifact({**body, "frame_table_hash": sha256_value(body)})
 
 
 def validate_joined_frame_table(document: Mapping[str, Any]) -> None:
@@ -388,13 +501,15 @@ def validate_joined_frame_table(document: Mapping[str, Any]) -> None:
         document.get("schema_version") != SCHEMA_VERSION
         or document.get("frame_table_version") != FRAME_TABLE_VERSION
         or document.get("join_key") != list(FRAME_KEY)
-        or document.get("synthetic") is not True
-        or document.get("scientific_use") != "forbidden"
     ):
         _fail(
             ProbeBridgeRejectionCode.INVALID_FRAME_TABLE,
             "Joined frame table envelope is invalid.",
         )
+    _validate_evidence_scope(
+        document.get("synthetic"),
+        document.get("scientific_use"),
+    )
     for field, length in (
         ("accepted_manifest_hash", 64),
         ("activation_handoff_hash", 64),
@@ -426,6 +541,13 @@ def validate_joined_frame_table(document: Mapping[str, Any]) -> None:
         _fail(
             ProbeBridgeRejectionCode.PROBE_CODE_MISMATCH,
             "Joined frame table probe code SHA is stale.",
+        )
+    try:
+        validate_sealed_artifact(document, expected_type="joined_frame_table")
+    except AnalysisArtifactError as error:
+        _fail(
+            ProbeBridgeRejectionCode.INVALID_FRAME_TABLE,
+            f"Joined frame table seal is invalid: {error}",
         )
     rows = document.get("rows")
     if not isinstance(rows, list) or not rows:
@@ -492,6 +614,7 @@ def validate_joined_frame_table(document: Mapping[str, Any]) -> None:
                 f"Trajectory {key[0]!r} crosses layouts.",
             )
     unhashed = dict(document)
+    unhashed.pop("artifact_hash", None)
     supplied_hash = unhashed.pop("frame_table_hash", None)
     try:
         actual_hash = sha256_value(unhashed)
@@ -523,7 +646,7 @@ def build_frame_fold_manifest(
             artifact_id=artifact_id,
             code_sha=frame_table["probe_code_sha"],
             config_hash=frame_table["analysis_config_hash"],
-            input_manifest_hash=frame_table["frame_table_hash"],
+            input_manifest_hash=frame_table["artifact_hash"],
             n_splits=n_splits,
             seed=seed,
         )
@@ -531,8 +654,8 @@ def build_frame_fold_manifest(
         payload.pop("artifact_hash")
         payload.update(
             {
-                "synthetic": True,
-                "scientific_use": "forbidden",
+                "synthetic": frame_table["synthetic"],
+                "scientific_use": frame_table["scientific_use"],
             }
         )
         return seal_artifact(payload)
@@ -612,13 +735,18 @@ def propagate_frame_folds(
             ProbeBridgeRejectionCode.INVALID_FOLD_MANIFEST,
             "Fold manifest must be a mapping.",
         )
+    _validate_evidence_scope(
+        fold_manifest.get("synthetic"),
+        fold_manifest.get("scientific_use"),
+    )
     if (
-        fold_manifest.get("synthetic") is not True
-        or fold_manifest.get("scientific_use") != "forbidden"
+        fold_manifest.get("synthetic") != frame_table.get("synthetic")
+        or fold_manifest.get("scientific_use")
+        != frame_table.get("scientific_use")
     ):
         _fail(
             ProbeBridgeRejectionCode.INVALID_SYNTHETIC_MARKING,
-            "Chunk 2 fold evidence must remain explicitly synthetic and forbidden.",
+            "Fold and frame-table evidence scopes differ.",
         )
     memberships = _fold_memberships(fold_manifest)
     frame_rows = {_frame_key(row): row for row in frame_table["rows"]}
@@ -635,7 +763,7 @@ def propagate_frame_folds(
             f"Fold manifest validation failed: {error}",
         )
     if (
-        fold_manifest.get("input_manifest_hash") != frame_table["frame_table_hash"]
+        fold_manifest.get("input_manifest_hash") != frame_table["artifact_hash"]
         or fold_manifest.get("config_hash") != frame_table["analysis_config_hash"]
         or fold_manifest.get("analysis_config_version")
         != frame_table["analysis_config_version"]
@@ -710,13 +838,14 @@ def propagate_frame_folds(
                     "analysis_config_version"
                 ],
                 "frame_table_hash": frame_table["frame_table_hash"],
+                "frame_table_artifact_hash": frame_table["artifact_hash"],
                 "activation_handoff_hash": frame_table[
                     "activation_handoff_hash"
                 ],
                 "target_document_hash": frame_table["target_document_hash"],
                 "probe_code_sha": frame_table["probe_code_sha"],
-                "synthetic": True,
-                "scientific_use": "forbidden",
+                "synthetic": frame_table["synthetic"],
+                "scientific_use": frame_table["scientific_use"],
             }
         )
         propagated.append(row)
@@ -938,6 +1067,7 @@ def _probe_matrix_payload(matrix: ProbeReadyMatrix) -> dict[str, Any]:
         "target_name": matrix.target_name,
         "accepted_manifest_hash": matrix.accepted_manifest_hash,
         "frame_table_hash": matrix.frame_table_hash,
+        "frame_table_artifact_hash": matrix.frame_table_artifact_hash,
         "fold_manifest_hash": matrix.fold_manifest_hash,
         "fold_version": matrix.fold_version,
         "analysis_config_hash": matrix.analysis_config_hash,
@@ -946,6 +1076,8 @@ def _probe_matrix_payload(matrix: ProbeReadyMatrix) -> dict[str, Any]:
         "probe_code_sha": matrix.probe_code_sha,
         "activation_handoff_hash": matrix.activation_handoff_hash,
         "target_document_hash": matrix.target_document_hash,
+        "analysis_scope": matrix.analysis_scope,
+        "selection_manifest_hash": matrix.selection_manifest_hash,
         "activation_chunk_hashes": [
             {"activation_chunk_id": chunk_id, "sha256": chunk_hash}
             for chunk_id, chunk_hash in matrix.activation_chunk_hashes
@@ -996,6 +1128,9 @@ def build_probe_ready_matrices(
     propagated_rows: Sequence[Mapping[str, Any]] | None = None,
     loaded_vectors: Mapping[tuple[str, int], Sequence[float]] | None = None,
     analysis_config_hash: str | None = None,
+    selected_frame_keys: Sequence[tuple[str, int]] | None = None,
+    selection_manifest_hash: str | None = None,
+    analysis_scope: str = "all_eligible",
 ) -> tuple[ProbeReadyMatrix, ...]:
     """Rebuild and authenticate exact A/B evidence before constructing X/y."""
 
@@ -1003,6 +1138,11 @@ def build_probe_ready_matrices(
         _fail(
             ProbeBridgeRejectionCode.MISSING_TARGET,
             f"Unsupported probe target {target_name!r}.",
+        )
+    if not isinstance(analysis_scope, str) or not analysis_scope.strip():
+        _fail(
+            ProbeBridgeRejectionCode.INVALID_FRAME_TABLE,
+            "analysis_scope must be non-empty.",
         )
     expected_frame_table = build_joined_frame_table(
         activation_package,
@@ -1050,12 +1190,67 @@ def build_probe_ready_matrices(
             ProbeBridgeRejectionCode.INCOMPLETE_LAYER_SITE_GRID,
             "Propagated activation rows are empty.",
         )
-    rows = [dict(row) for row in propagated_rows if isinstance(row, Mapping)]
-    if len(rows) != len(propagated_rows):
+    all_rows = [dict(row) for row in propagated_rows if isinstance(row, Mapping)]
+    if len(all_rows) != len(propagated_rows):
         _fail(
             ProbeBridgeRejectionCode.INCOMPLETE_LAYER_SITE_GRID,
             "Every propagated activation row must be a mapping.",
         )
+    evidence_scope = (
+        _singleton(all_rows, "synthetic"),
+        _singleton(all_rows, "scientific_use"),
+    )
+    _validate_evidence_scope(*evidence_scope)
+
+    selected_keys: set[tuple[str, int]] | None = None
+    if selected_frame_keys is not None:
+        try:
+            selected_keys = {
+                (trajectory_id, model_frame_idx)
+                for trajectory_id, model_frame_idx in selected_frame_keys
+                if isinstance(trajectory_id, str)
+                and trajectory_id
+                and isinstance(model_frame_idx, int)
+                and not isinstance(model_frame_idx, bool)
+                and model_frame_idx >= 0
+            }
+        except (TypeError, ValueError) as error:
+            _fail(
+                ProbeBridgeRejectionCode.INVALID_FRAME_TABLE,
+                f"Selected frame keys are malformed: {error}",
+            )
+        if len(selected_keys) != len(selected_frame_keys) or not selected_keys:
+            _fail(
+                ProbeBridgeRejectionCode.INVALID_FRAME_TABLE,
+                "Selected frame keys must be non-empty, valid, and unique.",
+            )
+        available_keys = {_frame_key(row) for row in all_rows}
+        unknown = sorted(selected_keys - available_keys)
+        if unknown:
+            _fail(
+                ProbeBridgeRejectionCode.MISSING_TARGET,
+                f"Selected frames are absent from the joined evidence: {unknown}.",
+            )
+        if not is_hex_digest(selection_manifest_hash, 64):
+            _fail(
+                ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
+                "Selected rows require a sealed selection-manifest hash.",
+            )
+    elif selection_manifest_hash is not None:
+        _fail(
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
+            "selection_manifest_hash was supplied without selected rows.",
+        )
+    if evidence_scope == (False, "permitted") and selected_keys is None:
+        _fail(
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
+            "Real probe matrices require an explicit sealed row selection.",
+        )
+    rows = (
+        all_rows
+        if selected_keys is None
+        else [row for row in all_rows if _frame_key(row) in selected_keys]
+    )
     seen_identity: set[tuple[str, int, int, str]] = set()
     sites_by_frame: dict[tuple[str, int], set[tuple[int, str]]] = defaultdict(set)
     fold_by_frame: dict[tuple[str, int], int] = {}
@@ -1149,6 +1344,7 @@ def build_probe_ready_matrices(
 
     accepted_manifest_hash = _singleton(rows, "accepted_manifest_hash")
     frame_table_hash = _singleton(rows, "frame_table_hash")
+    frame_table_artifact_hash = _singleton(rows, "frame_table_artifact_hash")
     fold_manifest_hash = _singleton(rows, "fold_manifest_hash")
     fold_version = _singleton(rows, "fold_version")
     analysis_config_hash = _singleton(rows, "fold_config_hash")
@@ -1162,6 +1358,7 @@ def build_probe_ready_matrices(
     for field, value, length in (
         ("accepted_manifest_hash", accepted_manifest_hash, 64),
         ("frame_table_hash", frame_table_hash, 64),
+        ("frame_table_artifact_hash", frame_table_artifact_hash, 64),
         ("fold_manifest_hash", fold_manifest_hash, 64),
         ("fold_config_hash", analysis_config_hash, 64),
         ("target_code_sha", target_code_sha, 40),
@@ -1192,16 +1389,7 @@ def build_probe_ready_matrices(
             ProbeBridgeRejectionCode.PROBE_CODE_MISMATCH,
             "Propagated rows are not bound to current probe code.",
         )
-    if synthetic is not True or scientific_use != "forbidden":
-        _fail(
-            ProbeBridgeRejectionCode.INVALID_SYNTHETIC_MARKING,
-            "Chunk 2 propagated evidence must be synthetic and forbidden.",
-        )
-    if seen_vector_claims != set(loaded_vectors):
-        _fail(
-            ProbeBridgeRejectionCode.MISSING_CHUNK_ROW,
-            "Propagated activation claims and verified vectors do not exactly match.",
-        )
+    _validate_evidence_scope(synthetic, scientific_use)
     matrices: list[ProbeReadyMatrix] = []
     activation_chunk_hashes = tuple(
         sorted(
@@ -1271,6 +1459,15 @@ def build_probe_ready_matrices(
                     "frame_table_hash": row["frame_table_hash"],
                     "accepted_manifest_hash": row["accepted_manifest_hash"],
                     "target_id": row["target_id"],
+                    "visibility": row["visibility"],
+                    "tau": row["tau"],
+                    "v": row["v"],
+                    "q": row["q"],
+                    "duration": row["duration"],
+                    "last_visible_position_blocks": row[
+                        "last_visible_position_blocks"
+                    ],
+                    "x_true_blocks": row["x_true_blocks"],
                 }
             )
         vector_sizes = {len(vector) for vector in features}
@@ -1291,6 +1488,7 @@ def build_probe_ready_matrices(
             metadata_rows=tuple(metadata),
             accepted_manifest_hash=accepted_manifest_hash,
             frame_table_hash=frame_table_hash,
+            frame_table_artifact_hash=frame_table_artifact_hash,
             fold_manifest_hash=fold_manifest_hash,
             fold_version=fold_version,
             analysis_config_hash=analysis_config_hash,
@@ -1300,9 +1498,11 @@ def build_probe_ready_matrices(
             activation_handoff_hash=activation_handoff_hash,
             target_document_hash=target_document_hash,
             activation_chunk_hashes=activation_chunk_hashes,
+            analysis_scope=analysis_scope,
+            selection_manifest_hash=selection_manifest_hash,
             matrix_hash="",
-            synthetic=True,
-            scientific_use="forbidden",
+            synthetic=synthetic,
+            scientific_use=scientific_use,
         )
         matrices.append(
             replace(
@@ -1334,10 +1534,14 @@ def run_ridge_oof_probe(
             "Probe matrix does not use universal schema v1.0.",
         )
     _validate_probe_matrix_hash(matrix)
-    if matrix.synthetic is not True or matrix.scientific_use != "forbidden":
+    _validate_evidence_scope(matrix.synthetic, matrix.scientific_use)
+    if matrix.synthetic is False and not is_hex_digest(
+        matrix.selection_manifest_hash,
+        64,
+    ):
         _fail(
-            ProbeBridgeRejectionCode.INVALID_SYNTHETIC_MARKING,
-            "Chunk 2 probe matrices must remain synthetic and forbidden.",
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
+            "Real probe execution requires a sealed selection manifest.",
         )
     literal_config_hash = hash_core_analysis_config(DEFAULT_CONFIG_PATH)
     frozen_config = load_core_analysis_config(DEFAULT_CONFIG_PATH)
@@ -1388,6 +1592,37 @@ def run_ridge_oof_probe(
         _fail(
             ProbeBridgeRejectionCode.ARTIFACT_BUILD_FAILED,
             "artifact_id_prefix must be non-empty.",
+        )
+    try:
+        matrix_artifact = seal_artifact(
+            {
+                "artifact_type": "probe_matrix_manifest",
+                "artifact_id": f"{artifact_id_prefix}:matrix",
+                "code_sha": matrix.probe_code_sha,
+                "config_hash": matrix.analysis_config_hash,
+                "input_manifest_hash": matrix.frame_table_artifact_hash,
+                "matrix_version": MATRIX_VERSION,
+                "matrix_hash": matrix.matrix_hash,
+                "frame_table_artifact_hash": matrix.frame_table_artifact_hash,
+                "fold_manifest_hash": matrix.fold_manifest_hash,
+                "selection_manifest_hash": matrix.selection_manifest_hash,
+                "activation_handoff_hash": matrix.activation_handoff_hash,
+                "target_document_hash": matrix.target_document_hash,
+                "analysis_scope": matrix.analysis_scope,
+                "target_name": matrix.target_name,
+                "layer_idx": matrix.layer_idx,
+                "hook_site": matrix.hook_site,
+                "row_count": len(matrix.targets),
+                "feature_count": len(matrix.features[0]) if matrix.features else 0,
+                "matrix_content": _probe_matrix_payload(matrix),
+                "synthetic": matrix.synthetic,
+                "scientific_use": matrix.scientific_use,
+            }
+        )
+    except (AnalysisArtifactError, IndexError, TypeError) as error:
+        _fail(
+            ProbeBridgeRejectionCode.ARTIFACT_BUILD_FAILED,
+            f"Probe matrix artifact construction failed: {error}",
         )
     row_count = len(matrix.features)
     if row_count == 0 or any(
@@ -1460,6 +1695,8 @@ def run_ridge_oof_probe(
         "outer_fold_seed": frozen_cv["split_seed"],
     }
     fold_fit_records: list[dict[str, Any]] = []
+    scaler_artifacts: list[Mapping[str, Any]] = []
+    fit_artifacts: list[Mapping[str, Any]] = []
     for fit in sorted(result.fits, key=lambda item: item.outer_fold_idx):
         training_membership = [
             {
@@ -1478,6 +1715,62 @@ def run_ridge_oof_probe(
             for index in fit.test_indices
         ]
         scaler = fit.model.scaler
+        try:
+            scaler_artifact = build_scaler_artifact(
+                scaler,
+                artifact_id=(
+                    f"{artifact_id_prefix}:outer_fold_{fit.outer_fold_idx}:scaler"
+                ),
+                code_sha=matrix.probe_code_sha,
+                config_hash=matrix.analysis_config_hash,
+                input_manifest_hash=matrix_artifact["artifact_hash"],
+                outer_fold_idx=fit.outer_fold_idx,
+            )
+            scaler_payload = dict(scaler_artifact)
+            scaler_payload.pop("artifact_hash")
+            scaler_payload.update(
+                {
+                    "analysis_config_version": matrix.analysis_config_version,
+                    "analysis_scope": matrix.analysis_scope,
+                    "selection_manifest_hash": matrix.selection_manifest_hash,
+                    "synthetic": matrix.synthetic,
+                    "scientific_use": matrix.scientific_use,
+                }
+            )
+            scaler_artifact = seal_artifact(scaler_payload)
+            fit_artifact = build_ridge_fit_artifact(
+                fit,
+                artifact_id=(
+                    f"{artifact_id_prefix}:outer_fold_{fit.outer_fold_idx}:fit"
+                ),
+                code_sha=matrix.probe_code_sha,
+                config_hash=matrix.analysis_config_hash,
+                input_manifest_hash=matrix_artifact["artifact_hash"],
+                fold_manifest_hash=matrix.fold_manifest_hash,
+                scaler_hash=scaler_artifact["artifact_hash"],
+                layer_idx=matrix.layer_idx,
+                hook_site=matrix.hook_site,
+                target_name=matrix.target_name,
+            )
+            fit_payload = dict(fit_artifact)
+            fit_payload.pop("artifact_hash")
+            fit_payload.update(
+                {
+                    "analysis_config_version": matrix.analysis_config_version,
+                    "analysis_scope": matrix.analysis_scope,
+                    "selection_manifest_hash": matrix.selection_manifest_hash,
+                    "synthetic": matrix.synthetic,
+                    "scientific_use": matrix.scientific_use,
+                }
+            )
+            fit_artifact = seal_artifact(fit_payload)
+        except (AnalysisArtifactError, KeyError, ProbeFitError, TypeError) as error:
+            _fail(
+                ProbeBridgeRejectionCode.ARTIFACT_BUILD_FAILED,
+                f"Scaler/fit artifact construction failed: {error}",
+            )
+        scaler_artifacts.append(scaler_artifact)
+        fit_artifacts.append(fit_artifact)
         fold_fit_records.append(
             {
                 "outer_fold_idx": fit.outer_fold_idx,
@@ -1493,6 +1786,8 @@ def run_ridge_oof_probe(
                 "test_indices": list(fit.test_indices),
                 "training_membership": training_membership,
                 "test_membership": test_membership,
+                "scaler_artifact_hash": scaler_artifact["artifact_hash"],
+                "fit_artifact_hash": fit_artifact["artifact_hash"],
                 "scaler": {
                     "fit_scope": "outer_training_rows_only",
                     "training_row_count": scaler.training_row_count,
@@ -1532,6 +1827,21 @@ def run_ridge_oof_probe(
             }
         )
     try:
+        metric_family, metric_prefix, target_unit, squared_unit = {
+            "mu_oracle_blocks": ("U1", "u1", "blocks", "blocks_squared"),
+            "log_sigma_oracle": (
+                "U2",
+                "u2_spread_decoding",
+                "dimensionless",
+                "dimensionless",
+            ),
+            "x_true_blocks": (
+                "diagnostic",
+                "visible_position_control",
+                "blocks",
+                "blocks_squared",
+            ),
+        }[matrix.target_name]
         prediction_artifact = build_prediction_artifact(
             prediction_rows,
             artifact_id=f"{artifact_id_prefix}:predictions",
@@ -1550,6 +1860,7 @@ def run_ridge_oof_probe(
             {
                 "analysis_config_version": matrix.analysis_config_version,
                 "matrix_hash": matrix.matrix_hash,
+                "matrix_artifact_hash": matrix_artifact["artifact_hash"],
                 "activation_handoff_hash": matrix.activation_handoff_hash,
                 "target_document_hash": matrix.target_document_hash,
                 "activation_chunk_hashes": [
@@ -1558,53 +1869,80 @@ def run_ridge_oof_probe(
                 ],
                 "probe_parameters": probe_parameters,
                 "fold_fit_records": fold_fit_records,
-                "synthetic": True,
-                "scientific_use": "forbidden",
+                "analysis_scope": matrix.analysis_scope,
+                "selection_manifest_hash": matrix.selection_manifest_hash,
+                "synthetic": matrix.synthetic,
+                "scientific_use": matrix.scientific_use,
             }
         )
         prediction_artifact = seal_artifact(prediction_payload)
 
-        metrics = regression_metrics(matrix.targets, result.predictions)
+        try:
+            metrics = regression_metrics(matrix.targets, result.predictions)
+            r2_record = {
+                "metric_id": f"{metric_prefix}_r2",
+                "metric_name": "r2",
+                "value": metrics.r2,
+                "unit": "dimensionless",
+                "sample_count": metrics.sample_count,
+                "sample_unit": "frame",
+                "status": "valid",
+                "diagnostic": None,
+            }
+            sample_count = metrics.sample_count
+            mae = metrics.mae
+            mse = metrics.mse
+        except U1MetricError as error:
+            if "constant truth" not in str(error):
+                raise
+            sample_count = len(matrix.targets)
+            residuals = [
+                float(actual) - float(predicted)
+                for actual, predicted in zip(matrix.targets, result.predictions)
+            ]
+            mae = sum(abs(value) for value in residuals) / sample_count
+            mse = sum(value * value for value in residuals) / sample_count
+            r2_record = {
+                "metric_id": f"{metric_prefix}_r2",
+                "metric_name": "r2",
+                "value": None,
+                "unit": "dimensionless",
+                "sample_count": sample_count,
+                "sample_unit": "frame",
+                "status": "invalid",
+                "diagnostic": str(error),
+            }
         u1_result_artifact = build_result_artifact(
             [
                 {
-                    "metric_id": "u1_mae",
+                    "metric_id": f"{metric_prefix}_mae",
                     "metric_name": "mae",
-                    "value": metrics.mae,
-                    "unit": "blocks",
-                    "sample_count": metrics.sample_count,
+                    "value": mae,
+                    "unit": target_unit,
+                    "sample_count": sample_count,
                     "sample_unit": "frame",
                     "status": "valid",
                     "diagnostic": None,
                 },
                 {
-                    "metric_id": "u1_mse",
+                    "metric_id": f"{metric_prefix}_mse",
                     "metric_name": "mse",
-                    "value": metrics.mse,
-                    "unit": "blocks_squared",
-                    "sample_count": metrics.sample_count,
+                    "value": mse,
+                    "unit": squared_unit,
+                    "sample_count": sample_count,
                     "sample_unit": "frame",
                     "status": "valid",
                     "diagnostic": None,
                 },
-                {
-                    "metric_id": "u1_r2",
-                    "metric_name": "r2",
-                    "value": metrics.r2,
-                    "unit": "dimensionless",
-                    "sample_count": metrics.sample_count,
-                    "sample_unit": "frame",
-                    "status": "valid",
-                    "diagnostic": None,
-                },
+                r2_record,
             ],
-            artifact_id=f"{artifact_id_prefix}:u1_results",
+            artifact_id=f"{artifact_id_prefix}:{metric_prefix}_results",
             code_sha=matrix.probe_code_sha,
             config_hash=matrix.analysis_config_hash,
             input_manifest_hash=matrix.matrix_hash,
             fold_manifest_hash=matrix.fold_manifest_hash,
             prediction_manifest_hashes=[prediction_artifact["artifact_hash"]],
-            analysis_family="U1",
+            analysis_family=metric_family,
         )
         result_payload = dict(u1_result_artifact)
         result_payload.pop("artifact_hash")
@@ -1612,11 +1950,14 @@ def run_ridge_oof_probe(
             {
                 "analysis_config_version": matrix.analysis_config_version,
                 "matrix_hash": matrix.matrix_hash,
+                "matrix_artifact_hash": matrix_artifact["artifact_hash"],
                 "probe_parameters": probe_parameters,
                 "fold_fit_records": fold_fit_records,
                 "fold_fit_records_hash": sha256_value(fold_fit_records),
-                "synthetic": True,
-                "scientific_use": "forbidden",
+                "analysis_scope": matrix.analysis_scope,
+                "selection_manifest_hash": matrix.selection_manifest_hash,
+                "synthetic": matrix.synthetic,
+                "scientific_use": matrix.scientific_use,
             }
         )
         u1_result_artifact = seal_artifact(result_payload)
@@ -1627,6 +1968,264 @@ def run_ridge_oof_probe(
         )
     return RidgeProbeExecution(
         oof_result=result,
+        matrix_artifact=matrix_artifact,
+        scaler_artifacts=tuple(scaler_artifacts),
+        fit_artifacts=tuple(fit_artifacts),
         prediction_artifact=prediction_artifact,
         u1_result_artifact=u1_result_artifact,
+    )
+
+
+def run_grouped_ridge_permutation(
+    matrix: ProbeReadyMatrix,
+    observed: RidgeProbeExecution,
+    *,
+    artifact_id: str,
+    permutation_count: int | None = None,
+    seed: int | None = None,
+) -> RidgePermutationExecution:
+    """Refit the complete grouped OOF ridge pipeline for each label shuffle.
+
+    Labels move only as whole equal-length trajectory blocks.  Alpha selection
+    and train-only scaling are rerun inside every permutation; reusing the
+    observed fit would not estimate the declared null procedure.
+    """
+
+    if not isinstance(matrix, ProbeReadyMatrix) or not isinstance(
+        observed,
+        RidgeProbeExecution,
+    ):
+        _fail(
+            ProbeBridgeRejectionCode.PROBE_FIT_FAILED,
+            "Permutation testing requires an authenticated matrix and OOF run.",
+        )
+    _validate_probe_matrix_hash(matrix)
+    _validate_evidence_scope(matrix.synthetic, matrix.scientific_use)
+    frozen_config = load_core_analysis_config(DEFAULT_CONFIG_PATH)
+    frozen_cv = frozen_config["cross_validation"]
+    frozen_resampling = frozen_config["resampling"]
+    expected_count = frozen_resampling["permutation_count_mvp"]
+    requested_count = expected_count if permutation_count is None else permutation_count
+    requested_seed = (
+        frozen_resampling["permutation_seed"] if seed is None else seed
+    )
+    if (
+        not isinstance(requested_count, int)
+        or isinstance(requested_count, bool)
+        or requested_count <= 0
+        or not isinstance(requested_seed, int)
+        or isinstance(requested_seed, bool)
+    ):
+        _fail(
+            ProbeBridgeRejectionCode.FROZEN_PROBE_CONFIG_MISMATCH,
+            "Permutation count and seed must be valid integers.",
+        )
+    if matrix.scientific_use == "permitted" and (
+        requested_count != expected_count
+        or requested_seed != frozen_resampling["permutation_seed"]
+    ):
+        _fail(
+            ProbeBridgeRejectionCode.FROZEN_PROBE_CONFIG_MISMATCH,
+            "Claim-bearing permutations must use the count and seed in core.yaml.",
+        )
+    if not isinstance(artifact_id, str) or not artifact_id:
+        _fail(
+            ProbeBridgeRejectionCode.ARTIFACT_BUILD_FAILED,
+            "artifact_id must be non-empty.",
+        )
+    if len(observed.oof_result.predictions) != len(matrix.targets):
+        _fail(
+            ProbeBridgeRejectionCode.INTERMEDIATE_PROVENANCE_MISMATCH,
+            "Observed predictions do not cover the submitted matrix.",
+        )
+    metric_family, metric_prefix = {
+        "mu_oracle_blocks": ("U1", "u1"),
+        "log_sigma_oracle": ("U2", "u2_spread_decoding"),
+        "x_true_blocks": ("diagnostic", "visible_position_control"),
+    }[matrix.target_name]
+    if len(set(matrix.targets)) == 1:
+        diagnostic = "R-squared is undefined for constant truth."
+        try:
+            result_artifact = build_result_artifact(
+                [
+                    {
+                        "metric_id": (
+                            f"{metric_prefix}_grouped_permutation_p_value"
+                        ),
+                        "metric_name": "grouped_permutation_p_value",
+                        "value": None,
+                        "unit": "dimensionless",
+                        "sample_count": 0,
+                        "sample_unit": "permutation",
+                        "status": "invalid",
+                        "diagnostic": diagnostic,
+                    },
+                    {
+                        "metric_id": (
+                            f"{metric_prefix}_grouped_permutation_observed_r2"
+                        ),
+                        "metric_name": "observed_r2",
+                        "value": None,
+                        "unit": "dimensionless",
+                        "sample_count": len(matrix.targets),
+                        "sample_unit": "frame",
+                        "status": "invalid",
+                        "diagnostic": diagnostic,
+                    },
+                ],
+                artifact_id=artifact_id,
+                code_sha=matrix.probe_code_sha,
+                config_hash=matrix.analysis_config_hash,
+                input_manifest_hash=observed.matrix_artifact["artifact_hash"],
+                fold_manifest_hash=matrix.fold_manifest_hash,
+                prediction_manifest_hashes=[
+                    observed.prediction_artifact["artifact_hash"]
+                ],
+                analysis_family=metric_family,
+            )
+            payload = dict(result_artifact)
+            payload.pop("artifact_hash")
+            payload.update(
+                {
+                    "analysis_config_version": matrix.analysis_config_version,
+                    "matrix_artifact_hash": observed.matrix_artifact[
+                        "artifact_hash"
+                    ],
+                    "analysis_scope": matrix.analysis_scope,
+                    "selection_manifest_hash": matrix.selection_manifest_hash,
+                    "permutation_unit": "whole_trajectory_block",
+                    "permutation_refit_policy": (
+                        "not_run_constant_truth_r2_undefined"
+                    ),
+                    "p_value_rule": "add_one_greater_or_equal",
+                    "permutation_count": 0,
+                    "permutation_seeds": [],
+                    "null_r2": [],
+                    "synthetic": matrix.synthetic,
+                    "scientific_use": matrix.scientific_use,
+                }
+            )
+            result_artifact = seal_artifact(payload)
+        except (AnalysisArtifactError, KeyError, TypeError) as error:
+            _fail(
+                ProbeBridgeRejectionCode.ARTIFACT_BUILD_FAILED,
+                f"Invalid permutation artifact construction failed: {error}",
+            )
+        return RidgePermutationExecution(
+            observed_r2=None,
+            null_r2=(),
+            p_value=None,
+            result_artifact=result_artifact,
+        )
+    try:
+        observed_metrics = regression_metrics(
+            matrix.targets,
+            observed.oof_result.predictions,
+        )
+        trajectory_ids = tuple(
+            str(row["trajectory_id"]) for row in matrix.metadata_rows
+        )
+        null_r2: list[float] = []
+        seeds: list[int] = []
+        alpha_grid = tuple(
+            float(value) for value in frozen_config["ridge"]["alpha_grid"]
+        )
+        for permutation_index in range(requested_count):
+            permutation_seed = requested_seed + permutation_index
+            permuted_targets = permute_trajectory_blocks(
+                trajectory_ids,
+                matrix.targets,
+                seed=permutation_seed,
+            )
+            permuted_fit = fit_ridge_oof(
+                matrix.features,
+                permuted_targets,
+                matrix.outer_folds,
+                matrix.layout_ids,
+                alpha_grid=alpha_grid,
+                inner_fold_count=frozen_cv["inner_fold_count"],
+                seed=frozen_cv["split_seed"],
+            )
+            null_r2.append(
+                regression_metrics(
+                    permuted_targets,
+                    permuted_fit.predictions,
+                ).r2
+            )
+            seeds.append(permutation_seed)
+        p_value = permutation_p_value(observed_metrics.r2, null_r2)
+        result_artifact = build_result_artifact(
+            [
+                {
+                    "metric_id": f"{metric_prefix}_grouped_permutation_p_value",
+                    "metric_name": "grouped_permutation_p_value",
+                    "value": p_value,
+                    "unit": "dimensionless",
+                    "sample_count": requested_count,
+                    "sample_unit": "permutation",
+                    "status": "valid",
+                    "diagnostic": None,
+                },
+                {
+                    "metric_id": f"{metric_prefix}_grouped_permutation_observed_r2",
+                    "metric_name": "observed_r2",
+                    "value": observed_metrics.r2,
+                    "unit": "dimensionless",
+                    "sample_count": observed_metrics.sample_count,
+                    "sample_unit": "frame",
+                    "status": "valid",
+                    "diagnostic": None,
+                },
+            ],
+            artifact_id=artifact_id,
+            code_sha=matrix.probe_code_sha,
+            config_hash=matrix.analysis_config_hash,
+            input_manifest_hash=observed.matrix_artifact["artifact_hash"],
+            fold_manifest_hash=matrix.fold_manifest_hash,
+            prediction_manifest_hashes=[
+                observed.prediction_artifact["artifact_hash"]
+            ],
+            analysis_family=metric_family,
+        )
+        payload = dict(result_artifact)
+        payload.pop("artifact_hash")
+        payload.update(
+            {
+                "analysis_config_version": matrix.analysis_config_version,
+                "matrix_artifact_hash": observed.matrix_artifact[
+                    "artifact_hash"
+                ],
+                "analysis_scope": matrix.analysis_scope,
+                "selection_manifest_hash": matrix.selection_manifest_hash,
+                "permutation_unit": "whole_trajectory_block",
+                "permutation_refit_policy": (
+                    "refit_scaler_alpha_and_ridge_inside_each_permutation"
+                ),
+                "p_value_rule": "add_one_greater_or_equal",
+                "permutation_count": requested_count,
+                "permutation_seeds": seeds,
+                "null_r2": null_r2,
+                "synthetic": matrix.synthetic,
+                "scientific_use": matrix.scientific_use,
+            }
+        )
+        result_artifact = seal_artifact(payload)
+    except (
+        AnalysisArtifactError,
+        KeyError,
+        ProbeFitError,
+        ResamplingError,
+        TypeError,
+        U1MetricError,
+        ValueError,
+    ) as error:
+        _fail(
+            ProbeBridgeRejectionCode.PROBE_FIT_FAILED,
+            f"Grouped ridge permutation failed: {error}",
+        )
+    return RidgePermutationExecution(
+        observed_r2=observed_metrics.r2,
+        null_r2=tuple(null_r2),
+        p_value=p_value,
+        result_artifact=result_artifact,
     )
