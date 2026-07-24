@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mineocclude.local/schemas/person_a/phase2_runtime_evidence_v1.schema.json",
+  "title": "MineOcclude Person A Phase 2.6-2.9 Runtime Evidence",
+  "description": "Additive runtime-evidence sub-schema. The frozen cross-role schema_version remains 1.0; the Python validators enforce the complete semantic contract.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/rollout"
+    },
+    {
+      "$ref": "#/$defs/architecture"
+    },
+    {
+      "$ref": "#/$defs/teacherForced"
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "gitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "seed",
+        "source_revision",
+        "asset_revision",
+        "mineocclude_code_sha",
+        "mineocclude_dirty",
+        "model_config_sha256",
+        "main_checkpoint_sha256",
+        "vae_config_sha256",
+        "vae_checkpoint_sha256",
+        "environment_report_sha256",
+        "command"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "asset_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "mineocclude_code_sha": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "mineocclude_dirty": {
+          "type": "boolean"
+        },
+        "model_config_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "main_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "vae_config_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "vae_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "environment_report_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "command": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "canonical_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "path",
+        "size_bytes",
+        "sha256"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "header": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "evidence_schema_version",
+        "evidence_type",
+        "status",
+        "identity",
+        "manifest_integrity"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "evidence_schema_version": {
+          "const": "mineocclude-phase2-runtime-evidence-v1.0"
+        },
+        "status": {
+          "const": "completed"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "manifest_integrity": {
+          "$ref": "#/$defs/integrity"
+        }
+      }
+    },
+    "rollout": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "evidence_schema_version",
+            "evidence_type",
+            "status",
+            "identity",
+            "inputs",
+            "runtime",
+            "outputs",
+            "ffprobe",
+            "manifest_integrity"
+          ],
+          "properties": {
+            "schema_version": true,
+            "evidence_schema_version": true,
+            "evidence_type": {
+              "const": "phase2.6_formal_rollout"
+            },
+            "status": true,
+            "identity": true,
+            "inputs": {
+              "type": "array",
+              "minItems": 7,
+              "maxItems": 7,
+              "items": {
+                "$ref": "#/$defs/artifact"
+              }
+            },
+            "runtime": {
+              "type": "object"
+            },
+            "outputs": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "$ref": "#/$defs/artifact"
+              }
+            },
+            "ffprobe": {
+              "type": "object"
+            },
+            "manifest_integrity": true
+          }
+        }
+      ]
+    },
+    "architecture": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "evidence_schema_version",
+            "evidence_type",
+            "status",
+            "identity",
+            "architecture",
+            "load_state",
+            "module_tree",
+            "cuda_memory",
+            "manifest_integrity"
+          ],
+          "properties": {
+            "schema_version": true,
+            "evidence_schema_version": true,
+            "evidence_type": {
+              "const": "phase2.7_architecture"
+            },
+            "status": true,
+            "identity": true,
+            "architecture": {
+              "type": "object"
+            },
+            "load_state": {
+              "type": "object"
+            },
+            "module_tree": {
+              "type": "array",
+              "minItems": 1
+            },
+            "cuda_memory": {
+              "type": "object"
+            },
+            "manifest_integrity": true
+          }
+        }
+      ]
+    },
+    "teacherForced": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "evidence_schema_version",
+            "evidence_type",
+            "status",
+            "identity",
+            "execution",
+            "input",
+            "token_layout",
+            "hooks",
+            "repeatability",
+            "timing",
+            "memory",
+            "cleanup",
+            "manifest_integrity"
+          ],
+          "properties": {
+            "schema_version": true,
+            "evidence_schema_version": true,
+            "evidence_type": {
+              "const": "phase2.8_2.9_teacher_forced"
+            },
+            "status": true,
+            "identity": true,
+            "execution": {
+              "type": "object"
+            },
+            "input": {
+              "type": "object"
+            },
+            "token_layout": {
+              "type": "object"
+            },
+            "hooks": {
+              "type": "array",
+              "minItems": 40
+            },
+            "repeatability": {
+              "type": "array",
+              "minItems": 20,
+              "maxItems": 20
+            },
+            "timing": {
+              "type": "object"
+            },
+            "memory": {
+              "type": "object"
+            },
+            "cleanup": {
+              "type": "object"
+            },
+            "manifest_integrity": true
+          }
+        }
+      ]
+    }
+  }
+}
