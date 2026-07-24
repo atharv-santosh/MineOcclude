@@ -342,6 +342,14 @@ public final class EpisodeManager {
         boolean geometricVisible;
         if (sheep == null) {
             geometricVisible = false;               // NO_SHEEP: nothing to see
+        } else if (!cfg.buildWall()) {
+            // NO_WALL positive control: the occluder was never built, so there
+            // is nothing to occlude the sightline — the sheep is geometrically
+            // visible throughout. Testing against the phantom wall volume here
+            // wrongly labeled the control mostly occluded (geometric 5/200
+            // while the detector saw the sheep 200/200), which would have made
+            // "visible position should be decodable" false for the control.
+            geometricVisible = true;
         } else if (player != null) {
             // Test against the wall AS BUILT: ArenaBuilder floors/ceils the
             // spec to whole blocks (a block at coordinate n occupies
