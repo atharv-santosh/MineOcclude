@@ -80,6 +80,57 @@ def send(commands: list[str]) -> None:
         fifo.write("\n".join(commands) + "\n")
 
 
+def _utc_now() -> str:
+    import datetime
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def _git(args: list[str]) -> str:
+    try:
+        return subprocess.run(["git", "-C", REPO, *args], capture_output=True,
+                              text=True, timeout=15).stdout.strip()
+    except (subprocess.SubprocessError, OSError):
+        return ""
+
+
+def _sha256(path: str) -> str:
+    import hashlib
+    try:
+        with open(path, "rb") as handle:
+            return hashlib.sha256(handle.read()).hexdigest()
+    except OSError:
+        return ""
+
+
+def _write_provenance(episode_id, command, seed, start_utc, end_utc, out_root,
+                      layout, accepted, trajectory_id=None) -> str:
+    """Record run-level provenance AT capture: exact command, UTC start/end,
+    seed, git dirty/sha, capturing-jar hash. This is the field set E's
+    registry needs and that captures before this change lack."""
+    prov = {
+        "episode_id": episode_id,
+        "trajectory_id": trajectory_id,
+        "layout": layout,
+        "seed": int(seed),
+        "capture_command": command,
+        "start_utc": start_utc,
+        "end_utc": end_utc,
+        "git_sha": _git(["rev-parse", "HEAD"]),
+        "git_dirty": bool(_git(["status", "--porcelain"])),
+        "capturing_jar_sha256": _sha256(
+            os.path.expanduser("~/mineocclude-server/mods/mineocclude-0.1.0.jar")),
+        "accepted": accepted,
+        "provenance_schema": "person-c-capture-provenance-v0.1",
+    }
+    dest_dir = (os.path.join(out_root, trajectory_id) if trajectory_id
+                else os.path.join(out_root, f"episode_{episode_id}_failed"))
+    os.makedirs(dest_dir, exist_ok=True)
+    path = os.path.join(dest_dir, "capture_provenance.json")
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(prov, handle, indent=1)
+    return path
+
+
 def focus_client() -> bool:
     """Bring the Minecraft client frontmost so rendering is never throttled."""
     script = (
@@ -113,8 +164,7 @@ def run_episode(episode_id: int, *, scene: str, hidden: int, reveal: int,
         print("  [warn] could not focus the client window automatically")
     time.sleep(1.0)
 
-    offset = len(log_text())
-    send([
+    command = [
         f"mineocclude mode {scene}",
         f"mineocclude duration {hidden}",
         f"mineocclude reveal {reveal}",
@@ -122,14 +172,27 @@ def run_episode(episode_id: int, *, scene: str, hidden: int, reveal: int,
         f"mineocclude impulse {impulse_tick} {impulse_deg}",
         "mineocclude lockcam on",
         f"mineocclude start {layout} {episode_id} {seed} {v} {q} {max_ticks}",
-    ])
-    if not wait_for(rf"episode {episode_id} recording started", 30, offset):
+    ]
+    # Run-level provenance recorded AT capture (the fields E's registry needs):
+    # exact command, UTC start/end, seed, git dirty/sha, and the capturing jar
+    # hash. Written even on failure so every attempt is auditable.
+    start_utc = _utc_now()
+    offset = len(log_text())
+    send(command)
+    started = wait_for(rf"episode {episode_id} recording started", 30, offset)
+    if not started:
         refused = re.search(rf"REFUSED.*{episode_id}", log_text()[offset:])
+        _write_provenance(episode_id, command, seed, start_utc, _utc_now(),
+                          out_root, layout, accepted=False)
         return {"accepted": False, "episode_id": episode_id,
                 "problems": ["episode never started"
                              + (" (start REFUSED)" if refused else "")]}
     duration_cap = (warmup + max_ticks) / 20.0 + 30
-    if not wait_for(rf"episode {episode_id} ended", duration_cap, offset):
+    ended = wait_for(rf"episode {episode_id} ended", duration_cap, offset)
+    end_utc = _utc_now()
+    if not ended:
+        _write_provenance(episode_id, command, seed, start_utc, end_utc,
+                          out_root, layout, accepted=False)
         return {"accepted": False, "episode_id": episode_id,
                 "problems": ["episode did not end within the safety window"]}
     time.sleep(2.0)  # let async PNG writes settle
@@ -140,6 +203,10 @@ def run_episode(episode_id: int, *, scene: str, hidden: int, reveal: int,
         out_root,
     )
     summary["episode_id"] = episode_id
+    prov = _write_provenance(episode_id, command, seed, start_utc, end_utc,
+                             out_root, layout, accepted=summary.get("accepted"),
+                             trajectory_id=summary.get("trajectory_id"))
+    summary["provenance"] = prov
     return summary
 
 
