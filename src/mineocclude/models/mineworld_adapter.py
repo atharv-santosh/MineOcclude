@@ -111,7 +111,7 @@ class FrameIdentity:
 
 @dataclass(frozen=True)
 class RuntimeLoadRequest:
-    """Explicit paths and identities needed by the future Step 3.2 loader."""
+    """Explicit paths and identities required by the Step 3.2 loader."""
 
     schema_version: str
     runtime_id: str
@@ -329,6 +329,13 @@ class PreprocessedFrame:
     color_order: str
     content_sha256: str
     frame: object
+    source_shape: tuple[int, int, int] | None = None
+    source_dtype: str | None = None
+    color_conversion: str | None = None
+    interpolation: str | None = None
+    preprocessing_profile: str | None = None
+    source_sha256: str | None = None
+    statistics: tuple[tuple[str, float], ...] = ()
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.PREPROCESS_FRAME
@@ -354,6 +361,54 @@ class PreprocessedFrame:
             operation,
         )
         _payload(self.frame, "frame", operation)
+        if self.source_shape is not None and (
+            not isinstance(self.source_shape, tuple)
+            or len(self.source_shape) != 3
+            or any(
+                type(value) is not int or value <= 0
+                for value in self.source_shape
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "source_shape",
+                "must contain three positive integer dimensions",
+            )
+        for field, value in (
+            ("source_dtype", self.source_dtype),
+            ("color_conversion", self.color_conversion),
+            ("interpolation", self.interpolation),
+            ("preprocessing_profile", self.preprocessing_profile),
+        ):
+            if value is not None:
+                _text(value, field, operation)
+        if self.source_sha256 is not None:
+            _digest(
+                self.source_sha256,
+                SHA256_LENGTH,
+                "source_sha256",
+                operation,
+            )
+        if (
+            not isinstance(self.statistics, tuple)
+            or any(
+                not isinstance(item, tuple)
+                or len(item) != 2
+                or not isinstance(item[0], str)
+                or not item[0]
+                or isinstance(item[1], bool)
+                or not isinstance(item[1], (int, float))
+                or not math.isfinite(float(item[1]))
+                for item in self.statistics
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "statistics",
+                "must contain finite named values",
+            )
 
 
 @dataclass(frozen=True)
@@ -386,6 +441,12 @@ class ConvertedAction:
     token_ids: tuple[int, ...]
     converter_identity: str
     content_sha256: str
+    raw_action_sha256: str | None = None
+    normalized_action: Mapping[str, Any] | None = None
+    vocabulary_offset: int | None = None
+    positional_roles: tuple[str, ...] = ()
+    converter_source_revision: str | None = None
+    is_noop: bool | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.CONVERT_ACTION
@@ -404,6 +465,55 @@ class ConvertedAction:
             "content_sha256",
             operation,
         )
+        if self.raw_action_sha256 is not None:
+            _digest(
+                self.raw_action_sha256,
+                SHA256_LENGTH,
+                "raw_action_sha256",
+                operation,
+            )
+        if self.normalized_action is not None and not isinstance(
+            self.normalized_action, Mapping
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "normalized_action",
+                "must be a mapping",
+            )
+        if self.vocabulary_offset is not None:
+            _uint(self.vocabulary_offset, "vocabulary_offset", operation)
+        if (
+            not isinstance(self.positional_roles, tuple)
+            or any(
+                not isinstance(role, str) or not role.strip()
+                for role in self.positional_roles
+            )
+            or (
+                self.positional_roles
+                and len(self.positional_roles) != len(self.token_ids)
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "positional_roles",
+                "must contain one non-empty role name per token when present",
+            )
+        if self.converter_source_revision is not None:
+            _digest(
+                self.converter_source_revision,
+                CODE_SHA_LENGTH,
+                "converter_source_revision",
+                operation,
+            )
+        if self.is_noop is not None and not isinstance(self.is_noop, bool):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "is_noop",
+                "must be boolean",
+            )
 
 
 @dataclass(frozen=True)
@@ -819,6 +929,16 @@ class UnavailableMineWorldAdapter:
         )
 
 
+def create_mineworld_adapter() -> MineWorldAdapter:
+    """Construct the private Wave 2 implementation behind the frozen protocol."""
+
+    from mineocclude.models._mineworld_adapter_wave2 import (
+        _Wave2MineWorldAdapter,
+    )
+
+    return _Wave2MineWorldAdapter()
+
+
 def _unavailable(
     operation: AdapterOperation,
     request: object,
@@ -1087,4 +1207,5 @@ __all__ = [
     "TrajectoryTokenizationRequest",
     "UnavailableMineWorldAdapter",
     "ValidatedTrajectory",
+    "create_mineworld_adapter",
 ]

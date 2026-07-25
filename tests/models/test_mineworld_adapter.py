@@ -39,6 +39,7 @@ from mineocclude.models.mineworld_adapter import (
     TrajectoryTokenizationRequest,
     UnavailableMineWorldAdapter,
     ValidatedTrajectory,
+    create_mineworld_adapter,
 )
 
 
@@ -250,9 +251,11 @@ class MineWorldAdapterApiTests(unittest.TestCase):
             "TrajectoryTokenizationRequest",
             "UnavailableMineWorldAdapter",
             "ValidatedTrajectory",
+            "create_mineworld_adapter",
         }
         self.assertEqual(expected, set(adapter_module.__all__))
         self.assertIsInstance(UnavailableMineWorldAdapter(), MineWorldAdapter)
+        self.assertIsInstance(create_mineworld_adapter(), MineWorldAdapter)
 
     def test_typed_request_and_result_records_validate_and_are_frozen(self):
         self.assertEqual(_runtime_request().schema_version, SCHEMA_VERSION)
