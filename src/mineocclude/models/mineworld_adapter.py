@@ -13,7 +13,8 @@ from __future__ import annotations
 
 import math
 import re
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from contextlib import AbstractContextManager
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -29,7 +30,6 @@ from mineocclude.contracts.identity import (
     SCHEMA_VERSION,
     SHA256_LENGTH,
 )
-
 
 MINEWORLD_ADAPTER_API_VERSION = "person-a-mineworld-adapter-v1.0"
 _ACTION_TOKENS_PER_FRAME = (
@@ -57,6 +57,7 @@ class AdapterFailureCode(str, Enum):
     INVALID_IDENTITY = "invalid_identity"
     INVALID_REQUEST = "invalid_request"
     INVALID_PROVENANCE = "invalid_provenance"
+    RUNTIME_EXECUTION_FAILED = "runtime_execution_failed"
     OPERATION_UNAVAILABLE = "operation_unavailable"
 
 
@@ -524,6 +525,12 @@ class FrameTokenSpan:
     pair_index: int
     visual_positions: tuple[int, ...]
     action_positions: tuple[int, ...]
+    accepted_pair_index: int | None = None
+    pair_start: int | None = None
+    pair_end_exclusive: int | None = None
+    causal_predecessor: FrameIdentity | None = None
+    causal_successor: FrameIdentity | None = None
+    included_in_context: bool = True
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TOKENIZE_TRAJECTORY
@@ -548,6 +555,69 @@ class FrameTokenSpan:
                 "visual_positions/action_positions",
                 "positions must be disjoint",
             )
+        expected_start = self.pair_index * TOKENS_PER_FRAME_ACTION_PAIR
+        expected_visual = tuple(
+            range(expected_start, expected_start + VISUAL_TOKENS_PER_FRAME)
+        )
+        expected_action = tuple(
+            range(
+                expected_start + VISUAL_TOKENS_PER_FRAME,
+                expected_start + TOKENS_PER_FRAME_ACTION_PAIR,
+            )
+        )
+        if (
+            self.visual_positions != expected_visual
+            or self.action_positions != expected_action
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "visual_positions/action_positions",
+                "must be one complete visual-then-action pair",
+            )
+        if self.accepted_pair_index is not None:
+            _uint(self.accepted_pair_index, "accepted_pair_index", operation)
+        if self.pair_start is not None and self.pair_start != expected_start:
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "pair_start",
+                f"must equal {expected_start}",
+            )
+        expected_end = expected_start + TOKENS_PER_FRAME_ACTION_PAIR
+        if (
+            self.pair_end_exclusive is not None
+            and self.pair_end_exclusive != expected_end
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "pair_end_exclusive",
+                f"must equal {expected_end}",
+            )
+        for field, neighbor in (
+            ("causal_predecessor", self.causal_predecessor),
+            ("causal_successor", self.causal_successor),
+        ):
+            if neighbor is not None:
+                _frame_identity(neighbor, operation)
+                if (
+                    neighbor.trajectory_id != self.identity.trajectory_id
+                    or neighbor.key == self.identity.key
+                ):
+                    _fail(
+                        AdapterFailureCode.INVALID_IDENTITY,
+                        operation,
+                        field,
+                        "must identify a different frame in the same trajectory",
+                    )
+        if self.included_in_context is not True:
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "included_in_context",
+                "FrameTokenSpan values represent included context only",
+            )
 
 
 @dataclass(frozen=True)
@@ -558,6 +628,7 @@ class FrameTokenMap:
     trajectory_id: str
     sequence_length: int
     spans: tuple[FrameTokenSpan, ...]
+    excluded_frame_identities: tuple[FrameIdentity, ...] = ()
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TOKENIZE_TRAJECTORY
@@ -597,6 +668,13 @@ class FrameTokenMap:
                 "spans",
                 "frame identities and pair indices must be unique",
             )
+        if pair_indices != list(range(len(self.spans))):
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "spans.pair_index",
+                "must be consecutive context-relative indices starting at zero",
+            )
         if len(all_positions) != len(set(all_positions)):
             _fail(
                 AdapterFailureCode.INVALID_IDENTITY,
@@ -604,12 +682,46 @@ class FrameTokenMap:
                 "spans",
                 "token positions must not overlap",
             )
-        if max(all_positions) >= self.sequence_length:
+        if (
+            self.sequence_length
+            != len(self.spans) * TOKENS_PER_FRAME_ACTION_PAIR
+            or all_positions != list(range(self.sequence_length))
+        ):
             _fail(
                 AdapterFailureCode.INVALID_IDENTITY,
                 operation,
                 "spans",
-                "token position exceeds sequence_length",
+                "must cover the complete sequence exactly once in order",
+            )
+        if (
+            not isinstance(self.excluded_frame_identities, tuple)
+            or any(
+                not isinstance(identity, FrameIdentity)
+                for identity in self.excluded_frame_identities
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "excluded_frame_identities",
+                "must be a tuple of FrameIdentity values",
+            )
+        excluded_keys = [
+            identity.key for identity in self.excluded_frame_identities
+        ]
+        if (
+            len(excluded_keys) != len(set(excluded_keys))
+            or set(excluded_keys) & set(keys)
+            or any(
+                identity.trajectory_id != self.trajectory_id
+                for identity in self.excluded_frame_identities
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "excluded_frame_identities",
+                "must be unique, disjoint, and belong to this trajectory",
             )
 
 
@@ -667,6 +779,16 @@ class TokenizedTrajectory:
     token_ids: tuple[int, ...]
     frame_token_map: FrameTokenMap
     token_sha256: str
+    attention_mask: tuple[int, ...] = ()
+    position_ids: tuple[int, ...] = ()
+    included_frame_identities: tuple[FrameIdentity, ...] = ()
+    excluded_frame_identities: tuple[FrameIdentity, ...] = ()
+    tokenization_profile: str | None = None
+    preprocessing_profile: str | None = None
+    action_conversion_profile: str | None = None
+    frame_token_map_sha256: str | None = None
+    accepted_frame_count: int | None = None
+    context_pair_count: int | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TOKENIZE_TRAJECTORY
@@ -692,6 +814,80 @@ class TokenizedTrajectory:
                 "sequence exceeds max_position_embeddings",
             )
         _digest(self.token_sha256, SHA256_LENGTH, "token_sha256", operation)
+        if self.attention_mask and (
+            len(self.attention_mask) != len(self.token_ids)
+            or any(value != 1 for value in self.attention_mask)
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "attention_mask",
+                "must mark every unpadded sequence position with one",
+            )
+        if self.position_ids and self.position_ids != tuple(
+            range(len(self.token_ids))
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "position_ids",
+                "must be consecutive context-relative positions",
+            )
+        for field, values in (
+            ("included_frame_identities", self.included_frame_identities),
+            ("excluded_frame_identities", self.excluded_frame_identities),
+        ):
+            if values:
+                _frame_identities(values, self.trajectory_id, operation)
+        if self.included_frame_identities and tuple(
+            span.identity for span in self.frame_token_map.spans
+        ) != self.included_frame_identities:
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "included_frame_identities",
+                "must exactly match FrameTokenMap span order",
+            )
+        if (
+            self.excluded_frame_identities
+            and self.excluded_frame_identities
+            != self.frame_token_map.excluded_frame_identities
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "excluded_frame_identities",
+                "must exactly match FrameTokenMap exclusions",
+            )
+        for field, value in (
+            ("tokenization_profile", self.tokenization_profile),
+            ("preprocessing_profile", self.preprocessing_profile),
+            ("action_conversion_profile", self.action_conversion_profile),
+        ):
+            if value is not None:
+                _text(value, field, operation)
+        if self.frame_token_map_sha256 is not None:
+            _digest(
+                self.frame_token_map_sha256,
+                SHA256_LENGTH,
+                "frame_token_map_sha256",
+                operation,
+            )
+        if self.accepted_frame_count is not None:
+            _positive_int(
+                self.accepted_frame_count, "accepted_frame_count", operation
+            )
+        if self.context_pair_count is not None:
+            _positive_int(
+                self.context_pair_count, "context_pair_count", operation
+            )
+            if self.context_pair_count != len(self.frame_token_map.spans):
+                _fail(
+                    AdapterFailureCode.INVALID_IDENTITY,
+                    operation,
+                    "context_pair_count",
+                    "must equal the FrameTokenMap span count",
+                )
 
 
 @dataclass(frozen=True)
@@ -703,6 +899,13 @@ class TeacherForcedRequest:
     seed: int
     precision: str
     batch_size: int = 1
+    hook_context_factory: (
+        Callable[
+            [tuple[tuple[str, object], ...]],
+            AbstractContextManager[object],
+        ]
+        | None
+    ) = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TEACHER_FORCED
@@ -710,6 +913,15 @@ class TeacherForcedRequest:
         _uint(self.seed, "seed", operation)
         _text(self.precision, "precision", operation)
         _positive_int(self.batch_size, "batch_size", operation)
+        if self.hook_context_factory is not None and not callable(
+            self.hook_context_factory
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "hook_context_factory",
+                "must be callable when provided",
+            )
 
 
 @dataclass(frozen=True)
@@ -725,6 +937,15 @@ class TeacherForcedResult:
     output_sha256: str
     elapsed_seconds: float
     output: object
+    token_sha256: str | None = None
+    frame_token_map_sha256: str | None = None
+    seed: int | None = None
+    batch_size: int | None = None
+    input_sequence_length: int | None = None
+    included_frame_identities: tuple[FrameIdentity, ...] = ()
+    excluded_frame_identities: tuple[FrameIdentity, ...] = ()
+    output_statistics: tuple[tuple[str, float], ...] = ()
+    warnings: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TEACHER_FORCED
@@ -756,6 +977,67 @@ class TeacherForcedResult:
         _digest(self.output_sha256, SHA256_LENGTH, "output_sha256", operation)
         _nonnegative_real(self.elapsed_seconds, "elapsed_seconds", operation)
         _payload(self.output, "output", operation)
+        for field, digest in (
+            ("token_sha256", self.token_sha256),
+            ("frame_token_map_sha256", self.frame_token_map_sha256),
+        ):
+            if digest is not None:
+                _digest(digest, SHA256_LENGTH, field, operation)
+        if self.seed is not None:
+            _uint(self.seed, "seed", operation)
+        if self.batch_size is not None:
+            _positive_int(self.batch_size, "batch_size", operation)
+        if self.input_sequence_length is not None:
+            _positive_int(
+                self.input_sequence_length,
+                "input_sequence_length",
+                operation,
+            )
+            if self.input_sequence_length != self.frame_token_map.sequence_length:
+                _fail(
+                    AdapterFailureCode.INVALID_IDENTITY,
+                    operation,
+                    "input_sequence_length",
+                    "must equal FrameTokenMap.sequence_length",
+                )
+        for field, values in (
+            ("included_frame_identities", self.included_frame_identities),
+            ("excluded_frame_identities", self.excluded_frame_identities),
+        ):
+            if values:
+                _frame_identities(values, self.trajectory_id, operation)
+        if (
+            not isinstance(self.output_statistics, tuple)
+            or any(
+                not isinstance(item, tuple)
+                or len(item) != 2
+                or not isinstance(item[0], str)
+                or not item[0]
+                or isinstance(item[1], bool)
+                or not isinstance(item[1], (int, float))
+                or not math.isfinite(float(item[1]))
+                for item in self.output_statistics
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "output_statistics",
+                "must contain finite named values",
+            )
+        if (
+            not isinstance(self.warnings, tuple)
+            or any(
+                not isinstance(warning, str) or not warning.strip()
+                for warning in self.warnings
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "warnings",
+                "must contain non-empty strings",
+            )
 
 
 @dataclass(frozen=True)
@@ -930,13 +1212,13 @@ class UnavailableMineWorldAdapter:
 
 
 def create_mineworld_adapter() -> MineWorldAdapter:
-    """Construct the private Wave 2 implementation behind the frozen protocol."""
+    """Construct the private Wave 3 implementation behind the frozen protocol."""
 
-    from mineocclude.models._mineworld_adapter_wave2 import (
-        _Wave2MineWorldAdapter,
+    from mineocclude.models._mineworld_adapter_wave3 import (
+        _Wave3MineWorldAdapter,
     )
 
-    return _Wave2MineWorldAdapter()
+    return _Wave3MineWorldAdapter()
 
 
 def _unavailable(

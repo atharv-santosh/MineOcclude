@@ -7,9 +7,9 @@ Shared schema version: `1.0`
 The public `MINEWORLD_ADAPTER_API_VERSION` constant carries the API version
 above for runtime-identity validation.
 
-Status: frozen by Person A Phase 3, Step 3.1. Steps 3.2 through 3.5 now have
-one private implementation behind the frozen protocol. Steps 3.6 through 3.8
-remain intentionally unavailable.
+Status: frozen by Person A Phase 3, Step 3.1. Steps 3.2 through 3.7 now have
+private implementations behind the frozen protocol. Step 3.8 remains
+intentionally unavailable.
 
 ## Purpose
 
@@ -31,12 +31,12 @@ primary downstream contract.
 | `validate_trajectory` | `AcceptedTrajectoryInput` | `ValidatedTrajectory` | Step 3.3, implemented locally |
 | `preprocess_frame` | `FramePreprocessRequest` | `PreprocessedFrame` | Step 3.4, implemented locally |
 | `convert_action` | `ActionConversionRequest` | `ConvertedAction` | Step 3.5, implemented locally |
-| `tokenize_trajectory` | `TrajectoryTokenizationRequest` | `TokenizedTrajectory` and its `FrameTokenMap` | Step 3.6 |
-| `teacher_forced` | `TeacherForcedRequest` | `TeacherForcedResult` | Step 3.7 |
+| `tokenize_trajectory` | `TrajectoryTokenizationRequest` | `TokenizedTrajectory` and its `FrameTokenMap` | Step 3.6, implemented locally |
+| `teacher_forced` | `TeacherForcedRequest` | `TeacherForcedResult` | Step 3.7, implemented locally |
 | `free_rollout` | `FreeRolloutRequest` | `FreeRolloutResult` | Step 3.8 |
 
 `MineWorldAdapter` is the protocol callers depend on.
-`create_mineworld_adapter()` constructs the private Wave 2 implementation
+`create_mineworld_adapter()` constructs the private Wave 3 implementation
 without exposing its class or MineWorld runtime objects. The Step 3.1 API had
 reserved a protocol but no construction path; this factory is the smallest
 compatible correction. `UnavailableMineWorldAdapter` remains available for
@@ -62,13 +62,19 @@ explicit contract-only use and never returns a placeholder success.
   11-token sequence, vocabulary offset, positional roles, no-op status, and
   converter identity.
 - `FrameTokenSpan` and `FrameTokenMap` explicitly associate each scientific
-  frame with visual and action token positions. No row-order inference is
+  frame with visual and action token positions, complete-pair bounds,
+  accepted/context-relative pair indices, causal neighbors, and excluded
+  identities. No filename, directory, or unvalidated row-order inference is
   permitted.
 - `TrajectoryTokenizationRequest` and `TokenizedTrajectory` carry the validated
-  components, runtime identity, explicit token sequence, map, and sequence
-  hash.
+  components, runtime identity, explicit token sequence, all-one validity mask,
+  context-relative position IDs, included and excluded identities, profiles,
+  map identity, and sequence identity.
 - `TeacherForcedRequest` and `TeacherForcedResult` define one explicit
-  teacher-forced call and its project-owned output metadata.
+  teacher-forced call and its project-owned output metadata. The request's
+  optional `hook_context_factory` receives only the ordered decoder-module
+  names and objects for the duration of the forward. External activation code
+  chooses whether and where to register temporary hooks and must clean them up.
 - `FreeRolloutRequest` and `FreeRolloutResult` define one explicit generation
   call and durable video/metadata identities.
 
@@ -76,10 +82,11 @@ Records that describe identity, requests, and results are frozen dataclasses.
 Array or tensor payload fields remain implementation-neutral and must not hold
 a private MineWorld control object as the public contract.
 
-The extra Step 3.4 and Step 3.5 result metadata is additive and defaulted. No
+The extra Step 3.4 through Step 3.7 metadata is additive and defaulted. No
 Step 3.1 symbol, field meaning, or required constructor argument changed, so
 the API remains `person-a-mineworld-adapter-v1.0`. Implementations produced by
-the Wave 2 factory populate every new field.
+the Wave 3 factory populate every new field. The public export set remains
+unchanged.
 
 ## Implemented Wave 2 boundary
 
@@ -119,6 +126,58 @@ The failure order is deliberate: path/hash/source failures precede
 deserialization; trajectory failures precede preprocessing and conversion;
 frame failures precede any later tokenization; action failures precede
 sequence construction and execution.
+
+## Implemented Wave 3 boundary
+
+`tokenize_trajectory` consumes only the validated `PreprocessedFrame` and
+`ConvertedAction` records supplied by the frozen request. It verifies their
+scientific identities and Wave 2 profiles before invoking the private loaded
+VAE's pinned `tokenize_images` method. The identical VAE call is repeated and
+must produce the same codes. Every result row must contain exactly 336
+integral visual-vocabulary IDs.
+
+The recorded-history teacher input is assembled as complete pairs in accepted
+trajectory order:
+
+`336 visual tokens + 11 action tokens = 347 positions`
+
+The teacher-forced path therefore preserves the final accepted action record.
+This differs deliberately from the Gradio free-generation prefill, which
+omits the final action because it is about to generate the successor frame.
+No observed frame is replaced by generated history.
+
+When more than 16 accepted pairs are supplied, the adapter retains the most
+recent 16 complete pairs, records every earlier accepted identity as excluded,
+and leaves each original `model_frame_idx` unchanged. It never splits a visual
+or action region. Context-relative positions restart at zero because the
+official transformer uses those positions for the current KV-cache prefill.
+`FrameTokenMap` records both the context-relative pair index and original
+accepted-pair index, exact absolute positions within the assembled input, and
+the predecessor/successor identities from the accepted trajectory.
+
+`TokenizedTrajectory.attention_mask` is an all-one validity mask because Wave
+3 constructs no padding. The pinned `LlamaModel` does not consume that mask
+from the outer call; it constructs the causal attention mask from the explicit
+`position_ids`. The private teacher executor therefore passes the exact token
+IDs and position IDs to `model.transformer`, matching the Phase 2 verified
+path.
+
+Before forwarding, `teacher_forced` recomputes the sequence and map hashes,
+checks runtime/config/checkpoint/VAE identity by exact runtime-record equality,
+validates profiles, token regions, included/excluded identities, mask,
+positions, context and position budgets, precision, device, batch size, and
+model/VAE evaluation state. The private executor uses an explicit seed,
+`torch.inference_mode()`, float16 CUDA autocast, a refreshed KV cache, and the
+pinned transformer call signature. Runtime exceptions remain structured
+`MineWorldAdapterError` values with the original exception type and safe
+message.
+
+The adapter does not register hooks. If a caller supplies
+`hook_context_factory`, the adapter exposes the complete ordered set of the 20
+runtime-identity decoder modules only while that caller-owned context manager
+surrounds the forward. The caller selects hook sites and owns registration and
+cleanup. No layer selection, pooled activation, activation storage, or
+serialization enters the adapter result.
 
 ## Teacher-forced and rollout separation
 
@@ -204,15 +263,13 @@ implementation imports the pinned official code.
 
 ## Current execution status
 
-Steps 3.2 through 3.5 are implemented and CPU-tested as an input/loading
-boundary. Loader tests use controlled objects and do not claim a new real
-checkpoint load. The action matrix is direct output from the clean pinned
-converter. The preprocessing golden is CPU-derived; its 336-code boundary uses
-an explicitly labeled fake VAE. Real Wave 2 behavior remains subject to the
-later GPU certification step.
+Steps 3.2 through 3.7 are implemented and CPU-tested through controlled
+official-boundary fakes. Loader tests do not claim a new real checkpoint load.
+The Wave 2 action matrix is direct output from the clean pinned converter. The
+Wave 3 fixture proves sequence/map semantics but labels its visual IDs as fake;
+it does not claim a local real-VAE or real-transformer execution.
 
-Step 3.6 must construct the real interleaved sequence and `FrameTokenMap`.
-Step 3.7 must execute teacher forcing, Step 3.8 must execute rollout, and Step
-3.9 must certify identity/failure propagation. Until then,
-`tokenize_trajectory`, `teacher_forced`, and `free_rollout` raise
-`operation_unavailable`.
+Step 3.8 free rollout and Step 3.9 certification remain out of scope.
+`free_rollout` continues to raise `operation_unavailable`. A later bounded GPU
+certification must run the adapter's real VAE and teacher path against the
+pinned runtime; Wave 3 does not claim that certification.

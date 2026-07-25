@@ -1,0 +1,70 @@
+{
+  "classification": "cpu_fake_official_boundary",
+  "expected": {
+    "excluded_model_frame_indices": [],
+    "frame_token_map": {
+      "excluded_model_frame_indices": [],
+      "sequence_length": 1041,
+      "spans": [
+        {
+          "accepted_pair_index": 0,
+          "action_count": 11,
+          "action_end_exclusive": 347,
+          "action_start": 336,
+          "causal_predecessor_model_frame_idx": null,
+          "causal_successor_model_frame_idx": 41,
+          "model_frame_idx": 40,
+          "pair_end_exclusive": 347,
+          "pair_index": 0,
+          "pair_start": 0,
+          "visual_count": 336,
+          "visual_end_exclusive": 336,
+          "visual_start": 0
+        },
+        {
+          "accepted_pair_index": 1,
+          "action_count": 11,
+          "action_end_exclusive": 694,
+          "action_start": 683,
+          "causal_predecessor_model_frame_idx": 40,
+          "causal_successor_model_frame_idx": 42,
+          "model_frame_idx": 41,
+          "pair_end_exclusive": 694,
+          "pair_index": 1,
+          "pair_start": 347,
+          "visual_count": 336,
+          "visual_end_exclusive": 683,
+          "visual_start": 347
+        },
+        {
+          "accepted_pair_index": 2,
+          "action_count": 11,
+          "action_end_exclusive": 1041,
+          "action_start": 1030,
+          "causal_predecessor_model_frame_idx": 41,
+          "causal_successor_model_frame_idx": null,
+          "model_frame_idx": 42,
+          "pair_end_exclusive": 1041,
+          "pair_index": 2,
+          "pair_start": 694,
+          "visual_count": 336,
+          "visual_end_exclusive": 1030,
+          "visual_start": 694
+        }
+      ],
+      "trajectory_id": "wave3-trajectory"
+    },
+    "frame_token_map_sha256": "c0712b25b4586541a252cc93f05d1dd25493c021f80ff1a0ce6bfd115400f844",
+    "included_model_frame_indices": [
+      40,
+      41,
+      42
+    ],
+    "sequence_length": 1041,
+    "token_sha256": "ab5c027f3b58204c3cea3c38d051238cdd4915f10f2040258c38edd1ca542c08"
+  },
+  "fixture_version": "person-a-phase3-wave3-v1.0",
+  "limitations": "Visual IDs are deterministic fake-boundary values; this fixture does not claim real VAE certification.",
+  "schema_version": "1.0",
+  "source_revision_inspected": "9f49efbcc68a5f0cf60e78f0abc566eac409282f"
+}
