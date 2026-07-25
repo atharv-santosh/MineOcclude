@@ -30,6 +30,14 @@ EVIDENCE_SCHEMA_VERSION = "mineocclude-phase2-runtime-evidence-v1.0"
 ROLLOUT_EVIDENCE_TYPE = "phase2.6_formal_rollout"
 ARCHITECTURE_EVIDENCE_TYPE = "phase2.7_architecture"
 TEACHER_FORCED_EVIDENCE_TYPE = "phase2.8_2.9_teacher_forced"
+ACTION_COMPATIBILITY_TRANSFORMATION = (
+    "mineworld_mcdataset_json_action_to_env_action"
+)
+ACTION_COMPATIBILITY_VERSION = "1.0"
+ACTION_COMPATIBILITY_SERIALIZATION = (
+    "UTF-8 JSON/Python-literal subset; sorted keys; compact separators; "
+    "finite numbers; integer binary values; one LF-terminated object per row"
+)
 
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
@@ -38,6 +46,7 @@ ACTION_TOKENS = 11
 TOKENS_PER_PAIR = 347
 CONTEXT_PAIRS = 16
 SEQUENCE_LENGTH = 5552
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 ROLLOUT_OUTPUT_ROLES = frozenset(
     {"generated_video", "paired_metadata", "raw_stdout_stderr"}
@@ -559,6 +568,491 @@ def validate_output_file_completeness(
     return tuple(rejections)
 
 
+def _validate_provenance_file_bytes(
+    value: Mapping[str, Any],
+    path: str,
+    rejections: list[EvidenceRejection],
+) -> None:
+    file_path = Path(value["path"])
+    if not file_path.is_file():
+        _reject(
+            rejections,
+            "missing_provenance_file",
+            "Referenced action provenance file is absent.",
+            f"{path}.path",
+        )
+        return
+    if (
+        file_path.stat().st_size != value["size_bytes"]
+        or sha256_file(file_path) != value["sha256"]
+    ):
+        _reject(
+            rejections,
+            "provenance_integrity_mismatch",
+            "Action provenance size or SHA-256 disagrees with literal bytes.",
+            path,
+        )
+
+
+def _action_sequence_facts(
+    path: Path,
+    *,
+    original_json: bool,
+) -> tuple[int, str, list[str]]:
+    """Recompute row-order facts from literal original or derived JSONL bytes."""
+
+    payload = path.read_bytes()
+    try:
+        text = payload.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise EvidenceValidationError(
+            "invalid_action_encoding", "Action provenance file is not UTF-8."
+        ) from exc
+    lines = text.splitlines()
+    if not lines or any(not line.strip() for line in lines):
+        raise EvidenceValidationError(
+            "invalid_action_cardinality",
+            "Action provenance must contain only nonempty rows.",
+        )
+
+    sequence_rows: list[bytes] = []
+    row_hashes: list[str] = []
+    if original_json:
+        def reject_constant(value: str) -> None:
+            raise ValueError(f"Non-standard JSON numeric constant: {value}")
+
+        for index, line in enumerate(lines):
+            try:
+                row = json.loads(line, parse_constant=reject_constant)
+            except (json.JSONDecodeError, ValueError) as exc:
+                raise EvidenceValidationError(
+                    "malformed_action_json",
+                    f"Original provenance row {index} is not strict JSON.",
+                ) from exc
+            if not isinstance(row, Mapping):
+                raise EvidenceValidationError(
+                    "invalid_action_row",
+                    f"Original provenance row {index} is not an object.",
+                )
+            canonical = canonical_json_bytes(row)
+            sequence_rows.append(canonical)
+            row_hashes.append(sha256_bytes(canonical))
+    else:
+        if not payload.endswith(b"\n") or b"\r" in payload:
+            raise EvidenceValidationError(
+                "invalid_action_serialization",
+                "Derived compatibility JSONL must use exact LF-terminated rows.",
+            )
+        for line in lines:
+            literal = (line + "\n").encode("utf-8")
+            sequence_rows.append(literal)
+            row_hashes.append(sha256_bytes(literal))
+    return len(lines), sha256_bytes(b"".join(sequence_rows)), row_hashes
+
+
+def validate_action_compatibility_provenance(
+    value: Any,
+    *,
+    inputs: Any | None = None,
+    outputs: Any | None = None,
+    identity: Any | None = None,
+    verify_bytes: bool = False,
+    path: str = "$.action_compatibility",
+) -> tuple[EvidenceRejection, ...]:
+    """Validate original/derived/generated JSONL identity without repairing it."""
+
+    rejections: list[EvidenceRejection] = []
+    if not _exact_fields(
+        value, {"original", "derived", "generated"}, path, rejections
+    ):
+        return tuple(rejections)
+    assert isinstance(value, Mapping)
+    original = value["original"]
+    derived = value["derived"]
+    generated = value["generated"]
+
+    original_fields = {
+        "classification",
+        "path",
+        "size_bytes",
+        "sha256",
+        "row_count",
+        "asset_revision",
+        "pre_size_bytes",
+        "pre_sha256",
+        "post_size_bytes",
+        "post_sha256",
+        "row_sequence_sha256",
+        "canonical_input",
+        "unchanged",
+    }
+    derived_fields = {
+        "classification",
+        "path",
+        "size_bytes",
+        "sha256",
+        "row_count",
+        "transformation_name",
+        "transformation_version",
+        "deterministic_serialization",
+        "parent_original_sha256",
+        "parent_row_sequence_sha256",
+        "row_sequence_sha256",
+        "source_to_derived_sequence_sha256",
+        "rows_dropped",
+        "rows_added",
+        "row_order_preserved",
+        "storage_classification",
+    }
+    generated_fields = {
+        "classification",
+        "path",
+        "size_bytes",
+        "sha256",
+        "row_count",
+        "relationship_to_generated_mp4",
+        "generated_video_sha256",
+        "relationship_to_original",
+        "original_jsonl_sha256",
+        "relationship_to_derived",
+        "derived_jsonl_sha256",
+        "materialization_method",
+    }
+    shapes_valid = (
+        _exact_fields(original, original_fields, f"{path}.original", rejections),
+        _exact_fields(derived, derived_fields, f"{path}.derived", rejections),
+        _exact_fields(generated, generated_fields, f"{path}.generated", rejections),
+    )
+    if not all(shapes_valid):
+        return tuple(rejections)
+    assert isinstance(original, Mapping)
+    assert isinstance(derived, Mapping)
+    assert isinstance(generated, Mapping)
+
+    for name, record, expected_classification in (
+        ("original", original, "original"),
+        ("derived", derived, "derived"),
+        ("generated", generated, "generated"),
+    ):
+        record_path = f"{path}.{name}"
+        if record["classification"] != expected_classification:
+            _reject(
+                rejections,
+                "invalid_provenance_classification",
+                f"{name} classification must be {expected_classification!r}.",
+                f"{record_path}.classification",
+            )
+        if not _is_nonempty_string(record["path"]):
+            _reject(
+                rejections,
+                "invalid_artifact_path",
+                "Provenance path must be non-empty.",
+                f"{record_path}.path",
+            )
+        if not _is_nonnegative_int(record["size_bytes"]):
+            _reject(
+                rejections,
+                "invalid_artifact_size",
+                "Provenance size must be a non-negative integer.",
+                f"{record_path}.size_bytes",
+            )
+        if not _is_sha256(record["sha256"]):
+            _reject(
+                rejections,
+                "invalid_sha256",
+                "Provenance SHA-256 is invalid.",
+                f"{record_path}.sha256",
+            )
+        if not _is_nonnegative_int(record["row_count"]) or record["row_count"] < 1:
+            _reject(
+                rejections,
+                "invalid_action_row_count",
+                "Action provenance row_count must be a positive integer.",
+                f"{record_path}.row_count",
+            )
+        if verify_bytes and _is_nonempty_string(record["path"]):
+            _validate_provenance_file_bytes(record, record_path, rejections)
+
+    if not _is_git_sha(original["asset_revision"]):
+        _reject(
+            rejections,
+            "invalid_git_sha",
+            "Original asset_revision must be a full lowercase Git SHA.",
+            f"{path}.original.asset_revision",
+        )
+    for field in (
+        "pre_size_bytes",
+        "post_size_bytes",
+    ):
+        if not _is_nonnegative_int(original[field]):
+            _reject(
+                rejections,
+                "invalid_artifact_size",
+                f"{field} must be a non-negative integer.",
+                f"{path}.original.{field}",
+            )
+    for field in (
+        "pre_sha256",
+        "post_sha256",
+        "row_sequence_sha256",
+    ):
+        if not _is_sha256(original[field]):
+            _reject(
+                rejections,
+                "invalid_sha256",
+                f"{field} must be a lowercase SHA-256.",
+                f"{path}.original.{field}",
+            )
+    if (
+        original["canonical_input"] is not True
+        or original["unchanged"] is not True
+        or original["size_bytes"] != original["pre_size_bytes"]
+        or original["size_bytes"] != original["post_size_bytes"]
+        or original["sha256"] != original["pre_sha256"]
+        or original["sha256"] != original["post_sha256"]
+    ):
+        _reject(
+            rejections,
+            "original_action_mutated",
+            "Original identity must equal both pre- and post-conversion identity.",
+            f"{path}.original",
+        )
+
+    for field in (
+        "parent_original_sha256",
+        "parent_row_sequence_sha256",
+        "row_sequence_sha256",
+        "source_to_derived_sequence_sha256",
+    ):
+        if not _is_sha256(derived[field]):
+            _reject(
+                rejections,
+                "invalid_sha256",
+                f"{field} must be a lowercase SHA-256.",
+                f"{path}.derived.{field}",
+            )
+    if derived["transformation_name"] != ACTION_COMPATIBILITY_TRANSFORMATION:
+        _reject(
+            rejections,
+            "invalid_action_transformation",
+            "Unsupported action compatibility transformation.",
+            f"{path}.derived.transformation_name",
+        )
+    if derived["transformation_version"] != ACTION_COMPATIBILITY_VERSION:
+        _reject(
+            rejections,
+            "invalid_action_transformation_version",
+            "Unsupported action compatibility transformation version.",
+            f"{path}.derived.transformation_version",
+        )
+    if derived["deterministic_serialization"] != ACTION_COMPATIBILITY_SERIALIZATION:
+        _reject(
+            rejections,
+            "invalid_action_serialization",
+            "Derived serialization description is not the frozen value.",
+            f"{path}.derived.deterministic_serialization",
+        )
+    if derived["storage_classification"] != "runtime_only_outside_git":
+        _reject(
+            rejections,
+            "invalid_action_storage_classification",
+            "Derived JSONL must be classified runtime_only_outside_git.",
+            f"{path}.derived.storage_classification",
+        )
+    if (
+        _is_nonempty_string(derived["path"])
+        and Path(derived["path"]).resolve().is_relative_to(REPO_ROOT)
+    ):
+        _reject(
+            rejections,
+            "derived_action_inside_repository",
+            "Derived compatibility JSONL must remain outside the Git tree.",
+            f"{path}.derived.path",
+        )
+    if (
+        derived["parent_original_sha256"] != original["sha256"]
+        or derived["parent_row_sequence_sha256"]
+        != original["row_sequence_sha256"]
+    ):
+        _reject(
+            rejections,
+            "broken_action_parent_lineage",
+            "Derived action lineage does not reference the original identity.",
+            f"{path}.derived",
+        )
+    if (
+        derived["row_sequence_sha256"] != derived["sha256"]
+        or derived["row_count"] != original["row_count"]
+        or derived["rows_dropped"] != 0
+        or derived["rows_added"] != 0
+        or derived["row_order_preserved"] is not True
+    ):
+        _reject(
+            rejections,
+            "invalid_action_cardinality",
+            "Derived actions must preserve exact row count and order with no edits.",
+            f"{path}.derived",
+        )
+
+    for field in (
+        "generated_video_sha256",
+        "original_jsonl_sha256",
+        "derived_jsonl_sha256",
+    ):
+        if not _is_sha256(generated[field]):
+            _reject(
+                rejections,
+                "invalid_sha256",
+                f"{field} must be a lowercase SHA-256.",
+                f"{path}.generated.{field}",
+            )
+    if (
+        generated["relationship_to_generated_mp4"]
+        != "paired_action_metadata_for_generated_video"
+        or generated["relationship_to_original"]
+        != "derived_from_original_via_compatibility_jsonl"
+        or generated["relationship_to_derived"]
+        != "byte_identical_copy_of_derived_jsonl"
+        or generated["materialization_method"]
+        != "upstream_byte_copy_of_derived_jsonl"
+    ):
+        _reject(
+            rejections,
+            "invalid_generated_action_relationship",
+            "Generated metadata relationships are not the frozen values.",
+            f"{path}.generated",
+        )
+    if (
+        generated["original_jsonl_sha256"] != original["sha256"]
+        or generated["derived_jsonl_sha256"] != derived["sha256"]
+        or generated["sha256"] != derived["sha256"]
+        or generated["size_bytes"] != derived["size_bytes"]
+        or generated["row_count"] != derived["row_count"]
+    ):
+        _reject(
+            rejections,
+            "broken_generated_action_lineage",
+            "Generated metadata is not bound to original and derived inputs.",
+            f"{path}.generated",
+        )
+
+    if verify_bytes and all(
+        _is_nonempty_string(record["path"])
+        and Path(record["path"]).is_file()
+        for record in (original, derived, generated)
+    ):
+        try:
+            original_count, original_sequence, original_row_hashes = (
+                _action_sequence_facts(
+                    Path(original["path"]),
+                    original_json=True,
+                )
+            )
+            derived_count, derived_sequence, derived_row_hashes = (
+                _action_sequence_facts(
+                    Path(derived["path"]),
+                    original_json=False,
+                )
+            )
+        except EvidenceValidationError as exc:
+            _reject(rejections, exc.code, exc.message, path)
+        else:
+            if (
+                original_count != original["row_count"]
+                or derived_count != derived["row_count"]
+                or original_sequence != original["row_sequence_sha256"]
+                or derived_sequence != derived["row_sequence_sha256"]
+            ):
+                _reject(
+                    rejections,
+                    "action_sequence_integrity_mismatch",
+                    "Recorded row counts or sequence hashes disagree with bytes.",
+                    path,
+                )
+            pair_binding = sha256_bytes(
+                b"".join(
+                    (source_hash + ":" + derived_hash + "\n").encode("ascii")
+                    for source_hash, derived_hash in zip(
+                        original_row_hashes,
+                        derived_row_hashes,
+                        strict=False,
+                    )
+                )
+            )
+            if (
+                original_count != derived_count
+                or pair_binding != derived["source_to_derived_sequence_sha256"]
+            ):
+                _reject(
+                    rejections,
+                    "action_row_order_mismatch",
+                    "Ordered original-to-derived row binding disagrees with bytes.",
+                    f"{path}.derived.source_to_derived_sequence_sha256",
+                )
+
+    if isinstance(inputs, list):
+        input_by_role = {
+            item.get("role"): item
+            for item in inputs
+            if isinstance(item, Mapping) and isinstance(item.get("role"), str)
+        }
+        canonical = input_by_role.get("input_jsonl")
+        if (
+            not isinstance(canonical, Mapping)
+            or canonical.get("path") != original["path"]
+            or canonical.get("size_bytes") != original["size_bytes"]
+            or canonical.get("sha256") != original["sha256"]
+        ):
+            _reject(
+                rejections,
+                "canonical_input_provenance_mismatch",
+                "Original provenance must equal the canonical input_jsonl artifact.",
+                f"{path}.original",
+            )
+    if (
+        not isinstance(identity, Mapping)
+        or identity.get("asset_revision") != original["asset_revision"]
+    ):
+        _reject(
+            rejections,
+            "asset_revision_provenance_mismatch",
+            "Original action asset revision must equal the run identity.",
+            f"{path}.original.asset_revision",
+        )
+
+    if isinstance(outputs, list):
+        by_role = {
+            item.get("role"): item
+            for item in outputs
+            if isinstance(item, Mapping) and isinstance(item.get("role"), str)
+        }
+        paired = by_role.get("paired_metadata")
+        video = by_role.get("generated_video")
+        if (
+            not isinstance(paired, Mapping)
+            or paired.get("path") != generated["path"]
+            or paired.get("size_bytes") != generated["size_bytes"]
+            or paired.get("sha256") != generated["sha256"]
+        ):
+            _reject(
+                rejections,
+                "generated_metadata_output_mismatch",
+                "Generated provenance does not equal the paired_metadata output.",
+                f"{path}.generated",
+            )
+        if (
+            not isinstance(video, Mapping)
+            or video.get("sha256") != generated["generated_video_sha256"]
+        ):
+            _reject(
+                rejections,
+                "generated_video_lineage_mismatch",
+                "Generated provenance does not bind the generated_video output.",
+                f"{path}.generated.generated_video_sha256",
+            )
+    return tuple(rejections)
+
+
 def _manifest_projection(document: Mapping[str, Any]) -> dict[str, Any]:
     projection = deepcopy(dict(document))
     projection.pop("manifest_integrity", None)
@@ -706,6 +1200,7 @@ def validate_rollout_manifest(
         "inputs",
         "runtime",
         "outputs",
+        "action_compatibility",
         "ffprobe",
         "manifest_integrity",
     }
@@ -819,6 +1314,15 @@ def validate_rollout_manifest(
     rejections.extend(
         validate_output_file_completeness(
             document["outputs"], verify_bytes=verify_output_bytes
+        )
+    )
+    rejections.extend(
+        validate_action_compatibility_provenance(
+            document["action_compatibility"],
+            inputs=document["inputs"],
+            outputs=document["outputs"],
+            identity=document["identity"],
+            verify_bytes=verify_output_bytes,
         )
     )
     try:

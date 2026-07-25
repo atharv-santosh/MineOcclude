@@ -1,13 +1,19 @@
 from __future__ import annotations
 
-import json
 import io
+import json
+import math
+import tempfile
 import unittest
 from contextlib import redirect_stderr
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 
 from mineocclude.models.phase2_aws import (
+    ACTION_COMPATIBILITY_SERIALIZATION,
+    ACTION_COMPATIBILITY_TRANSFORMATION,
+    ACTION_COMPATIBILITY_VERSION,
     PINNED_ASSET_REVISION,
     PINNED_MAIN_CHECKPOINT_SHA256,
     PINNED_SOURCE_REVISION,
@@ -16,11 +22,13 @@ from mineocclude.models.phase2_aws import (
     build_architecture_parser,
     build_rollout_parser,
     build_teacher_forced_parser,
+    convert_action_jsonl_for_pinned_inference,
 )
 from mineocclude.models.phase2_evidence import (
     ARCHITECTURE_EVIDENCE_TYPE,
     EVIDENCE_SCHEMA_VERSION,
     ROLLOUT_EVIDENCE_TYPE,
+    EvidenceValidationError,
     artifact_record,
     canonical_json_bytes,
     compare_numeric_sequences,
@@ -29,6 +37,7 @@ from mineocclude.models.phase2_evidence import (
     seal_document,
     sha256_bytes,
     sha256_file,
+    validate_action_compatibility_provenance,
     validate_architecture_facts,
     validate_hook_records,
     validate_output_file_completeness,
@@ -98,10 +107,24 @@ def _identity() -> dict[str, object]:
     }
 
 
-def _rollout_document() -> dict[str, object]:
+def _rollout_document(runtime_root: Path) -> dict[str, object]:
     shared_input = FIXTURES / "ffprobe_valid.json"
     generated = FIXTURES / "ffprobe_valid.json"
-    paired = FIXTURES / "ffprobe_invalid.json"
+    original = runtime_root / "original.jsonl"
+    original_row = _raw_action()
+    original.write_text(
+        json.dumps(original_row, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    paired = runtime_root / "paired.jsonl"
+    paired.write_text(
+        '{"camera":[0,0],"forward":0}\n',
+        encoding="utf-8",
+        newline="\n",
+    )
+    derived = runtime_root / "derived.jsonl"
+    derived.write_bytes(paired.read_bytes())
     raw_log = SCHEMA
     input_roles = [
         "model_config",
@@ -118,7 +141,13 @@ def _rollout_document() -> dict[str, object]:
         "evidence_type": ROLLOUT_EVIDENCE_TYPE,
         "status": "completed",
         "identity": _identity(),
-        "inputs": [artifact_record(role, shared_input) for role in input_roles],
+        "inputs": [
+            artifact_record(
+                role,
+                original if role == "input_jsonl" else shared_input,
+            )
+            for role in input_roles
+        ],
         "runtime": {
             "timings": {
                 "model_initialization_seconds": 2.0,
@@ -144,6 +173,70 @@ def _rollout_document() -> dict[str, object]:
             artifact_record("paired_metadata", paired),
             artifact_record("raw_stdout_stderr", raw_log),
         ],
+        "action_compatibility": {
+            "original": {
+                "classification": "original",
+                "path": str(original.resolve()),
+                "size_bytes": original.stat().st_size,
+                "sha256": sha256_file(original),
+                "row_count": 1,
+                "asset_revision": GIT_SHA,
+                "pre_size_bytes": original.stat().st_size,
+                "pre_sha256": sha256_file(original),
+                "post_size_bytes": original.stat().st_size,
+                "post_sha256": sha256_file(original),
+                "row_sequence_sha256": sha256_bytes(
+                    canonical_json_bytes(original_row)
+                ),
+                "canonical_input": True,
+                "unchanged": True,
+            },
+            "derived": {
+                "classification": "derived",
+                "path": str(derived.resolve()),
+                "size_bytes": derived.stat().st_size,
+                "sha256": sha256_file(derived),
+                "row_count": 1,
+                "transformation_name": ACTION_COMPATIBILITY_TRANSFORMATION,
+                "transformation_version": ACTION_COMPATIBILITY_VERSION,
+                "deterministic_serialization": ACTION_COMPATIBILITY_SERIALIZATION,
+                "parent_original_sha256": sha256_file(original),
+                "parent_row_sequence_sha256": sha256_bytes(
+                    canonical_json_bytes(original_row)
+                ),
+                "row_sequence_sha256": sha256_file(derived),
+                "source_to_derived_sequence_sha256": sha256_bytes(
+                    (
+                        sha256_bytes(canonical_json_bytes(original_row))
+                        + ":"
+                        + sha256_file(derived)
+                        + "\n"
+                    ).encode("ascii")
+                ),
+                "rows_dropped": 0,
+                "rows_added": 0,
+                "row_order_preserved": True,
+                "storage_classification": "runtime_only_outside_git",
+            },
+            "generated": {
+                "classification": "generated",
+                "path": str(paired.resolve()),
+                "size_bytes": paired.stat().st_size,
+                "sha256": sha256_file(paired),
+                "row_count": 1,
+                "relationship_to_generated_mp4":
+                    "paired_action_metadata_for_generated_video",
+                "generated_video_sha256": sha256_file(generated),
+                "relationship_to_original":
+                    "derived_from_original_via_compatibility_jsonl",
+                "original_jsonl_sha256": sha256_file(original),
+                "relationship_to_derived":
+                    "byte_identical_copy_of_derived_jsonl",
+                "derived_jsonl_sha256": sha256_file(derived),
+                "materialization_method":
+                    "upstream_byte_copy_of_derived_jsonl",
+            },
+        },
         "ffprobe": {
             "width": 640,
             "height": 360,
@@ -155,6 +248,91 @@ def _rollout_document() -> dict[str, object]:
         },
     }
     return seal_document(document)
+
+
+_FAKE_KEYBOARD_MAPPING = {
+    "key.keyboard.w": "forward",
+    "key.keyboard.s": "back",
+    "key.keyboard.a": "left",
+    "key.keyboard.d": "right",
+    "key.keyboard.space": "jump",
+}
+_FAKE_NOOP_ACTION = {
+    "ESC": 0,
+    "back": 0,
+    "drop": 0,
+    "forward": 0,
+    "hotbar.1": 0,
+    "inventory": 0,
+    "jump": 0,
+    "left": 0,
+    "right": 0,
+    "sneak": 0,
+    "sprint": 0,
+    "swapHands": 0,
+    "camera": [0, 0],
+    "attack": 0,
+    "use": 0,
+    "pickItem": 0,
+}
+
+
+def _fake_mcdataset_module(
+    mutate_flat: object | None = None,
+    *,
+    nondeterministic: bool = False,
+) -> object:
+    class Dataset:
+        calls = 0
+
+        def json_action_to_env_action(
+            self, row: dict[str, object]
+        ) -> tuple[dict[str, object], bool]:
+            Dataset.calls += 1
+            action = deepcopy(_FAKE_NOOP_ACTION)
+            for key in row["keyboard"]["keys"]:
+                action[_FAKE_KEYBOARD_MAPPING[key]] = 1
+            mouse = row["mouse"]
+            action["camera"] = [mouse["dy"] * 0.15, mouse["dx"] * 0.15]
+            for button, field in ((0, "attack"), (1, "use"), (2, "pickItem")):
+                if button in mouse["buttons"]:
+                    action[field] = 1
+            if nondeterministic and Dataset.calls % 2 == 0:
+                action["jump"] = 1 - action["jump"]
+            if callable(mutate_flat):
+                mutate_flat(action)
+            return action, not any(
+                value
+                for key, value in action.items()
+                if key != "camera"
+            )
+
+    return SimpleNamespace(
+        KEYBOARD_BUTTON_MAPPING=deepcopy(_FAKE_KEYBOARD_MAPPING),
+        NOOP_ACTION=deepcopy(_FAKE_NOOP_ACTION),
+        MCDataset=Dataset,
+        np=SimpleNamespace(array=lambda items: items),
+    )
+
+
+def _raw_action(
+    *,
+    keys: object | None = None,
+    buttons: object | None = None,
+    dx: object = 2,
+    dy: object = -3,
+) -> dict[str, object]:
+    return {
+        "keyboard": {"keys": [] if keys is None else keys},
+        "mouse": {
+            "buttons": [] if buttons is None else buttons,
+            "dx": dx,
+            "dy": dy,
+        },
+        "isGuiOpen": True,
+        "isGuiInventory": False,
+        "unused_nullable_state": None,
+    }
 
 
 def _architecture_facts() -> dict[str, object]:
@@ -201,7 +379,103 @@ def _hook_records() -> list[dict[str, object]]:
 
 class Phase2EvidenceTests(unittest.TestCase):
     def setUp(self) -> None:
+        self._temporary_directory = tempfile.TemporaryDirectory()
+        self.runtime_root = Path(self._temporary_directory.name)
         self.tmp_path = FIXTURES
+
+    def tearDown(self) -> None:
+        self._temporary_directory.cleanup()
+
+    def _convert_payload(
+        self,
+        payload: bytes,
+        *,
+        module: object | None = None,
+        case_name: str = "case",
+    ) -> tuple[Path, Path, dict[str, object]]:
+        case_root = self.runtime_root / case_name
+        case_root.mkdir()
+        original = case_root / "scene.jsonl"
+        original.write_bytes(payload)
+        derived = case_root / "runtime" / "scene.jsonl"
+        provenance = convert_action_jsonl_for_pinned_inference(
+            original,
+            derived,
+            mcdataset_module=module or _fake_mcdataset_module(),
+            asset_revision=PINNED_ASSET_REVISION,
+            expected_original_size_bytes=original.stat().st_size,
+            expected_original_sha256=sha256_file(original),
+        )
+        return original, derived, provenance
+
+    def _convert_rows(
+        self,
+        rows: list[dict[str, object]],
+        *,
+        module: object | None = None,
+        case_name: str = "case",
+    ) -> tuple[Path, Path, dict[str, object]]:
+        payload = b"".join(
+            (
+                json.dumps(
+                    row,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                )
+                + "\n"
+            ).encode("utf-8")
+            for row in rows
+        )
+        return self._convert_payload(
+            payload,
+            module=module,
+            case_name=case_name,
+        )
+
+    @staticmethod
+    def _complete_action_provenance(
+        provenance: dict[str, object],
+        *,
+        generated_metadata: Path,
+        generated_video: Path,
+    ) -> tuple[dict[str, object], list[dict[str, object]], list[dict[str, object]]]:
+        complete = deepcopy(provenance)
+        original = complete["original"]
+        derived = complete["derived"]
+        generated_metadata.write_bytes(Path(derived["path"]).read_bytes())
+        generated_video.write_bytes(b"controlled generated-video fixture")
+        complete["generated"] = {
+            "classification": "generated",
+            "path": str(generated_metadata.resolve()),
+            "size_bytes": generated_metadata.stat().st_size,
+            "sha256": sha256_file(generated_metadata),
+            "row_count": derived["row_count"],
+            "relationship_to_generated_mp4":
+                "paired_action_metadata_for_generated_video",
+            "generated_video_sha256": sha256_file(generated_video),
+            "relationship_to_original":
+                "derived_from_original_via_compatibility_jsonl",
+            "original_jsonl_sha256": original["sha256"],
+            "relationship_to_derived":
+                "byte_identical_copy_of_derived_jsonl",
+            "derived_jsonl_sha256": derived["sha256"],
+            "materialization_method":
+                "upstream_byte_copy_of_derived_jsonl",
+        }
+        inputs = [
+            {
+                "role": "input_jsonl",
+                "path": original["path"],
+                "size_bytes": original["size_bytes"],
+                "sha256": original["sha256"],
+            }
+        ]
+        outputs = [
+            artifact_record("paired_metadata", generated_metadata),
+            artifact_record("generated_video", generated_video),
+        ]
+        return complete, inputs, outputs
 
     def test_cli_parsing_and_teacher_repeat_default(self) -> None:
         common = _common_cli_arguments(self.tmp_path)
@@ -288,6 +562,453 @@ class Phase2EvidenceTests(unittest.TestCase):
         )
         self.assertEqual(len(schema["oneOf"]), 3)
 
+    def test_action_conversion_is_deterministic_ordered_and_complete(self) -> None:
+        rows = [
+            _raw_action(keys=["key.keyboard.w"], buttons=[0], dx=1, dy=-2),
+            _raw_action(keys=["key.keyboard.s"], buttons=[1], dx=3.5, dy=4),
+            _raw_action(keys=["key.keyboard.a"], buttons=[], dx=0, dy=0),
+        ]
+        original, first_path, first = self._convert_rows(
+            rows, case_name="deterministic_first"
+        )
+        original_bytes = original.read_bytes()
+        second_path = self.runtime_root / "deterministic_second" / "scene.jsonl"
+        second = convert_action_jsonl_for_pinned_inference(
+            original,
+            second_path,
+            mcdataset_module=_fake_mcdataset_module(),
+            asset_revision=PINNED_ASSET_REVISION,
+            expected_original_size_bytes=len(original_bytes),
+            expected_original_sha256=sha256_bytes(original_bytes),
+        )
+
+        self.assertEqual(first_path.read_bytes(), second_path.read_bytes())
+        self.assertEqual(first["derived"]["sha256"], second["derived"]["sha256"])
+        self.assertEqual(original.read_bytes(), original_bytes)
+        self.assertEqual(first["original"]["pre_size_bytes"], len(original_bytes))
+        self.assertEqual(first["original"]["post_size_bytes"], len(original_bytes))
+        self.assertEqual(first["original"]["pre_sha256"], sha256_bytes(original_bytes))
+        self.assertEqual(first["original"]["post_sha256"], sha256_bytes(original_bytes))
+        self.assertTrue(first["original"]["canonical_input"])
+        self.assertTrue(first["original"]["unchanged"])
+        self.assertEqual(first["original"]["row_count"], 3)
+        self.assertEqual(first["derived"]["row_count"], 3)
+        self.assertEqual(first["derived"]["rows_dropped"], 0)
+        self.assertEqual(first["derived"]["rows_added"], 0)
+        self.assertTrue(first["derived"]["row_order_preserved"])
+        self.assertEqual(
+            first["derived"]["storage_classification"],
+            "runtime_only_outside_git",
+        )
+        self.assertEqual(first["derived"]["size_bytes"], first_path.stat().st_size)
+        self.assertEqual(first["derived"]["sha256"], sha256_file(first_path))
+        self.assertEqual(
+            first["derived"]["parent_original_sha256"],
+            first["original"]["sha256"],
+        )
+
+        derived_rows = []
+        for line in first_path.read_text(encoding="utf-8").splitlines():
+            # Controlled bytes were emitted by the strict adapter immediately above.
+            parsed = eval(
+                line,
+                {"__builtins__": None},
+                {"array": lambda items: items},
+            )
+            derived_rows.append(parsed)
+            self.assertNotIn("true", line)
+            self.assertNotIn("false", line)
+            self.assertNotIn("null", line)
+        self.assertEqual(len(derived_rows), 3)
+        self.assertEqual(
+            [
+                (row["forward"], row["back"], row["left"])
+                for row in derived_rows
+            ],
+            [(1, 0, 0), (0, 1, 0), (0, 0, 1)],
+        )
+        self.assertEqual(set(derived_rows[0]), set(_FAKE_NOOP_ACTION))
+
+    def test_json_booleans_and_unused_null_do_not_enter_derived_actions(self) -> None:
+        row = _raw_action()
+        row["isGuiOpen"] = True
+        row["isGuiInventory"] = False
+        row["unused_nullable_state"] = None
+        _, derived, provenance = self._convert_rows(
+            [row], case_name="json_primitives"
+        )
+        parsed = json.loads(derived.read_text(encoding="utf-8"))
+        self.assertEqual(set(parsed), set(_FAKE_NOOP_ACTION))
+        self.assertNotIn("isGuiOpen", parsed)
+        self.assertNotIn("unused_nullable_state", parsed)
+        self.assertEqual(provenance["original"]["row_count"], 1)
+
+    def test_missing_action_events_use_pinned_noop_normalization(self) -> None:
+        _, derived, _ = self._convert_rows(
+            [_raw_action(keys=[], buttons=[], dx=0, dy=0)],
+            case_name="noop_normalization",
+        )
+        action = json.loads(derived.read_text(encoding="utf-8"))
+        self.assertEqual(action["camera"], [0.0, 0.0])
+        self.assertTrue(
+            all(value == 0 for key, value in action.items() if key != "camera")
+        )
+
+    def test_malformed_action_inputs_fail_closed_with_stable_codes(self) -> None:
+        raw_cases: list[tuple[str, bytes, str]] = [
+            ("malformed", b'{"keyboard":\n', "malformed_action_json"),
+            (
+                "blank",
+                (
+                    json.dumps(_raw_action())
+                    + "\n\n"
+                    + json.dumps(_raw_action())
+                    + "\n"
+                ).encode("utf-8"),
+                "blank_action_row",
+            ),
+            ("nondict", b"[]\n", "invalid_action_row"),
+            (
+                "missing_keyboard",
+                json.dumps({"mouse": {"dx": 0, "dy": 0, "buttons": []}}).encode()
+                + b"\n",
+                "invalid_keyboard_action",
+            ),
+            (
+                "missing_camera_source",
+                json.dumps(
+                    {"keyboard": {"keys": []}, "mouse": {"buttons": [], "dx": 0}}
+                ).encode()
+                + b"\n",
+                "invalid_camera_value",
+            ),
+            (
+                "null_camera",
+                json.dumps(_raw_action(dx=None)).encode() + b"\n",
+                "invalid_camera_value",
+            ),
+            (
+                "string_camera",
+                json.dumps(_raw_action(dx="2")).encode() + b"\n",
+                "invalid_camera_value",
+            ),
+            (
+                "nested_camera",
+                json.dumps(_raw_action(dx={"value": 2})).encode() + b"\n",
+                "invalid_camera_value",
+            ),
+            (
+                "nan_camera",
+                b'{"keyboard":{"keys":[]},"mouse":{"buttons":[],"dx":NaN,"dy":0}}\n',
+                "malformed_action_json",
+            ),
+            (
+                "positive_infinity",
+                b'{"keyboard":{"keys":[]},"mouse":{"buttons":[],"dx":1e999,"dy":0}}\n',
+                "invalid_camera_value",
+            ),
+            (
+                "negative_infinity",
+                b'{"keyboard":{"keys":[]},"mouse":{"buttons":[],"dx":-1e999,"dy":0}}\n',
+                "invalid_camera_value",
+            ),
+            (
+                "invalid_keyboard_type",
+                json.dumps(_raw_action(keys=[1])).encode() + b"\n",
+                "unsupported_keyboard_key",
+            ),
+            (
+                "unknown_keyboard_string",
+                json.dumps(_raw_action(keys=["key.keyboard.unknown"])).encode() + b"\n",
+                "unsupported_keyboard_key",
+            ),
+            (
+                "nested_keyboard",
+                json.dumps(_raw_action(keys=[["key.keyboard.w"]])).encode() + b"\n",
+                "unsupported_keyboard_key",
+            ),
+            (
+                "null_buttons",
+                json.dumps(
+                    {
+                        "keyboard": {"keys": []},
+                        "mouse": {"buttons": None, "dx": 0, "dy": 0},
+                    }
+                ).encode()
+                + b"\n",
+                "invalid_mouse_buttons",
+            ),
+            (
+                "boolean_button",
+                json.dumps(_raw_action(buttons=[True])).encode() + b"\n",
+                "invalid_mouse_button",
+            ),
+            (
+                "unknown_button",
+                json.dumps(_raw_action(buttons=[3])).encode() + b"\n",
+                "invalid_mouse_button",
+            ),
+            (
+                "nested_button",
+                json.dumps(_raw_action(buttons=[[0]])).encode() + b"\n",
+                "invalid_mouse_button",
+            ),
+        ]
+        for index, (name, payload, code) in enumerate(raw_cases):
+            with self.subTest(name=name):
+                with self.assertRaises(EvidenceValidationError) as raised:
+                    self._convert_payload(
+                        payload,
+                        case_name=f"invalid_raw_{index}",
+                    )
+                self.assertEqual(raised.exception.code, code)
+
+    def test_invalid_normalized_actions_and_nondeterminism_fail_closed(self) -> None:
+        mutations = [
+            (
+                "missing_camera",
+                lambda action: action.pop("camera"),
+                "incomplete_normalized_action",
+            ),
+            (
+                "short_camera",
+                lambda action: action.update(camera=[0]),
+                "invalid_camera",
+            ),
+            (
+                "string_camera",
+                lambda action: action.update(camera=["0", 0]),
+                "invalid_camera_value",
+            ),
+            (
+                "nan_camera",
+                lambda action: action.update(camera=[math.nan, 0]),
+                "invalid_camera_value",
+            ),
+            (
+                "positive_infinity",
+                lambda action: action.update(camera=[math.inf, 0]),
+                "invalid_camera_value",
+            ),
+            (
+                "negative_infinity",
+                lambda action: action.update(camera=[-math.inf, 0]),
+                "invalid_camera_value",
+            ),
+            (
+                "invalid_binary",
+                lambda action: action.update(forward=2),
+                "invalid_binary_action",
+            ),
+            (
+                "nested_binary",
+                lambda action: action.update(forward={"value": 1}),
+                "invalid_binary_action",
+            ),
+            (
+                "unknown_field",
+                lambda action: action.update(filename="shortcut"),
+                "incomplete_normalized_action",
+            ),
+        ]
+        for index, (name, mutation, code) in enumerate(mutations):
+            with self.subTest(name=name):
+                with self.assertRaises(EvidenceValidationError) as raised:
+                    self._convert_rows(
+                        [_raw_action()],
+                        module=_fake_mcdataset_module(mutation),
+                        case_name=f"invalid_flat_{index}",
+                    )
+                self.assertEqual(raised.exception.code, code)
+
+        with self.assertRaises(EvidenceValidationError) as raised:
+            self._convert_rows(
+                [_raw_action()],
+                module=_fake_mcdataset_module(nondeterministic=True),
+                case_name="nondeterministic",
+            )
+        self.assertEqual(
+            raised.exception.code,
+            "nondeterministic_action_conversion",
+        )
+
+    def test_original_locked_identity_mismatch_fails_before_conversion(self) -> None:
+        case_root = self.runtime_root / "identity_mismatch"
+        case_root.mkdir()
+        original = case_root / "scene.jsonl"
+        original.write_text(json.dumps(_raw_action()) + "\n", encoding="utf-8")
+        for index, (expected_size, expected_hash) in enumerate((
+            (original.stat().st_size + 1, sha256_file(original)),
+            (original.stat().st_size, "f" * 64),
+        )):
+            with self.subTest(size=expected_size, sha=expected_hash):
+                with self.assertRaises(EvidenceValidationError) as raised:
+                    convert_action_jsonl_for_pinned_inference(
+                        original,
+                        case_root / f"runtime-{index}" / "scene.jsonl",
+                        mcdataset_module=_fake_mcdataset_module(),
+                        asset_revision=PINNED_ASSET_REVISION,
+                        expected_original_size_bytes=expected_size,
+                        expected_original_sha256=expected_hash,
+                    )
+                self.assertEqual(
+                    raised.exception.code,
+                    "original_action_identity_mismatch",
+                )
+
+    def test_action_provenance_is_complete_linked_and_non_mutating(self) -> None:
+        original, _, partial = self._convert_rows(
+            [_raw_action(keys=["key.keyboard.w"])],
+            case_name="provenance_valid",
+        )
+        complete, inputs, outputs = self._complete_action_provenance(
+            partial,
+            generated_metadata=self.runtime_root / "generated.jsonl",
+            generated_video=self.runtime_root / "generated.mp4",
+        )
+        before = deepcopy(complete)
+        rejections = validate_action_compatibility_provenance(
+            complete,
+            inputs=inputs,
+            outputs=outputs,
+            identity={"asset_revision": PINNED_ASSET_REVISION},
+            verify_bytes=True,
+        )
+        self.assertEqual(rejections, ())
+        self.assertEqual(complete, before)
+        self.assertTrue(complete["original"]["canonical_input"])
+        self.assertEqual(
+            complete["derived"]["transformation_name"],
+            ACTION_COMPATIBILITY_TRANSFORMATION,
+        )
+        self.assertEqual(
+            complete["derived"]["transformation_version"],
+            ACTION_COMPATIBILITY_VERSION,
+        )
+        self.assertEqual(
+            complete["derived"]["parent_original_sha256"],
+            complete["original"]["sha256"],
+        )
+        self.assertEqual(
+            complete["generated"]["original_jsonl_sha256"],
+            complete["original"]["sha256"],
+        )
+        self.assertEqual(
+            complete["generated"]["derived_jsonl_sha256"],
+            complete["derived"]["sha256"],
+        )
+        self.assertEqual(
+            original.read_bytes(),
+            Path(complete["original"]["path"]).read_bytes(),
+        )
+
+    def test_action_provenance_mutation_and_malformed_claims_fail_closed(self) -> None:
+        original, derived, partial = self._convert_rows(
+            [_raw_action()],
+            case_name="provenance_negative",
+        )
+        generated = self.runtime_root / "negative-generated.jsonl"
+        video = self.runtime_root / "negative-generated.mp4"
+        complete, inputs, outputs = self._complete_action_provenance(
+            partial,
+            generated_metadata=generated,
+            generated_video=video,
+        )
+        identity = {"asset_revision": PINNED_ASSET_REVISION}
+
+        malformed_cases = []
+        missing = deepcopy(complete)
+        del missing["derived"]["transformation_version"]
+        malformed_cases.append(("missing", missing, "missing_required_field"))
+        wrong_class = deepcopy(complete)
+        wrong_class["derived"]["classification"] = "original"
+        malformed_cases.append(
+            ("classification", wrong_class, "invalid_provenance_classification")
+        )
+        wrong_hash = deepcopy(complete)
+        wrong_hash["derived"]["sha256"] = "f" * 64
+        malformed_cases.append(("hash", wrong_hash, "invalid_action_cardinality"))
+        wrong_size = deepcopy(complete)
+        wrong_size["generated"]["size_bytes"] += 1
+        malformed_cases.append(("size", wrong_size, "broken_generated_action_lineage"))
+        wrong_count = deepcopy(complete)
+        wrong_count["derived"]["row_count"] += 1
+        malformed_cases.append(
+            ("row_count", wrong_count, "invalid_action_cardinality")
+        )
+        wrong_order = deepcopy(complete)
+        wrong_order["derived"]["row_order_preserved"] = False
+        malformed_cases.append(
+            ("row_order", wrong_order, "invalid_action_cardinality")
+        )
+        malformed_cases.append(
+            ("asset_revision", deepcopy(complete), "asset_revision_provenance_mismatch")
+        )
+
+        for name, value, code in malformed_cases:
+            with self.subTest(name=name):
+                current_identity = (
+                    {"asset_revision": "c" * 40}
+                    if name == "asset_revision"
+                    else identity
+                )
+                codes = {
+                    item.code
+                    for item in validate_action_compatibility_provenance(
+                        value,
+                        inputs=inputs,
+                        outputs=outputs,
+                        identity=current_identity,
+                    )
+                }
+                self.assertIn(code, codes)
+
+        false_counts = deepcopy(complete)
+        false_counts["original"]["row_count"] = 9
+        false_counts["derived"]["row_count"] = 9
+        false_counts["generated"]["row_count"] = 9
+        codes = {
+            item.code
+            for item in validate_action_compatibility_provenance(
+                false_counts,
+                inputs=inputs,
+                outputs=outputs,
+                identity=identity,
+                verify_bytes=True,
+            )
+        }
+        self.assertIn("action_sequence_integrity_mismatch", codes)
+
+        original_bytes = original.read_bytes()
+        original.write_bytes(original_bytes + b" ")
+        codes = {
+            item.code
+            for item in validate_action_compatibility_provenance(
+                complete,
+                inputs=inputs,
+                outputs=outputs,
+                identity=identity,
+                verify_bytes=True,
+            )
+        }
+        self.assertIn("provenance_integrity_mismatch", codes)
+        original.write_bytes(original_bytes)
+
+        derived_bytes = derived.read_bytes()
+        derived.write_bytes(derived_bytes + b" ")
+        codes = {
+            item.code
+            for item in validate_action_compatibility_provenance(
+                complete,
+                inputs=inputs,
+                outputs=outputs,
+                identity=identity,
+                verify_bytes=True,
+            )
+        }
+        self.assertIn("provenance_integrity_mismatch", codes)
+        derived.write_bytes(derived_bytes)
+
     def test_runtime_constants_match_the_committed_asset_lock(self) -> None:
         lock = json.loads(
             (ROOT / "configs" / "assets" / "mineworld_assets_v1.json").read_text(
@@ -372,7 +1093,7 @@ class Phase2EvidenceTests(unittest.TestCase):
         )
 
     def test_rollout_identity_and_non_mutation(self) -> None:
-        document = _rollout_document()
+        document = _rollout_document(self.runtime_root)
         before = deepcopy(document)
         result = validate_rollout_manifest(document, verify_output_bytes=True)
         self.assertTrue(result.accepted, result.rejections)
@@ -387,7 +1108,7 @@ class Phase2EvidenceTests(unittest.TestCase):
         )
 
     def test_output_file_completeness_rehashes(self) -> None:
-        document = _rollout_document()
+        document = _rollout_document(self.runtime_root)
         outputs = document["outputs"]
         self.assertEqual(validate_output_file_completeness(outputs), ())
 
@@ -549,7 +1270,7 @@ class Phase2EvidenceTests(unittest.TestCase):
         )
 
     def test_manifest_tampering_fails_closed(self) -> None:
-        document = _rollout_document()
+        document = _rollout_document(self.runtime_root)
         document["runtime"]["timings"]["total_runtime_seconds"] = 99.0
         result = validate_rollout_manifest(document)
         self.assertFalse(result.accepted)

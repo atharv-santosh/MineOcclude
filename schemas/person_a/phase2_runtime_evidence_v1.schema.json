@@ -175,6 +175,7 @@
             "inputs",
             "runtime",
             "outputs",
+            "action_compatibility",
             "ffprobe",
             "manifest_integrity"
           ],
@@ -203,6 +204,231 @@
               "maxItems": 3,
               "items": {
                 "$ref": "#/$defs/artifact"
+              }
+            },
+            "action_compatibility": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "original",
+                "derived",
+                "generated"
+              ],
+              "properties": {
+                "original": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "classification",
+                    "path",
+                    "size_bytes",
+                    "sha256",
+                    "row_count",
+                    "asset_revision",
+                    "pre_size_bytes",
+                    "pre_sha256",
+                    "post_size_bytes",
+                    "post_sha256",
+                    "row_sequence_sha256",
+                    "canonical_input",
+                    "unchanged"
+                  ],
+                  "properties": {
+                    "classification": {
+                      "const": "original"
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "asset_revision": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{40}$"
+                    },
+                    "pre_size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "pre_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "post_size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "post_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "canonical_input": {
+                      "const": true
+                    },
+                    "unchanged": {
+                      "const": true
+                    }
+                  }
+                },
+                "derived": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "classification",
+                    "path",
+                    "size_bytes",
+                    "sha256",
+                    "row_count",
+                    "transformation_name",
+                    "transformation_version",
+                    "deterministic_serialization",
+                    "parent_original_sha256",
+                    "parent_row_sequence_sha256",
+                    "row_sequence_sha256",
+                    "source_to_derived_sequence_sha256",
+                    "rows_dropped",
+                    "rows_added",
+                    "row_order_preserved",
+                    "storage_classification"
+                  ],
+                  "properties": {
+                    "classification": {
+                      "const": "derived"
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "transformation_name": {
+                      "const": "mineworld_mcdataset_json_action_to_env_action"
+                    },
+                    "transformation_version": {
+                      "const": "1.0"
+                    },
+                    "deterministic_serialization": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "parent_original_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "parent_row_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "source_to_derived_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "rows_dropped": {
+                      "const": 0
+                    },
+                    "rows_added": {
+                      "const": 0
+                    },
+                    "row_order_preserved": {
+                      "const": true
+                    },
+                    "storage_classification": {
+                      "const": "runtime_only_outside_git"
+                    }
+                  }
+                },
+                "generated": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "classification",
+                    "path",
+                    "size_bytes",
+                    "sha256",
+                    "row_count",
+                    "relationship_to_generated_mp4",
+                    "generated_video_sha256",
+                    "relationship_to_original",
+                    "original_jsonl_sha256",
+                    "relationship_to_derived",
+                    "derived_jsonl_sha256",
+                    "materialization_method"
+                  ],
+                  "properties": {
+                    "classification": {
+                      "const": "generated"
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "relationship_to_generated_mp4": {
+                      "const": "paired_action_metadata_for_generated_video"
+                    },
+                    "generated_video_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "relationship_to_original": {
+                      "const": "derived_from_original_via_compatibility_jsonl"
+                    },
+                    "original_jsonl_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "relationship_to_derived": {
+                      "const": "byte_identical_copy_of_derived_jsonl"
+                    },
+                    "derived_jsonl_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "materialization_method": {
+                      "const": "upstream_byte_copy_of_derived_jsonl"
+                    }
+                  }
+                }
               }
             },
             "ffprobe": {

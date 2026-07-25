@@ -79,6 +79,85 @@ Do not continue using a manually inferred identity.
 
 ## 3. Run the formal Step 2.6 rollout
 
+### Required action compatibility boundary
+
+The first formal attempt,
+`person-a-phase2-aws-20260724-194620`, is immutable failed evidence at:
+
+```text
+/home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260724-194620
+```
+
+That attempt exited with status 1 after the pinned batch path tried to read the
+accepted raw VPT-style JSON action rows with its restricted Python `eval`
+expression. It produced `raw_stdout_stderr.log` and a copied `scene.jsonl`, but
+no `run_manifest.json` and no generated MP4. It is not successful Step 2.6
+evidence. Do not delete, overwrite, rename, reuse, or reseal that directory.
+
+The accepted ModelScope `scene.jsonl` is valid JSON. The pinned Gradio path
+reads it with `json.loads`, then calls
+`MCDataset.json_action_to_env_action`, then calls
+`get_action_index_from_actiondict`. The pinned batch path omitted the first two
+operations and instead applied:
+
+```python
+eval(line.strip(), {"__builtins__": None}, safe_globals)
+```
+
+MineWorld-Upstream remains untouched. The MineOcclude Step 2.6 command now
+creates a compatibility input by:
+
+1. parsing every nonempty canonical row only with strict `json.loads`;
+2. validating the raw `keyboard.keys`, `mouse.dx`, `mouse.dy`, and
+   `mouse.buttons` fields consumed by the pinned converter;
+3. calling the pinned `MCDataset.json_action_to_env_action` implementation;
+4. requiring the complete action-key set from pinned `NOOP_ACTION`, a
+   two-value finite numeric camera, and integer `0`/`1` binary fields; and
+5. emitting one deterministic flat action object per source row.
+
+Absent action events are normalized only through pinned `NOOP_ACTION` to the
+integer no-op value `0`. Missing source structures, unknown keyboard/button
+values, malformed JSON, blank rows, strings or nested values in action-bearing
+fields, non-finite camera values, or an incomplete normalized action fail the
+command.
+
+The serialization is a UTF-8 JSON/Python-literal subset with sorted keys,
+compact separators, finite numbers, integer binary values, and one
+LF-terminated object per row. Each emitted row is immediately checked with the
+exact pinned restricted-eval expression. Conversion runs twice and must
+produce byte-identical output. Row count and order are preserved; no row is
+dropped or added.
+
+The original `$INPUT_JSONL` remains the canonical accepted input and is never
+replaced. Its locked size and SHA-256 are checked before conversion and again
+after generation. The runtime-only derived file is:
+
+```text
+$EVIDENCE_ROOT/step2_6/inference_input/scene.jsonl
+```
+
+It stays outside Git. The input MP4 is exposed beside it by a runtime symlink;
+the canonical MP4 identity is unchanged. The upstream-generated
+`$EVIDENCE_ROOT/step2_6/scene.jsonl` is expected to be a byte-identical copy of
+the derived compatibility input and is recorded separately as generated paired
+metadata.
+
+The sealed manifest distinguishes:
+
+- `original`: canonical path, asset revision, pre/post size and SHA-256, row
+  count, row-sequence hash, and unchanged confirmation;
+- `derived`: runtime-only path, size and SHA-256, row count, transformation
+  name/version, deterministic serialization rule, parent hashes, and explicit
+  zero-dropped/zero-added/order-preserved assertions; and
+- `generated`: paired-metadata path, size and SHA-256, and explicit links to
+  the generated MP4 plus both original and derived JSONL identities.
+
+Any missing or inconsistent identity, relationship, hash, size, row count, or
+transformation fact prevents manifest acceptance.
+
+Before retrying, choose a **new** `SESSION_ID` and therefore a **new**
+`EVIDENCE_ROOT`. Never point the command at the failed session directory.
+
 ```bash
 python scripts/run_phase2_rollout.py \
   --mineworld-source-root "$MINEWORLD" \
@@ -104,7 +183,9 @@ python scripts/run_phase2_rollout.py \
 
 This command requests exactly one generated frame. A UI observation is not
 accepted as evidence: the command must write and validate the MP4, paired
-metadata, raw log, and sealed JSON manifest.
+metadata, raw log, compatibility provenance, and sealed JSON manifest.
+Step 2.6 remains pending until this corrected command exits zero in the new
+immutable AWS session and all durable evidence validates.
 
 ## 4. Run the Step 2.7 loaded-architecture inspection
 

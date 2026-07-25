@@ -12,6 +12,8 @@ import argparse
 import contextlib
 import importlib
 import json
+import math
+import numbers
 import os
 import random
 import shutil
@@ -26,6 +28,9 @@ from typing import Any, Iterator, Mapping, Sequence, TextIO
 
 from mineocclude.contracts.identity import SCHEMA_VERSION
 from mineocclude.models.phase2_evidence import (
+    ACTION_COMPATIBILITY_SERIALIZATION,
+    ACTION_COMPATIBILITY_TRANSFORMATION,
+    ACTION_COMPATIBILITY_VERSION,
     ARCHITECTURE_EVIDENCE_TYPE,
     EVIDENCE_SCHEMA_VERSION,
     ROLLOUT_EVIDENCE_TYPE,
@@ -56,6 +61,10 @@ PINNED_VAE_CONFIG_SHA256 = (
 )
 PINNED_VAE_CHECKPOINT_SHA256 = (
     "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+)
+PINNED_INPUT_JSONL_SIZE_BYTES = 15_326_380
+PINNED_INPUT_JSONL_SHA256 = (
+    "0029daf06496bb974305431a20e8c9d419791f362098bf9d57ee8b8e0f036f9b"
 )
 EXPECTED_LAYERS = 20
 EXPECTED_HIDDEN_SIZE = 2048
@@ -440,6 +449,557 @@ def _input_artifacts(prepared: Mapping[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
+def _parse_original_action_row(line: str, row_index: int) -> dict[str, Any]:
+    """Parse one canonical action row strictly as JSON, never as an expression."""
+
+    def reject_constant(value: str) -> None:
+        raise ValueError(f"Non-standard JSON numeric constant: {value}")
+
+    try:
+        value = json.loads(line, parse_constant=reject_constant)
+    except (json.JSONDecodeError, ValueError) as exc:
+        raise EvidenceValidationError(
+            "malformed_action_json",
+            f"Action row {row_index} is not strict finite JSON: {exc}",
+            f"$.rows[{row_index}]",
+        ) from exc
+    if not isinstance(value, dict):
+        raise EvidenceValidationError(
+            "invalid_action_row",
+            "Every nonempty action row must decode to an object.",
+            f"$.rows[{row_index}]",
+        )
+    return value
+
+
+def _validate_raw_action_fields(
+    row: Mapping[str, Any],
+    row_index: int,
+    *,
+    keyboard_mapping: Mapping[str, str],
+) -> None:
+    """Validate exactly the raw fields consumed by pinned MCDataset."""
+
+    path = f"$.rows[{row_index}]"
+    keyboard = row.get("keyboard")
+    mouse = row.get("mouse")
+    if not isinstance(keyboard, Mapping):
+        raise EvidenceValidationError(
+            "invalid_keyboard_action",
+            "keyboard must be an object.",
+            f"{path}.keyboard",
+        )
+    if not isinstance(mouse, Mapping):
+        raise EvidenceValidationError(
+            "invalid_mouse_action",
+            "mouse must be an object.",
+            f"{path}.mouse",
+        )
+
+    keys = keyboard.get("keys")
+    if not isinstance(keys, list):
+        raise EvidenceValidationError(
+            "invalid_keyboard_keys",
+            "keyboard.keys must be a list.",
+            f"{path}.keyboard.keys",
+        )
+    if len(keys) != len(set(map(repr, keys))):
+        raise EvidenceValidationError(
+            "duplicate_keyboard_key",
+            "keyboard.keys must not contain duplicate entries.",
+            f"{path}.keyboard.keys",
+        )
+    for key_index, key in enumerate(keys):
+        if not isinstance(key, str) or key not in keyboard_mapping:
+            raise EvidenceValidationError(
+                "unsupported_keyboard_key",
+                "Every keyboard key must be a pinned MCDataset mapping key.",
+                f"{path}.keyboard.keys[{key_index}]",
+            )
+
+    for field in ("dy", "dx"):
+        value = mouse.get(field)
+        if (
+            not isinstance(value, numbers.Real)
+            or isinstance(value, bool)
+            or not math.isfinite(float(value))
+        ):
+            raise EvidenceValidationError(
+                "invalid_camera_value",
+                f"mouse.{field} must be a finite real number.",
+                f"{path}.mouse.{field}",
+            )
+
+    buttons = mouse.get("buttons")
+    if not isinstance(buttons, list):
+        raise EvidenceValidationError(
+            "invalid_mouse_buttons",
+            "mouse.buttons must be a list.",
+            f"{path}.mouse.buttons",
+        )
+    if len(buttons) != len(set(map(repr, buttons))):
+        raise EvidenceValidationError(
+            "duplicate_mouse_button",
+            "mouse.buttons must not contain duplicate entries.",
+            f"{path}.mouse.buttons",
+        )
+    for button_index, button in enumerate(buttons):
+        if (
+            not isinstance(button, int)
+            or isinstance(button, bool)
+            or button not in {0, 1, 2}
+        ):
+            raise EvidenceValidationError(
+                "invalid_mouse_button",
+                "Mouse buttons must be integer values from the pinned set {0,1,2}.",
+                f"{path}.mouse.buttons[{button_index}]",
+            )
+
+
+def _normalize_flat_action(
+    value: Any,
+    row_index: int,
+    *,
+    required_action_keys: Sequence[str],
+) -> dict[str, Any]:
+    """Validate and reduce pinned MCDataset output to safe literal primitives."""
+
+    path = f"$.rows[{row_index}]"
+    if not isinstance(value, Mapping):
+        raise EvidenceValidationError(
+            "invalid_normalized_action",
+            "Pinned MCDataset must return an action object.",
+            path,
+        )
+    required = set(required_action_keys)
+    if set(value) != required:
+        missing = sorted(required - set(value))
+        unknown = sorted(set(value) - required)
+        raise EvidenceValidationError(
+            "incomplete_normalized_action",
+            f"Normalized action keys differ; missing={missing}, unknown={unknown}.",
+            path,
+        )
+    camera = value.get("camera")
+    if hasattr(camera, "tolist"):
+        camera = camera.tolist()
+    if (
+        not isinstance(camera, (list, tuple))
+        or isinstance(camera, (str, bytes))
+        or len(camera) != 2
+    ):
+        raise EvidenceValidationError(
+            "invalid_camera",
+            "Normalized camera must contain exactly two values.",
+            f"{path}.camera",
+        )
+    normalized_camera: list[int | float] = []
+    for camera_index, item in enumerate(camera):
+        if (
+            not isinstance(item, numbers.Real)
+            or isinstance(item, bool)
+            or not math.isfinite(float(item))
+        ):
+            raise EvidenceValidationError(
+                "invalid_camera_value",
+                "Normalized camera entries must be finite real numbers.",
+                f"{path}.camera[{camera_index}]",
+            )
+        if isinstance(item, numbers.Integral):
+            normalized_camera.append(int(item))
+        else:
+            normalized_camera.append(float(item))
+
+    normalized: dict[str, Any] = {}
+    for key in sorted(required):
+        if key == "camera":
+            normalized[key] = normalized_camera
+            continue
+        item = value[key]
+        if not isinstance(item, int) or isinstance(item, bool) or item not in {0, 1}:
+            raise EvidenceValidationError(
+                "invalid_binary_action",
+                f"{key} must be the integer 0 or 1.",
+                f"{path}.{key}",
+            )
+        normalized[key] = int(item)
+    return normalized
+
+
+def _restricted_eval_derived_action(
+    line: str,
+    row_index: int,
+    *,
+    safe_globals: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Exercise the exact pinned parser on a project-generated safe literal.
+
+    ``line`` is never caller input: it is emitted immediately beforehand from
+    the strictly reduced numeric action object above.  Canonical source rows
+    are parsed only with :func:`json.loads`.
+    """
+
+    try:
+        value = eval(
+            line.strip(),
+            {"__builtins__": None},
+            dict(safe_globals),
+        )
+    except Exception as exc:
+        raise EvidenceValidationError(
+            "derived_eval_incompatible",
+            f"Pinned restricted eval could not parse derived row {row_index}: {exc}",
+            f"$.rows[{row_index}]",
+        ) from exc
+    if not isinstance(value, dict):
+        raise EvidenceValidationError(
+            "derived_eval_incompatible",
+            "Pinned restricted eval did not return an action object.",
+            f"$.rows[{row_index}]",
+        )
+    return value
+
+
+def convert_action_jsonl_for_pinned_inference(
+    original_path: Path,
+    derived_path: Path,
+    *,
+    mcdataset_module: Any,
+    asset_revision: str,
+    expected_original_size_bytes: int,
+    expected_original_sha256: str,
+) -> dict[str, Any]:
+    """Create one deterministic, order-preserving batch-inference adapter."""
+
+    original = Path(original_path).resolve()
+    derived = Path(derived_path).resolve()
+    if not original.is_file():
+        raise EvidenceValidationError(
+            "missing_action_jsonl", f"Original action JSONL is absent: {original}"
+        )
+    if derived.exists():
+        raise EvidenceValidationError(
+            "derived_action_exists",
+            "Derived action JSONL must not be overwritten or reused.",
+        )
+    if derived == original:
+        raise EvidenceValidationError(
+            "invalid_derived_path",
+            "Derived action JSONL must be distinct from the canonical input.",
+        )
+    if derived.is_relative_to(REPO_ROOT):
+        raise EvidenceValidationError(
+            "derived_action_inside_repository",
+            "Derived compatibility JSONL must remain outside the MineOcclude tree.",
+        )
+
+    pre_size = original.stat().st_size
+    pre_hash = sha256_file(original)
+    if pre_size != expected_original_size_bytes or pre_hash != expected_original_sha256:
+        raise EvidenceValidationError(
+            "original_action_identity_mismatch",
+            "Canonical action JSONL size or SHA-256 differs from the accepted lock.",
+        )
+    if asset_revision != PINNED_ASSET_REVISION:
+        raise EvidenceValidationError(
+            "unpinned_asset_revision",
+            "Canonical action JSONL must use the pinned asset revision.",
+        )
+
+    keyboard_mapping = getattr(mcdataset_module, "KEYBOARD_BUTTON_MAPPING", None)
+    noop_action = getattr(mcdataset_module, "NOOP_ACTION", None)
+    dataset_class = getattr(mcdataset_module, "MCDataset", None)
+    array_constructor = getattr(getattr(mcdataset_module, "np", None), "array", None)
+    if (
+        not isinstance(keyboard_mapping, Mapping)
+        or not isinstance(noop_action, Mapping)
+        or not callable(dataset_class)
+        or not callable(array_constructor)
+        or "camera" not in noop_action
+    ):
+        raise EvidenceValidationError(
+            "invalid_pinned_action_contract",
+            "Pinned MCDataset action constants or class are missing.",
+        )
+    required_action_keys = tuple(noop_action)
+    if (
+        any(not isinstance(key, str) or not key for key in required_action_keys)
+        or len(required_action_keys) != len(set(required_action_keys))
+        or any(
+            not isinstance(source, str)
+            or not isinstance(target, str)
+            or target not in noop_action
+            for source, target in keyboard_mapping.items()
+        )
+    ):
+        raise EvidenceValidationError(
+            "invalid_pinned_action_contract",
+            "Pinned action keys or keyboard mapping are malformed.",
+        )
+    try:
+        dataset = dataset_class()
+    except Exception as exc:
+        raise EvidenceValidationError(
+            "invalid_pinned_action_contract",
+            f"Pinned MCDataset could not be initialized: {exc}",
+        ) from exc
+    normalizer = getattr(dataset, "json_action_to_env_action", None)
+    if not callable(normalizer):
+        raise EvidenceValidationError(
+            "invalid_pinned_action_contract",
+            "Pinned MCDataset action normalizer is absent.",
+        )
+
+    try:
+        original_bytes = original.read_bytes()
+        original_text = original_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise EvidenceValidationError(
+            "invalid_action_encoding", "Canonical action JSONL must be UTF-8."
+        ) from exc
+    lines = original_text.splitlines()
+    if not lines:
+        raise EvidenceValidationError(
+            "empty_action_jsonl", "Canonical action JSONL contains no rows."
+        )
+
+    first_serialized: list[bytes] = []
+    second_serialized: list[bytes] = []
+    original_canonical_rows: list[bytes] = []
+    pair_bindings: list[bytes] = []
+    for row_index, line in enumerate(lines):
+        if not line.strip():
+            raise EvidenceValidationError(
+                "blank_action_row",
+                "Blank action rows are forbidden; no row may be dropped.",
+                f"$.rows[{row_index}]",
+            )
+        row = _parse_original_action_row(line, row_index)
+        _validate_raw_action_fields(
+            row,
+            row_index,
+            keyboard_mapping=keyboard_mapping,
+        )
+        before = json.dumps(row, sort_keys=True, allow_nan=False)
+        try:
+            first_result = normalizer(row)
+        except Exception as exc:
+            raise EvidenceValidationError(
+                "action_normalization_failed",
+                f"Pinned action normalization failed: {exc}",
+                f"$.rows[{row_index}]",
+            ) from exc
+        if (
+            not isinstance(first_result, tuple)
+            or len(first_result) != 2
+        ):
+            raise EvidenceValidationError(
+                "invalid_normalizer_result",
+                "Pinned action normalizer must return (action, is_null_action).",
+                f"$.rows[{row_index}]",
+            )
+        first = _normalize_flat_action(
+            first_result[0],
+            row_index,
+            required_action_keys=required_action_keys,
+        )
+        try:
+            second_result = normalizer(row)
+        except Exception as exc:
+            raise EvidenceValidationError(
+                "action_normalization_failed",
+                f"Repeated pinned action normalization failed: {exc}",
+                f"$.rows[{row_index}]",
+            ) from exc
+        if (
+            not isinstance(second_result, tuple)
+            or len(second_result) != 2
+        ):
+            raise EvidenceValidationError(
+                "invalid_normalizer_result",
+                "Pinned action normalizer must return (action, is_null_action).",
+                f"$.rows[{row_index}]",
+            )
+        second = _normalize_flat_action(
+            second_result[0],
+            row_index,
+            required_action_keys=required_action_keys,
+        )
+        if json.dumps(row, sort_keys=True, allow_nan=False) != before:
+            raise EvidenceValidationError(
+                "action_normalizer_mutation",
+                "Pinned action normalization mutated the submitted source row.",
+                f"$.rows[{row_index}]",
+            )
+        first_line = (
+            json.dumps(
+                first,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode("utf-8")
+        second_line = (
+            json.dumps(
+                second,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode("utf-8")
+        if first_line != second_line:
+            raise EvidenceValidationError(
+                "nondeterministic_action_conversion",
+                "Repeated conversion produced different derived bytes.",
+                f"$.rows[{row_index}]",
+            )
+        parsed = _restricted_eval_derived_action(
+            first_line.decode("utf-8"),
+            row_index,
+            safe_globals={"array": array_constructor},
+        )
+        if parsed != first:
+            raise EvidenceValidationError(
+                "derived_eval_mismatch",
+                "Pinned restricted eval changed the derived action value.",
+                f"$.rows[{row_index}]",
+            )
+        canonical_source = (
+            json.dumps(
+                row,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode("utf-8")
+        original_canonical_rows.append(canonical_source)
+        pair_bindings.append(
+            (
+                sha256_bytes(canonical_source)
+                + ":"
+                + sha256_bytes(first_line)
+                + "\n"
+            ).encode("ascii")
+        )
+        first_serialized.append(first_line)
+        second_serialized.append(second_line)
+
+    payload = b"".join(first_serialized)
+    if payload != b"".join(second_serialized):
+        raise EvidenceValidationError(
+            "nondeterministic_action_conversion",
+            "Repeated complete conversion produced different derived bytes.",
+        )
+    derived.parent.mkdir(parents=True, exist_ok=False)
+    derived.write_bytes(payload)
+    derived_size = derived.stat().st_size
+    derived_hash = sha256_file(derived)
+    if derived_size != len(payload) or derived_hash != sha256_bytes(payload):
+        raise EvidenceValidationError(
+            "derived_action_integrity_mismatch",
+            "Derived JSONL size or SHA-256 differs from generated bytes.",
+        )
+
+    post_size = original.stat().st_size
+    post_hash = sha256_file(original)
+    if post_size != pre_size or post_hash != pre_hash:
+        raise EvidenceValidationError(
+            "original_action_mutated",
+            "Canonical action JSONL changed during compatibility conversion.",
+        )
+    row_count = len(lines)
+    original_sequence_hash = sha256_bytes(b"".join(original_canonical_rows))
+    derived_sequence_hash = sha256_bytes(payload)
+    return {
+        "original": {
+            "classification": "original",
+            "path": str(original),
+            "size_bytes": pre_size,
+            "sha256": pre_hash,
+            "row_count": row_count,
+            "asset_revision": asset_revision,
+            "pre_size_bytes": pre_size,
+            "pre_sha256": pre_hash,
+            "post_size_bytes": post_size,
+            "post_sha256": post_hash,
+            "row_sequence_sha256": original_sequence_hash,
+            "canonical_input": True,
+            "unchanged": True,
+        },
+        "derived": {
+            "classification": "derived",
+            "path": str(derived),
+            "size_bytes": derived_size,
+            "sha256": derived_hash,
+            "row_count": row_count,
+            "transformation_name": ACTION_COMPATIBILITY_TRANSFORMATION,
+            "transformation_version": ACTION_COMPATIBILITY_VERSION,
+            "deterministic_serialization": ACTION_COMPATIBILITY_SERIALIZATION,
+            "parent_original_sha256": pre_hash,
+            "parent_row_sequence_sha256": original_sequence_hash,
+            "row_sequence_sha256": derived_sequence_hash,
+            "source_to_derived_sequence_sha256": sha256_bytes(
+                b"".join(pair_bindings)
+            ),
+            "rows_dropped": 0,
+            "rows_added": 0,
+            "row_order_preserved": True,
+            "storage_classification": "runtime_only_outside_git",
+        },
+    }
+
+
+def _assert_action_file_unchanged(record: Mapping[str, Any], role: str) -> None:
+    path = Path(record["path"])
+    if (
+        not path.is_file()
+        or path.stat().st_size != record["size_bytes"]
+        or sha256_file(path) != record["sha256"]
+    ):
+        raise EvidenceValidationError(
+            f"{role}_action_mutated",
+            f"{role} action JSONL changed after compatibility conversion.",
+        )
+
+
+def _generated_action_provenance(
+    action_compatibility: Mapping[str, Any],
+    paired_metadata: Path,
+    generated_video: Path,
+) -> dict[str, Any]:
+    original = action_compatibility["original"]
+    derived = action_compatibility["derived"]
+    generated_record = artifact_record("paired_metadata", paired_metadata)
+    if (
+        generated_record["size_bytes"] != derived["size_bytes"]
+        or generated_record["sha256"] != derived["sha256"]
+    ):
+        raise EvidenceValidationError(
+            "generated_metadata_mismatch",
+            "Upstream paired metadata is not a byte-identical copy of the derived input.",
+        )
+    return {
+        "classification": "generated",
+        "path": generated_record["path"],
+        "size_bytes": generated_record["size_bytes"],
+        "sha256": generated_record["sha256"],
+        "row_count": derived["row_count"],
+        "relationship_to_generated_mp4": "paired_action_metadata_for_generated_video",
+        "generated_video_sha256": sha256_file(generated_video),
+        "relationship_to_original": "derived_from_original_via_compatibility_jsonl",
+        "original_jsonl_sha256": original["sha256"],
+        "relationship_to_derived": "byte_identical_copy_of_derived_jsonl",
+        "derived_jsonl_sha256": derived["sha256"],
+        "materialization_method": "upstream_byte_copy_of_derived_jsonl",
+    }
+
+
 def _ffprobe(path: Path, executable: str) -> dict[str, Any]:
     if shutil.which(executable) is None:
         raise EvidenceValidationError(
@@ -477,7 +1037,13 @@ def execute_rollout(
 ) -> Path:
     """Execute and seal exactly one generated-frame rollout on CUDA."""
 
-    output_dir = _prepare_output_directory(args.output_dir)
+    requested_output_dir = args.output_dir.resolve()
+    if requested_output_dir.is_relative_to(REPO_ROOT):
+        raise EvidenceValidationError(
+            "runtime_output_inside_repository",
+            "Formal Step 2.6 runtime evidence must remain outside the Git tree.",
+        )
+    output_dir = _prepare_output_directory(requested_output_dir)
     raw_log = output_dir / "raw_stdout_stderr.log"
     state: dict[str, Any] = {}
     with _raw_log(raw_log):
@@ -511,8 +1077,36 @@ def execute_rollout(
 
         with _external_source_imports(prepared["source_root"]):
             OmegaConf = importlib.import_module("omegaconf").OmegaConf
+            upstream_mcdataset = importlib.import_module("mcdataset")
             upstream_utils = importlib.import_module("utils")
             upstream_inference = importlib.import_module("inference")
+            compatibility_root = output_dir / "inference_input"
+            derived_jsonl = compatibility_root / input_jsonl.name
+            action_compatibility = convert_action_jsonl_for_pinned_inference(
+                input_jsonl,
+                derived_jsonl,
+                mcdataset_module=upstream_mcdataset,
+                asset_revision=args.asset_revision,
+                expected_original_size_bytes=PINNED_INPUT_JSONL_SIZE_BYTES,
+                expected_original_sha256=PINNED_INPUT_JSONL_SHA256,
+            )
+            staged_mp4 = compatibility_root / input_mp4.name
+            try:
+                staged_mp4.symlink_to(input_mp4)
+            except OSError as exc:
+                raise EvidenceValidationError(
+                    "input_video_staging_failed",
+                    f"Could not create the external-evidence MP4 symlink: {exc}",
+                ) from exc
+            if (
+                not staged_mp4.is_file()
+                or staged_mp4.stat().st_size != input_mp4.stat().st_size
+                or sha256_file(staged_mp4) != sha256_file(input_mp4)
+            ):
+                raise EvidenceValidationError(
+                    "input_video_staging_failed",
+                    "Staged MP4 symlink does not resolve to the canonical input bytes.",
+                )
             config = OmegaConf.load(str(prepared["model_config"]))
             _patch_config_paths(config, prepared)
 
@@ -532,7 +1126,7 @@ def execute_rollout(
 
             upstream_inference.output_path = output_dir
             generation_args = SimpleNamespace(
-                data_root=str(input_mp4.parent),
+                data_root=str(compatibility_root),
                 frames=1,
                 demo_num=args.context_frames,
                 window_size=2,
@@ -569,6 +1163,14 @@ def execute_rollout(
                 "missing_rollout_output",
                 "Upstream generation did not create both MP4 and paired metadata.",
             )
+        _assert_action_file_unchanged(action_compatibility["original"], "original")
+        _assert_action_file_unchanged(action_compatibility["derived"], "derived")
+        action_compatibility = dict(action_compatibility)
+        action_compatibility["generated"] = _generated_action_provenance(
+            action_compatibility,
+            paired_metadata,
+            generated_video,
+        )
         probe = _ffprobe(generated_video, args.ffprobe)
         if probe["decoded_frames"] != 1:
             raise EvidenceValidationError(
@@ -582,6 +1184,7 @@ def execute_rollout(
             "input_jsonl": input_jsonl,
             "generated_video": generated_video,
             "paired_metadata": paired_metadata,
+            "action_compatibility": action_compatibility,
             "ffprobe": probe,
             "runtime": {
                 "timings": {
@@ -625,6 +1228,7 @@ def execute_rollout(
         "inputs": inputs,
         "runtime": state["runtime"],
         "outputs": outputs,
+        "action_compatibility": state["action_compatibility"],
         "ffprobe": state["ffprobe"],
     }
     manifest_path = output_dir / "run_manifest.json"
