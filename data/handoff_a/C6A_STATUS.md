@@ -41,12 +41,13 @@ against your frozen golden matrix** (all 19 cases in
   **units are degrees on both sides**, matched to your `dx=12.0`/`dy=-8.0`
   cases.
 
-So your converter consumes `raw_actions.jsonl` **drop-in**. Regenerate the
+So your converter consumes `raw_actions.jsonl` **drop-in**. Generate the
 authoritative 11 tokens from it with `convert_action`
 (`vocabulary_offset=8192`, roles bos/camera_pitch/camera_yaw/hotbar/
 forward_back/left_right/sprint_sneak/use_attack/jump/drop_pick/eos).
-`mineworld_actions.jsonl` tokens remain C-reference only — do not certify
-against them (this is by design: token vocabulary is yours).
+There is intentionally **no token file** in this bundle — the token
+vocabulary is A-owned, so C ships only the raw actions and you produce the
+tokens (see `episodes/9410/ACTIONS_README.txt`).
 
 ## Correct ownership boundaries (not defects — your steps run on C's evidence)
 
