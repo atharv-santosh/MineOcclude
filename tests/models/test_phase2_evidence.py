@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import inspect
 import json
 import math
 import tempfile
@@ -12,6 +13,7 @@ from types import SimpleNamespace
 
 import numpy as np
 
+import mineocclude.models.phase2_aws as phase2_aws_module
 from mineocclude.models.phase2_aws import (
     ACTION_COMPATIBILITY_SERIALIZATION,
     ACTION_COMPATIBILITY_TRANSFORMATION,
@@ -23,6 +25,7 @@ from mineocclude.models.phase2_aws import (
     PINNED_SOURCE_REVISION,
     PINNED_VAE_CHECKPOINT_SHA256,
     PINNED_VAE_CONFIG_SHA256,
+    _initialize_cuda_device,
     build_architecture_parser,
     build_rollout_parser,
     build_teacher_forced_parser,
@@ -523,6 +526,64 @@ class _FakeCv2:
         return frame[source_y][:, source_x].copy()
 
 
+class _FakeCuda:
+    def __init__(
+        self,
+        *,
+        available: bool = True,
+        device_count: int = 1,
+        current_device: int = 0,
+        fail_on: str | None = None,
+    ) -> None:
+        self.available = available
+        self.count = device_count
+        self.selected = current_device
+        self.fail_on = fail_on
+        self.calls: list[str] = []
+
+    def _call(self, name: str) -> None:
+        self.calls.append(name)
+        if self.fail_on == name:
+            raise RuntimeError(f"controlled {name} failure")
+
+    def is_available(self) -> bool:
+        self._call("is_available")
+        return self.available
+
+    def device_count(self) -> int:
+        self._call("device_count")
+        return self.count
+
+    def init(self) -> None:
+        self._call("init")
+
+    def set_device(self, index: int) -> None:
+        self._call(f"set_device:{index}")
+
+    def current_device(self) -> int:
+        self._call("current_device")
+        return self.selected
+
+    def get_device_name(self, index: int) -> str:
+        self._call(f"get_device_name:{index}")
+        return "NVIDIA controlled fixture"
+
+    def get_device_properties(self, index: int) -> object:
+        self._call(f"get_device_properties:{index}")
+        return SimpleNamespace(
+            name="NVIDIA controlled fixture",
+            total_memory=24_000_000_000,
+            major=8,
+            minor=9,
+        )
+
+    def empty_cache(self) -> None:
+        self._call("empty_cache")
+
+    def reset_peak_memory_stats(self, index: int) -> None:
+        self._call(f"reset_peak_memory_stats:{index}")
+
+
 class Phase2EvidenceTests(unittest.TestCase):
     def setUp(self) -> None:
         self._temporary_directory = tempfile.TemporaryDirectory()
@@ -577,6 +638,118 @@ class Phase2EvidenceTests(unittest.TestCase):
             payload,
             module=module,
             case_name=case_name,
+        )
+
+    def test_cuda_initialization_is_fail_closed_and_strictly_ordered(self) -> None:
+        unavailable = _FakeCuda(available=False)
+        with self.assertRaises(EvidenceValidationError) as raised:
+            _initialize_cuda_device(SimpleNamespace(cuda=unavailable))
+        self.assertEqual(raised.exception.code, "cuda_required")
+        self.assertEqual(unavailable.calls, ["is_available"])
+
+        no_devices = _FakeCuda(device_count=0)
+        with self.assertRaises(EvidenceValidationError) as raised:
+            _initialize_cuda_device(SimpleNamespace(cuda=no_devices))
+        self.assertEqual(raised.exception.code, "cuda_device_missing")
+        self.assertEqual(no_devices.calls, ["is_available", "device_count"])
+
+        expected_order = [
+            "is_available",
+            "device_count",
+            "init",
+            "set_device:0",
+            "current_device",
+            "get_device_name:0",
+            "get_device_properties:0",
+            "empty_cache",
+            "reset_peak_memory_stats:0",
+        ]
+        successful = _FakeCuda()
+        evidence = _initialize_cuda_device(SimpleNamespace(cuda=successful))
+        self.assertEqual(successful.calls, expected_order)
+        self.assertEqual(
+            evidence,
+            {
+                "name": "NVIDIA controlled fixture",
+                "device_index": 0,
+                "device_count": 1,
+                "total_memory_bytes": 24_000_000_000,
+                "capability": "8.9",
+            },
+        )
+
+        repeated = _initialize_cuda_device(SimpleNamespace(cuda=successful))
+        self.assertEqual(repeated, evidence)
+        self.assertEqual(successful.calls, expected_order + expected_order)
+
+    def test_cuda_initialization_failures_propagate_without_reset(self) -> None:
+        for failure in ("init", "set_device:0"):
+            with self.subTest(failure=failure):
+                cuda = _FakeCuda(fail_on=failure)
+                with self.assertRaisesRegex(
+                    RuntimeError,
+                    f"controlled {failure} failure",
+                ):
+                    _initialize_cuda_device(SimpleNamespace(cuda=cuda))
+                self.assertNotIn("reset_peak_memory_stats:0", cuda.calls)
+
+        mismatch = _FakeCuda(current_device=1)
+        with self.assertRaises(EvidenceValidationError) as raised:
+            _initialize_cuda_device(SimpleNamespace(cuda=mismatch))
+        self.assertEqual(
+            raised.exception.code,
+            "cuda_device_selection_mismatch",
+        )
+        self.assertNotIn("get_device_name:0", mismatch.calls)
+        self.assertNotIn("reset_peak_memory_stats:0", mismatch.calls)
+
+        reset_failure = _FakeCuda(fail_on="reset_peak_memory_stats:0")
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "controlled reset_peak_memory_stats:0 failure",
+        ):
+            _initialize_cuda_device(SimpleNamespace(cuda=reset_failure))
+        self.assertEqual(
+            reset_failure.calls[-3:],
+            [
+                "get_device_properties:0",
+                "empty_cache",
+                "reset_peak_memory_stats:0",
+            ],
+        )
+
+    def test_all_cuda_reset_paths_use_initialization_helper(self) -> None:
+        module_source = inspect.getsource(phase2_aws_module)
+        helper_source = inspect.getsource(_initialize_cuda_device)
+        loader_source = inspect.getsource(
+            phase2_aws_module._load_model_with_key_evidence
+        )
+        rollout_source = inspect.getsource(phase2_aws_module.execute_rollout)
+        teacher_source = inspect.getsource(
+            phase2_aws_module.execute_teacher_forced
+        )
+
+        self.assertEqual(module_source.count("reset_peak_memory_stats("), 1)
+        self.assertIn("reset_peak_memory_stats(device_index)", helper_source)
+        self.assertLess(
+            helper_source.index("cuda.init()"),
+            helper_source.index("reset_peak_memory_stats"),
+        )
+        self.assertLess(
+            helper_source.index("cuda.set_device(device_index)"),
+            helper_source.index("reset_peak_memory_stats"),
+        )
+        self.assertLess(
+            loader_source.index("_initialize_cuda_device(torch)"),
+            loader_source.index("instantiate_from_config"),
+        )
+        self.assertLess(
+            rollout_source.index("_require_cuda"),
+            rollout_source.index("upstream_utils.load_model"),
+        )
+        self.assertLess(
+            teacher_source.index("_require_cuda"),
+            teacher_source.index("_load_model_with_key_evidence"),
         )
 
     @staticmethod

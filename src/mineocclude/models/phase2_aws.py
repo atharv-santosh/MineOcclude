@@ -306,12 +306,59 @@ def _require_cuda(confirmed: bool):
         raise EvidenceValidationError(
             "pytorch_import_failed", f"Could not import PyTorch: {exc}"
         ) from exc
-    if not torch.cuda.is_available() or torch.cuda.device_count() < 1:
+    _initialize_cuda_device(torch)
+    return torch
+
+
+def _initialize_cuda_device(
+    torch: Any,
+    *,
+    device_index: int = 0,
+) -> dict[str, Any]:
+    """Initialize and select CUDA before any model load or memory-stat reset."""
+
+    if torch.cuda.is_available() is not True:
         raise EvidenceValidationError(
             "cuda_required",
             "A real CUDA-capable PyTorch runtime is required; CPU execution is refused.",
         )
-    return torch
+    device_count = torch.cuda.device_count()
+    if (
+        not isinstance(device_count, int)
+        or isinstance(device_count, bool)
+        or device_count < 1
+    ):
+        raise EvidenceValidationError(
+            "cuda_device_missing",
+            "CUDA reported no selectable devices.",
+        )
+    torch.cuda.init()
+    torch.cuda.set_device(device_index)
+    current_device = torch.cuda.current_device()
+    if current_device != device_index:
+        raise EvidenceValidationError(
+            "cuda_device_selection_mismatch",
+            (
+                f"Selected CUDA device {device_index}, but current_device() "
+                f"reported {current_device!r}."
+            ),
+        )
+    device_name = torch.cuda.get_device_name(device_index)
+    properties = torch.cuda.get_device_properties(device_index)
+    if not isinstance(device_name, str) or not device_name.strip():
+        raise EvidenceValidationError(
+            "invalid_cuda_device_identity",
+            "CUDA device name must be a non-empty string.",
+        )
+    torch.cuda.empty_cache()
+    torch.cuda.reset_peak_memory_stats(device_index)
+    return {
+        "name": device_name,
+        "device_index": device_index,
+        "device_count": device_count,
+        "total_memory_bytes": int(properties.total_memory),
+        "capability": f"{properties.major}.{properties.minor}",
+    }
 
 
 def _preflight(args: argparse.Namespace, command: Sequence[str]) -> dict[str, Any]:
@@ -1585,9 +1632,6 @@ def execute_rollout(
             )
         }
         _seed_everything(torch, args.seed)
-        torch.cuda.set_device(0)
-        torch.cuda.empty_cache()
-        torch.cuda.reset_peak_memory_stats(0)
         total_start = time.perf_counter()
 
         with _external_source_imports(prepared["source_root"]):
@@ -1795,13 +1839,12 @@ def _load_model_with_key_evidence(
     *,
     precision: str,
 ) -> tuple[Any, Any, dict[str, list[str]], dict[str, Any]]:
+    _initialize_cuda_device(torch)
     with _external_source_imports(prepared["source_root"]):
         OmegaConf = importlib.import_module("omegaconf").OmegaConf
         upstream_utils = importlib.import_module("utils")
         config = OmegaConf.load(str(prepared["model_config"]))
         _patch_config_paths(config, prepared)
-        torch.cuda.empty_cache()
-        torch.cuda.reset_peak_memory_stats(0)
         load_start = time.perf_counter()
         model = upstream_utils.instantiate_from_config(config.model)
         transformer_weights = _load_state_dict(prepared["main_checkpoint"], torch)
