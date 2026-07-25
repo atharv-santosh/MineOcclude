@@ -6,6 +6,11 @@ foundation exported below. Its presence does not claim real-data execution or
 final scientific results.
 """
 
+from mineocclude.baselines.capture_ingest import (
+    UNASSIGNED_FOLD,
+    CaptureIngestError,
+    build_contexts_from_capture,
+)
 from mineocclude.baselines.constant_velocity import predict_constant_velocity
 from mineocclude.baselines.controls import (
     ControlAuditFinding,
@@ -118,4 +123,7 @@ __all__ = [
     "MissingnessCell",
     "MissingnessExclusionReport",
     "build_missingness_exclusion_report",
+    "UNASSIGNED_FOLD",
+    "CaptureIngestError",
+    "build_contexts_from_capture",
 ]
