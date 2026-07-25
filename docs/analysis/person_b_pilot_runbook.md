@@ -7,15 +7,16 @@ model/preprocess hashes.
 
 ## Completed C intake evidence
 
-- Source: `role/person-c-data@0e5f5adf94cd7039528c097f0260abddcaea8b68`.
-- Imported: ten target-present Regime A core packages across six layouts, one
-  corrected 200/200-visible no-wall control, and one no-sheep control.
-- Every literal capture SHA-256 matches C's checksum sidecar and all 12
+- Source: `role/person-c-data@260784ea4d0f130b5ce96a383008e5a4574f3cc2`.
+- Imported: ten target-present Regime A core packages across six layouts, five
+  200/200-visible no-wall controls across five layouts, and one no-sheep
+  control.
+- Every literal capture SHA-256 matches C's checksum sidecar and all 16
   packages pass C's frozen `0.1` validator.
-- B verified 11 unique signed projections: positive X for layouts
+- B verified 15 unique signed projections: positive X for layouts
   00/02/03/04 and positive Z for layouts 01/05. The no-sheep control has no
   identifiable target axis and is explicitly `no_object_not_oracle_eligible`.
-- The C-only real oracle math audit covers 11 applicable packages, has zero
+- The C-only real oracle math audit covers 15 applicable packages, has zero
   recursive/closed-form disagreement, no invariant failures, and 187 passing
   fixed-time q comparisons. It does not create or promote an A-bound target
   artifact.
@@ -25,10 +26,10 @@ model/preprocess hashes.
   Step 6.6 receipt.
 - Sealed intake:
   `data/person_b/phase6_c_intake/capture_intake_report.json`, artifact hash
-  `aabcf1fcbeb40bc1d284608e183752a846fa56aefdedbc154dbb7ce558ca57f7`.
+  `1d976a5543ede07b43b0be3c6eb053afbb8cbcc823dc63d6fd5fd931988ce636`.
 - Frozen source selection:
   `data/person_b/phase6_c_intake/condition_selection_source.json`, containing
-  1,456 hidden core rows and 200 visible no-wall rows.
+  1,456 hidden core rows and 1,000 visible no-wall rows.
 
 ## Immutable execution order
 
@@ -73,10 +74,9 @@ rows fail closed.
 
 - Fewer than five layouts yields an intake receipt labeled
   `plumbing_only_insufficient_layouts`; grouped OOF evidence is not emitted.
-- The hidden core source spans six layouts, but the received no-wall control
-  spans only `layout_02`. It remains plumbing-only for the visible-control
-  scope until four more control layouts arrive or an approved scientific
-  decision changes the held-out pilot rule.
+- The hidden core source spans six layouts and the no-wall control now spans
+  five layouts. The visible-control scope is eligible for frozen grouped OOF
+  execution as soon as matching A activations arrive.
 - Real grouped permutations always use the count and seed in
   `configs/analysis/core.yaml`. Reduced counts are accepted only for evidence
   already marked synthetic and forbidden for scientific use.
@@ -92,8 +92,6 @@ rows fail closed.
 - A: completed matching activation handoff and literal activation chunks.
 - A: authoritative `model_hash` and `preprocess_hash`; C's draft state outputs
   explicitly used placeholders and are not accepted as B evidence.
-- C: four additional no-wall visible-control layouts, unless the relevant
-  scientific owners approve and record a different pilot-control rule.
 - D: actual time-only, last-seen, and shuffled OOF response artifacts.
 - E: registry validation/append and a returned receipt.
 - E: acknowledgement of C's two-frame event-stability rule before

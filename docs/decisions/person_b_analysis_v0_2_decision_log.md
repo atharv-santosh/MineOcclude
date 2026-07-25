@@ -138,3 +138,19 @@ C-produced event IDs. This is an interface-compatibility signoff, not a
 rewrite of raw visibility rows or B's frozen U3 metric. Person E's independent
 acknowledgement remains required before event-derived cross-role evidence is
 promoted at Step 6.6.
+
+## 2026-07-25 expanded no-wall control intake
+
+Classification: `COMPATIBLE_INPUT_AUTHENTICATION_NO_JOINED_RESULT`
+
+Person B imported and authenticated four additional 200/200-visible no-wall
+controls from
+`role/person-c-data@260784ea4d0f130b5ce96a383008e5a4574f3cc2`.
+Together with the existing layout-02 control, the frozen control selection now
+contains 1,000 rows across layouts 00, 01, 02, 03, and 04. The five-layout
+minimum for grouped OOF evaluation is satisfied without changing folds,
+targets, metrics, or the control gate.
+
+This changes readiness, not scientific results. No activation rows, joined
+targets, fitted probes, predictions, or control metrics exist without Person
+A's matching activation handoff and authoritative model/preprocess hashes.

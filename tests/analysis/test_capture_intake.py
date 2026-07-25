@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -49,8 +50,8 @@ def test_real_person_c_capture_set_is_authenticated_and_classified() -> None:
     )
 
     report = bundle.report
-    assert report["package_count"] == 12
-    assert report["coordinate_frame_count"] == 11
+    assert report["package_count"] == 16
+    assert report["coordinate_frame_count"] == 15
     assert report["hidden_layout_ids"] == [
         "layout_00",
         "layout_01",
@@ -59,10 +60,21 @@ def test_real_person_c_capture_set_is_authenticated_and_classified() -> None:
         "layout_04",
         "layout_05",
     ]
-    assert report["visible_control_layout_ids"] == ["layout_02"]
+    assert report["visible_control_layout_ids"] == [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04",
+    ]
     assert (
         report["scope_limits"]["visible_control_evidence"]
-        == "plumbing_only_insufficient_control_layouts"
+        == "eligible_for_grouped_oof"
+    )
+    assert report["scope_limits"]["grouped_oof_min_layouts"] == 5
+    assert (
+        report["phase_readiness"]["step_6_4"]
+        == "blocked_on_person_a_activation_handoff"
     )
     assert report["c_only_oracle_math_audit"]["status"] == "pass"
     assert (
@@ -129,7 +141,7 @@ def test_real_condition_source_freezes_only_eligible_rows() -> None:
     )
 
     rows = bundle.condition_selection_source["rows"]
-    assert len(rows) == 1_656
+    assert len(rows) == 2_456
     assert sum(
         row["analysis_scopes"] == ["hidden_mean", "hidden_spread"]
         for row in rows
@@ -137,10 +149,22 @@ def test_real_condition_source_freezes_only_eligible_rows() -> None:
     assert sum(
         row["analysis_scopes"] == ["visible_no_wall_control"]
         for row in rows
-    ) == 200
+    ) == 1_000
+    control_rows = [
+        row
+        for row in rows
+        if row["analysis_scopes"] == ["visible_no_wall_control"]
+    ]
+    assert Counter(row["layout_id"] for row in control_rows) == {
+        "layout_00": 200,
+        "layout_01": 200,
+        "layout_02": 200,
+        "layout_03": 200,
+        "layout_04": 200,
+    }
     assert all("layout_05_ep9422" != row["trajectory_id"] for row in rows)
     assert len(selections_from_condition_source(bundle.condition_selection_source)) == (
-        3_112
+        3_912
     )
 
 

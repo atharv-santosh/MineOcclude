@@ -19,7 +19,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from mineocclude.analysis.config import hash_core_analysis_config
+from mineocclude.analysis.config import (
+    hash_core_analysis_config,
+    load_core_analysis_config,
+)
 from mineocclude.analysis.coordinates import (
     coordinate_frame_hash,
     validate_coordinate_frame,
@@ -477,7 +480,11 @@ def build_capture_intake_bundle(
         for record in package_records
     ]
     input_manifest_hash = sha256_value(source_set)
+    core_config = load_core_analysis_config()
     config_hash = hash_core_analysis_config()
+    grouped_oof_min_layouts = int(
+        core_config["cross_validation"]["fold_count"]
+    )
     hidden_layouts = sorted(
         {
             record["layout_id"]
@@ -562,17 +569,23 @@ def build_capture_intake_bundle(
                 ),
                 "step_6_3": "blocked_on_person_a_activation_handoff",
                 "step_6_4": (
-                    "blocked_on_person_a_activations_and_additional_control_layouts"
+                    "blocked_on_person_a_activation_handoff"
+                    if len(control_layouts) >= grouped_oof_min_layouts
+                    else (
+                        "blocked_on_person_a_activations_and_additional_"
+                        "control_layouts"
+                    )
                 ),
                 "step_6_5": "blocked_on_person_a_activation_handoff",
                 "step_6_6": "blocked_on_person_a_person_d_person_e_receipts",
             },
             "scope_limits": {
+                "grouped_oof_min_layouts": grouped_oof_min_layouts,
                 "hidden_layout_count": len(hidden_layouts),
                 "visible_no_wall_layout_count": len(control_layouts),
                 "visible_control_evidence": (
                     "plumbing_only_insufficient_control_layouts"
-                    if len(control_layouts) < 5
+                    if len(control_layouts) < grouped_oof_min_layouts
                     else "eligible_for_grouped_oof"
                 ),
             },

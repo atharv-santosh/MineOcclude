@@ -82,21 +82,19 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Cross-role synthetic validation | CURRENT | Shared runner validates C/A/B/D/E boundaries |
 | B1.9 schema/config/interface signoff | COMPLETE for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Central signoff record; runtime and result approvals remain pending |
 | Real scientific execution | PARTIALLY UNBLOCKED | C's real capture/coordinate side is authenticated; A activations and provenance still block A-bound targets, joins, controls, and probes |
-| Phase 6.1-6.6 pilot tooling | C-ONLY INTAKE EXECUTED | `data/person_b/phase6_c_intake/capture_intake_report.json` records 12 accepted C packages, 11 signed frames, and the remaining fail-closed dependencies |
+| Phase 6.1-6.6 pilot tooling | C-ONLY INTAKE EXECUTED | `data/person_b/phase6_c_intake/capture_intake_report.json` records 16 accepted C packages, 15 signed frames, and the remaining fail-closed dependencies |
 
 ## Current blockers
 
 - [ ] Receive a completed real activation handoff from Person A; the frozen
   contract and compatibility evidence are already merged.
-- [x] Receive and authenticate Person C's 12 real pilot capture packages.
-  B re-ran C's validator, verified every checksum, co-signed 11 unambiguous
+- [x] Receive and authenticate Person C's 16 real pilot capture packages.
+  B re-ran C's validator, verified every checksum, co-signed 15 unambiguous
   coordinate frames, quarantined the no-sheep control from oracle targets, and
-  froze 1,656 source-selection rows. The sealed intake artifact is
-  `aabcf1fcbeb40bc1d284608e183752a846fa56aefdedbc154dbb7ce558ca57f7`.
-- [ ] Receive at least four additional no-wall visible-control layouts, or a
-  recorded scientific decision approving a different held-out pilot rule.
-  The current single no-wall layout is plumbing-only under five-fold grouped
-  OOF evaluation.
+  froze 2,456 source-selection rows. The sealed intake artifact is
+  `1d976a5543ede07b43b0be3c6eb053afbb8cbcc823dc63d6fd5fd931988ce636`.
+- [x] Receive five no-wall visible-control layouts for grouped OOF evaluation.
+  Layouts 00, 01, 02, 03, and 04 each contribute 200 accepted visible rows.
 - [ ] Receive real Person D baseline artifacts; D's current contract and
   synthetic handoff already validate against B.
 - [ ] Receive Person E's validation/append receipt for the real B pilot
