@@ -28,7 +28,10 @@ import subprocess
 import pandas as pd
 
 from mineocclude.data.capture_contract import validate_capture_package
-from mineocclude.data.convert_mineworld import bin_camera
+from mineocclude.data.convert_mineworld import (
+    bin_camera,
+    flat_to_official_raw_action,
+)
 from mineocclude.data.noise_schedule import load_schedule
 from mineocclude.data.preprocess import sha256_file
 
@@ -110,15 +113,25 @@ def assemble_package(out_dir: str, server_dir: str, client_dir: str,
         "raw_actions": [], "normalized_actions": [], "server_state": [],
         "client_tick_log": [], "visibility": [], "seed_noise": [],
     }
+    prev_hotbar: int | None = None
     for (_, row), key in zip(frame_map.iterrows(), keys):
+        # raw_action is emitted in Person A's official MineRL/VPT shape
+        # (keyboard.keys + mouse.dx/dy/buttons) so A's convert_action reads
+        # it drop-in; C's flat capture is retained under raw_action_flat for
+        # audit. Verified against A's golden matrix in
+        # tests/data/test_person_a_action_compat.py.
+        official = flat_to_official_raw_action(row, prev_hotbar=prev_hotbar)
+        prev_hotbar = int(row["hotbar"])
         streams["raw_actions"].append({
             **key,
-            "raw_action": {field: (bool(row[field])
-                                   if field not in ("hotbar", "camera_dx",
-                                                    "camera_dy")
-                                   else (int(row[field]) if field == "hotbar"
-                                         else float(row[field])))
-                           for field in RAW_FIELDS},
+            "raw_action": official,
+            "raw_action_flat": {
+                field: (bool(row[field])
+                        if field not in ("hotbar", "camera_dx", "camera_dy")
+                        else (int(row[field]) if field == "hotbar"
+                              else float(row[field])))
+                for field in RAW_FIELDS
+            },
         })
         streams["normalized_actions"].append(
             {**key, "normalized_action": _normalized_action(row)}

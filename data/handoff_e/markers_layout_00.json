@@ -1,0 +1,66 @@
+{
+ "homography_fixture_schema_version": "person-e-homography-fixture-v1.0",
+ "schema_version": "1.0",
+ "layout_id": "layout_00",
+ "source_trajectory_id": "layout_00_ep9410",
+ "canonical_camera_pose_id": "layout_00_canonical_pose",
+ "image_coordinate_system": "pixel_center_xy_zero_based",
+ "image_width_px": 640,
+ "image_height_px": 360,
+ "world_coordinate_system": "ground_plane_world_xz_blocks",
+ "synthetic": false,
+ "scientific_use": "pending_e_detection_and_signoff",
+ "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE) \u2014 matches E's homography fixture and C's frozen layouts.yaml; the mod's near/far role names are superseded by E's north/south canonical roles.",
+ "world_coords_basis": "the mod's ACTUAL placed marker block positions from the captured scene (layout_meta.json), NOT the frozen layouts.yaml v0.2 coords (which describe a different, unbuilt geometry).",
+ "image_xy_status": "NULL \u2014 E supplies these by running the frozen detector on the source frames (data/handoff_a/episodes/9410 frames_640x360); marker detection is E-owned.",
+ "marker_correspondences": [
+  {
+   "marker_id": "north_west",
+   "marker_role": "north_west",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "blue",
+   "world_xz_blocks": [
+    -7.0,
+    1.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "near_west"
+  },
+  {
+   "marker_id": "north_east",
+   "marker_role": "north_east",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "yellow",
+   "world_xz_blocks": [
+    7.0,
+    1.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "near_east"
+  },
+  {
+   "marker_id": "south_east",
+   "marker_role": "south_east",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "white",
+   "world_xz_blocks": [
+    7.0,
+    -7.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "far_east"
+  },
+  {
+   "marker_id": "south_west",
+   "marker_role": "south_west",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "lime",
+   "world_xz_blocks": [
+    -7.0,
+    -7.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "far_west"
+  }
+ ]
+}

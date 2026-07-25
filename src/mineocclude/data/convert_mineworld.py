@@ -35,6 +35,60 @@ CAMERA_MAX_DEG = 10.0        # |dx|,|dy| beyond this saturate to the edge bin
 REFERENCE_CONVERTER_ID = "person_c_reference_tokenizer_v0"
 PINNED_CONVERTER_REQUIRED = "PINNED_MINEWORLD_CONVERTER_REQUIRED"
 
+# --------------------------------------------------------------------------
+# Official raw-action format expected by Person A's converter
+# (mineworld_adapter.convert_action, source mcdataset.py). Verified field by
+# field against A's frozen golden matrix
+# (tests/fixtures/person_a_compat/phase3_wave2_action_matrix.json) in
+# tests/data/test_person_a_action_compat.py. C's flat capture is mapped to
+# this MineRL/VPT shape so A's converter consumes it drop-in.
+# --------------------------------------------------------------------------
+#: flat boolean field -> Minecraft key identifier A expects.
+OFFICIAL_KEY_BINDINGS = {
+    "forward": "key.keyboard.w",
+    "back": "key.keyboard.s",
+    "left": "key.keyboard.a",
+    "right": "key.keyboard.d",
+    "jump": "key.keyboard.space",
+    "sneak": "key.keyboard.left.shift",
+    "sprint": "key.keyboard.left.control",
+    "drop": "key.keyboard.q",
+}
+#: flat boolean field -> A's mouse button index.
+OFFICIAL_MOUSE_BUTTONS = {"attack": 0, "use": 1, "pick_item": 2}
+
+
+def flat_to_official_raw_action(row, prev_hotbar: int | None = None) -> dict:
+    """Map C's flat captured action row to A's official raw-action shape.
+
+    Returns ``{"keyboard": {"keys": [...]}, "mouse": {"buttons": [...],
+    "dx": <yaw deg>, "dy": <pitch deg>}}`` exactly as A's
+    ``convert_action`` reads it. Camera deltas are degrees on both sides
+    (C ``camera_dx``=yaw, ``camera_dy``=pitch → A ``mouse.dx``/``dy``).
+
+    Hotbar is a *state* in C's capture but a keypress in A's format, so a
+    ``key.keyboard.<n>`` is emitted only on the tick the selected slot
+    CHANGES from ``prev_hotbar`` (a switch); an unchanged slot presses no
+    number key. ``prev_hotbar=None`` treats this row as the episode start
+    (no switch).
+    """
+    def flag(key):
+        return bool(row.get(key, False)) if hasattr(row, "get") else bool(row[key])
+
+    keys = [ident for field, ident in OFFICIAL_KEY_BINDINGS.items() if flag(field)]
+    hotbar = int(row["hotbar"])
+    if prev_hotbar is not None and hotbar != prev_hotbar and 0 <= hotbar <= 8:
+        keys.append(f"key.keyboard.{hotbar + 1}")
+    buttons = sorted(idx for field, idx in OFFICIAL_MOUSE_BUTTONS.items() if flag(field))
+    return {
+        "keyboard": {"keys": keys},
+        "mouse": {
+            "buttons": buttons,
+            "dx": float(row["camera_dx"]),
+            "dy": float(row["camera_dy"]),
+        },
+    }
+
 # Reference token slot layout: (name, number_of_values). BOS/EOS are singletons.
 SLOTS = [
     ("act_bos", 1),
