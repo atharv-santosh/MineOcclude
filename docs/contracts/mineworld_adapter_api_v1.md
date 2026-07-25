@@ -240,14 +240,22 @@ reference this code identity through `MineWorldRuntimeIdentity`, and teacher
 and rollout results also carry the accepted-manifest, request, and result
 identities.
 
-The prepared `run_phase3_adapter_certification.py` command loads the real
-runtime once, validates an accepted package, runs the real VAE, constructs the
-sequence/map, executes two teacher-forced forwards with caller-managed hooks,
-runs one free rollout, and produces four bounded reports: runtime identity,
-teacher-forced certification, rollout certification, and a final summary,
-plus one raw log. Before checkpoint loading it also replays the committed
-19-case action matrix through the pinned official converter and requires exact
-token, normalization, and no-op parity.
+The prepared `run_phase3_adapter_certification.py` command exposes one
+CPU-only `preflight` operation and a real `run` operation that begins with the
+same preflight implementation. The preflight strictly parses and applies the
+frozen trajectory validator, binds the actual MP4 size/hash and ffprobe facts
+to the accepted package, verifies the environment report and pinned
+source/assets, and checks the one-frame context budget. It finishes before any
+PyTorch import, CUDA query, session-directory creation, or runtime loading.
+It does not build, repair, or approve a Person C package.
+
+After preflight, the real command loads the runtime once, runs the real VAE,
+constructs the sequence/map, executes two teacher-forced forwards with
+caller-managed hooks, runs one free rollout, and produces four bounded
+reports: runtime identity, teacher-forced certification, rollout
+certification, and a final summary, plus one raw log. Before checkpoint
+loading it also replays the committed 19-case action matrix through the pinned
+official converter and requires exact token, normalization, and no-op parity.
 
 The reports record separate model-load, frame-preprocessing,
 accepted-action-conversion, VAE-tokenization, per-forward, rollout, and total

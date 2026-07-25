@@ -1,4 +1,4 @@
-"""Run or validate the bounded Person A Phase 3 adapter certification."""
+"""Preflight, run, or validate Person A Phase 3 adapter certification."""
 
 from __future__ import annotations
 

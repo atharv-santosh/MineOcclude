@@ -119,10 +119,21 @@ Prepared entry point:
 
 `scripts/run_phase3_adapter_certification.py`
 
-The command has `run` and `validate` modes. The real run accepts explicit
+The command has `preflight`, `run`, and `validate` modes. `preflight` and the
+start of `run` call the same CPU-only input validator. Before importing
+PyTorch, querying or initializing CUDA, creating the immutable session
+directory, or constructing the runtime, it strictly parses the accepted
+package, applies the frozen trajectory validator, hashes and probes the
+matching MP4, checks the fresh environment report, verifies the pinned source
+and asset identities, and checks the one-frame position budget. A preflight
+failure has no certification-output side effects.
+The backward-compatible `run --dry-run` path now performs this same real
+preflight rather than accepting nonexistent package/media placeholders.
+
+The real run accepts explicit
 source, asset, evidence, accepted-package, input-media, environment, seed,
-precision, and device inputs. It verifies clean revisions and hashes before
-checkpoint deserialization, loads the runtime once, runs the real VAE,
+precision, device, and generated-frame-count inputs. After the shared
+preflight passes, it loads the runtime once, runs the real VAE,
 constructs the real token map, runs two teacher-forced forwards with 20
 externally managed hooks, performs one free rollout, and validates a bounded
 report set. It also rechecks the committed 19-case action matrix against the
@@ -151,6 +162,20 @@ certification.
 Example command after this change is committed and synchronized:
 
 ```text
+python scripts/run_phase3_adapter_certification.py preflight \
+  --mineworld-source-root /home/sagemaker-user/MineWorld-Upstream \
+  --asset-root /home/sagemaker-user/MineWorld-Assets-Pinned \
+  --evidence-root /home/sagemaker-user/mineocclude-phase3-evidence \
+  --accepted-trajectory-package /external/accepted_trajectory.json \
+  --input-mp4 /external/accepted_trajectory.mp4 \
+  --environment-report /external/environment_report.txt \
+  --session-id person-a-phase3-aws-NEW-IMMUTABLE-ID \
+  --seed 20260725 \
+  --generated-frame-count 1 \
+  --precision float16 \
+  --device cuda:0 \
+  --mineocclude-revision NEW_COMMITTED_SHA
+
 python scripts/run_phase3_adapter_certification.py run \
   --mineworld-source-root /home/sagemaker-user/MineWorld-Upstream \
   --asset-root /home/sagemaker-user/MineWorld-Assets-Pinned \
@@ -160,31 +185,41 @@ python scripts/run_phase3_adapter_certification.py run \
   --environment-report /external/environment_report.txt \
   --session-id person-a-phase3-aws-NEW-IMMUTABLE-ID \
   --seed 20260725 \
+  --generated-frame-count 1 \
   --precision float16 \
   --device cuda:0 \
-  --mineocclude-revision NEW_COMMITTED_WAVE4_SHA \
+  --mineocclude-revision NEW_COMMITTED_SHA \
   --confirm-gpu-certification
 ```
 
 The concrete accepted-package/media paths, immutable session ID, and committed
-Wave 4 SHA must be supplied from the later AWS environment. No placeholder in
-the example is evidence.
+certification SHA must be supplied from the later AWS environment. No
+placeholder in the example is evidence.
 
 The accepted-package argument is the frozen C-to-A trajectory-package JSON
 consumed by `validate_trajectory_package`, not an arbitrary JSONL or action
 file. For the one-frame certification rollout it must contain at most 15
-complete accepted frame/action pairs and its `media.sha256` must match the
-supplied 640 x 360 MP4. The repository's small
-`tests/fixtures/trajectory/accepted_package.json` is CPU-only contract
+complete accepted frame/action pairs. Its `media.sha256` and
+`media.size_bytes` must match the supplied 640 x 360, 20 fps MP4, whose
+decoded count must equal every accepted stream's cardinality. The repository's
+small `tests/fixtures/trajectory/accepted_package.json` is CPU-only contract
 evidence with a synthetic media hash; it has no matching MP4 and is not an AWS
 certification input. The complete 4,152-frame ModelScope sample likewise
 cannot be passed directly to this bounded certification command. A matching,
 explicitly accepted bounded package/media pair must be prepared before AWS.
+The harness does not create or repair that Person C package, does not infer
+missing producer fields from ModelScope rows, and does not manufacture verified
+impulse-orientation evidence.
 
 The environment report must be generated for the new AWS session. The prior
 Phase 2 report remains valid Phase 2 evidence but must not be relabeled as an
 observation of a new session. The session ID must be new and path-free, and
-`--mineocclude-revision` must be the exact clean committed Wave 4 revision.
+`--mineocclude-revision` must be the exact clean committed certification
+revision.
+
+Local Phase 3 implementation remains complete. Real-runtime certification
+remains pending until a genuine Person C accepted package passes this
+preflight and the subsequent immutable GPU run validates its reports.
 
 ## Local validation
 
@@ -211,6 +246,26 @@ the Wave 4 worktree and a temporary detached worktree at baseline
 were identical across the two worktrees. They are pre-existing Person B/shared
 synthetic-evidence drift, not Wave 4 regressions; no unrelated saved evidence
 was rewritten.
+
+## CPU-only input preflight correction
+
+Baseline:
+
+`3251aa2a04a2db278f16f1b665cf07119ed38732`
+
+The post-Wave-4 correction adds a genuine package/media preflight without
+changing adapter behavior or the public API. The preflight negative matrix
+uses synthetic packages and controlled media-probe records only; these are
+tests of fail-closed behavior, not real certification inputs.
+
+Focused correction results:
+
+- CPU-only certification/preflight tests: PASS, 14 tests;
+- complete Wave 4 tests: PASS, 26 tests;
+- all Phase 3 adapter tests: PASS, 82 tests;
+- frozen trajectory, identity, activation, and schema tests: PASS, 56 tests;
+- external MineWorld source remained clean;
+- no AWS, CUDA, checkpoint, VAE, teacher-forced, or rollout execution occurred.
 
 ## Boundaries and non-claims
 

@@ -18,21 +18,27 @@ import subprocess
 import sys
 import time
 from collections.abc import Iterator, Mapping, Sequence
+from fractions import Fraction
 from pathlib import Path
 from typing import Any
 
 from mineocclude.contracts.identity import SCHEMA_VERSION
+from mineocclude.contracts.trajectory import validate_trajectory_package
 from mineocclude.models._mineworld_adapter_wave2 import (
     ACTION_CONVERTER_IDENTITY,
     MCDATASET_BLOB_SHA256,
     PINNED_ASSET_REVISION,
+    PINNED_ACTION_TOKENS,
     PINNED_DEVICE,
     PINNED_MAIN_CHECKPOINT_SHA256,
+    PINNED_MAX_POSITION_EMBEDDINGS,
     PINNED_MODEL_CONFIG_SHA256,
     PINNED_PRECISION,
     PINNED_SOURCE_REVISION,
+    PINNED_TOKENS_PER_PAIR,
     PINNED_VAE_CHECKPOINT_SHA256,
     PINNED_VAE_CONFIG_SHA256,
+    PINNED_VISUAL_TOKENS,
     _OfficialActionConverter,
 )
 from mineocclude.models._mineworld_adapter_wave4 import (
@@ -56,6 +62,7 @@ from mineocclude.models.mineworld_adapter import (
 from mineocclude.models.phase2_evidence import (
     EvidenceValidationError,
     canonical_json_bytes,
+    parse_ffprobe_output,
     sha256_file,
 )
 
@@ -72,6 +79,20 @@ _ACTION_FIXTURE = (
     / "models"
     / "phase3_wave2_action_matrix.json"
 )
+_ASSET_LOCK = _REPO_ROOT / "configs" / "assets" / "mineworld_assets_v1.json"
+_PINNED_ASSET_FILES = {
+    "checkpoints/700M_16f.ckpt": PINNED_MAIN_CHECKPOINT_SHA256,
+    "checkpoints/vae/config.json": PINNED_VAE_CONFIG_SHA256,
+    "checkpoints/vae/vae.ckpt": PINNED_VAE_CHECKPOINT_SHA256,
+}
+_ENVIRONMENT_SECTIONS = (
+    "=== SYSTEM ===",
+    "=== PACKAGE VERSIONS ===",
+    "=== IMPORT CHECKS ===",
+    "=== PYTORCH / CUDA ===",
+    "=== FINAL RESULT ===",
+)
+_ENVIRONMENT_PASS = "PASS: Official CUDA-capable environment validated."
 _EXPECTED_CHECKS = {
     "runtime_load": "PASS",
     "real_frame_preprocessing": "PASS",
@@ -88,6 +109,28 @@ _EXPECTED_CHECKS = {
 }
 
 
+def _add_preflight_arguments(command: argparse.ArgumentParser) -> None:
+    command.add_argument("--mineworld-source-root", required=True, type=Path)
+    command.add_argument("--asset-root", required=True, type=Path)
+    command.add_argument("--evidence-root", required=True, type=Path)
+    command.add_argument(
+        "--accepted-trajectory-package",
+        required=True,
+        type=Path,
+    )
+    command.add_argument("--input-mp4", required=True, type=Path)
+    command.add_argument("--environment-report", required=True, type=Path)
+    command.add_argument("--session-id", required=True)
+    command.add_argument("--seed", required=True, type=int)
+    command.add_argument("--precision", required=True)
+    command.add_argument("--device", required=True)
+    command.add_argument("--generated-frame-count", required=True, type=int)
+    command.add_argument("--output-frame-rate", default=6.0, type=float)
+    command.add_argument("--top-k", default=1, type=int)
+    command.add_argument("--mineocclude-revision", required=True)
+    command.add_argument("--ffprobe", default="ffprobe")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -96,20 +139,16 @@ def build_parser() -> argparse.ArgumentParser:
         )
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+    preflight = subparsers.add_parser(
+        "preflight",
+        help=(
+            "validate real package, media, environment, and pinned identities "
+            "without importing PyTorch or creating evidence"
+        ),
+    )
+    _add_preflight_arguments(preflight)
     run = subparsers.add_parser("run", help="execute the real CUDA certification")
-    run.add_argument("--mineworld-source-root", required=True, type=Path)
-    run.add_argument("--asset-root", required=True, type=Path)
-    run.add_argument("--evidence-root", required=True, type=Path)
-    run.add_argument("--accepted-trajectory-package", required=True, type=Path)
-    run.add_argument("--input-mp4", required=True, type=Path)
-    run.add_argument("--environment-report", required=True, type=Path)
-    run.add_argument("--session-id", required=True)
-    run.add_argument("--seed", required=True, type=int)
-    run.add_argument("--precision", default=PINNED_PRECISION)
-    run.add_argument("--device", default=PINNED_DEVICE)
-    run.add_argument("--output-frame-rate", default=6.0, type=float)
-    run.add_argument("--top-k", default=1, type=int)
-    run.add_argument("--mineocclude-revision", required=True)
+    _add_preflight_arguments(run)
     run.add_argument("--dry-run", action="store_true")
     run.add_argument("--confirm-gpu-certification", action="store_true")
     validate = subparsers.add_parser(
@@ -153,12 +192,352 @@ def _require_file(path: Path, role: str) -> Path:
 def _verify_file(path: Path, expected: str, role: str) -> Path:
     resolved = _require_file(path, role)
     observed = sha256_file(resolved)
-    if observed != expected:
+    if observed != expected.lower():
         raise EvidenceValidationError(
             "input_hash_mismatch",
-            f"{role}: expected {expected}, observed {observed}",
+            f"{role}: expected {expected.lower()}, observed {observed}",
         )
     return resolved
+
+
+def _require_directory(path: Path, role: str) -> Path:
+    resolved = path.resolve()
+    if not resolved.is_dir():
+        raise EvidenceValidationError(
+            "missing_input",
+            f"{role} is not an existing directory: {resolved}",
+        )
+    return resolved
+
+
+def _strict_json_mapping(path: Path, role: str) -> dict[str, Any]:
+    resolved = _require_file(path, role)
+
+    def reject_constant(value: str) -> None:
+        raise ValueError(f"non-finite JSON constant {value!r}")
+
+    def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate JSON key {key!r}")
+            result[key] = value
+        return result
+
+    try:
+        payload = resolved.read_text(encoding="utf-8")
+        document = json.loads(
+            payload,
+            parse_constant=reject_constant,
+            object_pairs_hook=unique_object,
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        raise EvidenceValidationError(
+            "invalid_json_input",
+            f"{role} is not strict finite JSON: {exc}",
+        ) from exc
+    if not isinstance(document, dict):
+        raise EvidenceValidationError(
+            "invalid_json_input",
+            f"{role} must contain one JSON object",
+        )
+    return document
+
+
+def _validate_environment_report(path: Path) -> dict[str, object]:
+    resolved = _require_file(path, "environment report")
+    try:
+        content = resolved.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        raise EvidenceValidationError(
+            "environment_report_invalid",
+            f"environment report is not readable UTF-8 text: {exc}",
+        ) from exc
+    if not content.strip():
+        raise EvidenceValidationError(
+            "environment_report_invalid",
+            "environment report is empty",
+        )
+    lowered = content.lower()
+    placeholders = (
+        "<placeholder>",
+        "<environment",
+        "replace_me",
+        "example only",
+        "dry_run_only",
+        "todo:",
+    )
+    missing_sections = [
+        section for section in _ENVIRONMENT_SECTIONS if section not in content
+    ]
+    if (
+        missing_sections
+        or _ENVIRONMENT_PASS not in content
+        or any(marker in lowered for marker in placeholders)
+    ):
+        detail = (
+            "missing sections: " + ", ".join(missing_sections)
+            if missing_sections
+            else "required CUDA PASS marker is absent or placeholder text exists"
+        )
+        raise EvidenceValidationError(
+            "environment_report_invalid",
+            detail,
+        )
+    return {
+        "path": resolved,
+        "size_bytes": resolved.stat().st_size,
+        "sha256": sha256_file(resolved),
+        "status": "PASS",
+    }
+
+
+def _probe_input_mp4(path: Path, executable: str) -> dict[str, Any]:
+    try:
+        result = subprocess.run(
+            [
+                executable,
+                "-v",
+                "error",
+                "-count_frames",
+                "-select_streams",
+                "v:0",
+                "-show_entries",
+                (
+                    "stream=width,height,r_frame_rate,avg_frame_rate,"
+                    "duration,nb_frames,nb_read_frames"
+                ),
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "json",
+                str(path),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise EvidenceValidationError(
+            "ffprobe_missing",
+            f"ffprobe executable not found: {executable}",
+        ) from exc
+    if result.returncode:
+        raise EvidenceValidationError(
+            "input_media_probe_failed",
+            (result.stderr or result.stdout or "ffprobe failed").strip(),
+        )
+    return parse_ffprobe_output(result.stdout)
+
+
+def _validate_asset_lock(asset_root: Path) -> dict[str, Path]:
+    document = _strict_json_mapping(_ASSET_LOCK, "MineWorld asset lock")
+    source = document.get("source")
+    files = document.get("files")
+    if (
+        document.get("schema_version") != SCHEMA_VERSION
+        or not isinstance(source, Mapping)
+        or source.get("provider") != "ModelScope"
+        or source.get("repository") != "AI-ModelScope/mineworld"
+        or source.get("revision") != PINNED_ASSET_REVISION
+        or not isinstance(files, Mapping)
+    ):
+        raise EvidenceValidationError(
+            "asset_revision_mismatch",
+            "project asset lock does not identify the pinned ModelScope revision",
+        )
+    verified: dict[str, Path] = {}
+    for relative_path, expected_sha256 in _PINNED_ASSET_FILES.items():
+        record = files.get(relative_path)
+        recorded_sha256 = (
+            record.get("sha256") if isinstance(record, Mapping) else None
+        )
+        if (
+            not isinstance(record, Mapping)
+            or not isinstance(recorded_sha256, str)
+            or recorded_sha256.lower() != expected_sha256
+            or type(record.get("size_bytes")) is not int
+            or record["size_bytes"] <= 0
+        ):
+            raise EvidenceValidationError(
+                "asset_revision_mismatch",
+                f"asset-lock record is invalid for {relative_path}",
+            )
+        path = _verify_file(
+            asset_root / Path(relative_path),
+            expected_sha256,
+            relative_path,
+        )
+        if path.stat().st_size != record["size_bytes"]:
+            raise EvidenceValidationError(
+                "input_size_mismatch",
+                (
+                    f"{relative_path}: expected {record['size_bytes']} bytes, "
+                    f"observed {path.stat().st_size}"
+                ),
+            )
+        verified[relative_path] = path
+    return verified
+
+
+def _validate_package_and_media(
+    package_path: Path,
+    input_mp4: Path,
+    *,
+    generated_frame_count: int,
+    ffprobe_executable: str,
+) -> dict[str, Any]:
+    package = _strict_json_mapping(
+        package_path,
+        "accepted trajectory package",
+    )
+    validation = validate_trajectory_package(package)
+    if not validation.accepted:
+        first = validation.rejections[0]
+        raise EvidenceValidationError(
+            "trajectory_package_rejected",
+            (
+                f"{first.code.value}: {first.message} "
+                f"({len(validation.rejections)} rejection(s))"
+            ),
+        )
+    if package.get("schema_version") != SCHEMA_VERSION:
+        raise EvidenceValidationError(
+            "invalid_schema_version",
+            f"accepted package must use schema version {SCHEMA_VERSION}",
+        )
+    acceptance_hashes = {
+        f"artifacts.{name}.sha256": record.get("sha256")
+        for name, record in package["artifacts"].items()
+    }
+    acceptance_hashes["impulse_orientation.evidence_hash"] = package[
+        "impulse_orientation"
+    ].get("evidence_hash")
+    placeholders = [
+        path
+        for path, value in acceptance_hashes.items()
+        if not isinstance(value, str)
+        or _SHA256.fullmatch(value) is None
+        or len(set(value)) == 1
+    ]
+    if placeholders:
+        raise EvidenceValidationError(
+            "acceptance_evidence_placeholder",
+            (
+                "accepted package contains missing or placeholder producer "
+                "evidence hashes: " + ", ".join(sorted(placeholders))
+            ),
+        )
+    frame_rows = package["streams"]["frame_map"]
+    context_pairs = len(frame_rows)
+    if context_pairs > 15:
+        raise EvidenceValidationError(
+            "certification_context_too_long",
+            (
+                "One-frame rollout certification permits at most 15 complete "
+                "accepted context pairs"
+            ),
+        )
+    if generated_frame_count != 1:
+        raise EvidenceValidationError(
+            "invalid_generated_frame_count",
+            "bounded Phase 3 certification requires exactly one generated frame",
+        )
+    position_budget = (
+        context_pairs * PINNED_TOKENS_PER_PAIR
+        + generated_frame_count * PINNED_VISUAL_TOKENS
+    )
+    if position_budget > PINNED_MAX_POSITION_EMBEDDINGS:
+        raise EvidenceValidationError(
+            "position_budget_exceeded",
+            (
+                f"required {position_budget} positions but the pinned model "
+                f"supports {PINNED_MAX_POSITION_EMBEDDINGS}"
+            ),
+        )
+
+    final_frame = max(
+        frame_rows,
+        key=lambda row: row["model_frame_idx"],
+    )
+    final_actions = [
+        row
+        for row in package["streams"]["raw_actions"]
+        if (
+            row["trajectory_id"] == final_frame["trajectory_id"]
+            and row["model_frame_idx"] == final_frame["model_frame_idx"]
+            and row["action_idx"] == final_frame["action_idx"]
+        )
+    ]
+    if len(final_actions) != 1 or not isinstance(
+        final_actions[0].get("raw_action"),
+        Mapping,
+    ):
+        raise EvidenceValidationError(
+            "missing_final_action",
+            "the final accepted model frame must retain exactly one raw action",
+        )
+
+    media = package["media"]
+    declared_size = media.get("size_bytes")
+    if type(declared_size) is not int or declared_size <= 0:
+        raise EvidenceValidationError(
+            "accepted_media_size_missing",
+            "accepted package media.size_bytes must be a positive integer",
+        )
+    resolved_mp4 = _require_file(input_mp4, "accepted trajectory MP4")
+    observed_size = resolved_mp4.stat().st_size
+    if observed_size != declared_size:
+        raise EvidenceValidationError(
+            "accepted_media_size_mismatch",
+            (
+                f"package declares {declared_size} bytes, "
+                f"observed {observed_size}"
+            ),
+        )
+    observed_sha256 = sha256_file(resolved_mp4)
+    if observed_sha256 != media["sha256"]:
+        raise EvidenceValidationError(
+            "accepted_media_hash_mismatch",
+            (
+                f"package declares {media['sha256']}, "
+                f"observed {observed_sha256}"
+            ),
+        )
+    probe = _probe_input_mp4(resolved_mp4, ffprobe_executable)
+    expected_frame_count = media["frame_count"]
+    if (
+        media["mode"] != "mp4"
+        or media["width"] != 640
+        or media["height"] != 360
+        or float(media["fps"]) != 20.0
+        or probe["width"] != 640
+        or probe["height"] != 360
+        or Fraction(probe["r_frame_rate"]) != Fraction(20, 1)
+        or Fraction(probe["avg_frame_rate"]) != Fraction(20, 1)
+        or probe["declared_frames"] != expected_frame_count
+        or probe["decoded_frames"] != expected_frame_count
+        or context_pairs != expected_frame_count
+    ):
+        raise EvidenceValidationError(
+            "accepted_media_metadata_mismatch",
+            (
+                "accepted MP4 must exactly match declared 640x360, 20 fps, "
+                "frame-count, decoded-count, and package cardinality"
+            ),
+        )
+    return {
+        "package": package,
+        "accepted_manifest_sha256": sha256_file(package_path),
+        "input_mp4": resolved_mp4,
+        "input_mp4_sha256": observed_sha256,
+        "input_mp4_size_bytes": observed_size,
+        "media_probe": probe,
+        "context_pairs": context_pairs,
+        "generated_frame_count": generated_frame_count,
+        "position_budget": position_budget,
+        "final_model_frame_idx": final_frame["model_frame_idx"],
+    }
 
 
 def _certify_action_fixture(source_root: Path) -> dict[str, object]:
@@ -227,7 +606,9 @@ def _certify_action_fixture(source_root: Path) -> dict[str, object]:
     }
 
 
-def _prepare(args: argparse.Namespace) -> dict[str, Any]:
+def preflight_certification_inputs(args: argparse.Namespace) -> dict[str, Any]:
+    """Validate every CPU-visible certification input without side effects."""
+
     if _SESSION.fullmatch(args.session_id) is None or ".." in args.session_id:
         raise EvidenceValidationError(
             "invalid_session_id",
@@ -253,11 +634,29 @@ def _prepare(args: argparse.Namespace) -> dict[str, Any]:
             "invalid_output_frame_rate",
             "output frame rate must be a finite positive value",
         )
+    if (
+        _CODE_SHA.fullmatch(args.mineocclude_revision) is None
+        or len(set(args.mineocclude_revision)) == 1
+    ):
+        raise EvidenceValidationError(
+            "mineocclude_revision_mismatch",
+            "MineOcclude revision must be a full non-placeholder commit SHA",
+        )
     evidence_root = args.evidence_root.resolve()
     if evidence_root.is_relative_to(_REPO_ROOT):
         raise EvidenceValidationError(
             "evidence_inside_repository",
             "GPU evidence root must remain outside Git",
+        )
+    if evidence_root.exists() and not evidence_root.is_dir():
+        raise EvidenceValidationError(
+            "invalid_evidence_root",
+            "evidence root exists but is not a directory",
+        )
+    if not evidence_root.exists() and not evidence_root.parent.is_dir():
+        raise EvidenceValidationError(
+            "invalid_evidence_root",
+            "evidence-root parent must already exist",
         )
     session_root = evidence_root / args.session_id
     if session_root.exists():
@@ -265,19 +664,22 @@ def _prepare(args: argparse.Namespace) -> dict[str, Any]:
             "session_collision",
             "immutable session directory already exists",
         )
-    source_root = args.mineworld_source_root.resolve()
-    asset_root = args.asset_root.resolve()
-    package_path = args.accepted_trajectory_package.resolve()
-    input_mp4 = args.input_mp4.resolve()
-    environment_report = args.environment_report.resolve()
+    source_root = _require_directory(
+        args.mineworld_source_root,
+        "MineWorld source root",
+    )
+    asset_root = _require_directory(args.asset_root, "ModelScope asset root")
+    package_path = _require_file(
+        args.accepted_trajectory_package,
+        "accepted trajectory package",
+    )
+    input_mp4 = _require_file(args.input_mp4, "accepted trajectory MP4")
+    environment_report = _require_file(
+        args.environment_report,
+        "environment report",
+    )
     code_revision = _git("rev-parse", "HEAD")
-    if (
-        args.mineocclude_revision is not None
-        and (
-            _CODE_SHA.fullmatch(args.mineocclude_revision) is None
-            or args.mineocclude_revision != code_revision
-        )
-    ):
+    if args.mineocclude_revision != code_revision:
         raise EvidenceValidationError(
             "mineocclude_revision_mismatch",
             f"expected {args.mineocclude_revision}, observed {code_revision}",
@@ -298,47 +700,95 @@ def _prepare(args: argparse.Namespace) -> dict[str, Any]:
             "source_dirty",
             "pinned MineWorld checkout is dirty",
         )
+    package_evidence = _validate_package_and_media(
+        package_path,
+        input_mp4,
+        generated_frame_count=args.generated_frame_count,
+        ffprobe_executable=args.ffprobe,
+    )
+    environment_evidence = _validate_environment_report(environment_report)
+    model_config = _verify_file(
+        source_root / "configs" / "700M_16f.yaml",
+        PINNED_MODEL_CONFIG_SHA256,
+        "model configuration",
+    )
+    asset_paths = _validate_asset_lock(asset_root)
     paths = {
-        "model_config": source_root / "configs" / "700M_16f.yaml",
-        "main_checkpoint": asset_root / "checkpoints" / "700M_16f.ckpt",
-        "vae_config": asset_root / "checkpoints" / "vae" / "config.json",
-        "vae_checkpoint": asset_root / "checkpoints" / "vae" / "vae.ckpt",
+        "model_config": model_config,
+        "main_checkpoint": asset_paths["checkpoints/700M_16f.ckpt"],
+        "vae_config": asset_paths["checkpoints/vae/config.json"],
+        "vae_checkpoint": asset_paths["checkpoints/vae/vae.ckpt"],
     }
-    if not args.dry_run:
-        paths = {
-            "model_config": _verify_file(
-                paths["model_config"],
-                PINNED_MODEL_CONFIG_SHA256,
-                "model configuration",
-            ),
-            "main_checkpoint": _verify_file(
-                paths["main_checkpoint"],
-                PINNED_MAIN_CHECKPOINT_SHA256,
-                "main checkpoint",
-            ),
-            "vae_config": _verify_file(
-                paths["vae_config"],
-                PINNED_VAE_CONFIG_SHA256,
-                "VAE configuration",
-            ),
-            "vae_checkpoint": _verify_file(
-                paths["vae_checkpoint"],
-                PINNED_VAE_CHECKPOINT_SHA256,
-                "VAE checkpoint",
-            ),
-        }
-        _require_file(package_path, "accepted trajectory package")
-        _require_file(input_mp4, "accepted trajectory MP4")
-        _require_file(environment_report, "environment report")
     return {
+        "status": "preflight_passed",
+        "schema_version": SCHEMA_VERSION,
+        "certification_version": CERTIFICATION_VERSION,
         "session_root": session_root,
         "source_root": source_root,
         "asset_root": asset_root,
         "package_path": package_path,
         "input_mp4": input_mp4,
         "environment_report": environment_report,
+        "source_revision": source_revision,
+        "asset_revision": PINNED_ASSET_REVISION,
         "mineocclude_revision": code_revision,
+        "package": package_evidence["package"],
+        "accepted_manifest_sha256": package_evidence[
+            "accepted_manifest_sha256"
+        ],
+        "input_mp4_sha256": package_evidence["input_mp4_sha256"],
+        "input_mp4_size_bytes": package_evidence["input_mp4_size_bytes"],
+        "media_probe": package_evidence["media_probe"],
+        "context_pairs": package_evidence["context_pairs"],
+        "generated_frame_count": package_evidence["generated_frame_count"],
+        "position_budget": package_evidence["position_budget"],
+        "final_model_frame_idx": package_evidence["final_model_frame_idx"],
+        "environment_report_sha256": environment_evidence["sha256"],
+        "environment_report_size_bytes": environment_evidence["size_bytes"],
         **paths,
+    }
+
+
+def _preflight_report(prepared: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": prepared["schema_version"],
+        "certification_version": prepared["certification_version"],
+        "status": prepared["status"],
+        "mineocclude_revision": prepared["mineocclude_revision"],
+        "source_revision": prepared["source_revision"],
+        "asset_revision": prepared["asset_revision"],
+        "session_root": str(prepared["session_root"]),
+        "session_directory_created": False,
+        "torch_imported": False,
+        "cuda_queried": False,
+        "runtime_loaded": False,
+        "accepted_trajectory_package": {
+            "path": str(prepared["package_path"]),
+            "sha256": prepared["accepted_manifest_sha256"],
+            "trajectory_id": prepared["package"]["trajectory_id"],
+            "schema_version": prepared["package"]["schema_version"],
+        },
+        "accepted_media": {
+            "path": str(prepared["input_mp4"]),
+            "size_bytes": prepared["input_mp4_size_bytes"],
+            "sha256": prepared["input_mp4_sha256"],
+            "probe": prepared["media_probe"],
+        },
+        "environment_report": {
+            "path": str(prepared["environment_report"]),
+            "size_bytes": prepared["environment_report_size_bytes"],
+            "sha256": prepared["environment_report_sha256"],
+        },
+        "context": {
+            "complete_pairs": prepared["context_pairs"],
+            "generated_frames": prepared["generated_frame_count"],
+            "visual_tokens_per_generated_frame": PINNED_VISUAL_TOKENS,
+            "action_tokens_per_pair": PINNED_ACTION_TOKENS,
+            "tokens_per_pair": PINNED_TOKENS_PER_PAIR,
+            "position_budget": prepared["position_budget"],
+            "max_position_embeddings": PINNED_MAX_POSITION_EMBEDDINGS,
+            "final_model_frame_idx": prepared["final_model_frame_idx"],
+        },
     }
 
 
@@ -421,17 +871,18 @@ def _write_json(path: Path, document: Mapping[str, Any]) -> str:
     return sha256_file(path)
 
 
+def execute_preflight(args: argparse.Namespace) -> dict[str, Any]:
+    """Run the shared CPU-only preflight and return bounded evidence."""
+
+    return _preflight_report(preflight_certification_inputs(args))
+
+
 def execute_certification(args: argparse.Namespace) -> Path:
-    prepared = _prepare(args)
+    prepared = preflight_certification_inputs(args)
     if args.dry_run:
         print(
             json.dumps(
-                {
-                    "status": "dry_run_only",
-                    "session_root": str(prepared["session_root"]),
-                    "mineocclude_revision": prepared["mineocclude_revision"],
-                    "cuda_or_checkpoint_execution": False,
-                },
+                _preflight_report(prepared),
                 indent=2,
                 sort_keys=True,
             )
@@ -463,14 +914,14 @@ def execute_certification(args: argparse.Namespace) -> Path:
             started = time.perf_counter()
             code_identity = _adapter_code_identity()
             adapter = create_mineworld_adapter()
-            package = json.loads(
-                prepared["package_path"].read_text(encoding="utf-8")
-            )
-            accepted_manifest_sha256 = sha256_file(prepared["package_path"])
-            input_mp4_sha256 = sha256_file(prepared["input_mp4"])
-            environment_report_sha256 = sha256_file(
-                prepared["environment_report"]
-            )
+            package = prepared["package"]
+            accepted_manifest_sha256 = prepared[
+                "accepted_manifest_sha256"
+            ]
+            input_mp4_sha256 = prepared["input_mp4_sha256"]
+            environment_report_sha256 = prepared[
+                "environment_report_sha256"
+            ]
             validated = adapter.validate_trajectory(
                 AcceptedTrajectoryInput(
                     schema_version=SCHEMA_VERSION,
@@ -479,23 +930,15 @@ def execute_certification(args: argparse.Namespace) -> Path:
                     document=package,
                 )
             )
-            if len(validated.frame_identities) > 15:
+            if len(validated.frame_identities) != prepared["context_pairs"]:
                 raise EvidenceValidationError(
-                    "certification_context_too_long",
+                    "preflight_runtime_identity_mismatch",
                     (
-                        "One-frame rollout certification permits at most 15 "
-                        "accepted context frames under the 5,552-position budget."
+                        "runtime adapter validation changed the accepted "
+                        "preflight frame count"
                     ),
                 )
             declared_media_sha256 = package["media"]["sha256"]
-            if input_mp4_sha256 != declared_media_sha256:
-                raise EvidenceValidationError(
-                    "accepted_media_hash_mismatch",
-                    (
-                        f"package declares {declared_media_sha256}, "
-                        f"observed {input_mp4_sha256}"
-                    ),
-                )
             action_fixture_started = time.perf_counter()
             action_fixture = _certify_action_fixture(prepared["source_root"])
             action_fixture_seconds = (
@@ -686,7 +1129,7 @@ def execute_certification(args: argparse.Namespace) -> Path:
                 context=tokenized,
                 run_id=f"{args.session_id}-rollout",
                 seed=args.seed,
-                generated_frame_count=1,
+                generated_frame_count=args.generated_frame_count,
                 output_directory=rollout_dir,
                 generation_config_sha256="0" * 64,
                 generation_actions=(actions[-1],),
@@ -1261,6 +1704,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.command == "run":
             result = execute_certification(args)
+        elif args.command == "preflight":
+            result = json.dumps(
+                execute_preflight(args),
+                indent=2,
+                sort_keys=True,
+            )
         else:
             validate_certification_summary(
                 args.summary,
