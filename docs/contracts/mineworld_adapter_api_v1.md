@@ -7,9 +7,9 @@ Shared schema version: `1.0`
 The public `MINEWORLD_ADAPTER_API_VERSION` constant carries the API version
 above for runtime-identity validation.
 
-Status: frozen by Person A Phase 3, Step 3.1. Steps 3.2 through 3.7 now have
-private implementations behind the frozen protocol. Step 3.8 remains
-intentionally unavailable.
+Status: frozen by Person A Phase 3, Step 3.1. Steps 3.2 through 3.9 now have
+private local implementations behind the frozen protocol. Real-runtime Phase
+3 certification remains pending.
 
 ## Purpose
 
@@ -33,10 +33,10 @@ primary downstream contract.
 | `convert_action` | `ActionConversionRequest` | `ConvertedAction` | Step 3.5, implemented locally |
 | `tokenize_trajectory` | `TrajectoryTokenizationRequest` | `TokenizedTrajectory` and its `FrameTokenMap` | Step 3.6, implemented locally |
 | `teacher_forced` | `TeacherForcedRequest` | `TeacherForcedResult` | Step 3.7, implemented locally |
-| `free_rollout` | `FreeRolloutRequest` | `FreeRolloutResult` | Step 3.8 |
+| `free_rollout` | `FreeRolloutRequest` | `FreeRolloutResult` | Step 3.8, implemented locally |
 
 `MineWorldAdapter` is the protocol callers depend on.
-`create_mineworld_adapter()` constructs the private Wave 3 implementation
+`create_mineworld_adapter()` constructs the private Wave 4 implementation
 without exposing its class or MineWorld runtime objects. The Step 3.1 API had
 reserved a protocol but no construction path; this factory is the smallest
 compatible correction. `UnavailableMineWorldAdapter` remains available for
@@ -49,18 +49,23 @@ explicit contract-only use and never returns a placeholder success.
   environment, precision, and device inputs required by the loader.
 - `MineWorldRuntimeIdentity` records the complete loaded runtime provenance,
   loaded class and decoder path identity, dimensions, token layout, precision,
-  and device.
+  device, and the deterministic sorted file/hash/size inventory for the
+  project-owned adapter implementation.
 - `AcceptedTrajectoryInput` identifies the accepted manifest and supplies the
   C-to-A document to the validator. `ValidatedTrajectory` records its exact
-  content identity and ordered frame identities.
+  content identity, ordered frame identities, and observed adapter code
+  identity. MineOcclude revision remains explicitly unavailable when
+  validation intentionally precedes runtime loading.
 - `FramePreprocessRequest` and `PreprocessedFrame` preserve source-frame
   identity and expose source/output shape, source/output dtype, color
   conversion, interpolation, preprocessing profile, hashes, statistics, and
-  the normalized CHW payload.
+  the normalized CHW payload. Runtime-bound preprocessing outputs also carry
+  the observed MineOcclude and adapter-code identities.
 - `ActionConversionRequest` and `ConvertedAction` preserve action-row identity
   and expose the original action hash, normalized official action, exact
   11-token sequence, vocabulary offset, positional roles, no-op status, and
-  converter identity.
+  converter identity, plus the observed MineOcclude and adapter-code
+  identities.
 - `FrameTokenSpan` and `FrameTokenMap` explicitly associate each scientific
   frame with visual and action token positions, complete-pair bounds,
   accepted/context-relative pair indices, causal neighbors, and excluded
@@ -69,23 +74,27 @@ explicit contract-only use and never returns a placeholder success.
 - `TrajectoryTokenizationRequest` and `TokenizedTrajectory` carry the validated
   components, runtime identity, explicit token sequence, all-one validity mask,
   context-relative position IDs, included and excluded identities, profiles,
-  map identity, and sequence identity.
+  map identity, sequence identity, accepted-manifest identity, and accepted
+  source-document identity.
 - `TeacherForcedRequest` and `TeacherForcedResult` define one explicit
   teacher-forced call and its project-owned output metadata. The request's
   optional `hook_context_factory` receives only the ordered decoder-module
   names and objects for the duration of the forward. External activation code
   chooses whether and where to register temporary hooks and must clean them up.
 - `FreeRolloutRequest` and `FreeRolloutResult` define one explicit generation
-  call and durable video/metadata identities.
+  call and durable video/metadata identities. The request supplies already
+  official-converted generation actions, explicit mutually exclusive top-k or
+  top-p sampling, precision, device, output rate, expected code identity,
+  accepted-manifest identity, and protected input paths.
 
 Records that describe identity, requests, and results are frozen dataclasses.
 Array or tensor payload fields remain implementation-neutral and must not hold
 a private MineWorld control object as the public contract.
 
-The extra Step 3.4 through Step 3.7 metadata is additive and defaulted. No
+The extra Step 3.4 through Step 3.9 metadata is additive and defaulted. No
 Step 3.1 symbol, field meaning, or required constructor argument changed, so
 the API remains `person-a-mineworld-adapter-v1.0`. Implementations produced by
-the Wave 3 factory populate every new field. The public export set remains
+the Wave 4 factory populate every new field. The public export set remains
 unchanged.
 
 ## Implemented Wave 2 boundary
@@ -179,6 +188,78 @@ surrounds the forward. The caller selects hook sites and owns registration and
 cleanup. No layer selection, pooled activation, activation storage, or
 serialization enters the adapter result.
 
+## Implemented Wave 4 boundary
+
+`free_rollout` consumes a validated `TokenizedTrajectory` and an explicit
+sequence of `ConvertedAction` values. It revalidates runtime, adapter code,
+accepted manifest, token sequence, `FrameTokenMap`, preprocessing,
+action-converter, tokenization, precision, device, sampling, and position
+budget before invoking generation. The first generation action is bound to
+the last accepted context frame; later actions must continue its explicit
+`model_frame_idx` order. The adapter never assigns action-vocabulary values.
+
+The private official executor extracts visual positions from the verified
+`FrameTokenMap`, refreshes the official KV cache, and calls the pinned
+`LlamaForCausalLM.naive_generate` with explicit seed, float16 CUDA inference
+mode, action tokens, requested generated-token count, temperature, and exactly
+one of top-k or top-p. It invokes the pinned `inference.token2video` boundary
+for VAE decoding and video writing. It does not call `teacher_forced`.
+
+Before generation, the position budget is:
+
+`context visual tokens + generated_frames * (11 action + 336 visual)`
+
+The request fails before the rollout dependency when that budget exceeds
+5,552 positions. The implementation does not lower context implicitly.
+
+Output paths must be outside tracked source or in a Git-ignored evidence
+location. Run IDs cannot contain path components. Existing outputs, pinned
+source paths, checkpoints, configurations, and caller-declared protected
+inputs are rejected before generation unless collision handling was explicitly
+requested. A successful output must decode to the requested frame count at
+384 x 224 and the requested frame rate. The adapter records the output size
+and SHA-256, generated identities, timing, peak CUDA allocation/reservation,
+request identity, and metadata-byte identity. The metadata deliberately does
+not claim a hash of itself.
+
+Runtime failures are written as bounded structured failure records in the
+external evidence directory. Generated MP4 files remain runtime-only and are
+not repository artifacts.
+
+Step 3.9 hashes this sorted implementation inventory:
+
+- `mineworld_adapter.py`;
+- `_mineworld_adapter_wave2.py`;
+- `_mineworld_adapter_wave3.py`;
+- `_mineworld_adapter_wave4.py`.
+
+Each inventory row records repository-relative path, byte size, and SHA-256;
+the aggregate hashes canonical JSON over the sorted rows and an identity
+version. The inventory is not self-signing. Runtime-dependent outputs
+reference this code identity through `MineWorldRuntimeIdentity`, and teacher
+and rollout results also carry the accepted-manifest, request, and result
+identities.
+
+The prepared `run_phase3_adapter_certification.py` command loads the real
+runtime once, validates an accepted package, runs the real VAE, constructs the
+sequence/map, executes two teacher-forced forwards with caller-managed hooks,
+runs one free rollout, and produces four bounded reports: runtime identity,
+teacher-forced certification, rollout certification, and a final summary,
+plus one raw log. Before checkpoint loading it also replays the committed
+19-case action matrix through the pinned official converter and requires exact
+token, normalization, and no-op parity.
+
+The reports record separate model-load, frame-preprocessing,
+accepted-action-conversion, VAE-tokenization, per-forward, rollout, and total
+timings. Report paths are session-relative so the small evidence bundle can be
+relocated without rewriting evidence. Full validation additionally verifies
+external input and generated-video bytes. The semantic validator requires the
+exact certification check set and verifies pinned runtime hashes, adapter-code
+inventory, two equal teacher outputs, all 20 ordered hook records and shapes,
+memory/timing fields, rollout count/shape/rate, and cross-report identities.
+It does not accept a collection of caller-supplied `PASS` strings by itself.
+The harness has not been executed during local Wave 4.
+
 ## Teacher-forced and rollout separation
 
 Teacher forcing and free rollout have different request types, result types,
@@ -200,7 +281,8 @@ identity:
 
 `trajectory_id + model_frame_idx + layer_idx + hook_site`
 
-Runtime identity separately binds MineOcclude code, pinned MineWorld source,
+Runtime identity separately binds MineOcclude code, adapter file inventory,
+pinned MineWorld source,
 ModelScope assets, model/VAE configurations and checkpoints, environment
 report, preprocessing, action conversion, classes, architecture, precision,
 and device.
@@ -215,10 +297,11 @@ Every adapter failure is a `MineWorldAdapterError` with:
 - immutable field/detail pairs.
 
 Invalid schema, identity, request, or provenance fails at record construction
-or the adapter boundary. Operations that have not reached their assigned
-roadmap step fail with `operation_unavailable`; they never silently succeed.
-Step 3.9 adds final identity propagation and failure-path certification without
-changing this exception shape.
+or the adapter boundary. Failure details identify the field, expected value,
+observed value, and scientific identity where applicable. Runtime exceptions
+retain their safe underlying type and message. This extends identity
+propagation and failure-path certification without changing the exception
+shape.
 
 ## Ownership boundary
 
@@ -263,13 +346,14 @@ implementation imports the pinned official code.
 
 ## Current execution status
 
-Steps 3.2 through 3.7 are implemented and CPU-tested through controlled
+Steps 3.2 through 3.9 are implemented and CPU-tested through controlled
 official-boundary fakes. Loader tests do not claim a new real checkpoint load.
 The Wave 2 action matrix is direct output from the clean pinned converter. The
 Wave 3 fixture proves sequence/map semantics but labels its visual IDs as fake;
 it does not claim a local real-VAE or real-transformer execution.
 
-Step 3.8 free rollout and Step 3.9 certification remain out of scope.
-`free_rollout` continues to raise `operation_unavailable`. A later bounded GPU
-certification must run the adapter's real VAE and teacher path against the
-pinned runtime; Wave 3 does not claim that certification.
+The Wave 4 rollout tests do not claim a local real-model generation. The
+consolidated GPU harness is prepared but has not run. The Phase 3 gate remains
+pending until one new immutable external session certifies the adapter's real
+VAE, teacher-forced hooks/repeatability, and free-rollout path under one clean
+committed revision.

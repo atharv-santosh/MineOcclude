@@ -131,6 +131,7 @@ class RuntimeLoadRequest:
     environment_report_sha256: str
     precision: str
     device: str
+    expected_adapter_code_sha256: str | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.LOAD_RUNTIME
@@ -150,6 +151,13 @@ class RuntimeLoadRequest:
             "environment_report_sha256",
         ):
             _digest(getattr(self, name), SHA256_LENGTH, name, operation)
+        if self.expected_adapter_code_sha256 is not None:
+            _digest(
+                self.expected_adapter_code_sha256,
+                SHA256_LENGTH,
+                "expected_adapter_code_sha256",
+                operation,
+            )
         for name in (
             "mineworld_source_root",
             "model_config_path",
@@ -192,6 +200,8 @@ class MineWorldRuntimeIdentity:
     max_context_pairs: int
     precision: str
     device: str
+    adapter_code_sha256: str | None = None
+    adapter_code_inventory: tuple[tuple[str, str, int], ...] = ()
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.LOAD_RUNTIME
@@ -229,6 +239,53 @@ class MineWorldRuntimeIdentity:
             "device",
         ):
             _text(getattr(self, name), name, operation)
+        if self.adapter_code_sha256 is not None:
+            _digest(
+                self.adapter_code_sha256,
+                SHA256_LENGTH,
+                "adapter_code_sha256",
+                operation,
+            )
+        if self.adapter_code_inventory:
+            if (
+                not isinstance(self.adapter_code_inventory, tuple)
+                or tuple(
+                    sorted(
+                        self.adapter_code_inventory,
+                        key=lambda item: item[0],
+                    )
+                )
+                != self.adapter_code_inventory
+                or len(
+                    {item[0] for item in self.adapter_code_inventory}
+                )
+                != len(self.adapter_code_inventory)
+                or any(
+                    not isinstance(item, tuple)
+                    or len(item) != 3
+                    or not isinstance(item[0], str)
+                    or not item[0]
+                    or not isinstance(item[1], str)
+                    or len(item[1]) != SHA256_LENGTH
+                    or _HEX.fullmatch(item[1]) is None
+                    or type(item[2]) is not int
+                    or item[2] < 0
+                    for item in self.adapter_code_inventory
+                )
+            ):
+                _fail(
+                    AdapterFailureCode.INVALID_PROVENANCE,
+                    operation,
+                    "adapter_code_inventory",
+                    "must be a unique path-sorted tuple of path/hash/size rows",
+                )
+            if self.adapter_code_sha256 is None:
+                _fail(
+                    AdapterFailureCode.INVALID_PROVENANCE,
+                    operation,
+                    "adapter_code_sha256",
+                    "is required when adapter_code_inventory is present",
+                )
         for name in ("layer_count", "hidden_size", "max_position_embeddings"):
             _positive_int(getattr(self, name), name, operation)
         expected = {
@@ -284,6 +341,8 @@ class ValidatedTrajectory:
     accepted_manifest_sha256: str
     source_document_sha256: str
     frame_identities: tuple[FrameIdentity, ...]
+    adapter_code_sha256: str | None = None
+    mineocclude_revision: str | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.VALIDATE_TRAJECTORY
@@ -302,6 +361,20 @@ class ValidatedTrajectory:
             operation,
         )
         _frame_identities(self.frame_identities, self.trajectory_id, operation)
+        if self.adapter_code_sha256 is not None:
+            _digest(
+                self.adapter_code_sha256,
+                SHA256_LENGTH,
+                "adapter_code_sha256",
+                operation,
+            )
+        if self.mineocclude_revision is not None:
+            _digest(
+                self.mineocclude_revision,
+                CODE_SHA_LENGTH,
+                "mineocclude_revision",
+                operation,
+            )
 
 
 @dataclass(frozen=True)
@@ -337,6 +410,8 @@ class PreprocessedFrame:
     preprocessing_profile: str | None = None
     source_sha256: str | None = None
     statistics: tuple[tuple[str, float], ...] = ()
+    adapter_code_sha256: str | None = None
+    mineocclude_revision: str | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.PREPROCESS_FRAME
@@ -410,6 +485,20 @@ class PreprocessedFrame:
                 "statistics",
                 "must contain finite named values",
             )
+        if self.adapter_code_sha256 is not None:
+            _digest(
+                self.adapter_code_sha256,
+                SHA256_LENGTH,
+                "adapter_code_sha256",
+                operation,
+            )
+        if self.mineocclude_revision is not None:
+            _digest(
+                self.mineocclude_revision,
+                CODE_SHA_LENGTH,
+                "mineocclude_revision",
+                operation,
+            )
 
 
 @dataclass(frozen=True)
@@ -448,6 +537,8 @@ class ConvertedAction:
     positional_roles: tuple[str, ...] = ()
     converter_source_revision: str | None = None
     is_noop: bool | None = None
+    adapter_code_sha256: str | None = None
+    mineocclude_revision: str | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.CONVERT_ACTION
@@ -514,6 +605,20 @@ class ConvertedAction:
                 operation,
                 "is_noop",
                 "must be boolean",
+            )
+        if self.adapter_code_sha256 is not None:
+            _digest(
+                self.adapter_code_sha256,
+                SHA256_LENGTH,
+                "adapter_code_sha256",
+                operation,
+            )
+        if self.mineocclude_revision is not None:
+            _digest(
+                self.mineocclude_revision,
+                CODE_SHA_LENGTH,
+                "mineocclude_revision",
+                operation,
             )
 
 
@@ -789,6 +894,8 @@ class TokenizedTrajectory:
     frame_token_map_sha256: str | None = None
     accepted_frame_count: int | None = None
     context_pair_count: int | None = None
+    accepted_manifest_sha256: str | None = None
+    source_document_sha256: str | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TOKENIZE_TRAJECTORY
@@ -888,6 +995,12 @@ class TokenizedTrajectory:
                     "context_pair_count",
                     "must equal the FrameTokenMap span count",
                 )
+        for field, value in (
+            ("accepted_manifest_sha256", self.accepted_manifest_sha256),
+            ("source_document_sha256", self.source_document_sha256),
+        ):
+            if value is not None:
+                _digest(value, SHA256_LENGTH, field, operation)
 
 
 @dataclass(frozen=True)
@@ -906,6 +1019,8 @@ class TeacherForcedRequest:
         ]
         | None
     ) = None
+    expected_adapter_code_sha256: str | None = None
+    accepted_manifest_sha256: str | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TEACHER_FORCED
@@ -922,6 +1037,15 @@ class TeacherForcedRequest:
                 "hook_context_factory",
                 "must be callable when provided",
             )
+        for field, value in (
+            (
+                "expected_adapter_code_sha256",
+                self.expected_adapter_code_sha256,
+            ),
+            ("accepted_manifest_sha256", self.accepted_manifest_sha256),
+        ):
+            if value is not None:
+                _digest(value, SHA256_LENGTH, field, operation)
 
 
 @dataclass(frozen=True)
@@ -946,6 +1070,11 @@ class TeacherForcedResult:
     excluded_frame_identities: tuple[FrameIdentity, ...] = ()
     output_statistics: tuple[tuple[str, float], ...] = ()
     warnings: tuple[str, ...] = ()
+    operation_type: str = AdapterOperation.TEACHER_FORCED.value
+    accepted_manifest_sha256: str | None = None
+    adapter_code_sha256: str | None = None
+    request_sha256: str | None = None
+    result_sha256: str | None = None
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.TEACHER_FORCED
@@ -1038,6 +1167,21 @@ class TeacherForcedResult:
                 "warnings",
                 "must contain non-empty strings",
             )
+        if self.operation_type != AdapterOperation.TEACHER_FORCED.value:
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "operation_type",
+                f"must equal {AdapterOperation.TEACHER_FORCED.value!r}",
+            )
+        for field, value in (
+            ("accepted_manifest_sha256", self.accepted_manifest_sha256),
+            ("adapter_code_sha256", self.adapter_code_sha256),
+            ("request_sha256", self.request_sha256),
+            ("result_sha256", self.result_sha256),
+        ):
+            if value is not None:
+                _digest(value, SHA256_LENGTH, field, operation)
 
 
 @dataclass(frozen=True)
@@ -1051,6 +1195,17 @@ class FreeRolloutRequest:
     generated_frame_count: int
     output_directory: Path
     generation_config_sha256: str
+    generation_actions: tuple[ConvertedAction, ...] = ()
+    temperature: float = 1.0
+    top_k: int | None = 1
+    top_p: float | None = None
+    output_frame_rate: float = 6.0
+    precision: str | None = None
+    device: str | None = None
+    expected_adapter_code_sha256: str | None = None
+    accepted_manifest_sha256: str | None = None
+    protected_input_paths: tuple[Path, ...] = ()
+    allow_overwrite: bool = False
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.FREE_ROLLOUT
@@ -1069,6 +1224,92 @@ class FreeRolloutRequest:
             "generation_config_sha256",
             operation,
         )
+        if (
+            not isinstance(self.generation_actions, tuple)
+            or any(
+                not isinstance(action, ConvertedAction)
+                for action in self.generation_actions
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "generation_actions",
+                "must be a tuple of ConvertedAction values",
+            )
+        _nonnegative_real(self.temperature, "temperature", operation)
+        if float(self.temperature) <= 0:
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "temperature",
+                "must be greater than zero",
+            )
+        if self.top_k is not None:
+            _positive_int(self.top_k, "top_k", operation)
+        if self.top_p is not None:
+            _nonnegative_real(self.top_p, "top_p", operation)
+            if not 0 < float(self.top_p) <= 1:
+                _fail(
+                    AdapterFailureCode.INVALID_REQUEST,
+                    operation,
+                    "top_p",
+                    "must be greater than zero and at most one",
+                )
+        if (self.top_k is None) == (self.top_p is None):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "top_k/top_p",
+                "exactly one sampling selector must be provided",
+            )
+        _nonnegative_real(
+            self.output_frame_rate,
+            "output_frame_rate",
+            operation,
+        )
+        if float(self.output_frame_rate) <= 0:
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "output_frame_rate",
+                "must be greater than zero",
+            )
+        for field, value in (
+            ("precision", self.precision),
+            ("device", self.device),
+        ):
+            if value is not None:
+                _text(value, field, operation)
+        for field, value in (
+            (
+                "expected_adapter_code_sha256",
+                self.expected_adapter_code_sha256,
+            ),
+            ("accepted_manifest_sha256", self.accepted_manifest_sha256),
+        ):
+            if value is not None:
+                _digest(value, SHA256_LENGTH, field, operation)
+        if (
+            not isinstance(self.protected_input_paths, tuple)
+            or any(
+                not isinstance(path, Path) or not str(path)
+                for path in self.protected_input_paths
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "protected_input_paths",
+                "must be a tuple of pathlib.Path values",
+            )
+        if not isinstance(self.allow_overwrite, bool):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "allow_overwrite",
+                "must be boolean",
+            )
 
 
 @dataclass(frozen=True)
@@ -1084,6 +1325,25 @@ class FreeRolloutResult:
     metadata_path: Path
     metadata_sha256: str
     elapsed_seconds: float
+    requested_frame_count: int | None = None
+    output_width: int | None = None
+    output_height: int | None = None
+    output_frame_rate: float | None = None
+    video_size_bytes: int | None = None
+    generated_frame_ids: tuple[str, ...] = ()
+    seed: int | None = None
+    precision: str | None = None
+    device: str | None = None
+    generation_config_sha256: str | None = None
+    token_sha256: str | None = None
+    frame_token_map_sha256: str | None = None
+    accepted_manifest_sha256: str | None = None
+    adapter_code_sha256: str | None = None
+    request_sha256: str | None = None
+    result_sha256: str | None = None
+    peak_cuda_allocated_bytes: int | None = None
+    peak_cuda_reserved_bytes: int | None = None
+    warnings: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         operation = AdapterOperation.FREE_ROLLOUT
@@ -1105,6 +1365,86 @@ class FreeRolloutResult:
             operation,
         )
         _nonnegative_real(self.elapsed_seconds, "elapsed_seconds", operation)
+        for field, value in (
+            ("requested_frame_count", self.requested_frame_count),
+            ("output_width", self.output_width),
+            ("output_height", self.output_height),
+        ):
+            if value is not None:
+                _positive_int(value, field, operation)
+        if self.output_frame_rate is not None:
+            _nonnegative_real(
+                self.output_frame_rate,
+                "output_frame_rate",
+                operation,
+            )
+            if float(self.output_frame_rate) <= 0:
+                _fail(
+                    AdapterFailureCode.INVALID_REQUEST,
+                    operation,
+                    "output_frame_rate",
+                    "must be greater than zero",
+                )
+        if self.video_size_bytes is not None:
+            _positive_int(
+                self.video_size_bytes,
+                "video_size_bytes",
+                operation,
+            )
+        if (
+            not isinstance(self.generated_frame_ids, tuple)
+            or any(
+                not isinstance(value, str) or not value
+                for value in self.generated_frame_ids
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_IDENTITY,
+                operation,
+                "generated_frame_ids",
+                "must contain non-empty generated identities",
+            )
+        if self.seed is not None:
+            _uint(self.seed, "seed", operation)
+        for field, value in (
+            ("precision", self.precision),
+            ("device", self.device),
+        ):
+            if value is not None:
+                _text(value, field, operation)
+        for field, value in (
+            ("generation_config_sha256", self.generation_config_sha256),
+            ("token_sha256", self.token_sha256),
+            ("frame_token_map_sha256", self.frame_token_map_sha256),
+            ("accepted_manifest_sha256", self.accepted_manifest_sha256),
+            ("adapter_code_sha256", self.adapter_code_sha256),
+            ("request_sha256", self.request_sha256),
+            ("result_sha256", self.result_sha256),
+        ):
+            if value is not None:
+                _digest(value, SHA256_LENGTH, field, operation)
+        for field, value in (
+            (
+                "peak_cuda_allocated_bytes",
+                self.peak_cuda_allocated_bytes,
+            ),
+            ("peak_cuda_reserved_bytes", self.peak_cuda_reserved_bytes),
+        ):
+            if value is not None:
+                _uint(value, field, operation)
+        if (
+            not isinstance(self.warnings, tuple)
+            or any(
+                not isinstance(warning, str) or not warning
+                for warning in self.warnings
+            )
+        ):
+            _fail(
+                AdapterFailureCode.INVALID_REQUEST,
+                operation,
+                "warnings",
+                "must contain non-empty strings",
+            )
 
 
 @runtime_checkable
@@ -1212,13 +1552,13 @@ class UnavailableMineWorldAdapter:
 
 
 def create_mineworld_adapter() -> MineWorldAdapter:
-    """Construct the private Wave 3 implementation behind the frozen protocol."""
+    """Construct the private Wave 4 implementation behind the frozen protocol."""
 
-    from mineocclude.models._mineworld_adapter_wave3 import (
-        _Wave3MineWorldAdapter,
+    from mineocclude.models._mineworld_adapter_wave4 import (
+        _Wave4MineWorldAdapter,
     )
 
-    return _Wave3MineWorldAdapter()
+    return _Wave4MineWorldAdapter()
 
 
 def _unavailable(

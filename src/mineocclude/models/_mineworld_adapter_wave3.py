@@ -238,8 +238,9 @@ def _validate_preprocessed_frame(
 def _validate_action(
     action: object,
     runtime_identity: MineWorldRuntimeIdentity,
+    *,
+    operation: AdapterOperation = AdapterOperation.TOKENIZE_TRAJECTORY,
 ) -> None:
-    operation = AdapterOperation.TOKENIZE_TRAJECTORY
     token_ids = getattr(action, "token_ids", ())
     if (
         getattr(action, "converter_identity", None)
@@ -714,6 +715,10 @@ class _Wave3MineWorldAdapter(_Wave2MineWorldAdapter):
             frame_token_map_sha256=_frame_token_map_sha256(frame_token_map),
             accepted_frame_count=len(accepted),
             context_pair_count=len(included),
+            accepted_manifest_sha256=(
+                request.trajectory.accepted_manifest_sha256
+            ),
+            source_document_sha256=request.trajectory.source_document_sha256,
         )
 
     def teacher_forced(
