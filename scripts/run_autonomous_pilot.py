@@ -116,7 +116,15 @@ def _write_provenance(episode_id, command, seed, start_utc, end_utc, out_root,
         "start_utc": start_utc,
         "end_utc": end_utc,
         "git_sha": _git(["rev-parse", "HEAD"]),
-        "git_dirty": bool(_git(["status", "--porcelain"])),
+        # git_dirty is CODE-scoped: was the code/config that produced this
+        # capture uncommitted? Output data written into the tracked data/ dir
+        # during collection does not count (it always exists mid-run). This is
+        # the provenance E asks about. working_tree_dirty is the raw all-paths
+        # flag, kept for full transparency.
+        "git_dirty": bool(_git(["status", "--porcelain", "--",
+                                "src", "fabric/mineocclude-mod/src", "scripts",
+                                "configs", "schemas"])),
+        "working_tree_dirty": bool(_git(["status", "--porcelain"])),
         "capturing_jar_sha256": _sha256(
             os.path.expanduser("~/mineocclude-server/mods/mineocclude-0.1.0.jar")),
         "accepted": accepted,
