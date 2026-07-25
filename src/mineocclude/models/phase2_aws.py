@@ -35,6 +35,10 @@ from mineocclude.models.phase2_evidence import (
     EVIDENCE_SCHEMA_VERSION,
     ROLLOUT_EVIDENCE_TYPE,
     TEACHER_FORCED_EVIDENCE_TYPE,
+    VIDEO_PREPROCESSING_NORMALIZATION,
+    VIDEO_PREPROCESSING_SOURCE,
+    VIDEO_PREPROCESSING_TRANSFORMATION,
+    VIDEO_PREPROCESSING_VERSION,
     EvidenceValidationError,
     artifact_record,
     expected_teacher_token_layout,
@@ -66,6 +70,16 @@ PINNED_INPUT_JSONL_SIZE_BYTES = 15_326_380
 PINNED_INPUT_JSONL_SHA256 = (
     "0029daf06496bb974305431a20e8c9d419791f362098bf9d57ee8b8e0f036f9b"
 )
+PINNED_INPUT_MP4_SIZE_BYTES = 124_782_221
+PINNED_INPUT_MP4_SHA256 = (
+    "b546e7657505004223742e2174e01d0b6a19091de7ee39a2f213bcf003c243de"
+)
+PINNED_INPUT_VIDEO_WIDTH = 640
+PINNED_INPUT_VIDEO_HEIGHT = 360
+PINNED_INPUT_VIDEO_FRAMES = 4_152
+PINNED_PROCESSED_VIDEO_WIDTH = 384
+PINNED_PROCESSED_VIDEO_HEIGHT = 224
+PINNED_MAX_POSITION_EMBEDDINGS = 5_552
 EXPECTED_LAYERS = 20
 EXPECTED_HIDDEN_SIZE = 2048
 VISUAL_TOKENS = 336
@@ -996,7 +1010,429 @@ def _generated_action_provenance(
         "original_jsonl_sha256": original["sha256"],
         "relationship_to_derived": "byte_identical_copy_of_derived_jsonl",
         "derived_jsonl_sha256": derived["sha256"],
-        "materialization_method": "upstream_byte_copy_of_derived_jsonl",
+        "materialization_method": "project_owned_byte_copy_of_derived_jsonl",
+    }
+
+
+def preprocess_rollout_frame(
+    frame: Any,
+    *,
+    source_frame_index: int,
+    cv2_module: Any,
+    numpy_module: Any,
+) -> tuple[Any, dict[str, Any]]:
+    """Apply the exact pinned Gradio frame boundary to one canonical frame."""
+
+    if not isinstance(source_frame_index, int) or isinstance(
+        source_frame_index, bool
+    ) or source_frame_index < 0:
+        raise EvidenceValidationError(
+            "invalid_source_frame_index",
+            "Source frame index must be a non-negative integer.",
+        )
+    if not isinstance(frame, numpy_module.ndarray):
+        raise EvidenceValidationError(
+            "invalid_source_frame_type",
+            "Decoded video frame must be a NumPy array.",
+        )
+    expected_source_shape = (
+        PINNED_INPUT_VIDEO_HEIGHT,
+        PINNED_INPUT_VIDEO_WIDTH,
+        3,
+    )
+    if tuple(frame.shape) != expected_source_shape:
+        raise EvidenceValidationError(
+            "invalid_source_frame_shape",
+            f"Decoded frame must have shape {expected_source_shape}.",
+        )
+    if frame.dtype != numpy_module.uint8:
+        raise EvidenceValidationError(
+            "invalid_source_frame_dtype",
+            "Decoded frame must be uint8 before pinned preprocessing.",
+        )
+
+    rgb = cv2_module.cvtColor(frame, code=cv2_module.COLOR_BGR2RGB)
+    rgb = numpy_module.asarray(
+        numpy_module.clip(rgb, 0, 255),
+        dtype=numpy_module.uint8,
+    )
+    processed = cv2_module.resize(
+        rgb,
+        (PINNED_PROCESSED_VIDEO_WIDTH, PINNED_PROCESSED_VIDEO_HEIGHT),
+        interpolation=cv2_module.INTER_LINEAR,
+    )
+    expected_processed_shape = (
+        PINNED_PROCESSED_VIDEO_HEIGHT,
+        PINNED_PROCESSED_VIDEO_WIDTH,
+        3,
+    )
+    if tuple(processed.shape) != expected_processed_shape:
+        raise EvidenceValidationError(
+            "invalid_processed_frame_shape",
+            f"Processed frame must have shape {expected_processed_shape}.",
+        )
+    if processed.dtype != numpy_module.uint8:
+        raise EvidenceValidationError(
+            "invalid_processed_frame_dtype",
+            "Processed frame must remain uint8 before normalization.",
+        )
+    payload = processed.tobytes(order="C")
+    return processed, {
+        "source_frame_index": source_frame_index,
+        "processed_sha256": sha256_bytes(payload),
+        "size_bytes": len(payload),
+    }
+
+
+def decode_and_preprocess_rollout_context(
+    video_path: Path,
+    *,
+    context_frames: int,
+    cv2_module: Any,
+    numpy_module: Any,
+) -> tuple[list[Any], dict[str, Any]]:
+    """Decode an exact context and release the capture on every outcome."""
+
+    if not isinstance(context_frames, int) or isinstance(
+        context_frames, bool
+    ) or context_frames <= 0:
+        raise EvidenceValidationError(
+            "invalid_context_frame_count",
+            "context_frames must be a positive integer.",
+        )
+    capture = cv2_module.VideoCapture(str(video_path))
+    if hasattr(capture, "isOpened") and not capture.isOpened():
+        capture.release()
+        raise EvidenceValidationError(
+            "video_decode_failed",
+            "Canonical input video could not be opened.",
+        )
+    selected_indices = list(range(context_frames))
+    processed_frames: list[Any] = []
+    frame_records: list[dict[str, Any]] = []
+    try:
+        for frame_index in selected_indices:
+            if capture.set(cv2_module.CAP_PROP_POS_FRAMES, frame_index) is False:
+                raise EvidenceValidationError(
+                    "video_seek_failed",
+                    f"Could not select required source frame {frame_index}.",
+                )
+            decoded, frame = capture.read()
+            if not decoded or frame is None:
+                raise EvidenceValidationError(
+                    "video_decode_failed",
+                    f"Could not decode required source frame {frame_index}.",
+                    f"$.video_preprocessing.derived.selected_source_frame_indices[{frame_index}]",
+                )
+            processed, record = preprocess_rollout_frame(
+                frame,
+                source_frame_index=frame_index,
+                cv2_module=cv2_module,
+                numpy_module=numpy_module,
+            )
+            processed_frames.append(processed)
+            frame_records.append(record)
+    finally:
+        capture.release()
+
+    observed_indices = [record["source_frame_index"] for record in frame_records]
+    if (
+        len(processed_frames) != context_frames
+        or len(frame_records) != context_frames
+        or observed_indices != selected_indices
+        or len(set(observed_indices)) != context_frames
+    ):
+        raise EvidenceValidationError(
+            "frame_cardinality_mismatch",
+            "Processed frames must preserve exact count, order, and identity.",
+        )
+    aggregate_payload = b"".join(
+        frame.tobytes(order="C") for frame in processed_frames
+    )
+    return processed_frames, {
+        "classification": "derived",
+        "transformation_name": VIDEO_PREPROCESSING_TRANSFORMATION,
+        "transformation_version": VIDEO_PREPROCESSING_VERSION,
+        "matched_source_path": VIDEO_PREPROCESSING_SOURCE,
+        "selected_source_frame_indices": selected_indices,
+        "requested_context_frames": context_frames,
+        "original_frame_shape": [
+            PINNED_INPUT_VIDEO_HEIGHT,
+            PINNED_INPUT_VIDEO_WIDTH,
+            3,
+        ],
+        "processed_frame_shape": [
+            PINNED_PROCESSED_VIDEO_HEIGHT,
+            PINNED_PROCESSED_VIDEO_WIDTH,
+            3,
+        ],
+        "color_conversion": "BGR_to_RGB",
+        "interpolation": "cv2.INTER_LINEAR",
+        "pre_normalization_dtype": "uint8",
+        "normalization_rule": VIDEO_PREPROCESSING_NORMALIZATION,
+        "processed_frame_count": len(processed_frames),
+        "processed_frames_sha256": sha256_bytes(aggregate_payload),
+        "processed_frames_size_bytes": len(aggregate_payload),
+        "frame_records": frame_records,
+        "frames_dropped": 0,
+        "frames_added": 0,
+        "frames_duplicated": 0,
+        "frame_order_preserved": True,
+        "storage_classification": "runtime_only_in_memory_outside_git",
+    }
+
+
+def validate_rollout_position_budget(
+    *,
+    context_frames: int,
+    raw_visual_token_shape: Sequence[int],
+    flattened_visual_token_shape: Sequence[int],
+    action_token_shape: Sequence[int],
+    max_position_embeddings: int,
+    generated_visual_tokens: int = VISUAL_TOKENS,
+) -> dict[str, Any]:
+    """Fail before transformer prefill unless the pinned token budget is exact."""
+
+    if not isinstance(context_frames, int) or isinstance(
+        context_frames, bool
+    ) or context_frames <= 0:
+        raise EvidenceValidationError(
+            "invalid_context_frame_count",
+            "context_frames must be a positive integer.",
+        )
+    expected_raw_shape = (context_frames, 14, 24)
+    if tuple(raw_visual_token_shape) != expected_raw_shape:
+        raise EvidenceValidationError(
+            "invalid_visual_token_shape",
+            f"Tokenizer output must have shape {expected_raw_shape}.",
+        )
+    expected_flattened_shape = (1, context_frames, VISUAL_TOKENS)
+    if tuple(flattened_visual_token_shape) != expected_flattened_shape:
+        raise EvidenceValidationError(
+            "invalid_flattened_visual_token_shape",
+            f"Flattened visual tokens must have shape {expected_flattened_shape}.",
+        )
+    expected_action_shape = (1, 1, ACTION_TOKENS)
+    if tuple(action_token_shape) != expected_action_shape:
+        raise EvidenceValidationError(
+            "invalid_action_token_shape",
+            f"Action tokens must have shape {expected_action_shape}.",
+        )
+    if generated_visual_tokens != VISUAL_TOKENS:
+        raise EvidenceValidationError(
+            "invalid_generation_token_count",
+            f"Exactly {VISUAL_TOKENS} generated visual tokens are required.",
+        )
+    if (
+        not isinstance(max_position_embeddings, int)
+        or isinstance(max_position_embeddings, bool)
+        or max_position_embeddings != PINNED_MAX_POSITION_EMBEDDINGS
+    ):
+        raise EvidenceValidationError(
+            "max_position_embeddings_mismatch",
+            "Loaded max_position_embeddings must equal the pinned value 5552.",
+        )
+
+    total_visual_prompt_tokens = context_frames * VISUAL_TOKENS
+    prompt_positions = total_visual_prompt_tokens + ACTION_TOKENS
+    conservative_position_budget = prompt_positions + generated_visual_tokens
+    if conservative_position_budget > max_position_embeddings:
+        raise EvidenceValidationError(
+            "position_budget_overflow",
+            (
+                f"Prompt plus generated positions ({conservative_position_budget}) "
+                f"exceed max_position_embeddings ({max_position_embeddings})."
+            ),
+        )
+    return {
+        "classification": "tokenized",
+        "raw_visual_token_shape": list(raw_visual_token_shape),
+        "flattened_visual_token_shape": list(flattened_visual_token_shape),
+        "visual_tokens_per_frame": VISUAL_TOKENS,
+        "total_visual_prompt_tokens": total_visual_prompt_tokens,
+        "action_token_shape": list(action_token_shape),
+        "action_token_count": ACTION_TOKENS,
+        "prompt_positions": prompt_positions,
+        "requested_generated_positions": generated_visual_tokens,
+        "conservative_position_budget": conservative_position_budget,
+        "max_position_embeddings": max_position_embeddings,
+        "position_budget_status": "PASS",
+    }
+
+
+def _tensor_sha256(tensor: Any) -> str:
+    payload = tensor.detach().cpu().contiguous().numpy().tobytes(order="C")
+    return sha256_bytes(payload)
+
+
+def _project_owned_lvm_generate(
+    args: SimpleNamespace,
+    model: Any,
+    output_dir: Path,
+    demo_video: str,
+    *,
+    upstream_inference: Any,
+) -> dict[str, Any]:
+    """Use pinned generation with the missing Gradio preprocessing boundary."""
+
+    if args.accelerate_algo != "naive":
+        raise EvidenceValidationError(
+            "unsupported_generation_algorithm",
+            "Formal Step 2.6 compatibility execution requires naive generation.",
+        )
+    input_mp4_path = Path(args.data_root) / demo_video
+    input_action_path = input_mp4_path.with_suffix(".jsonl")
+    output_mp4_path = output_dir / demo_video
+    output_action_path = output_mp4_path.with_suffix(".jsonl")
+    if output_mp4_path.exists() or output_action_path.exists():
+        raise EvidenceValidationError(
+            "rollout_output_exists",
+            "Formal rollout outputs must not already exist.",
+        )
+    shutil.copyfile(input_action_path, output_action_path)
+    if (
+        output_action_path.stat().st_size != input_action_path.stat().st_size
+        or sha256_file(output_action_path) != sha256_file(input_action_path)
+    ):
+        raise EvidenceValidationError(
+            "generated_metadata_mismatch",
+            "Paired metadata copy differs from the compatibility input.",
+        )
+
+    action_list: list[Any] = []
+    mcdataset = upstream_inference.MCDataset()
+    with input_action_path.open("r", encoding="utf-8") as handle:
+        for row_index, line in enumerate(handle):
+            parsed = _restricted_eval_derived_action(
+                line,
+                row_index,
+                safe_globals=upstream_inference.safe_globals,
+            )
+            parsed = dict(parsed)
+            parsed["camera"] = upstream_inference.np.array(parsed["camera"])
+            action_list.append(
+                mcdataset.get_action_index_from_actiondict(
+                    parsed,
+                    action_vocab_offset=8192,
+                )
+            )
+    required_action_index = args.demo_num
+    if len(action_list) <= required_action_index:
+        raise EvidenceValidationError(
+            "missing_generation_action",
+            "Compatibility JSONL lacks the action required after the context.",
+        )
+
+    processed_frames, derived = decode_and_preprocess_rollout_context(
+        input_mp4_path,
+        context_frames=args.demo_num,
+        cv2_module=upstream_inference.cv2,
+        numpy_module=upstream_inference.np,
+    )
+    device = model.transformer.device
+    frames = upstream_inference.torch.stack(
+        [upstream_inference.torch.from_numpy(frame) for frame in processed_frames],
+        dim=0,
+    ).to(device)
+    if tuple(frames.shape) != (
+        args.demo_num,
+        PINNED_PROCESSED_VIDEO_HEIGHT,
+        PINNED_PROCESSED_VIDEO_WIDTH,
+        3,
+    ):
+        raise EvidenceValidationError(
+            "invalid_processed_tensor_shape",
+            "Stacked processed frames have an unexpected shape.",
+        )
+    frames = frames.permute(0, 3, 1, 2).float() / 255.0
+    normalize = upstream_inference.transforms.Normalize(
+        mean=[0.5, 0.5, 0.5],
+        std=[0.5, 0.5, 0.5],
+    )
+    frames = normalize(frames)
+
+    with upstream_inference.torch.no_grad(), upstream_inference.torch.autocast(
+        device_type="cuda",
+        dtype=upstream_inference.torch.float16,
+    ):
+        raw_visual_tokens = model.tokenizer.tokenize_images(frames)
+    flattened_visual_tokens = upstream_inference.rearrange(
+        raw_visual_tokens,
+        "(b t) h w -> b t (h w)",
+        b=1,
+    )
+    action_tokens = upstream_inference.torch.tensor(
+        action_list[required_action_index : required_action_index + args.frames]
+    ).unsqueeze(1).to(device)
+    max_positions = getattr(getattr(model, "config", None), "max_position_embeddings", None)
+    tokenization = validate_rollout_position_budget(
+        context_frames=args.demo_num,
+        raw_visual_token_shape=tuple(raw_visual_tokens.shape),
+        flattened_visual_token_shape=tuple(flattened_visual_tokens.shape),
+        action_token_shape=tuple(action_tokens.shape),
+        max_position_embeddings=max_positions,
+        generated_visual_tokens=VISUAL_TOKENS * args.frames,
+    )
+    image_input = upstream_inference.rearrange(
+        flattened_visual_tokens,
+        "b t c -> b (t c)",
+    )
+    if tuple(image_input.shape) != (
+        1,
+        args.demo_num * VISUAL_TOKENS,
+    ):
+        raise EvidenceValidationError(
+            "invalid_visual_prompt_shape",
+            "Visual prompt tensor shape does not match the validated token budget.",
+        )
+    tokenization.update(
+        {
+            "tokenizer_module": type(model.tokenizer).__module__,
+            "tokenizer_class": type(model.tokenizer).__qualname__,
+            "vae_config_sha256": PINNED_VAE_CONFIG_SHA256,
+            "vae_checkpoint_sha256": PINNED_VAE_CHECKPOINT_SHA256,
+            "visual_token_dtype": str(raw_visual_tokens.dtype),
+            "visual_token_device": str(raw_visual_tokens.device),
+            "visual_token_sha256": _tensor_sha256(raw_visual_tokens),
+            "action_token_dtype": str(action_tokens.dtype),
+            "action_token_device": str(action_tokens.device),
+            "action_token_sha256": _tensor_sha256(action_tokens),
+        }
+    )
+
+    generation_start = time.time()
+    with upstream_inference.torch.no_grad(), upstream_inference.torch.autocast(
+        device_type="cuda",
+        dtype=upstream_inference.torch.float16,
+    ):
+        outputs = model.transformer.naive_generate(
+            input_ids=image_input,
+            max_new_tokens=VISUAL_TOKENS,
+            action_all=action_tokens,
+            top_k=args.top_k,
+            top_p=args.top_p,
+        )
+    time_costed = time.time() - generation_start
+    generated_tokens = outputs.tolist()[0]
+    if len(generated_tokens) != VISUAL_TOKENS:
+        raise EvidenceValidationError(
+            "unexpected_generation_result",
+            "Exactly 336 generated visual tokens were required.",
+        )
+    upstream_inference.token2video(
+        generated_tokens,
+        model.tokenizer,
+        str(output_mp4_path),
+        args.fps,
+        device,
+    )
+    return {
+        "time_costed": time_costed,
+        "token_num": len(generated_tokens),
+        "video_preprocessing": {
+            "derived": derived,
+            "tokenization": tokenization,
+        },
     }
 
 
@@ -1028,6 +1464,78 @@ def _ffprobe(path: Path, executable: str) -> dict[str, Any]:
             (result.stderr or result.stdout or "ffprobe failed").strip(),
         )
     return parse_ffprobe_output(result.stdout)
+
+
+def _canonical_video_provenance(
+    input_mp4: Path,
+    *,
+    ffprobe_executable: str,
+    asset_revision: str,
+) -> dict[str, Any]:
+    pre_size = input_mp4.stat().st_size
+    pre_hash = sha256_file(input_mp4)
+    if (
+        pre_size != PINNED_INPUT_MP4_SIZE_BYTES
+        or pre_hash != PINNED_INPUT_MP4_SHA256
+    ):
+        raise EvidenceValidationError(
+            "canonical_video_identity_mismatch",
+            "Canonical ModelScope MP4 does not match the pinned size and SHA-256.",
+        )
+    probe = _ffprobe(input_mp4, ffprobe_executable)
+    if (
+        probe["width"] != PINNED_INPUT_VIDEO_WIDTH
+        or probe["height"] != PINNED_INPUT_VIDEO_HEIGHT
+        or probe["r_frame_rate"] != "20/1"
+        or probe["avg_frame_rate"] != "20/1"
+        or probe["declared_frames"] != PINNED_INPUT_VIDEO_FRAMES
+        or probe["decoded_frames"] != PINNED_INPUT_VIDEO_FRAMES
+    ):
+        raise EvidenceValidationError(
+            "canonical_video_media_mismatch",
+            "Canonical ModelScope MP4 media facts do not match the pinned sample.",
+        )
+    return {
+        "classification": "original",
+        "path": str(input_mp4),
+        "size_bytes": pre_size,
+        "sha256": pre_hash,
+        "asset_revision": asset_revision,
+        "width": probe["width"],
+        "height": probe["height"],
+        "r_frame_rate": probe["r_frame_rate"],
+        "avg_frame_rate": probe["avg_frame_rate"],
+        "frame_count": probe["declared_frames"],
+        "decoded_frame_count": probe["decoded_frames"],
+        "duration_seconds": probe["duration_seconds"],
+        "pre_size_bytes": pre_size,
+        "pre_sha256": pre_hash,
+        "post_size_bytes": pre_size,
+        "post_sha256": pre_hash,
+        "canonical_input": True,
+        "unchanged": True,
+    }
+
+
+def _finalize_canonical_video_provenance(
+    original: Mapping[str, Any],
+) -> dict[str, Any]:
+    finalized = dict(original)
+    path = Path(finalized["path"])
+    post_size = path.stat().st_size
+    post_hash = sha256_file(path)
+    finalized["post_size_bytes"] = post_size
+    finalized["post_sha256"] = post_hash
+    finalized["unchanged"] = (
+        post_size == finalized["pre_size_bytes"]
+        and post_hash == finalized["pre_sha256"]
+    )
+    if finalized["unchanged"] is not True:
+        raise EvidenceValidationError(
+            "canonical_video_mutated",
+            "Canonical input MP4 changed during in-memory preprocessing.",
+        )
+    return finalized
 
 
 def execute_rollout(
@@ -1069,6 +1577,13 @@ def execute_rollout(
                 "invalid_rollout_input_extension",
                 "Formal input extensions must be .mp4 and .jsonl.",
             )
+        video_preprocessing = {
+            "original": _canonical_video_provenance(
+                input_mp4,
+                ffprobe_executable=args.ffprobe,
+                asset_revision=args.asset_revision,
+            )
+        }
         _seed_everything(torch, args.seed)
         torch.cuda.set_device(0)
         torch.cuda.empty_cache()
@@ -1124,7 +1639,6 @@ def execute_rollout(
                     "model_not_eval", "Official loader did not leave the model in eval mode."
                 )
 
-            upstream_inference.output_path = output_dir
             generation_args = SimpleNamespace(
                 data_root=str(compatibility_root),
                 frames=1,
@@ -1136,8 +1650,12 @@ def execute_rollout(
                 top_p=None,
             )
             generation_start = time.perf_counter()
-            result = upstream_inference.lvm_generate(
-                generation_args, model, output_dir, input_mp4.name
+            result = _project_owned_lvm_generate(
+                generation_args,
+                model,
+                output_dir,
+                input_mp4.name,
+                upstream_inference=upstream_inference,
             )
             torch.cuda.synchronize()
             first_frame_seconds = time.perf_counter() - generation_start
@@ -1155,6 +1673,13 @@ def execute_rollout(
                     "missing_generation_timing",
                     "Upstream generation did not report a positive kernel time.",
                 )
+            generated_preprocessing = result.get("video_preprocessing")
+            if not isinstance(generated_preprocessing, Mapping):
+                raise EvidenceValidationError(
+                    "missing_video_preprocessing_provenance",
+                    "Project-owned generation omitted preprocessing provenance.",
+                )
+            video_preprocessing.update(generated_preprocessing)
 
         generated_video = output_dir / input_mp4.name
         paired_metadata = output_dir / input_jsonl.name
@@ -1165,6 +1690,11 @@ def execute_rollout(
             )
         _assert_action_file_unchanged(action_compatibility["original"], "original")
         _assert_action_file_unchanged(action_compatibility["derived"], "derived")
+        video_preprocessing["original"] = (
+            _finalize_canonical_video_provenance(
+                video_preprocessing["original"],
+            )
+        )
         action_compatibility = dict(action_compatibility)
         action_compatibility["generated"] = _generated_action_provenance(
             action_compatibility,
@@ -1185,6 +1715,7 @@ def execute_rollout(
             "generated_video": generated_video,
             "paired_metadata": paired_metadata,
             "action_compatibility": action_compatibility,
+            "video_preprocessing": video_preprocessing,
             "ffprobe": probe,
             "runtime": {
                 "timings": {
@@ -1229,6 +1760,7 @@ def execute_rollout(
         "runtime": state["runtime"],
         "outputs": outputs,
         "action_compatibility": state["action_compatibility"],
+        "video_preprocessing": state["video_preprocessing"],
         "ffprobe": state["ffprobe"],
     }
     manifest_path = output_dir / "run_manifest.json"

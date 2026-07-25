@@ -38,6 +38,13 @@ ACTION_COMPATIBILITY_SERIALIZATION = (
     "UTF-8 JSON/Python-literal subset; sorted keys; compact separators; "
     "finite numbers; integer binary values; one LF-terminated object per row"
 )
+VIDEO_PREPROCESSING_TRANSFORMATION = "mineworld_gradio_step_video_preprocessing"
+VIDEO_PREPROCESSING_VERSION = "1.0"
+VIDEO_PREPROCESSING_SOURCE = "mineworld.py:step_video"
+VIDEO_PREPROCESSING_NORMALIZATION = (
+    "uint8 RGB CHW; float32 divide by 255.0; "
+    "per-channel Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5])"
+)
 
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
@@ -914,7 +921,7 @@ def validate_action_compatibility_provenance(
         or generated["relationship_to_derived"]
         != "byte_identical_copy_of_derived_jsonl"
         or generated["materialization_method"]
-        != "upstream_byte_copy_of_derived_jsonl"
+        != "project_owned_byte_copy_of_derived_jsonl"
     ):
         _reject(
             rejections,
@@ -1049,6 +1056,395 @@ def validate_action_compatibility_provenance(
                 "generated_video_lineage_mismatch",
                 "Generated provenance does not bind the generated_video output.",
                 f"{path}.generated.generated_video_sha256",
+            )
+    return tuple(rejections)
+
+
+def validate_video_preprocessing_provenance(
+    value: Any,
+    *,
+    inputs: Any = None,
+    identity: Any = None,
+    verify_bytes: bool = False,
+    path: str = "$.video_preprocessing",
+) -> tuple[EvidenceRejection, ...]:
+    """Validate canonical-video, in-memory preprocessing, and token lineage."""
+
+    rejections: list[EvidenceRejection] = []
+    if not _exact_fields(
+        value,
+        {"original", "derived", "tokenization"},
+        path,
+        rejections,
+    ):
+        return tuple(rejections)
+    assert isinstance(value, Mapping)
+    original = value["original"]
+    derived = value["derived"]
+    tokenization = value["tokenization"]
+
+    original_fields = {
+        "classification",
+        "path",
+        "size_bytes",
+        "sha256",
+        "asset_revision",
+        "width",
+        "height",
+        "r_frame_rate",
+        "avg_frame_rate",
+        "frame_count",
+        "decoded_frame_count",
+        "duration_seconds",
+        "pre_size_bytes",
+        "pre_sha256",
+        "post_size_bytes",
+        "post_sha256",
+        "canonical_input",
+        "unchanged",
+    }
+    derived_fields = {
+        "classification",
+        "transformation_name",
+        "transformation_version",
+        "matched_source_path",
+        "selected_source_frame_indices",
+        "requested_context_frames",
+        "original_frame_shape",
+        "processed_frame_shape",
+        "color_conversion",
+        "interpolation",
+        "pre_normalization_dtype",
+        "normalization_rule",
+        "processed_frame_count",
+        "processed_frames_sha256",
+        "processed_frames_size_bytes",
+        "frame_records",
+        "frames_dropped",
+        "frames_added",
+        "frames_duplicated",
+        "frame_order_preserved",
+        "storage_classification",
+    }
+    token_fields = {
+        "classification",
+        "raw_visual_token_shape",
+        "flattened_visual_token_shape",
+        "visual_tokens_per_frame",
+        "total_visual_prompt_tokens",
+        "action_token_shape",
+        "action_token_count",
+        "prompt_positions",
+        "requested_generated_positions",
+        "conservative_position_budget",
+        "max_position_embeddings",
+        "position_budget_status",
+        "tokenizer_module",
+        "tokenizer_class",
+        "vae_config_sha256",
+        "vae_checkpoint_sha256",
+        "visual_token_dtype",
+        "visual_token_device",
+        "visual_token_sha256",
+        "action_token_dtype",
+        "action_token_device",
+        "action_token_sha256",
+    }
+    original_ok = _exact_fields(
+        original,
+        original_fields,
+        f"{path}.original",
+        rejections,
+    )
+    derived_ok = _exact_fields(
+        derived,
+        derived_fields,
+        f"{path}.derived",
+        rejections,
+    )
+    token_ok = _exact_fields(
+        tokenization,
+        token_fields,
+        f"{path}.tokenization",
+        rejections,
+    )
+    if not (original_ok and derived_ok and token_ok):
+        return tuple(rejections)
+    assert isinstance(original, Mapping)
+    assert isinstance(derived, Mapping)
+    assert isinstance(tokenization, Mapping)
+
+    if (
+        original["classification"] != "original"
+        or original["canonical_input"] is not True
+        or original["unchanged"] is not True
+    ):
+        _reject(
+            rejections,
+            "invalid_canonical_video_classification",
+            "Canonical video must be classified original, canonical, and unchanged.",
+            f"{path}.original",
+        )
+    for field in ("sha256", "pre_sha256", "post_sha256"):
+        if not _is_sha256(original[field]):
+            _reject(
+                rejections,
+                "invalid_sha256",
+                f"{field} must be a lowercase SHA-256.",
+                f"{path}.original.{field}",
+            )
+    for field in (
+        "size_bytes",
+        "pre_size_bytes",
+        "post_size_bytes",
+        "width",
+        "height",
+        "frame_count",
+        "decoded_frame_count",
+    ):
+        if not _is_nonnegative_int(original[field]):
+            _reject(
+                rejections,
+                "invalid_video_fact",
+                f"{field} must be a non-negative integer.",
+                f"{path}.original.{field}",
+            )
+    if (
+        original["width"] != 640
+        or original["height"] != 360
+        or original["r_frame_rate"] != "20/1"
+        or original["avg_frame_rate"] != "20/1"
+        or original["frame_count"] != 4152
+        or original["decoded_frame_count"] != 4152
+        or not _is_positive_finite(original["duration_seconds"])
+    ):
+        _reject(
+            rejections,
+            "canonical_video_media_mismatch",
+            "Canonical video media facts do not match the pinned sample.",
+            f"{path}.original",
+        )
+    if (
+        original["size_bytes"] != original["pre_size_bytes"]
+        or original["size_bytes"] != original["post_size_bytes"]
+        or original["sha256"] != original["pre_sha256"]
+        or original["sha256"] != original["post_sha256"]
+    ):
+        _reject(
+            rejections,
+            "canonical_video_mutated",
+            "Canonical video pre/post identities must remain exact.",
+            f"{path}.original",
+        )
+
+    context_frames = derived["requested_context_frames"]
+    expected_indices = (
+        list(range(context_frames))
+        if _is_nonnegative_int(context_frames) and context_frames > 0
+        else None
+    )
+    records = derived["frame_records"]
+    if (
+        derived["classification"] != "derived"
+        or derived["transformation_name"] != VIDEO_PREPROCESSING_TRANSFORMATION
+        or derived["transformation_version"] != VIDEO_PREPROCESSING_VERSION
+        or derived["matched_source_path"] != VIDEO_PREPROCESSING_SOURCE
+        or derived["original_frame_shape"] != [360, 640, 3]
+        or derived["processed_frame_shape"] != [224, 384, 3]
+        or derived["color_conversion"] != "BGR_to_RGB"
+        or derived["interpolation"] != "cv2.INTER_LINEAR"
+        or derived["pre_normalization_dtype"] != "uint8"
+        or derived["normalization_rule"] != VIDEO_PREPROCESSING_NORMALIZATION
+        or derived["storage_classification"]
+        != "runtime_only_in_memory_outside_git"
+    ):
+        _reject(
+            rejections,
+            "invalid_video_preprocessing_contract",
+            "Derived preprocessing does not match the pinned Gradio boundary.",
+            f"{path}.derived",
+        )
+    if (
+        expected_indices is None
+        or derived["selected_source_frame_indices"] != expected_indices
+        or derived["processed_frame_count"] != context_frames
+        or derived["frames_dropped"] != 0
+        or derived["frames_added"] != 0
+        or derived["frames_duplicated"] != 0
+        or derived["frame_order_preserved"] is not True
+    ):
+        _reject(
+            rejections,
+            "frame_cardinality_mismatch",
+            "Derived frames must preserve exact context count, order, and identity.",
+            f"{path}.derived",
+        )
+    expected_frame_size = 224 * 384 * 3
+    if (
+        not _is_sha256(derived["processed_frames_sha256"])
+        or not _is_nonnegative_int(derived["processed_frames_size_bytes"])
+        or (
+            expected_indices is not None
+            and derived["processed_frames_size_bytes"]
+            != len(expected_indices) * expected_frame_size
+        )
+        or not isinstance(records, list)
+        or expected_indices is None
+        or len(records) != len(expected_indices)
+    ):
+        _reject(
+            rejections,
+            "invalid_processed_frame_integrity",
+            "Processed frame hashes, sizes, and record count must be complete.",
+            f"{path}.derived",
+        )
+    elif isinstance(records, list):
+        for index, record in enumerate(records):
+            record_path = f"{path}.derived.frame_records[{index}]"
+            if not _exact_fields(
+                record,
+                {"source_frame_index", "processed_sha256", "size_bytes"},
+                record_path,
+                rejections,
+            ):
+                continue
+            assert isinstance(record, Mapping)
+            if (
+                record["source_frame_index"] != expected_indices[index]
+                or not _is_sha256(record["processed_sha256"])
+                or record["size_bytes"] != expected_frame_size
+            ):
+                _reject(
+                    rejections,
+                    "invalid_processed_frame_record",
+                    "Processed frame record has wrong identity, size, or hash.",
+                    record_path,
+                )
+
+    expected_raw_shape = (
+        [context_frames, 14, 24] if expected_indices is not None else None
+    )
+    expected_flattened_shape = (
+        [1, context_frames, VISUAL_TOKENS]
+        if expected_indices is not None
+        else None
+    )
+    total_visual = (
+        context_frames * VISUAL_TOKENS if expected_indices is not None else None
+    )
+    expected_prompt = (
+        total_visual + ACTION_TOKENS if total_visual is not None else None
+    )
+    expected_budget = (
+        expected_prompt + VISUAL_TOKENS if expected_prompt is not None else None
+    )
+    if (
+        tokenization["classification"] != "tokenized"
+        or tokenization["raw_visual_token_shape"] != expected_raw_shape
+        or tokenization["flattened_visual_token_shape"]
+        != expected_flattened_shape
+        or tokenization["visual_tokens_per_frame"] != VISUAL_TOKENS
+        or tokenization["total_visual_prompt_tokens"] != total_visual
+        or tokenization["action_token_shape"] != [1, 1, ACTION_TOKENS]
+        or tokenization["action_token_count"] != ACTION_TOKENS
+        or tokenization["prompt_positions"] != expected_prompt
+        or tokenization["requested_generated_positions"] != VISUAL_TOKENS
+        or tokenization["conservative_position_budget"] != expected_budget
+        or tokenization["max_position_embeddings"] != SEQUENCE_LENGTH
+        or tokenization["position_budget_status"] != "PASS"
+        or (
+            isinstance(expected_budget, int)
+            and expected_budget > SEQUENCE_LENGTH
+        )
+    ):
+        _reject(
+            rejections,
+            "invalid_position_budget",
+            "Token shapes and conservative position budget are inconsistent.",
+            f"{path}.tokenization",
+        )
+    for field in (
+        "tokenizer_module",
+        "tokenizer_class",
+        "visual_token_dtype",
+        "visual_token_device",
+        "action_token_dtype",
+        "action_token_device",
+    ):
+        if not _is_nonempty_string(tokenization[field]):
+            _reject(
+                rejections,
+                "invalid_tokenizer_provenance",
+                f"{field} must be non-empty.",
+                f"{path}.tokenization.{field}",
+            )
+    for field in (
+        "vae_config_sha256",
+        "vae_checkpoint_sha256",
+        "visual_token_sha256",
+        "action_token_sha256",
+    ):
+        if not _is_sha256(tokenization[field]):
+            _reject(
+                rejections,
+                "invalid_sha256",
+                f"{field} must be a lowercase SHA-256.",
+                f"{path}.tokenization.{field}",
+            )
+    if isinstance(identity, Mapping) and (
+        original["asset_revision"] != identity.get("asset_revision")
+        or tokenization["vae_config_sha256"]
+        != identity.get("vae_config_sha256")
+        or tokenization["vae_checkpoint_sha256"]
+        != identity.get("vae_checkpoint_sha256")
+    ):
+        _reject(
+            rejections,
+            "video_preprocessing_identity_mismatch",
+            "Video/token provenance does not match the run identity.",
+            path,
+        )
+    if isinstance(inputs, list):
+        by_role = {
+            item.get("role"): item
+            for item in inputs
+            if isinstance(item, Mapping) and isinstance(item.get("role"), str)
+        }
+        canonical = by_role.get("input_mp4")
+        if (
+            not isinstance(canonical, Mapping)
+            or canonical.get("path") != original["path"]
+            or canonical.get("size_bytes") != original["size_bytes"]
+            or canonical.get("sha256") != original["sha256"]
+        ):
+            _reject(
+                rejections,
+                "canonical_video_provenance_mismatch",
+                "Original video provenance must equal the input_mp4 artifact.",
+                f"{path}.original",
+            )
+    if verify_bytes:
+        original_path = (
+            Path(original["path"])
+            if _is_nonempty_string(original["path"])
+            else None
+        )
+        if original_path is None or not original_path.is_file():
+            _reject(
+                rejections,
+                "missing_canonical_video",
+                "Canonical input MP4 is unavailable for byte verification.",
+                f"{path}.original.path",
+            )
+        elif (
+            original_path.stat().st_size != original["size_bytes"]
+            or sha256_file(original_path) != original["sha256"]
+        ):
+            _reject(
+                rejections,
+                "canonical_video_integrity_mismatch",
+                "Canonical input MP4 bytes disagree with provenance.",
+                f"{path}.original",
             )
     return tuple(rejections)
 
@@ -1201,6 +1597,7 @@ def validate_rollout_manifest(
         "runtime",
         "outputs",
         "action_compatibility",
+        "video_preprocessing",
         "ffprobe",
         "manifest_integrity",
     }
@@ -1321,6 +1718,14 @@ def validate_rollout_manifest(
             document["action_compatibility"],
             inputs=document["inputs"],
             outputs=document["outputs"],
+            identity=document["identity"],
+            verify_bytes=verify_output_bytes,
+        )
+    )
+    rejections.extend(
+        validate_video_preprocessing_provenance(
+            document["video_preprocessing"],
+            inputs=document["inputs"],
             identity=document["identity"],
             verify_bytes=verify_output_bytes,
         )

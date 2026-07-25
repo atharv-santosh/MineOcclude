@@ -130,6 +130,354 @@
         }
       }
     },
+    "videoPreprocessing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original",
+        "derived",
+        "tokenization"
+      ],
+      "properties": {
+        "original": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "path",
+            "size_bytes",
+            "sha256",
+            "asset_revision",
+            "width",
+            "height",
+            "r_frame_rate",
+            "avg_frame_rate",
+            "frame_count",
+            "decoded_frame_count",
+            "duration_seconds",
+            "pre_size_bytes",
+            "pre_sha256",
+            "post_size_bytes",
+            "post_sha256",
+            "canonical_input",
+            "unchanged"
+          ],
+          "properties": {
+            "classification": {
+              "const": "original"
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "asset_revision": {
+              "$ref": "#/$defs/gitSha"
+            },
+            "width": {
+              "const": 640
+            },
+            "height": {
+              "const": 360
+            },
+            "r_frame_rate": {
+              "const": "20/1"
+            },
+            "avg_frame_rate": {
+              "const": "20/1"
+            },
+            "frame_count": {
+              "const": 4152
+            },
+            "decoded_frame_count": {
+              "const": 4152
+            },
+            "duration_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pre_size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "pre_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "post_size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "post_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "canonical_input": {
+              "const": true
+            },
+            "unchanged": {
+              "const": true
+            }
+          }
+        },
+        "derived": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "transformation_name",
+            "transformation_version",
+            "matched_source_path",
+            "selected_source_frame_indices",
+            "requested_context_frames",
+            "original_frame_shape",
+            "processed_frame_shape",
+            "color_conversion",
+            "interpolation",
+            "pre_normalization_dtype",
+            "normalization_rule",
+            "processed_frame_count",
+            "processed_frames_sha256",
+            "processed_frames_size_bytes",
+            "frame_records",
+            "frames_dropped",
+            "frames_added",
+            "frames_duplicated",
+            "frame_order_preserved",
+            "storage_classification"
+          ],
+          "properties": {
+            "classification": {
+              "const": "derived"
+            },
+            "transformation_name": {
+              "const": "mineworld_gradio_step_video_preprocessing"
+            },
+            "transformation_version": {
+              "const": "1.0"
+            },
+            "matched_source_path": {
+              "const": "mineworld.py:step_video"
+            },
+            "selected_source_frame_indices": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "requested_context_frames": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "original_frame_shape": {
+              "const": [
+                360,
+                640,
+                3
+              ]
+            },
+            "processed_frame_shape": {
+              "const": [
+                224,
+                384,
+                3
+              ]
+            },
+            "color_conversion": {
+              "const": "BGR_to_RGB"
+            },
+            "interpolation": {
+              "const": "cv2.INTER_LINEAR"
+            },
+            "pre_normalization_dtype": {
+              "const": "uint8"
+            },
+            "normalization_rule": {
+              "type": "string",
+              "minLength": 1
+            },
+            "processed_frame_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "processed_frames_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "processed_frames_size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "frame_records": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_frame_index",
+                  "processed_sha256",
+                  "size_bytes"
+                ],
+                "properties": {
+                  "source_frame_index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "processed_sha256": {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  "size_bytes": {
+                    "const": 258048
+                  }
+                }
+              }
+            },
+            "frames_dropped": {
+              "const": 0
+            },
+            "frames_added": {
+              "const": 0
+            },
+            "frames_duplicated": {
+              "const": 0
+            },
+            "frame_order_preserved": {
+              "const": true
+            },
+            "storage_classification": {
+              "const": "runtime_only_in_memory_outside_git"
+            }
+          }
+        },
+        "tokenization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "raw_visual_token_shape",
+            "flattened_visual_token_shape",
+            "visual_tokens_per_frame",
+            "total_visual_prompt_tokens",
+            "action_token_shape",
+            "action_token_count",
+            "prompt_positions",
+            "requested_generated_positions",
+            "conservative_position_budget",
+            "max_position_embeddings",
+            "position_budget_status",
+            "tokenizer_module",
+            "tokenizer_class",
+            "vae_config_sha256",
+            "vae_checkpoint_sha256",
+            "visual_token_dtype",
+            "visual_token_device",
+            "visual_token_sha256",
+            "action_token_dtype",
+            "action_token_device",
+            "action_token_sha256"
+          ],
+          "properties": {
+            "classification": {
+              "const": "tokenized"
+            },
+            "raw_visual_token_shape": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "flattened_visual_token_shape": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "visual_tokens_per_frame": {
+              "const": 336
+            },
+            "total_visual_prompt_tokens": {
+              "type": "integer",
+              "minimum": 336
+            },
+            "action_token_shape": {
+              "const": [
+                1,
+                1,
+                11
+              ]
+            },
+            "action_token_count": {
+              "const": 11
+            },
+            "prompt_positions": {
+              "type": "integer",
+              "minimum": 347
+            },
+            "requested_generated_positions": {
+              "const": 336
+            },
+            "conservative_position_budget": {
+              "type": "integer",
+              "maximum": 5552
+            },
+            "max_position_embeddings": {
+              "const": 5552
+            },
+            "position_budget_status": {
+              "const": "PASS"
+            },
+            "tokenizer_module": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tokenizer_class": {
+              "type": "string",
+              "minLength": 1
+            },
+            "vae_config_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "vae_checkpoint_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "visual_token_dtype": {
+              "type": "string",
+              "minLength": 1
+            },
+            "visual_token_device": {
+              "type": "string",
+              "minLength": 1
+            },
+            "visual_token_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "action_token_dtype": {
+              "type": "string",
+              "minLength": 1
+            },
+            "action_token_device": {
+              "type": "string",
+              "minLength": 1
+            },
+            "action_token_sha256": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        }
+      }
+    },
     "header": {
       "type": "object",
       "required": [
@@ -176,6 +524,7 @@
             "runtime",
             "outputs",
             "action_compatibility",
+            "video_preprocessing",
             "ffprobe",
             "manifest_integrity"
           ],
@@ -425,11 +774,14 @@
                       "pattern": "^[0-9a-f]{64}$"
                     },
                     "materialization_method": {
-                      "const": "upstream_byte_copy_of_derived_jsonl"
+                      "const": "project_owned_byte_copy_of_derived_jsonl"
                     }
                   }
                 }
               }
+            },
+            "video_preprocessing": {
+              "$ref": "#/$defs/videoPreprocessing"
             },
             "ffprobe": {
               "type": "object"

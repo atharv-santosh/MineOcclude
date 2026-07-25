@@ -10,11 +10,15 @@ from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 
+import numpy as np
+
 from mineocclude.models.phase2_aws import (
     ACTION_COMPATIBILITY_SERIALIZATION,
     ACTION_COMPATIBILITY_TRANSFORMATION,
     ACTION_COMPATIBILITY_VERSION,
     PINNED_ASSET_REVISION,
+    PINNED_INPUT_MP4_SHA256,
+    PINNED_INPUT_MP4_SIZE_BYTES,
     PINNED_MAIN_CHECKPOINT_SHA256,
     PINNED_SOURCE_REVISION,
     PINNED_VAE_CHECKPOINT_SHA256,
@@ -23,11 +27,18 @@ from mineocclude.models.phase2_aws import (
     build_rollout_parser,
     build_teacher_forced_parser,
     convert_action_jsonl_for_pinned_inference,
+    decode_and_preprocess_rollout_context,
+    preprocess_rollout_frame,
+    validate_rollout_position_budget,
 )
 from mineocclude.models.phase2_evidence import (
     ARCHITECTURE_EVIDENCE_TYPE,
     EVIDENCE_SCHEMA_VERSION,
     ROLLOUT_EVIDENCE_TYPE,
+    VIDEO_PREPROCESSING_NORMALIZATION,
+    VIDEO_PREPROCESSING_SOURCE,
+    VIDEO_PREPROCESSING_TRANSFORMATION,
+    VIDEO_PREPROCESSING_VERSION,
     EvidenceValidationError,
     artifact_record,
     canonical_json_bytes,
@@ -43,6 +54,7 @@ from mineocclude.models.phase2_evidence import (
     validate_output_file_completeness,
     validate_rollout_manifest,
     validate_timing_fields,
+    validate_video_preprocessing_provenance,
 )
 
 
@@ -234,7 +246,84 @@ def _rollout_document(runtime_root: Path) -> dict[str, object]:
                     "byte_identical_copy_of_derived_jsonl",
                 "derived_jsonl_sha256": sha256_file(derived),
                 "materialization_method":
-                    "upstream_byte_copy_of_derived_jsonl",
+                    "project_owned_byte_copy_of_derived_jsonl",
+            },
+        },
+        "video_preprocessing": {
+            "original": {
+                "classification": "original",
+                "path": str(shared_input.resolve()),
+                "size_bytes": shared_input.stat().st_size,
+                "sha256": sha256_file(shared_input),
+                "asset_revision": GIT_SHA,
+                "width": 640,
+                "height": 360,
+                "r_frame_rate": "20/1",
+                "avg_frame_rate": "20/1",
+                "frame_count": 4152,
+                "decoded_frame_count": 4152,
+                "duration_seconds": 207.6,
+                "pre_size_bytes": shared_input.stat().st_size,
+                "pre_sha256": sha256_file(shared_input),
+                "post_size_bytes": shared_input.stat().st_size,
+                "post_sha256": sha256_file(shared_input),
+                "canonical_input": True,
+                "unchanged": True,
+            },
+            "derived": {
+                "classification": "derived",
+                "transformation_name": VIDEO_PREPROCESSING_TRANSFORMATION,
+                "transformation_version": VIDEO_PREPROCESSING_VERSION,
+                "matched_source_path": VIDEO_PREPROCESSING_SOURCE,
+                "selected_source_frame_indices": list(range(8)),
+                "requested_context_frames": 8,
+                "original_frame_shape": [360, 640, 3],
+                "processed_frame_shape": [224, 384, 3],
+                "color_conversion": "BGR_to_RGB",
+                "interpolation": "cv2.INTER_LINEAR",
+                "pre_normalization_dtype": "uint8",
+                "normalization_rule": VIDEO_PREPROCESSING_NORMALIZATION,
+                "processed_frame_count": 8,
+                "processed_frames_sha256": SHA256,
+                "processed_frames_size_bytes": 8 * 224 * 384 * 3,
+                "frame_records": [
+                    {
+                        "source_frame_index": index,
+                        "processed_sha256": SHA256,
+                        "size_bytes": 224 * 384 * 3,
+                    }
+                    for index in range(8)
+                ],
+                "frames_dropped": 0,
+                "frames_added": 0,
+                "frames_duplicated": 0,
+                "frame_order_preserved": True,
+                "storage_classification":
+                    "runtime_only_in_memory_outside_git",
+            },
+            "tokenization": {
+                "classification": "tokenized",
+                "raw_visual_token_shape": [8, 14, 24],
+                "flattened_visual_token_shape": [1, 8, 336],
+                "visual_tokens_per_frame": 336,
+                "total_visual_prompt_tokens": 2688,
+                "action_token_shape": [1, 1, 11],
+                "action_token_count": 11,
+                "prompt_positions": 2699,
+                "requested_generated_positions": 336,
+                "conservative_position_budget": 3035,
+                "max_position_embeddings": 5552,
+                "position_budget_status": "PASS",
+                "tokenizer_module": "fixture",
+                "tokenizer_class": "FixtureTokenizer",
+                "vae_config_sha256": SHA256,
+                "vae_checkpoint_sha256": SHA256,
+                "visual_token_dtype": "torch.int64",
+                "visual_token_device": "cuda:0",
+                "visual_token_sha256": SHA256,
+                "action_token_dtype": "torch.int64",
+                "action_token_device": "cuda:0",
+                "action_token_sha256": SHA256,
             },
         },
         "ffprobe": {
@@ -377,6 +466,63 @@ def _hook_records() -> list[dict[str, object]]:
     ]
 
 
+class _FakeCapture:
+    def __init__(self, frames: list[np.ndarray | None]) -> None:
+        self.frames = frames
+        self.current_index = 0
+        self.released = False
+
+    def isOpened(self) -> bool:
+        return True
+
+    def set(self, property_id: int, value: int) -> bool:
+        self.current_index = int(value)
+        return property_id == _FakeCv2.CAP_PROP_POS_FRAMES
+
+    def read(self) -> tuple[bool, np.ndarray | None]:
+        if self.current_index >= len(self.frames):
+            return False, None
+        frame = self.frames[self.current_index]
+        return frame is not None, None if frame is None else frame.copy()
+
+    def release(self) -> None:
+        self.released = True
+
+
+class _FakeCv2:
+    COLOR_BGR2RGB = 4
+    INTER_LINEAR = 1
+    CAP_PROP_POS_FRAMES = 1
+
+    def __init__(self, frames: list[np.ndarray | None]) -> None:
+        self.capture = _FakeCapture(frames)
+        self.interpolations: list[int] = []
+
+    def VideoCapture(self, path: str) -> _FakeCapture:
+        del path
+        return self.capture
+
+    def cvtColor(self, frame: np.ndarray, *, code: int) -> np.ndarray:
+        if code != self.COLOR_BGR2RGB:
+            raise AssertionError("unexpected color conversion")
+        return frame[:, :, ::-1].copy()
+
+    def resize(
+        self,
+        frame: np.ndarray,
+        size: tuple[int, int],
+        *,
+        interpolation: int,
+    ) -> np.ndarray:
+        self.interpolations.append(interpolation)
+        if interpolation != self.INTER_LINEAR:
+            raise AssertionError("unexpected interpolation")
+        width, height = size
+        source_y = np.linspace(0, frame.shape[0] - 1, height).astype(int)
+        source_x = np.linspace(0, frame.shape[1] - 1, width).astype(int)
+        return frame[source_y][:, source_x].copy()
+
+
 class Phase2EvidenceTests(unittest.TestCase):
     def setUp(self) -> None:
         self._temporary_directory = tempfile.TemporaryDirectory()
@@ -461,7 +607,7 @@ class Phase2EvidenceTests(unittest.TestCase):
                 "byte_identical_copy_of_derived_jsonl",
             "derived_jsonl_sha256": derived["sha256"],
             "materialization_method":
-                "upstream_byte_copy_of_derived_jsonl",
+                "project_owned_byte_copy_of_derived_jsonl",
         }
         inputs = [
             {
@@ -561,6 +707,312 @@ class Phase2EvidenceTests(unittest.TestCase):
             EVIDENCE_SCHEMA_VERSION,
         )
         self.assertEqual(len(schema["oneOf"]), 3)
+
+    def test_pinned_gradio_preprocessing_is_exact_and_deterministic(self) -> None:
+        frame = np.zeros((360, 640, 3), dtype=np.uint8)
+        frame[:, :] = [7, 19, 233]
+        original = frame.copy()
+        fake_cv2 = _FakeCv2([frame])
+        first, first_record = preprocess_rollout_frame(
+            frame,
+            source_frame_index=4,
+            cv2_module=fake_cv2,
+            numpy_module=np,
+        )
+        second, second_record = preprocess_rollout_frame(
+            frame,
+            source_frame_index=4,
+            cv2_module=fake_cv2,
+            numpy_module=np,
+        )
+
+        self.assertEqual(first.shape, (224, 384, 3))
+        self.assertEqual(first.dtype, np.uint8)
+        self.assertTrue(np.all(first == np.array([233, 19, 7], dtype=np.uint8)))
+        self.assertEqual(first.tobytes(), second.tobytes())
+        self.assertEqual(first_record, second_record)
+        self.assertEqual(first_record["source_frame_index"], 4)
+        self.assertEqual(
+            first_record["processed_sha256"],
+            sha256_bytes(first.tobytes()),
+        )
+        self.assertEqual(
+            fake_cv2.interpolations,
+            [_FakeCv2.INTER_LINEAR, _FakeCv2.INTER_LINEAR],
+        )
+        np.testing.assert_array_equal(frame, original)
+
+    def test_context_decode_preserves_frame_identity_cardinality_and_hashes(
+        self,
+    ) -> None:
+        frames = [
+            np.full((360, 640, 3), [index, index + 1, index + 2], np.uint8)
+            for index in range(3)
+        ]
+        canonical = self.runtime_root / "canonical.mp4"
+        canonical.write_bytes(b"canonical-video-fixture")
+        before = canonical.read_bytes()
+        first_cv2 = _FakeCv2(frames)
+        processed, provenance = decode_and_preprocess_rollout_context(
+            canonical,
+            context_frames=3,
+            cv2_module=first_cv2,
+            numpy_module=np,
+        )
+        second, repeated = decode_and_preprocess_rollout_context(
+            canonical,
+            context_frames=3,
+            cv2_module=_FakeCv2(frames),
+            numpy_module=np,
+        )
+
+        self.assertEqual(canonical.read_bytes(), before)
+        self.assertEqual(len(processed), 3)
+        self.assertEqual([item.mean() for item in processed], [1.0, 2.0, 3.0])
+        self.assertEqual(
+            provenance["selected_source_frame_indices"],
+            [0, 1, 2],
+        )
+        self.assertEqual(
+            [record["source_frame_index"] for record in provenance["frame_records"]],
+            [0, 1, 2],
+        )
+        self.assertEqual(provenance["processed_frame_count"], 3)
+        self.assertEqual(provenance["frames_dropped"], 0)
+        self.assertEqual(provenance["frames_added"], 0)
+        self.assertEqual(provenance["frames_duplicated"], 0)
+        self.assertTrue(provenance["frame_order_preserved"])
+        self.assertEqual(
+            provenance["processed_frames_sha256"],
+            repeated["processed_frames_sha256"],
+        )
+        self.assertEqual(
+            [item.tobytes() for item in processed],
+            [item.tobytes() for item in second],
+        )
+        self.assertTrue(first_cv2.capture.released)
+        self.assertEqual(
+            first_cv2.interpolations,
+            [
+                _FakeCv2.INTER_LINEAR,
+                _FakeCv2.INTER_LINEAR,
+                _FakeCv2.INTER_LINEAR,
+            ],
+        )
+
+    def test_frame_preprocessing_fails_closed_and_releases_capture(self) -> None:
+        valid = np.zeros((360, 640, 3), dtype=np.uint8)
+        invalid_frames = [
+            (
+                "shape",
+                np.zeros((359, 640, 3), dtype=np.uint8),
+                "invalid_source_frame_shape",
+            ),
+            (
+                "dtype",
+                np.zeros((360, 640, 3), dtype=np.float32),
+                "invalid_source_frame_dtype",
+            ),
+        ]
+        for name, frame, code in invalid_frames:
+            with self.subTest(name=name):
+                with self.assertRaises(EvidenceValidationError) as raised:
+                    preprocess_rollout_frame(
+                        frame,
+                        source_frame_index=0,
+                        cv2_module=_FakeCv2([frame]),
+                        numpy_module=np,
+                    )
+                self.assertEqual(raised.exception.code, code)
+
+        for name, frames in (
+            ("failed_decode", [valid, None]),
+            ("short_video", [valid]),
+        ):
+            with self.subTest(name=name):
+                fake_cv2 = _FakeCv2(frames)
+                with self.assertRaises(EvidenceValidationError) as raised:
+                    decode_and_preprocess_rollout_context(
+                        self.runtime_root / f"{name}.mp4",
+                        context_frames=2,
+                        cv2_module=fake_cv2,
+                        numpy_module=np,
+                    )
+                self.assertEqual(raised.exception.code, "video_decode_failed")
+                self.assertTrue(fake_cv2.capture.released)
+
+        failed_seek = _FakeCv2([valid])
+        failed_seek.capture.set = lambda property_id, value: False
+        with self.assertRaises(EvidenceValidationError) as raised:
+            decode_and_preprocess_rollout_context(
+                self.runtime_root / "failed-seek.mp4",
+                context_frames=1,
+                cv2_module=failed_seek,
+                numpy_module=np,
+            )
+        self.assertEqual(raised.exception.code, "video_seek_failed")
+        self.assertTrue(failed_seek.capture.released)
+
+    def test_token_shapes_and_position_budget_fail_before_prefill(self) -> None:
+        budget = validate_rollout_position_budget(
+            context_frames=8,
+            raw_visual_token_shape=(8, 14, 24),
+            flattened_visual_token_shape=(1, 8, 336),
+            action_token_shape=(1, 1, 11),
+            max_position_embeddings=5552,
+        )
+        self.assertEqual(budget["visual_tokens_per_frame"], 336)
+        self.assertEqual(budget["total_visual_prompt_tokens"], 8 * 336)
+        self.assertEqual(budget["prompt_positions"], 8 * 336 + 11)
+        self.assertEqual(
+            budget["conservative_position_budget"],
+            8 * 336 + 11 + 336,
+        )
+        self.assertEqual(budget["conservative_position_budget"], 3035)
+        self.assertEqual(budget["position_budget_status"], "PASS")
+
+        invalid_cases = [
+            (
+                "335_visual",
+                {
+                    "raw_visual_token_shape": (8, 5, 67),
+                    "flattened_visual_token_shape": (1, 8, 335),
+                },
+                "invalid_visual_token_shape",
+            ),
+            (
+                "337_visual",
+                {
+                    "raw_visual_token_shape": (8, 337, 1),
+                    "flattened_visual_token_shape": (1, 8, 337),
+                },
+                "invalid_visual_token_shape",
+            ),
+            (
+                "10_actions",
+                {"action_token_shape": (1, 1, 10)},
+                "invalid_action_token_shape",
+            ),
+            (
+                "12_actions",
+                {"action_token_shape": (1, 1, 12)},
+                "invalid_action_token_shape",
+            ),
+            (
+                "wrong_config",
+                {"max_position_embeddings": 5553},
+                "max_position_embeddings_mismatch",
+            ),
+            (
+                "overflow",
+                {
+                    "context_frames": 16,
+                    "raw_visual_token_shape": (16, 14, 24),
+                    "flattened_visual_token_shape": (1, 16, 336),
+                },
+                "position_budget_overflow",
+            ),
+        ]
+        defaults = {
+            "context_frames": 8,
+            "raw_visual_token_shape": (8, 14, 24),
+            "flattened_visual_token_shape": (1, 8, 336),
+            "action_token_shape": (1, 1, 11),
+            "max_position_embeddings": 5552,
+        }
+        for name, changes, code in invalid_cases:
+            with self.subTest(name=name):
+                arguments = defaults | changes
+                with self.assertRaises(EvidenceValidationError) as raised:
+                    validate_rollout_position_budget(**arguments)
+                self.assertEqual(raised.exception.code, code)
+
+    def test_video_preprocessing_provenance_is_separate_and_non_mutating(
+        self,
+    ) -> None:
+        document = _rollout_document(self.runtime_root)
+        provenance = document["video_preprocessing"]
+        before = deepcopy(provenance)
+        rejections = validate_video_preprocessing_provenance(
+            provenance,
+            inputs=document["inputs"],
+            identity=document["identity"],
+            verify_bytes=True,
+        )
+        self.assertEqual(rejections, ())
+        self.assertEqual(provenance, before)
+        self.assertEqual(provenance["original"]["classification"], "original")
+        self.assertEqual(provenance["derived"]["classification"], "derived")
+        self.assertEqual(
+            provenance["derived"]["transformation_name"],
+            VIDEO_PREPROCESSING_TRANSFORMATION,
+        )
+        self.assertEqual(
+            provenance["derived"]["transformation_version"],
+            VIDEO_PREPROCESSING_VERSION,
+        )
+        self.assertEqual(
+            provenance["derived"]["processed_frame_shape"],
+            [224, 384, 3],
+        )
+        self.assertEqual(
+            provenance["tokenization"]["conservative_position_budget"],
+            3035,
+        )
+        self.assertEqual(
+            {item["role"] for item in document["outputs"]},
+            {"generated_video", "paired_metadata", "raw_stdout_stderr"},
+        )
+
+    def test_video_preprocessing_provenance_mutations_fail_closed(self) -> None:
+        document = _rollout_document(self.runtime_root)
+        base = document["video_preprocessing"]
+        cases = []
+        missing = deepcopy(base)
+        del missing["derived"]["transformation_version"]
+        cases.append(("missing", missing, "missing_required_field"))
+        wrong_classification = deepcopy(base)
+        wrong_classification["derived"]["classification"] = "original"
+        cases.append(
+            (
+                "classification",
+                wrong_classification,
+                "invalid_video_preprocessing_contract",
+            )
+        )
+        wrong_order = deepcopy(base)
+        wrong_order["derived"]["selected_source_frame_indices"] = list(
+            reversed(range(8))
+        )
+        cases.append(("order", wrong_order, "frame_cardinality_mismatch"))
+        wrong_shape = deepcopy(base)
+        wrong_shape["derived"]["processed_frame_shape"] = [360, 640, 3]
+        cases.append(
+            ("processed_shape", wrong_shape, "invalid_video_preprocessing_contract")
+        )
+        wrong_hash = deepcopy(base)
+        wrong_hash["derived"]["processed_frames_sha256"] = "not-a-hash"
+        cases.append(
+            ("processed_hash", wrong_hash, "invalid_processed_frame_integrity")
+        )
+        wrong_budget = deepcopy(base)
+        wrong_budget["tokenization"]["conservative_position_budget"] = 5553
+        cases.append(("position_budget", wrong_budget, "invalid_position_budget"))
+        wrong_token_count = deepcopy(base)
+        wrong_token_count["tokenization"]["visual_tokens_per_frame"] = 335
+        cases.append(("token_count", wrong_token_count, "invalid_position_budget"))
+
+        for name, value, code in cases:
+            with self.subTest(name=name):
+                codes = {
+                    item.code
+                    for item in validate_video_preprocessing_provenance(
+                        value,
+                        inputs=document["inputs"],
+                        identity=document["identity"],
+                    )
+                }
+                self.assertIn(code, codes)
 
     def test_action_conversion_is_deterministic_ordered_and_complete(self) -> None:
         rows = [
@@ -1030,6 +1482,14 @@ class Phase2EvidenceTests(unittest.TestCase):
         self.assertEqual(
             lock["files"]["checkpoints/vae/vae.ckpt"]["sha256"].lower(),
             PINNED_VAE_CHECKPOINT_SHA256,
+        )
+        self.assertEqual(
+            lock["files"]["gradio_scene/scene.mp4"]["size_bytes"],
+            PINNED_INPUT_MP4_SIZE_BYTES,
+        )
+        self.assertEqual(
+            lock["files"]["gradio_scene/scene.mp4"]["sha256"].lower(),
+            PINNED_INPUT_MP4_SHA256,
         )
         self.assertEqual(
             PINNED_SOURCE_REVISION,
