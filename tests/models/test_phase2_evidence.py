@@ -42,9 +42,16 @@ from mineocclude.models.phase2_evidence import (
     VIDEO_PREPROCESSING_SOURCE,
     VIDEO_PREPROCESSING_TRANSFORMATION,
     VIDEO_PREPROCESSING_VERSION,
+    CHECKPOINT_KEY_HASH_SERIALIZATION,
+    CHECKPOINT_LOAD_COMPONENT_PROFILES,
+    CHECKPOINT_LOAD_PROFILE_ID,
+    CHECKPOINT_LOAD_PROFILE_PROVENANCE,
+    CHECKPOINT_LOAD_PROFILE_VERSION,
     EvidenceValidationError,
     artifact_record,
     canonical_json_bytes,
+    checkpoint_key_list_sha256,
+    classify_checkpoint_load_state,
     compare_numeric_sequences,
     expected_teacher_token_layout,
     parse_ffprobe_output,
@@ -53,6 +60,7 @@ from mineocclude.models.phase2_evidence import (
     sha256_file,
     validate_action_compatibility_provenance,
     validate_architecture_facts,
+    validate_architecture_report,
     validate_hook_records,
     validate_output_file_completeness,
     validate_rollout_manifest,
@@ -64,6 +72,9 @@ from mineocclude.models.phase2_evidence import (
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "tests" / "fixtures" / "phase2"
 SCHEMA = ROOT / "schemas" / "person_a" / "phase2_runtime_evidence_v1.schema.json"
+AUDITED_LOAD_KEYS = (
+    FIXTURES / "audited_checkpoint_load_keys_v1.json"
+)
 SHA256 = "a" * 64
 GIT_SHA = "b" * 40
 
@@ -120,6 +131,78 @@ def _identity() -> dict[str, object]:
         "environment_report_sha256": SHA256,
         "command": ["python", "scripts/run_phase2_rollout.py"],
     }
+
+
+def _pinned_identity() -> dict[str, object]:
+    identity = _identity()
+    identity.update(CHECKPOINT_LOAD_PROFILE_PROVENANCE)
+    return identity
+
+
+def _audited_raw_load_state() -> dict[str, list[str]]:
+    fixture = json.loads(AUDITED_LOAD_KEYS.read_text(encoding="utf-8"))
+    assert fixture["schema_version"] == "1.0"
+    assert fixture["profile_id"] == CHECKPOINT_LOAD_PROFILE_ID
+    assert fixture["profile_version"] == CHECKPOINT_LOAD_PROFILE_VERSION
+    assert (
+        fixture["key_hash_serialization"]
+        == CHECKPOINT_KEY_HASH_SERIALIZATION
+    )
+    for field, expected in CHECKPOINT_LOAD_PROFILE_PROVENANCE.items():
+        assert fixture[field] == expected
+    assert (
+        fixture["transformer_sorted_key_list_sha256"]
+        == CHECKPOINT_LOAD_COMPONENT_PROFILES["transformer"][
+            "sorted_key_list_sha256"
+        ]
+    )
+    assert (
+        fixture["vae_sorted_key_list_sha256"]
+        == CHECKPOINT_LOAD_COMPONENT_PROFILES["vae"][
+            "sorted_key_list_sha256"
+        ]
+    )
+    return {
+        "transformer_missing_keys": fixture["transformer_missing_keys"],
+        "transformer_unexpected_keys": fixture[
+            "transformer_unexpected_keys"
+        ],
+        "vae_missing_keys": fixture["vae_missing_keys"],
+        "vae_unexpected_keys": fixture["vae_unexpected_keys"],
+    }
+
+
+def _architecture_report() -> dict[str, object]:
+    identity = _pinned_identity()
+    raw_load_state = _audited_raw_load_state()
+    load_state = {
+        **deepcopy(raw_load_state),
+        "classification": classify_checkpoint_load_state(
+            raw_load_state,
+            identity,
+        ),
+    }
+    document = {
+        "schema_version": "1.0",
+        "evidence_schema_version": EVIDENCE_SCHEMA_VERSION,
+        "evidence_type": ARCHITECTURE_EVIDENCE_TYPE,
+        "status": "completed",
+        "identity": identity,
+        "architecture": _architecture_facts(),
+        "load_state": load_state,
+        "module_tree": [
+            {
+                "name": "",
+                "class_name": "LlamaLVM",
+                "direct_parameters": 1,
+            }
+        ],
+        "cuda_memory": {
+            "peak_allocated_bytes": 1,
+            "peak_reserved_bytes": 2,
+        },
+    }
+    return seal_document(document)
 
 
 def _rollout_document(runtime_root: Path) -> dict[str, object]:
@@ -1793,6 +1876,319 @@ class Phase2EvidenceTests(unittest.TestCase):
                 item.code == "architecture_mismatch"
                 for item in validate_architecture_facts(malformed)
             )
+        )
+
+    def test_exact_audited_checkpoint_profiles_pass(self) -> None:
+        raw_load_state = _audited_raw_load_state()
+        before = deepcopy(raw_load_state)
+        classification = classify_checkpoint_load_state(
+            raw_load_state,
+            _pinned_identity(),
+        )
+        self.assertEqual(raw_load_state, before)
+        self.assertEqual(classification["classification_status"], "PASS")
+        self.assertEqual(classification["final_decision"], "PASS")
+        self.assertEqual(
+            classification["profile_id"],
+            CHECKPOINT_LOAD_PROFILE_ID,
+        )
+        self.assertEqual(
+            classification["profile_version"],
+            CHECKPOINT_LOAD_PROFILE_VERSION,
+        )
+        self.assertTrue(classification["provenance_matches"])
+
+        for component in ("transformer", "vae"):
+            with self.subTest(component=component):
+                observed = classification[component]
+                profile = CHECKPOINT_LOAD_COMPONENT_PROFILES[component]
+                self.assertEqual(observed["decision"], "PASS")
+                self.assertEqual(observed["observed_missing_key_count"], 0)
+                self.assertEqual(
+                    observed["observed_unexpected_key_count"],
+                    profile["expected_unexpected_key_count"],
+                )
+                self.assertEqual(
+                    observed["sorted_key_list_sha256"],
+                    profile["sorted_key_list_sha256"],
+                )
+                self.assertEqual(observed["unmatched_keys"], [])
+                self.assertEqual(observed["duplicate_keys"], [])
+                self.assertEqual(
+                    observed["key_hash_serialization"],
+                    CHECKPOINT_KEY_HASH_SERIALIZATION,
+                )
+
+    def test_checkpoint_profile_rejects_missing_unknown_extra_and_duplicate_keys(
+        self,
+    ) -> None:
+        cases = []
+
+        transformer_missing = _audited_raw_load_state()
+        transformer_missing["transformer_missing_keys"].append(
+            "transformer.required.weight"
+        )
+        cases.append(("transformer_missing", transformer_missing))
+
+        vae_missing = _audited_raw_load_state()
+        vae_missing["vae_missing_keys"].append("encoder.required.weight")
+        cases.append(("vae_missing", vae_missing))
+
+        unknown_transformer = _audited_raw_load_state()
+        unknown_transformer["transformer_unexpected_keys"][0] = (
+            "tokenizer.runtime_weight"
+        )
+        cases.append(("unknown_transformer", unknown_transformer))
+
+        unknown_vae = _audited_raw_load_state()
+        unknown_vae["vae_unexpected_keys"][0] = "decoder.runtime_weight"
+        cases.append(("unknown_vae", unknown_vae))
+
+        extra_transformer = _audited_raw_load_state()
+        extra_transformer["transformer_unexpected_keys"].append(
+            "tokenizer.metrics_fid.audit_extra"
+        )
+        cases.append(("extra_transformer", extra_transformer))
+
+        missing_allowed = _audited_raw_load_state()
+        missing_allowed["vae_unexpected_keys"].pop()
+        cases.append(("missing_allowed", missing_allowed))
+
+        duplicate = _audited_raw_load_state()
+        duplicate["transformer_unexpected_keys"].append(
+            duplicate["transformer_unexpected_keys"][0]
+        )
+        cases.append(("duplicate", duplicate))
+
+        for name, load_state in cases:
+            with self.subTest(name=name):
+                classification = classify_checkpoint_load_state(
+                    load_state,
+                    _pinned_identity(),
+                )
+                self.assertEqual(classification["final_decision"], "FAIL")
+
+        duplicate_classification = classify_checkpoint_load_state(
+            duplicate,
+            _pinned_identity(),
+        )
+        self.assertEqual(
+            duplicate_classification["transformer"]["duplicate_keys"],
+            [duplicate["transformer_unexpected_keys"][0]],
+        )
+        self.assertEqual(
+            duplicate_classification["transformer"][
+                "observed_unexpected_key_count"
+            ],
+            1202,
+        )
+
+    def test_checkpoint_profile_rejects_family_count_and_digest_changes(
+        self,
+    ) -> None:
+        family_mismatch = _audited_raw_load_state()
+        family_mismatch["transformer_unexpected_keys"][0] = (
+            "tokenizer.metrics_is.audit_family_count_change"
+        )
+        classification = classify_checkpoint_load_state(
+            family_mismatch,
+            _pinned_identity(),
+        )
+        self.assertEqual(
+            classification["transformer"]["decision"],
+            "FAIL",
+        )
+        self.assertEqual(
+            classification["transformer"]["observed_unexpected_key_count"],
+            1201,
+        )
+        self.assertNotEqual(
+            classification["transformer"]["observed_family_counts"],
+            {
+                prefix: count
+                for prefix, count in CHECKPOINT_LOAD_COMPONENT_PROFILES[
+                    "transformer"
+                ]["allowed_families"]
+            },
+        )
+
+        transformer_digest = _audited_raw_load_state()
+        original_transformer_key = transformer_digest[
+            "transformer_unexpected_keys"
+        ][0]
+        transformer_digest["transformer_unexpected_keys"][0] = (
+            original_transformer_key + "_changed"
+        )
+        classification = classify_checkpoint_load_state(
+            transformer_digest,
+            _pinned_identity(),
+        )
+        self.assertEqual(
+            classification["transformer"]["observed_unexpected_key_count"],
+            1201,
+        )
+        self.assertNotEqual(
+            classification["transformer"]["sorted_key_list_sha256"],
+            classification["transformer"][
+                "expected_sorted_key_list_sha256"
+            ],
+        )
+        self.assertEqual(classification["transformer"]["decision"], "FAIL")
+
+        vae_digest = _audited_raw_load_state()
+        original_vae_key = vae_digest["vae_unexpected_keys"][0]
+        vae_digest["vae_unexpected_keys"][0] = original_vae_key + "_changed"
+        classification = classify_checkpoint_load_state(
+            vae_digest,
+            _pinned_identity(),
+        )
+        self.assertNotEqual(
+            classification["vae"]["sorted_key_list_sha256"],
+            classification["vae"]["expected_sorted_key_list_sha256"],
+        )
+        self.assertEqual(classification["vae"]["decision"], "FAIL")
+
+    def test_checkpoint_key_hash_is_deterministic_and_order_independent(
+        self,
+    ) -> None:
+        keys = _audited_raw_load_state()["transformer_unexpected_keys"]
+        expected = (
+            "9e9eb93cd04b24f4ef8faa4c2cdd1e6bd2c89a4a4a6eddfb11eedbb92c0734bf"
+        )
+        self.assertEqual(checkpoint_key_list_sha256(keys), expected)
+        self.assertEqual(
+            checkpoint_key_list_sha256(list(reversed(keys))),
+            expected,
+        )
+        self.assertEqual(checkpoint_key_list_sha256(list(keys)), expected)
+
+        malformed = _audited_raw_load_state()
+        malformed["vae_unexpected_keys"][0] = 7
+        with self.assertRaises(EvidenceValidationError) as raised:
+            classify_checkpoint_load_state(
+                malformed,
+                _pinned_identity(),
+            )
+        self.assertEqual(raised.exception.code, "non_string_checkpoint_key")
+
+    def test_checkpoint_profile_is_bound_to_all_pinned_provenance(self) -> None:
+        for field in (
+            "source_revision",
+            "asset_revision",
+            "main_checkpoint_sha256",
+            "vae_checkpoint_sha256",
+        ):
+            with self.subTest(field=field):
+                identity = _pinned_identity()
+                identity[field] = (
+                    "f" * 40 if field.endswith("revision") else "f" * 64
+                )
+                classification = classify_checkpoint_load_state(
+                    _audited_raw_load_state(),
+                    identity,
+                )
+                self.assertFalse(classification["provenance_matches"])
+                self.assertEqual(
+                    classification["classification_status"],
+                    "FAIL",
+                )
+                self.assertEqual(classification["final_decision"], "FAIL")
+                self.assertEqual(
+                    classification["expected_provenance"][field],
+                    CHECKPOINT_LOAD_PROFILE_PROVENANCE[field],
+                )
+                self.assertEqual(
+                    classification["observed_provenance"][field],
+                    identity[field],
+                )
+
+    def test_architecture_report_requires_recomputed_exact_profile(self) -> None:
+        report = _architecture_report()
+        before = deepcopy(report)
+        result = validate_architecture_report(report)
+        self.assertTrue(result.accepted, result.rejections)
+        self.assertEqual(report, before)
+        raw = _audited_raw_load_state()
+        for field in raw:
+            self.assertEqual(report["load_state"][field], raw[field])
+
+        stale_classification = deepcopy(report)
+        stale_classification["load_state"]["transformer_unexpected_keys"][0] += (
+            "_changed"
+        )
+        stale_classification = seal_document(
+            {
+                key: value
+                for key, value in stale_classification.items()
+                if key != "manifest_integrity"
+            }
+        )
+        codes = {
+            rejection.code
+            for rejection in validate_architecture_report(
+                stale_classification
+            ).rejections
+        }
+        self.assertIn("checkpoint_classification_mismatch", codes)
+        self.assertIn("checkpoint_load_profile_mismatch", codes)
+
+        failed_profile = deepcopy(stale_classification)
+        raw_failed = {
+            field: failed_profile["load_state"][field]
+            for field in raw
+        }
+        failed_profile["load_state"]["classification"] = (
+            classify_checkpoint_load_state(
+                raw_failed,
+                failed_profile["identity"],
+            )
+        )
+        failed_profile = seal_document(
+            {
+                key: value
+                for key, value in failed_profile.items()
+                if key != "manifest_integrity"
+            }
+        )
+        codes = {
+            rejection.code
+            for rejection in validate_architecture_report(
+                failed_profile
+            ).rejections
+        }
+        self.assertNotIn("checkpoint_classification_mismatch", codes)
+        self.assertIn("checkpoint_load_profile_mismatch", codes)
+
+    def test_checkpoint_classification_matches_runtime_schema_shape(self) -> None:
+        report = _architecture_report()
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        definitions = schema["$defs"]
+        load_definition = definitions["architectureLoadState"]
+        classification_definition = definitions[
+            "checkpointLoadClassification"
+        ]
+        component_definition = definitions[
+            "checkpointComponentClassification"
+        ]
+        self.assertFalse(load_definition["additionalProperties"])
+        self.assertFalse(classification_definition["additionalProperties"])
+        self.assertFalse(component_definition["additionalProperties"])
+        self.assertEqual(
+            set(report["load_state"]),
+            set(load_definition["required"]),
+        )
+        self.assertEqual(
+            set(report["load_state"]["classification"]),
+            set(classification_definition["required"]),
+        )
+        for component in ("transformer", "vae"):
+            self.assertEqual(
+                set(report["load_state"]["classification"][component]),
+                set(component_definition["required"]),
+            )
+        self.assertEqual(
+            schema["$defs"]["header"]["properties"]["schema_version"]["const"],
+            "1.0",
         )
 
     def test_hook_records_exact_grid_and_non_mutation(self) -> None:

@@ -41,6 +41,7 @@ from mineocclude.models.phase2_evidence import (
     VIDEO_PREPROCESSING_VERSION,
     EvidenceValidationError,
     artifact_record,
+    classify_checkpoint_load_state,
     expected_teacher_token_layout,
     parse_ffprobe_output,
     seal_document,
@@ -1838,7 +1839,7 @@ def _load_model_with_key_evidence(
     torch: Any,
     *,
     precision: str,
-) -> tuple[Any, Any, dict[str, list[str]], dict[str, Any]]:
+) -> tuple[Any, Any, dict[str, Any], dict[str, Any]]:
     _initialize_cuda_device(torch)
     with _external_source_imports(prepared["source_root"]):
         OmegaConf = importlib.import_module("omegaconf").OmegaConf
@@ -1866,17 +1867,20 @@ def _load_model_with_key_evidence(
             "peak_cuda_allocated_bytes": int(torch.cuda.max_memory_allocated(0)),
             "peak_cuda_reserved_bytes": int(torch.cuda.max_memory_reserved(0)),
         }
-    return (
-        model,
-        config,
-        {
-            "transformer_missing_keys": sorted(transformer_missing),
-            "transformer_unexpected_keys": sorted(transformer_unexpected),
-            "vae_missing_keys": sorted(vae_missing),
-            "vae_unexpected_keys": sorted(vae_unexpected),
-        },
-        load_runtime,
-    )
+    raw_load_state = {
+        "transformer_missing_keys": list(transformer_missing),
+        "transformer_unexpected_keys": list(transformer_unexpected),
+        "vae_missing_keys": list(vae_missing),
+        "vae_unexpected_keys": list(vae_unexpected),
+    }
+    load_state = {
+        **raw_load_state,
+        "classification": classify_checkpoint_load_state(
+            raw_load_state,
+            prepared["identity"],
+        ),
+    }
+    return model, config, load_state, load_runtime
 
 
 def _decoder_layers(model: Any, torch: Any) -> tuple[str, list[Any]]:
@@ -1906,7 +1910,7 @@ def _parameter_distribution(model: Any, attribute: str) -> dict[str, int]:
 def _architecture_document(
     prepared: Mapping[str, Any],
     model: Any,
-    load_state: Mapping[str, list[str]],
+    load_state: Mapping[str, Any],
     torch: Any,
 ) -> dict[str, Any]:
     decoder_path, layers = _decoder_layers(model, torch)

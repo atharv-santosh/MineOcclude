@@ -1,7 +1,7 @@
 # Person A Phase 2.6-2.9 AWS Execution Checklist
 
-Status: **Step 2.6 completed and independently byte-verified in immutable AWS
-session `person-a-phase2-aws-20260725-035027`; Steps 2.7-2.9 remain pending**.
+Status: **Step 2.6 completed in the current immutable formal session
+`person-a-phase2-aws-20260725-043732`; Steps 2.7-2.9 remain pending**.
 
 This checklist runs the project-owned evidence commands in their required
 order. It does not replace the pinned-source, asset-lock, or environment
@@ -236,19 +236,23 @@ The corrected formal rollout completed under:
 ```text
 person-a-phase2-aws-20260725-035027
 /home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-035027/step2_6
+person-a-phase2-aws-20260725-043732
+/home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-043732/step2_6
 ```
 
-It exited zero, generated and decoded exactly one frame, produced a sealed
-`run_manifest.json`, and passed independent output-byte verification. This is
-successful immutable Step 2.6 evidence. Preserve it as successful evidence;
-do not overwrite, rename, reuse, or represent it as failed.
+The `035027` run exited zero, generated and decoded exactly one frame, produced
+a sealed `run_manifest.json`, and passed independent output-byte verification.
+The `043732` run is the current formal session's recorded successful Step 2.6
+evidence. Preserve both as successful immutable evidence; do not overwrite,
+rename, reuse, or represent either as failed.
 
-Because the CUDA initialization correction below changes the MineOcclude code
-revision, the cleanest next formal bundle must use a **new** `SESSION_ID` and
-**new** `EVIDENCE_ROOT`, then rerun Steps 2.6 through 2.9 under one committed
-revision. This does not invalidate the successful Step 2.6 session above; it
-avoids mixing code revisions in a new combined evidence bundle. Never point a
-new command at either earlier failed session or the successful session root.
+Because the checkpoint-load classification correction below changes the
+MineOcclude code revision, the cleanest next formal bundle must use a **new**
+`SESSION_ID` and **new** `EVIDENCE_ROOT`, then rerun Steps 2.6 through 2.9
+under one committed revision. This does not invalidate either successful Step
+2.6 session above; it avoids mixing code revisions in a new combined evidence
+bundle. Never point a new command at an earlier failed or successful session
+root.
 
 ```bash
 python scripts/run_phase2_rollout.py \
@@ -311,6 +315,65 @@ the command. CUDA memory measurement remains required. Step 2.7 remains
 pending until it succeeds in a new immutable session and produces a validated
 architecture report.
 
+The subsequent Step 2.7 attempt at:
+
+```text
+/home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-043732/step2_7
+```
+
+is also immutable failed evidence. It contains `architecture_report.json` and
+`raw_stdout_stderr.log`. The CUDA correction succeeded: the run initialized
+CUDA, loaded the complete VAE and transformer, and observed the required
+20-layer architecture. The only rejection was the former blanket rule that
+treated every unexpected state-dictionary key as a runtime mismatch. Preserve
+this directory unchanged; do not overwrite, rename, reuse, or represent it as
+successful.
+
+The report recorded zero transformer missing keys and zero VAE missing keys.
+The non-runtime checkpoint entries were audited as these exact families:
+
+| Component | Audited family | Count |
+|---|---|---:|
+| Transformer | `tokenizer.metrics_fid.*` | 566 |
+| Transformer | `tokenizer.metrics_is.*` | 566 |
+| Transformer | `tokenizer.metrics_lpips.*` | 36 |
+| Transformer | `tokenizer.perceptual_loss.*` | 33 |
+| VAE | `loss.discriminator.*` | 16 |
+| VAE | `loss.perceptual_loss.*` | 33 |
+| VAE | `perceptual_loss.*` | 33 |
+| VAE | `metrics_fid.*` | 566 |
+| VAE | `metrics_is.*` | 566 |
+| VAE | `metrics_lpips.*` | 36 |
+
+These names identify auxiliary training discriminator/perceptual-loss modules
+and evaluation-metric modules; no required runtime model or tokenizer weight
+was missing. A prefix-only allowlist is still insufficient because it could
+accept an added, removed, duplicated, or renamed key under an allowed prefix.
+The project-owned profile therefore requires all of the following:
+
+- transformer total 1,201 and sorted-key-list SHA-256
+  `9e9eb93cd04b24f4ef8faa4c2cdd1e6bd2c89a4a4a6eddfb11eedbb92c0734bf`;
+- VAE total 1,250 and sorted-key-list SHA-256
+  `fcf2149ca82175f608c0d85b9173841eb9df75b2f38cbc9c3eb666ac5d2c5c85`;
+- every family count above, zero unmatched keys, zero duplicates, and zero
+  missing keys; and
+- exact source revision `9f49efbcc68a5f0cf60e78f0abc566eac409282f`,
+  asset revision `0dd5561ab317115831badc50e09a6ebe98693d0e`, main
+  checkpoint SHA-256
+  `a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5`,
+  and VAE checkpoint SHA-256
+  `370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab`.
+
+The key hash is deterministic: keys are sorted lexicographically, encoded as
+UTF-8, and each key is followed by one LF. Raw lists remain in the sealed
+report. The independently recomputed classification records expected and
+observed provenance, counts, families, unmatched/duplicate keys, hashes, and a
+final PASS/FAIL decision. The profile identifier is
+`mineworld-700m-16f-pinned-runtime-load-v1`, version `1.0`. Missing keys or any
+profile/provenance difference remain a hard failure. Step 2.7 remains pending
+until this exact profile and the existing architecture assertions pass in a
+new immutable session.
+
 ```bash
 python scripts/inspect_phase2_architecture.py \
   --mineworld-source-root "$MINEWORLD" \
@@ -332,8 +395,9 @@ python scripts/inspect_phase2_architecture.py \
   --confirm-aws-gpu-execution
 ```
 
-Do not suppress missing or unexpected state-dictionary keys. Any architecture
-or load-state mismatch must remain a nonzero result and must be reviewed before
+Do not suppress missing state-dictionary keys or unexpected keys outside the
+exact provenance-bound audited profile. Any architecture, profile, or
+load-state mismatch must remain a nonzero result and must be reviewed before
 Step 2.8.
 
 ## 5. Run the Step 2.8-2.9 teacher-forced repeat test

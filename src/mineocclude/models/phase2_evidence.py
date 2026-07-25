@@ -18,6 +18,7 @@ import json
 import math
 import re
 import sys
+from collections import Counter
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
@@ -45,6 +46,49 @@ VIDEO_PREPROCESSING_NORMALIZATION = (
     "uint8 RGB CHW; float32 divide by 255.0; "
     "per-channel Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5])"
 )
+CHECKPOINT_LOAD_PROFILE_ID = "mineworld-700m-16f-pinned-runtime-load-v1"
+CHECKPOINT_LOAD_PROFILE_VERSION = "1.0"
+CHECKPOINT_KEY_HASH_SERIALIZATION = (
+    "UTF-8 lexicographically sorted keys; one key plus LF per line"
+)
+CHECKPOINT_LOAD_PROFILE_PROVENANCE = {
+    "source_revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "asset_revision": "0dd5561ab317115831badc50e09a6ebe98693d0e",
+    "main_checkpoint_sha256": (
+        "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5"
+    ),
+    "vae_checkpoint_sha256": (
+        "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+    ),
+}
+CHECKPOINT_LOAD_COMPONENT_PROFILES = {
+    "transformer": {
+        "expected_unexpected_key_count": 1201,
+        "allowed_families": (
+            ("tokenizer.metrics_fid.", 566),
+            ("tokenizer.metrics_is.", 566),
+            ("tokenizer.metrics_lpips.", 36),
+            ("tokenizer.perceptual_loss.", 33),
+        ),
+        "sorted_key_list_sha256": (
+            "9e9eb93cd04b24f4ef8faa4c2cdd1e6bd2c89a4a4a6eddfb11eedbb92c0734bf"
+        ),
+    },
+    "vae": {
+        "expected_unexpected_key_count": 1250,
+        "allowed_families": (
+            ("loss.discriminator.", 16),
+            ("loss.perceptual_loss.", 33),
+            ("perceptual_loss.", 33),
+            ("metrics_fid.", 566),
+            ("metrics_is.", 566),
+            ("metrics_lpips.", 36),
+        ),
+        "sorted_key_list_sha256": (
+            "fcf2149ca82175f608c0d85b9173841eb9df75b2f38cbc9c3eb666ac5d2c5c85"
+        ),
+    },
+}
 
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
@@ -145,6 +189,158 @@ def sha256_file(path: Path, *, chunk_size: int = 8 * 1024 * 1024) -> str:
                 break
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def checkpoint_key_list_sha256(keys: Sequence[str]) -> str:
+    """Hash a key list with the audited order-independent serialization."""
+
+    if isinstance(keys, (str, bytes)) or not isinstance(keys, Sequence):
+        raise EvidenceValidationError(
+            "invalid_checkpoint_key_list",
+            "Checkpoint keys must be a sequence of strings.",
+        )
+    if any(not isinstance(key, str) for key in keys):
+        raise EvidenceValidationError(
+            "non_string_checkpoint_key",
+            "Every checkpoint load-state key must be a string.",
+        )
+    serialized = "".join(f"{key}\n" for key in sorted(keys)).encode("utf-8")
+    return sha256_bytes(serialized)
+
+
+def _checkpoint_component_classification(
+    component: str,
+    *,
+    missing_keys: Sequence[str],
+    unexpected_keys: Sequence[str],
+) -> dict[str, Any]:
+    profile = CHECKPOINT_LOAD_COMPONENT_PROFILES[component]
+    for label, values in (
+        ("missing", missing_keys),
+        ("unexpected", unexpected_keys),
+    ):
+        if isinstance(values, (str, bytes)) or not isinstance(values, Sequence):
+            raise EvidenceValidationError(
+                "invalid_checkpoint_key_list",
+                f"{component} {label} keys must be a sequence.",
+            )
+        if any(not isinstance(key, str) for key in values):
+            raise EvidenceValidationError(
+                "non_string_checkpoint_key",
+                f"{component} {label} keys must contain only strings.",
+            )
+
+    unexpected_counts = Counter(unexpected_keys)
+    duplicate_keys = sorted(
+        key for key, count in unexpected_counts.items() if count > 1
+    )
+    allowed_families = [
+        {"prefix": prefix, "expected_count": expected_count}
+        for prefix, expected_count in profile["allowed_families"]
+    ]
+    observed_family_counts = {
+        prefix: 0 for prefix, _ in profile["allowed_families"]
+    }
+    unmatched_keys: list[str] = []
+    for key in unexpected_keys:
+        matches = [
+            prefix
+            for prefix, _ in profile["allowed_families"]
+            if key.startswith(prefix)
+        ]
+        if len(matches) != 1:
+            unmatched_keys.append(key)
+        else:
+            observed_family_counts[matches[0]] += 1
+
+    observed_hash = checkpoint_key_list_sha256(unexpected_keys)
+    family_counts_match = all(
+        observed_family_counts[prefix] == expected_count
+        for prefix, expected_count in profile["allowed_families"]
+    )
+    passed = (
+        len(missing_keys) == 0
+        and len(unexpected_keys) == profile["expected_unexpected_key_count"]
+        and not unmatched_keys
+        and not duplicate_keys
+        and family_counts_match
+        and observed_hash == profile["sorted_key_list_sha256"]
+    )
+    return {
+        "expected_missing_key_count": 0,
+        "observed_missing_key_count": len(missing_keys),
+        "expected_unexpected_key_count": profile[
+            "expected_unexpected_key_count"
+        ],
+        "observed_unexpected_key_count": len(unexpected_keys),
+        "allowed_families": allowed_families,
+        "observed_family_counts": observed_family_counts,
+        "unmatched_keys": sorted(unmatched_keys),
+        "duplicate_keys": duplicate_keys,
+        "key_hash_serialization": CHECKPOINT_KEY_HASH_SERIALIZATION,
+        "expected_sorted_key_list_sha256": profile[
+            "sorted_key_list_sha256"
+        ],
+        "sorted_key_list_sha256": observed_hash,
+        "decision": "PASS" if passed else "FAIL",
+    }
+
+
+def classify_checkpoint_load_state(
+    load_state: Mapping[str, Any],
+    identity: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Classify raw load-state keys against the one pinned audited profile."""
+
+    required_load_fields = {
+        "transformer_missing_keys",
+        "transformer_unexpected_keys",
+        "vae_missing_keys",
+        "vae_unexpected_keys",
+    }
+    if not isinstance(load_state, Mapping) or set(load_state) != required_load_fields:
+        raise EvidenceValidationError(
+            "invalid_checkpoint_load_state",
+            "Raw checkpoint load state must contain exactly the four key lists.",
+        )
+    if not isinstance(identity, Mapping):
+        raise EvidenceValidationError(
+            "invalid_checkpoint_profile_provenance",
+            "Checkpoint profile provenance requires the run identity.",
+        )
+
+    observed_provenance = {
+        field: identity.get(field) for field in CHECKPOINT_LOAD_PROFILE_PROVENANCE
+    }
+    expected_provenance = dict(CHECKPOINT_LOAD_PROFILE_PROVENANCE)
+    provenance_matches = observed_provenance == expected_provenance
+    transformer = _checkpoint_component_classification(
+        "transformer",
+        missing_keys=load_state["transformer_missing_keys"],
+        unexpected_keys=load_state["transformer_unexpected_keys"],
+    )
+    vae = _checkpoint_component_classification(
+        "vae",
+        missing_keys=load_state["vae_missing_keys"],
+        unexpected_keys=load_state["vae_unexpected_keys"],
+    )
+    passed = (
+        provenance_matches
+        and transformer["decision"] == "PASS"
+        and vae["decision"] == "PASS"
+    )
+    decision = "PASS" if passed else "FAIL"
+    return {
+        "classification_status": decision,
+        "profile_id": CHECKPOINT_LOAD_PROFILE_ID,
+        "profile_version": CHECKPOINT_LOAD_PROFILE_VERSION,
+        "expected_provenance": expected_provenance,
+        "observed_provenance": observed_provenance,
+        "provenance_matches": provenance_matches,
+        "transformer": transformer,
+        "vae": vae,
+        "final_decision": decision,
+    }
 
 
 def artifact_record(role: str, path: Path) -> dict[str, Any]:
@@ -1876,25 +2072,60 @@ def validate_architecture_report(document: Any) -> EvidenceValidationResult:
         "transformer_unexpected_keys",
         "vae_missing_keys",
         "vae_unexpected_keys",
+        "classification",
     }
     if _exact_fields(load_state, load_fields, "$.load_state", rejections):
         assert isinstance(load_state, Mapping)
-        for field in load_fields:
+        raw_fields = load_fields - {"classification"}
+        raw_lists_valid = True
+        for field in raw_fields:
             value = load_state[field]
             if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+                raw_lists_valid = False
                 _reject(
                     rejections,
                     "invalid_load_key_list",
                     f"{field} must be a list of strings.",
                     f"$.load_state.{field}",
                 )
-            elif value:
+        if raw_lists_valid:
+            raw_load_state = {
+                field: load_state[field]
+                for field in raw_fields
+            }
+            try:
+                expected_classification = classify_checkpoint_load_state(
+                    raw_load_state,
+                    document["identity"],
+                )
+            except EvidenceValidationError as exc:
                 _reject(
                     rejections,
-                    "state_dict_mismatch",
-                    f"{field} is non-empty and requires review.",
-                    f"$.load_state.{field}",
+                    exc.code,
+                    exc.message,
+                    "$.load_state",
                 )
+            else:
+                if load_state["classification"] != expected_classification:
+                    _reject(
+                        rejections,
+                        "checkpoint_classification_mismatch",
+                        (
+                            "Checkpoint classification must be recomputed from "
+                            "the raw key lists and immutable run identity."
+                        ),
+                        "$.load_state.classification",
+                    )
+                if expected_classification["final_decision"] != "PASS":
+                    _reject(
+                        rejections,
+                        "checkpoint_load_profile_mismatch",
+                        (
+                            "The exact provenance-bound checkpoint load profile "
+                            "did not pass."
+                        ),
+                        "$.load_state.classification.final_decision",
+                    )
     module_tree = document["module_tree"]
     if not isinstance(module_tree, list) or not module_tree:
         _reject(

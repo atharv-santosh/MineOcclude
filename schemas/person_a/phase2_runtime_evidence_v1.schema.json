@@ -23,6 +23,220 @@
       "type": "string",
       "pattern": "^[0-9a-f]{40}$"
     },
+    "checkpointProfileProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_revision",
+        "asset_revision",
+        "main_checkpoint_sha256",
+        "vae_checkpoint_sha256"
+      ],
+      "properties": {
+        "source_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "asset_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "main_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "vae_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "checkpointKeyFamily": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prefix",
+        "expected_count"
+      ],
+      "properties": {
+        "prefix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expected_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "checkpointComponentClassification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_missing_key_count",
+        "observed_missing_key_count",
+        "expected_unexpected_key_count",
+        "observed_unexpected_key_count",
+        "allowed_families",
+        "observed_family_counts",
+        "unmatched_keys",
+        "duplicate_keys",
+        "key_hash_serialization",
+        "expected_sorted_key_list_sha256",
+        "sorted_key_list_sha256",
+        "decision"
+      ],
+      "properties": {
+        "expected_missing_key_count": {
+          "const": 0
+        },
+        "observed_missing_key_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_unexpected_key_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "observed_unexpected_key_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allowed_families": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/checkpointKeyFamily"
+          }
+        },
+        "observed_family_counts": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "unmatched_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "duplicate_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "key_hash_serialization": {
+          "const": "UTF-8 lexicographically sorted keys; one key plus LF per line"
+        },
+        "expected_sorted_key_list_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sorted_key_list_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "decision": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        }
+      }
+    },
+    "checkpointLoadClassification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification_status",
+        "profile_id",
+        "profile_version",
+        "expected_provenance",
+        "observed_provenance",
+        "provenance_matches",
+        "transformer",
+        "vae",
+        "final_decision"
+      ],
+      "properties": {
+        "classification_status": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "profile_id": {
+          "const": "mineworld-700m-16f-pinned-runtime-load-v1"
+        },
+        "profile_version": {
+          "const": "1.0"
+        },
+        "expected_provenance": {
+          "$ref": "#/$defs/checkpointProfileProvenance"
+        },
+        "observed_provenance": {
+          "$ref": "#/$defs/checkpointProfileProvenance"
+        },
+        "provenance_matches": {
+          "type": "boolean"
+        },
+        "transformer": {
+          "$ref": "#/$defs/checkpointComponentClassification"
+        },
+        "vae": {
+          "$ref": "#/$defs/checkpointComponentClassification"
+        },
+        "final_decision": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        }
+      }
+    },
+    "architectureLoadState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transformer_missing_keys",
+        "transformer_unexpected_keys",
+        "vae_missing_keys",
+        "vae_unexpected_keys",
+        "classification"
+      ],
+      "properties": {
+        "transformer_missing_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "transformer_unexpected_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "vae_missing_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "vae_unexpected_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "classification": {
+          "$ref": "#/$defs/checkpointLoadClassification"
+        }
+      }
+    },
     "identity": {
       "type": "object",
       "additionalProperties": false,
@@ -823,7 +1037,7 @@
               "type": "object"
             },
             "load_state": {
-              "type": "object"
+              "$ref": "#/$defs/architectureLoadState"
             },
             "module_tree": {
               "type": "array",
