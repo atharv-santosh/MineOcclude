@@ -343,6 +343,72 @@ def classify_checkpoint_load_state(
     }
 
 
+def validate_checkpoint_load_state(
+    load_state: Any,
+    identity: Any,
+    *,
+    path: str = "$.load_state",
+) -> tuple[EvidenceRejection, ...]:
+    """Validate raw keys and recompute the exact pinned load classification."""
+
+    load_fields = {
+        "transformer_missing_keys",
+        "transformer_unexpected_keys",
+        "vae_missing_keys",
+        "vae_unexpected_keys",
+        "classification",
+    }
+    rejections: list[EvidenceRejection] = []
+    if not _exact_fields(load_state, load_fields, path, rejections):
+        return tuple(rejections)
+    assert isinstance(load_state, Mapping)
+    raw_fields = load_fields - {"classification"}
+    raw_lists_valid = True
+    for field in raw_fields:
+        value = load_state[field]
+        if not isinstance(value, list) or any(
+            not isinstance(item, str) for item in value
+        ):
+            raw_lists_valid = False
+            _reject(
+                rejections,
+                "invalid_load_key_list",
+                f"{field} must be a list of strings.",
+                f"{path}.{field}",
+            )
+    if not raw_lists_valid:
+        return tuple(rejections)
+
+    raw_load_state = {field: load_state[field] for field in raw_fields}
+    try:
+        expected_classification = classify_checkpoint_load_state(
+            raw_load_state,
+            identity,
+        )
+    except EvidenceValidationError as exc:
+        _reject(rejections, exc.code, exc.message, path)
+        return tuple(rejections)
+
+    if load_state["classification"] != expected_classification:
+        _reject(
+            rejections,
+            "checkpoint_classification_mismatch",
+            (
+                "Checkpoint classification must be recomputed from the raw key "
+                "lists and immutable run identity."
+            ),
+            f"{path}.classification",
+        )
+    if expected_classification["final_decision"] != "PASS":
+        _reject(
+            rejections,
+            "checkpoint_load_profile_mismatch",
+            "The exact provenance-bound checkpoint load profile did not pass.",
+            f"{path}.classification.final_decision",
+        )
+    return tuple(rejections)
+
+
 def artifact_record(role: str, path: Path) -> dict[str, Any]:
     """Build a durable-output record from literal file bytes."""
 
@@ -2066,66 +2132,12 @@ def validate_architecture_report(document: Any) -> EvidenceValidationResult:
     assert isinstance(document, Mapping)
     rejections.extend(validate_architecture_facts(document["architecture"]))
 
-    load_state = document["load_state"]
-    load_fields = {
-        "transformer_missing_keys",
-        "transformer_unexpected_keys",
-        "vae_missing_keys",
-        "vae_unexpected_keys",
-        "classification",
-    }
-    if _exact_fields(load_state, load_fields, "$.load_state", rejections):
-        assert isinstance(load_state, Mapping)
-        raw_fields = load_fields - {"classification"}
-        raw_lists_valid = True
-        for field in raw_fields:
-            value = load_state[field]
-            if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
-                raw_lists_valid = False
-                _reject(
-                    rejections,
-                    "invalid_load_key_list",
-                    f"{field} must be a list of strings.",
-                    f"$.load_state.{field}",
-                )
-        if raw_lists_valid:
-            raw_load_state = {
-                field: load_state[field]
-                for field in raw_fields
-            }
-            try:
-                expected_classification = classify_checkpoint_load_state(
-                    raw_load_state,
-                    document["identity"],
-                )
-            except EvidenceValidationError as exc:
-                _reject(
-                    rejections,
-                    exc.code,
-                    exc.message,
-                    "$.load_state",
-                )
-            else:
-                if load_state["classification"] != expected_classification:
-                    _reject(
-                        rejections,
-                        "checkpoint_classification_mismatch",
-                        (
-                            "Checkpoint classification must be recomputed from "
-                            "the raw key lists and immutable run identity."
-                        ),
-                        "$.load_state.classification",
-                    )
-                if expected_classification["final_decision"] != "PASS":
-                    _reject(
-                        rejections,
-                        "checkpoint_load_profile_mismatch",
-                        (
-                            "The exact provenance-bound checkpoint load profile "
-                            "did not pass."
-                        ),
-                        "$.load_state.classification.final_decision",
-                    )
+    rejections.extend(
+        validate_checkpoint_load_state(
+            document["load_state"],
+            document["identity"],
+        )
+    )
     module_tree = document["module_tree"]
     if not isinstance(module_tree, list) or not module_tree:
         _reject(
@@ -2453,6 +2465,7 @@ def validate_teacher_forced_report(document: Any) -> EvidenceValidationResult:
         "evidence_type",
         "status",
         "identity",
+        "load_state",
         "execution",
         "input",
         "token_layout",
@@ -2469,6 +2482,12 @@ def validate_teacher_forced_report(document: Any) -> EvidenceValidationResult:
     ):
         return EvidenceValidationResult(tuple(rejections))
     assert isinstance(document, Mapping)
+    rejections.extend(
+        validate_checkpoint_load_state(
+            document["load_state"],
+            document["identity"],
+        )
+    )
 
     execution = document["execution"]
     execution_fields = {"repeats", "precision", "batch_size", "eval_mode", "no_grad"}

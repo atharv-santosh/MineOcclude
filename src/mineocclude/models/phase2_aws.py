@@ -49,6 +49,7 @@ from mineocclude.models.phase2_evidence import (
     sha256_file,
     validate_architecture_facts,
     validate_architecture_report,
+    validate_checkpoint_load_state,
     validate_rollout_manifest,
     validate_teacher_forced_report,
     write_sealed_document,
@@ -1883,6 +1884,24 @@ def _load_model_with_key_evidence(
     return model, config, load_state, load_runtime
 
 
+def _require_valid_checkpoint_load_state(
+    load_state: Mapping[str, Any],
+    identity: Mapping[str, Any],
+) -> None:
+    """Refuse execution unless the centralized audited profile recomputes."""
+
+    rejections = validate_checkpoint_load_state(load_state, identity)
+    if rejections:
+        raise EvidenceValidationError(
+            "state_dict_mismatch",
+            "Teacher-forced checkpoint load profile failed: "
+            + "; ".join(
+                f"{item.code} at {item.path}: {item.message}"
+                for item in rejections
+            ),
+        )
+
+
 def _decoder_layers(model: Any, torch: Any) -> tuple[str, list[Any]]:
     candidates: list[tuple[str, list[Any]]] = []
     for name, module in model.named_modules():
@@ -2169,15 +2188,10 @@ def execute_teacher_forced(
         model, _, load_state, load_runtime = _load_model_with_key_evidence(
             prepared, torch, precision=args.precision
         )
-        mismatches = {
-            field: values for field, values in load_state.items() if values
-        }
-        if mismatches:
-            raise EvidenceValidationError(
-                "state_dict_mismatch",
-                "Teacher-forced execution refused because load-key mismatches remain: "
-                + ", ".join(sorted(mismatches)),
-            )
+        _require_valid_checkpoint_load_state(
+            load_state,
+            prepared["identity"],
+        )
         if model.training:
             raise EvidenceValidationError(
                 "model_not_eval", "Teacher-forced model must be in eval mode."
@@ -2333,6 +2347,7 @@ def execute_teacher_forced(
             "evidence_type": TEACHER_FORCED_EVIDENCE_TYPE,
             "status": "completed",
             "identity": prepared["identity"],
+            "load_state": dict(load_state),
             "execution": {
                 "repeats": args.repeats,
                 "precision": args.precision,

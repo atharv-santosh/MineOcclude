@@ -1,7 +1,7 @@
 # Person A Phase 2.6-2.9 AWS Execution Checklist
 
-Status: **Step 2.6 completed in the current immutable formal session
-`person-a-phase2-aws-20260725-043732`; Steps 2.7-2.9 remain pending**.
+Status: **Steps 2.6 and 2.7 completed in immutable formal session
+`person-a-phase2-aws-20260725-052358`; Steps 2.8-2.9 remain pending**.
 
 This checklist runs the project-owned evidence commands in their required
 order. It does not replace the pinned-source, asset-lock, or environment
@@ -238,19 +238,21 @@ person-a-phase2-aws-20260725-035027
 /home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-035027/step2_6
 person-a-phase2-aws-20260725-043732
 /home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-043732/step2_6
+person-a-phase2-aws-20260725-052358
+/home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-052358/step2_6
 ```
 
 The `035027` run exited zero, generated and decoded exactly one frame, produced
 a sealed `run_manifest.json`, and passed independent output-byte verification.
-The `043732` run is the current formal session's recorded successful Step 2.6
-evidence. Preserve both as successful immutable evidence; do not overwrite,
-rename, reuse, or represent either as failed.
+The `043732` and `052358` runs are recorded successful formal Step 2.6
+evidence. Preserve all three as successful immutable evidence; do not
+overwrite, rename, reuse, or represent any as failed.
 
-Because the checkpoint-load classification correction below changes the
-MineOcclude code revision, the cleanest next formal bundle must use a **new**
+Because the teacher-forced checkpoint-gate correction below changes the
+MineOcclude code revision, the next formal bundle must use a **new**
 `SESSION_ID` and **new** `EVIDENCE_ROOT`, then rerun Steps 2.6 through 2.9
-under one committed revision. This does not invalidate either successful Step
-2.6 session above; it avoids mixing code revisions in a new combined evidence
+under one committed revision. This does not invalidate any successful Step 2.6
+session above; it avoids mixing code revisions in a new combined evidence
 bundle. Never point a new command at an earlier failed or successful session
 root.
 
@@ -370,9 +372,20 @@ report. The independently recomputed classification records expected and
 observed provenance, counts, families, unmatched/duplicate keys, hashes, and a
 final PASS/FAIL decision. The profile identifier is
 `mineworld-700m-16f-pinned-runtime-load-v1`, version `1.0`. Missing keys or any
-profile/provenance difference remain a hard failure. Step 2.7 remains pending
-until this exact profile and the existing architecture assertions pass in a
-new immutable session.
+profile/provenance difference remain a hard failure.
+
+Step 2.7 formally passed under commit
+`050f8c92ed26c8b83d56052391b0596b1a8f8e6d` in session
+`person-a-phase2-aws-20260725-052358`:
+
+```text
+/home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-052358/step2_7
+```
+
+Its `architecture_report.json` passed validation with zero missing keys, the
+complete 1,201/1,250 raw unexpected-key lists, and checkpoint classification
+PASS for the exact profile above. Preserve that directory as successful
+immutable Step 2.7 evidence.
 
 ```bash
 python scripts/inspect_phase2_architecture.py \
@@ -401,6 +414,39 @@ load-state mismatch must remain a nonzero result and must be reviewed before
 Step 2.8.
 
 ## 5. Run the Step 2.8-2.9 teacher-forced repeat test
+
+The formal Steps 2.8-2.9 attempt in session
+`person-a-phase2-aws-20260725-052358` failed before teacher-forced forward
+completion:
+
+```text
+/home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-052358/step2_8_2_9
+```
+
+It exited 1, contains `raw_stdout_stderr.log`, and did not create
+`teacher_forced_report.json`. The exact rejection was:
+
+```text
+state_dict_mismatch at $: Teacher-forced execution refused because
+load-key mismatches remain: classification,
+transformer_unexpected_keys, vae_unexpected_keys
+```
+
+The old teacher-forced gate tested every load-state field for generic
+truthiness. It therefore misclassified the intentionally nonempty audited raw
+unexpected-key lists and the nonempty classification evidence object as
+unresolved mismatches even though the centralized exact profile decision was
+PASS. The corrected gate now reruns the same semantic validator used by Step
+2.7 over all four raw lists and exact source/asset/checkpoint provenance; it
+continues only when the recomputed complete classification matches the stored
+evidence and its final decision is PASS.
+
+Preserve the failed `step2_8_2_9` directory unchanged. Do not overwrite,
+delete, rename, reuse, or represent it as successful. No scientific activation
+result, timing/repeatability result, or compute conclusion is claimed from
+that attempt. Steps 2.8-2.9 remain pending. After this correction is committed,
+use another new immutable session and evidence root and rerun Steps 2.6 through
+2.9 under the same new committed revision.
 
 ```bash
 python scripts/run_phase2_teacher_forced.py \

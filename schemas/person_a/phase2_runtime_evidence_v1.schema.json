@@ -1065,6 +1065,7 @@
             "evidence_type",
             "status",
             "identity",
+            "load_state",
             "execution",
             "input",
             "token_layout",
@@ -1083,6 +1084,9 @@
             },
             "status": true,
             "identity": true,
+            "load_state": {
+              "$ref": "#/$defs/architectureLoadState"
+            },
             "execution": {
               "type": "object"
             },

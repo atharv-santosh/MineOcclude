@@ -26,6 +26,7 @@ from mineocclude.models.phase2_aws import (
     PINNED_VAE_CHECKPOINT_SHA256,
     PINNED_VAE_CONFIG_SHA256,
     _initialize_cuda_device,
+    _require_valid_checkpoint_load_state,
     build_architecture_parser,
     build_rollout_parser,
     build_teacher_forced_parser,
@@ -38,6 +39,7 @@ from mineocclude.models.phase2_evidence import (
     ARCHITECTURE_EVIDENCE_TYPE,
     EVIDENCE_SCHEMA_VERSION,
     ROLLOUT_EVIDENCE_TYPE,
+    TEACHER_FORCED_EVIDENCE_TYPE,
     VIDEO_PREPROCESSING_NORMALIZATION,
     VIDEO_PREPROCESSING_SOURCE,
     VIDEO_PREPROCESSING_TRANSFORMATION,
@@ -61,10 +63,12 @@ from mineocclude.models.phase2_evidence import (
     validate_action_compatibility_provenance,
     validate_architecture_facts,
     validate_architecture_report,
+    validate_checkpoint_load_state,
     validate_hook_records,
     validate_output_file_completeness,
     validate_rollout_manifest,
     validate_timing_fields,
+    validate_teacher_forced_report,
     validate_video_preprocessing_provenance,
 )
 
@@ -201,6 +205,86 @@ def _architecture_report() -> dict[str, object]:
             "peak_allocated_bytes": 1,
             "peak_reserved_bytes": 2,
         },
+    }
+    return seal_document(document)
+
+
+def _teacher_forced_report() -> dict[str, object]:
+    identity = _pinned_identity()
+    raw_load_state = _audited_raw_load_state()
+    load_state = {
+        **deepcopy(raw_load_state),
+        "classification": classify_checkpoint_load_state(
+            raw_load_state,
+            identity,
+        ),
+    }
+    layout = expected_teacher_token_layout()
+    hooks = [
+        {
+            "repeat_index": repeat_index,
+            "layer_index": layer_index,
+            "module_name": f"transformer.model.layers.{layer_index}",
+            "shape": [1, 5552, 2048],
+            "dtype": "torch.float16",
+            "device": "cuda:0",
+            "token_positions_sha256": layout["positions_sha256"],
+            "output_sha256": (
+                f"{repeat_index:02x}{layer_index:02x}".ljust(64, "0")
+            ),
+            "summary": {
+                "min": -1.0,
+                "max": 1.0,
+                "mean": 0.0,
+                "std": 0.5,
+            },
+        }
+        for repeat_index in range(2)
+        for layer_index in range(20)
+    ]
+    document = {
+        "schema_version": "1.0",
+        "evidence_schema_version": EVIDENCE_SCHEMA_VERSION,
+        "evidence_type": TEACHER_FORCED_EVIDENCE_TYPE,
+        "status": "completed",
+        "identity": identity,
+        "load_state": load_state,
+        "execution": {
+            "repeats": 2,
+            "precision": "float16",
+            "batch_size": 1,
+            "eval_mode": True,
+            "no_grad": True,
+        },
+        "input": {
+            "input_id": "audited-teacher-fixture",
+            "input_kind": "accepted",
+            "mp4_sha256": SHA256,
+            "jsonl_sha256": SHA256,
+            "frame_indices": list(range(16)),
+        },
+        "token_layout": layout,
+        "hooks": hooks,
+        "repeatability": [
+            {
+                "layer_index": layer_index,
+                "allclose": True,
+                "max_absolute_difference": 0.0,
+                "rtol": 1e-3,
+                "atol": 1e-3,
+            }
+            for layer_index in range(20)
+        ],
+        "timing": {
+            "load_seconds": 1.0,
+            "forward_seconds": [0.5, 0.5],
+        },
+        "memory": {
+            "cpu_peak_rss_bytes": 1,
+            "peak_cuda_allocated_bytes": 2,
+            "peak_cuda_reserved_bytes": 3,
+        },
+        "cleanup": {"hooks_removed": True},
     }
     return seal_document(document)
 
@@ -2190,6 +2274,196 @@ class Phase2EvidenceTests(unittest.TestCase):
             schema["$defs"]["header"]["properties"]["schema_version"]["const"],
             "1.0",
         )
+
+    def test_teacher_checkpoint_gate_accepts_exact_nonempty_audited_profile(
+        self,
+    ) -> None:
+        report = _teacher_forced_report()
+        load_state = report["load_state"]
+        self.assertEqual(
+            len(load_state["transformer_unexpected_keys"]),
+            1201,
+        )
+        self.assertEqual(len(load_state["vae_unexpected_keys"]), 1250)
+        self.assertTrue(load_state["classification"])
+        self.assertEqual(
+            load_state["classification"]["final_decision"],
+            "PASS",
+        )
+        self.assertEqual(
+            validate_checkpoint_load_state(
+                load_state,
+                report["identity"],
+            ),
+            (),
+        )
+        self.assertIsNone(
+            _require_valid_checkpoint_load_state(
+                load_state,
+                report["identity"],
+            )
+        )
+        teacher_source = inspect.getsource(
+            phase2_aws_module.execute_teacher_forced
+        )
+        self.assertIn(
+            "_require_valid_checkpoint_load_state",
+            teacher_source,
+        )
+        self.assertNotIn(
+            "field: values for field, values in load_state.items() if values",
+            teacher_source,
+        )
+
+    def test_teacher_checkpoint_gate_recomputes_and_rejects_forged_evidence(
+        self,
+    ) -> None:
+        valid_report = _teacher_forced_report()
+        valid_load_state = valid_report["load_state"]
+        identity = valid_report["identity"]
+        cases = []
+
+        forged_pass = deepcopy(valid_load_state)
+        forged_pass["transformer_unexpected_keys"][0] += "_tampered"
+        cases.append(("forged_pass", forged_pass, identity))
+
+        missing_classification = deepcopy(valid_load_state)
+        del missing_classification["classification"]
+        cases.append(
+            ("missing_classification", missing_classification, identity)
+        )
+
+        failed_decision = deepcopy(valid_load_state)
+        failed_decision["classification"]["classification_status"] = "FAIL"
+        failed_decision["classification"]["final_decision"] = "FAIL"
+        cases.append(("failed_decision", failed_decision, identity))
+
+        transformer_missing = deepcopy(valid_load_state)
+        transformer_missing["transformer_missing_keys"].append(
+            "transformer.required.weight"
+        )
+        transformer_missing["classification"] = (
+            classify_checkpoint_load_state(
+                {
+                    field: transformer_missing[field]
+                    for field in _audited_raw_load_state()
+                },
+                identity,
+            )
+        )
+        cases.append(("transformer_missing", transformer_missing, identity))
+
+        vae_missing = deepcopy(valid_load_state)
+        vae_missing["vae_missing_keys"].append("vae.required.weight")
+        cases.append(("vae_missing", vae_missing, identity))
+
+        unknown_transformer = deepcopy(valid_load_state)
+        unknown_transformer["transformer_unexpected_keys"][0] = (
+            "tokenizer.runtime.weight"
+        )
+        cases.append(("unknown_transformer", unknown_transformer, identity))
+
+        unknown_vae = deepcopy(valid_load_state)
+        unknown_vae["vae_unexpected_keys"][0] = "decoder.runtime.weight"
+        cases.append(("unknown_vae", unknown_vae, identity))
+
+        additional_key = deepcopy(valid_load_state)
+        additional_key["transformer_unexpected_keys"].append(
+            "tokenizer.metrics_fid.additional"
+        )
+        cases.append(("additional_key", additional_key, identity))
+
+        removed_key = deepcopy(valid_load_state)
+        removed_key["vae_unexpected_keys"].pop()
+        cases.append(("removed_key", removed_key, identity))
+
+        duplicate_key = deepcopy(valid_load_state)
+        duplicate_key["transformer_unexpected_keys"].append(
+            duplicate_key["transformer_unexpected_keys"][0]
+        )
+        cases.append(("duplicate_key", duplicate_key, identity))
+
+        non_string_key = deepcopy(valid_load_state)
+        non_string_key["vae_unexpected_keys"][0] = 7
+        cases.append(("non_string_key", non_string_key, identity))
+
+        for field in (
+            "source_revision",
+            "asset_revision",
+            "main_checkpoint_sha256",
+            "vae_checkpoint_sha256",
+        ):
+            wrong_identity = deepcopy(identity)
+            wrong_identity[field] = (
+                "f" * 40 if field.endswith("revision") else "f" * 64
+            )
+            cases.append((f"wrong_{field}", valid_load_state, wrong_identity))
+
+        for name, load_state, current_identity in cases:
+            with self.subTest(name=name):
+                with self.assertRaises(EvidenceValidationError) as raised:
+                    _require_valid_checkpoint_load_state(
+                        load_state,
+                        current_identity,
+                    )
+                self.assertEqual(raised.exception.code, "state_dict_mismatch")
+
+    def test_teacher_checkpoint_gate_is_order_independent(self) -> None:
+        report = _teacher_forced_report()
+        reordered = deepcopy(report["load_state"])
+        reordered["transformer_unexpected_keys"].reverse()
+        reordered["vae_unexpected_keys"].reverse()
+        self.assertEqual(
+            validate_checkpoint_load_state(
+                reordered,
+                report["identity"],
+            ),
+            (),
+        )
+        self.assertIsNone(
+            _require_valid_checkpoint_load_state(
+                reordered,
+                report["identity"],
+            )
+        )
+
+    def test_teacher_report_preserves_and_validates_checkpoint_evidence(
+        self,
+    ) -> None:
+        report = _teacher_forced_report()
+        before = deepcopy(report)
+        result = validate_teacher_forced_report(report)
+        self.assertTrue(result.accepted, result.rejections)
+        self.assertEqual(report, before)
+        self.assertEqual(
+            report["load_state"],
+            _architecture_report()["load_state"],
+        )
+
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        teacher_schema = schema["$defs"]["teacherForced"]["allOf"][1]
+        self.assertIn("load_state", teacher_schema["required"])
+        self.assertEqual(
+            teacher_schema["properties"]["load_state"]["$ref"],
+            "#/$defs/architectureLoadState",
+        )
+
+        malformed = deepcopy(report)
+        malformed["load_state"]["classification"]["profile_version"] = "9.9"
+        malformed = seal_document(
+            {
+                key: value
+                for key, value in malformed.items()
+                if key != "manifest_integrity"
+            }
+        )
+        codes = {
+            rejection.code
+            for rejection in validate_teacher_forced_report(
+                malformed
+            ).rejections
+        }
+        self.assertIn("checkpoint_classification_mismatch", codes)
 
     def test_hook_records_exact_grid_and_non_mutation(self) -> None:
         records = _hook_records()
