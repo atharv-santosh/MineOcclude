@@ -1,12 +1,47 @@
 # Person A Phase 2.6-2.9 AWS Execution Checklist
 
-Status: **Steps 2.6 and 2.7 completed in immutable formal session
-`person-a-phase2-aws-20260725-052358`; Steps 2.8-2.9 remain pending**.
+Status: **Steps 2.6-2.9 completed in immutable formal session
+`person-a-phase2-aws-20260725-055616` under MineOcclude revision
+`35baf673312af5c21ae3f22168de405bd4ee8bd9`. The Phase 2.10 runtime record
+has been published and validated; Person E immutable-registry registration
+remains not evidenced by the imported bundle.**
 
 This checklist runs the project-owned evidence commands in their required
 order. It does not replace the pinned-source, asset-lock, or environment
 records. Checkpoints, generated video, and complete runtime directories remain
 outside Git.
+
+## Final formal bundle
+
+The final single-revision formal bundle is:
+
+```text
+session: person-a-phase2-aws-20260725-055616
+MineOcclude revision: 35baf673312af5c21ae3f22168de405bd4ee8bd9
+external evidence root:
+  /home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-055616
+imported evidence:
+  docs/status/phase2_runtime/person-a-phase2-aws-20260725-055616
+```
+
+Its `session_metadata.txt` records `result=PASS` and completed Steps
+2.6-2.9. The Step 2.6 rollout is completed and sealed, the Step 2.7
+architecture/checkpoint report is completed with classification `PASS`, and
+the Steps 2.8-2.9 teacher-forced report is completed with two repeats and all
+20 expected layer hooks. All three imported JSON records pass
+`mineocclude.models.phase2_evidence`.
+
+The final human-readable Phase 2.10 statement is:
+
+```text
+docs/status/person_a_phase2_runtime_record.md
+```
+
+It preserves the exact evidence links, runtime facts, bounded GREEN compute
+classification, warnings, and non-claims. The imported evidence does not
+contain a Person E immutable-registry snapshot or exact UTC run start/end
+timestamps. No registry entry is reconstructed from guessed timestamps;
+registration remains explicitly `NOT EVIDENCED`.
 
 ## Fixed identities
 
@@ -480,6 +515,23 @@ python scripts/run_phase2_teacher_forced.py \
 The command uses frames/actions 0 through 15, batch size one, `eval()`,
 `no_grad()`, all 20 discovered decoder layers, and the frozen 5,552-position
 layout. It must fail if hooks are incomplete, duplicated, or not removed.
+
+### Successful final Steps 2.8-2.9 evidence
+
+The corrected teacher-forced gate completed under the same revision and
+session as the final Step 2.6 and Step 2.7 runs:
+
+```text
+person-a-phase2-aws-20260725-055616
+/home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-055616/step2_8_2_9
+```
+
+The report records status `completed`, two `float16` eval/no-grad forwards,
+20/20 decoder layers captured on both repeats, successful hook cleanup, and
+all per-layer comparisons passing `rtol=1e-3`, `atol=1e-3` with maximum
+absolute difference `0.0`. Preserve this successful directory as immutable.
+It supersedes no earlier evidence and does not erase the failed
+`person-a-phase2-aws-20260725-052358/step2_8_2_9` history above.
 
 ## 6. Copy small evidence into MineOcclude
 
