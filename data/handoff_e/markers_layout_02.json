@@ -1,0 +1,68 @@
+{
+ "homography_fixture_schema_version": "person-e-homography-fixture-v1.0",
+ "schema_version": "1.0",
+ "layout_id": "layout_02",
+ "source_trajectory_id": "layout_02_ep9766_nosheep_calibration",
+ "canonical_camera_pose_id": "layout_02_canonical_pose",
+ "image_coordinate_system": "pixel_center_xy_zero_based",
+ "image_width_px": 640,
+ "image_height_px": 360,
+ "world_coordinate_system": "ground_plane_world_xz_blocks",
+ "synthetic": false,
+ "scientific_use": "pending_e_detection",
+ "marker_visibility": "all 4 in-frame, unoccluded (clean no-sheep capture, marker-fix jar)",
+ "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (y=4 = sheep foot-plane)",
+ "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE)",
+ "image_xy_status": "NULL \u2014 E detects on the no-sheep calibration frames",
+ "capture_provenance": "data/autonomous/layout_02_ep9766/capture_provenance.json (git_dirty=false)",
+ "marker_correspondences": [
+  {
+   "marker_id": "north_west",
+   "marker_role": "north_west",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "blue",
+   "world_xz_blocks": [
+    -8.0,
+    1.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "near_west"
+  },
+  {
+   "marker_id": "north_east",
+   "marker_role": "north_east",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "yellow",
+   "world_xz_blocks": [
+    8.0,
+    1.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "near_east"
+  },
+  {
+   "marker_id": "south_east",
+   "marker_role": "south_east",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "white",
+   "world_xz_blocks": [
+    8.0,
+    5.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "far_east"
+  },
+  {
+   "marker_id": "south_west",
+   "marker_role": "south_west",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "lime",
+   "world_xz_blocks": [
+    -8.0,
+    5.0
+   ],
+   "image_xy": null,
+   "mod_role_original": "far_west"
+  }
+ ]
+}

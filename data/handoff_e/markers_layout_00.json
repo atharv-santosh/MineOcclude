@@ -2,17 +2,19 @@
  "homography_fixture_schema_version": "person-e-homography-fixture-v1.0",
  "schema_version": "1.0",
  "layout_id": "layout_00",
- "source_trajectory_id": "layout_00_ep9410",
+ "source_trajectory_id": "layout_00_ep9762_nosheep_calibration",
  "canonical_camera_pose_id": "layout_00_canonical_pose",
  "image_coordinate_system": "pixel_center_xy_zero_based",
  "image_width_px": 640,
  "image_height_px": 360,
  "world_coordinate_system": "ground_plane_world_xz_blocks",
  "synthetic": false,
- "scientific_use": "pending_e_detection_and_signoff",
- "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE) \u2014 matches E's homography fixture and C's frozen layouts.yaml; the mod's near/far role names are superseded by E's north/south canonical roles.",
- "world_coords_basis": "the mod's ACTUAL placed marker block positions from the captured scene (layout_meta.json), NOT the frozen layouts.yaml v0.2 coords (which describe a different, unbuilt geometry).",
- "image_xy_status": "NULL \u2014 E supplies these by running the frozen detector on the source frames (data/handoff_a/episodes/9410 frames_640x360); marker detection is E-owned.",
+ "scientific_use": "pending_e_detection",
+ "marker_visibility": "all 4 in-frame, unoccluded (clean no-sheep capture, marker-fix jar)",
+ "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (y=4 = sheep foot-plane)",
+ "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE)",
+ "image_xy_status": "NULL \u2014 E detects on the no-sheep calibration frames",
+ "capture_provenance": "data/autonomous/layout_00_ep9762/capture_provenance.json (git_dirty=false)",
  "marker_correspondences": [
   {
    "marker_id": "north_west",
@@ -45,7 +47,7 @@
    "marker_color": "white",
    "world_xz_blocks": [
     7.0,
-    -7.0
+    5.0
    ],
    "image_xy": null,
    "mod_role_original": "far_east"
@@ -57,7 +59,7 @@
    "marker_color": "lime",
    "world_xz_blocks": [
     -7.0,
-    -7.0
+    5.0
    ],
    "image_xy": null,
    "mod_role_original": "far_west"
