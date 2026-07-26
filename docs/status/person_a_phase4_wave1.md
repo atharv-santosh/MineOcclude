@@ -86,7 +86,7 @@ stored under
 registers exactly one hook for every frozen layer. Captures are keyed and
 exposed in explicit `layer_idx` order, never callback-arrival order.
 
-All handles are removed:
+Cleanup of every obtained handle is attempted:
 
 - after a complete successful context;
 - after a forward exception;
@@ -95,9 +95,15 @@ All handles are removed:
 - on explicit `close()`;
 - whenever context exit runs.
 
-Cleanup is idempotent. Re-entry after closure, callbacks after closure,
-duplicate callbacks, missing callbacks, inconsistent shapes or normalization
-sites, partial registration, and incomplete 20-layer coverage fail clearly.
+Successful cleanup is idempotent. Cleanup attempts every obtained handle.
+Handles whose removal fails, including malformed returned handles without a
+callable `remove()`, remain retained and observable through
+`registered_hook_count`; a later explicit `close()` retries only those
+unresolved handles. The manager is not marked closed until every handle is
+removed. Cleanup failure is reported, while an already-active registration,
+forward, normalization, callback, duplicate-capture, or incomplete-capture
+exception remains the primary propagated exception. Callbacks are rejected
+after cleanup begins, and a manager whose cleanup failed cannot be re-entered.
 The manager does not mutate model outputs or perform disk storage.
 
 ## Step 4.3: FrameTokenMap-only selection
@@ -116,26 +122,35 @@ The selector revalidates the map at the boundary. It requires:
 - integer, non-negative, in-bounds positions;
 - exact agreement between map and hooked sequence lengths;
 - ordered context-relative pair indices;
+- exact binding of each stored visual/action block and pair bounds to its
+  declared context-relative 347-token pair;
 - full, non-overlapping sequence coverage;
 - visual positions disjoint from every action position;
 - selected positions disjoint from every neighboring frame.
 
 Missing or duplicate identities, malformed maps, count errors, duplicate or
-out-of-bounds positions, action overlap, and neighboring-frame contamination
-fail closed.
+out-of-bounds positions, whole-pair block reassignment, pair-bound mismatch,
+action overlap, and neighboring-frame contamination fail closed. After this
+validation, the selector returns the stored positions rather than constructing
+a replacement slice.
+
+The local fail-closed correction did not alter the successful AWS runtime
+probe or its immutable evidence. No AWS rerun was required.
 
 ## Validation
 
 The focused Wave 1 test cycle covers discovery, output normalization, hook
-lifetime and cleanup, repeated independent runs, and first/middle/final/
-context-boundary FrameTokenMap selection.
+lifetime and cleanup (including retained/retried removal failure and primary
+exception preservation), repeated independent runs, first/middle/final/
+context-boundary FrameTokenMap selection, and whole-pair reassignment
+rejection.
 
 With `PYTHONPATH=C:\Users\lollo\MineOcclude\src`,
 `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`, and `PYTHONDONTWRITEBYTECODE=1`, the
 isolated test runner produced:
 
 - `python -m pytest -q tests/activations/test_hooks.py
-  tests/activations/test_pool.py`: PASS, 27 tests and 14 subtests;
+  tests/activations/test_pool.py`: PASS, 34 tests and 18 subtests;
 - `python -m pytest -q tests/models/test_mineworld_adapter.py
   tests/models/test_mineworld_adapter_wave3.py
   tests/models/test_mineworld_adapter_wave4.py

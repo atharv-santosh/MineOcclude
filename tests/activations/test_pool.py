@@ -113,6 +113,85 @@ class VisualTokenSelectionTests(unittest.TestCase):
         self.assertTrue(set(selection.positions).isdisjoint(action_positions))
         self.assertTrue(set(selection.positions).isdisjoint(neighboring_visual))
 
+    def test_whole_pair_block_reassignment_rejects(self):
+        for swap_bounds in (False, True):
+            with self.subTest(swap_bounds=swap_bounds):
+                frame_token_map = _token_map(count=2)
+                first = copy.copy(frame_token_map.spans[0])
+                second = copy.copy(frame_token_map.spans[1])
+                first_visual = first.visual_positions
+                first_actions = first.action_positions
+                object.__setattr__(
+                    first,
+                    "visual_positions",
+                    second.visual_positions,
+                )
+                object.__setattr__(
+                    first,
+                    "action_positions",
+                    second.action_positions,
+                )
+                object.__setattr__(
+                    second,
+                    "visual_positions",
+                    first_visual,
+                )
+                object.__setattr__(
+                    second,
+                    "action_positions",
+                    first_actions,
+                )
+                if swap_bounds:
+                    object.__setattr__(first, "pair_start", 347)
+                    object.__setattr__(first, "pair_end_exclusive", 694)
+                    object.__setattr__(second, "pair_start", 0)
+                    object.__setattr__(second, "pair_end_exclusive", 347)
+                corrupted = _corrupt_map(
+                    frame_token_map,
+                    spans=(first, second),
+                )
+
+                with self.assertRaises(VisualTokenSelectionError) as caught:
+                    select_visual_token_positions(
+                        corrupted,
+                        trajectory_id=TRAJECTORY_ID,
+                        model_frame_idx=100,
+                        hooked_sequence_length=corrupted.sequence_length,
+                    )
+
+                self.assertIs(
+                    caught.exception.code,
+                    VisualSelectionErrorCode.MALFORMED_MAP,
+                )
+
+    def test_pair_bounds_must_match_declared_pair_index(self):
+        frame_token_map = _token_map(count=2)
+        cases = (
+            ("pair_start", 1),
+            ("pair_end_exclusive", 346),
+        )
+        for field, value in cases:
+            with self.subTest(field=field):
+                first = copy.copy(frame_token_map.spans[0])
+                object.__setattr__(first, field, value)
+                corrupted = _corrupt_map(
+                    frame_token_map,
+                    spans=(first, frame_token_map.spans[1]),
+                )
+
+                with self.assertRaises(VisualTokenSelectionError) as caught:
+                    select_visual_token_positions(
+                        corrupted,
+                        trajectory_id=TRAJECTORY_ID,
+                        model_frame_idx=100,
+                        hooked_sequence_length=corrupted.sequence_length,
+                    )
+
+                self.assertIs(
+                    caught.exception.code,
+                    VisualSelectionErrorCode.MALFORMED_MAP,
+                )
+
     def test_duplicate_visual_position_rejects(self):
         frame_token_map = _token_map(count=1)
         span = copy.copy(frame_token_map.spans[0])

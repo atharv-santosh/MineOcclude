@@ -22,14 +22,23 @@ class _FakeTensor:
 
 
 class _FakeHandle:
-    def __init__(self, module, identifier):
+    def __init__(self, module, identifier, *, failures_before_success=0):
         self._module = module
         self._identifier = identifier
+        self._failures_before_success = failures_before_success
         self.remove_calls = 0
 
     def remove(self):
         self.remove_calls += 1
+        if self.remove_calls <= self._failures_before_success:
+            raise RuntimeError("controlled remove failure")
         self._module.hooks.pop(self._identifier, None)
+
+
+class _MalformedHandle:
+    def __init__(self, module, identifier):
+        self._module = module
+        self._identifier = identifier
 
 
 class _FakeDecoderLayer:
@@ -38,13 +47,25 @@ class _FakeDecoderLayer:
         self.callback_history = []
         self.handles = []
         self._next_identifier = 0
+        self.remove_failures_before_success = 0
+        self.registration_error = None
+        self.return_malformed_handle = False
 
     def register_forward_hook(self, callback):
+        if self.registration_error is not None:
+            raise self.registration_error
         identifier = self._next_identifier
         self._next_identifier += 1
         self.hooks[identifier] = callback
         self.callback_history.append(callback)
-        handle = _FakeHandle(self, identifier)
+        if self.return_malformed_handle:
+            handle = _MalformedHandle(self, identifier)
+        else:
+            handle = _FakeHandle(
+                self,
+                identifier,
+                failures_before_success=self.remove_failures_before_success,
+            )
         self.handles.append(handle)
         return handle
 
@@ -263,6 +284,141 @@ class ScopedHookManagerTests(unittest.TestCase):
             caught.exception.code,
             HookErrorCode.INVALID_MANAGER_STATE,
         )
+
+    def test_cleanup_failure_retains_only_unresolved_handle_for_retry(self):
+        discovery, layers = _discovery()
+        layers[0].remove_failures_before_success = 1
+        manager = ScopedHookManager(discovery)
+        manager.__enter__()
+
+        with self.assertRaises(ActivationHookError) as caught:
+            manager.close()
+
+        self.assertIs(caught.exception.code, HookErrorCode.CLEANUP_FAILED)
+        self.assertFalse(manager.closed)
+        self.assertEqual(manager.registered_hook_count, 1)
+        self.assertEqual(len(layers[0].hooks), 1)
+        self.assertTrue(
+            all(
+                handle.remove_calls == 1
+                for index, layer in layers.items()
+                if index != 0
+                for handle in layer.handles
+            )
+        )
+
+        manager.close()
+
+        self.assertTrue(manager.closed)
+        self.assertEqual(manager.registered_hook_count, 0)
+        self.assertTrue(all(not layer.hooks for layer in layers.values()))
+        self.assertEqual(layers[0].handles[0].remove_calls, 2)
+        self.assertTrue(
+            all(
+                handle.remove_calls == 1
+                for index, layer in layers.items()
+                if index != 0
+                for handle in layer.handles
+            )
+        )
+
+    def test_forward_exception_remains_primary_when_cleanup_fails(self):
+        discovery, layers = _discovery()
+        layers[0].remove_failures_before_success = 1
+        manager = ScopedHookManager(discovery)
+
+        with (
+            self.assertRaisesRegex(
+                RuntimeError, "controlled forward"
+            ) as caught,
+            manager,
+        ):
+            raise RuntimeError("controlled forward")
+
+        cleanup_error = caught.exception.__cause__
+        self.assertIsInstance(cleanup_error, ActivationHookError)
+        self.assertIs(cleanup_error.code, HookErrorCode.CLEANUP_FAILED)
+        self.assertFalse(manager.closed)
+        self.assertEqual(manager.registered_hook_count, 1)
+
+        manager.close()
+        self.assertTrue(manager.closed)
+
+    def test_callback_exception_remains_primary_when_cleanup_fails(self):
+        discovery, layers = _discovery()
+        layers[0].remove_failures_before_success = 1
+
+        def fail(_capture):
+            raise ValueError("controlled callback failure")
+
+        manager = ScopedHookManager(discovery, capture_callback=fail)
+        with self.assertRaisesRegex(
+            ValueError, "controlled callback failure"
+        ) as caught, manager:
+            layers[0].emit(_FakeTensor())
+
+        cleanup_error = caught.exception.__cause__
+        self.assertIsInstance(cleanup_error, ActivationHookError)
+        self.assertIs(cleanup_error.code, HookErrorCode.CLEANUP_FAILED)
+        self.assertTrue(manager.closed)
+        self.assertEqual(manager.registered_hook_count, 0)
+        self.assertTrue(all(not layer.hooks for layer in layers.values()))
+
+    def test_partial_registration_attempts_every_obtained_handle(self):
+        discovery, layers = _discovery()
+        layers[0].remove_failures_before_success = 1
+        layers[2].registration_error = RuntimeError(
+            "controlled registration failure"
+        )
+        manager = ScopedHookManager(discovery)
+
+        with self.assertRaisesRegex(
+            RuntimeError, "controlled registration failure"
+        ) as caught:
+            manager.__enter__()
+
+        cleanup_error = caught.exception.__cause__
+        self.assertIsInstance(cleanup_error, ActivationHookError)
+        self.assertIs(cleanup_error.code, HookErrorCode.CLEANUP_FAILED)
+        self.assertEqual(layers[0].handles[0].remove_calls, 1)
+        self.assertEqual(layers[1].handles[0].remove_calls, 1)
+        self.assertEqual(manager.registered_hook_count, 1)
+        self.assertFalse(manager.closed)
+        self.assertEqual(len(layers[0].hooks), 1)
+        self.assertFalse(layers[1].hooks)
+
+        manager.close()
+        self.assertTrue(manager.closed)
+
+    def test_malformed_registration_handle_remains_observable(self):
+        discovery, layers = _discovery()
+        layers[0].return_malformed_handle = True
+        manager = ScopedHookManager(discovery)
+
+        with self.assertRaises(ActivationHookError) as caught:
+            manager.__enter__()
+
+        self.assertIs(caught.exception.code, HookErrorCode.REGISTRATION_FAILED)
+        cleanup_error = caught.exception.__cause__
+        self.assertIsInstance(cleanup_error, ActivationHookError)
+        self.assertIs(cleanup_error.code, HookErrorCode.CLEANUP_FAILED)
+        self.assertFalse(manager.closed)
+        self.assertEqual(manager.registered_hook_count, 1)
+        self.assertEqual(len(layers[0].hooks), 1)
+
+        stale_callback = layers[0].callback_history[0]
+        with self.assertRaises(ActivationHookError) as callback_error:
+            stale_callback(layers[0], (), _FakeTensor())
+        self.assertIs(
+            callback_error.exception.code,
+            HookErrorCode.CALLBACK_AFTER_CLOSE,
+        )
+
+        with self.assertRaises(ActivationHookError) as retry_error:
+            manager.close()
+        self.assertIs(retry_error.exception.code, HookErrorCode.CLEANUP_FAILED)
+        self.assertEqual(manager.registered_hook_count, 1)
+        self.assertFalse(manager.closed)
 
     def test_second_independent_run_has_no_stale_capture_or_hooks(self):
         discovery, layers = _discovery()

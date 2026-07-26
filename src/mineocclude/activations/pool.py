@@ -291,6 +291,36 @@ def select_visual_token_positions(
             VisualSelectionErrorCode.MALFORMED_MAP,
             "FrameTokenMap does not cover the hooked sequence exactly",
         )
+    for span_index, span in enumerate(frame_token_map.spans):
+        expected_pair_start = span_index * TOKENS_PER_FRAME_ACTION_PAIR
+        expected_pair_end = (
+            expected_pair_start + TOKENS_PER_FRAME_ACTION_PAIR
+        )
+        expected_visual = tuple(
+            range(
+                expected_pair_start,
+                expected_pair_start + VISUAL_TOKENS_PER_FRAME,
+            )
+        )
+        expected_actions = tuple(
+            range(
+                expected_pair_start + VISUAL_TOKENS_PER_FRAME,
+                expected_pair_end,
+            )
+        )
+        if (
+            span.pair_index != span_index
+            or getattr(span, "pair_start", None) != expected_pair_start
+            or getattr(span, "pair_end_exclusive", None)
+            != expected_pair_end
+            or span.visual_positions != expected_visual
+            or span.action_positions != expected_actions
+        ):
+            raise VisualTokenSelectionError(
+                VisualSelectionErrorCode.MALFORMED_MAP,
+                "each span must retain its declared complete "
+                "context-relative 336+11 token pair",
+            )
 
     return VisualTokenSelection(
         trajectory_id=trajectory_id,

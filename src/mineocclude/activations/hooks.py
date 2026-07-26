@@ -411,6 +411,8 @@ class HookCapture:
 class _ManagerState(str, Enum):
     NEW = "new"
     ACTIVE = "active"
+    CLEANING_UP = "cleaning_up"
+    CLEANUP_FAILED = "cleanup_failed"
     CLOSED = "closed"
 
 
@@ -477,23 +479,32 @@ class ScopedHookManager:
                         layer_idx=layer.layer_idx,
                     )
                 handle = register(self._make_callback(layer))
+                self._handles.append(handle)
                 if not callable(getattr(handle, "remove", None)):
                     raise ActivationHookError(
                         HookErrorCode.REGISTRATION_FAILED,
                         "register_forward_hook returned a handle without remove()",
                         layer_idx=layer.layer_idx,
                     )
-                self._handles.append(handle)
-        except Exception:
-            self.close()
-            raise
+        except Exception as exc:  # noqa: BLE001
+            self._raise_primary_after_cleanup(exc)
         if len(self._handles) != EXPECTED_DECODER_LAYER_COUNT:
-            self.close()
-            raise ActivationHookError(
-                HookErrorCode.REGISTRATION_FAILED,
-                "registration did not produce exactly 20 hook handles",
+            self._raise_primary_after_cleanup(
+                ActivationHookError(
+                    HookErrorCode.REGISTRATION_FAILED,
+                    "registration did not produce exactly 20 hook handles",
+                )
             )
         return self
+
+    def _raise_primary_after_cleanup(self, primary: Exception) -> None:
+        """Keep *primary* authoritative while exposing cleanup failure as cause."""
+
+        try:
+            self.close()
+        except Exception as cleanup_error:
+            raise primary from cleanup_error
+        raise primary
 
     def __exit__(
         self,
@@ -501,12 +512,19 @@ class ScopedHookManager:
         exc_value: BaseException | None,
         traceback: object,
     ) -> bool:
-        del exc_value, traceback
+        del exc_type, traceback
+        if exc_value is not None:
+            try:
+                self.close()
+            except Exception as cleanup_error:
+                raise exc_value from cleanup_error
+            return False
         try:
-            if exc_type is None and self._state is _ManagerState.ACTIVE:
+            if self._state is _ManagerState.ACTIVE:
                 self.require_complete()
-        finally:
-            self.close()
+        except Exception as exc:  # noqa: BLE001
+            self._raise_primary_after_cleanup(exc)
+        self.close()
         return False
 
     def _make_callback(
@@ -525,11 +543,12 @@ class ScopedHookManager:
                     layer_idx=layer.layer_idx,
                 )
             if layer.layer_idx in self._captures:
-                self.close()
-                raise ActivationHookError(
-                    HookErrorCode.DUPLICATE_CALLBACK,
-                    "one layer emitted more than one callback",
-                    layer_idx=layer.layer_idx,
+                self._raise_primary_after_cleanup(
+                    ActivationHookError(
+                        HookErrorCode.DUPLICATE_CALLBACK,
+                        "one layer emitted more than one callback",
+                        layer_idx=layer.layer_idx,
+                    )
                 )
             try:
                 normalized = self._output_normalizer(output)
@@ -551,9 +570,8 @@ class ScopedHookManager:
                 self._captures[layer.layer_idx] = captured
                 if self._capture_callback is not None:
                     self._capture_callback(captured)
-            except Exception:
-                self.close()
-                raise
+            except Exception as exc:  # noqa: BLE001
+                self._raise_primary_after_cleanup(exc)
 
         return capture
 
@@ -572,25 +590,40 @@ class ScopedHookManager:
         return self.captures
 
     def close(self) -> None:
-        """Remove all registered hooks; repeated cleanup is harmless."""
+        """Remove every hook, retaining unresolved handles for a later retry."""
 
         if self._state is _ManagerState.CLOSED:
             return
-        self._state = _ManagerState.CLOSED
-        handles = tuple(reversed(self._handles))
-        self._handles.clear()
+        if self._state is _ManagerState.CLEANING_UP:
+            raise ActivationHookError(
+                HookErrorCode.CLEANUP_FAILED,
+                "hook cleanup is already in progress",
+            )
+        self._state = _ManagerState.CLEANING_UP
+        unresolved_in_cleanup_order: list[object] = []
         failures: list[str] = []
-        for handle in handles:
+        for handle in reversed(self._handles):
+            remove = getattr(handle, "remove", None)
+            if not callable(remove):
+                unresolved_in_cleanup_order.append(handle)
+                failures.append(
+                    f"{type(handle).__name__}: handle does not expose remove()"
+                )
+                continue
             try:
-                handle.remove()
-            except Exception as exc:  # noqa: BLE001  # pragma: no cover
+                remove()
+            except Exception as exc:  # noqa: BLE001
+                unresolved_in_cleanup_order.append(handle)
                 failures.append(f"{type(exc).__name__}: {exc}")
+        self._handles = list(reversed(unresolved_in_cleanup_order))
         if failures:
+            self._state = _ManagerState.CLEANUP_FAILED
             raise ActivationHookError(
                 HookErrorCode.CLEANUP_FAILED,
                 "one or more hook handles could not be removed: "
                 + "; ".join(failures),
             )
+        self._state = _ManagerState.CLOSED
 
 
 __all__ = [
