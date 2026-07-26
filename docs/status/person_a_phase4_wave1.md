@@ -61,12 +61,24 @@ The committed Phase 2 architecture report records exactly 20
 certification records the same 20 names on two repeats with shape
 `[1, 2776, 2048]`.
 
-Those reports record the normalized tensor but not the raw Python output
-container before the existing direct-versus-tuple extraction. Therefore one
-later minimal real-runtime probe must record whether the loaded
-`LlamaDecoderLayer` output is direct or tuple-based and, for a tuple, confirm
-that the residual is at index `0`. Wave 1 does not invent that missing fact and
-does not run AWS.
+Those earlier reports recorded the normalized tensor but not the raw Python
+output container before the existing direct-versus-tuple extraction. The
+bounded AWS runtime session
+`person-a-phase4-hookprobe-aws-20260726-073253` closed that remaining evidence
+gap at MineOcclude revision
+`619d9c051106ed6c68122dccc846bd4109a4fda5`.
+
+One synthetic, non-scientific 347-token forward captured all 20
+`LlamaDecoderLayer` outputs at
+`transformer.model.layers.{layer_idx}`. Every layer emitted a direct
+`torch.Tensor`, not a tuple, with shape `[1, 347, 2048]`, dtype
+`torch.float16`, and device `cuda:0`. The container rule was stable across
+depth, exactly 20 hook handles were registered, all expected callbacks were
+captured, and every layer's forward-hook count returned to its pre-run value.
+
+The saved report and separate validation both passed. Runtime evidence is
+stored under
+`docs/status/phase4_runtime/person-a-phase4-hookprobe-aws-20260726-073253/`.
 
 ## Step 4.2: scoped hook lifetime
 
