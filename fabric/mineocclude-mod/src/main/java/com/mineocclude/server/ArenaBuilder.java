@@ -61,8 +61,19 @@ public final class ArenaBuilder {
         markerBlocks.clear();
         int y = (int) Math.floor(cfg.laneY);
         int floorY = y - 1;
+        // All four markers must be IN-FRAME at the canonical pose (pitch 0)
+        // AND well spread for a stable homography (Person E needs 4 visible,
+        // non-collinear correspondences). The visible ground strip in FRONT
+        // of the wall is thin, so the two rows straddle the wall in depth:
+        //   near row  = just in front of the wall (wallOrtho - 1)
+        //   far  row  = beyond the wall (wallOrtho + 3), placed at the lane
+        //               extremes (x = laneMin+1 / laneMax-1) which sit
+        //               OUTSIDE the wall's axis-shadow, so the far pair is
+        //               visible flanking the wall, not occluded by it.
+        // (Earlier bugs: orthoMin+2 = camOrtho-1 was behind the camera;
+        // orthoMin+5 = camOrtho+2 fell below the frame. Both fixed here.)
         int nearOrtho = (int) Math.floor(wallOrtho) - 1;   // just in front of the wall
-        int farOrtho = (int) Math.floor(orthoMin) + 2;     // nearer the camera
+        int farOrtho = (int) Math.floor(wallOrtho) + 3;    // beyond the wall, flanking it
         int axisWest = (int) Math.floor(cfg.laneMin) + 1;
         int axisEast = (int) Math.ceil(cfg.laneMax) - 1;
         int[][] markerAxes = {

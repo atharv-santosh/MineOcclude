@@ -81,8 +81,10 @@ def send(commands: list[str]) -> None:
 
 
 def _utc_now() -> str:
+    # Second-precision Z form: the rollout-registry validator parses strictly
+    # with "%Y-%m-%dT%H:%M:%SZ" (offset/fractional forms fail closed).
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _git(args: list[str]) -> str:
