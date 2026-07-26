@@ -1,8 +1,9 @@
-"""Select visual-token positions without performing Phase 4.4 pooling."""
+"""Select and mean-pool explicit MineWorld visual-token positions."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import importlib
+from dataclasses import dataclass, field
 from enum import Enum
 
 from mineocclude.contracts.activation import (
@@ -19,6 +20,7 @@ from mineocclude.models.mineworld_adapter import (
 ACTION_TOKENS_PER_FRAME = (
     TOKENS_PER_FRAME_ACTION_PAIR - VISUAL_TOKENS_PER_FRAME
 )
+MEAN_POOLING_IDENTITY = "person-a-visual-token-mean-v1.0"
 
 
 class VisualSelectionErrorCode(str, Enum):
@@ -43,6 +45,33 @@ class VisualTokenSelectionError(ValueError):
     def __init__(
         self,
         code: VisualSelectionErrorCode,
+        message: str,
+    ) -> None:
+        self.code = code
+        super().__init__(f"{code.value}: {message}")
+
+
+class VisualPoolingErrorCode(str, Enum):
+    """Stable failure reasons for visual-token mean pooling."""
+
+    INVALID_ACTIVATION = "invalid_activation"
+    INVALID_SHAPE = "invalid_shape"
+    INVALID_BATCH_SIZE = "invalid_batch_size"
+    INVALID_DTYPE = "invalid_dtype"
+    INVALID_SELECTION = "invalid_selection"
+    SEQUENCE_LENGTH_MISMATCH = "sequence_length_mismatch"
+    INVALID_LAYER_INDEX = "invalid_layer_index"
+    INVALID_HOOK_SITE = "invalid_hook_site"
+    NONFINITE_SELECTED_VALUE = "nonfinite_selected_value"
+    INVALID_RESULT = "invalid_result"
+
+
+class VisualPoolingError(ValueError):
+    """Actionable visual-token pooling failure."""
+
+    def __init__(
+        self,
+        code: VisualPoolingErrorCode,
         message: str,
     ) -> None:
         self.code = code
@@ -78,6 +107,37 @@ class VisualTokenSelection:
             expected_count=VISUAL_TOKENS_PER_FRAME,
             sequence_length=self.sequence_length,
             count_code=VisualSelectionErrorCode.INVALID_VISUAL_COUNT,
+        )
+
+
+@dataclass(frozen=True)
+class PooledVisualActivation:
+    """One independently owned CPU vector for one activation identity."""
+
+    trajectory_id: str
+    model_frame_idx: int
+    layer_idx: int
+    hook_site: str
+    vector: object = field(repr=False, compare=False)
+    hidden_size: int
+    source_batch_size: int
+    source_sequence_length: int
+    selected_visual_token_count: int
+    pooling_operation_identity: str
+    source_dtype: str
+    source_device: str
+    returned_dtype: str
+    returned_device: str
+
+    @property
+    def key(self) -> tuple[str, int, int, str]:
+        """Return the complete scientific activation identity."""
+
+        return (
+            self.trajectory_id,
+            self.model_frame_idx,
+            self.layer_idx,
+            self.hook_site,
         )
 
 
@@ -330,10 +390,181 @@ def select_visual_token_positions(
     )
 
 
+def _validate_pooling_selection(
+    selection: object,
+    *,
+    sequence_length: int,
+) -> VisualTokenSelection:
+    if not isinstance(selection, VisualTokenSelection):
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_SELECTION,
+            "selection must be a validated VisualTokenSelection",
+        )
+    try:
+        if (
+            not isinstance(selection.trajectory_id, str)
+            or not selection.trajectory_id.strip()
+            or not isinstance(selection.model_frame_idx, int)
+            or isinstance(selection.model_frame_idx, bool)
+            or selection.model_frame_idx < 0
+            or not isinstance(selection.sequence_length, int)
+            or isinstance(selection.sequence_length, bool)
+            or selection.sequence_length <= 0
+        ):
+            raise VisualTokenSelectionError(
+                VisualSelectionErrorCode.INVALID_REQUEST,
+                "selection identity and sequence length must be valid",
+            )
+        _validate_positions(
+            selection.positions,
+            expected_count=VISUAL_TOKENS_PER_FRAME,
+            sequence_length=selection.sequence_length,
+            count_code=VisualSelectionErrorCode.INVALID_VISUAL_COUNT,
+        )
+    except VisualTokenSelectionError as exc:
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_SELECTION,
+            str(exc),
+        ) from exc
+    if selection.sequence_length != sequence_length:
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.SEQUENCE_LENGTH_MISMATCH,
+            "activation and selection sequence lengths must match exactly",
+        )
+    return selection
+
+
+def mean_pool_visual_tokens(
+    *,
+    activation: object,
+    selection: VisualTokenSelection,
+    layer_idx: int,
+    hook_site: str,
+) -> PooledVisualActivation:
+    """Mean exactly the selection's 336 visual rows into one CPU vector."""
+
+    torch = importlib.import_module("torch")
+    if not isinstance(activation, torch.Tensor):
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_ACTIVATION,
+            "activation must be a torch.Tensor",
+        )
+    if activation.ndim != 3:
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_SHAPE,
+            "activation must have shape [batch, sequence, hidden]",
+        )
+    batch_size, sequence_length, hidden_size = activation.shape
+    if batch_size != 1:
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_BATCH_SIZE,
+            "activation batch size must be exactly 1",
+        )
+    if sequence_length <= 0 or hidden_size <= 0:
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_SHAPE,
+            "activation sequence and hidden dimensions must be positive",
+        )
+    if not torch.is_floating_point(activation) or activation.is_complex():
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_DTYPE,
+            "activation must use a real floating-point dtype",
+        )
+    validated_selection = _validate_pooling_selection(
+        selection,
+        sequence_length=sequence_length,
+    )
+    if (
+        not isinstance(layer_idx, int)
+        or isinstance(layer_idx, bool)
+        or layer_idx < 0
+    ):
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_LAYER_INDEX,
+            "layer_idx must be a non-negative integer",
+        )
+    if not isinstance(hook_site, str) or not hook_site.strip():
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_HOOK_SITE,
+            "hook_site must be a non-empty explicit string",
+        )
+
+    detached = activation.detach()
+    try:
+        position_index = torch.tensor(
+            validated_selection.positions,
+            dtype=torch.long,
+            device=activation.device,
+        )
+        selected = detached.index_select(1, position_index)
+    except (IndexError, RuntimeError, TypeError, ValueError) as exc:
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_SELECTION,
+            f"explicit visual-position selection failed: {exc}",
+        ) from exc
+    if selected.shape != (1, VISUAL_TOKENS_PER_FRAME, hidden_size):
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_RESULT,
+            "selected tensor shape does not preserve batch/token/hidden axes",
+        )
+    if not bool(torch.isfinite(selected).all().item()):
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.NONFINITE_SELECTED_VALUE,
+            "selected visual-token values must all be finite",
+        )
+
+    pooled = (
+        selected.to(dtype=torch.float32)
+        .mean(dim=1)
+        .squeeze(0)
+        .to(device="cpu")
+        .contiguous()
+        .clone()
+        .detach()
+    )
+    del selected
+    del position_index
+    if (
+        pooled.shape != (hidden_size,)
+        or pooled.dtype != torch.float32
+        or pooled.device.type != "cpu"
+        or not pooled.is_contiguous()
+        or pooled.requires_grad
+        or pooled.grad_fn is not None
+        or not bool(torch.isfinite(pooled).all().item())
+    ):
+        raise VisualPoolingError(
+            VisualPoolingErrorCode.INVALID_RESULT,
+            "pooled vector failed shape, dtype, ownership, or finiteness checks",
+        )
+
+    return PooledVisualActivation(
+        trajectory_id=validated_selection.trajectory_id,
+        model_frame_idx=validated_selection.model_frame_idx,
+        layer_idx=layer_idx,
+        hook_site=hook_site,
+        vector=pooled,
+        hidden_size=hidden_size,
+        source_batch_size=batch_size,
+        source_sequence_length=sequence_length,
+        selected_visual_token_count=VISUAL_TOKENS_PER_FRAME,
+        pooling_operation_identity=MEAN_POOLING_IDENTITY,
+        source_dtype=str(activation.dtype),
+        source_device=str(activation.device),
+        returned_dtype=str(pooled.dtype),
+        returned_device=str(pooled.device),
+    )
+
+
 __all__ = [
     "ACTION_TOKENS_PER_FRAME",
+    "MEAN_POOLING_IDENTITY",
+    "PooledVisualActivation",
+    "VisualPoolingError",
+    "VisualPoolingErrorCode",
     "VisualSelectionErrorCode",
     "VisualTokenSelection",
     "VisualTokenSelectionError",
+    "mean_pool_visual_tokens",
     "select_visual_token_positions",
 ]
