@@ -8,6 +8,7 @@ import inspect
 import json
 import subprocess
 import unittest
+import warnings
 from contextlib import contextmanager
 from dataclasses import replace
 from pathlib import Path
@@ -151,6 +152,28 @@ class _FakeModel(_EvalObject):
 
 class _FakeVae(_EvalObject):
     pass
+
+
+class _ArrayBackedTensor:
+    """Controlled tensor-like value for CPU-only output-metadata tests."""
+
+    def __init__(self, array, *, device="cuda:0"):
+        self._array = array
+        self.shape = array.shape
+        self.dtype = array.dtype
+        self.device = device
+
+    def detach(self):
+        return self
+
+    def cpu(self):
+        return self
+
+    def contiguous(self):
+        return self
+
+    def numpy(self):
+        return self._array
 
 
 class _VisualTokenizer:
@@ -703,6 +726,91 @@ class Wave3TeacherForcedTests(unittest.TestCase):
         self.assertIn("refresh_kvcache", source)
         self.assertNotIn("generate(", source)
         self.assertNotIn("free_rollout", source)
+
+
+class Wave3OutputMetadataRegressionTests(unittest.TestCase):
+    def metadata(self, values):
+        return wave3._output_metadata(_ArrayBackedTensor(values))
+
+    def test_float16_statistics_accumulate_in_float64(self):
+        values = np.full(
+            (4096,),
+            np.finfo(np.float16).max,
+            dtype=np.float16,
+        )
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            source_dtype_deviation = values.std()
+        self.assertFalse(np.isfinite(source_dtype_deviation))
+        self.assertTrue(
+            any(
+                "overflow encountered in reduce" in str(item.message)
+                for item in caught
+            )
+        )
+
+        shape, dtype, device, digest, statistics = self.metadata(values)
+
+        self.assertEqual(shape, values.shape)
+        self.assertEqual(dtype, "float16")
+        self.assertEqual(device, "cuda:0")
+        self.assertEqual(
+            digest,
+            hashlib.sha256(values.tobytes(order="C")).hexdigest(),
+        )
+        self.assertEqual(
+            tuple(name for name, _value in statistics),
+            (
+                "minimum",
+                "maximum",
+                "mean",
+                "standard_deviation",
+            ),
+        )
+        self.assertTrue(all(np.isfinite(value) for _name, value in statistics))
+        self.assertEqual(statistics[0][1], float(np.finfo(np.float16).max))
+        self.assertEqual(statistics[1][1], float(np.finfo(np.float16).max))
+        self.assertEqual(statistics[2][1], float(np.finfo(np.float16).max))
+        self.assertEqual(statistics[3][1], 0.0)
+
+    def test_float32_statistics_accumulate_in_float64(self):
+        values = np.full((4096,), np.float32(1e38), dtype=np.float32)
+        expected_digest = hashlib.sha256(
+            values.tobytes(order="C")
+        ).hexdigest()
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            source_dtype_mean = values.mean()
+        self.assertFalse(np.isfinite(source_dtype_mean))
+        self.assertTrue(
+            any(
+                "overflow encountered in reduce" in str(item.message)
+                for item in caught
+            )
+        )
+
+        _shape, dtype, _device, digest, statistics = self.metadata(values)
+
+        self.assertEqual(dtype, "float32")
+        self.assertEqual(digest, expected_digest)
+        self.assertTrue(all(np.isfinite(value) for _name, value in statistics))
+        self.assertEqual(statistics[2][1], float(values[0]))
+        self.assertEqual(statistics[3][1], 0.0)
+
+    def test_nonfinite_original_values_fail_closed(self):
+        cases = (
+            ("nan", np.nan),
+            ("positive-infinity", np.inf),
+            ("negative-infinity", -np.inf),
+        )
+        for label, invalid_value in cases:
+            with self.subTest(label=label):
+                values = np.array([0.0, invalid_value], dtype=np.float32)
+                with self.assertRaisesRegex(
+                    RuntimeError,
+                    "teacher-forced output contains nonfinite data",
+                ):
+                    self.metadata(values)
 
 
 class Wave3IntegratedBoundaryTests(unittest.TestCase):

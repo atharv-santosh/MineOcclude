@@ -435,12 +435,20 @@ def _output_metadata(output: object) -> tuple[
         numeric = numpy.asarray(array)
         if not numpy.isfinite(numeric).all():
             raise RuntimeError("teacher-forced output contains nonfinite data")
+        statistics_numeric = numpy.asarray(numeric, dtype=numpy.float64)
         statistics = (
-            ("minimum", float(numeric.min())),
-            ("maximum", float(numeric.max())),
-            ("mean", float(numeric.mean())),
-            ("standard_deviation", float(numeric.std())),
+            ("minimum", float(statistics_numeric.min())),
+            ("maximum", float(statistics_numeric.max())),
+            ("mean", float(statistics_numeric.mean())),
+            (
+                "standard_deviation",
+                float(statistics_numeric.std()),
+            ),
         )
+        if any(not math.isfinite(value) for _name, value in statistics):
+            raise RuntimeError(
+                "teacher-forced output statistics contain nonfinite data"
+            )
     except RuntimeError:
         raise
     except Exception as exc:
