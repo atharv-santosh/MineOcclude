@@ -1,0 +1,149 @@
+{
+  "accepted_manifest_hash": "5555555555555555555555555555555555555555555555555555555555555555",
+  "activation_key_counts": {
+    "accepted_keys_enumerated": 0,
+    "duplicate_keys": null,
+    "hook_sites": [],
+    "layers": 0,
+    "model_frames": 0,
+    "producing_run_ids": [],
+    "trajectories": 0
+  },
+  "analysis_dtype": null,
+  "base_commit": "b0b71653311902fffce769aca6c4e81475ba0766",
+  "certified_person_a_sha": "b0b71653311902fffce769aca6c4e81475ba0766",
+  "chunks_validated": 0,
+  "deterministic_repeat_result": {
+    "identical": null,
+    "reason": "The initial public package validation failed; repeating a blocked consumer path would not establish acceptance.",
+    "status": "not_run"
+  },
+  "duplicate_counts": {
+    "activation_keys": null,
+    "target_keys": null
+  },
+  "failure_reasons": [
+    {
+      "actual_byte_size": 364,
+      "actual_sha256": "6c633b930b3e35788a35b882c1067d11ccb01dee23b99d26aaa42834f3636a41",
+      "code": "FIXTURE_CHECKSUM_MISMATCH",
+      "expected_sha256": "29b7cb053e19d4276ab283c7cad3d12269f2599dabbbce0fc8ce07e166266e8a",
+      "path": "README.md",
+      "public_validator_error": "ValueError: example checksum mismatch: README.md"
+    }
+  ],
+  "fixture_inventory": {
+    "approved_directories": [
+      "chunks",
+      "indexes",
+      "run_bindings"
+    ],
+    "exact_inventory_match": true,
+    "files": [
+      {
+        "byte_size": 8320,
+        "declared_sha256": "409f6a6bf3e85e2b177db81d51b621707688bdcb6630f98d336d16537f39217f",
+        "path": "chunks/activation-chunk-106b16904a4ae44c7bac4903.npy",
+        "sha256": "409f6a6bf3e85e2b177db81d51b621707688bdcb6630f98d336d16537f39217f",
+        "sha256_matches_inventory": true
+      },
+      {
+        "byte_size": 9019,
+        "declared_sha256": "8526daf64764ec06940ca1ac4209c76371869382c13d546404d5726fc1d79805",
+        "path": "indexes/index-834f1070e8d77680e06d7713caf618624211c0bcf5ce4cfef8b692011ebd67e4.json",
+        "sha256": "8526daf64764ec06940ca1ac4209c76371869382c13d546404d5726fc1d79805",
+        "sha256_matches_inventory": true
+      },
+      {
+        "byte_size": 364,
+        "declared_sha256": "29b7cb053e19d4276ab283c7cad3d12269f2599dabbbce0fc8ce07e166266e8a",
+        "path": "README.md",
+        "sha256": "6c633b930b3e35788a35b882c1067d11ccb01dee23b99d26aaa42834f3636a41",
+        "sha256_matches_inventory": false
+      },
+      {
+        "byte_size": 1356,
+        "declared_sha256": "3b7ee30304940f062066c57ac4219dad2f68dfc9a505007c44355fdebae9084e",
+        "path": "run_bindings/run-480e36150b993ebec1bdf1ba66a872366e7daa5ffed790e70c46351257e9238f.json",
+        "sha256": "3b7ee30304940f062066c57ac4219dad2f68dfc9a505007c44355fdebae9084e",
+        "sha256_matches_inventory": true
+      },
+      {
+        "byte_size": 498,
+        "declared_sha256": null,
+        "path": "SHA256SUMS",
+        "sha256": "11162a1898649759eed4c222d538f48aff2d72da903a247aa9b4f12fcd260f1f",
+        "sha256_matches_inventory": null
+      }
+    ],
+    "no_alternate_chunks_indexes_or_bindings": true,
+    "no_extra_files": true,
+    "no_symlinks": true,
+    "no_temporary_files": true,
+    "observed_directories": [
+      "chunks",
+      "indexes",
+      "run_bindings"
+    ],
+    "status": "FAIL"
+  },
+  "fixture_relative_path": "docs/status/fixtures/phase5_activation_store_example",
+  "index_snapshot_id": "834f1070e8d77680e06d7713caf618624211c0bcf5ce4cfef8b692011ebd67e4",
+  "interface_defect": {
+    "affected_contract": "The committed Phase 5 synthetic activation-store handoff integrity inventory enforced by scripts/benchmark_phase5_activation_store.py validate-example.",
+    "exact_incompatibility": "SHA256SUMS binds README.md to 29b7cb053e19d4276ab283c7cad3d12269f2599dabbbce0fc8ce07e166266e8a, the SHA-256 of a 373-byte CRLF representation. The clean committed checkout has a 364-byte LF representation with SHA-256 6c633b930b3e35788a35b882c1067d11ccb01dee23b99d26aaa42834f3636a41. Git attributes require LF, so an independent clean checkout cannot satisfy the published inventory.",
+    "person_b_expectation": "Every SHA256SUMS entry must match the exact committed bytes in a clean checkout before the public loader and reader are used.",
+    "producer_field": "SHA256SUMS entry for README.md",
+    "smallest_versioned_migration_required": "Publish an explicitly versioned fixture-package revision whose checksum inventory is computed from the canonical committed LF bytes after Git normalization, and validate that revision from a fresh checkout. Keep schema_version 1.0 only through an explicit packaging-only version decision; do not silently replace the current inventory."
+  },
+  "joined_row_count": 0,
+  "migration_required": true,
+  "observed_unaccepted_index_declarations": {
+    "hidden_width": 2048,
+    "row_count": 1,
+    "stored_dtype": "float32",
+    "vector_shape": [
+      2048
+    ]
+  },
+  "person_b_acceptance_branch": "work/person-b-phase5-acceptance",
+  "private_assistance_used": false,
+  "producing_run_id": "phase5-synthetic-non-scientific-example",
+  "public_consumer_interfaces": {
+    "activation_index_loader": "mineocclude.activations.store.load_activation_index_snapshot",
+    "activation_selective_reader": "mineocclude.activations.store.read_activation_vectors",
+    "activation_target_join": "mineocclude.probes.bridge.build_joined_frame_table",
+    "minimal_probe": "mineocclude.probes.bridge.run_ridge_oof_probe",
+    "probe_matrix_builder": "mineocclude.probes.bridge.build_probe_ready_matrices",
+    "target_schema": "src/mineocclude/oracle/schema.py",
+    "target_validator": "mineocclude.oracle.schema.validate_oracle_target_document"
+  },
+  "receipt_format": "person-b-phase5-activation-store-receipt",
+  "receipt_version": "1.0",
+  "rows_loaded": 0,
+  "run_binding_digest": "5dd76ca68c331b5c7e4f6644f9c11c2161b6cc4f4b70de407eb80e6d05eb4d22",
+  "schema_version": "1.0",
+  "scientific_status": "synthetic_non_scientific",
+  "status": "INTERFACE_DEFECT_VERSIONED_DECISION_REQUIRED",
+  "store_identity_digest": "d0ba83b92ac5fc30b7092355ce9bd47faa182fa4fa4bdfb338afa3b2a5bcd231",
+  "target_fixture_path": "tests/fixtures/person_b/synthetic_oracle_targets.json",
+  "target_fixture_sha256": "3894ab1c9abcdecc89d0741f853dcfa8677ab5ad9d6e246c7ed65cca68dc2887",
+  "target_rows_validated": 0,
+  "tiny_probe_configuration": {
+    "analysis_dtype": null,
+    "feature_width": null,
+    "fold_or_split_identity": null,
+    "hook_site": null,
+    "input_row_count": 0,
+    "layer": null,
+    "probe_api": "mineocclude.probes.bridge.run_ridge_oof_probe",
+    "reason": "Not run because the public package-integrity gate failed.",
+    "seed": null,
+    "status": "not_run",
+    "target": null
+  },
+  "tiny_probe_output_hash": null,
+  "unmatched_activation_count": null,
+  "unmatched_target_count": null,
+  "vector_shape": null
+}
