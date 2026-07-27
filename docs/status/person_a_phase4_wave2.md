@@ -11,7 +11,11 @@ action and neighbor exclusion tests, and a bounded real-runtime probe. It does
 not implement Step 4.7 long-running extraction safety or Step 4.8 general
 unpooled activation evidence.
 
-## Step 4.4: explicit visual-token mean
+The bounded Wave 2 runtime gate subsequently passed in immutable session
+`person-a-phase4-wave2-aws-20260727-015157` at MineOcclude revision
+`76d2a5a462e3daba0baa374e92c7e7b20de393b8`.
+
+## Step 4.4: COMPLETE — explicit visual-token mean
 
 `mean_pool_visual_tokens()` accepts an already validated
 `VisualTokenSelection`; it does not reconstruct positions from frame number or
@@ -37,7 +41,14 @@ non-tensors, malformed shapes, non-real-floating dtypes, invalid selections,
 identity errors, and nonfinite selected visual values through project-owned
 error codes.
 
-## Step 4.5: detached CPU ownership
+The accepted real-runtime report contains 160 candidates from 8 frames across
+all 20 decoder layers. Each candidate binds one
+`trajectory_id + model_frame_idx + layer_idx + hook_site`, has final shape
+`[2048]`, and exactly equals the independently computed mean of its explicit
+336 visual-token rows. Every candidate records
+`max_abs_difference = 0.0`.
+
+## Step 4.5: COMPLETE — detached CPU ownership
 
 The returned candidate is independently owned, contiguous, detached
 `torch.float32` on CPU. It has shape `[hidden]`, does not require gradients,
@@ -62,7 +73,17 @@ to a simplistic allocator-naive pass threshold. The probe does not call
 `torch.cuda.empty_cache()` and does not perform a second forward or a long
 stress loop.
 
-## Step 4.6: contribution exclusion
+The bounded one-real-context memory gate passed. Every returned candidate was a
+detached, contiguous CPU `torch.float32` vector; no source CUDA tensor or
+selected 336-row matrix was retained as a candidate or saved as evidence. Every
+per-frame allocation remained within the fixed tolerance, the maximum
+after-frame allocated delta was 0 bytes, and the final allocated delta was
+0 bytes. All 20 temporary hook handles were removed successfully.
+
+This result is limited to the required bounded Wave 2 one-context gate. It does
+not establish the long-running extraction safety reserved for Step 4.7.
+
+## Step 4.6: COMPLETE — contribution exclusion
 
 Local tests independently compute the direct mean from the same explicit 336
 rows and require exact `torch.equal` equality. They place extreme, mutated,
@@ -97,6 +118,13 @@ This is a structural contribution test on captured activations, not a model
 rerun with changed scientific actions. The evidence fields are derived from
 actual tensor differences rather than being asserted from intended indices.
 
+The accepted proof used real decoder hook tensors on all 20 layers. For both
+the finite-sentinel and NaN/+Inf/-Inf variants, the derived changed-row set was
+exactly the intended 11 action positions, the explicit visual selection was
+unchanged, and the resulting pooled vector remained exactly equal to the
+original. Local tests continue to cover neighboring-frame contamination and
+action-boundary off-by-one failures.
+
 ## Runtime probe
 
 `scripts/run_phase4_wave2_pooling_probe.py` provides three explicit modes:
@@ -117,27 +145,43 @@ actual tensor differences rather than being asserted from intended indices.
   exact candidate/action/memory results, one forward, hook cleanup, referenced
   hashes, and absence of saved unpooled tensors.
 
-The intended AWS command shape is:
+## Accepted runtime evidence
 
-```text
-python scripts/run_phase4_wave2_pooling_probe.py run \
-  --mineworld-source-root <observed-pinned-source-root> \
-  --asset-root <observed-pinned-asset-root> \
-  --evidence-root <external-evidence-root> \
-  --accepted-trajectory-package <accepted-package.json> \
-  --accepted-trajectory-package-sha256 <sha256> \
-  --input-mp4 <accepted.mp4> \
-  --input-mp4-sha256 <sha256> \
-  --environment-report <fresh-environment-report.txt> \
-  --environment-report-sha256 <sha256> \
-  --session-id <new-immutable-session-id> \
-  --seed <seed> --precision float16 --device cuda:0 \
-  --mineocclude-revision <committed-wave2-sha> \
-  --confirm-runtime-probe
-```
+The accepted immutable evidence is stored at:
 
-The `run` and `validate` modes were not executed in this local task. Real
-runtime evidence for Steps 4.4–4.6 remains pending.
+`docs/status/phase4_runtime/person-a-phase4-wave2-aws-20260727-015157/`
+
+Identity and environment:
+
+- session ID:
+  `person-a-phase4-wave2-aws-20260727-015157`;
+- MineOcclude revision:
+  `76d2a5a462e3daba0baa374e92c7e7b20de393b8`;
+- MineWorld revision:
+  `9f49efbcc68a5f0cf60e78f0abc566eac409282f`;
+- ModelScope asset revision:
+  `0dd5561ab317115831badc50e09a6ebe98693d0e`;
+- qualified interpreter:
+  `/home/sagemaker-user/.conda/envs/mineworld/bin/python`;
+- Python `3.10.20`;
+- precision `float16`;
+- device `cuda:0`;
+- NVIDIA L4 in the pinned validated environment;
+- exactly one teacher-forced forward.
+
+The run exited with status 0, the independent validator exited with status 0,
+and `pooling_probe_report.json` records overall status `PASS`. The report
+contains 8 frames, 20 layers, 160 of 160 expected candidates, 20 successful
+action-exclusion layer records, memory status `PASS`, 20 complete captures,
+successful hook cleanup, and
+`unpooled_activation_artifacts_saved = false`.
+
+The downloaded evidence archive SHA-256 is:
+
+`79d7cd0e26a41525a16797130b529e742d4721bfe0064f710c9699808a68bf9b`
+
+The internal `export_file_hashes.sha256` inventory was reverified locally:
+all eight listed non-self evidence files match their recorded SHA-256 values.
 
 ## Files and local validation
 
@@ -182,8 +226,15 @@ standalone fake CLI preflight was reported as runtime evidence.
 
 ## Completion boundary
 
-The local implementations of Steps 4.4–4.6 are ready for review. The manual
-AWS probe and its independent evidence validation remain required before these
-steps are fully complete. The existing immutable Wave 1 AWS evidence remains
-valid, but it does not certify Wave 2 pooling, ownership, exclusion, or memory
-behavior.
+Steps 4.4, 4.5, and 4.6 are complete, including their bounded real-runtime
+evidence. The existing immutable Wave 1 AWS evidence remains valid and is
+complemented by the accepted Wave 2 pooling, ownership, exclusion, and memory
+evidence.
+
+Remaining scope is explicit:
+
+- Step 4.7 remains unimplemented;
+- Step 4.8 remains unimplemented;
+- no dataset-wide extraction was performed;
+- no Person B analysis, standardization, or regression was performed;
+- schema version remains `1.0` and no schema was changed.
