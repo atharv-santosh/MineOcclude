@@ -195,6 +195,292 @@ def require_valid_immutable_registry(
 
 
 PHASE1_LINEAGE_TRACE_SCHEMA_VERSION = "person-e-phase1-lineage-trace-v1.0"
+PHASE2_STEP2_1_BLOCKER_SCHEMA_VERSION = (
+    "person-e-phase2-step2.1-blocker-v0.1"
+)
+
+_PHASE2_STEP2_1_SOURCE_REVISIONS = {
+    "person_a_execution_revision": "35baf673312af5c21ae3f22168de405bd4ee8bd9",
+    "person_a_evidence_revision": "e5032cc00dd83716df6f8e1b863659477adddb95",
+    "person_c_pilot_revision": "82ef1212091b3f32eac02d7eabe25d55376086f2",
+}
+_PHASE2_STEP2_1_MISSING_FIELDS = (
+    {
+        "authority": "person_a",
+        "record_id": "person-a-phase2-aws-20260725-055616-step2.6",
+        "fields": ["started_at", "ended_at"],
+    },
+    {
+        "authority": "person_c",
+        "record_id": "layout_00_ep9410",
+        "fields": ["started_at", "ended_at"],
+    },
+    {
+        "authority": "person_a",
+        "record_id": "person-a-phase2-aws-20260725-055616-step2.6",
+        "fields": ["external_artifact_byte_verification_authority"],
+    },
+    {
+        "authority": "person_a",
+        "record_id": "failed_attempts",
+        "fields": ["authoritative_failed_attempt_registry_metadata"],
+    },
+)
+
+
+def validate_phase2_step2_1_blocker_record(document: Mapping[str, Any]) -> None:
+    """Validate the bounded, non-inferential Phase 2 Step 2.1 decision."""
+
+    required = {
+        "schema_version",
+        "blocker_schema_version",
+        "record_id",
+        "step",
+        "status",
+        "pass_claimed",
+        "real_completed_records_emitted",
+        "located_committed_metadata",
+        "source_revisions",
+        "missing_authoritative_fields",
+        "non_inference",
+        "decision",
+    }
+    if not isinstance(document, Mapping) or set(document) != required:
+        raise ProvenanceError("Step 2.1 blocker-record fields have changed.")
+    if document["schema_version"] != "1.0":
+        raise ProvenanceError("Step 2.1 blocker schema_version must remain '1.0'.")
+    if (
+        document["blocker_schema_version"]
+        != PHASE2_STEP2_1_BLOCKER_SCHEMA_VERSION
+    ):
+        raise ProvenanceError("Unsupported Step 2.1 blocker-record version.")
+    if document["record_id"] != "person_e_phase2_step2_1_blockers_v0_1":
+        raise ProvenanceError("Step 2.1 blocker record_id is not authoritative.")
+    if (
+        document["step"] != "2.1"
+        or document["status"] != "BLOCKED"
+        or document["pass_claimed"] is not False
+        or document["real_completed_records_emitted"] is not False
+        or document["decision"] != "blocked_not_failed"
+    ):
+        raise ProvenanceError("Step 2.1 blocker decision overclaims completion.")
+    if document["located_committed_metadata"] != {
+        "person_a": True,
+        "person_c": True,
+    }:
+        raise ProvenanceError("Located A/C metadata must be stated exactly.")
+    if document["source_revisions"] != _PHASE2_STEP2_1_SOURCE_REVISIONS:
+        raise ProvenanceError("Step 2.1 source revisions changed.")
+    if document["missing_authoritative_fields"] != list(
+        _PHASE2_STEP2_1_MISSING_FIELDS
+    ):
+        raise ProvenanceError("Step 2.1 missing authoritative fields changed.")
+    if document["non_inference"] != {
+        "timestamps_inferred": False,
+        "external_byte_authority_inferred": False,
+        "failed_attempts_manufactured": False,
+    }:
+        raise ProvenanceError("Step 2.1 non-inference declaration changed.")
+
+
+class ImmutableRegistryIndex:
+    """Deterministic read-only queries over the shared immutable registry."""
+
+    def __init__(
+        self,
+        registry: Mapping[str, Any],
+        *,
+        artifact_bytes_by_id: Mapping[str, bytes] | None = None,
+    ) -> None:
+        if not isinstance(registry, Mapping):
+            raise ProvenanceError("Immutable registry must be a mapping.")
+        require_valid_immutable_registry(
+            registry,
+            artifact_bytes_by_id=artifact_bytes_by_id,
+        )
+        self._registry = copy.deepcopy(dict(registry))
+        self._runs = {
+            run["run_id"]: run for run in self._registry["runs"]
+        }
+        self._artifacts = {
+            artifact["artifact_id"]: artifact
+            for artifact in self._registry["artifacts"]
+        }
+        self._children: dict[str, list[str]] = {
+            artifact_id: [] for artifact_id in self._artifacts
+        }
+        for artifact in self._artifacts.values():
+            for input_id in artifact["direct_input_artifact_ids"]:
+                self._children[input_id].append(artifact["artifact_id"])
+        for children in self._children.values():
+            children.sort()
+
+    @staticmethod
+    def _status_filter(
+        statuses: Sequence[str] | None,
+        *,
+        allowed: set[str],
+        name: str,
+    ) -> set[str] | None:
+        if statuses is None:
+            return None
+        if (
+            not isinstance(statuses, Sequence)
+            or isinstance(statuses, (str, bytes))
+            or not statuses
+            or any(not isinstance(status, str) for status in statuses)
+        ):
+            raise ProvenanceError(f"{name} must be a non-empty status sequence.")
+        selected = set(statuses)
+        if not selected <= allowed:
+            raise ProvenanceError(f"{name} contains an unsupported status.")
+        return selected
+
+    def query_runs(
+        self,
+        *,
+        statuses: Sequence[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Return all or lifecycle-filtered runs in canonical ID order."""
+
+        selected = self._status_filter(
+            statuses,
+            allowed={"in_progress", "completed", "failed"},
+            name="run statuses",
+        )
+        return [
+            copy.deepcopy(self._runs[run_id])
+            for run_id in sorted(self._runs)
+            if selected is None or self._runs[run_id]["status"] in selected
+        ]
+
+    def query_artifacts(
+        self,
+        *,
+        statuses: Sequence[str] | None = None,
+        artifact_types: Sequence[str] | None = None,
+        creator_run_statuses: Sequence[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Return deterministic all-status or explicitly filtered artifacts."""
+
+        selected_statuses = self._status_filter(
+            statuses,
+            allowed={"accepted", "excluded", "superseded"},
+            name="artifact statuses",
+        )
+        selected_run_statuses = self._status_filter(
+            creator_run_statuses,
+            allowed={"in_progress", "completed", "failed"},
+            name="creator run statuses",
+        )
+        selected_types: set[str] | None = None
+        if artifact_types is not None:
+            if (
+                not isinstance(artifact_types, Sequence)
+                or isinstance(artifact_types, (str, bytes))
+                or not artifact_types
+                or any(
+                    not isinstance(artifact_type, str) or not artifact_type
+                    for artifact_type in artifact_types
+                )
+            ):
+                raise ProvenanceError(
+                    "artifact_types must be a non-empty string sequence."
+                )
+            selected_types = set(artifact_types)
+        rows: list[dict[str, Any]] = []
+        for artifact_id in sorted(self._artifacts):
+            artifact = self._artifacts[artifact_id]
+            creator_status = self._runs[artifact["creator_run_id"]]["status"]
+            if (
+                selected_statuses is not None
+                and artifact["status"] not in selected_statuses
+            ):
+                continue
+            if (
+                selected_types is not None
+                and artifact["artifact_type"] not in selected_types
+            ):
+                continue
+            if (
+                selected_run_statuses is not None
+                and creator_status not in selected_run_statuses
+            ):
+                continue
+            rows.append(copy.deepcopy(artifact))
+        return rows
+
+    def accepted_artifacts(
+        self,
+        *,
+        artifact_types: Sequence[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Return only current artifacts from completed creator runs."""
+
+        return self.query_artifacts(
+            statuses=["accepted"],
+            artifact_types=artifact_types,
+            creator_run_statuses=["completed"],
+        )
+
+    def _lineage(
+        self,
+        artifact_id: str,
+        *,
+        direction: str,
+    ) -> dict[str, Any]:
+        if not isinstance(artifact_id, str) or not artifact_id:
+            raise ProvenanceError("artifact_id must be non-empty.")
+        if artifact_id not in self._artifacts:
+            raise ProvenanceError(f"Unknown artifact_id {artifact_id!r}.")
+        visited: set[str] = set()
+        edges: set[tuple[str, str]] = set()
+
+        def visit(current_id: str) -> None:
+            neighbors = (
+                self._artifacts[current_id]["direct_input_artifact_ids"]
+                if direction == "backward"
+                else self._children[current_id]
+            )
+            for neighbor_id in sorted(neighbors):
+                edge = (
+                    (neighbor_id, current_id)
+                    if direction == "backward"
+                    else (current_id, neighbor_id)
+                )
+                edges.add(edge)
+                if neighbor_id not in visited:
+                    visited.add(neighbor_id)
+                    visit(neighbor_id)
+
+        visit(artifact_id)
+        return {
+            "schema_version": self._registry["schema_version"],
+            "registry_id": self._registry["registry_id"],
+            "subject_artifact_id": artifact_id,
+            "direction": direction,
+            "artifact_nodes": [
+                copy.deepcopy(self._artifacts[node_id])
+                for node_id in sorted(visited)
+            ],
+            "direct_input_edges": [
+                {
+                    "input_artifact_id": input_id,
+                    "output_artifact_id": output_id,
+                }
+                for input_id, output_id in sorted(edges)
+            ],
+        }
+
+    def backward_lineage(self, artifact_id: str) -> dict[str, Any]:
+        """Return deterministic transitive direct inputs for an artifact."""
+
+        return self._lineage(artifact_id, direction="backward")
+
+    def forward_lineage(self, artifact_id: str) -> dict[str, Any]:
+        """Return deterministic transitive consumers for an artifact."""
+
+        return self._lineage(artifact_id, direction="forward")
 
 
 def trace_phase1_figure_lineage(
