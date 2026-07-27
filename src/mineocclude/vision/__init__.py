@@ -37,6 +37,12 @@ from .measurement import (
     find_reappearance,
     validate_phase1_rollout_measurement_fixture,
 )
+from .png_decode import (
+    PNG_DECODER_VERSION,
+    PngDecodeError,
+    decode_png_rgb,
+    load_png_rgb,
+)
 from .ssim import (
     SsimError,
     SsimResult,
@@ -52,7 +58,9 @@ __all__ = [
     "HomographyError",
     "HsvRange",
     "MeasurementError",
+    "PNG_DECODER_VERSION",
     "PersonEConfigError",
+    "PngDecodeError",
     "ReappearanceResult",
     "SsimError",
     "SsimResult",
@@ -62,6 +70,7 @@ __all__ = [
     "build_measurement_row",
     "compare_frames",
     "compute_ssim",
+    "decode_png_rgb",
     "detect_magenta",
     "find_alpha_zero_matches",
     "find_reappearance",
@@ -70,6 +79,7 @@ __all__ = [
     "homography_from_record",
     "load_detector_calibration_dataset",
     "load_person_e_config",
+    "load_png_rgb",
     "require_live_ready_person_e_config",
     "require_natural_variation_pair",
     "summarize_localization",
