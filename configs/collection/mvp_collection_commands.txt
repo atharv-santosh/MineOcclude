@@ -1,0 +1,401 @@
+# MineOcclude MVP collection — run each block in the SERVER console.
+# After each 'start', wait for '... recording started' then let it
+# auto-stop, then validate + build_dataset for that episode before
+# the next block.
+# 66 trajectories, balanced order (shuffle seed 42).
+
+# [1/66] set=sentinel layout=layout_03 v=1.0 q=0.05 hidden=24 ep=63
+mineocclude mode normal
+mineocclude duration 24
+mineocclude warmup 60
+mineocclude start layout_03 63 20759623 1.0 0.05 300
+
+# [2/66] set=nowall layout=layout_01 v=1.0 q=0.05 hidden=0 ep=49
+mineocclude mode nowall
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_01 49 20648757 1.0 0.05 60
+
+# [3/66] set=core layout=layout_04 v=2.0 q=0.02 hidden=16 ep=30
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_04 30 20498296 2.0 0.02 300
+
+# [4/66] set=core layout=layout_04 v=1.0 q=0.02 hidden=16 ep=26
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_04 26 20466620 1.0 0.02 300
+
+# [5/66] set=core layout=layout_01 v=2.0 q=0.2 hidden=16 ep=8
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_01 8 20324078 2.0 0.2 300
+
+# [6/66] set=core layout=layout_06 v=2.0 q=0.2 hidden=4 ep=47
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_06 47 20632919 2.0 0.2 300
+
+# [7/66] set=nosheep layout=layout_04 v=1.0 q=0.05 hidden=0 ep=58
+mineocclude mode nosheep
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_04 58 20720028 1.0 0.05 60
+
+# [8/66] set=core layout=layout_04 v=2.0 q=0.2 hidden=16 ep=32
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_04 32 20514134 2.0 0.2 300
+
+# [9/66] set=core layout=layout_03 v=1.0 q=0.02 hidden=4 ep=17
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_03 17 20395349 1.0 0.02 300
+
+# [10/66] set=nowall layout=layout_02 v=1.0 q=0.05 hidden=0 ep=50
+mineocclude mode nowall
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_02 50 20656676 1.0 0.05 60
+
+# [11/66] set=core layout=layout_02 v=1.0 q=0.02 hidden=16 ep=10
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_02 10 20339916 1.0 0.02 300
+
+# [12/66] set=core layout=layout_05 v=1.0 q=0.02 hidden=16 ep=34
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_05 34 20529972 1.0 0.02 300
+
+# [13/66] set=core layout=layout_04 v=2.0 q=0.2 hidden=4 ep=31
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_04 31 20506215 2.0 0.2 300
+
+# [14/66] set=core layout=layout_03 v=2.0 q=0.02 hidden=4 ep=21
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_03 21 20427025 2.0 0.02 300
+
+# [15/66] set=core layout=layout_03 v=1.0 q=0.2 hidden=4 ep=19
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_03 19 20411187 1.0 0.2 300
+
+# [16/66] set=nowall layout=layout_06 v=1.0 q=0.05 hidden=0 ep=54
+mineocclude mode nowall
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_06 54 20688352 1.0 0.05 60
+
+# [17/66] set=core layout=layout_03 v=2.0 q=0.2 hidden=16 ep=24
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_03 24 20450782 2.0 0.2 300
+
+# [18/66] set=core layout=layout_06 v=2.0 q=0.02 hidden=16 ep=46
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_06 46 20625000 2.0 0.02 300
+
+# [19/66] set=core layout=layout_06 v=2.0 q=0.02 hidden=4 ep=45
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_06 45 20617081 2.0 0.02 300
+
+# [20/66] set=sentinel layout=layout_01 v=1.0 q=0.05 hidden=24 ep=61
+mineocclude mode normal
+mineocclude duration 24
+mineocclude warmup 60
+mineocclude start layout_01 61 20743785 1.0 0.05 300
+
+# [21/66] set=core layout=layout_03 v=1.0 q=0.2 hidden=16 ep=20
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_03 20 20419106 1.0 0.2 300
+
+# [22/66] set=core layout=layout_03 v=2.0 q=0.2 hidden=4 ep=23
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_03 23 20442863 2.0 0.2 300
+
+# [23/66] set=core layout=layout_02 v=1.0 q=0.2 hidden=16 ep=12
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_02 12 20355754 1.0 0.2 300
+
+# [24/66] set=core layout=layout_05 v=2.0 q=0.2 hidden=16 ep=40
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_05 40 20577486 2.0 0.2 300
+
+# [25/66] set=core layout=layout_06 v=1.0 q=0.2 hidden=4 ep=43
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_06 43 20601243 1.0 0.2 300
+
+# [26/66] set=nowall layout=layout_04 v=1.0 q=0.05 hidden=0 ep=52
+mineocclude mode nowall
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_04 52 20672514 1.0 0.05 60
+
+# [27/66] set=sentinel layout=layout_05 v=1.0 q=0.05 hidden=24 ep=65
+mineocclude mode normal
+mineocclude duration 24
+mineocclude warmup 60
+mineocclude start layout_05 65 20775461 1.0 0.05 300
+
+# [28/66] set=core layout=layout_06 v=1.0 q=0.02 hidden=4 ep=41
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_06 41 20585405 1.0 0.02 300
+
+# [29/66] set=core layout=layout_04 v=1.0 q=0.02 hidden=4 ep=25
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_04 25 20458701 1.0 0.02 300
+
+# [30/66] set=nosheep layout=layout_05 v=1.0 q=0.05 hidden=0 ep=59
+mineocclude mode nosheep
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_05 59 20727947 1.0 0.05 60
+
+# [31/66] set=core layout=layout_01 v=2.0 q=0.02 hidden=4 ep=5
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_01 5 20300321 2.0 0.02 300
+
+# [32/66] set=core layout=layout_05 v=2.0 q=0.02 hidden=4 ep=37
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_05 37 20553729 2.0 0.02 300
+
+# [33/66] set=core layout=layout_03 v=2.0 q=0.02 hidden=16 ep=22
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_03 22 20434944 2.0 0.02 300
+
+# [34/66] set=nowall layout=layout_05 v=1.0 q=0.05 hidden=0 ep=53
+mineocclude mode nowall
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_05 53 20680433 1.0 0.05 60
+
+# [35/66] set=core layout=layout_02 v=1.0 q=0.2 hidden=4 ep=11
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_02 11 20347835 1.0 0.2 300
+
+# [36/66] set=core layout=layout_01 v=1.0 q=0.02 hidden=4 ep=1
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_01 1 20268645 1.0 0.02 300
+
+# [37/66] set=core layout=layout_03 v=1.0 q=0.02 hidden=16 ep=18
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_03 18 20403268 1.0 0.02 300
+
+# [38/66] set=core layout=layout_04 v=2.0 q=0.02 hidden=4 ep=29
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_04 29 20490377 2.0 0.02 300
+
+# [39/66] set=nosheep layout=layout_03 v=1.0 q=0.05 hidden=0 ep=57
+mineocclude mode nosheep
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_03 57 20712109 1.0 0.05 60
+
+# [40/66] set=core layout=layout_04 v=1.0 q=0.2 hidden=4 ep=27
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_04 27 20474539 1.0 0.2 300
+
+# [41/66] set=nosheep layout=layout_02 v=1.0 q=0.05 hidden=0 ep=56
+mineocclude mode nosheep
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_02 56 20704190 1.0 0.05 60
+
+# [42/66] set=core layout=layout_06 v=1.0 q=0.02 hidden=16 ep=42
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_06 42 20593324 1.0 0.02 300
+
+# [43/66] set=core layout=layout_02 v=2.0 q=0.02 hidden=4 ep=13
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_02 13 20363673 2.0 0.02 300
+
+# [44/66] set=sentinel layout=layout_04 v=1.0 q=0.05 hidden=24 ep=64
+mineocclude mode normal
+mineocclude duration 24
+mineocclude warmup 60
+mineocclude start layout_04 64 20767542 1.0 0.05 300
+
+# [45/66] set=nowall layout=layout_03 v=1.0 q=0.05 hidden=0 ep=51
+mineocclude mode nowall
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_03 51 20664595 1.0 0.05 60
+
+# [46/66] set=core layout=layout_05 v=2.0 q=0.2 hidden=4 ep=39
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_05 39 20569567 2.0 0.2 300
+
+# [47/66] set=core layout=layout_05 v=1.0 q=0.02 hidden=4 ep=33
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_05 33 20522053 1.0 0.02 300
+
+# [48/66] set=sentinel layout=layout_02 v=1.0 q=0.05 hidden=24 ep=62
+mineocclude mode normal
+mineocclude duration 24
+mineocclude warmup 60
+mineocclude start layout_02 62 20751704 1.0 0.05 300
+
+# [49/66] set=core layout=layout_02 v=2.0 q=0.02 hidden=16 ep=14
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_02 14 20371592 2.0 0.02 300
+
+# [50/66] set=nosheep layout=layout_01 v=1.0 q=0.05 hidden=0 ep=55
+mineocclude mode nosheep
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_01 55 20696271 1.0 0.05 60
+
+# [51/66] set=core layout=layout_01 v=1.0 q=0.02 hidden=16 ep=2
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_01 2 20276564 1.0 0.02 300
+
+# [52/66] set=core layout=layout_01 v=1.0 q=0.2 hidden=4 ep=3
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_01 3 20284483 1.0 0.2 300
+
+# [53/66] set=core layout=layout_04 v=1.0 q=0.2 hidden=16 ep=28
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_04 28 20482458 1.0 0.2 300
+
+# [54/66] set=core layout=layout_05 v=2.0 q=0.02 hidden=16 ep=38
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_05 38 20561648 2.0 0.02 300
+
+# [55/66] set=core layout=layout_01 v=2.0 q=0.02 hidden=16 ep=6
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_01 6 20308240 2.0 0.02 300
+
+# [56/66] set=core layout=layout_05 v=1.0 q=0.2 hidden=4 ep=35
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_05 35 20537891 1.0 0.2 300
+
+# [57/66] set=nosheep layout=layout_06 v=1.0 q=0.05 hidden=0 ep=60
+mineocclude mode nosheep
+mineocclude duration 0
+mineocclude warmup 60
+mineocclude start layout_06 60 20735866 1.0 0.05 60
+
+# [58/66] set=core layout=layout_06 v=1.0 q=0.2 hidden=16 ep=44
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_06 44 20609162 1.0 0.2 300
+
+# [59/66] set=core layout=layout_01 v=2.0 q=0.2 hidden=4 ep=7
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_01 7 20316159 2.0 0.2 300
+
+# [60/66] set=core layout=layout_06 v=2.0 q=0.2 hidden=16 ep=48
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_06 48 20640838 2.0 0.2 300
+
+# [61/66] set=core layout=layout_02 v=1.0 q=0.02 hidden=4 ep=9
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_02 9 20331997 1.0 0.02 300
+
+# [62/66] set=sentinel layout=layout_06 v=1.0 q=0.05 hidden=24 ep=66
+mineocclude mode normal
+mineocclude duration 24
+mineocclude warmup 60
+mineocclude start layout_06 66 20783380 1.0 0.05 300
+
+# [63/66] set=core layout=layout_02 v=2.0 q=0.2 hidden=16 ep=16
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_02 16 20387430 2.0 0.2 300
+
+# [64/66] set=core layout=layout_05 v=1.0 q=0.2 hidden=16 ep=36
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_05 36 20545810 1.0 0.2 300
+
+# [65/66] set=core layout=layout_01 v=1.0 q=0.2 hidden=16 ep=4
+mineocclude mode normal
+mineocclude duration 16
+mineocclude warmup 60
+mineocclude start layout_01 4 20292402 1.0 0.2 300
+
+# [66/66] set=core layout=layout_02 v=2.0 q=0.2 hidden=4 ep=15
+mineocclude mode normal
+mineocclude duration 4
+mineocclude warmup 60
+mineocclude start layout_02 15 20379511 2.0 0.2 300

@@ -19,13 +19,12 @@ each episode is generated from its seed by
 Layout identities are the six frozen C1 layout IDs (``layout_01`` ..
 ``layout_06`` from ``configs/scenes/layouts.yaml``).
 
-C7 BLOCKER NOTE: the frozen v0.2 layouts are geometrically defective
-(``docs/reports/person_c_layout_geometry_audit.md``) and the runtime mod
-currently registers its own validated ``layout_00``–``layout_05`` set, so
-the command blocks emitted here will be REFUSED by the mod until the
-team-reviewed layouts v0.3 is implemented on both sides. This module stays
-on the frozen identities deliberately: the matrix is a C7 artifact and must
-not silently adopt the deviation.
+C7 STATUS: layouts v0.3 (``configs/scenes/layouts.yaml``) now exports the
+mod's real, geometrically-valid geometry, and the mod registers the matching
+``layout_01``–``layout_06`` IDs — so the command blocks emitted here are
+accepted by the runtime. Duration is controlled: this module emits no
+``reveal`` command, so the mod stops at the hidden-frame target (reveal
+defaults to 0), giving exactly ``hidden`` occluded frames per core cell.
 
 Usage:
   python -m mineocclude.data.collection_matrix --out configs/collection

@@ -164,7 +164,7 @@ def client_connected() -> bool:
 def run_episode(episode_id: int, *, scene: str, hidden: int, reveal: int,
                 impulse_tick: int, impulse_deg: float, v: float, q: float,
                 max_ticks: int, warmup: int, out_root: str,
-                layout: str = "layout_00") -> dict:
+                layout: str = "layout_01") -> dict:
     seed = SEED_BASE + episode_id * 7919
     schedule = generate_noise_schedule(seed=seed, n_draws=max_ticks, q=q)
     write_schedule(schedule, os.path.join(
@@ -236,7 +236,7 @@ PLANS = {
     # window. Order interleaves conditions so collection order does not
     # align with any factor.
     "pilots10": [
-        dict(layout="layout_00", scene="normal", hidden=4, reveal=20,
+        dict(layout="layout_06", scene="normal", hidden=4, reveal=20,
              impulse_tick=-1, impulse_deg=0.0, v=1.0, q=0.02, max_ticks=500),
         dict(layout="layout_03", scene="normal", hidden=16, reveal=20,
              impulse_tick=-1, impulse_deg=0.0, v=2.0, q=0.20, max_ticks=500),
@@ -250,7 +250,7 @@ PLANS = {
              impulse_tick=-1, impulse_deg=0.0, v=1.0, q=0.20, max_ticks=500),
         dict(layout="layout_03", scene="normal", hidden=4, reveal=20,
              impulse_tick=-1, impulse_deg=0.0, v=1.0, q=0.02, max_ticks=500),
-        dict(layout="layout_00", scene="normal", hidden=16, reveal=20,
+        dict(layout="layout_06", scene="normal", hidden=16, reveal=20,
              impulse_tick=-1, impulse_deg=0.0, v=2.0, q=0.20, max_ticks=500),
         dict(layout="layout_04", scene="normal", hidden=16, reveal=20,
              impulse_tick=-1, impulse_deg=0.0, v=1.0, q=0.02, max_ticks=500),
@@ -273,15 +273,40 @@ PLANS = {
 }
 
 
+def load_production_plan() -> list:
+    """Build the driver plan from the frozen 66-cell MVP matrix
+    (configs/collection/mvp_matrix.csv). Controlled duration: reveal=0 so the
+    mod stops at the hidden-frame target (core hidden={4,16}, sentinel=24;
+    controls have no hidden phase). Scenes: core/sentinel=normal,
+    nowall/nosheep as named."""
+    import csv
+    cells = []
+    matrix = os.path.join(REPO, "configs", "collection", "mvp_matrix.csv")
+    with open(matrix, newline="") as handle:
+        for row in sorted(csv.DictReader(handle),
+                          key=lambda r: int(r["collection_order"])):
+            scene = {"core": "normal", "sentinel": "normal",
+                     "nowall": "nowall", "nosheep": "nosheep"}[row["set"]]
+            cells.append(dict(
+                layout=row["layout_id"], scene=scene,
+                hidden=int(float(row["hidden_frames"])), reveal=0,
+                impulse_tick=-1, impulse_deg=0.0,
+                v=float(row["v"]), q=float(row["q"]),
+                max_ticks=int(float(row["max_ticks"]))))
+    return cells
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--plan", choices=sorted(PLANS), default="smoke")
+    parser.add_argument("--plan", default="smoke")  # named PLANS or "production"
     parser.add_argument("--base-id", type=int, default=9300,
                         help="first episode id; attempts count upward")
     parser.add_argument("--out", default=os.path.join(REPO, "data", "autonomous"))
     parser.add_argument("--retries", type=int, default=2)
     args = parser.parse_args()
 
+    if args.plan == "production":
+        PLANS["production"] = load_production_plan()
     if not client_connected():
         print("ABORT: no client is connected to the server. "
               "Launch the MineOcclude installation and join localhost first.")

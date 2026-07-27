@@ -182,7 +182,7 @@ public final class EpisodeManager {
     }
 
     /**
-     * Build the default (layout_00) scene and position players — no recording.
+     * Build the default (layout_01) scene and position players — no recording.
      * Called on server start and on player join so a connecting client always
      * sees the arena from the canonical pose instead of empty sky.
      */
@@ -191,8 +191,8 @@ public final class EpisodeManager {
         ServerWorld world = server.getWorld(World.OVERWORLD);
         if (world == null) return;
 
-        Layouts.Layout L = Layouts.get("layout_00");
-        EpisodeConfig c = new EpisodeConfig("layout_00", -1L, 0L,
+        Layouts.Layout L = Layouts.get("layout_01");
+        EpisodeConfig c = new EpisodeConfig("layout_01", -1L, 0L,
                 1.0, 0.05, 0,
                 L.laneMin, L.laneMax, 0.75 * L.laneMin,
                 L.wallSegMin, L.wallSegMax,
@@ -216,7 +216,7 @@ public final class EpisodeManager {
         if (sheep != null) { sheep.despawn(); sheep = null; }
         sheep = new SheepController(c);
         sheep.spawn(world);
-        MineOcclude.LOG.info("[MineOcclude] preview scene ready (layout_00); players positioned at canonical pose");
+        MineOcclude.LOG.info("[MineOcclude] preview scene ready (layout_01); players positioned at canonical pose");
     }
 
     /** Open the logs, snap the camera to canonical pose, and start recording. */

@@ -131,45 +131,45 @@ class TestAllSixLayouts:
         assert status is GeometricStatus.VISIBLE
 
 
-class TestLayoutShadowAudit:
-    """AUDIT (C1.3 evidence gap, discovered by the C5.2 implementation).
+class TestLayoutArcValidity:
+    """v0.3 geometry validity (supersedes the v0.2 shadow audit).
 
-    At the canonical camera pose, the true perspective occlusion shadow at
-    lane depth covers essentially the entire lane: layouts 01, 02, and 05
-    have ZERO geometrically visible lane positions, and layouts 03, 04, and
-    06 are visible only in the immediate neighborhood of one lane endpoint.
-    The declared ``shadow`` bounds in layouts v0.2 are therefore inconsistent
-    with the actual geometry, and the required visible->hidden->visible arc
-    cannot occur. See
-    ``docs/reports/person_c_layout_geometry_audit.md``; the layouts need a
-    reviewed v0.3 geometry revision before C1.5/C6 collection. These
-    assertions pin the measured facts so any silent geometry change is
-    caught.
+    layouts v0.2 were geometrically defective — at the canonical pose the
+    occlusion shadow covered essentially the whole lane, so the required
+    visible->hidden->visible arc was impossible (see
+    ``docs/reports/person_c_layout_geometry_audit.md``). v0.3 exports the
+    mod's real working geometry (validated by accepted runtime captures).
+    These assertions now pin the *good* facts: every layout must produce the
+    arc — visible lane positions on BOTH ends and an occluded middle — so a
+    silent regression back to broken geometry is caught.
+
+    The camera EYE is the pose feet + 1.62 (ServerPlayerEntity eye height),
+    matching how the mod computes visibility.
     """
-
-    FULLY_OCCLUDED = {"layout_01", "layout_02", "layout_05"}
-    ENDPOINT_ONLY = {"layout_03": "min", "layout_04": "min", "layout_06": "min"}
 
     @pytest.mark.parametrize("layout", load_layouts(),
                              ids=lambda l: l["layout_id"])
-    def test_measured_lane_visibility(self, layout):
+    def test_layout_produces_occlusion_arc(self, layout):
+        import numpy as np
         lane = layout["lane"]
         box = layout_wall_box(layout)
-        camera = camera_of(layout)
-        lane_min = geometric_visibility(
-            camera, sheep_at(layout, lane["min_scalar_blocks"]), box
-        )
-        lane_max = geometric_visibility(
-            camera, sheep_at(layout, lane["max_scalar_blocks"]), box
-        )
-        layout_id = layout["layout_id"]
-        if layout_id in self.FULLY_OCCLUDED:
-            assert lane_min is GeometricStatus.OCCLUDED
-            assert lane_max is GeometricStatus.OCCLUDED
-        else:
-            assert layout_id in self.ENDPOINT_ONLY
-            assert lane_min is GeometricStatus.VISIBLE
-            assert lane_max is GeometricStatus.OCCLUDED
+        pos = layout["canonical_pose"]["position_blocks"]
+        eye = (pos["x"], pos["y"] + 1.62, pos["z"])
+
+        def sheep_scalar(scalar):
+            return sheep_at(layout, scalar)
+
+        span = np.arange(lane["min_scalar_blocks"],
+                         lane["max_scalar_blocks"] + 0.01, 0.25)
+        statuses = [geometric_visibility(eye, sheep_scalar(float(s)), box).value
+                    for s in span]
+        n_visible = statuses.count("visible")
+        n_occluded = statuses.count("occluded")
+        mid = statuses[len(statuses) // 2]
+        # arc: substantial visible span, an occluded region, occluded middle
+        assert n_visible >= 5, (layout["layout_id"], "too few visible lane positions")
+        assert n_occluded >= 5, (layout["layout_id"], "no occlusion")
+        assert mid == "occluded", (layout["layout_id"], "middle not occluded")
 
 
 def test_compute_geometric_visibility_dataframe():
