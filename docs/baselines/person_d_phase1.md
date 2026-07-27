@@ -1,14 +1,20 @@
 # Person D Phase 1 Baselines and Controls
 
-Status: implemented and unit-tested against synthetic fixtures (67 D tests
-passed on 2026-07-22); not yet run against real accepted rows, folds, or
-oracle targets. See `docs/baselines/person_d_phase0.md` for the current
-ownership/dependency record, `PERSON_D_ISSUE.md` for blockers, and
+Status: implemented and unit-tested against synthetic fixtures (92 D tests
+passed on 2026-07-27); not yet run against real accepted rows, folds, or
+oracle targets, except for a non-scientific real-data preview (see below).
+See `docs/baselines/person_d_phase0.md` for the current ownership/dependency
+record, `PERSON_D_ISSUE.md` for blockers, and
 `docs/decisions/person_d_phase1_decision_log.md` for dated decisions.
 
 Repository-side A/B compatibility is technically verified in
 `docs/baselines/person_d_schema_v1_review.md`. Formal human approval by
-Persons A and B remains pending and is not implied by passing tests.
+Persons A and B for the Phase 0/1 interface checkpoint
+(`80d41c5ca0e341263a7b0c683fae4b51be376c55`) is **COMPLETE**, recorded in
+`docs/contracts/schema_v1_0_signed_record.md`. This covers only that exact
+checkpoint's interface compatibility -- it does not cover real-data
+baselines, final scientific comparisons, or the Step 4.3 positive-control
+gate below, which remains unevaluated pending real no-wall data.
 
 ## Scope
 
@@ -33,6 +39,9 @@ real probe or oracle themselves (those are Person B's).
 | `baselines/random_weight.py` | architecture/random-feature decodability (deferred to Week 2) | `mu_oracle_blocks` only |
 | `baselines/leakage.py` | metadata-only leakage diagnostics | n/a -- audits, not predictions |
 | `baselines/u4_control_matrix.py` | U4 control-matrix completeness/norm/orthogonality audits | n/a -- audits, not predictions |
+| `baselines/missingness.py` | consolidated accepted/missing tabulation and silent-exclusion/reason-code audit | n/a -- audits, not predictions |
+| `baselines/capture_ingest.py` | joins Person C's real capture row streams into `TrajectoryContext`s (fold left `UNASSIGNED_FOLD` until a real B fold manifest exists) | n/a -- ingest adapter, not a baseline |
+| `baselines/positive_control_gate.py` | Step 4.3 no-wall positive-control ridge/R^2/bootstrap gate; fails closed to `BLOCKED` on non-real `data_provenance` | n/a -- audits, not predictions |
 | `baselines/export.py` | packages predictions into Person B's frozen consumer contract | n/a |
 | `baselines/spec.py` | authoritative strict `BaselineSpec` and prediction schema | `mu_oracle_blocks` for the Phase 1 proof |
 | `baselines/firewall.py` | exact pre-fit legal-feature selection and identity/provenance validation | n/a |
@@ -102,6 +111,26 @@ target_name)` pair; a baseline that cannot define every one of B's expected
 frame keys for a target simply omits those keys rather than fabricating a
 value, and coverage against B's expected key set is checked by passing
 `expected_fold_by_frame` to `validate_document`.
+
+## Step 4.3 status: implemented, UNEVALUATED
+
+`controls.audit_no_wall_control` is only the structural half of Step 4.3
+(every no-wall frame really is visible with `tau=0`). The scientific half --
+fit the frozen visible-position ridge on no-wall rows and require held-out
+R^2 >= 0.50 with a bootstrap CI strictly above zero -- is implemented in
+`baselines/positive_control_gate.py`, calling Person B's real
+`probes.ridge.fit_ridge_oof`, `metrics.u1_mean.regression_metrics`, and
+`metrics.resampling` bootstrap primitives directly.
+
+The gate's own status right now is **BLOCKED**, not passed and not failed:
+real no-wall rows, a real Person B fold manifest, and real oracle targets do
+not exist yet. `evaluate_no_wall_positive_control_gate` requires an explicit
+`data_provenance` argument with no default; only the literal
+`REAL_NO_WALL_DATA_PROVENANCE` unlocks a PASSED/FAILED verdict, so a
+synthetic run can never be read as a satisfied gate.
+`docs/status/person_d_step_4_3_positive_control_gate.json` records the
+current BLOCKED run against synthetic fixtures -- this is machinery
+evidence only. "Implemented" here must not be read as "passed."
 
 ## Wiring real data (once available)
 

@@ -453,3 +453,44 @@ them is a separate, still-open task.
 
 Baseline suite: 82 -> 92 passing. Repo-wide: same 13 pre-existing
 A/B-owned failures, confirmed unchanged by direct re-run.
+
+## 2026-07-27 -- Reconciled stale documentation across three D docs
+
+**Found:** `docs/baselines/person_d_phase1.md` still said "Formal human
+approval by Persons A and B remains pending," and `PERSON_D_ISSUE.md` still
+listed that same signoff as an open, unchecked blocker. Both were stale --
+`docs/baselines/person_d_phase0.md` already correctly recorded it as
+**COMPLETE**, matching the central record in
+`docs/contracts/schema_v1_0_signed_record.md`
+(`APPROVED_FOR_PHASE_1_FREEZE` at `80d41c5ca0e341263a7b0c683fae4b51be376c55`).
+Test counts also disagreed: phase0.md said 74, phase1.md said 67; the
+actual count (after the two entries above) is 92.
+
+**Fixed:**
+- `person_d_phase1.md`: replaced the stale pending-approval line with the
+  same COMPLETE-for-that-checkpoint language phase0.md already used, plus
+  an explicit note that it does not cover real-data baselines or the Step
+  4.3 gate. Updated the test count to 92 (dated 2026-07-27). Added the
+  three modules missing from the module map entirely
+  (`missingness.py`, `capture_ingest.py`, `positive_control_gate.py`).
+  Added a "Step 4.3 status: implemented, UNEVALUATED" section stating the
+  gate's actual current status is BLOCKED, not passed.
+- `person_d_phase0.md`: updated the record date, the test count (74 -> 92),
+  and the milestone table -- added an explicit Step 4.3 row (UNEVALUATED /
+  BLOCKED pending real no-wall data) and a note on the real-capture preview
+  under the real-data-baselines row, so "implemented" is never conflated
+  with "passed" anywhere in this doc either.
+- `PERSON_D_ISSUE.md`: checked off the A/B signoff blocker with the same
+  COMPLETE-for-that-checkpoint qualification (not a blanket signoff on
+  everything downstream); added the real-capture ingest adapter and the
+  Step 4.3 gate to the MVP work checklist, both marked complete with their
+  actual current status (non-scientific preview; BLOCKED) stated inline
+  rather than implied by the checkmark alone.
+
+**Why the qualification matters everywhere it appears:** the A/B signoff is
+real and complete for one specific frozen interface checkpoint. Repeating
+it without that scope note (as the stale copies did, if left uncorrected in
+one direction, or as a blanket "everything is approved" if overcorrected in
+the other) would misstate what was actually approved. Every corrected
+occurrence in this pass keeps the same explicit checkpoint-scoped wording
+phase0.md already used, rather than inventing a new phrasing per file.

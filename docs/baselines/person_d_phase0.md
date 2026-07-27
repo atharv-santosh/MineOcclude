@@ -1,6 +1,6 @@
 # Person D Phase 0 Status, Ownership, and Dependencies
 
-Record date: 2026-07-22
+Record date: 2026-07-27 (last reconciled; originally recorded 2026-07-22)
 
 Current branch: `integration/mvp`
 
@@ -21,9 +21,10 @@ real-data baselines, final comparisons, or later-phase methods.
 | Branch/base and ownership inventory | READY | This record; `docs/baselines/person_d_phase1.md`; approved integration checkpoint `80d41c5ca0e341263a7b0c683fae4b51be376c55`. |
 | D-to-B baseline document compatibility | READY | `src/mineocclude/baselines/export.py`; `tests/baselines/test_export.py`; current B validator at `src/mineocclude/contracts/analysis_inputs.py`. |
 | Authoritative-fold consumption | READY for synthetic Phase 1 evidence | D validates and consumes B's sealed manifest without assigning folds. Evidence: `tests/fixtures/person_d/synthetic_b_fold_manifest.json` and `tests/baselines/test_export.py`. A real accepted-run fold manifest has not been produced. |
-| D synthetic baseline/control checks | READY | `src/mineocclude/baselines/`; `tests/baselines/`; 74 tests passed on 2026-07-22 (includes explicit donor-frame-identity alignment, conflicting-fold rejection, and a consolidated missingness/exclusion audit added the same day -- see the decision log). This is synthetic evidence only. |
+| D synthetic baseline/control checks | READY | `src/mineocclude/baselines/`; `tests/baselines/`; 92 tests passed on 2026-07-27 (includes explicit donor-frame-identity alignment, conflicting-fold rejection, a consolidated missingness/exclusion audit with a human-legible reason-code summary, the real-capture ingest adapter, and the Step 4.3 positive-control ridge/R^2/bootstrap gate -- see the decision log). This is synthetic evidence only except where explicitly noted as real-capture-derived (`tests/fixtures/person_d/real_capture_excerpt/`, `real_capture_no_sheep_excerpt/`). |
 | A/B compatibility handshake | COMPLETE FOR PHASE 0/1 CHECKPOINT | `docs/baselines/person_d_schema_v1_review.md` records the technical review; `docs/contracts/schema_v1_0_signed_record.md` records the A/B human approval at the exact checkpoint. |
-| Real-data baselines and scientific comparisons | BLOCKED / NOT STARTED | No real accepted rows, real fold manifest, real target table, or final experimental result is claimed here. |
+| Step 4.3 no-wall positive-control statistical gate | UNEVALUATED -- BLOCKED pending real no-wall data | `src/mineocclude/baselines/positive_control_gate.py` implements the ridge/R^2/bootstrap machinery and fails closed to `BLOCKED` on any non-real `data_provenance`; `docs/status/person_d_step_4_3_positive_control_gate.json` records the current run against synthetic fixtures. This is machinery evidence only -- the gate itself has not passed or failed, because real no-wall rows, a real B fold manifest, and real oracle targets do not exist yet. Do not read "implemented" as "passed." |
+| Real-data baselines and scientific comparisons | BLOCKED / NOT STARTED | No real accepted rows, real fold manifest, real target table, or final experimental result is claimed here. A small real-data preview (last-seen/constant-velocity computed, not scored, on Person C's real captured episodes) exists at `docs/status/person_d_real_pilot_baseline_preview.json`; it is explicitly marked non-scientific. |
 
 ## Phase 0.2 -- File scope and ownership
 

@@ -18,10 +18,15 @@ the current A/B/C authorities and does not vendor copies of them.
 
 ## Current blockers
 
-- [ ] Obtain formal human Person A and Person B approval of the technically
+- [x] Obtain formal human Person A and Person B approval of the technically
       verified schema-v1.0 D handshake recorded in
-      `docs/baselines/person_d_schema_v1_review.md`. Passing repository tests
-      is not human signoff.
+      `docs/baselines/person_d_schema_v1_review.md`. **COMPLETE** as of the
+      `80d41c5ca0e341263a7b0c683fae4b51be376c55` checkpoint -- recorded in
+      `docs/contracts/schema_v1_0_signed_record.md`
+      (`APPROVED_FOR_PHASE_1_FREEZE`). This covers Phase 0/1 interface
+      compatibility only; it does not approve real-data baselines, final
+      scientific comparisons, or the Step 4.3 positive-control gate (still
+      BLOCKED pending real no-wall data -- see below).
 
 - [ ] Receive Person B's real persisted `fold_manifest` artifact. D's Phase 1
       tests consume the sealed synthetic B-style artifact at
@@ -96,9 +101,28 @@ the current A/B/C authorities and does not vendor copies of them.
       patterns) and always records a reason for non-applicable rows;
       `visible_history_q.py` now raises rather than silently resolving a
       trajectory with conflicting fold assignments.
+- [x] Real-capture ingest adapter (`mineocclude.baselines.capture_ingest`):
+      joins Person C's real `server_state`/`visibility`/`frame_map` row
+      streams into `TrajectoryContext`s, fold left `UNASSIGNED_FOLD` until a
+      real B fold manifest exists. Run over all 17 of Person C's real
+      accepted pilot episodes as a non-scientific preview
+      (`docs/status/person_d_real_pilot_baseline_preview.json`); the one
+      episode with 0/200 applicable rows (`layout_05_ep9422`) was confirmed
+      to be a genuine occluder-only/no-sheep negative control, not an
+      ingest defect, and now carries an explicit reason code rather than a
+      bare zero.
+- [x] Step 4.3 no-wall positive-control statistical gate
+      (`mineocclude.baselines.positive_control_gate`): fits the frozen
+      visible-position ridge via Person B's real ridge/metric/resampling
+      authorities and requires held-out R^2 >= 0.50 with a bootstrap CI
+      strictly above zero. Fails closed to `BLOCKED` (not PASSED, not
+      FAILED) unless the caller explicitly declares real no-wall data
+      provenance; currently `BLOCKED`, since real no-wall rows, a real B
+      fold manifest, and real oracle targets do not exist yet.
 - [ ] Run all of the above against real accepted rows/folds/targets once
       C/B/A hand off real data -- everything above is currently exercised
-      only against synthetic fixtures (`tests/baselines/`).
+      only against synthetic fixtures (`tests/baselines/`), except the
+      non-scientific real-capture preview and ingest adapter noted above.
 
 ## Post-MVP work
 
