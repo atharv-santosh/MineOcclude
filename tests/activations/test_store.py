@@ -210,6 +210,23 @@ def _pilot_write_arguments(
     return arguments, captures, candidates, frame_map
 
 
+def _candidate_delta(
+    candidates: tuple,
+    *,
+    layer_idx: int,
+    delta: float,
+) -> tuple:
+    updated = list(candidates)
+    candidate = copy.copy(updated[layer_idx])
+    object.__setattr__(
+        candidate,
+        "vector",
+        updated[layer_idx].vector.add(delta).contiguous().clone().detach(),
+    )
+    updated[layer_idx] = candidate
+    return tuple(updated)
+
+
 def _replace_npz(
     artifact: Path,
     manifest: Path,
@@ -217,6 +234,22 @@ def _replace_npz(
 ) -> None:
     payload = _deterministic_npz(arrays)
     artifact.write_bytes(payload)
+    document = json.loads(manifest.read_text(encoding="utf-8"))
+    document["artifact"]["size_bytes"] = len(payload)
+    document["artifact"]["sha256"] = hashlib.sha256(payload).hexdigest()
+    manifest.write_text(
+        json.dumps(document, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _replace_npz_unrestricted(
+    artifact: Path,
+    manifest: Path,
+    arrays: dict[str, numpy.ndarray],
+) -> None:
+    numpy.savez(artifact, **arrays)
+    payload = artifact.read_bytes()
     document = json.loads(manifest.read_text(encoding="utf-8"))
     document["artifact"]["size_bytes"] = len(payload)
     document["artifact"]["sha256"] = hashlib.sha256(payload).hexdigest()
@@ -515,6 +548,9 @@ class LimitedUnpooledPilotTests(unittest.TestCase):
                 (20, 336, 4),
             )
             self.assertEqual(result.token_dtype, "float16")
+            self.assertEqual(result.pooled_shape, (20, 4))
+            self.assertEqual(result.pooled_dtype, "float32")
+            self.assertEqual(result.pooling_unequal_layer_count, 0)
             self.assertEqual(result.layer_indices, tuple(range(20)))
             self.assertEqual(result.visual_positions, tuple(range(336)))
             self.assertLess(
@@ -524,10 +560,23 @@ class LimitedUnpooledPilotTests(unittest.TestCase):
             with numpy.load(result.artifact_path, allow_pickle=False) as arrays:
                 self.assertEqual(
                     set(arrays.files),
-                    {"token_values", "layer_indices", "visual_positions"},
+                    {
+                        "token_values",
+                        "pooled_means",
+                        "layer_indices",
+                        "visual_positions",
+                    },
                 )
                 self.assertEqual(arrays["token_values"].dtype, numpy.float16)
+                self.assertEqual(arrays["pooled_means"].dtype, numpy.float32)
                 before = arrays["token_values"].copy()
+                for layer_idx in range(20):
+                    self.assertTrue(
+                        numpy.array_equal(
+                            arrays["pooled_means"][layer_idx],
+                            candidates[layer_idx].vector.numpy(),
+                        )
+                    )
             captures[0].output.tensor.fill_(999)
             with numpy.load(result.artifact_path, allow_pickle=False) as arrays:
                 self.assertTrue(numpy.array_equal(arrays["token_values"], before))
@@ -538,7 +587,11 @@ class LimitedUnpooledPilotTests(unittest.TestCase):
             ]
             self.assertEqual(len(selected), 20)
             self.assertTrue(
-                all(record["torch_equal"] for record in result.pooling_audit)
+                all(
+                    record["candidate_binding_sha256_equal"]
+                    and record["allclose"]
+                    for record in result.pooling_audit
+                )
             )
             document = json.loads(
                 result.manifest_path.read_text(encoding="utf-8")
@@ -553,6 +606,76 @@ class LimitedUnpooledPilotTests(unittest.TestCase):
             self.assertEqual(
                 sorted(path.suffix for path in directory.iterdir()),
                 [".json", ".npz"],
+            )
+
+    def test_cross_device_tolerance_passes_and_excess_fails_without_outputs(self):
+        cases = (
+            ("within", 5e-4, True),
+            ("above", 2.0, False),
+        )
+        for name, delta, should_pass in cases:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as raw:
+                directory = Path(raw)
+                arguments, _captures_value, candidates, _map = (
+                    _pilot_write_arguments(directory)
+                )
+                arguments["pooled_candidates"] = _candidate_delta(
+                    candidates,
+                    layer_idx=0,
+                    delta=delta,
+                )
+                if should_pass:
+                    result = write_limited_unpooled_pilot(**arguments)
+                    record = result.pooling_audit[0]
+                    self.assertTrue(record["allclose"])
+                    self.assertGreater(
+                        record["maximum_absolute_difference"],
+                        0.0,
+                    )
+                    self.assertLessEqual(
+                        record["maximum_tolerance_ratio"],
+                        1.0,
+                    )
+                else:
+                    with self.assertRaises(
+                        ActivationExtractionError
+                    ) as caught:
+                        write_limited_unpooled_pilot(**arguments)
+                    self.assertIs(
+                        caught.exception.code,
+                        ExtractionErrorCode.POOLING_AUDIT_FAILED,
+                    )
+                    message = str(caught.exception)
+                    for field in (
+                        "maximum_absolute_difference",
+                        "maximum_tolerance_ratio",
+                        "rtol=0.001",
+                        "atol=0.001",
+                    ):
+                        self.assertIn(field, message)
+                    self.assertEqual(tuple(directory.iterdir()), ())
+
+    def test_manifest_tolerance_mismatch_rejects(self):
+        with tempfile.TemporaryDirectory() as raw:
+            result, _captures_value, _candidates, _map = _write_pilot(
+                Path(raw)
+            )
+            document = json.loads(
+                result.manifest_path.read_text(encoding="utf-8")
+            )
+            document["pooling_audit"]["token_reproduction"]["rtol"] = 1e-2
+            result.manifest_path.write_text(
+                json.dumps(document, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(ActivationExtractionError) as caught:
+                validate_limited_unpooled_pilot(
+                    result.manifest_path,
+                    expected_hidden_size=4,
+                )
+            self.assertIs(
+                caught.exception.code,
+                ExtractionErrorCode.POOLING_AUDIT_FAILED,
             )
 
     def test_default_pooled_extraction_writes_nothing_and_opt_in_is_required(self):
@@ -831,7 +954,20 @@ class LimitedUnpooledPilotTests(unittest.TestCase):
             )
 
     def test_validator_rejects_shape_layers_positions_hash_and_object_arrays(self):
-        mutations = ("shape", "layers", "positions", "object", "hash")
+        mutations = (
+            "token_shape",
+            "pooled_shape",
+            "pooled_dtype",
+            "missing_pooled",
+            "extra_array",
+            "tampered_pooled",
+            "reordered_pooled",
+            "recomputed_token_mean",
+            "layers",
+            "positions",
+            "object",
+            "hash",
+        )
         for mutation in mutations:
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as raw:
                 directory = Path(raw)
@@ -841,8 +977,39 @@ class LimitedUnpooledPilotTests(unittest.TestCase):
                         name: source[name].copy()
                         for name in source.files
                     }
-                if mutation == "shape":
+                if mutation == "token_shape":
                     arrays["token_values"] = arrays["token_values"][:, :-1, :]
+                    _replace_npz(result.artifact_path, result.manifest_path, arrays)
+                elif mutation == "pooled_shape":
+                    arrays["pooled_means"] = arrays["pooled_means"][:, :-1]
+                    _replace_npz(result.artifact_path, result.manifest_path, arrays)
+                elif mutation == "pooled_dtype":
+                    arrays["pooled_means"] = arrays["pooled_means"].astype(
+                        numpy.float64
+                    )
+                    _replace_npz(result.artifact_path, result.manifest_path, arrays)
+                elif mutation == "missing_pooled":
+                    arrays.pop("pooled_means")
+                    _replace_npz_unrestricted(
+                        result.artifact_path,
+                        result.manifest_path,
+                        arrays,
+                    )
+                elif mutation == "extra_array":
+                    arrays["unexpected"] = numpy.zeros(1, dtype=numpy.float32)
+                    _replace_npz_unrestricted(
+                        result.artifact_path,
+                        result.manifest_path,
+                        arrays,
+                    )
+                elif mutation == "tampered_pooled":
+                    arrays["pooled_means"][0, 0] += 0.25
+                    _replace_npz(result.artifact_path, result.manifest_path, arrays)
+                elif mutation == "reordered_pooled":
+                    arrays["pooled_means"] = arrays["pooled_means"][::-1].copy()
+                    _replace_npz(result.artifact_path, result.manifest_path, arrays)
+                elif mutation == "recomputed_token_mean":
+                    arrays["token_values"][0, :, 0] += 2.0
                     _replace_npz(result.artifact_path, result.manifest_path, arrays)
                 elif mutation == "layers":
                     arrays["layer_indices"][0] = 1
@@ -855,18 +1022,10 @@ class LimitedUnpooledPilotTests(unittest.TestCase):
                         [object()],
                         dtype=object,
                     )
-                    numpy.savez(result.artifact_path, **arrays)
-                    payload = result.artifact_path.read_bytes()
-                    document = json.loads(
-                        result.manifest_path.read_text(encoding="utf-8")
-                    )
-                    document["artifact"]["size_bytes"] = len(payload)
-                    document["artifact"]["sha256"] = hashlib.sha256(
-                        payload
-                    ).hexdigest()
-                    result.manifest_path.write_text(
-                        json.dumps(document, indent=2, sort_keys=True) + "\n",
-                        encoding="utf-8",
+                    _replace_npz_unrestricted(
+                        result.artifact_path,
+                        result.manifest_path,
+                        arrays,
                     )
                 else:
                     document = json.loads(

@@ -5,6 +5,8 @@
 Phase 4 Wave 3 implements the local portions of Steps 4.7 and 4.8 on
 `role/person-a-model`, starting from
 `3f607eec5682dced8f106b000280691a6f6823cf`.
+The runtime-grounded v1.1 correction starts from committed Wave 3 revision
+`72f7d830b5630a4204b9d47ac81432a92a711227`.
 
 The local change adds one complete-context pooled-extraction helper, one
 explicitly enabled limited-unpooled pilot writer/reader, and one prepared
@@ -16,6 +18,26 @@ The accepted immutable Wave 1 and Wave 2 evidence remains valid. In particular,
 Wave 2 already established the exact visual-token mean, detached CPU candidate
 ownership, action/neighbor exclusion, and one-context allocated-memory result.
 Wave 3 builds on those frozen boundaries rather than reinterpreting them.
+
+### Preserved first runtime attempt
+
+The first real v1.0 runtime attempt,
+`person-a-phase4-wave3-aws-20260727-034948`, is immutable failed operational
+evidence. Extraction A reached the limited-unpooled pooling audit and failed at
+layer 0 before the controlled middle failure or extraction B. Its preserved
+failure hashes are:
+
+- `failed_probe.json`:
+  `546f170992fdce2050df1c993f3edc8bc34f9adfd137b1a4db2d6ddaf6a61b2a`;
+- `raw_stdout_stderr.log`:
+  `8c6e7e568646208507da975d70ecfd69ae235bb66bceb45c4fc7b8149d17e14e`.
+
+The failure came from an invalid v1.0 assumption that a CUDA float32 reduction
+and an independent CPU float32 reduction of stored float16 rows must be
+bitwise equal. The selected runtime values were not reported as nonfinite, and
+the failure occurred before the later hook-lifecycle, stale-buffer, identity,
+or memory checks. It therefore supplies no evidence of failure in those
+boundaries and is not scientific evidence or a successful gate.
 
 ## Step 4.7 local implementation: consecutive-extraction safety
 
@@ -137,13 +159,15 @@ The prepared real probe selects the first explicit `FrameTokenMap` span
 The numeric payload is one deterministic, uncompressed `.npz` file with:
 
 - `token_values`: `[20, 336, 2048]`, source-preserving `float16`;
+- `pooled_means`: `[20, 2048]`, independently owned CPU `float32` rows that
+  are byte-bound to the extraction-A pooled candidates;
 - `layer_indices`: exact integer values `0..19`; and
 - `visual_positions`: the exact 336 absolute positions for the selected frame.
 
 The raw `token_values` payload is 27,525,120 bytes. The complete serialized NPZ
-must not exceed 32 MiB (33,554,432 bytes). Arrays are NumPy numeric arrays only;
-object arrays and pickle are forbidden, and readback always uses
-`allow_pickle=False`.
+adds 163,840 bytes of pooled rows and must not exceed 32 MiB (33,554,432
+bytes). Arrays are NumPy numeric arrays only; object arrays and pickle are
+forbidden, and readback always uses `allow_pickle=False`.
 
 Layers are copied sequentially: each explicit 336-row selection is detached,
 moved to CPU, made contiguous, cloned, and released before processing the next
@@ -175,21 +199,34 @@ NPZ and one independently validated manifest exist.
 ### Independent pooling reproduction
 
 The independent reader reopens the NPZ with `allow_pickle=False`, checks its
-exact array inventory, numeric dtypes, shape, 20 layer indices, one complete
-336-row visual prefix, identities, hashes, and size bound. For each layer it:
+exact four-array inventory, numeric dtypes, shapes, 20 layer indices, one
+complete 336-row visual prefix, identities, hashes, and size bound.
+
+Artifact/probe v1.1 preserves two different guarantees:
+
+1. exact candidate binding: every stored `pooled_means` row has the same
+   byte-level SHA-256 as its extraction-A `PooledVisualActivation`; and
+2. independent token reproduction: CPU-recomputed means from the stored token
+   rows must be close to those exact stored production vectors under
+   `rtol=1e-3` and `atol=1e-3`.
+
+For each layer the reader:
 
 1. reads the saved `[336, hidden]` `float16` rows;
 2. casts them to `torch.float32`;
 3. means over only the token axis; and
-4. compares the result with extraction A using `torch.equal`.
+4. applies `torch.allclose` against the corresponding exact stored
+   `pooled_means` row.
 
-Every layer and the aggregate result require a maximum difference of `0.0`.
-The runtime validator repeats this calculation from the saved artifact and
-matches its derived candidate hashes to the bounded extraction-A hashes.
+It independently recomputes the mean hash, maximum absolute difference,
+maximum tolerance ratio, and unequal-layer count rather than trusting manifest
+or report PASS fields. Cross-device reduction results are not falsely claimed
+to be bitwise identical, and no tolerance looser than `1e-3/1e-3` is accepted.
 
 ## Runtime probe
 
-`scripts/run_phase4_wave3_extraction_probe.py` exposes exactly:
+Probe v1.1,
+`person-a-phase4-wave3-extraction-probe-v1.1`, exposes exactly:
 
 - `preflight`: reuses the frozen Phase 3 CPU package/media/environment
   validator and adds the exact Wave 3 counts. It requires an unused session,
@@ -238,7 +275,8 @@ The intended later AWS command shape is:
   --report <new-session>/extraction_probe_report.json
 ```
 
-The command has not been run locally or on AWS.
+The corrected v1.1 command has not been run locally or on AWS. The earlier
+v1.0 failed session remains immutable and is not reused.
 
 ## Files and local validation
 
@@ -261,13 +299,14 @@ PYTHONDONTWRITEBYTECODE=1
 The ordered local validation results are:
 
 - `python -m pytest -q -p no:cacheprovider
-  tests/activations/test_store.py`: PASS, 15 tests and 13 subtests;
+  tests/activations/test_store.py`: PASS, 17 tests and 22 subtests;
 - `python -m pytest -q -p no:cacheprovider
-  tests/activations/test_phase4_wave3_probe.py`: PASS, 16 tests and 4
+  tests/activations/test_phase4_wave3_probe.py`: PASS, 18 tests and 6
   subtests;
 - `python -m pytest -q -p no:cacheprovider
-  tests/activations/test_hooks.py tests/activations/test_pool.py`: PASS, 43
-  tests and 35 subtests;
+  tests/activations/test_pool.py`: PASS, 21 tests and 28 subtests;
+- `python -m pytest -q -p no:cacheprovider
+  tests/activations/test_hooks.py`: PASS, 22 tests and 7 subtests;
 - `python -m pytest -q -p no:cacheprovider
   tests/activations/test_phase4_wave2_probe.py`: PASS, 11 tests and 12
   subtests;
@@ -296,3 +335,5 @@ No dataset-wide extraction, Person B analysis, scientific layer selection,
 localization, intervention, training, schema change, or Phase 5 work occurred.
 No AWS or GPU execution occurred during the correction pass; the GPU remains
 stopped and runtime evidence remains pending.
+Schema version remains `1.0`, and the accepted Wave 1 and Wave 2 evidence
+remains valid.

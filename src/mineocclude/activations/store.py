@@ -10,6 +10,7 @@ import hashlib
 import importlib
 import io
 import json
+import math
 import os
 import zipfile
 from collections.abc import Mapping
@@ -35,14 +36,18 @@ from mineocclude.contracts.activation import VISUAL_TOKENS_PER_FRAME
 from mineocclude.contracts.identity import SCHEMA_VERSION
 from mineocclude.models.mineworld_adapter import FrameTokenMap
 
-LIMITED_UNPOOLED_ARTIFACT_VERSION = "person-a-limited-unpooled-pilot-v1.0"
+LIMITED_UNPOOLED_ARTIFACT_VERSION = "person-a-limited-unpooled-pilot-v1.1"
 LIMITED_UNPOOLED_CLASSIFICATION = "limited_one_frame_unpooled_pilot"
 MAX_UNPOOLED_ARTIFACT_SIZE_BYTES = 32 * 1024 * 1024
+UNPOOLED_REPRODUCTION_RTOL = 1e-3
+UNPOOLED_REPRODUCTION_ATOL = 1e-3
 UNPOOLED_TOKEN_ARRAY_NAME = "token_values"
+UNPOOLED_POOLED_ARRAY_NAME = "pooled_means"
 UNPOOLED_LAYER_ARRAY_NAME = "layer_indices"
 UNPOOLED_POSITION_ARRAY_NAME = "visual_positions"
 _UNPOOLED_ARRAY_NAMES = (
     UNPOOLED_TOKEN_ARRAY_NAME,
+    UNPOOLED_POOLED_ARRAY_NAME,
     UNPOOLED_LAYER_ARRAY_NAME,
     UNPOOLED_POSITION_ARRAY_NAME,
 )
@@ -207,8 +212,13 @@ class LimitedUnpooledPilot:
     artifact_sha256: str
     token_shape: tuple[int, int, int]
     token_dtype: str
+    pooled_shape: tuple[int, int]
+    pooled_dtype: str
     layer_indices: tuple[int, ...]
     visual_positions: tuple[int, ...]
+    pooling_maximum_absolute_difference: float
+    pooling_maximum_tolerance_ratio: float
+    pooling_unequal_layer_count: int
     pooling_audit: tuple[Mapping[str, object], ...]
 
 
@@ -530,6 +540,60 @@ def _tensor_sha256(tensor: object) -> str:
     return _sha256_bytes(numeric.tobytes(order="C"))
 
 
+def _pooling_comparison(
+    recomputed: object,
+    reference: object,
+) -> tuple[bool, float, float]:
+    torch = importlib.import_module("torch")
+    if (
+        not isinstance(recomputed, torch.Tensor)
+        or not isinstance(reference, torch.Tensor)
+        or recomputed.shape != reference.shape
+        or recomputed.dtype != torch.float32
+        or reference.dtype != torch.float32
+        or recomputed.device.type != "cpu"
+        or reference.device.type != "cpu"
+        or not bool(torch.isfinite(recomputed).all().item())
+        or not bool(torch.isfinite(reference).all().item())
+    ):
+        _fail(
+            ExtractionErrorCode.POOLING_AUDIT_FAILED,
+            "pooling comparison requires finite matching CPU float32 vectors",
+        )
+    absolute_difference = (recomputed - reference).abs()
+    tolerance = (
+        UNPOOLED_REPRODUCTION_ATOL
+        + UNPOOLED_REPRODUCTION_RTOL * reference.abs()
+    )
+    maximum_absolute_difference = float(
+        absolute_difference.max().item()
+    )
+    maximum_tolerance_ratio = float(
+        (absolute_difference / tolerance).max().item()
+    )
+    allclose = bool(
+        torch.allclose(
+            recomputed,
+            reference,
+            rtol=UNPOOLED_REPRODUCTION_RTOL,
+            atol=UNPOOLED_REPRODUCTION_ATOL,
+        )
+    )
+    if (
+        not math.isfinite(maximum_absolute_difference)
+        or not math.isfinite(maximum_tolerance_ratio)
+    ):
+        _fail(
+            ExtractionErrorCode.POOLING_AUDIT_FAILED,
+            "pooling comparison produced nonfinite audit telemetry",
+        )
+    return (
+        allclose,
+        maximum_absolute_difference,
+        maximum_tolerance_ratio,
+    )
+
+
 def _candidate_by_layer(
     candidates: tuple[PooledVisualActivation, ...],
     *,
@@ -595,6 +659,7 @@ def _candidate_by_layer(
             or not vector.is_contiguous()
             or vector.requires_grad
             or vector.grad_fn is not None
+            or not bool(torch.isfinite(vector).all().item())
             or candidate.selected_visual_token_count
             != VISUAL_TOKENS_PER_FRAME
             or candidate.layer_idx != layer_idx
@@ -714,6 +779,7 @@ def _manifest_payload(
     artifact_size: int,
     artifact_sha256: str,
     token_shape: tuple[int, int, int],
+    pooled_shape: tuple[int, int],
     pooling_audit: tuple[Mapping[str, object], ...],
 ) -> dict[str, object]:
     positions_bytes = json.dumps(
@@ -743,6 +809,8 @@ def _manifest_payload(
             "visual_positions_sha256": _sha256_bytes(positions_bytes),
             "token_payload_shape": list(token_shape),
             "token_payload_dtype": "float16",
+            "pooled_payload_shape": list(pooled_shape),
+            "pooled_payload_dtype": "float32",
             "serialized_device": "cpu",
         },
         "provenance": {
@@ -772,10 +840,38 @@ def _manifest_payload(
             "maximum_size_bytes": MAX_UNPOOLED_ARTIFACT_SIZE_BYTES,
         },
         "pooling_audit": {
-            "comparison": "torch.equal",
-            "rtol": None,
-            "atol": None,
-            "maximum_absolute_difference": 0.0,
+            "exact_candidate_binding": {
+                "comparison": "sha256_byte_equality",
+                "stored_array": UNPOOLED_POOLED_ARRAY_NAME,
+                "all_layers_match": True,
+                "status": "PASS",
+            },
+            "token_reproduction": {
+                "comparison": "torch.allclose",
+                "recomputed_from": UNPOOLED_TOKEN_ARRAY_NAME,
+                "reference_array": UNPOOLED_POOLED_ARRAY_NAME,
+                "recomputed_device": "cpu",
+                "recomputed_dtype": "float32",
+                "reference_semantics": (
+                    "exact stored production pooled vectors; CPU-recomputed "
+                    "means may differ from CUDA reductions within tolerance"
+                ),
+                "rtol": UNPOOLED_REPRODUCTION_RTOL,
+                "atol": UNPOOLED_REPRODUCTION_ATOL,
+                "maximum_absolute_difference": max(
+                    float(record["maximum_absolute_difference"])
+                    for record in pooling_audit
+                ),
+                "maximum_tolerance_ratio": max(
+                    float(record["maximum_tolerance_ratio"])
+                    for record in pooling_audit
+                ),
+                "unequal_layer_count": sum(
+                    record["allclose"] is not True
+                    for record in pooling_audit
+                ),
+                "status": "PASS",
+            },
             "layer_records": [dict(record) for record in pooling_audit],
             "status": "PASS",
         },
@@ -883,6 +979,7 @@ def write_limited_unpooled_pilot(
     torch = importlib.import_module("torch")
     numpy = importlib.import_module("numpy")
     copied_layers: list[object] = []
+    copied_pooled_layers: list[object] = []
     audit: list[Mapping[str, object]] = []
     for layer_idx in range(EXPECTED_DECODER_LAYER_COUNT):
         source = _capture_tensor(captures[layer_idx], layer_idx)
@@ -920,37 +1017,82 @@ def write_limited_unpooled_pilot(
                 "selected pilot rows failed shape, dtype, or ownership checks",
                 layer_idx=layer_idx,
             )
-        mean = selected.to(dtype=torch.float32).mean(dim=0).contiguous()
         candidate = candidate_by_layer[layer_idx].vector
-        equal = bool(torch.equal(mean, candidate))
-        maximum = (
-            float((mean - candidate).abs().max().item())
-            if mean.numel()
-            else 0.0
+        stored_pooled = (
+            candidate.detach()
+            .to(device="cpu")
+            .contiguous()
+            .clone()
+            .detach()
         )
-        if not equal or maximum != 0.0:
+        if (
+            stored_pooled.shape != (facts.hidden_size,)
+            or stored_pooled.dtype != torch.float32
+            or stored_pooled.device.type != "cpu"
+            or not stored_pooled.is_contiguous()
+            or stored_pooled.requires_grad
+            or stored_pooled.grad_fn is not None
+            or not bool(torch.isfinite(stored_pooled).all().item())
+        ):
+            _fail(
+                ExtractionErrorCode.UNSAFE_ARRAY,
+                "stored pooled row failed shape, dtype, or ownership checks",
+                layer_idx=layer_idx,
+            )
+        candidate_sha256 = _tensor_sha256(candidate)
+        stored_pooled_sha256 = _tensor_sha256(stored_pooled)
+        if stored_pooled_sha256 != candidate_sha256:
             _fail(
                 ExtractionErrorCode.POOLING_AUDIT_FAILED,
-                "saved visual rows do not reproduce the pooled candidate exactly",
+                "stored pooled row is not byte-identical to extraction A",
+                layer_idx=layer_idx,
+            )
+        mean = selected.to(dtype=torch.float32).mean(dim=0).contiguous()
+        (
+            equal,
+            maximum_absolute_difference,
+            maximum_tolerance_ratio,
+        ) = _pooling_comparison(mean, stored_pooled)
+        if not equal:
+            _fail(
+                ExtractionErrorCode.POOLING_AUDIT_FAILED,
+                "CPU token reproduction exceeded tolerance: "
+                f"maximum_absolute_difference={maximum_absolute_difference!r}, "
+                f"maximum_tolerance_ratio={maximum_tolerance_ratio!r}, "
+                f"rtol={UNPOOLED_REPRODUCTION_RTOL!r}, "
+                f"atol={UNPOOLED_REPRODUCTION_ATOL!r}",
                 layer_idx=layer_idx,
             )
         audit.append(
             MappingProxyType(
                 {
                     "layer_idx": layer_idx,
-                    "candidate_sha256": _tensor_sha256(candidate),
-                    "artifact_mean_sha256": _tensor_sha256(mean),
-                    "torch_equal": True,
-                    "maximum_absolute_difference": 0.0,
+                    "candidate_sha256": candidate_sha256,
+                    "stored_pooled_sha256": stored_pooled_sha256,
+                    "cpu_recomputed_mean_sha256": _tensor_sha256(mean),
+                    "candidate_binding_sha256_equal": True,
+                    "allclose": True,
+                    "maximum_absolute_difference": (
+                        maximum_absolute_difference
+                    ),
+                    "maximum_tolerance_ratio": maximum_tolerance_ratio,
+                    "rtol": UNPOOLED_REPRODUCTION_RTOL,
+                    "atol": UNPOOLED_REPRODUCTION_ATOL,
                 }
             )
         )
         copied_layers.append(selected.numpy().copy(order="C"))
+        copied_pooled_layers.append(
+            stored_pooled.numpy().copy(order="C")
+        )
         del mean
         del selected
+        del stored_pooled
 
     token_values = numpy.stack(copied_layers, axis=0)
     copied_layers.clear()
+    pooled_means = numpy.stack(copied_pooled_layers, axis=0)
+    copied_pooled_layers.clear()
     layer_indices = numpy.arange(
         EXPECTED_DECODER_LAYER_COUNT,
         dtype=numpy.int64,
@@ -961,14 +1103,24 @@ def write_limited_unpooled_pilot(
         VISUAL_TOKENS_PER_FRAME,
         facts.hidden_size,
     )
-    if token_values.shape != expected_shape or token_values.dtype != numpy.float16:
+    expected_pooled_shape = (
+        EXPECTED_DECODER_LAYER_COUNT,
+        facts.hidden_size,
+    )
+    if (
+        token_values.shape != expected_shape
+        or token_values.dtype != numpy.float16
+        or pooled_means.shape != expected_pooled_shape
+        or pooled_means.dtype != numpy.float32
+    ):
         _fail(
             ExtractionErrorCode.UNSAFE_ARRAY,
-            "assembled pilot payload has an invalid shape or dtype",
+            "assembled token or pooled payload has an invalid shape or dtype",
         )
     payload = _deterministic_npz(
         {
             UNPOOLED_TOKEN_ARRAY_NAME: token_values,
+            UNPOOLED_POOLED_ARRAY_NAME: pooled_means,
             UNPOOLED_LAYER_ARRAY_NAME: layer_indices,
             UNPOOLED_POSITION_ARRAY_NAME: visual_positions,
         }
@@ -989,6 +1141,7 @@ def write_limited_unpooled_pilot(
             artifact_size=len(payload),
             artifact_sha256=artifact_sha256,
             token_shape=expected_shape,
+            pooled_shape=expected_pooled_shape,
             pooling_audit=tuple(audit),
         )
         manifest_bytes = (
@@ -1002,6 +1155,7 @@ def write_limited_unpooled_pilot(
         ).encode("utf-8")
         _atomic_write(manifest_path, manifest_bytes)
         del token_values
+        del pooled_means
         return validate_limited_unpooled_pilot(
             manifest_path,
             expected_hidden_size=facts.hidden_size,
@@ -1163,15 +1317,22 @@ def validate_limited_unpooled_pilot(
         VISUAL_TOKENS_PER_FRAME,
         source_hidden_size,
     )
+    expected_pooled_shape = (
+        EXPECTED_DECODER_LAYER_COUNT,
+        source_hidden_size,
+    )
     if (
         capture.get("visual_token_count") != VISUAL_TOKENS_PER_FRAME
         or capture.get("token_payload_shape") != list(expected_shape)
         or capture.get("token_payload_dtype") != "float16"
+        or capture.get("pooled_payload_shape")
+        != list(expected_pooled_shape)
+        or capture.get("pooled_payload_dtype") != "float32"
         or capture.get("serialized_device") != "cpu"
     ):
         _fail(
             ExtractionErrorCode.ARTIFACT_IDENTITY_MISMATCH,
-            "manifest capture shape, count, dtype, or device is invalid",
+            "manifest token/pooled shape, count, dtype, or device is invalid",
         )
     positions_hash = _sha256_bytes(
         json.dumps(
@@ -1305,17 +1466,24 @@ def validate_limited_unpooled_pilot(
                     "numeric artifact has an unexpected array inventory",
                 )
             token_values = arrays[UNPOOLED_TOKEN_ARRAY_NAME]
+            pooled_means = arrays[UNPOOLED_POOLED_ARRAY_NAME]
             layer_indices = arrays[UNPOOLED_LAYER_ARRAY_NAME]
             visual_positions = arrays[UNPOOLED_POSITION_ARRAY_NAME]
             if any(
                 getattr(array.dtype, "hasobject", False)
-                for array in (token_values, layer_indices, visual_positions)
+                for array in (
+                    token_values,
+                    pooled_means,
+                    layer_indices,
+                    visual_positions,
+                )
             ):
                 _fail(
                     ExtractionErrorCode.UNSAFE_ARRAY,
                     "object arrays are forbidden",
                 )
             token_values = token_values.copy(order="C")
+            pooled_means = pooled_means.copy(order="C")
             layer_indices = layer_indices.copy(order="C")
             visual_positions = visual_positions.copy(order="C")
     except ActivationExtractionError:
@@ -1325,10 +1493,15 @@ def validate_limited_unpooled_pilot(
             ExtractionErrorCode.UNSAFE_ARRAY,
             f"safe allow_pickle=False read failed: {type(exc).__name__}: {exc}",
         )
-    if token_values.shape != expected_shape or token_values.dtype != numpy.float16:
+    if (
+        token_values.shape != expected_shape
+        or token_values.dtype != numpy.float16
+        or pooled_means.shape != expected_pooled_shape
+        or pooled_means.dtype != numpy.float32
+    ):
         _fail(
             ExtractionErrorCode.UNSAFE_ARRAY,
-            "token_values has an invalid shape or dtype",
+            "token_values or pooled_means has an invalid shape or dtype",
         )
     expected_layers_array = numpy.arange(
         EXPECTED_DECODER_LAYER_COUNT,
@@ -1347,12 +1520,34 @@ def validate_limited_unpooled_pilot(
             "layer or visual-position array identity mismatch",
         )
 
+    binding = _mapping(
+        pooling.get("exact_candidate_binding"),
+        "pooling_audit.exact_candidate_binding",
+    )
+    reproduction = _mapping(
+        pooling.get("token_reproduction"),
+        "pooling_audit.token_reproduction",
+    )
     records = pooling.get("layer_records")
     if (
-        pooling.get("comparison") != "torch.equal"
-        or pooling.get("rtol") is not None
-        or pooling.get("atol") is not None
-        or pooling.get("maximum_absolute_difference") != 0.0
+        binding.get("comparison") != "sha256_byte_equality"
+        or binding.get("stored_array") != UNPOOLED_POOLED_ARRAY_NAME
+        or binding.get("all_layers_match") is not True
+        or binding.get("status") != "PASS"
+        or reproduction.get("comparison") != "torch.allclose"
+        or reproduction.get("recomputed_from") != UNPOOLED_TOKEN_ARRAY_NAME
+        or reproduction.get("reference_array")
+        != UNPOOLED_POOLED_ARRAY_NAME
+        or reproduction.get("recomputed_device") != "cpu"
+        or reproduction.get("recomputed_dtype") != "float32"
+        or reproduction.get("reference_semantics")
+        != (
+            "exact stored production pooled vectors; CPU-recomputed means "
+            "may differ from CUDA reductions within tolerance"
+        )
+        or reproduction.get("rtol") != UNPOOLED_REPRODUCTION_RTOL
+        or reproduction.get("atol") != UNPOOLED_REPRODUCTION_ATOL
+        or reproduction.get("status") != "PASS"
         or pooling.get("status") != "PASS"
         or not isinstance(records, list)
         or len(records) != EXPECTED_DECODER_LAYER_COUNT
@@ -1360,9 +1555,12 @@ def validate_limited_unpooled_pilot(
         _fail(
             ExtractionErrorCode.POOLING_AUDIT_FAILED,
             "pooling-audit header is invalid",
-        )
+    )
     torch = importlib.import_module("torch")
     validated_audit: list[Mapping[str, object]] = []
+    maximum_absolute_difference = 0.0
+    maximum_tolerance_ratio = 0.0
+    unequal_layer_count = 0
     for layer_idx, record_value in enumerate(records):
         record = _mapping(record_value, f"pooling_audit.layer_records[{layer_idx}]")
         mean = (
@@ -1371,34 +1569,111 @@ def validate_limited_unpooled_pilot(
             .mean(dim=0)
             .contiguous()
         )
+        stored_pooled = (
+            torch.from_numpy(pooled_means[layer_idx].copy())
+            .to(dtype=torch.float32)
+            .contiguous()
+        )
         mean_sha = _tensor_sha256(mean)
+        stored_pooled_sha = _tensor_sha256(stored_pooled)
         candidate_sha = _require_hex(
             record.get("candidate_sha256"),
             "candidate_sha256",
             _SHA256_LENGTH,
         )
+        (
+            allclose,
+            layer_maximum_absolute_difference,
+            layer_maximum_tolerance_ratio,
+        ) = _pooling_comparison(mean, stored_pooled)
         if (
             record.get("layer_idx") != layer_idx
-            or record.get("artifact_mean_sha256") != mean_sha
-            or record.get("artifact_mean_sha256") != candidate_sha
-            or record.get("torch_equal") is not True
-            or record.get("maximum_absolute_difference") != 0.0
+            or record.get("stored_pooled_sha256") != stored_pooled_sha
+            or stored_pooled_sha != candidate_sha
+            or record.get("cpu_recomputed_mean_sha256") != mean_sha
+            or record.get("candidate_binding_sha256_equal") is not True
+            or record.get("allclose") is not allclose
+            or record.get("maximum_absolute_difference")
+            != layer_maximum_absolute_difference
+            or record.get("maximum_tolerance_ratio")
+            != layer_maximum_tolerance_ratio
+            or record.get("rtol") != UNPOOLED_REPRODUCTION_RTOL
+            or record.get("atol") != UNPOOLED_REPRODUCTION_ATOL
         ):
             _fail(
                 ExtractionErrorCode.POOLING_AUDIT_FAILED,
-                "artifact-derived mean does not match recorded extraction A",
+                "stored candidate binding or independently recomputed token "
+                "audit differs from the manifest",
                 layer_idx=layer_idx,
             )
         if expected_candidates is not None:
             candidate = expected_candidates.get(layer_idx)
-            if candidate is None or not torch.equal(mean, candidate.vector):
+            if (
+                candidate is None
+                or _tensor_sha256(candidate.vector) != stored_pooled_sha
+            ):
                 _fail(
                     ExtractionErrorCode.POOLING_AUDIT_FAILED,
-                    "artifact-derived mean does not match supplied candidate",
+                    "stored pooled row is not byte-identical to the supplied "
+                    "extraction-A candidate",
                     layer_idx=layer_idx,
                 )
-        validated_audit.append(MappingProxyType(dict(record)))
+        if not allclose:
+            _fail(
+                ExtractionErrorCode.POOLING_AUDIT_FAILED,
+                "CPU token reproduction exceeded tolerance: "
+                f"maximum_absolute_difference="
+                f"{layer_maximum_absolute_difference!r}, "
+                f"maximum_tolerance_ratio={layer_maximum_tolerance_ratio!r}, "
+                f"rtol={UNPOOLED_REPRODUCTION_RTOL!r}, "
+                f"atol={UNPOOLED_REPRODUCTION_ATOL!r}",
+                layer_idx=layer_idx,
+            )
+        maximum_absolute_difference = max(
+            maximum_absolute_difference,
+            layer_maximum_absolute_difference,
+        )
+        maximum_tolerance_ratio = max(
+            maximum_tolerance_ratio,
+            layer_maximum_tolerance_ratio,
+        )
+        unequal_layer_count += int(not allclose)
+        validated_audit.append(
+            MappingProxyType(
+                {
+                    "layer_idx": layer_idx,
+                    "candidate_sha256": candidate_sha,
+                    "stored_pooled_sha256": stored_pooled_sha,
+                    "cpu_recomputed_mean_sha256": mean_sha,
+                    "candidate_binding_sha256_equal": True,
+                    "allclose": allclose,
+                    "maximum_absolute_difference": (
+                        layer_maximum_absolute_difference
+                    ),
+                    "maximum_tolerance_ratio": (
+                        layer_maximum_tolerance_ratio
+                    ),
+                    "rtol": UNPOOLED_REPRODUCTION_RTOL,
+                    "atol": UNPOOLED_REPRODUCTION_ATOL,
+                }
+            )
+        )
         del mean
+        del stored_pooled
+
+    if (
+        reproduction.get("maximum_absolute_difference")
+        != maximum_absolute_difference
+        or reproduction.get("maximum_tolerance_ratio")
+        != maximum_tolerance_ratio
+        or reproduction.get("unequal_layer_count") != unequal_layer_count
+        or unequal_layer_count != 0
+    ):
+        _fail(
+            ExtractionErrorCode.POOLING_AUDIT_FAILED,
+            "aggregate token-reproduction audit differs from independently "
+            "recomputed values",
+        )
 
     manifest_size = manifest_path.stat().st_size
     return LimitedUnpooledPilot(
@@ -1418,8 +1693,13 @@ def validate_limited_unpooled_pilot(
         artifact_sha256=declared_sha,
         token_shape=expected_shape,
         token_dtype="float16",
+        pooled_shape=expected_pooled_shape,
+        pooled_dtype="float32",
         layer_indices=tuple(range(EXPECTED_DECODER_LAYER_COUNT)),
         visual_positions=tuple(positions_json),
+        pooling_maximum_absolute_difference=maximum_absolute_difference,
+        pooling_maximum_tolerance_ratio=maximum_tolerance_ratio,
+        pooling_unequal_layer_count=unequal_layer_count,
         pooling_audit=tuple(validated_audit),
     )
 
@@ -1428,6 +1708,8 @@ __all__ = [
     "LIMITED_UNPOOLED_ARTIFACT_VERSION",
     "LIMITED_UNPOOLED_CLASSIFICATION",
     "MAX_UNPOOLED_ARTIFACT_SIZE_BYTES",
+    "UNPOOLED_REPRODUCTION_ATOL",
+    "UNPOOLED_REPRODUCTION_RTOL",
     "ActivationExtractionError",
     "CaptureSetFacts",
     "ExtractionErrorCode",

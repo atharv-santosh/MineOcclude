@@ -126,9 +126,14 @@ def _valid_report(probe):
         {
             "layer_idx": layer_idx,
             "candidate_sha256": records[layer_idx]["a_sha256"],
-            "artifact_mean_sha256": records[layer_idx]["a_sha256"],
-            "torch_equal": True,
+            "stored_pooled_sha256": records[layer_idx]["a_sha256"],
+            "cpu_recomputed_mean_sha256": records[layer_idx]["a_sha256"],
+            "candidate_binding_sha256_equal": True,
+            "allclose": True,
             "maximum_absolute_difference": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "rtol": 1e-3,
+            "atol": 1e-3,
         }
         for layer_idx in range(20)
     ]
@@ -206,6 +211,7 @@ def _valid_report(probe):
         },
         "unpooled_pilot": {
             "classification": "limited_one_frame_unpooled_pilot",
+            "artifact_version": probe.EXPECTED_UNPOOLED_ARTIFACT_VERSION,
             "manifest_path": "limited_unpooled_pilot.manifest.json",
             "manifest_size_bytes": 1,
             "manifest_sha256": "9" * 64,
@@ -214,10 +220,24 @@ def _valid_report(probe):
             "artifact_sha256": "a" * 64,
             "shape": [20, 336, 2048],
             "dtype": "float16",
+            "pooled_shape": [20, 2048],
+            "pooled_dtype": "float32",
+            "array_names": probe.EXPECTED_UNPOOLED_ARRAY_NAMES,
             "layer_indices": list(range(20)),
             "visual_positions": list(range(336)),
             "action_positions_saved": False,
             "dataset_wide_unpooled_storage_enabled": False,
+            "exact_candidate_binding_status": "PASS",
+            "token_reproduction": {
+                "comparison": "torch.allclose",
+                "rtol": 1e-3,
+                "atol": 1e-3,
+                "maximum_absolute_difference": 0.0,
+                "maximum_tolerance_ratio": 0.0,
+                "unequal_layer_count": 0,
+                "status": "PASS",
+            },
+            "independent_audit_status": "PASS",
             "pooling_audit_status": "PASS",
             "pooling_audit": pilot_audit,
         },
@@ -460,12 +480,43 @@ class ExtractionProbeSemanticValidatorTests(unittest.TestCase):
         dtype = copy.deepcopy(self.report)
         dtype["unpooled_pilot"]["dtype"] = "float32"
         cases.append(dtype)
+        pooled_shape = copy.deepcopy(self.report)
+        pooled_shape["unpooled_pilot"]["pooled_shape"] = [20, 2047]
+        cases.append(pooled_shape)
+        pooled_dtype = copy.deepcopy(self.report)
+        pooled_dtype["unpooled_pilot"]["pooled_dtype"] = "float16"
+        cases.append(pooled_dtype)
         layers = copy.deepcopy(self.report)
         layers["unpooled_pilot"]["layer_indices"][0] = 1
         cases.append(layers)
         positions = copy.deepcopy(self.report)
         positions["unpooled_pilot"]["visual_positions"][0] = 336
         cases.append(positions)
+        for report in cases:
+            self._reject(report)
+
+    def test_unpooled_tolerance_and_aggregate_claims_reject(self):
+        cases = []
+        tolerance = copy.deepcopy(self.report)
+        tolerance["unpooled_pilot"]["token_reproduction"]["rtol"] = 1e-2
+        cases.append(tolerance)
+
+        layer_tolerance = copy.deepcopy(self.report)
+        layer_tolerance["unpooled_pilot"]["pooling_audit"][0]["atol"] = 1e-2
+        cases.append(layer_tolerance)
+
+        maximum = copy.deepcopy(self.report)
+        maximum["unpooled_pilot"]["token_reproduction"][
+            "maximum_absolute_difference"
+        ] = 0.5
+        cases.append(maximum)
+
+        unequal = copy.deepcopy(self.report)
+        unequal["unpooled_pilot"]["token_reproduction"][
+            "unequal_layer_count"
+        ] = 1
+        cases.append(unequal)
+
         for report in cases:
             self._reject(report)
 
@@ -480,6 +531,7 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
         cls.raw_path = cls.directory / cls.probe.RAW_LOG_FILENAME
         cls.raw_path.write_text("controlled\n", encoding="utf-8")
         token_values = numpy.zeros((20, 336, 2048), dtype=numpy.float16)
+        pooled_means = numpy.zeros((20, 2048), dtype=numpy.float32)
         layers = numpy.arange(20, dtype=numpy.int64)
         positions = numpy.arange(336, dtype=numpy.int64)
         from mineocclude.activations.store import _deterministic_npz
@@ -487,6 +539,7 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
         payload = _deterministic_npz(
             {
                 "token_values": token_values,
+                "pooled_means": pooled_means,
                 "layer_indices": layers,
                 "visual_positions": positions,
             }
@@ -511,7 +564,7 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
         manifest = {
             "schema_version": "1.0",
             "artifact_version": (
-                "person-a-limited-unpooled-pilot-v1.0"
+                "person-a-limited-unpooled-pilot-v1.1"
             ),
             "classification": "limited_one_frame_unpooled_pilot",
             "status": "PASS",
@@ -537,6 +590,8 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
                 "visual_positions_sha256": position_hash,
                 "token_payload_shape": [20, 336, 2048],
                 "token_payload_dtype": "float16",
+                "pooled_payload_shape": [20, 2048],
+                "pooled_payload_dtype": "float32",
                 "serialized_device": "cpu",
             },
             "provenance": {
@@ -561,6 +616,7 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
                 "sha256": hashlib.sha256(payload).hexdigest(),
                 "array_names": [
                     "token_values",
+                    "pooled_means",
                     "layer_indices",
                     "visual_positions",
                 ],
@@ -568,17 +624,42 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
                 "maximum_size_bytes": 32 * 1024 * 1024,
             },
             "pooling_audit": {
-                "comparison": "torch.equal",
-                "rtol": None,
-                "atol": None,
-                "maximum_absolute_difference": 0.0,
+                "exact_candidate_binding": {
+                    "comparison": "sha256_byte_equality",
+                    "stored_array": "pooled_means",
+                    "all_layers_match": True,
+                    "status": "PASS",
+                },
+                "token_reproduction": {
+                    "comparison": "torch.allclose",
+                    "recomputed_from": "token_values",
+                    "reference_array": "pooled_means",
+                    "recomputed_device": "cpu",
+                    "recomputed_dtype": "float32",
+                    "reference_semantics": (
+                        "exact stored production pooled vectors; "
+                        "CPU-recomputed means may differ from CUDA reductions "
+                        "within tolerance"
+                    ),
+                    "rtol": 1e-3,
+                    "atol": 1e-3,
+                    "maximum_absolute_difference": 0.0,
+                    "maximum_tolerance_ratio": 0.0,
+                    "unequal_layer_count": 0,
+                    "status": "PASS",
+                },
                 "layer_records": [
                     {
                         "layer_idx": layer_idx,
                         "candidate_sha256": mean_sha,
-                        "artifact_mean_sha256": mean_sha,
-                        "torch_equal": True,
+                        "stored_pooled_sha256": mean_sha,
+                        "cpu_recomputed_mean_sha256": mean_sha,
+                        "candidate_binding_sha256_equal": True,
+                        "allclose": True,
                         "maximum_absolute_difference": 0.0,
+                        "maximum_tolerance_ratio": 0.0,
+                        "rtol": 1e-3,
+                        "atol": 1e-3,
                     }
                     for layer_idx in range(20)
                 ],
@@ -613,7 +694,10 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
                 "candidate_sha256"
             ] = mean_sha
             cls.report["unpooled_pilot"]["pooling_audit"][layer_idx][
-                "artifact_mean_sha256"
+                "stored_pooled_sha256"
+            ] = mean_sha
+            cls.report["unpooled_pilot"]["pooling_audit"][layer_idx][
+                "cpu_recomputed_mean_sha256"
             ] = mean_sha
         cls.report["unpooled_pilot"].update(
             {
@@ -647,6 +731,28 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
             json.dumps(report, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
+
+    def _bind_current_artifact_files(self, report):
+        payload = self.artifact_path.read_bytes()
+        manifest = json.loads(
+            self.manifest_path.read_text(encoding="utf-8")
+        )
+        manifest["artifact"]["size_bytes"] = len(payload)
+        manifest["artifact"]["sha256"] = hashlib.sha256(payload).hexdigest()
+        self.manifest_path.write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        report["unpooled_pilot"]["artifact_size_bytes"] = len(payload)
+        report["unpooled_pilot"]["artifact_sha256"] = hashlib.sha256(
+            payload
+        ).hexdigest()
+        report["unpooled_pilot"][
+            "manifest_size_bytes"
+        ] = self.manifest_path.stat().st_size
+        report["unpooled_pilot"]["manifest_sha256"] = hashlib.sha256(
+            self.manifest_path.read_bytes()
+        ).hexdigest()
 
     def test_complete_files_and_artifact_pass(self):
         self._write_report(self.report)
@@ -686,6 +792,44 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.probe.validate(self.report_path, verify_files=True)
 
+    def test_numeric_pass_claim_is_independently_recomputed(self):
+        original_artifact = self.artifact_path.read_bytes()
+        original_manifest = self.manifest_path.read_bytes()
+        with numpy.load(self.artifact_path, allow_pickle=False) as source:
+            original_arrays = {
+                name: source[name].copy()
+                for name in source.files
+            }
+        for mutation in ("stored_pooled", "token_mean"):
+            with self.subTest(mutation=mutation):
+                arrays = {
+                    name: value.copy()
+                    for name, value in original_arrays.items()
+                }
+                if mutation == "stored_pooled":
+                    arrays["pooled_means"][0, 0] = 5.0
+                else:
+                    arrays["token_values"][0, :, 0] = 5.0
+                try:
+                    from mineocclude.activations.store import (
+                        _deterministic_npz,
+                    )
+
+                    self.artifact_path.write_bytes(
+                        _deterministic_npz(arrays)
+                    )
+                    report = copy.deepcopy(self.report)
+                    self._bind_current_artifact_files(report)
+                    self._write_report(report)
+                    with self.assertRaises(ValueError):
+                        self.probe.validate(
+                            self.report_path,
+                            verify_files=True,
+                        )
+                finally:
+                    self.artifact_path.write_bytes(original_artifact)
+                    self.manifest_path.write_bytes(original_manifest)
+
     def test_pickle_object_array_rejects(self):
         original = self.artifact_path.read_bytes()
         original_manifest = self.manifest_path.read_bytes()
@@ -694,6 +838,10 @@ class ExtractionProbeArtifactValidatorTests(unittest.TestCase):
             numpy.savez(
                 self.artifact_path,
                 token_values=numpy.array([object()], dtype=object),
+                pooled_means=numpy.zeros(
+                    (20, 2048),
+                    dtype=numpy.float32,
+                ),
                 layer_indices=numpy.arange(20, dtype=numpy.int64),
                 visual_positions=numpy.arange(336, dtype=numpy.int64),
             )

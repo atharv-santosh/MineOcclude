@@ -24,7 +24,16 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-PROBE_VERSION = "person-a-phase4-wave3-extraction-probe-v1.0"
+PROBE_VERSION = "person-a-phase4-wave3-extraction-probe-v1.1"
+EXPECTED_UNPOOLED_ARTIFACT_VERSION = (
+    "person-a-limited-unpooled-pilot-v1.1"
+)
+EXPECTED_UNPOOLED_ARRAY_NAMES = [
+    "token_values",
+    "pooled_means",
+    "layer_indices",
+    "visual_positions",
+]
 EXPECTED_LAYER_COUNT = 20
 EXPECTED_HIDDEN_SIZE = 2048
 EXPECTED_VISUAL_TOKENS = 336
@@ -42,6 +51,8 @@ FORCED_FAILURE_LAYER = 10
 MEMORY_TOLERANCE_BYTES = 1_048_576
 CANDIDATE_COMPARISON_RTOL = 1e-3
 CANDIDATE_COMPARISON_ATOL = 1e-3
+UNPOOLED_REPRODUCTION_RTOL = CANDIDATE_COMPARISON_RTOL
+UNPOOLED_REPRODUCTION_ATOL = CANDIDATE_COMPARISON_ATOL
 HOOK_SITE = "decoder_layer_output_residual_stream"
 REPORT_FILENAME = "extraction_probe_report.json"
 RAW_LOG_FILENAME = "raw_stdout_stderr.log"
@@ -572,6 +583,7 @@ def run(args: argparse.Namespace) -> Path:
     from mineocclude.activations.hooks import ScopedHookManager
     from mineocclude.activations.pool import select_visual_token_positions
     from mineocclude.activations.store import (
+        LIMITED_UNPOOLED_ARTIFACT_VERSION,
         UnpooledPilotIdentity,
         extract_complete_pooled_context,
         validate_limited_unpooled_pilot,
@@ -1139,11 +1151,11 @@ def run(args: argparse.Namespace) -> Path:
                 for record in validated_pilot.pooling_audit:
                     if (
                         a_by_layer.get(record["layer_idx"])
-                        != record["candidate_sha256"]
+                        != record["stored_pooled_sha256"]
                     ):
                         _raise(
                             "unpooled_candidate_mismatch",
-                            "pilot mean hash differs from extraction A",
+                            "stored pilot pooled row differs from extraction A",
                         )
 
                 peak = {
@@ -1261,6 +1273,9 @@ def run(args: argparse.Namespace) -> Path:
                         "classification": (
                             "limited_one_frame_unpooled_pilot"
                         ),
+                        "artifact_version": (
+                            LIMITED_UNPOOLED_ARTIFACT_VERSION
+                        ),
                         "manifest_path": pilot.manifest_path.name,
                         "manifest_size_bytes": (
                             pilot.manifest_size_bytes
@@ -1273,12 +1288,32 @@ def run(args: argparse.Namespace) -> Path:
                         "artifact_sha256": pilot.artifact_sha256,
                         "shape": list(pilot.token_shape),
                         "dtype": pilot.token_dtype,
+                        "pooled_shape": list(pilot.pooled_shape),
+                        "pooled_dtype": pilot.pooled_dtype,
+                        "array_names": EXPECTED_UNPOOLED_ARRAY_NAMES,
                         "layer_indices": list(pilot.layer_indices),
                         "visual_positions": list(
                             pilot.visual_positions
                         ),
                         "action_positions_saved": False,
                         "dataset_wide_unpooled_storage_enabled": False,
+                        "exact_candidate_binding_status": "PASS",
+                        "token_reproduction": {
+                            "comparison": "torch.allclose",
+                            "rtol": UNPOOLED_REPRODUCTION_RTOL,
+                            "atol": UNPOOLED_REPRODUCTION_ATOL,
+                            "maximum_absolute_difference": (
+                                pilot.pooling_maximum_absolute_difference
+                            ),
+                            "maximum_tolerance_ratio": (
+                                pilot.pooling_maximum_tolerance_ratio
+                            ),
+                            "unequal_layer_count": (
+                                pilot.pooling_unequal_layer_count
+                            ),
+                            "status": "PASS",
+                        },
+                        "independent_audit_status": "PASS",
                         "pooling_audit_status": "PASS",
                         "pooling_audit": [
                             dict(record)
@@ -1653,9 +1688,15 @@ def _validate_unpooled(
 ) -> None:
     pilot = _mapping(report.get("unpooled_pilot"), "unpooled_pilot")
     report_audit = pilot.get("pooling_audit")
+    token_reproduction = _mapping(
+        pilot.get("token_reproduction"),
+        "unpooled_pilot.token_reproduction",
+    )
     if (
         pilot.get("classification")
         != "limited_one_frame_unpooled_pilot"
+        or pilot.get("artifact_version")
+        != EXPECTED_UNPOOLED_ARTIFACT_VERSION
         or pilot.get("shape")
         != [
             EXPECTED_LAYER_COUNT,
@@ -1663,11 +1704,21 @@ def _validate_unpooled(
             EXPECTED_HIDDEN_SIZE,
         ]
         or pilot.get("dtype") != "float16"
+        or pilot.get("pooled_shape")
+        != [EXPECTED_LAYER_COUNT, EXPECTED_HIDDEN_SIZE]
+        or pilot.get("pooled_dtype") != "float32"
+        or pilot.get("array_names") != EXPECTED_UNPOOLED_ARRAY_NAMES
         or pilot.get("layer_indices")
         != list(range(EXPECTED_LAYER_COUNT))
         or pilot.get("action_positions_saved") is not False
         or pilot.get("dataset_wide_unpooled_storage_enabled") is not False
+        or pilot.get("exact_candidate_binding_status") != "PASS"
+        or pilot.get("independent_audit_status") != "PASS"
         or pilot.get("pooling_audit_status") != "PASS"
+        or token_reproduction.get("comparison") != "torch.allclose"
+        or token_reproduction.get("rtol") != UNPOOLED_REPRODUCTION_RTOL
+        or token_reproduction.get("atol") != UNPOOLED_REPRODUCTION_ATOL
+        or token_reproduction.get("status") != "PASS"
         or not isinstance(report_audit, list)
         or len(report_audit) != EXPECTED_LAYER_COUNT
     ):
@@ -1675,28 +1726,94 @@ def _validate_unpooled(
             "unpooled_identity_mismatch",
             "limited pilot identity, shape, dtype, or scope is invalid",
         )
+    first_frame = (
+        candidates[0]["trajectory_id"],
+        candidates[0]["model_frame_idx"],
+    )
+    expected_candidate_hashes = {
+        int(record["layer_idx"]): _require_sha256(
+            record.get("a_sha256"),
+            "extraction-A candidate sha256",
+        )
+        for record in candidates
+        if (
+            record["trajectory_id"],
+            record["model_frame_idx"],
+        )
+        == first_frame
+    }
+    if set(expected_candidate_hashes) != set(range(EXPECTED_LAYER_COUNT)):
+        _raise(
+            "unpooled_candidate_coverage_mismatch",
+            "extraction A must expose all 20 first-frame candidate hashes",
+        )
+    maximum_absolute_difference = 0.0
+    maximum_tolerance_ratio = 0.0
+    unequal_layer_count = 0
     for layer_idx, record_value in enumerate(report_audit):
         record = _mapping(
             record_value,
             f"unpooled_pilot.pooling_audit[{layer_idx}]",
         )
+        candidate_sha = _require_sha256(
+            record.get("candidate_sha256"),
+            "unpooled candidate sha256",
+        )
+        stored_sha = _require_sha256(
+            record.get("stored_pooled_sha256"),
+            "unpooled stored pooled sha256",
+        )
+        _require_sha256(
+            record.get("cpu_recomputed_mean_sha256"),
+            "unpooled CPU-recomputed mean sha256",
+        )
+        recorded_difference = _finite_number(
+            record.get("maximum_absolute_difference"),
+            "unpooled maximum_absolute_difference",
+        )
+        recorded_ratio = _finite_number(
+            record.get("maximum_tolerance_ratio"),
+            "unpooled maximum_tolerance_ratio",
+        )
         if (
             record.get("layer_idx") != layer_idx
-            or record.get("torch_equal") is not True
-            or record.get("maximum_absolute_difference") != 0.0
-            or _require_sha256(
-                record.get("candidate_sha256"),
-                "unpooled candidate sha256",
-            )
-            != _require_sha256(
-                record.get("artifact_mean_sha256"),
-                "unpooled artifact mean sha256",
-            )
+            or candidate_sha != stored_sha
+            or stored_sha != expected_candidate_hashes[layer_idx]
+            or record.get("candidate_binding_sha256_equal") is not True
+            or record.get("allclose") is not True
+            or record.get("rtol") != UNPOOLED_REPRODUCTION_RTOL
+            or record.get("atol") != UNPOOLED_REPRODUCTION_ATOL
+            or recorded_difference < 0.0
+            or recorded_ratio < 0.0
+            or recorded_ratio > 1.0
         ):
             _raise(
                 "unpooled_pooling_audit_mismatch",
-                "report pooling audit must preserve 20 exact layer results",
+                "report must preserve exact extraction-A binding and 20 "
+                "tolerance-qualified token reproductions",
             )
+        maximum_absolute_difference = max(
+            maximum_absolute_difference,
+            recorded_difference,
+        )
+        maximum_tolerance_ratio = max(
+            maximum_tolerance_ratio,
+            recorded_ratio,
+        )
+        unequal_layer_count += int(record.get("allclose") is not True)
+    if (
+        token_reproduction.get("maximum_absolute_difference")
+        != maximum_absolute_difference
+        or token_reproduction.get("maximum_tolerance_ratio")
+        != maximum_tolerance_ratio
+        or token_reproduction.get("unequal_layer_count")
+        != unequal_layer_count
+        or unequal_layer_count != 0
+    ):
+        _raise(
+            "unpooled_pooling_audit_mismatch",
+            "report token-reproduction aggregates are inconsistent",
+        )
     positions = pilot.get("visual_positions")
     if (
         not isinstance(positions, list)
@@ -1773,10 +1890,6 @@ def _validate_unpooled(
         manifest_path,
         expected_hidden_size=EXPECTED_HIDDEN_SIZE,
     )
-    first_frame = (
-        candidates[0]["trajectory_id"],
-        candidates[0]["model_frame_idx"],
-    )
     if (
         validated.session_id != report.get("session_id")
         or (
@@ -1794,37 +1907,40 @@ def _validate_unpooled(
         or list(validated.layer_indices) != list(range(EXPECTED_LAYER_COUNT))
         or list(validated.token_shape) != pilot.get("shape")
         or validated.token_dtype != pilot.get("dtype")
+        or list(validated.pooled_shape) != pilot.get("pooled_shape")
+        or validated.pooled_dtype != pilot.get("pooled_dtype")
+        or validated.pooling_maximum_absolute_difference
+        != maximum_absolute_difference
+        or validated.pooling_maximum_tolerance_ratio
+        != maximum_tolerance_ratio
+        or validated.pooling_unequal_layer_count != unequal_layer_count
     ):
         _raise(
             "unpooled_identity_mismatch",
             "independent artifact identity differs from the runtime report",
         )
     audit = {
-        int(record["layer_idx"]): record["candidate_sha256"]
+        int(record["layer_idx"]): record["stored_pooled_sha256"]
         for record in validated.pooling_audit
     }
-    expected = {
-        int(record["layer_idx"]): record["a_sha256"]
-        for record in candidates
-        if (
-            record["trajectory_id"],
-            record["model_frame_idx"],
-        )
-        == first_frame
-    }
-    if audit != expected:
+    if audit != expected_candidate_hashes:
         _raise(
             "unpooled_pooling_audit_mismatch",
-            "artifact-derived mean hashes differ from extraction A",
+            "stored pooled-row hashes differ from extraction A",
         )
     report_audit_hashes = {
-        int(record["layer_idx"]): record["candidate_sha256"]
+        int(record["layer_idx"]): record["stored_pooled_sha256"]
         for record in report_audit
     }
     if report_audit_hashes != audit:
         _raise(
             "unpooled_pooling_audit_mismatch",
             "report and independent manifest pooling audits differ",
+        )
+    if [dict(record) for record in validated.pooling_audit] != report_audit:
+        _raise(
+            "unpooled_pooling_audit_mismatch",
+            "report audit differs from independently recomputed numeric audit",
         )
 
 
