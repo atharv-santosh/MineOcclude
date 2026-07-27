@@ -5,6 +5,9 @@ import unittest
 from mineocclude.vision.homography import (
     HomographyError,
     fit_marker_homography,
+    homography_from_record,
+    localize_ground_contact_from_background_pair,
+    localize_marker_top_face,
     summarize_localization,
 )
 from mineocclude.vision.ssim import (
@@ -18,6 +21,68 @@ from mineocclude.vision.ssim import (
 
 
 class TestHomography(unittest.TestCase):
+    def test_registered_image_localizers_are_deterministic(self) -> None:
+        marker_image = [[[0, 0, 0] for _ in range(30)] for _ in range(30)]
+        for y, bounds in enumerate(
+            ((8, 19), (9, 20), (10, 21), (11, 22), (12, 23)),
+            start=18,
+        ):
+            for x in range(bounds[0], bounds[1] + 1):
+                marker_image[y][x] = [0, 0, 160]
+        marker = localize_marker_top_face(
+            marker_image,
+            marker_color="blue",
+        )
+        self.assertEqual(marker["bounding_box_xyxy"], [8, 18, 24, 23])
+        self.assertEqual(marker["segmentation_pixel_count"], 60)
+        self.assertEqual(
+            marker["localization_method_version"],
+            "person-e-marker-color-top-face-diagonals-v0.1",
+        )
+
+        background = [[[0, 0, 0] for _ in range(10)] for _ in range(10)]
+        visible = [[list(pixel) for pixel in row] for row in background]
+        for y in range(3, 8):
+            for x in range(2, 6):
+                visible[y][x] = [120, 0, 120]
+        ground = localize_ground_contact_from_background_pair(
+            visible,
+            background,
+        )
+        self.assertEqual(ground["image_xy"], [3.5, 7.0])
+        self.assertEqual(ground["bounding_box_xyxy"], [2, 3, 6, 8])
+
+    def test_bound_record_round_trip_preserves_resolution_and_sources(self) -> None:
+        ids = ["north_west", "north_east", "south_east", "south_west"]
+        points = {
+            "north_west": [0.0, 0.0],
+            "north_east": [2.0, 0.0],
+            "south_east": [2.0, 2.0],
+            "south_west": [0.0, 2.0],
+        }
+        homography = fit_marker_homography(
+            points,
+            points,
+            marker_ids=ids,
+            layout_id="layout_1",
+            canonical_camera_pose_id="pose_1",
+            resolution_id="resolution_640x360_rgb8",
+            image_width_px=640,
+            image_height_px=360,
+            source_correspondence_hash="a" * 64,
+            detector_version="detector_v1",
+            software_runtime_hash="b" * 64,
+        )
+        record = homography.to_record()
+        self.assertEqual(record["resolution_id"], "resolution_640x360_rgb8")
+        self.assertEqual(record["source_correspondence_hash"], "a" * 64)
+        restored = homography_from_record(record)
+        self.assertEqual(restored.to_record(), record)
+        tampered = dict(record)
+        tampered["image_width_px"] = None
+        with self.assertRaisesRegex(HomographyError, "all-or-none"):
+            homography_from_record(tampered)
+
     def test_known_affine_mapping_and_localization_report(self) -> None:
         marker_ids = ["north_west", "north_east", "south_east", "south_west"]
         image_points = {

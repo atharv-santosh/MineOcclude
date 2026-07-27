@@ -8,30 +8,35 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from mineocclude.experiments.registry import (  # noqa: E402
+from mineocclude.experiments.registry import (
     ProvenanceError,
+    hash_file_bytes,
     hash_json_value,
     load_json_with_sha256,
     write_json_exclusive,
 )
-from mineocclude.vision.calibration import (  # noqa: E402
+from mineocclude.vision.calibration import (
     CALIBRATION_SPLITS,
+    FROZEN_DETECTOR_CALIBRATION_SCHEMA_VERSION,
     frames_for_split,
+    load_committed_frame_rgb,
     load_detector_calibration_dataset,
 )
-from mineocclude.vision.config import (  # noqa: E402
+from mineocclude.vision.config import (
     PersonEConfigError,
     validate_person_e_config,
 )
-from mineocclude.vision.magenta import (  # noqa: E402
+from mineocclude.vision.magenta import (
+    CALIBRATION_DETECTION_DOCUMENT_SCHEMA_VERSION,
+    DETECTOR_ALGORITHM_VERSION,
     HsvRange,
     PresenceMetrics,
     detect_magenta,
     evaluate_presence,
+    validate_detection_document,
 )
 
 
@@ -81,6 +86,14 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         required=True,
         help="Validated Person E config whose literal bytes are recorded.",
+    )
+    parser.add_argument(
+        "--detections-output",
+        type=Path,
+        help=(
+            "Calibration-only authoritative detection document. Required when "
+            "publishing real frozen-split evidence."
+        ),
     )
     return parser.parse_args()
 
@@ -192,7 +205,7 @@ def _detector_settings(
         raise ValueError("Calibration report must be a mapping.")
     if (
         report.get("detector_report_schema_version")
-        != "person-e-detector-report-v0.2"
+        not in {"person-e-detector-report-v0.2", "person-e-detector-report-v0.3"}
         or report.get("evaluation_split") != "calibration"
         or report.get("dataset_hash") != dataset_hash
         or report.get("config_hash") != config_hash
@@ -237,17 +250,26 @@ def main() -> None:
     settings_hash = hash_json_value(settings)
     detector_identity_hash = hash_json_value(
         {
+            "algorithm_version": DETECTOR_ALGORITHM_VERSION,
             "threshold_version": threshold_version,
             "settings_hash": settings_hash,
         }
     )
+    detector_version = (
+        f"{DETECTOR_ALGORITHM_VERSION}:sha256:{detector_identity_hash}"
+    )
 
     output_rows: list[dict[str, Any]] = []
+    source_contexts: list[dict[str, Any]] = []
+    detection_records: list[dict[str, Any]] = []
     labeled_results = []
     by_layout: dict[tuple[str, str], list[tuple[bool, Any]]] = {}
     for frame in frames:
+        rgb = frame.get("rgb")
+        if rgb is None:
+            rgb = load_committed_frame_rgb(frame, repository=ROOT)
         result = detect_magenta(
-            frame["rgb"],
+            rgb,
             hsv_ranges=thresholds,
             min_area_pixels=settings["min_area_pixels"],
             max_area_pixels=settings["max_area_pixels"],
@@ -271,10 +293,71 @@ def main() -> None:
                 "source_frame_idx": frame["source_frame_idx"],
                 "source_frame_hash": frame["source_frame_hash"],
                 "decoded_rgb_hash": frame["decoded_rgb_hash"],
+                "detector_version": detector_version,
                 "threshold_version": threshold_version,
+                "presence": result.detected,
+                "quality_status": "accepted",
                 **result.to_record(),
             }
         )
+        if (
+            dataset["detector_calibration_schema_version"]
+            == FROZEN_DETECTOR_CALIBRATION_SCHEMA_VERSION
+        ):
+            context = {
+                "source_frame_id": frame["frame_id"],
+                "source_artifact_id": frame["source_artifact_id"],
+                "source_frame_idx": frame["source_frame_idx"],
+                "source_frame_hash": frame["source_frame_hash"],
+                "decoded_rgb_hash": frame["decoded_rgb_hash"],
+                "source_git_revision": frame["source_git_revision"],
+                "source_git_path": frame["source_git_path"],
+                "split": frame["split"],
+                "layout_id": frame["layout_id"],
+                "canonical_camera_pose_id": frame[
+                    "canonical_camera_pose_id"
+                ],
+                "resolution_id": frame["resolution_id"],
+                "image_width_px": frame["image_width_px"],
+                "image_height_px": frame["image_height_px"],
+                "pixel_format": frame["pixel_format"],
+                "image_coordinate_system": "pixel_center_xy_zero_based",
+                "truth_class": frame["truth_class"],
+                "truth_present": frame["truth_present"],
+                "frame_available": True,
+            }
+            source_contexts.append(context)
+            detection_records.append(
+                {
+                    **{
+                        field: value
+                        for field, value in context.items()
+                        if field != "frame_available"
+                    },
+                    "detection_id": (
+                        f"{detector_version}:{frame['frame_id']}"
+                    ),
+                    "detector_version": detector_version,
+                    "threshold_version": threshold_version,
+                    "status": result.status,
+                    "presence": result.detected,
+                    "centroid_xy": (
+                        None
+                        if result.centroid_xy is None
+                        else list(result.centroid_xy)
+                    ),
+                    "area_pixels": result.area_pixels,
+                    "bounding_box_xyxy": (
+                        None
+                        if result.bounding_box_xyxy is None
+                        else list(result.bounding_box_xyxy)
+                    ),
+                    "quality_status": "accepted",
+                    "rejection_reason": result.rejection_reason,
+                    "threshold_match_pixels": result.threshold_match_pixels,
+                    "candidate_blob_count": result.candidate_blob_count,
+                }
+            )
 
     gate_config = config["detector"]["heldout_gates"]
     minimum_precision = float(gate_config["minimum_precision"])
@@ -310,10 +393,41 @@ def main() -> None:
         }
         for layout in dataset["layouts"]
     ]
+    detection_document_hash = None
+    if args.detections_output is not None:
+        if args.split != "calibration":
+            raise ValueError(
+                "--detections-output is reserved for calibration-only evidence."
+            )
+        if not source_contexts:
+            raise ValueError(
+                "--detections-output requires the frozen calibration schema."
+            )
+        detection_document = {
+            "schema_version": dataset["schema_version"],
+            "detection_schema_version": (
+                CALIBRATION_DETECTION_DOCUMENT_SCHEMA_VERSION
+            ),
+            "document_id": (
+                f"calibration_detections_{detector_identity_hash}"
+            ),
+            "synthetic": False,
+            "scientific_use": "permitted",
+            "detector_version": detector_version,
+            "threshold_version": threshold_version,
+            "split_version": dataset["split_version"],
+            "settings_hash": settings_hash,
+            "source_contexts": source_contexts,
+            "records": detection_records,
+        }
+        validate_detection_document(detection_document)
+        write_json_exclusive(args.detections_output, detection_document)
+        detection_document_hash = hash_file_bytes(args.detections_output)
+
     write_json_exclusive(
         args.output,
         {
-            "detector_report_schema_version": "person-e-detector-report-v0.2",
+            "detector_report_schema_version": "person-e-detector-report-v0.3",
             "schema_version": dataset["schema_version"],
             "dataset_id": dataset["dataset_id"],
             "detector_calibration_schema_version": dataset[
@@ -328,7 +442,10 @@ def main() -> None:
             "config_instance_version": config["config_instance_version"],
             "config_hash": config_hash,
             "settings_hash": settings_hash,
+            "detector_algorithm_version": DETECTOR_ALGORITHM_VERSION,
+            "detector_version": detector_version,
             "detector_identity_hash": detector_identity_hash,
+            "detection_document_hash": detection_document_hash,
             **settings,
             "heldout_gate": {
                 "minimum_precision": minimum_precision,
