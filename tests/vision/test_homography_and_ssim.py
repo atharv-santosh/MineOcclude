@@ -68,6 +68,154 @@ class TestHomography(unittest.TestCase):
                 canonical_camera_pose_id="pose_1",
             )
 
+    def test_known_projective_transform_is_recovered_exactly(self) -> None:
+        """A real camera is perspective, not affine.
+
+        The affine case above still passes if the two perspective terms are
+        dropped, so it cannot detect that class of regression. This fits a
+        transform whose perspective terms are non-zero and requires them back.
+        """
+        known = (
+            (2.0, 0.3, 5.0),
+            (0.1, 1.5, -4.0),
+            (0.002, 0.004, 1.0),
+        )
+
+        def project(point: tuple[float, float]) -> list[float]:
+            x, y = point
+            denominator = known[2][0] * x + known[2][1] * y + known[2][2]
+            return [
+                (known[0][0] * x + known[0][1] * y + known[0][2]) / denominator,
+                (known[1][0] * x + known[1][1] * y + known[1][2]) / denominator,
+            ]
+
+        marker_ids = ["north_west", "north_east", "south_east", "south_west"]
+        image_points = {
+            "north_west": [10.0, 20.0],
+            "north_east": [90.0, 25.0],
+            "south_east": [85.0, 80.0],
+            "south_west": [15.0, 70.0],
+        }
+        world_points = {
+            name: project((point[0], point[1])) for name, point in image_points.items()
+        }
+
+        homography = fit_marker_homography(
+            image_points,
+            world_points,
+            marker_ids=marker_ids,
+            layout_id="layout_projective",
+            canonical_camera_pose_id="pose_projective",
+        )
+
+        for row_index, expected_row in enumerate(known):
+            for column_index, expected in enumerate(expected_row):
+                self.assertAlmostEqual(
+                    homography.matrix[row_index][column_index], expected, places=12
+                )
+
+        # Guard the perspective terms explicitly: an affine-only fit zeroes them.
+        self.assertNotAlmostEqual(homography.matrix[2][0], 0.0, places=6)
+        self.assertNotAlmostEqual(homography.matrix[2][1], 0.0, places=6)
+
+        # A point strictly inside the marker quad, away from every fit point.
+        interior = homography.transform([42.0, 55.0])
+        self.assertAlmostEqual(interior[0], 80.90490797546012, places=9)
+        self.assertAlmostEqual(interior[1], 63.420245398773005, places=9)
+
+    def test_malformed_and_degenerate_inputs_fail_closed(self) -> None:
+        """Each rejection reason stays distinct, so failures cannot be confused."""
+        marker_ids = ["north_west", "north_east", "south_east", "south_west"]
+        square = {
+            "north_west": [0.0, 0.0],
+            "north_east": [1.0, 0.0],
+            "south_east": [1.0, 1.0],
+            "south_west": [0.0, 1.0],
+        }
+        singular = "singular or numerically degenerate"
+        not_unique = "must be unique in both spaces"
+        cases = [
+            (
+                "three of four image points collinear",
+                {
+                    "north_west": [0.0, 0.0],
+                    "north_east": [1.0, 0.0],
+                    "south_east": [2.0, 0.0],
+                    "south_west": [0.0, 1.0],
+                },
+                square,
+                marker_ids,
+                singular,
+            ),
+            (
+                "world points collinear, image points valid",
+                square,
+                {
+                    "north_west": [0.0, 0.0],
+                    "north_east": [1.0, 0.0],
+                    "south_east": [2.0, 0.0],
+                    "south_west": [3.0, 0.0],
+                },
+                marker_ids,
+                singular,
+            ),
+            (
+                "duplicate image point",
+                {
+                    "north_west": [0.0, 0.0],
+                    "north_east": [1.0, 0.0],
+                    "south_east": [1.0, 1.0],
+                    "south_west": [0.0, 0.0],
+                },
+                square,
+                marker_ids,
+                not_unique,
+            ),
+            (
+                "duplicate world point",
+                square,
+                {
+                    "north_west": [0.0, 0.0],
+                    "north_east": [1.0, 0.0],
+                    "south_east": [1.0, 1.0],
+                    "south_west": [1.0, 1.0],
+                },
+                marker_ids,
+                not_unique,
+            ),
+            (
+                "non-finite image coordinate (nan)",
+                {**square, "north_west": [float("nan"), 0.0]},
+                square,
+                marker_ids,
+                "coordinates must be finite numbers",
+            ),
+            (
+                "non-finite image coordinate (inf)",
+                {**square, "north_west": [float("inf"), 0.0]},
+                square,
+                marker_ids,
+                "coordinates must be finite numbers",
+            ),
+            (
+                "three marker ids instead of four",
+                {name: square[name] for name in marker_ids[:3]},
+                {name: square[name] for name in marker_ids[:3]},
+                marker_ids[:3],
+                "must contain four unique non-empty IDs",
+            ),
+        ]
+        for label, image_points, world_points, ids, expected in cases:
+            with self.subTest(case=label):
+                with self.assertRaisesRegex(HomographyError, expected):
+                    fit_marker_homography(
+                        image_points,
+                        world_points,
+                        marker_ids=ids,
+                        layout_id="layout_1",
+                        canonical_camera_pose_id="pose_1",
+                    )
+
 
 class TestSsim(unittest.TestCase):
     def test_identical_frames_have_unit_ssim(self) -> None:
