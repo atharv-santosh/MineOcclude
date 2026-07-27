@@ -45,6 +45,13 @@ from mineocclude.baselines.missingness import (
     build_missingness_exclusion_report,
     summarize_non_applicable_reasons,
 )
+from mineocclude.baselines.positive_control_gate import (
+    REAL_NO_WALL_DATA_PROVENANCE,
+    STEP_4_3_R2_THRESHOLD,
+    PositiveControlGateError,
+    PositiveControlGateFinding,
+    evaluate_no_wall_positive_control_gate,
+)
 from mineocclude.baselines.random_weight import fit_predict_random_weight
 from mineocclude.baselines.raw_pixel import fit_predict_raw_pixel
 from mineocclude.baselines.spec import (
@@ -128,4 +135,9 @@ __all__ = [
     "UNASSIGNED_FOLD",
     "CaptureIngestError",
     "build_contexts_from_capture",
+    "REAL_NO_WALL_DATA_PROVENANCE",
+    "STEP_4_3_R2_THRESHOLD",
+    "PositiveControlGateError",
+    "PositiveControlGateFinding",
+    "evaluate_no_wall_positive_control_gate",
 ]

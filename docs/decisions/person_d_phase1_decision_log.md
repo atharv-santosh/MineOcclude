@@ -384,3 +384,72 @@ both baselines are wholly non-applicable but zero silent exclusions).
 Baseline suite: 79 -> 82 passing. Repo-wide: same 13 pre-existing A/B-owned
 failures in `test_synthetic_analysis_chain.py`/`test_synthetic_pipeline.py`
 before and after, confirmed unchanged by direct re-run.
+
+## 2026-07-27 -- Built the Step 4.3 no-wall positive-control statistical gate
+
+**Gap:** Step 4.3 was marked COMPLETE, but `controls.audit_no_wall_control`
+only ever checked the structural half (every no-wall frame really is
+visible with `tau=0`). The scientific half -- fit the frozen
+visible-position ridge on no-wall rows and require held-out R^2 >= 0.50
+with a bootstrap CI strictly above zero -- did not exist anywhere. A
+repo-wide grep for `0.50` found only `leakage.py`'s unrelated
+`r2_threshold=0.1`.
+
+**Decision:** Added `src/mineocclude/baselines/positive_control_gate.py`
+as a sibling module to `controls.py`, not an addition to it.
+`controls.py` deliberately has no numpy/ridge/fold-manifest dependency for
+its lightweight structural audits; this gate pulls in Person B's real
+`probes.ridge.fit_ridge_oof`, `metrics.u1_mean.regression_metrics`, and
+`metrics.resampling` (`hierarchical_bootstrap_indices` +
+`bootstrap_confidence_interval`) plus `export.attach_b_fold_assignments`
+for fold membership. D calls these directly; nothing here reimplements or
+paraphrases B's ridge, metric, or resampling math. The ridge alpha grid,
+inner-fold count, split seed, and the bootstrap's resample count/seed all
+come from `configs/analysis/core.yaml` via `analysis.config
+.load_core_analysis_config()` -- none of those numbers are invented or
+hardcoded independently in this module.
+
+**Fail-closed contract:** `evaluate_no_wall_positive_control_gate` takes a
+mandatory (no-default) `data_provenance` argument. Only the exact literal
+`REAL_NO_WALL_DATA_PROVENANCE` unlocks a scientific PASSED/FAILED verdict;
+any other value -- including every synthetic fixture in this test suite --
+returns `status="BLOCKED"` with every numeric field (`r2`, `ci_low`,
+`ci_high`, `fold_count`, `resample_count`, `seed`) left `None` before any
+ridge is even fit. There is no boolean shortcut (e.g. `is_real=True`) that
+could default to true; a mislabeling has to be an explicit, visible literal
+in the caller's own code. This mirrors the project's existing convention
+for real-vs-not provenance (`"scientific_use": "forbidden"` in the real
+pilot preview, `IS_FAIR_BASELINE` in `known_q_analytic.py`) rather than
+inventing a new enforcement mechanism.
+
+**Current status:** `BLOCKED`. Real no-wall rows, a real Person B fold
+manifest, and real oracle targets do not exist anywhere in this repository
+yet (same blockers tracked throughout this log and
+`docs/status/person_d_real_pilot_baseline_preview.json`). The gate cannot
+report PASSED or FAILED until they do.
+
+**Evidence:** `tests/baselines/test_positive_control_gate.py` (10 tests:
+BLOCKED on non-real provenance regardless of signal quality, a clean
+PASSED, a sub-threshold-R^2 FAILED, a CI-straddling-zero FAILED with R^2
+above threshold, structural-audit/empty-input/missing-target/invalid-fold-
+manifest error paths, and a "BLOCKED never carries a numeric field" check).
+All four PASSED/FAILED/BLOCKED test scenarios use the caller-declared real
+literal deliberately, on the same synthetic fixture already used elsewhere
+in Phase 4, to exercise the arithmetic -- none of this is a claim about
+real data. Persisted evidence:
+`docs/status/person_d_step_4_3_positive_control_gate.json`
+(`scripts/run_step_4_3_positive_control_gate.py`), explicitly marked
+`"scientific_use": "forbidden"` and reporting `BLOCKED`, run against the
+same synthetic fixture with an honestly non-real `data_provenance` label.
+
+**Follow-up needed, not done here:** Phase 4's other three SAVE
+deliverables (`split_integrity.json` from `leakage.audit_layout_fold
+_isolation`, a metadata-leakage report from `leakage
+.check_metadata_predictability`/`audit_identity_not_filename_derived`, and
+a missingness-exclusion report from `missingness
+.build_missingness_exclusion_report`) exist as functions with test
+coverage but have never been written to disk as an artifact. Persisting
+them is a separate, still-open task.
+
+Baseline suite: 82 -> 92 passing. Repo-wide: same 13 pre-existing
+A/B-owned failures, confirmed unchanged by direct re-run.

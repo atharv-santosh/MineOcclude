@@ -1,0 +1,18 @@
+{
+  "gate_finding": {
+    "ci_high": null,
+    "ci_low": null,
+    "data_provenance": "synthetic_fixture_no_real_no_wall_capture_exists_yet",
+    "detail": "Gate inputs are not declared as Person C's real accepted no-wall capture data (data_provenance='synthetic_fixture_no_real_no_wall_capture_exists_yet' != 'person_c_accepted_no_wall_capture'). Real no-wall rows, a real B fold manifest, and real oracle targets do not exist yet in this repository, so this reports BLOCKED rather than computing a scientific R^2 no one has grounds to trust.",
+    "fold_count": null,
+    "n_rows": 15,
+    "r2": null,
+    "r2_threshold": 0.5,
+    "resample_count": null,
+    "seed": null,
+    "status": "BLOCKED"
+  },
+  "reason": "no real no-wall rows, real Person B fold manifest, or real oracle targets exist yet; this run exercises the gate's ridge/R^2/bootstrap machinery against the same synthetic fixture used in tests/baselines/test_positive_control_gate.py, with data_provenance honestly labeled as non-real, so the gate reports BLOCKED rather than a scientific PASSED/FAILED verdict",
+  "report_type": "person_d_step_4_3_positive_control_gate",
+  "scientific_use": "forbidden"
+}
