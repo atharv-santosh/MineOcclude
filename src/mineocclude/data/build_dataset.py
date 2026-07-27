@@ -43,6 +43,13 @@ def process_episode(server_dir: str, client_dir: str, out_root: str,
                     run_empirical: bool = True,
                     canonical_640: bool = True) -> dict:
     """Process one episode. Returns a summary dict (accepted flag + stats)."""
+    if run_empirical and not canonical_640:
+        raise ValueError(
+            "run_empirical requires canonical_640: the detector must read the "
+            "canonical 640x360 frames so centroids match the declared "
+            "source-frame space. Detecting on the raw framebuffer exports "
+            "centroids at the client window scale."
+        )
     frame_map, report = align_episode(server_dir, client_dir)
     summary = {
         "server_dir": server_dir, "client_dir": client_dir,
@@ -53,6 +60,14 @@ def process_episode(server_dir: str, client_dir: str, out_root: str,
     }
     if not report.accepted or frame_map is None:
         return summary
+
+    # Canonical 640x360 source frames (16:9), independent of the client window.
+    # This must precede detection: the detector reads these frames so that
+    # centroids land in the 640x360 space the layout/marker contract declares.
+    # The raw framebuffer is the native window size (2x on Retina), which
+    # silently doubled every exported centroid before this was reordered.
+    if canonical_640:
+        frame_map = normalize_episode(frame_map)
 
     # Server-logged geometric channel; empirical channel from the interim
     # detector until E's frozen detector rows are supplied for these frames.
@@ -101,10 +116,6 @@ def process_episode(server_dir: str, client_dir: str, out_root: str,
                 "captured no empirical reveal (missing_reveal)"
             ]
             return summary
-
-    # Canonical 640x360 source frames (16:9), independent of the client window.
-    if canonical_640:
-        frame_map = normalize_episode(frame_map)
 
     # Impulse evidence: a scripted-impulse episode (declared in the server's
     # reset_result.json) is gated by the pixel-level step check; ordinary

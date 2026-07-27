@@ -6,7 +6,8 @@
   {
    "trajectory_id": "layout_00_ep9522",
    "episode_id": 9522,
-   "layout_id": "layout_00",
+   "layout_id": "layout_01",
+   "legacy_layout_id": "layout_00",
    "seed": 95665444,
    "start_utc": "2026-07-25T20:51:46Z",
    "end_utc": "2026-07-25T20:52:04Z",
@@ -30,7 +31,8 @@
   {
    "trajectory_id": "layout_00_ep9529",
    "episode_id": 9529,
-   "layout_id": "layout_00",
+   "layout_id": "layout_01",
+   "legacy_layout_id": "layout_00",
    "seed": 95720877,
    "start_utc": "2026-07-25T20:55:02Z",
    "end_utc": "2026-07-25T20:55:12Z",
@@ -54,7 +56,8 @@
   {
    "trajectory_id": "layout_01_ep9524",
    "episode_id": 9524,
-   "layout_id": "layout_01",
+   "layout_id": "layout_02",
+   "legacy_layout_id": "layout_01",
    "seed": 95681282,
    "start_utc": "2026-07-25T20:52:42Z",
    "end_utc": "2026-07-25T20:52:59Z",
@@ -78,7 +81,8 @@
   {
    "trajectory_id": "layout_01_ep9531",
    "episode_id": 9531,
-   "layout_id": "layout_01",
+   "layout_id": "layout_02",
+   "legacy_layout_id": "layout_01",
    "seed": 95736715,
    "start_utc": "2026-07-25T20:55:49Z",
    "end_utc": "2026-07-25T20:56:00Z",
@@ -102,7 +106,8 @@
   {
    "trajectory_id": "layout_02_ep9526",
    "episode_id": 9526,
-   "layout_id": "layout_02",
+   "layout_id": "layout_03",
+   "legacy_layout_id": "layout_02",
    "seed": 95697120,
    "start_utc": "2026-07-25T20:53:34Z",
    "end_utc": "2026-07-25T20:53:46Z",
@@ -126,7 +131,8 @@
   {
    "trajectory_id": "layout_03_ep9523",
    "episode_id": 9523,
-   "layout_id": "layout_03",
+   "layout_id": "layout_04",
+   "legacy_layout_id": "layout_03",
    "seed": 95673363,
    "start_utc": "2026-07-25T20:52:21Z",
    "end_utc": "2026-07-25T20:52:32Z",
@@ -150,7 +156,8 @@
   {
    "trajectory_id": "layout_03_ep9528",
    "episode_id": 9528,
-   "layout_id": "layout_03",
+   "layout_id": "layout_04",
+   "legacy_layout_id": "layout_03",
    "seed": 95712958,
    "start_utc": "2026-07-25T20:54:30Z",
    "end_utc": "2026-07-25T20:54:46Z",
@@ -174,7 +181,8 @@
   {
    "trajectory_id": "layout_04_ep9525",
    "episode_id": 9525,
-   "layout_id": "layout_04",
+   "layout_id": "layout_05",
+   "legacy_layout_id": "layout_04",
    "seed": 95689201,
    "start_utc": "2026-07-25T20:53:16Z",
    "end_utc": "2026-07-25T20:53:25Z",
@@ -198,7 +206,8 @@
   {
    "trajectory_id": "layout_04_ep9530",
    "episode_id": 9530,
-   "layout_id": "layout_04",
+   "layout_id": "layout_05",
+   "legacy_layout_id": "layout_04",
    "seed": 95728796,
    "start_utc": "2026-07-25T20:55:22Z",
    "end_utc": "2026-07-25T20:55:36Z",
@@ -222,7 +231,8 @@
   {
    "trajectory_id": "layout_05_ep9527",
    "episode_id": 9527,
-   "layout_id": "layout_05",
+   "layout_id": "layout_06",
+   "legacy_layout_id": "layout_05",
    "seed": 95705039,
    "start_utc": "2026-07-25T20:53:58Z",
    "end_utc": "2026-07-25T20:54:14Z",
@@ -244,5 +254,31 @@
    "capture_provenance": "/Users/atharvsantosh/MineOcclude/data/autonomous/layout_05_ep9527/capture_provenance.json"
   }
  ],
- "utc_format": "%Y-%m-%dT%H:%M:%SZ (second precision; parses with rollout_registry strict format)"
+ "utc_format": "%Y-%m-%dT%H:%M:%SZ (second precision; parses with rollout_registry strict format)",
+ "layout_id_correction": {
+  "applied": "legacy mod ids layout_00-layout_05 -> frozen contract layout_01-layout_06",
+  "decision_record": "docs/decisions/person_c_layout_id_supersession_v0_1.md",
+  "corrected_fields": [
+   "canonical_camera_pose_id",
+   "frame_id",
+   "layout_id",
+   "marker_set_id",
+   "png_path"
+  ],
+  "preserved_verbatim": [
+   "trajectory_id",
+   "source_trajectory_id",
+   "source_artifact_id",
+   "episode_id",
+   "capture_command",
+   "capture_package",
+   "capture_provenance",
+   "seed",
+   "start_utc",
+   "end_utc",
+   "git_sha",
+   "capturing_jar_sha256"
+  ],
+  "preserved_rationale": "These record what was actually captured and executed against the prototype mod, and name real on-disk artifacts. Rewriting them would falsify provenance."
+ }
 }

@@ -2,8 +2,9 @@
  "homography_fixture_schema_version": "person-e-homography-fixture-v1.0",
  "schema_version": "1.0",
  "layout_id": "layout_04",
- "source_trajectory_id": "layout_04_ep9770_nosheep_calibration",
- "canonical_camera_pose_id": "layout_04_canonical_pose",
+ "legacy_layout_id": "layout_03",
+ "source_trajectory_id": "layout_03_ep9768_nosheep_calibration",
+ "canonical_camera_pose_id": "layout_04_canonical_pose_v1",
  "image_coordinate_system": "pixel_center_xy_zero_based",
  "image_width_px": 640,
  "image_height_px": 360,
@@ -14,7 +15,7 @@
  "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (y=4 = sheep foot-plane)",
  "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE)",
  "image_xy_status": "NULL \u2014 E detects on the no-sheep calibration frames",
- "capture_provenance": "data/autonomous/layout_04_ep9770/capture_provenance.json (git_dirty=false)",
+ "capture_provenance": "data/autonomous/layout_03_ep9768/capture_provenance.json (git_dirty=false)",
  "marker_correspondences": [
   {
    "marker_id": "north_west",
@@ -22,8 +23,8 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "blue",
    "world_xz_blocks": [
-    -6.0,
-    1.0
+    -7.0,
+    2.0
    ],
    "image_xy": null,
    "mod_role_original": "near_west"
@@ -34,8 +35,8 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "yellow",
    "world_xz_blocks": [
-    6.0,
-    1.0
+    7.0,
+    2.0
    ],
    "image_xy": null,
    "mod_role_original": "near_east"
@@ -46,8 +47,8 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "white",
    "world_xz_blocks": [
-    6.0,
-    5.0
+    7.0,
+    6.0
    ],
    "image_xy": null,
    "mod_role_original": "far_east"
@@ -58,11 +59,37 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "lime",
    "world_xz_blocks": [
-    -6.0,
-    5.0
+    -7.0,
+    6.0
    ],
    "image_xy": null,
    "mod_role_original": "far_west"
   }
- ]
+ ],
+ "layout_id_correction": {
+  "applied": "legacy mod ids layout_00-layout_05 -> frozen contract layout_01-layout_06",
+  "decision_record": "docs/decisions/person_c_layout_id_supersession_v0_1.md",
+  "corrected_fields": [
+   "canonical_camera_pose_id",
+   "frame_id",
+   "layout_id",
+   "marker_set_id",
+   "png_path"
+  ],
+  "preserved_verbatim": [
+   "trajectory_id",
+   "source_trajectory_id",
+   "source_artifact_id",
+   "episode_id",
+   "capture_command",
+   "capture_package",
+   "capture_provenance",
+   "seed",
+   "start_utc",
+   "end_utc",
+   "git_sha",
+   "capturing_jar_sha256"
+  ],
+  "preserved_rationale": "These record what was actually captured and executed against the prototype mod, and name real on-disk artifacts. Rewriting them would falsify provenance."
+ }
 }

@@ -6,16 +6,52 @@ marker/calibration artifacts derive from the clean calibration captures
 nosheep/negative+markers), collected on committed code with
 `git_dirty=false`. Provenance: `provenance_calibration_clean.json`.
 
+## ⚠ BREAKING since the last handoff: layout ids were off by one
+
+Every `layout_id` in this handoff has been **corrected by +1** to match the
+frozen `configs/scenes/layouts.yaml`. The captures were made against the
+prototype mod's zero-based ids (`layout_00`–`layout_05`) while the frozen
+contract uses `layout_01`–`layout_06`, so the previous delivery keyed each
+layout's markers to the *wrong* contract entry — e.g. what was
+`markers_layout_01.json` (a Z-wall scene) is contract **`layout_02`**, not
+contract `layout_01` (an X-wall scene).
+
+**If you already computed homographies from the previous delivery, discard
+them** — each was fitted for the wrong layout.
+
+- Mapping and evidence: `docs/decisions/person_c_layout_id_supersession_v0_1.md`.
+- This is an identifier shift only; **no geometry changed**. Verified: every
+  marker set's `world_xz_blocks` now matches that layout's `world_blocks` in
+  `layouts.yaml` exactly.
+- Corrected: `layout_id`, `canonical_camera_pose_id`, `marker_set_id`,
+  `frame_id`, `png_path`, marker filenames, `calibration_frames/` dirs.
+- **Preserved verbatim** (historical provenance — do not join on these):
+  `trajectory_id`, `source_trajectory_id`, `source_artifact_id`,
+  `capture_command`, and the `data/autonomous/layout_00_ep…` paths. These
+  still carry legacy ids because they name what was actually executed and
+  real on-disk directories. Each record also carries `legacy_layout_id`.
+- Join on `layout_id`. The production dataset
+  (`data/autonomous/layout_{01..06}_ep1xxxx`) uses the same contract ids.
+
 ## 1. Marker visibility — FIXED
 
 Root cause confirmed as you diagnosed: the far marker row was at
 `camOrtho − 1` (one block behind the camera). Fixed to `wallOrtho + 3`
 (beyond the wall, at the lane extremes, outside the wall's axis-shadow);
 all four markers are now in-frame and unoccluded, **verified on all 6
-layouts**. World coords: `markers_layout_00.json … markers_layout_05.json`
+layouts**. World coords: `markers_layout_01.json … markers_layout_06.json`
 (`source_trajectory_id` names the clean nosheep capture per layout). Detect
-`image_xy` on that capture's frames
-(`~/mineocclude-client/mineocclude_client_out/episode_976{2,4,6,8},977{0,2}/frames/`).
+`image_xy` on that capture's frames — **use the `frames_640x360/` directory,
+not `frames/`**:
+`~/mineocclude-client/mineocclude_client_out/episode_976{2,4,6,8},977{0,2}/frames_640x360/`.
+
+> **Pixel-space correction.** `frames/` holds the raw client framebuffer at
+> **1280×720** (Retina 2×), not 640×360. These files declare
+> `image_width_px: 640, image_height_px: 360`, and the committed
+> `calibration_frames/*.png` are 640×360. Detecting on `frames/` and
+> reporting into a 640×360 contract puts every `image_xy` at 2× its true
+> value. The previous README pointed at `frames/` — if you detected there,
+> halve your coordinates or re-detect on `frames_640x360/`.
 
 ## 2. Marker image-point convention — CONFIRMED
 

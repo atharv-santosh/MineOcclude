@@ -6,7 +6,8 @@
   {
    "trajectory_id": "layout_00_ep9761",
    "episode_id": 9761,
-   "layout_id": "layout_00",
+   "layout_id": "layout_01",
+   "legacy_layout_id": "layout_00",
    "scene": "normal",
    "seed": 97558085,
    "capture_command": [
@@ -29,7 +30,8 @@
   {
    "trajectory_id": "layout_00_ep9762",
    "episode_id": 9762,
-   "layout_id": "layout_00",
+   "layout_id": "layout_01",
+   "legacy_layout_id": "layout_00",
    "scene": "nosheep",
    "seed": 97566004,
    "capture_command": [
@@ -52,7 +54,8 @@
   {
    "trajectory_id": "layout_01_ep9763",
    "episode_id": 9763,
-   "layout_id": "layout_01",
+   "layout_id": "layout_02",
+   "legacy_layout_id": "layout_01",
    "scene": "normal",
    "seed": 97573923,
    "capture_command": [
@@ -75,7 +78,8 @@
   {
    "trajectory_id": "layout_01_ep9764",
    "episode_id": 9764,
-   "layout_id": "layout_01",
+   "layout_id": "layout_02",
+   "legacy_layout_id": "layout_01",
    "scene": "nosheep",
    "seed": 97581842,
    "capture_command": [
@@ -98,7 +102,8 @@
   {
    "trajectory_id": "layout_02_ep9765",
    "episode_id": 9765,
-   "layout_id": "layout_02",
+   "layout_id": "layout_03",
+   "legacy_layout_id": "layout_02",
    "scene": "normal",
    "seed": 97589761,
    "capture_command": [
@@ -121,7 +126,8 @@
   {
    "trajectory_id": "layout_02_ep9766",
    "episode_id": 9766,
-   "layout_id": "layout_02",
+   "layout_id": "layout_03",
+   "legacy_layout_id": "layout_02",
    "scene": "nosheep",
    "seed": 97597680,
    "capture_command": [
@@ -144,7 +150,8 @@
   {
    "trajectory_id": "layout_03_ep9767",
    "episode_id": 9767,
-   "layout_id": "layout_03",
+   "layout_id": "layout_04",
+   "legacy_layout_id": "layout_03",
    "scene": "normal",
    "seed": 97605599,
    "capture_command": [
@@ -167,7 +174,8 @@
   {
    "trajectory_id": "layout_03_ep9768",
    "episode_id": 9768,
-   "layout_id": "layout_03",
+   "layout_id": "layout_04",
+   "legacy_layout_id": "layout_03",
    "scene": "nosheep",
    "seed": 97613518,
    "capture_command": [
@@ -190,7 +198,8 @@
   {
    "trajectory_id": "layout_04_ep9769",
    "episode_id": 9769,
-   "layout_id": "layout_04",
+   "layout_id": "layout_05",
+   "legacy_layout_id": "layout_04",
    "scene": "normal",
    "seed": 97621437,
    "capture_command": [
@@ -213,7 +222,8 @@
   {
    "trajectory_id": "layout_04_ep9770",
    "episode_id": 9770,
-   "layout_id": "layout_04",
+   "layout_id": "layout_05",
+   "legacy_layout_id": "layout_04",
    "scene": "nosheep",
    "seed": 97629356,
    "capture_command": [
@@ -236,7 +246,8 @@
   {
    "trajectory_id": "layout_05_ep9771",
    "episode_id": 9771,
-   "layout_id": "layout_05",
+   "layout_id": "layout_06",
+   "legacy_layout_id": "layout_05",
    "scene": "normal",
    "seed": 97637275,
    "capture_command": [
@@ -259,7 +270,8 @@
   {
    "trajectory_id": "layout_05_ep9772",
    "episode_id": 9772,
-   "layout_id": "layout_05",
+   "layout_id": "layout_06",
+   "legacy_layout_id": "layout_05",
    "scene": "nosheep",
    "seed": 97645194,
    "capture_command": [
@@ -279,5 +291,31 @@
    "capturing_jar_sha256": "be960a924e2c6a2b44b393566391f86e1160f9fd18d7e5bf718b6c307dfbf022",
    "capture_package_sha256": "00fd41fca89c153a7e96c7d5de59c3c66af2e5bd5db53e8218a293f890b464db"
   }
- ]
+ ],
+ "layout_id_correction": {
+  "applied": "legacy mod ids layout_00-layout_05 -> frozen contract layout_01-layout_06",
+  "decision_record": "docs/decisions/person_c_layout_id_supersession_v0_1.md",
+  "corrected_fields": [
+   "canonical_camera_pose_id",
+   "frame_id",
+   "layout_id",
+   "marker_set_id",
+   "png_path"
+  ],
+  "preserved_verbatim": [
+   "trajectory_id",
+   "source_trajectory_id",
+   "source_artifact_id",
+   "episode_id",
+   "capture_command",
+   "capture_package",
+   "capture_provenance",
+   "seed",
+   "start_utc",
+   "end_utc",
+   "git_sha",
+   "capturing_jar_sha256"
+  ],
+  "preserved_rationale": "These record what was actually captured and executed against the prototype mod, and name real on-disk artifacts. Rewriting them would falsify provenance."
+ }
 }

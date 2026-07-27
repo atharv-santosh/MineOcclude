@@ -63,14 +63,21 @@ the frozen Person C contracts:
 
 ## Recorded deviations (open items)
 
-- **Mod-internal layouts vs frozen `layouts.yaml`.** The mod still uses its
+- **Mod-internal layouts vs frozen `layouts.yaml`.** ~~The mod still uses its
   prototype layout table (`Layouts.java`, relative coordinates, ids
-  `layout_00`–`layout_05`), which produced the existing real data. The frozen
-  C1 `layouts.yaml` v0.2 (`layout_01`–`layout_06`, absolute world
-  coordinates) is NOT loadable by the mod yet — and the geometry audit
-  (`docs/reports/person_c_layout_geometry_audit.md`) shows v0.2 is itself
-  defective at the canonical pose. Reconciling the two is a C1 revision item
-  that must be resolved before matrix collection.
+  `layout_00`–`layout_05`), which produced the existing real data.~~
+  **RESOLVED for the mod in `1f1937a`**: `Layouts.java` now registers
+  `layout_01`–`layout_06` matching the frozen contract, and `layouts.yaml`
+  was revised to v0.3 (the v0.2 canonical-pose geometry defect referenced
+  here is fixed; the cited geometry-audit report was never committed and the
+  per-layout occlusion-arc assertions in
+  `tests/data/test_visibility_geometry.py` are the surviving check).
+  **NOT resolved for artifacts captured before `1f1937a`**: the C6 pilot
+  bundles and the Person E handoff carry the legacy zero-based ids. That is
+  handled by `docs/decisions/person_c_layout_id_supersession_v0_1.md`, which
+  records the `layout_00→layout_01 … layout_05→layout_06` mapping, the
+  evidence that it is a pure rename, and which artifacts were corrected
+  versus preserved as historical provenance.
 - **Integer episode IDs on the wire and in JSONL.** The canonical downstream
   string identity is `str(episode_id)` with
   `trajectory_id = "<layout_id>_ep<episode_id>"`, declared once in

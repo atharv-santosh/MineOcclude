@@ -310,15 +310,47 @@ def detect_frame(path: str, **kw) -> Detection:
     return detect_magenta_rgb(open_rgb_retry(path), **kw)
 
 
-def add_interim_empirical_visibility(frame_map, **kw):
-    """Run the interim detector over every frame (plumbing/QA only)."""
-    detections = [detect_frame(p, **kw) for p in frame_map["frame_abspath"]]
+#: Declared source-frame geometry. Centroids are reported in this space, and
+#: it is the space Person E's marker/homography contract is written against.
+CANONICAL_FRAME_W, CANONICAL_FRAME_H = 640, 360
+
+#: Column holding the canonical 640x360 source frame. The sibling
+#: ``frame_abspath`` is the *raw* client framebuffer, which is the native
+#: window size (1280x720 on a Retina display) — detecting there silently
+#: reports centroids at 2x the canonical scale.
+CANONICAL_FRAME_COLUMN = "frame_640_path"
+
+
+def add_interim_empirical_visibility(frame_map, frame_column=CANONICAL_FRAME_COLUMN,
+                                     **kw):
+    """Run the interim detector over every frame (plumbing/QA only).
+
+    Reads the canonical 640x360 frames, so ``blob_cx``/``blob_cy`` are in the
+    same pixel space the layout/marker contract declares. Centroids outside
+    that frame are a hard error rather than a silently exported coordinate.
+    """
+    if frame_column not in frame_map.columns:
+        raise KeyError(
+            f"frame map has no {frame_column!r} column; the interim detector "
+            "must read canonical 640x360 frames, not the raw framebuffer"
+        )
+    detections = [detect_frame(p, **kw) for p in frame_map[frame_column]]
+    for path, det in zip(frame_map[frame_column], detections):
+        if not det.detected:
+            continue
+        if not (0 <= det.cx < CANONICAL_FRAME_W and 0 <= det.cy < CANONICAL_FRAME_H):
+            raise ValueError(
+                f"detector centroid ({det.cx:.1f}, {det.cy:.1f}) falls outside "
+                f"the declared {CANONICAL_FRAME_W}x{CANONICAL_FRAME_H} source "
+                f"frame for {path}; refusing to export out-of-space coordinates"
+            )
     out = frame_map.copy()
     out["empirical_visible"] = [d.detected for d in detections]
     out["blob_area"] = [d.area_fraction for d in detections]
     out["blob_cx"] = [d.cx for d in detections]
     out["blob_cy"] = [d.cy for d in detections]
     out["detector_id"] = INTERIM_DETECTOR_ID
+    out["detector_frame_space"] = f"{CANONICAL_FRAME_W}x{CANONICAL_FRAME_H}"
     return out
 
 
