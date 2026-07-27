@@ -7,6 +7,7 @@ import errno
 import hashlib
 import importlib.util
 import json
+import math
 import os
 import shutil
 import tempfile
@@ -53,6 +54,34 @@ CHECKED_EXAMPLE = (
     / "fixtures"
     / "phase5_activation_store_example"
 )
+CHECKED_HANDOFF_V12 = (
+    Path(__file__).parents[2]
+    / "docs"
+    / "status"
+    / "fixtures"
+    / "phase5_activation_store_handoff_v1_2"
+)
+V11_EXPECTED_HASHES = {
+    "README.md": (
+        "cae80aa2dfab6d491e65918efa35623d4cbb3eb1d83493362833dc667a3dc181"
+    ),
+    "SHA256SUMS": (
+        "0e9e4f605a8e8eceacd8dff0cb48f5db1f5a643b40073daa4b83032d09bc0b4d"
+    ),
+    "chunks/activation-chunk-106b16904a4ae44c7bac4903.npy": (
+        "409f6a6bf3e85e2b177db81d51b621707688bdcb6630f98d336d16537f39217f"
+    ),
+    (
+        "indexes/index-"
+        "834f1070e8d77680e06d7713caf618624211c0bcf5ce4cfef8b692011ebd67e4"
+        ".json"
+    ): "8526daf64764ec06940ca1ac4209c76371869382c13d546404d5726fc1d79805",
+    (
+        "run_bindings/run-"
+        "480e36150b993ebec1bdf1ba66a872366e7daa5ffed790e70c46351257e9238f"
+        ".json"
+    ): "3b7ee30304940f062066c57ac4219dad2f68dfc9a505007c44355fdebae9084e",
+}
 CREATED = "2026-07-27T00:00:00Z"
 WIDTH = 2048
 
@@ -2246,6 +2275,319 @@ class TestPhase5ExampleAndForecast(unittest.TestCase):
         self.assertEqual(
             benchmark._deterministic_json_bytes(unresolved),
             benchmark._deterministic_json_bytes(copy.deepcopy(unresolved)),
+        )
+
+
+class TestPhase5CoordinatedHandoffV12(unittest.TestCase):
+    """Exercise the exact public A-store to B-probe consumer handoff."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.benchmark = _benchmark_module()
+        cls.temporary = tempfile.TemporaryDirectory()
+        cls.generated = Path(cls.temporary.name) / "handoff-v1-2"
+        cls.benchmark._write_handoff_v12(
+            type("Arguments", (), {"output_dir": cls.generated})()
+        )
+        cls.manifest = json.loads(
+            (cls.generated / "handoff_manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        cls.accepted = json.loads(
+            (
+                cls.generated
+                / "accepted_manifest"
+                / "accepted_manifest_rows.json"
+            ).read_text(encoding="utf-8")
+        )
+        cls.targets = json.loads(
+            (
+                cls.generated
+                / "targets"
+                / "synthetic_oracle_targets.json"
+            ).read_text(encoding="utf-8")
+        )
+        cls.snapshot = load_activation_index_snapshot(
+            cls.generated / cls.manifest["activation_store"]["index_path"],
+            store_root=cls.generated,
+        )
+        cls.probe = cls.benchmark._handoff_v12_probe(
+            output=cls.generated,
+            snapshot=cls.snapshot,
+            target_document=cls.targets,
+        )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temporary.cleanup()
+
+    def _validate(self, root: Path) -> None:
+        self.benchmark._validate_handoff_v12(
+            type("Arguments", (), {"output_dir": root})()
+        )
+
+    def test_checked_package_has_exact_inventory_checksums_and_text_bytes(self):
+        self._validate(CHECKED_HANDOFF_V12)
+        expected = {
+            "README.md",
+            "SHA256SUMS",
+            "accepted_manifest/accepted_manifest_rows.json",
+            "handoff_manifest.json",
+            "targets/synthetic_oracle_targets.json",
+            self.manifest["activation_store"]["index_path"],
+            self.manifest["activation_store"]["run_binding_path"],
+            *(
+                chunk["path"]
+                for chunk in self.manifest["activation_store"]["chunks"]
+            ),
+        }
+        observed = {
+            path.relative_to(self.generated).as_posix()
+            for path in self.generated.rglob("*")
+            if path.is_file()
+        }
+        self.assertEqual(observed, expected)
+        inventory = {
+            relative: digest
+            for digest, relative in (
+                line.split("  ", maxsplit=1)
+                for line in (
+                    self.generated / "SHA256SUMS"
+                ).read_text(encoding="utf-8").splitlines()
+            )
+        }
+        self.assertEqual(set(inventory), expected - {"SHA256SUMS"})
+        for relative, digest in inventory.items():
+            self.assertEqual(
+                hashlib.sha256(
+                    (self.generated / relative).read_bytes()
+                ).hexdigest(),
+                digest,
+            )
+        for path in self.generated.rglob("*"):
+            if path.is_file() and (
+                path.suffix in {".json", ".md"}
+                or path.name == "SHA256SUMS"
+            ):
+                payload = path.read_bytes()
+                self.assertNotIn(b"\r", payload)
+                self.assertFalse(payload.startswith(b"\xef\xbb\xbf"))
+                self.assertTrue(payload.endswith(b"\n"))
+                payload.decode("utf-8")
+
+    def test_generation_is_byte_identical_and_probe_hash_is_stable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / "first"
+            second = Path(directory) / "second"
+            for output in (first, second):
+                self.benchmark._write_handoff_v12(
+                    type("Arguments", (), {"output_dir": output})()
+                )
+            first_files = {
+                path.relative_to(first).as_posix(): path.read_bytes()
+                for path in first.rglob("*")
+                if path.is_file()
+            }
+            second_files = {
+                path.relative_to(second).as_posix(): path.read_bytes()
+                for path in second.rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual(first_files, second_files)
+            first_manifest = json.loads(
+                (first / "handoff_manifest.json").read_text(encoding="utf-8")
+            )
+            second_manifest = json.loads(
+                (second / "handoff_manifest.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                first_manifest["deterministic_probe"]["probe_output_hash"],
+                second_manifest["deterministic_probe"]["probe_output_hash"],
+            )
+
+    def test_manifest_rows_are_eligible_and_public_store_reads_every_vector(self):
+        rows = self.accepted["rows"]
+        self.assertEqual(len(rows), 10)
+        for row in rows:
+            validate_identity = self.benchmark.validate_identity
+            validate_identity(row)
+        proof = build_activation_eligibility_proof(
+            store_identity=self.snapshot.store_identity,
+            accepted_manifest_rows=rows,
+        )
+        self.assertEqual(len(proof.eligible_rows), 10)
+        keys = tuple(
+            ActivationRowKey.from_row(row)
+            for row in self.snapshot.index_rows
+        )
+        vectors = read_activation_vectors(
+            store_root=self.generated,
+            snapshot=self.snapshot,
+            row_keys=keys,
+        )
+        self.assertEqual(vectors.shape, (10, 2048))
+        self.assertEqual(vectors.dtype.name, "float32")
+        self.assertTrue(numpy.isfinite(vectors).all())
+        numpy.testing.assert_array_equal(vectors, self.probe["vectors"])
+
+    def test_targets_join_exactly_and_probe_ready_matrix_is_complete(self):
+        self.benchmark.validate_oracle_target_document(self.targets)
+        activation_keys = {
+            (row["trajectory_id"], row["model_frame_idx"])
+            for row in self.snapshot.index_rows
+        }
+        target_keys = {
+            (row["trajectory_id"], row["model_frame_idx"])
+            for row in self.targets["rows"]
+        }
+        self.assertEqual(activation_keys, target_keys)
+        self.assertEqual(len(activation_keys), 10)
+        self.assertEqual(len(self.snapshot.index_rows), len(activation_keys))
+        self.assertEqual(len(self.targets["rows"]), len(target_keys))
+        self.assertEqual(len(self.probe["frame_table"]["rows"]), 10)
+        matrix = self.probe["matrix"]
+        self.assertEqual(len(matrix.features), 10)
+        self.assertTrue(all(len(vector) == 2048 for vector in matrix.features))
+        self.assertEqual(len(set(matrix.layout_ids)), 10)
+        self.assertEqual(matrix.layer_idx, 0)
+        self.assertEqual(matrix.hook_site, "residual_stream")
+        self.assertEqual(matrix.target_name, "mu_oracle_blocks")
+        self.assertEqual(matrix.accepted_manifest_hash, self.accepted[
+            "accepted_manifest_hash"
+        ])
+
+    def test_all_outer_and_grouped_inner_folds_are_nonempty(self):
+        outer_counts = {
+            int(index): count
+            for index, count in self.manifest[
+                "deterministic_probe"
+            ]["outer_fold_counts"].items()
+        }
+        self.assertEqual(outer_counts, {index: 2 for index in range(5)})
+        self.assertEqual(
+            self.manifest["deterministic_probe"]["outer_fold_assignments"],
+            self.probe["fold_manifest"]["layout_assignments"],
+        )
+        self.assertEqual(
+            self.manifest["deterministic_probe"]["outer_fold_manifest_hash"],
+            self.probe["fold_manifest"]["artifact_hash"],
+        )
+        self.assertEqual(len(self.probe["inner_facts"]), 5)
+        for fact in self.probe["inner_facts"]:
+            self.assertEqual(fact["outer_training_group_count"], 8)
+            self.assertEqual(fact["outer_training_row_count"], 8)
+            self.assertEqual(
+                fact["inner_fold_counts"],
+                {str(index): 2 for index in range(4)},
+            )
+
+    def test_real_public_tiny_probe_is_finite_and_repeatable(self):
+        first = self.probe["execution"]
+        second = self.benchmark.run_ridge_oof_probe(
+            self.probe["matrix"],
+            artifact_id_prefix="phase5-handoff-v1-2-tiny-probe",
+        )
+        self.assertEqual(first, second)
+        self.assertEqual(len(first.oof_result.predictions), 10)
+        self.assertTrue(
+            all(math.isfinite(value) for value in first.oof_result.predictions)
+        )
+        repeated_document = {
+            "matrix_hash": self.probe["matrix"].matrix_hash,
+            "output_shape": [len(second.oof_result.predictions)],
+            "prediction_artifact_hash": (
+                second.prediction_artifact["artifact_hash"]
+            ),
+            "predictions": list(second.oof_result.predictions),
+            "u1_result_artifact_hash": (
+                second.u1_result_artifact["artifact_hash"]
+            ),
+        }
+        self.assertEqual(
+            self.benchmark.sha256_value(repeated_document),
+            self.manifest["deterministic_probe"]["probe_output_hash"],
+        )
+
+    def test_changed_activation_or_target_identity_fails_the_public_join(self):
+        activation = copy.deepcopy(self.probe["activation_package"])
+        activation["index_rows"][0]["trajectory_id"] = "changed-trajectory"
+        with self.assertRaises(ValueError):
+            self.benchmark.build_joined_frame_table(
+                activation,
+                self.targets,
+            )
+        targets = copy.deepcopy(self.targets)
+        for row in targets["rows"]:
+            row["accepted_manifest_hash"] = "f" * 64
+        self.benchmark.validate_oracle_target_document(targets)
+        with self.assertRaises(ValueError):
+            self.benchmark.build_joined_frame_table(
+                self.probe["activation_package"],
+                targets,
+            )
+
+    def test_missing_group_coverage_fails_before_probe_fitting(self):
+        rows = [
+            {
+                **dict(row),
+                "fold_idx": 0 if index == 0 else 1,
+            }
+            for index, row in enumerate(self.probe["frame_table"]["rows"][:4])
+        ]
+        with self.assertRaises(ValueError):
+            self.benchmark.build_grouped_inner_folds(
+                rows,
+                outer_fold_idx=0,
+                n_splits=4,
+                seed=20260719,
+            )
+
+    def test_extra_file_target_tamper_and_chunk_tamper_fail_closed(self):
+        mutations = {}
+
+        def add_extra(root: Path) -> None:
+            (root / "EXTRA.txt").write_text("extra", encoding="utf-8")
+
+        def tamper_target(root: Path) -> None:
+            path = root / "targets" / "synthetic_oracle_targets.json"
+            path.write_bytes(path.read_bytes() + b" ")
+
+        def tamper_chunk(root: Path) -> None:
+            path = next((root / "chunks").glob("*.npy"))
+            payload = bytearray(path.read_bytes())
+            payload[-1] ^= 1
+            path.write_bytes(payload)
+
+        mutations["extra_file"] = add_extra
+        mutations["target_bytes"] = tamper_target
+        mutations["activation_chunk"] = tamper_chunk
+        for label, mutate in mutations.items():
+            with (
+                self.subTest(label=label),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                copied = Path(directory) / "handoff"
+                shutil.copytree(self.generated, copied)
+                mutate(copied)
+                with self.assertRaises(ValueError):
+                    self._validate(copied)
+
+    def test_v11_is_byte_unchanged_and_schema_remains_v1(self):
+        observed = {
+            path.relative_to(CHECKED_EXAMPLE).as_posix(): hashlib.sha256(
+                path.read_bytes()
+            ).hexdigest()
+            for path in CHECKED_EXAMPLE.rglob("*")
+            if path.is_file()
+        }
+        self.assertEqual(observed, V11_EXPECTED_HASHES)
+        self.assertEqual(self.manifest["schema_version"], "1.0")
+        self.assertEqual(self.accepted["schema_version"], "1.0")
+        self.assertEqual(self.targets["schema_version"], "1.0")
+        self.assertEqual(
+            self.snapshot.store_identity.schema_version,
+            "1.0",
         )
 
 

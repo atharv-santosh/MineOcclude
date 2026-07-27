@@ -324,6 +324,56 @@ example is not accepted runtime evidence and is not independent Person B
 execution. A fresh Person B acceptance run in a new worktree and branch is
 required; the failed acceptance worktree and receipt must not be reused.
 
+## Coordinated synthetic handoff v1.2
+
+The independent v1.1 consumer attempt is preserved at receipt commit
+`7791c938ce2d97014216974a02f5174b42893874`. Its package integrity, public
+store load/read, and dtype-promotion checks passed, but the activation key
+`synthetic-phase5-example-trajectory + 0` did not match Person B's target keys,
+the accepted-manifest identities differed, and one trajectory/row could not
+support the frozen five outer grouped folds with four grouped inner folds.
+Those are fixture-coordination defects, not a production-store or schema
+failure.
+
+`docs/status/fixtures/phase5_activation_store_handoff_v1_2/` is the new
+deterministic coordinated package. It remains explicitly
+`synthetic_non_scientific`, uses schema version 1.0, and does not modify or
+replace v1.1. Ten one-frame trajectories use ten distinct layout groups and one
+shared accepted-manifest identity across authoritative manifest rows,
+activation rows, the canonical index, and Person B target rows. The
+deterministic five-way outer assignment has two groups in every fold. Each
+outer training set therefore has eight groups, and each frozen four-way
+grouped inner split has two groups in every fold.
+
+The activation store remains the production `.npy` format written by
+`publish_activation_chunk`, validated by `load_activation_index_snapshot`, and
+read by `read_activation_vectors`. Person B's frozen synthetic bridge
+authenticates a JSON chunk envelope. The bounded public consumer proof
+therefore creates a deterministic in-memory bridge envelope only after the
+production reader has verified and returned all ten vectors. That envelope is
+not persisted as a second activation authority. Person B's unchanged public
+`validate_oracle_target_document`, `build_joined_frame_table`,
+`build_probe_ready_matrices`, and `run_ridge_oof_probe` functions then validate
+ten exact universal-key joins, a `[10, 2048]` matrix, five nonempty outer folds,
+all required inner folds, and ten finite out-of-fold predictions. The
+consumer-proof output hash is
+`50bad375850e7ca1bdbcfccc28397b5bf695804cae0a4c9db857c7385e5f9c61`.
+It proves only that the public consumer path executes; the numeric result has
+no scientific meaning.
+
+The package has an exact eight-file inventory: README, checksum inventory,
+machine-readable handoff manifest, authoritative accepted-manifest document,
+Person B target document, one immutable `.npy` chunk, one canonical index, and
+one immutable run binding. `SHA256SUMS` hashes every payload except itself.
+Generation and the probe result are byte-deterministic in the supported local
+environment. Package v1.0 and v1.1, both failed receipts, Audit 2 storage
+revision `b0b71653311902fffce769aca6c4e81475ba0766`, production storage, and
+schema 1.0 remain unchanged.
+
+This is still Person A-authored synthetic handoff evidence. A fresh independent
+Person B worktree must validate and consume v1.2 before Step 5.8 can pass.
+Phase 5 remains gate-incomplete until that new receipt succeeds.
+
 ## S3 transfer considerations
 
 Chunks and indexes are immutable independently checksummed objects with relative

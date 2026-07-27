@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import io
 import json
@@ -11,6 +12,8 @@ import math
 import platform
 import sys
 import time
+from collections import Counter
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -26,7 +29,32 @@ from mineocclude.activations.store import (
     publish_activation_chunk,
     read_activation_vectors,
 )
-from mineocclude.contracts.identity import SCHEMA_VERSION
+from mineocclude.analysis.config import (
+    DEFAULT_CONFIG_PATH,
+    hash_core_analysis_config,
+    load_core_analysis_config,
+)
+from mineocclude.analysis.filters import apply_ordered_filters
+from mineocclude.analysis.manifests import sha256_value
+from mineocclude.contracts.activation import validate_activation_handoff
+from mineocclude.contracts.identity import (
+    FRAME_KEY,
+    REQUIRED_FIELDS,
+    SCHEMA_VERSION,
+    validate_identity,
+)
+from mineocclude.oracle.schema import (
+    ORACLE_TARGET_SCHEMA_VERSION,
+    validate_oracle_target_document,
+)
+from mineocclude.oracle.targets import build_regime_a_target_document
+from mineocclude.probes.bridge import (
+    build_frame_fold_manifest,
+    build_joined_frame_table,
+    build_probe_ready_matrices,
+    run_ridge_oof_probe,
+)
+from mineocclude.probes.splits import build_grouped_inner_folds
 
 REPORT_NAME = "benchmark_report.json"
 SUMMARY_NAME = "benchmark_summary.txt"
@@ -70,6 +98,56 @@ EXAMPLE_APPROVED_RELATIVE_FILES = frozenset(
 )
 EXAMPLE_APPROVED_RELATIVE_DIRECTORIES = frozenset(
     {"chunks", "indexes", "run_bindings"}
+)
+HANDOFF_V12_PACKAGE_VERSION = "1.2"
+HANDOFF_V12_FORMAT = "mineocclude-phase5-coordinated-synthetic-handoff"
+HANDOFF_V12_SCIENTIFIC_STATUS = "synthetic_non_scientific"
+HANDOFF_V12_SEED = 20260727
+HANDOFF_V12_TRAJECTORY_COUNT = 10
+HANDOFF_V12_FRAME_COUNT = 10
+HANDOFF_V12_LAYER = 0
+HANDOFF_V12_HOOK_SITE = "residual_stream"
+HANDOFF_V12_WIDTH = 2048
+HANDOFF_V12_DTYPE = "float32"
+HANDOFF_V12_RUN_ID = "phase5-synthetic-handoff-v1-2-activation-run"
+HANDOFF_V12_TARGET_RUN_ID = "phase5-synthetic-handoff-v1-2-target-run"
+HANDOFF_V12_GENERATION_SOURCE_SHA = (
+    "9c8a2f63d88d0c648e3f702557727be87ab56487"
+)
+HANDOFF_V12_AUDIT2_STORAGE_SHA = (
+    "b0b71653311902fffce769aca6c4e81475ba0766"
+)
+HANDOFF_V12_FAILED_RECEIPT_COMMITS = (
+    "1b229fdec74eb602c03d8301fd5744bc9c73b30e",
+    "7791c938ce2d97014216974a02f5174b42893874",
+)
+HANDOFF_V12_ACCEPTED_PATH = (
+    "accepted_manifest/accepted_manifest_rows.json"
+)
+HANDOFF_V12_TARGET_PATH = "targets/synthetic_oracle_targets.json"
+HANDOFF_V12_MANIFEST_PATH = "handoff_manifest.json"
+HANDOFF_V12_README_PATH = "README.md"
+HANDOFF_V12_CHECKSUM_PATH = "SHA256SUMS"
+HANDOFF_V12_APPROVED_DIRECTORIES = frozenset(
+    {
+        "accepted_manifest",
+        "chunks",
+        "indexes",
+        "run_bindings",
+        "targets",
+    }
+)
+HANDOFF_V12_FIXED_FILES = frozenset(
+    {
+        HANDOFF_V12_ACCEPTED_PATH,
+        HANDOFF_V12_TARGET_PATH,
+        HANDOFF_V12_MANIFEST_PATH,
+        HANDOFF_V12_README_PATH,
+        HANDOFF_V12_CHECKSUM_PATH,
+    }
+)
+HANDOFF_V12_CONSUMER_CHUNK_ID = (
+    "phase5-handoff-v1-2-person-b-consumer-chunk"
 )
 
 
@@ -779,6 +857,960 @@ def _validate_example(args: argparse.Namespace) -> int:
     return 0
 
 
+def _strict_json(path: Path, *, label: str) -> Mapping[str, Any]:
+    def reject_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"{label} contains duplicate JSON key {key!r}")
+            result[key] = value
+        return result
+
+    def reject_constant(value: str) -> None:
+        raise ValueError(f"{label} contains nonfinite JSON value {value!r}")
+
+    try:
+        document = json.loads(
+            _read_lf_utf8(path, label=label),
+            object_pairs_hook=reject_duplicates,
+            parse_constant=reject_constant,
+        )
+    except json.JSONDecodeError as error:
+        raise ValueError(f"{label} is malformed JSON: {error}") from error
+    if not isinstance(document, Mapping):
+        raise TypeError(f"{label} root must be a JSON object")
+    if path.read_bytes() != _deterministic_json_bytes(document):
+        raise ValueError(f"{label} bytes are not canonical deterministic JSON")
+    return document
+
+
+def _handoff_v12_base_manifest_rows() -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for index in range(HANDOFF_V12_TRAJECTORY_COUNT):
+        rows.append(
+            {
+                "action_idx": 0,
+                "code_sha": HANDOFF_V12_GENERATION_SOURCE_SHA,
+                "config_hash": "3" * 64,
+                "duration": 0.05,
+                "episode_id": f"phase5-handoff-v1-2-episode-{index:02d}",
+                "exclusion_reason": None,
+                "layout_id": f"phase5-handoff-v1-2-layout-{index:02d}",
+                "model_frame_idx": 0,
+                "model_hash": "1" * 64,
+                "preprocess_hash": "4" * 64,
+                "q": 0.125,
+                "regime": "synthetic_test",
+                "render_frame_idx": 0,
+                "run_id": HANDOFF_V12_RUN_ID,
+                "schema_version": SCHEMA_VERSION,
+                "seed": HANDOFF_V12_SEED,
+                "server_tick": 1000 + index,
+                "status": "accepted",
+                "superseded_by": None,
+                "tau": 0.0,
+                "trajectory_id": (
+                    f"phase5-handoff-v1-2-trajectory-{index:02d}"
+                ),
+                "v": 0.25,
+                "visibility": "visible",
+            }
+        )
+    return rows
+
+
+def _handoff_v12_accepted_manifest_hash(
+    rows_without_hash: Sequence[Mapping[str, Any]],
+) -> str:
+    return sha256_value(
+        {
+            "identity_definition": (
+                "sha256_canonical_json_of_rows_before_hash_injection"
+            ),
+            "rows": [dict(row) for row in rows_without_hash],
+            "schema_version": SCHEMA_VERSION,
+            "scientific_status": HANDOFF_V12_SCIENTIFIC_STATUS,
+        }
+    )
+
+
+def _handoff_v12_manifest_rows() -> list[dict[str, Any]]:
+    rows = _handoff_v12_base_manifest_rows()
+    accepted_manifest_hash = _handoff_v12_accepted_manifest_hash(rows)
+    for row in rows:
+        row["accepted_manifest_hash"] = accepted_manifest_hash
+        validate_identity(row)
+    return rows
+
+
+def _handoff_v12_activation_rows(
+    manifest_rows: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for source in manifest_rows:
+        row = dict(source)
+        row.update(
+            {
+                "checkpoint_hash": "1" * 64,
+                "frame_token_positions": list(range(336)),
+                "hook_site": HANDOFF_V12_HOOK_SITE,
+                "layer_idx": HANDOFF_V12_LAYER,
+            }
+        )
+        result.append(row)
+    return result
+
+
+def _handoff_v12_vectors() -> numpy.ndarray:
+    generator = numpy.random.Generator(numpy.random.PCG64(HANDOFF_V12_SEED))
+    integers = generator.integers(
+        -1000,
+        1001,
+        size=(HANDOFF_V12_FRAME_COUNT, HANDOFF_V12_WIDTH),
+        dtype=numpy.int32,
+    )
+    return (integers.astype(numpy.float32) / numpy.float32(1000.0)).astype(
+        numpy.float32
+    )
+
+
+def _handoff_v12_state_document(
+    manifest_rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    for index, source in enumerate(manifest_rows):
+        position = 5.0 + (0.75 * index) + (0.1 * (index % 3))
+        state = {field: source[field] for field in REQUIRED_FIELDS}
+        state.update(
+            {
+                "accepted_manifest_hash": source["accepted_manifest_hash"],
+                "observed_position_blocks": position,
+                "scientific_use": "forbidden",
+                "synthetic": True,
+                "x_true_blocks": position,
+            }
+        )
+        rows.append(state)
+    return {
+        "fixture_metadata": {
+            "scientific_use": "forbidden",
+            "synthetic": True,
+        },
+        "join_key": list(FRAME_KEY),
+        "rows": rows,
+        "schema_version": SCHEMA_VERSION,
+    }
+
+
+def _handoff_from_snapshot(
+    snapshot: Any,
+    vectors: numpy.ndarray,
+) -> tuple[dict[str, Any], dict[str, bytes]]:
+    if (
+        vectors.ndim != 2
+        or vectors.shape
+        != (len(snapshot.index_rows), snapshot.store_identity.hidden_width)
+        or vectors.dtype.name != HANDOFF_V12_DTYPE
+        or not numpy.isfinite(vectors).all()
+    ):
+        raise ValueError(
+            "public-reader vectors do not match the coordinated fixture"
+        )
+    rows = [
+        copy.deepcopy(row)
+        for row in snapshot.to_document()["index_rows"]
+    ]
+    for offset, row in enumerate(rows):
+        row["activation_chunk_id"] = HANDOFF_V12_CONSUMER_CHUNK_ID
+        row["chunk_row_idx"] = offset
+    compatibility_document = {
+        "chunk_id": HANDOFF_V12_CONSUMER_CHUNK_ID,
+        "dtype": HANDOFF_V12_DTYPE,
+        "rows": [
+            {
+                "chunk_row_idx": index,
+                "vector": [float(value) for value in vectors[index]],
+            }
+            for index in range(vectors.shape[0])
+        ],
+        "vector_shape": [snapshot.store_identity.hidden_width],
+    }
+    compatibility_payload = _deterministic_json_bytes(
+        compatibility_document
+    )
+    layer_counts = Counter(int(row["layer_idx"]) for row in rows)
+    frame_keys = {
+        (str(row["trajectory_id"]), int(row["model_frame_idx"]))
+        for row in rows
+    }
+    counts = {
+        str(layer): count for layer, count in sorted(layer_counts.items())
+    }
+    package = {
+        "accepted_manifest_hash": (
+            snapshot.store_identity.accepted_manifest_hash
+        ),
+        "cardinality_report": {
+            "accepted_manifest_rows": len(frame_keys),
+            "actual_activation_rows": len(rows),
+            "actual_rows_by_layer": counts,
+            "expected_activation_rows": len(rows),
+            "expected_rows_by_layer": counts,
+        },
+        "checkpoint_hash": snapshot.store_identity.checkpoint_hash,
+        "chunks": [
+            {
+                "chunk_id": HANDOFF_V12_CONSUMER_CHUNK_ID,
+                "dtype": HANDOFF_V12_DTYPE,
+                "path": (
+                    "in_memory/"
+                    f"{HANDOFF_V12_CONSUMER_CHUNK_ID}.json"
+                ),
+                "row_count": len(rows),
+                "sha256": hashlib.sha256(
+                    compatibility_payload
+                ).hexdigest(),
+                "vector_shape": [snapshot.store_identity.hidden_width],
+            }
+        ],
+        "handoff_id": snapshot.snapshot_id,
+        "index_rows": rows,
+        "preprocess_hash": snapshot.store_identity.preprocess_hash,
+        "run_id": snapshot.store_identity.run_id,
+        "run_status": snapshot.run_status,
+        "schema_version": SCHEMA_VERSION,
+        "selection_policy": {
+            "description": (
+                "Accepted-manifest and requested-layer extraction independent "
+                "of target and held-out labels."
+            ),
+            "uses_heldout_labels": False,
+            "uses_target_labels": False,
+        },
+    }
+    validation = validate_activation_handoff(package)
+    if not validation.accepted:
+        details = "; ".join(item.message for item in validation.rejections)
+        raise ValueError(
+            f"public activation handoff validation failed: {details}"
+        )
+    return package, {
+        HANDOFF_V12_CONSUMER_CHUNK_ID: compatibility_payload
+    }
+
+
+def _handoff_v12_probe(
+    *,
+    output: Path,
+    snapshot: Any,
+    target_document: Mapping[str, Any],
+) -> dict[str, Any]:
+    keys = tuple(
+        ActivationRowKey.from_row(row) for row in snapshot.index_rows
+    )
+    vectors = read_activation_vectors(
+        store_root=output,
+        snapshot=snapshot,
+        row_keys=keys,
+    )
+    activation_package, chunk_payloads = _handoff_from_snapshot(
+        snapshot,
+        vectors,
+    )
+    frame_table = build_joined_frame_table(
+        activation_package,
+        target_document,
+    )
+    fold_manifest = build_frame_fold_manifest(
+        frame_table,
+        artifact_id="phase5-handoff-v1-2-folds",
+    )
+    matrices = build_probe_ready_matrices(
+        activation_package,
+        target_document,
+        frame_table,
+        fold_manifest,
+        chunk_payloads,
+        target_name="mu_oracle_blocks",
+    )
+    if len(matrices) != 1:
+        raise ValueError("coordinated handoff must build exactly one matrix")
+    matrix = matrices[0]
+    execution = run_ridge_oof_probe(
+        matrix,
+        artifact_id_prefix="phase5-handoff-v1-2-tiny-probe",
+    )
+    fold_by_key = {
+        (
+            membership["trajectory_id"],
+            membership["model_frame_idx"],
+        ): membership["fold_idx"]
+        for membership in fold_manifest["memberships"]
+    }
+    annotated = [
+        {
+            **dict(row),
+            "fold_idx": fold_by_key[
+                (row["trajectory_id"], row["model_frame_idx"])
+            ],
+        }
+        for row in frame_table["rows"]
+    ]
+    inner_facts: list[dict[str, Any]] = []
+    for outer_fold_idx in range(5):
+        inner_rows = build_grouped_inner_folds(
+            annotated,
+            outer_fold_idx=outer_fold_idx,
+            n_splits=4,
+            seed=HANDOFF_V12_SEED - 8,
+        )
+        inner_counts = Counter(
+            int(row["inner_fold_idx"]) for row in inner_rows
+        )
+        inner_facts.append(
+            {
+                "inner_fold_counts": {
+                    str(index): inner_counts[index] for index in range(4)
+                },
+                "outer_fold_idx": outer_fold_idx,
+                "outer_training_group_count": len(
+                    {row["layout_id"] for row in inner_rows}
+                ),
+                "outer_training_row_count": len(inner_rows),
+            }
+        )
+    output_document = {
+        "matrix_hash": matrix.matrix_hash,
+        "output_shape": [len(execution.oof_result.predictions)],
+        "prediction_artifact_hash": (
+            execution.prediction_artifact["artifact_hash"]
+        ),
+        "predictions": list(execution.oof_result.predictions),
+        "u1_result_artifact_hash": (
+            execution.u1_result_artifact["artifact_hash"]
+        ),
+    }
+    if not all(
+        math.isfinite(float(value))
+        for value in execution.oof_result.predictions
+    ):
+        raise ValueError("tiny public probe produced nonfinite predictions")
+    return {
+        "activation_package": activation_package,
+        "chunk_payloads": chunk_payloads,
+        "execution": execution,
+        "fold_manifest": fold_manifest,
+        "frame_table": frame_table,
+        "inner_facts": inner_facts,
+        "matrix": matrix,
+        "output_document": output_document,
+        "probe_output_hash": sha256_value(output_document),
+        "vectors": vectors,
+    }
+
+
+def _handoff_v12_readme() -> bytes:
+    return (
+        b"# Phase 5 coordinated synthetic handoff v1.2\n\n"
+        b"This package is deterministic `synthetic_non_scientific` "
+        b"engineering data. It is not runtime evidence, a scientific result, "
+        b"or an independent Person B receipt.\n\n"
+        b"Version 1.0 failed canonical-byte/checksum integrity. Version 1.1 "
+        b"fixed package integrity but its activation and target identities did "
+        b"not join and it lacked enough groups for the frozen Person B probe. "
+        b"Version 1.2 coordinates accepted-manifest, activation, and target "
+        b"identities across ten independent layouts.\n\n"
+        b"The persisted activation data is the production Phase 5 `.npy` "
+        b"store written and loaded through public Person A APIs. Person B's "
+        b"frozen bridge authenticates a JSON fixture envelope, so the public "
+        b"consumer path reads the `.npy` vectors first and creates a "
+        b"deterministic in-memory envelope; no second persisted activation "
+        b"authority is introduced.\n\n"
+        b"Validate and execute the bounded consumer proof with:\n\n"
+        b"```powershell\n"
+        b"python scripts/benchmark_phase5_activation_store.py "
+        b"validate-handoff-v1-2 --output-dir "
+        b"docs/status/fixtures/"
+        b"phase5_activation_store_handoff_v1_2\n"
+        b"```\n\n"
+        b"The public sequence is "
+        b"`load_activation_index_snapshot` -> `read_activation_vectors` -> "
+        b"`validate_oracle_target_document` -> "
+        b"`build_joined_frame_table` -> `build_probe_ready_matrices` -> "
+        b"`run_ridge_oof_probe`. The universal join key is exactly "
+        b"`trajectory_id + model_frame_idx`; row and file order are never "
+        b"identity.\n\n"
+        b"Fresh independent Person B acceptance is still required before "
+        b"Step 5.8 can pass.\n"
+    )
+
+
+def _handoff_v12_inventory(
+    output: Path,
+    manifest: Mapping[str, Any],
+) -> tuple[set[str], set[str]]:
+    activation = manifest.get("activation_store")
+    if not isinstance(activation, Mapping):
+        raise TypeError("handoff manifest activation_store is malformed")
+    chunks = activation.get("chunks")
+    if not isinstance(chunks, list) or not chunks:
+        raise ValueError("handoff manifest chunk inventory is malformed")
+    declared = {
+        *HANDOFF_V12_FIXED_FILES,
+        activation.get("index_path"),
+        activation.get("run_binding_path"),
+        *(chunk.get("path") for chunk in chunks if isinstance(chunk, Mapping)),
+    }
+    if any(not isinstance(path, str) or not path for path in declared):
+        raise ValueError("handoff manifest contains invalid inventory paths")
+    files = {str(path) for path in declared}
+    directories = {
+        path.relative_to(output).as_posix()
+        for path in output.rglob("*")
+        if path.is_dir()
+    }
+    return files, directories
+
+
+def _write_handoff_v12(args: argparse.Namespace) -> int:
+    output = args.output_dir.resolve()
+    if output.exists():
+        raise ValueError(f"refusing to overwrite output directory: {output}")
+    output.mkdir(parents=True)
+    (output / "accepted_manifest").mkdir()
+    (output / "targets").mkdir()
+
+    manifest_rows = _handoff_v12_manifest_rows()
+    accepted_manifest_hash = manifest_rows[0]["accepted_manifest_hash"]
+    accepted_document = {
+        "accepted_manifest_hash": accepted_manifest_hash,
+        "accepted_manifest_identity_definition": (
+            "sha256_canonical_json_of_rows_before_hash_injection"
+        ),
+        "join_key": list(FRAME_KEY),
+        "package_version": HANDOFF_V12_PACKAGE_VERSION,
+        "rows": manifest_rows,
+        "schema_version": SCHEMA_VERSION,
+        "scientific_status": HANDOFF_V12_SCIENTIFIC_STATUS,
+    }
+    accepted_path = output / HANDOFF_V12_ACCEPTED_PATH
+    accepted_path.write_bytes(_deterministic_json_bytes(accepted_document))
+
+    identity = ActivationStoreIdentity(
+        schema_version=SCHEMA_VERSION,
+        run_id=HANDOFF_V12_RUN_ID,
+        checkpoint_hash="1" * 64,
+        model_hash="1" * 64,
+        config_hash="3" * 64,
+        preprocess_hash="4" * 64,
+        accepted_manifest_hash=accepted_manifest_hash,
+        code_sha=HANDOFF_V12_GENERATION_SOURCE_SHA,
+        hook_site=HANDOFF_V12_HOOK_SITE,
+        requested_layers=(HANDOFF_V12_LAYER,),
+        dtype=HANDOFF_V12_DTYPE,
+        hidden_width=HANDOFF_V12_WIDTH,
+    )
+    proof = build_activation_eligibility_proof(
+        store_identity=identity,
+        accepted_manifest_rows=manifest_rows,
+    )
+    snapshot = publish_activation_chunk(
+        store_root=output,
+        store_identity=identity,
+        accepted_manifest_rows=manifest_rows,
+        eligibility_proof=proof,
+        rows=_handoff_v12_activation_rows(manifest_rows),
+        vectors=_handoff_v12_vectors(),
+        creation_timestamp=CREATION_TIMESTAMP,
+    )
+
+    target_document = build_regime_a_target_document(
+        _handoff_v12_state_document(manifest_rows),
+        oracle_run_id=HANDOFF_V12_TARGET_RUN_ID,
+        oracle_code_sha=HANDOFF_V12_GENERATION_SOURCE_SHA,
+        oracle_config_hash=hash_core_analysis_config(DEFAULT_CONFIG_PATH),
+    )
+    target_path = output / HANDOFF_V12_TARGET_PATH
+    target_path.write_bytes(_deterministic_json_bytes(target_document))
+
+    probe = _handoff_v12_probe(
+        output=output,
+        snapshot=snapshot,
+        target_document=target_document,
+    )
+    index_path = output / snapshot.relative_path
+    run_binding = next((output / "run_bindings").glob("run-*.json"))
+    chunks = [
+        {
+            "byte_size": (output / chunk.relative_path).stat().st_size,
+            "chunk_id": chunk.chunk_id,
+            "path": chunk.relative_path,
+            "row_count": chunk.row_count,
+            "sha256": _sha256(output / chunk.relative_path),
+        }
+        for chunk in snapshot.chunks
+    ]
+    fold_counts = Counter(int(value) for value in probe["matrix"].outer_folds)
+    config = load_core_analysis_config(DEFAULT_CONFIG_PATH)
+    manifest = {
+        "accepted_manifest": {
+            "accepted_manifest_hash": accepted_manifest_hash,
+            "byte_size": accepted_path.stat().st_size,
+            "path": HANDOFF_V12_ACCEPTED_PATH,
+            "row_count": len(manifest_rows),
+            "sha256": _sha256(accepted_path),
+        },
+        "activation_store": {
+            "analysis_dtype_expected_by_person_b": "float64",
+            "chunks": chunks,
+            "index_path": snapshot.relative_path,
+            "index_sha256": _sha256(index_path),
+            "index_snapshot_id": snapshot.snapshot_id,
+            "row_count": len(snapshot.index_rows),
+            "run_binding_digest": json.loads(
+                run_binding.read_text(encoding="utf-8")
+            )["binding_digest"],
+            "run_binding_path": run_binding.relative_to(output).as_posix(),
+            "run_binding_sha256": _sha256(run_binding),
+            "store_identity_digest": snapshot.store_identity.digest,
+            "stored_dtype": HANDOFF_V12_DTYPE,
+            "vector_width": HANDOFF_V12_WIDTH,
+        },
+        "audit2_certified_storage_sha": HANDOFF_V12_AUDIT2_STORAGE_SHA,
+        "consumer_compatibility": {
+            "activation_handoff_hash": sha256_value(
+                probe["activation_package"]
+            ),
+            "consumer_chunk_id": HANDOFF_V12_CONSUMER_CHUNK_ID,
+            "consumer_chunk_sha256": hashlib.sha256(
+                probe["chunk_payloads"][HANDOFF_V12_CONSUMER_CHUNK_ID]
+            ).hexdigest(),
+            "description": (
+                "deterministic in-memory Person B JSON fixture envelope built "
+                "only from vectors verified by the public Phase 5 reader"
+            ),
+            "persisted": False,
+            "private_assistance_required": False,
+        },
+        "deterministic_probe": {
+            "alpha_grid": config["ridge"]["alpha_grid"],
+            "feature_shape": [
+                len(probe["matrix"].features),
+                len(probe["matrix"].features[0]),
+            ],
+            "finite": True,
+            "horizon": {
+                "kind": "same_model_frame",
+                "model_frame_offset": 0,
+            },
+            "inner_fold_count": config["cross_validation"][
+                "inner_fold_count"
+            ],
+            "outer_fold_assignments": probe["fold_manifest"][
+                "layout_assignments"
+            ],
+            "outer_fold_counts": {
+                str(index): fold_counts[index] for index in range(5)
+            },
+            "outer_fold_manifest_hash": probe["fold_manifest"][
+                "artifact_hash"
+            ],
+            "outer_fold_seed": config["cross_validation"]["split_seed"],
+            "output_shape": probe["output_document"]["output_shape"],
+            "probe_output_hash": probe["probe_output_hash"],
+            "target_name": probe["matrix"].target_name,
+        },
+        "expected_join": {
+            "duplicate_activation_key_count": 0,
+            "duplicate_target_key_count": 0,
+            "joined_row_count": HANDOFF_V12_FRAME_COUNT,
+            "unmatched_activation_count": 0,
+            "unmatched_target_count": 0,
+            "universal_join_key": list(FRAME_KEY),
+        },
+        "fixed_seed": HANDOFF_V12_SEED,
+        "generation_source_sha": HANDOFF_V12_GENERATION_SOURCE_SHA,
+        "grouped_inner_fold_viability": probe["inner_facts"],
+        "handoff_format": HANDOFF_V12_FORMAT,
+        "migration_required": False,
+        "model_frame_count": HANDOFF_V12_FRAME_COUNT,
+        "package_version": HANDOFF_V12_PACKAGE_VERSION,
+        "person_b_public_functions": [
+            "mineocclude.oracle.schema.validate_oracle_target_document",
+            "mineocclude.probes.bridge.build_joined_frame_table",
+            "mineocclude.probes.bridge.build_probe_ready_matrices",
+            "mineocclude.probes.bridge.run_ridge_oof_probe",
+        ],
+        "person_b_target": {
+            "byte_size": target_path.stat().st_size,
+            "horizons": [
+                {
+                    "kind": "same_model_frame",
+                    "model_frame_offset": 0,
+                }
+            ],
+            "path": HANDOFF_V12_TARGET_PATH,
+            "row_count": len(target_document["rows"]),
+            "sha256": _sha256(target_path),
+            "target_names": ["mu_oracle_blocks"],
+            "target_schema_version": ORACLE_TARGET_SCHEMA_VERSION,
+        },
+        "prior_failed_receipt_commits": list(
+            HANDOFF_V12_FAILED_RECEIPT_COMMITS
+        ),
+        "private_assistance_required": False,
+        "producing_run_id": HANDOFF_V12_RUN_ID,
+        "public_store_functions": [
+            "mineocclude.activations.store.publish_activation_chunk",
+            "mineocclude.activations.store.load_activation_index_snapshot",
+            "mineocclude.activations.store.read_activation_vectors",
+        ],
+        "schema_version": SCHEMA_VERSION,
+        "scientific_status": HANDOFF_V12_SCIENTIFIC_STATUS,
+        "site": {
+            "hook_site": HANDOFF_V12_HOOK_SITE,
+            "layer_idx": HANDOFF_V12_LAYER,
+        },
+        "trajectory_group_count": HANDOFF_V12_TRAJECTORY_COUNT,
+    }
+    manifest_path = output / HANDOFF_V12_MANIFEST_PATH
+    manifest_path.write_bytes(_deterministic_json_bytes(manifest))
+    readme = _handoff_v12_readme()
+    if b"\r" in readme or not readme.endswith(b"\n"):
+        raise ValueError("handoff README is not canonical LF text")
+    (output / HANDOFF_V12_README_PATH).write_bytes(readme)
+
+    payload_paths = sorted(
+        (
+            path
+            for path in output.rglob("*")
+            if path.is_file()
+            and path.relative_to(output).as_posix()
+            != HANDOFF_V12_CHECKSUM_PATH
+        ),
+        key=lambda path: path.relative_to(output).as_posix(),
+    )
+    checksum_bytes = "".join(
+        f"{_sha256(path)}  {path.relative_to(output).as_posix()}\n"
+        for path in payload_paths
+    ).encode("utf-8")
+    (output / HANDOFF_V12_CHECKSUM_PATH).write_bytes(checksum_bytes)
+    return _validate_handoff_v12(
+        argparse.Namespace(output_dir=output),
+    )
+
+
+def _validate_handoff_v12(args: argparse.Namespace) -> int:
+    selected = args.output_dir.absolute()
+    if selected.is_symlink():
+        raise ValueError("handoff root must not be a symbolic link")
+    output = selected.resolve()
+    if not output.is_dir():
+        raise ValueError("handoff root must be an ordinary directory")
+    for path in output.rglob("*"):
+        if path.is_symlink():
+            raise ValueError(
+                "handoff inventory contains a symlink: "
+                + path.relative_to(output).as_posix()
+            )
+        if not path.is_file() and not path.is_dir():
+            raise ValueError("handoff inventory contains an unsupported entry")
+
+    manifest = _strict_json(
+        output / HANDOFF_V12_MANIFEST_PATH,
+        label="handoff manifest",
+    )
+    expected_files, observed_directories = _handoff_v12_inventory(
+        output,
+        manifest,
+    )
+    observed_files = {
+        path.relative_to(output).as_posix()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+    if observed_directories != HANDOFF_V12_APPROVED_DIRECTORIES:
+        raise ValueError(
+            "handoff directory inventory differs from the approved inventory"
+        )
+    if observed_files != expected_files:
+        raise ValueError(
+            "handoff file inventory differs from the exact declared inventory; "
+            f"observed={sorted(observed_files)!r}"
+        )
+    checksum_text = _read_lf_utf8(
+        output / HANDOFF_V12_CHECKSUM_PATH,
+        label="handoff checksum inventory",
+    )
+    entries: dict[str, str] = {}
+    for line in checksum_text.splitlines():
+        fields = line.split("  ", maxsplit=1)
+        if (
+            len(fields) != 2
+            or len(fields[0]) != 64
+            or fields[1] in entries
+        ):
+            raise ValueError("handoff checksum inventory is malformed")
+        try:
+            int(fields[0], 16)
+        except ValueError as error:
+            raise ValueError(
+                "handoff checksum inventory contains a non-hex digest"
+            ) from error
+        entries[fields[1]] = fields[0]
+    if set(entries) != expected_files - {HANDOFF_V12_CHECKSUM_PATH}:
+        raise ValueError("handoff checksum inventory coverage is incomplete")
+    for relative, expected_hash in entries.items():
+        if _sha256(output / relative) != expected_hash:
+            raise ValueError(f"handoff checksum mismatch: {relative}")
+    for relative in expected_files:
+        if relative.endswith((".json", ".md")) or relative == (
+            HANDOFF_V12_CHECKSUM_PATH
+        ):
+            _read_lf_utf8(output / relative, label=relative)
+
+    if (
+        manifest.get("handoff_format") != HANDOFF_V12_FORMAT
+        or manifest.get("package_version") != HANDOFF_V12_PACKAGE_VERSION
+        or manifest.get("schema_version") != SCHEMA_VERSION
+        or manifest.get("scientific_status")
+        != HANDOFF_V12_SCIENTIFIC_STATUS
+        or manifest.get("generation_source_sha")
+        != HANDOFF_V12_GENERATION_SOURCE_SHA
+        or manifest.get("audit2_certified_storage_sha")
+        != HANDOFF_V12_AUDIT2_STORAGE_SHA
+        or manifest.get("prior_failed_receipt_commits")
+        != list(HANDOFF_V12_FAILED_RECEIPT_COMMITS)
+        or manifest.get("migration_required") is not False
+        or manifest.get("private_assistance_required") is not False
+    ):
+        raise ValueError("handoff manifest identity or classification is invalid")
+
+    accepted = _strict_json(
+        output / HANDOFF_V12_ACCEPTED_PATH,
+        label="accepted manifest",
+    )
+    rows = accepted.get("rows")
+    if not isinstance(rows, list) or len(rows) != HANDOFF_V12_FRAME_COUNT:
+        raise ValueError("accepted manifest row cardinality is invalid")
+    expected_accepted_hash = _handoff_v12_accepted_manifest_hash(
+        [
+            {
+                key: value
+                for key, value in row.items()
+                if key != "accepted_manifest_hash"
+            }
+            for row in rows
+            if isinstance(row, Mapping)
+        ]
+    )
+    accepted_hash = accepted.get("accepted_manifest_hash")
+    if (
+        len(rows)
+        != len(
+            [row for row in rows if isinstance(row, Mapping)]
+        )
+        or accepted_hash != expected_accepted_hash
+        or any(row.get("accepted_manifest_hash") != accepted_hash for row in rows)
+    ):
+        raise ValueError("accepted manifest identity is inconsistent")
+    for row in rows:
+        validate_identity(row)
+    filter_result = apply_ordered_filters(
+        rows,
+        accepted_manifest_hash=str(accepted_hash),
+    )
+    if (
+        filter_result.rejections
+        or len(filter_result.accepted_rows) != HANDOFF_V12_FRAME_COUNT
+    ):
+        raise ValueError("accepted rows do not all pass ordered eligibility")
+
+    activation = manifest["activation_store"]
+    if (
+        activation.get("row_count") != HANDOFF_V12_FRAME_COUNT
+        or activation.get("vector_width") != HANDOFF_V12_WIDTH
+        or activation.get("stored_dtype") != HANDOFF_V12_DTYPE
+        or activation.get("analysis_dtype_expected_by_person_b")
+        != "float64"
+    ):
+        raise ValueError("activation-store summary is inconsistent")
+    index_path = output / activation["index_path"]
+    if (
+        index_path.stat().st_size <= 0
+        or _sha256(index_path) != activation["index_sha256"]
+    ):
+        raise ValueError("activation index identity is inconsistent")
+    snapshot = load_activation_index_snapshot(index_path, store_root=output)
+    if (
+        snapshot.snapshot_id != activation["index_snapshot_id"]
+        or snapshot.store_identity.digest
+        != activation["store_identity_digest"]
+        or snapshot.store_identity.accepted_manifest_hash != accepted_hash
+        or len(snapshot.index_rows) != HANDOFF_V12_FRAME_COUNT
+    ):
+        raise ValueError("activation snapshot identity is inconsistent")
+    run_binding = _strict_json(
+        output / activation["run_binding_path"],
+        label="run binding",
+    )
+    if (
+        _sha256(output / activation["run_binding_path"])
+        != activation["run_binding_sha256"]
+        or run_binding.get("binding_digest")
+        != activation["run_binding_digest"]
+    ):
+        raise ValueError("run-binding identity is inconsistent")
+    declared_chunks = {
+        item["path"]: item for item in activation["chunks"]
+    }
+    observed_chunks = {
+        chunk.relative_path: chunk for chunk in snapshot.chunks
+    }
+    if set(declared_chunks) != set(observed_chunks):
+        raise ValueError("activation chunk inventory is inconsistent")
+    for relative, chunk in observed_chunks.items():
+        declared = declared_chunks[relative]
+        path = output / relative
+        if (
+            declared.get("chunk_id") != chunk.chunk_id
+            or declared.get("row_count") != chunk.row_count
+            or declared.get("byte_size") != path.stat().st_size
+            or declared.get("sha256") != _sha256(path)
+        ):
+            raise ValueError("activation chunk identity is inconsistent")
+
+    target = _strict_json(
+        output / HANDOFF_V12_TARGET_PATH,
+        label="Person B target document",
+    )
+    validate_oracle_target_document(target)
+    target_rows = target.get("rows")
+    if (
+        not isinstance(target_rows, list)
+        or len(target_rows) != HANDOFF_V12_FRAME_COUNT
+        or len({float(row["mu_oracle_blocks"]) for row in target_rows}) <= 1
+    ):
+        raise ValueError("target cardinality or variation is invalid")
+    if (
+        manifest["accepted_manifest"]["sha256"]
+        != _sha256(output / HANDOFF_V12_ACCEPTED_PATH)
+        or manifest["accepted_manifest"]["byte_size"]
+        != (output / HANDOFF_V12_ACCEPTED_PATH).stat().st_size
+        or manifest["accepted_manifest"]["accepted_manifest_hash"]
+        != accepted_hash
+        or manifest["person_b_target"]["sha256"]
+        != _sha256(output / HANDOFF_V12_TARGET_PATH)
+        or manifest["person_b_target"]["byte_size"]
+        != (output / HANDOFF_V12_TARGET_PATH).stat().st_size
+    ):
+        raise ValueError("accepted-manifest or target file provenance differs")
+
+    activation_keys = {
+        (row["trajectory_id"], row["model_frame_idx"])
+        for row in snapshot.index_rows
+    }
+    target_keys = {
+        (row["trajectory_id"], row["model_frame_idx"])
+        for row in target_rows
+    }
+    if (
+        len(activation_keys) != len(snapshot.index_rows)
+        or len(target_keys) != len(target_rows)
+        or activation_keys != target_keys
+    ):
+        raise ValueError("activation and target universal keys do not match")
+    probe = _handoff_v12_probe(
+        output=output,
+        snapshot=snapshot,
+        target_document=target,
+    )
+    matrix = probe["matrix"]
+    fold_counts = Counter(int(value) for value in matrix.outer_folds)
+    expected_fold_counts = {
+        str(index): fold_counts[index] for index in range(5)
+    }
+    if (
+        len(probe["frame_table"]["rows"]) != HANDOFF_V12_FRAME_COUNT
+        or len(matrix.features) != HANDOFF_V12_FRAME_COUNT
+        or any(len(vector) != HANDOFF_V12_WIDTH for vector in matrix.features)
+        or set(fold_counts) != set(range(5))
+        or any(count <= 0 for count in fold_counts.values())
+        or probe["inner_facts"]
+        != manifest["grouped_inner_fold_viability"]
+        or expected_fold_counts
+        != manifest["deterministic_probe"]["outer_fold_counts"]
+        or probe["fold_manifest"]["layout_assignments"]
+        != manifest["deterministic_probe"]["outer_fold_assignments"]
+        or probe["fold_manifest"]["artifact_hash"]
+        != manifest["deterministic_probe"]["outer_fold_manifest_hash"]
+        or probe["probe_output_hash"]
+        != manifest["deterministic_probe"]["probe_output_hash"]
+        or manifest["deterministic_probe"]["feature_shape"]
+        != [HANDOFF_V12_FRAME_COUNT, HANDOFF_V12_WIDTH]
+        or manifest["deterministic_probe"]["output_shape"]
+        != [HANDOFF_V12_FRAME_COUNT]
+    ):
+        raise ValueError("join, matrix, fold, or probe evidence is inconsistent")
+    compatibility = manifest["consumer_compatibility"]
+    if (
+        compatibility["activation_handoff_hash"]
+        != sha256_value(probe["activation_package"])
+        or compatibility["consumer_chunk_sha256"]
+        != hashlib.sha256(
+            probe["chunk_payloads"][HANDOFF_V12_CONSUMER_CHUNK_ID]
+        ).hexdigest()
+        or compatibility.get("persisted") is not False
+    ):
+        raise ValueError("consumer compatibility identity is inconsistent")
+    join_facts = manifest["expected_join"]
+    if join_facts != {
+        "duplicate_activation_key_count": 0,
+        "duplicate_target_key_count": 0,
+        "joined_row_count": HANDOFF_V12_FRAME_COUNT,
+        "unmatched_activation_count": 0,
+        "unmatched_target_count": 0,
+        "universal_join_key": list(FRAME_KEY),
+    }:
+        raise ValueError("expected join facts are inconsistent")
+    if (
+        manifest.get("trajectory_group_count")
+        != HANDOFF_V12_TRAJECTORY_COUNT
+        or manifest.get("model_frame_count") != HANDOFF_V12_FRAME_COUNT
+        or manifest.get("site")
+        != {
+            "hook_site": HANDOFF_V12_HOOK_SITE,
+            "layer_idx": HANDOFF_V12_LAYER,
+        }
+    ):
+        raise ValueError("handoff row/group/site facts are inconsistent")
+
+    target_values = numpy.asarray(matrix.targets, dtype=numpy.float64)
+    feature_values = numpy.asarray(matrix.features, dtype=numpy.float64)
+    if any(
+        numpy.array_equal(feature_values[:, index], target_values)
+        for index in range(feature_values.shape[1])
+    ):
+        raise ValueError("fixture contains an obvious direct target feature")
+    readme = _read_lf_utf8(
+        output / HANDOFF_V12_README_PATH,
+        label="handoff README",
+    )
+    if (
+        HANDOFF_V12_SCIENTIFIC_STATUS not in readme
+        or "Fresh independent Person B acceptance is still required" not in readme
+    ):
+        raise ValueError("handoff README classification is incomplete")
+    print(
+        "Phase 5 coordinated synthetic handoff v1.2: VALID\n"
+        f"joined rows: {len(matrix.features)}\n"
+        f"feature width: {len(matrix.features[0])}\n"
+        f"groups: {len(set(matrix.layout_ids))}\n"
+        f"probe output hash: {probe['probe_output_hash']}"
+    )
+    return 0
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="operation", required=True)
@@ -819,6 +1851,26 @@ def _parser() -> argparse.ArgumentParser:
     )
     validate_example.add_argument("--output-dir", type=Path, required=True)
     validate_example.set_defaults(handler=_validate_example)
+    handoff_v12 = subparsers.add_parser(
+        "write-handoff-v1-2",
+        help=(
+            "write the coordinated synthetic activation/target handoff v1.2"
+        ),
+    )
+    handoff_v12.add_argument("--output-dir", type=Path, required=True)
+    handoff_v12.set_defaults(handler=_write_handoff_v12)
+    validate_handoff_v12 = subparsers.add_parser(
+        "validate-handoff-v1-2",
+        help=(
+            "validate and run the public consumer path for handoff v1.2"
+        ),
+    )
+    validate_handoff_v12.add_argument(
+        "--output-dir",
+        type=Path,
+        required=True,
+    )
+    validate_handoff_v12.set_defaults(handler=_validate_handoff_v12)
     return parser
 
 
