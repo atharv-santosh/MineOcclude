@@ -3,8 +3,10 @@
 ## Status and objective
 
 Status: locally implemented, not committed. GPU execution is neither required
-nor authorized for this work. Step 5.8 independent Person B acceptance remains
-pending.
+nor authorized for this work. Step 5.8 independent Person B acceptance passed.
+Step 5.7 remains externally partial because authoritative Regime A counts and
+approved capacity have not been supplied; this record therefore does not claim
+that every Phase 5 roadmap item is fully closed.
 
 The Phase 5 v1 objective is an append-safe, independently verifiable store for
 production pooled activation vectors. It must preserve the frozen activation
@@ -275,8 +277,8 @@ remains conventional and deterministic.
 This record shape remains compatible with Person B's activation handoff:
 readers retain universal identity, condition fields, visibility, token
 positions, pooling method, chunk ID/offset, model and preprocessing provenance,
-manifest identity, run identity, and accepted lifecycle. Step 5.8 still
-requires Person B's independent acceptance.
+manifest identity, run identity, and accepted lifecycle. Step 5.8 subsequently
+passed through the independent Person B v1.2 acceptance recorded below.
 
 ## Checked-in synthetic index example
 
@@ -321,8 +323,9 @@ The chunk, canonical index, and immutable run binding are unchanged: there is
 no chunk, index, or run-binding migration. Audit 2 remains valid because
 production storage code and numeric/identity payloads are unchanged. This
 example is not accepted runtime evidence and is not independent Person B
-execution. A fresh Person B acceptance run in a new worktree and branch is
-required; the failed acceptance worktree and receipt must not be reused.
+execution. The required fresh acceptance was later completed against the
+separate coordinated v1.2 package; neither failed acceptance worktree nor
+receipt was reused.
 
 ## Coordinated synthetic handoff v1.2
 
@@ -370,9 +373,69 @@ environment. Package v1.0 and v1.1, both failed receipts, Audit 2 storage
 revision `b0b71653311902fffce769aca6c4e81475ba0766`, production storage, and
 schema 1.0 remain unchanged.
 
-This is still Person A-authored synthetic handoff evidence. A fresh independent
-Person B worktree must validate and consume v1.2 before Step 5.8 can pass.
-Phase 5 remains gate-incomplete until that new receipt succeeds.
+The package itself is Person A-authored synthetic handoff evidence. It did not
+complete Step 5.8 until the fresh independent Person B worktree validated and
+consumed it as recorded in the following closeout.
+
+## Step 5.8 independent Person B closeout
+
+Step 5.8 is **PASS**. The Phase 5 independent-consumer handoff gate passed.
+The evidence chain is:
+
+1. Package v1.0 failed because its checksum inventory authenticated CRLF README
+   bytes rather than the committed LF bytes. Its failed receipt is preserved at
+   commit `1b229fdec74eb602c03d8301fd5744bc9c73b30e`.
+2. Package v1.1 fixed package integrity but failed because activation and target
+   frame identities were disjoint and the one-row fixture could not execute
+   Person B's frozen grouped probe. Its failed receipt is preserved at commit
+   `7791c938ce2d97014216974a02f5174b42893874`.
+3. Package v1.2 coordinated accepted-manifest, activation, target, join, group,
+   fold, and probe identities and passed independent Person B acceptance.
+
+The exact revisions are:
+
+- Audit 2-certified storage revision:
+  `b0b71653311902fffce769aca6c4e81475ba0766`;
+- coordinated v1.2 handoff package revision:
+  `b6d4304adb0f82c1722342795133dde4aa59ea7f`; and
+- successful independent Person B receipt commit:
+  `94e754d8a36efd16c1ce7246183abb14ecd8d5b9`.
+
+The imported receipts are:
+
+- `docs/status/person_b_phase5_activation_store_receipt_v1_2.json`, SHA-256
+  `9f5134fad591e6dcb4e346938d104239ae979d652493f49a7f312902d4faec5e`;
+- `docs/status/person_b_phase5_activation_store_receipt_v1_2.md`, SHA-256
+  `6ab8c0bb0cdf09631245a91b25078d5cdf09bfdb4971198268285e25355c2f15`.
+
+The JSON receipt asserts:
+
+- `status: PASS`;
+- `private_assistance_used: false`;
+- `migration_required: false`; and
+- `scientific_status: synthetic_non_scientific`.
+
+Person B independently validated package v1.2, loaded 10 activation rows,
+validated 10 target rows, and joined all 10 rows. There were zero unmatched
+activation rows, zero unmatched target rows, zero duplicate activation keys,
+and zero duplicate target keys. The matrix width was 2,048; stored vectors were
+`float32` and analysis vectors were `float64`. Ten trajectory/layout groups
+populated five outer folds and four grouped inner folds. The probe returned
+shape `[10]`, every output was finite, and its deterministic output SHA-256 was
+`50bad375850e7ca1bdbcfccc28397b5bf695804cae0a4c9db857c7385e5f9c61`.
+The complete consumer path also passed a deterministic fresh-process repeat.
+
+No schema migration occurred: the frozen schema remains `1.0`. Package v1.1
+and v1.2 work did not change production activation-store code, so the Audit 2
+certification remains valid. The tiny probe is synthetic engineering evidence;
+no scientific claim follows from it. Direct target-first imports retain a
+nonblocking YELLOW circular-import sensitivity outside Step 5.8, while the
+documented complete store-first consumer path passed.
+
+Step 5.7 remains externally **PARTIAL** because authoritative Regime A counts
+and approved capacity have not been supplied. Consequently, Step 5.8 and its
+independent-consumer gate are closed, but this decision does not claim that
+every Phase 5 roadmap item is fully closed.
 
 ## S3 transfer considerations
 
@@ -436,7 +499,10 @@ against persisted bytes plus its largest simultaneous staging object.
   for Step 5.7 and the final four-scenario forecast; neither value is invented.
 - A future reviewed Parquet serializer may encode the same backend-neutral
   records after its dependency and byte-level contract are approved.
-- Step 5.8 independent Person B acceptance is pending.
-- Phase 5 remains gate-incomplete until Step 5.8; no Person B receipt was
-  created or fabricated.
+- Step 5.8 independent Person B acceptance is PASS, backed by the imported
+  v1.2 JSON and Markdown receipts and receipt commit recorded above.
+- The Phase 5 independent-consumer handoff gate passed, but Step 5.7 remains
+  externally partial, so every Phase 5 roadmap item is not yet fully closed.
+- Target-first circular-import sensitivity remains a nonblocking YELLOW issue
+  outside Step 5.8; the documented store-first consumer path passed.
 - The frozen schema remains `1.0`, and no dependency upgrade occurred.
