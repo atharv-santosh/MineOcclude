@@ -324,16 +324,79 @@ disabled pytest's cache provider. The CPU-only preflight boundary test uses a
 controlled shared-preflight result and proves all five side-effect flags false;
 no real package, video, checkpoint, CUDA, or model operation was run.
 
+## Accepted v1.1 runtime evidence
+
+The corrected Wave 3 v1.1 implementation was reviewed, committed,
+and pushed at:
+
+```text
+f83b1805d1020f65974425a4a4bbb8f6296c980f
+```
+
+The CPU-only preflight passed for immutable session:
+
+```text
+person-a-phase4-wave3-v11-aws-20260727-045300
+```
+
+The preflight imported no PyTorch, queried no CUDA, loaded no runtime,
+created no session directory, and permitted no overwrite.
+
+The bounded GPU probe then passed with:
+
+- one runtime load;
+- three forward attempts in success/failure/success order;
+- two successful extractions;
+- one expected controlled post-registration failure;
+- exactly one bounded unpooled pilot;
+- one NPZ containing the approved four-array inventory;
+- no failed-probe report;
+- a clean AWS repository worktree.
+
+The standalone validator was run separately and returned `PASS` with
+`VALIDATE_STATUS=0`. The independent-validation log SHA-256 is:
+
+```text
+c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431
+```
+
+The accepted repository evidence is stored byte-for-byte at:
+
+```text
+docs/status/phase4_runtime/person-a-phase4-wave3-v11-aws-20260727-045300/
+```
+
+The exported archive SHA-256 is:
+
+```text
+e8cfc0f26ece569a9a1d23fecaa9ebc27ba0805d5ca11f9e7a0dc233c8968476
+```
+
+The downloaded archive matched that hash, and all eight non-self files
+matched the internal `SHA256SUMS` manifest before repository import.
+
+The accepted v1.1 evidence preserves two separate guarantees:
+
+1. exact SHA-256 byte binding between extraction-A pooled candidates
+   and stored `pooled_means`;
+2. independent CPU float32 token-mean reproduction using
+   `rtol=1e-3` and `atol=1e-3`.
+
+Production pooling semantics and schema version `1.0` were unchanged.
+The failed v1.0 session remains immutable and is not accepted evidence.
+
 ## Completion boundary
 
-Steps 4.7 and 4.8 are implemented locally and have CPU-only tests. Neither step
-is marked complete: the required success-failure-success report and the real
-one-frame unpooled pooling audit must still be produced by one later bounded
-AWS run from an exact reviewed commit.
+Steps 4.7 and 4.8 passed their bounded real-runtime and independent
+validation gates. At the evidence-closeout commit containing this
+status document and the imported immutable evidence directory,
+Person A Phase 4 Wave 3 is complete through E5.
 
-No dataset-wide extraction, Person B analysis, scientific layer selection,
-localization, intervention, training, schema change, or Phase 5 work occurred.
-No AWS or GPU execution occurred during the correction pass; the GPU remains
-stopped and runtime evidence remains pending.
-Schema version remains `1.0`, and the accepted Wave 1 and Wave 2 evidence
+This completion covers only consecutive extraction safety and the one-
+frame limited-unpooled pilot. It does not complete production activation
+chunk storage, resumable dataset extraction, Person B analysis, layer
+selection, intervention, Phase 5, the 66-trajectory MVP, or any final
+scientific claim.
+
+Schema version remains `1.0`. Accepted Wave 1 and Wave 2 evidence
 remains valid.
