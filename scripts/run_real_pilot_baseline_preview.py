@@ -36,6 +36,10 @@ from mineocclude.baselines.capture_ingest import (  # noqa: E402
 )
 from mineocclude.baselines.constant_velocity import predict_constant_velocity  # noqa: E402
 from mineocclude.baselines.last_seen import predict_last_seen  # noqa: E402
+from mineocclude.baselines.missingness import (  # noqa: E402
+    build_missingness_exclusion_report,
+    summarize_non_applicable_reasons,
+)
 
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -75,16 +79,34 @@ def _ingest_episode(episode_dir: Path):
 
 
 def _summarize(rows) -> dict[str, Any]:
-    applicable = [row for row in rows if row.target_name == "mu_oracle_blocks" and row.applicable]
+    mu_rows = [row for row in rows if row.target_name == "mu_oracle_blocks"]
+    applicable = [row for row in mu_rows if row.applicable]
     predictions = [row.prediction for row in applicable]
     summary: dict[str, Any] = {
-        "total_rows": sum(1 for row in rows if row.target_name == "mu_oracle_blocks"),
+        "total_rows": len(mu_rows),
         "applicable_rows": len(applicable),
     }
     if predictions:
         summary["prediction_mean"] = statistics.fmean(predictions)
         summary["prediction_min"] = min(predictions)
         summary["prediction_max"] = max(predictions)
+
+    # An episode (or baseline) can legitimately have few or zero
+    # applicable rows -- e.g. an occluder-only/no-object negative
+    # control never has a visible target to remember. A bare zero
+    # count can't distinguish that from a silent ingest defect, so
+    # every non-applicable row's reason code is surfaced here rather
+    # than dropped. build_missingness_exclusion_report is the same
+    # integrity check used across every other D baseline (Step 4.5);
+    # if it ever finds a non-applicable row with no reason at all,
+    # that is a real defect, not a legitimate empty episode.
+    non_applicable = [row for row in mu_rows if not row.applicable]
+    if non_applicable:
+        missingness_report = build_missingness_exclusion_report(mu_rows)
+        summary["missingness"] = {
+            "non_applicable_reason_counts": summarize_non_applicable_reasons(mu_rows),
+            "has_silent_missingness": missingness_report.has_silent_missingness,
+        }
     return summary
 
 

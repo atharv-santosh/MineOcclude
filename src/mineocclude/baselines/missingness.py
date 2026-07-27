@@ -110,3 +110,21 @@ def build_missingness_exclusion_report(
     return MissingnessExclusionReport(
         cells=cells, rows_missing_reason_code=tuple(missing_reason)
     )
+
+
+def summarize_non_applicable_reasons(rows: Sequence[BaselineRow]) -> dict:
+    """Count non-applicable rows by their ``fit_metadata`` reason text.
+
+    Companion to :func:`build_missingness_exclusion_report`: that function
+    only flags rows missing a reason entirely (the "silent" case). This
+    collects the actual reason strings so a summary report can explain
+    *why* a baseline has few or zero applicable rows on some slice of
+    data, instead of surfacing a bare zero with no explanation.
+    """
+
+    counts: dict[str, int] = defaultdict(int)
+    for row in rows:
+        if not row.applicable:
+            reason = row.fit_metadata.get("reason") or "<no reason recorded>"
+            counts[str(reason)] += 1
+    return dict(counts)

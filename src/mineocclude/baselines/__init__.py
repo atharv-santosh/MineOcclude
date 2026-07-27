@@ -43,6 +43,7 @@ from mineocclude.baselines.missingness import (
     MissingnessCell,
     MissingnessExclusionReport,
     build_missingness_exclusion_report,
+    summarize_non_applicable_reasons,
 )
 from mineocclude.baselines.random_weight import fit_predict_random_weight
 from mineocclude.baselines.raw_pixel import fit_predict_raw_pixel
@@ -123,6 +124,7 @@ __all__ = [
     "MissingnessCell",
     "MissingnessExclusionReport",
     "build_missingness_exclusion_report",
+    "summarize_non_applicable_reasons",
     "UNASSIGNED_FOLD",
     "CaptureIngestError",
     "build_contexts_from_capture",

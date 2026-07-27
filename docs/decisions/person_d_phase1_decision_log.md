@@ -333,3 +333,54 @@ blocked on external data -- an accepted real trajectory, Person B's real
 folds/targets, and Person A's real frames/activations do not exist yet. No
 amount of D-side code changes substitutes for that; the three fixes above
 are the finishable, non-blocked portion of the outstanding gaps.
+
+## 2026-07-27 -- Diagnosed and closed the zero-applicable-row episode in the real pilot preview
+
+**Classification: (a) LEGITIMATE, not a defect.** `layout_05_ep9422`'s
+`capture_package_v0_1.json` (`origin/role/person-c-data@260784e`) records
+`"condition": "occluder_only_no_sheep"`. Direct inspection of the real row
+streams confirms this at the data level, not just the manifest label: all
+200 `visibility.jsonl` rows are `visibility="occluded"` and all 200
+`server_state.jsonl` rows have `state.target_present=false` -- there is no
+visible-target frame anywhere in the episode.
+
+**Line-level trace (`capture_ingest.py::build_contexts_from_capture`):**
+`last_seen_position` is initialized to `None` (line 116) and is only ever
+assigned inside the `if is_visible:` branch (line 140). Since
+`visibility_value == "visible"` is never true for this episode, that branch
+never executes for any of the 200 frames, so `last_seen_position_blocks`
+stays `None` on every resulting `TrajectoryContext` -- confirmed directly
+(not assumed) via
+`tests/baselines/test_no_sheep_episode_missingness.py::test_build_contexts_from_capture_never_fabricates_a_position`.
+`last_seen.py`/`constant_velocity.py` therefore correctly mark every row
+non-applicable with `prediction=None`; this is the adapter behaving exactly
+as documented, not a join/parse failure.
+
+**Fix (legibility, not baseline logic):** per instruction, no baseline math
+changed. `scripts/run_real_pilot_baseline_preview.py::_summarize` now
+surfaces, for any baseline/target with non-applicable rows, a
+`"missingness"` block containing
+`non_applicable_reason_counts` (new
+`mineocclude.baselines.missingness.summarize_non_applicable_reasons`,
+counting each `fit_metadata["reason"]` string) and `has_silent_missingness`
+(existing `build_missingness_exclusion_report`, unchanged). This is the same
+Step 4.5 seam every other D baseline is already checked against, reused
+rather than reimplemented. A wholly-non-applicable episode in the preview
+report now reads as an explained `0/200` with its exact reason text, instead
+of a bare, unexplained zero.
+
+**Regenerated evidence:** re-ran the preview script against the same 17
+real episodes; every numeric field (`applicable_rows`, `total_rows`,
+`prediction_mean/min/max`) is byte-identical to the prior committed report
+for all 17 episodes -- confirmed by direct diff before overwriting. Only the
+new `missingness` block was added, and only where non-applicable rows exist.
+`docs/status/person_d_real_pilot_baseline_preview.json` updated in place.
+
+**Evidence:** `tests/fixtures/person_d/real_capture_no_sheep_excerpt/`
+(real excerpted frames 0-19 of `layout_05_ep9422`, with provenance README),
+`tests/baselines/test_no_sheep_episode_missingness.py` (3 new tests: raw
+stream confirms no-sheep condition; contexts never fabricate a position;
+both baselines are wholly non-applicable but zero silent exclusions).
+Baseline suite: 79 -> 82 passing. Repo-wide: same 13 pre-existing A/B-owned
+failures in `test_synthetic_analysis_chain.py`/`test_synthetic_pipeline.py`
+before and after, confirmed unchanged by direct re-run.
