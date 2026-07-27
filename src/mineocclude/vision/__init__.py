@@ -27,6 +27,12 @@ from .magenta import (
     detect_magenta,
     validate_detection_document,
 )
+from .markers import (
+    MARKER_DETECTOR_VERSION,
+    MarkerDetectionError,
+    detect_layout_markers,
+    detect_marker_point,
+)
 from .measurement import (
     MeasurementError,
     ReappearanceResult,
@@ -57,6 +63,8 @@ __all__ = [
     "Homography",
     "HomographyError",
     "HsvRange",
+    "MARKER_DETECTOR_VERSION",
+    "MarkerDetectionError",
     "MeasurementError",
     "PNG_DECODER_VERSION",
     "PersonEConfigError",
@@ -71,7 +79,9 @@ __all__ = [
     "compare_frames",
     "compute_ssim",
     "decode_png_rgb",
+    "detect_layout_markers",
     "detect_magenta",
+    "detect_marker_point",
     "find_alpha_zero_matches",
     "find_reappearance",
     "fit_marker_homography",
