@@ -282,7 +282,18 @@ requires Person B's independent acceptance.
 
 `docs/status/fixtures/phase5_activation_store_example/` is an explicitly
 synthetic, non-scientific, deterministic example produced by the public writer.
-It contains:
+The checked package is fixture package v1.1 under unchanged schema version 1.0.
+Fixture package v1.0 was independently rejected by Person B because its README
+checksum was calculated from a pre-Git-normalization 373-byte CRLF
+representation while a fresh checkout contained the canonical 364-byte LF
+representation. The failed receipt commit
+`1b229fdec74eb602c03d8301fd5744bc9c73b30e` remains preserved. Version 1.1
+writes the README and checksum inventory as explicit BOM-free UTF-8 bytes with
+LF endings, then hashes the exact README bytes written to disk. This is a
+fixture-package integrity correction, not a schema or storage-protocol
+migration.
+
+The package contains:
 
 - `chunks/activation-chunk-106b16904a4ae44c7bac4903.npy` (8,320 bytes,
   SHA-256
@@ -304,8 +315,14 @@ approved chunk, one approved canonical index, and one approved run binding.
 Extra files, directories, alternate objects, temporaries, symlinks, unsupported
 entries, missing files, and checksum omissions are rejected. `SHA256SUMS` does
 not claim a checksum for itself. Generation is byte-identical across repeated
-runs in the supported environment. This example is not accepted runtime
-evidence and is not independent Person B execution.
+runs in the supported environment. The public validator hashes raw checked-out
+bytes and rejects CRLF-mutated text rather than normalizing or repairing it.
+The chunk, canonical index, and immutable run binding are unchanged: there is
+no chunk, index, or run-binding migration. Audit 2 remains valid because
+production storage code and numeric/identity payloads are unchanged. This
+example is not accepted runtime evidence and is not independent Person B
+execution. A fresh Person B acceptance run in a new worktree and branch is
+required; the failed acceptance worktree and receipt must not be reused.
 
 ## S3 transfer considerations
 

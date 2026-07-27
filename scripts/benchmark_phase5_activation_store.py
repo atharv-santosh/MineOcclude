@@ -50,6 +50,7 @@ SCENARIO_INPUT_FIELDS = (
 INDEX_CHUNK_DESCRIPTOR_ESTIMATE_BYTES = 1024
 EXAMPLE_README_NAME = "README.md"
 EXAMPLE_CHECKSUM_NAME = "SHA256SUMS"
+EXAMPLE_PACKAGE_VERSION = "1.1"
 EXAMPLE_APPROVED_RELATIVE_FILES = frozenset(
     {
         EXAMPLE_README_NAME,
@@ -600,6 +601,18 @@ def _example_files(output: Path) -> tuple[Path, Path, Path]:
     return chunk, index, binding
 
 
+def _read_lf_utf8(path: Path, *, label: str) -> str:
+    payload = path.read_bytes()
+    if payload.startswith(b"\xef\xbb\xbf") or b"\r" in payload:
+        raise ValueError(f"{label} must be BOM-free UTF-8 with LF line endings")
+    if not payload.endswith(b"\n"):
+        raise ValueError(f"{label} must end with an LF line ending")
+    try:
+        return payload.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise ValueError(f"{label} must be valid UTF-8") from error
+
+
 def _write_example(args: argparse.Namespace) -> int:
     output = args.output_dir.resolve()
     if output.exists():
@@ -633,28 +646,43 @@ def _write_example(args: argparse.Namespace) -> int:
         creation_timestamp=CREATION_TIMESTAMP,
     )
     chunk, index, binding = _example_files(output)
-    readme = (
-        "# Synthetic Phase 5 activation-store example\n\n"
-        "This is deterministic, synthetic, non-scientific documentation data. "
-        "It is not accepted runtime evidence and is not a Person B receipt.\n\n"
-        "Validate and read it with:\n\n"
-        "```powershell\n"
-        "python scripts/benchmark_phase5_activation_store.py "
-        "validate-example --output-dir "
-        "docs/status/fixtures/phase5_activation_store_example\n"
-        "```\n"
+    readme_bytes = bytes(
+        (
+            "# Synthetic Phase 5 activation-store example\n\n"
+            f"Fixture package version: `{EXAMPLE_PACKAGE_VERSION}`.\n\n"
+            "Package v1.0 was independently rejected because its README "
+            "checksum was computed from pre-Git-normalization CRLF bytes. "
+            "Package v1.1 binds the canonical committed LF bytes.\n\n"
+            "This is deterministic, synthetic, non-scientific documentation "
+            "data. It is not accepted runtime evidence and is not a Person B "
+            "receipt.\n\n"
+            "Validate and read it with:\n\n"
+            "```powershell\n"
+            "python scripts/benchmark_phase5_activation_store.py "
+            "validate-example --output-dir "
+            "docs/status/fixtures/phase5_activation_store_example\n"
+            "```\n"
+        ),
+        "utf-8",
     )
+    if b"\r" in readme_bytes:
+        raise ValueError("example README generation produced non-LF bytes")
     readme_path = output / EXAMPLE_README_NAME
-    readme_path.write_text(readme, encoding="utf-8")
+    readme_path.write_bytes(readme_bytes)
     inventory_paths = (binding, chunk, index, readme_path)
-    inventory = "".join(
-        f"{_sha256(path)}  {path.relative_to(output).as_posix()}\n"
-        for path in sorted(
-            inventory_paths,
-            key=lambda item: item.relative_to(output).as_posix(),
-        )
+    inventory_bytes = bytes(
+        "".join(
+            f"{_sha256(path)}  {path.relative_to(output).as_posix()}\n"
+            for path in sorted(
+                inventory_paths,
+                key=lambda item: item.relative_to(output).as_posix(),
+            )
+        ),
+        "utf-8",
     )
-    (output / EXAMPLE_CHECKSUM_NAME).write_text(inventory, encoding="utf-8")
+    if b"\r" in inventory_bytes:
+        raise ValueError("example checksum generation produced non-LF bytes")
+    (output / EXAMPLE_CHECKSUM_NAME).write_bytes(inventory_bytes)
     if snapshot.relative_path != index.relative_to(output).as_posix():
         raise ValueError("example snapshot path is inconsistent")
     return _validate_example(
@@ -698,8 +726,16 @@ def _validate_example(args: argparse.Namespace) -> int:
     readme_path = output / EXAMPLE_README_NAME
     if not inventory_path.is_file() or not readme_path.is_file():
         raise ValueError("example checksum inventory or README is missing")
+    inventory_text = _read_lf_utf8(
+        inventory_path,
+        label="example checksum inventory",
+    )
+    readme_text = _read_lf_utf8(
+        readme_path,
+        label="example README",
+    )
     entries: dict[str, str] = {}
-    for line in inventory_path.read_text(encoding="utf-8").splitlines():
+    for line in inventory_text.splitlines():
         fields = line.split("  ", maxsplit=1)
         if (
             len(fields) != 2
@@ -722,8 +758,8 @@ def _validate_example(args: argparse.Namespace) -> int:
         len(snapshot.index_rows) != 1
         or snapshot.index_rows[0]["regime"]
         != "synthetic_non_scientific_example"
-        or "synthetic, non-scientific"
-        not in readme_path.read_text(encoding="utf-8")
+        or "synthetic, non-scientific" not in readme_text
+        or f"package version: `{EXAMPLE_PACKAGE_VERSION}`" not in readme_text
     ):
         raise ValueError("example classification or cardinality is invalid")
     key = ActivationRowKey.from_row(snapshot.index_rows[0])

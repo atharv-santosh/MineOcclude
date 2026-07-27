@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import errno
+import hashlib
 import importlib.util
 import json
 import os
@@ -2028,6 +2029,77 @@ class TestPhase5ExampleAndForecast(unittest.TestCase):
                 if path.is_file()
             }
             self.assertEqual(first_files, second_files)
+
+    def test_example_text_payloads_are_lf_and_inventory_hashes_raw_readme(self):
+        benchmark = _benchmark_module()
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "example"
+            benchmark._write_example(
+                type("Arguments", (), {"output_dir": output})()
+            )
+            readme_bytes = (output / "README.md").read_bytes()
+            inventory_bytes = (output / "SHA256SUMS").read_bytes()
+            for name, payload in (
+                ("README.md", readme_bytes),
+                ("SHA256SUMS", inventory_bytes),
+            ):
+                with self.subTest(name=name):
+                    self.assertNotIn(b"\r", payload)
+                    self.assertIn(b"\n", payload)
+                    self.assertTrue(payload.endswith(b"\n"))
+            entries = {
+                relative: digest
+                for digest, relative in (
+                    line.split("  ", maxsplit=1)
+                    for line in inventory_bytes.decode("utf-8").splitlines()
+                )
+            }
+            self.assertEqual(
+                entries["README.md"],
+                hashlib.sha256(readme_bytes).hexdigest(),
+            )
+
+    def test_checked_example_rejects_readme_line_ending_or_byte_mutation(self):
+        benchmark = _benchmark_module()
+        mutations = {
+            "crlf": lambda payload: payload.replace(b"\n", b"\r\n"),
+            "changed_byte": lambda payload: b"!" + payload[1:],
+        }
+        for label, mutate in mutations.items():
+            with (
+                self.subTest(label=label),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                copied = Path(directory) / "example"
+                shutil.copytree(CHECKED_EXAMPLE, copied)
+                readme = copied / "README.md"
+                readme.write_bytes(mutate(readme.read_bytes()))
+                with self.assertRaises(ValueError):
+                    benchmark._validate_example(
+                        type("Arguments", (), {"output_dir": copied})()
+                    )
+
+    def test_regeneration_preserves_immutable_example_payloads(self):
+        benchmark = _benchmark_module()
+        immutable_directories = ("chunks", "indexes", "run_bindings")
+        before = {
+            path.relative_to(CHECKED_EXAMPLE).as_posix(): path.read_bytes()
+            for directory in immutable_directories
+            for path in (CHECKED_EXAMPLE / directory).iterdir()
+            if path.is_file()
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "example"
+            benchmark._write_example(
+                type("Arguments", (), {"output_dir": output})()
+            )
+            after = {
+                path.relative_to(output).as_posix(): path.read_bytes()
+                for directory in immutable_directories
+                for path in (output / directory).iterdir()
+                if path.is_file()
+            }
+        self.assertEqual(before, after)
 
     def test_example_inventory_rejects_every_unapproved_entry(self):
         benchmark = _benchmark_module()
