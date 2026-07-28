@@ -1,0 +1,42 @@
+=== PERSON A PHASE 2.6 FORMAL ROLLOUT ===
+[VAE] Loading VQGAN from 
+/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/config.json
+/home/sagemaker-user/.conda/envs/mineworld/lib/python3.10/site-packages/diffusers/configuration_utils.py:245: FutureWarning: It is deprecated to pass a pretrained model name or path to `from_config`.If you were trying to load a model, please use <class 'diffusers.models.autoencoders.vq_model.VQModel'>.load_config(...) followed by <class 'diffusers.models.autoencoders.vq_model.VQModel'>.from_config(...) instead. Otherwise, please make sure to pass a configuration dictionary instead. This functionality will be removed in v1.0.0.
+  deprecate("config-passed-as-path", "1.0.0", deprecation_message, standard_warn=False)
+[VAE] Use ckpt_path: /home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt
+[tvae.models.amused_vqvae][AutoencodingLegacy] Restored from 
+/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt with 0 missing and 
+1250 unexpected keys
+W0728 00:01:08.077000 1808 .conda/envs/mineworld/lib/python3.10/site-packages/torch/_inductor/utils.py:1137] [0/0] Not enough SMs to use max_autotune_gemm mode
+/home/sagemaker-user/.conda/envs/mineworld/lib/python3.10/site-packages/torch/_inductor/compile_fx.py:194: UserWarning: TensorFloat32 tensor cores for float32 matrix multiplication available but not enabled. Consider setting `torch.set_float32_matmul_precision('high')` for better performance.
+  warnings.warn(
+{
+  "cuda_version": "12.6",
+  "generated_frames_requested": 1,
+  "gpu": {
+    "capability": "8.9",
+    "device_index": 0,
+    "name": "NVIDIA L4",
+    "total_memory_bytes": 23661248512
+  },
+  "peak_cuda_allocated_bytes": 6207769600,
+  "peak_cuda_reserved_bytes": 9330229248,
+  "process_exit_status": 0,
+  "timings": {
+    "first_generated_frame_seconds": 157.33144119297503,
+    "generation_kernel_seconds": 155.5327558517456,
+    "model_initialization_seconds": 17.842331370979082,
+    "total_runtime_seconds": 179.90037131600548
+  },
+  "torch_version": "2.6.0+cu126"
+}
+{
+  "avg_frame_rate": "6/1",
+  "declared_frames": 1,
+  "decoded_frames": 1,
+  "duration_seconds": 0.166667,
+  "height": 224,
+  "r_frame_rate": "6/1",
+  "width": 384
+}
+PASS: generated video decoded and formal runtime fields captured.

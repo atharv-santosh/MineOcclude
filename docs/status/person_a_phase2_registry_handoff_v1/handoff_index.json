@@ -1,0 +1,54 @@
+{
+  "attempt_scope_policy": "Each replacement wrapper session declares and records every rollout attempt launched within its unique session boundary. Two failed sessions and one completed session are preserved.",
+  "combined_bundle": {
+    "path": "package/person-a-registry-handoff-all-20260728.tar.gz",
+    "sha256": "d0ed11e5ee7f8983ba8a21745e911bebbbe50492e6fd46ade39c8d309f02fa61",
+    "sidecar_path": "package/person-a-registry-handoff-all-20260728.tar.gz.sha256"
+  },
+  "external_link_record": "external_link_record.json",
+  "handoff_version": "person-a-phase2-registry-handoff-v1",
+  "person_a_source_revision": "85224f1951c224698a2cf6f8a0a3088de5b67664",
+  "schema_version": "1.0",
+  "sessions": [
+    {
+      "archive_path": "package/person-a-registry-smoke-20260727T235120Z.tar.gz",
+      "archive_sha256": "50fca3421fdf657e973311c19f201a221d90c9226b5446ef2fb5db5009405268",
+      "attempt_count": 1,
+      "attempt_inventory_complete": true,
+      "ended_at": "2026-07-27T23:52:02Z",
+      "evidence_path": "sessions/person-a-registry-smoke-20260727T235120Z",
+      "lifecycle_status": "failed",
+      "run_id": "person-a-registry-smoke-20260727T235120Z-step2.6",
+      "session_id": "person-a-registry-smoke-20260727T235120Z",
+      "started_at": "2026-07-27T23:51:20Z",
+      "verification_result": "fail"
+    },
+    {
+      "archive_path": "package/person-a-registry-smoke-20260727T235656Z.tar.gz",
+      "archive_sha256": "a3d353fedcb95b1f562db477ea75eb35b158ac91a9be53679923ddf9e5810aaa",
+      "attempt_count": 1,
+      "attempt_inventory_complete": true,
+      "ended_at": "2026-07-27T23:57:04Z",
+      "evidence_path": "sessions/person-a-registry-smoke-20260727T235656Z",
+      "lifecycle_status": "failed",
+      "run_id": "person-a-registry-smoke-20260727T235656Z-step2.6",
+      "session_id": "person-a-registry-smoke-20260727T235656Z",
+      "started_at": "2026-07-27T23:56:56Z",
+      "verification_result": "fail"
+    },
+    {
+      "archive_path": "package/person-a-registry-smoke-20260728T000019Z.tar.gz",
+      "archive_sha256": "74c801f2ebbcd6df7f7692047e90ad5a983974927398a0fac35f10a40015ec5f",
+      "attempt_count": 1,
+      "attempt_inventory_complete": true,
+      "ended_at": "2026-07-28T00:04:04Z",
+      "evidence_path": "sessions/person-a-registry-smoke-20260728T000019Z",
+      "lifecycle_status": "completed",
+      "run_id": "person-a-registry-smoke-20260728T000019Z-step2.6",
+      "session_id": "person-a-registry-smoke-20260728T000019Z",
+      "started_at": "2026-07-28T00:00:19Z",
+      "verification_result": "pass"
+    }
+  ],
+  "verification_authority": "Kazim Abbas"
+}
