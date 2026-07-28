@@ -17,8 +17,6 @@ import platform
 import shutil
 import subprocess
 import sys
-from typing import Optional
-
 
 EXPECTED_PACKAGES = {
     "torch": "2.6.0",
@@ -37,6 +35,7 @@ EXPECTED_PACKAGES = {
     "scikit-learn": "1.6.1",
     "modelscope": "1.38.1",
     "modelscope-hub": "0.1.8",
+    "pyarrow": "25.0.0",
 }
 
 LOCAL_BUILD_SUFFIX_PACKAGES = frozenset({"torch", "torchvision"})
@@ -73,10 +72,11 @@ IMPORT_CHECKS = {
     "gym": "gym",
     "scikit-learn": "sklearn",
     "modelscope": "modelscope",
+    "pyarrow": "pyarrow",
 }
 
 
-def run_command(command: list[str]) -> tuple[Optional[int], str]:
+def run_command(command: list[str]) -> tuple[int | None, str]:
     executable = shutil.which(command[0])
     if executable is None:
         return None, f"{command[0]}: NOT FOUND"
@@ -148,7 +148,7 @@ def main() -> int:
         try:
             importlib.import_module(import_name)
             print(f"{package_name}: PASS")
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - report arbitrary import failures
             print(f"{package_name}: FAIL ({type(exc).__name__}: {exc})")
             failures.append(f"{package_name}: import failed")
 
@@ -195,7 +195,7 @@ def main() -> int:
                 "--require-cuda was specified but CUDA is unavailable"
             )
 
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - report runtime inspection failures
         print(f"PyTorch CUDA inspection failed: {exc}")
         failures.append("PyTorch CUDA inspection failed")
 
