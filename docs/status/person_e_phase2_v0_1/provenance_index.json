@@ -99,6 +99,30 @@
       "status": "accepted"
     },
     {
+      "artifact_id": "person_e_phase2_v0_1:registry_query_example.json",
+      "direct_inputs": [
+        "registry_snapshot.json"
+      ],
+      "path": "registry_query_example.json",
+      "sha256": "dd65835d38fc45068a23d54ddcf1ae3f1810481343546f6da473f3d79ec3ab43",
+      "shared_immutable_registry_emitted": true,
+      "size_bytes": 126973,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:registry_snapshot.json",
+      "direct_inputs": [
+        "git:f0a4fed546eb1cf19a7094e6b99399a58294726a:docs/status/person_a_phase2_registry_handoff_v1/handoff_index.json",
+        "git:f2fa76739fd9949afe8c8ac3207f8003c018baea:data/handoff_e/person_c_phase2_registry_handoff_v1/pilot_registry_handoff.json",
+        "git:f2fa76739fd9949afe8c8ac3207f8003c018baea:data/handoff_e/person_c_phase2_registry_handoff_v1/artifact_verification.json"
+      ],
+      "path": "registry_snapshot.json",
+      "sha256": "0a181a866d50ec296c9c3db0ceda26ef342d7ace014d330e9bd70bc6fa6e2e88",
+      "shared_immutable_registry_emitted": true,
+      "size_bytes": 76165,
+      "status": "accepted"
+    },
+    {
       "artifact_id": "person_e_phase2_v0_1:split_coverage_report.json",
       "direct_inputs": [
         "frozen_split_manifest.json"
@@ -110,20 +134,29 @@
       "status": "accepted"
     },
     {
-      "artifact_id": "person_e_phase2_v0_1:step2_1_blockers.json",
-      "direct_inputs": [],
-      "path": "step2_1_blockers.json",
-      "sha256": "07b0e2e8453d65c1e203d5efdea7437abeb6186b4c834f68945899820d1b3932",
-      "shared_immutable_registry_emitted": false,
-      "size_bytes": 1513,
+      "artifact_id": "person_e_phase2_v0_1:step2_1_registry_receipt.json",
+      "direct_inputs": [
+        "registry_snapshot.json",
+        "registry_query_example.json",
+        "git:f0a4fed546eb1cf19a7094e6b99399a58294726a:docs/status/person_a_phase2_registry_handoff_v1/handoff_index.json",
+        "git:f2fa76739fd9949afe8c8ac3207f8003c018baea:data/handoff_e/person_c_phase2_registry_handoff_v1/attempt_scope.json"
+      ],
+      "path": "step2_1_registry_receipt.json",
+      "sha256": "873522fa0457200fb0b109ab89764315eff3e6b7299332564a54ad8c250d573a",
+      "shared_immutable_registry_emitted": true,
+      "size_bytes": 7269,
       "status": "accepted"
     }
   ],
   "schema_version": "1.0",
-  "shared_immutable_registry_status": "pending_step2_1_authoritative_inputs",
+  "shared_immutable_registry_status": "step2_1_real_registry_emitted_and_validated",
   "source_revisions": {
+    "person_a_registry_handoff": "f0a4fed546eb1cf19a7094e6b99399a58294726a",
+    "person_a_registry_source": "85224f1951c224698a2cf6f8a0a3088de5b67664",
     "person_b": "03a2c4663ce73873b4fed0369943c1f43edcd742",
     "person_c": "00784756f21895d19aff44572496c956cc5d932f",
+    "person_c_registry_handoff": "f2fa76739fd9949afe8c8ac3207f8003c018baea",
+    "person_c_registry_source": "487532ba1e7745fe07174090c0851269fb70a6a7",
     "person_e_base": "24e4556fa03b25fd7256474593b518bdf03cdbe2"
   }
 }

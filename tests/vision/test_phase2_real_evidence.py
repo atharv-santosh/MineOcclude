@@ -7,9 +7,10 @@ import unittest
 from pathlib import Path
 
 from mineocclude.experiments.registry import (
+    ImmutableRegistryIndex,
     formatted_json_bytes,
     hash_json_value,
-    validate_phase2_step2_1_blocker_record,
+    require_valid_immutable_registry,
 )
 from mineocclude.vision.calibration import (
     CalibrationDatasetError,
@@ -142,10 +143,24 @@ class TestPhase2RealEvidence(unittest.TestCase):
             self.assertAlmostEqual(predicted[0], row["predicted_world_xz"][0])
             self.assertAlmostEqual(predicted[1], row["predicted_world_xz"][1])
 
-    def test_blocker_and_all_json_bytes_are_canonical_utf8_lf(self) -> None:
-        validate_phase2_step2_1_blocker_record(
-            load("step2_1_blockers.json")
+    def test_real_registry_and_all_json_bytes_are_canonical_utf8_lf(
+        self,
+    ) -> None:
+        registry = load("registry_snapshot.json")
+        receipt = load("step2_1_registry_receipt.json")
+        status = load("phase2_status.json")
+        self.assertTrue(require_valid_immutable_registry(registry).accepted)
+        index = ImmutableRegistryIndex(registry)
+        self.assertEqual(len(index.query_runs()), 4)
+        self.assertEqual(
+            receipt["run_counts_by_lifecycle_status"],
+            {"in_progress": 0, "completed": 2, "failed": 2},
         )
+        self.assertEqual(receipt["accepted_artifact_count"], 28)
+        steps = {row["step"]: row for row in status["steps"]}
+        self.assertEqual(steps["2.1"]["status"], "PASS")
+        self.assertEqual(steps["2.4"]["status"], "PARTIAL")
+        self.assertEqual(status["overall_status"], "PARTIAL")
         for path in sorted(EVIDENCE.glob("*.json")):
             with self.subTest(path=path.name):
                 payload = path.read_bytes()
