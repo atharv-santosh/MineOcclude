@@ -259,6 +259,41 @@ def test_feasibility_receipt():
     assert d["requesting_person_e_confirmation_before_final_capture"] is True
 
 
+def test_feasibility_deterministic_equivalence_register():
+    r = loadj(V3, FEASIBILITY)
+    reg = r["authorized_deterministic_equivalence_register"]
+    assert r["authorized_preview_equivalence_register_count"] == 24
+    assert len(reg) == 24
+    absent = [f for f in frames() if f["truth_class"] == "absent"]
+    absent_by_id = {f["frame_id"]: f for f in absent}
+    assert {row["v0_3_frame_id"] for row in reg} == set(absent_by_id)  # exactly the 24 absent frames
+    assert len({row["preview_sha256"] for row in reg}) == 24          # one distinct preview each
+    for row in reg:
+        f = absent_by_id[row["v0_3_frame_id"]]
+        # binds the exact frozen identity
+        assert row["layout_id"] == f["layout_id"]
+        assert row["reserved_episode_id"] == f["reserved_episode_id"]
+        assert row["reserved_frame_index"] == f["reserved_frame_index"]
+        assert row["distractor_identity"] == f["distractor_identity"]
+        assert row["cow_world_position"] == f["distractor_world_position"]
+        assert row["canonical_camera_pose_id"] == f["canonical_camera_pose_id"]
+        assert row["planned_final_png_path"] == f["planned_source_relative_path"]
+        assert len(row["preview_sha256"]) == 64
+        assert row["preview_feasibility_only"] is True
+        assert row["person_e_detector_never_run"] is True
+        assert row["preview_bytes_forbidden_from_copy_or_reuse"] is True
+    # unmapped previews remain hard-forbidden; no overlap with the registered set
+    mapped = {row["preview_sha256"] for row in reg}
+    assert set(r["unmapped_preview_hashes_remain_hard_forbidden"]).isdisjoint(mapped)
+    cats = r["hard_forbidden_hash_categories"]
+    assert any("37 Detector v1 development" in c for c in cats)
+    assert any("cross-row" in c for c in cats)
+    assert any("present frame" in c for c in cats)
+    sd = r["scientific_disclosure"]
+    assert sd["set_remains_held_out_from_person_e_frozen_detector"] is True
+    assert sd["no_claim_of_pixel_novelty_relative_to_person_c_feasibility_previews_is_made"] is True
+
+
 def test_frozen_v0_3_six_predeclaration_json_unchanged():
     """The six frozen v0_3 predeclaration JSON are unchanged from 24791b1 (the
     feasibility receipt is a new 7th file, not a modification)."""
