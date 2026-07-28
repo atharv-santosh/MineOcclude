@@ -53,13 +53,31 @@ Expected post-fix gate for the five in-frame layouts: systematic bias removed
 => median ~= 0, p95 ~= 0.17 (detection spread only), inside both gates. No
 recapture required for those five.
 
-## Not resolved by this correction
+## Phase 2 — layout_02 coverage recapture (DONE)
 
-- **layout_02 coverage:** two markers are clipped at the image border, so
-  layout_02 is not evaluable regardless of world coordinates. It needs new
-  border-safe geometry and a targeted recapture (Phase 2).
-- **depth bracketing:** for five layouts the sheep lane (depth 6) sits ~0.5
-  block beyond the far marker row (depth span ends 5.5) — a mild extrapolation.
-  The convention bias dominated it; if any corrected layout still marginally
-  misses, extend the far marker row past the lane depth (built into the Phase-2
-  geometry, retrofittable to all six).
+layout_02 had two markers clipped at the image border (near row at shallow depth,
+lane extremes, >half-FOV off-axis), so it was not evaluable regardless of world
+coordinates. Fixed with **marker geometry v2**: a deeper row projects *more
+central* (toward the wall), so the far row must be *wider* than the near row to
+clear the wall silhouette. The geometry is runtime-tunable via the new
+`mineocclude markergeom <nearOrtho> <farOrtho> <nearInset> <farInset>` command;
+layout_02 uses `markergeom 0 7 5 0` (near row in front of the wall, far row at
+the lane extremes behind it). All four markers verified in-frame with >=111px
+border margin by colour detection; the quad area is 77 blocks^2 (well-posed
+homography) and brackets the sheep depth (6).
+
+Regenerated from clean captures (`git_dirty=false`, jar `aea241ec`):
+- `markers_layout_02.json` — top-face-centre world coords, born correct from the
+  mod (`world_x/world_z`); source `layout_02_ep31002` (nosheep);
+- `calibration_frames/{visible,negative}/layout_02/` — 6+6 clean frames
+  (visible from `ep31001`, negative from `ep31002`);
+- `detector_calibration_inputs.json` / `independent_probe_points.json` — layout_02
+  entries rebuilt (12 detector, 6 probe; splits 3 calibration / 3 heldout);
+- `provenance_calibration_clean.json` — ep31001/ep31002 added.
+
+## Residual note
+
+For the five non-recaptured layouts the sheep lane (depth 6) sits ~0.5 block
+beyond the far marker row — a mild extrapolation the convention bias had
+dominated. If any corrected layout still marginally misses the gate, extend its
+far marker row past the lane depth (the same geometry v2 lever, retrofittable).

@@ -3,19 +3,19 @@
  "schema_version": "1.0",
  "layout_id": "layout_02",
  "legacy_layout_id": "layout_01",
- "source_trajectory_id": "layout_01_ep9764_nosheep_calibration",
+ "source_trajectory_id": "layout_02_ep31002_nosheep_clean",
  "canonical_camera_pose_id": "layout_02_canonical_pose_v1",
  "image_coordinate_system": "pixel_center_xy_zero_based",
  "image_width_px": 640,
  "image_height_px": 360,
- "world_coordinate_system": "ground_plane_world_xz_blocks",
+ "world_coordinate_system": "ground_plane_world_xz_blocks_topface_centre",
  "synthetic": false,
  "scientific_use": "pending_e_detection",
- "marker_visibility": "all 4 in-frame, unoccluded (clean no-sheep capture, marker-fix jar)",
- "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (y=4 = sheep foot-plane)",
+ "marker_visibility": "all 4 in-frame with border margin (>=111px), verified by colour detection on the clean no-sheep capture; far row widened to clear the wall silhouette (markergeom 0 7 5 0)",
+ "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (y=4 = sheep foot-plane); coords born-correct from the mod (world_x/world_z)",
  "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE)",
- "image_xy_status": "NULL \u2014 E detects on the no-sheep calibration frames",
- "capture_provenance": "data/autonomous/layout_01_ep9764/capture_provenance.json (git_dirty=false)",
+ "image_xy_status": "NULL — E detects on the no-sheep calibration frames",
+ "capture_provenance": "data/autonomous/layout_02_ep31002/capture_provenance.json (git_dirty=false)",
  "marker_correspondences": [
   {
    "marker_id": "north_west",
@@ -23,11 +23,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "blue",
    "world_xz_blocks": [
-    1.0,
-    -7.0
+    0.5,
+    -2.5
    ],
    "image_xy": null,
-   "mod_role_original": "near_west"
+   "mod_role_original": "near_west",
+   "world_point_convention": "block_top_face_centre"
   },
   {
    "marker_id": "north_east",
@@ -35,11 +36,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "yellow",
    "world_xz_blocks": [
-    1.0,
-    7.0
+    0.5,
+    3.5
    ],
    "image_xy": null,
-   "mod_role_original": "near_east"
+   "mod_role_original": "near_east",
+   "world_point_convention": "block_top_face_centre"
   },
   {
    "marker_id": "south_east",
@@ -47,11 +49,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "white",
    "world_xz_blocks": [
-    5.0,
-    7.0
+    7.5,
+    8.5
    ],
    "image_xy": null,
-   "mod_role_original": "far_east"
+   "mod_role_original": "far_east",
+   "world_point_convention": "block_top_face_centre"
   },
   {
    "marker_id": "south_west",
@@ -59,11 +62,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "lime",
    "world_xz_blocks": [
-    5.0,
-    -7.0
+    7.5,
+    -7.5
    ],
    "image_xy": null,
-   "mod_role_original": "far_west"
+   "mod_role_original": "far_west",
+   "world_point_convention": "block_top_face_centre"
   }
  ],
  "layout_id_correction": {
@@ -91,5 +95,21 @@
    "capturing_jar_sha256"
   ],
   "preserved_rationale": "These record what was actually captured and executed against the prototype mod, and name real on-disk artifacts. Rewriting them would falsify provenance."
+ },
+ "marker_convention_correction": {
+  "correction_id": "person-c-marker-worldcoord-topface-centre-v1",
+  "status": "coords born-correct at capture (mod emits world_x/world_z = top-face centre)",
+  "eval_probe_untouched": true
+ },
+ "layout_02_coverage_recapture": {
+  "reason": "previous layout_02 had 2 clipped markers (near row at shallow depth, lane extremes, >half-FOV off-axis) -> not evaluable.",
+  "fix": "marker geometry v2 with widened far row: markergeom nearOrtho=0 farOrtho=7 nearInset=5 farInset=0 (near row in front of the wall, far row at lane extremes behind it). All 4 markers in-frame, sheep depth (6) bracketed by the quad.",
+  "capture": "layout_02_ep31002 (clean no-sheep), jar aea241eceb87, seed 265765564, 2026-07-28T02:47:46Z",
+  "markergeom_param": [
+   0,
+   7,
+   5,
+   0
+  ]
  }
 }
