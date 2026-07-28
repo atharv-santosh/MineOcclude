@@ -163,8 +163,12 @@ def test_detector_outcomes_unavailable_and_no_png():
     blob = load(V3, "untouched_test_frame_manifest.json").decode()
     for banned in ("centroid", "detected_present", "classification", "empirical", "confidence"):
         assert banned not in blob
-    pngs = [f for _, _, fs in os.walk(V3) for f in fs if f.lower().endswith(".png")]
-    assert pngs == []
+    # the predeclaration commit itself created no image bytes (permanent invariant;
+    # the finalized PNGs are added only in the later finalization commit)
+    tree = subprocess.check_output(
+        ["git", "-C", ROOT, "ls-tree", "-r", "--name-only", V3_PREDECL_COMMIT, "--",
+         "data/handoff_e/phase3_detector_v1_untouched_test_v0_3/"]).decode()
+    assert not any(x.lower().endswith(".png") for x in tree.splitlines())
 
 
 def test_capture_requirements_fail_closed():
@@ -306,9 +310,14 @@ def test_frozen_v0_3_six_predeclaration_json_unchanged():
         assert load(V3, name) == committed, rel
 
 
-def test_no_png_under_committed_v0_3_package():
-    pngs = [f for _, _, fs in os.walk(V3) for f in fs if f.lower().endswith(".png")]
-    assert pngs == []
+def test_no_png_committed_through_register_commit():
+    """No image bytes were committed at any point from the predeclaration through
+    the feasibility/register commits; finals are created only by finalization."""
+    for commit in (V3_PREDECL_COMMIT, "2f24fb4", "51c98aa"):
+        tree = subprocess.check_output(
+            ["git", "-C", ROOT, "ls-tree", "-r", "--name-only", commit, "--",
+             "data/handoff_e/phase3_detector_v1_untouched_test_v0_3/"]).decode()
+        assert not any(x.lower().endswith(".png") for x in tree.splitlines()), commit
 
 
 if __name__ == "__main__":
