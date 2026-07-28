@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Mapping
 from pathlib import Path
@@ -16,6 +17,7 @@ from mineocclude.experiments.registry import (
     hash_file_bytes,
     hash_json_value,
     load_json_with_sha256,
+    write_bytes_exclusive,
     write_json_exclusive,
 )
 from mineocclude.vision.calibration import (
@@ -29,6 +31,9 @@ from mineocclude.vision.config import (
     PersonEConfigError,
     validate_person_e_config,
 )
+from mineocclude.vision.detection_records import (
+    validate_test_evaluation_request,
+)
 from mineocclude.vision.magenta import (
     CALIBRATION_DETECTION_DOCUMENT_SCHEMA_VERSION,
     DETECTOR_ALGORITHM_VERSION,
@@ -37,6 +42,10 @@ from mineocclude.vision.magenta import (
     detect_magenta,
     evaluate_presence,
     validate_detection_document,
+)
+from mineocclude.vision.phase3_detector_candidate import (
+    PERSON_C_DEVELOPMENT_SOURCE_REVISION,
+    evaluate_frozen_candidate_records,
 )
 
 
@@ -52,8 +61,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--split",
         choices=tuple(sorted(CALIBRATION_SPLITS)),
-        required=True,
-        help="Evaluation role; only heldout results can claim the planning gate.",
+        help="Legacy Phase 2 split. Historical heldout is not an untouched test.",
+    )
+    parser.add_argument(
+        "--evaluation-mode",
+        choices=("development", "test"),
+        help=(
+            "Phase 3 frozen-candidate mode. Test requires an immutable manifest "
+            "and explicit --one-shot-test."
+        ),
     )
     parser.add_argument(
         "--hsv-range",
@@ -71,11 +87,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--connectivity", type=int, choices=(4, 8))
     parser.add_argument(
         "--threshold-version",
-        required=True,
         help="Unique detector-threshold version; filenames are not identity.",
     )
-    parser.add_argument("--producer-run-id", required=True)
-    parser.add_argument("--code-sha", required=True)
+    parser.add_argument("--producer-run-id")
+    parser.add_argument("--code-sha")
     parser.add_argument(
         "--calibration-report",
         type=Path,
@@ -84,7 +99,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--config",
         type=Path,
-        required=True,
         help="Validated Person E config whose literal bytes are recorded.",
     )
     parser.add_argument(
@@ -95,12 +109,24 @@ def parse_args() -> argparse.Namespace:
             "publishing real frozen-split evidence."
         ),
     )
+    parser.add_argument(
+        "--detections-parquet-output",
+        type=Path,
+        help="Required exact-schema Parquet output in Phase 3 evaluation mode.",
+    )
+    parser.add_argument("--frozen-candidate-config", type=Path)
+    parser.add_argument("--frozen-candidate-version-record", type=Path)
+    parser.add_argument("--development-reclassification-receipt", type=Path)
+    parser.add_argument("--one-shot-test", action="store_true")
+    parser.add_argument("--candidate-comparison", action="store_true")
     return parser.parse_args()
 
 
 def _require_identifier(value: str, name: str) -> str:
-    if not value.strip() or value != value.strip() or any(
-        character.isspace() for character in value
+    if (
+        not value.strip()
+        or value != value.strip()
+        or any(character.isspace() for character in value)
     ):
         raise ValueError(f"{name} must be a non-empty identifier without whitespace.")
     return value
@@ -146,8 +172,7 @@ def _metrics_record(
     }
     if split == "heldout":
         record["planning_gate_passed"] = (
-            metrics.precision >= minimum_precision
-            and metrics.recall >= minimum_recall
+            metrics.precision >= minimum_precision and metrics.recall >= minimum_recall
         )
     return record
 
@@ -202,7 +227,7 @@ def _detector_settings(
         raise ValueError("Heldout settings must come only from --calibration-report.")
     report, report_hash = load_json_with_sha256(args.calibration_report)
     if not isinstance(report, Mapping):
-        raise ValueError("Calibration report must be a mapping.")
+        raise TypeError("Calibration report must be a mapping.")
     if (
         report.get("detector_report_schema_version")
         not in {"person-e-detector-report-v0.2", "person-e-detector-report-v0.3"}
@@ -230,11 +255,159 @@ def _detector_settings(
     return settings, report_hash
 
 
+def _load_mapping(path: Path, name: str) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError(f"Could not load {name}: {error}") from error
+    if not isinstance(value, dict):
+        raise TypeError(f"{name} must contain one mapping.")
+    return value
+
+
+def _development_frames(
+    receipt: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    if (
+        receipt.get("reclassification_schema_version")
+        != "person-e-phase3-development-reclassification-v1.0"
+        or receipt.get("current_split_role") != "development"
+        or receipt.get("untouched_test_claim_permitted") is not False
+        or receipt.get("person_c_source_revision")
+        != PERSON_C_DEVELOPMENT_SOURCE_REVISION
+    ):
+        raise ValueError("Development reclassification receipt is invalid.")
+    frames = receipt.get("frames")
+    if not isinstance(frames, list) or len(frames) != receipt.get("frame_count"):
+        raise ValueError("Development reclassification frame coverage is incomplete.")
+    return [dict(frame) for frame in frames]
+
+
+def _normalize_test_frames(
+    frames: list[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    return [
+        {
+            **dict(frame),
+            "source_git_path": frame["source_path"],
+            "source_frame_hash": frame["source_sha256"],
+            "historical_phase2_split_role": None,
+            "split_role": "test",
+        }
+        for frame in frames
+    ]
+
+
+def _phase3_main(args: argparse.Namespace) -> None:
+    required_paths = {
+        "--frozen-candidate-config": args.frozen_candidate_config,
+        "--frozen-candidate-version-record": (args.frozen_candidate_version_record),
+        "--development-reclassification-receipt": (
+            args.development_reclassification_receipt
+        ),
+        "--detections-parquet-output": args.detections_parquet_output,
+    }
+    missing = [name for name, value in required_paths.items() if value is None]
+    if missing:
+        raise ValueError(f"Phase 3 evaluation requires: {', '.join(missing)}.")
+    if args.split is not None:
+        raise ValueError("Phase 3 evaluation cannot also declare a Phase 2 split.")
+    if args.detections_output is not None:
+        raise ValueError("Phase 3 writes only --detections-parquet-output.")
+    phase3_setting_overrides = {
+        "--hsv-range": args.hsv_range,
+        "--min-area": args.min_area,
+        "--max-area": args.max_area,
+        "--open-iterations": args.open_iterations,
+        "--close-iterations": args.close_iterations,
+        "--morphology-radius": args.morphology_radius,
+        "--connectivity": args.connectivity,
+        "--threshold-version": args.threshold_version,
+        "--calibration-report": args.calibration_report,
+        "--config": args.config,
+    }
+    requested_overrides = {
+        name: value
+        for name, value in phase3_setting_overrides.items()
+        if value is not None
+    }
+    if args.evaluation_mode == "development" and requested_overrides:
+        raise ValueError(
+            "Frozen development evaluation rejects detector-setting overrides."
+        )
+    candidate_config = _load_mapping(
+        args.frozen_candidate_config, "frozen candidate config"
+    )
+    candidate_version = _load_mapping(
+        args.frozen_candidate_version_record,
+        "frozen candidate version record",
+    )
+    reclassification = _load_mapping(
+        args.development_reclassification_receipt,
+        "development reclassification receipt",
+    )
+    development_frames = _development_frames(reclassification)
+    if args.evaluation_mode == "development":
+        if args.one_shot_test:
+            raise ValueError("Development evaluation cannot use one-shot test mode.")
+        manifest = _load_mapping(args.input, "development manifest")
+        if manifest != reclassification:
+            raise ValueError(
+                "Development input must be the exact reclassification receipt."
+            )
+        frames = development_frames
+        source_revision = PERSON_C_DEVELOPMENT_SOURCE_REVISION
+    else:
+        manifest = _load_mapping(args.input, "test manifest")
+        test_frames = validate_test_evaluation_request(
+            manifest,
+            frozen_candidate=candidate_version,
+            forbidden_development_hashes=reclassification["unique_source_sha256"],
+            output_paths=(args.output, args.detections_parquet_output),
+            one_shot_test=args.one_shot_test,
+            candidate_comparison_requested=args.candidate_comparison,
+            proposed_settings=requested_overrides or None,
+        )
+        frames = _normalize_test_frames(test_frames)
+        source_revision = manifest["source_revision"]
+    _, report, _, parquet_payload = evaluate_frozen_candidate_records(
+        ROOT,
+        frames=frames,
+        candidate_config=candidate_config,
+        candidate_version=candidate_version,
+        split_role=args.evaluation_mode,
+        person_c_source_revision=source_revision,
+    )
+    report.update(
+        {
+            "one_shot_test_mode": (
+                args.evaluation_mode == "test" and args.one_shot_test
+            ),
+            "candidate_comparison_requested": args.candidate_comparison,
+            "test_result_overwrite_forbidden": True,
+            "tuning_permitted": args.evaluation_mode == "development",
+        }
+    )
+    write_bytes_exclusive(args.detections_parquet_output, parquet_payload)
+    write_json_exclusive(args.output, report)
+
+
 def main() -> None:
     args = parse_args()
-    threshold_version = _require_identifier(
-        args.threshold_version, "threshold_version"
-    )
+    if args.evaluation_mode is not None:
+        _phase3_main(args)
+        return
+    legacy_required = {
+        "--split": args.split,
+        "--threshold-version": args.threshold_version,
+        "--producer-run-id": args.producer_run_id,
+        "--code-sha": args.code_sha,
+        "--config": args.config,
+    }
+    missing = [name for name, value in legacy_required.items() if value is None]
+    if missing:
+        raise ValueError(f"Legacy evaluation requires: {', '.join(missing)}.")
+    threshold_version = _require_identifier(args.threshold_version, "threshold_version")
     producer_run_id = _require_identifier(args.producer_run_id, "producer_run_id")
     code_sha = _require_code_sha(args.code_sha)
     dataset, dataset_hash = load_detector_calibration_dataset(args.input)
@@ -255,9 +428,7 @@ def main() -> None:
             "settings_hash": settings_hash,
         }
     )
-    detector_version = (
-        f"{DETECTOR_ALGORITHM_VERSION}:sha256:{detector_identity_hash}"
-    )
+    detector_version = f"{DETECTOR_ALGORITHM_VERSION}:sha256:{detector_identity_hash}"
 
     output_rows: list[dict[str, Any]] = []
     source_contexts: list[dict[str, Any]] = []
@@ -314,9 +485,7 @@ def main() -> None:
                 "source_git_path": frame["source_git_path"],
                 "split": frame["split"],
                 "layout_id": frame["layout_id"],
-                "canonical_camera_pose_id": frame[
-                    "canonical_camera_pose_id"
-                ],
+                "canonical_camera_pose_id": frame["canonical_camera_pose_id"],
                 "resolution_id": frame["resolution_id"],
                 "image_width_px": frame["image_width_px"],
                 "image_height_px": frame["image_height_px"],
@@ -334,17 +503,13 @@ def main() -> None:
                         for field, value in context.items()
                         if field != "frame_available"
                     },
-                    "detection_id": (
-                        f"{detector_version}:{frame['frame_id']}"
-                    ),
+                    "detection_id": (f"{detector_version}:{frame['frame_id']}"),
                     "detector_version": detector_version,
                     "threshold_version": threshold_version,
                     "status": result.status,
                     "presence": result.detected,
                     "centroid_xy": (
-                        None
-                        if result.centroid_xy is None
-                        else list(result.centroid_xy)
+                        None if result.centroid_xy is None else list(result.centroid_xy)
                     ),
                     "area_pixels": result.area_pixels,
                     "bounding_box_xyxy": (
@@ -405,12 +570,8 @@ def main() -> None:
             )
         detection_document = {
             "schema_version": dataset["schema_version"],
-            "detection_schema_version": (
-                CALIBRATION_DETECTION_DOCUMENT_SCHEMA_VERSION
-            ),
-            "document_id": (
-                f"calibration_detections_{detector_identity_hash}"
-            ),
+            "detection_schema_version": (CALIBRATION_DETECTION_DOCUMENT_SCHEMA_VERSION),
+            "document_id": (f"calibration_detections_{detector_identity_hash}"),
             "synthetic": False,
             "scientific_use": "permitted",
             "detector_version": detector_version,

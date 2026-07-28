@@ -1,0 +1,71 @@
+{
+  "candidate_config_schema_version": "person-e-phase3-detector-candidate-config-v1.0",
+  "configuration": {
+    "algorithm_id": "hsv-largest-valid-blob-v1.0-candidate",
+    "applicability": {
+      "canonical_camera_pose_ids": [
+        "layout_01_canonical_pose_v1",
+        "layout_02_canonical_pose_v1",
+        "layout_03_canonical_pose_v1",
+        "layout_04_canonical_pose_v1",
+        "layout_05_canonical_pose_v1",
+        "layout_06_canonical_pose_v1"
+      ],
+      "expected_channel_order": "RGB",
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "layout_ids": [
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04",
+        "layout_05",
+        "layout_06"
+      ],
+      "mismatched_input_behavior": "reject_fail_closed",
+      "pixel_format": "rgb8",
+      "resolution_id": "resolution_640x360_rgb8"
+    },
+    "detector_core_algorithm_version": "hsv-largest-valid-blob-v0.1",
+    "detector_core_implementation_path": "src/mineocclude/vision/magenta.py",
+    "detector_implementation_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "detector_settings": {
+      "bounding_box_convention": "xyxy_half_open",
+      "centroid_convention": "arithmetic_mean_of_selected_pixel_centres",
+      "close_iterations": 0,
+      "component_filter": "inclusive_area_bounds",
+      "connectivity": 8,
+      "expected_channel_order": "RGB",
+      "hsv_ranges": [
+        [
+          280.0,
+          320.0,
+          0.5,
+          1.0,
+          0.35,
+          1.0
+        ]
+      ],
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "max_area_pixels": 5000,
+      "min_area_pixels": 19,
+      "morphology_radius_pixels": 1,
+      "open_iterations": 0,
+      "pixel_format": "rgb8",
+      "selection_rule": "largest_valid_area",
+      "tie_breaking_rule": "topmost_then_leftmost"
+    },
+    "detector_settings_sha256": "0dbb426adf99f53455eea04c4aaeb56f3cb22cbc351d87269bb605445eb8f2ea",
+    "formal_test_gates": {
+      "minimum_precision": 0.95,
+      "minimum_recall": 0.95
+    },
+    "person_a_parquet_authority_revision": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+    "person_c_development_source_revision": "fa70424530f422a2e6140e0e90d0ff18f583141e",
+    "person_e_source_base_revision": "44af0d06c47a8270991bd1b1d70031d116dd5e00",
+    "pyarrow_version": "25.0.0"
+  },
+  "detector_config_sha256": "acfecd659958891eaee0d582c946abdfaaf47d1ab3307a24f7652e634c045bfa",
+  "schema_version": "1.0"
+}

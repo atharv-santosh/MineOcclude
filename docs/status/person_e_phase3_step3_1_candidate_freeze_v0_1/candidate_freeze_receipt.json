@@ -1,0 +1,29 @@
+{
+  "candidate_freeze_receipt_schema_version": "person-e-phase3-detector-candidate-freeze-receipt-v1.0",
+  "candidate_frozen": true,
+  "changed_parameter_count": 1,
+  "changed_parameters": [
+    {
+      "candidate_value": 19,
+      "historical_value": 20,
+      "justification": "The sole documented development false negative contains 19 threshold-matching connected pixels; no other detector parameter or algorithmic operation is changed.",
+      "parameter": "min_area_pixels"
+    }
+  ],
+  "config_sha256": "acfecd659958891eaee0d582c946abdfaaf47d1ab3307a24f7652e634c045bfa",
+  "dependency_files_changed": false,
+  "detector_parameters_changed": true,
+  "detector_version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+  "development_detections_parquet_sha256": "b575520e4176cc58b75c871208eed9ce12e5e54238d6ca2aef072021ff96c247",
+  "development_source_revision": "fa70424530f422a2e6140e0e90d0ff18f583141e",
+  "historical_detector_version": "hsv-largest-valid-blob-v0.1:sha256:1ff40286e68007b06d160a0b8eb91c4adabed00873675cbfd888d4a8d5ad1b37",
+  "implementation_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+  "new_untouched_test_bytes_inspected": false,
+  "person_a_parquet_authority_revision": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+  "person_e_source_base_revision": "44af0d06c47a8270991bd1b1d70031d116dd5e00",
+  "phase1_and_phase2_evidence_immutable": true,
+  "schema_version": "1.0",
+  "settings_sha256": "0dbb426adf99f53455eea04c4aaeb56f3cb22cbc351d87269bb605445eb8f2ea",
+  "step_3_1_pass_claimed": false,
+  "u4_result_content_inspected": false
+}
