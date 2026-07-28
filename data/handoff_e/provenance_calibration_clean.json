@@ -334,6 +334,50 @@
    "git_sha": "3cc5f619689da42e4d6a01c319d2ce1d3636d356",
    "capturing_jar_sha256": "aea241eceb87f7d5b3f89f0d213aa428284e3253557065632fb002d8d9ce55e8",
    "marker_geometry": "markergeom 0 7 5 0 (border-safe far-row-wider; layout_02 coverage recapture)"
+  },
+  {
+   "trajectory_id": "layout_03_ep33005",
+   "episode_id": 33005,
+   "layout_id": "layout_03",
+   "scene": "nosheep",
+   "seed": 281627321,
+   "capture_command": [
+    "mineocclude mode nosheep",
+    "mineocclude duration 0",
+    "mineocclude reveal 0",
+    "mineocclude warmup 60",
+    "mineocclude impulse -1 0.0",
+    "mineocclude lockcam on",
+    "mineocclude start layout_03 33005 281627321 1.0 0.05 60"
+   ],
+   "start_utc": "2026-07-28T04:11:05Z",
+   "end_utc": "2026-07-28T04:11:11Z",
+   "git_dirty": false,
+   "git_sha": "aa2e8ed127b829092e866af1f2c099acc3a20051",
+   "capturing_jar_sha256": "aea241eceb87f7d5b3f89f0d213aa428284e3253557065632fb002d8d9ce55e8",
+   "marker_geometry": "markergeom 0 7 5 0 (layout_03 coverage recapture)"
+  },
+  {
+   "trajectory_id": "layout_03_ep33006",
+   "episode_id": 33006,
+   "layout_id": "layout_03",
+   "scene": "normal",
+   "seed": 97589761,
+   "capture_command": [
+    "mineocclude mode normal",
+    "mineocclude duration 8",
+    "mineocclude reveal 20",
+    "mineocclude warmup 60",
+    "mineocclude impulse -1 0.0",
+    "mineocclude lockcam on",
+    "mineocclude start layout_03 33006 97589761 1.0 0.05 400"
+   ],
+   "start_utc": "2026-07-28T04:11:17Z",
+   "end_utc": "2026-07-28T04:11:49Z",
+   "git_dirty": false,
+   "git_sha": "aa2e8ed127b829092e866af1f2c099acc3a20051",
+   "capturing_jar_sha256": "aea241eceb87f7d5b3f89f0d213aa428284e3253557065632fb002d8d9ce55e8",
+   "marker_geometry": "markergeom 0 7 5 0 (layout_03 coverage recapture)"
   }
  ],
  "layout_id_correction": {
@@ -362,5 +406,6 @@
   ],
   "preserved_rationale": "These record what was actually captured and executed against the prototype mod, and name real on-disk artifacts. Rewriting them would falsify provenance."
  },
- "layout_02_recapture_note": "layout_02 markers/frames/probe points regenerated from ep31001/ep31002 (git_dirty=false, jar aea241ec) after fixing 2 clipped markers with marker geometry v2; see docs/reports/person_c_marker_worldcoord_convention_correction_v0_1.md"
+ "layout_02_recapture_note": "layout_02 markers/frames/probe points regenerated from ep31001/ep31002 (git_dirty=false, jar aea241ec) after fixing 2 clipped markers with marker geometry v2; see docs/reports/person_c_marker_worldcoord_convention_correction_v0_1.md",
+ "layout_03_recapture_note": "layout_03 markers/frames regenerated from ep33005/ep33006 (git_dirty=false, jar aea241ec). Probe positions preserved byte-identical (forced seed 97589761 reproduced the prior sheep path)."
 }

@@ -3,7 +3,7 @@
  "schema_version": "1.0",
  "layout_id": "layout_03",
  "legacy_layout_id": "layout_02",
- "source_trajectory_id": "layout_02_ep9766_nosheep_calibration",
+ "source_trajectory_id": "layout_03_ep33005_nosheep_clean",
  "canonical_camera_pose_id": "layout_03_canonical_pose_v1",
  "image_coordinate_system": "pixel_center_xy_zero_based",
  "image_width_px": 640,
@@ -11,11 +11,11 @@
  "world_coordinate_system": "ground_plane_world_xz_blocks_topface_centre",
  "synthetic": false,
  "scientific_use": "pending_e_detection",
- "marker_visibility": "all 4 in-frame, unoccluded (clean no-sheep capture, marker-fix jar)",
+ "marker_visibility": "all 4 in-frame with border margin (>=111px), verified by colour detection on the clean no-sheep capture; markergeom 0 7 5 0 (near row in front of the wider occluder, far row at lane extremes)",
  "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (BlockPos + (0.5, y+1, 0.5)); matches marker_image_point_convention and the y=4 sheep foot-plane",
  "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE)",
  "image_xy_status": "NULL — E detects on the no-sheep calibration frames",
- "capture_provenance": "data/autonomous/layout_02_ep9766/capture_provenance.json (git_dirty=false)",
+ "capture_provenance": "data/autonomous/layout_03_ep33005/capture_provenance.json (git_dirty=false)",
  "marker_correspondences": [
   {
    "marker_id": "north_west",
@@ -23,16 +23,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "blue",
    "world_xz_blocks": [
-    -7.5,
-    1.5
+    -3.5,
+    0.5
    ],
    "image_xy": null,
    "mod_role_original": "near_west",
-   "world_point_convention": "block_top_face_centre",
-   "world_xz_blocks_previous_corner": [
-    -8.0,
-    1.0
-   ]
+   "world_point_convention": "block_top_face_centre"
   },
   {
    "marker_id": "north_east",
@@ -40,16 +36,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "yellow",
    "world_xz_blocks": [
-    8.5,
-    1.5
+    4.5,
+    0.5
    ],
    "image_xy": null,
    "mod_role_original": "near_east",
-   "world_point_convention": "block_top_face_centre",
-   "world_xz_blocks_previous_corner": [
-    8.0,
-    1.0
-   ]
+   "world_point_convention": "block_top_face_centre"
   },
   {
    "marker_id": "south_east",
@@ -57,16 +49,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "white",
    "world_xz_blocks": [
-    8.5,
-    5.5
+    9.5,
+    7.5
    ],
    "image_xy": null,
    "mod_role_original": "far_east",
-   "world_point_convention": "block_top_face_centre",
-   "world_xz_blocks_previous_corner": [
-    8.0,
-    5.0
-   ]
+   "world_point_convention": "block_top_face_centre"
   },
   {
    "marker_id": "south_west",
@@ -74,16 +62,12 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "lime",
    "world_xz_blocks": [
-    -7.5,
-    5.5
+    -8.5,
+    7.5
    ],
    "image_xy": null,
    "mod_role_original": "far_west",
-   "world_point_convention": "block_top_face_centre",
-   "world_xz_blocks_previous_corner": [
-    -8.0,
-    5.0
-   ]
+   "world_point_convention": "block_top_face_centre"
   }
  ],
  "layout_id_correction": {
@@ -114,10 +98,18 @@
  },
  "marker_convention_correction": {
   "correction_id": "person-c-marker-worldcoord-topface-centre-v1",
-  "defect": "world_xz_blocks recorded the marker BlockPos (block MIN corner) while the image convention detects the top-face CENTRE. The uniform (-0.5,-0.5) mismatch injected a constant-sign ~0.5-block frame shift into the fitted homography -> the wall-parallel localization bias (median 0.4221, p95 0.5885) Person E measured.",
-  "fix": "world_xz_blocks := BlockPos + (0.5, 0.5) (top-face centre); y-plane unchanged at 4. Input-geometry correction, NOT a probe-derived +0.5 output offset (that would fit the symptom; this fixes the cause).",
-  "proof": "synthetic pinhole homography over this layout's marker rectangle: corner-labelled markers -> 0.5000 median abs wall-parallel error, all same sign; top-face-centre-labelled -> 0.0000. No evaluation probe used.",
-  "eval_probe_untouched": true,
-  "world_point_convention": "block_top_face_centre"
+  "status": "coords born-correct at capture (mod emits world_x/world_z = top-face centre)",
+  "eval_probe_untouched": true
+ },
+ "layout_03_coverage_recapture": {
+  "reason": "north-west/blue and north-east/yellow markers touched the frame border (near row at shallow depth, wide lane) -> public detector rejected them in all 6 negative frames -> 0/6 probes.",
+  "fix": "marker geometry v2, markergeom nearOrtho=0 farOrtho=7 nearInset=5 farInset=0.",
+  "capture": "layout_03_ep33005 (clean no-sheep), jar aea241eceb87, seed 281627321, 2026-07-28T04:11:05Z",
+  "markergeom_param": [
+   0,
+   7,
+   5,
+   0
+  ]
  }
 }
