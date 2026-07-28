@@ -14,7 +14,7 @@ import pytest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
-import gen_phase3_untouched_predeclaration as gen  # noqa: E402
+import gen_phase3_untouched_predeclaration as gen
 
 PKG = os.path.join(ROOT, "data/handoff_e/phase3_detector_v1_untouched_test_v0_1")
 
@@ -53,8 +53,8 @@ def test_binding_matches_person_e_freeze_commit_record():
     """The bound hashes equal what E actually committed in the freeze record."""
     raw = subprocess.check_output([
         "git", "-C", ROOT, "show",
-        "3930669eddc026ecb081e947f71f1855a7415904:docs/status/"
-        "person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_version_record.json"])
+        ("3930669eddc026ecb081e947f71f1855a7415904:docs/status/"
+         "person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_version_record.json")])
     rec = json.loads(raw)
     b = loadj("untouched_test_predeclaration.json")["person_e_candidate_binding"]
     assert b["detector_identity_sha256"] == rec["detector_identity_sha256"]
@@ -113,8 +113,8 @@ def test_capture_requirements_forbid_reuse_and_bind_forbidden_hashes():
     # exactly Person E's 36 forbidden development hashes, bound
     raw = subprocess.check_output([
         "git", "-C", ROOT, "show",
-        "3930669eddc026ecb081e947f71f1855a7415904:docs/status/"
-        "person_e_phase3_step3_1_candidate_freeze_v0_1/new_untouched_test_requirements.json"])
+        ("3930669eddc026ecb081e947f71f1855a7415904:docs/status/"
+         "person_e_phase3_step3_1_candidate_freeze_v0_1/new_untouched_test_requirements.json")])
     forb = sorted(json.loads(raw)["forbidden_development_source_sha256"])
     assert cr["forbidden_development_source_sha256"] == forb
     assert len(forb) == 37

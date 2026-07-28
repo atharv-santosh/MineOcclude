@@ -8,6 +8,7 @@ under data/handoff_e/phase3_detector_v1_untouched_test_v0_1/. Byte-identical on
 every run (sorted keys, LF, no BOM, no wall-clock).
 """
 from __future__ import annotations
+
 import hashlib
 import json
 import os
@@ -73,7 +74,9 @@ def historical_c_episode_ids() -> list[int]:
                     ids.add(int(tok[2:]))
     prov = os.path.join(ROOT, "data/handoff_e/provenance_calibration_clean.json")
     if os.path.exists(prov):
-        for t in json.load(open(prov)).get("trajectories", []):
+        with open(prov, encoding="utf-8") as handle:
+            trajectories = json.load(handle).get("trajectories", [])
+        for t in trajectories:
             if isinstance(t.get("episode_id"), int):
                 ids.add(t["episode_id"])
     return sorted(ids)
@@ -220,8 +223,8 @@ def build_capture_requirements() -> dict:
             "All 48 predeclared rows are mandatory.",
             "No frame may be removed because it is difficult.",
             "No substitutions are allowed after capture begins.",
-            "A substitution requires retiring this package version and committing a new "
-            "predeclaration first.",
+            ("A substitution requires retiring this package version and committing a new "
+             "predeclaration first."),
             "Person E receives exactly one formal evaluation run.",
             "A failed test set cannot later be reused for tuning and still be called untouched.",
             "No detector outcomes are disclosed during capture or package construction.",
