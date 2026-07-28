@@ -228,5 +228,53 @@ def test_only_permitted_paths_changed():
         assert ok, f"unexpected change: {line!r}"
 
 
+# ---- pre-capture feasibility receipt (documentation-only commit) ----
+FEASIBILITY = "untouched_test_precapture_feasibility_receipt.json"
+V3_PREDECL_COMMIT = "24791b155a8962adce451a804a2bad94165392cc"
+
+
+def test_feasibility_receipt():
+    r = loadj(V3, FEASIBILITY)
+    assert r["package_id"] == "person-c-phase3-detector-v1-untouched-test-v0_3"
+    assert r["owner"] == "Person C"
+    assert r["purpose"] == "physical scene-feasibility validation only"
+    assert r["preview_was_a_formal_test_capture"] is False
+    assert r["preview_was_a_detector_evaluation"] is False
+    assert r["person_e_detector_ever_executed"] is False
+    assert r["detector_outcome_or_metric_inspected"] is False
+    assert r["detector_mask_inspected"] is False
+    assert r["detector_centroid_inspected"] is False
+    assert r["detector_classification_inspected"] is False
+    assert r["u4_output_inspected"] is False
+    assert r["previews_quarantined_and_forbidden_from_formal_v0_3_package"] is True
+    assert r["previews_are_not_eligible_for_person_e_evaluation"] is True
+    assert r["no_test_result_was_learned_from_the_preview"] is True
+    assert r["preview_paths_bytes_may_not_be_copied_renamed_transcoded_resized_or_reused"] is True
+    assert r["all_final_48_png_byte_streams_must_be_created_after_this_documentation_commit"] is True
+    assert r["final_capture_uses_only_episodes_53001_53030_and_the_exact_frozen_v0_3_manifest"] is True
+    assert r["layouts_covered"] == LAYOUTS and r["cow_positions_checked_per_layout"] == 4
+    assert isinstance(r["preview_frame_count"], int) and r["preview_frame_count"] > 0
+    # deterministic-identity disclosure present and flags E confirmation
+    d = r["deterministic_identity_disclosure"]
+    assert d["requesting_person_e_confirmation_before_final_capture"] is True
+
+
+def test_frozen_v0_3_six_predeclaration_json_unchanged():
+    """The six frozen v0_3 predeclaration JSON are unchanged from 24791b1 (the
+    feasibility receipt is a new 7th file, not a modification)."""
+    for name in ("untouched_test_predeclaration.json", "untouched_test_frame_manifest.json",
+                 "untouched_test_stratification_plan.json", "untouched_test_truth_authority.json",
+                 "untouched_test_capture_requirements.json",
+                 "untouched_test_predeclaration_receipt.json"):
+        rel = f"data/handoff_e/phase3_detector_v1_untouched_test_v0_3/{name}"
+        committed = subprocess.check_output(["git", "-C", ROOT, "show", f"{V3_PREDECL_COMMIT}:{rel}"])
+        assert load(V3, name) == committed, rel
+
+
+def test_no_png_under_committed_v0_3_package():
+    pngs = [f for _, _, fs in os.walk(V3) for f in fs if f.lower().endswith(".png")]
+    assert pngs == []
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))
