@@ -90,6 +90,30 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
                                 DoubleArgumentType.getDouble(ctx, "q"),
                                 IntegerArgumentType.getInteger(ctx, "ticks"),
                                 warmupTicks)))))))))
+                .then(CommandManager.literal("markergeom")
+                    .then(CommandManager.argument("nearOrtho", IntegerArgumentType.integer())
+                    .then(CommandManager.argument("farOrtho", IntegerArgumentType.integer())
+                    .then(CommandManager.argument("nearInset", IntegerArgumentType.integer())
+                    .then(CommandManager.argument("farInset", IntegerArgumentType.integer())
+                        .executes(ctx -> {
+                            ArenaBuilder.ovrNearOrtho = IntegerArgumentType.getInteger(ctx, "nearOrtho");
+                            ArenaBuilder.ovrFarOrtho = IntegerArgumentType.getInteger(ctx, "farOrtho");
+                            ArenaBuilder.ovrNearInset = IntegerArgumentType.getInteger(ctx, "nearInset");
+                            ArenaBuilder.ovrFarInset = IntegerArgumentType.getInteger(ctx, "farInset");
+                            ctx.getSource().sendFeedback(new LiteralText(
+                                    "markergeom override: nearOrtho=" + ArenaBuilder.ovrNearOrtho
+                                    + " farOrtho=" + ArenaBuilder.ovrFarOrtho
+                                    + " nearInset=" + ArenaBuilder.ovrNearInset
+                                    + " farInset=" + ArenaBuilder.ovrFarInset), true);
+                            return 1;
+                        }))))))
+                .then(CommandManager.literal("markergeomreset")
+                    .executes(ctx -> {
+                        ArenaBuilder.ovrNearOrtho = null; ArenaBuilder.ovrFarOrtho = null;
+                        ArenaBuilder.ovrNearInset = null; ArenaBuilder.ovrFarInset = null;
+                        ctx.getSource().sendFeedback(new LiteralText("markergeom override cleared"), true);
+                        return 1;
+                    }))
                 .then(CommandManager.literal("warmup")
                     .then(CommandManager.argument("ticks", IntegerArgumentType.integer(0))
                         .executes(ctx -> {

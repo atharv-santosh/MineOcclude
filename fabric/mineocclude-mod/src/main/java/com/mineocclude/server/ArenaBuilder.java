@@ -42,6 +42,18 @@ public final class ArenaBuilder {
     public static final String[] MARKER_COLORS =
             {"blue", "yellow", "lime", "white"};
 
+    /** Runtime marker-geometry overrides (`mineocclude markergeom`). null = use
+     *  the computed defaults. nearOrtho/farOrtho are absolute ortho (depth)
+     *  block coords; nearInset/farInset are blocks pulled in from each lane
+     *  extreme. Static so a live tweak affects the next arena build. */
+    public static Integer ovrNearOrtho, ovrFarOrtho, ovrNearInset, ovrFarInset;
+
+    /** Signature of the active override, folded into the arena-rebuild cache key
+     *  so a markergeom change forces a rebuild. */
+    public static String markerGeomSignature() {
+        return ovrNearOrtho + "/" + ovrFarOrtho + "/" + ovrNearInset + "/" + ovrFarInset;
+    }
+
     public ArenaBuilder(EpisodeConfig cfg, double wallOrtho, double orthoMin, double orthoMax) {
         this.cfg = cfg;
         this.wallOrtho = wallOrtho;
@@ -61,24 +73,37 @@ public final class ArenaBuilder {
         markerBlocks.clear();
         int y = (int) Math.floor(cfg.laneY);
         int floorY = y - 1;
-        // All four markers must be IN-FRAME at the canonical pose (pitch 0)
-        // AND well spread for a stable homography (Person E needs 4 visible,
-        // non-collinear correspondences). The visible ground strip in FRONT
-        // of the wall is thin, so the two rows straddle the wall in depth:
-        //   near row  = just in front of the wall (wallOrtho - 1)
-        //   far  row  = beyond the wall (wallOrtho + 3), placed at the lane
-        //               extremes (x = laneMin+1 / laneMax-1) which sit
-        //               OUTSIDE the wall's axis-shadow, so the far pair is
-        //               visible flanking the wall, not occluded by it.
-        // (Earlier bugs: orthoMin+2 = camOrtho-1 was behind the camera;
-        // orthoMin+5 = camOrtho+2 fell below the frame. Both fixed here.)
-        int nearOrtho = (int) Math.floor(wallOrtho) - 1;   // just in front of the wall
-        int farOrtho = (int) Math.floor(wallOrtho) + 3;    // beyond the wall, flanking it
-        int axisWest = (int) Math.floor(cfg.laneMin) + 1;
-        int axisEast = (int) Math.ceil(cfg.laneMax) - 1;
+        // Marker geometry v2 (Person E Phase 2.4): the four markers must be
+        // IN-FRAME with border margin AND closely bracket the sheep validation
+        // lane. Both rows straddle the SHEEP DEPTH (sheepOrtho +/- 2) rather
+        // than the wall, so:
+        //   - the sheep foot-origin lies INSIDE the marker quad in depth (no
+        //     depth extrapolation);
+        //   - both rows are deeper from the camera than the old wall-1 near
+        //     row, so their lane-extreme ends fall well inside the pitch-0 FOV
+        //     (the old shallow near row at the lane extremes clipped, e.g.
+        //     layout_02);
+        //   - both rows sit at |axis| well outside the finite wall segment, so
+        //     the wall never occludes them.
+        // Axis offsets pull in 2 blocks from the lane extremes for image-border
+        // margin while still closely bracketing the lane.
+        // A deeper row projects MORE central (toward the wall), so the far row
+        // must be WIDER than the near row to clear the wall silhouette. The
+        // near/far depth and per-row axis inset are runtime-tunable
+        // (`mineocclude markergeom`) so the border-safe geometry can be dialled
+        // in live per layout without a rebuild. ovr* == null uses the defaults.
+        int sheepOrtho = (int) Math.round(cfg.wallOrthoConst);  // sheep depth
+        int nearOrtho = ovrNearOrtho != null ? ovrNearOrtho : sheepOrtho - 2;
+        int farOrtho = ovrFarOrtho != null ? ovrFarOrtho : sheepOrtho + 2;
+        int nearInset = ovrNearInset != null ? ovrNearInset : 2;
+        int farInset = ovrFarInset != null ? ovrFarInset : 0;   // far row wider
+        int nearWest = (int) Math.floor(cfg.laneMin) + nearInset;
+        int nearEast = (int) Math.ceil(cfg.laneMax) - nearInset;
+        int farWest = (int) Math.floor(cfg.laneMin) + farInset;
+        int farEast = (int) Math.ceil(cfg.laneMax) - farInset;
         int[][] markerAxes = {
-                {axisWest, nearOrtho}, {axisEast, nearOrtho},
-                {axisWest, farOrtho}, {axisEast, farOrtho},
+                {nearWest, nearOrtho}, {nearEast, nearOrtho},
+                {farWest, farOrtho}, {farEast, farOrtho},
         };
         for (int[] axes : markerAxes) {
             BlockPos pos = axisPos(axes[0], floorY, axes[1]);

@@ -8,13 +8,13 @@
  "image_coordinate_system": "pixel_center_xy_zero_based",
  "image_width_px": 640,
  "image_height_px": 360,
- "world_coordinate_system": "ground_plane_world_xz_blocks",
+ "world_coordinate_system": "ground_plane_world_xz_blocks_topface_centre",
  "synthetic": false,
  "scientific_use": "pending_e_detection",
  "marker_visibility": "all 4 in-frame, unoccluded (clean no-sheep capture, marker-fix jar)",
- "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (y=4 = sheep foot-plane)",
+ "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (BlockPos + (0.5, y+1, 0.5)); matches marker_image_point_convention and the y=4 sheep foot-plane",
  "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE)",
- "image_xy_status": "NULL \u2014 E detects on the no-sheep calibration frames",
+ "image_xy_status": "NULL — E detects on the no-sheep calibration frames",
  "capture_provenance": "data/autonomous/layout_03_ep9768/capture_provenance.json (git_dirty=false)",
  "marker_correspondences": [
   {
@@ -23,11 +23,16 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "blue",
    "world_xz_blocks": [
-    -7.0,
-    2.0
+    -6.5,
+    2.5
    ],
    "image_xy": null,
-   "mod_role_original": "near_west"
+   "mod_role_original": "near_west",
+   "world_point_convention": "block_top_face_centre",
+   "world_xz_blocks_previous_corner": [
+    -7.0,
+    2.0
+   ]
   },
   {
    "marker_id": "north_east",
@@ -35,11 +40,16 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "yellow",
    "world_xz_blocks": [
-    7.0,
-    2.0
+    7.5,
+    2.5
    ],
    "image_xy": null,
-   "mod_role_original": "near_east"
+   "mod_role_original": "near_east",
+   "world_point_convention": "block_top_face_centre",
+   "world_xz_blocks_previous_corner": [
+    7.0,
+    2.0
+   ]
   },
   {
    "marker_id": "south_east",
@@ -47,11 +57,16 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "white",
    "world_xz_blocks": [
-    7.0,
-    6.0
+    7.5,
+    6.5
    ],
    "image_xy": null,
-   "mod_role_original": "far_east"
+   "mod_role_original": "far_east",
+   "world_point_convention": "block_top_face_centre",
+   "world_xz_blocks_previous_corner": [
+    7.0,
+    6.0
+   ]
   },
   {
    "marker_id": "south_west",
@@ -59,11 +74,16 @@
    "marker_kind": "non_magenta_geometry_marker",
    "marker_color": "lime",
    "world_xz_blocks": [
-    -7.0,
-    6.0
+    -6.5,
+    6.5
    ],
    "image_xy": null,
-   "mod_role_original": "far_west"
+   "mod_role_original": "far_west",
+   "world_point_convention": "block_top_face_centre",
+   "world_xz_blocks_previous_corner": [
+    -7.0,
+    6.0
+   ]
   }
  ],
  "layout_id_correction": {
@@ -91,5 +111,13 @@
    "capturing_jar_sha256"
   ],
   "preserved_rationale": "These record what was actually captured and executed against the prototype mod, and name real on-disk artifacts. Rewriting them would falsify provenance."
+ },
+ "marker_convention_correction": {
+  "correction_id": "person-c-marker-worldcoord-topface-centre-v1",
+  "defect": "world_xz_blocks recorded the marker BlockPos (block MIN corner) while the image convention detects the top-face CENTRE. The uniform (-0.5,-0.5) mismatch injected a constant-sign ~0.5-block frame shift into the fitted homography -> the wall-parallel localization bias (median 0.4221, p95 0.5885) Person E measured.",
+  "fix": "world_xz_blocks := BlockPos + (0.5, 0.5) (top-face centre); y-plane unchanged at 4. Input-geometry correction, NOT a probe-derived +0.5 output offset (that would fit the symptom; this fixes the cause).",
+  "proof": "synthetic pinhole homography over this layout's marker rectangle: corner-labelled markers -> 0.5000 median abs wall-parallel error, all same sign; top-face-centre-labelled -> 0.0000. No evaluation probe used.",
+  "eval_probe_untouched": true,
+  "world_point_convention": "block_top_face_centre"
  }
 }

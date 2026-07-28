@@ -589,11 +589,23 @@ public final class EpisodeManager {
             for (int m = 0; m < arena.markerBlocks.size(); m++) {
                 int[] b = arena.markerBlocks.get(m);
                 if (m > 0) markers.append(',');
+                // world_* is the AUTHORITATIVE homography world point: the CENTRE
+                // of the marker block's TOP FACE (x+0.5, y+1, z+0.5), which is the
+                // point the marker_image_point_convention detects and which lies on
+                // the y=4 sheep foot-plane. The raw BlockPos (x/y/z, the block's
+                // minimum corner) is retained for provenance only. Recording the
+                // corner AS the homography world point injected a uniform
+                // (-0.5,-0.5) frame shift -> the constant-sign ~0.5-block
+                // wall-parallel localization bias Person E measured.
                 markers.append("{\"role\":\"").append(ArenaBuilder.MARKER_ROLES[m])
                         .append("\",\"color\":\"").append(ArenaBuilder.MARKER_COLORS[m])
                         .append("\",\"x\":").append(b[0])
                         .append(",\"y\":").append(b[1])
-                        .append(",\"z\":").append(b[2]).append('}');
+                        .append(",\"z\":").append(b[2])
+                        .append(",\"world_x\":").append(b[0] + 0.5)
+                        .append(",\"world_y\":").append(b[1] + 1)
+                        .append(",\"world_z\":").append(b[2] + 0.5)
+                        .append('}');
             }
         }
         markers.append(']');
@@ -613,7 +625,8 @@ public final class EpisodeManager {
      *  observed as runs of byte-identical captured frames (see FrameCapture's
      *  stale-capture detector) that silently corrupted whole episodes. */
     private void buildArenaIfChanged(ServerWorld world, double orthoMin, double orthoMax) {
-        String key = cfg.layoutId + "|" + cfg.scene + "|" + wallOrtho + "|" + orthoMin + "|" + orthoMax;
+        String key = cfg.layoutId + "|" + cfg.scene + "|" + wallOrtho + "|" + orthoMin + "|" + orthoMax
+                + "|" + ArenaBuilder.markerGeomSignature();
         if (key.equals(lastBuiltArenaKey)) {
             return;
         }
