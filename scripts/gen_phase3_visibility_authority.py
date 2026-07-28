@@ -7,64 +7,91 @@ compute_geometric_visibility) and final schema. No empirical/E-authored decision
 is included. Deterministic (sorted by (trajectory_id, model_frame_idx)).
 """
 from __future__ import annotations
-import glob
+
+import fnmatch
 import hashlib
+import io
 import json
 import os
 import subprocess
+import sys
 
 import pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-import sys
 sys.path.insert(0, os.path.join(ROOT, "src"))
-import mineocclude.contracts  # noqa: F401,E402  (import-order cycle)
-from mineocclude.data.visibility import GEOMETRY_RULE_VERSION  # noqa: E402
+import mineocclude.contracts  # noqa: F401  (imported for the import-order cycle side effect)
+from mineocclude.data.visibility import GEOMETRY_RULE_VERSION
 
 OUT = os.path.join(ROOT, "data/handoff_e/phase3_visibility_authority_v0_1")
 SCHEMA_VERSION = "1.0"
 DATASET_ID = "person-c-phase3-geometric-visibility-authority-v0_1"
 
-
-def _sha256(path: str) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for c in iter(lambda: f.read(1 << 20), b""):
-            h.update(c)
-    return h.hexdigest()
+# Immutable frozen authority-input revision. All input discovery/reads bind to
+# THIS Git object, never the current HEAD/working tree, so the committed
+# authority artifacts regenerate byte-identically from any descendant commit.
+SOURCE_REVISION = "fa70424530f422a2e6140e0e90d0ff18f583141e"
 
 
-def _head() -> str:
-    return subprocess.check_output(["git", "-C", ROOT, "rev-parse", "HEAD"]).decode().strip()
+class SourceBindingError(Exception):
+    """Fail-closed error when the frozen source input cannot be resolved."""
 
 
-def _layouts() -> dict:
-    with open(os.path.join(ROOT, "configs/scenes/layouts.yaml"), encoding="utf-8") as h:
-        return {l["layout_id"]: l for l in json.load(h)["layouts"]}
+def _resolve(rev: str) -> None:
+    try:
+        subprocess.run(["git", "-C", ROOT, "rev-parse", "--verify", f"{rev}^{{commit}}"],
+                       check=True, capture_output=True)
+    except subprocess.CalledProcessError as exc:
+        raise SourceBindingError(f"source revision {rev} is not resolvable") from exc
 
 
-def regime_a_trajectories() -> list[str]:
-    tracked = set(subprocess.check_output(["git", "-C", ROOT, "ls-files"]).decode().split())
+def _cat(rev: str, path: str) -> bytes:
+    """Exact bytes of `path` at Git revision `rev`; fail closed if missing."""
+    try:
+        return subprocess.run(["git", "-C", ROOT, "cat-file", "blob", f"{rev}:{path}"],
+                              check=True, capture_output=True).stdout
+    except subprocess.CalledProcessError as exc:
+        raise SourceBindingError(f"required object {rev}:{path} is missing") from exc
+
+
+def _sha256_bytes(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def _layouts(rev: str) -> dict:
+    data = json.loads(_cat(rev, "configs/scenes/layouts.yaml"))
+    return {l["layout_id"]: l for l in data["layouts"]}
+
+
+def regime_a_trajectories(rev: str) -> list[str]:
+    """Discover the regime-A NORMAL-scene ep10xxx frame maps at `rev` (via Git,
+    not the working tree). NO_SHEEP/NO_WALL controls are excluded."""
+    names = subprocess.run(
+        ["git", "-C", ROOT, "ls-tree", "-r", "--name-only", rev, "--", "data/autonomous"],
+        check=True, capture_output=True).stdout.decode().splitlines()
     out = []
-    for p in sorted(glob.glob(os.path.join(ROOT, "data/autonomous/*_ep10*/frame_map.parquet"))):
-        rel = os.path.relpath(p, ROOT)
-        if rel not in tracked:
+    for rel in sorted(names):
+        if not fnmatch.fnmatch(rel, "data/autonomous/*_ep10*/frame_map.parquet"):
             continue
-        meta = pd.read_parquet(p, columns=["regime", "scene"])
-        # regime-A occlusion set: the NORMAL-scene trajectories (controls excluded;
-        # NO_SHEEP has no target, NO_WALL is a separate positive control).
+        meta = pd.read_parquet(io.BytesIO(_cat(rev, rel)), columns=["regime", "scene"])
         if str(meta["regime"].iloc[0]) == "A" and str(meta["scene"].iloc[0]) == "NORMAL":
-            out.append(os.path.dirname(p))
-    return sorted(out)
+            out.append(rel)
+    if not out:
+        raise SourceBindingError(f"no regime-A NORMAL frame maps found at {rev}")
+    return out
 
 
-def build_records(head: str):
+def build_records(source_revision: str):
+    _resolve(source_revision)
     records, srcs = [], {}
-    for d in regime_a_trajectories():
-        fmp = os.path.join(d, "frame_map.parquet")
-        rel = os.path.relpath(fmp, ROOT)
-        srcs[rel] = _sha256(fmp)
-        fm = pd.read_parquet(fmp)
+    for rel in regime_a_trajectories(source_revision):
+        blob = _cat(source_revision, rel)
+        srcs[rel] = _sha256_bytes(blob)
+        fm = pd.read_parquet(io.BytesIO(blob))
+        for col in ("trajectory_id", "model_frame_idx", "layout_id", "geometric_visible",
+                    "render_frame_idx", "player_x", "sheep_x"):
+            if col not in fm.columns:
+                raise SourceBindingError(f"{rel} missing required column {col}")
         for _, r in fm.iterrows():
             # AUTHORITATIVE value = the server as-built geometric_visible stored at
             # capture (ground truth of the placed blocks), NOT a config recompute.
@@ -102,7 +129,7 @@ def build_records(head: str):
                     "sheep_y": (None if pd.isna(r["sheep_y"]) else float(r["sheep_y"])),
                     "sheep_z": (None if pd.isna(r["sheep_z"]) else float(r["sheep_z"]))},
                 "geometry_rule_version": GEOMETRY_RULE_VERSION,
-                "source_revision": head,
+                "source_revision": source_revision,
                 "source_frame_map": rel,
                 "source_frame_map_sha256": srcs[rel],
                 "scientific_use": "authoritative_geometry_only",
@@ -157,9 +184,8 @@ def jsonl(records) -> bytes:
                     for r in records)).encode()
 
 
-def build_all():
-    head = _head()
-    records, srcs = build_records(head)
+def build_all(source_revision: str = SOURCE_REVISION):
+    records, srcs = build_records(source_revision)
     trajs = sorted({r["trajectory_id"] for r in records})
     from collections import Counter
     files = {}
@@ -175,12 +201,12 @@ def build_all():
         "records_sha256": hashlib.sha256(files["geometric_visibility_records.jsonl"]).hexdigest()})
     files["provenance_index.json"] = canon({
         "schema_version": SCHEMA_VERSION, "dataset_id": DATASET_ID,
-        "source_revision": head, "geometry_rule_version": GEOMETRY_RULE_VERSION,
+        "source_revision": source_revision, "geometry_rule_version": GEOMETRY_RULE_VERSION,
         "source_frame_maps": dict(sorted(srcs.items()))})
     files["visibility_authority_receipt.json"] = canon({
         "schema_version": SCHEMA_VERSION, "dataset_id": DATASET_ID,
         "owner": "Person C", "geometry_rule_version": GEOMETRY_RULE_VERSION,
-        "source_revision": head, "record_count": len(records),
+        "source_revision": source_revision, "record_count": len(records),
         "trajectory_count": len(trajs), "empirical_decision_present": False,
         "generated_by_c_authoritative_workflow": True,
         "file_sha256": {n: hashlib.sha256(b).hexdigest()

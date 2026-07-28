@@ -7,8 +7,10 @@ NOT from Person E's homography output. C supplies authority + ground truth;
 E performs and publishes the validation. Deterministic JSON.
 """
 from __future__ import annotations
-import glob
+
+import fnmatch
 import hashlib
+import io
 import json
 import os
 import subprocess
@@ -22,72 +24,86 @@ PACKAGE_ID = "person-c-phase3-homography-authority-v0_1"
 LAYOUTS = [f"layout_0{i}" for i in range(1, 7)]
 MARKER_ORDER = ["north_west", "north_east", "south_east", "south_west"]
 
-
-def _sha256(path: str) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for c in iter(lambda: f.read(1 << 20), b""):
-            h.update(c)
-    return h.hexdigest()
+# Immutable frozen authority-input revision. All input discovery/reads bind to
+# THIS Git object, never the current HEAD/working tree, so the committed
+# authority artifacts regenerate byte-identically from any descendant commit.
+SOURCE_REVISION = "fa70424530f422a2e6140e0e90d0ff18f583141e"
 
 
-def _head() -> str:
-    return subprocess.check_output(["git", "-C", ROOT, "rev-parse", "HEAD"]).decode().strip()
+class SourceBindingError(Exception):
+    """Fail-closed error when the frozen source input cannot be resolved."""
 
 
-def _layouts() -> dict:
-    with open(os.path.join(ROOT, "configs/scenes/layouts.yaml"), encoding="utf-8") as h:
-        return {l["layout_id"]: l for l in json.load(h)["layouts"]}
+def _resolve(rev: str) -> None:
+    try:
+        subprocess.run(["git", "-C", ROOT, "rev-parse", "--verify", f"{rev}^{{commit}}"],
+                       check=True, capture_output=True)
+    except subprocess.CalledProcessError as exc:
+        raise SourceBindingError(f"source revision {rev} is not resolvable") from exc
 
 
-def _committed(rel: str) -> bool:
-    tracked = _committed._c
-    return rel in tracked
-_committed._c = None
+def _cat(rev: str, path: str) -> bytes:
+    """Exact bytes of `path` at Git revision `rev`; fail closed if missing."""
+    try:
+        return subprocess.run(["git", "-C", ROOT, "cat-file", "blob", f"{rev}:{path}"],
+                              check=True, capture_output=True).stdout
+    except subprocess.CalledProcessError as exc:
+        raise SourceBindingError(f"required object {rev}:{path} is missing") from exc
 
 
-def _tracked() -> set:
-    if _committed._c is None:
-        _committed._c = set(subprocess.check_output(["git", "-C", ROOT, "ls-files"]).decode().split())
-    return _committed._c
+def _sha256_bytes(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
 
 
-def visible_capture_for(layout: str, wall_parallel_axis: str) -> tuple[str, str] | None:
-    """A committed capture for this layout whose sheep sweeps the widest visible
+def _exists_at(rev: str, path: str) -> bool:
+    return subprocess.run(["git", "-C", ROOT, "cat-file", "-e", f"{rev}:{path}"],
+                          check=False, capture_output=True).returncode == 0
+
+
+def _layouts(rev: str) -> dict:
+    data = json.loads(_cat(rev, "configs/scenes/layouts.yaml"))
+    return {l["layout_id"]: l for l in data["layouts"]}
+
+
+def _layout_frame_maps(rev: str, layout: str) -> list[str]:
+    names = subprocess.run(
+        ["git", "-C", ROOT, "ls-tree", "-r", "--name-only", rev, "--", "data/autonomous"],
+        check=True, capture_output=True).stdout.decode().splitlines()
+    return sorted(n for n in names
+                  if fnmatch.fnmatch(n, f"data/autonomous/{layout}_ep*/frame_map.parquet"))
+
+
+def visible_capture_for(rev: str, layout: str, wall_parallel_axis: str) -> tuple[str, str] | None:
+    """A capture for this layout (at `rev`) whose sheep sweeps the widest visible
     span along the wall-parallel axis, so the known-direction displacement is far
     above the localization noise floor. Prefers NO_WALL controls (sheep fully
     visible / unoccluded => long monotonic sweep); falls back to NORMAL."""
-    _tracked()
     axcol = "sheep_x" if wall_parallel_axis == "x" else "sheep_z"
-    best = None  # (span, dir, scene)
-    for p in sorted(glob.glob(os.path.join(ROOT, f"data/autonomous/{layout}_ep*/frame_map.parquet"))):
-        rel = os.path.relpath(p, ROOT)
-        if not _committed(rel):
-            continue
-        meta = pd.read_parquet(p, columns=["scene"])
-        scene = str(meta["scene"].iloc[0])
+    best = None  # (weight, rel, scene, span)
+    for rel in _layout_frame_maps(rev, layout):
+        fm = pd.read_parquet(io.BytesIO(_cat(rev, rel)))
+        scene = str(fm["scene"].iloc[0])
         if scene not in ("NO_WALL", "NORMAL"):
             continue
-        fm = pd.read_parquet(p)
-        vis = fm[fm["geometric_visible"] == True]  # noqa: E712
+        vis = fm[fm["geometric_visible"] == True]
         if len(vis) < 2:
             continue
         span = float(vis[axcol].max() - vis[axcol].min())
         # NO_WALL preferred: a large scene-priority weight guarantees it wins when present
         weight = span + (1000.0 if scene == "NO_WALL" else 0.0)
         if best is None or weight > best[0]:
-            best = (weight, os.path.dirname(p), scene, span)
+            best = (weight, rel, scene, span)
     return (best[1], best[2]) if best else None
 
 
-def known_direction_record(layout: str, wall_parallel_axis: str, head: str) -> dict | None:
-    found = visible_capture_for(layout, wall_parallel_axis)
+def known_direction_record(rev: str, layout: str, wall_parallel_axis: str) -> dict | None:
+    found = visible_capture_for(rev, layout, wall_parallel_axis)
     if found is None:
         return None
-    d, scene = found
-    fmp = os.path.join(d, "frame_map.parquet")
-    fm = pd.read_parquet(fmp).sort_values("model_frame_idx").reset_index(drop=True)
-    vis = fm[fm["geometric_visible"] == True].reset_index(drop=True)  # noqa: E712
+    rel, scene = found
+    fmp = rel
+    fm = pd.read_parquet(io.BytesIO(_cat(rev, rel))).sort_values("model_frame_idx").reset_index(drop=True)
+    vis = fm[fm["geometric_visible"] == True].reset_index(drop=True)
     if len(vis) < 2:
         return None
     axcol = "sheep_x" if wall_parallel_axis == "x" else "sheep_z"
@@ -120,16 +136,16 @@ def known_direction_record(layout: str, wall_parallel_axis: str, head: str) -> d
         "displacement_exceeds_localization_noise": abs(disp) >= 0.5,
         "truth_source": "person_c_server_world_state",
         "detector_output_used_to_define_direction": False,
-        "source_frame_map": os.path.relpath(fmp, ROOT),
-        "source_frame_map_sha256": _sha256(fmp),
-        "source_revision": head,
+        "source_frame_map": fmp,
+        "source_frame_map_sha256": _sha256_bytes(_cat(rev, rel)),
+        "source_revision": rev,
     }
 
 
-def marker_binding(layout: str, head: str) -> dict:
+def marker_binding(rev: str, layout: str) -> dict:
     rel = f"data/handoff_e/markers_layout_{layout[-2:]}.json"
-    path = os.path.join(ROOT, rel)
-    mk = json.load(open(path))
+    blob = _cat(rev, rel)
+    mk = json.loads(blob)
     by_role = {m["marker_role"]: m for m in mk["marker_correspondences"]}
     return {
         "layout_id": layout,
@@ -138,8 +154,8 @@ def marker_binding(layout: str, head: str) -> dict:
         "image_coordinate_convention": "pixel_center_xy_zero_based",
         "world_coordinate_convention": "ground_plane_world_xz_blocks_topface_centre",
         "marker_source_record": rel,
-        "marker_source_sha256": _sha256(path),
-        "marker_source_committed": _committed(rel),
+        "marker_source_sha256": _sha256_bytes(blob),
+        "marker_source_committed": _exists_at(rev, rel),
         "marker_order": MARKER_ORDER,
         "binding_note": ("this marker set is valid ONLY at this layout_id + "
                          "canonical_camera_pose_id + 640x360 + these conventions; "
@@ -153,9 +169,10 @@ def marker_binding(layout: str, head: str) -> dict:
     }
 
 
-def build_all():
-    head = _head()
-    layouts = _layouts()
+def build_all(source_revision: str = SOURCE_REVISION):
+    _resolve(source_revision)
+    head = source_revision
+    layouts = _layouts(source_revision)
     wall_parallel = {}
     for lay in LAYOUTS:
         wall_parallel[lay] = layouts[lay]["lane"]["axis"]  # sheep travels parallel to the wall
@@ -205,12 +222,12 @@ def build_all():
         "note": ("Owner-authored controlled known-direction movements from Person C server "
                  "world state. Each establishes the wall-parallel sign INDEPENDENTLY of Person "
                  "E's measured localization errors. Detector output was NOT used."),
-        "records": [r for r in (known_direction_record(lay, wall_parallel[lay], head)
+        "records": [r for r in (known_direction_record(head, lay, wall_parallel[lay])
                                 for lay in LAYOUTS) if r is not None],
     }
     bindings = {
         "schema_version": SCHEMA_VERSION, "package_id": PACKAGE_ID, "owner": "Person C",
-        "per_layout": [marker_binding(lay, head) for lay in LAYOUTS],
+        "per_layout": [marker_binding(head, lay) for lay in LAYOUTS],
         "source_revision": head,
     }
     files = {}
