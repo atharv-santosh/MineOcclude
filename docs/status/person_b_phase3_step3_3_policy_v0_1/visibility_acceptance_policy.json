@@ -1,0 +1,75 @@
+{
+  "authoritative_join_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "channel_preservation": {
+    "geometric_empirical_and_final_preserved_separately": true,
+    "person_b_may_recompute_or_overwrite_visible_flag": false,
+    "person_e_may_supply_or_overwrite_visible_flag": false,
+    "preserved_fields": [
+      "geometric_visible",
+      "empirical_magenta_visible",
+      "visible_flag"
+    ]
+  },
+  "detector_acceptance_prerequisite": {
+    "inherited_from": "person_e_step_3_1",
+    "prerequisite_passed": true,
+    "recomputed_on_step_3_3_production_records": false,
+    "result": {
+      "confusion_matrix": {
+        "false_negative": 0,
+        "false_positive": 0,
+        "true_negative": 24,
+        "true_positive": 24
+      },
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "thresholds": {
+      "minimum_precision": 0.95,
+      "minimum_recall": 0.95
+    }
+  },
+  "eligibility_requirements": [
+    "exact_authoritative_join_identity_is_present",
+    "person_c_produced_visible_flag",
+    "geometric_visible_is_non_null_boolean",
+    "empirical_magenta_visible_is_non_null_boolean",
+    "visible_flag_equals_logical_and_of_geometric_visible_and_empirical_magenta_visible",
+    "detector_version_exactly_equals_frozen_version",
+    "detector_identity_exactly_equals_frozen_identity_when_identity_field_is_present",
+    "required_layout_camera_pose_resolution_and_coordinate_convention_identities_match",
+    "person_b_coordinate_frame_is_valid_hash_bound_unit_normalized_and_signed_off_by_person_b_and_person_c",
+    "person_a_model_and_preprocessing_provenance_hashes_are_present_and_valid",
+    "quarantined_is_false",
+    "quarantine_category_is_none",
+    "invalidity_reason_is_null",
+    "lifecycle_or_status_is_accepted",
+    "record_belongs_to_accepted_manifest"
+  ],
+  "fail_closed_behavior": {
+    "failure_disposition": "reject",
+    "must_not_create": [
+      "accepted_analysis_row",
+      "visible_anchor",
+      "oracle_target",
+      "zero_valued_substitute",
+      "silent_repair"
+    ]
+  },
+  "final_label_equation": "visible_flag = geometric_visible AND empirical_magenta_visible",
+  "ownership": {
+    "coordinate_frame_owner_reviewer": [
+      "person_b",
+      "person_c"
+    ],
+    "empirical_channel_owner": "person_e",
+    "final_label_owner": "person_c",
+    "model_preprocessing_provenance_owner": "person_a",
+    "policy_owner": "person_b"
+  },
+  "schema_version": "1.0",
+  "visibility_acceptance_policy_schema_id": "person-b-phase3-step3-3-visibility-acceptance-policy-v1.0"
+}

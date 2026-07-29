@@ -1,0 +1,54 @@
+{
+  "authority_checks": {
+    "all_authority_commits_exist": true,
+    "bound_file_hashes_recomputed_from_exact_commits": true,
+    "person_b_operational_base_matches_remote": true
+  },
+  "bound_hash_verification": {
+    "person_b_coordinate_authority": {
+      "commit": "03a2c4663ce73873b4fed0369943c1f43edcd742",
+      "matches_supplied_sha256": true,
+      "path": "src/mineocclude/analysis/coordinates.py",
+      "recomputed_sha256": "19e3946e0b0385989b639187e0eda8ff4cc7712938fd87c6084fb9d2306af493"
+    },
+    "person_c_disagreement_schema": {
+      "commit": "3ba6c091426a537d60c950dd1bb38f5fc02826d5",
+      "matches_supplied_sha256": true,
+      "path": "data/handoff_e/phase3_visibility_interface_v0_1/visibility_disagreement_schema.json",
+      "recomputed_sha256": "d8cd12786bb36211bd5b91d2f0c575809f89808fb44114e6589b8a20ee6ac963"
+    },
+    "person_c_empirical_import_contract": {
+      "commit": "3ba6c091426a537d60c950dd1bb38f5fc02826d5",
+      "matches_supplied_sha256": true,
+      "path": "data/handoff_e/phase3_visibility_interface_v0_1/empirical_visibility_import_contract.json",
+      "recomputed_sha256": "a286341bb157e6630d0b18adef26efc31ad97fc9e921cbbeca960974f3ce5f4c"
+    },
+    "person_c_final_visibility_interface": {
+      "commit": "3ba6c091426a537d60c950dd1bb38f5fc02826d5",
+      "matches_supplied_sha256": true,
+      "path": "data/handoff_e/phase3_visibility_interface_v0_1/final_visibility_interface.json",
+      "recomputed_sha256": "fd9a68681b002c0c3652e4299691e55417c18bdd9ef0f69d351c96bfd8822730"
+    }
+  },
+  "observations": {
+    "detector_rerun_occurred": false,
+    "person_b_coordinate_schema_present": true,
+    "person_b_exclusion_rejection_machinery_present": true,
+    "person_b_explicit_0_95_detector_gate_already_present": false,
+    "person_b_fail_closed_intake_present": true,
+    "person_b_visibility_rule_already_present": false,
+    "person_c_exact_e_detector_version_binding_present": true,
+    "person_c_final_and_rule_present": true,
+    "person_c_quarantine_schema_present": true,
+    "person_e_step_3_1_precision_recall_prerequisite_passed": true,
+    "person_e_step_3_2_passed": true,
+    "step_3_3_empirical_integration_occurred": false,
+    "u4_output_inspected": false
+  },
+  "operational_start": {
+    "local_head": "08b9677124f3ed04db49d5e5e720f04771c96b83",
+    "remote_head": "08b9677124f3ed04db49d5e5e720f04771c96b83"
+  },
+  "schema_version": "1.0",
+  "validation_receipt_schema_id": "person-b-phase3-step3-3-validation-receipt-v1.0"
+}
