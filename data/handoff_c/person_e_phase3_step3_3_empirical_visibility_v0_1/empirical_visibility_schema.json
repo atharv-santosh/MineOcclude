@@ -1,0 +1,65 @@
+{
+  "fields": [
+    {
+      "json_type": "string",
+      "name": "trajectory_id",
+      "required": true
+    },
+    {
+      "json_type": "integer",
+      "name": "model_frame_idx",
+      "required": true
+    },
+    {
+      "json_type": "boolean",
+      "name": "empirical_magenta_visible",
+      "required": true
+    },
+    {
+      "json_type": "string",
+      "name": "detector_version",
+      "required": true
+    },
+    {
+      "json_type": "string",
+      "name": "layout_id",
+      "required": true
+    },
+    {
+      "json_type": "string",
+      "name": "canonical_camera_pose_id",
+      "required": true
+    },
+    {
+      "json_type": "string",
+      "name": "resolution",
+      "required": true
+    },
+    {
+      "json_type": "string",
+      "name": "coordinate_convention",
+      "required": true
+    }
+  ],
+  "forbidden_fields": [
+    "archive_member_path",
+    "archive_path",
+    "blob_diagnostics",
+    "detector_thresholds",
+    "detector_truth",
+    "false_negative",
+    "false_positive",
+    "geometric_visible",
+    "invalidity_reason",
+    "precision",
+    "quarantine_category",
+    "quarantined",
+    "recall",
+    "true_negative",
+    "true_positive",
+    "visible_flag"
+  ],
+  "record_format": "compact_sorted_key_jsonl",
+  "schema_id": "person-e-phase3-step3-3-empirical-visibility-v0-1-empirical-records-schema-v1.0",
+  "schema_version": "1.0"
+}
