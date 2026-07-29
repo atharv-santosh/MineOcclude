@@ -1,9 +1,12 @@
 """Focused tests for the Person C Phase 3 Step 3.3 generation-input package.
 
-Builds the package once into a temp dir (happy path) and asserts determinism,
-structure, context values/types, key-set equality, forbidden-field absence, and
-existing-authority immutability. Fail-closed branches are exercised by injecting
-bad inputs into the generator's frame-map / provenance / context sources.
+Portable by construction: the generator's expected source-root layout is
+reconstructed entirely from the committed canonical archives under
+data/handoff_e/phase3_visibility_repair_v0_1/. No external capture directory,
+user home, or machine-specific path is referenced. Every generate()/validate()
+/gather() call consumes the reconstructed temporary source root; fail-closed
+mutations happen only inside pytest temp dirs and never touch the committed
+package.
 """
 import io
 import json
@@ -20,7 +23,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import build_phase3_visibility_repair_v0_1 as mod
 
-SOURCE_ROOT = os.path.expanduser("~/mineocclude-client/mineocclude_client_out")
+PKG = os.path.join(ROOT, mod.PKG_REL)
 GVR = os.path.join(ROOT, mod.GVR_REL)
 
 
@@ -34,10 +37,69 @@ def _readb(path):
         return f.read()
 
 
+def _is_safe_relpath(name: str) -> bool:
+    n = name.replace("\\", "/")
+    return (bool(n) and not os.path.isabs(name) and not n.startswith("/")
+            and ".." not in n.split("/"))
+
+
+# --------------------------------------------------------------------------- #
+# Portable source root: reconstruct <tmp>/episode_<id>/frames_640x360/<idx>.png
+# from the committed archives, matching the layout the generator resolves.
+# --------------------------------------------------------------------------- #
 @pytest.fixture(scope="module")
-def built(tmp_path_factory):
+def source_root(tmp_path_factory):
+    root = tmp_path_factory.mktemp("canonical_src")
+    gen = [json.loads(l) for l in mod.read_lines(os.path.join(PKG, "generation_input_manifest.jsonl"))]
+    assert len(gen) == 1850
+    by_arch = {}
+    for r in gen:
+        by_arch.setdefault(r["archive_path"], []).append(r)
+
+    written: set[str] = set()
+    identities: set[tuple] = set()
+    count = 0
+    for arch_rel, rows in by_arch.items():
+        assert _is_safe_relpath(arch_rel), arch_rel
+        with tarfile.open(os.path.join(PKG, arch_rel), "r:gz") as tar:
+            infos = tar.getmembers()
+            names = [ti.name for ti in infos]
+            assert len(names) == len(set(names))  # each member exactly once
+            by_name = {ti.name: ti for ti in infos}
+            for r in rows:
+                mp = r["archive_member_path"]
+                assert _is_safe_relpath(mp), mp
+                ti = by_name.get(mp)
+                assert ti is not None, mp
+                extracted = tar.extractfile(ti)
+                assert extracted is not None
+                data = extracted.read()  # explicit per-member read, no extractall
+                assert mod.sha256_bytes(data) == r["frame_640_sha256"]
+                assert len(data) == r["frame_size_bytes"]
+                episode = mod._episode_of(r["trajectory_id"])
+                base = os.path.basename(mp)
+                assert base == f"{r['render_frame_idx']:06d}.png"
+                out = root / f"episode_{episode}" / "frames_640x360" / base
+                assert str(out) not in written  # no duplicate output paths
+                written.add(str(out))
+                identities.add((r["trajectory_id"], r["model_frame_idx"]))
+                out.parent.mkdir(parents=True, exist_ok=True)
+                with open(out, "wb") as f:
+                    f.write(data)
+                count += 1
+
+    all_pngs = list(root.rglob("*.png"))
+    assert count == 1850
+    assert len(all_pngs) == 1850  # exactly 1,850 files, no extras
+    assert len(written) == 1850   # zero duplicate output paths
+    assert len(identities) == 1850  # exactly 1,850 manifest identities
+    return str(root)
+
+
+@pytest.fixture(scope="module")
+def built(source_root, tmp_path_factory):
     out = tmp_path_factory.mktemp("pkg")
-    files = mod.generate(SOURCE_ROOT, out_dir=str(out))
+    files = mod.generate(source_root, out_dir=str(out))
     return str(out), files
 
 
@@ -47,9 +109,9 @@ def _rows(pkg, name):
 
 
 # ---- determinism ----------------------------------------------------------
-def test_deterministic_regeneration_byte_identical():
-    a = mod.generate(SOURCE_ROOT, out_dir=None)
-    b = mod.generate(SOURCE_ROOT, out_dir=None)
+def test_deterministic_regeneration_byte_identical(source_root):
+    a = mod.generate(source_root, out_dir=None)
+    b = mod.generate(source_root, out_dir=None)
     assert a.keys() == b.keys()
     for k in a:
         assert a[k] == b[k], k
@@ -61,9 +123,8 @@ def test_deterministic_archive_helper_and_fixed_metadata():
     a1 = mod.build_deterministic_archive(members)
     a2 = mod.build_deterministic_archive(members)
     assert a1 == a2
-    # gzip: no embedded filename (FNAME bit clear), mtime zero
-    assert not (a1[3] & 0x08)
-    assert a1[4:8] == b"\x00\x00\x00\x00"
+    assert not (a1[3] & 0x08)  # gzip FNAME bit clear
+    assert a1[4:8] == b"\x00\x00\x00\x00"  # gzip mtime zero
     with tarfile.open(fileobj=io.BytesIO(a1), mode="r:gz") as t:
         for ti in t.getmembers():
             assert ti.mtime == 0 and ti.uid == 0 and ti.gid == 0
@@ -218,14 +279,14 @@ def test_existing_authority_files_byte_identical_to_head():
 
 
 # ---- validate-only mode ---------------------------------------------------
-def test_validate_only_passes(built):
+def test_validate_only_passes(built, source_root):
     pkg, _ = built
-    mod.validate(SOURCE_ROOT, pkg)  # raises on failure
+    mod.validate(source_root, pkg)  # raises on failure
 
 
-def test_validate_detects_tampered_archive(built, tmp_path):
-    pkg, _ = built
+def test_validate_detects_tampered_archive(built, source_root, tmp_path):
     import shutil
+    pkg, _ = built
     clone = tmp_path / "clone"
     shutil.copytree(pkg, clone)
     victim = next(clone.glob("canonical_frames/*.tar.gz"))
@@ -233,21 +294,21 @@ def test_validate_detects_tampered_archive(built, tmp_path):
     data[-1] ^= 0xFF
     victim.write_bytes(bytes(data))
     with pytest.raises(mod.FailClosed):
-        mod.validate(SOURCE_ROOT, str(clone))
+        mod.validate(source_root, str(clone))
 
 
-def test_validate_detects_missing_and_extra_file(built, tmp_path):
+def test_validate_detects_missing_and_extra_file(built, source_root, tmp_path):
     import shutil
     pkg, _ = built
     clone = tmp_path / "c2"
     shutil.copytree(pkg, clone)
     (clone / "phase3_status.json").unlink()
     with pytest.raises(mod.FailClosed):
-        mod.validate(SOURCE_ROOT, str(clone))
+        mod.validate(source_root, str(clone))
     shutil.copytree(pkg, tmp_path / "c3")
     (tmp_path / "c3" / "UNEXPECTED.json").write_text("{}\n")
     with pytest.raises(mod.FailClosed):
-        mod.validate(SOURCE_ROOT, str(tmp_path / "c3"))
+        mod.validate(source_root, str(tmp_path / "c3"))
 
 
 # ---- fail-closed source guards (inject bad frame-map / provenance / context)
@@ -264,105 +325,101 @@ def _patch_first_map(monkeypatch, mutate):
     monkeypatch.setattr(mod.pd, "read_parquet", fake)
 
 
-def test_wrong_source_resolution_fails_closed(monkeypatch):
+def test_wrong_source_resolution_fails_closed(monkeypatch, source_root):
     def mut(df):
         df.loc[df.index[0], "detector_frame_space"] = "1280x720"
         return df
     _patch_first_map(monkeypatch, mut)
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_wrong_coordinate_convention_fails_closed(monkeypatch, tmp_path):
+def test_wrong_coordinate_convention_fails_closed(monkeypatch, source_root, tmp_path):
     bad = tmp_path / "homog.json"
     h = _loadj(os.path.join(ROOT, mod.HOMOG_REL))
     h["image_coordinate_convention"] = "top_left_origin"
     bad.write_text(json.dumps(h))
     monkeypatch.setattr(mod, "HOMOG_REL", os.path.relpath(str(bad), ROOT))
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_wrong_source_png_hash_fails_closed(monkeypatch):
+def test_wrong_source_png_hash_fails_closed(monkeypatch, source_root):
     def mut(df):
         df.loc[df.index[0], "frame_640_sha256"] = "0" * 64
         return df
     _patch_first_map(monkeypatch, mut)
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_missing_source_png_fails_closed(monkeypatch):
+def test_missing_source_png_fails_closed(monkeypatch, source_root):
     def mut(df):
-        df.loc[df.index[0], "frame_640_path"] = "/nonexistent/does_not_exist.png"
+        df.loc[df.index[0], "frame_640_path"] = "no_such_frame_deadbeef.png"
         return df
     _patch_first_map(monkeypatch, mut)
-    # empty source root forces the fallback to the (missing) declared path
     with pytest.raises(mod.FailClosed):
-        mod.gather("/tmp/definitely_no_such_capture_root_xyz")
+        mod.gather(source_root)
 
 
-def test_duplicate_identity_fails_closed(monkeypatch):
+def test_duplicate_identity_fails_closed(monkeypatch, source_root):
     def mut(df):
         return pd.concat([df, df.iloc[[0]]], ignore_index=True)
     _patch_first_map(monkeypatch, mut)
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_extra_identity_key_fails_closed(monkeypatch):
+def test_extra_identity_key_fails_closed(monkeypatch, source_root):
     def mut(df):
         row = df.iloc[[0]].copy()
         row.loc[row.index[0], "model_frame_idx"] = 999999
         return pd.concat([df, row], ignore_index=True)
     _patch_first_map(monkeypatch, mut)
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_missing_identity_key_fails_closed(monkeypatch):
+def test_missing_identity_key_fails_closed(monkeypatch, source_root):
     def mut(df):
         return df.iloc[1:].reset_index(drop=True)
     _patch_first_map(monkeypatch, mut)
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_wrong_frame_map_hash_fails_closed(monkeypatch):
+def test_wrong_frame_map_hash_fails_closed(monkeypatch, source_root):
     real = mod.load_provenance
 
     def fake():
         p = dict(real())
-        first = min(p)
-        p[first] = "f" * 64
+        p[min(p)] = "f" * 64
         return p
     monkeypatch.setattr(mod, "load_provenance", fake)
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_geometric_record_sha_change_fails_closed(monkeypatch):
+def test_geometric_record_sha_change_fails_closed(monkeypatch, source_root):
     monkeypatch.setattr(mod, "GEOMETRIC_RECORDS_SHA", "a" * 64)
     with pytest.raises(mod.FailClosed):
-        mod.gather(SOURCE_ROOT)
+        mod.gather(source_root)
 
 
-def test_png_decode_failure_and_wrong_dims_fail_closed(monkeypatch, tmp_path):
-    # decode failure: point first frame at a non-PNG file
+def test_png_decode_failure_fails_closed(monkeypatch, source_root, tmp_path):
     notpng = tmp_path / "x.png"
     notpng.write_bytes(b"not a png at all")
 
     def mut(df):
         df.loc[df.index[0], "frame_640_path"] = str(notpng)
-        # keep its declared hash consistent so decode (not hash) is the trigger
         df.loc[df.index[0], "frame_640_sha256"] = mod.sha256_file(str(notpng))
         return df
     _patch_first_map(monkeypatch, mut)
     with pytest.raises(mod.FailClosed):
-        mod.gather("/tmp/definitely_no_such_capture_root_xyz")
+        mod.gather(source_root)
 
 
-def test_wrong_dimensions_fail_closed(monkeypatch, tmp_path):
+def test_wrong_dimensions_fail_closed(monkeypatch, source_root, tmp_path):
     small = tmp_path / "small.png"
     Image.new("RGB", (100, 100)).save(small)
 
@@ -372,13 +429,33 @@ def test_wrong_dimensions_fail_closed(monkeypatch, tmp_path):
         return df
     _patch_first_map(monkeypatch, mut)
     with pytest.raises(mod.FailClosed):
-        mod.gather("/tmp/definitely_no_such_capture_root_xyz")
+        mod.gather(source_root)
 
 
 def test_u4_source_root_rejected(monkeypatch):
     monkeypatch.setattr(sys, "argv",
                         ["x", "build", "--source-root", "/data/mineocclude_u4/out"])
     assert mod.main() == 2
+
+
+# ---- portability guard ----------------------------------------------------
+def test_module_has_no_machine_specific_source_root():
+    """This test module must not reference any machine-specific source root.
+
+    Forbidden substrings are assembled from fragments so this assertion does not
+    match itself.
+    """
+    with open(os.path.abspath(__file__), encoding="utf-8") as f:
+        src = f.read()
+    forbidden = [
+        "C:" + "\\Users" + "\\",          # windows user home
+        "/" + "Users" + "/",              # posix user home
+        "expand" + "user",                # home-directory expansion helper
+        "Path." + "home",                 # pathlib home locator
+        "mineocclude_" + "client_out",    # fixed external capture dir
+    ]
+    for frag in forbidden:
+        assert frag not in src, frag
 
 
 if __name__ == "__main__":
