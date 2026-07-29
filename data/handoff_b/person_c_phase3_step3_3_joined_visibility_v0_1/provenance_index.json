@@ -1,0 +1,55 @@
+{
+  "authorities": {
+    "person_a_model_preprocessing_commit": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+    "person_b_coordinate_frame": {
+      "path": "src/mineocclude/analysis/coordinates.py",
+      "schema": "person-b-wall-parallel-frame-v0.1",
+      "sha256": "19e3946e0b0385989b639187e0eda8ff4cc7712938fd87c6084fb9d2306af493",
+      "signoff": {
+        "person_b": true,
+        "person_c": true
+      }
+    },
+    "person_b_policy_commit": "eec9396e6a93feaab3d5d298ac7cdc4cb54fdbd4",
+    "person_c_current_authority": "cbe673d7d765178b3175af60e69c609547be1d68",
+    "person_c_original_geometry_authority": "3ba6c091426a537d60c950dd1bb38f5fc02826d5",
+    "person_e_empirical_commit": "90855ea52b19ced3f0ce610f7d18db35070ee023"
+  },
+  "command": "build_person_c_phase3_step3_3_joined_visibility_v0_1.py build --e-package-root <E_ROOT>",
+  "empirical_channel_owner": "Person E",
+  "final_label_owner": "Person C",
+  "input_hashes": {
+    "c_disagreement_schema": "d8cd12786bb36211bd5b91d2f0c575809f89808fb44114e6589b8a20ee6ac963",
+    "c_empirical_import_contract": "a286341bb157e6630d0b18adef26efc31ad97fc9e921cbbeca960974f3ce5f4c",
+    "c_final_interface": "fd9a68681b002c0c3652e4299691e55417c18bdd9ef0f69d351c96bfd8822730",
+    "c_geometric_records": "914a5bee842c92e707b94c6d58c91807681310ac6a393d18a06ba8dfa70572eb",
+    "e_detector_diagnostics": "288277f7e9d20348d82a543b90a79cc8340843e30f02f454340bc855e80aa7ad",
+    "e_empirical_records": "b6da7d73e2eea0975469d59cb92a47aace90d1651c8e42cc22cfc40675d90681",
+    "e_inventory": "f21fd49e001aac9f35545721e5d0f357b8b635cd26d1fcb5ce9f5938b284fc52"
+  },
+  "joined_package_identity": "person-c-phase3-step3-3-joined-visibility-v0-1",
+  "model_preprocessing_provenance": {
+    "note": "model/preprocessing provenance is preserved per row via source_revision and frame_640_sha256; no A-owned provenance value is absent",
+    "owner": "Person A (authorized), carried by Person C",
+    "per_frame_canonical_frame_hash_field": "frame_640_sha256",
+    "per_frame_source_frame_map_hash_field": "source_frame_map_sha256",
+    "person_c_source_revision": "fa70424530f422a2e6140e0e90d0ff18f583141e"
+  },
+  "output_hashes": {
+    "authority_binding.json": "6afaf4ac4048b8fd48b80f139fbef22524ede76766094aa76147b398c963711c",
+    "coverage_report.json": "fbae6baf7d2d226d8ada0f436162a690267611a18f8428e6353b18c615976e95",
+    "joined_visibility_records.jsonl": "e9bb71ae4ebb046297abf700f6fabb1813facdd691be9f02e0e730dfe79ad17e",
+    "joined_visibility_schema.json": "333270fd2b0b22ac8061e49e0306c730bb6155e28e50a92bb719d66b36a89aef",
+    "phase3_status.json": "3f370d785976166a74e7b1468c11fac1ceba744153e2b328fb48b75d01e3e13a",
+    "quarantine_accounting_report.json": "35c2e7aa682ba217ffd426c1bf11a8790359cd94e8a2fbd4beeddb3eb4cc7195",
+    "strict_join_receipt.json": "cb4b7fb19953a0cb157ed72187744ed6b237f7447e57c4662127aa25c7658eab",
+    "validation_receipt.json": "10f031b5cd4908764bc0b2a715a2e324a094d880d00698f835bd1cf95502301a"
+  },
+  "runtime": {
+    "pandas": "2.2.3",
+    "platform": "macOS-26.4.1-arm64-arm-64bit",
+    "python": "3.11.9"
+  },
+  "schema_id": "person-c-phase3-step3-3-joined-visibility-v0-1",
+  "schema_version": "1.0"
+}
