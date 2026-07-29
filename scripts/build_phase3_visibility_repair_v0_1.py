@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Build the additive Person C Phase 3 Step 3.3 generation-input authority.
 
 This package is an *E generation-input* authority, not a final visibility
@@ -100,6 +99,17 @@ def load_json_path(path: str):
 def read_lines(path: str) -> list[str]:
     with open(path, encoding="utf-8") as f:
         return [l for l in f if l.strip()]
+
+
+def canonical_relative_path(rel: str) -> str:
+    """Map a local-filesystem relative path to its POSIX manifest form.
+
+    Separator normalization only: Windows "\\" becomes canonical "/". Absolute
+    paths and ".." traversal components are preserved verbatim (never collapsed
+    or stripped), so an unsafe path is never silently turned into a valid
+    package-relative key -- it simply fails to match any expected manifest path.
+    """
+    return rel.replace("\\", "/")
 
 
 def sha256_file(path: str) -> str:
@@ -504,7 +514,7 @@ def validate(source_root: str, pkg_dir: str):
     # extra files on disk
     for dirpath, _, fnames in os.walk(pkg_dir):
         for fn in fnames:
-            rel = os.path.relpath(os.path.join(dirpath, fn), pkg_dir)
+            rel = canonical_relative_path(os.path.relpath(os.path.join(dirpath, fn), pkg_dir))
             if rel not in expected:
                 problems.append(f"unexpected: {rel}")
     # extract archives and re-verify member hashes + dims

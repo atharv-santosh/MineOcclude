@@ -438,6 +438,23 @@ def test_u4_source_root_rejected(monkeypatch):
     assert mod.main() == 2
 
 
+# ---- cross-platform path normalization ------------------------------------
+def test_canonical_relative_path_normalization():
+    cr = mod.canonical_relative_path
+    # Windows backslash separators -> canonical POSIX slashes
+    assert cr("canonical_frames" + "\\" + "example_frames_640x360.tar.gz") == \
+        "canonical_frames/example_frames_640x360.tar.gz"
+    # already-canonical POSIX path is unchanged
+    assert cr("canonical_frames/example_frames_640x360.tar.gz") == \
+        "canonical_frames/example_frames_640x360.tar.gz"
+    # unsafe traversal is preserved, never silently collapsed into a valid key
+    assert ".." in cr(".." + "\\" + "evil.tar.gz").split("/")
+    assert ".." in cr("../evil.tar.gz").split("/")
+    # an absolute path stays absolute (cannot match a clean package-relative key)
+    assert cr("Z:" + "\\" + "pkg" + "\\" + "a.tar.gz").startswith("Z:/")
+    assert cr("/abs/evil.tar.gz") == "/abs/evil.tar.gz"
+
+
 # ---- portability guard ----------------------------------------------------
 def test_module_has_no_machine_specific_source_root():
     """This test module must not reference any machine-specific source root.
