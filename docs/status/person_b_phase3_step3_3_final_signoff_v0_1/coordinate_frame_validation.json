@@ -1,0 +1,27 @@
+{
+  "authority_commit": "eec9396e6a93feaab3d5d298ac7cdc4cb54fdbd4",
+  "result": {
+    "origin_field": "wall_parallel_origin_world_xyz",
+    "person_a_owns_coordinate_frame": false,
+    "person_b_signoff": true,
+    "person_c_signoff": true,
+    "positive_axis_field": "wall_parallel_positive_unit_vector_world_xyz",
+    "schema": "person-b-wall-parallel-frame-v0.1",
+    "sha256": "19e3946e0b0385989b639187e0eda8ff4cc7712938fd87c6084fb9d2306af493",
+    "signed_projection": true,
+    "status": "PASS",
+    "unit_positive_direction_required": true,
+    "units": "blocks"
+  },
+  "schema_id": "person-b-phase3-step3-3-final-signoff-v0-1-coordinate-frame-validation-v1.0",
+  "schema_version": "1.0",
+  "u4_output_inspected": false,
+  "validation_basis": [
+    "exact_implementation_sha256",
+    "exact_coordinate_schema",
+    "signed_origin_subtraction_and_direction_projection",
+    "unit_positive_direction_check",
+    "person_b_and_person_c_signoffs",
+    "person_a_coordinate_ownership_exclusion"
+  ]
+}
