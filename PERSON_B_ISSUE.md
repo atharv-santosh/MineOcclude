@@ -82,7 +82,7 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Cross-role synthetic validation | CURRENT | Shared runner validates C/A/B/D/E boundaries |
 | B1.9 schema/config/interface signoff | COMPLETE for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Central signoff record; runtime and result approvals remain pending |
 | Real scientific execution | PARTIALLY UNBLOCKED | C's real capture/coordinate side is authenticated; A activations and provenance still block A-bound targets, joins, controls, and probes |
-| Phase 6.1-6.6 pilot tooling | C-ONLY INTAKE EXECUTED | `data/person_b/phase6_c_intake/capture_intake_report.json` records 16 accepted C packages, 15 signed frames, and the remaining fail-closed dependencies |
+| Phase 6.1-6.6 pilot tooling | C-ONLY INTAKE + FOLDS EXECUTED | C intake records 16 packages and 15 signed frames; the real six-layout/five-fold plan is frozen before A |
 
 ## Current blockers
 
@@ -95,6 +95,13 @@ of activation extraction, capture truth, baseline logic, or measurement.
   `1d976a5543ede07b43b0be3c6eb053afbb8cbcc823dc63d6fd5fd931988ce636`.
 - [x] Receive five no-wall visible-control layouts for grouped OOF evaluation.
   Layouts 00, 01, 02, 03, and 04 each contribute 200 accepted visible rows.
+- [x] Freeze real layout-to-fold assignments from accepted Person C rows.
+  The sealed pre-A plan assigns all 15 eligible trajectories across six
+  layouts and proves every declared scope covers folds 0-4. Its artifact hash
+  is `ca265b64935880aede8c3bb8b6060cdda17c23932e5e98878a3fcf8ee5341f01`.
+- [ ] Bind exact frame memberships to the frozen layout plan after A supplies
+  complete matching activations. A may remove neither layouts nor
+  trajectories; exact frame completeness remains enforced by the join.
 - [ ] Receive real Person D baseline artifacts; D's current contract and
   synthetic handoff already validate against B.
 - [ ] Receive Person E's validation/append receipt for the real B pilot
@@ -105,7 +112,8 @@ sidecars are imported, coordinate projections are signed, the no-object
 control is rejected from oracle use, the condition source is frozen, and the
 real C-only recursive/closed-form audit passes with zero disagreement and no
 invariant failures. The real C-to-B state writer, literal activation-chunk
-checks, ordered filter receipt, grouped folds, real ridge/permutation path,
+checks, ordered filter receipt, A-independent layout folds, real
+ridge/permutation path,
 explicit positive-control gate, D request packet, and E registration request
 remain ready for A-bound execution. See
 `docs/analysis/person_b_pilot_runbook.md`. None of these preparation artifacts

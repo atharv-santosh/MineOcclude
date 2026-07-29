@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,11 @@ from mineocclude.analysis.pilot import (  # noqa: E402
     require_positive_control_pass,
     run_plumbing_smoke,
     run_probe_scope,
+)
+from mineocclude.analysis.layout_fold_plan import (  # noqa: E402
+    LayoutFoldPlanError,
+    bind_frame_fold_artifacts_to_layout_plan,
+    validate_layout_fold_plan,
 )
 from mineocclude.analysis.selection import (  # noqa: E402
     SCOPE_HIDDEN_MEAN,
@@ -45,6 +51,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("target_document", type=Path)
     parser.add_argument("selection_source", type=Path)
     parser.add_argument("output_directory", type=Path)
+    parser.add_argument(
+        "--layout-fold-plan",
+        required=True,
+        type=Path,
+        help=(
+            "Sealed pre-A fold plan derived from accepted Person C rows."
+        ),
+    )
     parser.add_argument("--artifact-id-prefix", required=True)
     parser.add_argument(
         "--scope",
@@ -85,7 +99,11 @@ def _chunk_payloads(
     for descriptor in activation["chunks"]:
         chunk_id = descriptor["chunk_id"]
         relative_path = Path(descriptor["path"])
-        path = relative_path if relative_path.is_absolute() else chunk_root / relative_path
+        path = (
+            relative_path
+            if relative_path.is_absolute()
+            else chunk_root / relative_path
+        )
         payloads[chunk_id] = path.read_bytes()
     return payloads
 
@@ -120,6 +138,17 @@ def execute(args: argparse.Namespace) -> None:
     selection_source, selection_source_file_hash = load_json_with_sha256(
         args.selection_source
     )
+    layout_fold_plan, _layout_fold_plan_file_hash = load_json_with_sha256(
+        args.layout_fold_plan
+    )
+    validate_layout_fold_plan(layout_fold_plan)
+    if (
+        layout_fold_plan.get("input_manifest_hash")
+        != selection_source_file_hash
+    ):
+        raise LayoutFoldPlanError(
+            "Layout fold plan belongs to a different condition source."
+        )
     selections = selections_from_condition_source(selection_source)
     chunk_root = args.chunk_root or args.activation_handoff.parent
     chunk_payloads = _chunk_payloads(activation, chunk_root=chunk_root)
@@ -129,6 +158,22 @@ def execute(args: argparse.Namespace) -> None:
         targets,
         chunk_payloads,
         artifact_id_prefix=args.artifact_id_prefix,
+    )
+    if preparation.fold_manifest is None:
+        raise LayoutFoldPlanError(
+            "Real pilot inputs do not cover the C-frozen evaluative folds."
+        )
+    bound_fold_manifest, bound_intake_receipt = (
+        bind_frame_fold_artifacts_to_layout_plan(
+            layout_fold_plan,
+            preparation.fold_manifest,
+            preparation.intake_receipt,
+        )
+    )
+    preparation = replace(
+        preparation,
+        fold_manifest=bound_fold_manifest,
+        intake_receipt=bound_intake_receipt,
     )
     selection = build_analysis_selection_manifest(
         preparation.frame_table,

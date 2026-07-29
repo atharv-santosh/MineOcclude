@@ -38,8 +38,17 @@ dropped.
 
 ## Fold and preprocessing artifacts
 
-Fold manifests save exact frame memberships, layout-to-fold assignments,
+Before Person A joins, `layout_fold_plan` freezes layout-to-fold and
+trajectory-to-fold assignments from accepted Person C condition rows only. It
+records per-layout row/trajectory evidence, per-scope five-fold coverage,
+source/intake hashes, the literal config, code, seed, and the explicit absence
+of A artifacts and outcome fields.
+
+Later fold manifests save exact frame memberships, layout-to-fold assignments,
 strategy, seed, fold count, input manifest, config, code, and content hash.
+The real pilot runner rejects them unless they exactly preserve the pre-A
+layout plan, then embeds `source_layout_fold_plan_hash` in the frame manifest
+and both hashes in the pilot receipt.
 Inner folds are rebuilt using outer-training layouts only. Scaler artifacts
 record training-row count, feature means/scales, constant feature indices, and
 outer fold. Constant features use scale `1` and are explicitly listed rather
@@ -67,6 +76,8 @@ the frozen targets, folds, metrics, or selection rules:
 - `capture_intake_report`, which authenticates literal C package bytes,
   records signed coordinate projections and no-object quarantine, and remains
   explicitly pending A provenance/activations;
+- `layout_fold_plan`, which freezes real outcome-independent layout and
+  trajectory assignments from accepted C rows before A arrives;
 - `oracle_target_document` and `oracle_audit`;
 - `joined_frame_table`, `filter_audit`, and `pilot_intake_receipt`;
 - `analysis_selection_manifest` and `fold_manifest`;

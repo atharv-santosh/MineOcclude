@@ -154,3 +154,20 @@ targets, metrics, or the control gate.
 This changes readiness, not scientific results. No activation rows, joined
 targets, fitted probes, predictions, or control metrics exist without Person
 A's matching activation handoff and authoritative model/preprocess hashes.
+
+## 2026-07-28 pre-A real layout fold freeze
+
+Classification: `COMPATIBLE_PREDECLARED_SELECTION_NO_RESULT`
+
+Person B froze five grouped folds from the 2,456 accepted C condition rows
+before receiving any Person A activation or any probe outcome. The plan covers
+15 target-present trajectories and six layouts. The deterministic frozen
+assignment is layout 03 to fold 0, layout 00 to fold 1, layout 01 to fold 2,
+layout 04 to fold 3, and layouts 02/05 to fold 4. Hidden mean, hidden spread,
+and visible no-wall control rows each cover all five folds.
+
+This is a layout/trajectory plan, not a fabricated A-bound frame manifest. The
+real pilot runner requires the plan and rejects a later frame fold manifest if
+its config, seed, strategy, layout set, or assignments differ. Once matched,
+the frame manifest and intake receipt carry the sealed plan hash. Exact frame
+membership still waits for A's complete matching activation handoff.
