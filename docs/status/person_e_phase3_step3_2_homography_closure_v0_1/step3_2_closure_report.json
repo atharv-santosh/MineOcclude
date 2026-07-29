@@ -1,0 +1,55 @@
+{
+  "applicability_context_fields": [
+    "layout_id",
+    "canonical_camera_pose_id",
+    "image_height_px",
+    "resolution_id",
+    "image_coordinate_system",
+    "image_width_px"
+  ],
+  "applicability_validation": {
+    "exact_context_passed": true,
+    "individual_mismatch_fail_closed": {
+      "canonical_camera_pose_id": true,
+      "image_coordinate_system": true,
+      "image_height_px": true,
+      "image_width_px": true,
+      "layout_id": true,
+      "resolution_id": true
+    },
+    "mismatch_field_count": 6
+  },
+  "distinct_homography_identity_count": 6,
+  "excluded_layout_ids": [],
+  "homography_count": 6,
+  "image_coordinate_convention": "pixel_center_xy_zero_based",
+  "layout_ids": [
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04",
+    "layout_05",
+    "layout_06"
+  ],
+  "localization_probe_count": 36,
+  "median_absolute_wall_parallel_error_blocks": 0.09341800000000022,
+  "median_threshold_maximum_blocks": 0.2,
+  "non_unit_wall_parallel_direction_fails_closed": true,
+  "numeric_gate_passed": true,
+  "p95_absolute_wall_parallel_error_blocks": 0.28720401897341596,
+  "p95_threshold_exclusive_maximum_blocks": 0.5,
+  "probe_derived_tuning_applied": false,
+  "probe_filtering_applied": false,
+  "probes_per_layout": 6,
+  "schema_version": "1.0",
+  "signed_wall_parallel_errors_include_positive_and_negative_values": true,
+  "source_split_changed_after_evaluation": false,
+  "status": "PASS",
+  "step": "3.2",
+  "step3_2_closure_report_schema_id": "person-e-phase3-step3-2-closure-report-v1.0",
+  "u4_output_inspected": false,
+  "wall_parallel_direction_unit_vector_required": true,
+  "world_coordinate_convention": "ground_plane_world_xz_blocks",
+  "world_coordinate_system": "ground_plane_world_xz_blocks_topface_centre",
+  "world_point_convention": "block_top_face_centre"
+}
