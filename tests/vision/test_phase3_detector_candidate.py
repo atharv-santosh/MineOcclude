@@ -28,6 +28,9 @@ from mineocclude.vision.detection_records import (
 
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "docs" / "status" / "person_e_phase3_step3_1_candidate_freeze_v0_1"
+PERSON_C_UNTOUCHED_TEST_PACKAGE_REVISION = (
+    "3ba6c091426a537d60c950dd1bb38f5fc02826d5"
+)
 
 
 def load_json(name: str) -> dict:
@@ -59,7 +62,7 @@ class TestPhase3DetectorCandidate(unittest.TestCase):
         cls.parquet_payload = (EVIDENCE / "development_detections.parquet").read_bytes()
         cls.rows = read_detection_parquet_bytes(cls.parquet_payload, schema=cls.schema)
 
-    def test_exact_authorities_and_runtime(self) -> None:
+    def test_exact_authorities_runtime_and_development_binding(self) -> None:
         self.assertEqual(pyarrow.__version__, PYARROW_VERSION)
         self.assertEqual(PYARROW_VERSION, "25.0.0")
         self.assertEqual(
@@ -90,6 +93,14 @@ class TestPhase3DetectorCandidate(unittest.TestCase):
                 capture_output=True,
                 text=True,
             ).stdout.strip(),
+            PERSON_C_UNTOUCHED_TEST_PACKAGE_REVISION,
+        )
+        self.assertEqual(
+            self.version["development_source_revision"],
+            PERSON_C_DEVELOPMENT_SOURCE_REVISION,
+        )
+        self.assertEqual(
+            self.reclassification["person_c_source_revision"],
             PERSON_C_DEVELOPMENT_SOURCE_REVISION,
         )
 
