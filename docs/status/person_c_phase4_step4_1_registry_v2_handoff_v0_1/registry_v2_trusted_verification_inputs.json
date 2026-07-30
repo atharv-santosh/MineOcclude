@@ -1,0 +1,103 @@
+{
+  "artifact_bytes_source": {
+    "artifact_id": "layout_00_ep9403",
+    "byte_size": 662116,
+    "path": "data/autonomous/layout_00_ep9403/capture_package_v0_1.json",
+    "sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213"
+  },
+  "schema_id": "person-c-phase4-step4-1-registry-v2-handoff-v0-1-registry-v2-trusted-verification-inputs",
+  "schema_version": "1.0",
+  "trusted_inputs": {
+    "trusted_artifact_authorizations": {
+      "layout_00_ep9403": {
+        "authorization": {
+          "artifact_id": "layout_00_ep9403",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+          "artifact_size_bytes": 662116,
+          "artifact_type": "raw_trajectory",
+          "authority_id": "authority_person_c_raw_trajectory_9403",
+          "authorization_id": "authorization_person_c_9403",
+          "authorization_record_id": "person_c_9403_authorization_v0_1",
+          "authorization_record_receipt_authority_revision": null,
+          "authorization_record_receipt_id": null,
+          "authorization_record_receipt_sha256": null,
+          "authorization_record_sha256": "a45a4a4901e49f922df8c3e122aa28846ecf4d3c067413f345ce7d1ee8d2b5ab",
+          "authorization_record_verification_mode": "local_bytes",
+          "decision": "accepted",
+          "manifest_artifact_identity": "person-c-raw-trajectory-layout_00_ep9403",
+          "manifest_id": "manifest_person_c_raw_trajectory_9403",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "a2d74c7efc162b8afd50c5206c6d9e34f2e66983d813c44be2d2f2b18c2075e2",
+          "owner_authority_revision": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+          "owner_id": "person_c",
+          "owner_status": "accepted"
+        },
+        "authorization_record_verification": {
+          "external_receipt": null,
+          "mode": "local_bytes"
+        }
+      }
+    },
+    "trusted_artifact_receipts": null,
+    "trusted_authorization_record_bytes": {
+      "person_c_9403_authorization_v0_1": "{\n  \"artifact_id\": \"layout_00_ep9403\",\n  \"artifact_schema_version\": \"person-c-capture-package-v0.1\",\n  \"artifact_sha256\": \"21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213\",\n  \"artifact_size_bytes\": 662116,\n  \"artifact_type\": \"raw_trajectory\",\n  \"authority_id\": \"authority_person_c_raw_trajectory_9403\",\n  \"authorization_id\": \"authorization_person_c_9403\",\n  \"authorization_record_id\": \"person_c_9403_authorization_v0_1\",\n  \"decision\": \"accepted\",\n  \"manifest_artifact_identity\": \"person-c-raw-trajectory-layout_00_ep9403\",\n  \"manifest_id\": \"manifest_person_c_raw_trajectory_9403\",\n  \"manifest_schema_version\": \"person-c-registry-v2-manifest-v1.0\",\n  \"manifest_sha256\": \"a2d74c7efc162b8afd50c5206c6d9e34f2e66983d813c44be2d2f2b18c2075e2\",\n  \"owner_authority_revision\": \"bf09c23bb12f59acae724811eed6b82bab17c0ed\",\n  \"owner_id\": \"person_c\",\n  \"owner_status\": \"accepted\"\n}\n"
+    },
+    "trusted_manifest_records": {
+      "manifest_person_c_raw_trajectory_9403": {
+        "artifact_identities": [
+          {
+            "artifact_id": "layout_00_ep9403",
+            "artifact_schema_version": "person-c-capture-package-v0.1",
+            "artifact_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+            "artifact_size_bytes": 662116,
+            "artifact_type": "raw_trajectory",
+            "manifest_artifact_identity": "person-c-raw-trajectory-layout_00_ep9403"
+          }
+        ],
+        "decision": "accepted",
+        "manifest_id": "manifest_person_c_raw_trajectory_9403",
+        "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+        "manifest_sha256": "a2d74c7efc162b8afd50c5206c6d9e34f2e66983d813c44be2d2f2b18c2075e2",
+        "owner_authority_id": "authority_person_c_raw_trajectory_9403",
+        "owner_authority_revision": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+        "owner_id": "person_c",
+        "owner_status": "accepted"
+      }
+    },
+    "trusted_owner_authorities": {
+      "authority_person_c_raw_trajectory_9403": {
+        "authority": {
+          "authority_id": "authority_person_c_raw_trajectory_9403",
+          "authority_revision": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+          "authorized_artifact_types": [
+            "raw_trajectory"
+          ],
+          "decision": "accepted",
+          "owner_id": "person_c",
+          "owner_status": "accepted",
+          "schema_version": "1.0",
+          "status_record_id": "person_c_9403_status_v0_1",
+          "status_record_receipt_authority_revision": null,
+          "status_record_receipt_id": null,
+          "status_record_receipt_sha256": null,
+          "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+          "status_record_sha256": "6a747ba0b9663c998752c5088e9ce7969996200e464811b3dad1d85219e9fb10",
+          "status_record_verification_mode": "local_bytes"
+        },
+        "status_record_verification": {
+          "external_receipt": null,
+          "mode": "local_bytes"
+        }
+      }
+    },
+    "trusted_status_record_bytes": {
+      "person_c_9403_status_v0_1": "{\n  \"authority_revision\": \"bf09c23bb12f59acae724811eed6b82bab17c0ed\",\n  \"decision\": \"accepted\",\n  \"owner_id\": \"person_c\",\n  \"owner_status\": \"accepted\",\n  \"schema_version\": \"mineocclude-owner-status-record-v1.0\",\n  \"status_record_id\": \"person_c_9403_status_v0_1\"\n}\n"
+    }
+  },
+  "verifier": {
+    "authority_commit": "b27d404c6aa913bac559754fa8b7accdff46e886",
+    "frozen_validator_sha256": "386a6bce4f5ba727aa51b40c69ef444c0d984984697da63f6ea4045a44c07356",
+    "validator_path": "src/mineocclude/contracts/rollout_registry.py"
+  }
+}

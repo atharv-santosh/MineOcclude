@@ -1,0 +1,119 @@
+{
+  "immutable_registry_document": {
+    "artifacts": [
+      {
+        "artifact_id": "layout_00_ep9403",
+        "artifact_schema_version": "person-c-capture-package-v0.1",
+        "artifact_type": "raw_trajectory",
+        "byte_verification_id": "verification_person_c_9403",
+        "creator_run_id": "run_person_c_capture_9403",
+        "direct_input_artifact_ids": [],
+        "manifest_artifact_identity": "person-c-raw-trajectory-layout_00_ep9403",
+        "manifest_id": "manifest_person_c_raw_trajectory_9403",
+        "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+        "manifest_sha256": "a2d74c7efc162b8afd50c5206c6d9e34f2e66983d813c44be2d2f2b18c2075e2",
+        "owner_authority_id": "authority_person_c_raw_trajectory_9403",
+        "owner_authority_revision": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+        "owner_decision": "accepted",
+        "owner_status_record_id": "person_c_9403_status_v0_1",
+        "owner_status_record_sha256": "6a747ba0b9663c998752c5088e9ce7969996200e464811b3dad1d85219e9fb10",
+        "schema_version": "1.0",
+        "sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+        "size_bytes": 662116,
+        "status": "accepted",
+        "status_reason": null,
+        "superseded_by": null,
+        "uri": "git://role/person-c-data/data/autonomous/layout_00_ep9403/capture_package_v0_1.json"
+      }
+    ],
+    "byte_verifications": [
+      {
+        "artifact_id": "layout_00_ep9403",
+        "external_receipt_authority_revision": null,
+        "external_receipt_id": null,
+        "external_receipt_sha256": null,
+        "mode": "local_bytes",
+        "schema_version": "1.0",
+        "verification_id": "verification_person_c_9403",
+        "verified_at": "2026-07-30T00:00:03Z",
+        "verified_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+        "verified_size_bytes": 662116
+      }
+    ],
+    "immutable_registry_schema_version": "mineocclude-immutable-registry-v2.0",
+    "manifests": [
+      {
+        "artifact_identities": [
+          "person-c-raw-trajectory-layout_00_ep9403"
+        ],
+        "decision": "accepted",
+        "manifest_id": "manifest_person_c_raw_trajectory_9403",
+        "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+        "manifest_sha256": "a2d74c7efc162b8afd50c5206c6d9e34f2e66983d813c44be2d2f2b18c2075e2",
+        "owner_authority_id": "authority_person_c_raw_trajectory_9403",
+        "schema_version": "1.0"
+      }
+    ],
+    "owner_authorities": [
+      {
+        "authority_id": "authority_person_c_raw_trajectory_9403",
+        "authority_revision": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+        "authorized_artifact_types": [
+          "raw_trajectory"
+        ],
+        "decision": "accepted",
+        "owner_id": "person_c",
+        "owner_status": "accepted",
+        "schema_version": "1.0",
+        "status_record_id": "person_c_9403_status_v0_1",
+        "status_record_receipt_authority_revision": null,
+        "status_record_receipt_id": null,
+        "status_record_receipt_sha256": null,
+        "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+        "status_record_sha256": "6a747ba0b9663c998752c5088e9ce7969996200e464811b3dad1d85219e9fb10",
+        "status_record_verification_mode": "local_bytes"
+      }
+    ],
+    "registry_id": "person_c_phase4_step4_1_registry_v2_single_pilot_v0_1",
+    "runs": [
+      {
+        "checkpoint_hash": "54f4c76ea651d1c04996512557a35285a331380387aa86f32e62ef5d190a8900",
+        "code_sha": "019913fbb058ae4ab0be9b249c39ea97f4d2c1c0",
+        "command": [
+          "mineocclude",
+          "capture",
+          "layout_00_ep9403"
+        ],
+        "config_snapshot_hash": "60bbb85d48767a334b1d2b3849ef1772b8d84489dfac53ab34274889aa1ddebf",
+        "created_at": "2026-07-30T00:00:00Z",
+        "data_identity_hash": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+        "ended_at": "2026-07-30T00:00:02Z",
+        "environment_hash": "bffd4341c01d14f77f01880353c33f3b378c3308c0b3a94fec4522fa0c86585d",
+        "failure_reason": null,
+        "git_dirty": false,
+        "input_artifact_ids": [],
+        "output_artifact_ids": [
+          "layout_00_ep9403"
+        ],
+        "owner": "person_c",
+        "parent_run_id": null,
+        "pending_reason": null,
+        "preprocess_hash": "77bd4f035edb8d556534e8a4d04736aea977f30c66b61f78e39c7db5a5246871",
+        "run_id": "run_person_c_capture_9403",
+        "schema_version": "1.0",
+        "seeds": {
+          "capture": 94723083
+        },
+        "started_at": "2026-07-30T00:00:01Z",
+        "status": "completed",
+        "supersedes_run_id": null,
+        "supersession_reason": null
+      }
+    ],
+    "schema_version": "1.0",
+    "scientific_use": "permitted",
+    "synthetic": false
+  },
+  "schema_id": "person-c-phase4-step4-1-registry-v2-handoff-v0-1-registry-v2-document",
+  "schema_version": "1.0"
+}
