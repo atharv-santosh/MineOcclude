@@ -9,14 +9,10 @@
     "U4 and downstream outcomes were not used to select inputs, folds, layers, or authorization"
   ],
   "automatic_transition_defined_by_existing_documents": false,
-  "current_documented_state": {
-    "independent_final_verification": "PENDING",
-    "overall_phase3_status": "IN_PROGRESS",
-    "person_a_phase6_authorized": false,
-    "phase3_closure_recommendation": "READY",
-    "phase3_formally_closed": false
+  "frozen_person_b_phase3_final_signoff_authority": {
+    "commit": "aa84ab3b05c533c3e8dbd1ab897dd04d9f26f1cd"
   },
-  "current_state_sources": [
+  "frozen_person_b_phase3_signoff_documents": [
     {
       "path": "docs/status/person_b_phase3_step3_3_final_signoff_v0_1/analysis_readiness_decision.json",
       "sha256": "537d3b8e7ee98991e11a3a1c5e391e8cc76235fed6e75c4d9674c62cb3231bfb"
@@ -26,11 +22,11 @@
       "sha256": "72b69c4d68b7f08e9adde32273ca3a60c3e584544a9598a215fb6917f248d83e"
     }
   ],
-  "documented_conditions_that_must_change_first": [
-    "independent final Phase 3 verification changes from PENDING to PASS",
-    "Phase 3 is formally closed by the independent audit rather than Person B",
-    "overall Phase 3 status changes from IN_PROGRESS to COMPLETE"
-  ],
+  "historical_project_phase3_state": {
+    "independent_final_verification": "PASS",
+    "overall_phase3_status": "COMPLETE",
+    "phase3_formally_closed": true
+  },
   "person_a_phase6_authorized": false,
   "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-phase6-authorization-conditions",
   "schema_version": "1.0",

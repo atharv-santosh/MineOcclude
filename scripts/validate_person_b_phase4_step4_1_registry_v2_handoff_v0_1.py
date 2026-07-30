@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -18,6 +19,9 @@ SCHEMA_TOKEN = "person-b-phase4-step4-1-registry-v2-handoff-v0-1"
 STARTING_AUTHORITY = "aa84ab3b05c533c3e8dbd1ab897dd04d9f26f1cd"
 PACKAGE_RELATIVE_PATH = Path(
     "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1"
+)
+DUPLICATED_PACKAGE_RELATIVE_PATH = Path(
+    "docs/status/person_b_phase4_step4_step4_1_registry_v2_handoff_v0_1"
 )
 DOCUMENT_NAMES = (
     "accepted_c_oracle_inputs.json",
@@ -95,6 +99,10 @@ EXPECTED_LAYOUT_ASSIGNMENTS = [
     {"fold_idx": 4, "layout_id": "layout_05"},
 ]
 BLOCKED_JOB_TYPES = {"fitted_probe", "prediction", "metric_table"}
+STALE_PHASE3_TEXT = re.compile(
+    r"\bphase\s*3\b.{0,80}\b(pending|unverified|unclosed|in[_ ]progress)\b",
+    flags=re.IGNORECASE,
+)
 
 
 class HandoffValidationError(ValueError):
@@ -168,7 +176,19 @@ def _git(repo_root: Path, *arguments: str) -> str:
 def validate_worktree_scope(repo_root: Path) -> None:
     """Reject modifications outside the preparation package, script, and test."""
 
-    status = _git(repo_root, "status", "--porcelain=v1", "--untracked-files=all")
+    result = subprocess.run(
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+        cwd=repo_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        _fail(
+            "pre_existing_path_modified",
+            result.stderr.strip() or "git status failed",
+        )
+    status = result.stdout.rstrip("\r\n")
     for line in status.splitlines():
         path = line[3:].replace("\\", "/")
         if " -> " in path:
@@ -259,6 +279,29 @@ def _validate_inventory(
         "sha256_inventory_mismatch",
         "inventory must explicitly exclude itself",
     )
+
+
+def _validate_no_stale_phase3_text(
+    documents: Mapping[str, Mapping[str, Any]],
+) -> None:
+    def strings(value: Any) -> Sequence[str]:
+        if isinstance(value, str):
+            return (value,)
+        if isinstance(value, Mapping):
+            return tuple(
+                text for item in value.values() for text in strings(item)
+            )
+        if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+            return tuple(text for item in value for text in strings(item))
+        return ()
+
+    for name, document in documents.items():
+        for text in strings(document):
+            _require(
+                STALE_PHASE3_TEXT.search(text) is None,
+                "authority_hash_mismatch",
+                f"{name} contains a stale textual Phase 3 status claim",
+            )
 
 
 def _validate_fold_and_c_inputs(
@@ -516,28 +559,63 @@ def _validate_blockers_and_phase(documents: Mapping[str, Mapping[str, Any]]) -> 
         "person_a_phase6_silently_authorized",
         "this package may not authorize Person A Phase 6",
     )
-    state = phase6.get("current_documented_state")
+    _require(
+        phase6.get("automatic_transition_defined_by_existing_documents") is False,
+        "person_a_phase6_silently_authorized",
+        "an automatic Person A Phase 6 transition was claimed",
+    )
+    authority = phase6.get("frozen_person_b_phase3_final_signoff_authority")
+    _require(
+        isinstance(authority, Mapping)
+        and authority.get("commit") == STARTING_AUTHORITY,
+        "authority_hash_mismatch",
+        "the frozen Person B Phase 3 final signoff authority is wrong",
+    )
+    state = phase6.get("historical_project_phase3_state")
     _require(
         isinstance(state, Mapping)
-        and state.get("independent_final_verification") == "PENDING"
-        and state.get("phase3_formally_closed") is False
-        and state.get("overall_phase3_status") == "IN_PROGRESS",
-        "person_a_phase6_silently_authorized",
-        "Phase 3 status was silently promoted",
+        and state.get("independent_final_verification") == "PASS"
+        and state.get("phase3_formally_closed") is True
+        and state.get("overall_phase3_status") == "COMPLETE",
+        "authority_hash_mismatch",
+        "historical project Phase 3 is not independently verified and closed",
     )
 
     receipt = documents["validation_receipt.json"]
+    receipt_phase3 = receipt.get("historical_project_phase3_state")
     _require(
         receipt.get("preparation_decision") == "READY"
+        and receipt.get("preparation_package_committed") is True
         and receipt.get("person_a_phase6_authorized") is False
         and receipt.get("scientific_outputs_created") is False
+        and receipt.get("accepted_scientific_output_count") == 0
+        and receipt.get("accepted_placeholder_count") == 0
+        and receipt.get("production_oracle_created") is False
+        and receipt.get("fitted_probe_executed") is False
         and receipt.get("probe_fitting_executed") is False
         and receipt.get("production_predictions_executed") is False
         and receipt.get("production_metrics_executed") is False
+        and receipt.get("final_frame_membership_blocked_on_person_a") is True
         and receipt.get("u4_output_inspected") is False
         and receipt.get("validation_status") == "PASS",
         "scientific_output_present",
         "validation receipt is inconsistent with preparation-only scope",
+    )
+    _require(
+        isinstance(receipt_phase3, Mapping)
+        and receipt_phase3.get("independent_final_verification") == "PASS"
+        and receipt_phase3.get("overall_phase3_status") == "COMPLETE"
+        and receipt_phase3.get("phase3_formally_closed") is True,
+        "authority_hash_mismatch",
+        "validation receipt carries stale Phase 3 status",
+    )
+    _require(
+        receipt.get("actual_handoff_path")
+        == PACKAGE_RELATIVE_PATH.as_posix() + "/"
+        and receipt.get("actual_handoff_path_valid") is True
+        and receipt.get("prior_duplicated_path_was_reporting_typo") is True,
+        "missing_required_document",
+        "validation receipt does not record the corrected handoff path",
     )
 
 
@@ -555,11 +633,27 @@ def validate_package(
     repo_root = repo_root.resolve()
     if any("u4" == part.lower() for part in package_root.parts):
         _fail("u4_path_rejected", "U4 paths are outside this preparation task")
+    _require(
+        package_root.name == PACKAGE_RELATIVE_PATH.name,
+        "missing_required_document",
+        "the handoff package root uses the wrong directory name",
+    )
     if verify_sources:
+        _require(
+            package_root == (repo_root / PACKAGE_RELATIVE_PATH).resolve(),
+            "missing_required_document",
+            "the handoff package is not at the authoritative repository path",
+        )
+        _require(
+            not (repo_root / DUPLICATED_PACKAGE_RELATIVE_PATH).exists(),
+            "missing_required_document",
+            "the prior duplicated reporting path exists",
+        )
         _validate_source_authorities(repo_root)
     if verify_worktree:
         validate_worktree_scope(repo_root)
     documents = _validate_document_set(package_root)
+    _validate_no_stale_phase3_text(documents)
     _validate_fold_and_c_inputs(repo_root, documents)
     _validate_contracts(documents)
     _validate_registry_policy(documents)
@@ -569,6 +663,8 @@ def validate_package(
     return {
         "blocked_job_count": len(documents["blocked_jobs.json"]["jobs"]),
         "person_a_phase6_authorized": False,
+        "phase3_formally_closed": True,
+        "phase3_independent_verification": "PASS",
         "preparation_decision": "READY",
         "production_metrics_executed": False,
         "production_predictions_executed": False,

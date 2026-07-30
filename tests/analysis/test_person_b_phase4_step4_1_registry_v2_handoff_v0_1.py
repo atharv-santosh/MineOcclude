@@ -12,6 +12,7 @@ import pytest
 
 from scripts.validate_person_b_phase4_step4_1_registry_v2_handoff_v0_1 import (
     DOCUMENT_NAMES,
+    DUPLICATED_PACKAGE_RELATIVE_PATH,
     INVENTORIED_NAMES,
     PACKAGE_RELATIVE_PATH,
     HandoffValidationError,
@@ -78,6 +79,8 @@ def test_real_package_passes_complete_validation() -> None:
     assert result == {
         "blocked_job_count": 3,
         "person_a_phase6_authorized": False,
+        "phase3_formally_closed": True,
+        "phase3_independent_verification": "PASS",
         "preparation_decision": "READY",
         "production_metrics_executed": False,
         "production_predictions_executed": False,
@@ -90,6 +93,195 @@ def test_real_package_passes_complete_validation() -> None:
 def test_exact_document_inventory() -> None:
     assert sorted(path.name for path in PACKAGE_ROOT.iterdir() if path.is_file()) == (
         sorted(DOCUMENT_NAMES)
+    )
+
+
+def test_phase3_is_independently_verified_and_formally_closed() -> None:
+    phase6 = _load(PACKAGE_ROOT / "phase6_authorization_conditions.json")
+    state = phase6["historical_project_phase3_state"]
+    assert state == {
+        "independent_final_verification": "PASS",
+        "overall_phase3_status": "COMPLETE",
+        "phase3_formally_closed": True,
+    }
+    assert phase6["person_a_phase6_authorized"] is False
+    assert phase6["automatic_transition_defined_by_existing_documents"] is False
+    assert phase6["this_handoff_changes_authorization"] is False
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("independent_final_verification", "PENDING"),
+        ("independent_final_verification", "UNVERIFIED"),
+        ("overall_phase3_status", "IN_PROGRESS"),
+        ("phase3_formally_closed", False),
+    ],
+)
+def test_stale_phase3_status_fails(
+    tmp_path: Path,
+    field: str,
+    value: Any,
+) -> None:
+    package = _copy_package(tmp_path)
+
+    def mutate(document: dict[str, Any]) -> None:
+        document["historical_project_phase3_state"][field] = value
+
+    _mutate(package, "phase6_authorization_conditions.json", mutate)
+    with pytest.raises(HandoffValidationError, match="authority_hash_mismatch"):
+        _validate_copy(package)
+
+
+def test_phase3_closure_does_not_authorize_phase6(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+
+    def mutate(document: dict[str, Any]) -> None:
+        assert document["historical_project_phase3_state"][
+            "phase3_formally_closed"
+        ] is True
+        document["person_a_phase6_authorized"] = True
+
+    _mutate(package, "phase6_authorization_conditions.json", mutate)
+    with pytest.raises(
+        HandoffValidationError,
+        match="person_a_phase6_silently_authorized",
+    ):
+        _validate_copy(package)
+
+
+def test_phase6_authorization_must_be_boolean_false(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+    _mutate(
+        package,
+        "phase6_authorization_conditions.json",
+        lambda document: document.__setitem__("person_a_phase6_authorized", 0),
+    )
+    with pytest.raises(
+        HandoffValidationError,
+        match="person_a_phase6_silently_authorized",
+    ):
+        _validate_copy(package)
+
+
+def test_automatic_phase6_transition_fails(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+    _mutate(
+        package,
+        "phase6_authorization_conditions.json",
+        lambda document: document.__setitem__(
+            "automatic_transition_defined_by_existing_documents",
+            True,
+        ),
+    )
+    with pytest.raises(
+        HandoffValidationError,
+        match="person_a_phase6_silently_authorized",
+    ):
+        _validate_copy(package)
+
+
+def test_actual_handoff_path_is_nonduplicated() -> None:
+    assert PACKAGE_ROOT == REPO_ROOT / PACKAGE_RELATIVE_PATH
+    assert PACKAGE_ROOT.is_dir()
+    assert not (REPO_ROOT / DUPLICATED_PACKAGE_RELATIVE_PATH).exists()
+
+
+def test_all_json_documents_are_canonical() -> None:
+    for name in DOCUMENT_NAMES:
+        path = PACKAGE_ROOT / name
+        document = _load(path)
+        assert path.read_bytes() == canonical_json_bytes(document)
+
+
+def test_no_accepted_scientific_output_or_placeholder_exists() -> None:
+    receipt = _load(PACKAGE_ROOT / "validation_receipt.json")
+    assert receipt["accepted_scientific_output_count"] == 0
+    assert receipt["accepted_placeholder_count"] == 0
+    assert receipt["production_oracle_created"] is False
+    assert receipt["fitted_probe_executed"] is False
+    assert receipt["production_predictions_executed"] is False
+    assert receipt["production_metrics_executed"] is False
+
+
+def test_stale_phase3_validation_receipt_fails(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+
+    def mutate(document: dict[str, Any]) -> None:
+        document["historical_project_phase3_state"][
+            "independent_final_verification"
+        ] = "PENDING"
+
+    _mutate(package, "validation_receipt.json", mutate)
+    with pytest.raises(HandoffValidationError, match="authority_hash_mismatch"):
+        _validate_copy(package)
+
+
+def test_stale_textual_phase3_claim_fails(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+    _mutate(
+        package,
+        "phase6_authorization_conditions.json",
+        lambda document: document.__setitem__(
+            "stale_note",
+            "Phase 3 remains unclosed.",
+        ),
+    )
+    with pytest.raises(HandoffValidationError, match="authority_hash_mismatch"):
+        _validate_copy(package)
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["accepted_scientific_output_count", "accepted_placeholder_count"],
+)
+def test_accepted_output_or_placeholder_count_fails(
+    tmp_path: Path,
+    field: str,
+) -> None:
+    package = _copy_package(tmp_path)
+    _mutate(
+        package,
+        "validation_receipt.json",
+        lambda document: document.__setitem__(field, 1),
+    )
+    with pytest.raises(HandoffValidationError, match="scientific_output_present"):
+        _validate_copy(package)
+
+
+def test_c_inputs_fold_and_registry_templates_are_byte_invariant() -> None:
+    expected_hashes = {
+        "accepted_c_oracle_inputs.json": (
+            "67a4a61f77e2200b8570a5d13489c55796f5a2f00f95d525b22d7aefde2cb29c"
+        ),
+        "registry_v2_exact_artifact_authorization.json": (
+            "b4a353300082363dec9fc5d9467652548daf4ddd92dbe2bc4aef8f34f2862a46"
+        ),
+        "registry_v2_manifest_template.json": (
+            "1d7b3b1d0bbd2e3e8624aaa1c1fcdabf6a9fc516a0538ecc484a66538c21bb99"
+        ),
+        "registry_v2_owner_status.json": (
+            "d5a199f86107de4a94525f8831e1a0a7ef1e502ea38fcd3793abb4d68c94e3bb"
+        ),
+        "registry_v2_validation_schema.json": (
+            "891711a167f892d1b5412886695cd28dbb3ac26cf303c7bd3f200da0fa265c5d"
+        ),
+        "registry_v2_verification_receipt_template.json": (
+            "6ba3295da38855540c4f3e540bcab26c87db12d48a6d70afba5aebfd9eaa6146"
+        ),
+        "sealed_fold_split_identity.json": (
+            "133d8e2aa01896bd90fc0a4f1492d205ae9fffa4e55870d05666dfcca4fb58e5"
+        ),
+    }
+    assert {
+        name: sha256_file(PACKAGE_ROOT / name) for name in expected_hashes
+    } == expected_hashes
+    c_inputs = _load(PACKAGE_ROOT / "accepted_c_oracle_inputs.json")
+    assert c_inputs["accepted_input_count"] == 15
+    assert c_inputs["excluded_input"]["trajectory_id"] == "layout_05_ep9422"
+    assert (
+        c_inputs["excluded_input"]["classification"]
+        == "no_object_not_oracle_eligible"
     )
 
 
