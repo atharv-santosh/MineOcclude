@@ -1,0 +1,88 @@
+{
+  "authorizations": [
+    {
+      "artifact_type": "fold_manifest",
+      "authorization": "CONTRACT_ONLY",
+      "production_registration_allowed": false,
+      "required_direct_inputs": [
+        "joined_frame_table",
+        "layout_fold_plan",
+        "analysis_config"
+      ]
+    },
+    {
+      "artifact_type": "oracle_target",
+      "authorization": "CONTRACT_ONLY",
+      "production_registration_allowed": false,
+      "required_direct_inputs": [
+        "accepted_person_c_state_inputs",
+        "coordinate_frames",
+        "accepted_person_a_model_input_manifest_provenance",
+        "analysis_config"
+      ]
+    },
+    {
+      "artifact_type": "fitted_probe",
+      "authorization": "BLOCKED",
+      "production_registration_allowed": false,
+      "required_direct_inputs": [
+        "activation",
+        "oracle_target",
+        "fold_manifest",
+        "analysis_selection_manifest",
+        "probe_matrix_manifest",
+        "analysis_config"
+      ]
+    },
+    {
+      "artifact_type": "prediction",
+      "authorization": "BLOCKED",
+      "production_registration_allowed": false,
+      "required_direct_inputs": [
+        "fitted_probe",
+        "activation",
+        "oracle_target",
+        "fold_manifest",
+        "probe_matrix_manifest"
+      ]
+    },
+    {
+      "artifact_type": "metric_table",
+      "authorization": "BLOCKED",
+      "production_registration_allowed": false,
+      "required_direct_inputs": [
+        "prediction",
+        "oracle_target",
+        "baseline",
+        "fold_manifest",
+        "analysis_config"
+      ]
+    }
+  ],
+  "base_registry_schema_version": "mineocclude-immutable-registry-v1.0",
+  "forbidden_source_substitutions": [
+    {
+      "forbidden_source": "docs/status/person_b_phase3_step3_3_final_signoff_v0_1",
+      "must_not_be_registered_as": [
+        "oracle_target",
+        "fitted_probe",
+        "prediction",
+        "metric_table"
+      ],
+      "reason": "Phase 3 readiness is policy evidence, not a scientific artifact."
+    },
+    {
+      "forbidden_source": "synthetic_activation_store_acceptance_evidence",
+      "must_not_be_registered_as": [
+        "production_activation",
+        "fitted_probe",
+        "prediction",
+        "metric_table"
+      ],
+      "reason": "Synthetic compatibility evidence cannot replace production inputs."
+    }
+  ],
+  "registry_generation": "v2",
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-exact-artifact-authorization",
+  "schema_version": "1.0"
+}

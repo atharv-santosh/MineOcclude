@@ -1,0 +1,112 @@
+{
+  "final_frame_manifest": {
+    "artifact_schema_version": "person-b-analysis-artifact-v0.1",
+    "artifact_type": "fold_manifest",
+    "blocked_by": [
+      "accepted_person_a_model_input_manifest",
+      "accepted_person_a_production_activation_handoff",
+      "exact_joined_frame_key_set"
+    ],
+    "construction_status": "BLOCKED_PENDING_PERSON_A",
+    "direct_input_requirements": [
+      "joined_frame_table_artifact_hash",
+      "accepted_manifest_hash",
+      "source_layout_fold_plan_hash",
+      "literal_analysis_config_hash",
+      "probe_code_sha"
+    ],
+    "exact_membership_key": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "must_preserve_layout_plan_exactly": true,
+    "required_fields": [
+      "artifact_hash",
+      "artifact_id",
+      "artifact_schema_version",
+      "artifact_type",
+      "code_sha",
+      "config_hash",
+      "input_manifest_hash",
+      "analysis_config_version",
+      "fold_schema_version",
+      "strategy",
+      "n_splits",
+      "seed",
+      "layout_assignments",
+      "memberships",
+      "source_layout_fold_plan_hash",
+      "synthetic",
+      "scientific_use"
+    ],
+    "scientific_use_before_validation": "forbidden"
+  },
+  "frozen_assignment": {
+    "accepted_row_count": 2456,
+    "artifact_hash": "ca265b64935880aede8c3bb8b6060cdda17c23932e5e98878a3fcf8ee5341f01",
+    "artifact_id": "person_b_c_layout_fold_plan_2026_07_28",
+    "file_sha256": "a762cfe66984675e6af9177ff954540fe17cafc7747422fcad26ed1a2f7bbf8b",
+    "layout_assignments": [
+      {
+        "fold_idx": 1,
+        "layout_id": "layout_00"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "layout_01"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "layout_02"
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "layout_03"
+      },
+      {
+        "fold_idx": 3,
+        "layout_id": "layout_04"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "layout_05"
+      }
+    ],
+    "layout_count": 6,
+    "n_splits": 5,
+    "outcome_fields_used": false,
+    "path": "data/person_b/phase6_c_intake/layout_fold_plan.json",
+    "person_a_artifacts_used": false,
+    "seed": 20260719,
+    "status": "SEALED_PRE_A_LAYOUT_TRAJECTORY_PLAN",
+    "strategy": "layout_grouped",
+    "trajectory_count": 15
+  },
+  "inner_validation": {
+    "fold_count": 4,
+    "grouping": "layout_id",
+    "seed_rule": "outer_seed_plus_outer_fold_idx",
+    "selection_scope": "outer_training_layouts_only",
+    "test_layout_may_select_alpha": false,
+    "test_layout_may_select_layer": false,
+    "train_only_scaler_required": true
+  },
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-sealed-fold-split-identity",
+  "schema_version": "1.0",
+  "split_contract": {
+    "analysis_config_version": "person-b-phase1-v0.2",
+    "config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+    "fold_schema_version": "person-b-fold-v0.1",
+    "folds_populated_required": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "grouping_field": "layout_id",
+    "row_order_has_scientific_meaning": false,
+    "validator_path": "src/mineocclude/probes/splits.py",
+    "validator_sha256": "748d4135ccfe94c23f891ecb43ca7139cb075069fdf16f8126f8e2440a6f0510"
+  }
+}

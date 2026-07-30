@@ -1,0 +1,75 @@
+{
+  "artifact_contract": {
+    "artifact_schema_version": "person-b-analysis-artifact-v0.1",
+    "artifact_type": "fitted_probe",
+    "payload_artifact_types": [
+      "probe_matrix_manifest",
+      "scaler_manifest",
+      "ridge_fit_manifest"
+    ],
+    "status_authority": "person_b"
+  },
+  "blocked_reason": "Exact accepted Person A production activation and model-input artifacts do not exist in this authority.",
+  "direct_input_artifact_types": [
+    "activation",
+    "oracle_target",
+    "fold_manifest",
+    "analysis_selection_manifest",
+    "probe_matrix_manifest",
+    "analysis_config"
+  ],
+  "execution_status": "BLOCKED_PENDING_PERSON_A",
+  "fit_requirements": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "analysis_dtype": "float64",
+    "feature_width": 2048,
+    "inner_fold_count": 4,
+    "inner_grouping": "layout_id",
+    "model_family": "ridge",
+    "outer_fold_count": 5,
+    "scaler_fit_scope": "outer_training_rows_only",
+    "selection_scope": "training_validation_only",
+    "test_layout_may_select_alpha": false,
+    "test_layout_may_select_layer": false
+  },
+  "required_input_bindings": [
+    "activation_artifact_id_and_sha256",
+    "activation_handoff_id_and_sha256",
+    "activation_chunk_ids_and_sha256s",
+    "accepted_model_input_artifact_id_and_sha256",
+    "accepted_manifest_hash",
+    "checkpoint_hash",
+    "preprocess_hash",
+    "oracle_target_artifact_id_and_sha256",
+    "final_frame_fold_manifest_id_and_sha256",
+    "selection_manifest_id_and_sha256",
+    "probe_matrix_manifest_id_and_sha256",
+    "analysis_config_literal_sha256",
+    "code_sha"
+  ],
+  "required_output_metadata": [
+    "target_name",
+    "layer_idx",
+    "hook_site",
+    "outer_fold_idx",
+    "selected_alpha",
+    "mean_mse_by_alpha",
+    "training_membership",
+    "test_membership",
+    "scaler_artifact_hash",
+    "standardized_coefficients",
+    "standardized_intercept",
+    "raw_coefficients",
+    "raw_intercept",
+    "synthetic",
+    "scientific_use"
+  ],
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-fitted-probe-input-contract",
+  "schema_version": "1.0",
+  "scientific_output_present": false
+}
