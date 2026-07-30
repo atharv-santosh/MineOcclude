@@ -494,3 +494,74 @@ one direction, or as a blanket "everything is approved" if overcorrected in
 the other) would misstate what was actually approved. Every corrected
 occurrence in this pass keeps the same explicit checkpoint-scoped wording
 phase0.md already used, rather than inventing a new phrasing per file.
+
+## 2026-07-29 -- Phase 4 Step 4.1 registry v2 handoff preparation package
+
+**Decision:** Build the Step 4.1 scientific-baseline handoff preparation
+package under
+`docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/`, covering
+everything independent of Person B's still-unavailable fold manifest and
+oracle-target document. Two new modules:
+`src/mineocclude/baselines/scientific_readiness.py` (the exact scientific
+baseline input contract: fold identity, oracle identity, accepted-context
+identity, deterministic artifact IDs, direct-input relationships) and
+`src/mineocclude/baselines/registry_v2_artifacts.py` (D's own
+owner-status/exact-artifact-authorization/manifest/verification-receipt
+schemas, built on Person B's real `analysis.manifests.seal_artifact`
+sealing primitive).
+
+**Ownership boundary respected:** Person E owns the project's actual
+Immutable Registry v2 system (`docs/contracts/immutable_registry_v2.md`,
+`role/person-e-operations`). Per the task's explicit instruction not to
+merge or integrate other role branches, `registry_v2_artifacts.py` does
+not vendor or import E's code; it defines D's own independent artifact
+types mirroring the same four handoff concepts for exactly D's own
+baseline-output domain. This is a deliberate parallel construction, not a
+copy -- documented explicitly in the module's own docstring so a future
+reader does not mistake it for E's system or attempt to merge the two.
+
+**Fail-closed design:** `validate_scientific_baseline_readiness` requires
+an explicit, no-default `candidate_scientific_use` argument; only the
+literal `"accepted"` unlocks a READY verdict. It collects every violation
+(rather than stopping at the first) into a `ScientificReadinessFinding`.
+Confirmed the four item-8 conditions independently: `UNASSIGNED_FOLD`,
+missing sealed B fold identity, missing B oracle identity, and
+`scientific_use=forbidden` each block on their own, and can co-occur
+(`test_multiple_simultaneous_violations_are_all_reported`).
+
+**Key finding, empirically verified rather than assumed:** constructed the
+most structurally valid synthetic oracle-target document buildable
+*without* Person B's real coordinate-frame signoff (using the same
+`fixture_metadata.synthetic=True, scientific_use="forbidden"` bypass
+`mineocclude.oracle.schema.validate_oracle_target_document` itself
+defines) and confirmed it still reports `BLOCKED`, for exactly one reason
+-- `scientific_use=forbidden` -- not any structural defect
+(`test_even_the_best_case_synthetic_fixture_is_blocked`). This proves the
+gate cannot be satisfied by any synthetic fixture this project's own
+oracle schema will currently accept; READY is only reachable once Person
+B's real coordinate-frame signoff and literal-config-hash binding exist.
+No test in this suite claims or attempts to demonstrate a READY verdict,
+by design -- see `test_scientific_readiness.py`'s module docstring.
+
+**Evidence:** `tests/baselines/test_scientific_readiness.py` (11 tests),
+`tests/baselines/test_registry_v2_artifacts.py` (11 tests). Persisted,
+reproducible artifacts via
+`scripts/prepare_step_4_1_registry_v2_handoff.py`: the four registry v2
+templates (owner-status recorded honestly as `pending`; the other three
+built against obviously-placeholder hashes), a composite validation
+report confirming their cross-references agree, and
+`scientific_readiness_best_case_check.json` recording the BLOCKED result
+above. `production_job_status.json` records the production baseline job
+as BLOCKED with exact, dated, sourced reason codes (missing real B fold
+manifest; missing real B oracle-target document, itself blocked on Person
+A's activation handoff per B's own `capture_intake_report.json`).
+`runbook.md` records the exact command/inputs/outputs/acceptance checks
+for every step once B's real artifacts land, including an explicit "what
+must never happen" section against premature/fabricated READY results.
+
+**Scope respected:** no scientific baseline was generated, fit, or
+accepted; `docs/status/person_d_real_pilot_baseline_preview.json`'s
+`scientific_use: forbidden` marking is untouched. No other role's branch
+was merged or integrated. Baseline suite: 92 -> 113 passing. Repo-wide:
+same 13 pre-existing A/B-owned failures, confirmed unchanged by direct
+re-run.

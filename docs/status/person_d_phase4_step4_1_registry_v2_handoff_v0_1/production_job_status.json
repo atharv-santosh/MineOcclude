@@ -1,0 +1,36 @@
+{
+  "record_type": "person_d_phase4_step4_1_production_job_status",
+  "record_date": "2026-07-29",
+  "job_name": "produce_scientific_baseline_prediction_documents",
+  "status": "BLOCKED",
+  "scientific_use": "forbidden",
+  "blocking_reasons": [
+    {
+      "reason_code": "missing_real_b_fold_manifest",
+      "detail": "No real, sealed Person B fold/split manifest exists on any branch. Every fold_manifest present in this repository is tests/fixtures/person_d/synthetic_b_fold_manifest.json, which is explicitly non-scientific test fixture data.",
+      "owner": "person_b",
+      "confirmed_via": "git ls-tree -r origin/role/person-b-methods --name-only | grep fold_manifest (2026-07-29)"
+    },
+    {
+      "reason_code": "missing_real_b_oracle_target_document",
+      "detail": "Person B's real capture-intake status for Person C's accepted trajectories is 'accepted_c_inputs_pending_person_a': the oracle-target math is content-complete on C's inputs alone, but the final target document cannot be sealed without Person A's real model_hash/preprocess_hash. No oracle_target_document exists on any branch outside synthetic fixtures.",
+      "owner": "person_b",
+      "blocked_on": "person_a_activation_handoff",
+      "confirmed_via": "docs status check of origin/role/person-b-methods:data/person_b/phase6_c_intake/capture_intake_report.json (2026-07-29): status=accepted_c_inputs_pending_person_a, step_6_2=c_only_math_complete_final_target_blocked_on_person_a_model_and_preprocess_hashes"
+    }
+  ],
+  "what_is_ready_now": [
+    "The exact scientific baseline input contract (schema_readiness gate) is implemented and tested: src/mineocclude/baselines/scientific_readiness.py.",
+    "The Registry v2-style owner-status/exact-artifact-authorization/manifest/verification-receipt schemas for D-owned baseline outputs are implemented and tested: src/mineocclude/baselines/registry_v2_artifacts.py.",
+    "Deterministic baseline prediction artifact IDs are implemented: build_baseline_prediction_artifact_id.",
+    "113 tests pass in tests/baselines, confirming the gate fails closed on every condition it must (UNASSIGNED_FOLD, missing sealed fold identity, missing oracle identity, scientific_use=forbidden, coverage mismatch, non-accepted candidate_scientific_use)."
+  ],
+  "what_is_not_done": [
+    "No scientific baseline prediction document has been generated or accepted.",
+    "docs/status/person_d_real_pilot_baseline_preview.json remains scientific_use=forbidden and must never be promoted to an accepted baseline; this job status record does not change that.",
+    "The three other Phase 4 SAVE deliverables (split_integrity.json, a metadata-leakage report, a written missingness_exclusion_report) remain unwritten to disk -- tracked separately, not part of this Step 4.1 handoff."
+  ],
+  "unblock_condition": "This job becomes runnable the moment Person B publishes both a real, sealed fold manifest (validating against mineocclude.probes.splits.validate_fold_manifest) and a real oracle_target_document (validating against mineocclude.oracle.schema.validate_oracle_target_document with no fixture_metadata.scientific_use=forbidden marker). See runbook.md for the exact command and acceptance checks to run at that point.",
+  "next_check_owner": "person_d",
+  "next_check_action": "git fetch origin role/person-b-methods and re-run scripts/prepare_step_4_1_registry_v2_handoff.py's underlying gate against B's real artifacts once they exist."
+}
