@@ -1,0 +1,40 @@
+{
+  "acknowledgement_owner": "person_a",
+  "current_acknowledgement": null,
+  "current_state": "MISSING_REQUIRED_OWNER_ACKNOWLEDGEMENT",
+  "person_a_preflight": {
+    "commit": "0416ce88060277b28512f95dca0af94984a8211d",
+    "counts_as_positive_runtime_acknowledgement": false,
+    "person_a_phase6_authorized": false
+  },
+  "person_b_may_supply_this_acknowledgement": false,
+  "post_execution_bytes_required_for_acknowledgement": false,
+  "required_acknowledgement_fields": [
+    "acknowledgement_id",
+    "owner",
+    "owner_authority_commit",
+    "accepted_person_c_decision_id",
+    "selected_trajectory_id",
+    "selected_git_object_sha256",
+    "immutable_runtime_configuration_identity",
+    "bounded_steps",
+    "candidate_only_output_classification",
+    "scientific_execution_claimed",
+    "u4_output_inspected"
+  ],
+  "required_values": {
+    "bounded_steps": [
+      "6.1",
+      "6.2",
+      "6.3",
+      "6.4",
+      "6.5",
+      "6.6"
+    ],
+    "candidate_only_output_classification": true,
+    "scientific_execution_claimed": false,
+    "u4_output_inspected": false
+  },
+  "schema_id": "person-b-phase4-step4-1-step6-authorization-refresh-v0-1-person-a-required-acknowledgement",
+  "schema_version": "1.0"
+}
