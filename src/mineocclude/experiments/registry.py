@@ -15,10 +15,13 @@ import os
 import tempfile
 from collections import Counter
 from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
 from mineocclude.contracts.rollout_registry import (
+    IMMUTABLE_REGISTRY_V2_SCHEMA_VERSION,
     ImmutableRegistryValidationResult,
     validate_immutable_run_artifact_registry,
     validate_rollout_registry_bundle,
@@ -172,6 +175,13 @@ def require_valid_immutable_registry(
     *,
     previous_registry: Mapping[str, Any] | None = None,
     artifact_bytes_by_id: Mapping[str, bytes] | None = None,
+    trusted_owner_authorities: Mapping[str, Mapping[str, Any]] | None = None,
+    trusted_status_record_bytes: Mapping[str, bytes] | None = None,
+    trusted_artifact_authorizations: Mapping[str, Mapping[str, Any]]
+    | None = None,
+    trusted_authorization_record_bytes: Mapping[str, bytes] | None = None,
+    trusted_manifest_records: Mapping[str, Mapping[str, Any]] | None = None,
+    trusted_artifact_receipts: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> ImmutableRegistryValidationResult:
     """Delegate immutable-lineage validation to the one shared contract.
 
@@ -184,6 +194,12 @@ def require_valid_immutable_registry(
         document,
         previous_registry=previous_registry,
         artifact_bytes_by_id=artifact_bytes_by_id,
+        trusted_owner_authorities=trusted_owner_authorities,
+        trusted_status_record_bytes=trusted_status_record_bytes,
+        trusted_artifact_authorizations=trusted_artifact_authorizations,
+        trusted_authorization_record_bytes=trusted_authorization_record_bytes,
+        trusted_manifest_records=trusted_manifest_records,
+        trusted_artifact_receipts=trusted_artifact_receipts,
     )
     if result.accepted:
         return result
@@ -198,6 +214,37 @@ PHASE1_LINEAGE_TRACE_SCHEMA_VERSION = "person-e-phase1-lineage-trace-v1.0"
 PHASE2_STEP2_1_BLOCKER_SCHEMA_VERSION = (
     "person-e-phase2-step2.1-blocker-v0.1"
 )
+V2_IMPACT_QUERY_SCHEMA_VERSION = (
+    "person-e-immutable-registry-v2-impact-query-v0.1"
+)
+V2_PROVENANCE_QUERY_SCHEMA_VERSION = (
+    "person-e-immutable-registry-v2-provenance-query-v0.1"
+)
+V2_SUPERSESSION_IMPACT_SCHEMA_VERSION = (
+    "person-e-immutable-registry-v2-supersession-impact-v0.1"
+)
+
+
+@dataclass(frozen=True)
+class _EffectiveState:
+    state: str
+    reason: str
+    stale_root_cause_artifact_ids: tuple[str, ...] = ()
+    invalid_root_cause_artifact_ids: tuple[str, ...] = ()
+    stale_root_causal_paths: tuple[tuple[str, ...], ...] = ()
+    invalid_root_causal_paths: tuple[tuple[str, ...], ...] = ()
+
+    @property
+    def root_cause_artifact_ids(self) -> tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    *self.stale_root_cause_artifact_ids,
+                    *self.invalid_root_cause_artifact_ids,
+                }
+            )
+        )
+
 
 _PHASE2_STEP2_1_SOURCE_REVISIONS = {
     "person_a_execution_revision": "35baf673312af5c21ae3f22168de405bd4ee8bd9",
@@ -291,12 +338,28 @@ class ImmutableRegistryIndex:
         registry: Mapping[str, Any],
         *,
         artifact_bytes_by_id: Mapping[str, bytes] | None = None,
+        trusted_owner_authorities: Mapping[str, Mapping[str, Any]]
+        | None = None,
+        trusted_status_record_bytes: Mapping[str, bytes] | None = None,
+        trusted_artifact_authorizations: Mapping[str, Mapping[str, Any]]
+        | None = None,
+        trusted_authorization_record_bytes: Mapping[str, bytes] | None = None,
+        trusted_manifest_records: Mapping[str, Mapping[str, Any]]
+        | None = None,
+        trusted_artifact_receipts: Mapping[str, Mapping[str, Any]]
+        | None = None,
     ) -> None:
         if not isinstance(registry, Mapping):
             raise ProvenanceError("Immutable registry must be a mapping.")
         require_valid_immutable_registry(
             registry,
             artifact_bytes_by_id=artifact_bytes_by_id,
+            trusted_owner_authorities=trusted_owner_authorities,
+            trusted_status_record_bytes=trusted_status_record_bytes,
+            trusted_artifact_authorizations=trusted_artifact_authorizations,
+            trusted_authorization_record_bytes=trusted_authorization_record_bytes,
+            trusted_manifest_records=trusted_manifest_records,
+            trusted_artifact_receipts=trusted_artifact_receipts,
         )
         self._registry = copy.deepcopy(dict(registry))
         self._runs = {
@@ -481,6 +544,588 @@ class ImmutableRegistryIndex:
         """Return deterministic transitive consumers for an artifact."""
 
         return self._lineage(artifact_id, direction="forward")
+
+    def _require_v2(self) -> None:
+        if (
+            self._registry.get("immutable_registry_schema_version")
+            != IMMUTABLE_REGISTRY_V2_SCHEMA_VERSION
+        ):
+            raise ProvenanceError(
+                "This query requires an explicitly validated immutable-registry v2 document."
+            )
+
+    def _require_artifact_id(self, artifact_id: str) -> None:
+        if not isinstance(artifact_id, str) or not artifact_id:
+            raise ProvenanceError("artifact_id must be a non-empty string.")
+        if artifact_id not in self._artifacts:
+            raise ProvenanceError(f"Unknown artifact_id {artifact_id!r}.")
+
+    def _require_run_id(self, run_id: str) -> None:
+        if not isinstance(run_id, str) or not run_id:
+            raise ProvenanceError("run_id must be a non-empty string.")
+        if run_id not in self._runs:
+            raise ProvenanceError(f"Unknown run_id {run_id!r}.")
+
+    def _all_forward_paths(
+        self,
+        root_artifact_ids: Sequence[str],
+    ) -> dict[str, tuple[tuple[str, ...], ...]]:
+        paths_by_artifact: dict[str, set[tuple[str, ...]]] = {}
+
+        def visit(current_id: str, path: tuple[str, ...]) -> None:
+            for child_id in self._children[current_id]:
+                child_path = (*path, child_id)
+                paths_by_artifact.setdefault(child_id, set()).add(child_path)
+                visit(child_id, child_path)
+
+        for root_id in sorted(root_artifact_ids):
+            visit(root_id, (root_id,))
+        return {
+            artifact_id: tuple(sorted(paths))
+            for artifact_id, paths in paths_by_artifact.items()
+        }
+
+    def _all_backward_paths(
+        self,
+        subject_artifact_id: str,
+    ) -> dict[str, tuple[tuple[str, ...], ...]]:
+        paths_by_artifact: dict[str, set[tuple[str, ...]]] = {}
+
+        def visit(current_id: str, reverse_path: tuple[str, ...]) -> None:
+            inputs = self._artifacts[current_id]["direct_input_artifact_ids"]
+            for input_id in sorted(inputs):
+                input_reverse_path = (*reverse_path, input_id)
+                causal_path = tuple(reversed(input_reverse_path))
+                paths_by_artifact.setdefault(input_id, set()).add(causal_path)
+                visit(input_id, input_reverse_path)
+
+        visit(subject_artifact_id, (subject_artifact_id,))
+        return {
+            artifact_id: tuple(sorted(paths))
+            for artifact_id, paths in paths_by_artifact.items()
+        }
+
+    def _effective_state(
+        self,
+        artifact_id: str,
+        *,
+        root_effects: Mapping[str, str],
+        memo: dict[str, _EffectiveState],
+        active: set[str],
+    ) -> _EffectiveState:
+        cached = memo.get(artifact_id)
+        if cached is not None:
+            return cached
+        if artifact_id in active:
+            raise ProvenanceError(
+                f"Artifact dependency cycle encountered at {artifact_id!r}."
+            )
+        artifact = self._artifacts[artifact_id]
+        creator = self._runs[artifact["creator_run_id"]]
+        override = root_effects.get(artifact_id)
+        own_stale_roots: set[str] = set()
+        own_invalid_roots: set[str] = set()
+        own_stale_paths: set[tuple[str, ...]] = set()
+        own_invalid_paths: set[tuple[str, ...]] = set()
+        own_stale_reason: str | None = None
+        own_invalid_reason: str | None = None
+        if override == "stale":
+            own_stale_roots.add(artifact_id)
+            own_stale_paths.add((artifact_id,))
+            own_stale_reason = "hypothetical_structural_supersession"
+        elif override == "invalid":
+            own_invalid_roots.add(artifact_id)
+            own_invalid_paths.add((artifact_id,))
+            own_invalid_reason = "hypothetical_upstream_unusable"
+        if artifact["status"] == "superseded":
+            own_stale_roots.add(artifact_id)
+            own_stale_paths.add((artifact_id,))
+            own_stale_reason = "artifact_structurally_superseded"
+        elif artifact["status"] == "excluded":
+            own_invalid_roots.add(artifact_id)
+            own_invalid_paths.add((artifact_id,))
+            own_invalid_reason = "artifact_excluded"
+        if creator["status"] != "completed":
+            own_invalid_roots.add(artifact_id)
+            own_invalid_paths.add((artifact_id,))
+            own_invalid_reason = f"creator_run_{creator['status']}"
+
+        next_active = {*active, artifact_id}
+        dependency_states = [
+            self._effective_state(
+                input_id,
+                root_effects=root_effects,
+                memo=memo,
+                active=next_active,
+            )
+            for input_id in artifact["direct_input_artifact_ids"]
+        ]
+        stale_roots = {
+            *own_stale_roots,
+            *(
+                root_id
+                for dependency in dependency_states
+                for root_id in dependency.stale_root_cause_artifact_ids
+            ),
+        }
+        invalid_roots = {
+            *own_invalid_roots,
+            *(
+                root_id
+                for dependency in dependency_states
+                for root_id in dependency.invalid_root_cause_artifact_ids
+            ),
+        }
+        stale_paths = {
+            *own_stale_paths,
+            *(
+                (*path, artifact_id)
+                for dependency in dependency_states
+                for path in dependency.stale_root_causal_paths
+            ),
+        }
+        invalid_paths = {
+            *own_invalid_paths,
+            *(
+                (*path, artifact_id)
+                for dependency in dependency_states
+                for path in dependency.invalid_root_causal_paths
+            ),
+        }
+        if invalid_roots:
+            if stale_roots:
+                reason = "invalid_precedence_with_stale_causes"
+            elif (
+                own_invalid_reason is not None
+                and invalid_roots == {artifact_id}
+            ):
+                reason = own_invalid_reason
+            else:
+                reason = "depends_on_unusable_artifact"
+            result = _EffectiveState(
+                state="invalid",
+                reason=reason,
+                stale_root_cause_artifact_ids=tuple(sorted(stale_roots)),
+                invalid_root_cause_artifact_ids=tuple(
+                    sorted(invalid_roots)
+                ),
+                stale_root_causal_paths=tuple(sorted(stale_paths)),
+                invalid_root_causal_paths=tuple(sorted(invalid_paths)),
+            )
+        elif stale_roots:
+            if (
+                own_stale_reason is not None
+                and stale_roots == {artifact_id}
+            ):
+                reason = own_stale_reason
+            else:
+                reason = "depends_on_structurally_superseded_artifact"
+            result = _EffectiveState(
+                state="stale",
+                reason=reason,
+                stale_root_cause_artifact_ids=tuple(sorted(stale_roots)),
+                stale_root_causal_paths=tuple(sorted(stale_paths)),
+            )
+        else:
+            result = _EffectiveState(
+                state="current",
+                reason="no_unusable_or_superseded_dependency",
+            )
+        memo[artifact_id] = result
+        return result
+
+    @staticmethod
+    def _effective_cause_fields(
+        effective: _EffectiveState,
+    ) -> dict[str, Any]:
+        path_causes = [
+            {
+                "causal_path": list(path),
+                "effective_state_cause": state,
+                "root_cause_artifact_id": path[0],
+            }
+            for state, paths in (
+                ("invalid", effective.invalid_root_causal_paths),
+                ("stale", effective.stale_root_causal_paths),
+            )
+            for path in paths
+        ]
+        path_causes.sort(
+            key=lambda row: (
+                row["causal_path"],
+                row["effective_state_cause"],
+            )
+        )
+        return {
+            "root_cause_artifact_ids": list(
+                effective.root_cause_artifact_ids
+            ),
+            "stale_root_cause_artifact_ids": list(
+                effective.stale_root_cause_artifact_ids
+            ),
+            "invalid_root_cause_artifact_ids": list(
+                effective.invalid_root_cause_artifact_ids
+            ),
+            "stale_root_causal_paths": [
+                list(path) for path in effective.stale_root_causal_paths
+            ],
+            "invalid_root_causal_paths": [
+                list(path) for path in effective.invalid_root_causal_paths
+            ],
+            "causal_path_causes": path_causes,
+        }
+
+    def _validated_root_effects(
+        self,
+        *,
+        root_artifact_ids: Sequence[str],
+        root_effective_state: str | None,
+        root_effective_states_by_artifact_id: Mapping[str, str] | None,
+    ) -> dict[str, str]:
+        if (
+            root_effective_state is not None
+            and root_effective_states_by_artifact_id is not None
+        ):
+            raise ProvenanceError(
+                "Scalar and per-artifact root effective states are ambiguous."
+            )
+        if root_effective_state not in {None, "stale", "invalid"}:
+            raise ProvenanceError(
+                "root_effective_state must be stale, invalid, or null."
+            )
+        root_ids = set(root_artifact_ids)
+        if root_effective_states_by_artifact_id is None:
+            return (
+                {
+                    root_id: root_effective_state
+                    for root_id in root_ids
+                }
+                if root_effective_state is not None
+                else {}
+            )
+        if not isinstance(root_effective_states_by_artifact_id, Mapping):
+            raise ProvenanceError(
+                "root_effective_states_by_artifact_id must be a mapping."
+            )
+        effects: dict[str, str] = {}
+        for artifact_id, state in root_effective_states_by_artifact_id.items():
+            if not isinstance(artifact_id, str) or not artifact_id:
+                raise ProvenanceError(
+                    "Root effective-state mapping keys must be artifact IDs."
+                )
+            if artifact_id in effects:
+                raise ProvenanceError(
+                    "Root effective-state mapping contains a duplicate artifact."
+                )
+            if artifact_id not in self._artifacts:
+                raise ProvenanceError(
+                    f"Unknown root-state artifact_id {artifact_id!r}."
+                )
+            if artifact_id not in root_ids:
+                raise ProvenanceError(
+                    f"Artifact {artifact_id!r} is not an output of the queried run."
+                )
+            if state not in {"stale", "invalid"}:
+                raise ProvenanceError(
+                    "Mapped root effective states must be stale or invalid."
+                )
+            effects[artifact_id] = state
+        return effects
+
+    def _forward_impact(
+        self,
+        *,
+        subject_type: str,
+        subject_id: str,
+        root_artifact_ids: Sequence[str],
+        root_effective_state: str | None,
+        root_effective_states_by_artifact_id: Mapping[str, str] | None = None,
+    ) -> dict[str, Any]:
+        root_effects = self._validated_root_effects(
+            root_artifact_ids=root_artifact_ids,
+            root_effective_state=root_effective_state,
+            root_effective_states_by_artifact_id=(
+                root_effective_states_by_artifact_id
+            ),
+        )
+        paths_by_artifact = self._all_forward_paths(root_artifact_ids)
+        memo: dict[str, _EffectiveState] = {}
+        root_ids = set(root_artifact_ids)
+        subject_output_artifacts: list[dict[str, Any]] = []
+        subject_output_dependency_edges: list[dict[str, str]] = []
+        for root_id in sorted(root_ids):
+            artifact = self._artifacts[root_id]
+            effective = self._effective_state(
+                root_id,
+                root_effects=root_effects,
+                memo=memo,
+                active=set(),
+            )
+            direct_root_inputs = sorted(
+                set(artifact["direct_input_artifact_ids"]) & root_ids
+            )
+            subject_output_artifacts.append(
+                {
+                    "artifact_id": root_id,
+                    "artifact_type": artifact["artifact_type"],
+                    "creator_run_id": artifact["creator_run_id"],
+                    "subject_distance": 0,
+                    "base_lifecycle_status": artifact["status"],
+                    "assigned_hypothetical_root_state": root_effects.get(
+                        root_id
+                    ),
+                    "effective_state": effective.state,
+                    "effective_state_reason": effective.reason,
+                    "direct_subject_output_dependency_artifact_ids": (
+                        direct_root_inputs
+                    ),
+                    "causal_paths_from_subject_outputs": [
+                        list(path)
+                        for path in paths_by_artifact.get(root_id, ())
+                    ],
+                    **self._effective_cause_fields(effective),
+                }
+            )
+            subject_output_dependency_edges.extend(
+                {
+                    "upstream_subject_output_artifact_id": input_id,
+                    "downstream_subject_output_artifact_id": root_id,
+                    "relationship": "direct_input_artifact_ids",
+                }
+                for input_id in direct_root_inputs
+            )
+        rows: list[dict[str, Any]] = []
+        for artifact_id, paths in paths_by_artifact.items():
+            if subject_type == "run" and artifact_id in root_ids:
+                continue
+            artifact = self._artifacts[artifact_id]
+            effective = self._effective_state(
+                artifact_id,
+                root_effects=root_effects,
+                memo=memo,
+                active=set(),
+            )
+            distance = min(len(path) - 1 for path in paths)
+            discovery_path = min(
+                path for path in paths if len(path) - 1 == distance
+            )
+            rows.append(
+                {
+                    "subject_type": subject_type,
+                    "subject_id": subject_id,
+                    "affected_artifact_id": artifact_id,
+                    "affected_creator_run_id": artifact["creator_run_id"],
+                    "artifact_type": artifact["artifact_type"],
+                    "graph_distance": distance,
+                    "discovery_predecessor_artifact_id": discovery_path[-2],
+                    "causal_paths": [list(path) for path in paths],
+                    "multiple_causal_paths": len(paths) > 1,
+                    "base_lifecycle_status": artifact["status"],
+                    "effective_state": effective.state,
+                    "effective_state_reason": effective.reason,
+                    **self._effective_cause_fields(effective),
+                }
+            )
+        rows.sort(
+            key=lambda row: (
+                row["graph_distance"],
+                row["affected_artifact_id"],
+            )
+        )
+        return {
+            "query_schema_version": V2_IMPACT_QUERY_SCHEMA_VERSION,
+            "registry_id": self._registry["registry_id"],
+            "subject_type": subject_type,
+            "subject_id": subject_id,
+            "subject_output_artifact_ids": sorted(root_artifact_ids),
+            "subject_output_artifacts": subject_output_artifacts,
+            "subject_output_dependency_edges": (
+                subject_output_dependency_edges
+            ),
+            "root_effective_state": root_effective_state,
+            "root_effective_states_by_artifact_id": {
+                root_id: root_effects.get(root_id)
+                for root_id in sorted(root_artifact_ids)
+            },
+            "affected_artifacts": rows,
+        }
+
+    def forward_artifact_impact(
+        self,
+        artifact_id: str,
+        *,
+        root_effective_state: str | None = None,
+    ) -> dict[str, Any]:
+        """Return every explicit transitive consumer of one v2 artifact."""
+
+        self._require_v2()
+        self._require_artifact_id(artifact_id)
+        return self._forward_impact(
+            subject_type="artifact",
+            subject_id=artifact_id,
+            root_artifact_ids=(artifact_id,),
+            root_effective_state=root_effective_state,
+        )
+
+    def forward_run_impact(
+        self,
+        run_id: str,
+        *,
+        root_effective_state: str | None = None,
+        root_effective_states_by_artifact_id: Mapping[str, str] | None = None,
+    ) -> dict[str, Any]:
+        """Return the transitive consumer union for all outputs of one v2 run."""
+
+        self._require_v2()
+        self._require_run_id(run_id)
+        return self._forward_impact(
+            subject_type="run",
+            subject_id=run_id,
+            root_artifact_ids=tuple(self._runs[run_id]["output_artifact_ids"]),
+            root_effective_state=root_effective_state,
+            root_effective_states_by_artifact_id=(
+                root_effective_states_by_artifact_id
+            ),
+        )
+
+    def backward_provenance(self, artifact_id: str) -> dict[str, Any]:
+        """Return complete explicit v2 input provenance for one artifact."""
+
+        self._require_v2()
+        self._require_artifact_id(artifact_id)
+        paths_by_artifact = self._all_backward_paths(artifact_id)
+        memo: dict[str, _EffectiveState] = {}
+        rows: list[dict[str, Any]] = []
+        edges: set[tuple[str, str]] = set()
+        for upstream_id, paths in paths_by_artifact.items():
+            upstream = self._artifacts[upstream_id]
+            effective = self._effective_state(
+                upstream_id,
+                root_effects={},
+                memo=memo,
+                active=set(),
+            )
+            distance = min(len(path) - 1 for path in paths)
+            discovery_path = min(
+                path for path in paths if len(path) - 1 == distance
+            )
+            for path in paths:
+                edges.update(pairwise(path))
+            rows.append(
+                {
+                    "artifact_id": upstream_id,
+                    "creator_run_id": upstream["creator_run_id"],
+                    "artifact_type": upstream["artifact_type"],
+                    "graph_distance": distance,
+                    "direct_successor_artifact_id": discovery_path[1],
+                    "causal_paths": [list(path) for path in paths],
+                    "multiple_causal_paths": len(paths) > 1,
+                    "owner_authority_id": upstream.get(
+                        "owner_authority_id"
+                    ),
+                    "manifest_id": upstream.get("manifest_id"),
+                    "base_lifecycle_status": upstream["status"],
+                    "effective_state": effective.state,
+                    "effective_state_reason": effective.reason,
+                    **self._effective_cause_fields(effective),
+                }
+            )
+        rows.sort(
+            key=lambda row: (
+                row["graph_distance"],
+                row["artifact_id"],
+            )
+        )
+        return {
+            "query_schema_version": V2_PROVENANCE_QUERY_SCHEMA_VERSION,
+            "registry_id": self._registry["registry_id"],
+            "subject_artifact_id": artifact_id,
+            "subject_creator_run_id": self._artifacts[artifact_id][
+                "creator_run_id"
+            ],
+            "upstream_artifacts": rows,
+            "creator_run_ids": sorted(
+                {row["creator_run_id"] for row in rows}
+            ),
+            "direct_input_edges": [
+                {
+                    "input_artifact_id": input_id,
+                    "output_artifact_id": output_id,
+                }
+                for input_id, output_id in sorted(edges)
+            ],
+        }
+
+    def supersession_impact(self, artifact_id: str) -> dict[str, Any]:
+        """Report descendants made stale by a hypothetical valid supersession."""
+
+        self._require_v2()
+        self._require_artifact_id(artifact_id)
+        source = self._artifacts[artifact_id]
+        if source["status"] != "accepted":
+            raise ProvenanceError(
+                "Supersession impact requires a currently accepted source."
+            )
+        impact = self.forward_artifact_impact(
+            artifact_id,
+            root_effective_state="stale",
+        )
+        rows = impact["affected_artifacts"]
+        affected_ids = {
+            row["affected_artifact_id"] for row in rows
+        }
+        unaffected_ids = sorted(
+            set(self._artifacts) - affected_ids - {artifact_id}
+        )
+        memo: dict[str, _EffectiveState] = {}
+        return {
+            "query_schema_version": V2_SUPERSESSION_IMPACT_SCHEMA_VERSION,
+            "registry_id": self._registry["registry_id"],
+            "superseded_source_artifact_id": artifact_id,
+            "superseded_source": {
+                "artifact_id": artifact_id,
+                "base_lifecycle_status": source["status"],
+                "effective_state": "stale",
+                "effective_state_reason": (
+                    "hypothetical_structural_supersession"
+                ),
+                "current_usable_input": False,
+            },
+            "directly_affected_artifact_ids": [
+                row["affected_artifact_id"]
+                for row in rows
+                if row["graph_distance"] == 1
+            ],
+            "transitively_affected_artifact_ids": [
+                row["affected_artifact_id"]
+                for row in rows
+                if row["graph_distance"] > 1
+            ],
+            "stale_artifact_ids": [
+                row["affected_artifact_id"]
+                for row in rows
+                if row["effective_state"] == "stale"
+            ],
+            "invalid_artifact_ids": [
+                row["affected_artifact_id"]
+                for row in rows
+                if row["effective_state"] == "invalid"
+            ],
+            "unaffected_artifact_ids": unaffected_ids,
+            "unaffected_artifacts": [
+                {
+                    "artifact_id": unaffected_id,
+                    "effective_state": self._effective_state(
+                        unaffected_id,
+                        root_effects={artifact_id: "stale"},
+                        memo=memo,
+                        active=set(),
+                    ).state,
+                }
+                for unaffected_id in unaffected_ids
+            ],
+            "affected_artifacts": copy.deepcopy(rows),
+        }
 
 
 def trace_phase1_figure_lineage(

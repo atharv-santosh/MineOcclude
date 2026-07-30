@@ -387,7 +387,8 @@ derived effective states and are not mutable artifact lifecycle values or
 fields stored in a v2 document. Adding a stored `effective_status`, `stale`, or
 `invalid` claim is an unknown-field rejection.
 
-For the next query slice, the definitions are:
+Slice 2 implements these derived-state definitions without changing stored
+records:
 
 - An artifact is **effectively stale** when its base record is accepted but it
   directly or transitively depends on an accepted record that has been
@@ -399,10 +400,73 @@ For the next query slice, the definitions are:
   directly or transitively depends on a missing, failed, excluded, malformed,
   or otherwise unusable record.
 
-Slice 1 validates the current artifact's direct inputs and structural
-supersession only. It does **not** implement the transitive stale/invalid impact
-query. That calculation and its query surface belong to the next bounded
-slice.
+The read-only `ImmutableRegistryIndex` dispatches explicitly on
+`mineocclude-immutable-registry-v2.0` and exposes:
+
+- `forward_artifact_impact(artifact_id, *, root_effective_state=None)`, which
+  returns every transitive consumer reachable through
+  `direct_input_artifact_ids`;
+- `forward_run_impact(run_id, *, root_effective_state=None,
+  root_effective_states_by_artifact_id=None)`, which unions transitive
+  consumers from every explicit output artifact of the run;
+- `backward_provenance(artifact_id)`, which returns every transitive input,
+  creator run, explicit edge, authority/manifest identity, graph distance, and
+  complete path to the subject;
+- `supersession_impact(artifact_id)`, which evaluates a hypothetical structural
+  supersession event against a validated current registry.
+
+Forward rows are ordered by `(graph_distance, artifact_id)`. Backward rows use
+the same ordering, causal paths are lexicographically ordered, and duplicate
+artifacts and paths are removed. Where more than one explicit path reaches an
+artifact, the result retains all paths and sets `multiple_causal_paths`.
+
+Supersession reports distinguish the superseded source, directly affected
+children, transitive descendants, stale outputs, invalid outputs, and
+unaffected artifacts. Each stale or invalid row includes its root-cause IDs,
+effective-state reason, direct discovery predecessor, and at least one complete
+causal path. A hypothetical unusable-root query propagates `invalid`; a
+hypothetical structurally superseded root propagates `stale`.
+
+Effective-state classification and cause retention are independent. `invalid`
+has precedence over `stale`, which has precedence over `current`, but every
+contributing stale and invalid root remains in the combined root inventory and
+in its separate `stale_root_cause_artifact_ids` or
+`invalid_root_cause_artifact_ids` inventory. Labeled stale and invalid
+root-causal paths retain every distinct path. A mixed result uses
+`invalid_precedence_with_stale_causes`, so invalid classification never implies
+that stale causes were absent.
+
+The scalar `root_effective_state` remains the backwards-compatible way to
+assign `stale` or `invalid` to every run output. Alternatively,
+`root_effective_states_by_artifact_id` assigns those closed values independently
+to exact output artifact IDs; omitted outputs have no hypothetical state. An
+empty mapping is equivalent to no hypothetical assignment. Unknown IDs,
+non-output IDs, unsupported values, non-mappings, or simultaneous scalar and
+mapping arguments fail closed. Results identify every root output and its
+hypothetical assignment, including null for unspecified outputs.
+
+Every artifact declared in a queried run's `output_artifact_ids` is a subject
+root with `subject_distance` zero. Subject roots are listed in
+`subject_output_artifacts` and never appear in `affected_artifacts`, including
+when one subject root explicitly depends on another. Such valid root-to-root
+relationships remain visible in `subject_output_dependency_edges`, each root
+lists its direct subject-root dependencies and paths from other subject roots,
+and traversal continues through root artifacts to downstream consumers. Thus a
+path such as `X -> Y -> metric` remains visible when both `X` and `Y` are run
+outputs, while the metric's distance is one because `Y` is itself a distance-
+zero subject root. Non-root distance is always the shortest distance from any
+declared subject root. This filtering applies only to run-impact presentation;
+an artifact-level query from `X` still reports reachable `Y` as a normal
+descendant.
+
+Queries use only stored run output IDs and artifact
+`direct_input_artifact_ids`. URIs, directory layout, filenames, artifact
+types, owners, timestamps, record ordering, and naming conventions never add
+edges. Construction validates the complete external Slice 1 trust chain first;
+missing trust, malformed identities, missing edges, or cycles fail closed.
+Queries deep-copy the registry and never rewrite lifecycle status, repair
+lineage, create acceptance, or mutate authority, manifest, or verification
+records. Existing v1 query result shapes remain unchanged.
 
 ## Migration and ownership
 
