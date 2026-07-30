@@ -63,13 +63,16 @@ from it can never drift apart by being edited independently.
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Mapping, Sequence, Tuple
 
 from mineocclude.analysis.manifests import AnalysisArtifactError, sha256_value
 from mineocclude.baselines.capture_ingest import UNASSIGNED_FOLD
 from mineocclude.baselines.interface import TrajectoryContext
-from mineocclude.oracle.schema import OracleValidationError, validate_oracle_target_document
+from mineocclude.oracle.schema import (
+    OracleValidationError,
+    validate_oracle_target_document,
+)
 from mineocclude.probes.splits import GroupedSplitError, validate_fold_manifest
 
 SCIENTIFIC_BASELINE_INPUT_CONTRACT_SCHEMA_VERSION = "person-d-scientific-baseline-input-v0.1"
@@ -82,13 +85,13 @@ READY_SCIENTIFIC_USE = "accepted"
 #: baseline prediction artifact directly depends on. Referenced by
 #: both the artifact-ID builder below and
 #: ``registry_v2_artifacts.build_exact_artifact_authorization``.
-BASELINE_PREDICTION_DIRECT_INPUTS: Tuple[str, ...] = (
+BASELINE_PREDICTION_DIRECT_INPUTS: tuple[str, ...] = (
     "fold_manifest_hash",
     "oracle_target_hash",
     "config_hash",
 )
 
-RowKey = Tuple[str, int]
+RowKey = tuple[str, int]
 
 
 class ScientificReadinessError(ValueError):
@@ -105,7 +108,7 @@ class ScientificReadinessFinding:
     status: str
     """One of ``"READY"`` or ``"BLOCKED"``."""
 
-    blocked_reasons: Tuple[str, ...]
+    blocked_reasons: tuple[str, ...]
     n_rows: int
     candidate_scientific_use: str
     contract_schema_version: str = SCIENTIFIC_BASELINE_INPUT_CONTRACT_SCHEMA_VERSION

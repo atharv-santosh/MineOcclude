@@ -23,10 +23,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-import mineocclude.baselines as baselines  # noqa: E402
-from mineocclude.baselines.interface import TrajectoryContext  # noqa: E402
-from mineocclude.contracts.identity import SCHEMA_VERSION  # noqa: E402
-from mineocclude.oracle.schema import (  # noqa: E402
+from mineocclude import baselines
+from mineocclude.baselines.interface import TrajectoryContext
+from mineocclude.contracts.identity import SCHEMA_VERSION
+from mineocclude.oracle.schema import (
     ORACLE_INFORMATION_SET,
     ORACLE_METHOD,
     ORACLE_TARGET_SCHEMA_VERSION,

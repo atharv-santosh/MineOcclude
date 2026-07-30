@@ -1,0 +1,65 @@
+{
+  "accepted_baseline_count": 0,
+  "accepted_placeholder_count": 0,
+  "blocked_status": "blocked",
+  "checks": {
+    "dedicated_validator": {
+      "checks_performed": [
+        "every required new JSON file exists and is canonical",
+        "authority_binding.json branch/authority/claims are correct",
+        "production_job_status.json is blocked with all four required reason codes",
+        "forbidden_preview_guard.json's bound hash matches the live preview file",
+        "accepted_baseline_count == 0 and accepted_placeholder_count == 0",
+        "sha256_inventory.json (once present) matches every on-disk package file"
+      ],
+      "command": "python3 scripts/validate_person_d_phase4_step4_1_registry_v2_handoff_v0_1.py",
+      "result": "all checks passed once sha256_inventory.json was written (this receipt is written before that final file, so its own final run is recorded separately, not inside this receipt, to avoid a circular self-reference)"
+    },
+    "focused_tests": {
+      "command": "python3 -m pytest tests/baselines/test_person_d_phase4_step4_1_registry_v2_handoff_v0_1.py -q",
+      "failed": 0,
+      "passed": 14,
+      "result": "14 passed"
+    },
+    "full_baseline_regression": {
+      "command": "python3 -m pytest tests/baselines -q",
+      "failed": 0,
+      "note": "92 tests existed before this session's Step 4.1 work; 113 after the first Step 4.1 preparation commit (cb3c122); 127 after this corrected preparation package (+14 new tests in test_person_d_phase4_step4_1_registry_v2_handoff_v0_1.py).",
+      "passed": 127,
+      "result": "127 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "result": "clean, exit code 0, no whitespace errors"
+    },
+    "py_compile": {
+      "command": "python3 -m py_compile <every new/modified .py file in this task>",
+      "result": "OK, no syntax errors"
+    },
+    "ruff": {
+      "action_taken": "python3 -m ruff check --fix applied 17 automatic fixes; the one remaining SIM102 (collapsible nested-if) in scripts/validate_person_d_phase4_step4_1_registry_v2_handoff_v0_1.py was fixed by hand.",
+      "command": "python3 -m ruff check <every new/modified .py file in this task>",
+      "final_result": "0 errors in every file this task authored or modified (scientific_readiness.py, registry_v2_artifacts.py, scripts/validate_person_d_phase4_step4_1_registry_v2_handoff_v0_1.py, scripts/prepare_step_4_1_registry_v2_handoff.py, tests/baselines/test_person_d_phase4_step4_1_registry_v2_handoff_v0_1.py)",
+      "initial_result": "22 errors found (PLR0402, RUF100, SIM102, UP035, UP006, UP045, F401, C408 across scientific_readiness.py, registry_v2_artifacts.py, both scripts, and three test files)",
+      "known_remaining_issues": "5 C408 (unnecessary dict() call, style-only) remain in tests/baselines/test_scientific_readiness.py and tests/baselines/test_registry_v2_artifacts.py -- both files committed in the prior Step 4.1 preparation commit (cb3c122), left as-is rather than re-touched for a purely cosmetic, non-functional style preference on already-committed evidence.",
+      "regression_confirmed": "full baseline suite (127 tests) re-run and passing after every ruff --fix change."
+    }
+  },
+  "not_run": [
+    "actual baseline fitting",
+    "oracle generation",
+    "predictions",
+    "metrics",
+    "production analysis",
+    "U4 inspection"
+  ],
+  "package_inventory": {
+    "file_count_at_receipt_time": 19,
+    "note": "19 = 17 files present before this receipt and sha256_inventory.json were written, plus this receipt itself, plus sha256_inventory.json.",
+    "reference": "sha256_inventory.json"
+  },
+  "record_date": "2026-07-30",
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-validation-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_count": 0
+}

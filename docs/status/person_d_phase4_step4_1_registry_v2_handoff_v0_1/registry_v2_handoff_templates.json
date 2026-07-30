@@ -1,0 +1,63 @@
+{
+  "artifact_verification_receipt_template": {
+    "artifact_hash": null,
+    "artifact_id": null,
+    "artifact_type": "person_d_baseline_verification_receipt",
+    "verification_mode": "local_bytes",
+    "verification_result": "pending",
+    "verified_artifact_id": null,
+    "verified_sha256": null
+  },
+  "authorization_verification_template": {
+    "allowed_modes": [
+      "local_bytes",
+      "external_receipt"
+    ],
+    "verification_mode": null,
+    "verification_result": "pending",
+    "verified_at": null,
+    "verifies": "exact_artifact_authorization_template"
+  },
+  "builder_reference": "src/mineocclude/baselines/registry_v2_artifacts.py",
+  "exact_artifact_authorization_template": {
+    "artifact_hash": null,
+    "artifact_id": null,
+    "artifact_type": "person_d_baseline_exact_artifact_authorization",
+    "direct_input_hashes": {
+      "config_hash": null,
+      "fold_manifest_hash": null,
+      "oracle_target_hash": null
+    },
+    "note": "Scoped to exactly one target_artifact_id -- never a wildcard by baseline type or owner. Cannot be minted until target_artifact_id is real.",
+    "owner_status_record_hash": null,
+    "target_artifact_id": null,
+    "target_artifact_sha256": null,
+    "target_artifact_type": "baseline_prediction_document"
+  },
+  "note": "These are structural templates, not accepted Registry v2 records. Every production artifact ID or hash Person B has not yet supplied is explicitly null or 'pending' below -- never a fabricated placeholder value. Contrast with registry_v2/*.json in this same package (built earlier via the strict Python builders in registry_v2_artifacts.py, which require well-formed hex digests and so use obviously-fake repeated-digit placeholders instead of null). Both are valid ways to represent 'not real yet'; this file uses the more explicit null/pending form the task requested.",
+  "owner_status_record_template": {
+    "artifact_hash": null,
+    "artifact_id": null,
+    "artifact_type": "person_d_baseline_owner_status",
+    "authority_revision": "cb3c122d5a93f8ba579168c5f18b86444164aec9",
+    "authorized_artifact_types": [
+      "baseline_prediction_document"
+    ],
+    "decision": "pending",
+    "note": "owner_status=pending is Person D's real, honest current status: no scientific baseline_prediction_document exists to be accepted, rejected, or superseded yet.",
+    "owner_id": "person_d",
+    "owner_status": "pending"
+  },
+  "record_date": "2026-07-30",
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-registry-v2-handoff-templates",
+  "schema_version": "1.0",
+  "strict_schema_valid_examples": "docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/registry_v2/*.json (built via build_owner_status_record/build_exact_artifact_authorization/build_handoff_manifest/build_verification_receipt with obviously-fake but well-formed placeholder hashes)",
+  "trusted_manifest_entry_template": {
+    "artifact_hash": null,
+    "artifact_id": null,
+    "artifact_identities": [],
+    "artifact_type": "person_d_baseline_handoff_manifest",
+    "note": "artifact_identities is empty because no real artifact_id/artifact_sha256 pair exists yet to list. A real manifest entry requires at least one populated identity per registry_v2_artifacts.build_handoff_manifest.",
+    "owner_status_record_hash": null
+  }
+}

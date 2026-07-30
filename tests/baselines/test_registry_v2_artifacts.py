@@ -22,7 +22,6 @@ from mineocclude.baselines.registry_v2_artifacts import (
     build_owner_status_record,
     build_verification_receipt,
     validate_exact_artifact_authorization,
-    validate_handoff_manifest,
     validate_owner_status_record,
     validate_registry_v2_handoff_package,
     validate_verification_receipt,

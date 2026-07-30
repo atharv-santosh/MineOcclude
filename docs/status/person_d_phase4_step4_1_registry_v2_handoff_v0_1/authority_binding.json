@@ -1,0 +1,37 @@
+{
+  "claims": {
+    "existing_preview_remains_forbidden": true,
+    "no_accepted_baseline_exists": true,
+    "no_project_integration_is_claimed": true,
+    "no_scientific_baseline_was_executed": true,
+    "no_u4_output_was_inspected": true
+  },
+  "person_b": {
+    "authority_reconciliation_note": "aa84ab3 is not role/person-b-analysis's current tip. Read directly from Person B's own committed docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/authority_binding.json at commit 836c933: its own 'starting_authority' field is literally 'aa84ab3b05c533c3e8dbd1ab897dd04d9f26f1cd'. This resolves the apparent discrepancy: aa84ab3 is the commit Person B's own Step 4.1 preparation work is anchored to (their pre-handoff baseline), and 836c933 is Person B's own committed Step 4.1 preparation package built on top of it -- structurally the same situation as Person D's cb3c122 relative to 4fe28c6 above. Both branches are one 'prepare our own Step 4.1 handoff package' commit ahead of the hash each task description names as the 'expected' authority.",
+    "committed_handoff_package_classification": "Person B's own committed package at 836c933 is a Step 4.1 preparation/contract package, not a production handoff. Verified by reading docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/oracle_target_contract.json (construction_status='READY_AS_CONTRACT_NOT_EXECUTED', production_artifact_created=false) and sealed_fold_split_identity.json (final_frame_manifest.construction_status='BLOCKED_PENDING_PERSON_A') directly at that commit.",
+    "committed_handoff_package_is_production_handoff": false,
+    "committed_handoff_package_verified": true,
+    "corrected_branch": "role/person-b-analysis",
+    "task_stated_branch": "role/person-b-methods",
+    "task_stated_expected_authority": "aa84ab3b05c533c3e8dbd1ab897dd04d9f26f1cd",
+    "verified_current_branch_head": "836c933a286577ae04dcf645cdd9eaf41069a899",
+    "verified_current_head_subject": "Prepare Person B Phase 4 Step 4.1 handoff"
+  },
+  "person_d": {
+    "branch": "role/person-d-baselines",
+    "head_discrepancy_note": "This preparation task's own instructions stated 4fe28c6 as the expected starting authority, but role/person-d-baselines had already advanced one commit (to cb3c122, 'Prepare Phase 4 Step 4.1 scientific-baseline registry v2 handoff') in this same working session before this task was issued. Verified via git log -1 on both local HEAD and origin/role/person-d-baselines before writing this record; both matched cb3c122, not 4fe28c6. This preparation package is built additively on top of cb3c122, not by rewinding to 4fe28c6.",
+    "task_stated_starting_authority": "4fe28c61a01578cc6f7747c89d6aa1cd0f005299",
+    "verified_current_local_and_remote_head": "cb3c122d5a93f8ba579168c5f18b86444164aec9"
+  },
+  "person_e": {
+    "registry_v2_contract_authority": "25509bb4ba292a83d933058539aca1ca6002524a",
+    "registry_v2_contract_authority_subject": "Define Person E Phase 4 Step 4.1 registry v2",
+    "registry_v2_query_authority": "5d8660c90fbf7362d7f32005f9b650e15ae1bfb5",
+    "registry_v2_query_authority_subject": "Implement Person E Phase 4 Step 4.1 registry queries",
+    "verification_note": "Both hashes confirmed to exist as real commits on origin/role/person-e-operations via git cat-file -t and git merge-base --is-ancestor; 5d8660c is that branch's current HEAD as of this record's date. Person D does not vendor, import, or merge role/person-e-operations -- these hashes are recorded for provenance/citation only, matching this package's registry_v2_artifacts.py module, which independently mirrors (does not import) Person E's Registry v2 concepts for Person D's own baseline-output domain."
+  },
+  "record_date": "2026-07-30",
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "verification_method": "git cat-file -t <hash>; git log -1 --format='%H %s' <hash>; git merge-base --is-ancestor <hash> <branch>; direct git show of cited upstream JSON files at their exact commits. All performed 2026-07-30 before this record was written."
+}

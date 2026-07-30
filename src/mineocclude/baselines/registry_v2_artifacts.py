@@ -45,8 +45,8 @@ a receipt must reference a manifest entry that exists).
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Mapping, Sequence, Tuple
 
 from mineocclude.analysis.manifests import (
     AnalysisArtifactError,
