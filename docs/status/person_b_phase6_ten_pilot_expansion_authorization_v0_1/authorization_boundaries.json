@@ -1,0 +1,34 @@
+{
+  "schema_id": "person-b-phase6-ten-pilot-expansion-authorization-v0-1-boundaries",
+  "schema_version": "1.0",
+  "authorized": {
+    "additional_pilot_count": 9,
+    "device": "cuda:0",
+    "execution_host": "aws_sagemaker_linux_gpu",
+    "exact_person_a_runner_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+    "reuse_existing_layout_00_ep9403": true,
+    "seed": 20260725,
+    "steps": [
+      "6.1",
+      "6.2",
+      "6.3",
+      "6.4",
+      "6.5"
+    ]
+  },
+  "not_authorized": {
+    "altered_folds": true,
+    "altered_targets": true,
+    "altered_thresholds_or_control_definitions": true,
+    "existing_pilot_reextraction": true,
+    "future_registry_v2_output_acceptance": true,
+    "hidden_state_interpretation": true,
+    "step_6_6_success_before_person_b_control_execution": true,
+    "u4_inspection": true,
+    "unlisted_pilots": true
+  },
+  "automatic_scientific_use_transition": false,
+  "scientific_execution_performed_at_authorization": false,
+  "step_6_6_complete": false,
+  "u4_output_inspected": false
+}
