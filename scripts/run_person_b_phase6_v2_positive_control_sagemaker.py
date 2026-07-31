@@ -22,6 +22,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from mineocclude.analysis.coordinates_v2 import (
+    PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE,
+    PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT,
+    PERSON_A_ACTIVATION_SOURCE_ROW_V2_DIGEST_DOMAIN,
+    PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT,
     build_state_input_v2_from_capture_bytes,
 )
 from mineocclude.analysis.positive_control_v2 import (
@@ -250,6 +254,18 @@ def _load_control_states(
             coordinate_frame=coordinate,
             model_hash=store_identity["model_hash"],
             preprocess_hash=store_identity["preprocess_hash"],
+            source_row_artifact_type=(
+                PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE
+            ),
+            source_row_producer_commit=(
+                PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT
+            ),
+            source_row_canonicalization_contract=(
+                PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT
+            ),
+            source_row_digest_domain=(
+                PERSON_A_ACTIVATION_SOURCE_ROW_V2_DIGEST_DOMAIN
+            ),
         )
     return states
 
@@ -381,6 +397,17 @@ def main() -> None:
         "positive_control_results": results,
         "schema_version": "1.0",
         "scientific_execution_performed": True,
+        "source_row_canonicalization": {
+            "artifact_type": PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE,
+            "canonicalization_contract": (
+                PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT
+            ),
+            "digest_domain": PERSON_A_ACTIVATION_SOURCE_ROW_V2_DIGEST_DOMAIN,
+            "producer_commit": PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT,
+            "registry_digest_substitution_count": 0,
+            "source_identity_join_pass": True,
+            "visible_control_row_count": 1_000,
+        },
         "u4_output_inspected": False,
     }
     write_json_exclusive(output_root / "person_b_step6_6_positive_control.json", report)

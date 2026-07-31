@@ -573,6 +573,18 @@ def test_literal_capture_and_canonical_state_hashes_are_independent(
         coordinate_frame={},
         model_hash=HASH("model"),
         preprocess_hash=HASH("preprocess"),
+        source_row_artifact_type=(
+            coordinates_v2.PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE
+        ),
+        source_row_producer_commit=(
+            coordinates_v2.PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT
+        ),
+        source_row_canonicalization_contract=(
+            coordinates_v2.PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT
+        ),
+        source_row_digest_domain=(
+            coordinates_v2.PERSON_A_ACTIVATION_SOURCE_ROW_V2_DIGEST_DOMAIN
+        ),
     )
     assert result["literal_capture_package_sha256"] == literal_hash
     assert (
@@ -896,6 +908,24 @@ def test_hidden_rows_and_core_visible_substitution_fail_closed() -> None:
             expected_manifest_sha256=authority.accepted_c_manifest_by_trajectory[
                 VISIBLE_CONTROL_PILOT_IDS[0]
             ],
+        )
+
+
+def test_changed_person_a_source_digest_fails_exact_join() -> None:
+    indices, states, authority, fold_plan = _loaded_bridge_fixture()
+    trajectory_id = VISIBLE_CONTROL_PILOT_IDS[0]
+    states[trajectory_id]["rows"][0]["c_frame_map_row_sha256"] = HASH(
+        "substituted-source-row-digest"
+    )
+    with pytest.raises(
+        control_v2.PositiveControlV2Error,
+        match="c_frame_map_row_sha256",
+    ):
+        build_positive_control_bridge_v2(
+            indices,
+            states,
+            authority=authority,
+            fold_plan=fold_plan,
         )
 
 

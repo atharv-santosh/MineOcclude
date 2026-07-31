@@ -38,9 +38,21 @@ PERSON_A_ACTIVATION_STORE_V2_PRODUCER_SHA256 = (
     "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575"
 )
 PERSON_A_ACTIVATION_INDEX_V2_ARTIFACT_TYPE = "person_a_activation_store_v2_index"
-PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT = (
+PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE = (
+    "person_a_activation_store_v2_source_row"
+)
+PERSON_A_ACTIVATION_STORE_V2_CANONICALIZATION_CONTRACT = (
     "person-a-activation-store-v2-canonical-json@"
     f"{PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT}"
+)
+PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT = (
+    PERSON_A_ACTIVATION_STORE_V2_CANONICALIZATION_CONTRACT
+)
+PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT = (
+    PERSON_A_ACTIVATION_STORE_V2_CANONICALIZATION_CONTRACT
+)
+PERSON_A_ACTIVATION_SOURCE_ROW_V2_DIGEST_DOMAIN = (
+    "person-a-activation-store-v2-source-row-entire-mapping-sha256-v1"
 )
 REGISTRY_V2_RECORD_ARTIFACT_TYPE = "registry_v2_record"
 REGISTRY_V2_CANONICALIZATION_CONTRACT = (
@@ -221,6 +233,27 @@ def canonical_json_bytes_for_artifact(
             _fail(
                 "canonicalization_identity_conflict",
                 "Person A index and store format identities conflict.",
+            )
+        return person_a_activation_index_v2_canonical_json_bytes(value)
+    if artifact_type == PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE:
+        if (
+            canonicalization_contract
+            != PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT
+        ):
+            _fail(
+                "canonicalization_contract_mismatch",
+                "Activation source rows require the exact Person A producer contract.",
+            )
+        required_identity = (
+            "trajectory_id",
+            "model_frame_idx",
+            "render_frame_idx",
+            "server_tick",
+        )
+        if any(field not in value for field in required_identity):
+            _fail(
+                "canonicalization_identity_conflict",
+                "Person A source-row canonicalization requires exact frame identity.",
             )
         return person_a_activation_index_v2_canonical_json_bytes(value)
     if artifact_type == REGISTRY_V2_RECORD_ARTIFACT_TYPE:
@@ -875,6 +908,10 @@ __all__ = [
     "ACTIVATION_STORE_V2_FORMAT_VERSION",
     "PERSON_A_ACTIVATION_INDEX_V2_ARTIFACT_TYPE",
     "PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT",
+    "PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE",
+    "PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT",
+    "PERSON_A_ACTIVATION_SOURCE_ROW_V2_DIGEST_DOMAIN",
+    "PERSON_A_ACTIVATION_STORE_V2_CANONICALIZATION_CONTRACT",
     "PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT",
     "PERSON_A_ACTIVATION_STORE_V2_PRODUCER_SHA256",
     "REGISTRY_V2_CANONICALIZATION_CONTRACT",
