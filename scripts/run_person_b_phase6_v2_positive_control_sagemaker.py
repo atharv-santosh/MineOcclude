@@ -50,8 +50,14 @@ C_ACCEPTANCE_PATH = (
     "accepted_pilot_manifest.json"
 )
 B_RATIFICATION_PATH = (
-    "docs/status/person_b_phase6_v2_consumer_ratification_v0_1/owner_ratification.json"
+    "docs/status/"
+    "person_b_phase6_v2_consumer_canonicalization_reratification_v0_1/"
+    "owner_reratification.json"
 )
+CANONICALIZATION_IMPLEMENTATION_COMMIT = (
+    "88f8f4ac97e7c53b929714d041f0626dc38c2879"
+)
+SUPERSEDED_RATIFICATION_COMMIT = "0a3f28a9893e8870418d1369732f9276a17e5b4d"
 DEFAULT_OUTPUT_ROOT = Path(
     "/home/sagemaker-user/person-b-phase6-approved-outputs/"
     "person-b-phase6-v2-positive-control-step6-6"
@@ -103,7 +109,15 @@ def _require_authorities(repository: Path, ratification_commit: str) -> None:
     _git(repository, "merge-base", "--is-ancestor", ratification_commit, "HEAD")
     ratification = _git_json(repository, ratification_commit, B_RATIFICATION_PATH)
     if (
-        ratification.get("decision") != "RATIFY_EXACT_V2_POSITIVE_CONTROL_CONSUMER"
+        ratification.get("decision")
+        != "RERATIFY_EXACT_V2_POSITIVE_CONTROL_CONSUMER_WITH_PERSON_A_CANONICALIZATION"
+        or ratification.get("implementation_commit")
+        != CANONICALIZATION_IMPLEMENTATION_COMMIT
+        or ratification.get("supersedes_ratification_commit")
+        != SUPERSEDED_RATIFICATION_COMMIT
+        or ratification.get("previous_execution_authorization_superseded") is not True
+        or ratification.get("producer_canonicalization_contract")
+        != PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT
         or ratification.get("authorized_execution")
         != "person_b_frozen_visible_position_positive_control_only"
         or ratification.get("person_a_ten_pilot_commit") != PERSON_A_TEN_PILOT_COMMIT
