@@ -1,0 +1,109 @@
+{
+  "authorities": {
+    "person_a_sagemaker_addendum": {
+      "branch": "role/person-a-model",
+      "commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c",
+      "remote_ref": "origin/role/person-a-model"
+    },
+    "person_b_bounded_runtime_authorization": {
+      "branch": "role/person-b-analysis",
+      "commit": "43e5ac83004cce2145384c1383f2c3820311af14"
+    },
+    "person_c_accepted_pilot": {
+      "commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+    }
+  },
+  "claims": {
+    "additional_pilots_authorized": false,
+    "branch_merge_permitted": false,
+    "future_person_a_registry_v2_output_acceptance_authorized": false,
+    "hidden_state_interpretation_authorized": false,
+    "scientific_execution_performed": false,
+    "u4_output_inspected": false
+  },
+  "mineworld_model_config_authority": {
+    "byte_size": 668,
+    "git_blob_oid": "edd472dce202f90cd63b268f571984df64260cab",
+    "git_blob_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "mineworld_commit": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "path": "configs/700M_16f.yaml",
+    "repository": "https://github.com/microsoft/mineworld.git",
+    "windows_crlf_materialized_bytes_authoritative": false,
+    "windows_crlf_sha256": "ec397bb74aae0decc46e8ef7ddf460555d15603276239200e90e1bc41d65d223"
+  },
+  "schema_id": "person-b-phase6-sagemaker-runtime-ratification-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "source_read_policy": "exact_committed_git_objects_only",
+  "source_records": [
+    {
+      "byte_size": 3056,
+      "owner": "person_a",
+      "path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/authority_binding.json",
+      "sha256": "0535d2d36060d6cafb3e5e23b6ef29368ca09b352f996742374b135bd6b61ae7",
+      "source_commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
+    },
+    {
+      "byte_size": 1971,
+      "owner": "person_a",
+      "path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/deterministic_seed_decision.json",
+      "sha256": "dbd26f4e4e36c3f28b68d4099be19fa8000bc8fcba7e6523ff93a1172a0de5cd",
+      "source_commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
+    },
+    {
+      "byte_size": 1334,
+      "owner": "person_a",
+      "path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/execution_host_contract.json",
+      "sha256": "a7c1150e644c8b302856e36e732f1cfcbfdc56883b993874a7129f4671cb3898",
+      "source_commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
+    },
+    {
+      "byte_size": 1044,
+      "owner": "person_a",
+      "path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/git_blob_identity_receipt.json",
+      "sha256": "adcc7c27c7b80525e66cdf368be8fcb22a0bd8b54bfbdddc352e0c7540c94448",
+      "source_commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
+    },
+    {
+      "byte_size": 2028,
+      "owner": "person_a",
+      "path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/runtime_preflight_contract.json",
+      "sha256": "77a09762753e6cf74ecde1e3eea965782cb8542662eaa00c6a8c0f97e015a901",
+      "source_commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
+    },
+    {
+      "byte_size": 806,
+      "owner": "person_a",
+      "path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/sha256_inventory.json",
+      "sha256": "66aefe6784db9cd234916a340a990cc385558334bef271b7636379fab75609da",
+      "source_commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
+    },
+    {
+      "byte_size": 888,
+      "owner": "person_a",
+      "path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/validation_receipt.json",
+      "sha256": "45e8ec9782ce5887454c7cad021b36d22e87bac564c4f19019a6b30b68f6022a",
+      "source_commit": "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
+    },
+    {
+      "byte_size": 1241,
+      "owner": "person_b",
+      "path": "docs/status/person_b_phase4_step4_1_step6_final_runtime_authorization_v0_1/authorization_boundaries.json",
+      "sha256": "89e064e40d276fe6588a74366f2438d3d158aa4c3b764adf505bbcc685adcf7f",
+      "source_commit": "43e5ac83004cce2145384c1383f2c3820311af14"
+    },
+    {
+      "byte_size": 1404,
+      "owner": "person_b",
+      "path": "docs/status/person_b_phase4_step4_1_step6_final_runtime_authorization_v0_1/combined_runtime_authorization.json",
+      "sha256": "ce183b5a967add7a95909cf2a90c85a9ed4c8a2973663a7048b823008e11770a",
+      "source_commit": "43e5ac83004cce2145384c1383f2c3820311af14"
+    },
+    {
+      "byte_size": 1995,
+      "owner": "person_c",
+      "path": "docs/status/person_c_phase4_step4_1_registry_v2_handoff_v0_1/selected_pilot_acceptance.json",
+      "sha256": "6e663b1c5a4e4e269a680a0b5c142da6f4f0d22ecf46092cdc8c81c0ce1ad8a9",
+      "source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+    }
+  ]
+}
