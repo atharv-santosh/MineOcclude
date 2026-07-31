@@ -1,0 +1,57 @@
+{
+  "authorized_execution": "person_b_frozen_visible_position_positive_control_only",
+  "decision": "RERATIFY_EXACT_V2_SOURCE_ROW_CANONICALIZATION_CONSUMER",
+  "e_schema_change_required": false,
+  "exact_source_identity_join_pass": true,
+  "hidden_state_interpretation_authorized": false,
+  "implementation_commit": "c6f2d1d3495fa1b4a567408e1a84a5b5484e5ecb",
+  "implementation_files": [
+    {
+      "byte_size": 16106,
+      "path": "scripts/run_person_b_phase6_v2_positive_control_sagemaker.py",
+      "sha256": "395faea87fac2a2a8b98a9b7bdf1b906dfa1333f79405ad6c300d01ac3c9de1c"
+    },
+    {
+      "byte_size": 11393,
+      "path": "src/mineocclude/analysis/coordinates_v2.py",
+      "sha256": "54ef2e056f3a0b5ac12170ad5284837d2abdcdd5b86c5f02a3a15bf4754f1ebd"
+    },
+    {
+      "byte_size": 35726,
+      "path": "src/mineocclude/contracts/activation_v2.py",
+      "sha256": "ee95e4cac224d9501987ba67525773dc42c39df9eb9bf70874932acc69c2119f"
+    },
+    {
+      "byte_size": 36362,
+      "path": "tests/analysis/test_person_b_phase6_v2_consumer.py",
+      "sha256": "1eb0e2d6506aa28484a4c0cdee6a522df9711a6da3deda4ce2a454ec722aad9d"
+    },
+    {
+      "byte_size": 15591,
+      "path": "tests/analysis/test_person_b_phase6_v2_source_row_canonicalization.py",
+      "sha256": "dcf1134c90297a8468754c125c40fa7bbd50681c33d15c67fa3eb32ac1925dfd"
+    }
+  ],
+  "owner": "person_b",
+  "person_a_ten_pilot_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+  "person_b_expansion_authorization_commit": "a838c9703003176d8e793bbd43dd6de917740be6",
+  "person_b_expansion_selection_commit": "19f08b2e27217b781961da8f7299e1396a3ab703",
+  "person_c_expansion_acceptance_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+  "previous_execution_authorization_superseded": true,
+  "previous_implementation_commit": "88f8f4ac97e7c53b929714d041f0626dc38c2879",
+  "producer_canonicalization_contract": "person-a-activation-store-v2-canonical-json@55776dc88302b89b52eef483a710fbf6811cf536",
+  "ratification_guard_runner_sha256": "1d45683f06a03137ee5ac4f15a4c7265d3405e9079d51f20b47b323031d5c407",
+  "ratification_scope": "exact_source_row_implementation_and_frozen_five_layout_1000_row_visible_position_control",
+  "real_visible_control_rows_matched": 1000,
+  "real_visible_control_rows_tested": 1000,
+  "registry_canonicalization_scope": "registry_v2_owned_records_only",
+  "registry_digest_substitution_count": 0,
+  "schema_id": "person-b-phase6-v2-source-row-canonicalization-reratification-v0-1-owner-reratification-v1.0",
+  "schema_version": "1.0",
+  "source_row_artifact_type": "person_a_activation_store_v2_source_row",
+  "source_row_canonicalization_contract": "person-a-activation-store-v2-canonical-json@55776dc88302b89b52eef483a710fbf6811cf536",
+  "source_row_digest_domain": "person-a-activation-store-v2-source-row-entire-mapping-sha256-v1",
+  "source_row_producer_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+  "supersedes_ratification_commit": "03e8cdb8673f2260f42b8554b00ac30e3e4f7c8b",
+  "u4_output_inspected": false
+}

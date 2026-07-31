@@ -55,13 +55,13 @@ C_ACCEPTANCE_PATH = (
 )
 B_RATIFICATION_PATH = (
     "docs/status/"
-    "person_b_phase6_v2_consumer_canonicalization_reratification_v0_1/"
+    "person_b_phase6_v2_source_row_canonicalization_reratification_v0_1/"
     "owner_reratification.json"
 )
 CANONICALIZATION_IMPLEMENTATION_COMMIT = (
-    "88f8f4ac97e7c53b929714d041f0626dc38c2879"
+    "c6f2d1d3495fa1b4a567408e1a84a5b5484e5ecb"
 )
-SUPERSEDED_RATIFICATION_COMMIT = "0a3f28a9893e8870418d1369732f9276a17e5b4d"
+SUPERSEDED_RATIFICATION_COMMIT = "03e8cdb8673f2260f42b8554b00ac30e3e4f7c8b"
 DEFAULT_OUTPUT_ROOT = Path(
     "/home/sagemaker-user/person-b-phase6-approved-outputs/"
     "person-b-phase6-v2-positive-control-step6-6"
@@ -114,7 +114,7 @@ def _require_authorities(repository: Path, ratification_commit: str) -> None:
     ratification = _git_json(repository, ratification_commit, B_RATIFICATION_PATH)
     if (
         ratification.get("decision")
-        != "RERATIFY_EXACT_V2_POSITIVE_CONTROL_CONSUMER_WITH_PERSON_A_CANONICALIZATION"
+        != "RERATIFY_EXACT_V2_SOURCE_ROW_CANONICALIZATION_CONSUMER"
         or ratification.get("implementation_commit")
         != CANONICALIZATION_IMPLEMENTATION_COMMIT
         or ratification.get("supersedes_ratification_commit")
@@ -122,6 +122,20 @@ def _require_authorities(repository: Path, ratification_commit: str) -> None:
         or ratification.get("previous_execution_authorization_superseded") is not True
         or ratification.get("producer_canonicalization_contract")
         != PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT
+        or ratification.get("source_row_artifact_type")
+        != PERSON_A_ACTIVATION_SOURCE_ROW_V2_ARTIFACT_TYPE
+        or ratification.get("source_row_producer_commit")
+        != PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT
+        or ratification.get("source_row_canonicalization_contract")
+        != PERSON_A_ACTIVATION_SOURCE_ROW_V2_CANONICALIZATION_CONTRACT
+        or ratification.get("source_row_digest_domain")
+        != PERSON_A_ACTIVATION_SOURCE_ROW_V2_DIGEST_DOMAIN
+        or ratification.get("registry_canonicalization_scope")
+        != "registry_v2_owned_records_only"
+        or ratification.get("real_visible_control_rows_tested") != 1_000
+        or ratification.get("real_visible_control_rows_matched") != 1_000
+        or ratification.get("registry_digest_substitution_count") != 0
+        or ratification.get("exact_source_identity_join_pass") is not True
         or ratification.get("authorized_execution")
         != "person_b_frozen_visible_position_positive_control_only"
         or ratification.get("person_a_ten_pilot_commit") != PERSON_A_TEN_PILOT_COMMIT
