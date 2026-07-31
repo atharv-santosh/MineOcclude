@@ -1,0 +1,33 @@
+{
+  "automatic_phase6_transition_allowed": false,
+  "future_person_a_output_acceptance": {
+    "accepted": false,
+    "required_post_execution_evidence": [
+      "exact_model_input_bytes_and_sha256",
+      "exact_extraction_bytes_and_sha256",
+      "exact_activation_bytes_and_sha256",
+      "exact_rollout_bytes_and_sha256",
+      "owner_status_records",
+      "exact_artifact_authorization_records",
+      "verified_authorization_record_bytes",
+      "trusted_manifest_entries",
+      "direct_input_lineage",
+      "independent_registry_v2_verification"
+    ],
+    "state": "BLOCKED_UNTIL_EXACT_BYTES_AND_TRUST_RECORDS_EXIST"
+  },
+  "no_automatic_transition": true,
+  "no_silent_authorization": true,
+  "positive_control_boundary": {
+    "additional_pilots_authorized": false,
+    "hidden_state_interpretation_authorized": false,
+    "positive_control_passed": false,
+    "project_integration_authorized": false,
+    "step_4_1_closure_authorized": false
+  },
+  "production_execution_started_at_decision": false,
+  "registry_v2_selected_c_input_trust_chain_accepted": true,
+  "schema_id": "person-b-phase4-step4-1-step6-final-runtime-authorization-v0-1-authorization-boundaries",
+  "schema_version": "1.0",
+  "u4_output_inspected": false
+}
