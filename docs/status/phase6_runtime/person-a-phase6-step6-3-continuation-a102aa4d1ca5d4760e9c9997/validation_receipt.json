@@ -1,0 +1,28 @@
+{
+  "activation_store_v2_validator_pass": true,
+  "canonical_json_file_count": 28,
+  "canonical_json_pass": true,
+  "focused_resume_runner_validation": {
+    "clean_committed_checkout": {
+      "failed": 1,
+      "failure_scope": "preparation_change_inventory_requires_the_original_13_paths_to_be_uncommitted",
+      "passed": 15
+    },
+    "exact_parent_plus_repaired_commit_diff_checkout": {
+      "failed": 0,
+      "passed": 16,
+      "status": "PASS"
+    },
+    "test_command": "python -m unittest tests.models.test_person_a_phase6_step6_3_resume_preparation_v0_1"
+  },
+  "git_diff_check_pass": true,
+  "handoff_artifact_hash_failure_count": 0,
+  "handoff_artifact_hashes_pass": true,
+  "inventory_pass": true,
+  "nonfinite_activation_count": 0,
+  "prior_immutable_evidence_pass": true,
+  "schema_version": "1.0",
+  "scientific_completion_audit_pass": true,
+  "status": "PASS",
+  "u4_output_inspected": false
+}
