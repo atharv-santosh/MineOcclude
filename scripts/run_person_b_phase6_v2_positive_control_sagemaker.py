@@ -36,6 +36,7 @@ from mineocclude.analysis.positive_control_v2 import (
     validate_ten_pilot_authority_documents,
 )
 from mineocclude.contracts.activation_v2 import (
+    PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT,
     external_chunk_bindings,
     load_activation_index_v2,
 )
@@ -183,6 +184,9 @@ def _load_indices(
         index = inventory["activation_index"]
         loaded[trajectory_id] = load_activation_index_v2(
             index["path"],
+            canonicalization_contract=(
+                PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT
+            ),
             expected_index_sha256=index["sha256"],
             expected_index_byte_size=index["byte_size"],
             expected_trajectory_id=trajectory_id,

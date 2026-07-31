@@ -20,7 +20,9 @@ from typing import Any
 import numpy as np
 
 from mineocclude.contracts.activation import validate_activation_handoff
-from mineocclude.experiments.registry import canonical_json_bytes
+from mineocclude.experiments.registry import (
+    canonical_json_bytes as registry_v2_canonical_json_bytes,
+)
 
 ACTIVATION_INDEX_V2_FORMAT_VERSION = "person-a-activation-index-v2"
 ACTIVATION_STORE_V2_FORMAT_VERSION = "person-a-activation-store-v2"
@@ -29,6 +31,21 @@ VISUAL_TOKENS_PER_FRAME = 336
 TOKENS_PER_FRAME_ACTION_PAIR = 347
 MAX_CONTEXT_LOCAL_PAIR_IDX = 15
 EXPECTED_DTYPE = "float32"
+PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT = (
+    "55776dc88302b89b52eef483a710fbf6811cf536"
+)
+PERSON_A_ACTIVATION_STORE_V2_PRODUCER_SHA256 = (
+    "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575"
+)
+PERSON_A_ACTIVATION_INDEX_V2_ARTIFACT_TYPE = "person_a_activation_store_v2_index"
+PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT = (
+    "person-a-activation-store-v2-canonical-json@"
+    f"{PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT}"
+)
+REGISTRY_V2_RECORD_ARTIFACT_TYPE = "registry_v2_record"
+REGISTRY_V2_CANONICALIZATION_CONTRACT = (
+    "mineocclude-immutable-registry-v2-canonical-json"
+)
 
 
 class ActivationV2ConsumerError(ValueError):
@@ -57,6 +74,18 @@ class ExternalChunkBinding:
     sha256: str
     byte_size: int
     row_count: int
+
+
+@dataclass(frozen=True)
+class ValidatedActivationIndexV2:
+    """Authenticated producer bytes and parsed v2 index without chunk loading."""
+
+    raw_sha256: str
+    raw_byte_size: int
+    document: Mapping[str, Any]
+    store_identity: Mapping[str, Any]
+    chunks: tuple[Mapping[str, Any], ...]
+    rows: tuple[Mapping[str, Any], ...]
 
 
 @dataclass(frozen=True)
@@ -142,6 +171,88 @@ def _require_text(value: Any, field: str) -> str:
 
 def _sha256_bytes(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
+
+
+def person_a_activation_index_v2_canonical_json_bytes(value: Any) -> bytes:
+    """Reproduce the exact Person A producer encoding from the bound commit."""
+
+    try:
+        return (
+            json.dumps(
+                value,
+                allow_nan=False,
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n"
+        ).encode("utf-8")
+    except (TypeError, ValueError) as error:
+        _fail("invalid_json", f"Value is not Person A canonical JSON: {error}")
+
+
+def canonical_json_bytes_for_artifact(
+    value: Mapping[str, Any],
+    *,
+    artifact_type: str,
+    canonicalization_contract: str,
+) -> bytes:
+    """Dispatch canonicalization only through explicit owner/schema identity."""
+
+    if artifact_type == PERSON_A_ACTIVATION_INDEX_V2_ARTIFACT_TYPE:
+        if (
+            canonicalization_contract
+            != PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT
+        ):
+            _fail(
+                "canonicalization_contract_mismatch",
+                "Activation Store v2 requires the exact Person A producer contract.",
+            )
+        if value.get("format_version") != ACTIVATION_INDEX_V2_FORMAT_VERSION:
+            _fail(
+                "canonicalization_identity_conflict",
+                "Person A index canonicalization requires activation-index v2.",
+            )
+        store = value.get("store_identity")
+        if (
+            not isinstance(store, Mapping)
+            or store.get("format_version") != ACTIVATION_STORE_V2_FORMAT_VERSION
+        ):
+            _fail(
+                "canonicalization_identity_conflict",
+                "Person A index and store format identities conflict.",
+            )
+        return person_a_activation_index_v2_canonical_json_bytes(value)
+    if artifact_type == REGISTRY_V2_RECORD_ARTIFACT_TYPE:
+        if canonicalization_contract != REGISTRY_V2_CANONICALIZATION_CONTRACT:
+            _fail(
+                "canonicalization_contract_mismatch",
+                "Registry v2 records require their existing Registry contract.",
+            )
+        return registry_v2_canonical_json_bytes(value)
+    _fail(
+        "unknown_canonicalization_contract",
+        f"Unsupported artifact type {artifact_type!r}.",
+    )
+
+
+def person_a_activation_index_v2_snapshot_digest(
+    document: Mapping[str, Any],
+    *,
+    canonicalization_contract: str,
+) -> str:
+    """Hash Person A's exact snapshot domain: the index minus snapshot_id."""
+
+    if "snapshot_id" not in document:
+        _fail("invalid_index", "Activation Index v2 lacks snapshot_id.")
+    identity_document = dict(document)
+    identity_document.pop("snapshot_id")
+    payload = canonical_json_bytes_for_artifact(
+        identity_document,
+        artifact_type=PERSON_A_ACTIVATION_INDEX_V2_ARTIFACT_TYPE,
+        canonicalization_contract=canonicalization_contract,
+    )
+    return _sha256_bytes(payload)
 
 
 def _strict_json_bytes(payload: bytes, *, label: str) -> Mapping[str, Any]:
@@ -304,6 +415,7 @@ def _validate_store_identity(
 def _validate_index_document_v2(
     document: Mapping[str, Any],
     *,
+    canonicalization_contract: str,
     expected_trajectory_id: str,
     expected_manifest_sha256: str,
 ) -> tuple[
@@ -523,9 +635,10 @@ def _validate_index_document_v2(
             _fail("chunk_key_mismatch", f"Chunk {chunk_id!r} key bounds differ.")
 
     snapshot_id = _require_sha256(document.get("snapshot_id"), "snapshot_id")
-    identity_document = dict(document)
-    identity_document.pop("snapshot_id")
-    if snapshot_id != _sha256_bytes(canonical_json_bytes(identity_document)):
+    if snapshot_id != person_a_activation_index_v2_snapshot_digest(
+        document,
+        canonicalization_contract=canonicalization_contract,
+    ):
         _fail("snapshot_identity_mismatch", "snapshot_id is not the canonical digest.")
     return store, tuple(chunks), tuple(rows)
 
@@ -533,6 +646,7 @@ def _validate_index_document_v2(
 def dispatch_activation_document(
     document: Mapping[str, Any],
     *,
+    canonicalization_contract: str | None = None,
     expected_trajectory_id: str | None = None,
     expected_manifest_sha256: str | None = None,
 ) -> ActivationDispatchResult:
@@ -542,6 +656,11 @@ def dispatch_activation_document(
         _fail("invalid_document", "Activation evidence must be an object.")
     version = document.get("format_version")
     if version is None:
+        if canonicalization_contract is not None:
+            _fail(
+                "canonicalization_identity_conflict",
+                "Historical v1 dispatch cannot claim a v2 canonicalization contract.",
+            )
         result = validate_activation_handoff(document)
         return ActivationDispatchResult(
             format_version="person-b-historical-activation-handoff-v1",
@@ -550,14 +669,19 @@ def dispatch_activation_document(
         )
     if version != ACTIVATION_INDEX_V2_FORMAT_VERSION:
         _fail("unsupported_format", f"Unsupported activation format {version!r}.")
-    if expected_trajectory_id is None or expected_manifest_sha256 is None:
+    if (
+        canonicalization_contract is None
+        or expected_trajectory_id is None
+        or expected_manifest_sha256 is None
+    ):
         _fail(
             "missing_authority",
-            "v2 dispatch requires trajectory and C manifest authority.",
+            "v2 dispatch requires canonicalization, trajectory, and C authority.",
         )
     try:
         _validate_index_document_v2(
             document,
+            canonicalization_contract=canonicalization_contract,
             expected_trajectory_id=expected_trajectory_id,
             expected_manifest_sha256=expected_manifest_sha256,
         )
@@ -610,9 +734,64 @@ def external_chunk_bindings(
     return result
 
 
+def validate_activation_index_v2_bytes(
+    payload: bytes,
+    *,
+    canonicalization_contract: str,
+    expected_index_sha256: str,
+    expected_index_byte_size: int,
+    expected_trajectory_id: str,
+    expected_manifest_sha256: str,
+) -> ValidatedActivationIndexV2:
+    """Validate immutable Person A index bytes without reading activation chunks."""
+
+    if not isinstance(payload, bytes):
+        _fail("invalid_index_bytes", "Activation index payload must be literal bytes.")
+    _require_sha256(expected_index_sha256, "activation_index.sha256")
+    _require_int(
+        expected_index_byte_size,
+        "activation_index.byte_size",
+        minimum=1,
+    )
+    if len(payload) != expected_index_byte_size:
+        _fail("byte_size_mismatch", "activation_index byte size does not match.")
+    actual_sha256 = _sha256_bytes(payload)
+    if actual_sha256 != expected_index_sha256:
+        _fail(
+            "sha256_mismatch",
+            "activation_index literal-byte SHA-256 does not match.",
+        )
+    document = _strict_json_bytes(payload, label="activation_index")
+    expected_payload = canonical_json_bytes_for_artifact(
+        document,
+        artifact_type=PERSON_A_ACTIVATION_INDEX_V2_ARTIFACT_TYPE,
+        canonicalization_contract=canonicalization_contract,
+    )
+    if payload != expected_payload:
+        _fail(
+            "noncanonical_index",
+            "Activation Index v2 bytes differ from Person A producer canonical JSON.",
+        )
+    store, chunks, rows = _validate_index_document_v2(
+        document,
+        canonicalization_contract=canonicalization_contract,
+        expected_trajectory_id=expected_trajectory_id,
+        expected_manifest_sha256=expected_manifest_sha256,
+    )
+    return ValidatedActivationIndexV2(
+        raw_sha256=actual_sha256,
+        raw_byte_size=len(payload),
+        document=dict(document),
+        store_identity=dict(store),
+        chunks=tuple(dict(chunk) for chunk in chunks),
+        rows=tuple(dict(row) for row in rows),
+    )
+
+
 def load_activation_index_v2(
     index_path: Path | str,
     *,
+    canonicalization_contract: str,
     expected_index_sha256: str,
     expected_index_byte_size: int,
     expected_trajectory_id: str,
@@ -629,14 +808,17 @@ def load_activation_index_v2(
         expected_byte_size=expected_index_byte_size,
         label="activation_index",
     )
-    document = _strict_json_bytes(payload, label="activation_index")
-    if payload != canonical_json_bytes(dict(document)):
-        _fail("noncanonical_index", "Activation Index v2 bytes are not canonical JSON.")
-    store, chunks, rows = _validate_index_document_v2(
-        document,
+    validated = validate_activation_index_v2_bytes(
+        payload,
+        canonicalization_contract=canonicalization_contract,
+        expected_index_sha256=expected_index_sha256,
+        expected_index_byte_size=expected_index_byte_size,
         expected_trajectory_id=expected_trajectory_id,
         expected_manifest_sha256=expected_manifest_sha256,
     )
+    store = validated.store_identity
+    chunks = validated.chunks
+    rows = validated.rows
     descriptors = {str(chunk["chunk_id"]): chunk for chunk in chunks}
     if set(descriptors) != set(chunk_bindings):
         _fail("chunk_coverage_mismatch", "Index and external inventory sets differ.")
@@ -691,12 +873,23 @@ def load_activation_index_v2(
 __all__ = [
     "ACTIVATION_INDEX_V2_FORMAT_VERSION",
     "ACTIVATION_STORE_V2_FORMAT_VERSION",
+    "PERSON_A_ACTIVATION_INDEX_V2_ARTIFACT_TYPE",
+    "PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT",
+    "PERSON_A_ACTIVATION_STORE_V2_PRODUCER_COMMIT",
+    "PERSON_A_ACTIVATION_STORE_V2_PRODUCER_SHA256",
+    "REGISTRY_V2_CANONICALIZATION_CONTRACT",
+    "REGISTRY_V2_RECORD_ARTIFACT_TYPE",
     "ActivationDispatchResult",
     "ActivationV2ConsumerError",
     "ExternalChunkBinding",
     "LoadedActivationIndexV2",
+    "ValidatedActivationIndexV2",
+    "canonical_json_bytes_for_artifact",
     "derive_visual_token_positions",
     "dispatch_activation_document",
     "external_chunk_bindings",
     "load_activation_index_v2",
+    "person_a_activation_index_v2_canonical_json_bytes",
+    "person_a_activation_index_v2_snapshot_digest",
+    "validate_activation_index_v2_bytes",
 ]
