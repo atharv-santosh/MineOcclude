@@ -42,7 +42,7 @@ from mineocclude.activations.store_v2 import (
     validate_activation_index_snapshot_v2,
 )
 
-RUNNER_VERSION = "person-a-phase6-single-pilot-sagemaker-runner-v0.1"
+RUNNER_VERSION = "person-a-phase6-single-pilot-sagemaker-runner-v0.2"
 REQUIRED_BRANCH = "role/person-a-model"
 PERSON_A_STARTING_AUTHORITY = "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
 PERSON_A_ACKNOWLEDGEMENT = "ca3f5695dc37f9f2c8066e323b25485c042b6cf7"
@@ -59,6 +59,12 @@ EXPECTED_ACTIVATION_ROW_COUNT = 4960
 HOOK_SITE = "decoder_layer_output_residual_stream"
 HIDDEN_WIDTH = 2048
 MODEL_CONFIG_PATH = "configs/700M_16f.yaml"
+EXPECTED_SAGEMAKER_MINEWORLD_ROOT = Path(
+    "/home/sagemaker-user/MineWorld-Upstream"
+)
+EXPECTED_SAGEMAKER_MODEL_CONFIG_PATH = (
+    EXPECTED_SAGEMAKER_MINEWORLD_ROOT / MODEL_CONFIG_PATH
+)
 MODEL_CONFIG_GIT_BLOB_SHA256 = (
     "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018"
 )
@@ -165,6 +171,59 @@ def _sha256_file(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def validated_physical_model_config_path(
+    *,
+    mineworld_root: Path,
+    git_blob_bytes: bytes,
+    expected_path: Path = EXPECTED_SAGEMAKER_MODEL_CONFIG_PATH,
+    expected_sha256: str = MODEL_CONFIG_GIT_BLOB_SHA256,
+) -> Path:
+    """Return only the exact ordinary config whose bytes match the Git blob."""
+
+    physical_path = mineworld_root / MODEL_CONFIG_PATH
+    if physical_path.is_symlink() or not physical_path.is_file():
+        _fail(
+            "model_config_physical_path_invalid",
+            "runtime model configuration must be an existing ordinary file",
+            step="preflight",
+        )
+    try:
+        resolved = physical_path.resolve(strict=True)
+    except OSError as error:
+        _fail(
+            "model_config_physical_path_invalid",
+            f"runtime model configuration cannot be resolved: {error}",
+            step="preflight",
+        )
+    if resolved != expected_path:
+        _fail(
+            "model_config_physical_path_invalid",
+            (
+                "runtime model configuration must resolve exactly to "
+                f"{expected_path}"
+            ),
+            step="preflight",
+        )
+    physical_bytes = resolved.read_bytes()
+    if physical_bytes != git_blob_bytes:
+        _fail(
+            "model_config_byte_mismatch",
+            "physical model configuration differs from frozen Git-object bytes",
+            step="preflight",
+        )
+    physical_sha256 = _sha256_bytes(physical_bytes)
+    if (
+        physical_sha256 != expected_sha256
+        or _sha256_bytes(git_blob_bytes) != expected_sha256
+    ):
+        _fail(
+            "model_config_identity_mismatch",
+            "physical and Git-object configuration hashes must match the freeze",
+            step="preflight",
+        )
+    return resolved
 
 
 def _canonical_document_bytes(value: Mapping[str, Any]) -> bytes:
@@ -494,6 +553,10 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
             "authoritative Git-blob model configuration hash differs",
             step="preflight",
         )
+    physical_model_config = validated_physical_model_config_path(
+        mineworld_root=arguments.mineworld_root,
+        git_blob_bytes=model_config_blob,
+    )
     file_hashes = {
         "main_checkpoint": _sha256_file(arguments.main_checkpoint),
         "vae_config": _sha256_file(arguments.vae_config),
@@ -580,6 +643,7 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
             "torch": torch.__version__,
         },
         "free_disk_bytes": free_disk,
+        "frozen_file_sha256": file_hashes,
         "git_commit": current_commit,
         "git_worktree_clean": True,
         "host": {
@@ -591,6 +655,10 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
         },
         "mineworld_commit": mineworld_commit,
         "model_config_git_blob_sha256": _sha256_bytes(model_config_blob),
+        "model_config_physical_path": str(physical_model_config),
+        "model_config_physical_sha256": _sha256_file(
+            physical_model_config
+        ),
         "nvidia_smi": nvidia.stdout.strip().splitlines(),
         "runner_version": RUNNER_VERSION,
         "seed": arguments.seed,
@@ -696,14 +764,14 @@ def step6_1_intake(context: RunContext) -> dict[str, Any]:
         context.arguments.mineworld_root,
         f"{MINEWORLD_REVISION}:{MODEL_CONFIG_PATH}",
     )
-    model_config_path = intake_root / "700M_16f.git-blob.yaml"
-    _exclusive_write(model_config_path, model_config_bytes)
+    model_config_provenance_path = intake_root / "700M_16f.git-blob.yaml"
+    _exclusive_write(model_config_provenance_path, model_config_bytes)
     context.state.update(
         {
             "accepted_manifest": accepted_manifest,
             "capture_package": package,
             "input_paths": materialized,
-            "model_config_path": model_config_path,
+            "model_config_provenance_path": model_config_provenance_path,
             "payloads": payloads,
         }
     )
@@ -714,6 +782,12 @@ def step6_1_intake(context: RunContext) -> dict[str, Any]:
         "capture_package_sha256": C_CAPTURE_PACKAGE_SHA256,
         "direct_input_hashes": observed,
         "input_root": str(intake_root),
+        "model_config_git_blob_sha256": _sha256_bytes(
+            model_config_bytes
+        ),
+        "model_config_provenance_path": str(
+            model_config_provenance_path
+        ),
         "pilot": SELECTED_PILOT,
         "status": "PASS",
     }
@@ -840,6 +914,14 @@ def _runtime_load_request(context: RunContext) -> Any:
     environment_receipt = (
         context.session_root / "runtime_preflight_receipt.json"
     )
+    model_config_blob = _git_object_bytes(
+        context.arguments.mineworld_root,
+        f"{MINEWORLD_REVISION}:{MODEL_CONFIG_PATH}",
+    )
+    physical_model_config_path = validated_physical_model_config_path(
+        mineworld_root=context.arguments.mineworld_root,
+        git_blob_bytes=model_config_blob,
+    )
     return adapter_module.RuntimeLoadRequest(
         schema_version=identity_module.SCHEMA_VERSION,
         runtime_id=f"{context.arguments.session_id}:runtime",
@@ -851,7 +933,7 @@ def _runtime_load_request(context: RunContext) -> Any:
         mineworld_source_revision=MINEWORLD_REVISION,
         modelscope_asset_revision=wave2.PINNED_ASSET_REVISION,
         mineworld_source_root=context.arguments.mineworld_root,
-        model_config_path=context.state["model_config_path"],
+        model_config_path=physical_model_config_path,
         main_checkpoint_path=context.arguments.main_checkpoint,
         vae_config_path=context.arguments.vae_config,
         vae_checkpoint_path=context.arguments.vae_checkpoint,

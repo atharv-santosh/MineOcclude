@@ -1,0 +1,34 @@
+{
+  "adapter_state_rehydration_from_prior_validated_bytes": true,
+  "combined_final_report_required": true,
+  "continuation_identity_inputs": [
+    "prior_final_report_sha256",
+    "person_a_repaired_commit",
+    "pilot",
+    "seed",
+    "main_checkpoint_sha256",
+    "model_config_sha256",
+    "preprocess_sha256",
+    "vae_config_sha256",
+    "vae_checkpoint_sha256"
+  ],
+  "continuation_output_must_be_distinct": true,
+  "execute_steps": [
+    "6.3",
+    "6.4",
+    "6.5"
+  ],
+  "expected_activation_row_count": 4960,
+  "fail_closed_on_existing_step6_4_output": true,
+  "pilot": "layout_00_ep9403",
+  "prepare_step6_6_handoff_only": true,
+  "prior_evidence_mutation_allowed": false,
+  "prior_inputs_reused_read_only": true,
+  "resume_start_step": "6.3",
+  "schema_version": "1.0",
+  "seed": 20260725,
+  "step6_1_reexecuted": false,
+  "step6_2_handler_called": false,
+  "step6_2_receipt_rewritten": false,
+  "step6_2_reexecuted": false
+}
