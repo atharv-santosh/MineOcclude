@@ -949,7 +949,7 @@ def _runtime_load_request(context: RunContext) -> Any:
 
 
 def step6_3_tokenize(context: RunContext) -> dict[str, Any]:
-    """Load the frozen runtime and build sixteen bounded FrameTokenMaps."""
+    """Load the frozen runtime and build bounded 16-frame contexts."""
 
     adapter_module = importlib.import_module(
         "mineocclude.models.mineworld_adapter"
@@ -1038,10 +1038,14 @@ def step6_3_tokenize(context: RunContext) -> dict[str, Any]:
                 step="6.3",
             )
         tokenized_windows.append(tokenized)
-    if len(tokenized_windows) != 16:
+    expected_context_count = (GLOBAL_MODEL_FRAME_COUNT + 15) // 16
+    if len(tokenized_windows) != expected_context_count:
         _fail(
             "context_count_mismatch",
-            "248 frames must produce exactly sixteen bounded contexts",
+            (
+                f"{GLOBAL_MODEL_FRAME_COUNT} frames must produce exactly "
+                f"{expected_context_count} bounded contexts"
+            ),
             step="6.3",
         )
     context.state.update(

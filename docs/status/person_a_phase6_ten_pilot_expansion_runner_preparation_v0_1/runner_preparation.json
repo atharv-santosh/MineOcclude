@@ -1,0 +1,96 @@
+{
+  "schema_id": "person-a-phase6-ten-pilot-expansion-runner-preparation-v0-1",
+  "schema_version": "1.0",
+  "runner_version": "person-a-phase6-ten-pilot-sagemaker-runner-v0.1",
+  "runner_files": {
+    "multi_pilot_runner": {
+      "byte_size": 42405,
+      "path": "scripts/run_person_a_phase6_ten_pilot_sagemaker.py",
+      "sha256": "0584a886b23a9b1a851dfb00ed91f8804501c4cc1615f9928abed0756ecf9cf2"
+    },
+    "sagemaker_wrapper": {
+      "byte_size": 2059,
+      "path": "scripts/run_person_a_phase6_ten_pilot_sagemaker.sh",
+      "sha256": "bd5507f5645743998d9ec80b3f47960fa60eed89dcabdedd373377d56a79a6ce"
+    },
+    "single_pilot_engine": {
+      "byte_size": 60304,
+      "path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+      "sha256": "52738bfba8ab94625a79fe6f6ebd1475a3f0462265c15d0f01ae9f6b691f5745"
+    },
+    "focused_tests": {
+      "byte_size": 9348,
+      "path": "tests/models/test_person_a_phase6_ten_pilot_sagemaker_runner_v0_1.py",
+      "sha256": "f8ab6a7d9de72cb6128c7cada827f66bba56419bf1091e1bc8717eacef4ced9d"
+    }
+  },
+  "sagemaker_command": "tmux new-session -d -s person-a-phase6-ten-pilot 'bash scripts/run_person_a_phase6_ten_pilot_sagemaker.sh'",
+  "execution_plan": {
+    "additional_pilot_count": 9,
+    "authorized_step_range_required": "6.1-6.5",
+    "combined_expected_activation_row_count": 37480,
+    "deterministic_order": true,
+    "device": "cuda:0",
+    "execution_host": "aws_sagemaker_linux_gpu",
+    "fail_closed_at_first_failed_step_per_pilot": true,
+    "later_pilots_execute_after_failure": false,
+    "seed": 20260725,
+    "successful_earlier_pilots_preserved": true,
+    "total_pilot_count": 10
+  },
+  "ordered_pilot_ids": [
+    "layout_00_ep9403",
+    "layout_00_ep9441",
+    "layout_01_ep9405",
+    "layout_01_ep9442",
+    "layout_02_ep9407",
+    "layout_02_ep9432",
+    "layout_03_ep9404",
+    "layout_03_ep9443",
+    "layout_04_ep9406",
+    "layout_04_ep9444"
+  ],
+  "additional_pilot_ids": [
+    "layout_00_ep9441",
+    "layout_01_ep9405",
+    "layout_01_ep9442",
+    "layout_02_ep9407",
+    "layout_02_ep9432",
+    "layout_03_ep9404",
+    "layout_03_ep9443",
+    "layout_04_ep9406",
+    "layout_04_ep9444"
+  ],
+  "no_wall_control_pilot_ids": [
+    "layout_00_ep9441",
+    "layout_01_ep9442",
+    "layout_02_ep9432",
+    "layout_03_ep9443",
+    "layout_04_ep9444"
+  ],
+  "existing_pilot": {
+    "activation_index_byte_size": 32502224,
+    "activation_index_sha256": "473efef1eb52514c097051ec8f4501cb621f92c9ceaeb847249c7e3ae042ad55",
+    "activation_row_count": 4960,
+    "reextraction_authorized": false,
+    "reuse_required": true,
+    "trajectory_id": "layout_00_ep9403"
+  },
+  "output_contract": {
+    "activation_store_format": "person-a-activation-store-v2",
+    "combined_multi_pilot_activation_index": true,
+    "exact_per_pilot_inventories": true,
+    "large_artifacts_outside_git": true,
+    "person_b_step_6_6_positive_control_handoff": true,
+    "person_e_provenance_handoff": true,
+    "preserve_context_local_pair_identity": true,
+    "preserve_global_model_frame_identity": true
+  },
+  "authorization_boundaries": {
+    "future_registry_v2_output_acceptance_authorized": false,
+    "hidden_state_interpretation_authorized": false,
+    "person_a_expansion_execution_authorized": false,
+    "step_6_6_complete": false,
+    "u4_output_inspected": false
+  }
+}
