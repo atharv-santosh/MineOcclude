@@ -1,0 +1,52 @@
+{
+  "defects": [
+    {
+      "finding": "Production run mode raised ProductionRunnerError('real execution is not implemented') unconditionally for every family.",
+      "id": 1,
+      "repair": "Added src/mineocclude/baselines/eight_family_runner.py (compute_family_rows/fit_and_export_family) and run_production() in the CLI: real fit/export/persist/resume/fail-closed logic dispatching to each family's existing, already-tested D implementation, using each module's own frozen seed/configuration defaults unchanged.",
+      "verification": "Exercised end-to-end against all 8 families with synthetic contexts/targets (never real data); every produced document independently re-validates via validate_baseline_document_v0_2. tests/baselines/test_eight_family_runner.py (10 tests) and test_baseline_family_production_cli.py's run_production tests confirm fit/persist/resume/fail-closed behavior.",
+      "verified_by": "Direct read of scripts/run_person_d_step4_1_eight_family_production.py at c089d5f before writing any fix."
+    },
+    {
+      "finding": "PERSON_D_IMPLEMENTATION_COMMIT = '853e0acadf050a0b1f318b399b524e57379d03bf' -- the historical branch-starting authority from before the exporter was even written, not the commit whose modules this script actually imports.",
+      "id": 2,
+      "repair": "Renamed to PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT and set to 'fd9302e5d218193211f2f96986ca32dc1a365e66' -- the commit that actually introduced baseline_family_input_v0_2.py, eight_family_execution_manifest.py, and frame_handoff_v0_2.py.",
+      "verification": "test_exporter_commit_is_the_real_implementation_not_the_historical_authority explicitly asserts the new value and that it differs from the old one.",
+      "verified_by": "Direct read of the constant's value at c089d5f; cross-checked that 853e0ac predates baseline_family_input_v0_2.py's existence entirely (that module was first added in fd9302e)."
+    },
+    {
+      "finding": "No branch, HEAD, ancestor, or clean-worktree check existed anywhere in main() or elsewhere in the script.",
+      "id": 3,
+      "repair": "Added resolve_git_facts (impure, shells to git) and verify_branch_and_authorization (pure, directly tested), requiring simultaneously: branch == role/person-d-baselines; clean worktree; exporter commit is an ancestor of HEAD; HEAD equals the hash recorded in docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json (this file, committed in this same evidence package, citing 5cef66e -- the code-repair commit itself. This is deliberately a one-commit-behind authorization, refreshed only by an explicit follow-up commit before real execution -- see that file's own note for why a commit cannot cite its own hash).",
+      "verification": "9 dedicated authorization tests, including explicit rejection of the old historical authority (853e0ac) as a HEAD value, and a resolve_git_facts test against the real repository confirming branch/ancestor facts are read correctly.",
+      "verified_by": "Grepped the full c089d5f script for 'branch', 'HEAD', 'git status', 'ancestor' -- zero matches."
+    },
+    {
+      "finding": "run_preflight parsed the frame manifest's JSON content and trusted it directly; no raw-byte hash check against PERSON_A_FRAME_MANIFEST_SHA256 existed before that trust.",
+      "id": 4,
+      "repair": "Added frame_handoff_v0_2.verify_frame_manifest_raw_bytes(path), called first in run_preflight before any JSON parsing.",
+      "verification": "test_preflight_verifies_raw_bytes_before_trusting_manifest_contents (happy path) and test_preflight_fails_closed_on_a_raw_byte_tampered_manifest (a single appended byte after the expected hash was recorded correctly fails closed).",
+      "verified_by": "Direct read of run_preflight at c089d5f: it called frame_manifest_path.read_text() then json.loads(), with the file's expected SHA-256 only ever embedded as a literal constant inside build_frame_manifest_direct_input_reference's *output* reference, never independently verified against the actual local file."
+    },
+    {
+      "finding": "verify_frame_manifest_records only checked the manifest's own internal declared fields (format validity, non-duplication) -- it never read an actual external frame payload file to confirm the manifest's claims about it.",
+      "id": 5,
+      "repair": "Added frame_handoff_v0_2.verify_frame_payloads_on_disk/FramePayloadVerificationResult: for every record, resolves output_relative_path, requires the file to exist, re-reads its actual bytes, and requires actual byte size and SHA-256 to equal the manifest's declared values, plus identity (global_frame_identity, target_binding.target_id, fold_binding.fold_idx) and frozen preprocessing consistency (dtype/layout/color_order/payload_format/shape, taken from Person A's own committed sample record). Wired into run_preflight via new --frame-root/--verify-payloads CLI flags, with the exact required aggregate counters (expected/actual/missing/duplicate/size_mismatch/hash_mismatch/identity_mismatch/preprocessing_mismatch).",
+      "verification": "5 dedicated tests: full 1,695-record synthetic manifest all-clear, missing file, changed byte size, changed SHA-256, duplicate frame identity -- each independently fails closed with the correct counter incremented.",
+      "verified_by": "Direct read of verify_frame_manifest_records at c089d5f: no filesystem access to any path outside the manifest file itself."
+    }
+  ],
+  "person_b_schema_typo_now_fixed_upstream": {
+    "action_required": "none -- Person D's code already used the correct value; this just confirms Person B's own schema file now agrees.",
+    "finding_from_prior_preparation": "person_b_baseline_input_v0_2.schema.json's fold_manifest_hash const was a corrupted 62-character string.",
+    "person_b_fix_commit": "4e0e0f49d4642cf069de8c66c3a8fee47806c4b0",
+    "verified": "git show 4e0e0f4 -- schemas/analysis/person_b_baseline_input_v0_2.schema.json shows the exact 2-character diff correcting it to the same 64-character value Person D's own FROZEN_DIRECT_INPUTS already used independently."
+  },
+  "prior_runner_commit_audited": "c089d5f8451abb94ac3a9daa1642671251d4d39d",
+  "record_date": "2026-08-01",
+  "repair_commit": "5cef66e92dc8ea5fab68bbf16b51608c0173ebeb",
+  "schema_id": "person-d-phase4-step4-1-eight-family-production-v0-2-defect-repair-log",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}
