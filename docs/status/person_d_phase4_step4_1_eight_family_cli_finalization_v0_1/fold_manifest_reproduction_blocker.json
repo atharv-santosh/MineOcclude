@@ -1,0 +1,48 @@
+{
+  "affected_code_path": "mineocclude.baselines.export.attach_b_fold_assignments -> mineocclude.probes.splits.validate_fold_manifest -> mineocclude.probes.splits._assign_validated_rows",
+  "artifact_hash_verification_is_unaffected": "The real ten_pilot_frame_fold_manifest.json's raw bytes match FROZEN_DIRECT_INPUTS['fold_manifest'] exactly (sha256 53ca938c...738d71, 742601 bytes) -- this is not a hash or transport problem.",
+  "consumers_currently_blocked": [
+    "mineocclude.baselines.production_input_ingest.build_all_trajectory_contexts (this pass's new real-data ingestion path)",
+    "any future Person D real v0.1 or v0.2 export that calls export.attach_b_fold_assignments against this real fold manifest"
+  ],
+  "discovered_by": "A real (non-scientific) dry run of build_all_trajectory_contexts against the actual materialized, hash-verified production fold manifest (docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json at commit c9a519b). No baseline was fit and no metric was computed; this only exercises fold-manifest structural validation.",
+  "exact_reproduction": {
+    "declared_layout_assignments": {
+      "layout_00": 1,
+      "layout_01": 2,
+      "layout_02": 4,
+      "layout_03": 0,
+      "layout_04": 3
+    },
+    "ds_recomputed_layout_assignments": {
+      "layout_00": 0,
+      "layout_01": 1,
+      "layout_02": 2,
+      "layout_03": 3,
+      "layout_04": 4
+    },
+    "inputs_confirmed_identical": {
+      "analysis_config_version": "person-b-phase1-v0.2 (matches both the manifest and D's own load_core_analysis_config)",
+      "config_hash": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab (matches both the manifest and D's own hash_core_analysis_config)",
+      "fold_schema_version": "person-b-fold-v0.1 (matches both)",
+      "n_splits": 5,
+      "per_layout_admitted_row_counts": {
+        "layout_00": 409,
+        "layout_01": 387,
+        "layout_02": 335,
+        "layout_03": 292,
+        "layout_04": 272
+      },
+      "seed": 20260719
+    }
+  },
+  "finding": "mineocclude.probes.splits.validate_fold_manifest rejects the real, hash-verified, production ten_pilot_frame_fold_manifest.json with GroupedSplitError('Fold memberships differ from the deterministic seeded assignment.'). This is not a data-corruption or hash problem -- every input the check depends on (config_hash, analysis_config_version, fold_schema_version, n_splits, seed, per-layout row counts) matches exactly between the real manifest and D's own frozen configuration. The check fails because D's own _assign_validated_rows reproduction genuinely computes a different fold-to-layout assignment than what Person B's real production manifest declares.",
+  "recommended_next_step": "Escalate to whoever owns mineocclude/probes/splits.py's fold-assignment algorithm (likely Person B, per that module's own docstring 'Deterministic layout-grouped fold assignment for Person B analyses') to reconcile _assign_validated_rows against the real algorithm Person B's production pipeline actually used, then re-run this exact dry run (build_all_trajectory_contexts against the real materialized fold manifest) to confirm agreement before any real baseline execution is authorized.",
+  "record_date": "2026-08-01",
+  "root_cause_characterization": "_assign_validated_rows sorts layouts by (-row_count, tie_breaker(seed, layout_id)) and then greedily assigns each, in that order, to the currently-least-loaded fold (ties on load broken by lowest fold index). The seed-dependent tie_breaker only ever changes the outcome when two layouts share the exact same row count. All five real layout counts here are strictly distinct (409 > 387 > 335 > 292 > 272), so the tie_breaker never engages and the algorithm degenerates to a fixed, seed-invariant rank order (confirmed directly: three different seed values, including the real one, all produce the identical {layout_00:0, layout_01:1, layout_02:2, layout_03:3, layout_04:4} assignment). Person B's real production assignment is a non-trivial permutation of that rank order ({1,2,4,0,3}), meaning Person B's actual real fold-assignment procedure is genuinely seed-sensitive in a way this shared reproduction algorithm structurally cannot be whenever counts are distinct -- the common case, not an edge case.",
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-fold-manifest-reproduction-blocker",
+  "schema_version": "1.0",
+  "scope_note": "src/mineocclude/probes/splits.py is shared, pre-existing, foundational code (not introduced or modified by this pass, and not exclusively Person D-owned) that other real and synthetic pathways may depend on. This preparation deliberately did not alter it: the correct fix requires knowing Person B's actual real seeded-assignment algorithm, which is not recoverable from the committed manifest alone, and unilaterally changing shared cross-validation-adjacent code is outside the scope authorized for this CLI-wiring pass (which must not alter fold assignments or configurations).",
+  "u4_output_inspected": false,
+  "unresolved": true
+}

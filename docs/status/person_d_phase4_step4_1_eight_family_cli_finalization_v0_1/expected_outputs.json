@@ -1,0 +1,89 @@
+{
+  "combined_completion_state": "<output-root>/run_state.json (schema_version 1.0, one entry per family_id: status/output_path/targets)",
+  "output_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+  "per_family_outputs": [
+    {
+      "family_id": "last_seen",
+      "output_files": [
+        "last_seen__mu_oracle_blocks.json"
+      ],
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "family_id": "constant_velocity",
+      "output_files": [
+        "constant_velocity__mu_oracle_blocks.json"
+      ],
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "family_id": "grouped_shuffled",
+      "output_files": [
+        "grouped_shuffled__log_sigma_oracle.json",
+        "grouped_shuffled__mu_oracle_blocks.json"
+      ],
+      "targets": [
+        "log_sigma_oracle",
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "family_id": "time_only",
+      "output_files": [
+        "time_only__log_sigma_oracle.json"
+      ],
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    },
+    {
+      "family_id": "explicit_feature",
+      "output_files": [
+        "explicit_feature__mu_oracle_blocks.json"
+      ],
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "family_id": "raw_pixel",
+      "output_files": [
+        "raw_pixel__mu_oracle_blocks.json"
+      ],
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "family_id": "visible_history_q",
+      "output_files": [
+        "visible_history_q__log_sigma_oracle.json"
+      ],
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    },
+    {
+      "family_id": "known_q_analytic",
+      "output_files": [
+        "known_q_analytic__log_sigma_oracle.json"
+      ],
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    }
+  ],
+  "per_output_file_schema": "person-b-baseline-input-v0.2 (validated by mineocclude.baselines.baseline_family_input_v0_2.validate_baseline_document_v0_2 before being written; a document that fails validation is never persisted)",
+  "record_date": "2026-08-01",
+  "resume_semantics": {
+    "force": "explicitly authorizes refitting every family regardless of run_state.json (--resume force); still never touches a family's output unless that same family is refit",
+    "resume_default": "a family already recorded as completed is skipped only if its output file still exists on disk and still independently re-validates; otherwise it is refit"
+  },
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-expected-outputs",
+  "schema_version": "1.0",
+  "total_output_files": 9
+}

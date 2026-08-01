@@ -1,0 +1,47 @@
+{
+  "capture_package_provenance_note": {
+    "action_taken": "materialize_git_committed_artifact for every capture package now reads from role/person-c-data at PERSON_C_EXPANSION_ACCEPTANCE_COMMIT, not from role/person-b-analysis.",
+    "finding": "Person B's own FROZEN_SOURCE_CONTEXTS / source_context_manifest.json capture_package identity (path/sha256/byte_size) for all 10 pilots does not match the content actually committed at that same path on Person B's own branch (role/person-b-analysis). It does match, byte-for-byte, the content committed at the same path on Person C's branch (role/person-c-data) at the exact commit Person B's own source_context_manifest.json already separately cites as person_c_expansion_acceptance.",
+    "not_a_blocker": "Person C is the trajectory contract's designated producer of this data (docs/contracts/trajectory_v1.md); binding to Person C's branch at the commit Person B itself cites is correct, not a workaround.",
+    "verification": "Independently re-hashed all 10 real committed capture_package_v0_1.json files at role/person-c-data:c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960 against every FROZEN_SOURCE_CONTEXTS entry's declared sha256/byte_size: 10/10 exact matches. The same 10 paths on role/person-b-analysis's own tree: 10/10 mismatches (both sha256 and byte_size)."
+  },
+  "claims": {
+    "no_baseline_definition_target_fold_family_order_seed_configuration_pilot_membership_source_identity_or_acceptance_criterion_was_altered": true,
+    "no_metric_was_computed": true,
+    "no_person_a_frame_artifact_was_modified": true,
+    "no_person_b_prediction_was_modified": true,
+    "no_scientific_baseline_was_executed": true,
+    "no_u4_output_was_inspected": true,
+    "production_run_mode_was_not_executed": true
+  },
+  "cli_finalization_commit": "bb2ebf7947c92c814dae85fc9cef29fef04e4c6f",
+  "materialize_dry_run_performed_outside_the_repository": {
+    "note": "run_materialize was called directly (not via the CLI's argv) against a scratch directory outside this repository, using this real, already-fetched history, to prove the mechanics work end-to-end. This wrote no files inside the repository and fit no baseline.",
+    "result": "MATERIALIZE_PASSED for all 5 committed artifact types (fold manifest, oracle target manifest, source-context manifest, Person A's frame manifest, and all 10 Person C capture packages)."
+  },
+  "person_a_branch": "role/person-a-model",
+  "person_a_frame_handoff_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+  "person_b_branch": "role/person-b-analysis",
+  "person_b_v0_2_contract_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+  "person_b_v0_2_production_ratification_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+  "person_b_v0_2_schema_correction_commit": "4e0e0f49d4642cf069de8c66c3a8fee47806c4b0",
+  "person_c_branch": "role/person-c-data",
+  "person_c_expansion_acceptance_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+  "person_d_branch": "role/person-d-baselines",
+  "person_d_prior_runner_commit": "5cef66e92dc8ea5fab68bbf16b51608c0173ebeb",
+  "person_d_prior_runner_preparation_commit": "b2ddba5a3033a0b4cd1f2a302e885e915174a3aa",
+  "record_date": "2026-08-01",
+  "required_baseline_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "verification_method": "git fetch origin --prune; git show <commit>:<path> | sha256sum / wc -c; direct field/code-level inspection; a real (repo-external, read-only-against-git) run_materialize dry run; a real (frame-payload-free) build_all_trajectory_contexts dry run against the actual materialized fold/oracle-target/capture-package artifacts. All performed 2026-08-01."
+}
