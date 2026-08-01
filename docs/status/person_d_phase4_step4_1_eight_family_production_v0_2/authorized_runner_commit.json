@@ -1,7 +1,7 @@
 {
   "authorized_branch": "role/person-d-baselines",
-  "authorized_runner_commit": "bb2ebf7947c92c814dae85fc9cef29fef04e4c6f",
-  "note": "This is the single source of truth scripts/run_person_d_step4_1_eight_family_production.py::load_authorized_runner_commit reads at execution time. It cites bb2ebf7 (the 'Wire Person D Step 4.1 eight-family production CLI' commit, superseding the prior 5cef66e reference) because that is the exact commit whose code this authorization record was written to accompany -- it could not be written inside that same commit, since a commit cannot embed its own hash. Whoever deploys a real execution must refresh authorized_runner_commit to the exact commit being deployed immediately beforehand if this branch advances further; this file deliberately does not auto-track HEAD, so a stale or forgotten update fails closed rather than silently permitting drift.",
+  "authorized_runner_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5",
+  "note": "This is the single source of truth scripts/run_person_d_step4_1_eight_family_production.py::load_authorized_runner_commit reads at execution time. It cites 4915252 (the 'Implement Person D signed explicit production fold validation' commit, superseding the prior bb2ebf7 and 5cef66e references) because that is the exact commit whose code this authorization record was written to accompany -- it could not be written inside that same commit, since a commit cannot embed its own hash. Whoever deploys a real execution must refresh authorized_runner_commit to the exact commit being deployed immediately beforehand if this branch advances further; this file deliberately does not auto-track HEAD, so a stale or forgotten update fails closed rather than silently permitting drift.",
   "record_date": "2026-08-01",
   "schema_id": "person-d-phase4-step4-1-eight-family-production-v0-2-authorized-runner-commit",
   "schema_version": "1.0"

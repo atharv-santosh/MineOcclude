@@ -1,0 +1,19 @@
+{
+  "cli_not_executed_locally": true,
+  "cli_path": "scripts/run_person_d_step4_1_eight_family_production.py",
+  "environment": {
+    "device": "cpu",
+    "no_u4_access": true,
+    "python_requires": ">=3.10",
+    "seed_source": "configs/analysis/core.yaml"
+  },
+  "materialize_command": "python scripts/run_person_d_step4_1_eight_family_production.py materialize --materialize-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1",
+  "preflight_command": "python scripts/run_person_d_step4_1_eight_family_production.py preflight --frame-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/preprocessed_frame_manifest.json --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --fold-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/ten_pilot_frame_fold_manifest.json --verify-payloads --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+  "record_date": "2026-08-01",
+  "run_command": "python scripts/run_person_d_step4_1_eight_family_production.py run --frame-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/preprocessed_frame_manifest.json --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --fold-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/ten_pilot_frame_fold_manifest.json --target-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/production_oracle_target_manifest.json --source-context-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/source_context_manifest.json --source-context-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1 --analysis-config-path configs/analysis/core.yaml --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1 --resume resume",
+  "run_command_status": "code_path_verified_against_real_fold_and_target_manifests -- the fold_manifest_reproduction_blocker.json blocker is resolved (see real_manifest_regression_result.json); the only remaining requirement for a literal real execution is the approved SageMaker environment itself (Person A's real frame payloads at --frame-root, none of which exist on this development machine). No code-level blocker remains as of this commit.",
+  "schema_id": "person-d-phase4-step4-1-signed-fold-validation-v0-1-production-command",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}
