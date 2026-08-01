@@ -1,0 +1,149 @@
+{
+  "baseline_execution_authorized": false,
+  "current_person_d_behavior": {
+    "affected_call_path": "mineocclude.baselines.production_input_ingest.build_all_trajectory_contexts -> mineocclude.baselines.export.attach_b_fold_assignments -> mineocclude.probes.splits.validate_fold_manifest -> mineocclude.probes.splits._assign_validated_rows",
+    "current_reproduction_by_ordered_layout": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "current_reproduction_is_authoritative": false,
+    "real_manifest_result": "rejected",
+    "rejection": "GroupedSplitError: Fold memberships differ from the deterministic seeded assignment."
+  },
+  "exact_test_vectors": [
+    {
+      "expected_fold_by_ordered_layout": [
+        1,
+        2,
+        4,
+        0,
+        3,
+        4
+      ],
+      "layout_row_counts": [
+        507,
+        502,
+        335,
+        524,
+        418,
+        170
+      ],
+      "ordered_layout_ids": [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04",
+        "layout_05"
+      ],
+      "test_vector_id": "full_prejoin_six_layout_generation"
+    },
+    {
+      "expected_historical_subset_reproduction": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "expected_signed_assignment": [
+        1,
+        2,
+        4,
+        0,
+        3
+      ],
+      "layout_row_counts": [
+        409,
+        387,
+        335,
+        292,
+        272
+      ],
+      "ordered_layout_ids": [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04"
+      ],
+      "test_vector_id": "production_subset_preserves_prejoin_mapping"
+    }
+  ],
+  "final_person_d_execution_authorization_issued": false,
+  "fold_contract_version": "person-b-step4-1-production-fold-contract-v0.1",
+  "fold_manifest": {
+    "byte_size": 742601,
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+    "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+  },
+  "person_d_execution_ready": false,
+  "person_d_patch_required": true,
+  "producing_contract_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+  "required_person_d_behavior": [
+    "read the exact contract version from this committed interface and reject unknown versions",
+    "for person-b-ten-pilot-frame-fold-v0.1 dispatch to signed explicit mapping validation instead of subset regeneration",
+    "verify exact fold and target literal byte sizes and SHA-256 values before parsing",
+    "validate the exact accepted pilot sequence, row identities, counts, grouping, signed layout mapping, source identities and row-mapping digest",
+    "retain the existing historical validate_fold_manifest behavior for manifests without the production format version",
+    "never rewrite or regenerate the accepted production fold manifest",
+    "run the exact real-manifest regression before requesting final execution authorization",
+    "keep baseline execution blocked until all compatibility checks pass"
+  ],
+  "required_person_d_patch_points": [
+    {
+      "current_byte_size": 8772,
+      "current_commit": "b260561143d72d69428f45c1f210bdf117f9803d",
+      "current_sha256": "f0d43fa53da783899b911cada668a997c58a0ec796d2280941be8f08fde9b20c",
+      "function": "attach_b_fold_assignments",
+      "path": "src/mineocclude/baselines/export.py",
+      "required_change": "explicitly dispatch production fold format/version to the signed explicit mapping validator; keep the historical path unchanged for historical formats"
+    },
+    {
+      "current_byte_size": 20281,
+      "current_commit": "b260561143d72d69428f45c1f210bdf117f9803d",
+      "current_sha256": "f9e47cade036d8a88b8188981b40fd00d18c899606d309f57532aad64c0bf73c",
+      "function": "build_all_trajectory_contexts",
+      "path": "src/mineocclude/baselines/production_input_ingest.py",
+      "required_change": "propagate the exact production fold contract version and use the validated explicit mapping without rebalancing"
+    },
+    {
+      "current_byte_size": 17560,
+      "current_commit": "b260561143d72d69428f45c1f210bdf117f9803d",
+      "current_sha256": "748d4135ccfe94c23f891ecb43ca7139cb075069fdf16f8126f8e2440a6f0510",
+      "function": "validate_fold_manifest",
+      "path": "src/mineocclude/probes/splits.py",
+      "required_change": "do not change historical semantics; either add an explicit production-format dispatch or bypass this historical helper only through the versioned production validator"
+    },
+    {
+      "current_byte_size": 36642,
+      "current_commit": "b260561143d72d69428f45c1f210bdf117f9803d",
+      "current_sha256": "3cf480abd9a6586b737b4907647eb5ec4a1e14a3165345fb256b527352a4cad0",
+      "function": "build_real_run_inputs",
+      "path": "scripts/run_person_d_step4_1_eight_family_production.py",
+      "required_change": "bind and verify the exact contract version and fail closed before any family executes when the production interface is absent or invalid"
+    }
+  ],
+  "required_reference_functions": [
+    "mineocclude.probes.production_fold_contract_v0_1.validate_production_fold_manifest_bytes",
+    "mineocclude.probes.production_fold_contract_v0_1.validate_production_fold_document",
+    "mineocclude.probes.production_fold_contract_v0_1.validate_fold_target_binding_bytes",
+    "mineocclude.probes.production_fold_contract_v0_1.row_mapping_sha256"
+  ],
+  "schema_id": "person-b-step4-1-fold-validation-interface-v0-1-person-d-compatibility-contract",
+  "schema_version": "1.0",
+  "target_manifest": {
+    "byte_size": 4934874,
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+    "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "u4_output_inspected": false,
+  "unresolved_blockers": [
+    "Person D commit b260561143d72d69428f45c1f210bdf117f9803d rejects the exact real fold manifest",
+    "Person D has not yet implemented the versioned signed-explicit-mapping dispatch",
+    "Person D has not yet passed the exact real-manifest regression under the new contract"
+  ]
+}
