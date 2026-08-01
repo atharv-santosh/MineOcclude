@@ -1,0 +1,293 @@
+{
+  "authorities": {
+    "person_a_ten_pilot_completion": "55776dc88302b89b52eef483a710fbf6811cf536",
+    "person_b_baseline_input_v0_2": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+    "person_b_step4_1_production_ratification": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+    "person_b_step6_6_pass": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+    "person_c_ten_pilot_acceptance": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+    "person_d_recorded_starting_authority": "853e0acadf050a0b1f318b399b524e57379d03bf",
+    "person_e_phase6_acceptance": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+    "person_e_phase6_to_step4_1_handoff": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7"
+  },
+  "bindings": {
+    "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+    "fold_manifest": {
+      "byte_size": 742601,
+      "git_blob_oid": "2bf314b91fecdea55b8170837932803a2a950d70",
+      "git_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "role": "person_b",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+    },
+    "person_b_predictions_direct_input_to_person_d": false,
+    "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+    "target_manifest": {
+      "byte_size": 4934874,
+      "git_blob_oid": "017553803c56587767bccf19192ae3f7d72c04b5",
+      "git_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+      "role": "person_b",
+      "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+    }
+  },
+  "person_a_contract_sources": [
+    {
+      "byte_size": 60304,
+      "git_blob_oid": "c10f3092678ae331040d2c4a47c963224be45879",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+      "role": "person_a",
+      "sha256": "52738bfba8ab94625a79fe6f6ebd1475a3f0462265c15d0f01ae9f6b691f5745"
+    },
+    {
+      "byte_size": 42405,
+      "git_blob_oid": "f97db3bb39d74b7501959944709ae3b9129adfd9",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "scripts/run_person_a_phase6_ten_pilot_sagemaker.py",
+      "role": "person_a",
+      "sha256": "0584a886b23a9b1a851dfb00ed91f8804501c4cc1615f9928abed0756ecf9cf2"
+    },
+    {
+      "byte_size": 50914,
+      "git_blob_oid": "035554f8a1668ed043efcc5bd965e58ee3a6baa7",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "src/mineocclude/activations/store_v2.py",
+      "role": "person_a",
+      "sha256": "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575"
+    },
+    {
+      "byte_size": 62055,
+      "git_blob_oid": "4a9bf6b0bfd2573c9f40fcea7b727813525ee564",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "src/mineocclude/models/mineworld_adapter.py",
+      "role": "person_a",
+      "sha256": "0d8f55fbd24a1552bd9242b3a4554f7cdc15240b24865904e2f77446128516a5"
+    },
+    {
+      "byte_size": 36608,
+      "git_blob_oid": "7bac2d47a9b1ecb7d9326b543e78f39c5ede3a7f",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+      "role": "person_a",
+      "sha256": "e165dad8f8fb53087da08668b4687c27576d6c7e680300e6577ea35e18d3e076"
+    },
+    {
+      "byte_size": 44435,
+      "git_blob_oid": "49b2282dc179b3da3546fd817992e02518ddd8cb",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "src/mineocclude/models/_mineworld_adapter_wave4.py",
+      "role": "person_a",
+      "sha256": "88d26a6a0272ce79e5fdb7dff716ae9d6b27cc4c764c4003db08f67aa4a3272b"
+    },
+    {
+      "byte_size": 2405,
+      "git_blob_oid": "dbb8c168a00e04fc3fed9cbb16ae7aceff56524f",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/artifact_manifest.json",
+      "role": "person_a",
+      "sha256": "b5d7ccccfcc2bc2a3cca6887fa79487305b8652a5c3952ecd90847af15a29b67"
+    },
+    {
+      "byte_size": 2130,
+      "git_blob_oid": "2f64b7b741e6b6dbca8798d3e0a5b06cacb35366",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/completion_report.json",
+      "role": "person_a",
+      "sha256": "5602725d839f8c1521cf6272a2d09c8fe8c9e29766f0555c0b1b8f0bf23e44ce"
+    }
+  ],
+  "person_b_v0_2_contract_sources": [
+    {
+      "byte_size": 2945,
+      "git_blob_oid": "2e693ceceb44f7fb944471ed44b4b0d29459b043",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/authority_binding.json",
+      "role": "person_b",
+      "sha256": "7a3d8d0f821d2aff4533a605629b1f528dd93e48a3157f5266760a9e6bccd149"
+    },
+    {
+      "byte_size": 3863,
+      "git_blob_oid": "7c6dfb556d74814116d2fb09c312871976b80ad3",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/baseline_family_contract.json",
+      "role": "person_b",
+      "sha256": "78eb8e7f40ae60ff69f14d124ca019211cb31fe3f59a2e035c7bd399c7b81ab1"
+    },
+    {
+      "byte_size": 960,
+      "git_blob_oid": "85241ba7c0632c9310a7477f0a3122d271aa9679",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/contract_ratification.json",
+      "role": "person_b",
+      "sha256": "c6b72e2d52d865e8d11a7372554d71ef0b0afe4acbacb3e06cd942c397ed7d28"
+    },
+    {
+      "byte_size": 2401,
+      "git_blob_oid": "89cc8067a67e1d2be6edf13d7f9ba66385cfa900",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/execution_blocker_receipt.json",
+      "role": "person_b",
+      "sha256": "7660290d401c4c78d70f19937f51b7f3a55231aea07f915d546653e9ab9f9ebb"
+    },
+    {
+      "byte_size": 4654,
+      "git_blob_oid": "bded41082a83db6f06e40b87a8618020a8845639",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+      "role": "person_b",
+      "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+    },
+    {
+      "byte_size": 741,
+      "git_blob_oid": "c0be04eb78bd10186429ada9b836aaef8a7947ba",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/validation_receipt.json",
+      "role": "person_b",
+      "sha256": "e5473631578a6e3f89e4def1117887301242da19bd0735ff489a6ff31898ac20"
+    },
+    {
+      "byte_size": 4109,
+      "git_blob_oid": "b4d9ea17400b808573071de1c7722e60373ff75b",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "schemas/analysis/person_b_baseline_input_v0_2.schema.json",
+      "role": "person_b",
+      "sha256": "6feff0e747705eadd120c9cd710133c83325b2e0d6d083903867348363654b23"
+    },
+    {
+      "byte_size": 4002,
+      "git_blob_oid": "6a99b1b241d6b080612cfb765fe57450877cf0ba",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "scripts/validate_person_b_step4_1_baseline_family_inputs_v0_2.py",
+      "role": "person_b",
+      "sha256": "2a097be55d9a0e03967ccb21ae573b055c9156d140fc82c4ccc284f915f1b072"
+    },
+    {
+      "byte_size": 24592,
+      "git_blob_oid": "c42408bbc3f794a50fa0395dbe9aa81466c01340",
+      "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "path": "src/mineocclude/contracts/baseline_family_inputs.py",
+      "role": "person_b",
+      "sha256": "26bc822c1fc9a50111ff18dda1f68e230c0e0a972ba9c14ccbfc962ba60d2103"
+    }
+  ],
+  "person_d_contract_sources": [
+    {
+      "byte_size": 8431,
+      "git_blob_oid": "b6b33fdb0ef05f2eba34eab63b8ed59ed4654089",
+      "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+      "path": "docs/baselines/person_d_phase0.md",
+      "role": "person_d",
+      "sha256": "affaa628339922e73bd37ffd491b01aeaaf52f197410db60f083ffddce9851a6"
+    },
+    {
+      "byte_size": 9617,
+      "git_blob_oid": "3ff4321eeadcc1b066ebbdfcfc677be4983a6a16",
+      "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+      "path": "docs/baselines/person_d_phase1.md",
+      "role": "person_d",
+      "sha256": "5961b91b057859df7e92df1494ff73b916c232bdd430d4fb213dc84089486db0"
+    },
+    {
+      "byte_size": 4114,
+      "git_blob_oid": "02ffe4d360279409b74e1d0372cc424cddedd3a0",
+      "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+      "path": "docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/scientific_baseline_input_contract.json",
+      "role": "person_d",
+      "sha256": "a3e823b32451ef83f6b1e4cf5c59ed26a9e480918e03016c11b1fb56948e3f07"
+    },
+    {
+      "byte_size": 4754,
+      "git_blob_oid": "cdf7039fafb511c407994c3b529c9beb42f9ecd7",
+      "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+      "path": "src/mineocclude/baselines/raw_pixel.py",
+      "role": "person_d",
+      "sha256": "b1602ae5acb9b2b7c88ad41f4bac5c578b7a5fcddeff2f78b1a7321724a7de94"
+    }
+  ],
+  "person_e_handoff_sources": [
+    {
+      "byte_size": 5289,
+      "git_blob_oid": "e08cb100cb819c579eb519966e002d4de7ed15eb",
+      "git_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+      "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/authority_binding.json",
+      "role": "person_e",
+      "sha256": "da0dfd42521b103ef846f454f9f9d9bef8af7fd98833e6bd9db2b13938d7f390"
+    },
+    {
+      "byte_size": 3556,
+      "git_blob_oid": "7b0212241c65480c6bcba774802a7b6f19484e55",
+      "git_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+      "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/person_e_closure_requirements.json",
+      "role": "person_e",
+      "sha256": "c77148f0d2139bff6eef10da41bd55df2da878bee95029afd258bbcb63d741dd"
+    },
+    {
+      "byte_size": 218967,
+      "git_blob_oid": "6768e501ed31a2733a5630a89e1ca6af53330087",
+      "git_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+      "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/phase6_artifact_handoff.json",
+      "role": "person_e",
+      "sha256": "2f0d2b158d9421a7a1623f00998d08c1e55dbb2ce9590b416cf2ef846d67a744"
+    },
+    {
+      "byte_size": 694,
+      "git_blob_oid": "d49a9c155a840500b452c184e24ac201ce5f27f7",
+      "git_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+      "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/sha256_inventory.json",
+      "role": "person_e",
+      "sha256": "acded0b8e344a5c74d0b02cbf3820166b38d28d360a7432eee45c24125b4bfb7"
+    },
+    {
+      "byte_size": 24521,
+      "git_blob_oid": "83ce358b84437271bfe60195db48b808a65aa347",
+      "git_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+      "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/step4_1_execution_contract.json",
+      "role": "person_e",
+      "sha256": "93158682d2b8684d5ef99681f6a0882b3f45c3fbd29b55d498fd4f8e6feda722"
+    },
+    {
+      "byte_size": 5902,
+      "git_blob_oid": "ebff45fbb565c229ca6e728c3c4a70ae2395950a",
+      "git_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+      "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/validation_receipt.json",
+      "role": "person_e",
+      "sha256": "d15a4eb302ca93bc33075202cc7d7e656f8529aaf91f759a45e320065814bfe8"
+    }
+  ],
+  "person_e_phase6_acceptance_sources": [
+    {
+      "byte_size": 52066,
+      "git_blob_oid": "295106302465c07112ffe96caf932e7c8e24baf4",
+      "git_commit": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+      "path": "docs/status/person_e_phase6_step6_6_provenance_acceptance_v0_1/accepted_provenance_manifest.json",
+      "role": "person_e",
+      "sha256": "33509304adf33f0fec1b6b60d361c698038fb838341a33588d9defc36c04459a"
+    },
+    {
+      "byte_size": 894,
+      "git_blob_oid": "fe5252b0db228423a778beef24297db7fb1337e1",
+      "git_commit": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+      "path": "docs/status/person_e_phase6_step6_6_provenance_acceptance_v0_1/authority_binding.json",
+      "role": "person_e",
+      "sha256": "1b7539492b12a14fb1c5cf927af27cacd1ab2329e1e8f6ac08316a4671c2d93c"
+    },
+    {
+      "byte_size": 576,
+      "git_blob_oid": "093fb0776ed8fce18b49df0c68e8103611d27b92",
+      "git_commit": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+      "path": "docs/status/person_e_phase6_step6_6_provenance_acceptance_v0_1/phase6_closure_decision.json",
+      "role": "person_e",
+      "sha256": "c3c0388d62a16810a06412a8932b047384328e7c15f744ef72b88bc8ef207bb0"
+    },
+    {
+      "byte_size": 1185,
+      "git_blob_oid": "5c2c70324680946d2e068c2ed3a9d110d5567884",
+      "git_commit": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+      "path": "docs/status/person_e_phase6_step6_6_provenance_acceptance_v0_1/validation_receipt.json",
+      "role": "person_e",
+      "sha256": "98c0591b31b6f452850a86e602cc0cd1bb394d82cb48ccc39474cca3ed07b7cf"
+    }
+  ],
+  "schema_id": "person-a-step4-1-frame-handoff-v0-1-authority-binding",
+  "schema_version": "1.0"
+}

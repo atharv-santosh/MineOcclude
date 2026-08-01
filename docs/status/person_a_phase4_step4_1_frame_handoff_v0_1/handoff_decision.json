@@ -1,0 +1,45 @@
+{
+  "all_required_artifacts_present": false,
+  "all_required_hashes_verified": false,
+  "all_required_sizes_verified": false,
+  "baseline_execution_performed": false,
+  "fold_manifest_bound": true,
+  "immutable_artifact_requirements": [
+    "all referenced source-context and Person A index/receipt artifacts are immutable",
+    "a future valid preprocessed-frame direct input must be immutable and byte-sized",
+    "source MP4, activation chunks, and Person B predictions must not be substituted for preprocessed-frame payloads",
+    "no source or Phase 6 artifact may be overwritten, normalized, resized, converted, or reserialized by this handoff"
+  ],
+  "person_a_reextraction_authorized": false,
+  "person_a_reextraction_required": false,
+  "person_d_frame_handoff_ready": false,
+  "preprocessed_frames_modified": false,
+  "probe_execution_performed": false,
+  "record_date": "2026-08-01",
+  "retention_requirements": [
+    {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-inputs",
+      "requirement": "retain immutable source/input trees through final Step 4.1 closure and durable Registry v2 receipt verification"
+    },
+    {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-outputs",
+      "requirement": "retain accepted indexes, chunks, inventories, bounded audits, logs, and reports without overwrite, relocation, or deletion"
+    }
+  ],
+  "schema_id": "person-a-step4-1-frame-handoff-v0-1-decision",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "source_contexts_modified": false,
+  "source_identities_verified": true,
+  "status": "FAIL_CLOSED_MISSING_PREPROCESSED_FRAME_DIRECT_INPUT",
+  "target_manifest_bound": true,
+  "u4_output_inspected": false,
+  "unresolved_blockers": [
+    {
+      "blocker_id": "preprocessed_frame_manifest_and_1695_payloads_absent",
+      "detail": "The accepted Phase 6 runner preprocessed all source frames only in process memory. The authorized retained trees contain no serialized CHW float32 frame payloads, no per-frame output content hashes, and no byte-sized preprocessed-frame manifest for the 1,695 fold-admitted raw-pixel rows.",
+      "owner": "person_a",
+      "required_producing_authority": "55776dc88302b89b52eef483a710fbf6811cf536"
+    }
+  ]
+}
