@@ -1,0 +1,125 @@
+{
+  "artifact_contract_id": "person-a-step4-1-preprocessed-frame-artifact-v0.1:18bb86f4e18c489ac388301c4ed9d9a86824f67dc78476068afe0928deb74301",
+  "artifact_contract_sha256": "18bb86f4e18c489ac388301c4ed9d9a86824f67dc78476068afe0928deb74301",
+  "artifact_contract_sha256_scope": {
+    "artifact_id_rule": "person-a-step4-1-preprocessed-frame-v0-1::{trajectory_id}::{model_frame_idx}",
+    "filename_rule": "frames/{trajectory_id}/{model_frame_idx:06d}.f32le",
+    "output_root": "/home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1",
+    "payload_format": "raw-little-endian-float32-c-order",
+    "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+    "preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+    "shape": [
+      3,
+      224,
+      384
+    ]
+  },
+  "artifact_id_rule": "person-a-step4-1-preprocessed-frame-v0-1::{trajectory_id}::{model_frame_idx}",
+  "content_hash_rule": "sha256(raw C-order bytes of the finite float32 CHW array); the payload file contains exactly those bytes",
+  "decoder": {
+    "accepted_function": "mineocclude.models.phase3_certification._decode_frames",
+    "color_order": "BGR",
+    "implementation_authority": "55776dc88302b89b52eef483a710fbf6811cf536",
+    "source_dtype": "uint8",
+    "source_shape": [
+      360,
+      640,
+      3
+    ],
+    "source_video_rule": "the exact accepted per-pilot video_640x360.mp4 bound in source_context_manifest.json"
+  },
+  "filename_rule": "frames/{trajectory_id}/{model_frame_idx:06d}.f32le",
+  "metadata_record_required_fields": [
+    "artifact_id",
+    "trajectory_id",
+    "model_frame_idx",
+    "global_frame_identity",
+    "source_frame_id",
+    "source_frame_idx",
+    "source_tick",
+    "fold_binding",
+    "target_binding",
+    "accepted_c_manifest_sha256",
+    "c_frame_map_row_sha256",
+    "c_state_row_sha256",
+    "preprocess_hash",
+    "preprocessing_profile",
+    "output_path",
+    "payload_format",
+    "payload_byte_size",
+    "payload_sha256",
+    "shape",
+    "dtype",
+    "layout",
+    "color_order",
+    "direct_input_eligibility_by_family"
+  ],
+  "operations_in_order": [
+    "decode the exact source_frame_idx with cv2.VideoCapture",
+    "require source shape (360, 640, 3), dtype uint8, BGR, C-contiguous",
+    "apply no crop and resize the complete RGB frame to width 384 and height 224",
+    "convert BGR to RGB with cv2.cvtColor(COLOR_BGR2RGB)",
+    "resize with cv2.INTER_LINEAR",
+    "transpose HWC to CHW",
+    "cast to float32 and divide by float32(255.0)",
+    "normalize with (tensor - float32(0.5)) / float32(0.5)",
+    "make the tensor C-contiguous",
+    "serialize the exact tensor as little-endian float32 C-order bytes"
+  ],
+  "output_contract": {
+    "byte_order": "little",
+    "channels": 3,
+    "color_order": "RGB",
+    "dtype": "float32",
+    "height": 224,
+    "layout": "CHW",
+    "payload_byte_size": 1032192,
+    "payload_format": "raw-little-endian-float32-c-order",
+    "shape": [
+      3,
+      224,
+      384
+    ],
+    "value_range_inclusive": [
+      -1.0,
+      1.0
+    ],
+    "width": 384
+  },
+  "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+  "preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+  "preprocessor": {
+    "accepted_function": "mineocclude.models._mineworld_adapter_wave2._preprocess_bgr_frame",
+    "implementation_authority": "55776dc88302b89b52eef483a710fbf6811cf536",
+    "new_image_library_used": false,
+    "second_preprocessing_implementation_used": false
+  },
+  "runtime_identity": {
+    "cv2": {
+      "binary_path": "/home/sagemaker-user/.conda/envs/mineworld/lib/python3.10/site-packages/cv2/cv2.abi3.so",
+      "binary_sha256": "188d38ace4716a74534ddf4dd4f7d77a06641bd0908bf12eb218a3c2fef35f38",
+      "version": "4.11.0"
+    },
+    "environment_reused": true,
+    "existing_environment_root": "/home/sagemaker-user/.conda/envs/mineworld",
+    "libgl": {
+      "path": "/opt/conda/lib/libGL.so.1.7.0",
+      "sha256": "6b7b1f6e5c5f949a7e5e2f49ffde1322d93469c9994d0c5ebfeaff93808bb415"
+    },
+    "library_installed_for_materialization": false,
+    "model_loaded": false,
+    "numpy": {
+      "binary_path": "/home/sagemaker-user/.conda/envs/mineworld/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so",
+      "binary_sha256": "fe5efe31c55326b072c8fb239a225819211826cb45cd3c74ed0af0030e70f3a1",
+      "version": "1.26.4"
+    },
+    "platform": "Linux-6.12.94-123.180.amzn2023.x86_64-x86_64-with-glibc2.39",
+    "python": {
+      "executable": "/home/sagemaker-user/.conda/envs/mineworld/bin/python3.10",
+      "version": "3.10.20"
+    }
+  },
+  "schema_id": "person-a-step4-1-frame-handoff-v0-2-preprocessing-and-serialization-contract",
+  "schema_version": "1.0",
+  "serialization_container": "none"
+}
