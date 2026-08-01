@@ -1,0 +1,107 @@
+{
+  "accepted_pilot_count": 10,
+  "baseline_families": [
+    {
+      "definition": "mu equals the last visible wall-parallel position",
+      "family_id": "last_seen",
+      "role": "memory heuristic floor",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "mu equals last visible position plus estimated visible-window velocity times tau",
+      "family_id": "constant_velocity",
+      "role": "Regime A reference",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "seeded trajectory derangement using the donor target at the same explicit model_frame_idx",
+      "family_id": "grouped_shuffled",
+      "role": "trajectory-level chance floor",
+      "targets": [
+        "log_sigma_oracle",
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "outer-training-fold polynomial regression of log_sigma on tau only",
+      "family_id": "time_only",
+      "role": "clock-substitution test",
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    },
+    {
+      "definition": "layout-grouped ridge on the frozen observable feature and interaction list",
+      "family_id": "explicit_feature",
+      "role": "non-privileged feature ceiling",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "layout-grouped ridge on the exact current preprocessed frame only",
+      "family_id": "raw_pixel",
+      "role": "visual-leakage/scene-cue check",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "estimate q from outer-training-fold visible-history residuals, then predict ln(sqrt(q_hat * tau))",
+      "family_id": "visible_history_q",
+      "role": "fair spread baseline",
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    },
+    {
+      "definition": "predict ln(sqrt(q_scripted * tau)) on hidden rows",
+      "family_id": "known_q_analytic",
+      "role": "privileged non-fair reference ceiling",
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    }
+  ],
+  "baseline_family_count": 8,
+  "baseline_input_schema_version": "person-b-baseline-input-v0.2",
+  "contract_implementation": "src/mineocclude/contracts/baseline_family_inputs.py",
+  "dispatch": {
+    "person-b-baseline-input-v0.1": "historical last_seen-only validation",
+    "person-b-baseline-input-v0.2": "exact frozen eight-family validation",
+    "unknown": "fail_closed"
+  },
+  "fold_manifest": {
+    "byte_size": 742601,
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+    "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+  },
+  "oracle_target": {
+    "byte_size": 4934874,
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+    "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "owner": "person_b",
+  "person_b_predictions": {
+    "byte_size": 84257218,
+    "direct_input_to_person_d": false,
+    "immutable": true,
+    "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+    "reserved_for_later_comparison": true,
+    "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba"
+  },
+  "schema_id": "person-b-phase4-step4-1-baseline-family-contract-v0-2-contract",
+  "schema_path": "schemas/analysis/person_b_baseline_input_v0_2.schema.json",
+  "schema_version": "1.0",
+  "source_context_manifest": {
+    "byte_size": 4654,
+    "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+    "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+  },
+  "u4_output_inspected": false,
+  "validator": "scripts/validate_person_b_step4_1_baseline_family_inputs_v0_2.py"
+}
