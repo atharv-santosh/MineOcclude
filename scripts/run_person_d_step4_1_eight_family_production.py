@@ -1,45 +1,64 @@
 """Frozen, fail-closed Person D Step 4.1 eight-family production runner.
 
-This script is prepared and frozen but is **not executed** as part of
-preparing it -- it targets a SageMaker environment with Person A's
-real preprocessed frames and Person B's real production fold/oracle
-manifests mounted locally, none of which exist on this machine. Running
-it here would either fail closed immediately (missing input roots) or,
-worse, attempt real baseline execution outside its intended environment.
+Not executed as part of preparing or repairing it -- it targets a
+SageMaker environment with Person A's real preprocessed frames and
+Person B's real production fold/oracle manifests mounted locally, none
+of which exist on this machine.
 
 ## What this binds
 
-- Person A frame-handoff commit and frame-manifest identity
-  (:mod:`mineocclude.baselines.frame_handoff_v0_2`);
-- Person B v0.2 contract commit and frozen direct-input identities
-  (:mod:`mineocclude.baselines.baseline_family_input_v0_2`);
+- Person D's own exporter implementation commit
+  (``PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT``) -- the commit whose
+  ``baseline_family_input_v0_2``/``eight_family_execution_manifest``/
+  ``frame_handoff_v0_2``/``eight_family_runner`` modules this script
+  actually calls, never the historical branch-starting authority;
+- the authorized exact runner commit this script itself must equal at
+  execution time (``AUTHORIZATION_RECORD_PATH``, populated by the
+  companion "runner-preparation" evidence commit once this script's
+  own commit hash is known -- see "Branch and commit authorization"
+  below for why this cannot be self-referential inside one commit);
+- Person B's v0.2 contract and schema-correction commits;
+- Person A's frame-handoff commit and frame-manifest identity;
 - the exact ordered eight-family set;
-- Person D's own implementation commit (this repository's current
-  ``role/person-d-baselines`` HEAD);
-- approved input/output roots;
-- environment and seed requirements;
+- approved input/output roots, environment, and seed requirements;
 - per-family runner and environment receipts;
 - canonical manifests and SHA-256 inventories.
+
+## Branch and commit authorization
+
+A script cannot embed its own future commit hash. Instead,
+``AUTHORIZATION_RECORD_PATH`` names a small JSON file
+(``{"authorized_runner_commit": "<hash>"}``) that is committed
+*separately*, after this script's own commit hash is known, and cites
+it. At real execution time this script requires: the current branch is
+exactly ``role/person-d-baselines`` (never a detached HEAD or any
+other branch); the worktree is clean; the exporter implementation
+commit is an ancestor of HEAD; and HEAD equals exactly the hash
+recorded in that authorization file. Before the authorization file is
+committed, ``load_authorized_runner_commit`` returns ``None`` and the
+check fails closed (``no_authorized_runner_commit_recorded``) rather
+than silently permitting any HEAD. Whoever actually deploys a real run
+must refresh the authorization record to the exact commit being
+deployed immediately beforehand -- this is deliberate operational
+discipline against silent drift, not an oversight.
 
 ## Restart / resume
 
 Every family's completed, verified output is recorded in
-``run_state.json`` under the approved output root, keyed by family ID
-and the document's own SHA-256. On a second invocation, any family
-whose recorded output still exists on disk and still validates against
+``run_state.json`` under the approved output root. A family is only
+skipped when its recorded output file both still exists on disk and
+still independently re-validates against
 :func:`mineocclude.baselines.baseline_family_input_v0_2
-.validate_baseline_document_v0_2` is skipped rather than re-fit --
-:func:`determine_family_execution_plan` is the pure function that
+.validate_baseline_document_v0_2` -- :func:`determine_family_execution_plan`
 implements this and is exercised directly in
 ``tests/baselines/test_baseline_family_production_cli.py`` without
-ever invoking ``run`` mode.
+ever invoking ``run`` mode for real.
 
 ## Fail-closed per family
 
 If any family's fit/export/validation step fails, this script stops
 immediately (nonzero exit) without deleting or altering any earlier
-family's already-verified, on-disk output. The next invocation resumes
-from exactly where it stopped.
+family's already-verified, on-disk output.
 
 ## No U4 access
 
@@ -51,6 +70,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from collections.abc import Callable, Mapping
 from pathlib import Path
@@ -70,28 +90,49 @@ from mineocclude.baselines.eight_family_execution_manifest import (
     build_eight_family_execution_manifest,
     validate_eight_family_execution_manifest,
 )
+from mineocclude.baselines.eight_family_runner import (
+    EightFamilyRunnerError,
+    fit_and_export_family,
+)
 from mineocclude.baselines.frame_handoff_v0_2 import (
     PERSON_A_EXTERNAL_FRAME_ROOT,
     PERSON_A_FRAME_HANDOFF_COMMIT,
     PERSON_A_FRAME_MANIFEST_PATH,
     build_frame_manifest_direct_input_reference,
+    verify_frame_manifest_raw_bytes,
     verify_frame_manifest_records,
     verify_frame_manifest_summary_counts,
+    verify_frame_payloads_on_disk,
 )
 
-#: Person D's implementation commit this runner is frozen against.
-#: Updated only by re-freezing this script against a new committed
-#: Person D authority -- never edited to match a local, uncommitted
-#: change.
-PERSON_D_IMPLEMENTATION_COMMIT = "853e0acadf050a0b1f318b399b524e57379d03bf"
+#: Person D's actual exporter implementation commit this runner calls
+#: into. Never the historical branch-starting authority
+#: (853e0acadf050a0b1f318b399b524e57379d03bf) -- that commit predates
+#: baseline_family_input_v0_2.py/eight_family_execution_manifest.py/
+#: frame_handoff_v0_2.py entirely and cannot be what this script runs.
+PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT = "fd9302e5d218193211f2f96986ca32dc1a365e66"
+
+#: Person B's schema-correction commit (fixed the 62-character
+#: truncated fold_manifest_hash const this preparation already flagged
+#: and worked around independently).
+PERSON_B_V0_2_SCHEMA_CORRECTION_COMMIT = "4e0e0f49d4642cf069de8c66c3a8fee47806c4b0"
+
+AUTHORIZED_BRANCH = "role/person-d-baselines"
+
+#: Populated by the companion runner-preparation evidence commit with
+#: this script's own commit hash, once known. See module docstring.
+AUTHORIZATION_RECORD_PATH = (
+    ROOT
+    / "docs"
+    / "status"
+    / "person_d_phase4_step4_1_eight_family_production_v0_2"
+    / "authorized_runner_commit.json"
+)
 
 #: Approved SageMaker input root for Person A's preprocessed frames.
 APPROVED_PERSON_A_FRAME_ROOT = PERSON_A_EXTERNAL_FRAME_ROOT
 
 #: Approved output root for this runner's own produced artifacts.
-#: The exact final path is bound by the deployment's own environment
-#: receipt (below); this default matches the sibling convention already
-#: used by Person A/B's own approved-outputs roots.
 DEFAULT_APPROVED_OUTPUT_ROOT = (
     "/home/sagemaker-user/person-d-step4-1-approved-outputs/"
     "person-d-step4-1-production-v0-1"
@@ -107,7 +148,93 @@ RUN_STATE_FILENAME = "run_state.json"
 
 
 class ProductionRunnerError(ValueError):
-    """Raised when a preflight or per-family fail-closed check fails."""
+    """Raised when a preflight, authorization, or per-family check fails."""
+
+
+# --------------------------------------------------------------------------
+# Branch / commit authorization (defects 2 and 3)
+# --------------------------------------------------------------------------
+
+
+def resolve_git_facts(repo_root: Path) -> dict:
+    """Gather the real git facts this script's authorization check needs.
+
+    The only impure half of the authorization check -- kept separate
+    from :func:`verify_branch_and_authorization` so that function stays
+    a pure, directly testable check over plain values.
+    """
+
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=repo_root, capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo_root, capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    dirty = bool(
+        subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=repo_root, capture_output=True, text=True, check=True,
+        ).stdout.strip()
+    )
+    ancestor_check = subprocess.run(
+        [
+            "git", "merge-base", "--is-ancestor",
+            PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT, "HEAD",
+        ],
+        cwd=repo_root, capture_output=True, text=True, check=False,
+    )
+    return {
+        "branch": branch,
+        "head": head,
+        "worktree_dirty": dirty,
+        "exporter_commit_is_ancestor": ancestor_check.returncode == 0,
+    }
+
+
+def load_authorized_runner_commit(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    value = data.get("authorized_runner_commit")
+    return value if isinstance(value, str) and value else None
+
+
+def verify_branch_and_authorization(
+    *,
+    branch: str,
+    head: str,
+    worktree_dirty: bool,
+    exporter_commit_is_ancestor: bool,
+    authorized_runner_commit: str | None,
+) -> tuple[str, ...]:
+    """Pure fail-closed check: is this exact execution context authorized.
+
+    Never trusts a branch name alone, a clean-looking worktree alone,
+    or an ancestor relationship alone -- every one of the four facts
+    must hold simultaneously.
+    """
+
+    errors: list[str] = []
+    if branch != AUTHORIZED_BRANCH:
+        errors.append(f"wrong_branch:{branch!r}")
+    if worktree_dirty:
+        errors.append("dirty_worktree")
+    if not exporter_commit_is_ancestor:
+        errors.append("exporter_commit_not_ancestor")
+    if authorized_runner_commit is None:
+        errors.append("no_authorized_runner_commit_recorded")
+    elif head != authorized_runner_commit:
+        errors.append(
+            f"head_not_authorized:head={head!r}:authorized={authorized_runner_commit!r}"
+        )
+    return tuple(errors)
+
+
+# --------------------------------------------------------------------------
+# Resume planning (unchanged in spirit, still pure and testable)
+# --------------------------------------------------------------------------
 
 
 def load_run_state(output_root: Path) -> dict:
@@ -136,10 +263,6 @@ def determine_family_execution_plan(
     (2) its recorded output file still exists on disk;
     (3) re-loading and re-validating that file against
     :func:`validate_baseline_document_v0_2` still returns no errors.
-
-    Any other case marks the family ``"must_run"`` -- this never
-    silently trusts stale state, and it never duplicates a family's
-    already-verified output.
     """
 
     if load_document is None:
@@ -173,16 +296,32 @@ def determine_family_execution_plan(
     return plan
 
 
-def run_preflight(*, frame_manifest_path: Path, frame_manifest_byte_size: int) -> dict:
+# --------------------------------------------------------------------------
+# Preflight (defects 4 and 5 repaired here)
+# --------------------------------------------------------------------------
+
+
+def run_preflight(
+    *,
+    frame_manifest_path: Path,
+    frame_root: Path | None = None,
+    verify_payloads: bool = False,
+) -> dict:
     """Verify every frozen input identity before any family is fit.
 
-    Never fits a baseline, computes a metric, or reads a U4 artifact.
+    Verifies the frame manifest's raw bytes (defect 4) before trusting
+    anything parsed from it, then its declared summary counts and
+    per-record structural fields, and -- when ``verify_payloads`` is
+    true and ``frame_root`` is supplied -- every one of the 1,695
+    external frame payloads on disk (defect 5). Never fits a baseline,
+    computes a metric, or reads a U4 artifact.
     """
 
-    if not frame_manifest_path.exists():
-        raise ProductionRunnerError(
-            f"Person A frame manifest not found at {frame_manifest_path}"
-        )
+    raw_errors = verify_frame_manifest_raw_bytes(frame_manifest_path)
+    if raw_errors:
+        raise ProductionRunnerError(f"frame manifest raw-byte checks failed: {raw_errors}")
+
+    frame_manifest_byte_size = frame_manifest_path.stat().st_size
     manifest = json.loads(frame_manifest_path.read_text(encoding="utf-8"))
 
     summary_errors = verify_frame_manifest_summary_counts(manifest)
@@ -196,6 +335,25 @@ def run_preflight(*, frame_manifest_path: Path, frame_manifest_byte_size: int) -
             f"frame manifest record checks failed: {record_errors[:10]}"
             + (" ... (truncated)" if len(record_errors) > 10 else "")
         )
+
+    payload_result = None
+    if verify_payloads:
+        if frame_root is None:
+            raise ProductionRunnerError(
+                "verify_payloads=True requires frame_root"
+            )
+        payload_result = verify_frame_payloads_on_disk(manifest, frame_root=frame_root)
+        if not payload_result.all_clear:
+            raise ProductionRunnerError(
+                "frame payload verification failed: "
+                f"missing={payload_result.missing_frame_count} "
+                f"duplicate={payload_result.duplicate_frame_count} "
+                f"size_mismatch={payload_result.size_mismatch_count} "
+                f"hash_mismatch={payload_result.hash_mismatch_count} "
+                f"identity_mismatch={payload_result.identity_mismatch_count} "
+                f"preprocessing_mismatch={payload_result.preprocessing_mismatch_count} "
+                f"errors={payload_result.errors[:10]}"
+            )
 
     frame_reference = build_frame_manifest_direct_input_reference(
         byte_size=frame_manifest_byte_size
@@ -216,12 +374,95 @@ def run_preflight(*, frame_manifest_path: Path, frame_manifest_byte_size: int) -
         "person_b_v0_2_production_ratification_commit": (
             PERSON_B_V0_2_PRODUCTION_RATIFICATION_COMMIT
         ),
+        "person_b_v0_2_schema_correction_commit": PERSON_B_V0_2_SCHEMA_CORRECTION_COMMIT,
         "person_e_v0_2_step4_1_handoff_commit": PERSON_E_V0_2_STEP4_1_HANDOFF_COMMIT,
-        "person_d_implementation_commit": PERSON_D_IMPLEMENTATION_COMMIT,
+        "person_d_exporter_implementation_commit": PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT,
         "eight_family_execution_manifest": execution_manifest,
+        "frame_payload_verification_performed": verify_payloads,
         "baseline_execution_performed": False,
         "u4_output_inspected": False,
     }
+
+
+# --------------------------------------------------------------------------
+# Production run mode (defect 1 repaired here)
+# --------------------------------------------------------------------------
+
+
+def run_production(
+    *,
+    contexts,
+    mu_oracle_by_key,
+    log_sigma_oracle_by_key,
+    visible_positions_by_trajectory,
+    pixel_features_by_key,
+    config_hash: str,
+    input_manifest_hash: str,
+    fit_manifest_hash: str,
+    preprocessed_frame_manifest_reference: Mapping[str, object],
+    output_root: Path,
+) -> dict:
+    """Fit, validate, and persist every family not already verified.
+
+    Fails closed per family: on any family's failure, this stops
+    immediately and raises, leaving every earlier family's persisted,
+    already-verified output untouched. Never invoked by this
+    preparation pass -- exercised in tests via direct calls with
+    synthetic contexts/targets only.
+    """
+
+    existing_state = load_run_state(output_root)
+    plan = determine_family_execution_plan(existing_state, output_root=output_root)
+    state = {"schema_version": "1.0", "families": dict(existing_state.get("families", {}))}
+
+    for family_id in FROZEN_BASELINE_FAMILY_IDS:
+        if plan[family_id] == "skip_already_verified":
+            continue
+        try:
+            documents = fit_and_export_family(
+                family_id,
+                contexts,
+                mu_oracle_by_key=mu_oracle_by_key,
+                log_sigma_oracle_by_key=log_sigma_oracle_by_key,
+                visible_positions_by_trajectory=visible_positions_by_trajectory,
+                pixel_features_by_key=pixel_features_by_key,
+                config_hash=config_hash,
+                input_manifest_hash=input_manifest_hash,
+                fit_manifest_hash=fit_manifest_hash,
+                preprocessed_frame_manifest_reference=(
+                    preprocessed_frame_manifest_reference if family_id == "raw_pixel" else None
+                ),
+            )
+        except EightFamilyRunnerError as error:
+            state["families"][family_id] = {"status": "failed", "error": str(error)}
+            save_run_state(output_root, state)
+            raise ProductionRunnerError(f"{family_id}: fit/export failed: {error}") from error
+
+        for target_name, document in documents.items():
+            errors = validate_baseline_document_v0_2(document)
+            if errors:
+                state["families"][family_id] = {
+                    "status": "failed",
+                    "error": f"{target_name}: {errors}",
+                }
+                save_run_state(output_root, state)
+                raise ProductionRunnerError(
+                    f"{family_id}/{target_name}: exported document failed validation: {errors}"
+                )
+            output_path = output_root / f"{family_id}__{target_name}.json"
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(
+                json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+
+        state["families"][family_id] = {
+            "status": "completed",
+            "output_path": f"{family_id}__{min(documents)}.json",
+            "targets": sorted(documents),
+        }
+        save_run_state(output_root, state)
+
+    return state
 
 
 def main() -> int:
@@ -243,12 +484,32 @@ def main() -> int:
         help="Local path to Person A's committed preprocessed_frame_manifest.json.",
     )
     parser.add_argument(
+        "--frame-root",
+        type=Path,
+        default=None,
+        help="Local root containing the 1,695 real frame payload files.",
+    )
+    parser.add_argument(
+        "--verify-payloads",
+        action="store_true",
+        help="Verify all 1,695 frame payloads on disk during preflight (requires --frame-root).",
+    )
+    parser.add_argument(
         "--output-root",
         type=Path,
         default=Path(DEFAULT_APPROVED_OUTPUT_ROOT),
         help="Approved output root for this runner's produced artifacts.",
     )
     args = parser.parse_args()
+
+    git_facts = resolve_git_facts(ROOT)
+    authorized_runner_commit = load_authorized_runner_commit(AUTHORIZATION_RECORD_PATH)
+    authorization_errors = verify_branch_and_authorization(
+        authorized_runner_commit=authorized_runner_commit, **git_facts
+    )
+    if authorization_errors:
+        print(f"FAIL-CLOSED: authorization checks failed: {authorization_errors}", file=sys.stderr)
+        return 1
 
     if not args.frame_manifest_path.exists():
         print(
@@ -258,36 +519,26 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
-    byte_size = args.frame_manifest_path.stat().st_size
 
     preflight_report = run_preflight(
         frame_manifest_path=args.frame_manifest_path,
-        frame_manifest_byte_size=byte_size,
+        frame_root=args.frame_root,
+        verify_payloads=args.verify_payloads,
     )
     print(json.dumps({"preflight": preflight_report["status"]}, indent=2))
 
     if args.mode == "preflight":
         return 0
 
-    # mode == "run": resume-aware per-family execution.
-    existing_state = load_run_state(args.output_root)
-    plan = determine_family_execution_plan(existing_state, output_root=args.output_root)
-    for family_id in FROZEN_BASELINE_FAMILY_IDS:
-        if plan[family_id] == "skip_already_verified":
-            print(f"{family_id}: skipping (already verified)")
-            continue
-        # Real fitting/export/registry-v2 trust-record construction
-        # happens here, family by family, in the approved SageMaker
-        # environment only. Never invoked as part of preparing this
-        # script; see module docstring and the task's explicit
-        # "do not execute" scope.
-        raise ProductionRunnerError(
-            f"{family_id}: real execution is not implemented in this "
-            "preparation pass -- see docs/status/"
-            "person_d_phase4_step4_1_eight_family_production_v0_1/ for "
-            "the frozen runbook this step must follow once run for real."
-        )
-    return 0
+    print(
+        "FAIL-CLOSED: 'run' mode requires real oracle-target/fold-manifest/"
+        "context inputs that are only available in the approved SageMaker "
+        "environment; this CLI does not accept them from the command line "
+        "in this preparation pass. Call run_production(...) directly with "
+        "real inputs once available.",
+        file=sys.stderr,
+    )
+    return 1
 
 
 if __name__ == "__main__":

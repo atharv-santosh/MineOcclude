@@ -12,7 +12,10 @@ identities and summary counts.
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Mapping
+from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from mineocclude.baselines.baseline_family_input_v0_2 import (
@@ -40,6 +43,15 @@ PERSON_A_EXTERNAL_FRAME_ROOT = (
 REQUIRED_FRAME_ARTIFACT_COUNT = 1695
 REQUIRED_ACCEPTED_PILOT_COUNT = 10
 REQUIRED_SOURCE_CONTEXT_ARTIFACT_COUNT = 10
+
+#: Frozen per-payload preprocessing facts, copied from Person A's own
+#: committed sample record (commit 380b9a3) and required to hold for
+#: every one of the 1,695 payloads -- not invented independently.
+REQUIRED_PAYLOAD_DTYPE = "float32"
+REQUIRED_PAYLOAD_LAYOUT = "CHW"
+REQUIRED_PAYLOAD_COLOR_ORDER = "RGB"
+REQUIRED_PAYLOAD_FORMAT = "raw-little-endian-float32-c-order"
+REQUIRED_PAYLOAD_SHAPE = (3, 224, 384)
 
 
 def _valid_sha256(value: Any) -> bool:
@@ -133,6 +145,176 @@ def verify_frame_manifest_records(manifest: Mapping[str, Any]) -> tuple[str, ...
             errors.append(f"record[{index}]:invalid_fold_binding")
 
     return tuple(errors)
+
+
+def verify_frame_manifest_raw_bytes(manifest_path: Path) -> tuple[str, ...]:
+    """Verify the manifest *file's own raw bytes* before trusting its parsed content.
+
+    This must run before ``json.loads`` is trusted for anything: a
+    byte-identical file is the only basis for claiming the manifest is
+    genuinely Person A's committed one, independent of whatever its
+    parsed JSON claims about itself.
+    """
+
+    if not manifest_path.exists():
+        return ("manifest_file_not_found",)
+    raw = manifest_path.read_bytes()
+    errors: list[str] = []
+    actual_sha256 = hashlib.sha256(raw).hexdigest()
+    if actual_sha256 != PERSON_A_FRAME_MANIFEST_SHA256:
+        errors.append(
+            f"raw_sha256_mismatch:expected={PERSON_A_FRAME_MANIFEST_SHA256}:"
+            f"actual={actual_sha256}"
+        )
+    return tuple(errors)
+
+
+@dataclass(frozen=True)
+class FramePayloadVerificationResult:
+    expected_frame_count: int
+    actual_frame_count: int
+    missing_frame_count: int
+    duplicate_frame_count: int
+    size_mismatch_count: int
+    hash_mismatch_count: int
+    identity_mismatch_count: int
+    preprocessing_mismatch_count: int
+    errors: tuple[str, ...] = field(default_factory=tuple)
+
+    @property
+    def all_clear(self) -> bool:
+        return (
+            self.actual_frame_count == self.expected_frame_count
+            and self.missing_frame_count == 0
+            and self.duplicate_frame_count == 0
+            and self.size_mismatch_count == 0
+            and self.hash_mismatch_count == 0
+            and self.identity_mismatch_count == 0
+            and self.preprocessing_mismatch_count == 0
+        )
+
+
+def verify_frame_payloads_on_disk(
+    manifest: Mapping[str, Any], *, frame_root: Path
+) -> FramePayloadVerificationResult:
+    """Verify every one of the 1,695 external frame payloads on disk.
+
+    For every record: resolves its path from the exact manifest,
+    requires the file to exist, and requires its actual byte size and
+    SHA-256 to equal the manifest's declared values -- never trusting
+    the manifest's own claims about a file this function can directly
+    read. Also checks per-record identity/preprocessing consistency
+    (``global_frame_identity`` matches ``trajectory_id``:
+    ``model_frame_idx``; ``target_binding.target_id`` matches the
+    frozen naming rule; dtype/layout/color_order/payload_format/shape
+    match the one frozen preprocessing profile every payload must
+    share) without touching any U4 path.
+    """
+
+    records = manifest.get("records") if isinstance(manifest, Mapping) else None
+    if not isinstance(records, list):
+        return FramePayloadVerificationResult(
+            expected_frame_count=REQUIRED_FRAME_ARTIFACT_COUNT,
+            actual_frame_count=0,
+            missing_frame_count=REQUIRED_FRAME_ARTIFACT_COUNT,
+            duplicate_frame_count=0,
+            size_mismatch_count=0,
+            hash_mismatch_count=0,
+            identity_mismatch_count=0,
+            preprocessing_mismatch_count=0,
+            errors=("records_not_a_list",),
+        )
+
+    errors: list[str] = []
+    seen_keys: set[tuple] = set()
+    missing = duplicate = size_mismatch = hash_mismatch = identity_mismatch = 0
+    preprocessing_mismatch = 0
+
+    for record in records:
+        if not isinstance(record, Mapping):
+            missing += 1
+            errors.append("record_not_a_mapping")
+            continue
+        trajectory_id = record.get("trajectory_id")
+        model_frame_idx = record.get("model_frame_idx")
+        key = (trajectory_id, model_frame_idx)
+        if key in seen_keys:
+            duplicate += 1
+            errors.append(f"{key}:duplicate_payload_identity")
+            continue
+        seen_keys.add(key)
+
+        relative_path = record.get("output_relative_path")
+        if not isinstance(relative_path, str) or not relative_path:
+            missing += 1
+            errors.append(f"{key}:missing_output_relative_path")
+            continue
+        full_path = frame_root / relative_path
+        if not full_path.exists():
+            missing += 1
+            errors.append(f"{key}:file_missing:{full_path}")
+            continue
+
+        payload = full_path.read_bytes()
+        expected_size = record.get("payload_byte_size")
+        if len(payload) != expected_size:
+            size_mismatch += 1
+            errors.append(
+                f"{key}:size_mismatch:expected={expected_size}:actual={len(payload)}"
+            )
+        expected_hash = record.get("payload_sha256")
+        actual_hash = hashlib.sha256(payload).hexdigest()
+        if actual_hash != expected_hash:
+            hash_mismatch += 1
+            errors.append(f"{key}:hash_mismatch")
+
+        expected_global_identity = f"{trajectory_id}:{model_frame_idx}"
+        if record.get("global_frame_identity") != expected_global_identity:
+            identity_mismatch += 1
+            errors.append(f"{key}:global_frame_identity_mismatch")
+        target_binding = record.get("target_binding")
+        expected_target_id = f"{trajectory_id}:{model_frame_idx}:regime_a_primary_v1"
+        if (
+            not isinstance(target_binding, Mapping)
+            or target_binding.get("target_id") != expected_target_id
+        ):
+            identity_mismatch += 1
+            errors.append(f"{key}:target_binding_mismatch")
+        fold_binding = record.get("fold_binding")
+        if not isinstance(fold_binding, Mapping) or not isinstance(
+            fold_binding.get("fold_idx"), int
+        ) or isinstance(fold_binding.get("fold_idx"), bool):
+            identity_mismatch += 1
+            errors.append(f"{key}:fold_binding_mismatch")
+
+        if record.get("dtype") != REQUIRED_PAYLOAD_DTYPE:
+            preprocessing_mismatch += 1
+            errors.append(f"{key}:dtype_mismatch")
+        if record.get("layout") != REQUIRED_PAYLOAD_LAYOUT:
+            preprocessing_mismatch += 1
+            errors.append(f"{key}:layout_mismatch")
+        if record.get("color_order") != REQUIRED_PAYLOAD_COLOR_ORDER:
+            preprocessing_mismatch += 1
+            errors.append(f"{key}:color_order_mismatch")
+        if record.get("payload_format") != REQUIRED_PAYLOAD_FORMAT:
+            preprocessing_mismatch += 1
+            errors.append(f"{key}:payload_format_mismatch")
+        shape = record.get("shape")
+        if not isinstance(shape, list) or tuple(shape) != REQUIRED_PAYLOAD_SHAPE:
+            preprocessing_mismatch += 1
+            errors.append(f"{key}:shape_mismatch")
+
+    return FramePayloadVerificationResult(
+        expected_frame_count=REQUIRED_FRAME_ARTIFACT_COUNT,
+        actual_frame_count=len(seen_keys),
+        missing_frame_count=missing,
+        duplicate_frame_count=duplicate,
+        size_mismatch_count=size_mismatch,
+        hash_mismatch_count=hash_mismatch,
+        identity_mismatch_count=identity_mismatch,
+        preprocessing_mismatch_count=preprocessing_mismatch,
+        errors=tuple(errors),
+    )
 
 
 def build_frame_manifest_direct_input_reference(*, byte_size: int) -> dict:
