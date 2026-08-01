@@ -136,6 +136,32 @@ def family_manifest() -> dict[str, object]:
 
 
 class TestBaselineFamilyInputV02(unittest.TestCase):
+    def test_schema_freezes_exact_64_character_fold_hash(self) -> None:
+        schema = json.loads(
+            (
+                ROOT
+                / "schemas"
+                / "analysis"
+                / "person_b_baseline_input_v0_2.schema.json"
+            ).read_text(encoding="utf-8")
+        )
+        correct_hash = FROZEN_DIRECT_INPUTS["fold_manifest"]["sha256"]
+        malformed_hash = (
+            "53ca938c6ae936c3ecb6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        )
+        frozen_hash = schema["properties"]["fold_manifest_hash"]["const"]
+
+        self.assertEqual(frozen_hash, correct_hash)
+        self.assertEqual(len(frozen_hash), 64)
+        self.assertRegex(frozen_hash, r"^[0-9a-f]{64}$")
+        self.assertNotEqual(frozen_hash, malformed_hash)
+
+        for rejected_hash in (malformed_hash, "0" * 64):
+            with self.subTest(rejected_hash=rejected_hash):
+                document = baseline_document("last_seen")
+                document["fold_manifest_hash"] = rejected_hash
+                self.assertFalse(validate_baseline_input(document).accepted)
+
     def test_committed_contract_records_exact_eight_and_fail_closed_status(
         self,
     ) -> None:
