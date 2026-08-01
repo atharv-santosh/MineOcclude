@@ -1,0 +1,116 @@
+{
+  "analysis_config": {
+    "byte_size": 4881,
+    "path": "configs/analysis/core.yaml",
+    "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+  },
+  "condition_selection": {
+    "byte_size": 656885,
+    "path": "data/person_b/phase6_c_intake/condition_selection_source.json",
+    "sha256": "b5f0f22978bc62911f284da8b700bd8f166144586d0925bb03f8a730963a50aa"
+  },
+  "fitted_probe": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "analysis_dtype": "float64",
+    "feature_width": 2048,
+    "inner_fold_count": 4,
+    "model_family": "ridge",
+    "outer_fold_count": 5,
+    "scaler_fit_scope": "outer_training_rows_only"
+  },
+  "fold_plan": {
+    "byte_size": 6540,
+    "path": "data/person_b/phase6_c_intake/layout_fold_plan.json",
+    "sha256": "a762cfe66984675e6af9177ff954540fe17cafc7747422fcad26ed1a2f7bbf8b"
+  },
+  "frozen_mvp_criteria": {
+    "U1_green": "A contiguous band of at least two layers has held-out R2 greater than zero, beats last-seen, and beats grouped shuffle at p<0.01.",
+    "U2_green": "Partial correlation of decoded/oracle spread controlling tau has a hierarchical 95% bootstrap CI above zero; average absolute 50/80/95% coverage error is at most 0.10 and improves on time-only and visible-history-q baselines.",
+    "U3_green": "Positive hidden-time growth, decoded/oracle slope ratio in [0.5, 2.0], and a reveal decrease with CI below zero and median spread reduction of at least 25%.",
+    "decision_rule": {
+      "GREEN": "Engineering gates pass; U1 and U2 are green; U3 is directionally correct.",
+      "RED": "Runtime, alignment, oracle, positive control, detector, or reproduction fails; do not interpret negative science.",
+      "YELLOW": "Engineering and controls pass, but a frozen scientific criterion fails cleanly; report the valid alternative result."
+    }
+  },
+  "metric_families": {
+    "U1": [
+      "r2",
+      "mae",
+      "grouped_permutation",
+      "baseline_comparison"
+    ],
+    "U2": [
+      "partial_correlation_controlling_tau",
+      "coverage",
+      "ece",
+      "z_diagnostics"
+    ],
+    "U3": [
+      "hidden_growth",
+      "oracle_slope_ratio",
+      "reveal_snapback"
+    ]
+  },
+  "metric_rules": {
+    "coverage_interval": "central_gaussian_inclusive",
+    "coverage_levels": [
+      0.5,
+      0.8,
+      0.95
+    ],
+    "duration_binning": "exact_duration_seconds",
+    "ece_aggregation": "mean_absolute_nominal_empirical_gap",
+    "near_zero_sigma_threshold_blocks": 1e-12,
+    "nonfinite_policy": "count_and_fail_result_no_clipping",
+    "partial_correlation_controls": [
+      "tau"
+    ],
+    "reveal_window_seconds": [
+      -1.0,
+      1.0
+    ]
+  },
+  "oracle_method": "primary_scalar_kalman_crosschecked_closed_form",
+  "oracle_targets": [
+    "mu_oracle_blocks",
+    "var_oracle_blocks2",
+    "sigma_oracle_blocks",
+    "log_sigma_oracle",
+    "x_true_blocks"
+  ],
+  "production_probe_targets": [
+    "mu_oracle_blocks",
+    "log_sigma_oracle"
+  ],
+  "random_split_used": false,
+  "resampling_rules": {
+    "bootstrap_count_mvp": 1000,
+    "bootstrap_hierarchy": [
+      "layout_id",
+      "trajectory_id"
+    ],
+    "bootstrap_seed": 20260721,
+    "permutation_count_mvp": 999,
+    "permutation_seed": 20260720,
+    "permutation_unit": "whole_trajectory_block"
+  },
+  "schema_id": "person-b-phase4-step4-1-production-handoff-v0-1-scientific-contract-binding",
+  "schema_version": "1.0",
+  "threshold_criteria": {
+    "U1_green": "A contiguous band of at least two layers has held-out R2 greater than zero, beats last-seen, and beats grouped shuffle at p<0.01.",
+    "U2_green": "Partial correlation of decoded/oracle spread controlling tau has a hierarchical 95% bootstrap CI above zero; average absolute 50/80/95% coverage error is at most 0.10 and improves on time-only and visible-history-q baselines.",
+    "U3_green": "Positive hidden-time growth, decoded/oracle slope ratio in [0.5, 2.0], and a reveal decrease with CI below zero and median spread reduction of at least 25%.",
+    "decision_rule": {
+      "GREEN": "Engineering gates pass; U1 and U2 are green; U3 is directionally correct.",
+      "RED": "Runtime, alignment, oracle, positive control, detector, or reproduction fails; do not interpret negative science.",
+      "YELLOW": "Engineering and controls pass, but a frozen scientific criterion fails cleanly; report the valid alternative result."
+    }
+  },
+  "u4_output_inspected": false
+}
