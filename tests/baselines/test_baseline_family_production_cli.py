@@ -111,6 +111,23 @@ def _write_manifest_and_patch_expected_hash(tmp_path: Path, manifest: dict, monk
     return manifest_path
 
 
+def _write_fold_manifest_and_patch_expected_hash(tmp_path: Path, monkeypatch) -> Path:
+    """A fold-manifest stand-in for tests that mock away real fold
+    semantics (``build_real_run_inputs``/``run_production``) but still
+    need preflight's raw-byte check to pass. ``validate_b_fold_manifest``
+    is patched to a no-op alongside this, so the file's actual content
+    is never semantically validated here."""
+
+    fold_bytes = json.dumps({"sentinel": "fold-manifest"}).encode("utf-8")
+    fold_path = tmp_path / "ten_pilot_frame_fold_manifest.json"
+    fold_path.write_bytes(fold_bytes)
+    real_sha256 = hashlib.sha256(fold_bytes).hexdigest()
+    monkeypatch.setitem(FROZEN_DIRECT_INPUTS["fold_manifest"], "sha256", real_sha256)
+    monkeypatch.setitem(FROZEN_DIRECT_INPUTS["fold_manifest"], "byte_size", len(fold_bytes))
+    monkeypatch.setattr(cli, "validate_b_fold_manifest", lambda document: None)
+    return fold_path
+
+
 def _valid_document():
     from mineocclude.baselines.baseline_family_input_v0_2 import (
         build_baseline_document_v0_2,
@@ -630,6 +647,7 @@ def test_main_run_mode_requires_frame_root(tmp_path, monkeypatch, capsys):
 
 def test_main_run_mode_wires_real_inputs_into_run_production(tmp_path, monkeypatch, capsys):
     auth_path = _authorize(monkeypatch, tmp_path)
+    fold_manifest_path = _write_fold_manifest_and_patch_expected_hash(tmp_path, monkeypatch)
     manifest, frame_root = _synthetic_frame_manifest_and_payloads(tmp_path)
     manifest_path = _write_manifest_and_patch_expected_hash(tmp_path, manifest, monkeypatch)
 
@@ -667,6 +685,7 @@ def test_main_run_mode_wires_real_inputs_into_run_production(tmp_path, monkeypat
             "--authorization-record-path", str(auth_path),
             "--frame-manifest-path", str(manifest_path),
             "--frame-root", str(frame_root),
+            "--fold-manifest-path", str(fold_manifest_path),
             "--output-root", str(tmp_path / "out"),
             "--resume", "force",
         ],
@@ -812,6 +831,68 @@ def test_historical_preflight_still_works_without_payload_verification(tmp_path,
     report = cli.run_preflight(frame_manifest_path=manifest_path)
     assert report["status"] == "PREFLIGHT_PASSED"
     assert report["frame_payload_verification_performed"] is False
+    assert report["fold_manifest_verified"] is False
+
+
+# --------------------------------------------------------------------------
+# Signed explicit-mapping fold-contract dispatch (shared by preflight and run)
+# --------------------------------------------------------------------------
+
+
+def _real_fold_manifest_path(tmp_path: Path) -> Path:
+    """Materialize the real production fold manifest via a plain git
+    object read (never a checkout/merge) for CLI-level regression tests."""
+
+    import subprocess
+
+    from mineocclude.baselines.production_fold_contract_v0_1 import (
+        FROZEN_FOLD_MANIFEST_PATH,
+        PERSON_B_FOLD_CONTRACT_COMMIT,
+    )
+
+    result = subprocess.run(
+        ["git", "show", f"{PERSON_B_FOLD_CONTRACT_COMMIT}:{FROZEN_FOLD_MANIFEST_PATH}"],
+        cwd=ROOT, capture_output=True, check=True,
+    )
+    path = tmp_path / "real_ten_pilot_frame_fold_manifest.json"
+    path.write_bytes(result.stdout)
+    return path
+
+
+def test_preflight_accepts_the_real_production_fold_manifest(tmp_path, monkeypatch):
+    manifest, _ = _synthetic_frame_manifest_and_payloads(tmp_path)
+    manifest_path = _write_manifest_and_patch_expected_hash(tmp_path, manifest, monkeypatch)
+    fold_manifest_path = _real_fold_manifest_path(tmp_path)
+
+    report = cli.run_preflight(
+        frame_manifest_path=manifest_path, fold_manifest_path=fold_manifest_path
+    )
+    assert report["status"] == "PREFLIGHT_PASSED"
+    assert report["fold_manifest_verified"] is True
+    assert report["fold_contract_version"] == "person-b-step4-1-production-fold-contract-v0.1"
+
+
+def test_preflight_fails_closed_on_a_tampered_real_fold_manifest(tmp_path, monkeypatch):
+    manifest, _ = _synthetic_frame_manifest_and_payloads(tmp_path)
+    manifest_path = _write_manifest_and_patch_expected_hash(tmp_path, manifest, monkeypatch)
+    fold_manifest_path = _real_fold_manifest_path(tmp_path)
+    fold_manifest_path.write_bytes(fold_manifest_path.read_bytes() + b" ")
+
+    with pytest.raises(cli.ProductionRunnerError, match="raw-byte"):
+        cli.run_preflight(
+            frame_manifest_path=manifest_path, fold_manifest_path=fold_manifest_path
+        )
+
+
+def test_preflight_and_run_share_the_same_fold_validator():
+    """Proves preflight (via the CLI's imported binding) and the
+    producing path (via export.attach_b_fold_assignments's internal
+    call) dispatch through the identical function object, not two
+    independently-maintained copies."""
+
+    import mineocclude.baselines.export as export_module
+
+    assert cli.validate_b_fold_manifest is export_module.validate_b_fold_manifest
 
 
 def test_no_u4_import_in_the_cli_module():

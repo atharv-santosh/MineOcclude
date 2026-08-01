@@ -97,6 +97,7 @@ from mineocclude.baselines.eight_family_runner import (
     EightFamilyRunnerError,
     fit_and_export_family,
 )
+from mineocclude.baselines.export import BaselineExportError, validate_b_fold_manifest
 from mineocclude.baselines.frame_handoff_v0_2 import (
     PERSON_A_EXTERNAL_FRAME_ROOT,
     PERSON_A_FRAME_HANDOFF_COMMIT,
@@ -107,6 +108,12 @@ from mineocclude.baselines.frame_handoff_v0_2 import (
     verify_frame_manifest_records,
     verify_frame_manifest_summary_counts,
     verify_frame_payloads_on_disk,
+)
+from mineocclude.baselines.production_fold_contract_v0_1 import (
+    PERSON_B_FOLD_CONTRACT_COMMIT,
+    PERSON_B_FOLD_RATIFICATION_COMMIT,
+    PRODUCTION_FOLD_CONTRACT_VERSION,
+    PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION,
 )
 from mineocclude.baselines.production_input_ingest import (
     PERSON_C_EXPANSION_ACCEPTANCE_COMMIT,
@@ -349,6 +356,7 @@ def run_preflight(
     frame_manifest_path: Path,
     frame_root: Path | None = None,
     verify_payloads: bool = False,
+    fold_manifest_path: Path | None = None,
 ) -> dict:
     """Verify every frozen input identity before any family is fit.
 
@@ -358,6 +366,15 @@ def run_preflight(
     true and ``frame_root`` is supplied -- every one of the 1,695
     external frame payloads on disk (defect 5). Never fits a baseline,
     computes a metric, or reads a U4 artifact.
+
+    When ``fold_manifest_path`` is supplied, its raw bytes are verified
+    against the frozen fold-manifest identity and its contents are
+    dispatch-validated through :func:`mineocclude.baselines.export
+    .validate_b_fold_manifest` -- the exact same version-aware check
+    ``attach_b_fold_assignments`` performs during a real run, called
+    here too so the producing path can never bypass it: this function
+    is the one preflight shared by both the ``preflight`` and ``run``
+    CLI modes.
     """
 
     raw_errors = verify_frame_manifest_raw_bytes(frame_manifest_path)
@@ -410,6 +427,24 @@ def run_preflight(
             f"eight-family execution manifest failed validation: {manifest_errors}"
         )
 
+    fold_manifest_verified = False
+    if fold_manifest_path is not None:
+        try:
+            fold_manifest_document = load_and_verify_json_artifact(
+                fold_manifest_path,
+                expected_sha256=FROZEN_DIRECT_INPUTS["fold_manifest"]["sha256"],
+                expected_byte_size=FROZEN_DIRECT_INPUTS["fold_manifest"]["byte_size"],
+            )
+        except ProductionInputIngestError as error:
+            raise ProductionRunnerError(
+                f"fold manifest raw-byte checks failed: {error}"
+            ) from error
+        try:
+            validate_b_fold_manifest(fold_manifest_document)
+        except BaselineExportError as error:
+            raise ProductionRunnerError(f"fold manifest failed validation: {error}") from error
+        fold_manifest_verified = True
+
     return {
         "status": "PREFLIGHT_PASSED",
         "person_a_frame_handoff_commit": PERSON_A_FRAME_HANDOFF_COMMIT,
@@ -418,6 +453,10 @@ def run_preflight(
             PERSON_B_V0_2_PRODUCTION_RATIFICATION_COMMIT
         ),
         "person_b_v0_2_schema_correction_commit": PERSON_B_V0_2_SCHEMA_CORRECTION_COMMIT,
+        "person_b_fold_contract_commit": PERSON_B_FOLD_CONTRACT_COMMIT,
+        "person_b_fold_ratification_commit": PERSON_B_FOLD_RATIFICATION_COMMIT,
+        "fold_contract_version": PRODUCTION_FOLD_CONTRACT_VERSION,
+        "fold_manifest_verified": fold_manifest_verified,
         "person_e_v0_2_step4_1_handoff_commit": PERSON_E_V0_2_STEP4_1_HANDOFF_COMMIT,
         "person_d_exporter_implementation_commit": PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT,
         "eight_family_execution_manifest": execution_manifest,
@@ -563,6 +602,22 @@ def build_real_run_inputs(
         expected_sha256=FROZEN_DIRECT_INPUTS["fold_manifest"]["sha256"],
         expected_byte_size=FROZEN_DIRECT_INPUTS["fold_manifest"]["byte_size"],
     )
+    # Explicit binding, ahead of build_all_trajectory_contexts's own
+    # (also-enforced) dispatch: the real production fold manifest must
+    # declare exactly this contract's format version, not merely
+    # whatever export.validate_b_fold_manifest happens to accept. Fails
+    # closed before any family executes if it is absent or wrong.
+    if fold_manifest.get("fold_manifest_format_version") != PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION:
+        raise ProductionRunnerError(
+            "fold manifest does not declare the required production fold "
+            f"contract format version {PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION!r}: "
+            f"got {fold_manifest.get('fold_manifest_format_version')!r}"
+        )
+    try:
+        validate_b_fold_manifest(fold_manifest)
+    except BaselineExportError as error:
+        raise ProductionRunnerError(f"fold manifest failed validation: {error}") from error
+
     oracle_target_document = load_and_verify_json_artifact(
         target_manifest_path,
         expected_sha256=FROZEN_DIRECT_INPUTS["oracle_target"]["sha256"],
@@ -841,21 +896,6 @@ def main() -> int:
         print("FAIL-CLOSED: 'run' mode requires --frame-root.", file=sys.stderr)
         return 1
 
-    verify_payloads = args.verify_payloads or args.mode == "run"
-    try:
-        preflight_report = run_preflight(
-            frame_manifest_path=args.frame_manifest_path,
-            frame_root=args.frame_root,
-            verify_payloads=verify_payloads,
-        )
-    except ProductionRunnerError as error:
-        print(f"FAIL-CLOSED: preflight failed: {error}", file=sys.stderr)
-        return 1
-    print(json.dumps({"preflight": preflight_report["status"]}, indent=2))
-
-    if args.mode == "preflight":
-        return 0
-
     materialize_root = args.materialize_root
     fold_manifest_path = args.fold_manifest_path or (
         materialize_root / MATERIALIZED_FOLD_MANIFEST_FILENAME
@@ -867,6 +907,31 @@ def main() -> int:
         materialize_root / MATERIALIZED_SOURCE_CONTEXT_MANIFEST_FILENAME
     )
     source_context_root = args.source_context_root or materialize_root
+
+    # The producing ('run') path must always validate the fold manifest
+    # as part of the one shared preflight below -- it can never bypass
+    # it. A bare 'preflight' invocation only validates it when the
+    # caller explicitly supplied --fold-manifest-path, preserving
+    # backward-compatible frame-manifest-only preflight checks.
+    preflight_fold_manifest_path = (
+        fold_manifest_path if args.mode == "run" or args.fold_manifest_path else None
+    )
+
+    verify_payloads = args.verify_payloads or args.mode == "run"
+    try:
+        preflight_report = run_preflight(
+            frame_manifest_path=args.frame_manifest_path,
+            frame_root=args.frame_root,
+            verify_payloads=verify_payloads,
+            fold_manifest_path=preflight_fold_manifest_path,
+        )
+    except ProductionRunnerError as error:
+        print(f"FAIL-CLOSED: preflight failed: {error}", file=sys.stderr)
+        return 1
+    print(json.dumps({"preflight": preflight_report["status"]}, indent=2))
+
+    if args.mode == "preflight":
+        return 0
 
     try:
         real_inputs = build_real_run_inputs(
