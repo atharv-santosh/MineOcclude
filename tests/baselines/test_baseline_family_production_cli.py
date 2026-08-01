@@ -524,6 +524,231 @@ def test_main_never_reaches_run_production_without_authorization(tmp_path, monke
     assert not (tmp_path / "out").exists()
 
 
+def test_main_materialize_mode_requires_authorization(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "AUTHORIZATION_RECORD_PATH", tmp_path / "does_not_exist.json")
+    monkeypatch.setattr(
+        sys, "argv",
+        [
+            "run_person_d_step4_1_eight_family_production.py",
+            "materialize",
+            "--materialize-root", str(tmp_path / "materialized"),
+        ],
+    )
+    exit_code = cli.main()
+    assert exit_code == 1
+    assert "authorization checks failed" in capsys.readouterr().err
+    assert not (tmp_path / "materialized").exists()
+
+
+def _authorize(monkeypatch, tmp_path):
+    """Make main()'s authorization gate pass without depending on this
+    checkout's real branch/HEAD state -- git facts and the recorded
+    authorization are both faked to agree with each other."""
+
+    fake_head = "f" * 40
+    monkeypatch.setattr(
+        cli,
+        "resolve_git_facts",
+        lambda repo_root: {
+            "branch": cli.AUTHORIZED_BRANCH,
+            "head": fake_head,
+            "worktree_dirty": False,
+            "exporter_commit_is_ancestor": True,
+        },
+    )
+    auth_path = tmp_path / "authorized_runner_commit.json"
+    auth_path.write_text(
+        json.dumps({"authorized_runner_commit": fake_head}), encoding="utf-8"
+    )
+    return auth_path
+
+
+def test_main_materialize_mode_dispatches_to_run_materialize(tmp_path, monkeypatch, capsys):
+    auth_path = _authorize(monkeypatch, tmp_path)
+    recorded = {}
+
+    def fake_run_materialize(*, repo_root, materialize_root):
+        recorded["repo_root"] = repo_root
+        recorded["materialize_root"] = materialize_root
+        return {"status": "MATERIALIZE_PASSED"}
+
+    monkeypatch.setattr(cli, "run_materialize", fake_run_materialize)
+    monkeypatch.setattr(
+        sys, "argv",
+        [
+            "run_person_d_step4_1_eight_family_production.py",
+            "materialize",
+            "--authorization-record-path", str(auth_path),
+            "--materialize-root", str(tmp_path / "materialized"),
+        ],
+    )
+    exit_code = cli.main()
+    assert exit_code == 0
+    assert recorded["materialize_root"] == tmp_path / "materialized"
+    assert "MATERIALIZE_PASSED" in capsys.readouterr().out
+
+
+def test_main_materialize_mode_fails_closed_on_ingest_error(tmp_path, monkeypatch, capsys):
+    auth_path = _authorize(monkeypatch, tmp_path)
+
+    def fake_run_materialize(*, repo_root, materialize_root):
+        raise cli.ProductionInputIngestError("simulated hash mismatch")
+
+    monkeypatch.setattr(cli, "run_materialize", fake_run_materialize)
+    monkeypatch.setattr(
+        sys, "argv",
+        [
+            "run_person_d_step4_1_eight_family_production.py",
+            "materialize",
+            "--authorization-record-path", str(auth_path),
+            "--materialize-root", str(tmp_path / "materialized"),
+        ],
+    )
+    exit_code = cli.main()
+    assert exit_code == 1
+    assert "materialize failed" in capsys.readouterr().err
+
+
+def test_main_run_mode_requires_frame_root(tmp_path, monkeypatch, capsys):
+    auth_path = _authorize(monkeypatch, tmp_path)
+    manifest, _ = _synthetic_frame_manifest_and_payloads(tmp_path)
+    manifest_path = _write_manifest_and_patch_expected_hash(tmp_path, manifest, monkeypatch)
+    monkeypatch.setattr(
+        sys, "argv",
+        [
+            "run_person_d_step4_1_eight_family_production.py",
+            "run",
+            "--authorization-record-path", str(auth_path),
+            "--frame-manifest-path", str(manifest_path),
+            "--output-root", str(tmp_path / "out"),
+        ],
+    )
+    exit_code = cli.main()
+    assert exit_code == 1
+    assert "requires --frame-root" in capsys.readouterr().err
+
+
+def test_main_run_mode_wires_real_inputs_into_run_production(tmp_path, monkeypatch, capsys):
+    auth_path = _authorize(monkeypatch, tmp_path)
+    manifest, frame_root = _synthetic_frame_manifest_and_payloads(tmp_path)
+    manifest_path = _write_manifest_and_patch_expected_hash(tmp_path, manifest, monkeypatch)
+
+    real_inputs = {
+        "contexts": ["sentinel_contexts"],
+        "mu_oracle_by_key": {},
+        "log_sigma_oracle_by_key": {},
+        "visible_positions_by_trajectory": {},
+        "pixel_features_by_key": {},
+        "config_hash": "c" * 64,
+        "input_manifest_hash": "i" * 64,
+        "fit_manifest_hash": "f" * 64,
+        "preprocessed_frame_manifest_reference": {
+            "path": "x", "sha256": "0" * 64, "byte_size": 1,
+        },
+    }
+    recorded_build_kwargs = {}
+    recorded_production_kwargs = {}
+
+    def fake_build_real_run_inputs(**kwargs):
+        recorded_build_kwargs.update(kwargs)
+        return real_inputs
+
+    def fake_run_production(**kwargs):
+        recorded_production_kwargs.update(kwargs)
+        return {"families": {"last_seen": {"status": "completed"}}}
+
+    monkeypatch.setattr(cli, "build_real_run_inputs", fake_build_real_run_inputs)
+    monkeypatch.setattr(cli, "run_production", fake_run_production)
+    monkeypatch.setattr(
+        sys, "argv",
+        [
+            "run_person_d_step4_1_eight_family_production.py",
+            "run",
+            "--authorization-record-path", str(auth_path),
+            "--frame-manifest-path", str(manifest_path),
+            "--frame-root", str(frame_root),
+            "--output-root", str(tmp_path / "out"),
+            "--resume", "force",
+        ],
+    )
+    exit_code = cli.main()
+    assert exit_code == 0
+    assert recorded_build_kwargs["frame_root"] == frame_root
+    assert recorded_production_kwargs["force_rerun"] is True
+    assert recorded_production_kwargs["contexts"] == ["sentinel_contexts"]
+    assert "COMPLETED" in capsys.readouterr().out
+
+
+def test_run_production_force_rerun_refits_a_completed_family(tmp_path, monkeypatch):
+    from tests.baselines.conftest import build_trajectory_contexts
+
+    layout_folds = {"layout_00": 1, "layout_01": 2, "layout_02": 4, "layout_03": 0, "layout_04": 3}
+    pilots = {
+        "layout_00_ep9403": ("layout_00", (0.0, 1.0, 2.0)),
+        "layout_00_ep9441": ("layout_00", (0.0, 2.0, 4.0)),
+        "layout_01_ep9405": ("layout_01", (0.0, 1.5, 3.0)),
+        "layout_02_ep9407": ("layout_02", (0.0, 0.5, 1.0)),
+        "layout_03_ep9404": ("layout_03", (0.0, 1.0, 0.5)),
+        "layout_04_ep9406": ("layout_04", (0.0, 2.0, 1.0)),
+    }
+    contexts, mu_oracle_by_key, log_sigma_oracle_by_key = [], {}, {}
+    visible_positions_by_trajectory, pixel_features_by_key = {}, {}
+    for trajectory_id, (layout_id, positions) in pilots.items():
+        ctx_list = build_trajectory_contexts(
+            trajectory_id=trajectory_id, layout_id=layout_id, fold=layout_folds[layout_id],
+            visible_positions=positions, dt=1.0, hidden_taus=(1.0,), duration_seconds=2.0,
+            q_scripted=0.02,
+        )
+        contexts.extend(ctx_list)
+        visible_positions_by_trajectory[trajectory_id] = positions
+        last_seen = ctx_list[-1].last_seen_position_blocks
+        velocity = ctx_list[-1].last_seen_velocity_blocks_per_s
+        for ctx in ctx_list:
+            key = (ctx.trajectory_id, ctx.model_frame_idx)
+            mu_oracle_by_key[key] = last_seen + velocity * ctx.tau_seconds
+            log_sigma_oracle_by_key[key] = 0.1 * ctx.tau_seconds + 0.01
+            pixel_features_by_key[key] = [float(ctx.model_frame_idx), 1.0]
+
+    from mineocclude.baselines.frame_handoff_v0_2 import (
+        build_frame_manifest_direct_input_reference,
+    )
+
+    output_root = tmp_path / "out"
+    kwargs = {
+        "contexts": contexts,
+        "mu_oracle_by_key": mu_oracle_by_key,
+        "log_sigma_oracle_by_key": log_sigma_oracle_by_key,
+        "visible_positions_by_trajectory": visible_positions_by_trajectory,
+        "pixel_features_by_key": pixel_features_by_key,
+        "config_hash": FROZEN_DIRECT_INPUTS["analysis_config"]["sha256"],
+        "input_manifest_hash": "e" * 64,
+        "fit_manifest_hash": "f" * 64,
+        "preprocessed_frame_manifest_reference": build_frame_manifest_direct_input_reference(
+            byte_size=6460547
+        ),
+        "output_root": output_root,
+    }
+    cli.run_production(**kwargs)
+
+    call_counts = {"last_seen": 0}
+    real_fit_and_export_family = cli.fit_and_export_family
+
+    def counting_fit_and_export_family(family_id, *args, **fkwargs):
+        if family_id == "last_seen":
+            call_counts["last_seen"] += 1
+        return real_fit_and_export_family(family_id, *args, **fkwargs)
+
+    monkeypatch.setattr(cli, "fit_and_export_family", counting_fit_and_export_family)
+
+    cli.run_production(**kwargs)
+    assert call_counts["last_seen"] == 0, "plain resume must not refit a completed family"
+
+    cli.run_production(**kwargs, force_rerun=True)
+    assert call_counts["last_seen"] == 1, (
+        "force_rerun must explicitly authorize refitting an already-completed family"
+    )
+
+
 # --------------------------------------------------------------------------
 # Resume planning (unchanged from the prior preparation, re-confirmed here)
 # --------------------------------------------------------------------------

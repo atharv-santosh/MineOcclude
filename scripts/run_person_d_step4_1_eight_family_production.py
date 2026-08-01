@@ -79,14 +79,17 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from mineocclude.analysis.config import hash_core_analysis_config
 from mineocclude.baselines.baseline_family_input_v0_2 import (
     FROZEN_BASELINE_FAMILY_IDS,
+    FROZEN_DIRECT_INPUTS,
     PERSON_B_V0_2_CONTRACT_COMMIT,
     PERSON_B_V0_2_PRODUCTION_RATIFICATION_COMMIT,
     PERSON_E_V0_2_STEP4_1_HANDOFF_COMMIT,
     validate_baseline_document_v0_2,
 )
 from mineocclude.baselines.eight_family_execution_manifest import (
+    FROZEN_SOURCE_CONTEXTS,
     build_eight_family_execution_manifest,
     validate_eight_family_execution_manifest,
 )
@@ -98,11 +101,24 @@ from mineocclude.baselines.frame_handoff_v0_2 import (
     PERSON_A_EXTERNAL_FRAME_ROOT,
     PERSON_A_FRAME_HANDOFF_COMMIT,
     PERSON_A_FRAME_MANIFEST_PATH,
+    PERSON_A_FRAME_MANIFEST_SHA256,
     build_frame_manifest_direct_input_reference,
     verify_frame_manifest_raw_bytes,
     verify_frame_manifest_records,
     verify_frame_manifest_summary_counts,
     verify_frame_payloads_on_disk,
+)
+from mineocclude.baselines.production_input_ingest import (
+    PERSON_C_EXPANSION_ACCEPTANCE_COMMIT,
+    ProductionInputIngestError,
+    build_all_trajectory_contexts,
+    build_fit_manifest_hash,
+    build_input_manifest_hash,
+    build_oracle_target_lookups,
+    build_pixel_features_by_key,
+    load_and_verify_json_artifact,
+    materialize_git_committed_artifact,
+    verify_oracle_target_manifest_structure,
 )
 
 #: Person D's actual exporter implementation commit this runner calls
@@ -137,6 +153,33 @@ DEFAULT_APPROVED_OUTPUT_ROOT = (
     "/home/sagemaker-user/person-d-step4-1-approved-outputs/"
     "person-d-step4-1-production-v0-1"
 )
+
+#: Approved root this runner's own ``materialize`` mode writes committed
+#: cross-role Git artifacts into (fold manifest, oracle target manifest,
+#: source-context manifest, Person A's frame manifest, and the ten real
+#: capture packages) -- never a substitute for the source branches
+#: themselves, only a local, byte-verified copy for ``run`` mode to read.
+DEFAULT_MATERIALIZED_INPUT_ROOT = (
+    "/home/sagemaker-user/person-d-step4-1-approved-outputs/"
+    "person-d-step4-1-materialized-inputs-v0-1"
+)
+
+#: Filenames this script's own ``materialize`` mode writes the fold/
+#: oracle-target/source-context manifests under, inside whatever
+#: ``--materialize-root`` is given. The ten real capture packages are
+#: written at their own frozen ``FROZEN_SOURCE_CONTEXTS`` relative paths
+#: instead, so ``--source-context-root`` can point at the same root.
+MATERIALIZED_FOLD_MANIFEST_FILENAME = "ten_pilot_frame_fold_manifest.json"
+MATERIALIZED_ORACLE_TARGET_FILENAME = "production_oracle_target_manifest.json"
+MATERIALIZED_SOURCE_CONTEXT_MANIFEST_FILENAME = "source_context_manifest.json"
+MATERIALIZED_FRAME_MANIFEST_FILENAME = "preprocessed_frame_manifest.json"
+
+#: The real, independently-verified byte size of Person A's committed
+#: frame manifest at ``PERSON_A_FRAME_HANDOFF_COMMIT``/
+#: ``PERSON_A_FRAME_MANIFEST_PATH`` (``git show <commit>:<path> | wc -c``).
+#: Not frozen alongside ``PERSON_A_FRAME_MANIFEST_SHA256`` in
+#: frame_handoff_v0_2.py, so it is bound here for materialization only.
+PERSON_A_FRAME_MANIFEST_BYTE_SIZE = 6460547
 
 REQUIRED_ENVIRONMENT = {
     "device": "cpu",
@@ -378,9 +421,192 @@ def run_preflight(
         "person_e_v0_2_step4_1_handoff_commit": PERSON_E_V0_2_STEP4_1_HANDOFF_COMMIT,
         "person_d_exporter_implementation_commit": PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT,
         "eight_family_execution_manifest": execution_manifest,
+        "frame_manifest": manifest,
         "frame_payload_verification_performed": verify_payloads,
         "baseline_execution_performed": False,
         "u4_output_inspected": False,
+    }
+
+
+# --------------------------------------------------------------------------
+# Materialize mode: byte-verified local copies of committed cross-role inputs
+# --------------------------------------------------------------------------
+
+
+def run_materialize(*, repo_root: Path, materialize_root: Path) -> dict:
+    """Materialize every committed cross-role artifact this runner needs.
+
+    Each artifact is read via a plain ``git show <commit>:<path>`` object
+    read -- never a checkout or merge of another role's branch -- and
+    verified byte-for-byte against its frozen identity before being
+    written into ``materialize_root``. Fails closed (raises
+    :class:`ProductionInputIngestError`) on any read failure or hash/size
+    mismatch; never fits a baseline or computes a metric.
+
+    The ten real capture packages are read from Person C's branch at
+    ``PERSON_C_EXPANSION_ACCEPTANCE_COMMIT`` -- the exact commit Person
+    B's own ``source_context_manifest.json`` already cites as
+    ``person_c_expansion_acceptance`` -- not from Person B's own branch,
+    whose copy at the same nominal path does not match the frozen
+    ``FROZEN_SOURCE_CONTEXTS`` identity (verified directly; see this
+    script's module docstring and ``production_input_ingest.py``).
+    """
+
+    materialized: dict[str, str] = {}
+
+    fold_reference = FROZEN_DIRECT_INPUTS["fold_manifest"]
+    materialize_git_committed_artifact(
+        repo_root=repo_root,
+        commit=PERSON_B_V0_2_PRODUCTION_RATIFICATION_COMMIT,
+        repo_relative_path=fold_reference["path"],
+        output_path=materialize_root / MATERIALIZED_FOLD_MANIFEST_FILENAME,
+        expected_sha256=fold_reference["sha256"],
+        expected_byte_size=fold_reference["byte_size"],
+    )
+    materialized["fold_manifest"] = str(materialize_root / MATERIALIZED_FOLD_MANIFEST_FILENAME)
+
+    oracle_reference = FROZEN_DIRECT_INPUTS["oracle_target"]
+    materialize_git_committed_artifact(
+        repo_root=repo_root,
+        commit=PERSON_B_V0_2_PRODUCTION_RATIFICATION_COMMIT,
+        repo_relative_path=oracle_reference["path"],
+        output_path=materialize_root / MATERIALIZED_ORACLE_TARGET_FILENAME,
+        expected_sha256=oracle_reference["sha256"],
+        expected_byte_size=oracle_reference["byte_size"],
+    )
+    materialized["oracle_target"] = str(materialize_root / MATERIALIZED_ORACLE_TARGET_FILENAME)
+
+    source_context_reference = FROZEN_DIRECT_INPUTS["source_context_manifest"]
+    materialize_git_committed_artifact(
+        repo_root=repo_root,
+        commit=PERSON_B_V0_2_CONTRACT_COMMIT,
+        repo_relative_path=source_context_reference["path"],
+        output_path=materialize_root / MATERIALIZED_SOURCE_CONTEXT_MANIFEST_FILENAME,
+        expected_sha256=source_context_reference["sha256"],
+        expected_byte_size=source_context_reference["byte_size"],
+    )
+    materialized["source_context_manifest"] = str(
+        materialize_root / MATERIALIZED_SOURCE_CONTEXT_MANIFEST_FILENAME
+    )
+
+    materialize_git_committed_artifact(
+        repo_root=repo_root,
+        commit=PERSON_A_FRAME_HANDOFF_COMMIT,
+        repo_relative_path=PERSON_A_FRAME_MANIFEST_PATH,
+        output_path=materialize_root / MATERIALIZED_FRAME_MANIFEST_FILENAME,
+        expected_sha256=PERSON_A_FRAME_MANIFEST_SHA256,
+        expected_byte_size=PERSON_A_FRAME_MANIFEST_BYTE_SIZE,
+    )
+    materialized["frame_manifest"] = str(materialize_root / MATERIALIZED_FRAME_MANIFEST_FILENAME)
+
+    for source_context in FROZEN_SOURCE_CONTEXTS:
+        capture_reference = source_context["capture_package"]
+        output_path = materialize_root / capture_reference["path"]
+        materialize_git_committed_artifact(
+            repo_root=repo_root,
+            commit=PERSON_C_EXPANSION_ACCEPTANCE_COMMIT,
+            repo_relative_path=capture_reference["path"],
+            output_path=output_path,
+            expected_sha256=capture_reference["sha256"],
+            expected_byte_size=capture_reference["byte_size"],
+        )
+        materialized[f"capture_package:{source_context['trajectory_id']}"] = str(output_path)
+
+    return {
+        "status": "MATERIALIZE_PASSED",
+        "materialize_root": str(materialize_root),
+        "materialized_artifacts": materialized,
+        "person_b_v0_2_production_ratification_commit": (
+            PERSON_B_V0_2_PRODUCTION_RATIFICATION_COMMIT
+        ),
+        "person_b_v0_2_contract_commit": PERSON_B_V0_2_CONTRACT_COMMIT,
+        "person_a_frame_handoff_commit": PERSON_A_FRAME_HANDOFF_COMMIT,
+        "person_c_expansion_acceptance_commit": PERSON_C_EXPANSION_ACCEPTANCE_COMMIT,
+        "baseline_execution_performed": False,
+        "u4_output_inspected": False,
+    }
+
+
+# --------------------------------------------------------------------------
+# Real input assembly for run mode
+# --------------------------------------------------------------------------
+
+
+def build_real_run_inputs(
+    *,
+    fold_manifest_path: Path,
+    target_manifest_path: Path,
+    source_context_manifest_path: Path,
+    source_context_root: Path,
+    analysis_config_path: Path,
+    frame_manifest: Mapping[str, Any],
+    frame_root: Path,
+    execution_manifest: Mapping[str, Any],
+) -> dict:
+    """Load, verify, and join every real input ``run_production`` needs.
+
+    Every artifact is byte-verified against its frozen identity before
+    being trusted, exactly matching the discipline the frame manifest
+    already applies. Never fits a baseline or computes a metric -- this
+    only assembles ``run_production``'s input arguments.
+    """
+
+    config_hash = hash_core_analysis_config(analysis_config_path)
+    if config_hash != FROZEN_DIRECT_INPUTS["analysis_config"]["sha256"]:
+        raise ProductionRunnerError(
+            f"analysis config hash mismatch: expected="
+            f"{FROZEN_DIRECT_INPUTS['analysis_config']['sha256']} actual={config_hash}"
+        )
+
+    fold_manifest = load_and_verify_json_artifact(
+        fold_manifest_path,
+        expected_sha256=FROZEN_DIRECT_INPUTS["fold_manifest"]["sha256"],
+        expected_byte_size=FROZEN_DIRECT_INPUTS["fold_manifest"]["byte_size"],
+    )
+    oracle_target_document = load_and_verify_json_artifact(
+        target_manifest_path,
+        expected_sha256=FROZEN_DIRECT_INPUTS["oracle_target"]["sha256"],
+        expected_byte_size=FROZEN_DIRECT_INPUTS["oracle_target"]["byte_size"],
+    )
+    oracle_errors = verify_oracle_target_manifest_structure(oracle_target_document)
+    if oracle_errors:
+        raise ProductionRunnerError(f"oracle target manifest failed validation: {oracle_errors}")
+
+    # Bound the manifest to D's own frozen contract, not merely loaded --
+    # confirms this real file agrees with source_context_manifest.json's
+    # own committed identity before it is used to join capture packages.
+    load_and_verify_json_artifact(
+        source_context_manifest_path,
+        expected_sha256=FROZEN_DIRECT_INPUTS["source_context_manifest"]["sha256"],
+        expected_byte_size=FROZEN_DIRECT_INPUTS["source_context_manifest"]["byte_size"],
+    )
+
+    try:
+        contexts, visible_positions_by_trajectory = build_all_trajectory_contexts(
+            source_context_root=source_context_root,
+            oracle_target_document=oracle_target_document,
+            fold_manifest=fold_manifest,
+            config_hash=config_hash,
+        )
+    except ProductionInputIngestError as error:
+        raise ProductionRunnerError(f"trajectory context assembly failed: {error}") from error
+
+    mu_oracle_by_key, log_sigma_oracle_by_key = build_oracle_target_lookups(oracle_target_document)
+    pixel_features_by_key = build_pixel_features_by_key(
+        frame_manifest=frame_manifest, frame_root=frame_root
+    )
+    frame_reference = execution_manifest["direct_inputs"]["preprocessed_frame_manifest"]
+
+    return {
+        "contexts": contexts,
+        "mu_oracle_by_key": mu_oracle_by_key,
+        "log_sigma_oracle_by_key": log_sigma_oracle_by_key,
+        "visible_positions_by_trajectory": visible_positions_by_trajectory,
+        "pixel_features_by_key": pixel_features_by_key,
+        "config_hash": config_hash,
+        "input_manifest_hash": build_input_manifest_hash(execution_manifest),
+        "fit_manifest_hash": build_fit_manifest_hash(execution_manifest),
+        "preprocessed_frame_manifest_reference": frame_reference,
     }
 
 
@@ -401,18 +627,23 @@ def run_production(
     fit_manifest_hash: str,
     preprocessed_frame_manifest_reference: Mapping[str, object],
     output_root: Path,
+    force_rerun: bool = False,
 ) -> dict:
     """Fit, validate, and persist every family not already verified.
 
     Fails closed per family: on any family's failure, this stops
     immediately and raises, leaving every earlier family's persisted,
-    already-verified output untouched. Never invoked by this
-    preparation pass -- exercised in tests via direct calls with
-    synthetic contexts/targets only.
+    already-verified output untouched. ``force_rerun`` is the explicit,
+    caller-authorized override for "resume behavior" (``--resume force``
+    on the CLI): when true, every family is (re)fit regardless of any
+    already-recorded ``run_state.json`` entry, but an already-completed
+    *other* family's on-disk output is still never touched unless that
+    family itself is refit.
     """
 
     existing_state = load_run_state(output_root)
-    plan = determine_family_execution_plan(existing_state, output_root=output_root)
+    plan_source: Mapping[str, Any] = {} if force_rerun else existing_state
+    plan = determine_family_execution_plan(plan_source, output_root=output_root)
     state = {"schema_version": "1.0", "families": dict(existing_state.get("families", {}))}
 
     for family_id in FROZEN_BASELINE_FAMILY_IDS:
@@ -469,13 +700,23 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "mode",
-        choices=("preflight", "run"),
+        choices=("preflight", "materialize", "run"),
         help=(
             "preflight: verify all frozen inputs and the eight-family "
-            "execution manifest without fitting anything. run: fit and "
-            "export each family in order, resuming any already-verified "
-            "family output."
+            "execution manifest without fitting anything. materialize: "
+            "byte-verify and locally copy every committed cross-role "
+            "input (fold/oracle-target/source-context manifests, Person "
+            "A's frame manifest, and the ten real capture packages) from "
+            "their authoritative branches. run: fit and export each "
+            "family in order, resuming any already-verified family "
+            "output."
         ),
+    )
+    parser.add_argument(
+        "--authorization-record-path",
+        type=Path,
+        default=AUTHORIZATION_RECORD_PATH,
+        help="Path to the {authorized_runner_commit} JSON this exact HEAD must equal.",
     )
     parser.add_argument(
         "--frame-manifest-path",
@@ -492,7 +733,12 @@ def main() -> int:
     parser.add_argument(
         "--verify-payloads",
         action="store_true",
-        help="Verify all 1,695 frame payloads on disk during preflight (requires --frame-root).",
+        help=(
+            "Verify all 1,695 frame payloads on disk during preflight "
+            "(requires --frame-root). Always forced on for 'run' mode "
+            "regardless of this flag, since raw_pixel requires every "
+            "payload to be read either way."
+        ),
     )
     parser.add_argument(
         "--output-root",
@@ -500,16 +746,87 @@ def main() -> int:
         default=Path(DEFAULT_APPROVED_OUTPUT_ROOT),
         help="Approved output root for this runner's produced artifacts.",
     )
+    parser.add_argument(
+        "--materialize-root",
+        type=Path,
+        default=Path(DEFAULT_MATERIALIZED_INPUT_ROOT),
+        help="Root 'materialize' mode writes byte-verified committed inputs into.",
+    )
+    parser.add_argument(
+        "--fold-manifest-path",
+        type=Path,
+        default=None,
+        help=(
+            "Local path to Person B's real ten_pilot_frame_fold_manifest.json "
+            "(defaults to <materialize-root>/" + MATERIALIZED_FOLD_MANIFEST_FILENAME + ")."
+        ),
+    )
+    parser.add_argument(
+        "--target-manifest-path",
+        type=Path,
+        default=None,
+        help=(
+            "Local path to Person B's real production_oracle_target_manifest.json "
+            "(defaults to <materialize-root>/" + MATERIALIZED_ORACLE_TARGET_FILENAME + ")."
+        ),
+    )
+    parser.add_argument(
+        "--source-context-manifest-path",
+        type=Path,
+        default=None,
+        help=(
+            "Local path to Person B's real source_context_manifest.json "
+            "(defaults to <materialize-root>/"
+            + MATERIALIZED_SOURCE_CONTEXT_MANIFEST_FILENAME
+            + ")."
+        ),
+    )
+    parser.add_argument(
+        "--source-context-root",
+        type=Path,
+        default=None,
+        help=(
+            "Local root containing the ten real capture_package_v0_1.json "
+            "files at their frozen relative paths (defaults to --materialize-root)."
+        ),
+    )
+    parser.add_argument(
+        "--analysis-config-path",
+        type=Path,
+        default=Path(FROZEN_DIRECT_INPUTS["analysis_config"]["path"]),
+        help="Local path to the frozen configs/analysis/core.yaml.",
+    )
+    parser.add_argument(
+        "--resume",
+        choices=("resume", "force"),
+        default="resume",
+        help=(
+            "resume: skip any family whose recorded output still exists "
+            "and still re-validates. force: explicitly authorize "
+            "refitting every family regardless of run_state.json."
+        ),
+    )
     args = parser.parse_args()
 
     git_facts = resolve_git_facts(ROOT)
-    authorized_runner_commit = load_authorized_runner_commit(AUTHORIZATION_RECORD_PATH)
+    authorized_runner_commit = load_authorized_runner_commit(args.authorization_record_path)
     authorization_errors = verify_branch_and_authorization(
         authorized_runner_commit=authorized_runner_commit, **git_facts
     )
     if authorization_errors:
         print(f"FAIL-CLOSED: authorization checks failed: {authorization_errors}", file=sys.stderr)
         return 1
+
+    if args.mode == "materialize":
+        try:
+            materialize_report = run_materialize(
+                repo_root=ROOT, materialize_root=args.materialize_root
+            )
+        except ProductionInputIngestError as error:
+            print(f"FAIL-CLOSED: materialize failed: {error}", file=sys.stderr)
+            return 1
+        print(json.dumps({"materialize": materialize_report["status"]}, indent=2))
+        return 0
 
     if not args.frame_manifest_path.exists():
         print(
@@ -520,25 +837,70 @@ def main() -> int:
         )
         return 1
 
-    preflight_report = run_preflight(
-        frame_manifest_path=args.frame_manifest_path,
-        frame_root=args.frame_root,
-        verify_payloads=args.verify_payloads,
-    )
+    if args.mode == "run" and args.frame_root is None:
+        print("FAIL-CLOSED: 'run' mode requires --frame-root.", file=sys.stderr)
+        return 1
+
+    verify_payloads = args.verify_payloads or args.mode == "run"
+    try:
+        preflight_report = run_preflight(
+            frame_manifest_path=args.frame_manifest_path,
+            frame_root=args.frame_root,
+            verify_payloads=verify_payloads,
+        )
+    except ProductionRunnerError as error:
+        print(f"FAIL-CLOSED: preflight failed: {error}", file=sys.stderr)
+        return 1
     print(json.dumps({"preflight": preflight_report["status"]}, indent=2))
 
     if args.mode == "preflight":
         return 0
 
-    print(
-        "FAIL-CLOSED: 'run' mode requires real oracle-target/fold-manifest/"
-        "context inputs that are only available in the approved SageMaker "
-        "environment; this CLI does not accept them from the command line "
-        "in this preparation pass. Call run_production(...) directly with "
-        "real inputs once available.",
-        file=sys.stderr,
+    materialize_root = args.materialize_root
+    fold_manifest_path = args.fold_manifest_path or (
+        materialize_root / MATERIALIZED_FOLD_MANIFEST_FILENAME
     )
-    return 1
+    target_manifest_path = args.target_manifest_path or (
+        materialize_root / MATERIALIZED_ORACLE_TARGET_FILENAME
+    )
+    source_context_manifest_path = args.source_context_manifest_path or (
+        materialize_root / MATERIALIZED_SOURCE_CONTEXT_MANIFEST_FILENAME
+    )
+    source_context_root = args.source_context_root or materialize_root
+
+    try:
+        real_inputs = build_real_run_inputs(
+            fold_manifest_path=fold_manifest_path,
+            target_manifest_path=target_manifest_path,
+            source_context_manifest_path=source_context_manifest_path,
+            source_context_root=source_context_root,
+            analysis_config_path=args.analysis_config_path,
+            frame_manifest=preflight_report["frame_manifest"],
+            frame_root=args.frame_root,
+            execution_manifest=preflight_report["eight_family_execution_manifest"],
+        )
+    except ProductionRunnerError as error:
+        print(f"FAIL-CLOSED: real input assembly failed: {error}", file=sys.stderr)
+        return 1
+
+    state = run_production(
+        output_root=args.output_root,
+        force_rerun=args.resume == "force",
+        **real_inputs,
+    )
+    print(
+        json.dumps(
+            {
+                "run": "COMPLETED",
+                "families": {
+                    family_id: record.get("status")
+                    for family_id, record in state["families"].items()
+                },
+            },
+            indent=2,
+        )
+    )
+    return 0
 
 
 if __name__ == "__main__":
