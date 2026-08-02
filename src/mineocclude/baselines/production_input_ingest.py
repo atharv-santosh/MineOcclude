@@ -45,11 +45,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import struct
 import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
+
+import numpy as np
 
 from mineocclude.analysis.manifests import sha256_value
 from mineocclude.baselines.baseline_family_input_v0_2 import (
@@ -406,17 +407,33 @@ def build_all_trajectory_contexts(
 
 def build_pixel_features_by_key(
     *, frame_manifest: Mapping[str, Any], frame_root: Path
-) -> dict[RowKey, list[float]]:
-    """Read every real preprocessed frame payload into a flat feature vector.
+) -> dict[RowKey, np.ndarray]:
+    """Read every real preprocessed frame payload into a compact feature vector.
 
-    Only ``raw_pixel`` consumes this. Assumes the caller has already run
+    Only ``raw_pixel`` consumes this, and it is the single largest
+    in-memory structure this runner ever builds (437,391,360 float32
+    values across all 1,695 admitted frames -- roughly 1.6 GiB compact).
+    Every value is decoded straight into a ``float32`` NumPy array via
+    :func:`_decode_little_endian_float32` -- never a Python list of
+    boxed ``float`` objects, which would multiply this footprint by
+    roughly 8x (each boxed Python float is 24+ bytes versus 4 bytes
+    packed) and was the confirmed root cause of a production OOM kill
+    (13.035 GiB minimum boxed footprint on a 15 GiB, zero-swap host).
+
+    Assumes the caller has already run
     :func:`mineocclude.baselines.frame_handoff_v0_2.verify_frame_payloads_on_disk`
     against this exact ``frame_manifest``/``frame_root`` pair (the
     production CLI's ``run`` mode always does, unconditionally) -- this
     function does not re-verify each payload's hash, only decodes it.
+
+    Callers must treat the returned mapping as a single family-scoped,
+    short-lived structure: build it immediately before ``raw_pixel``
+    fits and drop every reference to it immediately afterward (the
+    production CLI's ``run_production`` does exactly this) so the
+    following families never carry this memory forward.
     """
 
-    features: dict[RowKey, list[float]] = {}
+    features: dict[RowKey, np.ndarray] = {}
     for record in frame_manifest.get("records", ()):
         if not isinstance(record, Mapping):
             continue
@@ -430,14 +447,20 @@ def build_pixel_features_by_key(
         ):
             continue
         payload = (frame_root / relative_path).read_bytes()
-        values = _decode_little_endian_float32(payload)
-        features[(trajectory_id, model_frame_idx)] = values
+        features[(trajectory_id, model_frame_idx)] = _decode_little_endian_float32(payload)
     return features
 
 
-def _decode_little_endian_float32(payload: bytes) -> list[float]:
-    count = len(payload) // 4
-    return list(struct.unpack(f"<{count}f", payload[: count * 4]))
+def _decode_little_endian_float32(payload: bytes) -> np.ndarray:
+    """Decode raw little-endian float32 bytes into a compact, owned array.
+
+    ``np.frombuffer`` returns a read-only view over ``payload``; ``.copy()``
+    detaches it from that (short-lived, per-call) ``bytes`` buffer into
+    its own owned, writeable allocation -- exactly one float32 array per
+    frame, never a Python list of boxed floats.
+    """
+
+    return np.frombuffer(payload, dtype="<f4").copy()
 
 
 def build_input_manifest_hash(execution_manifest: Mapping[str, Any]) -> str:

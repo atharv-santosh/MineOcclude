@@ -443,7 +443,58 @@ def test_build_pixel_features_by_key_decodes_real_float32_payloads(tmp_path):
     features = ingest.build_pixel_features_by_key(
         frame_manifest=frame_manifest, frame_root=frame_root
     )
-    assert features[("traj_a", 0)] == pytest.approx(values)
+    assert features[("traj_a", 0)].tolist() == pytest.approx(values)
+
+
+def test_build_pixel_features_by_key_never_boxes_values_as_python_floats(tmp_path):
+    """The confirmed root cause of the production OOM (exit 137): every
+    one of the 437,391,360 raw_pixel feature values must be represented
+    in compact NumPy storage, never as individually boxed Python
+    ``float`` objects (each 24+ bytes versus float32's packed 4 bytes)."""
+
+    import numpy as np
+
+    frame_root = tmp_path / "frames"
+    relative_path = "traj_a/000000.f32le"
+    full_path = frame_root / relative_path
+    full_path.parent.mkdir(parents=True)
+    values = [0.5, -1.0, 2.25, 3.0]
+    full_path.write_bytes(struct.pack(f"<{len(values)}f", *values))
+
+    frame_manifest = {
+        "records": [
+            {
+                "trajectory_id": "traj_a",
+                "model_frame_idx": 0,
+                "output_relative_path": relative_path,
+            }
+        ]
+    }
+    features = ingest.build_pixel_features_by_key(
+        frame_manifest=frame_manifest, frame_root=frame_root
+    )
+    array = features[("traj_a", 0)]
+    assert isinstance(array, np.ndarray), (
+        f"expected a compact numpy.ndarray, got {type(array)!r} -- a Python "
+        "list here would reintroduce the confirmed OOM root cause"
+    )
+    assert not isinstance(array, list)
+    assert array.dtype == np.float32
+    assert array.tolist() == pytest.approx(values)
+
+
+def test_build_pixel_features_by_key_source_never_calls_dot_tolist_internally():
+    """Static check matching this task's explicit requirement: the
+    production path must not call ``.tolist()`` or equivalent boxing on
+    the large feature matrix anywhere in its own source."""
+
+    import inspect
+
+    source = inspect.getsource(ingest.build_pixel_features_by_key) + inspect.getsource(
+        ingest._decode_little_endian_float32
+    )
+    assert ".tolist()" not in source
+    assert "struct.unpack" not in source
 
 
 def test_build_input_manifest_hash_and_fit_manifest_hash_are_deterministic_and_distinct():

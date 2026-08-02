@@ -118,7 +118,14 @@ def _write_fold_manifest_and_patch_expected_hash(tmp_path: Path, monkeypatch) ->
     is patched to a no-op alongside this, so the file's actual content
     is never semantically validated here."""
 
-    fold_bytes = json.dumps({"sentinel": "fold-manifest"}).encode("utf-8")
+    fold_bytes = json.dumps(
+        {
+            "sentinel": "fold-manifest",
+            "memberships": [
+                {"trajectory_id": "sentinel_traj", "model_frame_idx": 0, "fold_idx": 0},
+            ],
+        }
+    ).encode("utf-8")
     fold_path = tmp_path / "ten_pilot_frame_fold_manifest.json"
     fold_path.write_bytes(fold_bytes)
     real_sha256 = hashlib.sha256(fold_bytes).hexdigest()
@@ -766,6 +773,212 @@ def test_run_production_force_rerun_refits_a_completed_family(tmp_path, monkeypa
     assert call_counts["last_seen"] == 1, (
         "force_rerun must explicitly authorize refitting an already-completed family"
     )
+
+
+# --------------------------------------------------------------------------
+# Memory repair: lazy, family-scoped pixel features + memory-plan gate
+# --------------------------------------------------------------------------
+
+
+def _six_pilot_fixture():
+    from tests.baselines.conftest import build_trajectory_contexts
+
+    layout_folds = {"layout_00": 1, "layout_01": 2, "layout_02": 4, "layout_03": 0, "layout_04": 3}
+    pilots = {
+        "layout_00_ep9403": ("layout_00", (0.0, 1.0, 2.0)),
+        "layout_00_ep9441": ("layout_00", (0.0, 2.0, 4.0)),
+        "layout_01_ep9405": ("layout_01", (0.0, 1.5, 3.0)),
+        "layout_02_ep9407": ("layout_02", (0.0, 0.5, 1.0)),
+        "layout_03_ep9404": ("layout_03", (0.0, 1.0, 0.5)),
+        "layout_04_ep9406": ("layout_04", (0.0, 2.0, 1.0)),
+    }
+    contexts, mu_oracle_by_key, log_sigma_oracle_by_key = [], {}, {}
+    visible_positions_by_trajectory, pixel_features_by_key = {}, {}
+    for trajectory_id, (layout_id, positions) in pilots.items():
+        ctx_list = build_trajectory_contexts(
+            trajectory_id=trajectory_id, layout_id=layout_id, fold=layout_folds[layout_id],
+            visible_positions=positions, dt=1.0, hidden_taus=(1.0,), duration_seconds=2.0,
+            q_scripted=0.02,
+        )
+        contexts.extend(ctx_list)
+        visible_positions_by_trajectory[trajectory_id] = positions
+        last_seen = ctx_list[-1].last_seen_position_blocks
+        velocity = ctx_list[-1].last_seen_velocity_blocks_per_s
+        for ctx in ctx_list:
+            key = (ctx.trajectory_id, ctx.model_frame_idx)
+            mu_oracle_by_key[key] = last_seen + velocity * ctx.tau_seconds
+            log_sigma_oracle_by_key[key] = 0.1 * ctx.tau_seconds + 0.01
+            pixel_features_by_key[key] = [float(ctx.model_frame_idx), 1.0]
+    return contexts, mu_oracle_by_key, log_sigma_oracle_by_key, visible_positions_by_trajectory, pixel_features_by_key
+
+
+def _base_run_production_kwargs(tmp_path):
+    from mineocclude.baselines.frame_handoff_v0_2 import (
+        build_frame_manifest_direct_input_reference,
+    )
+
+    contexts, mu, log_sigma, visible, pixel_features = _six_pilot_fixture()
+    return {
+        "contexts": contexts,
+        "mu_oracle_by_key": mu,
+        "log_sigma_oracle_by_key": log_sigma,
+        "visible_positions_by_trajectory": visible,
+        "config_hash": FROZEN_DIRECT_INPUTS["analysis_config"]["sha256"],
+        "input_manifest_hash": "e" * 64,
+        "fit_manifest_hash": "f" * 64,
+        "preprocessed_frame_manifest_reference": build_frame_manifest_direct_input_reference(
+            byte_size=6460547
+        ),
+        "output_root": tmp_path / "out",
+    }, pixel_features
+
+
+def test_run_production_pixel_features_provider_is_lazy_and_called_exactly_once(tmp_path):
+    kwargs, pixel_features = _base_run_production_kwargs(tmp_path)
+    call_count = {"n": 0}
+
+    def provider():
+        call_count["n"] += 1
+        return pixel_features
+
+    state = cli.run_production(pixel_features_provider=provider, **kwargs)
+    assert call_count["n"] == 1
+    assert state["families"]["raw_pixel"]["status"] == "completed"
+
+
+def test_run_production_never_passes_pixel_features_to_non_raw_pixel_families(tmp_path, monkeypatch):
+    kwargs, pixel_features = _base_run_production_kwargs(tmp_path)
+    seen_pixel_features_by_family = {}
+    real_fit_and_export_family = cli.fit_and_export_family
+
+    def spy(family_id, *args, **fkwargs):
+        seen_pixel_features_by_family[family_id] = fkwargs.get("pixel_features_by_key")
+        return real_fit_and_export_family(family_id, *args, **fkwargs)
+
+    monkeypatch.setattr(cli, "fit_and_export_family", spy)
+
+    cli.run_production(pixel_features_provider=lambda: pixel_features, **kwargs)
+
+    for family_id in FROZEN_BASELINE_FAMILY_IDS:
+        if family_id == "raw_pixel":
+            assert seen_pixel_features_by_family[family_id] == pixel_features
+        else:
+            assert seen_pixel_features_by_family[family_id] == {}, (
+                f"{family_id} must never receive raw_pixel's feature matrix"
+            )
+
+
+def test_run_production_families_execute_in_the_frozen_order(tmp_path, monkeypatch):
+    kwargs, pixel_features = _base_run_production_kwargs(tmp_path)
+    call_order = []
+    real_fit_and_export_family = cli.fit_and_export_family
+
+    def spy(family_id, *args, **fkwargs):
+        call_order.append(family_id)
+        return real_fit_and_export_family(family_id, *args, **fkwargs)
+
+    monkeypatch.setattr(cli, "fit_and_export_family", spy)
+    cli.run_production(pixel_features_provider=lambda: pixel_features, **kwargs)
+    assert tuple(call_order) == FROZEN_BASELINE_FAMILY_IDS
+
+
+def test_run_production_memory_plan_gate_blocks_raw_pixel_before_fitting(tmp_path, monkeypatch):
+    kwargs, pixel_features = _base_run_production_kwargs(tmp_path)
+    provider_calls = {"n": 0}
+
+    def provider():
+        provider_calls["n"] += 1
+        return pixel_features
+
+    from mineocclude.baselines.memory_planning import MemoryPlan
+
+    rejecting_plan = MemoryPlan(
+        feature_value_count=437_391_360,
+        source_dtype="float32",
+        compact_payload_bytes=1,
+        expected_largest_resident_matrix_bytes=1,
+        expected_working_copy_bytes=1,
+        estimated_peak_bytes=999 * 1024**3,
+        detected_host_physical_bytes=15 * 1024**3,
+        detected_host_available_bytes=None,
+        admitted=False,
+        reasons=("estimated_peak_bytes=999GiB exceeds detected_budget_bytes=15GiB",),
+    )
+    monkeypatch.setattr(cli, "build_raw_pixel_memory_plan", lambda **_: rejecting_plan)
+
+    fit_calls = []
+    real_fit_and_export_family = cli.fit_and_export_family
+    monkeypatch.setattr(
+        cli,
+        "fit_and_export_family",
+        lambda family_id, *a, **k: (
+            fit_calls.append(family_id) or real_fit_and_export_family(family_id, *a, **k)
+        ),
+    )
+
+    with pytest.raises(cli.ProductionRunnerError, match="memory plan rejected"):
+        cli.run_production(pixel_features_provider=provider, **kwargs)
+
+    assert provider_calls["n"] == 0, "the expensive feature matrix must never be built once rejected"
+    assert "raw_pixel" not in fit_calls, "raw_pixel must never be fit once the memory plan rejects it"
+
+    state = cli.load_run_state(kwargs["output_root"])
+    assert state["families"]["raw_pixel"]["status"] == "failed"
+    # Earlier families in frozen order still completed and are on disk.
+    assert state["families"]["last_seen"]["status"] == "completed"
+
+
+def test_run_production_releases_pixel_features_after_raw_pixel_completes(tmp_path):
+    kwargs, pixel_features = _base_run_production_kwargs(tmp_path)
+
+    def provider():
+        return pixel_features
+
+    state = cli.run_production(pixel_features_provider=provider, **kwargs)
+    assert state["families"]["raw_pixel"]["status"] == "completed"
+    # The subsequent families (visible_history_q, known_q_analytic) must
+    # have completed too -- proving raw_pixel's release did not corrupt
+    # or interrupt the rest of the run.
+    raw_pixel_index = FROZEN_BASELINE_FAMILY_IDS.index("raw_pixel")
+    for family_id in FROZEN_BASELINE_FAMILY_IDS[raw_pixel_index + 1:]:
+        assert state["families"][family_id]["status"] == "completed"
+
+
+def test_run_production_resume_never_calls_the_pixel_features_provider_for_a_valid_family(tmp_path):
+    kwargs, pixel_features = _base_run_production_kwargs(tmp_path)
+    call_count = {"n": 0}
+
+    def counting_provider():
+        call_count["n"] += 1
+        return pixel_features
+
+    cli.run_production(pixel_features_provider=counting_provider, **kwargs)
+    assert call_count["n"] == 1
+
+    cli.run_production(pixel_features_provider=counting_provider, **kwargs)
+    assert call_count["n"] == 1, "resume must not rebuild raw_pixel's feature matrix for a valid family"
+
+
+def test_preflight_reports_memory_plan_for_the_real_production_fold_manifest(tmp_path, monkeypatch):
+    manifest, _ = _synthetic_frame_manifest_and_payloads(tmp_path)
+    manifest_path = _write_manifest_and_patch_expected_hash(tmp_path, manifest, monkeypatch)
+    fold_manifest_path = _real_fold_manifest_path(tmp_path)
+
+    report = cli.run_preflight(
+        frame_manifest_path=manifest_path, fold_manifest_path=fold_manifest_path
+    )
+    memory_plan = report["memory_plan"]
+    assert memory_plan is not None
+    assert memory_plan["feature_value_count"] == 437_391_360
+    assert memory_plan["source_dtype"] == "float32"
+    assert memory_plan["compact_payload_bytes"] == 437_391_360 * 4
+
+
+def test_preflight_memory_plan_is_none_without_a_fold_manifest(tmp_path, monkeypatch):
+    manifest, _ = _synthetic_frame_manifest_and_payloads(tmp_path)
+    manifest_path = _write_manifest_and_patch_expected_hash(tmp_path, manifest, monkeypatch)
+    report = cli.run_preflight(frame_manifest_path=manifest_path)
+    assert report["memory_plan"] is None
 
 
 # --------------------------------------------------------------------------

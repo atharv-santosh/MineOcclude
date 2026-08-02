@@ -69,9 +69,12 @@ path, or artifact.
 from __future__ import annotations
 
 import argparse
+import functools
+import gc
 import json
 import subprocess
 import sys
+from collections import Counter
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
@@ -81,6 +84,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from mineocclude.analysis.config import hash_core_analysis_config
 from mineocclude.baselines.baseline_family_input_v0_2 import (
+    BASELINE_FAMILY_CONTRACTS_V0_2,
     FROZEN_BASELINE_FAMILY_IDS,
     FROZEN_DIRECT_INPUTS,
     PERSON_B_V0_2_CONTRACT_COMMIT,
@@ -103,11 +107,17 @@ from mineocclude.baselines.frame_handoff_v0_2 import (
     PERSON_A_FRAME_HANDOFF_COMMIT,
     PERSON_A_FRAME_MANIFEST_PATH,
     PERSON_A_FRAME_MANIFEST_SHA256,
+    REQUIRED_PAYLOAD_SHAPE,
     build_frame_manifest_direct_input_reference,
     verify_frame_manifest_raw_bytes,
     verify_frame_manifest_records,
     verify_frame_manifest_summary_counts,
     verify_frame_payloads_on_disk,
+)
+from mineocclude.baselines.memory_planning import (
+    MemoryPlan,
+    MemoryPlanError,
+    build_raw_pixel_memory_plan,
 )
 from mineocclude.baselines.production_fold_contract_v0_1 import (
     PERSON_B_FOLD_CONTRACT_COMMIT,
@@ -127,6 +137,15 @@ from mineocclude.baselines.production_input_ingest import (
     materialize_git_committed_artifact,
     verify_oracle_target_manifest_structure,
 )
+
+#: raw_pixel's own frozen inner-CV fold count (BASELINE_FAMILY_CONTRACTS_V0_2
+#: ["raw_pixel"]["configuration"]["inner_fold_count"]) -- read once here so
+#: the memory plan uses the exact same value the estimator itself uses,
+#: never a separately-maintained duplicate.
+RAW_PIXEL_INNER_FOLD_COUNT = BASELINE_FAMILY_CONTRACTS_V0_2["raw_pixel"]["configuration"][
+    "inner_fold_count"
+]
+RAW_PIXEL_FEATURE_DIM = REQUIRED_PAYLOAD_SHAPE[0] * REQUIRED_PAYLOAD_SHAPE[1] * REQUIRED_PAYLOAD_SHAPE[2]
 
 #: Person D's actual exporter implementation commit this runner calls
 #: into. Never the historical branch-starting authority
@@ -351,6 +370,24 @@ def determine_family_execution_plan(
 # --------------------------------------------------------------------------
 
 
+def _memory_plan_to_dict(plan: MemoryPlan) -> dict[str, Any]:
+    """Serialize a :class:`MemoryPlan` for inclusion in a JSON report."""
+
+    return {
+        "feature_value_count": plan.feature_value_count,
+        "source_dtype": plan.source_dtype,
+        "compact_payload_bytes": plan.compact_payload_bytes,
+        "expected_largest_resident_matrix_bytes": plan.expected_largest_resident_matrix_bytes,
+        "expected_working_copy_bytes": plan.expected_working_copy_bytes,
+        "estimated_peak_bytes": plan.estimated_peak_bytes,
+        "estimated_peak_gib": plan.estimated_peak_gib,
+        "detected_host_physical_bytes": plan.detected_host_physical_bytes,
+        "detected_host_available_bytes": plan.detected_host_available_bytes,
+        "admitted": plan.admitted,
+        "reasons": list(plan.reasons),
+    }
+
+
 def run_preflight(
     *,
     frame_manifest_path: Path,
@@ -428,6 +465,7 @@ def run_preflight(
         )
 
     fold_manifest_verified = False
+    memory_plan_report: dict[str, Any] | None = None
     if fold_manifest_path is not None:
         try:
             fold_manifest_document = load_and_verify_json_artifact(
@@ -445,6 +483,28 @@ def run_preflight(
             raise ProductionRunnerError(f"fold manifest failed validation: {error}") from error
         fold_manifest_verified = True
 
+        # Deterministic, non-scientific: reports whether raw_pixel's
+        # fit is expected to fit the detected host's memory budget,
+        # using only the fold manifest's own admitted-row-count-by-fold
+        # distribution -- no context is built and no baseline is fit.
+        # row_count is derived from the manifest's own membership count
+        # (not the frozen REQUIRED_FRAME_ARTIFACT_COUNT constant) so it
+        # is self-consistent by construction with outer_fold_row_counts.
+        memberships = fold_manifest_document["memberships"]
+        outer_fold_row_counts = list(
+            Counter(membership["fold_idx"] for membership in memberships).values()
+        )
+        try:
+            memory_plan = build_raw_pixel_memory_plan(
+                row_count=len(memberships),
+                feature_dim=RAW_PIXEL_FEATURE_DIM,
+                outer_fold_row_counts=outer_fold_row_counts,
+                inner_fold_count=RAW_PIXEL_INNER_FOLD_COUNT,
+            )
+        except MemoryPlanError as error:
+            raise ProductionRunnerError(f"memory plan could not be computed: {error}") from error
+        memory_plan_report = _memory_plan_to_dict(memory_plan)
+
     return {
         "status": "PREFLIGHT_PASSED",
         "person_a_frame_handoff_commit": PERSON_A_FRAME_HANDOFF_COMMIT,
@@ -457,6 +517,7 @@ def run_preflight(
         "person_b_fold_ratification_commit": PERSON_B_FOLD_RATIFICATION_COMMIT,
         "fold_contract_version": PRODUCTION_FOLD_CONTRACT_VERSION,
         "fold_manifest_verified": fold_manifest_verified,
+        "memory_plan": memory_plan_report,
         "person_e_v0_2_step4_1_handoff_commit": PERSON_E_V0_2_STEP4_1_HANDOFF_COMMIT,
         "person_d_exporter_implementation_commit": PERSON_D_EXPORTER_IMPLEMENTATION_COMMIT,
         "eight_family_execution_manifest": execution_manifest,
@@ -647,8 +708,14 @@ def build_real_run_inputs(
         raise ProductionRunnerError(f"trajectory context assembly failed: {error}") from error
 
     mu_oracle_by_key, log_sigma_oracle_by_key = build_oracle_target_lookups(oracle_target_document)
-    pixel_features_by_key = build_pixel_features_by_key(
-        frame_manifest=frame_manifest, frame_root=frame_root
+    # Deliberately NOT built eagerly here: the 437,391,360 raw_pixel
+    # feature values (~1.6 GiB compact, previously ~13 GiB boxed -- the
+    # confirmed OOM root cause) must exist for only as long as the
+    # raw_pixel family's own fit needs them. A bound callable defers
+    # that entire construction to run_production, which builds it
+    # immediately before raw_pixel fits and drops it immediately after.
+    pixel_features_provider = functools.partial(
+        build_pixel_features_by_key, frame_manifest=frame_manifest, frame_root=frame_root
     )
     frame_reference = execution_manifest["direct_inputs"]["preprocessed_frame_manifest"]
 
@@ -657,7 +724,7 @@ def build_real_run_inputs(
         "mu_oracle_by_key": mu_oracle_by_key,
         "log_sigma_oracle_by_key": log_sigma_oracle_by_key,
         "visible_positions_by_trajectory": visible_positions_by_trajectory,
-        "pixel_features_by_key": pixel_features_by_key,
+        "pixel_features_provider": pixel_features_provider,
         "config_hash": config_hash,
         "input_manifest_hash": build_input_manifest_hash(execution_manifest),
         "fit_manifest_hash": build_fit_manifest_hash(execution_manifest),
@@ -676,7 +743,8 @@ def run_production(
     mu_oracle_by_key,
     log_sigma_oracle_by_key,
     visible_positions_by_trajectory,
-    pixel_features_by_key,
+    pixel_features_by_key: Mapping[tuple[str, int], object] | None = None,
+    pixel_features_provider: Callable[[], Mapping[tuple[str, int], object]] | None = None,
     config_hash: str,
     input_manifest_hash: str,
     fit_manifest_hash: str,
@@ -694,6 +762,26 @@ def run_production(
     already-recorded ``run_state.json`` entry, but an already-completed
     *other* family's on-disk output is still never touched unless that
     family itself is refit.
+
+    raw_pixel's feature matrix (437,391,360 float32 values across all
+    1,695 admitted frames -- the confirmed root cause of a production
+    OOM kill when previously boxed as Python floats) is never resident
+    for longer than raw_pixel's own fit call: pass
+    ``pixel_features_provider`` (a zero-argument callable built from
+    real frame data, as ``build_real_run_inputs`` does) so this
+    function builds it immediately before raw_pixel fits and drops
+    every reference to it immediately after, before the next family
+    begins. ``pixel_features_by_key`` (an already-built mapping) remains
+    supported for direct/test callers holding a small synthetic mapping
+    only; the real production path must use ``pixel_features_provider``.
+
+    Before raw_pixel is ever handed real pixel data via
+    ``pixel_features_provider``, a deterministic, non-scientific
+    memory-plan preflight
+    (:func:`mineocclude.baselines.memory_planning.build_raw_pixel_memory_plan`)
+    checks whether the unchanged ridge-fitting pipeline's estimated peak
+    memory fits the detected host budget, and fails closed -- before any
+    fitting begins -- if it does not.
     """
 
     existing_state = load_run_state(output_root)
@@ -704,6 +792,29 @@ def run_production(
     for family_id in FROZEN_BASELINE_FAMILY_IDS:
         if plan[family_id] == "skip_already_verified":
             continue
+
+        family_pixel_features: Mapping[tuple[str, int], object] = {}
+        if family_id == "raw_pixel":
+            if pixel_features_provider is not None:
+                memory_plan = build_raw_pixel_memory_plan(
+                    row_count=len(contexts),
+                    feature_dim=RAW_PIXEL_FEATURE_DIM,
+                    outer_fold_row_counts=list(Counter(ctx.fold for ctx in contexts).values()),
+                    inner_fold_count=RAW_PIXEL_INNER_FOLD_COUNT,
+                )
+                if not memory_plan.admitted:
+                    error = ProductionRunnerError(
+                        "memory plan rejected raw_pixel execution before fitting: "
+                        f"estimated_peak_gib={memory_plan.estimated_peak_gib:.3f} "
+                        f"reasons={memory_plan.reasons}"
+                    )
+                    state["families"][family_id] = {"status": "failed", "error": str(error)}
+                    save_run_state(output_root, state)
+                    raise error
+                family_pixel_features = pixel_features_provider()
+            elif pixel_features_by_key is not None:
+                family_pixel_features = pixel_features_by_key
+
         try:
             documents = fit_and_export_family(
                 family_id,
@@ -711,7 +822,7 @@ def run_production(
                 mu_oracle_by_key=mu_oracle_by_key,
                 log_sigma_oracle_by_key=log_sigma_oracle_by_key,
                 visible_positions_by_trajectory=visible_positions_by_trajectory,
-                pixel_features_by_key=pixel_features_by_key,
+                pixel_features_by_key=family_pixel_features,
                 config_hash=config_hash,
                 input_manifest_hash=input_manifest_hash,
                 fit_manifest_hash=fit_manifest_hash,
@@ -723,6 +834,10 @@ def run_production(
             state["families"][family_id] = {"status": "failed", "error": str(error)}
             save_run_state(output_root, state)
             raise ProductionRunnerError(f"{family_id}: fit/export failed: {error}") from error
+        finally:
+            if family_id == "raw_pixel":
+                family_pixel_features = None
+                gc.collect()
 
         for target_name, document in documents.items():
             errors = validate_baseline_document_v0_2(document)
