@@ -1,0 +1,15 @@
+{
+  "authorization_pattern": "unchanged from the prior preparation: the expected authorized Person D HEAD is read from a committed JSON object at runtime (docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json), never embedded self-referentially in the commit that would need to cite its own hash.",
+  "authorization_record_path": "docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json",
+  "current_authorized_runner_commit": "f6fb6e542f87462c366ea657ded2dc8a47c3428f",
+  "person_b_previous_authorization_commit_superseded": "76e1d33788bcf1482b310d2b41a5db3d734d98a7",
+  "reauthorization_required_because": "the memory-repair implementation changed the Person D runner commit HEAD must equal; the prior authorization named 5b90e5bf6c6975119f509d766a82a9786d64300c, which this commit supersedes.",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-memory-bounded-execution-v0-1-authorization-interface",
+  "schema_version": "1.0",
+  "what_person_b_should_confirm_before_reauthorizing": [
+    "docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json cites the exact commit to be deployed",
+    "the deployment host's verified available memory meets or exceeds the recommended ~20 GiB in memory_plan_summary.json (not merely the previously-assumed 15 GiB nominal)",
+    "no scientific authority (fold manifest, target manifest, frame manifest, baseline family order/seeds/configuration) changed -- all are identical to the previously-issued authorization, see authority_binding.json's unchanged_input_hashes"
+  ]
+}

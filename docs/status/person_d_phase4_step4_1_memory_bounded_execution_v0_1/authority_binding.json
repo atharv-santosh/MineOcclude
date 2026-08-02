@@ -1,0 +1,40 @@
+{
+  "claims": {
+    "no_baseline_definition_target_fold_family_order_seed_configuration_pilot_membership_source_identity_or_acceptance_criterion_was_altered": true,
+    "no_estimator_hyperparameter_training_or_prediction_semantics_were_altered": true,
+    "no_feature_values_were_changed_to_reduce_memory": true,
+    "no_full_production_baseline_execution_was_performed": true,
+    "no_metric_was_computed": true,
+    "no_person_a_frame_artifact_was_modified": true,
+    "no_person_b_prediction_was_modified": true,
+    "no_u4_output_was_inspected": true
+  },
+  "person_a_frame_handoff_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+  "person_b_final_execution_authorization_commit_superseded": "76e1d33788bcf1482b310d2b41a5db3d734d98a7",
+  "person_b_fold_contract_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+  "person_b_fold_ratification_commit": "a612ec29108c8f69f19cdc283e40873e75796ea7",
+  "person_d": {
+    "branch": "role/person-d-baselines",
+    "memory_repair_implementation_commit": "f6fb6e542f87462c366ea657ded2dc8a47c3428f",
+    "prior_runner_commit_that_oomed": "5b90e5bf6c6975119f509d766a82a9786d64300c"
+  },
+  "record_date": "2026-08-01",
+  "required_baseline_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "schema_id": "person-d-phase4-step4-1-memory-bounded-execution-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "unchanged_input_hashes": {
+    "fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+    "frame_manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+    "target_manifest_sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "verification_method": "Confirmed execution report (exit 137, 437391360 boxed float32 values, 13.035 GiB minimum boxed footprint, 15 GiB host, zero swap) traced to production_input_ingest.build_pixel_features_by_key's list(struct.unpack(...)) return value: 437391360 * 24 (Python float object) + 437391360 * 8 (list pointer) is within 1% of the reported 13.035 GiB. 258048 = 3*224*384 (the frame payload shape) confirmed via direct arithmetic against the reported 437391360-value count / 1695 admitted frames. All performed 2026-08-01 by direct code inspection, never by running the real production workload."
+}
