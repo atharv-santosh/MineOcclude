@@ -1,0 +1,52 @@
+{
+  "atomic_write_protocol": {
+    "accepted_final_state": "canonical receipt is reread, payload SHA-256 is recomputed, and every direct-audit binding matches",
+    "failure_state": "no receipt is accepted; a failed pre-rename temporary file is removed",
+    "method": "same-directory temporary file, flush, fsync, and atomic os.replace rename",
+    "mutates_existing_family_outputs": false
+  },
+  "corrected_lifecycle": [
+    "validate the materialized input root and all 1695 frame payloads",
+    "validate exact D checkout and external authorization record",
+    "validate physical and available memory independently at 20.0 GiB",
+    "directly audit run_state and every present prediction file without requiring a provenance receipt",
+    "classify every family from runtime evidence as reusable, absent, or invalid-conflicting",
+    "when every present family is reusable, atomically create a missing Person B audit receipt or revalidate an existing one",
+    "reread and validate canonical receipt bytes, payload SHA-256, and every bound file before allowing D resume"
+  ],
+  "decision_vocabulary": [
+    "reusable",
+    "absent",
+    "invalid-conflicting"
+  ],
+  "direct_evidence_required": [
+    "canonical prediction document and exact prediction-file SHA-256 inventory",
+    "exact run_state output-manifest hash",
+    "live exact clean Person D checkout receipt",
+    "validated superseding authorization-record identity and accepted producing lineage",
+    "live environment receipt meeting both 20.0 GiB thresholds",
+    "exact family configuration and seed from the applicability contract",
+    "exact target, fold, frame, and source-context bindings",
+    "exact applicability identity-set digest and prediction count",
+    "finite predictions with no duplicate, missing, or extra identities",
+    "explicit no-U4 assertions"
+  ],
+  "exact_authorities": {
+    "applicability_validator_commit": "248b7a174cb38a522f3638d7789b0e1d1b5befdf",
+    "person_d_memory_implementation_commit": "f6fb6e542f87462c366ea657ded2dc8a47c3428f",
+    "person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "provenance_audit_validator_commit": "d7b710d6fbc9f8ecba5075788d4149f6f62b100c",
+    "superseded_authorization_commit": "60353157874d8d095ac29d76a40b8a8fa86b3d29"
+  },
+  "existing_receipt_policy": "directly revalidate all underlying files first, then require the existing receipt and its hashes to match the new direct audit exactly",
+  "first_audit_receipt_prerequisite": false,
+  "output_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+  "receipt_filename": "preserved_output_provenance.json",
+  "receipt_hash_scope": "canonical UTF-8 JSON of the complete receipt with canonical_receipt_sha256 omitted; the validator separately reports SHA-256 of final canonical file bytes",
+  "receipt_role": "Person B-generated audit output stored beside, but never represented as, original Person D scientific output",
+  "receipt_schema_id": "person-b-step4-1-preserved-output-provenance-audit-receipt-v0-2",
+  "schema_id": "person-b-phase4-step4-1-provenance-reauthorization-v0-2-provenance-audit-contract",
+  "schema_version": "2.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}
