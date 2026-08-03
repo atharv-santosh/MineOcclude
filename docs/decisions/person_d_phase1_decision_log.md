@@ -240,3 +240,328 @@ interface meanings and compatibility at
 checkpoint. It does not approve real-data baseline execution, final scientific
 comparisons, or later-phase methods. The earlier pending statements above are
 retained as historical status at the time they were written.
+
+## 2026-07-22 -- Reconciled local branch after an out-of-session history rewrite
+
+**Context found:** between the 2026-07-21 session and this one, `origin/
+role/person-d-baselines` was force-updated to match `integration/mvp`
+(current tip `a699797`, "Record Phase 0-1 cross-role signoffs"), replacing
+the vendored-file commit pushed at the end of the prior session. That prior
+commit is preserved, not lost, at `origin/backup/person-d-before-final-sync`.
+A parallel `origin/repair/person-d-phase1` branch shows the new Phase 0/1
+foundation (`BaselineSpec`, legal-input firewall, common harness) was built
+independently of the prior session's work.
+
+**Decision:** adopt the current official state as-is. Local
+`role/person-d-baselines` was reset (`git reset --hard
+origin/role/person-d-baselines`) to match; the prior session's vendored-file
+commit is not merged forward or reconciled against this one. Confirmed with
+the user before resetting, since this discards a locally-committed history
+in favor of the remote's, though nothing of the prior work is actually lost
+(it remains reachable via the backup branch if ever needed).
+
+**Why:** the new foundation is the one the rest of the team (and whatever
+integration/repair process ran) is building on top of; maintaining two
+divergent Person D implementations would only create confusion at the next
+real integration point.
+
+## 2026-07-22 -- Isolated all current test failures to a Python-version mismatch
+
+**Finding:** a full-suite run on the current official state showed 23
+failing tests. Traced every one to two root causes, both 3.10-only syntax
+running under this machine's Python 3.9: `zip(..., strict=True)` in
+`mineocclude.analysis.synthetic_chain` (Person B) and
+`mineocclude.vision.homography`/`ssim` (Person E), and `Path.write_text(...,
+newline=...)` in a Person B plotting script. None of the 23 failures are in
+Person D's own code; the one D-relevant integration test
+(`test_current_d_and_e_boundaries_use_real_validators`) fails only because it
+depends on B's `run_synthetic_analysis_chain`, which hits the same `zip`
+issue upstream of D's own boundary check.
+
+**Attempted fix:** installed `python@3.10` via Homebrew, but the resulting
+interpreter's `pyexpat` module fails to load (`_XML_SetAllocTrackerActivationThreshold`
+symbol missing from the system `libexpat`), traced to this machine's Command
+Line Tools being older than its macOS version. Fixing that needs `sudo` and
+an Apple Command Line Tools update -- deferred rather than done silently as
+a side effect of chasing test failures; the user can update Command Line
+Tools independently via System Settings whenever convenient.
+
+**Effect:** none of Person D's own code needed a Python-version fix. The
+three real gaps fixed below were found by reading the code directly, not
+from the pytest failures.
+
+## 2026-07-22 -- Fixed the three PDF-flagged Phase 2-4 gaps
+
+**Step 2.1 (grouped shuffled-label floor):** `shuffled.py` aligned a
+recipient frame to its donor by *position within a locally sorted list*,
+not by explicit `model_frame_idx`. If donor and recipient trajectories ever
+have different excluded/missing-frame patterns, positional alignment
+silently pairs the wrong frames. Fixed: `TrajectoryTargets` is now keyed by
+explicit `model_frame_idx` (`Mapping[str, Mapping[int, Optional[float]]]`,
+was `Mapping[str, Sequence[Optional[float]]]`) and a donor missing that
+exact frame index now correctly falls out as not applicable, with a reason
+code (previously missing entirely). This is a breaking change to
+`apply_grouped_shuffle`'s second argument shape; nothing else in the repo
+called it yet, so no other caller needed updating.
+
+**Step 3.4 (visible-history-q spread baseline):** `visible_history_q.py`
+silently took whichever `fold` value it saw first per trajectory
+(`dict.setdefault`), masking any upstream bug that assigned one trajectory
+to two folds. Fixed: added `VisibleHistoryQError`, raised the moment a
+trajectory's contexts disagree on `fold`, rather than silently resolving to
+the first-seen value.
+
+**Step 4.5 (missingness/exclusion audit):** no consolidated tabulation
+existed across baselines/conditions; only scattered per-row reason strings.
+Added `mineocclude.baselines.missingness.build_missingness_exclusion_report`,
+which tabulates accepted/missing counts by (baseline, target, layout,
+regime, duration bin) and flags any non-applicable row whose
+`fit_metadata` carries no `reason` key as a silent exclusion. Running it
+against every real D baseline over a synthetic multi-layout fixture found
+one such silent exclusion -- `shuffled.py`'s non-applicable rows never
+carried a reason -- fixed in the same pass as the Step 2.1 change above.
+
+**Evidence:** `tests/baselines/test_shuffled.py`,
+`tests/baselines/test_visible_history_q.py`
+(`test_fit_predict_visible_history_q_rejects_conflicting_fold_assignments`),
+`tests/baselines/test_missingness.py`. Full baseline suite passing after
+these changes; no regressions in the wider repo suite (same 23
+pre-existing, unrelated failures before and after).
+
+**Scope note:** Phase 5 (Steps 5.1-5.4, the real end-to-end pilot) remains
+blocked on external data -- an accepted real trajectory, Person B's real
+folds/targets, and Person A's real frames/activations do not exist yet. No
+amount of D-side code changes substitutes for that; the three fixes above
+are the finishable, non-blocked portion of the outstanding gaps.
+
+## 2026-07-27 -- Diagnosed and closed the zero-applicable-row episode in the real pilot preview
+
+**Classification: (a) LEGITIMATE, not a defect.** `layout_05_ep9422`'s
+`capture_package_v0_1.json` (`origin/role/person-c-data@260784e`) records
+`"condition": "occluder_only_no_sheep"`. Direct inspection of the real row
+streams confirms this at the data level, not just the manifest label: all
+200 `visibility.jsonl` rows are `visibility="occluded"` and all 200
+`server_state.jsonl` rows have `state.target_present=false` -- there is no
+visible-target frame anywhere in the episode.
+
+**Line-level trace (`capture_ingest.py::build_contexts_from_capture`):**
+`last_seen_position` is initialized to `None` (line 116) and is only ever
+assigned inside the `if is_visible:` branch (line 140). Since
+`visibility_value == "visible"` is never true for this episode, that branch
+never executes for any of the 200 frames, so `last_seen_position_blocks`
+stays `None` on every resulting `TrajectoryContext` -- confirmed directly
+(not assumed) via
+`tests/baselines/test_no_sheep_episode_missingness.py::test_build_contexts_from_capture_never_fabricates_a_position`.
+`last_seen.py`/`constant_velocity.py` therefore correctly mark every row
+non-applicable with `prediction=None`; this is the adapter behaving exactly
+as documented, not a join/parse failure.
+
+**Fix (legibility, not baseline logic):** per instruction, no baseline math
+changed. `scripts/run_real_pilot_baseline_preview.py::_summarize` now
+surfaces, for any baseline/target with non-applicable rows, a
+`"missingness"` block containing
+`non_applicable_reason_counts` (new
+`mineocclude.baselines.missingness.summarize_non_applicable_reasons`,
+counting each `fit_metadata["reason"]` string) and `has_silent_missingness`
+(existing `build_missingness_exclusion_report`, unchanged). This is the same
+Step 4.5 seam every other D baseline is already checked against, reused
+rather than reimplemented. A wholly-non-applicable episode in the preview
+report now reads as an explained `0/200` with its exact reason text, instead
+of a bare, unexplained zero.
+
+**Regenerated evidence:** re-ran the preview script against the same 17
+real episodes; every numeric field (`applicable_rows`, `total_rows`,
+`prediction_mean/min/max`) is byte-identical to the prior committed report
+for all 17 episodes -- confirmed by direct diff before overwriting. Only the
+new `missingness` block was added, and only where non-applicable rows exist.
+`docs/status/person_d_real_pilot_baseline_preview.json` updated in place.
+
+**Evidence:** `tests/fixtures/person_d/real_capture_no_sheep_excerpt/`
+(real excerpted frames 0-19 of `layout_05_ep9422`, with provenance README),
+`tests/baselines/test_no_sheep_episode_missingness.py` (3 new tests: raw
+stream confirms no-sheep condition; contexts never fabricate a position;
+both baselines are wholly non-applicable but zero silent exclusions).
+Baseline suite: 79 -> 82 passing. Repo-wide: same 13 pre-existing A/B-owned
+failures in `test_synthetic_analysis_chain.py`/`test_synthetic_pipeline.py`
+before and after, confirmed unchanged by direct re-run.
+
+## 2026-07-27 -- Built the Step 4.3 no-wall positive-control statistical gate
+
+**Gap:** Step 4.3 was marked COMPLETE, but `controls.audit_no_wall_control`
+only ever checked the structural half (every no-wall frame really is
+visible with `tau=0`). The scientific half -- fit the frozen
+visible-position ridge on no-wall rows and require held-out R^2 >= 0.50
+with a bootstrap CI strictly above zero -- did not exist anywhere. A
+repo-wide grep for `0.50` found only `leakage.py`'s unrelated
+`r2_threshold=0.1`.
+
+**Decision:** Added `src/mineocclude/baselines/positive_control_gate.py`
+as a sibling module to `controls.py`, not an addition to it.
+`controls.py` deliberately has no numpy/ridge/fold-manifest dependency for
+its lightweight structural audits; this gate pulls in Person B's real
+`probes.ridge.fit_ridge_oof`, `metrics.u1_mean.regression_metrics`, and
+`metrics.resampling` (`hierarchical_bootstrap_indices` +
+`bootstrap_confidence_interval`) plus `export.attach_b_fold_assignments`
+for fold membership. D calls these directly; nothing here reimplements or
+paraphrases B's ridge, metric, or resampling math. The ridge alpha grid,
+inner-fold count, split seed, and the bootstrap's resample count/seed all
+come from `configs/analysis/core.yaml` via `analysis.config
+.load_core_analysis_config()` -- none of those numbers are invented or
+hardcoded independently in this module.
+
+**Fail-closed contract:** `evaluate_no_wall_positive_control_gate` takes a
+mandatory (no-default) `data_provenance` argument. Only the exact literal
+`REAL_NO_WALL_DATA_PROVENANCE` unlocks a scientific PASSED/FAILED verdict;
+any other value -- including every synthetic fixture in this test suite --
+returns `status="BLOCKED"` with every numeric field (`r2`, `ci_low`,
+`ci_high`, `fold_count`, `resample_count`, `seed`) left `None` before any
+ridge is even fit. There is no boolean shortcut (e.g. `is_real=True`) that
+could default to true; a mislabeling has to be an explicit, visible literal
+in the caller's own code. This mirrors the project's existing convention
+for real-vs-not provenance (`"scientific_use": "forbidden"` in the real
+pilot preview, `IS_FAIR_BASELINE` in `known_q_analytic.py`) rather than
+inventing a new enforcement mechanism.
+
+**Current status:** `BLOCKED`. Real no-wall rows, a real Person B fold
+manifest, and real oracle targets do not exist anywhere in this repository
+yet (same blockers tracked throughout this log and
+`docs/status/person_d_real_pilot_baseline_preview.json`). The gate cannot
+report PASSED or FAILED until they do.
+
+**Evidence:** `tests/baselines/test_positive_control_gate.py` (10 tests:
+BLOCKED on non-real provenance regardless of signal quality, a clean
+PASSED, a sub-threshold-R^2 FAILED, a CI-straddling-zero FAILED with R^2
+above threshold, structural-audit/empty-input/missing-target/invalid-fold-
+manifest error paths, and a "BLOCKED never carries a numeric field" check).
+All four PASSED/FAILED/BLOCKED test scenarios use the caller-declared real
+literal deliberately, on the same synthetic fixture already used elsewhere
+in Phase 4, to exercise the arithmetic -- none of this is a claim about
+real data. Persisted evidence:
+`docs/status/person_d_step_4_3_positive_control_gate.json`
+(`scripts/run_step_4_3_positive_control_gate.py`), explicitly marked
+`"scientific_use": "forbidden"` and reporting `BLOCKED`, run against the
+same synthetic fixture with an honestly non-real `data_provenance` label.
+
+**Follow-up needed, not done here:** Phase 4's other three SAVE
+deliverables (`split_integrity.json` from `leakage.audit_layout_fold
+_isolation`, a metadata-leakage report from `leakage
+.check_metadata_predictability`/`audit_identity_not_filename_derived`, and
+a missingness-exclusion report from `missingness
+.build_missingness_exclusion_report`) exist as functions with test
+coverage but have never been written to disk as an artifact. Persisting
+them is a separate, still-open task.
+
+Baseline suite: 82 -> 92 passing. Repo-wide: same 13 pre-existing
+A/B-owned failures, confirmed unchanged by direct re-run.
+
+## 2026-07-27 -- Reconciled stale documentation across three D docs
+
+**Found:** `docs/baselines/person_d_phase1.md` still said "Formal human
+approval by Persons A and B remains pending," and `PERSON_D_ISSUE.md` still
+listed that same signoff as an open, unchecked blocker. Both were stale --
+`docs/baselines/person_d_phase0.md` already correctly recorded it as
+**COMPLETE**, matching the central record in
+`docs/contracts/schema_v1_0_signed_record.md`
+(`APPROVED_FOR_PHASE_1_FREEZE` at `80d41c5ca0e341263a7b0c683fae4b51be376c55`).
+Test counts also disagreed: phase0.md said 74, phase1.md said 67; the
+actual count (after the two entries above) is 92.
+
+**Fixed:**
+- `person_d_phase1.md`: replaced the stale pending-approval line with the
+  same COMPLETE-for-that-checkpoint language phase0.md already used, plus
+  an explicit note that it does not cover real-data baselines or the Step
+  4.3 gate. Updated the test count to 92 (dated 2026-07-27). Added the
+  three modules missing from the module map entirely
+  (`missingness.py`, `capture_ingest.py`, `positive_control_gate.py`).
+  Added a "Step 4.3 status: implemented, UNEVALUATED" section stating the
+  gate's actual current status is BLOCKED, not passed.
+- `person_d_phase0.md`: updated the record date, the test count (74 -> 92),
+  and the milestone table -- added an explicit Step 4.3 row (UNEVALUATED /
+  BLOCKED pending real no-wall data) and a note on the real-capture preview
+  under the real-data-baselines row, so "implemented" is never conflated
+  with "passed" anywhere in this doc either.
+- `PERSON_D_ISSUE.md`: checked off the A/B signoff blocker with the same
+  COMPLETE-for-that-checkpoint qualification (not a blanket signoff on
+  everything downstream); added the real-capture ingest adapter and the
+  Step 4.3 gate to the MVP work checklist, both marked complete with their
+  actual current status (non-scientific preview; BLOCKED) stated inline
+  rather than implied by the checkmark alone.
+
+**Why the qualification matters everywhere it appears:** the A/B signoff is
+real and complete for one specific frozen interface checkpoint. Repeating
+it without that scope note (as the stale copies did, if left uncorrected in
+one direction, or as a blanket "everything is approved" if overcorrected in
+the other) would misstate what was actually approved. Every corrected
+occurrence in this pass keeps the same explicit checkpoint-scoped wording
+phase0.md already used, rather than inventing a new phrasing per file.
+
+## 2026-07-29 -- Phase 4 Step 4.1 registry v2 handoff preparation package
+
+**Decision:** Build the Step 4.1 scientific-baseline handoff preparation
+package under
+`docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/`, covering
+everything independent of Person B's still-unavailable fold manifest and
+oracle-target document. Two new modules:
+`src/mineocclude/baselines/scientific_readiness.py` (the exact scientific
+baseline input contract: fold identity, oracle identity, accepted-context
+identity, deterministic artifact IDs, direct-input relationships) and
+`src/mineocclude/baselines/registry_v2_artifacts.py` (D's own
+owner-status/exact-artifact-authorization/manifest/verification-receipt
+schemas, built on Person B's real `analysis.manifests.seal_artifact`
+sealing primitive).
+
+**Ownership boundary respected:** Person E owns the project's actual
+Immutable Registry v2 system (`docs/contracts/immutable_registry_v2.md`,
+`role/person-e-operations`). Per the task's explicit instruction not to
+merge or integrate other role branches, `registry_v2_artifacts.py` does
+not vendor or import E's code; it defines D's own independent artifact
+types mirroring the same four handoff concepts for exactly D's own
+baseline-output domain. This is a deliberate parallel construction, not a
+copy -- documented explicitly in the module's own docstring so a future
+reader does not mistake it for E's system or attempt to merge the two.
+
+**Fail-closed design:** `validate_scientific_baseline_readiness` requires
+an explicit, no-default `candidate_scientific_use` argument; only the
+literal `"accepted"` unlocks a READY verdict. It collects every violation
+(rather than stopping at the first) into a `ScientificReadinessFinding`.
+Confirmed the four item-8 conditions independently: `UNASSIGNED_FOLD`,
+missing sealed B fold identity, missing B oracle identity, and
+`scientific_use=forbidden` each block on their own, and can co-occur
+(`test_multiple_simultaneous_violations_are_all_reported`).
+
+**Key finding, empirically verified rather than assumed:** constructed the
+most structurally valid synthetic oracle-target document buildable
+*without* Person B's real coordinate-frame signoff (using the same
+`fixture_metadata.synthetic=True, scientific_use="forbidden"` bypass
+`mineocclude.oracle.schema.validate_oracle_target_document` itself
+defines) and confirmed it still reports `BLOCKED`, for exactly one reason
+-- `scientific_use=forbidden` -- not any structural defect
+(`test_even_the_best_case_synthetic_fixture_is_blocked`). This proves the
+gate cannot be satisfied by any synthetic fixture this project's own
+oracle schema will currently accept; READY is only reachable once Person
+B's real coordinate-frame signoff and literal-config-hash binding exist.
+No test in this suite claims or attempts to demonstrate a READY verdict,
+by design -- see `test_scientific_readiness.py`'s module docstring.
+
+**Evidence:** `tests/baselines/test_scientific_readiness.py` (11 tests),
+`tests/baselines/test_registry_v2_artifacts.py` (11 tests). Persisted,
+reproducible artifacts via
+`scripts/prepare_step_4_1_registry_v2_handoff.py`: the four registry v2
+templates (owner-status recorded honestly as `pending`; the other three
+built against obviously-placeholder hashes), a composite validation
+report confirming their cross-references agree, and
+`scientific_readiness_best_case_check.json` recording the BLOCKED result
+above. `production_job_status.json` records the production baseline job
+as BLOCKED with exact, dated, sourced reason codes (missing real B fold
+manifest; missing real B oracle-target document, itself blocked on Person
+A's activation handoff per B's own `capture_intake_report.json`).
+`runbook.md` records the exact command/inputs/outputs/acceptance checks
+for every step once B's real artifacts land, including an explicit "what
+must never happen" section against premature/fabricated READY results.
+
+**Scope respected:** no scientific baseline was generated, fit, or
+accepted; `docs/status/person_d_real_pilot_baseline_preview.json`'s
+`scientific_use: forbidden` marking is untouched. No other role's branch
+was merged or integrated. Baseline suite: 92 -> 113 passing. Repo-wide:
+same 13 pre-existing A/B-owned failures, confirmed unchanged by direct
+re-run.

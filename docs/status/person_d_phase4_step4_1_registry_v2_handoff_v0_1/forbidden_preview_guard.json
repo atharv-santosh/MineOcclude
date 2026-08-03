@@ -1,0 +1,27 @@
+{
+  "bound_artifact": {
+    "literal_byte_size": 13290,
+    "literal_sha256": "06fdd2abe67b9a24ca4888ab7c9651a0b98b4a3567ed1e0c1b836bb9c3208c9b",
+    "path": "docs/status/person_d_real_pilot_baseline_preview.json",
+    "reason_recorded_in_source_file": "no real sealed B fold_manifest attached; every context uses UNASSIGNED_FOLD",
+    "report_type": "person_d_real_pilot_baseline_preview",
+    "scientific_use": "forbidden"
+  },
+  "cross_reference": {
+    "production_job_status": "production_job_status.json",
+    "readiness_gate_contract": "readiness_gate_contract.json"
+  },
+  "guard": {
+    "enforcement": "Structural, not just a label: mineocclude.baselines.scientific_readiness.validate_scientific_baseline_readiness requires an oracle_target_document that validates against mineocclude.oracle.schema.validate_oracle_target_document with no fixture_metadata.scientific_use=='forbidden' marker, and requires an explicit candidate_scientific_use=='accepted' declaration for the artifact being produced. This preview document satisfies neither: it is not an oracle_target_document at all (wrong schema entirely), and it is explicitly self-labeled scientific_use=forbidden.",
+    "if_literal_sha256_changes": "The bound literal_sha256 above must be recomputed and this record updated before this guard can be trusted again -- a changed hash means the underlying preview file was edited and this binding is stale.",
+    "may_never_be_used_as": [
+      "the_production_scientific_baseline",
+      "the_real_oracle_target_document",
+      "an_accepted_registry_v2_artifact",
+      "a_substitute_for_missing_person_b_outputs"
+    ]
+  },
+  "record_date": "2026-07-30",
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-forbidden-preview-guard",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,122 @@
+{
+  "contradictions_found_and_resolved": [
+    {
+      "does_not_block_this_preparation": true,
+      "finding": "schemas/analysis/person_b_baseline_input_v0_2.schema.json's 'fold_manifest_hash' const is 62 characters long (missing the substring 'e6' collapsed to 'e' at position 21), not a valid 64-character SHA-256 hex digest, and does not match the actual fold manifest file's independently-verified SHA-256.",
+      "owner_to_notify": "person_b",
+      "resolution": "Person D's FROZEN_DIRECT_INPUTS['fold_manifest']['sha256'] uses the verified, byte-correct 64-character value (53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71), not the corrupted schema literal. Not invented -- independently confirmed against the actual committed fold-manifest file's real SHA-256 by direct recomputation before writing any code.",
+      "verification": "Directly diffed the schema's const character-by-character against the SHA-256 independently recomputed from docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json's literal bytes (matches baseline_family_contract.json's and source_context_manifest.json's fold_manifest_sha256 field, and the fold manifest's own internal artifact_hash cross-checks via owner_ratification.json's fold_artifact_hash -- both self-consistent). Only the JSON Schema file's inline const has the typo; every other citation of this hash across Person B's own commit is correct and consistent."
+    },
+    {
+      "does_not_block_this_preparation": true,
+      "finding": "The task's cited 'Person B Step 4.1 production ratification' commit (c9a519b) and 'Person A Activation Store v2 completion' commit (55776dc) are correctly-hashed real commits, but c9a519b's own subject is 'Ratify Person B Step 4.1 production inputs and execution' (not literally 'production ratification') and 55776dc's subject is 'Complete Person A Phase 6 ten-pilot expansion' (not literally 'Activation Store v2 completion').",
+      "resolution": "Treated as accurate hash citations with paraphrased/approximate prose labels, not a hash error. No code depends on the prose label, only the hash itself.",
+      "verification": "git log -1 --format='%H %s' on both hashes; both are real, reachable commits on their expected branches, ancestors of the expected branch tips."
+    }
+  ],
+  "expected_output_rows_and_identities": "One person-b-baseline-input-v0.2 document per (baseline_family, target_name) pair; row identity is (trajectory_id, model_frame_idx) drawn only from the 10 frozen accepted pilots; every row carries fold_idx (from the frozen fold manifest), prediction_scope='out_of_fold', and a non-empty fit_id.",
+  "expected_person_e_closure_artifacts": {
+    "required_from_person_d": [
+      "baseline",
+      "prediction byte sizes and SHA-256 identities",
+      "fit, missingness/exclusion, and exact coverage receipts",
+      "runner and environment receipt"
+    ],
+    "source": "role/person-e-operations@21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7, person_e_closure_requirements.json#final_person_e_inputs.from_person_d"
+  },
+  "no_contradiction_left_unresolved": true,
+  "no_invented_scientific_definitions": true,
+  "output_schema": "schemas/analysis/person_b_baseline_input_v0_2.schema.json (Person B, commit 265cbbb) -- read directly, not imported; Person D's own build_baseline_document_v0_2/validate_baseline_document_v0_2 independently produce/check the identical document shape.",
+  "record_date": "2026-08-01",
+  "required_lineage_and_receipts": [
+    "direct_inputs binding all four frozen Person B artifacts (analysis_config, fold_manifest, oracle_target, source_context_manifest) plus preprocessed_frame_manifest for raw_pixel only",
+    "person_b_prediction_reservation bound with direct_input_to_person_d=false",
+    "accepted_pilot_ids equal to the frozen ordered ten-pilot set",
+    "Registry v2 owner-status / exact-artifact-authorization / manifest / verification-receipt trust records (src/mineocclude/baselines/registry_v2_artifacts.py, prepared in the prior Step 4.1 handoff commit 853e0ac)"
+  ],
+  "resolved_per_family": {
+    "families": [
+      {
+        "canonical_identifier": "last_seen",
+        "family_id": "last_seen",
+        "fit_required": false,
+        "seed": null,
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "canonical_identifier": "constant_velocity",
+        "family_id": "constant_velocity",
+        "fit_required": false,
+        "seed": null,
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "canonical_identifier": "grouped_shuffled",
+        "family_id": "grouped_shuffled",
+        "fit_required": false,
+        "requires_derangement": true,
+        "seed": 20260720,
+        "target_names": [
+          "log_sigma_oracle",
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "canonical_identifier": "time_only",
+        "family_id": "time_only",
+        "fit_required": true,
+        "fit_scope": "outer_training_folds_only",
+        "seed": null,
+        "target_names": [
+          "log_sigma_oracle"
+        ]
+      },
+      {
+        "canonical_identifier": "explicit_feature",
+        "family_id": "explicit_feature",
+        "fit_required": true,
+        "seed": 20260719,
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "canonical_identifier": "raw_pixel",
+        "family_id": "raw_pixel",
+        "fit_required": true,
+        "requires_preprocessed_frame_manifest": true,
+        "seed": 20260719,
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "canonical_identifier": "visible_history_q",
+        "family_id": "visible_history_q",
+        "fit_required": true,
+        "fit_scope": "outer_training_folds_only",
+        "seed": null,
+        "target_names": [
+          "log_sigma_oracle"
+        ]
+      },
+      {
+        "canonical_identifier": "known_q_analytic",
+        "fair_baseline": false,
+        "family_id": "known_q_analytic",
+        "fit_required": false,
+        "seed": null,
+        "target_names": [
+          "log_sigma_oracle"
+        ]
+      }
+    ],
+    "note": "See src/mineocclude/baselines/baseline_family_input_v0_2.py::BASELINE_FAMILY_CONTRACTS_V0_2 for the full machine-readable version of every row below, copied verbatim from Person B's commit 265cbbb."
+  },
+  "schema_id": "person-d-phase4-step4-1-eight-family-production-v0-1-contract-reconciliation",
+  "schema_version": "1.0"
+}

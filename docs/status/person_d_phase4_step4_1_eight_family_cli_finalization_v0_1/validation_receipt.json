@@ -1,0 +1,52 @@
+{
+  "checks": {
+    "changed_path_review": {
+      "result": "4 files in the CLI-finalization commit (bb2ebf7): 2 modified (the CLI script and its test file), 2 new (production_input_ingest.py and its test file). All within Person D's owned directories (src/mineocclude/baselines/, scripts/, tests/baselines/). No historical Phase 1 file, PERSON_D_ISSUE.md, or any A/B/C/E-owned file was touched. No U4 path referenced."
+    },
+    "focused_ingest_and_cli_tests": {
+      "command": "python3 -m pytest tests/baselines/test_production_input_ingest.py tests/baselines/test_baseline_family_production_cli.py tests/baselines/test_eight_family_runner.py tests/baselines/test_baseline_family_input_v0_2.py -q",
+      "failed": 0,
+      "passed": 89,
+      "result": "89 passed"
+    },
+    "full_baselines_regression": {
+      "command": "python3 -m pytest tests/baselines -q",
+      "failed": 0,
+      "note": "190 tests existed before this pass; 20 new tests added in test_production_input_ingest.py and 6 net new in test_baseline_family_production_cli.py; all prior tests still pass unchanged.",
+      "passed": 216,
+      "result": "216 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "result": "clean, exit code 0"
+    },
+    "py_compile": {
+      "command": "python3 -m py_compile <every new/modified .py file in this task>",
+      "result": "OK, no syntax errors"
+    },
+    "real_context_assembly_dry_run": {
+      "command": "build_all_trajectory_contexts(...) called directly against the real materialized fold/oracle-target/capture-package artifacts (frame-payload-free, since raw_pixel's pixel features are the only consumer of those and were not exercised here)",
+      "result": "config_hash and oracle-target structural checks passed; fold assignment failed closed with GroupedSplitError -- see fold_manifest_reproduction_blocker.json. This is the one substantive finding of this pass, not a code defect in the new ingestion module."
+    },
+    "real_materialize_dry_run": {
+      "command": "run_materialize(repo_root=ROOT, materialize_root=<scratch dir outside the repository>) called directly (not via CLI argv)",
+      "result": "MATERIALIZE_PASSED: fold manifest (742601 bytes), oracle target manifest (4934874 bytes), source-context manifest (4654 bytes), Person A's frame manifest (6460547 bytes), and all 10 real Person C capture packages -- every byte size and sha256 matched its frozen identity exactly."
+    },
+    "ruff": {
+      "command": "python3 -m ruff check <every new/modified .py file in this task>",
+      "result": "All checks passed (0 errors)."
+    }
+  },
+  "not_run": [
+    "actual baseline fitting against real Person C capture data",
+    "the production CLI's run mode against real inputs (blocked by fold_manifest_reproduction_blocker.json)",
+    "metric computation",
+    "U4 inspection"
+  ],
+  "person_d_cli_finalization_commit": "bb2ebf7947c92c814dae85fc9cef29fef04e4c6f",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-validation-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

@@ -1,0 +1,59 @@
+{
+  "current_call_status": "not_yet_callable_with_real_arguments",
+  "current_call_status_reason": "fold_manifest and oracle_target_document arguments require Person B's real sealed artifacts, which do not exist yet (see scientific_baseline_input_contract.json and production_job_status.json). Calling the gate today with any available input necessarily yields BLOCKED, as demonstrated in scientific_readiness_best_case_check.json (from the prior Step 4.1 preparation package, still valid).",
+  "exact_call": {
+    "keyword_args": {
+      "candidate_scientific_use": "accepted",
+      "fold_manifest": "<Person B's real, sealed fold manifest document>",
+      "oracle_target_document": "<Person B's real oracle_target document>"
+    },
+    "positional_args": [
+      "contexts"
+    ]
+  },
+  "gate_function": "mineocclude.baselines.scientific_readiness.validate_scientific_baseline_readiness",
+  "gate_immutability": {
+    "may_be_bypassed": false,
+    "may_be_special_cased": false,
+    "may_be_weakened": false,
+    "note": "The gate must not be edited, monkeypatched, wrapped, or fed synthetic-but-non-forbidden-labeled data to force a READY result. The only legitimate way to reach READY is for every required identity in scientific_baseline_input_contract.json to become genuinely real."
+  },
+  "record_date": "2026-07-30",
+  "required_result": {
+    "blocked_reasons": [],
+    "status": "READY"
+  },
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-readiness-gate-contract",
+  "schema_version": "1.0",
+  "verified_fail_closed_conditions": [
+    {
+      "condition": "a context still carries UNASSIGNED_FOLD",
+      "test": "tests/baselines/test_scientific_readiness.py::test_unassigned_fold_cannot_pass"
+    },
+    {
+      "condition": "missing or invalid sealed B fold manifest identity",
+      "test": "tests/baselines/test_scientific_readiness.py::test_missing_sealed_fold_identity_cannot_pass"
+    },
+    {
+      "condition": "missing or invalid B oracle target identity",
+      "test": "tests/baselines/test_scientific_readiness.py::test_missing_oracle_identity_cannot_pass"
+    },
+    {
+      "condition": "scientific_use=='forbidden' anywhere in the lineage",
+      "test": "tests/baselines/test_scientific_readiness.py::test_scientific_use_forbidden_cannot_pass"
+    },
+    {
+      "condition": "candidate_scientific_use != 'accepted'",
+      "test": "tests/baselines/test_scientific_readiness.py::test_non_accepted_candidate_scientific_use_cannot_pass"
+    },
+    {
+      "condition": "context/fold/oracle row coverage does not exactly match",
+      "test": "tests/baselines/test_scientific_readiness.py::test_coverage_mismatch_cannot_pass"
+    },
+    {
+      "condition": "the most structurally valid synthetic fixture buildable without B's real coordinate-frame signoff",
+      "note": "Confirms READY is unreachable by any synthetic fixture this project's own oracle schema currently accepts, not merely discouraged.",
+      "test": "tests/baselines/test_scientific_readiness.py::test_even_the_best_case_synthetic_fixture_is_blocked"
+    }
+  ]
+}

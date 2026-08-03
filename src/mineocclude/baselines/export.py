@@ -12,14 +12,20 @@ honest about the same handoff format.
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import replace
-from typing import Mapping, Optional, Sequence
 
 from mineocclude.analysis.manifests import is_hex_digest
 from mineocclude.baselines.interface import BaselineRow, TargetName, TrajectoryContext
+from mineocclude.baselines.production_fold_contract_v0_1 import (
+    PRODUCTION_FOLD_CONTRACT_VERSION,
+    PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION,
+    ProductionFoldContractError,
+    validate_production_fold_document,
+)
 from mineocclude.contracts.analysis_inputs import (
-    AnalysisInputValidationResult,
     BASELINE_FAMILY_CONTRACTS,
+    AnalysisInputValidationResult,
     validate_baseline_input,
 )
 from mineocclude.contracts.identity import SCHEMA_VERSION
@@ -35,6 +41,54 @@ class BaselineExportError(ValueError):
     """Raised when a baseline document cannot be honestly constructed."""
 
 
+def validate_b_fold_manifest(fold_manifest: Mapping[str, object]) -> None:
+    """Validate B's fold manifest through the correct version-dispatched authority.
+
+    Dispatches on the document's own ``fold_manifest_format_version``:
+    absent (historical manifests never carried this field) routes to the
+    pre-existing :func:`mineocclude.probes.splits.validate_fold_manifest`
+    deterministic-reproduction check, completely unchanged. Exactly
+    ``PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION`` routes to Person B's
+    ratified signed-explicit-mapping validator instead -- that
+    reproduction check is provably wrong for this format (the real
+    production manifest inherits its fold assignment from an original,
+    pre-join, six-layout computation it never rebalances after five
+    layouts were admitted with reduced row counts; see
+    production_fold_contract_v0_1's module docstring). Any other,
+    unrecognized format version fails closed rather than silently
+    falling through to either validator.
+
+    Shared by :func:`attach_b_fold_assignments` and the production CLI's
+    preflight, so the producing path can never bypass this check.
+    """
+
+    format_version = (
+        fold_manifest.get("fold_manifest_format_version")
+        if isinstance(fold_manifest, Mapping)
+        else None
+    )
+    if format_version == PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION:
+        try:
+            validate_production_fold_document(
+                fold_manifest, contract_version=PRODUCTION_FOLD_CONTRACT_VERSION
+            )
+        except ProductionFoldContractError as error:
+            raise BaselineExportError(
+                f"authoritative B production fold manifest is invalid: {error}"
+            ) from error
+    elif format_version is None:
+        try:
+            validate_fold_manifest(fold_manifest)
+        except (GroupedSplitError, TypeError, ValueError) as error:
+            raise BaselineExportError(
+                f"authoritative B fold manifest is invalid: {error}"
+            ) from error
+    else:
+        raise BaselineExportError(
+            f"unknown fold_manifest_format_version: {format_version!r}"
+        )
+
+
 def attach_b_fold_assignments(
     contexts: Sequence[TrajectoryContext],
     *,
@@ -42,17 +96,13 @@ def attach_b_fold_assignments(
 ) -> list[TrajectoryContext]:
     """Attach exact frame memberships from B's sealed fold manifest.
 
-    Person D never computes fold membership. The supplied artifact is first
-    validated by Person B's authoritative validator, then required to cover
-    exactly the submitted ``trajectory_id + model_frame_idx`` identities.
+    Person D never computes fold membership. The supplied artifact is
+    first validated by :func:`validate_b_fold_manifest`, then required
+    to cover exactly the submitted ``trajectory_id + model_frame_idx``
+    identities.
     """
 
-    try:
-        validate_fold_manifest(fold_manifest)
-    except (GroupedSplitError, TypeError, ValueError) as error:
-        raise BaselineExportError(
-            f"authoritative B fold manifest is invalid: {error}"
-        ) from error
+    validate_b_fold_manifest(fold_manifest)
 
     memberships = fold_manifest.get("memberships")
     if not isinstance(memberships, list):
@@ -120,8 +170,8 @@ def build_baseline_document(
     input_manifest_hash: str,
     fold_manifest_hash: str,
     fit_manifest_hash: str,
-    fit_id_by_key: Optional[Mapping[FrameKey, str]] = None,
-    default_fit_id: Optional[str] = None,
+    fit_id_by_key: Mapping[FrameKey, str] | None = None,
+    default_fit_id: str | None = None,
 ) -> dict[str, object]:
     """Build one ``person-b-baseline-input-v0.1`` document for one target.
 
@@ -215,7 +265,7 @@ def build_baseline_document(
 def validate_document(
     document: Mapping[str, object],
     *,
-    expected_fold_by_frame: Optional[Mapping[FrameKey, int]] = None,
+    expected_fold_by_frame: Mapping[FrameKey, int] | None = None,
 ) -> AnalysisInputValidationResult:
     """Validate a baseline document against B's real consumer contract.
 

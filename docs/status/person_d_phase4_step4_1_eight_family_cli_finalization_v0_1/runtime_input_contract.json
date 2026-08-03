@@ -1,0 +1,101 @@
+{
+  "record_date": "2026-08-01",
+  "required_runtime_artifacts": [
+    {
+      "artifact": "analysis_config",
+      "byte_size": 4881,
+      "canonical_path": "configs/analysis/core.yaml",
+      "consumed_by_families": [
+        "all eight (config_hash binding)"
+      ],
+      "materialization": "already a real local file in this worktree; no Git-object materialization needed",
+      "producing_commit": "already present on role/person-d-baselines",
+      "purpose": "frozen analysis configuration; its hash is the document config_hash every family binds",
+      "schema_or_version": "hash_core_analysis_config()",
+      "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+    },
+    {
+      "artifact": "fold_manifest",
+      "byte_size": 742601,
+      "canonical_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "consumed_by_families": [
+        "all eight (fold_idx binding via export.attach_b_fold_assignments)"
+      ],
+      "known_blocker": "see fold_manifest_reproduction_blocker.json -- D's own validate_fold_manifest currently rejects this real, hash-correct manifest",
+      "materialization": "materialize_git_committed_artifact from role/person-b-analysis",
+      "producing_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "purpose": "authoritative layout-grouped fold membership for the 1,695 admitted frames",
+      "schema_or_version": "person-b-fold-v0.1",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+    },
+    {
+      "artifact": "oracle_target",
+      "byte_size": 4934874,
+      "canonical_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+      "consumed_by_families": [
+        "mu_oracle_by_key: all eight; log_sigma_oracle_by_key: grouped_shuffled, time_only, visible_history_q, known_q_analytic",
+        "also the sole source of each trajectory's known-by-design v/q/duration/seed"
+      ],
+      "materialization": "materialize_git_committed_artifact from role/person-b-analysis",
+      "note": "verify_oracle_target_manifest_structure is an independent structural check written for this document -- mineocclude.oracle.schema.validate_oracle_target_document is deliberately not used, since its coordinate_frame (singular) expectation does not match this document's real coordinate_frames_by_trajectory (plural) shape, a previously-noted unresolved schema mismatch this pass did not need to resolve.",
+      "producing_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "purpose": "per-frame mu_oracle_blocks/log_sigma_oracle targets (1,695 rows; log_sigma_oracle populated on 695 of them) plus each trajectory's scripted v/q/duration/seed",
+      "schema_or_version": "person-b-oracle-target-v0.1",
+      "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+    },
+    {
+      "artifact": "source_context_manifest",
+      "byte_size": 4654,
+      "canonical_path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+      "consumed_by_families": [
+        "all eight (indirectly, via the per-pilot capture_package identities it binds)"
+      ],
+      "materialization": "materialize_git_committed_artifact from role/person-b-analysis",
+      "producing_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "purpose": "binds each of the 10 accepted pilots to its capture_package identity and condition_role",
+      "schema_or_version": "person-b-phase4-step4-1-baseline-family-contract-v0-2-source-context-manifest",
+      "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+    },
+    {
+      "artifact": "preprocessed_frame_manifest",
+      "byte_size": 6460547,
+      "canonical_path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/preprocessed_frame_manifest.json",
+      "consumed_by_families": [
+        "raw_pixel only"
+      ],
+      "materialization": "materialize_git_committed_artifact from role/person-a-model",
+      "producing_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+      "purpose": "identifies and describes all 1,695 real preprocessed frame payload files",
+      "schema_or_version": "n/a (verified structurally by frame_handoff_v0_2.py, already frozen)",
+      "sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5"
+    },
+    {
+      "artifact": "preprocessed_frame_payloads (1,695 files)",
+      "byte_size": "1,032,192 bytes each (3x224x384 float32 CHW), never committed to Git",
+      "canonical_path": "<--frame-root>/frames/<trajectory_id>/<model_frame_idx zero-padded>.f32le",
+      "consumed_by_families": [
+        "raw_pixel only"
+      ],
+      "materialization": "not materializable from Git; must be supplied at the real SageMaker frame root Person A approved (--frame-root)",
+      "producing_commit": "n/a (external binary data)",
+      "purpose": "raw pixel features for the raw_pixel ridge fit",
+      "schema_or_version": "raw-little-endian-float32-c-order, matching REQUIRED_PAYLOAD_* in frame_handoff_v0_2.py",
+      "sha256": "per-file, verified individually by verify_frame_payloads_on_disk"
+    },
+    {
+      "artifact": "capture_package_v0_1.json (10 files, one per accepted pilot)",
+      "byte_size": "302,914 - 662,116 bytes each, see FROZEN_SOURCE_CONTEXTS",
+      "canonical_path": "data/autonomous/<trajectory_id>/capture_package_v0_1.json",
+      "consumed_by_families": [
+        "all eight (via the TrajectoryContext each package's row streams build)"
+      ],
+      "materialization": "materialize_git_committed_artifact from role/person-c-data, PERSON_C_EXPANSION_ACCEPTANCE_COMMIT -- not role/person-b-analysis; see authority_binding.json's capture_package_provenance_note",
+      "producing_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+      "purpose": "Person C's real frame_map/server_state/visibility row streams; joined causally into TrajectoryContext by capture_ingest.build_contexts_from_capture",
+      "schema_or_version": "trajectory package schema 1.0 (docs/contracts/trajectory_v1.md)",
+      "sha256": "per-pilot, see FROZEN_SOURCE_CONTEXTS in eight_family_execution_manifest.py"
+    }
+  ],
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-runtime-input-contract",
+  "schema_version": "1.0"
+}

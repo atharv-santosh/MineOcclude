@@ -1,0 +1,20 @@
+{
+  "authorization_pattern": "unchanged from the prior preparation: the expected authorized Person D HEAD is read from a committed JSON object at runtime (docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json), never embedded self-referentially in the commit that would need to cite its own hash.",
+  "authorization_record_path": "docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json",
+  "checked_fields": {
+    "authorized_runner_commit": "must equal git rev-parse HEAD exactly",
+    "branch": "must equal role/person-d-baselines exactly (never detached HEAD, never another branch)",
+    "exporter_commit_is_ancestor": "fd9302e5d218193211f2f96986ca32dc1a365e66 must be an ancestor of HEAD",
+    "worktree_dirty": "must be false (git status --porcelain empty)"
+  },
+  "current_authorized_runner_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5",
+  "fold_contract_authorization": {
+    "person_b_fold_contract_implementation_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+    "person_b_fold_ratification_commit": "a612ec29108c8f69f19cdc283e40873e75796ea7",
+    "required_for_final_authorization": "Person B's final execution authorization should re-confirm the fold-contract implementation and ratification commits above are still the current authoritative ones for role/person-b-analysis before authorizing role/person-d-baselines to execute against them."
+  },
+  "how_person_b_issues_final_execution_authorization": "Unchanged from the prior preparation: Person B confirms the exact Person D commit to deploy, verifies docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json already cites that exact commit (refreshing it via a new commit if the branch has advanced since), and only then invokes the CLI's run mode on that exact checked-out commit in the approved SageMaker environment. verify_branch_and_authorization enforces all four checked fields simultaneously and fails closed if any one does not hold -- applies identically to materialize, preflight, and run modes.",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-signed-fold-validation-v0-1-authorization-interface",
+  "schema_version": "1.0"
+}

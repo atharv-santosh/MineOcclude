@@ -1,0 +1,65 @@
+{
+  "contract_schema_version_bound": "person-d-scientific-baseline-input-v0.1",
+  "current_actual_result": {
+    "reason": "every required_identities.* entry above is null/unavailable; see production_job_status.json for the full blocker list",
+    "status": "BLOCKED"
+  },
+  "direct_input_artifact_ids": {
+    "config_hash": null,
+    "fold_manifest_hash": null,
+    "note": "These three fields are exactly mineocclude.baselines.scientific_readiness.BASELINE_PREDICTION_DIRECT_INPUTS. All three are null pending Person B's real artifacts.",
+    "oracle_target_hash": null
+  },
+  "gate_call_required_before_any_fit": "validate_scientific_baseline_readiness(contexts, fold_manifest=..., oracle_target_document=..., candidate_scientific_use='accepted')",
+  "gate_required_result": {
+    "blocked_reasons": [],
+    "status": "READY"
+  },
+  "implementation_reference": "src/mineocclude/baselines/scientific_readiness.py::validate_scientific_baseline_readiness",
+  "record_date": "2026-07-30",
+  "required_identities": {
+    "coordinate_frame_identity": {
+      "coordinate_frame_hash": null,
+      "coordinate_frame_id": null,
+      "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+      "note": "Individual per-episode coordinate_frame_hash values exist in Person B's accepted_c_oracle_inputs.json, but no oracle_target_document exists yet to bind one into, per mineocclude.oracle.schema.validate_oracle_target_document's non-fixture path.",
+      "status": "unavailable_as_a_sealed_document_bound_into_an_oracle_target_document"
+    },
+    "person_a_model_and_preprocessing_context_identities": {
+      "applicable_to": [
+        "raw_pixel baseline",
+        "random_weight baseline",
+        "sealing the real oracle_target document"
+      ],
+      "model_hash": null,
+      "note": "Every blocker chain in Person B's own committed blocked_jobs.json (job_ids person_b_phase4_fit_ridge_probes, person_b_phase4_generate_oof_predictions) names person_a_production_activation_handoff as a direct blocker.",
+      "preprocess_hash": null,
+      "status": "unavailable"
+    },
+    "person_b_oracle_target": {
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "note": "Person B's own committed oracle_target_contract.json at commit 836c933 records construction_status='READY_AS_CONTRACT_NOT_EXECUTED' and production_artifact_created=false.",
+      "status": "unavailable",
+      "validated_by": "mineocclude.oracle.schema.validate_oracle_target_document"
+    },
+    "person_b_sealed_fold_manifest": {
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "note": "Person B's own committed docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/sealed_fold_split_identity.json records final_frame_manifest.construction_status='BLOCKED_PENDING_PERSON_A' at commit 836c933 (role/person-b-analysis). A layout-level fold plan (frozen_assignment, artifact_id='person_b_c_layout_fold_plan_2026_07_28') exists, but this is not the same as the frame-level sealed fold_manifest artifact this contract requires.",
+      "status": "unavailable",
+      "validated_by": "mineocclude.probes.splits.validate_fold_manifest"
+    },
+    "person_c_trajectory_identities": {
+      "note": "Person B's committed accepted_c_oracle_inputs.json lists 15 accepted Person C capture packages with real accepted_manifest_hash/coordinate_frame_hash values. Person D does not consume this list directly -- Person D consumes trajectory identity only via the fold-manifest and oracle-target documents above (item 4 of the Step 4.1 contract), both of which remain unavailable.",
+      "status": "partially_available_but_not_directly_consumed"
+    }
+  },
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-scientific-baseline-input-contract",
+  "schema_version": "1.0",
+  "scientific_use_decision": {
+    "current_value": "not_yet_declarable",
+    "note": "candidate_scientific_use is a mandatory, no-default argument to validate_scientific_baseline_readiness. It cannot honestly be set to 'accepted' while every identity above is null/unavailable.",
+    "required_value": "accepted"
+  }
+}

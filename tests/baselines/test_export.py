@@ -16,14 +16,18 @@ from pathlib import Path
 
 import pytest
 
+from mineocclude.analysis.manifests import seal_artifact
 from mineocclude.baselines.export import (
     BaselineExportError,
     attach_b_fold_assignments,
     build_baseline_document,
+    validate_b_fold_manifest,
     validate_document,
 )
 from mineocclude.baselines.last_seen import predict_last_seen
-from mineocclude.analysis.manifests import seal_artifact
+from mineocclude.baselines.production_fold_contract_v0_1 import (
+    PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION,
+)
 from mineocclude.contracts.analysis_inputs import BASELINE_FAMILY_CONTRACTS
 from tests.baselines.conftest import build_trajectory_contexts
 
@@ -201,9 +205,6 @@ def test_validate_document_enforces_exact_coverage_against_b_expectations():
         default_fit_id="last_seen:mu_oracle_blocks:closed_form",
     )
 
-    covered_keys = {
-        (row["trajectory_id"], row["model_frame_idx"]) for row in document["rows"]
-    }
     expected_fold_by_frame = {
         (ctx.trajectory_id, ctx.model_frame_idx): ctx.fold for ctx in contexts
     }
@@ -236,6 +237,58 @@ def test_build_baseline_document_rejects_bad_hash():
             fit_manifest_hash=VALID_HASH,
             default_fit_id="last_seen:mu_oracle_blocks:closed_form",
         )
+
+
+def test_validate_b_fold_manifest_preserves_historical_behavior_for_historical_manifests():
+    """format_version absent (historical manifests never carried this
+    field) must still route through the pre-existing
+    ``validate_fold_manifest`` deterministic-reproduction check,
+    completely unchanged -- proven here via the same synthetic fixture
+    every other historical-path test in this file already relies on."""
+
+    validate_b_fold_manifest(_fold_manifest())  # must not raise
+
+
+def test_validate_b_fold_manifest_rejects_unknown_format_version():
+    manifest = _fold_manifest()
+    manifest["fold_manifest_format_version"] = "some-unrecognized-future-format-v9.9"
+    with pytest.raises(BaselineExportError, match="unknown fold_manifest_format_version"):
+        validate_b_fold_manifest(manifest)
+
+
+def test_validate_b_fold_manifest_dispatches_to_signed_explicit_mapping_for_production_format():
+    """A document merely *claiming* the production format version but
+    failing that validator's real checks must be rejected through the
+    production path, not silently accepted or misrouted to the
+    historical path (which would ignore the field entirely)."""
+
+    manifest = _fold_manifest()
+    manifest["fold_manifest_format_version"] = PRODUCTION_FOLD_MANIFEST_FORMAT_VERSION
+    with pytest.raises(BaselineExportError, match="authoritative B production fold manifest"):
+        validate_b_fold_manifest(manifest)
+
+
+def test_validate_b_fold_manifest_accepts_the_real_production_fold_manifest():
+    """The exact real-manifest regression this task requires, exercised
+    through the same dispatch function ``attach_b_fold_assignments``
+    (and the CLI's preflight) actually calls -- not a paraphrase of it.
+    """
+
+    import subprocess
+    from pathlib import Path as _Path
+
+    from mineocclude.baselines.production_fold_contract_v0_1 import (
+        FROZEN_FOLD_MANIFEST_PATH,
+        RATIFYING_PERSON_B_COMMIT,
+    )
+
+    root = _Path(__file__).resolve().parents[2]
+    result = subprocess.run(
+        ["git", "show", f"{RATIFYING_PERSON_B_COMMIT}:{FROZEN_FOLD_MANIFEST_PATH}"],
+        cwd=root, capture_output=True, check=True,
+    )
+    real_fold_manifest = json.loads(result.stdout.decode("utf-8"))
+    validate_b_fold_manifest(real_fold_manifest)  # must not raise
 
 
 def test_build_baseline_document_rejects_empty_applicable_set():

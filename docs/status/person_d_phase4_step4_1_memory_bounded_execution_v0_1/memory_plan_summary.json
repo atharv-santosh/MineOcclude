@@ -1,0 +1,39 @@
+{
+  "conservative_working_copy_breakdown_bytes": {
+    "compact_source_bytes": 1749565440,
+    "inner_standardized_bytes": 2203213824,
+    "inner_training_bytes": 2203213824,
+    "outer_standardized_bytes": 2937618432,
+    "outer_training_bytes": 2937618432,
+    "upcast_matrix_bytes": 3499130880,
+    "working_copy_bytes": 13780795392
+  },
+  "current_15_gib_host_supported": false,
+  "estimated_peak_gib": 14.96,
+  "fixed_overhead_allowance_gib": 0.5,
+  "honest_finding": "Removing the Python-float boxing bug drops raw_pixel's primary feature representation from a minimum of 13.035 GiB (boxed) to approximately 1.63 GiB (compact float32) -- exactly as expected. That alone is not sufficient to declare the 15 GiB host safe. mineocclude.probes.ridge (an unchanged estimator this repair does not modify) upcasts every input to float64 before any linear-algebra step and produces several further same-size training/standardized copies during its outer/inner cross-validation. Modeling those honestly (see conservative_working_copy_breakdown_bytes) puts the real Step 4.1 shape's estimated peak at approximately 14.96 GiB against a nominal 15 GiB physical budget -- a margin of roughly 37 MiB, effectively zero. Real available memory on any host is always somewhat less than nominal physical memory (OS/kernel reservations, page cache, other resident processes), and this run has zero swap to absorb any error in this estimate. The current 15 GiB host is therefore not honestly reported as supported.",
+  "minimum_recommended_host_memory_gib": 20,
+  "minimum_recommended_host_memory_rationale": "estimated_peak_gib (~14.96) plus a genuine operating margin against real-vs-nominal memory variance and estimation uncertainty -- not a number chosen to make any specific host pass. 20 GiB gives roughly 5 GiB of real headroom; a host that can be verified to expose at least that much available (not merely nominal physical) memory at runtime is required before a real execution should be authorized.",
+  "not_changed_to_produce_this_estimate": [
+    "raw_pixel's estimator (mineocclude.probes.ridge fit_ridge_oof/select_ridge_alpha_grouped/fit_ridge)",
+    "alpha_grid, inner_fold_count, or seed",
+    "feature dimensionality, ordering, normalization, or values"
+  ],
+  "real_input_derivation": {
+    "feature_dim": 258048,
+    "inner_fold_count": 4,
+    "outer_fold_row_counts": [
+      292,
+      409,
+      387,
+      272,
+      335
+    ],
+    "row_count": 1695
+  },
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-memory-bounded-execution-v0-1-memory-plan-summary",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

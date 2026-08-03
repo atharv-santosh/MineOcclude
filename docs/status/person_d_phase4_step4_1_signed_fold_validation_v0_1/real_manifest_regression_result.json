@@ -1,0 +1,64 @@
+{
+  "checks": {
+    "accepted_mapping_equals_signed_assignment": true,
+    "all_admitted_row_identities_validate": true,
+    "all_ten_pilots_exact": true,
+    "fold_contract_version_exact": true,
+    "fold_manifest_raw_sha256_passes": true,
+    "historical_seed_invariant_reproduction_not_used_as_authority": true,
+    "layout_row_counts_equal_frozen": true,
+    "no_baseline_fit_occurred": true,
+    "production_preflight_accepts_the_exact_real_manifest": true,
+    "target_binding_passes": true,
+    "validation_mode_is_signed_explicit_mapping": true,
+    "zero_cross_fold_leakage": true,
+    "zero_duplicate_rows": true
+  },
+  "cross_fold_leakage_count": 0,
+  "duplicate_row_count": 0,
+  "executed_functions": [
+    "mineocclude.baselines.production_fold_contract_v0_1.validate_fold_target_binding_bytes",
+    "mineocclude.baselines.production_input_ingest.build_all_trajectory_contexts",
+    "mineocclude.baselines.production_input_ingest.build_oracle_target_lookups",
+    "mineocclude.baselines.export.validate_b_fold_manifest",
+    "scripts/run_person_d_step4_1_eight_family_production.py::run_preflight (fold_manifest_path supplied)"
+  ],
+  "layout_row_counts": [
+    409,
+    387,
+    335,
+    292,
+    272
+  ],
+  "real_contexts_built": 1695,
+  "real_folds_present": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "real_pilots_present": [
+    "layout_00_ep9403",
+    "layout_00_ep9441",
+    "layout_01_ep9405",
+    "layout_01_ep9442",
+    "layout_02_ep9407",
+    "layout_02_ep9432",
+    "layout_03_ep9404",
+    "layout_03_ep9443",
+    "layout_04_ep9406",
+    "layout_04_ep9444"
+  ],
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-signed-fold-validation-v0-1-real-manifest-regression-result",
+  "scientific_execution_performed": false,
+  "signed_fold_to_layout_assignment": [
+    1,
+    2,
+    4,
+    0,
+    3
+  ],
+  "u4_output_inspected": false
+}

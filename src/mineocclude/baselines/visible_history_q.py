@@ -32,6 +32,10 @@ BASELINE_NAME = "visible_history_q"
 REGIME_A_DT_SECONDS = 0.05
 
 
+class VisibleHistoryQError(ValueError):
+    """Raised when input contexts violate this baseline's fold invariants."""
+
+
 def _trajectory_q_residuals(
     visible_positions: Sequence[float], dt_seconds: float
 ) -> list[float]:
@@ -64,11 +68,23 @@ def fit_predict_visible_history_q(
     whose fold has at least one pooled training-fold residual pair;
     defines no mean prediction -- q_hat and tau alone carry no
     positional information, matching time_only.py's role split.
+
+    Raises :class:`VisibleHistoryQError` if any trajectory's contexts
+    disagree on ``fold`` -- B's layout-grouped folds mean one
+    trajectory can never legitimately span two folds, so silently
+    taking whichever fold value appeared first (as this function used
+    to) would mask a real upstream data bug instead of surfacing it.
     """
 
     trajectory_fold: dict[str, int] = {}
     for ctx in contexts:
-        trajectory_fold.setdefault(ctx.trajectory_id, ctx.fold)
+        existing_fold = trajectory_fold.setdefault(ctx.trajectory_id, ctx.fold)
+        if existing_fold != ctx.fold:
+            raise VisibleHistoryQError(
+                f"trajectory {ctx.trajectory_id!r} has conflicting fold "
+                f"assignments ({existing_fold} vs {ctx.fold}); one trajectory "
+                "must belong to exactly one fold"
+            )
 
     residuals_by_trajectory: dict[str, list[float]] = {
         trajectory_id: _trajectory_q_residuals(positions, dt_seconds)

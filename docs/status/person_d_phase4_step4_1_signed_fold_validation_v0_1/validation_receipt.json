@@ -1,0 +1,48 @@
+{
+  "checks": {
+    "changed_path_review": {
+      "result": "6 files in the fold-validator commit (4915252): 4 modified (the CLI script, export.py, and two test files), 2 new (production_fold_contract_v0_1.py and its test file). All within Person D's owned directories (src/mineocclude/baselines/, scripts/, tests/baselines/). No historical Phase 1 file, PERSON_D_ISSUE.md, or any A/B/C/E-owned file was touched. No U4 path referenced."
+    },
+    "focused_fold_dispatch_and_runner_tests": {
+      "command": "python3 -m pytest tests/baselines/test_production_fold_contract_v0_1.py tests/baselines/test_export.py tests/baselines/test_baseline_family_production_cli.py -q",
+      "failed": 0,
+      "passed": 73,
+      "result": "73 passed"
+    },
+    "full_baselines_regression": {
+      "command": "python3 -m pytest tests/baselines -q",
+      "failed": 0,
+      "note": "216 tests existed before this pass; 15 new tests in test_production_fold_contract_v0_1.py, 4 new dispatch tests in test_export.py, 3 new CLI-level tests in test_baseline_family_production_cli.py; all prior tests still pass unchanged.",
+      "passed": 238,
+      "result": "238 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "result": "clean, exit code 0"
+    },
+    "py_compile": {
+      "command": "python3 -m py_compile <every new/modified .py file in this task>",
+      "result": "OK, no syntax errors"
+    },
+    "real_manifest_regression": {
+      "command": "validate_fold_target_binding_bytes against the real fold/target manifests read via git show; build_all_trajectory_contexts against the real materialized fold/oracle-target/capture-package artifacts",
+      "result": "PASSED -- see real_manifest_regression_result.json for full detail (1,695 real contexts, all 10 pilots, all 5 folds, 0 duplicates, 0 cross-fold leakage)"
+    },
+    "ruff": {
+      "command": "python3 -m ruff check <every new/modified .py file in this task>",
+      "result": "All checks passed (0 errors) after --fix for mechanical import-sort/style issues surfaced by touching export.py and the CLI script."
+    }
+  },
+  "not_run": [
+    "actual baseline fitting against real Person C capture data",
+    "the production CLI's run mode against real inputs (no code-level blocker remains; only the real SageMaker frame-payload environment is unavailable here)",
+    "metric computation",
+    "U4 inspection"
+  ],
+  "person_d_fold_validator_implementation_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-signed-fold-validation-v0-1-validation-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

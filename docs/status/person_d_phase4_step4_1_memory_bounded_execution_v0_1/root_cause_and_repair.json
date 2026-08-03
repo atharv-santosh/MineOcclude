@@ -1,0 +1,45 @@
+{
+  "confirmed_execution_report": {
+    "exit_code": 137,
+    "host_memory_gib": 15,
+    "host_swap_gib": 0,
+    "minimum_boxed_feature_memory_gib": 13.035
+  },
+  "exact_code_path_before_repair": "scripts/run_person_d_step4_1_eight_family_production.py::build_real_run_inputs -> mineocclude.baselines.production_input_ingest.build_pixel_features_by_key -> mineocclude.baselines.production_input_ingest._decode_little_endian_float32 (old: list(struct.unpack(f'<{count}f', payload))) -> run_production held the resulting dict for the entire 8-family loop via the eager pixel_features_by_key argument, even though only the raw_pixel family ever reads it.",
+  "feature_value_count": 437391360,
+  "feature_value_count_derivation": "1695 admitted frames * 258048 values/frame (3*224*384, the frozen preprocessed-frame payload shape) = 437391360, exactly matching the confirmed incident report.",
+  "found_operations_that_materially_increased_peak_memory": [
+    {
+      "finding": "list construction / Python-float conversion: every decoded frame payload was materialized as list(struct.unpack(...)) -- 258048 individually boxed Python float objects per frame, 437391360 total across all 1,695 admitted frames.",
+      "impact_gib": 13.035,
+      "operation": "list construction and Python-float boxing"
+    },
+    {
+      "finding": "simultaneous retention of raw frames and extracted features: build_real_run_inputs built the full boxed dict for all 1,695 frames eagerly, before any family (including the 7 families that never touch pixel data) began fitting, and run_production held one shared reference to it across the entire 8-family loop.",
+      "impact": "the boxed structure was resident for the full run duration, not just raw_pixel's fit",
+      "operation": "eager, whole-run construction and retention"
+    },
+    {
+      "finding": "dtype promotion (not the OOM's direct cause, but a real, unavoidable working-copy source in the unchanged ridge estimator): mineocclude.probes.ridge._matrix upcasts every input to float64 before any linear-algebra step, doubling the compact float32 array's size, and this copy coexists with the compact source for the whole fit_ridge_oof call.",
+      "impact": "see memory_plan_summary.json for the full working-copy breakdown",
+      "operation": "float64 upcast inside the unchanged ridge estimator"
+    }
+  ],
+  "not_found_as_contributors": [
+    "nested lists beyond the single flat per-frame list",
+    "repeated concatenation (frame_manifest.get('records', ()) is iterated once, not repeatedly rebuilt)",
+    "duplicate dense matrices beyond the estimator's own (unchanged) float64 upcast and per-fold training-slice copies",
+    "family-wide caching beyond the single shared pixel_features_by_key argument itself",
+    "serialization staging copies (documents written to disk are small prediction rows, never the raw feature matrix)"
+  ],
+  "record_date": "2026-08-01",
+  "repair_summary": {
+    "boxing_removed": "production_input_ingest._decode_little_endian_float32 now returns np.frombuffer(payload, dtype='<f4').copy() -- a compact, owned float32 NumPy array, never a Python list of boxed floats.",
+    "lazy_family_scoped_construction": "build_real_run_inputs now returns a pixel_features_provider callable (functools.partial(build_pixel_features_by_key, ...)) instead of an eager dict; run_production calls it only immediately before raw_pixel fits, and explicitly drops the reference (plus gc.collect()) immediately after, before the next family begins.",
+    "memory_plan_gate_added": "mineocclude.baselines.memory_planning.build_raw_pixel_memory_plan is called before raw_pixel's fit, using the real fold-manifest-derived row/fold distribution; run_production fails closed (raises before calling the provider) if the estimated peak exceeds the detected host budget."
+  },
+  "schema_id": "person-d-phase4-step4-1-memory-bounded-execution-v0-1-root-cause-and-repair",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

@@ -1,0 +1,51 @@
+{
+  "checks": {
+    "canonical_json_schema_validation": {
+      "result": "Every new module round-trips build->validate with zero errors (build_baseline_document_v0_2/validate_baseline_document_v0_2 for all 8 families; build_eight_family_execution_manifest/validate_eight_family_execution_manifest); verified interactively before committing, in addition to the 32 automated tests."
+    },
+    "changed_path_review": {
+      "result": "7 files in the exporter/CLI commit (fd9302e): 1 modified (src/mineocclude/baselines/__init__.py, D's own package index), 6 new (3 src modules, 1 script, 2 test files) -- all within Person D's owned directories. No historical Phase 1 file, PERSON_D_ISSUE.md, or any A/B/C/E-owned file was touched. No U4 path referenced."
+    },
+    "focused_exporter_and_runner_preparation_tests": {
+      "command": "python3 -m pytest tests/baselines/test_baseline_family_input_v0_2.py tests/baselines/test_baseline_family_production_cli.py -q",
+      "failed": 0,
+      "passed": 32,
+      "result": "32 passed"
+    },
+    "full_baselines_regression": {
+      "command": "python3 -m pytest tests/baselines -q",
+      "failed": 0,
+      "note": "127 tests existed before this task's changes; 32 new tests added; all 127 historical tests still pass unchanged, proving historical Person D behavior is unaffected.",
+      "passed": 159,
+      "result": "159 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "result": "clean, exit code 0, no whitespace errors"
+    },
+    "inventory_validation": {
+      "result": "All 8 Person D family-module hashes (current_person_d_family_modules()) independently verified to match Person B's own frozen PERSON_D_FAMILY_MODULES citations at commit 265cbbb byte-for-byte before any code was written against them."
+    },
+    "py_compile": {
+      "command": "python3 -m py_compile <every new/modified .py file in this task>",
+      "result": "OK, no syntax errors"
+    },
+    "ruff": {
+      "command": "python3 -m ruff check <every new/modified .py file in this task>",
+      "result": "All checks passed (0 errors) after applying --fix for mechanical style issues and manually fixing one PEP 484 implicit-Optional and one NaN-comparison-as-self-comparison warning (rewritten as math.isfinite); full test suite re-confirmed passing after every fix."
+    }
+  },
+  "not_run": [
+    "actual baseline fitting",
+    "oracle target generation",
+    "metric computation",
+    "the production CLI's run mode",
+    "U4 inspection"
+  ],
+  "person_d_implementation_commit": "fd9302e5d218193211f2f96986ca32dc1a365e66",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-eight-family-production-v0-1-validation-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}
