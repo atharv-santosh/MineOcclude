@@ -21,9 +21,9 @@ import platform
 import re
 import subprocess
 import sys
+import tempfile
 from collections import defaultdict
-from collections.abc import Mapping, Sequence
-from datetime import datetime
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +50,12 @@ INVENTORIED_NAMES = DOCUMENT_NAMES[:-1]
 PERSON_B_STARTING_AUTHORITY = "76e1d33788bcf1482b310d2b41a5db3d734d98a7"
 PERSON_B_APPLICABILITY_STARTING_AUTHORITY = (
     "a6f1cedd390ecde129fc5b25ad50f81a0848530b"
+)
+PERSON_B_PROVENANCE_STARTING_AUTHORITY = (
+    "60353157874d8d095ac29d76a40b8a8fa86b3d29"
+)
+PERSON_B_APPLICABILITY_VALIDATOR_COMMIT = (
+    "248b7a174cb38a522f3638d7789b0e1d1b5befdf"
 )
 PERSON_D_MEMORY_IMPLEMENTATION_COMMIT = (
     "f6fb6e542f87462c366ea657ded2dc8a47c3428f"
@@ -125,6 +131,16 @@ APPLICABILITY_CONTRACT_RELATIVE_PATH = Path(
     "family_target_applicability_contract.json"
 )
 PRESERVED_PROVENANCE_FILENAME = "preserved_output_provenance.json"
+PRESERVED_PROVENANCE_SCHEMA_ID = (
+    "person-b-step4-1-preserved-output-provenance-audit-receipt-v0-2"
+)
+PROVENANCE_AUTHORIZATION_SCHEMA_ID = (
+    "person-b-phase4-step4-1-provenance-reauthorization-v0-2-"
+    "person-d-authorization-record"
+)
+VALIDATOR_RELATIVE_PATH = Path(
+    "scripts/validate_person_b_step4_1_memory_reauthorization_v0_1.py"
+)
 PREDECESSOR_AUTHORIZATION_RECORD_SHA256 = (
     "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
 )
@@ -855,7 +871,160 @@ def _validate_applicability_external_auth(
     )
 
 
+def _provenance_validator_commit(repo_root: Path = ROOT) -> str:
+    """Return the committed authority that most recently changed this validator."""
+
+    commit = _git_text(
+        repo_root,
+        "log",
+        "-1",
+        "--format=%H",
+        "--",
+        VALIDATOR_RELATIVE_PATH.as_posix(),
+    )
+    _require(
+        re.fullmatch(r"[0-9a-f]{40}", commit) is not None,
+        "runtime_authorization_mismatch",
+        "provenance validator commit",
+    )
+    return commit
+
+
+def _validate_provenance_external_auth(
+    repo_root: Path, document: Mapping[str, Any]
+) -> None:
+    """Validate the non-circular v0.2 Person B resume authorization record."""
+
+    expected_fields = {
+        "accepted_authorization_authority_by_reusable_family",
+        "accepted_producing_authority_by_reusable_family",
+        "applicability_contract_path",
+        "applicability_contract_sha256",
+        "applicability_contract_version",
+        "atomic_receipt_generation_required",
+        "authorization_scope",
+        "authorized_branch",
+        "authorized_runner_commit",
+        "direct_output_validation_required",
+        "existing_receipt_revalidation_required",
+        "frame_root",
+        "materialized_root",
+        "minimum_available_memory_gib",
+        "minimum_physical_memory_gib",
+        "output_root",
+        "preserved_reusable_families",
+        "provenance_audit_validator_commit",
+        "provenance_receipt_is_audit_output",
+        "record_purpose",
+        "schema_id",
+        "schema_version",
+        "scientific_execution_performed",
+        "source_commit",
+        "supersedes_authorization_commit",
+        "u4_output_inspected",
+    }
+    _require(
+        set(document) == expected_fields,
+        "runtime_authorization_mismatch",
+        "provenance record fields",
+    )
+    _require(
+        document.get("schema_version") == "2.0"
+        and document.get("schema_id") == PROVENANCE_AUTHORIZATION_SCHEMA_ID,
+        "runtime_authorization_mismatch",
+        "provenance record schema",
+    )
+    _require(
+        document.get("authorized_runner_commit") == PERSON_D_RUNNER_COMMIT
+        and document.get("authorized_branch") == PERSON_D_BRANCH,
+        "runtime_authorization_mismatch",
+        "runner lineage",
+    )
+    _require(
+        document.get("supersedes_authorization_commit")
+        == PERSON_B_PROVENANCE_STARTING_AUTHORITY,
+        "runtime_authorization_mismatch",
+        "provenance supersession",
+    )
+    _require(
+        document.get("provenance_audit_validator_commit")
+        == _provenance_validator_commit(repo_root),
+        "runtime_authorization_mismatch",
+        "provenance validator authority",
+    )
+    contract_path = repo_root / APPLICABILITY_CONTRACT_RELATIVE_PATH
+    _require(
+        document.get("applicability_contract_version")
+        == APPLICABILITY_CONTRACT_VERSION
+        and document.get("applicability_contract_path")
+        == APPLICABILITY_CONTRACT_RELATIVE_PATH.as_posix()
+        and contract_path.is_file()
+        and document.get("applicability_contract_sha256")
+        == _sha256(contract_path.read_bytes()),
+        "runtime_authorization_mismatch",
+        "applicability binding",
+    )
+    expected_producing = {
+        family: PERSON_D_RUNNER_COMMIT for family in PRESERVED_COMPLETED_FAMILIES
+    }
+    expected_authorizations = {
+        family: PERSON_B_APPLICABILITY_STARTING_AUTHORITY
+        for family in PRESERVED_COMPLETED_FAMILIES
+    }
+    _require(
+        tuple(document.get("preserved_reusable_families", ()))
+        == PRESERVED_COMPLETED_FAMILIES
+        and document.get("accepted_producing_authority_by_reusable_family")
+        == expected_producing
+        and document.get("accepted_authorization_authority_by_reusable_family")
+        == expected_authorizations,
+        "runtime_authorization_mismatch",
+        "preserved output lineage",
+    )
+    _require(
+        document.get("direct_output_validation_required") is True
+        and document.get("provenance_receipt_is_audit_output") is True
+        and document.get("atomic_receipt_generation_required") is True
+        and document.get("existing_receipt_revalidation_required") is True,
+        "runtime_authorization_mismatch",
+        "corrected audit lifecycle",
+    )
+    _require(
+        document.get("minimum_physical_memory_gib")
+        == MINIMUM_PHYSICAL_MEMORY_GIB
+        and document.get("minimum_available_memory_gib")
+        == MINIMUM_AVAILABLE_MEMORY_GIB,
+        "runtime_authorization_mismatch",
+        "memory thresholds",
+    )
+    _require(
+        document.get("materialized_root") == MATERIALIZED_ROOT_ABSOLUTE_PATH
+        and document.get("frame_root") == FRAME_ROOT_ABSOLUTE_PATH
+        and document.get("output_root") == OUTPUT_ROOT_ABSOLUTE_PATH,
+        "runtime_authorization_mismatch",
+        "approved roots",
+    )
+    _require(
+        document.get("authorization_scope")
+        == "Person B provenance-audited fail-closed resume authorization for exact Person D runner HEAD"
+        and document.get("record_purpose")
+        == "External superseding authorization whose receipt is generated only after direct Person B audit"
+        and document.get("source_commit") == "external_person_b_package",
+        "runtime_authorization_mismatch",
+        "record purpose",
+    )
+    _require(
+        document.get("scientific_execution_performed") is False
+        and document.get("u4_output_inspected") is False,
+        "runtime_authorization_mismatch",
+        "safety",
+    )
+
+
 def _validate_external_auth(repo_root: Path, document: Mapping[str, Any]) -> None:
+    if document.get("schema_id") == PROVENANCE_AUTHORIZATION_SCHEMA_ID:
+        _validate_provenance_external_auth(repo_root, document)
+        return
     if (
         document.get("schema_id")
         == "person-b-phase4-step4-1-applicability-reauthorization-v0-1-person-d-authorization-record"
@@ -1866,12 +2035,14 @@ def _validate_resume_prediction_document(
     )
     rows = document.get("rows")
     _require(isinstance(rows, list), "resume_row_lineage_mismatch", family)
-    expected_keys = _expected_resume_keys(
-        family,
-        target_name,
-        target_by_key,
-        fold_by_key,
-        repo_root=repo_root,
+    applicability = load_applicability_contract(
+        target_by_key, fold_by_key, repo_root=repo_root
+    )
+    applicability_entry = applicability["entries"][(family, target_name)]
+    expected_keys = set(
+        applicability["identity_sets"][
+            applicability_entry["admitted_identity_set"]
+        ]
     )
     actual_keys: set[tuple[str, int]] = set()
     for row in rows:
@@ -1938,236 +2109,25 @@ def _validate_resume_prediction_document(
     )
     return {
         "byte_size": len(raw),
+        "family": family,
+        "identity_set_sha256": _sha256(
+            canonical_json_bytes(
+                [
+                    {"model_frame_idx": frame_idx, "trajectory_id": trajectory}
+                    for trajectory, frame_idx in sorted(
+                        actual_keys,
+                        key=lambda key: (EXPECTED_PILOTS.index(key[0]), key[1]),
+                    )
+                ]
+            )
+        ),
         "path": path.name,
+        "producing_scientific_authority": dict(
+            applicability_entry["producing_scientific_authority"]
+        ),
         "row_count": len(rows),
         "sha256": _sha256(raw),
         "target": target_name,
-    }
-
-
-def _parse_utc_timestamp(value: Any, label: str) -> datetime:
-    _require(
-        isinstance(value, str) and value.endswith("Z"),
-        "resume_provenance_timestamp_invalid",
-        label,
-    )
-    try:
-        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
-    except ValueError as error:
-        _fail("resume_provenance_timestamp_invalid", f"{label}: {error}")
-    return parsed
-
-
-def _validate_preserved_output_provenance(
-    output_root: Path,
-    state: Mapping[str, Any],
-    output_inventory: Sequence[Mapping[str, Any]],
-) -> Mapping[str, Any]:
-    """Bind preserved files to runner, authorization, environment, and time."""
-
-    path = output_root / PRESERVED_PROVENANCE_FILENAME
-    _require(path.is_file(), "resume_provenance_missing", str(path))
-    document = _parse_path(path, "preserved output provenance")
-    _require(
-        document.get("schema_id")
-        == "person-b-step4-1-preserved-output-provenance-v0-1"
-        and document.get("schema_version") == "1.0",
-        "resume_provenance_invalid",
-        "schema",
-    )
-    _require(
-        document.get("output_root") == OUTPUT_ROOT_ABSOLUTE_PATH,
-        "resume_provenance_invalid",
-        "output root",
-    )
-    _require(
-        document.get("u4_output_inspected") is False,
-        "u4_reference",
-        "preserved provenance",
-    )
-    state_raw = (output_root / "run_state.json").read_bytes()
-    state_reference = {
-        "byte_size": len(state_raw),
-        "path": "run_state.json",
-        "sha256": _sha256(state_raw),
-    }
-    families_state = state.get("families")
-    _require(isinstance(families_state, Mapping), "resume_state_invalid", "families")
-    completed_families = tuple(
-        family
-        for family in EXPECTED_FAMILIES
-        if isinstance(families_state.get(family), Mapping)
-        and families_state[family].get("status") == "completed"
-    )
-    _require(
-        completed_families == PRESERVED_COMPLETED_FAMILIES,
-        "resume_provenance_chronology_mismatch",
-        "preserved completed family order",
-    )
-    inventory_by_family: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
-    for item in output_inventory:
-        filename = item.get("path")
-        _require(
-            isinstance(filename, str) and "__" in filename,
-            "resume_inventory_invalid",
-            str(filename),
-        )
-        inventory_by_family[filename.split("__", 1)[0]].append(dict(item))
-    total_predictions = sum(
-        int(item["row_count"]) for item in output_inventory
-    )
-    _require(
-        total_predictions == PRESERVED_PREDICTION_COUNT,
-        "resume_provenance_chronology_mismatch",
-        "preserved prediction count",
-    )
-
-    chronology = document.get("chronology")
-    _require(isinstance(chronology, Mapping), "resume_provenance_invalid", "chronology")
-    prior_oom = chronology.get("prior_oom_report")
-    preserved_run = chronology.get("preserved_run")
-    _require(
-        isinstance(prior_oom, Mapping) and isinstance(preserved_run, Mapping),
-        "resume_provenance_invalid",
-        "chronology receipts",
-    )
-    _require(
-        prior_oom.get("producing_runner_commit") == PERSON_D_PRIOR_RUNNER_COMMIT
-        and prior_oom.get("authorization_authority_commit")
-        == PERSON_B_STARTING_AUTHORITY
-        and prior_oom.get("completed_family_count") == 0
-        and prior_oom.get("prediction_count") == 0,
-        "resume_provenance_chronology_mismatch",
-        "prior OOM report",
-    )
-    _require(
-        preserved_run.get("producing_runner_commit") == PERSON_D_RUNNER_COMMIT
-        and preserved_run.get("authorization_authority_commit")
-        == PERSON_B_APPLICABILITY_STARTING_AUTHORITY
-        and tuple(preserved_run.get("completed_families", ()))
-        == PRESERVED_COMPLETED_FAMILIES
-        and preserved_run.get("prediction_count") == PRESERVED_PREDICTION_COUNT,
-        "resume_provenance_chronology_mismatch",
-        "preserved run",
-    )
-    oom_time = _parse_utc_timestamp(prior_oom.get("recorded_at_utc"), "prior OOM")
-    preserved_time = _parse_utc_timestamp(
-        preserved_run.get("recorded_at_utc"), "preserved run"
-    )
-    _require(
-        oom_time < preserved_time,
-        "resume_provenance_chronology_mismatch",
-        "event timestamps",
-    )
-
-    provenance_families = document.get("families")
-    _require(
-        isinstance(provenance_families, Mapping)
-        and set(provenance_families) == set(PRESERVED_COMPLETED_FAMILIES),
-        "resume_provenance_invalid",
-        "family receipts",
-    )
-    decisions: dict[str, str] = {family: "absent" for family in EXPECTED_FAMILIES}
-    for family in PRESERVED_COMPLETED_FAMILIES:
-        record = provenance_families.get(family)
-        _require(isinstance(record, Mapping), "resume_provenance_invalid", family)
-        _require(
-            set(record)
-            == {
-                "authorization_receipt",
-                "configuration",
-                "environment_receipt",
-                "output_manifest",
-                "prediction_inventory",
-                "runner_receipt",
-            },
-            "resume_provenance_invalid",
-            f"{family}.fields",
-        )
-        _require(
-            record.get("configuration") == EXPECTED_CONFIGURATION[family],
-            "resume_config_mismatch",
-            f"{family}.provenance",
-        )
-        output_manifest = record.get("output_manifest")
-        _require(
-            isinstance(output_manifest, Mapping)
-            and output_manifest.get("run_state") == state_reference
-            and output_manifest.get("family_status") == "completed"
-            and output_manifest.get("targets")
-            == sorted(EXPECTED_RESUME_TARGET_FAMILIES[family]),
-            "resume_output_manifest_mismatch",
-            family,
-        )
-        expected_inventory = sorted(
-            inventory_by_family[family], key=lambda item: str(item["target"])
-        )
-        _require(
-            record.get("prediction_inventory") == expected_inventory,
-            "resume_inventory_mismatch",
-            family,
-        )
-        runner = record.get("runner_receipt")
-        _require(
-            isinstance(runner, Mapping)
-            and runner.get("producing_runner_commit") == PERSON_D_RUNNER_COMMIT
-            and runner.get("branch") == PERSON_D_BRANCH
-            and runner.get("worktree_clean") is True,
-            "resume_runner_lineage_mismatch",
-            family,
-        )
-        completed_at = _parse_utc_timestamp(
-            runner.get("completed_at_utc"), f"{family}.runner"
-        )
-        _require(
-            completed_at <= preserved_time,
-            "resume_provenance_chronology_mismatch",
-            f"{family}.completion",
-        )
-        authorization = record.get("authorization_receipt")
-        _require(
-            isinstance(authorization, Mapping)
-            and authorization.get("authorization_authority_commit")
-            == PERSON_B_APPLICABILITY_STARTING_AUTHORITY
-            and authorization.get("authorized_runner_commit")
-            == PERSON_D_RUNNER_COMMIT
-            and authorization.get("authorization_record_path")
-            == PREDECESSOR_AUTHORIZATION_RECORD_PATH
-            and authorization.get("authorization_record_sha256")
-            == PREDECESSOR_AUTHORIZATION_RECORD_SHA256,
-            "resume_authorization_lineage_mismatch",
-            family,
-        )
-        environment = record.get("environment_receipt")
-        physical = environment.get("physical_memory_gib") if isinstance(environment, Mapping) else None
-        available = environment.get("available_memory_gib") if isinstance(environment, Mapping) else None
-        _require(
-            isinstance(physical, (int, float))
-            and not isinstance(physical, bool)
-            and math.isfinite(physical)
-            and physical >= MINIMUM_PHYSICAL_MEMORY_GIB
-            and isinstance(available, (int, float))
-            and not isinstance(available, bool)
-            and math.isfinite(available)
-            and available >= MINIMUM_AVAILABLE_MEMORY_GIB
-            and environment.get("u4_output_inspected") is False,
-            "resume_environment_receipt_mismatch",
-            family,
-        )
-        environment_time = _parse_utc_timestamp(
-            environment.get("captured_at_utc"), f"{family}.environment"
-        )
-        _require(
-            environment_time <= completed_at,
-            "resume_provenance_chronology_mismatch",
-            f"{family}.environment time",
-        )
-        decisions[family] = "reusable"
-    return {
-        "chronology_reconciled": True,
-        "decisions": decisions,
-        "prediction_count": total_predictions,
-        "provenance_sha256": _sha256(path.read_bytes()),
     }
 
 
@@ -2201,12 +2161,22 @@ def validate_output_resume_state(
         )
         return {
             "checked": False,
+            "completed_families": [],
             "completed_family_count": 0,
             "decisions": {family: "absent" for family in EXPECTED_FAMILIES},
+            "direct_output_validation_required": True,
+            "no_u4_input": True,
             "passed": True,
+            "prediction_count": 0,
         }
-    state = _parse_path(state_path, "D run_state", canonical=False)
-    _require(state.get("schema_version") == "1.0", "resume_state_invalid", "schema_version")
+    state_raw = state_path.read_bytes()
+    state = _parse_bytes(state_raw, "D run_state", canonical=False)
+    _require(
+        set(state) == {"families", "schema_version"}
+        and state.get("schema_version") == "1.0",
+        "resume_state_invalid",
+        "schema",
+    )
     families = state.get("families")
     _require(isinstance(families, Mapping), "resume_state_invalid", "families")
     unknown = set(families) - set(EXPECTED_FAMILIES)
@@ -2214,16 +2184,44 @@ def validate_output_resume_state(
     # The manifests are loaded only when a completed output must be checked;
     # a fresh run with no run_state remains a constant-time no-op.
     target_by_key, fold_by_key = _load_resume_lineage(repo_root.resolve(), materialized_root)
-    completed = 0
+    decisions: dict[str, str] = {family: "absent" for family in EXPECTED_FAMILIES}
+    completed_families: list[str] = []
     inventory: list[Mapping[str, Any]] = []
-    for family, record in families.items():
+    expected_prediction_paths: set[str] = set()
+    for family in EXPECTED_FAMILIES:
+        record = families.get(family)
+        expected_targets = EXPECTED_RESUME_TARGET_FAMILIES[family]
+        family_paths = {
+            f"{family}__{target_name}.json" for target_name in expected_targets
+        }
+        present_paths = {
+            path.name for path in output_root.glob(f"{family}__*.json") if path.is_file()
+        }
+        if record is None:
+            _require(
+                not present_paths,
+                "resume_invalid_conflicting",
+                f"{family}: outputs exist without completed run_state entry",
+            )
+            continue
         _require(isinstance(record, Mapping), "resume_state_invalid", family)
         _require(record.get("status") in {"completed", "failed"}, "resume_state_invalid", family)
         if record.get("status") != "completed":
+            _require(
+                not present_paths,
+                "resume_invalid_conflicting",
+                f"{family}: outputs exist for failed run_state entry",
+            )
             continue
-        completed += 1
-        expected_targets = EXPECTED_RESUME_TARGET_FAMILIES[family]
+        completed_families.append(family)
+        decisions[family] = "reusable"
+        expected_prediction_paths.update(family_paths)
         recorded_path = _safe_output_path(output_root, record.get("output_path"))
+        _require(
+            present_paths == family_paths,
+            "resume_output_inventory_mismatch",
+            family,
+        )
         _require(
             record.get("targets") == sorted(expected_targets),
             "resume_state_invalid",
@@ -2250,25 +2248,318 @@ def validate_output_resume_state(
                     repo_root=repo_root,
                 )
             )
-    provenance = (
-        _validate_preserved_output_provenance(
-            output_root, state, inventory
-        )
-        if completed
-        else {
-            "chronology_reconciled": False,
-            "decisions": {family: "absent" for family in EXPECTED_FAMILIES},
-            "prediction_count": 0,
-        }
+    actual_prediction_paths = {
+        path.name for path in output_root.glob("*__*.json") if path.is_file()
+    }
+    _require(
+        actual_prediction_paths == expected_prediction_paths,
+        "resume_output_inventory_mismatch",
+        "unexpected prediction files",
     )
+    state_reference = {
+        "byte_size": len(state_raw),
+        "path": "run_state.json",
+        "sha256": _sha256(state_raw),
+    }
+    inventory_by_family: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in inventory:
+        inventory_by_family[str(item["family"])].append(dict(item))
+    family_evidence: dict[str, Mapping[str, Any]] = {}
+    for family in completed_families:
+        family_inventory = sorted(
+            inventory_by_family[family], key=lambda item: str(item["target"])
+        )
+        family_evidence[family] = {
+            "audit_decision": "reusable",
+            "configuration": EXPECTED_CONFIGURATION[family],
+            "exact_prediction_count": sum(
+                int(item["row_count"]) for item in family_inventory
+            ),
+            "identity_set_sha256_by_target": {
+                str(item["target"]): item["identity_set_sha256"]
+                for item in family_inventory
+            },
+            "output_manifest": {
+                "family_status": "completed",
+                "run_state": state_reference,
+                "targets": sorted(EXPECTED_RESUME_TARGET_FAMILIES[family]),
+            },
+            "prediction_inventory": family_inventory,
+            "prediction_inventory_sha256": _sha256(
+                canonical_json_bytes(family_inventory)
+            ),
+        }
+    total_predictions = sum(int(item["row_count"]) for item in inventory)
+    contract_path = repo_root / APPLICABILITY_CONTRACT_RELATIVE_PATH
     return {
         "checked": True,
-        "completed_family_count": completed,
-        "decisions": provenance["decisions"],
+        "applicability_contract": {
+            "path": APPLICABILITY_CONTRACT_RELATIVE_PATH.as_posix(),
+            "sha256": _sha256(contract_path.read_bytes()),
+            "version": APPLICABILITY_CONTRACT_VERSION,
+        },
+        "completed_families": completed_families,
+        "completed_family_count": len(completed_families),
+        "decisions": decisions,
+        "direct_output_validation_required": True,
+        "family_evidence": family_evidence,
+        "fold_manifest_sha256": FOLD_MANIFEST_SHA256,
+        "frame_manifest_sha256": FRAME_MANIFEST_SHA256,
+        "no_u4_input": True,
+        "output_manifest": state_reference,
         "output_inventory": inventory,
         "passed": True,
-        "preserved_output_provenance": provenance,
+        "prediction_count": total_predictions,
+        "source_context_manifest_sha256": SOURCE_CONTEXT_SHA256,
+        "target_manifest_sha256": TARGET_MANIFEST_SHA256,
     }
+
+
+def _validate_audit_environment_receipt(receipt: Any) -> None:
+    _require(
+        isinstance(receipt, Mapping)
+        and set(receipt)
+        == {
+            "available_memory_bytes",
+            "available_memory_gib",
+            "minimum_available_memory_gib",
+            "minimum_physical_memory_gib",
+            "physical_memory_bytes",
+            "physical_memory_gib",
+            "u4_output_inspected",
+        },
+        "resume_environment_receipt_mismatch",
+        "environment receipt fields",
+    )
+    physical = receipt.get("physical_memory_gib")
+    available = receipt.get("available_memory_gib")
+    physical_bytes = receipt.get("physical_memory_bytes")
+    available_bytes = receipt.get("available_memory_bytes")
+    _require(
+        isinstance(physical, (int, float))
+        and not isinstance(physical, bool)
+        and math.isfinite(physical)
+        and physical >= MINIMUM_PHYSICAL_MEMORY_GIB
+        and isinstance(available, (int, float))
+        and not isinstance(available, bool)
+        and math.isfinite(available)
+        and available >= MINIMUM_AVAILABLE_MEMORY_GIB
+        and isinstance(physical_bytes, int)
+        and not isinstance(physical_bytes, bool)
+        and physical == physical_bytes / BYTES_PER_GIB
+        and isinstance(available_bytes, int)
+        and not isinstance(available_bytes, bool)
+        and available == available_bytes / BYTES_PER_GIB
+        and receipt.get("minimum_physical_memory_gib")
+        == MINIMUM_PHYSICAL_MEMORY_GIB
+        and receipt.get("minimum_available_memory_gib")
+        == MINIMUM_AVAILABLE_MEMORY_GIB
+        and receipt.get("u4_output_inspected") is False,
+        "resume_environment_receipt_mismatch",
+        "environment thresholds",
+    )
+
+
+def build_provenance_audit_context(
+    *,
+    authorization_record: Mapping[str, Any],
+    authorization_record_path: Path,
+    d_checkout_receipt: Mapping[str, Any],
+    memory_gate: Mapping[str, Any],
+    repo_root: Path = ROOT,
+) -> Mapping[str, Any]:
+    """Build trusted receipt inputs from already-validated live runtime gates."""
+
+    _require(
+        authorization_record.get("schema_id") == PROVENANCE_AUTHORIZATION_SCHEMA_ID,
+        "resume_authorization_lineage_mismatch",
+        "corrected provenance authorization required",
+    )
+    auth_raw = authorization_record_path.read_bytes()
+    _require(
+        _parse_bytes(auth_raw, "provenance authorization record")
+        == authorization_record,
+        "resume_authorization_lineage_mismatch",
+        "authorization record bytes",
+    )
+    _require(
+        d_checkout_receipt.get("branch") == PERSON_D_BRANCH
+        and d_checkout_receipt.get("head") == PERSON_D_RUNNER_COMMIT
+        and d_checkout_receipt.get("dirty") is False
+        and d_checkout_receipt.get("passed") is True,
+        "resume_runner_lineage_mismatch",
+        "live D checkout receipt",
+    )
+    runner_receipt = {
+        "branch": PERSON_D_BRANCH,
+        "producing_runner_commit": PERSON_D_RUNNER_COMMIT,
+        "worktree_clean": True,
+    }
+    environment_receipt = {
+        "available_memory_bytes": memory_gate["available_memory_bytes"],
+        "available_memory_gib": memory_gate["available_memory_gib"],
+        "minimum_available_memory_gib": MINIMUM_AVAILABLE_MEMORY_GIB,
+        "minimum_physical_memory_gib": MINIMUM_PHYSICAL_MEMORY_GIB,
+        "physical_memory_bytes": memory_gate["physical_memory_bytes"],
+        "physical_memory_gib": memory_gate["physical_memory_gib"],
+        "u4_output_inspected": False,
+    }
+    _validate_audit_environment_receipt(environment_receipt)
+    return {
+        "accepted_authorization_authority_by_reusable_family": dict(
+            authorization_record[
+                "accepted_authorization_authority_by_reusable_family"
+            ]
+        ),
+        "accepted_producing_authority_by_reusable_family": dict(
+            authorization_record["accepted_producing_authority_by_reusable_family"]
+        ),
+        "authorization_record": {
+            "path": str(authorization_record_path.resolve()),
+            "sha256": _sha256(auth_raw),
+        },
+        "environment_receipt": environment_receipt,
+        "runner_receipt": runner_receipt,
+        "validator_commit": authorization_record[
+            "provenance_audit_validator_commit"
+        ],
+    }
+
+
+def _receipt_payload_sha256(document: Mapping[str, Any]) -> str:
+    payload = dict(document)
+    payload.pop("canonical_receipt_sha256", None)
+    return _sha256(canonical_json_bytes(payload))
+
+
+def _build_provenance_receipt(
+    direct_audit: Mapping[str, Any], audit_context: Mapping[str, Any]
+) -> Mapping[str, Any]:
+    runner_receipt = dict(audit_context["runner_receipt"])
+    environment_receipt = dict(audit_context["environment_receipt"])
+    runner_sha256 = _sha256(canonical_json_bytes(runner_receipt))
+    environment_sha256 = _sha256(canonical_json_bytes(environment_receipt))
+    auth_reference = dict(audit_context["authorization_record"])
+    producing = audit_context[
+        "accepted_producing_authority_by_reusable_family"
+    ]
+    authorizations = audit_context[
+        "accepted_authorization_authority_by_reusable_family"
+    ]
+    families: dict[str, Mapping[str, Any]] = {}
+    family_evidence = direct_audit["family_evidence"]
+    for family in direct_audit["completed_families"]:
+        _require(
+            family in producing and family in authorizations,
+            "resume_authorization_lineage_mismatch",
+            family,
+        )
+        evidence = family_evidence[family]
+        families[family] = {
+            **dict(evidence),
+            "environment_receipt_sha256": environment_sha256,
+            "producing_authorization_lineage": {
+                "authorization_authority_commit": authorizations[family],
+                "authorization_record_path": PREDECESSOR_AUTHORIZATION_RECORD_PATH,
+                "authorization_record_sha256": PREDECESSOR_AUTHORIZATION_RECORD_SHA256,
+            },
+            "producing_person_d_authority": producing[family],
+            "runner_receipt_sha256": runner_sha256,
+        }
+    document: dict[str, Any] = {
+        "applicability_contract": dict(direct_audit["applicability_contract"]),
+        "audit_decisions": dict(direct_audit["decisions"]),
+        "direct_output_validation_required": True,
+        "environment_receipt": environment_receipt,
+        "environment_receipt_sha256": environment_sha256,
+        "families": families,
+        "fold_manifest_sha256": direct_audit["fold_manifest_sha256"],
+        "frame_manifest_sha256": direct_audit["frame_manifest_sha256"],
+        "generating_person_b_validator_commit": audit_context["validator_commit"],
+        "no_u4_input": True,
+        "output_manifest": dict(direct_audit["output_manifest"]),
+        "output_root": direct_audit["output_root"],
+        "person_d_runner_commit": PERSON_D_RUNNER_COMMIT,
+        "receipt_is_person_b_generated_audit_output": True,
+        "runner_receipt": runner_receipt,
+        "runner_receipt_sha256": runner_sha256,
+        "schema_id": PRESERVED_PROVENANCE_SCHEMA_ID,
+        "schema_version": "2.0",
+        "source_context_manifest_sha256": direct_audit[
+            "source_context_manifest_sha256"
+        ],
+        "superseding_authorization_record": auth_reference,
+        "target_manifest_sha256": direct_audit["target_manifest_sha256"],
+        "total_prediction_count": direct_audit["prediction_count"],
+        "u4_output_inspected": False,
+    }
+    document["canonical_receipt_sha256"] = _receipt_payload_sha256(document)
+    return document
+
+
+def _validate_provenance_receipt(
+    path: Path,
+    direct_audit: Mapping[str, Any],
+    audit_context: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    raw = path.read_bytes()
+    document = _parse_bytes(raw, "Person B preserved-output audit receipt")
+    _require(
+        document.get("schema_id") == PRESERVED_PROVENANCE_SCHEMA_ID
+        and document.get("schema_version") == "2.0",
+        "resume_provenance_invalid",
+        "receipt schema",
+    )
+    _require(
+        document.get("canonical_receipt_sha256")
+        == _receipt_payload_sha256(document),
+        "resume_provenance_hash_mismatch",
+        "canonical receipt payload",
+    )
+    _validate_audit_environment_receipt(document.get("environment_receipt"))
+    comparison_context = dict(audit_context)
+    comparison_context["environment_receipt"] = document["environment_receipt"]
+    expected = _build_provenance_receipt(direct_audit, comparison_context)
+    _require(
+        document == expected,
+        "resume_provenance_binding_mismatch",
+        "receipt does not match direct audit",
+    )
+    return {
+        "canonical_receipt_sha256": document["canonical_receipt_sha256"],
+        "file_sha256": _sha256(raw),
+        "path": str(path.resolve()),
+        "validated": True,
+    }
+
+
+def _atomic_write_provenance_receipt(
+    path: Path,
+    document: Mapping[str, Any],
+    *,
+    replace_func: Callable[[Path, Path], Any] = os.replace,
+) -> None:
+    """Write only the Person B receipt via a same-directory atomic rename."""
+
+    raw = canonical_json_bytes(document)
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            temporary_path = Path(handle.name)
+            handle.write(raw)
+            handle.flush()
+            os.fsync(handle.fileno())
+        replace_func(temporary_path, path)
+        temporary_path = None
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 def audit_preserved_outputs(
@@ -2276,8 +2567,10 @@ def audit_preserved_outputs(
     *,
     materialized_root: Path | None = None,
     repo_root: Path = ROOT,
+    audit_context: Mapping[str, Any] | None = None,
+    atomic_replace: Callable[[Path, Path], Any] = os.replace,
 ) -> Mapping[str, Any]:
-    """Return one bounded decision per family without changing any output."""
+    """Directly audit preserved files, then create/revalidate the B receipt."""
 
     try:
         result = validate_output_resume_state(
@@ -2314,7 +2607,55 @@ def audit_preserved_outputs(
             "decisions": decisions,
             "error": str(error),
             "passed": False,
+            "receipt_accepted": False,
+            "receipt_generated": False,
         }
+    result = dict(result)
+    result["output_root"] = str(output_root.resolve())
+    if not result["completed_families"]:
+        result.update(
+            {
+                "receipt_accepted": False,
+                "receipt_generated": False,
+                "receipt_required": False,
+            }
+        )
+        return result
+    _require(
+        all(
+            result["decisions"][family] == "reusable"
+            for family in result["completed_families"]
+        ),
+        "resume_invalid_conflicting",
+        "every present family must be reusable",
+    )
+    _require(
+        audit_context is not None,
+        "resume_provenance_context_missing",
+        "validated runner, authorization, and environment receipts required",
+    )
+    receipt_path = output_root.resolve() / PRESERVED_PROVENANCE_FILENAME
+    generated = False
+    if not receipt_path.exists():
+        receipt = _build_provenance_receipt(result, audit_context)
+        _atomic_write_provenance_receipt(
+            receipt_path, receipt, replace_func=atomic_replace
+        )
+        generated = True
+    receipt_validation = _validate_provenance_receipt(
+        receipt_path, result, audit_context
+    )
+    result.update(
+        {
+            "preserved_output_provenance": {
+                **receipt_validation,
+                "prediction_count": result["prediction_count"],
+            },
+            "receipt_accepted": True,
+            "receipt_generated": generated,
+            "receipt_required": True,
+        }
+    )
     return result
 
 
@@ -2622,12 +2963,41 @@ def runtime_preflight(
 ) -> Mapping[str, Any]:
     """Run the B-owned D-checkout and immediate memory gate."""
 
-    validate_d_checkout(d_checkout)
+    d_receipt = validate_d_checkout(d_checkout)
     record = validate_external_authorization_record(authorization_record_path)
     detected = dict(memory) if memory is not None else detect_linux_memory()
     _require(platform.system() == "Linux" or memory is not None, "memory_platform_unsupported", "runtime gate requires Linux detection")
     gate = validate_memory_gate(detected)
-    resume = validate_output_resume_state(output_root, materialized_root=materialized_root) if output_root is not None else {"checked": False, "passed": True}
+    if output_root is not None:
+        _require(
+            record.get("output_root") == str(output_root.resolve()),
+            "resume_output_root_mismatch",
+            str(output_root.resolve()),
+        )
+        audit_context = build_provenance_audit_context(
+            authorization_record=record,
+            authorization_record_path=authorization_record_path,
+            d_checkout_receipt=d_receipt,
+            memory_gate=gate,
+        )
+        resume = audit_preserved_outputs(
+            output_root,
+            materialized_root=materialized_root,
+            audit_context=audit_context,
+        )
+        _require(
+            resume.get("passed") is True,
+            "resume_invalid_conflicting",
+            str(resume.get("error", "direct preserved-output audit failed")),
+        )
+        _require(
+            not resume.get("completed_families")
+            or resume.get("receipt_accepted") is True,
+            "resume_provenance_invalid",
+            "completed outputs require a generated or revalidated receipt",
+        )
+    else:
+        resume = {"checked": False, "passed": True}
     return {"accepted": True, "authorization_record": dict(record), "d_checkout": str(d_checkout.resolve()), "memory": gate, "resume": resume}
 
 
@@ -2652,6 +3022,8 @@ def _run_cli(argv: Sequence[str]) -> int:
     preflight.add_argument("--json", action="store_true")
     audit = sub.add_parser("resume-audit")
     audit.add_argument("--repo-root", type=Path, default=ROOT)
+    audit.add_argument("--d-checkout", type=Path, required=True)
+    audit.add_argument("--authorization-record-path", type=Path, required=True)
     audit.add_argument("--output-root", type=Path, required=True)
     audit.add_argument("--materialized-root", type=Path)
     audit.add_argument("--json", action="store_true")
@@ -2675,13 +3047,12 @@ def _run_cli(argv: Sequence[str]) -> int:
                 materialized_root=args.materialized_root,
             )
         else:
-            result = audit_preserved_outputs(
-                args.output_root,
+            result = runtime_preflight(
+                args.d_checkout,
+                args.authorization_record_path,
+                output_root=args.output_root,
                 materialized_root=args.materialized_root,
-                repo_root=args.repo_root,
             )
-            if result.get("passed") is not True:
-                raise MemoryReauthorizationError(str(result.get("error")))
     except (MemoryReauthorizationError, OSError) as error:
         if getattr(args, "json", False):
             print(json.dumps({"accepted": False, "error": str(error)}, sort_keys=True))

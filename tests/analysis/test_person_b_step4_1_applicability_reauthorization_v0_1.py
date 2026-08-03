@@ -116,7 +116,6 @@ def _write_preserved_bundle(
     target_by_key, fold_by_key = lineage
     state = {"families": {}, "schema_version": "1.0"}
     paths: dict[str, Path] = {}
-    prediction_inventory: dict[str, list[dict]] = {}
     for family in validator.PRESERVED_COMPLETED_FAMILIES:
         targets = validator.EXPECTED_RESUME_TARGET_FAMILIES[family]
         state["families"][family] = {
@@ -124,94 +123,50 @@ def _write_preserved_bundle(
             "status": "completed",
             "targets": sorted(targets),
         }
-        inventory: list[dict] = []
         for target in targets:
             keys = _expected_keys(family, target, (target_by_key, fold_by_key))
             document = _prediction_document(family, target, keys, fold_by_key)
             path = output_root / f"{family}__{target}.json"
             _write_json(path, document)
-            raw = path.read_bytes()
-            inventory.append(
-                {
-                    "byte_size": len(raw),
-                    "path": path.name,
-                    "row_count": len(keys),
-                    "sha256": validator._sha256(raw),
-                    "target": target,
-                }
-            )
             paths[f"{family}/{target}"] = path
-        prediction_inventory[family] = sorted(
-            inventory, key=lambda item: item["target"]
-        )
     state_path = output_root / "run_state.json"
     _write_json(state_path, state)
-    state_raw = state_path.read_bytes()
-    state_reference = {
-        "byte_size": len(state_raw),
-        "path": "run_state.json",
-        "sha256": validator._sha256(state_raw),
-    }
-    families = {}
-    for family in validator.PRESERVED_COMPLETED_FAMILIES:
-        families[family] = {
-            "authorization_receipt": {
-                "authorization_authority_commit": validator.PERSON_B_APPLICABILITY_STARTING_AUTHORITY,
-                "authorization_record_path": validator.PREDECESSOR_AUTHORIZATION_RECORD_PATH,
-                "authorization_record_sha256": validator.PREDECESSOR_AUTHORIZATION_RECORD_SHA256,
-                "authorized_runner_commit": validator.PERSON_D_RUNNER_COMMIT,
-            },
-            "configuration": copy.deepcopy(validator.EXPECTED_CONFIGURATION[family]),
-            "environment_receipt": {
-                "available_memory_gib": 24.10773468017578,
-                "captured_at_utc": "2026-08-02T01:00:00Z",
-                "physical_memory_gib": 30.977378845214844,
-                "u4_output_inspected": False,
-            },
-            "output_manifest": {
-                "family_status": "completed",
-                "run_state": state_reference,
-                "targets": sorted(
-                    validator.EXPECTED_RESUME_TARGET_FAMILIES[family]
-                ),
-            },
-            "prediction_inventory": prediction_inventory[family],
-            "runner_receipt": {
-                "branch": validator.PERSON_D_BRANCH,
-                "completed_at_utc": "2026-08-02T02:00:00Z",
-                "producing_runner_commit": validator.PERSON_D_RUNNER_COMMIT,
-                "worktree_clean": True,
-            },
-        }
-    provenance = {
-        "chronology": {
-            "preserved_run": {
-                "authorization_authority_commit": validator.PERSON_B_APPLICABILITY_STARTING_AUTHORITY,
-                "completed_families": list(
-                    validator.PRESERVED_COMPLETED_FAMILIES
-                ),
-                "prediction_count": validator.PRESERVED_PREDICTION_COUNT,
-                "producing_runner_commit": validator.PERSON_D_RUNNER_COMMIT,
-                "recorded_at_utc": "2026-08-02T03:00:00Z",
-            },
-            "prior_oom_report": {
-                "authorization_authority_commit": validator.PERSON_B_STARTING_AUTHORITY,
-                "completed_family_count": 0,
-                "prediction_count": 0,
-                "producing_runner_commit": validator.PERSON_D_PRIOR_RUNNER_COMMIT,
-                "recorded_at_utc": "2026-08-01T03:00:00Z",
-            },
-        },
-        "families": families,
-        "output_root": validator.OUTPUT_ROOT_ABSOLUTE_PATH,
-        "schema_id": "person-b-step4-1-preserved-output-provenance-v0-1",
-        "schema_version": "1.0",
-        "u4_output_inspected": False,
-    }
-    provenance_path = output_root / validator.PRESERVED_PROVENANCE_FILENAME
-    _write_json(provenance_path, provenance)
-    paths["provenance"] = provenance_path
+    paths["run_state"] = state_path
     return paths
+
+
+def _audit_context() -> dict:
+    physical_bytes = 32 * validator.BYTES_PER_GIB
+    available_bytes = 24 * validator.BYTES_PER_GIB
+    return {
+        "accepted_authorization_authority_by_reusable_family": {
+            family: validator.PERSON_B_APPLICABILITY_STARTING_AUTHORITY
+            for family in validator.PRESERVED_COMPLETED_FAMILIES
+        },
+        "accepted_producing_authority_by_reusable_family": {
+            family: validator.PERSON_D_RUNNER_COMMIT
+            for family in validator.PRESERVED_COMPLETED_FAMILIES
+        },
+        "authorization_record": {
+            "path": "/test/person_d_authorization_record.json",
+            "sha256": "a" * 64,
+        },
+        "environment_receipt": {
+            "available_memory_bytes": available_bytes,
+            "available_memory_gib": available_bytes / validator.BYTES_PER_GIB,
+            "minimum_available_memory_gib": 20.0,
+            "minimum_physical_memory_gib": 20.0,
+            "physical_memory_bytes": physical_bytes,
+            "physical_memory_gib": physical_bytes / validator.BYTES_PER_GIB,
+            "u4_output_inspected": False,
+        },
+        "runner_receipt": {
+            "branch": validator.PERSON_D_BRANCH,
+            "producing_runner_commit": validator.PERSON_D_RUNNER_COMMIT,
+            "worktree_clean": True,
+        },
+        "validator_commit": validator.PERSON_B_APPLICABILITY_VALIDATOR_COMMIT,
+    }
 
 
 def test_global_universe_and_every_family_target_entry_are_frozen(
@@ -378,11 +333,20 @@ def test_valid_preserved_outputs_are_reusable_and_absent_outputs_may_run(
     tmp_path: Path, lineage: tuple[dict, dict]
 ) -> None:
     paths = _write_preserved_bundle(tmp_path / "output", lineage)
-    result = validator.validate_output_resume_state(
+    receipt_path = tmp_path / "output" / validator.PRESERVED_PROVENANCE_FILENAME
+    assert not receipt_path.exists()
+    direct = validator.validate_output_resume_state(
         tmp_path / "output", repo_root=ROOT
+    )
+    assert not receipt_path.exists()
+    result = validator.audit_preserved_outputs(
+        tmp_path / "output", repo_root=ROOT, audit_context=_audit_context()
     )
     assert result["completed_family_count"] == 5
     assert result["preserved_output_provenance"]["prediction_count"] == 7691
+    assert result["receipt_generated"] is True
+    assert result["receipt_accepted"] is True
+    assert direct["prediction_count"] == 7691
     assert all(
         result["decisions"][family] == "reusable"
         for family in validator.PRESERVED_COMPLETED_FAMILIES
@@ -391,7 +355,8 @@ def test_valid_preserved_outputs_are_reusable_and_absent_outputs_may_run(
         result["decisions"][family] == "absent"
         for family in validator.EXPECTED_FAMILIES[5:]
     )
-    assert paths["provenance"].is_file()
+    assert receipt_path.is_file()
+    assert "provenance" not in paths
 
     empty = tmp_path / "empty"
     empty.mkdir()
@@ -399,43 +364,30 @@ def test_valid_preserved_outputs_are_reusable_and_absent_outputs_may_run(
     assert set(absent["decisions"].values()) == {"absent"}
 
 
-@pytest.mark.parametrize(
-    ("receipt", "field", "value", "error"),
-    [
-        (
-            "runner_receipt",
-            "producing_runner_commit",
-            "0" * 40,
-            "resume_runner_lineage_mismatch",
-        ),
-        (
-            "authorization_receipt",
-            "authorization_authority_commit",
-            "0" * 40,
-            "resume_authorization_lineage_mismatch",
-        ),
-        (
-            "runner_receipt",
-            "producing_runner_commit",
-            validator.PERSON_D_PRIOR_RUNNER_COMMIT,
-            "resume_runner_lineage_mismatch",
-        ),
-    ],
-)
-def test_wrong_or_unexplained_predecessor_lineage_fails(
-    tmp_path: Path,
-    lineage: tuple[dict, dict],
-    receipt: str,
-    field: str,
-    value: str,
-    error: str,
+@pytest.mark.parametrize("field", ["runner_receipt", "superseding_authorization_record"])
+def test_changed_runner_or_authorization_lineage_receipt_fails(
+    tmp_path: Path, lineage: tuple[dict, dict], field: str
 ) -> None:
-    paths = _write_preserved_bundle(tmp_path / "output", lineage)
-    provenance = json.loads(paths["provenance"].read_text(encoding="utf-8"))
-    provenance["families"]["last_seen"][receipt][field] = value
-    _write_json(paths["provenance"], provenance)
-    with pytest.raises(validator.MemoryReauthorizationError, match=error):
-        validator.validate_output_resume_state(tmp_path / "output", repo_root=ROOT)
+    output_root = tmp_path / "output"
+    _write_preserved_bundle(output_root, lineage)
+    validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    receipt_path = output_root / validator.PRESERVED_PROVENANCE_FILENAME
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    if field == "runner_receipt":
+        receipt[field]["producing_runner_commit"] = "0" * 40
+    else:
+        receipt[field]["sha256"] = "0" * 64
+    receipt["canonical_receipt_sha256"] = validator._receipt_payload_sha256(receipt)
+    _write_json(receipt_path, receipt)
+    with pytest.raises(
+        validator.MemoryReauthorizationError,
+        match="resume_provenance_binding_mismatch",
+    ):
+        validator.audit_preserved_outputs(
+            output_root, repo_root=ROOT, audit_context=_audit_context()
+        )
 
 
 def test_invalid_conflicting_output_is_not_overwritten(
@@ -453,17 +405,245 @@ def test_invalid_conflicting_output_is_not_overwritten(
     assert result["passed"] is False
     assert result["decisions"]["constant_velocity"] == "invalid-conflicting"
     assert {path: path.read_bytes() for path in paths.values()} == before
+    assert not (
+        tmp_path / "output" / validator.PRESERVED_PROVENANCE_FILENAME
+    ).exists()
+
+
+def test_receipt_generation_changes_no_family_or_manifest_bytes(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    paths = _write_preserved_bundle(output_root, lineage)
+    before = {path: path.read_bytes() for path in paths.values()}
+    result = validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    assert result["receipt_generated"] is True
+    assert {path: path.read_bytes() for path in paths.values()} == before
+    receipt_path = output_root / validator.PRESERVED_PROVENANCE_FILENAME
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["receipt_is_person_b_generated_audit_output"] is True
+    assert receipt["direct_output_validation_required"] is True
+    assert receipt["person_d_runner_commit"] == validator.PERSON_D_RUNNER_COMMIT
+    assert receipt["applicability_contract"]["version"] == (
+        validator.APPLICABILITY_CONTRACT_VERSION
+    )
+    assert receipt["output_manifest"]["sha256"] == validator._sha256(
+        paths["run_state"].read_bytes()
+    )
+    assert receipt["canonical_receipt_sha256"] == (
+        validator._receipt_payload_sha256(receipt)
+    )
+    assert set(receipt["families"]) == set(validator.PRESERVED_COMPLETED_FAMILIES)
+    for family_receipt in receipt["families"].values():
+        assert family_receipt["audit_decision"] == "reusable"
+        assert family_receipt["prediction_inventory_sha256"]
+        assert family_receipt["runner_receipt_sha256"] == receipt[
+            "runner_receipt_sha256"
+        ]
+        assert family_receipt["environment_receipt_sha256"] == receipt[
+            "environment_receipt_sha256"
+        ]
+
+
+def test_existing_receipt_is_reused_only_after_direct_revalidation(
+    tmp_path: Path,
+    lineage: tuple[dict, dict],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output_root = tmp_path / "output"
+    _write_preserved_bundle(output_root, lineage)
+    first = validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    receipt_path = output_root / validator.PRESERVED_PROVENANCE_FILENAME
+    receipt_bytes = receipt_path.read_bytes()
+    calls = 0
+    original = validator._validate_resume_prediction_document
+
+    def counted_validation(**kwargs):
+        nonlocal calls
+        calls += 1
+        return original(**kwargs)
+
+    monkeypatch.setattr(
+        validator, "_validate_resume_prediction_document", counted_validation
+    )
+    second = validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    assert first["receipt_generated"] is True
+    assert second["receipt_generated"] is False
+    assert second["receipt_accepted"] is True
+    assert calls == 6
+    assert receipt_path.read_bytes() == receipt_bytes
+
+
+def test_changed_prediction_hash_fails_existing_receipt(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    paths = _write_preserved_bundle(output_root, lineage)
+    validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    prediction_path = paths["last_seen/mu_oracle_blocks"]
+    prediction = json.loads(prediction_path.read_text(encoding="utf-8"))
+    prediction["rows"][0]["prediction"] += 0.25
+    _write_json(prediction_path, prediction)
+    with pytest.raises(
+        validator.MemoryReauthorizationError,
+        match="resume_provenance_binding_mismatch",
+    ):
+        validator.audit_preserved_outputs(
+            output_root, repo_root=ROOT, audit_context=_audit_context()
+        )
+
+
+def test_changed_manifest_hash_makes_existing_receipt_stale(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    paths = _write_preserved_bundle(output_root, lineage)
+    validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    state = json.loads(paths["run_state"].read_text(encoding="utf-8"))
+    state["families"]["raw_pixel"] = {"status": "failed"}
+    _write_json(paths["run_state"], state)
+    with pytest.raises(
+        validator.MemoryReauthorizationError,
+        match="resume_provenance_binding_mismatch",
+    ):
+        validator.audit_preserved_outputs(
+            output_root, repo_root=ROOT, audit_context=_audit_context()
+        )
+
+
+def test_changed_identity_set_digest_fails_receipt_revalidation(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    _write_preserved_bundle(output_root, lineage)
+    validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    receipt_path = output_root / validator.PRESERVED_PROVENANCE_FILENAME
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["families"]["constant_velocity"]["identity_set_sha256_by_target"][
+        "mu_oracle_blocks"
+    ] = "0" * 64
+    receipt["canonical_receipt_sha256"] = validator._receipt_payload_sha256(receipt)
+    _write_json(receipt_path, receipt)
+    with pytest.raises(
+        validator.MemoryReauthorizationError,
+        match="resume_provenance_binding_mismatch",
+    ):
+        validator.audit_preserved_outputs(
+            output_root, repo_root=ROOT, audit_context=_audit_context()
+        )
+
+
+def test_changed_authorization_record_identity_fails_existing_receipt(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    _write_preserved_bundle(output_root, lineage)
+    validator.audit_preserved_outputs(
+        output_root, repo_root=ROOT, audit_context=_audit_context()
+    )
+    changed_context = copy.deepcopy(_audit_context())
+    changed_context["authorization_record"]["sha256"] = "0" * 64
+    with pytest.raises(
+        validator.MemoryReauthorizationError,
+        match="resume_provenance_binding_mismatch",
+    ):
+        validator.audit_preserved_outputs(
+            output_root, repo_root=ROOT, audit_context=changed_context
+        )
+
+
+def test_manually_fabricated_receipt_is_not_accepted(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    _write_preserved_bundle(output_root, lineage)
+    receipt_path = output_root / validator.PRESERVED_PROVENANCE_FILENAME
+    _write_json(
+        receipt_path,
+        {
+            "canonical_receipt_sha256": "0" * 64,
+            "schema_id": validator.PRESERVED_PROVENANCE_SCHEMA_ID,
+            "schema_version": "2.0",
+        },
+    )
+    with pytest.raises(
+        validator.MemoryReauthorizationError,
+        match="resume_provenance_hash_mismatch",
+    ):
+        validator.audit_preserved_outputs(
+            output_root, repo_root=ROOT, audit_context=_audit_context()
+        )
+
+
+def test_atomic_write_interruption_leaves_no_accepted_partial_receipt(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    _write_preserved_bundle(output_root, lineage)
+    receipt_path = output_root / validator.PRESERVED_PROVENANCE_FILENAME
+
+    def interrupted_replace(source: Path, destination: Path) -> None:
+        assert source.is_file()
+        assert destination == receipt_path
+        raise OSError("simulated atomic rename interruption")
+
+    with pytest.raises(OSError, match="simulated atomic rename interruption"):
+        validator.audit_preserved_outputs(
+            output_root,
+            repo_root=ROOT,
+            audit_context=_audit_context(),
+            atomic_replace=interrupted_replace,
+        )
+    assert not receipt_path.exists()
+    assert not list(output_root.glob(f".{receipt_path.name}.*.tmp"))
+
+
+def test_direct_family_inventory_count_decomposition_is_exact(
+    tmp_path: Path, lineage: tuple[dict, dict]
+) -> None:
+    output_root = tmp_path / "output"
+    _write_preserved_bundle(output_root, lineage)
+    direct = validator.validate_output_resume_state(output_root, repo_root=ROOT)
+    counts = {
+        family: direct["family_evidence"][family]["exact_prediction_count"]
+        for family in validator.PRESERVED_COMPLETED_FAMILIES
+    }
+    assert counts == {
+        "last_seen": 1695,
+        "constant_velocity": 1690,
+        "grouped_shuffled": 1428 + 493,
+        "time_only": 695,
+        "explicit_feature": 1690,
+    }
+    assert sum(counts.values()) == 7691
 
 
 def test_runtime_orders_memory_before_preserved_audit(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     events: list[str] = []
-    monkeypatch.setattr(validator, "validate_d_checkout", lambda path: events.append("d"))
+    monkeypatch.setattr(
+        validator,
+        "validate_d_checkout",
+        lambda path: events.append("d") or {"passed": True},
+    )
     monkeypatch.setattr(
         validator,
         "validate_external_authorization_record",
-        lambda path: events.append("authorization") or {},
+        lambda path: events.append("authorization")
+        or {"output_root": str((tmp_path / "output").resolve())},
     )
     monkeypatch.setattr(
         validator,
@@ -472,8 +652,14 @@ def test_runtime_orders_memory_before_preserved_audit(
     )
     monkeypatch.setattr(
         validator,
-        "validate_output_resume_state",
-        lambda *args, **kwargs: events.append("audit") or {"passed": True},
+        "build_provenance_audit_context",
+        lambda **kwargs: events.append("context") or {},
+    )
+    monkeypatch.setattr(
+        validator,
+        "audit_preserved_outputs",
+        lambda *args, **kwargs: events.append("audit")
+        or {"completed_families": [], "passed": True},
     )
     validator.runtime_preflight(
         tmp_path,
@@ -484,7 +670,91 @@ def test_runtime_orders_memory_before_preserved_audit(
             "physical_bytes": 20 * validator.BYTES_PER_GIB,
         },
     )
-    assert events == ["d", "authorization", "memory", "audit"]
+    assert events == ["d", "authorization", "memory", "context", "audit"]
+
+
+def test_invalid_conflicting_audit_prevents_runtime_acceptance(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    output_root = tmp_path / "output"
+    monkeypatch.setattr(
+        validator,
+        "validate_d_checkout",
+        lambda path: {"branch": validator.PERSON_D_BRANCH, "passed": True},
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_external_authorization_record",
+        lambda path: {"output_root": str(output_root.resolve())},
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_memory_gate",
+        lambda memory: {"passed": True},
+    )
+    monkeypatch.setattr(
+        validator, "build_provenance_audit_context", lambda **kwargs: {}
+    )
+    monkeypatch.setattr(
+        validator,
+        "audit_preserved_outputs",
+        lambda *args, **kwargs: {
+            "completed_families": ["constant_velocity"],
+            "error": "constant_velocity invalid-conflicting",
+            "passed": False,
+            "receipt_accepted": False,
+        },
+    )
+    with pytest.raises(
+        validator.MemoryReauthorizationError, match="resume_invalid_conflicting"
+    ):
+        validator.runtime_preflight(
+            tmp_path,
+            tmp_path / "authorization.json",
+            output_root=output_root,
+            memory={"available_bytes": 1, "physical_bytes": 1},
+        )
+
+
+def test_all_reusable_audit_permits_fail_closed_runtime_resume(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    output_root = tmp_path / "output"
+    monkeypatch.setattr(
+        validator,
+        "validate_d_checkout",
+        lambda path: {"branch": validator.PERSON_D_BRANCH, "passed": True},
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_external_authorization_record",
+        lambda path: {"output_root": str(output_root.resolve())},
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_memory_gate",
+        lambda memory: {"passed": True},
+    )
+    monkeypatch.setattr(
+        validator, "build_provenance_audit_context", lambda **kwargs: {}
+    )
+    monkeypatch.setattr(
+        validator,
+        "audit_preserved_outputs",
+        lambda *args, **kwargs: {
+            "completed_families": list(validator.PRESERVED_COMPLETED_FAMILIES),
+            "passed": True,
+            "receipt_accepted": True,
+        },
+    )
+    result = validator.runtime_preflight(
+        tmp_path,
+        tmp_path / "authorization.json",
+        output_root=output_root,
+        memory={"available_bytes": 1, "physical_bytes": 1},
+    )
+    assert result["accepted"] is True
+    assert result["resume"]["receipt_accepted"] is True
 
 
 def test_no_scientific_execution_or_u4_access_is_part_of_contract() -> None:
