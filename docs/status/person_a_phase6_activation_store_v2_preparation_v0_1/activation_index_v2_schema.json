@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "chunks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "creation_timestamp": {
+      "type": "string"
+    },
+    "format_version": {
+      "const": "person-a-activation-index-v2"
+    },
+    "index_rows": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "activation_chunk_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "chunk_row_idx": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "context_local_pair_idx": {
+            "maximum": 15,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "global_model_frame_idx": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "model_frame_idx": false,
+          "source_frame_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "source_tick": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "store_format_version": {
+            "const": "person-a-activation-store-v2"
+          }
+        },
+        "required": [
+          "activation_chunk_id",
+          "chunk_row_idx",
+          "context_local_pair_idx",
+          "global_model_frame_idx",
+          "source_frame_id",
+          "source_tick",
+          "store_format_version"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "run_status": {
+      "const": "completed"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "snapshot_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "store_identity": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "chunks",
+    "creation_timestamp",
+    "format_version",
+    "index_rows",
+    "run_status",
+    "schema_version",
+    "snapshot_id",
+    "store_identity"
+  ],
+  "schema_id": "person-a-phase6-activation-index-v2-json-schema-v0.1",
+  "schema_version": "1.0",
+  "title": "Person A Activation Index v2",
+  "type": "object"
+}

@@ -16,6 +16,13 @@ Person A responsibility defined by the MineOcclude execution roadmap.
 | MVP experiment configuration | `configs/experiments/mvp.yaml` | Skeleton |
 | Environment verification | `scripts/check_env.py` | Skeleton |
 | Environment dependency specification | `requirements.txt` | Authoritative location reserved |
+| Phase 2.6-2.9 runtime-evidence validation | `src/mineocclude/models/phase2_evidence.py` | Prepared; CPU-testable |
+| Phase 2.6-2.9 AWS runtime execution boundary | `src/mineocclude/models/phase2_aws.py` | Prepared; AWS GPU execution pending |
+| Formal Step 2.6 rollout command | `scripts/run_phase2_rollout.py` | Prepared; AWS GPU execution pending |
+| Loaded Step 2.7 architecture command | `scripts/inspect_phase2_architecture.py` | Prepared; AWS GPU execution pending |
+| Step 2.8-2.9 teacher-forced command | `scripts/run_phase2_teacher_forced.py` | Prepared; AWS GPU execution pending |
+| Phase 2 runtime-evidence schema | `schemas/person_a/phase2_runtime_evidence_v1.schema.json` | Additive schema v1.0 evidence contract |
+| Phase 2.6-2.9 AWS execution checklist | `docs/status/person_a_phase2_aws_execution_checklist.md` | Prepared; runtime results pending |
 
 ## Boundary rule
 

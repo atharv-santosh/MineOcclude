@@ -1,0 +1,43 @@
+{
+  "activation_chunk_count": 20,
+  "activation_chunks_staged": false,
+  "activation_index": {
+    "byte_size": 32502224,
+    "external_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-step6-3-continuation-a102aa4d1ca5d4760e9c9997-activation-store-v2/indexes/index-82dc0e18607a1a89135a1a88cbec5d53531682db970e9a1323672e7f4d28677b.json",
+    "sha256": "473efef1eb52514c097051ec8f4501cb621f92c9ceaeb847249c7e3ae042ad55",
+    "staged_path": "activation_store/indexes/index-82dc0e18607a1a89135a1a88cbec5d53531682db970e9a1323672e7f4d28677b.json"
+  },
+  "bounded_audit": {
+    "artifact_byte_size": 27692784,
+    "artifact_path": "bounded_audit/limited_unpooled_frame_0.npz",
+    "artifact_sha256": "95c379d1430d6afd66ec0ff391b1604e5da92c5133844433ce0f12981a67042d",
+    "manifest_path": "bounded_audit/limited_unpooled_frame_0.manifest.json",
+    "manifest_sha256": "32c2fbbbe0fa58448e28aea0543a7023a5c16648d703a38d9e17dd2f9f954eeb"
+  },
+  "excluded_large_artifacts": [
+    {
+      "artifact_count": 20,
+      "category": "activation_chunks",
+      "disposition": "retained_in_approved_external_activation_store_and_bound_by_step6_6_handoff_sha256",
+      "reason": "scientific chunks remain in the approved immutable external store; only their manifest, final index, hashes, and bounded audit artifact are committed"
+    }
+  ],
+  "handoff_artifact_count": 21,
+  "handoff_artifact_hash_failure_count": 0,
+  "handoff_artifact_hashes_verified": true,
+  "logs": [
+    {
+      "decompressed_sha256": "abb97fad5b73739c2c4939c68d1f6f044e6d83106c695cf83d23ccceb8cf658c",
+      "gzip_sha256": "3ed917b9556be0876a4063a87c5817fca89d1aabeda78996f97b5789fc3d7738",
+      "packaging": "deterministic_gzip_mtime_zero",
+      "path": "resume_wrapper.log.gz"
+    },
+    {
+      "decompressed_sha256": "082889bf8ec504f13ab985cf6c04a9be99a39ace1a4b86c0a6a1f7f747d4438",
+      "gzip_sha256": "76d7046a6e8cc93b65fe536343ceb06afc8596c0b68a1a1eef9b80f0b6a365c8",
+      "packaging": "deterministic_gzip_mtime_zero",
+      "path": "routine_operational_retry/wrapper.log.gz"
+    }
+  ],
+  "schema_version": "1.0"
+}

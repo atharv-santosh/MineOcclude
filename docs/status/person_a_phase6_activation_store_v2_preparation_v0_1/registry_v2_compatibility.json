@@ -1,0 +1,21 @@
+{
+  "e_schema_change_required": false,
+  "evidence": {
+    "artifact_schema_version_rule": "non_empty_string",
+    "artifact_type": "activation",
+    "artifact_type_allowed": true,
+    "owner": "person_a",
+    "owner_allowed_for_artifact_type": true,
+    "person_e_authority_commit": "b27d404c6aa913bac559754fa8b7accdff46e886",
+    "validator_path": "src/mineocclude/contracts/rollout_registry.py",
+    "validator_symbols": [
+      "IMMUTABLE_V2_ARTIFACT_TYPES",
+      "IMMUTABLE_V2_ARTIFACT_OWNER_IDS",
+      "_validate_v2_artifact_record"
+    ]
+  },
+  "interpretation": "Registry v2 already accepts Person A-owned activation artifacts and requires an explicit non-empty artifact_schema_version. The additive person-a-activation-index-v2 identifier fits without changing Person E schema or validator bytes.",
+  "person_e_files_modified": false,
+  "schema_id": "person-a-phase6-activation-store-v2-preparation-v0.1-registry-v2-compatibility",
+  "schema_version": "1.0"
+}

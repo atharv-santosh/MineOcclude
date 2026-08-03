@@ -1,0 +1,111 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "input:run_phase2_rollout.py",
+      "byte_count": 367,
+      "expected_sha256": "4b44064343a04f582fd0234dd1a53bbb6d34cee69c5a459ba4c146ce50833474",
+      "observed_sha256": "4b44064343a04f582fd0234dd1a53bbb6d34cee69c5a459ba4c146ce50833474",
+      "path": "/home/sagemaker-user/MineOcclude-Person-A-Registry/scripts/run_phase2_rollout.py",
+      "verification_classification": "repository_bytes_recomputed",
+      "verification_result": "match"
+    },
+    {
+      "artifact_id": "input:700M_16f.yaml",
+      "byte_count": 668,
+      "expected_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+      "observed_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+      "path": "/home/sagemaker-user/MineWorld-Upstream/configs/700M_16f.yaml",
+      "verification_classification": "repository_bytes_recomputed",
+      "verification_result": "match"
+    },
+    {
+      "artifact_id": "input:700M_16f.ckpt",
+      "byte_count": 3798736924,
+      "expected_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "observed_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "match"
+    },
+    {
+      "artifact_id": "input:config.json",
+      "byte_count": 805,
+      "expected_sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb",
+      "observed_sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb",
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/config.json",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "match"
+    },
+    {
+      "artifact_id": "input:vae.ckpt",
+      "byte_count": 1657555486,
+      "expected_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+      "observed_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "match"
+    },
+    {
+      "artifact_id": "input:scene.mp4",
+      "byte_count": 124782221,
+      "expected_sha256": "b546e7657505004223742e2174e01d0b6a19091de7ee39a2f213bcf003c243de",
+      "observed_sha256": "b546e7657505004223742e2174e01d0b6a19091de7ee39a2f213bcf003c243de",
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/gradio_scene/scene.mp4",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "match"
+    },
+    {
+      "artifact_id": "input:scene.jsonl",
+      "byte_count": 15326380,
+      "expected_sha256": "0029daf06496bb974305431a20e8c9d419791f362098bf9d57ee8b8e0f036f9b",
+      "observed_sha256": "0029daf06496bb974305431a20e8c9d419791f362098bf9d57ee8b8e0f036f9b",
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/gradio_scene/scene.jsonl",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "match"
+    },
+    {
+      "artifact_id": "evidence:environment_report",
+      "byte_count": 4259,
+      "expected_sha256": null,
+      "observed_sha256": "77ec43681643cb72005618a5466e64256a51cfe26f1f6283474423d56ad96380",
+      "path": "/home/sagemaker-user/person-a-registry-evidence/person-a-registry-smoke-20260727T235120Z/environment_report.txt",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "directly_hashed"
+    },
+    {
+      "artifact_id": "evidence:exact_command",
+      "byte_count": 2192,
+      "expected_sha256": null,
+      "observed_sha256": "2d7954ab97d3056840eef7d5678fed7db318b87ef0ecf1b52ff17f5fd404418a",
+      "path": "/home/sagemaker-user/person-a-registry-evidence/person-a-registry-smoke-20260727T235120Z/exact_command.json",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "directly_hashed"
+    },
+    {
+      "artifact_id": "evidence:launcher_log",
+      "byte_count": 914,
+      "expected_sha256": null,
+      "observed_sha256": "4a2809a7824fb8416d42cce4396dcc2c49c8cbff6eb45e2c71c067ba8d33b27d",
+      "path": "/home/sagemaker-user/person-a-registry-evidence/person-a-registry-smoke-20260727T235120Z/launcher_stdout_stderr.log",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "directly_hashed"
+    },
+    {
+      "artifact_id": "output:step2_6/raw_stdout_stderr.log",
+      "byte_count": 848,
+      "expected_sha256": null,
+      "observed_sha256": "dbc62e81f6952bbc9cf276ba1faf7272f418fa72c4af38d3607a084e9527fcd5",
+      "path": "/home/sagemaker-user/person-a-registry-evidence/person-a-registry-smoke-20260727T235120Z/step2_6/raw_stdout_stderr.log",
+      "verification_classification": "local_external_bytes_recomputed",
+      "verification_result": "directly_hashed"
+    }
+  ],
+  "attempt_id": "person-a-registry-smoke-20260727T235120Z-attempt-001",
+  "receipt_version": "person-a-registry-artifact-verification-v1",
+  "run_id": "person-a-registry-smoke-20260727T235120Z-step2.6",
+  "schema_version": "1.0",
+  "session_id": "person-a-registry-smoke-20260727T235120Z",
+  "verification_authority": "Kazim Abbas",
+  "verification_method": "Kazim Abbas directly supervised this session. SHA-256 was recomputed over the exact finalized launcher, configuration, checkpoint, input, environment, log, manifest, metadata, JSONL, video, report, and generated output bytes available during the run.",
+  "verification_result": "fail"
+}

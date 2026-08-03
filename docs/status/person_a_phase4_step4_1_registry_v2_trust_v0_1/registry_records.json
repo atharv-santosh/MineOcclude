@@ -1,0 +1,112 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+      "artifact_schema_version": "person-a-step4-1-preprocessed-frame-manifest-v0-1",
+      "artifact_type": "model_input",
+      "byte_verification_id": "person_a_step4_1_frame_manifest_local_bytes_v0_1",
+      "creator_run_id": "person_a_step4_1_frame_handoff_380b9a3",
+      "direct_input_artifact_ids": [],
+      "manifest_artifact_identity": "person-a-step4-1-preprocessed-frame-inputs-1695",
+      "manifest_id": "person_a_step4_1_frame_input_manifest_v0_1",
+      "manifest_schema_version": "person-a-step4-1-preprocessed-frame-manifest-v0-1",
+      "manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+      "owner_authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+      "owner_authority_revision": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_a_step4_1_frame_input_status_v0_1",
+      "owner_status_record_sha256": "35a7952cbb1aeef82965cb9c29fa0292487c6c3801c9347d99e740b7d14a001c",
+      "schema_version": "1.0",
+      "sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+      "size_bytes": 6460547,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "file:///home/sagemaker-user/MineOcclude/docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/preprocessed_frame_manifest.json"
+    }
+  ],
+  "byte_verifications": [
+    {
+      "artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+      "external_receipt_authority_revision": null,
+      "external_receipt_id": null,
+      "external_receipt_sha256": null,
+      "mode": "local_bytes",
+      "schema_version": "1.0",
+      "verification_id": "person_a_step4_1_frame_manifest_local_bytes_v0_1",
+      "verified_at": "2026-08-03T00:00:00Z",
+      "verified_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+      "verified_size_bytes": 6460547
+    }
+  ],
+  "manifests": [
+    {
+      "artifact_identities": [
+        "person-a-step4-1-preprocessed-frame-inputs-1695"
+      ],
+      "decision": "accepted",
+      "manifest_id": "person_a_step4_1_frame_input_manifest_v0_1",
+      "manifest_schema_version": "person-a-step4-1-preprocessed-frame-manifest-v0-1",
+      "manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+      "owner_authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+      "schema_version": "1.0"
+    }
+  ],
+  "owner_authorities": [
+    {
+      "authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+      "authority_revision": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+      "authorized_artifact_types": [
+        "model_input"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_a",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_a_step4_1_frame_input_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "35a7952cbb1aeef82965cb9c29fa0292487c6c3801c9347d99e740b7d14a001c",
+      "status_record_verification_mode": "local_bytes"
+    }
+  ],
+  "runs": [
+    {
+      "checkpoint_hash": "e59dd5a91cb9f42bcd8178fb173880ea2d740a301d998e7c204c32da12a3b8b5",
+      "code_sha": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+      "command": [
+        "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+        "scripts/build_person_a_step4_1_frame_handoff_v0_2.py",
+        "--check"
+      ],
+      "config_snapshot_hash": "1c44cb43ea398f364dd98a0cdfa2ac4bad9b4ef61c82a5182f50e05a04716088",
+      "created_at": "2026-08-01T07:05:39Z",
+      "data_identity_hash": "9ceff62942c42a4f321f4eb9fd2070b2a9e6d3bf944c1c0f505dc81c31e0e7b9",
+      "ended_at": "2026-08-01T07:05:41Z",
+      "environment_hash": "6651df1f83a7917c498f34c4e2d096cbd024c659dd0e77c11bff1348eef59dcb",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [],
+      "output_artifact_ids": [
+        "person_a_step4_1_preprocessed_frame_inputs_v0_1"
+      ],
+      "owner": "person_a",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+      "run_id": "person_a_step4_1_frame_handoff_380b9a3",
+      "schema_version": "1.0",
+      "seeds": {
+        "deterministic_preprocessing_no_rng": 0
+      },
+      "started_at": "2026-08-01T07:05:40Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    }
+  ],
+  "schema_id": "person-a-step4-1-registry-v2-records-v0-1",
+  "schema_version": "1.0"
+}

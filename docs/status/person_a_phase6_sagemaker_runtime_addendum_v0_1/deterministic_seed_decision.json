@@ -1,0 +1,54 @@
+{
+  "application_scope": [
+    "python",
+    "numpy",
+    "pytorch_cpu",
+    "pytorch_cuda",
+    "model_execution",
+    "repeat_extraction",
+    "deterministic_audit_row_selection"
+  ],
+  "b_ratification_present": false,
+  "b_ratification_required_before_execution": true,
+  "candidate_seed_values_found": [
+    20260725
+  ],
+  "canonical_seed": 20260725,
+  "decision_complete": true,
+  "decision_owner": "person_a",
+  "decision_source": "existing_committed_person_a_gpu_runtime_value",
+  "derived_from_machine_state": false,
+  "derived_from_random_output": false,
+  "derived_from_wall_clock_time": false,
+  "new_owner_selected_value": false,
+  "provenance": [
+    {
+      "byte_size": 4565,
+      "commit": "ca3f5695dc37f9f2c8066e323b25485c042b6cf7",
+      "json_location": "/command/--seed",
+      "path": "docs/status/phase3_runtime/person-a-phase3-aws-20260726-034000/certification_summary.json",
+      "sha256": "e0f56314b1d485b67fd710557187c88d30417da80234319f6aafc840ca256570",
+      "value": 20260725
+    },
+    {
+      "byte_size": 143935,
+      "commit": "ca3f5695dc37f9f2c8066e323b25485c042b6cf7",
+      "json_location": "/command/--seed",
+      "path": "docs/status/phase4_runtime/person-a-phase4-wave2-aws-20260727-015157/pooling_probe_report.json",
+      "sha256": "24239fb43c27bc3b2ea28d3a57054e30a5ccbc6432a94d48568174d6e0b78d6e",
+      "value": 20260725
+    },
+    {
+      "byte_size": 351845,
+      "commit": "ca3f5695dc37f9f2c8066e323b25485c042b6cf7",
+      "json_location": "/command/--seed",
+      "path": "docs/status/phase4_runtime/person-a-phase4-wave3-v11-aws-20260727-045300/extraction_probe_report.json",
+      "sha256": "73f6ef771c06b6b06d82e3eb7d06b4adb840a0557c31e8bd0b6e5deacd3d32c5",
+      "value": 20260725
+    }
+  ],
+  "schema_id": "person-a-phase6-sagemaker-runtime-addendum-v0.1-deterministic-seed-decision",
+  "schema_version": "1.0",
+  "seed_policy_state": "BOUND_AWAITING_PERSON_B_RATIFICATION",
+  "unique_existing_seed_count": 1
+}

@@ -1,0 +1,57 @@
+{
+  "existing_pilot_modified": false,
+  "final_oom_kill_counter": 2,
+  "installed_operational_packages": [
+    "libgl1",
+    "libglib2.0-0t64",
+    "libjemalloc2"
+  ],
+  "operational_memory_configuration": {
+    "allocator": "libjemalloc.so.2",
+    "allocator_configuration": "background_thread:true,dirty_decay_ms:0,muzzy_decay_ms:0,narenas:1,retain:false,abort_conf:true",
+    "python_allocator": "malloc",
+    "pytorch_cuda_allocator_configuration": "expandable_segments:True"
+  },
+  "quarantined_attempts": [
+    {
+      "failure_scope": "pre_step6_3_missing_libGL_so_1",
+      "new_scientific_activation_artifacts_created": false,
+      "output_quarantine_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/quarantine/person-a-phase6-ten-pilot-expansion-seed-20260725-libgl-preextract-20260731T101555Z",
+      "wrapper_log_sha256": "37ac7f2795fcd6066cd1cf59bf23c405a6ae20457e6e1711123157565f89ae6d"
+    },
+    {
+      "completed_additional_pilots": [
+        "layout_00_ep9441",
+        "layout_01_ep9405"
+      ],
+      "failure_scope": "host_oom_during_layout_01_ep9442_before_step6_3",
+      "output_quarantine_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/quarantine/person-a-phase6-ten-pilot-expansion-seed-20260725-host-oom-20260731T103637Z",
+      "partial_scientific_artifacts_preserved": true,
+      "wrapper_log_sha256": "115540048662c1f3dad189248b8c7c8947d084e018ebc4ce8ccb13fcfd992f26"
+    },
+    {
+      "completed_additional_pilots": [
+        "layout_00_ep9441",
+        "layout_01_ep9405",
+        "layout_01_ep9442",
+        "layout_02_ep9407",
+        "layout_02_ep9432"
+      ],
+      "failure_scope": "host_oom_during_layout_03_ep9404_before_step6_3",
+      "output_quarantine_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/quarantine/person-a-phase6-ten-pilot-expansion-seed-20260725-host-oom-20260731T110840Z",
+      "partial_scientific_artifacts_preserved": true,
+      "wrapper_log_sha256": "8cab7959ed0d7fddf2c2a9efcfdc6a207e45174ed434deaca3934a7b92466195"
+    },
+    {
+      "failure_scope": "preflight_existing_artifact_root_export_pointed_to_receipt_directory",
+      "new_scientific_artifacts_created": false,
+      "output_quarantine_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/quarantine/person-a-phase6-ten-pilot-expansion-seed-20260725-existing-root-preflight-20260731T111035Z",
+      "wrapper_log_sha256": "e3f5e59746f31be288cec14d8713e8a2a21210ff0598e627b0683e2a06c026d5"
+    }
+  ],
+  "quarantined_without_deletion": true,
+  "retry_status": "PASS",
+  "schema_version": "1.0",
+  "scientific_code_modified": false,
+  "successful_wrapper_log_sha256": "563ef6c0c22dfab2ba383d7c78577681cdcc4b56213ca81f91f228abcc4d9415"
+}

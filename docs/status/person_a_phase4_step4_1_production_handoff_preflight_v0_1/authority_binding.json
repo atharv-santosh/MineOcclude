@@ -1,0 +1,77 @@
+{
+  "authorities": {
+    "person_a": {
+      "branch": "role/person-a-model",
+      "remote_ref": "origin/role/person-a-model",
+      "source_authority_commit": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    "person_b": {
+      "branch": "role/person-b-analysis",
+      "remote_ref": "origin/role/person-b-analysis",
+      "source_authority_commit": "a189c7f0c6a822f3dd0d9869a572e1e2d390c5f1",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    "person_c": {
+      "branch": "role/person-c-data",
+      "remote_ref": "origin/role/person-c-data",
+      "source_authority_commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    "person_d": {
+      "branch": "role/person-d-baselines",
+      "remote_ref": "origin/role/person-d-baselines",
+      "source_authority_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    "person_e": {
+      "branch": "role/person-e-operations",
+      "remote_ref": "origin/role/person-e-operations",
+      "source_authority_commit": "b27d404c6aa913bac559754fa8b7accdff46e886",
+      "source_read_policy": "exact_git_commit_object"
+    }
+  },
+  "authorization": {
+    "automatic_phase6_transition_allowed": false,
+    "later_explicit_versioned_authorization_required": true,
+    "person_a_phase6_authorized": false,
+    "production_execution_performed": false,
+    "registry_v2_acceptance_authorized": false,
+    "scientific_execution_authorized": false
+  },
+  "builder_path": "scripts/build_person_a_phase4_step4_1_production_handoff_preflight_v0_1.py",
+  "external_evidence": [
+    {
+      "byte_size": 1788,
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/phase6_authorization_conditions.json",
+      "sha256": "fcea4c2fa2cf943ab40914aa397ccfb91e35307fc1a1f83257c83731ddb5ec24",
+      "source_commit": "a189c7f0c6a822f3dd0d9869a572e1e2d390c5f1"
+    },
+    {
+      "byte_size": 4499,
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/person_a_required_handoff.json",
+      "sha256": "5c2e80b67e31420ff5ab82b29b9843df5dab8847ad4420d33a9224515bd98c8f",
+      "source_commit": "a189c7f0c6a822f3dd0d9869a572e1e2d390c5f1"
+    },
+    {
+      "byte_size": 2002,
+      "path": "docs/status/person_e_phase4_step4_1_slice3a_v0_1/owner_handoffs/person_a_requirements.json",
+      "sha256": "26e56ecb95b8aa678eff320540eb1dd982dc51d51b12b71ac3653f7114b39879",
+      "source_commit": "b27d404c6aa913bac559754fa8b7accdff46e886"
+    },
+    {
+      "byte_size": 2647,
+      "path": "docs/status/person_e_phase4_step4_1_slice3a_v0_1/authority_binding.json",
+      "sha256": "cebf83896dee0906abe2602d92041f96e9cadb132e55051f9cf76f9c5495daee",
+      "source_commit": "b27d404c6aa913bac559754fa8b7accdff46e886"
+    }
+  ],
+  "person_a_branch": "role/person-a-model",
+  "project_integration_claimed": false,
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-authority-binding-v0.1",
+  "schema_version": "1.0",
+  "starting_authority": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+  "step4_1_complete": false,
+  "test_path": "tests/models/test_person_a_phase4_step4_1_production_handoff_preflight_v0_1.py",
+  "u4_output_inspected": false
+}

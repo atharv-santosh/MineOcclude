@@ -1,0 +1,21 @@
+{
+  "confirmed_defect": {
+    "global_frames_representable": 16,
+    "model_frame_idx_maximum_exclusive": 16,
+    "reproduced_by_focused_test": true,
+    "token_positions_derived_from_model_frame_idx": true,
+    "v1_candidate_validator_path": "src/mineocclude/activations/store.py:_candidate_rows_and_vectors"
+  },
+  "invalid_repairs_rejected": [
+    "weakening_or_removing_model_frame_idx_less_than_16",
+    "wrapping_global_model_frame_idx_modulo_16",
+    "using_context_local_pair_idx_as_global_frame_identity",
+    "splitting_one_pilot_into_fake_trajectory_identities",
+    "relabeling_historical_v1_artifacts"
+  ],
+  "reason_additive_v2_is_required": "The old field simultaneously names the global frame and derives context-local positions. Global frame 16 would either be rejected or collide with frame 0 if wrapped.",
+  "schema_id": "person-a-phase6-activation-store-v2-preparation-v0.1-reproduced-v1-limitation",
+  "schema_version": "1.0",
+  "v1_implementation_modified": false,
+  "v1_reinterpretation_forbidden": true
+}

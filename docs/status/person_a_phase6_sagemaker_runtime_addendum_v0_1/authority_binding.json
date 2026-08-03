@@ -1,0 +1,76 @@
+{
+  "authorities": {
+    "person_a_acknowledgement": {
+      "commit": "ca3f5695dc37f9f2c8066e323b25485c042b6cf7",
+      "source_documents": [
+        {
+          "byte_size": 2523,
+          "path": "docs/status/person_a_step6_runtime_acknowledgement_v0_1/frozen_runtime_configuration.json",
+          "sha256": "ecf3e5700da2ade1ca30290966a77bfb558b6afa3d834a0771007a90c06e9cd7"
+        },
+        {
+          "byte_size": 1027,
+          "path": "docs/status/person_a_step6_runtime_acknowledgement_v0_1/runtime_acknowledgement.json",
+          "sha256": "96734e3722184f45ea43d8480774d9facad4cfc14cd8b11ff847e8ca373172db"
+        }
+      ]
+    },
+    "person_a_preflight": {
+      "commit": "0416ce88060277b28512f95dca0af94984a8211d",
+      "source_documents": [
+        {
+          "byte_size": 4666,
+          "path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/immutable_runtime_configuration.json",
+          "sha256": "eb634c1e81c65a724b7cf32cbfe03f62e80a4428afda605071e1a43c6d0f4c10"
+        }
+      ]
+    },
+    "person_b_final_authorization": {
+      "commit": "43e5ac83004cce2145384c1383f2c3820311af14",
+      "source_documents": [
+        {
+          "byte_size": 1241,
+          "path": "docs/status/person_b_phase4_step4_1_step6_final_runtime_authorization_v0_1/authorization_boundaries.json",
+          "sha256": "89e064e40d276fe6588a74366f2438d3d158aa4c3b764adf505bbcc685adcf7f"
+        },
+        {
+          "byte_size": 1404,
+          "path": "docs/status/person_b_phase4_step4_1_step6_final_runtime_authorization_v0_1/combined_runtime_authorization.json",
+          "sha256": "ce183b5a967add7a95909cf2a90c85a9ed4c8a2973663a7048b823008e11770a"
+        }
+      ]
+    },
+    "person_c_accepted_pilot": {
+      "commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+      "source_documents": [
+        {
+          "byte_size": 2385,
+          "path": "docs/status/person_c_phase4_step4_1_registry_v2_handoff_v0_1/accepted_pilot_manifest.json",
+          "sha256": "6b53d697f69d35b4d0464d328993fb0b544d51cd521be073e7a866c38772fc2a"
+        },
+        {
+          "byte_size": 1995,
+          "path": "docs/status/person_c_phase4_step4_1_registry_v2_handoff_v0_1/selected_pilot_acceptance.json",
+          "sha256": "6e663b1c5a4e4e269a680a0b5c142da6f4f0d22ecf46092cdc8c81c0ce1ad8a9"
+        }
+      ]
+    }
+  },
+  "claims": {
+    "branch_merge_permitted": false,
+    "hidden_state_interpretation_authorized": false,
+    "model_loaded": false,
+    "phase6_step_execution_started": false,
+    "registry_v2_future_a_output_acceptance_authorized": false,
+    "scientific_artifacts_generated": false,
+    "scientific_execution_performed": false,
+    "u4_output_inspected": false
+  },
+  "schema_id": "person-a-phase6-sagemaker-runtime-addendum-v0.1-authority-binding",
+  "schema_version": "1.0",
+  "selected_pilot": {
+    "capture_package_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+    "trajectory_id": "layout_00_ep9403"
+  },
+  "source_read_policy": "exact_committed_git_objects_only"
+}
