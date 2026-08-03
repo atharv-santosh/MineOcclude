@@ -36,6 +36,12 @@ from mineocclude.vision.measurement import (  # noqa: E402
 
 
 U4_FRAME_INPUT_SCHEMA_VERSION = "person-e-u4-frame-input-v0.1"
+SUPPORTED_HOMOGRAPHY_REPORT_SCHEMA_VERSIONS = frozenset(
+    {
+        "person-e-homography-report-v0.2",
+        "person-e-homography-report-v0.3",
+    }
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -117,9 +123,8 @@ def main() -> None:
         != U4_FRAME_INPUT_SCHEMA_VERSION
     ):
         raise ValueError("Unknown U4 frame-input schema version.")
-    if (
-        homography_report.get("homography_report_schema_version")
-        != "person-e-homography-report-v0.2"
+    if homography_report.get("homography_report_schema_version") not in (
+        SUPPORTED_HOMOGRAPHY_REPORT_SCHEMA_VERSIONS
     ):
         raise ValueError("Unknown homography-report schema version.")
     if homography_report.get("config_hash") != config_hash:

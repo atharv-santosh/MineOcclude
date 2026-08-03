@@ -1,0 +1,178 @@
+{
+  "acceptance_contract": {
+    "decision_precedence": [
+      "INCONCLUSIVE_integrity_or_control_gate",
+      "PASS_all_scientific_gates",
+      "FAIL_clean_scientific_miss"
+    ],
+    "fail": "All integrity and control gates pass, all required metrics are valid, and no contiguous band of at least two layers meets every U1/U2/U3 gate.",
+    "inconclusive": "Any unknown hash/version, missing or invalid artifact/row, leakage, failed control, nonfinite or degenerate required statistic, absent reveal pair, or unauthorized scope prevents scientific classification.",
+    "pass": "All integrity and control gates pass and at least one contiguous band of two or more adjacent layers has every layer satisfy the exact U1_green, U2_green, and U3_green gates.",
+    "status_vocabulary": [
+      "PASS",
+      "FAIL",
+      "INCONCLUSIVE"
+    ]
+  },
+  "closure_report_required_fields": [
+    "schema_id",
+    "schema_version",
+    "person_b_comparison_contract_commit",
+    "person_b_post_reveal_contract_commit",
+    "person_e_bounded_reveal_authorization_commit",
+    "person_e_comparison_ratification_commit",
+    "person_d_completion_commit",
+    "all_direct_input_paths_sizes_and_sha256s",
+    "post_reveal_execution_receipt",
+    "final_comparison_execution_receipt",
+    "positive_control_decision",
+    "negative_control_results",
+    "per_layer_u1_u2_u3_results",
+    "paired_tests_and_max_t_adjusted_p_values",
+    "bootstrap_confidence_intervals",
+    "all_qualifying_contiguous_layer_bands",
+    "decision",
+    "decision_rationale",
+    "registry_v2_registry_id_and_sha256",
+    "registry_v2_imported_artifact_ids",
+    "unresolved_blockers",
+    "scientific_execution_performed",
+    "u4_output_inspected"
+  ],
+  "comparison_ratification": {
+    "authorization_output_root": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1",
+    "bounded_reveal_authorization": {
+      "commit": "99fb896ed8e6a3b187272fe078706bc7b17666d8",
+      "path": "docs/status/person_e_phase4_step4_1_bounded_reveal_authorization_v0_1/bounded_reveal_authorization.json",
+      "sha256": "b41b98c90a89c42e3e8119999679dd35644cd277a758722438794583f86cb7a2"
+    },
+    "broad_hidden_state_interpretation_authorized": false,
+    "comparison_contract": {
+      "commit": "4da02023a376df77eacb48084b1406ec1accfcb1",
+      "file": {
+        "byte_size": 18881,
+        "sha256": "ca80d850ce9a9d320dcba878de1abdfcfed3648d2770d6b91ab2156a6cb6340e"
+      },
+      "version": "person-b-step4-1-final-comparison-v0.1"
+    },
+    "decision": "RATIFY_EXACT_PERSON_B_STEP4_1_FINAL_COMPARISON_INTERFACE",
+    "exact_final_comparison_metrics_authorized": true,
+    "exploratory_metrics_authorized": false,
+    "manual_u4_inspection_authorized": false,
+    "permitted_execution_sequence": [
+      {
+        "order": 1,
+        "owner": "person_b",
+        "required_input": "exact_bounded_reveal_authorization_commit",
+        "required_output": "100 exact post-reveal predictions and receipts",
+        "step": "BOUNDED_REVEAL_PREDICTIONS"
+      },
+      {
+        "order": 2,
+        "owner": "person_b",
+        "required_input": "verified post-reveal package plus exact preserved B and D predictions",
+        "required_output": "frozen comparison metric package and receipts",
+        "step": "FINAL_COMPARISON_METRICS"
+      },
+      {
+        "order": 3,
+        "owner": "person_e",
+        "required_input": "complete exact B and D trust packages",
+        "required_output": "Registry v2 import, closure report, and PASS/FAIL/INCONCLUSIVE decision",
+        "step": "VERIFY_IMPORT_AND_CLOSE"
+      }
+    ],
+    "person_b_comparison_contract_commit": "4da02023a376df77eacb48084b1406ec1accfcb1",
+    "person_b_post_reveal_contract_commit": "53c2cd287a63e18e9b1fa5565b77f5c476baf9c4",
+    "post_hoc_layer_selection_authorized": false,
+    "post_hoc_test_selection_authorized": false,
+    "post_reveal_contract": {
+      "commit": "53c2cd287a63e18e9b1fa5565b77f5c476baf9c4",
+      "file": {
+        "byte_size": 15476,
+        "sha256": "28684ece32b8898a7a669482f6b640504738cb4eaf3aea091e6988c79a79d835"
+      },
+      "version": "person-b-step4-1-bounded-reveal-v0.1"
+    },
+    "probe_refitting_authorized": false,
+    "ratification_version": "person-e-step4-1-final-comparison-ratification-v0.1",
+    "schema_id": "person-e-step4-1-final-comparison-ratification-v0-1",
+    "schema_version": "1.0",
+    "scientific_execution_performed": false,
+    "step4_1_complete": false,
+    "u4_output_inspected": false,
+    "unknown_version_or_changed_hash_policy": "FAIL_CLOSED_INCONCLUSIVE"
+  },
+  "control_requirements": {
+    "negative": {
+      "family": "grouped_shuffled",
+      "required_targets": [
+        "mu_oracle_blocks",
+        "log_sigma_oracle"
+      ]
+    },
+    "no_object": "NOT_APPLICABLE_TO_FROZEN_TEN_PILOT_PRODUCTION_SET",
+    "positive": {
+      "authority_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "decision": "PASS_FROZEN_VISIBLE_POSITION_POSITIVE_CONTROL",
+      "decision_sha256": "742557b32326180003b1cd83ed5db6f1a1ebfebd692d969809698d323f239056"
+    }
+  },
+  "person_b_required_evidence": {
+    "existing_predictions": {
+      "byte_size": 84257218,
+      "count": 27800,
+      "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+      "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba"
+    },
+    "final_comparison": {
+      "output_root": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1",
+      "required_files": [
+        "comparison_metric_table.json",
+        "paired_test_results.json",
+        "confidence_intervals.json",
+        "layer_band_decision.json",
+        "registry_v2_import_package.json",
+        "execution_receipt.json",
+        "sha256_inventory.json"
+      ],
+      "schema_id": "person-b-step4-1-final-comparison-output-v0-1"
+    },
+    "post_reveal": {
+      "count": 100,
+      "output_root": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1",
+      "required_files": [
+        "post_reveal_predictions.json",
+        "execution_receipt.json",
+        "sha256_inventory.json"
+      ],
+      "schema_id": "person-b-step4-1-bounded-reveal-predictions-v0-1"
+    }
+  },
+  "person_d_required_evidence": {
+    "completion_commit": "f89b142a6fdb52c2d238669af8df14061cee5896",
+    "completion_manifest_sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5",
+    "prediction_count": 10776,
+    "required_families": [
+      "last_seen",
+      "constant_velocity",
+      "grouped_shuffled",
+      "time_only",
+      "explicit_feature",
+      "raw_pixel",
+      "visible_history_q",
+      "known_q_analytic"
+    ],
+    "required_receipts": [
+      "run_state.json",
+      "preserved_output_provenance.json",
+      "nine exact prediction documents",
+      "fit and missingness/exclusion receipts",
+      "runner and environment receipts"
+    ]
+  },
+  "schema_id": "person-e-step4-1-final-closure-contract-v0-1",
+  "schema_version": "1.0",
+  "step4_1_complete": false,
+  "u4_output_inspected": false
+}

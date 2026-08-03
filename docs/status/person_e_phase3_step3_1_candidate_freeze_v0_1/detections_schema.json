@@ -1,0 +1,476 @@
+{
+  "column_order": [
+    "schema_version",
+    "record_id",
+    "frame_id",
+    "trajectory_id",
+    "model_frame_idx",
+    "source_artifact_id",
+    "source_frame_idx",
+    "layout_id",
+    "canonical_camera_pose_id",
+    "resolution_id",
+    "image_width_px",
+    "image_height_px",
+    "pixel_format",
+    "image_coordinate_system",
+    "split_role",
+    "historical_phase2_split_role",
+    "truth_present",
+    "detected_present",
+    "classification",
+    "centroid_x",
+    "centroid_y",
+    "area_pixels",
+    "bbox_x_min",
+    "bbox_y_min",
+    "bbox_x_max_exclusive",
+    "bbox_y_max_exclusive",
+    "threshold_match_pixels",
+    "threshold_match_fraction",
+    "candidate_blob_count",
+    "selected_blob_fraction_of_threshold_matches",
+    "quality_status",
+    "detector_algorithm_id",
+    "detector_version",
+    "detector_config_sha256",
+    "detector_settings_sha256",
+    "detector_implementation_sha256",
+    "status",
+    "reason",
+    "image_region",
+    "background_stratum",
+    "background_stratum_status",
+    "source_path",
+    "source_sha256",
+    "person_c_source_revision",
+    "person_a_parquet_authority_revision"
+  ],
+  "detection_record_schema_version": "person-e-detection-record-v1.0",
+  "fields": [
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Person E detection-row schema.",
+        "field_order": "0"
+      },
+      "name": "schema_version",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Immutable detector-record identity.",
+        "field_order": "1"
+      },
+      "name": "record_id",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Owner-authored source-frame identity.",
+        "field_order": "2"
+      },
+      "name": "frame_id",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Trajectory identity when available.",
+        "field_order": "3"
+      },
+      "name": "trajectory_id",
+      "nullable": true
+    },
+    {
+      "arrow_type": "int64",
+      "metadata": {
+        "description": "Model-frame index when available.",
+        "field_order": "4"
+      },
+      "name": "model_frame_idx",
+      "nullable": true
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Committed source artifact identity.",
+        "field_order": "5"
+      },
+      "name": "source_artifact_id",
+      "nullable": false
+    },
+    {
+      "arrow_type": "int64",
+      "metadata": {
+        "description": "Frame index in the source artifact.",
+        "field_order": "6"
+      },
+      "name": "source_frame_idx",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Registered layout identity.",
+        "field_order": "7"
+      },
+      "name": "layout_id",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Canonical camera-pose identity.",
+        "field_order": "8"
+      },
+      "name": "canonical_camera_pose_id",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Registered image resolution identity.",
+        "field_order": "9"
+      },
+      "name": "resolution_id",
+      "nullable": false
+    },
+    {
+      "arrow_type": "int32",
+      "metadata": {
+        "description": "Decoded image width in pixels.",
+        "field_order": "10"
+      },
+      "name": "image_width_px",
+      "nullable": false
+    },
+    {
+      "arrow_type": "int32",
+      "metadata": {
+        "description": "Decoded image height in pixels.",
+        "field_order": "11"
+      },
+      "name": "image_height_px",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Decoded channel and sample format.",
+        "field_order": "12"
+      },
+      "name": "pixel_format",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Pixel-centre coordinate convention.",
+        "field_order": "13"
+      },
+      "name": "image_coordinate_system",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Current evaluation role.",
+        "field_order": "14"
+      },
+      "name": "split_role",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Historical Phase 2 role, retained only for provenance.",
+        "field_order": "15"
+      },
+      "name": "historical_phase2_split_role",
+      "nullable": true
+    },
+    {
+      "arrow_type": "bool",
+      "metadata": {
+        "description": "Owner-authored binary presence truth.",
+        "field_order": "16"
+      },
+      "name": "truth_present",
+      "nullable": false
+    },
+    {
+      "arrow_type": "bool",
+      "metadata": {
+        "description": "Fail-closed detector presence result.",
+        "field_order": "17"
+      },
+      "name": "detected_present",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "TP, FP, TN, or FN classification.",
+        "field_order": "18"
+      },
+      "name": "classification",
+      "nullable": false
+    },
+    {
+      "arrow_type": "double",
+      "metadata": {
+        "description": "Detected centroid x pixel centre.",
+        "field_order": "19"
+      },
+      "name": "centroid_x",
+      "nullable": true
+    },
+    {
+      "arrow_type": "double",
+      "metadata": {
+        "description": "Detected centroid y pixel centre.",
+        "field_order": "20"
+      },
+      "name": "centroid_y",
+      "nullable": true
+    },
+    {
+      "arrow_type": "int64",
+      "metadata": {
+        "description": "Selected connected-component area.",
+        "field_order": "21"
+      },
+      "name": "area_pixels",
+      "nullable": true
+    },
+    {
+      "arrow_type": "int32",
+      "metadata": {
+        "description": "Inclusive bounding-box x minimum.",
+        "field_order": "22"
+      },
+      "name": "bbox_x_min",
+      "nullable": true
+    },
+    {
+      "arrow_type": "int32",
+      "metadata": {
+        "description": "Inclusive bounding-box y minimum.",
+        "field_order": "23"
+      },
+      "name": "bbox_y_min",
+      "nullable": true
+    },
+    {
+      "arrow_type": "int32",
+      "metadata": {
+        "description": "Exclusive bounding-box x maximum.",
+        "field_order": "24"
+      },
+      "name": "bbox_x_max_exclusive",
+      "nullable": true
+    },
+    {
+      "arrow_type": "int32",
+      "metadata": {
+        "description": "Exclusive bounding-box y maximum.",
+        "field_order": "25"
+      },
+      "name": "bbox_y_max_exclusive",
+      "nullable": true
+    },
+    {
+      "arrow_type": "int64",
+      "metadata": {
+        "description": "Pixels matching the frozen HSV thresholds before morphology.",
+        "field_order": "26"
+      },
+      "name": "threshold_match_pixels",
+      "nullable": false
+    },
+    {
+      "arrow_type": "double",
+      "metadata": {
+        "description": "Threshold-matching pixels divided by decoded image pixels.",
+        "field_order": "27"
+      },
+      "name": "threshold_match_fraction",
+      "nullable": false
+    },
+    {
+      "arrow_type": "int32",
+      "metadata": {
+        "description": "Connected components considered before the area filter.",
+        "field_order": "28"
+      },
+      "name": "candidate_blob_count",
+      "nullable": false
+    },
+    {
+      "arrow_type": "double",
+      "metadata": {
+        "description": "Selected area divided by threshold matches when detected.",
+        "field_order": "29"
+      },
+      "name": "selected_blob_fraction_of_threshold_matches",
+      "nullable": true
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "accepted, low_quality, or rejected.",
+        "field_order": "30"
+      },
+      "name": "quality_status",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Frozen detector algorithm ID.",
+        "field_order": "31"
+      },
+      "name": "detector_algorithm_id",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Complete immutable detector version.",
+        "field_order": "32"
+      },
+      "name": "detector_version",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "SHA-256 of the canonical candidate configuration identity.",
+        "field_order": "33"
+      },
+      "name": "detector_config_sha256",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "SHA-256 of the canonical detector settings.",
+        "field_order": "34"
+      },
+      "name": "detector_settings_sha256",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "SHA-256 of the detector implementation bytes.",
+        "field_order": "35"
+      },
+      "name": "detector_implementation_sha256",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "detected, not_detected, or rejected.",
+        "field_order": "36"
+      },
+      "name": "status",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Explicit non-detection or rejection reason.",
+        "field_order": "37"
+      },
+      "name": "reason",
+      "nullable": true
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Predeclared or independently derived region.",
+        "field_order": "38"
+      },
+      "name": "image_region",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Owner-authored marker/wall/background stratum when available.",
+        "field_order": "39"
+      },
+      "name": "background_stratum",
+      "nullable": true
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Whether the background stratum is owner-authored or unavailable.",
+        "field_order": "40"
+      },
+      "name": "background_stratum_status",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Repository-relative committed PNG path.",
+        "field_order": "41"
+      },
+      "name": "source_path",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "SHA-256 of literal source PNG bytes.",
+        "field_order": "42"
+      },
+      "name": "source_sha256",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Exact Person C source Git revision.",
+        "field_order": "43"
+      },
+      "name": "person_c_source_revision",
+      "nullable": false
+    },
+    {
+      "arrow_type": "string",
+      "metadata": {
+        "description": "Exact Person A Parquet dependency-authority revision.",
+        "field_order": "44"
+      },
+      "name": "person_a_parquet_authority_revision",
+      "nullable": false
+    }
+  ],
+  "null_policy": "Only schema-nullable unavailable values are null; NaN, infinity, and arbitrary Python objects reject fail-closed.",
+  "pyarrow_version": "25.0.0",
+  "row_ordering_key": [
+    "layout_id",
+    "frame_id"
+  ],
+  "schema_metadata": {
+    "detector_config_sha256": "acfecd659958891eaee0d582c946abdfaaf47d1ab3307a24f7652e634c045bfa",
+    "detector_implementation_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "detector_settings_sha256": "0dbb426adf99f53455eea04c4aaeb56f3cb22cbc351d87269bb605445eb8f2ea",
+    "detector_version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+    "person_a_parquet_authority_revision": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+    "person_c_source_revision": "fa70424530f422a2e6140e0e90d0ff18f583141e",
+    "pyarrow_version": "25.0.0",
+    "row_ordering_key": "layout_id,frame_id",
+    "schema_version": "person-e-detection-record-v1.0",
+    "timestamp_policy": "no_timestamp_columns"
+  },
+  "schema_version": "1.0"
+}

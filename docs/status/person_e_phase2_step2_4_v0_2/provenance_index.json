@@ -1,0 +1,78 @@
+{
+  "correction_schema_version": "person-e-phase2-step2.4-correction-v0.2",
+  "previous_phase2_records": {
+    "provenance_hash": "5a31b0e5747222c6003772ecc3afba7284b5ef277bfddd4e12a1f6fb339e7668",
+    "shared_immutable_registry_status": "pending_step2_1_authoritative_inputs",
+    "status_hash": "6029c0febee17af9da54c397b298010bfc8c5eec5a0d7d6b19141d76aef2506a"
+  },
+  "provenance_index_schema_version": "person-e-phase2-step2.4-provenance-index-v0.2",
+  "records": [
+    {
+      "artifact_id": "person_e_phase2_step2_4_v0_2:homography_correspondences.json",
+      "direct_inputs": [
+        "source_and_ground_contact_validation.json",
+        "../person_e_phase2_v0_1/homography_correspondences.json"
+      ],
+      "path": "homography_correspondences.json",
+      "sha256": "4b657fd63cb8b8582957f58eea98ba47d65a230aa2ba78c260a24fb89f43fb67",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 40026,
+      "status": "accepted_correction_evidence"
+    },
+    {
+      "artifact_id": "person_e_phase2_step2_4_v0_2:homography_record.json",
+      "direct_inputs": [
+        "homography_correspondences.json",
+        "../person_e_phase2_v0_1/detector_version_record.json"
+      ],
+      "path": "homography_record.json",
+      "sha256": "d21126315f84ad9f2a58a78c06ab56c562457d1b6e6b3f7f5ee5afd79595c88f",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 9796,
+      "status": "accepted_correction_evidence"
+    },
+    {
+      "artifact_id": "person_e_phase2_step2_4_v0_2:localization_validation_report.json",
+      "direct_inputs": [
+        "source_and_ground_contact_validation.json",
+        "homography_record.json",
+        "git:00784756f21895d19aff44572496c956cc5d932f:data/handoff_e/independent_probe_points.json",
+        "../person_e_phase2_v0_1/localization_validation_report.json"
+      ],
+      "path": "localization_validation_report.json",
+      "sha256": "1b88a7ff42f57939ede3cf59a6259ce54ff4ae5b8e789d443bd1b158bc7f2e49",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 58715,
+      "status": "accepted_correction_evidence"
+    },
+    {
+      "artifact_id": "person_e_phase2_step2_4_v0_2:source_and_ground_contact_validation.json",
+      "direct_inputs": [
+        "../person_e_phase2_v0_1/frozen_split_manifest.json",
+        "../person_e_phase2_v0_1/frozen_detector_config.json",
+        "git:00784756f21895d19aff44572496c956cc5d932f:data/handoff_e/detector_calibration_inputs.json"
+      ],
+      "path": "source_and_ground_contact_validation.json",
+      "sha256": "ac10059a26588355629a4bf550c0d8911450369661a85de3e0d8f25f1e79bb11",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 126337,
+      "status": "accepted_correction_evidence"
+    }
+  ],
+  "schema_version": "1.0",
+  "shared_immutable_registry_status": "pending_step2_1_authoritative_inputs",
+  "source_revisions": {
+    "person_c": "00784756f21895d19aff44572496c956cc5d932f",
+    "person_e_base": "e9af9394b93674dc735be38bb7c0c519c66cc135"
+  },
+  "superseded_step2_4_evidence_retained": {
+    "homography_correspondences_hash": "38dd835d1e845e29781557ce8352bcdc986bb86e783a356d13b524fb3825f88c",
+    "homography_record_hash": "df999f2383262751adb4ae4b61e349c1132ca31ba235e17eb8c2b0c159781aa4",
+    "localization_validation_report_hash": "68c1a92ae03efac953396460e3fd543ce9075027b06e36b74a0ffc3a0106e06c"
+  },
+  "unchanged_upstream_evidence": {
+    "detector_version_record_hash": "667fb0a27f6f3c31832c390dba2d87ef5930f51808a7f5191de8b5a4ac2dafc0",
+    "frozen_detector_config_hash": "0333e21002cf94878ae3d945337a34aec280fb1d07f87bac6346a7daf9c0605a",
+    "frozen_split_manifest_hash": "03097dda9c1c68ae120b291845a65aba7166cff20c234f51d30b5cdd2d10811c"
+  }
+}

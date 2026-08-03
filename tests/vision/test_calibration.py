@@ -3,21 +3,23 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import struct
 import subprocess
 import sys
 import tempfile
 import unittest
+import zlib
 from pathlib import Path
 
 from mineocclude.experiments.registry import hash_json_value
 from mineocclude.vision.calibration import (
     CalibrationDatasetError,
+    decode_png_rgb_bytes,
     frames_for_split,
     load_detector_calibration_dataset,
     validate_detector_calibration_dataset,
 )
 from mineocclude.vision.config import DEFAULT_PERSON_E_CONFIG_PATH
-
 
 ROOT = Path(__file__).resolve().parents[2]
 EVALUATOR = ROOT / "scripts" / "evaluate_magenta_detector.py"
@@ -95,6 +97,35 @@ def calibration_dataset() -> dict[str, object]:
 
 
 class TestCalibrationDataset(unittest.TestCase):
+    def test_stdlib_png_decoder_checks_rgb_and_crc(self) -> None:
+        signature = b"\x89PNG\r\n\x1a\n"
+
+        def chunk(kind: bytes, data: bytes) -> bytes:
+            return (
+                struct.pack(">I", len(data))
+                + kind
+                + data
+                + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+            )
+
+        payload = (
+            signature
+            + chunk(
+                b"IHDR",
+                struct.pack(">IIBBBBB", 2, 1, 8, 2, 0, 0, 0),
+            )
+            + chunk(b"IDAT", zlib.compress(b"\x00\xff\x00\xff\x01\x02\x03"))
+            + chunk(b"IEND", b"")
+        )
+        self.assertEqual(
+            decode_png_rgb_bytes(payload),
+            [[[255, 0, 255], [1, 2, 3]]],
+        )
+        tampered = bytearray(payload)
+        tampered[-5] ^= 1
+        with self.assertRaisesRegex(CalibrationDatasetError, "CRC"):
+            decode_png_rgb_bytes(bytes(tampered))
+
     def test_valid_dataset_loads_once_with_literal_hash_and_split(self) -> None:
         document = calibration_dataset()
         validate_detector_calibration_dataset(document)

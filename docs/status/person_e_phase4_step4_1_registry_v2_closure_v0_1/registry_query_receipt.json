@@ -1,0 +1,1030 @@
+{
+  "backward_final_metric_provenance": {
+    "creator_run_ids": [
+      "person_a_phase6_ten_pilot_activation_completion_55776dc",
+      "person_a_step4_1_frame_handoff_380b9a3",
+      "person_b_step4_1_bounded_reveal_53c2cd2",
+      "person_b_step4_1_fitted_probe_production_ca3bf19",
+      "person_b_step4_1_oof_prediction_production_ca3bf19",
+      "person_d_step4_1_eight_family_completion_f89b142"
+    ],
+    "direct_input_edges": [
+      {
+        "input_artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "output_artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "output_artifact_id": "person_b_step4_1_fitted_probes_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "output_artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1"
+      },
+      {
+        "input_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "output_artifact_id": "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1"
+      },
+      {
+        "input_artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+        "output_artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1"
+      },
+      {
+        "input_artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+        "output_artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1"
+      },
+      {
+        "input_artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      },
+      {
+        "input_artifact_id": "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+        "output_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1"
+      }
+    ],
+    "query_schema_version": "person-e-immutable-registry-v2-provenance-query-v0.1",
+    "registry_id": "mineocclude_step4_1_final_comparison_registry_v2",
+    "subject_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+    "subject_creator_run_id": "person_b_step4_1_final_comparison_1b9ac2e",
+    "upstream_artifacts": [
+      {
+        "artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "artifact_type": "prediction",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_b_step4_1_bounded_reveal_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_b_step4_1_bounded_reveal_53c2cd2",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+        "artifact_type": "prediction",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_b_step4_1_preserved_oof_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_b_step4_1_oof_prediction_production_ca3bf19",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "direct_successor_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_d_step4_1_baseline_manifest_v0_1",
+        "multiple_causal_paths": false,
+        "owner_authority_id": "person_d_step4_1_baseline_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "artifact_type": "activation",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_bounded_reveal_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_bounded_reveal_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_preserved_oof_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_preserved_oof_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_a_phase6_ten_pilot_activation_completion_55776dc",
+        "direct_successor_artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 2,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_a_step4_1_activation_manifest_v0_1",
+        "multiple_causal_paths": true,
+        "owner_authority_id": "person_a_step4_1_activation_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "artifact_type": "model_input",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_a_step4_1_frame_handoff_380b9a3",
+        "direct_successor_artifact_id": "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 2,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_a_step4_1_frame_input_manifest_v0_1",
+        "multiple_causal_paths": true,
+        "owner_authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      },
+      {
+        "artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+        "artifact_type": "fitted_probe",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_bounded_reveal_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_preserved_oof_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "creator_run_id": "person_b_step4_1_fitted_probe_production_ca3bf19",
+        "direct_successor_artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 2,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+        "multiple_causal_paths": true,
+        "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": []
+      }
+    ]
+  },
+  "forward_activation_impact": {
+    "affected_artifacts": [
+      {
+        "affected_artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "affected_creator_run_id": "person_b_step4_1_bounded_reveal_53c2cd2",
+        "artifact_type": "prediction",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_bounded_reveal_predictions_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_bounded_reveal_predictions_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": true,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+        "affected_creator_run_id": "person_b_step4_1_fitted_probe_production_ca3bf19",
+        "artifact_type": "fitted_probe",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_fitted_probes_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+        "affected_creator_run_id": "person_b_step4_1_oof_prediction_production_ca3bf19",
+        "artifact_type": "prediction",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_preserved_oof_predictions_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_preserved_oof_predictions_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": true,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "affected_creator_run_id": "person_b_step4_1_final_comparison_1b9ac2e",
+        "artifact_type": "metric_table",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_bounded_reveal_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_bounded_reveal_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_fitted_probes_v0_1",
+            "person_b_step4_1_preserved_oof_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+            "person_b_step4_1_preserved_oof_predictions_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 2,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": true,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "subject_type": "artifact"
+      }
+    ],
+    "query_schema_version": "person-e-immutable-registry-v2-impact-query-v0.1",
+    "registry_id": "mineocclude_step4_1_final_comparison_registry_v2",
+    "root_effective_state": null,
+    "root_effective_states_by_artifact_id": {
+      "person_a_step4_1_activation_store_v2_combined_index_v0_1": null
+    },
+    "subject_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+    "subject_output_artifact_ids": [
+      "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+    ],
+    "subject_output_artifacts": [
+      {
+        "artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "artifact_type": "activation",
+        "assigned_hypothetical_root_state": null,
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths_from_subject_outputs": [],
+        "creator_run_id": "person_a_phase6_ten_pilot_activation_completion_55776dc",
+        "direct_subject_output_dependency_artifact_ids": [],
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_distance": 0
+      }
+    ],
+    "subject_output_dependency_edges": [],
+    "subject_type": "artifact"
+  },
+  "forward_frame_input_impact": {
+    "affected_artifacts": [
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+        "affected_creator_run_id": "person_d_step4_1_eight_family_completion_f89b142",
+        "artifact_type": "baseline",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 1,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": false,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      },
+      {
+        "affected_artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "affected_creator_run_id": "person_b_step4_1_final_comparison_1b9ac2e",
+        "artifact_type": "metric_table",
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths": [
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ],
+          [
+            "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+            "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+            "person_b_step4_1_final_comparison_metric_table_v0_1"
+          ]
+        ],
+        "discovery_predecessor_artifact_id": "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "graph_distance": 2,
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "multiple_causal_paths": true,
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "subject_type": "artifact"
+      }
+    ],
+    "query_schema_version": "person-e-immutable-registry-v2-impact-query-v0.1",
+    "registry_id": "mineocclude_step4_1_final_comparison_registry_v2",
+    "root_effective_state": null,
+    "root_effective_states_by_artifact_id": {
+      "person_a_step4_1_preprocessed_frame_inputs_v0_1": null
+    },
+    "subject_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+    "subject_output_artifact_ids": [
+      "person_a_step4_1_preprocessed_frame_inputs_v0_1"
+    ],
+    "subject_output_artifacts": [
+      {
+        "artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "artifact_type": "model_input",
+        "assigned_hypothetical_root_state": null,
+        "base_lifecycle_status": "accepted",
+        "causal_path_causes": [],
+        "causal_paths_from_subject_outputs": [],
+        "creator_run_id": "person_a_step4_1_frame_handoff_380b9a3",
+        "direct_subject_output_dependency_artifact_ids": [],
+        "effective_state": "current",
+        "effective_state_reason": "no_unusable_or_superseded_dependency",
+        "invalid_root_causal_paths": [],
+        "invalid_root_cause_artifact_ids": [],
+        "root_cause_artifact_ids": [],
+        "stale_root_causal_paths": [],
+        "stale_root_cause_artifact_ids": [],
+        "subject_distance": 0
+      }
+    ],
+    "subject_output_dependency_edges": [],
+    "subject_type": "artifact"
+  },
+  "query_mechanics_authority": "5d8660c90fbf7362d7f32005f9b650e15ae1bfb5",
+  "registry_id": "mineocclude_step4_1_final_comparison_registry_v2",
+  "schema_id": "person-e-step4-1-registry-v2-query-receipt-v0-1",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,64 @@
+{
+  "authorities": {
+    "person_a": {
+      "branch": "origin/role/person-a-model",
+      "source_authority_commit": "06b87fe1f43d2133c25db498fcc1fd234f958aad"
+    },
+    "person_b": {
+      "branch": "origin/role/person-b-analysis",
+      "source_authority_commit": "aa84ab3b05c533c3e8dbd1ab897dd04d9f26f1cd"
+    },
+    "person_c": {
+      "branch": "origin/role/person-c-data",
+      "source_authority_commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed"
+    },
+    "person_d": {
+      "branch": "origin/role/person-d-baselines",
+      "source_authority_commit": "4fe28c61a01578cc6f7747c89d6aa1cd0f005299"
+    },
+    "person_e_empirical": {
+      "branch": "role/person-e-operations",
+      "source_authority_commit": "90855ea52b19ced3f0ce610f7d18db35070ee023"
+    },
+    "person_e_query": {
+      "branch": "role/person-e-operations",
+      "source_authority_commit": "5d8660c90fbf7362d7f32005f9b650e15ae1bfb5"
+    },
+    "person_e_registry_v2": {
+      "branch": "role/person-e-operations",
+      "source_authority_commit": "25509bb4ba292a83d933058539aca1ca6002524a"
+    }
+  },
+  "builder_path": "scripts/build_person_e_phase4_step4_1_slice3a_v0_1.py",
+  "claims": {
+    "accepted_artifact_exists": false,
+    "accepted_placeholder_exists": false,
+    "person_a_phase6_authorized": false,
+    "production_registry_acceptance_claimed": false,
+    "project_wide_integration_claimed": false,
+    "scientific_acceptance_claimed": false,
+    "step4_1_closure_claimed": false,
+    "u4_output_inspected": false
+  },
+  "person_e_branch": "role/person-e-operations",
+  "production_state": "pending",
+  "schema_id": "person-e-phase4-step4-1-slice3a-authority-binding-v0.1",
+  "schema_version": "1.0",
+  "scientific_acceptance_claimed": false,
+  "scientific_use_policy": {
+    "blocked_registry_scientific_use": "forbidden",
+    "meaning": "scientific_use=forbidden prevents scientific use of this incomplete operational planning registry; production_state=pending describes workflow progress outside the frozen schema."
+  },
+  "slice1_registry_v2_authority": "25509bb4ba292a83d933058539aca1ca6002524a",
+  "slice2_query_authority": "5d8660c90fbf7362d7f32005f9b650e15ae1bfb5",
+  "slice3a_is_step4_1_closure": false,
+  "source_authority_policy": {
+    "current_remote_tips_in_deterministic_evidence": false,
+    "pinned_commit_must_equal_or_ancestor_of_branch_tip": true,
+    "pinned_commit_must_exist": true,
+    "source_bytes_read_from": "source_authority_commit"
+  },
+  "starting_commit": "5d8660c90fbf7362d7f32005f9b650e15ae1bfb5",
+  "step4_1_closure_state": "blocked",
+  "test_path": "tests/experiments/test_person_e_phase4_step4_1_slice3a_v0_1.py"
+}
