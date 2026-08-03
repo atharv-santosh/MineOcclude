@@ -1,0 +1,46 @@
+{
+  "activation_requirements": [
+    "Exact tensor shape, dtype, and layer identity.",
+    "Exact extraction and model-input direct-input identities."
+  ],
+  "artifact_byte_or_receipt_requirements": [
+    "Committed exact artifact bytes with SHA-256 and byte size, or a trusted external byte receipt.",
+    "Manifest identity, artifact identity, schema version, and source revision must match exactly."
+  ],
+  "blocks_step4_1_closure": true,
+  "current_authority_commit": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+  "direct_input_identities_required": [
+    "Accepted Person C raw_trajectory artifact IDs.",
+    "Exact preprocessing identity and checkpoint identity.",
+    "Each production output's exact accepted predecessor IDs."
+  ],
+  "exact_minimum_registry_v2_trust_records": [
+    "trusted owner authority",
+    "verified owner status record bytes",
+    "trusted exact-artifact authorization",
+    "verified authorization record bytes",
+    "trusted manifest with exact artifact entry",
+    "verified local artifact bytes or trusted external receipt",
+    "exact direct-input artifact identities"
+  ],
+  "expected_branch": "origin/role/person-a-model",
+  "owner": "person_a",
+  "owner_status_and_authorization_required": true,
+  "phase6_authorized": false,
+  "pilot_promotion_policy": "Bounded one-frame extraction and limited activation pilots cannot be promoted to production science.",
+  "production_state": "pending",
+  "prohibited_substitutions_or_placeholders": [
+    "No accepted placeholder or expected-cardinality artifact row.",
+    "No readiness note, pilot, preview, schema, or policy receipt may substitute for result bytes.",
+    "No cross-owner status or authorization may be authored by Person E."
+  ],
+  "proposed_owner_owned_output_path": "docs/status/person_a_phase4_step4_1_production_handoff_v0_1/",
+  "required_output_artifacts": [
+    "model_input",
+    "extraction",
+    "activation",
+    "rollout"
+  ],
+  "schema_version": "1.0",
+  "trusted_manifest_required": true
+}

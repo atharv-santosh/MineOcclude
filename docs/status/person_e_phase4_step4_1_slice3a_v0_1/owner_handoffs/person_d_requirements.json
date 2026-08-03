@@ -1,0 +1,37 @@
+{
+  "artifact_byte_or_receipt_requirements": [
+    "Committed exact artifact bytes with SHA-256 and byte size, or a trusted external byte receipt.",
+    "Manifest identity, artifact identity, schema version, and source revision must match exactly."
+  ],
+  "blocks_step4_1_closure": true,
+  "current_authority_commit": "4fe28c61a01578cc6f7747c89d6aa1cd0f005299",
+  "direct_input_identities_required": [
+    "Exact sealed Person B fold identity.",
+    "Exact Person B oracle identity.",
+    "Exact accepted model/prediction input identities used by the baseline."
+  ],
+  "exact_minimum_registry_v2_trust_records": [
+    "trusted owner authority",
+    "verified owner status record bytes",
+    "trusted exact-artifact authorization",
+    "verified authorization record bytes",
+    "trusted manifest with exact artifact entry",
+    "verified local artifact bytes or trusted external receipt",
+    "exact direct-input artifact identities"
+  ],
+  "expected_branch": "origin/role/person-d-baselines",
+  "forbidden_preview_path": "docs/status/person_d_real_pilot_baseline_preview.json",
+  "forbidden_preview_promotable": false,
+  "owner": "person_d",
+  "prohibited_substitutions_or_placeholders": [
+    "No accepted placeholder or expected-cardinality artifact row.",
+    "No readiness note, pilot, preview, schema, or policy receipt may substitute for result bytes.",
+    "No cross-owner status or authorization may be authored by Person E."
+  ],
+  "proposed_owner_owned_output_path": "docs/status/person_d_phase4_step4_1_scientific_baseline_v0_1/",
+  "required_output_artifacts": [
+    "baseline"
+  ],
+  "required_output_semantics": "Accepted scientific baseline predictions, not a preview or positive-control readiness gate.",
+  "schema_version": "1.0"
+}

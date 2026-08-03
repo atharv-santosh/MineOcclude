@@ -1,0 +1,1806 @@
+{
+  "all_required_probes_evaluated": false,
+  "blocked_layout_ids": [
+    "layout_02"
+  ],
+  "blocked_sample_count": 6,
+  "by_image_region": [
+    {
+      "image_region": "left_middle",
+      "median_absolute_wall_parallel_error_blocks": 0.395130265223151,
+      "median_euclidean_error_blocks": 0.9191832592735574,
+      "p95_absolute_wall_parallel_error_blocks": 0.590492928304335,
+      "p95_euclidean_error_blocks": 1.0010504151636737,
+      "sample_count": 12,
+      "signed_wall_parallel_error_blocks": {
+        "maximum": -0.12648092510194875,
+        "mean": -0.4045969623947725,
+        "median": -0.395130265223151,
+        "minimum": -0.6060580665260602
+      }
+    },
+    {
+      "image_region": "right_middle",
+      "median_absolute_wall_parallel_error_blocks": 0.47091067842717393,
+      "median_euclidean_error_blocks": 1.069699597559441,
+      "p95_absolute_wall_parallel_error_blocks": 0.5733010937803769,
+      "p95_euclidean_error_blocks": 1.3179578741573124,
+      "sample_count": 18,
+      "signed_wall_parallel_error_blocks": {
+        "maximum": -0.21973229975779685,
+        "mean": -0.4415433813820387,
+        "median": -0.47091067842717393,
+        "minimum": -0.5972390570965507
+      }
+    }
+  ],
+  "correction_schema_version": "person-e-phase2-step2.4-correction-v0.2",
+  "evaluated_sample_count": 30,
+  "evaluated_subset_gate_passed": false,
+  "frozen_detector_version": "hsv-largest-valid-blob-v0.1:sha256:1ff40286e68007b06d160a0b8eb91c4adabed00873675cbfd888d4a8d5ad1b37",
+  "gate_decision": "not_passed_incomplete_layout_coverage_and_evaluated_subset_failed",
+  "ground_contact_localization_method_version": "person-e-paired-background-silhouette-base-v0.1",
+  "homography_document_hash": "d21126315f84ad9f2a58a78c06ab56c562457d1b6e6b3f7f5ee5afd79595c88f",
+  "localization_report_schema_version": "person-e-real-localization-report-v0.2",
+  "marker_detector_version": "person-e-marker-detect-v1.0",
+  "median_absolute_wall_parallel_error_blocks": 0.4221485104262732,
+  "median_euclidean_error_blocks": 0.9782683060157858,
+  "old_versus_corrected": {
+    "corrected_same_five_layouts": {
+      "median_absolute_wall_parallel_error_blocks": 0.4221485104262732,
+      "median_euclidean_error_blocks": 0.9782683060157858,
+      "p95_absolute_wall_parallel_error_blocks": 0.5884724982493275,
+      "p95_euclidean_error_blocks": 1.3161433408115626,
+      "sample_count": 30,
+      "signed_wall_parallel_error_blocks": {
+        "maximum": -0.12648092510194875,
+        "mean": -0.42676481378713227,
+        "median": -0.4221485104262732,
+        "minimum": -0.6060580665260602
+      }
+    },
+    "median_absolute_wall_parallel_delta_blocks": -0.019378641222011606,
+    "old_all_36": {
+      "median_absolute_wall_parallel_error_blocks": 0.45075163834691656,
+      "median_euclidean_error_blocks": 1.0386929921754318,
+      "p95_absolute_wall_parallel_error_blocks": 0.6218506278843547,
+      "p95_euclidean_error_blocks": 1.2655910396886303,
+      "sample_count": 36,
+      "signed_wall_parallel_error_blocks": {
+        "maximum": -0.14563861576274117,
+        "mean": -0.4448352253833381,
+        "median": -0.45075163834691656,
+        "minimum": -0.6542118639172356
+      }
+    },
+    "old_evidence": {
+      "path": "../person_e_phase2_v0_1/localization_validation_report.json",
+      "sha256": "68c1a92ae03efac953396460e3fd543ce9075027b06e36b74a0ffc3a0106e06c",
+      "status": "retained_failed_baseline"
+    },
+    "old_same_five_layouts": {
+      "median_absolute_wall_parallel_error_blocks": 0.4415271516482848,
+      "median_euclidean_error_blocks": 1.0434913074720482,
+      "p95_absolute_wall_parallel_error_blocks": 0.6234459888406083,
+      "p95_euclidean_error_blocks": 1.2660373457789422,
+      "sample_count": 30,
+      "signed_wall_parallel_error_blocks": {
+        "maximum": -0.14563861576274117,
+        "mean": -0.42819991439394656,
+        "median": -0.4415271516482848,
+        "minimum": -0.6542118639172356
+      }
+    },
+    "p95_absolute_wall_parallel_delta_blocks": -0.034973490591280854
+  },
+  "p95_absolute_wall_parallel_error_blocks": 0.5884724982493275,
+  "p95_euclidean_error_blocks": 1.3161433408115626,
+  "per_layout": [
+    {
+      "canonical_camera_pose_id": "layout_00_canonical_pose",
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:71381943500833c4a9cc484c1c8ebeae9e52528b9628d6b9c24176c292f8a8ae",
+      "layout_id": "layout_00",
+      "summary": {
+        "median_absolute_wall_parallel_error_blocks": 0.4916312531952909,
+        "median_euclidean_error_blocks": 1.2953023503205685,
+        "p95_absolute_wall_parallel_error_blocks": 0.5637015759544766,
+        "p95_euclidean_error_blocks": 1.3234427272129499,
+        "sample_count": 6,
+        "signed_wall_parallel_error_blocks": {
+          "maximum": -0.21973229975779685,
+          "mean": -0.43794098584974134,
+          "median": -0.4916312531952909,
+          "minimum": -0.5690767473128169
+        }
+      },
+      "wall_parallel_origin_xz": [
+        -7.0,
+        1.0
+      ],
+      "wall_parallel_positive_unit_xz": [
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "canonical_camera_pose_id": "layout_01_canonical_pose",
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:98a1789cd133c86ea1d304da2489909e3cb1aeeb39a322f65d40bc682160f49f",
+      "layout_id": "layout_01",
+      "summary": {
+        "median_absolute_wall_parallel_error_blocks": 0.34588126346196857,
+        "median_euclidean_error_blocks": 0.972082801041867,
+        "p95_absolute_wall_parallel_error_blocks": 0.4259236330278344,
+        "p95_euclidean_error_blocks": 1.0029744245414631,
+        "sample_count": 6,
+        "signed_wall_parallel_error_blocks": {
+          "maximum": -0.12648092510194875,
+          "mean": -0.3237722280796976,
+          "median": -0.34588126346196857,
+          "minimum": -0.42969875562939563
+        }
+      },
+      "wall_parallel_origin_xz": [
+        1.0,
+        -7.0
+      ],
+      "wall_parallel_positive_unit_xz": [
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "canonical_camera_pose_id": "layout_03_canonical_pose",
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:01c4b5b0e9cceb1e72e2a182635fcd7eb5f2b8e69a967b2a2cc3388310539414",
+      "layout_id": "layout_03",
+      "summary": {
+        "median_absolute_wall_parallel_error_blocks": 0.5179058681725506,
+        "median_euclidean_error_blocks": 0.9272910296362331,
+        "p95_absolute_wall_parallel_error_blocks": 0.5810994663069513,
+        "p95_euclidean_error_blocks": 0.9643421230999227,
+        "sample_count": 6,
+        "signed_wall_parallel_error_blocks": {
+          "maximum": -0.41217405709655086,
+          "mean": -0.5135592669288177,
+          "median": -0.5179058681725506,
+          "minimum": -0.5972390570965507
+        }
+      },
+      "wall_parallel_origin_xz": [
+        -7.0,
+        2.0
+      ],
+      "wall_parallel_positive_unit_xz": [
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "canonical_camera_pose_id": "layout_04_canonical_pose",
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:8529c43ffdb6c92bc66cfef34eecb3f83dd3466b2995a63d6d290bba0bb12a81",
+      "layout_id": "layout_04",
+      "summary": {
+        "median_absolute_wall_parallel_error_blocks": 0.35742700608393685,
+        "median_euclidean_error_blocks": 1.069699597559441,
+        "p95_absolute_wall_parallel_error_blocks": 0.47492240820637366,
+        "p95_euclidean_error_blocks": 1.1158481400041578,
+        "sample_count": 6,
+        "signed_wall_parallel_error_blocks": {
+          "maximum": -0.30261295494758667,
+          "mean": -0.373129891367557,
+          "median": -0.35742700608393685,
+          "minimum": -0.5100508926259693
+        }
+      },
+      "wall_parallel_origin_xz": [
+        -6.0,
+        1.0
+      ],
+      "wall_parallel_positive_unit_xz": [
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "canonical_camera_pose_id": "layout_05_canonical_pose",
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:bd9c2d62deee6967a9c0cffd059475d15d0c2a942fd58a66672c3eff0a3650ef",
+      "layout_id": "layout_05",
+      "summary": {
+        "median_absolute_wall_parallel_error_blocks": 0.5333142159534745,
+        "median_euclidean_error_blocks": 0.8758009671996891,
+        "p95_absolute_wall_parallel_error_blocks": 0.5989830036980033,
+        "p95_euclidean_error_blocks": 0.9168367622456741,
+        "sample_count": 6,
+        "signed_wall_parallel_error_blocks": {
+          "maximum": -0.2869484333061214,
+          "mean": -0.4854216967098474,
+          "median": -0.5333142159534745,
+          "minimum": -0.6060580665260602
+        }
+      },
+      "wall_parallel_origin_xz": [
+        2.0,
+        -8.0
+      ],
+      "wall_parallel_positive_unit_xz": [
+        0.0,
+        1.0
+      ]
+    }
+  ],
+  "planning_gate_passed": false,
+  "png_decoder_version": "person-e-png-decode-v1.0",
+  "probe_targets_used_for_fitting": false,
+  "probe_targets_used_for_method_selection": false,
+  "records": [
+    {
+      "absolute_wall_parallel_error_blocks": 0.21973229975779685,
+      "canonical_camera_pose_id": "layout_00_canonical_pose",
+      "decoded_rgb_hash": "5d2d71dae7f2f425aad71fc92c2fea333c3e4121c090c3a90f809f10a4a061f8",
+      "euclidean_error_blocks": 1.2172699107440685,
+      "frame_id": "layout_00_visible_000",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          450,
+          184,
+          482,
+          219
+        ],
+        "changed_pixel_count": 942,
+        "image_xy": [
+          465.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        465.5,
+        218.0
+      ],
+      "layout_id": "layout_00",
+      "paired_background_frame_id": "layout_00_negative_000",
+      "predicted_wall_parallel_blocks": 0.8564207002422028,
+      "predicted_world_xz": [
+        -6.143579299757797,
+        4.80272653414267
+      ],
+      "sample_index": 0,
+      "signed_wall_parallel_error_blocks": -0.21973229975779685,
+      "source_artifact_id": "layout_00_ep9761",
+      "source_frame_hash": "d9d6f2b8b8ce036554f43b47e93bcef7a7f563fc8f8546bdceca3b82a4b824bc",
+      "source_frame_idx": 0,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.0761529999999997,
+      "true_world_xz": [
+        -5.923847,
+        6.0
+      ],
+      "true_world_xz_blocks": [
+        -5.923847,
+        6.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.3079982997577968,
+      "canonical_camera_pose_id": "layout_00_canonical_pose",
+      "decoded_rgb_hash": "5d2d71dae7f2f425aad71fc92c2fea333c3e4121c090c3a90f809f10a4a061f8",
+      "euclidean_error_blocks": 1.2362551131136792,
+      "frame_id": "layout_00_visible_001",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          450,
+          184,
+          482,
+          219
+        ],
+        "changed_pixel_count": 942,
+        "image_xy": [
+          465.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        465.5,
+        218.0
+      ],
+      "layout_id": "layout_00",
+      "paired_background_frame_id": "layout_00_negative_001",
+      "predicted_wall_parallel_blocks": 0.8564207002422028,
+      "predicted_world_xz": [
+        -6.143579299757797,
+        4.80272653414267
+      ],
+      "sample_index": 1,
+      "signed_wall_parallel_error_blocks": -0.3079982997577968,
+      "source_artifact_id": "layout_00_ep9761",
+      "source_frame_hash": "d9d6f2b8b8ce036554f43b47e93bcef7a7f563fc8f8546bdceca3b82a4b824bc",
+      "source_frame_idx": 1,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.1644189999999996,
+      "true_world_xz": [
+        -5.835581,
+        6.0
+      ],
+      "true_world_xz_blocks": [
+        -5.835581,
+        6.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.4383712997577973,
+      "canonical_camera_pose_id": "layout_00_canonical_pose",
+      "decoded_rgb_hash": "e1475624a17464280c53fefb88531db6d641249234dccdc4612c989762f8301a",
+      "euclidean_error_blocks": 1.2750031954851575,
+      "frame_id": "layout_00_visible_002",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          450,
+          184,
+          482,
+          219
+        ],
+        "changed_pixel_count": 938,
+        "image_xy": [
+          465.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        465.5,
+        218.0
+      ],
+      "layout_id": "layout_00",
+      "paired_background_frame_id": "layout_00_negative_002",
+      "predicted_wall_parallel_blocks": 0.8564207002422028,
+      "predicted_world_xz": [
+        -6.143579299757797,
+        4.80272653414267
+      ],
+      "sample_index": 2,
+      "signed_wall_parallel_error_blocks": -0.4383712997577973,
+      "source_artifact_id": "layout_00_ep9761",
+      "source_frame_hash": "82b5b6e95b77b130a3f910857318314717717f57c53b33f1cbae791a38bd4e82",
+      "source_frame_idx": 2,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.2947920000000002,
+      "true_world_xz": [
+        -5.705208,
+        6.0
+      ],
+      "true_world_xz_blocks": [
+        -5.705208,
+        6.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5475760618794556,
+      "canonical_camera_pose_id": "layout_00_canonical_pose",
+      "decoded_rgb_hash": "e2e600f5189f4435ba18c0db8731eed49fe29e68f10ac5832ffec24dbdf0c362",
+      "euclidean_error_blocks": 1.3165866608934031,
+      "frame_id": "layout_00_visible_003",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          449,
+          184,
+          481,
+          219
+        ],
+        "changed_pixel_count": 934,
+        "image_xy": [
+          464.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        464.5,
+        218.0
+      ],
+      "layout_id": "layout_00",
+      "paired_background_frame_id": "layout_00_negative_003",
+      "predicted_wall_parallel_blocks": 0.8986539381205443,
+      "predicted_world_xz": [
+        -6.101346061879456,
+        4.802685967634628
+      ],
+      "sample_index": 3,
+      "signed_wall_parallel_error_blocks": -0.5475760618794556,
+      "source_artifact_id": "layout_00_ep9761",
+      "source_frame_hash": "dca1672526550eeaaf2629efb6095cbc02c5adf3e0e9e8d87e87ff86c751f380",
+      "source_frame_idx": 3,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.44623,
+      "true_world_xz": [
+        -5.55377,
+        6.0
+      ],
+      "true_world_xz_blocks": [
+        -5.55377,
+        6.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5690767473128169,
+      "canonical_camera_pose_id": "layout_00_canonical_pose",
+      "decoded_rgb_hash": "73fe168c9596c42558954ae50fd4de880b8f1b3ddf4e1c8e2cba364c88e30093",
+      "euclidean_error_blocks": 1.3257280826527986,
+      "frame_id": "layout_00_visible_004",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          447,
+          184,
+          480,
+          219
+        ],
+        "changed_pixel_count": 921,
+        "image_xy": [
+          463.0,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        463.0,
+        218.0
+      ],
+      "layout_id": "layout_00",
+      "paired_background_frame_id": "layout_00_negative_004",
+      "predicted_wall_parallel_blocks": 0.9620022526871832,
+      "predicted_world_xz": [
+        -6.037997747312817,
+        4.802625119353955
+      ],
+      "sample_index": 4,
+      "signed_wall_parallel_error_blocks": -0.5690767473128169,
+      "source_artifact_id": "layout_00_ep9761",
+      "source_frame_hash": "259e2215c72f9853efcbee1dab856d008e0a95e6cf0eed457448c80c402a2fc6",
+      "source_frame_idx": 4,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.531079,
+      "true_world_xz": [
+        -5.468921,
+        6.0
+      ],
+      "true_world_xz_blocks": [
+        -5.468921,
+        6.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5448912066327845,
+      "canonical_camera_pose_id": "layout_00_canonical_pose",
+      "decoded_rgb_hash": "058692404fb0d47f70b84ea22971b1fbbd2c09f84217566752d18dbc89b610dd",
+      "euclidean_error_blocks": 1.3156015051559797,
+      "frame_id": "layout_00_visible_005",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          445,
+          184,
+          478,
+          219
+        ],
+        "changed_pixel_count": 905,
+        "image_xy": [
+          461.0,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        461.0,
+        218.0
+      ],
+      "layout_id": "layout_00",
+      "paired_background_frame_id": "layout_00_negative_005",
+      "predicted_wall_parallel_blocks": 1.0464637933672156,
+      "predicted_world_xz": [
+        -5.953536206632784,
+        4.802543991078191
+      ],
+      "sample_index": 5,
+      "signed_wall_parallel_error_blocks": -0.5448912066327845,
+      "source_artifact_id": "layout_00_ep9761",
+      "source_frame_hash": "559571c2bbc5c0dd787c235bc3876b7e68d1a95b89ab41fa3ac922ccd54755c9",
+      "source_frame_idx": 5,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.591355,
+      "true_world_xz": [
+        -5.408645,
+        6.0
+      ],
+      "true_world_xz_blocks": [
+        -5.408645,
+        6.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.37566226522315116,
+      "canonical_camera_pose_id": "layout_01_canonical_pose",
+      "decoded_rgb_hash": "96f2e0fd66306ddd3b3b4737506e3db905e1071db221f00582b103f7e79899f8",
+      "euclidean_error_blocks": 0.9826304430475655,
+      "frame_id": "layout_01_visible_000",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          156,
+          184,
+          196,
+          218
+        ],
+        "changed_pixel_count": 1074,
+        "image_xy": [
+          175.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        175.5,
+        217.0
+      ],
+      "layout_id": "layout_01",
+      "paired_background_frame_id": "layout_01_negative_000",
+      "predicted_wall_parallel_blocks": 0.780715734776849,
+      "predicted_world_xz": [
+        5.092012968104023,
+        -6.219284265223151
+      ],
+      "sample_index": 0,
+      "signed_wall_parallel_error_blocks": -0.37566226522315116,
+      "source_artifact_id": "layout_01_ep9763",
+      "source_frame_hash": "706f8be1a3033c4bd446b6e096c88b32958dc675c3feb6c9f6217a69d4fc75d2",
+      "source_frame_idx": 0,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.1563780000000001,
+      "true_world_xz": [
+        6.0,
+        -5.843622
+      ],
+      "true_world_xz_blocks": [
+        6.0,
+        -5.843622
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.4145982652231508,
+      "canonical_camera_pose_id": "layout_01_canonical_pose",
+      "decoded_rgb_hash": "96f2e0fd66306ddd3b3b4737506e3db905e1071db221f00582b103f7e79899f8",
+      "euclidean_error_blocks": 0.9981644010969896,
+      "frame_id": "layout_01_visible_001",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          156,
+          184,
+          196,
+          218
+        ],
+        "changed_pixel_count": 1074,
+        "image_xy": [
+          175.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        175.5,
+        217.0
+      ],
+      "layout_id": "layout_01",
+      "paired_background_frame_id": "layout_01_negative_001",
+      "predicted_wall_parallel_blocks": 0.780715734776849,
+      "predicted_world_xz": [
+        5.092012968104023,
+        -6.219284265223151
+      ],
+      "sample_index": 1,
+      "signed_wall_parallel_error_blocks": -0.4145982652231508,
+      "source_artifact_id": "layout_01_ep9763",
+      "source_frame_hash": "706f8be1a3033c4bd446b6e096c88b32958dc675c3feb6c9f6217a69d4fc75d2",
+      "source_frame_idx": 1,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.1953139999999998,
+      "true_world_xz": [
+        6.0,
+        -5.804686
+      ],
+      "true_world_xz_blocks": [
+        6.0,
+        -5.804686
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.42969875562939563,
+      "canonical_camera_pose_id": "layout_01_canonical_pose",
+      "decoded_rgb_hash": "5fa3d0d29cf80dc49ad82564b711d24b3b635e069236005eb01a0555a0f0f7d0",
+      "euclidean_error_blocks": 1.0045777656896209,
+      "frame_id": "layout_01_visible_002",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          156,
+          184,
+          198,
+          218
+        ],
+        "changed_pixel_count": 1070,
+        "image_xy": [
+          176.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        176.5,
+        217.0
+      ],
+      "layout_id": "layout_01",
+      "paired_background_frame_id": "layout_01_negative_002",
+      "predicted_wall_parallel_blocks": 0.8240862443706041,
+      "predicted_world_xz": [
+        5.0919606469274035,
+        -6.175913755629396
+      ],
+      "sample_index": 2,
+      "signed_wall_parallel_error_blocks": -0.42969875562939563,
+      "source_artifact_id": "layout_01_ep9763",
+      "source_frame_hash": "6ff7e2e20b7f16ba17c1048af24acad9dfb2798a323acd5d65661ba545504dca",
+      "source_frame_idx": 2,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.2537849999999997,
+      "true_world_xz": [
+        6.0,
+        -5.746215
+      ],
+      "true_world_xz_blocks": [
+        6.0,
+        -5.746215
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.316100261700786,
+      "canonical_camera_pose_id": "layout_01_canonical_pose",
+      "decoded_rgb_hash": "507f1dc5dc9eadcb33295cbe3af0cd81319cf9f705bd78e64a3cbf68e5c74869",
+      "euclidean_error_blocks": 0.9615351590361685,
+      "frame_id": "layout_01_visible_003",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          157,
+          184,
+          199,
+          218
+        ],
+        "changed_pixel_count": 1066,
+        "image_xy": [
+          177.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        177.5,
+        217.0
+      ],
+      "layout_id": "layout_01",
+      "paired_background_frame_id": "layout_01_negative_003",
+      "predicted_wall_parallel_blocks": 0.8674557382992143,
+      "predicted_world_xz": [
+        5.091908326976068,
+        -6.132544261700786
+      ],
+      "sample_index": 3,
+      "signed_wall_parallel_error_blocks": -0.316100261700786,
+      "source_artifact_id": "layout_01_ep9763",
+      "source_frame_hash": "15a0f6eaae99fc01a45f2103ac8015074fab3d2fd5021a160d263fa00cad1ce0",
+      "source_frame_idx": 3,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.1835560000000003,
+      "true_world_xz": [
+        6.0,
+        -5.816444
+      ],
+      "true_world_xz_blocks": [
+        6.0,
+        -5.816444
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.28009289559975326,
+      "canonical_camera_pose_id": "layout_01_canonical_pose",
+      "decoded_rgb_hash": "1deda485f44852fa427e4348cbcacd03b96adeee6c65668459a38241c2793b71",
+      "euclidean_error_blocks": 0.950331535803614,
+      "frame_id": "layout_01_visible_004",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          157,
+          184,
+          200,
+          218
+        ],
+        "changed_pixel_count": 1066,
+        "image_xy": [
+          178.0,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        178.0,
+        217.0
+      ],
+      "layout_id": "layout_01",
+      "paired_background_frame_id": "layout_01_negative_004",
+      "predicted_wall_parallel_blocks": 0.8891401044002469,
+      "predicted_world_xz": [
+        5.09188216745986,
+        -6.110859895599753
+      ],
+      "sample_index": 4,
+      "signed_wall_parallel_error_blocks": -0.28009289559975326,
+      "source_artifact_id": "layout_01_ep9763",
+      "source_frame_hash": "b19eece508cc6869bccfc42c8a4040450cf63b3a4466e6280a5ecf6e2427b66f",
+      "source_frame_idx": 4,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.1692330000000002,
+      "true_world_xz": [
+        6.0,
+        -5.830767
+      ],
+      "true_world_xz_blocks": [
+        6.0,
+        -5.830767
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.12648092510194875,
+      "canonical_camera_pose_id": "layout_01_canonical_pose",
+      "decoded_rgb_hash": "fb6f2393c8c04bab1122e102ccf0f6489e66859f6e47ded8d0c005da0442d0ea",
+      "euclidean_error_blocks": 0.9169353559291494,
+      "frame_id": "layout_01_visible_005",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          159,
+          184,
+          200,
+          218
+        ],
+        "changed_pixel_count": 1061,
+        "image_xy": [
+          179.0,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        179.0,
+        217.0
+      ],
+      "layout_id": "layout_01",
+      "paired_background_frame_id": "layout_01_negative_005",
+      "predicted_wall_parallel_blocks": 0.9325080748980517,
+      "predicted_world_xz": [
+        5.091829849346351,
+        -6.067491925101948
+      ],
+      "sample_index": 5,
+      "signed_wall_parallel_error_blocks": -0.12648092510194875,
+      "source_artifact_id": "layout_01_ep9763",
+      "source_frame_hash": "aa272779905f7f204a799121d5680e23daaa8f5ef780ed9fac46b6d191fa585d",
+      "source_frame_idx": 5,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.0589890000000004,
+      "true_world_xz": [
+        6.0,
+        -5.941011
+      ],
+      "true_world_xz_blocks": [
+        6.0,
+        -5.941011
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.41217405709655086,
+      "canonical_camera_pose_id": "layout_03_canonical_pose",
+      "decoded_rgb_hash": "67a43118b963ba28dbf69cb4719d6ea1fe41b544d511a9fff323159a3d78543c",
+      "euclidean_error_blocks": 0.8727463480341567,
+      "frame_id": "layout_03_visible_000",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          432,
+          183,
+          457,
+          212
+        ],
+        "changed_pixel_count": 622,
+        "image_xy": [
+          444.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        444.0,
+        211.0
+      ],
+      "layout_id": "layout_03",
+      "paired_background_frame_id": "layout_03_negative_000",
+      "predicted_wall_parallel_blocks": 0.5918539429034491,
+      "predicted_world_xz": [
+        -6.408146057096551,
+        7.230715439734082
+      ],
+      "sample_index": 0,
+      "signed_wall_parallel_error_blocks": -0.41217405709655086,
+      "source_artifact_id": "layout_03_ep9767",
+      "source_frame_hash": "247ab9202dadb9528708506183acd4d9d57ffa978e0dac9508d4132e1401c81b",
+      "source_frame_idx": 0,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.004028,
+      "true_world_xz": [
+        -5.995972,
+        8.0
+      ],
+      "true_world_xz_blocks": [
+        -5.995972,
+        8.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5034500570965506,
+      "canonical_camera_pose_id": "layout_03_canonical_pose",
+      "decoded_rgb_hash": "67a43118b963ba28dbf69cb4719d6ea1fe41b544d511a9fff323159a3d78543c",
+      "euclidean_error_blocks": 0.9193806038056528,
+      "frame_id": "layout_03_visible_001",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          432,
+          183,
+          457,
+          212
+        ],
+        "changed_pixel_count": 622,
+        "image_xy": [
+          444.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        444.0,
+        211.0
+      ],
+      "layout_id": "layout_03",
+      "paired_background_frame_id": "layout_03_negative_001",
+      "predicted_wall_parallel_blocks": 0.5918539429034491,
+      "predicted_world_xz": [
+        -6.408146057096551,
+        7.230715439734082
+      ],
+      "sample_index": 1,
+      "signed_wall_parallel_error_blocks": -0.5034500570965506,
+      "source_artifact_id": "layout_03_ep9767",
+      "source_frame_hash": "247ab9202dadb9528708506183acd4d9d57ffa978e0dac9508d4132e1401c81b",
+      "source_frame_idx": 1,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.0953039999999996,
+      "true_world_xz": [
+        -5.904696,
+        8.0
+      ],
+      "true_world_xz_blocks": [
+        -5.904696,
+        8.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5972390570965507,
+      "canonical_camera_pose_id": "layout_03_canonical_pose",
+      "decoded_rgb_hash": "48736a8c419dee1eb67d3ac6ff9ef53e7f046bb0057608f2c845e3d9ead3e704",
+      "euclidean_error_blocks": 0.9739061689840062,
+      "frame_id": "layout_03_visible_002",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          432,
+          183,
+          457,
+          212
+        ],
+        "changed_pixel_count": 634,
+        "image_xy": [
+          444.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        444.0,
+        211.0
+      ],
+      "layout_id": "layout_03",
+      "paired_background_frame_id": "layout_03_negative_002",
+      "predicted_wall_parallel_blocks": 0.5918539429034491,
+      "predicted_world_xz": [
+        -6.408146057096551,
+        7.230715439734082
+      ],
+      "sample_index": 2,
+      "signed_wall_parallel_error_blocks": -0.5972390570965507,
+      "source_artifact_id": "layout_03_ep9767",
+      "source_frame_hash": "372519eb1e88cba278642932d5e6453567b898bed8b83b30d00f05e2c0b7a1ee",
+      "source_frame_idx": 2,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.1890929999999997,
+      "true_world_xz": [
+        -5.810907,
+        8.0
+      ],
+      "true_world_xz_blocks": [
+        -5.810907,
+        8.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5326806939381532,
+      "canonical_camera_pose_id": "layout_03_canonical_pose",
+      "decoded_rgb_hash": "74c5a273660a3319685f2450858668cce5032a0ca04e387a4388592ae7f3c0d4",
+      "euclidean_error_blocks": 0.9356499854476723,
+      "frame_id": "layout_03_visible_003",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          431,
+          183,
+          456,
+          212
+        ],
+        "changed_pixel_count": 621,
+        "image_xy": [
+          443.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        443.0,
+        211.0
+      ],
+      "layout_id": "layout_03",
+      "paired_background_frame_id": "layout_03_negative_003",
+      "predicted_wall_parallel_blocks": 0.6431333060618467,
+      "predicted_world_xz": [
+        -6.356866693938153,
+        7.230784702717245
+      ],
+      "sample_index": 3,
+      "signed_wall_parallel_error_blocks": -0.5326806939381532,
+      "source_artifact_id": "layout_03_ep9767",
+      "source_frame_hash": "96e18f6b7519199fda34eeea9175f76bf1af12715e1c4440c1cea3c220fd1e01",
+      "source_frame_idx": 3,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.175814,
+      "true_world_xz": [
+        -5.824186,
+        8.0
+      ],
+      "true_world_xz_blocks": [
+        -5.824186,
+        8.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5113245741443322,
+      "canonical_camera_pose_id": "layout_03_canonical_pose",
+      "decoded_rgb_hash": "a6b8aa8ebb0697c163579cd3bb0467bf544ddbedc275b006a1a21b7990d3117c",
+      "euclidean_error_blocks": 0.9236296421403303,
+      "frame_id": "layout_03_visible_004",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          430,
+          183,
+          456,
+          212
+        ],
+        "changed_pixel_count": 621,
+        "image_xy": [
+          442.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        442.5,
+        211.0
+      ],
+      "layout_id": "layout_03",
+      "paired_background_frame_id": "layout_03_negative_004",
+      "predicted_wall_parallel_blocks": 0.6687734258556679,
+      "predicted_world_xz": [
+        -6.331226574144332,
+        7.23081933480073
+      ],
+      "sample_index": 4,
+      "signed_wall_parallel_error_blocks": -0.5113245741443322,
+      "source_artifact_id": "layout_03_ep9767",
+      "source_frame_hash": "9f3260cb1aa2c98537de2a7f92f0a7e18c318b00554ca6bd1074968f31fc32e5",
+      "source_frame_idx": 4,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.180098,
+      "true_world_xz": [
+        -5.819902,
+        8.0
+      ],
+      "true_world_xz_blocks": [
+        -5.819902,
+        8.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.524487162200769,
+      "canonical_camera_pose_id": "layout_03_canonical_pose",
+      "decoded_rgb_hash": "17dbb875b97751ff3707121ab8c0229e393bcb9db961bb100713442d5d28610b",
+      "euclidean_error_blocks": 0.9309524171321358,
+      "frame_id": "layout_03_visible_005",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          430,
+          183,
+          455,
+          212
+        ],
+        "changed_pixel_count": 621,
+        "image_xy": [
+          442.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        442.0,
+        211.0
+      ],
+      "layout_id": "layout_03",
+      "paired_background_frame_id": "layout_03_negative_005",
+      "predicted_wall_parallel_blocks": 0.6944138377992308,
+      "predicted_world_xz": [
+        -6.305586162200769,
+        7.230853967278807
+      ],
+      "sample_index": 5,
+      "signed_wall_parallel_error_blocks": -0.524487162200769,
+      "source_artifact_id": "layout_03_ep9767",
+      "source_frame_hash": "1613e7e3ff5b215ea8055faebc48a16b682bad58242c4b4b31c0c533a9bcbd73",
+      "source_frame_idx": 5,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.2189009999999998,
+      "true_world_xz": [
+        -5.781099,
+        8.0
+      ],
+      "true_world_xz_blocks": [
+        -5.781099,
+        8.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.30261295494758667,
+      "canonical_camera_pose_id": "layout_04_canonical_pose",
+      "decoded_rgb_hash": "2095fc38d05ca73d715a9709d4b40f590cb74be552058311023b1f67e46987e7",
+      "euclidean_error_blocks": 1.0526601447858226,
+      "frame_id": "layout_04_visible_000",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          456,
+          185,
+          497,
+          227
+        ],
+        "changed_pixel_count": 1455,
+        "image_xy": [
+          476.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        476.0,
+        226.0
+      ],
+      "layout_id": "layout_04",
+      "paired_background_frame_id": "layout_04_negative_000",
+      "predicted_wall_parallel_blocks": 0.543009045052413,
+      "predicted_world_xz": [
+        -5.456990954947587,
+        3.991774439959788
+      ],
+      "sample_index": 0,
+      "signed_wall_parallel_error_blocks": -0.30261295494758667,
+      "source_artifact_id": "layout_04_ep9769",
+      "source_frame_hash": "8cb58e98186c350a751a0528e798f3bca4c4f7f57be63e1cc890b538ec3197a9",
+      "source_frame_idx": 0,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 0.8456219999999997,
+      "true_world_xz": [
+        -5.154378,
+        5.0
+      ],
+      "true_world_xz_blocks": [
+        -5.154378,
+        5.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.36953695494758687,
+      "canonical_camera_pose_id": "layout_04_canonical_pose",
+      "decoded_rgb_hash": "2095fc38d05ca73d715a9709d4b40f590cb74be552058311023b1f67e46987e7",
+      "euclidean_error_blocks": 1.0738139228890329,
+      "frame_id": "layout_04_visible_001",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          456,
+          185,
+          497,
+          227
+        ],
+        "changed_pixel_count": 1455,
+        "image_xy": [
+          476.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        476.0,
+        226.0
+      ],
+      "layout_id": "layout_04",
+      "paired_background_frame_id": "layout_04_negative_001",
+      "predicted_wall_parallel_blocks": 0.543009045052413,
+      "predicted_world_xz": [
+        -5.456990954947587,
+        3.991774439959788
+      ],
+      "sample_index": 1,
+      "signed_wall_parallel_error_blocks": -0.36953695494758687,
+      "source_artifact_id": "layout_04_ep9769",
+      "source_frame_hash": "8cb58e98186c350a751a0528e798f3bca4c4f7f57be63e1cc890b538ec3197a9",
+      "source_frame_idx": 1,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 0.9125459999999999,
+      "true_world_xz": [
+        -5.087454,
+        5.0
+      ],
+      "true_world_xz_blocks": [
+        -5.087454,
+        5.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.3517732716642774,
+      "canonical_camera_pose_id": "layout_04_canonical_pose",
+      "decoded_rgb_hash": "4877f443a0e1bc681a691ce57f23280faef3632affa986620b5eb6be3db31983",
+      "euclidean_error_blocks": 1.0678207664588188,
+      "frame_id": "layout_04_visible_002",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          455,
+          185,
+          496,
+          227
+        ],
+        "changed_pixel_count": 1454,
+        "image_xy": [
+          475.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        475.0,
+        226.0
+      ],
+      "layout_id": "layout_04",
+      "paired_background_frame_id": "layout_04_negative_002",
+      "predicted_wall_parallel_blocks": 0.5778507283357222,
+      "predicted_world_xz": [
+        -5.422149271664278,
+        3.991785362820342
+      ],
+      "sample_index": 2,
+      "signed_wall_parallel_error_blocks": -0.3517732716642774,
+      "source_artifact_id": "layout_04_ep9769",
+      "source_frame_hash": "d3ace48245a1d5c4aa366eadd8f10c5ce87e58e5fd90c1e09d57f573bb559590",
+      "source_frame_idx": 2,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 0.9296239999999996,
+      "true_world_xz": [
+        -5.070376,
+        5.0
+      ],
+      "true_world_xz_blocks": [
+        -5.070376,
+        5.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.3417245335163255,
+      "canonical_camera_pose_id": "layout_04_canonical_pose",
+      "decoded_rgb_hash": "280b54a1c90945283b55e16db5e630a0e2b9cf647af74fbfb798ad8926ea60fa",
+      "euclidean_error_blocks": 1.0645423365649227,
+      "frame_id": "layout_04_visible_003",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          454,
+          185,
+          495,
+          227
+        ],
+        "changed_pixel_count": 1454,
+        "image_xy": [
+          474.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        474.0,
+        226.0
+      ],
+      "layout_id": "layout_04",
+      "paired_background_frame_id": "layout_04_negative_003",
+      "predicted_wall_parallel_blocks": 0.6126924664836748,
+      "predicted_world_xz": [
+        -5.387307533516325,
+        3.991796285698096
+      ],
+      "sample_index": 3,
+      "signed_wall_parallel_error_blocks": -0.3417245335163255,
+      "source_artifact_id": "layout_04_ep9769",
+      "source_frame_hash": "5663fea28005bfda7d5254d1564db89139d7f485872d012dba9b5ea4bf412823",
+      "source_frame_idx": 3,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 0.9544170000000003,
+      "true_world_xz": [
+        -5.045583,
+        5.0
+      ],
+      "true_world_xz_blocks": [
+        -5.045583,
+        5.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.3630807405035963,
+      "canonical_camera_pose_id": "layout_04_canonical_pose",
+      "decoded_rgb_hash": "a6de8e58d502727bbaec1ba32c828d3c9f58aad6f5ad7726688e55c61b95316d",
+      "euclidean_error_blocks": 1.0715784286600634,
+      "frame_id": "layout_04_visible_004",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          453,
+          185,
+          494,
+          227
+        ],
+        "changed_pixel_count": 1451,
+        "image_xy": [
+          473.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        473.0,
+        226.0
+      ],
+      "layout_id": "layout_04",
+      "paired_background_frame_id": "layout_04_negative_004",
+      "predicted_wall_parallel_blocks": 0.6475342594964033,
+      "predicted_world_xz": [
+        -5.352465740503597,
+        3.9918072085930536
+      ],
+      "sample_index": 4,
+      "signed_wall_parallel_error_blocks": -0.3630807405035963,
+      "source_artifact_id": "layout_04_ep9769",
+      "source_frame_hash": "727f09b01585312bdcda508900bcf62f65b2feac92b44ced1e7bb38b274d45e9",
+      "source_frame_idx": 4,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.0106149999999996,
+      "true_world_xz": [
+        -4.989385,
+        5.0
+      ],
+      "true_world_xz_blocks": [
+        -4.989385,
+        5.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5100508926259693,
+      "canonical_camera_pose_id": "layout_04_canonical_pose",
+      "decoded_rgb_hash": "920b1c5e1bea2c2b9e831d608cbe00cc2e4eaf882284e7f17784fa73babf14ae",
+      "euclidean_error_blocks": 1.1298595457091993,
+      "frame_id": "layout_04_visible_005",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          452,
+          185,
+          493,
+          227
+        ],
+        "changed_pixel_count": 1454,
+        "image_xy": [
+          472.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "right_middle",
+      "image_xy": [
+        472.0,
+        226.0
+      ],
+      "layout_id": "layout_04",
+      "paired_background_frame_id": "layout_04_negative_005",
+      "predicted_wall_parallel_blocks": 0.6823761073740311,
+      "predicted_world_xz": [
+        -5.317623892625969,
+        3.991818131505208
+      ],
+      "sample_index": 5,
+      "signed_wall_parallel_error_blocks": -0.5100508926259693,
+      "source_artifact_id": "layout_04_ep9769",
+      "source_frame_hash": "fefd5630f82b1f7fac5587987461e619700a702cf2eb818567e0f32b9e5ec407",
+      "source_frame_idx": 5,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.1924270000000003,
+      "true_world_xz": [
+        -4.807573,
+        5.0
+      ],
+      "true_world_xz_blocks": [
+        -4.807573,
+        5.0
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.2869484333061214,
+      "canonical_camera_pose_id": "layout_05_canonical_pose",
+      "decoded_rgb_hash": "518646dd4aad4616a77b3d2024c4208866e7c8faa4345e5374fd8ac6455bab72",
+      "euclidean_error_blocks": 0.7509720029176419,
+      "frame_id": "layout_05_visible_000",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          200,
+          212
+        ],
+        "changed_pixel_count": 758,
+        "image_xy": [
+          182.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        182.5,
+        211.0
+      ],
+      "layout_id": "layout_05",
+      "paired_background_frame_id": "layout_05_negative_000",
+      "predicted_wall_parallel_blocks": 0.9597595666938785,
+      "predicted_world_xz": [
+        6.3060118547199115,
+        -7.0402404333061215
+      ],
+      "sample_index": 0,
+      "signed_wall_parallel_error_blocks": -0.2869484333061214,
+      "source_artifact_id": "layout_05_ep9771",
+      "source_frame_hash": "b82712928d41094ee66a6b4747c17f5dcb9af193989165aba4dcce4ad9f177df",
+      "source_frame_idx": 0,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.246708,
+      "true_world_xz": [
+        7.0,
+        -6.753292
+      ],
+      "true_world_xz_blocks": [
+        7.0,
+        -6.753292
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.37513743330612126,
+      "canonical_camera_pose_id": "layout_05_canonical_pose",
+      "decoded_rgb_hash": "518646dd4aad4616a77b3d2024c4208866e7c8faa4345e5374fd8ac6455bab72",
+      "euclidean_error_blocks": 0.7888901315498894,
+      "frame_id": "layout_05_visible_001",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          200,
+          212
+        ],
+        "changed_pixel_count": 758,
+        "image_xy": [
+          182.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        182.5,
+        211.0
+      ],
+      "layout_id": "layout_05",
+      "paired_background_frame_id": "layout_05_negative_001",
+      "predicted_wall_parallel_blocks": 0.9597595666938785,
+      "predicted_world_xz": [
+        6.3060118547199115,
+        -7.0402404333061215
+      ],
+      "sample_index": 1,
+      "signed_wall_parallel_error_blocks": -0.37513743330612126,
+      "source_artifact_id": "layout_05_ep9771",
+      "source_frame_hash": "b82712928d41094ee66a6b4747c17f5dcb9af193989165aba4dcce4ad9f177df",
+      "source_frame_idx": 1,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.3348969999999998,
+      "true_world_xz": [
+        7.0,
+        -6.665103
+      ],
+      "true_world_xz_blocks": [
+        7.0,
+        -6.665103
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.4940414333061218,
+      "canonical_camera_pose_id": "layout_05_canonical_pose",
+      "decoded_rgb_hash": "855adca7345fee08cb65c0c144379f6764ecd402a1f0f687c49a292ec107fc53",
+      "euclidean_error_blocks": 0.8518782093776459,
+      "frame_id": "layout_05_visible_002",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          200,
+          212
+        ],
+        "changed_pixel_count": 742,
+        "image_xy": [
+          182.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        182.5,
+        211.0
+      ],
+      "layout_id": "layout_05",
+      "paired_background_frame_id": "layout_05_negative_002",
+      "predicted_wall_parallel_blocks": 0.9597595666938785,
+      "predicted_world_xz": [
+        6.3060118547199115,
+        -7.0402404333061215
+      ],
+      "sample_index": 2,
+      "signed_wall_parallel_error_blocks": -0.4940414333061218,
+      "source_artifact_id": "layout_05_ep9771",
+      "source_frame_hash": "cf59ceefca3bae2adfc7de4831bd2362903721b9932aada4d880600fd2326652",
+      "source_frame_idx": 2,
+      "split": "calibration",
+      "true_wall_parallel_blocks": 1.4538010000000003,
+      "true_world_xz": [
+        7.0,
+        -6.546199
+      ],
+      "true_world_xz_blocks": [
+        7.0,
+        -6.546199
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5725869986008272,
+      "canonical_camera_pose_id": "layout_05_canonical_pose",
+      "decoded_rgb_hash": "32f7b406a7f3e9c7b395a9a5d90eb445f92a1ddc7290b9c33e7a5deaf62055e7",
+      "euclidean_error_blocks": 0.8997237250217323,
+      "frame_id": "layout_05_visible_003",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          201,
+          212
+        ],
+        "changed_pixel_count": 750,
+        "image_xy": [
+          183.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        183.0,
+        211.0
+      ],
+      "layout_id": "layout_05",
+      "paired_background_frame_id": "layout_05_negative_003",
+      "predicted_wall_parallel_blocks": 0.9855610013991729,
+      "predicted_world_xz": [
+        6.305992139525583,
+        -7.014438998600827
+      ],
+      "sample_index": 3,
+      "signed_wall_parallel_error_blocks": -0.5725869986008272,
+      "source_artifact_id": "layout_05_ep9771",
+      "source_frame_hash": "c231951ddb59ff0a5218a45571fbc2fc57c9498af1a6e66e56142b669e35910a",
+      "source_frame_idx": 3,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.558148,
+      "true_world_xz": [
+        7.0,
+        -6.441852
+      ],
+      "true_world_xz_blocks": [
+        7.0,
+        -6.441852
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5777578152138325,
+      "canonical_camera_pose_id": "layout_05_canonical_pose",
+      "decoded_rgb_hash": "9ecc95cdcd2cebf9f1a2de47ae2b819884349a309dcb1853ca9065a4e48ab60c",
+      "euclidean_error_blocks": 0.9030535611288004,
+      "frame_id": "layout_05_visible_004",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          167,
+          184,
+          202,
+          212
+        ],
+        "changed_pixel_count": 736,
+        "image_xy": [
+          184.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        184.0,
+        211.0
+      ],
+      "layout_id": "layout_05",
+      "paired_background_frame_id": "layout_05_negative_004",
+      "predicted_wall_parallel_blocks": 1.0371631847861673,
+      "predicted_world_xz": [
+        6.305952709661116,
+        -6.962836815213833
+      ],
+      "sample_index": 4,
+      "signed_wall_parallel_error_blocks": -0.5777578152138325,
+      "source_artifact_id": "layout_05_ep9771",
+      "source_frame_hash": "34de9d6f458f1ca4d9554e2e9be705e567173034f651acb6e702c20102632466",
+      "source_frame_idx": 4,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.6149209999999998,
+      "true_world_xz": [
+        7.0,
+        -6.385079
+      ],
+      "true_world_xz_blocks": [
+        7.0,
+        -6.385079
+      ],
+      "world_y_blocks": 4.0
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.6060580665260602,
+      "canonical_camera_pose_id": "layout_05_canonical_pose",
+      "decoded_rgb_hash": "d77730ccd5bbb17353d7f8428393b677aa7eaec311b08bf97c103242dca97dd0",
+      "euclidean_error_blocks": 0.9214311626179654,
+      "frame_id": "layout_05_visible_005",
+      "ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          167,
+          184,
+          203,
+          212
+        ],
+        "changed_pixel_count": 740,
+        "image_xy": [
+          184.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "image_region": "left_middle",
+      "image_xy": [
+        184.5,
+        211.0
+      ],
+      "layout_id": "layout_05",
+      "paired_background_frame_id": "layout_05_negative_005",
+      "predicted_wall_parallel_blocks": 1.0629639334739398,
+      "predicted_world_xz": [
+        6.3059329949909815,
+        -6.93703606652606
+      ],
+      "sample_index": 5,
+      "signed_wall_parallel_error_blocks": -0.6060580665260602,
+      "source_artifact_id": "layout_05_ep9771",
+      "source_frame_hash": "0a0fda290cad8a0d2562558966336876653e9a03dee917564433fb54d7efbccd",
+      "source_frame_idx": 5,
+      "split": "heldout",
+      "true_wall_parallel_blocks": 1.669022,
+      "true_world_xz": [
+        7.0,
+        -6.330978
+      ],
+      "true_world_xz_blocks": [
+        7.0,
+        -6.330978
+      ],
+      "world_y_blocks": 4.0
+    }
+  ],
+  "remaining_blockers": [
+    {
+      "blocker_id": "layout_02_clipped_near_markers",
+      "detail": "layout_02 blue and yellow marker blobs touch the image border in every declared no-sheep frame; a recapture or authoritative exclusion ruling is required",
+      "kind": "source_evidence"
+    },
+    {
+      "blocker_id": "five_layout_error_gate_still_failed",
+      "detail": "public sub-pixel markers plus the probe-independent paired-silhouette ground contact still exceed the wall error gate on the 30 evaluable probes; changing pixels further would require an independent method or new capture geometry rather than probe tuning",
+      "kind": "method_or_capture_geometry"
+    }
+  ],
+  "required_gate": {
+    "maximum_median_absolute_wall_parallel_error_blocks": 0.2,
+    "maximum_p95_absolute_wall_parallel_error_blocks_exclusive": 0.5
+  },
+  "required_sample_count": 36,
+  "sample_count": 30,
+  "schema_version": "1.0",
+  "signed_wall_parallel_error_blocks": {
+    "maximum": -0.12648092510194875,
+    "mean": -0.42676481378713227,
+    "median": -0.4221485104262732,
+    "minimum": -0.6060580665260602
+  },
+  "source_probe_document_hash": "b376095ad8c7c90bd0b49f5c4af5c6fd0345dd5842d6b8104e0fd630f432216e",
+  "source_probe_document_path": "data/handoff_e/independent_probe_points.json",
+  "source_probe_revision": "00784756f21895d19aff44572496c956cc5d932f",
+  "worst_cases": [
+    {
+      "absolute_wall_parallel_error_blocks": 0.6060580665260602,
+      "euclidean_error_blocks": 0.9214311626179654,
+      "frame_id": "layout_05_visible_005",
+      "image_region": "left_middle",
+      "layout_id": "layout_05",
+      "signed_wall_parallel_error_blocks": -0.6060580665260602
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5972390570965507,
+      "euclidean_error_blocks": 0.9739061689840062,
+      "frame_id": "layout_03_visible_002",
+      "image_region": "right_middle",
+      "layout_id": "layout_03",
+      "signed_wall_parallel_error_blocks": -0.5972390570965507
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5777578152138325,
+      "euclidean_error_blocks": 0.9030535611288004,
+      "frame_id": "layout_05_visible_004",
+      "image_region": "left_middle",
+      "layout_id": "layout_05",
+      "signed_wall_parallel_error_blocks": -0.5777578152138325
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5725869986008272,
+      "euclidean_error_blocks": 0.8997237250217323,
+      "frame_id": "layout_05_visible_003",
+      "image_region": "left_middle",
+      "layout_id": "layout_05",
+      "signed_wall_parallel_error_blocks": -0.5725869986008272
+    },
+    {
+      "absolute_wall_parallel_error_blocks": 0.5690767473128169,
+      "euclidean_error_blocks": 1.3257280826527986,
+      "frame_id": "layout_00_visible_004",
+      "image_region": "right_middle",
+      "layout_id": "layout_00",
+      "signed_wall_parallel_error_blocks": -0.5690767473128169
+    }
+  ]
+}

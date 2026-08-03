@@ -1,0 +1,40 @@
+{
+  "artifact_byte_or_receipt_requirements": [
+    "Committed exact artifact bytes with SHA-256 and byte size, or a trusted external byte receipt.",
+    "Manifest identity, artifact identity, schema version, and source revision must match exactly."
+  ],
+  "blocks_step4_1_closure": true,
+  "current_authority_commit": "aa84ab3b05c533c3e8dbd1ab897dd04d9f26f1cd",
+  "direct_input_identities_required": [
+    "Sealed fold/split identity.",
+    "Accepted Person A activation artifact IDs and exact tensor/layer identities.",
+    "Accepted Person D baseline artifact IDs for metric_table.",
+    "Exact oracle, fitted-probe, and prediction predecessor IDs."
+  ],
+  "exact_minimum_registry_v2_trust_records": [
+    "trusted owner authority",
+    "verified owner status record bytes",
+    "trusted exact-artifact authorization",
+    "verified authorization record bytes",
+    "trusted manifest with exact artifact entry",
+    "verified local artifact bytes or trusted external receipt",
+    "exact direct-input artifact identities"
+  ],
+  "expected_branch": "origin/role/person-b-analysis",
+  "owner": "person_b",
+  "prohibited_substitutions_or_placeholders": [
+    "No accepted placeholder or expected-cardinality artifact row.",
+    "No readiness note, pilot, preview, schema, or policy receipt may substitute for result bytes.",
+    "No cross-owner status or authorization may be authored by Person E."
+  ],
+  "proposed_owner_owned_output_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/",
+  "readiness_is_not_artifact": "Readiness or policy signoff is not oracle, fitted-probe, prediction, or metric-table result bytes.",
+  "required_output_artifacts": [
+    "oracle_target",
+    "fitted_probe",
+    "prediction",
+    "metric_table"
+  ],
+  "schema_version": "1.0",
+  "sealed_fold_or_split_identity_required": true
+}
