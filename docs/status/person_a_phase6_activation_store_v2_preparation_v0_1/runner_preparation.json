@@ -1,0 +1,31 @@
+{
+  "command": "bash scripts/run_person_a_phase6_single_pilot_sagemaker.sh",
+  "execution_gate": {
+    "b_activation_store_v2_ratification_present": false,
+    "b_activation_store_v2_ratification_required": true,
+    "future_ratification_binding_required": [
+      "person_a_activation_store_v2_commit",
+      "person_a_activation_store_v2_module_sha256",
+      "person-a-activation-store-v2",
+      "person-a-activation-index-v2",
+      "layout_00_ep9403",
+      "4960_activation_rows"
+    ],
+    "runner_executed": false
+  },
+  "expected_activation_row_count": 4960,
+  "hard_gate_order": [
+    "runtime_preflight",
+    "6.1",
+    "6.2",
+    "6.3",
+    "6.4",
+    "6.5",
+    "6.6_handoff_preparation_only"
+  ],
+  "runner_path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+  "schema_id": "person-a-phase6-activation-store-v2-preparation-v0.1-runner-preparation",
+  "schema_version": "1.0",
+  "selected_pilot": "layout_00_ep9403",
+  "wrapper_path": "scripts/run_person_a_phase6_single_pilot_sagemaker.sh"
+}

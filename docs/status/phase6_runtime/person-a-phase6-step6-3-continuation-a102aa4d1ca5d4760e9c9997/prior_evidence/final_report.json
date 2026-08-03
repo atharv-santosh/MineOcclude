@@ -1,0 +1,74 @@
+{
+  "activation_store_format_version": "person-a-activation-store-v2",
+  "b_activation_store_v2_ratification": {
+    "commit": "9626934c09d898c466608ccfb1dfe861700dd98b",
+    "git_object": "9626934c09d898c466608ccfb1dfe861700dd98b:docs/status/person_b_phase6_activation_store_v2_ratification_v0_1/runner_compatibility_ratification.json",
+    "sha256": "73131f3583aef349143ca37c5c8b0d1a013fb7754d1d2b7cc827f195594763a7",
+    "verified": true
+  },
+  "deterministic_seed": 20260725,
+  "device": "cuda:0",
+  "expected_activation_row_count": 4960,
+  "global_model_frame_count": 248,
+  "handoff": null,
+  "runner_version": "person-a-phase6-single-pilot-sagemaker-runner-v0.1",
+  "scientific_execution_environment": "aws_sagemaker_linux_gpu",
+  "selected_pilot": "layout_00_ep9403",
+  "sequence": {
+    "completed_steps": [
+      "6.1",
+      "6.2"
+    ],
+    "failed_step": "6.3",
+    "failure": {
+      "exception_message": "invalid_provenance: load_runtime: model_config_path: must be the pinned 700M_16f config at /home/sagemaker-user/MineWorld-Upstream/configs/700M_16f.yaml",
+      "exception_type": "MineWorldAdapterError",
+      "status": "FAIL",
+      "step": "6.3",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/sagemaker-user/MineOcclude/scripts/run_person_a_phase6_single_pilot_sagemaker.py\", line 1450, in execute_step_sequence\n    result = dict(handlers[step](context))\n  File \"/home/sagemaker-user/MineOcclude/scripts/run_person_a_phase6_single_pilot_sagemaker.py\", line 880, in step6_3_tokenize\n    runtime = adapter.load_runtime(_runtime_load_request(context))\n  File \"/home/sagemaker-user/MineOcclude/src/mineocclude/models/_mineworld_adapter_wave4.py\", line 410, in load_runtime\n    identity = super().load_runtime(request)\n  File \"/home/sagemaker-user/MineOcclude/src/mineocclude/models/_mineworld_adapter_wave2.py\", line 488, in load_runtime\n    prepared = self._prepare_runtime(request)\n  File \"/home/sagemaker-user/MineOcclude/src/mineocclude/models/_mineworld_adapter_wave2.py\", line 798, in _prepare_runtime\n    raise _adapter_error(\nmineocclude.models.mineworld_adapter.MineWorldAdapterError: invalid_provenance: load_runtime: model_config_path: must be the pinned 700M_16f config at /home/sagemaker-user/MineWorld-Upstream/configs/700M_16f.yaml\n"
+    },
+    "later_steps_executed_after_failure": false,
+    "status": "FAIL"
+  },
+  "status": "FAIL",
+  "step_receipts": [
+    {
+      "elapsed_seconds": 0.07001126099930843,
+      "result": {
+        "accepted_manifest_sha256": "6b53d697f69d35b4d0464d328993fb0b544d51cd521be073e7a866c38772fc2a",
+        "capture_package_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+        "direct_input_hashes": {
+          "frame_map": "eb1ff07b794a5f4aab6fb1ce6cfcca784cb3dc233a786c67d565f1f3efcd645b",
+          "media": "694ddc9a6d9b234c1939a6a0ce818a56f84a0f921f91764c860bdc16b89b0560",
+          "normalized_actions": "8774d0d2619cdd5cc463ddc2d19e38573439d7b4eec6f8e6ae8146467f99ae77",
+          "raw_actions": "4218b4566ad3918ed34660d074a6450e49b09a7fd4acb7a2d4988afc185d519d",
+          "state": "ef6213e4e67ecec4164bd405e8e9520464d5fd6a985d46cd847eb97165352ea4",
+          "visibility": "786cadb110cc02fe11658edbe6e804c081449112c240147b29226f2a9f683a8f"
+        },
+        "input_root": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725",
+        "pilot": "layout_00_ep9403",
+        "status": "PASS"
+      },
+      "status": "PASS",
+      "step": "6.1"
+    },
+    {
+      "elapsed_seconds": 0.03859163500237628,
+      "result": {
+        "frame_count": 248,
+        "identity_ambiguity_count": 0,
+        "pilot": "layout_00_ep9403",
+        "status": "PASS",
+        "stream_counts": {
+          "frame_map": 248,
+          "normalized_actions": 248,
+          "raw_actions": 248,
+          "server_state": 248,
+          "visibility": 248
+        }
+      },
+      "status": "PASS",
+      "step": "6.2"
+    }
+  ]
+}

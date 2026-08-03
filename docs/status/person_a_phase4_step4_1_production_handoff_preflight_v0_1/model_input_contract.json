@@ -1,0 +1,64 @@
+{
+  "artifact_id_rule": "person_a_model_input__<source_set_digest>__<preprocessing_identity_digest>",
+  "artifact_type": "model_input",
+  "checkpoint_identity_required": true,
+  "direct_input_artifact_ids": [
+    "layout_00_ep9403",
+    "layout_00_ep9410",
+    "layout_00_ep9441",
+    "layout_01_ep9405",
+    "layout_01_ep9412",
+    "layout_01_ep9442",
+    "layout_02_ep9407",
+    "layout_02_ep9432",
+    "layout_03_ep9404",
+    "layout_03_ep9409",
+    "layout_03_ep9443",
+    "layout_04_ep9406",
+    "layout_04_ep9411",
+    "layout_04_ep9444",
+    "layout_05_ep9408"
+  ],
+  "direct_input_source_set_digest": "75e9563a2d38b9c023e64c39a9c0176d427378e4c1a67bfb61f510d2406e04d7",
+  "expected_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "expected_row_count": 2877,
+  "expected_source_frame_count": 2877,
+  "future_artifact_id": null,
+  "future_byte_size": null,
+  "future_sha256": null,
+  "instantiated_output_artifact": false,
+  "no_overwrite": true,
+  "owner": "person_a",
+  "package_schema_version": "1.0",
+  "preprocessing_identity_required": true,
+  "prohibited_promotion_records": [
+    {
+      "path": "docs/status/person_a_phase2_registry_handoff_v1/sessions/person-a-registry-smoke-20260728T000019Z/step2_6/scene.jsonl",
+      "promotion_allowed": false,
+      "promotion_id": "smoke_model_input",
+      "reason": "bounded_smoke_not_production_science",
+      "registry_v2_accepted": false,
+      "scientific_artifact": false,
+      "sha256": "53fb9436345dc87febf955a2a0928c3d7caaa558f0886a57612ea5b2bfedac57"
+    }
+  ],
+  "prohibited_promotions": [
+    "smoke_model_input"
+  ],
+  "registry_v2_accepted": false,
+  "registry_v2_requirements": [
+    "trusted_owner_authority",
+    "verified_owner_status_record_bytes",
+    "trusted_exact_artifact_authorization",
+    "verified_authorization_record_bytes",
+    "trusted_manifest_exact_artifact_entry",
+    "verified_artifact_bytes_or_trusted_receipt",
+    "exact_direct_input_artifact_identities"
+  ],
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-model-input-contract-v0.1",
+  "schema_version": "1.0",
+  "status": "contract_only_not_executed"
+}

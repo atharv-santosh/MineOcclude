@@ -1,0 +1,97 @@
+{
+  "activation_identity": {
+    "physical_uniqueness_fields": [
+      "trajectory_id",
+      "global_model_frame_idx",
+      "source_frame_id",
+      "source_tick",
+      "layer_idx",
+      "hook_site",
+      "checkpoint_hash",
+      "preprocess_hash",
+      "run_id",
+      "activation_chunk_id",
+      "chunk_row_idx"
+    ],
+    "scientific_uniqueness_fields": [
+      "trajectory_id",
+      "global_model_frame_idx",
+      "source_frame_id",
+      "source_tick",
+      "layer_idx",
+      "hook_site",
+      "checkpoint_hash",
+      "preprocess_hash",
+      "run_id"
+    ]
+  },
+  "backward_compatibility": {
+    "explicit_format_dispatch_required": true,
+    "new_records_readable_as_v1": false,
+    "old_artifacts_migrated": false,
+    "old_artifacts_reinterpreted": false,
+    "v1_format_version": "person-a-activation-store-v1",
+    "v2_format_version": "person-a-activation-store-v2"
+  },
+  "cardinality": {
+    "expected_activation_rows": 4960,
+    "frozen_layer_count": 20,
+    "frozen_layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "global_model_frames": 248
+  },
+  "context_local_identity": {
+    "field": "context_local_pair_idx",
+    "maximum": 15,
+    "minimum": 0,
+    "used_as_global_frame_identity": false
+  },
+  "global_frame_identity": {
+    "field": "global_model_frame_idx",
+    "monotonically_increasing_complete_pilot_identity": true,
+    "used_to_derive_token_positions": false
+  },
+  "index_format_version": "person-a-activation-index-v2",
+  "schema_id": "person-a-phase6-activation-store-v2-preparation-v0.1-contract",
+  "schema_version": "1.0",
+  "source_identity": {
+    "required_fields": [
+      "trajectory_id",
+      "source_frame_id",
+      "source_frame_idx",
+      "source_tick",
+      "frame_token_map_sha256",
+      "c_frame_map_sha256",
+      "c_frame_map_row_sha256",
+      "c_state_sha256",
+      "c_state_row_sha256"
+    ]
+  },
+  "store_format_version": "person-a-activation-store-v2",
+  "token_position_derivation": {
+    "action_tokens_per_pair": 11,
+    "formula": "start=context_local_pair_idx*347; visual_positions=range(start,start+336)",
+    "global_frame_index_used": false,
+    "visual_tokens_per_pair": 336
+  }
+}

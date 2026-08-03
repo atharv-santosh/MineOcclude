@@ -3,7 +3,8 @@
 # Python version requirement: 3.10
 #
 # Do not manually invent or add MineWorld dependency versions here.
-# The official pinned MineWorld requirements must be established first,
-# before MineOcclude-specific project dependencies are added and locked.
+# MineWorld dependencies remain governed by the qualified environment files.
 #
-# This file reserves the authoritative dependency location during Phase 1.
+# MineOcclude-specific dependency approved after MineWorld qualification.
+# This is the sole approved Parquet implementation.
+pyarrow==25.0.0

@@ -1,0 +1,36 @@
+{
+  "execution_boundary": {
+    "allowed_production_environment": "aws_sagemaker_linux_gpu",
+    "local_cpu_execution_authorized": false,
+    "local_windows_host_cpu_only": true,
+    "local_windows_host_role": "preparation_only",
+    "production_execution_authorized_by_this_addendum": false,
+    "required_cuda_device": "cuda:0",
+    "sagemaker_gpu_execution_required": true,
+    "torch_cuda_is_available_required": true
+  },
+  "git_checkout_policy": {
+    "branch_merge_permitted": false,
+    "exact_committed_git_objects_required": true,
+    "remote_checkout_required": true,
+    "working_tree_clean_required": true
+  },
+  "required_pre_step6_1_runtime_receipt": {
+    "capture_before_step6_1": true,
+    "required_fields": [
+      "aws_sagemaker_environment_identity",
+      "cuda_device_identity",
+      "cuda_runtime_and_toolkit_identity",
+      "dependency_lock_and_installed_package_identity",
+      "gpu_driver_identity",
+      "gpu_model_and_memory_identity",
+      "mineocclude_commit_and_clean_state",
+      "mineworld_commit_and_clean_state",
+      "python_identity",
+      "pytorch_build_and_cuda_identity"
+    ]
+  },
+  "schema_id": "person-a-phase6-sagemaker-runtime-addendum-v0.1-execution-host-contract",
+  "schema_version": "1.0",
+  "state": "PREPARATION_ONLY_AWAITING_SAGEMAKER_PREFLIGHT_AND_B_SEED_RATIFICATION"
+}

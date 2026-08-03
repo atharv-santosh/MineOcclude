@@ -1,0 +1,164 @@
+{
+  "acceptance_state": "not_accepted",
+  "configuration": [
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "verified Person A runtime engineering identity",
+      "name": "main_checkpoint_sha256",
+      "value": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5"
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "verified Person A runtime engineering identity",
+      "name": "vae_checkpoint_sha256",
+      "value": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "verified Person A runtime engineering identity",
+      "name": "model_config_sha256",
+      "value": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018"
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "phase3 preprocessing golden and runtime certification",
+      "name": "preprocessing_identity",
+      "value": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab"
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "selected Person C capture packages",
+      "name": "input_dimensions_hwc",
+      "value": [
+        360,
+        640,
+        3
+      ]
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "phase3 preprocessing golden",
+      "name": "preprocessed_dimensions_chw",
+      "value": [
+        3,
+        224,
+        384
+      ]
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "phase4 extraction pilot",
+      "name": "extraction_hook",
+      "value": "decoder_layer_output_residual_stream"
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "phase4 extraction pilot",
+      "name": "source_tensor_shape",
+      "value": [
+        1,
+        2776,
+        2048
+      ]
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "phase4 extraction pilot",
+      "name": "source_tensor_dtype",
+      "value": "float16"
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "frozen activation contract",
+      "name": "visual_tokens_per_frame",
+      "value": 336
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "frozen activation contract and Phase 5 storage decision",
+      "name": "pooling",
+      "value": {
+        "analysis_dtype": "float64",
+        "method": "mean",
+        "production_representation": "pooled_only",
+        "region": "visual",
+        "stored_dtype": "float32",
+        "vector_shape": [
+          2048
+        ]
+      }
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "verified 20-layer adapter identity",
+      "name": "activation_layers",
+      "value": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "frozen activation contract",
+      "name": "activation_index_key",
+      "value": [
+        "trajectory_id",
+        "model_frame_idx",
+        "layer_idx",
+        "hook_site"
+      ]
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "Phase 5 pooled activation storage decision",
+      "name": "chunk_and_index_rules",
+      "value": {
+        "chunk_format": "npy",
+        "index_format": "canonical_json",
+        "no_overwrite": true,
+        "row_order": "trajectory_id,model_frame_idx,layer_idx,hook_site",
+        "run_binding_required": true
+      }
+    },
+    {
+      "classification": "PROPOSED_FROZEN_CONFIGURATION",
+      "evidence": "Phase 3 runtime certification engineering identity",
+      "name": "rollout_configuration",
+      "value": {
+        "action_tokens_per_frame": 11,
+        "context_pair_limit": 16,
+        "output_dimensions_hw": [
+          224,
+          384
+        ],
+        "precision": "float16",
+        "temperature": 1.0,
+        "top_k": 1,
+        "visual_tokens_per_frame": 336
+      }
+    }
+  ],
+  "configuration_identity_is_artifact_acceptance": false,
+  "configuration_identity_is_execution_authorization": false,
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-runtime-configuration-v0.1",
+  "schema_version": "1.0",
+  "status": "PROPOSED_FROZEN_CONFIGURATION"
+}

@@ -1,0 +1,62 @@
+{
+  "authorities": {
+    "person_a_acknowledgement": true,
+    "person_a_starting_authority": true,
+    "person_b_runtime_authorization": true,
+    "person_b_sagemaker_ratification": true,
+    "person_c_accepted_pilot": true,
+    "person_e_registry_v2_validator": true
+  },
+  "aws_sagemaker_environment": {
+    "AWS_ACCOUNT_ID": "323206973672",
+    "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI": "/_sagemaker-instance-credentials/5e5f7ff8d5098cb152bfed83927b4859f526857874984bbf032c1a07c3625278",
+    "AWS_DEFAULT_REGION": "us-east-1",
+    "AWS_INTERNAL_IMAGE_OWNER": "jupyterlab",
+    "AWS_REGION": "us-east-1",
+    "SAGEMAKER_APP_TYPE": "JupyterLab",
+    "SAGEMAKER_APP_TYPE_LOWERCASE": "jupyterlab",
+    "SAGEMAKER_INTERNAL_IMAGE_URI": "885854791233.dkr.ecr.us-east-1.amazonaws.com/sagemaker-distribution-prod@sha256:9c67e46c54fed143ead72c03e2e2b6c330ec3510ec475a46f327884b39f9ac65",
+    "SAGEMAKER_LOGGING_DIR": "/var/log/sagemaker/",
+    "SAGEMAKER_LOG_FILE": "/var/log/studio/jupyterlab.log",
+    "SAGEMAKER_RECOVERY_MODE_HOME": "/tmp/sagemaker-recovery-mode-home",
+    "SAGEMAKER_SPACE_NAME": "mineocclude-gpu",
+    "SAGEMAKER_SPACE_TYPE_LOWERCASE": "private"
+  },
+  "b_activation_store_v2_ratification": {
+    "commit": "9626934c09d898c466608ccfb1dfe861700dd98b",
+    "git_object": "9626934c09d898c466608ccfb1dfe861700dd98b:docs/status/person_b_phase6_activation_store_v2_ratification_v0_1/runner_compatibility_ratification.json",
+    "sha256": "73131f3583aef349143ca37c5c8b0d1a013fb7754d1d2b7cc827f195594763a7",
+    "verified": true
+  },
+  "branch": "role/person-a-model",
+  "cuda": {
+    "available": true,
+    "device": "cuda:0",
+    "device_count": 1,
+    "device_name": "NVIDIA L4",
+    "torch_cuda_version": "12.6",
+    "total_memory_bytes": 23661248512
+  },
+  "dependency_identities": {
+    "numpy": "1.26.4",
+    "torch": "2.6.0+cu126"
+  },
+  "free_disk_bytes": 36894560256,
+  "git_commit": "a5841beea424f444bb364dae815d8a74de55f849",
+  "git_worktree_clean": true,
+  "host": {
+    "machine": "x86_64",
+    "node": "default",
+    "platform": "Linux-6.12.94-123.180.amzn2023.x86_64-x86_64-with-glibc2.39",
+    "python": "3.10.20",
+    "system": "Linux"
+  },
+  "mineworld_commit": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+  "model_config_git_blob_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+  "nvidia_smi": [
+    "NVIDIA L4, GPU-28c08eee-1f82-0161-df6b-433510104213, 23034 MiB, 595.71.05"
+  ],
+  "runner_version": "person-a-phase6-single-pilot-sagemaker-runner-v0.1",
+  "seed": 20260725,
+  "status": "PASS"
+}

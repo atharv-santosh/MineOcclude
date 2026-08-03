@@ -1,0 +1,12 @@
+=== PERSON A PHASE 2.6 FORMAL ROLLOUT ===
+Traceback (most recent call last):
+  File "/home/sagemaker-user/MineOcclude-Person-A-Registry/src/mineocclude/models/phase2_aws.py", line 118, in _raw_log
+    yield
+  File "/home/sagemaker-user/MineOcclude-Person-A-Registry/src/mineocclude/models/phase2_aws.py", line 1630, in execute_rollout
+    "original": _canonical_video_provenance(
+  File "/home/sagemaker-user/MineOcclude-Person-A-Registry/src/mineocclude/models/phase2_aws.py", line 1534, in _canonical_video_provenance
+    probe = _ffprobe(input_mp4, ffprobe_executable)
+  File "/home/sagemaker-user/MineOcclude-Person-A-Registry/src/mineocclude/models/phase2_aws.py", line 1490, in _ffprobe
+    raise EvidenceValidationError(
+mineocclude.models.phase2_evidence.EvidenceValidationError: ffprobe_missing at $: ffprobe executable not found: ffprobe
+FAIL: ffprobe_missing at $: ffprobe executable not found: ffprobe

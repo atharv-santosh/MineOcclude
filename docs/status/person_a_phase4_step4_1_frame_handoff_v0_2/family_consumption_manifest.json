@@ -1,0 +1,132 @@
+{
+  "baseline_families": [
+    {
+      "definition": "mu equals the last visible wall-parallel position",
+      "family_id": "last_seen",
+      "person_a_direct_inputs": [
+        "source_context_manifest"
+      ],
+      "ready": true,
+      "role": "memory heuristic floor",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "mu equals last visible position plus estimated visible-window velocity times tau",
+      "family_id": "constant_velocity",
+      "person_a_direct_inputs": [
+        "source_context_manifest"
+      ],
+      "ready": true,
+      "role": "Regime A reference",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "seeded trajectory derangement using the donor target at the same explicit model_frame_idx",
+      "family_id": "grouped_shuffled",
+      "person_a_direct_inputs": [],
+      "ready": true,
+      "role": "trajectory-level chance floor",
+      "targets": [
+        "log_sigma_oracle",
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "outer-training-fold polynomial regression of log_sigma on tau only",
+      "family_id": "time_only",
+      "person_a_direct_inputs": [
+        "source_context_manifest"
+      ],
+      "ready": true,
+      "role": "clock-substitution test",
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    },
+    {
+      "definition": "layout-grouped ridge on the frozen observable feature and interaction list",
+      "family_id": "explicit_feature",
+      "person_a_direct_inputs": [
+        "source_context_manifest"
+      ],
+      "ready": true,
+      "role": "non-privileged feature ceiling",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "layout-grouped ridge on the exact current preprocessed frame only",
+      "family_id": "raw_pixel",
+      "person_a_direct_inputs": [
+        "preprocessed_frame_manifest",
+        "preprocessed_frame_payloads"
+      ],
+      "ready": true,
+      "role": "visual-leakage/scene-cue check",
+      "targets": [
+        "mu_oracle_blocks"
+      ]
+    },
+    {
+      "definition": "estimate q from outer-training-fold visible-history residuals, then predict ln(sqrt(q_hat * tau))",
+      "family_id": "visible_history_q",
+      "person_a_direct_inputs": [
+        "source_context_manifest"
+      ],
+      "ready": true,
+      "role": "fair spread baseline",
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    },
+    {
+      "definition": "predict ln(sqrt(q_scripted * tau)) on hidden rows",
+      "family_id": "known_q_analytic",
+      "person_a_direct_inputs": [
+        "source_context_manifest"
+      ],
+      "ready": true,
+      "role": "privileged non-fair reference ceiling",
+      "targets": [
+        "log_sigma_oracle"
+      ]
+    }
+  ],
+  "baseline_family_count": 8,
+  "contract_authority": {
+    "byte_size": 3863,
+    "git_blob_oid": "7c6dfb556d74814116d2fb09c312871976b80ad3",
+    "git_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+    "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/baseline_family_contract.json",
+    "role": "person_b",
+    "sha256": "78eb8e7f40ae60ff69f14d124ca019211cb31fe3f59a2e035c7bd399c7b81ab1"
+  },
+  "fold_manifest": {
+    "byte_size": 742601,
+    "git_blob_oid": "2bf314b91fecdea55b8170837932803a2a950d70",
+    "git_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+    "role": "person_b",
+    "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+  },
+  "person_b_predictions_direct_input_to_person_d": false,
+  "preprocessed_frame_manifest_path": "/home/sagemaker-user/MineOcclude/docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/preprocessed_frame_manifest.json",
+  "schema_id": "person-a-step4-1-frame-handoff-v0-2-family-consumption-manifest",
+  "schema_version": "1.0",
+  "source_context_manifest_path": "/home/sagemaker-user/MineOcclude/docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/source_context_manifest.json",
+  "status": "ALL_EIGHT_FAMILY_DIRECT_INPUTS_AVAILABLE",
+  "target_manifest": {
+    "byte_size": 4934874,
+    "git_blob_oid": "017553803c56587767bccf19192ae3f7d72c04b5",
+    "git_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+    "role": "person_b",
+    "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "u4_output_inspected": false
+}
