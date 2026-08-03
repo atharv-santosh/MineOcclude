@@ -1,0 +1,90 @@
+{
+  "artifact_bytes": {
+    "person_a_step4_1_activation_store_v2_combined_index_v0_1": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json"
+  },
+  "trusted_artifact_authorizations": {
+    "person_a_step4_1_activation_store_v2_combined_index_v0_1": {
+      "authorization": {
+        "artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "artifact_schema_version": "person-a-multi-pilot-activation-index-v1",
+        "artifact_sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+        "artifact_size_bytes": 245491346,
+        "artifact_type": "activation",
+        "authority_id": "person_a_step4_1_activation_authority_v0_1",
+        "authorization_id": "person_a_step4_1_activation_authorization_v0_1",
+        "authorization_record_id": "person_a_step4_1_activation_authorization_record_v0_1",
+        "authorization_record_receipt_authority_revision": null,
+        "authorization_record_receipt_id": null,
+        "authorization_record_receipt_sha256": null,
+        "authorization_record_sha256": "e69c37042dd2fa96ac707f0238f9d069a4a169ca9c9fd08bca2bba351c8e90e1",
+        "authorization_record_verification_mode": "local_bytes",
+        "decision": "accepted",
+        "manifest_artifact_identity": "person-a-step4-1-activation-store-v2-ten-pilot-combined-index",
+        "manifest_id": "person_a_step4_1_activation_manifest_v0_1",
+        "manifest_schema_version": "person-a-phase6-ten-pilot-artifact-manifest-v1.0",
+        "manifest_sha256": "b5d7ccccfcc2bc2a3cca6887fa79487305b8652a5c3952ecd90847af15a29b67",
+        "owner_authority_revision": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "owner_id": "person_a",
+        "owner_status": "accepted"
+      },
+      "authorization_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    }
+  },
+  "trusted_authorization_record_bytes": {
+    "person_a_step4_1_activation_authorization_record_v0_1": "artifact_authorization_record.json"
+  },
+  "trusted_manifest_records": {
+    "person_a_step4_1_activation_manifest_v0_1": {
+      "artifact_identities": [
+        {
+          "artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+          "artifact_schema_version": "person-a-multi-pilot-activation-index-v1",
+          "artifact_sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+          "artifact_size_bytes": 245491346,
+          "artifact_type": "activation",
+          "manifest_artifact_identity": "person-a-step4-1-activation-store-v2-ten-pilot-combined-index"
+        }
+      ],
+      "decision": "accepted",
+      "manifest_id": "person_a_step4_1_activation_manifest_v0_1",
+      "manifest_schema_version": "person-a-phase6-ten-pilot-artifact-manifest-v1.0",
+      "manifest_sha256": "b5d7ccccfcc2bc2a3cca6887fa79487305b8652a5c3952ecd90847af15a29b67",
+      "owner_authority_id": "person_a_step4_1_activation_authority_v0_1",
+      "owner_authority_revision": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "owner_id": "person_a",
+      "owner_status": "accepted"
+    }
+  },
+  "trusted_owner_authorities": {
+    "person_a_step4_1_activation_authority_v0_1": {
+      "authority": {
+        "authority_id": "person_a_step4_1_activation_authority_v0_1",
+        "authority_revision": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "authorized_artifact_types": [
+          "activation"
+        ],
+        "decision": "accepted",
+        "owner_id": "person_a",
+        "owner_status": "accepted",
+        "schema_version": "1.0",
+        "status_record_id": "person_a_step4_1_activation_status_v0_1",
+        "status_record_receipt_authority_revision": null,
+        "status_record_receipt_id": null,
+        "status_record_receipt_sha256": null,
+        "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+        "status_record_sha256": "f9eee1b170731113c22049c24040e18bc1f2e6b00d172714b47c80375fcb5b30",
+        "status_record_verification_mode": "local_bytes"
+      },
+      "status_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    }
+  },
+  "trusted_status_record_bytes": {
+    "person_a_step4_1_activation_status_v0_1": "owner_status_record.json"
+  }
+}

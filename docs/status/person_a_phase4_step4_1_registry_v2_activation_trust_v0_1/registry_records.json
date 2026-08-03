@@ -1,0 +1,111 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+      "artifact_schema_version": "person-a-multi-pilot-activation-index-v1",
+      "artifact_type": "activation",
+      "byte_verification_id": "person_a_step4_1_activation_combined_index_local_bytes_v0_1",
+      "creator_run_id": "person_a_phase6_ten_pilot_activation_completion_55776dc",
+      "direct_input_artifact_ids": [],
+      "manifest_artifact_identity": "person-a-step4-1-activation-store-v2-ten-pilot-combined-index",
+      "manifest_id": "person_a_step4_1_activation_manifest_v0_1",
+      "manifest_schema_version": "person-a-phase6-ten-pilot-artifact-manifest-v1.0",
+      "manifest_sha256": "b5d7ccccfcc2bc2a3cca6887fa79487305b8652a5c3952ecd90847af15a29b67",
+      "owner_authority_id": "person_a_step4_1_activation_authority_v0_1",
+      "owner_authority_revision": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_a_step4_1_activation_status_v0_1",
+      "owner_status_record_sha256": "f9eee1b170731113c22049c24040e18bc1f2e6b00d172714b47c80375fcb5b30",
+      "schema_version": "1.0",
+      "sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+      "size_bytes": 245491346,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "file:///home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json"
+    }
+  ],
+  "byte_verifications": [
+    {
+      "artifact_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+      "external_receipt_authority_revision": null,
+      "external_receipt_id": null,
+      "external_receipt_sha256": null,
+      "mode": "local_bytes",
+      "schema_version": "1.0",
+      "verification_id": "person_a_step4_1_activation_combined_index_local_bytes_v0_1",
+      "verified_at": "2026-08-03T07:00:00Z",
+      "verified_sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+      "verified_size_bytes": 245491346
+    }
+  ],
+  "manifests": [
+    {
+      "artifact_identities": [
+        "person-a-step4-1-activation-store-v2-ten-pilot-combined-index"
+      ],
+      "decision": "accepted",
+      "manifest_id": "person_a_step4_1_activation_manifest_v0_1",
+      "manifest_schema_version": "person-a-phase6-ten-pilot-artifact-manifest-v1.0",
+      "manifest_sha256": "b5d7ccccfcc2bc2a3cca6887fa79487305b8652a5c3952ecd90847af15a29b67",
+      "owner_authority_id": "person_a_step4_1_activation_authority_v0_1",
+      "schema_version": "1.0"
+    }
+  ],
+  "owner_authorities": [
+    {
+      "authority_id": "person_a_step4_1_activation_authority_v0_1",
+      "authority_revision": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "authorized_artifact_types": [
+        "activation"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_a",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_a_step4_1_activation_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "f9eee1b170731113c22049c24040e18bc1f2e6b00d172714b47c80375fcb5b30",
+      "status_record_verification_mode": "local_bytes"
+    }
+  ],
+  "runs": [
+    {
+      "checkpoint_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "code_sha": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "command": [
+        "bash",
+        "scripts/run_person_a_phase6_ten_pilot_sagemaker.sh"
+      ],
+      "config_snapshot_hash": "eb634c1e81c65a724b7cf32cbfe03f62e80a4428afda605071e1a43c6d0f4c10",
+      "created_at": "2026-07-31T11:42:07Z",
+      "data_identity_hash": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+      "ended_at": "2026-07-31T11:42:09Z",
+      "environment_hash": "562c28c441b385cf1a02128d3ac8a34711ea9c76720ee2fdbf30a8bf37e30d0b",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [],
+      "output_artifact_ids": [
+        "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+      ],
+      "owner": "person_a",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+      "run_id": "person_a_phase6_ten_pilot_activation_completion_55776dc",
+      "schema_version": "1.0",
+      "seeds": {
+        "phase6": 20260725
+      },
+      "started_at": "2026-07-31T11:42:08Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    }
+  ],
+  "schema_id": "person-a-step4-1-registry-v2-activation-records-v0-1",
+  "schema_version": "1.0"
+}
