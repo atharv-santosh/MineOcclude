@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE"
+      ]
+    },
+    "direct_input_sha256s": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minProperties": 1,
+      "type": "object"
+    },
+    "layer_bands": {
+      "items": {
+        "items": {
+          "maximum": 19,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "metric_records": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "paired_test_records": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_id": {
+      "const": "person-b-step4-1-final-comparison-output-v0-1"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "scientific_execution_performed": {
+      "const": true
+    },
+    "u4_output_inspected": {
+      "const": false
+    }
+  },
+  "required": [
+    "schema_id",
+    "schema_version",
+    "decision",
+    "direct_input_sha256s",
+    "metric_records",
+    "paired_test_records",
+    "layer_bands",
+    "scientific_execution_performed",
+    "u4_output_inspected"
+  ],
+  "title": "Person B Step 4.1 final comparison output v0.1",
+  "type": "object"
+}

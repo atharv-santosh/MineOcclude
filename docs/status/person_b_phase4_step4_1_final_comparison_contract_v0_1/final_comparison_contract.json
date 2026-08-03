@@ -1,0 +1,508 @@
+{
+  "acceptance_contract": {
+    "decision_precedence": [
+      "INCONCLUSIVE_integrity_or_control_gate",
+      "PASS_all_scientific_gates",
+      "FAIL_clean_scientific_miss"
+    ],
+    "fail_rule": "All integrity, lineage, applicability, finiteness, positive-control, and resampling gates pass, but no contiguous qualifying layer band of length at least two exists.",
+    "inconclusive_rule": "Any unknown version or hash, missing/extra/duplicate/nonfinite row, unexpected applicability mismatch, leakage, failed positive control, missing reveal pair, fewer than two independent layout units, degenerate required statistic, or unauthorized execution makes the result INCONCLUSIVE and forbids negative scientific interpretation.",
+    "layer_gate": {
+      "adjacency": "integer layer_idx differs by exactly one",
+      "minimum_contiguous_length": 2,
+      "no_best_layer_is_selected": true,
+      "qualifying_layer_requires": [
+        "U1_green",
+        "U2_green",
+        "U3_green"
+      ],
+      "report_all_qualifying_bands": true
+    },
+    "pass_rule": "All integrity and control gates pass and at least one contiguous band of two or more adjacent frozen layers has every layer satisfy U1_green, U2_green, and U3_green.",
+    "scientific_gates": {
+      "U1_green": {
+        "held_out_r2_strictly_greater_than": 0.0,
+        "max_t_adjusted_p_strictly_less_than": 0.01,
+        "paired_loss_improvement_strictly_greater_than": 0.0,
+        "required_primary_baselines": [
+          "last_seen",
+          "grouped_shuffled"
+        ]
+      },
+      "U2_green": {
+        "average_absolute_coverage_error_at_most": 0.1,
+        "coverage_error_strictly_better_than": [
+          "time_only",
+          "visible_history_q"
+        ],
+        "coverage_levels": [
+          0.5,
+          0.8,
+          0.95
+        ],
+        "partial_correlation_bootstrap_ci_lower_strictly_greater_than": 0.0,
+        "partial_correlation_controls": [
+          "tau"
+        ]
+      },
+      "U3_green": {
+        "decoded_hidden_growth_strictly_greater_than": 0.0,
+        "median_reveal_reduction_fraction_at_least": 0.25,
+        "oracle_slope_ratio_closed_interval": [
+          0.5,
+          2.0
+        ],
+        "reveal_difference_bootstrap_ci_upper_strictly_less_than": 0.0
+      }
+    },
+    "status_vocabulary": [
+      "PASS",
+      "FAIL",
+      "INCONCLUSIVE"
+    ]
+  },
+  "aggregation_contract": {
+    "baseline_family_aggregation": "Never pool baseline families. Emit one layer-target-family result; roles and fair/non-fair labels remain attached.",
+    "excluded_identity_treatment": "Use only exclusions named by the ratified applicability contract. Report each excluded identity and reason; never count it as failure, zero, or imputed prediction.",
+    "fold_aggregation": "Validate OOF provenance and emit fold diagnostics, but do not average fold summaries because folds contain unequal layout counts.",
+    "layer_aggregation": "No numeric aggregation across layers. Emit all 20 layer results and apply the frozen contiguous-band decision rule.",
+    "macro_micro_policy": "Primary statistics are layout-macro: rows are averaged within each trajectory, trajectories equally within layout, then layouts equally. Pooled-frame micro statistics are descriptive only.",
+    "missing_data_policy": "Strict applicability-aware inner intersection only. No imputation, carry-forward, clipping, replacement, or silent drop. Missing expected rows or extra rows make the affected required result INCONCLUSIVE.",
+    "pilot_aggregation": "The five core pilots are scientific units. The five no-wall pilots are used only through the already frozen positive-control decision and are never pooled into hidden-target metrics.",
+    "probe_specific_pairing_keys": [
+      "layer_idx",
+      "hook_site"
+    ],
+    "reveal_pairing_keys": [
+      "event_id",
+      "trajectory_id",
+      "layer_idx",
+      "hook_site"
+    ],
+    "row_level_pairing_keys": [
+      "trajectory_id",
+      "model_frame_idx",
+      "fold_idx",
+      "target_name"
+    ],
+    "target_aggregation": "Never combine mu_oracle_blocks and log_sigma_oracle. U1 consumes mean predictions; U2/U3 reconstruct sigma_hat=exp(log_sigma_hat).",
+    "weighting_rule": "equal_layout_then_equal_trajectory_then_equal_row"
+  },
+  "authorities": {
+    "person_b_starting_authority": "2a23c84995fea4e15293039063e60e9535fd2ee2",
+    "person_d_completion_commit": "f89b142a6fdb52c2d238669af8df14061cee5896",
+    "person_e_ratification_required_before_execution": true,
+    "person_e_starting_authority": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+    "this_contract_authority": "The Git commit containing this package; it must be the direct child of person_b_starting_authority."
+  },
+  "baseline_contract": {
+    "applicability": {
+      "path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+      "sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103"
+    },
+    "family_order": [
+      "last_seen",
+      "constant_velocity",
+      "grouped_shuffled",
+      "time_only",
+      "explicit_feature",
+      "raw_pixel",
+      "visible_history_q",
+      "known_q_analytic"
+    ],
+    "non_fair_reference_families": [
+      "known_q_analytic"
+    ],
+    "prediction_count": 10776,
+    "prediction_documents": [
+      {
+        "family": "last_seen",
+        "row_count": 1695,
+        "sha256": "48481740b50d41f87ac78ef7e2a4a1be930c400f197613c13212f7bfdb4bf4ae",
+        "target": "mu_oracle_blocks"
+      },
+      {
+        "family": "constant_velocity",
+        "row_count": 1690,
+        "sha256": "1156b6ca9bdc72355c23f8bcd2cbe9ba0324ad9e861fee47a246e5ef0a09fc7a",
+        "target": "mu_oracle_blocks"
+      },
+      {
+        "family": "grouped_shuffled",
+        "row_count": 493,
+        "sha256": "cc182dfa1795eba5eb59c98dfb54d1d7eda9a39e6f3188846c863d9b12142fcc",
+        "target": "log_sigma_oracle"
+      },
+      {
+        "family": "grouped_shuffled",
+        "row_count": 1428,
+        "sha256": "db190c7fdd99e0eb075cdf603b9e7bb516caa857d2f1167e5ecf8da84c315ba5",
+        "target": "mu_oracle_blocks"
+      },
+      {
+        "family": "time_only",
+        "row_count": 695,
+        "sha256": "aa8a60d9ee36a27655abd0a13b5aba2665aa5d865a9332c3f2a840cfbae5d273",
+        "target": "log_sigma_oracle"
+      },
+      {
+        "family": "explicit_feature",
+        "row_count": 1690,
+        "sha256": "c724dc1b8918556508e4b4260315b16cf294977d51231f7c05963bc27ea973e7",
+        "target": "mu_oracle_blocks"
+      },
+      {
+        "family": "raw_pixel",
+        "row_count": 1695,
+        "sha256": "bb0a15f9d2d54f53e46c6a201d464958f2f8db90decba5784e81a99ff2298420",
+        "target": "mu_oracle_blocks"
+      },
+      {
+        "family": "visible_history_q",
+        "row_count": 695,
+        "sha256": "5ef20829a26a09d4c1407c8d398cc1429266b2b45ae233fe4679d35f57c24bbc",
+        "target": "log_sigma_oracle"
+      },
+      {
+        "family": "known_q_analytic",
+        "row_count": 695,
+        "sha256": "f589af2acc429460b8e9fc2725401e2adb5c0ce6424f73f3867fa43bda8ff2cd",
+        "target": "log_sigma_oracle"
+      }
+    ],
+    "production_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+    "run_state": {
+      "byte_size": 1480,
+      "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/run_state.json",
+      "sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5"
+    }
+  },
+  "confidence_interval_contract": {
+    "bootstrap_count": 2000,
+    "coverage": 0.95,
+    "hierarchy": [
+      "layout_id",
+      "trajectory_id",
+      "all_paired_rows"
+    ],
+    "interval": "equal_tailed_percentile_linear_quantiles",
+    "seed": 20260721,
+    "unit": "whole_layout_then_whole_trajectory"
+  },
+  "control_contract": {
+    "negative_control": {
+      "family": "grouped_shuffled",
+      "required_targets": [
+        "mu_oracle_blocks",
+        "log_sigma_oracle"
+      ],
+      "role": "trajectory_deranged_chance_floor"
+    },
+    "no_object_control": {
+      "decision": "NOT_APPLICABLE_TO_FROZEN_TEN_PILOT_PRODUCTION_SET",
+      "reason": "No occluder-only/no-sheep pilot is in the immutable ten-pilot production membership; adding one would change accepted identities."
+    },
+    "positive_control": {
+      "authority_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "decision": "PASS_FROZEN_VISIBLE_POSITION_POSITIVE_CONTROL",
+      "decision_sha256": "742557b32326180003b1cd83ed5db6f1a1ebfebd692d969809698d323f239056",
+      "lineage_sha256": "29fd15d6773f16843d3de6b8db58c2d100bcf47779b41bbd44a3c81a062f74f4",
+      "must_be_revalidated_not_recomputed": true
+    }
+  },
+  "degree_of_freedom_resolutions": [
+    {
+      "choice": "Evaluate every frozen layer; select no best layer.",
+      "consequence": "Inference is conservative and cannot promote an isolated maximum.",
+      "resolution_authority": "person_b_scientific_methods_owner",
+      "source": "PERSON_B_MVP_ROADMAP.md contiguous-band and no-test-layer-selection rules"
+    },
+    {
+      "choice": "Require one common contiguous band to satisfy U1, U2, and U3.",
+      "consequence": "A signal split across unrelated layers cannot pass Step 4.1.",
+      "resolution_authority": "person_b_scientific_methods_owner",
+      "source": "Frozen U1 band criterion and alternative-results no-favorable-layer-search rule"
+    },
+    {
+      "choice": "Use shared-sign maxT correction within each declared objective family.",
+      "consequence": "Controls family-wise error while preserving dependence across layers.",
+      "resolution_authority": "person_b_scientific_methods_owner",
+      "source": "Frozen whole-trajectory permutation unit, count, seed, and p<0.01 U1 gate"
+    },
+    {
+      "choice": "Map the detailed U3_green gate, not vague directional wording, to PASS.",
+      "consequence": "PASS uses the stricter predeclared slope, CI, and 25% thresholds.",
+      "resolution_authority": "person_b_scientific_methods_owner",
+      "source": "PERSON_B_MVP_ROADMAP.md detailed MVP acceptance gates"
+    }
+  ],
+  "execution_interface": {
+    "command": [
+      "python",
+      "scripts/run_person_b_step4_1_final_comparison.py",
+      "--repository-root",
+      "$PWD",
+      "--person-b-contract-commit",
+      "<PERSON_B_POST_REVEAL_CONTRACT_COMMIT>",
+      "--person-e-ratification-commit",
+      "<PERSON_E_COMPARISON_RATIFICATION_COMMIT>",
+      "--person-b-predictions",
+      "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+      "--person-d-root",
+      "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+      "--post-reveal-predictions",
+      "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1/post_reveal_predictions.json",
+      "--output-root",
+      "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1"
+    ],
+    "execution_count": 1,
+    "fail_closed_gates": [
+      "exact B contract commits and E ratification Git objects",
+      "all literal input byte sizes and SHA-256 values",
+      "canonical strict JSON with no duplicate or nonfinite values",
+      "exact prediction, target, layer, hook, fold, row, and applicability identities",
+      "zero fold leakage and only out-of-fold fitted probes",
+      "complete positive and negative control evidence",
+      "complete post-reveal receipt and 100 exact predictions",
+      "clean role/person-b-analysis checkout at exact contract commit",
+      "output root absent or exact complete no-write receipt"
+    ],
+    "output_root": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1",
+    "outputs": [
+      "comparison_metric_table.json",
+      "paired_test_results.json",
+      "confidence_intervals.json",
+      "layer_band_decision.json",
+      "registry_v2_import_package.json",
+      "execution_receipt.json",
+      "sha256_inventory.json"
+    ],
+    "person_e_ratification_required": true,
+    "resume_behavior": "If the output root exists, validate a complete exact inventory and return ALREADY_COMPLETE_NO_WRITE; otherwise fail. Partial resume and overwrite are forbidden."
+  },
+  "input_contract": {
+    "analysis_config": {
+      "byte_size": 4881,
+      "path": "configs/analysis/core.yaml",
+      "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+    },
+    "fold_manifest": {
+      "byte_size": 742601,
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+    },
+    "oracle_target": {
+      "byte_size": 4934874,
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+      "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+    },
+    "person_b_prediction_count": 27800,
+    "person_b_predictions": {
+      "byte_size": 84257218,
+      "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+      "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba"
+    },
+    "person_b_probe_matrix_count": 40,
+    "post_reveal_input": {
+      "exact_artifact_hash_is_bound_by_person_e_after_production": true,
+      "required_prediction_count": 100,
+      "required_schema_id": "person-b-step4-1-bounded-reveal-predictions-v0-1"
+    }
+  },
+  "layer_contract": {
+    "hook_site": "decoder_layer_output_residual_stream",
+    "layer_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "selection_mode": "none_all_layers_fixed_before_runtime",
+    "test_data_may_select_layer": false
+  },
+  "metric_contract": {
+    "primary_comparison_statistic": {
+      "definition": "layout-macro paired loss improvement = baseline loss minus probe loss on the exact applicability-aware row intersection",
+      "log_sigma_loss": "squared_error_in_log_sigma",
+      "mu_loss": "squared_error_in_blocks",
+      "positive_direction": "probe_better"
+    },
+    "reveal_snapback": {
+      "event_count": 5,
+      "metric": "median(post_sigma_hat_blocks - pre_sigma_hat_blocks)",
+      "pair_rule": "nearest occluded time<0 and nearest visible time>=0",
+      "reduction_fraction": "median((pre_sigma_hat-post_sigma_hat)/pre_sigma_hat)",
+      "relative_times_seconds": [
+        -0.05,
+        0.0
+      ],
+      "window_seconds": [
+        -1.0,
+        1.0
+      ]
+    },
+    "secondary_statistics": [
+      "r2",
+      "mae_blocks",
+      "partial_correlation_controlling_tau",
+      "50_80_95_percent_interval_coverage",
+      "mean_absolute_coverage_error",
+      "z_diagnostics",
+      "trajectory_hidden_growth_slope",
+      "decoded_oracle_slope_ratio",
+      "median_reveal_reduction_fraction"
+    ]
+  },
+  "multiplicity_contract": {
+    "adjustment": "single_step_shared_sign_flip_maxT",
+    "family_wise_comparison_sets": {
+      "U1": "20 layers x [last_seen, grouped_shuffled] = 40 hypotheses",
+      "U2": "20 layers x [time_only, visible_history_q] = 40 hypotheses",
+      "U3_reveal": "20 layer reveal-decrease hypotheses"
+    },
+    "null_hypothesis": "layout-macro paired improvement is less than or equal to zero",
+    "p_value_rule": "add_one_numerator_and_denominator",
+    "permutation_count": 999,
+    "resampling_unit": "whole_trajectory_pair_with_one_shared_sign_per_layout",
+    "seed": 20260720,
+    "sidedness": "one_sided_in_predeclared_improvement_direction",
+    "studentization": "mean_layout_improvement_divided_by_standard_error",
+    "tie_rule": "greater_than_or_equal_is_extreme"
+  },
+  "output_schema_contract": {
+    "canonicalization": "UTF-8 JSON sorted keys indent=2 newline; finite numbers only",
+    "metric_record_required_fields": [
+      "metric_id",
+      "objective",
+      "target_name",
+      "layer_idx",
+      "hook_site",
+      "baseline_family",
+      "value",
+      "unit",
+      "sample_count",
+      "sample_unit",
+      "status",
+      "diagnostic",
+      "direct_input_sha256s"
+    ],
+    "paired_test_required_fields": [
+      "hypothesis_id",
+      "objective_family",
+      "observed_statistic",
+      "raw_p_value",
+      "max_t_adjusted_p_value",
+      "permutation_count",
+      "seed",
+      "sidedness",
+      "null_hypothesis",
+      "layout_count"
+    ],
+    "registry_v2_artifact_type": "metric_table",
+    "schema_id": "person-b-step4-1-final-comparison-output-v0-1"
+  },
+  "reveal_event_contract": [
+    {
+      "event_id": "layout_00_ep9403:reveal:228",
+      "fold_idx": 1,
+      "layout_id": "layout_00",
+      "post_model_frame_idx": 228,
+      "pre_model_frame_idx": 227,
+      "trajectory_id": "layout_00_ep9403"
+    },
+    {
+      "event_id": "layout_01_ep9405:reveal:210",
+      "fold_idx": 2,
+      "layout_id": "layout_01",
+      "post_model_frame_idx": 210,
+      "pre_model_frame_idx": 209,
+      "trajectory_id": "layout_01_ep9405"
+    },
+    {
+      "event_id": "layout_02_ep9407:reveal:138",
+      "fold_idx": 4,
+      "layout_id": "layout_02",
+      "post_model_frame_idx": 138,
+      "pre_model_frame_idx": 137,
+      "trajectory_id": "layout_02_ep9407"
+    },
+    {
+      "event_id": "layout_03_ep9404:reveal:106",
+      "fold_idx": 0,
+      "layout_id": "layout_03",
+      "post_model_frame_idx": 106,
+      "pre_model_frame_idx": 105,
+      "trajectory_id": "layout_03_ep9404"
+    },
+    {
+      "event_id": "layout_04_ep9406:reveal:93",
+      "fold_idx": 3,
+      "layout_id": "layout_04",
+      "post_model_frame_idx": 93,
+      "pre_model_frame_idx": 92,
+      "trajectory_id": "layout_04_ep9406"
+    }
+  ],
+  "schema_id": "person-b-step4-1-final-comparison-contract-v0-1",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "scope": {
+    "core_pilots": [
+      "layout_00_ep9403",
+      "layout_01_ep9405",
+      "layout_02_ep9407",
+      "layout_03_ep9404",
+      "layout_04_ep9406"
+    ],
+    "layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "targets": [
+      "mu_oracle_blocks",
+      "log_sigma_oracle"
+    ]
+  },
+  "u4_restrictions": {
+    "broad_hidden_state_interpretation_authorized": false,
+    "manual_u4_inspection_authorized": false,
+    "u4_input_or_output_may_be_opened": false,
+    "u4_output_inspected": false
+  },
+  "unresolved_scientific_choices": [],
+  "version": "person-b-step4-1-final-comparison-v0.1"
+}
