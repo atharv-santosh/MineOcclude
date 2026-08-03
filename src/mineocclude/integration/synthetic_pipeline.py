@@ -69,6 +69,10 @@ DEFAULT_REPORT_PATH = (
     ROOT / "tests" / "fixtures" / "integration" / "synthetic_join_report.json"
 )
 
+DEFAULT_ANALYSIS_REPORT_PATH = (
+    ROOT / "tests" / "fixtures" / "person_b" / "synthetic_analysis_chain_v1.json"
+)
+
 FIXTURE_MARKER = {
     "synthetic": True,
     "scientific_use": "forbidden",
@@ -1903,19 +1907,9 @@ def collect_orphaned_claim_bearing_rows(
         for row in documents["activation_handoff"]["index_rows"]
     }
 
-    target_keys = {
-        make_key(row, ("trajectory_id", "model_frame_idx"))
-        for row in documents["oracle_targets"]["rows"]
-    }
-
     b_target_keys = {
         make_key(row, ("trajectory_id", "model_frame_idx"))
         for row in b_target_document["rows"]
-    }
-
-    baseline_keys = {
-        make_key(row, ("trajectory_id", "model_frame_idx"))
-        for row in d_baseline_document["rows"]
     }
 
     run_ids = {
@@ -2413,6 +2407,10 @@ def main() -> None:
     report = run_synthetic_pipeline()
 
     write_json(DEFAULT_REPORT_PATH, report)
+    write_json(
+        DEFAULT_ANALYSIS_REPORT_PATH,
+        report["person_b_synthetic_analysis_chain"],
+    )
 
     print("Step 1.7 synthetic integration status:", report["overall_status"])
     print(
@@ -2432,6 +2430,7 @@ def main() -> None:
     )
     print("Orphaned rows:", report["summary"]["orphaned_claim_bearing_rows"])
     print("Join report:", DEFAULT_REPORT_PATH)
+    print("Analysis report:", DEFAULT_ANALYSIS_REPORT_PATH)
 
     if report["overall_status"] != "passed":
         raise SystemExit(1)
