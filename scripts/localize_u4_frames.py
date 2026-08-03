@@ -117,10 +117,10 @@ def main() -> None:
         != U4_FRAME_INPUT_SCHEMA_VERSION
     ):
         raise ValueError("Unknown U4 frame-input schema version.")
-    if (
-        homography_report.get("homography_report_schema_version")
-        != "person-e-homography-report-v0.2"
-    ):
+    if homography_report.get("homography_report_schema_version") not in {
+        "person-e-homography-report-v0.2",
+        "person-e-homography-report-v0.3",
+    }:
         raise ValueError("Unknown homography-report schema version.")
     if homography_report.get("config_hash") != config_hash:
         raise ValueError("Homography report was produced under a different config.")

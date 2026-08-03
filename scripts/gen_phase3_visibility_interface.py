@@ -9,7 +9,6 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 import sys
@@ -27,14 +26,13 @@ SCHEMA_VERSION = "1.0"
 PKG = "person-c-phase3-visibility-interface-v0_1"
 DETECTOR_VERSION = ("hsv-largest-valid-blob-v1.0-candidate:sha256:"
                     "0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125")
+SOURCE_REVISION = "fa70424530f422a2e6140e0e90d0ff18f583141e"
 
 
 def canon(o): return (json.dumps(o, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode()
 
 
 def build_all():
-    head = subprocess.check_output(["git", "-C", ROOT, "rev-parse", "HEAD"]).decode().strip()
-
     interface = {
         "schema_version": SCHEMA_VERSION, "package_id": PKG, "owner": "Person C",
         "final_visibility_interface_version": FINAL_VISIBILITY_INTERFACE_VERSION,
@@ -109,7 +107,7 @@ def build_all():
     files["visibility_disagreement_schema.json"] = canon(disagreement_schema)
     files["visibility_join_validation_receipt.json"] = canon({
         "schema_version": SCHEMA_VERSION, "package_id": PKG, "owner": "Person C",
-        "source_revision": head,
+        "source_revision": SOURCE_REVISION,
         "final_visibility_interface_version": FINAL_VISIBILITY_INTERFACE_VERSION,
         "enforcement_module": "mineocclude.data.visibility_join",
         "authoritative_primary_key": list(PRIMARY_KEY),
