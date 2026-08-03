@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from scripts.person_c.prepare_c1_5_c6a import bundle_digest, derive_c6a_rows, validate_c6a_rows
+from scripts.person_c.prepare_c1_5_c6a import (
+    bundle_digest,
+    derive_c6a_rows,
+    target_configuration,
+    validate_c6a_rows,
+)
 
 
 def _source_row(order: int, layout: str = "layout_01") -> dict[str, str]:
@@ -40,3 +45,10 @@ def test_bundle_digest_is_order_independent_but_content_bound() -> None:
     assert bundle_digest([a, b]) == bundle_digest([b, a])
     changed = dict(b, size_bytes=3)
     assert bundle_digest([a, b]) != bundle_digest([a, changed])
+
+
+def test_target_configuration_is_bound_to_the_named_layout() -> None:
+    layout = {"target_start": {"world_xyz": [-6.0, 4.0, 6.0]}}
+    assert target_configuration(layout, True)["start_world_xyz"] == [-6.0, 4.0, 6.0]
+    assert target_configuration(layout, True)["exact_count"] == 1
+    assert target_configuration(layout, False)["exact_count"] == 0

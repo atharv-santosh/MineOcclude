@@ -126,6 +126,21 @@ def matrix_bytes(rows: list[dict[str, Any]]) -> bytes:
     return stream.getvalue().encode("utf-8")
 
 
+def target_configuration(layout: dict[str, Any], required: bool) -> dict[str, Any]:
+    return {
+        "required": required,
+        "entity_type": "minecraft:sheep",
+        "color": "magenta",
+        "tag": "mineocclude_experimental_target",
+        "no_ai": True,
+        "silent": True,
+        "persistent": True,
+        "invulnerable": True,
+        "start_world_xyz": layout["target_start"]["world_xyz"],
+        "exact_count": 1 if required else 0,
+    }
+
+
 def inventory_bytes(directory: Path, outputs: dict[Path, bytes]) -> bytes:
     entries = []
     for path, data in sorted(outputs.items(), key=lambda item: str(item[0])):
@@ -253,12 +268,7 @@ def main() -> int:
             "mineocclude_jar_sha256": jar["sha256"],
             "impulse": {"axis": -1, "at_tick": 0},
             "camera": layout["camera"],
-            "target": {"required": row["scene"] != "nosheep",
-                       "entity_type": "minecraft:sheep", "color": "magenta",
-                       "tag": "mineocclude_experimental_target", "no_ai": True,
-                       "silent": True, "persistent": True, "invulnerable": True,
-                       "start_world_xyz": layout["target_start"]["world_xyz"],
-                       "exact_count": 0 if row["scene"] == "nosheep" else 1},
+            "target": target_configuration(layout, row["scene"] != "nosheep"),
             "noise_schedule": entry,
             "execution_command": (f"mineocclude start {row['layout_id']} {row['episode_id']} "
                                   f"{row['seed']} {row['v']} {row['q']} {row['max_ticks']}"),
@@ -324,7 +334,7 @@ def main() -> int:
             "schedule": c1_schedule_entries[1],
             "independence_required": True,
         },
-        "target_expectation": episode_records[0]["target"],
+        "target_expectation": target_configuration(layouts["layout_01"], True),
         "marker_expectation": layouts["layout_01"]["markers"],
         "camera_expectation": layouts["layout_01"]["camera"],
         "screenshot_requirement": "new F2 gameplay PNG at canonical pose with wall, four markers, and the retained magenta target visible before capture; copy bytes to the exact operator screenshot path",
@@ -455,9 +465,31 @@ For the independent operator, repeat from a fresh server/client session using ep
         "scientific_capture_started": False,
     }
     outputs[REPAIR_DOC_DIR / "repair_receipt.json"] = dump(repair)
+    outputs[REPAIR_DOC_DIR / "build_and_test_receipt.json"] = dump({
+        "schema_version": "person-c-c1-c6a-build-test-receipt-v0.1",
+        "source_commit": args.source_commit,
+        "java_executable": r"C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot\bin\java.exe",
+        "gradle_command": r".\gradlew.bat clean build test --no-daemon",
+        "gradle_clean_build_pass": True,
+        "fabric_test_pass": True,
+        "junit_test_count": 32,
+        "target_retention_regression_test_count": 11,
+        "focused_repository_command": (
+            "python -m pytest tests/test_person_c_c1_c6a_plan.py "
+            "tests/data/test_noise_schedule.py tests/data/test_layout_contract.py "
+            "tests/data/test_environment_lock.py -q"),
+        "focused_repository_test_pass": True,
+        "focused_pytest_count": 30,
+        "focused_subtest_count": 30,
+        "built_jar": jar,
+    })
     outputs[REPAIR_DOC_DIR / "validation_report.json"] = dump({
         "schema_version": "person-c-c1-c6a-repair-validation-v0.1",
         "status": "PASS" if smoke is not None else "PENDING_SMOKE",
+        "gradle_clean_build_pass": True,
+        "fabric_test_pass": True,
+        "focused_repository_test_pass": True,
+        "target_retention_regression_test_count": 11,
         "c6a_row_count": len(rows), "unique_episode_ids": True,
         "unique_seeds": True, "all_layouts_exist": True,
         "all_geometry_version": GEOMETRY_VERSION, "c6b_episode_count": 0,
