@@ -1,10 +1,11 @@
-"""Public contract helpers without import-time dependency cycles.
+"""Cross-role contract validators.
 
-The analysis-input validators depend on the Person C capture contract through
-the coordinate adapter. Importing them eagerly here made a direct import of
-``mineocclude.data.capture_contract`` recurse back into itself. Keep the
-package-level convenience API, but resolve it only when a caller requests one
-of these names.
+Exports are resolved lazily (PEP 562). ``analysis_inputs`` imports Person B's
+analysis chain, which itself imports ``mineocclude.data.capture_contract``;
+an eager import here made the package-import order significant (importing
+``mineocclude.data`` before ``mineocclude.contracts`` raised a circular
+ImportError). Lazy resolution keeps every import order working without
+changing any exported name.
 """
 
 from __future__ import annotations

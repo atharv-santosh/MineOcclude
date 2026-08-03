@@ -1,0 +1,12 @@
+{
+  "geometry_rule_reference": "mineocclude.data.visibility (geometric visibility)",
+  "package_id": "person-c-phase3-detector-v1-untouched-test-v0_1",
+  "person_e_detector_output_used_for_truth": false,
+  "rules": {
+    "binary_labels": "owner-authored positive/negative only; no detector outcome",
+    "truth_absent": "no-sheep capture condition (no sheep entity in the scene). Binary owner-authored label truth_present=false.",
+    "truth_present": "sheep present (visible capture condition) AND geometrically visible per Person C server as-built wall/sheep geometry at the reserved frame index. Binary owner-authored label truth_present=true."
+  },
+  "schema_version": "1.0",
+  "truth_authority": "Person C owned geometry and authoritative capture condition"
+}

@@ -1,0 +1,12 @@
+{
+  "geometry_rule_reference": "mineocclude.data.visibility (geometric visibility)",
+  "package_id": "person-c-phase3-detector-v1-untouched-test-v0_3",
+  "person_e_detector_output_used_for_truth": false,
+  "rules": {
+    "binary_labels": "owner-authored positive/negative only; no detector outcome",
+    "truth_absent": "no magenta sheep entity present. A non-magenta cow distractor held static in the visible foreground at an exact world position may be present; it is NOT the detection target and does not change the binary absent label",
+    "truth_present": "magenta sheep present AND geometrically visible per Person C server as-built geometry at the reserved frame index"
+  },
+  "schema_version": "1.0",
+  "truth_authority": "Person C owned geometry and authoritative capture condition"
+}

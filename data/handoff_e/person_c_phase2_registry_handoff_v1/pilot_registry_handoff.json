@@ -1,0 +1,187 @@
+{
+  "acceptance_authority": {
+    "decision": "accepted",
+    "declared_by": "Person C (atharvsantosh, owner and verifier of the capture evidence)",
+    "validator_version": "person-c-qa-v0.1"
+  },
+  "accepted": true,
+  "artifacts": {
+    "action_stream": {
+      "repository_path": "data/autonomous/layout_03_ep10002/mineworld_actions.jsonl",
+      "sha256": "9ee098f721e25203b8e017d6b0eb70d265b1302e0b3455c5b92d6f256ec2e475",
+      "verification_classification": "repository_bytes_recomputed"
+    },
+    "capture_provenance": {
+      "repository_path": "data/autonomous/layout_03_ep10002/capture_provenance.json",
+      "sha256": "95d845fc2b26a177193da68aacaa12aa4727e8d55a53e49d44e831ba0334e55d",
+      "verification_classification": "repository_bytes_recomputed"
+    },
+    "checksum_manifest": {
+      "repository_path": "data/autonomous/layout_03_ep10002/qa_report_10002.json.sha256",
+      "sha256": "600d636d1d487c5e0a702909288bbfe99fcbfa501463fd117877ff7a6417800e",
+      "verification_classification": "repository_bytes_recomputed"
+    },
+    "frame_map": {
+      "repository_path": "data/autonomous/layout_03_ep10002/frame_map.parquet",
+      "sha256": "9d4ff1116b8d0d5646413ed4718f01072eadb200def2841c246e40afce8b99a9",
+      "verification_classification": "repository_bytes_recomputed"
+    },
+    "layout_config": {
+      "repository_path": "configs/scenes/layouts.yaml",
+      "sha256": "5a39d2dcae44d72f07b0e645dcc3e64ea6178ef79f1c9e3f12bff11f857f82cb",
+      "verification_classification": "repository_bytes_recomputed"
+    },
+    "media_video": {
+      "repository_path": "data/autonomous/layout_03_ep10002/video_640x360.mp4",
+      "sha256": "51d9ccad35a63f82342fa1deceeb1b1b23be33cd2e96240535c23c3be9f89e9d",
+      "verification_classification": "repository_bytes_recomputed"
+    },
+    "qa_report": {
+      "repository_path": "data/autonomous/layout_03_ep10002/qa_report_10002.json",
+      "sha256": "9e7cd07225a32455e26e454a84440cb21b1a4da6c0e879ee9b54a28d500c7217",
+      "verification_classification": "repository_bytes_recomputed"
+    },
+    "raw_client_actions": {
+      "external_object": "~/mineocclude-client/mineocclude_client_out/episode_10002/raw_actions.jsonl",
+      "sha256": "4e49cdc13b8cf2e5939ea11b3e7b8d3abd54133609e6767a623dfb8a1e0c2372",
+      "verification_classification": "local_external_bytes_recomputed"
+    },
+    "raw_client_tick": {
+      "external_object": "~/mineocclude-client/mineocclude_client_out/episode_10002/client_tick.jsonl",
+      "sha256": "859cdbe66b493c794c3847123e48c35a59e9c3943619313f48520a38599ea989",
+      "verification_classification": "local_external_bytes_recomputed"
+    },
+    "raw_frames_640x360": {
+      "external_object": "~/mineocclude-client/mineocclude_client_out/episode_10002/frames_640x360",
+      "frame_file_count": 33,
+      "frame_manifest_sha256": "3fa79eae24b0622ca15cf2b99ac56e2d45577f11c38de1b6d0d7ba568ebda454",
+      "verification_classification": "local_external_bytes_recomputed"
+    },
+    "raw_server_state": {
+      "external_object": "~/mineocclude-server/mineocclude_out/episode_10002/server_state.jsonl",
+      "sha256": "b30821fa0bb055e0b59119e86f7cf8e49fffb550d43239f4bb234b8fc2b2c605",
+      "verification_classification": "local_external_bytes_recomputed"
+    },
+    "seed_noise_schedule": {
+      "external_object": "~/mineocclude-server/mineocclude_schedules/episode_10002.jsonl",
+      "sha256": "73e63fad1ceea1449fa922f13f7cfc9935450a1339568611eb2d7a912ca57989",
+      "verification_classification": "local_external_bytes_recomputed"
+    }
+  },
+  "attempt_id": "layout_03_ep10002-attempt-1",
+  "attempt_scope_ref": "attempt_scope.json",
+  "attempt_scope_summary": {
+    "accepted": 1,
+    "attempts_in_pilot_cell": 1,
+    "failed_or_superseded": 0
+  },
+  "canonical_camera_pose_id": "layout_03_canonical_pose_v1",
+  "capture_command": [
+    "mineocclude mode normal",
+    "mineocclude duration 24",
+    "mineocclude reveal 0",
+    "mineocclude warmup 60",
+    "mineocclude impulse -1 0.0",
+    "mineocclude lockcam on",
+    "mineocclude start layout_03 10002 99466564 1.0 0.05 300"
+  ],
+  "capture_time_code_sha": "1f1937ad850b2476aca528032410a1938d0abe7f",
+  "deterministic_capture_inputs": {
+    "capturing_jar_sha256": "51451c196a38b2fe0bae0c736ac6b603d8c5bfd2c9fe0a3de8d4ac09dbc09d89",
+    "max_ticks": 300,
+    "noise_rng": "immutable_numpy_pcg64_schedule",
+    "q": 0.05,
+    "seed": 99466564,
+    "v": 1.0,
+    "warmup": 60
+  },
+  "direct_input_relationships": [
+    {
+      "input": "seed_noise_schedule",
+      "produces": "capture_run"
+    },
+    {
+      "input": "layout_config",
+      "produces": "capture_run"
+    },
+    {
+      "input": "capturing_jar_sha256",
+      "produces": "capture_run"
+    }
+  ],
+  "dirty_state": {
+    "git_dirty_code_scoped": false,
+    "note": "git_dirty is code/config-scoped; working tree carried in-progress data output at capture time only.",
+    "working_tree_dirty_at_capture": true
+  },
+  "ended_at": "2026-07-27T21:12:10Z",
+  "episode_id": 10002,
+  "frame_count": 33,
+  "historical_pilot_note": {
+    "no_historical_timestamps_were_invented": true,
+    "preferred_historical_episode": 9410,
+    "reason": "episode 9410 has no authoritative UTC started_at/ended_at (lifecycle records monotonic diagnostic_nanos only) and no attempt-scope declaration; fail-closed per Person E Step 2.1.",
+    "replacement_is_first_registry_grade_pilot": true,
+    "status": "retained as historical evidence; NOT registry-registered"
+  },
+  "layout_id": "layout_03",
+  "lifecycle_status": "accepted",
+  "lifecycle_version": "person-c-tick-lifecycle-v0.1",
+  "output_relationships": [
+    {
+      "from": "capture_run",
+      "outputs": [
+        "raw_server_state",
+        "raw_client_actions",
+        "raw_client_tick",
+        "raw_frames_640x360"
+      ]
+    },
+    {
+      "from": [
+        "raw_server_state",
+        "raw_client_actions",
+        "raw_frames_640x360"
+      ],
+      "outputs": [
+        "frame_map",
+        "action_stream",
+        "media_video"
+      ]
+    },
+    {
+      "from": "frame_map",
+      "manifested_by": "checksum_manifest",
+      "verified_by": "qa_report"
+    }
+  ],
+  "receipt_version": "person-c-phase2-registry-handoff-v1",
+  "resolution": {
+    "height": 360,
+    "width": 640
+  },
+  "row_count": 33,
+  "schema_version": "1.0",
+  "session_id": "person-c-production-run-base10000-2026-07-27",
+  "source_evidence_paths": [
+    "data/autonomous/layout_03_ep10002/frame_map.parquet",
+    "data/autonomous/layout_03_ep10002/mineworld_actions.jsonl",
+    "data/autonomous/layout_03_ep10002/video_640x360.mp4",
+    "data/autonomous/layout_03_ep10002/qa_report_10002.json",
+    "data/autonomous/layout_03_ep10002/qa_report_10002.json.sha256",
+    "data/autonomous/layout_03_ep10002/capture_provenance.json",
+    "configs/scenes/layouts.yaml",
+    "data/autonomous/pilot_production_ledger.json"
+  ],
+  "source_revision": "487532ba1e7745fe07174090c0851269fb70a6a7",
+  "started_at": "2026-07-27T21:12:05Z",
+  "tick_rate_hz": 20,
+  "trajectory_id": "layout_03_ep10002",
+  "verification_authority": "Person C (atharvsantosh, owner and verifier of the capture evidence)",
+  "verification_method": "per-artifact; see artifact_verification.json (repository_bytes_recomputed and local_external_bytes_recomputed)",
+  "visibility_label_counts": {
+    "hidden": 24,
+    "quarantined": 16,
+    "visible": 9
+  }
+}

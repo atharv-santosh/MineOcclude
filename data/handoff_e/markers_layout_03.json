@@ -1,0 +1,115 @@
+{
+ "homography_fixture_schema_version": "person-e-homography-fixture-v1.0",
+ "schema_version": "1.0",
+ "layout_id": "layout_03",
+ "legacy_layout_id": "layout_02",
+ "source_trajectory_id": "layout_03_ep33005_nosheep_clean",
+ "canonical_camera_pose_id": "layout_03_canonical_pose_v1",
+ "image_coordinate_system": "pixel_center_xy_zero_based",
+ "image_width_px": 640,
+ "image_height_px": 360,
+ "world_coordinate_system": "ground_plane_world_xz_blocks_topface_centre",
+ "synthetic": false,
+ "scientific_use": "pending_e_detection",
+ "marker_visibility": "all 4 in-frame with border margin (>=111px), verified by colour detection on the clean no-sheep capture; markergeom 0 7 5 0 (near row in front of the wider occluder, far row at lane extremes)",
+ "marker_image_point_convention": "CENTRE OF MARKER BLOCK TOP FACE (BlockPos + (0.5, y+1, 0.5)); matches marker_image_point_convention and the y=4 sheep foot-plane",
+ "role_relabel_basis": "marker COLOR (blue=NW, yellow=NE, lime=SW, white=SE)",
+ "image_xy_status": "NULL — E detects on the no-sheep calibration frames",
+ "capture_provenance": "data/autonomous/layout_03_ep33005/capture_provenance.json (git_dirty=false)",
+ "marker_correspondences": [
+  {
+   "marker_id": "north_west",
+   "marker_role": "north_west",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "blue",
+   "world_xz_blocks": [
+    -3.5,
+    0.5
+   ],
+   "image_xy": null,
+   "mod_role_original": "near_west",
+   "world_point_convention": "block_top_face_centre"
+  },
+  {
+   "marker_id": "north_east",
+   "marker_role": "north_east",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "yellow",
+   "world_xz_blocks": [
+    4.5,
+    0.5
+   ],
+   "image_xy": null,
+   "mod_role_original": "near_east",
+   "world_point_convention": "block_top_face_centre"
+  },
+  {
+   "marker_id": "south_east",
+   "marker_role": "south_east",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "white",
+   "world_xz_blocks": [
+    9.5,
+    7.5
+   ],
+   "image_xy": null,
+   "mod_role_original": "far_east",
+   "world_point_convention": "block_top_face_centre"
+  },
+  {
+   "marker_id": "south_west",
+   "marker_role": "south_west",
+   "marker_kind": "non_magenta_geometry_marker",
+   "marker_color": "lime",
+   "world_xz_blocks": [
+    -8.5,
+    7.5
+   ],
+   "image_xy": null,
+   "mod_role_original": "far_west",
+   "world_point_convention": "block_top_face_centre"
+  }
+ ],
+ "layout_id_correction": {
+  "applied": "legacy mod ids layout_00-layout_05 -> frozen contract layout_01-layout_06",
+  "decision_record": "docs/decisions/person_c_layout_id_supersession_v0_1.md",
+  "corrected_fields": [
+   "canonical_camera_pose_id",
+   "frame_id",
+   "layout_id",
+   "marker_set_id",
+   "png_path"
+  ],
+  "preserved_verbatim": [
+   "trajectory_id",
+   "source_trajectory_id",
+   "source_artifact_id",
+   "episode_id",
+   "capture_command",
+   "capture_package",
+   "capture_provenance",
+   "seed",
+   "start_utc",
+   "end_utc",
+   "git_sha",
+   "capturing_jar_sha256"
+  ],
+  "preserved_rationale": "These record what was actually captured and executed against the prototype mod, and name real on-disk artifacts. Rewriting them would falsify provenance."
+ },
+ "marker_convention_correction": {
+  "correction_id": "person-c-marker-worldcoord-topface-centre-v1",
+  "status": "coords born-correct at capture (mod emits world_x/world_z = top-face centre)",
+  "eval_probe_untouched": true
+ },
+ "layout_03_coverage_recapture": {
+  "reason": "north-west/blue and north-east/yellow markers touched the frame border (near row at shallow depth, wide lane) -> public detector rejected them in all 6 negative frames -> 0/6 probes.",
+  "fix": "marker geometry v2, markergeom nearOrtho=0 farOrtho=7 nearInset=5 farInset=0.",
+  "capture": "layout_03_ep33005 (clean no-sheep), jar aea241eceb87, seed 281627321, 2026-07-28T04:11:05Z",
+  "markergeom_param": [
+   0,
+   7,
+   5,
+   0
+  ]
+ }
+}

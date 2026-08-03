@@ -1,0 +1,33 @@
+{
+  "authoritative_primary_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "context_identities_must_match": [
+    "layout_id",
+    "canonical_camera_pose_id",
+    "resolution",
+    "coordinate_convention"
+  ],
+  "enforcement_module": "mineocclude.data.visibility_join.strict_join",
+  "final_label_owner": "Person C",
+  "final_visibility_interface_version": "person-c-final-visibility-interface-v1.0",
+  "geometry_rule_version": "person-c-geometric-visibility-v0.1",
+  "owner": "Person C",
+  "package_id": "person-c-phase3-visibility-interface-v0_1",
+  "person_e_may_write_visible_flag": false,
+  "primary_key_confirmation": "(trajectory_id, model_frame_idx) remains the complete authoritative primary key for the join; it uniquely identifies a model frame within the dataset.",
+  "primary_key_is_complete": true,
+  "rule": "visible_flag = geometric_visible AND empirical_magenta_visible",
+  "schema_version": "1.0",
+  "separately_preserved_fields": [
+    "geometric_visible",
+    "empirical_magenta_visible",
+    "visible_flag",
+    "quarantine_category",
+    "quarantined",
+    "invalidity_reason",
+    "detector_version",
+    "geometry_rule_version"
+  ]
+}
