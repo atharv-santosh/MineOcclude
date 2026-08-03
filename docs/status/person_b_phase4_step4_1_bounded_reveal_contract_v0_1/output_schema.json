@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "comparison_contract_commit": {
+      "const": "4da02023a376df77eacb48084b1406ec1accfcb1"
+    },
+    "person_b_contract_commit": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "person_e_authorization_commit": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "prediction_count": {
+      "const": 100
+    },
+    "rows": {
+      "items": {
+        "type": "object"
+      },
+      "maxItems": 100,
+      "minItems": 100,
+      "type": "array"
+    },
+    "schema_id": {
+      "const": "person-b-step4-1-bounded-reveal-predictions-v0-1"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "u4_output_inspected": {
+      "const": false
+    }
+  },
+  "required": [
+    "schema_id",
+    "schema_version",
+    "comparison_contract_commit",
+    "person_b_contract_commit",
+    "person_e_authorization_commit",
+    "prediction_count",
+    "rows",
+    "u4_output_inspected"
+  ],
+  "title": "Person B Step 4.1 bounded reveal predictions v0.1",
+  "type": "object"
+}
