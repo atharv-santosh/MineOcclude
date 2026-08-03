@@ -142,11 +142,7 @@ public final class EpisodeManager {
 
         // Fixed, controlled lighting/weather (plan requirement + so the magenta
         // sheep is clearly lit): permanent noon, no weather.
-        world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_WEATHER_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, server);
-        world.setTimeOfDay(6000L);                    // noon
-        world.setWeather(1_000_000, 0, false, false); // clear, no rain/thunder
+        applyRuntimeBaseline(world);
 
         this.cfg = config;
         this.wallOrtho = cfg.wallOrthoConst + cfg.wallOrthoOffset;
@@ -215,11 +211,7 @@ public final class EpisodeManager {
         this.camOrtho = wallOrtho - c.cameraDist;
         this.arena = new ArenaBuilder(c, wallOrtho, camOrtho - 3, c.wallOrthoConst + 3);
 
-        world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_WEATHER_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, server);
-        world.setTimeOfDay(6000L);
-        world.setWeather(1_000_000, 0, false, false);
+        applyRuntimeBaseline(world);
 
         buildArenaIfChanged(world, camOrtho - 3, c.wallOrthoConst + 3);
         forceLoadArena(world);
@@ -561,6 +553,22 @@ public final class EpisodeManager {
     private ServerPlayerEntity firstPlayer() {
         List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
         return players.isEmpty() ? null : players.get(0);
+    }
+
+    /** Apply the additive post-C1 runtime baseline before any preview/reset. */
+    private void applyRuntimeBaseline(ServerWorld world) {
+        world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
+        world.getGameRules().get(GameRules.DO_WEATHER_CYCLE).set(false, server);
+        world.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, server);
+        world.getGameRules().get(GameRules.DO_MOB_GRIEFING).set(false, server);
+        // Yarn 1.16.5 exposes no direct IntRule setter; use the vanilla command
+        // path so callbacks and command-result semantics remain authoritative.
+        server.getCommandManager().execute(server.getCommandSource(),
+                "gamerule randomTickSpeed 0");
+        world.getGameRules().get(GameRules.DO_FIRE_TICK).set(false, server);
+        world.getGameRules().get(GameRules.KEEP_INVENTORY).set(true, server);
+        world.setTimeOfDay(6000L);
+        world.setWeather(1_000_000, 0, false, false);
     }
 
     /**
