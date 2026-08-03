@@ -1,0 +1,1448 @@
+{
+  "all_baseline_outputs_finite": true,
+  "all_eight_baselines_complete": true,
+  "applicability_contract": {
+    "path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+    "sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+    "version": "person-b-step4-1-family-target-applicability-v0.1"
+  },
+  "authorization_chain": {
+    "person_b_authorization_commit": "2a23c84995fea4e15293039063e60e9535fd2ee2",
+    "person_b_authorization_record": {
+      "accepted_authorization_authority_by_reusable_family": {
+        "constant_velocity": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+        "explicit_feature": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+        "grouped_shuffled": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+        "last_seen": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+        "time_only": "a6f1cedd390ecde129fc5b25ad50f81a0848530b"
+      },
+      "accepted_producing_authority_by_reusable_family": {
+        "constant_velocity": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "explicit_feature": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "grouped_shuffled": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "last_seen": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "time_only": "683077b58fdb73176936fcb131e9297eb102ea10"
+      },
+      "applicability_contract_path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+      "applicability_contract_sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+      "applicability_contract_version": "person-b-step4-1-family-target-applicability-v0.1",
+      "atomic_receipt_generation_required": true,
+      "authorization_scope": "Person B provenance-audited fail-closed resume authorization for exact Person D runner HEAD",
+      "authorized_branch": "role/person-d-baselines",
+      "authorized_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+      "direct_output_validation_required": true,
+      "existing_receipt_revalidation_required": true,
+      "frame_root": "/home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1",
+      "materialized_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1",
+      "minimum_available_memory_gib": 20.0,
+      "minimum_physical_memory_gib": 20.0,
+      "output_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+      "preserved_reusable_families": [
+        "last_seen",
+        "constant_velocity",
+        "grouped_shuffled",
+        "time_only",
+        "explicit_feature"
+      ],
+      "provenance_audit_validator_commit": "d7b710d6fbc9f8ecba5075788d4149f6f62b100c",
+      "provenance_receipt_is_audit_output": true,
+      "record_purpose": "External superseding authorization whose receipt is generated only after direct Person B audit",
+      "schema_id": "person-b-phase4-step4-1-provenance-reauthorization-v0-2-person-d-authorization-record",
+      "schema_version": "2.0",
+      "scientific_execution_performed": false,
+      "source_commit": "external_person_b_package",
+      "supersedes_authorization_commit": "60353157874d8d095ac29d76a40b8a8fa86b3d29",
+      "u4_output_inspected": false
+    },
+    "person_b_authorization_record_path": "docs/status/person_b_phase4_step4_1_provenance_reauthorization_v0_2/person_d_authorization_record.json",
+    "person_b_authorization_record_sha256": "55acedbd0d6ddde28f6b12d02fc6416dddb6f32a1e435fdc90815bfbb46095cb",
+    "person_d_completion_commit": "f89b142a6fdb52c2d238669af8df14061cee5896",
+    "person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10"
+  },
+  "baseline_family_contracts": {
+    "constant_velocity": {
+      "configuration": {
+        "fit_required": false,
+        "randomness": "none"
+      },
+      "definition": "mu equals last visible position plus estimated visible-window velocity times tau",
+      "expected_output_type": "out_of_fold_mu_prediction",
+      "feature_access": [
+        "estimated_velocity_blocks_per_s",
+        "last_visible_position_blocks",
+        "tau",
+        "visibility"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": false
+      },
+      "role": "Regime A reference",
+      "target_names": [
+        "mu_oracle_blocks"
+      ]
+    },
+    "explicit_feature": {
+      "configuration": {
+        "alpha_grid": [
+          0.1,
+          1.0,
+          10.0,
+          100.0
+        ],
+        "inner_fold_count": 4,
+        "scaler_fit_scope": "outer_training_rows_only",
+        "seed": 20260719
+      },
+      "definition": "layout-grouped ridge on the frozen observable feature and interaction list",
+      "expected_output_type": "out_of_fold_mu_prediction",
+      "feature_access": [
+        "duration_seconds",
+        "estimated_velocity_blocks_per_s",
+        "last_seen_position_blocks",
+        "tau_seconds",
+        "velocity_times_duration",
+        "velocity_times_tau"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": false
+      },
+      "role": "non-privileged feature ceiling",
+      "target_names": [
+        "mu_oracle_blocks"
+      ]
+    },
+    "grouped_shuffled": {
+      "configuration": {
+        "alignment_key": "model_frame_idx",
+        "grouping_unit": "trajectory_id",
+        "permutation_seed": 20260720,
+        "requires_derangement": true
+      },
+      "definition": "seeded trajectory derangement using the donor target at the same explicit model_frame_idx",
+      "expected_output_type": "out_of_fold_grouped_null_prediction",
+      "feature_access": [
+        "fold_idx",
+        "layout_id",
+        "model_frame_idx",
+        "oracle_target_sequence",
+        "trajectory_id"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": false
+      },
+      "role": "trajectory-level chance floor",
+      "target_names": [
+        "log_sigma_oracle",
+        "mu_oracle_blocks"
+      ]
+    },
+    "known_q_analytic": {
+      "configuration": {
+        "fair_baseline": false,
+        "formula": "ln(sqrt(q_scripted_blocks2_per_s * tau))",
+        "randomness": "none"
+      },
+      "definition": "predict ln(sqrt(q_scripted * tau)) on hidden rows",
+      "expected_output_type": "privileged_log_sigma_reference",
+      "feature_access": [
+        "q_scripted_blocks2_per_s",
+        "tau",
+        "visibility"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": true
+      },
+      "role": "privileged non-fair reference ceiling",
+      "target_names": [
+        "log_sigma_oracle"
+      ]
+    },
+    "last_seen": {
+      "configuration": {
+        "fit_required": false,
+        "randomness": "none"
+      },
+      "definition": "mu equals the last visible wall-parallel position",
+      "expected_output_type": "out_of_fold_mu_prediction",
+      "feature_access": [
+        "last_visible_position_blocks",
+        "tau",
+        "visibility"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": false
+      },
+      "role": "memory heuristic floor",
+      "target_names": [
+        "mu_oracle_blocks"
+      ]
+    },
+    "raw_pixel": {
+      "configuration": {
+        "alpha_grid": [
+          0.1,
+          1.0,
+          10.0,
+          100.0
+        ],
+        "frame_scope": "exact_current_preprocessed_frame_only",
+        "inner_fold_count": 4,
+        "scaler_fit_scope": "outer_training_rows_only",
+        "seed": 20260719
+      },
+      "definition": "layout-grouped ridge on the exact current preprocessed frame only",
+      "expected_output_type": "out_of_fold_mu_prediction",
+      "feature_access": [
+        "current_preprocessed_frame"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": false
+      },
+      "role": "visual-leakage/scene-cue check",
+      "target_names": [
+        "mu_oracle_blocks"
+      ]
+    },
+    "time_only": {
+      "configuration": {
+        "fit_scope": "outer_training_folds_only",
+        "primary_polynomial_degree": 1,
+        "sensitivity_polynomial_degree": 2
+      },
+      "definition": "outer-training-fold polynomial regression of log_sigma on tau only",
+      "expected_output_type": "out_of_fold_log_sigma_prediction",
+      "feature_access": [
+        "tau",
+        "visibility"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": false
+      },
+      "role": "clock-substitution test",
+      "target_names": [
+        "log_sigma_oracle"
+      ]
+    },
+    "visible_history_q": {
+      "configuration": {
+        "dt_seconds": 0.05,
+        "fit_scope": "outer_training_folds_only",
+        "q_estimator": "visible_increment_residual_variance_over_dt"
+      },
+      "definition": "estimate q from outer-training-fold visible-history residuals, then predict ln(sqrt(q_hat * tau))",
+      "expected_output_type": "out_of_fold_log_sigma_prediction",
+      "feature_access": [
+        "tau",
+        "visibility",
+        "visible_history_positions"
+      ],
+      "legal_information": {
+        "uses_future_information": false,
+        "uses_hidden_truth": false,
+        "uses_scripted_q": false
+      },
+      "role": "fair spread baseline",
+      "target_names": [
+        "log_sigma_oracle"
+      ]
+    }
+  },
+  "baseline_prediction_count": 10776,
+  "combined_completion_manifest": {
+    "byte_size": 1480,
+    "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/run_state.json",
+    "sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5"
+  },
+  "complete_source_context_lineage": {
+    "fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+    "frame_manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+    "source_context_manifest_sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c",
+    "target_manifest_sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "completed_baseline_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "completed_baseline_family_count": 8,
+  "constant_velocity_applicability": {
+    "admitted_count": 1690,
+    "candidate_count": 1695,
+    "excluded_count": 5,
+    "excluded_identities": [
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_00_ep9441"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_01_ep9442"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_02_ep9432"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_03_ep9443"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_04_ep9444"
+      }
+    ],
+    "excluded_identities_verified": true,
+    "target": "mu_oracle_blocks"
+  },
+  "cross_fold_leakage_count": 0,
+  "duplicate_prediction_identity_count": 0,
+  "exact_prediction_documents": [
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/last_seen__mu_oracle_blocks.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "fit_required": false,
+          "randomness": "none"
+        },
+        "definition": "mu equals the last visible wall-parallel position",
+        "expected_output_type": "out_of_fold_mu_prediction",
+        "feature_access": [
+          "last_visible_position_blocks",
+          "tau",
+          "visibility"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "memory heuristic floor",
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      "byte_size": 404704,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "last_seen",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "60fb45e255ea4a0613ffdf4a17f0aae7424f7afcd3623932003cf937b2f0d05a",
+      "path": "last_seen__mu_oracle_blocks.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 1695,
+      "sha256": "48481740b50d41f87ac78ef7e2a4a1be930c400f197613c13212f7bfdb4bf4ae",
+      "target": "mu_oracle_blocks",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/constant_velocity__mu_oracle_blocks.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "fit_required": false,
+          "randomness": "none"
+        },
+        "definition": "mu equals last visible position plus estimated visible-window velocity times tau",
+        "expected_output_type": "out_of_fold_mu_prediction",
+        "feature_access": [
+          "estimated_velocity_blocks_per_s",
+          "last_visible_position_blocks",
+          "tau",
+          "visibility"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "Regime A reference",
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      "byte_size": 417255,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "constant_velocity",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "7d8d82a3dc73c75e95c8638dec86d56db30c3be1555299f9ab4c891416670c0b",
+      "path": "constant_velocity__mu_oracle_blocks.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 1690,
+      "sha256": "1156b6ca9bdc72355c23f8bcd2cbe9ba0324ad9e861fee47a246e5ef0a09fc7a",
+      "target": "mu_oracle_blocks",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/grouped_shuffled__log_sigma_oracle.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "alignment_key": "model_frame_idx",
+          "grouping_unit": "trajectory_id",
+          "permutation_seed": 20260720,
+          "requires_derangement": true
+        },
+        "definition": "seeded trajectory derangement using the donor target at the same explicit model_frame_idx",
+        "expected_output_type": "out_of_fold_grouped_null_prediction",
+        "feature_access": [
+          "fold_idx",
+          "layout_id",
+          "model_frame_idx",
+          "oracle_target_sequence",
+          "trajectory_id"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "trajectory-level chance floor",
+        "target_names": [
+          "log_sigma_oracle",
+          "mu_oracle_blocks"
+        ]
+      },
+      "byte_size": 121603,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "grouped_shuffled",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "028c2308f1d8da3ba823b9da8efdc0e769a8a5b07411b35663f779b8f01bcff9",
+      "path": "grouped_shuffled__log_sigma_oracle.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 493,
+      "sha256": "cc182dfa1795eba5eb59c98dfb54d1d7eda9a39e6f3188846c863d9b12142fcc",
+      "target": "log_sigma_oracle",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/grouped_shuffled__mu_oracle_blocks.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "alignment_key": "model_frame_idx",
+          "grouping_unit": "trajectory_id",
+          "permutation_seed": 20260720,
+          "requires_derangement": true
+        },
+        "definition": "seeded trajectory derangement using the donor target at the same explicit model_frame_idx",
+        "expected_output_type": "out_of_fold_grouped_null_prediction",
+        "feature_access": [
+          "fold_idx",
+          "layout_id",
+          "model_frame_idx",
+          "oracle_target_sequence",
+          "trajectory_id"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "trajectory-level chance floor",
+        "target_names": [
+          "log_sigma_oracle",
+          "mu_oracle_blocks"
+        ]
+      },
+      "byte_size": 346725,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "grouped_shuffled",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "e7022c81e4cdf8733b4d0fa54f91f1e4aed96b790c1fa955a0b6c0fdf6c0be0e",
+      "path": "grouped_shuffled__mu_oracle_blocks.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 1428,
+      "sha256": "db190c7fdd99e0eb075cdf603b9e7bb516caa857d2f1167e5ecf8da84c315ba5",
+      "target": "mu_oracle_blocks",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/time_only__log_sigma_oracle.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "fit_scope": "outer_training_folds_only",
+          "primary_polynomial_degree": 1,
+          "sensitivity_polynomial_degree": 2
+        },
+        "definition": "outer-training-fold polynomial regression of log_sigma on tau only",
+        "expected_output_type": "out_of_fold_log_sigma_prediction",
+        "feature_access": [
+          "tau",
+          "visibility"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "clock-substitution test",
+        "target_names": [
+          "log_sigma_oracle"
+        ]
+      },
+      "byte_size": 168182,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "time_only",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "ec2b2691af579b39c1e239213cf348ab7f54af9f4296bdee454b7528aece1f1a",
+      "path": "time_only__log_sigma_oracle.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 695,
+      "sha256": "aa8a60d9ee36a27655abd0a13b5aba2665aa5d865a9332c3f2a840cfbae5d273",
+      "target": "log_sigma_oracle",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/explicit_feature__mu_oracle_blocks.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "inner_fold_count": 4,
+          "scaler_fit_scope": "outer_training_rows_only",
+          "seed": 20260719
+        },
+        "definition": "layout-grouped ridge on the frozen observable feature and interaction list",
+        "expected_output_type": "out_of_fold_mu_prediction",
+        "feature_access": [
+          "duration_seconds",
+          "estimated_velocity_blocks_per_s",
+          "last_seen_position_blocks",
+          "tau_seconds",
+          "velocity_times_duration",
+          "velocity_times_tau"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "non-privileged feature ceiling",
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      "byte_size": 416276,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "explicit_feature",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "7d8d82a3dc73c75e95c8638dec86d56db30c3be1555299f9ab4c891416670c0b",
+      "path": "explicit_feature__mu_oracle_blocks.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 1690,
+      "sha256": "c724dc1b8918556508e4b4260315b16cf294977d51231f7c05963bc27ea973e7",
+      "target": "mu_oracle_blocks",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/raw_pixel__mu_oracle_blocks.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "frame_scope": "exact_current_preprocessed_frame_only",
+          "inner_fold_count": 4,
+          "scaler_fit_scope": "outer_training_rows_only",
+          "seed": 20260719
+        },
+        "definition": "layout-grouped ridge on the exact current preprocessed frame only",
+        "expected_output_type": "out_of_fold_mu_prediction",
+        "feature_access": [
+          "current_preprocessed_frame"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "visual-leakage/scene-cue check",
+        "target_names": [
+          "mu_oracle_blocks"
+        ]
+      },
+      "byte_size": 405896,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "preprocessed_frame_manifest": {
+          "byte_size": 6460547,
+          "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/preprocessed_frame_manifest.json",
+          "sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "raw_pixel",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "60fb45e255ea4a0613ffdf4a17f0aae7424f7afcd3623932003cf937b2f0d05a",
+      "path": "raw_pixel__mu_oracle_blocks.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 1695,
+      "sha256": "bb0a15f9d2d54f53e46c6a201d464958f2f8db90decba5784e81a99ff2298420",
+      "target": "mu_oracle_blocks",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/visible_history_q__log_sigma_oracle.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "dt_seconds": 0.05,
+          "fit_scope": "outer_training_folds_only",
+          "q_estimator": "visible_increment_residual_variance_over_dt"
+        },
+        "definition": "estimate q from outer-training-fold visible-history residuals, then predict ln(sqrt(q_hat * tau))",
+        "expected_output_type": "out_of_fold_log_sigma_prediction",
+        "feature_access": [
+          "tau",
+          "visibility",
+          "visible_history_positions"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": false
+        },
+        "role": "fair spread baseline",
+        "target_names": [
+          "log_sigma_oracle"
+        ]
+      },
+      "byte_size": 173068,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "visible_history_q",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "ec2b2691af579b39c1e239213cf348ab7f54af9f4296bdee454b7528aece1f1a",
+      "path": "visible_history_q__log_sigma_oracle.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 695,
+      "sha256": "5ef20829a26a09d4c1407c8d398cc1429266b2b45ae233fe4679d35f57c24bbc",
+      "target": "log_sigma_oracle",
+      "u4_output_inspected": false
+    },
+    {
+      "absolute_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/known_q_analytic__log_sigma_oracle.json",
+      "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "baseline_family_contract": {
+        "configuration": {
+          "fair_baseline": false,
+          "formula": "ln(sqrt(q_scripted_blocks2_per_s * tau))",
+          "randomness": "none"
+        },
+        "definition": "predict ln(sqrt(q_scripted * tau)) on hidden rows",
+        "expected_output_type": "privileged_log_sigma_reference",
+        "feature_access": [
+          "q_scripted_blocks2_per_s",
+          "tau",
+          "visibility"
+        ],
+        "legal_information": {
+          "uses_future_information": false,
+          "uses_hidden_truth": false,
+          "uses_scripted_q": true
+        },
+        "role": "privileged non-fair reference ceiling",
+        "target_names": [
+          "log_sigma_oracle"
+        ]
+      },
+      "byte_size": 173176,
+      "direct_inputs": {
+        "analysis_config": {
+          "byte_size": 4881,
+          "path": "configs/analysis/core.yaml",
+          "producer_role": "person_b",
+          "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+        },
+        "fold_manifest": {
+          "byte_size": 742601,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+        },
+        "oracle_target": {
+          "byte_size": 4934874,
+          "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+        },
+        "source_context_manifest": {
+          "byte_size": 4654,
+          "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+          "producer_role": "person_b",
+          "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c"
+        }
+      },
+      "family": "known_q_analytic",
+      "fit_manifest_sha256": "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b",
+      "identity_set_sha256": "ec2b2691af579b39c1e239213cf348ab7f54af9f4296bdee454b7528aece1f1a",
+      "path": "known_q_analytic__log_sigma_oracle.json",
+      "producer_role": "person_d",
+      "random_split_used": false,
+      "row_count": 695,
+      "sha256": "f589af2acc429460b8e9fc2725401e2adb5c0ce6424f73f3867fa43bda8ff2cd",
+      "target": "log_sigma_oracle",
+      "u4_output_inspected": false
+    }
+  ],
+  "frame_count": 1695,
+  "manual_u4_inspection_performed": false,
+  "nonfinite_prediction_count": 0,
+  "person_a_owner_record_binding": {
+    "artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+    "commit": "e3182af19e60a46ab900e060cb7ad213c014083a",
+    "inventory_path": "docs/status/person_a_phase4_step4_1_registry_v2_trust_v0_1/sha256_inventory.json",
+    "inventory_sha256": "cefe8c73d5d45e3a59bd3a780c8914cce4a1cd9d25dad7782f18ff532e6cbe39",
+    "owner_authority": {
+      "authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+      "authority_revision": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+      "authorized_artifact_types": [
+        "model_input"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_a",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_a_step4_1_frame_input_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "35a7952cbb1aeef82965cb9c29fa0292487c6c3801c9347d99e740b7d14a001c",
+      "status_record_verification_mode": "local_bytes"
+    },
+    "owner_authority_path": "docs/status/person_a_phase4_step4_1_registry_v2_trust_v0_1/owner_authority.json",
+    "owner_authority_sha256": "5aa3f16459811262731d12d63a14d9d4dffb5223e765a24eecea2e626214caea",
+    "validation_receipt_path": "docs/status/person_a_phase4_step4_1_registry_v2_trust_v0_1/validation_receipt.json",
+    "validation_receipt_sha256": "62db8aee51076cd7cea477bc5f55960a8841d55aaa2e9fa66bcd1ececda4dc58"
+  },
+  "preserved_output_provenance_path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/preserved_output_provenance.json",
+  "preserved_output_provenance_receipt": {
+    "applicability_contract": {
+      "path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+      "sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+      "version": "person-b-step4-1-family-target-applicability-v0.1"
+    },
+    "audit_decisions": {
+      "constant_velocity": "reusable",
+      "explicit_feature": "reusable",
+      "grouped_shuffled": "reusable",
+      "known_q_analytic": "absent",
+      "last_seen": "reusable",
+      "raw_pixel": "absent",
+      "time_only": "reusable",
+      "visible_history_q": "absent"
+    },
+    "canonical_receipt_sha256": "68cac6ab57b151504044b74332117c516407101b770db414f3a264edf4b364fc",
+    "direct_output_validation_required": true,
+    "environment_receipt": {
+      "available_memory_bytes": 26003996672,
+      "available_memory_gib": 24.218109130859375,
+      "minimum_available_memory_gib": 20.0,
+      "minimum_physical_memory_gib": 20.0,
+      "physical_memory_bytes": 32909385728,
+      "physical_memory_gib": 30.649253845214844,
+      "u4_output_inspected": false
+    },
+    "environment_receipt_sha256": "b7cc16667680cc9ba9236ad9fe0a2e4f321784c8d3bd70d8e13baa8b341c1ad7",
+    "families": {
+      "constant_velocity": {
+        "audit_decision": "reusable",
+        "configuration": {
+          "fit_required": false,
+          "randomness": "none"
+        },
+        "environment_receipt_sha256": "b7cc16667680cc9ba9236ad9fe0a2e4f321784c8d3bd70d8e13baa8b341c1ad7",
+        "exact_prediction_count": 1690,
+        "identity_set_sha256_by_target": {
+          "mu_oracle_blocks": "7d8d82a3dc73c75e95c8638dec86d56db30c3be1555299f9ab4c891416670c0b"
+        },
+        "output_manifest": {
+          "family_status": "completed",
+          "run_state": {
+            "byte_size": 952,
+            "path": "run_state.json",
+            "sha256": "cd0c791b2ff3a9d0a12f419391e5d72f2220e154e624c1eca20c35988efe3f29"
+          },
+          "targets": [
+            "mu_oracle_blocks"
+          ]
+        },
+        "prediction_inventory": [
+          {
+            "byte_size": 417255,
+            "family": "constant_velocity",
+            "identity_set_sha256": "7d8d82a3dc73c75e95c8638dec86d56db30c3be1555299f9ab4c891416670c0b",
+            "path": "constant_velocity__mu_oracle_blocks.json",
+            "producing_scientific_authority": {
+              "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+              "path": "src/mineocclude/baselines/constant_velocity.py",
+              "sha256": "fcf1c9276de173d6b16a38764dff176bedc7c81dc50d832f9c2d47cb10718f8d"
+            },
+            "row_count": 1690,
+            "sha256": "1156b6ca9bdc72355c23f8bcd2cbe9ba0324ad9e861fee47a246e5ef0a09fc7a",
+            "target": "mu_oracle_blocks"
+          }
+        ],
+        "prediction_inventory_sha256": "286f2ab6f71d81b285c8f777b7c9649e3678bd9724938da57451a15b2149190a",
+        "producing_authorization_lineage": {
+          "authorization_authority_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+          "authorization_record_path": "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_memory_reauthorization_v0_1/person_d_authorization_record.json",
+          "authorization_record_sha256": "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
+        },
+        "producing_person_d_authority": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "runner_receipt_sha256": "cc29b3da5c4bc7310cd3aba8f9b2e1c498366efb9f199d70d4db497ddf0c8d0f"
+      },
+      "explicit_feature": {
+        "audit_decision": "reusable",
+        "configuration": {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "inner_fold_count": 4,
+          "scaler_fit_scope": "outer_training_rows_only",
+          "seed": 20260719
+        },
+        "environment_receipt_sha256": "b7cc16667680cc9ba9236ad9fe0a2e4f321784c8d3bd70d8e13baa8b341c1ad7",
+        "exact_prediction_count": 1690,
+        "identity_set_sha256_by_target": {
+          "mu_oracle_blocks": "7d8d82a3dc73c75e95c8638dec86d56db30c3be1555299f9ab4c891416670c0b"
+        },
+        "output_manifest": {
+          "family_status": "completed",
+          "run_state": {
+            "byte_size": 952,
+            "path": "run_state.json",
+            "sha256": "cd0c791b2ff3a9d0a12f419391e5d72f2220e154e624c1eca20c35988efe3f29"
+          },
+          "targets": [
+            "mu_oracle_blocks"
+          ]
+        },
+        "prediction_inventory": [
+          {
+            "byte_size": 416276,
+            "family": "explicit_feature",
+            "identity_set_sha256": "7d8d82a3dc73c75e95c8638dec86d56db30c3be1555299f9ab4c891416670c0b",
+            "path": "explicit_feature__mu_oracle_blocks.json",
+            "producing_scientific_authority": {
+              "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+              "path": "src/mineocclude/baselines/explicit_feature.py",
+              "sha256": "7357090241356663454a396277279390582a60409524e099dd1746c34f84b90d"
+            },
+            "row_count": 1690,
+            "sha256": "c724dc1b8918556508e4b4260315b16cf294977d51231f7c05963bc27ea973e7",
+            "target": "mu_oracle_blocks"
+          }
+        ],
+        "prediction_inventory_sha256": "616196b66d4e9703acd9f34a56530275d28af30e4e7b5e0e9320d98771096710",
+        "producing_authorization_lineage": {
+          "authorization_authority_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+          "authorization_record_path": "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_memory_reauthorization_v0_1/person_d_authorization_record.json",
+          "authorization_record_sha256": "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
+        },
+        "producing_person_d_authority": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "runner_receipt_sha256": "cc29b3da5c4bc7310cd3aba8f9b2e1c498366efb9f199d70d4db497ddf0c8d0f"
+      },
+      "grouped_shuffled": {
+        "audit_decision": "reusable",
+        "configuration": {
+          "alignment_key": "model_frame_idx",
+          "grouping_unit": "trajectory_id",
+          "permutation_seed": 20260720,
+          "requires_derangement": true
+        },
+        "environment_receipt_sha256": "b7cc16667680cc9ba9236ad9fe0a2e4f321784c8d3bd70d8e13baa8b341c1ad7",
+        "exact_prediction_count": 1921,
+        "identity_set_sha256_by_target": {
+          "log_sigma_oracle": "028c2308f1d8da3ba823b9da8efdc0e769a8a5b07411b35663f779b8f01bcff9",
+          "mu_oracle_blocks": "e7022c81e4cdf8733b4d0fa54f91f1e4aed96b790c1fa955a0b6c0fdf6c0be0e"
+        },
+        "output_manifest": {
+          "family_status": "completed",
+          "run_state": {
+            "byte_size": 952,
+            "path": "run_state.json",
+            "sha256": "cd0c791b2ff3a9d0a12f419391e5d72f2220e154e624c1eca20c35988efe3f29"
+          },
+          "targets": [
+            "log_sigma_oracle",
+            "mu_oracle_blocks"
+          ]
+        },
+        "prediction_inventory": [
+          {
+            "byte_size": 121603,
+            "family": "grouped_shuffled",
+            "identity_set_sha256": "028c2308f1d8da3ba823b9da8efdc0e769a8a5b07411b35663f779b8f01bcff9",
+            "path": "grouped_shuffled__log_sigma_oracle.json",
+            "producing_scientific_authority": {
+              "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+              "path": "src/mineocclude/baselines/shuffled.py",
+              "sha256": "e4bb2f5ad3e053d77bd5f85340bd86877efb70112adaef829c2ff1a9b983d6df"
+            },
+            "row_count": 493,
+            "sha256": "cc182dfa1795eba5eb59c98dfb54d1d7eda9a39e6f3188846c863d9b12142fcc",
+            "target": "log_sigma_oracle"
+          },
+          {
+            "byte_size": 346725,
+            "family": "grouped_shuffled",
+            "identity_set_sha256": "e7022c81e4cdf8733b4d0fa54f91f1e4aed96b790c1fa955a0b6c0fdf6c0be0e",
+            "path": "grouped_shuffled__mu_oracle_blocks.json",
+            "producing_scientific_authority": {
+              "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+              "path": "src/mineocclude/baselines/shuffled.py",
+              "sha256": "e4bb2f5ad3e053d77bd5f85340bd86877efb70112adaef829c2ff1a9b983d6df"
+            },
+            "row_count": 1428,
+            "sha256": "db190c7fdd99e0eb075cdf603b9e7bb516caa857d2f1167e5ecf8da84c315ba5",
+            "target": "mu_oracle_blocks"
+          }
+        ],
+        "prediction_inventory_sha256": "424f01d6c9c118fcb6ea2d0264fc839d004c77edd0a6f853ef5ef27530323a04",
+        "producing_authorization_lineage": {
+          "authorization_authority_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+          "authorization_record_path": "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_memory_reauthorization_v0_1/person_d_authorization_record.json",
+          "authorization_record_sha256": "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
+        },
+        "producing_person_d_authority": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "runner_receipt_sha256": "cc29b3da5c4bc7310cd3aba8f9b2e1c498366efb9f199d70d4db497ddf0c8d0f"
+      },
+      "last_seen": {
+        "audit_decision": "reusable",
+        "configuration": {
+          "fit_required": false,
+          "randomness": "none"
+        },
+        "environment_receipt_sha256": "b7cc16667680cc9ba9236ad9fe0a2e4f321784c8d3bd70d8e13baa8b341c1ad7",
+        "exact_prediction_count": 1695,
+        "identity_set_sha256_by_target": {
+          "mu_oracle_blocks": "60fb45e255ea4a0613ffdf4a17f0aae7424f7afcd3623932003cf937b2f0d05a"
+        },
+        "output_manifest": {
+          "family_status": "completed",
+          "run_state": {
+            "byte_size": 952,
+            "path": "run_state.json",
+            "sha256": "cd0c791b2ff3a9d0a12f419391e5d72f2220e154e624c1eca20c35988efe3f29"
+          },
+          "targets": [
+            "mu_oracle_blocks"
+          ]
+        },
+        "prediction_inventory": [
+          {
+            "byte_size": 404704,
+            "family": "last_seen",
+            "identity_set_sha256": "60fb45e255ea4a0613ffdf4a17f0aae7424f7afcd3623932003cf937b2f0d05a",
+            "path": "last_seen__mu_oracle_blocks.json",
+            "producing_scientific_authority": {
+              "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+              "path": "src/mineocclude/baselines/last_seen.py",
+              "sha256": "b1e7f4fc03f382bbadfd4d1f67930b8fce22cd73083f92162357c83e962f45ec"
+            },
+            "row_count": 1695,
+            "sha256": "48481740b50d41f87ac78ef7e2a4a1be930c400f197613c13212f7bfdb4bf4ae",
+            "target": "mu_oracle_blocks"
+          }
+        ],
+        "prediction_inventory_sha256": "3cf6a7a7a54342cf5197e5fe9cfaa1e6895d14f8c0dfce121e86649b301b959d",
+        "producing_authorization_lineage": {
+          "authorization_authority_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+          "authorization_record_path": "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_memory_reauthorization_v0_1/person_d_authorization_record.json",
+          "authorization_record_sha256": "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
+        },
+        "producing_person_d_authority": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "runner_receipt_sha256": "cc29b3da5c4bc7310cd3aba8f9b2e1c498366efb9f199d70d4db497ddf0c8d0f"
+      },
+      "time_only": {
+        "audit_decision": "reusable",
+        "configuration": {
+          "fit_scope": "outer_training_folds_only",
+          "primary_polynomial_degree": 1,
+          "sensitivity_polynomial_degree": 2
+        },
+        "environment_receipt_sha256": "b7cc16667680cc9ba9236ad9fe0a2e4f321784c8d3bd70d8e13baa8b341c1ad7",
+        "exact_prediction_count": 695,
+        "identity_set_sha256_by_target": {
+          "log_sigma_oracle": "ec2b2691af579b39c1e239213cf348ab7f54af9f4296bdee454b7528aece1f1a"
+        },
+        "output_manifest": {
+          "family_status": "completed",
+          "run_state": {
+            "byte_size": 952,
+            "path": "run_state.json",
+            "sha256": "cd0c791b2ff3a9d0a12f419391e5d72f2220e154e624c1eca20c35988efe3f29"
+          },
+          "targets": [
+            "log_sigma_oracle"
+          ]
+        },
+        "prediction_inventory": [
+          {
+            "byte_size": 168182,
+            "family": "time_only",
+            "identity_set_sha256": "ec2b2691af579b39c1e239213cf348ab7f54af9f4296bdee454b7528aece1f1a",
+            "path": "time_only__log_sigma_oracle.json",
+            "producing_scientific_authority": {
+              "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+              "path": "src/mineocclude/baselines/time_only.py",
+              "sha256": "0990117c370020e96a53a9e896f58ab92f8507e1f55d979b12344274d566d5c0"
+            },
+            "row_count": 695,
+            "sha256": "aa8a60d9ee36a27655abd0a13b5aba2665aa5d865a9332c3f2a840cfbae5d273",
+            "target": "log_sigma_oracle"
+          }
+        ],
+        "prediction_inventory_sha256": "f526834dcaea83eb85c56f10a123f94e555dca566f5fa7bdec27183289f23724",
+        "producing_authorization_lineage": {
+          "authorization_authority_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+          "authorization_record_path": "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_memory_reauthorization_v0_1/person_d_authorization_record.json",
+          "authorization_record_sha256": "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
+        },
+        "producing_person_d_authority": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "runner_receipt_sha256": "cc29b3da5c4bc7310cd3aba8f9b2e1c498366efb9f199d70d4db497ddf0c8d0f"
+      }
+    },
+    "fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+    "frame_manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+    "generating_person_b_validator_commit": "d7b710d6fbc9f8ecba5075788d4149f6f62b100c",
+    "no_u4_input": true,
+    "output_manifest": {
+      "byte_size": 952,
+      "path": "run_state.json",
+      "sha256": "cd0c791b2ff3a9d0a12f419391e5d72f2220e154e624c1eca20c35988efe3f29"
+    },
+    "output_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+    "person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "receipt_is_person_b_generated_audit_output": true,
+    "runner_receipt": {
+      "branch": "role/person-d-baselines",
+      "producing_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+      "worktree_clean": true
+    },
+    "runner_receipt_sha256": "cc29b3da5c4bc7310cd3aba8f9b2e1c498366efb9f199d70d4db497ddf0c8d0f",
+    "schema_id": "person-b-step4-1-preserved-output-provenance-audit-receipt-v0-2",
+    "schema_version": "2.0",
+    "source_context_manifest_sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c",
+    "superseding_authorization_record": {
+      "path": "/home/sagemaker-user/MineOcclude-Person-B-Step6_6/docs/status/person_b_phase4_step4_1_provenance_reauthorization_v0_2/person_d_authorization_record.json",
+      "sha256": "55acedbd0d6ddde28f6b12d02fc6416dddb6f32a1e435fdc90815bfbb46095cb"
+    },
+    "target_manifest_sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282",
+    "total_prediction_count": 7691,
+    "u4_output_inspected": false
+  },
+  "preserved_output_provenance_sha256": "e5e33f04640f9721b8a341f23478f65a435e69009927770081ee10b11775e8c3",
+  "registry_v2_query_authority": "5d8660c90fbf7362d7f32005f9b650e15ae1bfb5",
+  "registry_v2_schema_authority": "25509bb4ba292a83d933058539aca1ca6002524a",
+  "schema_id": "person-d-step4-1-registry-v2-source-evidence-v0-1",
+  "schema_version": "1.0",
+  "scientific_rerun_during_registration": false,
+  "signed_explicit_mapping": [
+    1,
+    2,
+    4,
+    0,
+    3
+  ],
+  "source_completion_authority_binding": {
+    "applicability_contract": {
+      "path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+      "sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+      "version": "person-b-step4-1-family-target-applicability-v0.1"
+    },
+    "approved_roots": {
+      "frame_root": "/home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1",
+      "materialized_input_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1",
+      "output_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1"
+    },
+    "combined_completion_manifest": {
+      "byte_size": 1480,
+      "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/run_state.json",
+      "sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5"
+    },
+    "person_b_authorization_commit": "2a23c84995fea4e15293039063e60e9535fd2ee2",
+    "person_b_authorization_record": {
+      "path": "docs/status/person_b_phase4_step4_1_provenance_reauthorization_v0_2/person_d_authorization_record.json",
+      "sha256": "55acedbd0d6ddde28f6b12d02fc6416dddb6f32a1e435fdc90815bfbb46095cb"
+    },
+    "person_d_branch": "role/person-d-baselines",
+    "person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "provenance_receipt": {
+      "byte_size": 14992,
+      "canonical_receipt_sha256": "68cac6ab57b151504044b74332117c516407101b770db414f3a264edf4b364fc",
+      "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/preserved_output_provenance.json",
+      "sha256": "e5e33f04640f9721b8a341f23478f65a435e69009927770081ee10b11775e8c3"
+    },
+    "schema_id": "person-d-phase4-step4-1-provenance-audited-completion-v0-1-authority-binding",
+    "schema_version": "1.0",
+    "scientific_execution_performed": true,
+    "u4_output_inspected": false
+  },
+  "source_completion_report": {
+    "all_baseline_outputs_finite": true,
+    "all_eight_baselines_complete": true,
+    "baseline_prediction_count": 10776,
+    "combined_completion_manifest": {
+      "byte_size": 1480,
+      "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/run_state.json",
+      "sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5"
+    },
+    "completed_baseline_families": [
+      "last_seen",
+      "constant_velocity",
+      "grouped_shuffled",
+      "time_only",
+      "explicit_feature",
+      "raw_pixel",
+      "visible_history_q",
+      "known_q_analytic"
+    ],
+    "completed_baseline_family_count": 8,
+    "constant_velocity_applicability": {
+      "admitted_count": 1690,
+      "candidate_count": 1695,
+      "excluded_count": 5,
+      "excluded_identities": [
+        {
+          "model_frame_idx": 0,
+          "trajectory_id": "layout_00_ep9441"
+        },
+        {
+          "model_frame_idx": 0,
+          "trajectory_id": "layout_01_ep9442"
+        },
+        {
+          "model_frame_idx": 0,
+          "trajectory_id": "layout_02_ep9432"
+        },
+        {
+          "model_frame_idx": 0,
+          "trajectory_id": "layout_03_ep9443"
+        },
+        {
+          "model_frame_idx": 0,
+          "trajectory_id": "layout_04_ep9444"
+        }
+      ],
+      "excluded_identities_verified": true,
+      "target": "mu_oracle_blocks"
+    },
+    "person_b_comparison_ready": true,
+    "preserved_family_decisions": {
+      "constant_velocity": "reusable",
+      "explicit_feature": "reusable",
+      "grouped_shuffled": "reusable",
+      "last_seen": "reusable",
+      "time_only": "reusable"
+    },
+    "preserved_outputs_overwritten": false,
+    "provenance_receipt_generated": true,
+    "resumed_absent_families": [
+      "raw_pixel",
+      "visible_history_q",
+      "known_q_analytic"
+    ],
+    "schema_id": "person-d-phase4-step4-1-provenance-audited-completion-v0-1-completion-report",
+    "schema_version": "1.0",
+    "scientific_execution_performed": true,
+    "u4_output_inspected": false,
+    "unresolved_blockers": []
+  },
+  "source_completion_validation_receipt": {
+    "all_eight_family_outputs_validated": true,
+    "all_prediction_documents_canonical": true,
+    "all_predictions_finite": true,
+    "authorization_record_validated": true,
+    "authorized_chain_exit_code": 0,
+    "baseline_prediction_count": 10776,
+    "combined_completion_manifest_validated": true,
+    "cross_fold_leakage_count": 0,
+    "duplicate_prediction_identity_count": 0,
+    "family_target_applicability_validated": true,
+    "frame_count": 1695,
+    "frame_hashes_and_sizes_validated": true,
+    "memory_preflight": {
+      "available_memory_bytes": 26003996672,
+      "available_memory_gib": 24.218109130859375,
+      "minimum_available_memory_gib": 20.0,
+      "minimum_physical_memory_gib": 20.0,
+      "passed": true,
+      "physical_memory_bytes": 32909385728,
+      "physical_memory_gib": 30.649253845214844,
+      "swap_counted_as_capacity": false,
+      "swap_total_gib": 0.0
+    },
+    "missing_prediction_identity_count": 0,
+    "person_b_direct_output_audit_passed": true,
+    "person_b_provenance_receipt_generated": true,
+    "person_b_provenance_receipt_validated": true,
+    "person_d_document_validator_error_count": 0,
+    "person_d_runner_started": true,
+    "person_d_runner_status": "COMPLETED",
+    "prediction_file_count": 9,
+    "preserved_family_count": 5,
+    "preserved_family_decisions": {
+      "constant_velocity": "reusable",
+      "explicit_feature": "reusable",
+      "grouped_shuffled": "reusable",
+      "last_seen": "reusable",
+      "time_only": "reusable"
+    },
+    "preserved_output_hashes_unchanged": true,
+    "required_family_order_validated": true,
+    "resumed_family_count": 3,
+    "schema_id": "person-d-phase4-step4-1-provenance-audited-completion-v0-1-validation-receipt",
+    "schema_version": "1.0",
+    "signed_explicit_mapping": [
+      1,
+      2,
+      4,
+      0,
+      3
+    ],
+    "source_context_binding_validated": true,
+    "target_and_fold_bindings_validated": true,
+    "u4_output_inspected": false,
+    "unauthorized_extra_prediction_identity_count": 0
+  },
+  "u4_input_used": false
+}
