@@ -1,0 +1,209 @@
+{
+  "artifact_bytes": {
+    "person_b_step4_1_bounded_reveal_predictions_v0_1": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1/post_reveal_predictions.json",
+    "person_b_step4_1_final_comparison_metric_table_v0_1": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1/comparison_metric_table.json",
+    "person_b_step4_1_fitted_probes_v0_1": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+    "person_b_step4_1_preserved_oof_predictions_v0_1": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json"
+  },
+  "trusted_artifact_authorizations": {
+    "person_b_step4_1_bounded_reveal_predictions_v0_1": {
+      "authorization": {
+        "artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "artifact_schema_version": "person-b-step4-1-bounded-reveal-predictions-v0-1",
+        "artifact_sha256": "b7716ba00b1e45b20dab130965d03bba8947a87999be51e89404fad4982d288d",
+        "artifact_size_bytes": 101230,
+        "artifact_type": "prediction",
+        "authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "authorization_id": "person_b_step4_1_bounded_prediction_authorization_v0_1",
+        "authorization_record_id": "person_b_step4_1_bounded_prediction_authorization_record_v0_1",
+        "authorization_record_receipt_authority_revision": null,
+        "authorization_record_receipt_id": null,
+        "authorization_record_receipt_sha256": null,
+        "authorization_record_sha256": "c1cd58725d8bddbab1453acef164e6cd3f794737ec5e4fb74fb705e65a1dfe0b",
+        "authorization_record_verification_mode": "local_bytes",
+        "decision": "accepted",
+        "manifest_artifact_identity": "person-b-step4-1::bounded_prediction",
+        "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+        "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+        "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+        "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+        "owner_id": "person_b",
+        "owner_status": "accepted"
+      },
+      "authorization_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    },
+    "person_b_step4_1_final_comparison_metric_table_v0_1": {
+      "authorization": {
+        "artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+        "artifact_schema_version": "person-b-step4-1-final-comparison-output-v0-1",
+        "artifact_sha256": "c471fddb9bdc1a87c2f7e11ad8dc55db9e407f0ea45a2e038f668bda178ad0a7",
+        "artifact_size_bytes": 1601171,
+        "artifact_type": "metric_table",
+        "authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "authorization_id": "person_b_step4_1_metric_table_authorization_v0_1",
+        "authorization_record_id": "person_b_step4_1_metric_table_authorization_record_v0_1",
+        "authorization_record_receipt_authority_revision": null,
+        "authorization_record_receipt_id": null,
+        "authorization_record_receipt_sha256": null,
+        "authorization_record_sha256": "546bc3fd5570b22778315711bf3b04a6c0cdcfb1d287377f40fb9342f4076624",
+        "authorization_record_verification_mode": "local_bytes",
+        "decision": "accepted",
+        "manifest_artifact_identity": "person-b-step4-1::metric_table",
+        "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+        "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+        "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+        "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+        "owner_id": "person_b",
+        "owner_status": "accepted"
+      },
+      "authorization_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    },
+    "person_b_step4_1_fitted_probes_v0_1": {
+      "authorization": {
+        "artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+        "artifact_schema_version": "person-b-step4-1-production-ridge-oof-v0-1",
+        "artifact_sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+        "artifact_size_bytes": 84257218,
+        "artifact_type": "fitted_probe",
+        "authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "authorization_id": "person_b_step4_1_fitted_probe_authorization_v0_1",
+        "authorization_record_id": "person_b_step4_1_fitted_probe_authorization_record_v0_1",
+        "authorization_record_receipt_authority_revision": null,
+        "authorization_record_receipt_id": null,
+        "authorization_record_receipt_sha256": null,
+        "authorization_record_sha256": "4cb1d9f14851e32e891a5c6aaa7d353182c559972e52e5b0201edf811fd3b9ac",
+        "authorization_record_verification_mode": "local_bytes",
+        "decision": "accepted",
+        "manifest_artifact_identity": "person-b-step4-1::fitted_probe",
+        "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+        "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+        "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+        "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+        "owner_id": "person_b",
+        "owner_status": "accepted"
+      },
+      "authorization_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    },
+    "person_b_step4_1_preserved_oof_predictions_v0_1": {
+      "authorization": {
+        "artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+        "artifact_schema_version": "person-b-step4-1-production-ridge-oof-v0-1",
+        "artifact_sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+        "artifact_size_bytes": 84257218,
+        "artifact_type": "prediction",
+        "authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "authorization_id": "person_b_step4_1_preserved_prediction_authorization_v0_1",
+        "authorization_record_id": "person_b_step4_1_preserved_prediction_authorization_record_v0_1",
+        "authorization_record_receipt_authority_revision": null,
+        "authorization_record_receipt_id": null,
+        "authorization_record_receipt_sha256": null,
+        "authorization_record_sha256": "55d29896506a8b5bca2db7bccc210c0e2b78c5b567f0b85a0811cce2fedaa242",
+        "authorization_record_verification_mode": "local_bytes",
+        "decision": "accepted",
+        "manifest_artifact_identity": "person-b-step4-1::preserved_prediction",
+        "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+        "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+        "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+        "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+        "owner_id": "person_b",
+        "owner_status": "accepted"
+      },
+      "authorization_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    }
+  },
+  "trusted_authorization_record_bytes": {
+    "person_b_step4_1_bounded_prediction_authorization_record_v0_1": "artifact_authorization_records/person_b_step4_1_bounded_prediction_authorization_record_v0_1.json",
+    "person_b_step4_1_fitted_probe_authorization_record_v0_1": "artifact_authorization_records/person_b_step4_1_fitted_probe_authorization_record_v0_1.json",
+    "person_b_step4_1_metric_table_authorization_record_v0_1": "artifact_authorization_records/person_b_step4_1_metric_table_authorization_record_v0_1.json",
+    "person_b_step4_1_preserved_prediction_authorization_record_v0_1": "artifact_authorization_records/person_b_step4_1_preserved_prediction_authorization_record_v0_1.json"
+  },
+  "trusted_manifest_records": {
+    "person_b_step4_1_prediction_metric_manifest_v0_1": {
+      "artifact_identities": [
+        {
+          "artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+          "artifact_schema_version": "person-b-step4-1-production-ridge-oof-v0-1",
+          "artifact_sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+          "artifact_size_bytes": 84257218,
+          "artifact_type": "fitted_probe",
+          "manifest_artifact_identity": "person-b-step4-1::fitted_probe"
+        },
+        {
+          "artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+          "artifact_schema_version": "person-b-step4-1-production-ridge-oof-v0-1",
+          "artifact_sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+          "artifact_size_bytes": 84257218,
+          "artifact_type": "prediction",
+          "manifest_artifact_identity": "person-b-step4-1::preserved_prediction"
+        },
+        {
+          "artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+          "artifact_schema_version": "person-b-step4-1-bounded-reveal-predictions-v0-1",
+          "artifact_sha256": "b7716ba00b1e45b20dab130965d03bba8947a87999be51e89404fad4982d288d",
+          "artifact_size_bytes": 101230,
+          "artifact_type": "prediction",
+          "manifest_artifact_identity": "person-b-step4-1::bounded_prediction"
+        },
+        {
+          "artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+          "artifact_schema_version": "person-b-step4-1-final-comparison-output-v0-1",
+          "artifact_sha256": "c471fddb9bdc1a87c2f7e11ad8dc55db9e407f0ea45a2e038f668bda178ad0a7",
+          "artifact_size_bytes": 1601171,
+          "artifact_type": "metric_table",
+          "manifest_artifact_identity": "person-b-step4-1::metric_table"
+        }
+      ],
+      "decision": "accepted",
+      "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+      "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+      "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+      "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+      "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+      "owner_id": "person_b",
+      "owner_status": "accepted"
+    }
+  },
+  "trusted_owner_authorities": {
+    "person_b_step4_1_prediction_metric_authority_v0_1": {
+      "authority": {
+        "authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+        "authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+        "authorized_artifact_types": [
+          "fitted_probe",
+          "prediction",
+          "metric_table"
+        ],
+        "decision": "accepted",
+        "owner_id": "person_b",
+        "owner_status": "accepted",
+        "schema_version": "1.0",
+        "status_record_id": "person_b_step4_1_prediction_metric_status_v0_1",
+        "status_record_receipt_authority_revision": null,
+        "status_record_receipt_id": null,
+        "status_record_receipt_sha256": null,
+        "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+        "status_record_sha256": "a1ef6fe69bd53efb0325aef4a17510111f4418bd862ac06a6ce59b1336810b6e",
+        "status_record_verification_mode": "local_bytes"
+      },
+      "status_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    }
+  },
+  "trusted_status_record_bytes": {
+    "person_b_step4_1_prediction_metric_status_v0_1": "owner_status_record.json"
+  }
+}
