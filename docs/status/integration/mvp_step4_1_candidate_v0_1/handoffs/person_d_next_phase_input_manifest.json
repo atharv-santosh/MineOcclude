@@ -1,0 +1,403 @@
+{
+  "schema_id": "mineocclude-person-d-next-phase-input-manifest-v0.1",
+  "schema_version": "0.1",
+  "consumer_role": "person_d",
+  "candidate_branch": "integration/mvp-step4-1-candidate",
+  "candidate_authority": {
+    "binding": "the commit containing this manifest",
+    "parent_certification_commit": "b285437531ebdce21cd001a6a961c2895d292c32"
+  },
+  "authority_commits": {
+    "person_a": "397ba849adc63df80912c21dd1efacb1e29b8977",
+    "person_b": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+    "person_c": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+    "person_d": "5ea6ce92890da7faa46f6aa837135081633d5f3d",
+    "person_e": "ab41a76ce0c855c0ac54c59c736bac7599f7e69d"
+  },
+  "identity_contract": {
+    "rollout_identity_fields": ["source_run_id", "run_id"],
+    "trajectory_identity_fields": ["trajectory_id", "layout_id"],
+    "sample_identity_fields": ["trajectory_id", "model_frame_idx", "source_frame_id"],
+    "activation_identity_fields": ["trajectory_id", "model_frame_idx", "layer", "site", "chunk_id"],
+    "fold_identity_fields": ["fold_idx", "layout_id", "trajectory_id", "model_frame_idx"],
+    "evaluation_join_key": ["trajectory_id", "model_frame_idx"],
+    "standalone_rollout_id_status": "not_defined_by_the_accepted_step4_1_capture_authority",
+    "standalone_rollout_id_handling": "Do not invent rollout_id; preserve accepted source_run_id and run_id values."
+  },
+  "frozen_evaluation_identity": {
+    "trajectory_ids": [
+      "layout_00_ep9403",
+      "layout_00_ep9441",
+      "layout_01_ep9405",
+      "layout_01_ep9442",
+      "layout_02_ep9407",
+      "layout_02_ep9432",
+      "layout_03_ep9404",
+      "layout_03_ep9443",
+      "layout_04_ep9406",
+      "layout_04_ep9444"
+    ],
+    "admitted_row_count": 1695,
+    "excluded_row_count": 179,
+    "fold_count": 5,
+    "row_level_mapping_sha256": "6bc8ced64ebce10b27a2c9e1dceede31d92bf2013015fb81975e64bdf01ad52c",
+    "fold_to_layout": [
+      {"fold_idx": 0, "layout_id": "layout_03", "row_count": 292},
+      {"fold_idx": 1, "layout_id": "layout_00", "row_count": 409},
+      {"fold_idx": 2, "layout_id": "layout_01", "row_count": 387},
+      {"fold_idx": 3, "layout_id": "layout_04", "row_count": 272},
+      {"fold_idx": 4, "layout_id": "layout_02", "row_count": 335}
+    ],
+    "random_split_used": false
+  },
+  "u4_boundary": {
+    "control_matrix_contract_only": true,
+    "u4_outputs_are_inputs": false,
+    "u4_outputs_inspected": false,
+    "manual_u4_inspection_performed": false,
+    "required_control_kinds": ["primary", "alpha_zero", "random_direction", "orthogonal_direction", "wrong_layer", "wrong_timestep"]
+  },
+  "inputs": [
+    {
+      "logical_input_name": "person_b_exact_frozen_fold_membership",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "schema_or_contract_version": "person-b-ten-pilot-frame-fold-v0.1 / person-b-fold-v0.1",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+      "identity_fields": {
+        "rollout": {"status": "transitively_bound", "fields": ["source_manifests"]},
+        "trajectory": {"status": "bound", "fields": ["trajectory_id", "layout_id"], "count": 10},
+        "sample": {"status": "bound", "fields": ["trajectory_id", "model_frame_idx", "source_frame_id"], "admitted_count": 1695, "excluded_count": 179},
+        "activation": {"status": "bound", "fields": ["combined_activation_index_sha256"], "activation_row_count": 37480},
+        "fold": {"status": "bound", "fields": ["fold_idx", "layout_id", "trajectory_id", "model_frame_idx"], "fold_count": 5, "row_level_mapping_sha256": "6bc8ced64ebce10b27a2c9e1dceede31d92bf2013015fb81975e64bdf01ad52c"}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "final_comparison_execution_receipt_direct_input",
+        "repository_relative_path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/execution_receipt.json",
+        "sha256": "d14992316f7fac7d09313ccc938dd1a82d8655f6de8764db9f99f6f03719fcb7",
+        "field": "direct_input_sha256s.fold_manifest"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D next-phase fold-scoped baseline and control analysis",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "random_split_used": false}
+    },
+    {
+      "logical_input_name": "person_b_exact_evaluation_row_universe",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "schema_or_contract_version": "person-b-ten-pilot-frame-fold-v0.1 / person-b-fold-v0.1",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+      "identity_fields": {
+        "rollout": {"status": "transitively_bound", "fields": ["source_manifests"]},
+        "trajectory": {"status": "bound", "fields": ["trajectory_id", "layout_id"], "count": 10},
+        "sample": {"status": "bound", "fields": ["trajectory_id", "model_frame_idx", "source_frame_id", "status"], "admitted_count": 1695, "excluded_count": 179},
+        "activation": {"status": "join_bound", "fields": ["trajectory_id", "model_frame_idx"]},
+        "fold": {"status": "bound", "fields": ["fold_idx"], "fold_count": 5}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "final_comparison_execution_receipt_direct_input",
+        "repository_relative_path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/execution_receipt.json",
+        "sha256": "d14992316f7fac7d09313ccc938dd1a82d8655f6de8764db9f99f6f03719fcb7",
+        "field": "direct_input_sha256s.fold_manifest"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D exact 1,695-row evaluation-universe selection",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "admitted_row_count": 1695}
+    },
+    {
+      "logical_input_name": "activation_aligned_sample_identities",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/activation_evidence_manifest.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "schema_or_contract_version": "person-b-phase4-step4-1-production-handoff-v0-1-activation-evidence-manifest / 1.0; activation index person-a-combined-activation-index-v2",
+      "sha256": "4913423888e1b8f47c3710c942c67de93953a8186616e6ef6a2ee2c8f16063aa",
+      "identity_fields": {
+        "rollout": {"status": "bound", "fields": ["person_a_commit", "accepted_activation_index.path"]},
+        "trajectory": {"status": "bound", "fields": ["pilots[].trajectory_id", "pilots[].layout_id"], "count": 10},
+        "sample": {"status": "activation_aligned", "fields": ["trajectory_id", "model_frame_idx"], "source_frame_count": 1874},
+        "activation": {"status": "bound", "fields": ["accepted_activation_index.sha256", "pilots[].activation_index.sha256", "chunks[].chunk_id", "chunks[].sha256"], "row_count": 37480, "chunk_count": 200},
+        "fold": {"status": "bound", "fields": ["pilots[].fold_idx", "pilots[].layout_id"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "accepted_activation_artifact_record",
+        "repository_relative_path": "docs/status/person_a_phase4_step4_1_registry_v2_activation_trust_v0_1/registry_records.json",
+        "sha256": "d26cc598bef1d41f76324af89ccd0cfdff593c1b290dbc7dd80a3c16f6dab27f",
+        "record_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1",
+        "payload_sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D sample alignment without activation re-identification",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "accepted_pilot_count": 10}
+    },
+    {
+      "logical_input_name": "oracle_targets",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "schema_or_contract_version": "person-b-analysis-artifact-v0.1 / person-b-oracle-target-v0.1",
+      "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282",
+      "identity_fields": {
+        "rollout": {"status": "bound", "fields": ["run_id", "source_run_id"]},
+        "trajectory": {"status": "bound", "fields": ["trajectory_id", "layout_id"], "count": 10},
+        "sample": {"status": "bound", "fields": ["trajectory_id", "model_frame_idx", "source_frame_id", "target_id"], "count": 1695},
+        "activation": {"status": "join_bound", "fields": ["trajectory_id", "model_frame_idx"]},
+        "fold": {"status": "bound", "fields": ["fold_idx", "layout_id"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "final_comparison_execution_receipt_direct_input",
+        "repository_relative_path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/execution_receipt.json",
+        "sha256": "d14992316f7fac7d09313ccc938dd1a82d8655f6de8764db9f99f6f03719fcb7",
+        "field": "direct_input_sha256s.oracle_target"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D baseline target evaluation",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "row_count": 1695, "join_key": ["trajectory_id", "model_frame_idx"]}
+    },
+    {
+      "logical_input_name": "baseline_input_contract_and_version",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/baseline_family_contract.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+      "schema_or_contract_version": "person-b-phase4-step4-1-baseline-family-contract-v0-2-contract / 1.0; baseline input person-b-baseline-input-v0.2",
+      "sha256": "78eb8e7f40ae60ff69f14d124ca019211cb31fe3f59a2e035c7bd399c7b81ab1",
+      "identity_fields": {
+        "rollout": {"status": "bound_by_source_context", "fields": ["source_context_manifest"]},
+        "trajectory": {"status": "bound_by_source_context", "fields": ["source_context_manifest"]},
+        "sample": {"status": "bound", "fields": ["fold_manifest", "oracle_target"]},
+        "activation": {"status": "not_applicable_to_baseline_inputs", "fields": []},
+        "fold": {"status": "bound", "fields": ["fold_manifest.sha256"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "person_d_accepted_source_evidence",
+        "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/source_evidence.json",
+        "sha256": "e9d85fcd73d210e620b91a50948041f54247598416aec793e30c0c9ea20bea7d",
+        "field": "baseline_family_contracts"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D eight-family baseline input validation and dispatch",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "baseline_family_count": 8}
+    },
+    {
+      "logical_input_name": "family_target_applicability_rules",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "248b7a174cb38a522f3638d7789b0e1d1b5befdf",
+      "schema_or_contract_version": "person-b-step4-1-family-target-applicability-v0.1 / 1.0",
+      "sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+      "identity_fields": {
+        "rollout": {"status": "not_applicable", "fields": []},
+        "trajectory": {"status": "bound_by_identity_sets", "fields": ["identity_sets"]},
+        "sample": {"status": "bound", "fields": ["identity_encoding", "identity_sets"], "global_candidate_count": 1695},
+        "activation": {"status": "not_applicable", "fields": []},
+        "fold": {"status": "preserved_by_sample_identity", "fields": ["identity_sets"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "person_d_accepted_source_evidence",
+        "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/source_evidence.json",
+        "sha256": "e9d85fcd73d210e620b91a50948041f54247598416aec793e30c0c9ea20bea7d",
+        "field": "applicability_contract"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D per-family and per-target applicability filtering",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "global_candidate_count": 1695}
+    },
+    {
+      "logical_input_name": "leakage_and_control_requirements",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_production_fold_contract_v0_1/production_fold_assignment_contract.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+      "schema_or_contract_version": "person-b-step4-1-production-fold-contract-v0.1 / 1.0",
+      "sha256": "7210d1fa04adf17871d364555d6fd8546202ab36c0f945dde0ca8f86e991713d",
+      "identity_fields": {
+        "rollout": {"status": "not_applicable", "fields": []},
+        "trajectory": {"status": "bound", "fields": ["production_subset.accepted_pilot_ids", "production_subset.fold_to_layout"]},
+        "sample": {"status": "bound", "fields": ["production_subset.row_level_mapping_identity", "target_manifest"]},
+        "activation": {"status": "forbidden_as_u4_input", "fields": []},
+        "fold": {"status": "bound", "fields": ["fold_manifest.sha256", "fold_manifest.artifact_hash", "production_subset.fold_to_layout"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "accepted_person_d_validation_receipt",
+        "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/validation_receipt.json",
+        "sha256": "eaf3081beddbf251727a8811524235f30605ac304464dd8a311067f8f78af026",
+        "cross_fold_leakage_count": 0,
+        "u4_input_used": false
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D fold isolation, leakage prevention, and control gating",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "u4_inputs_and_outputs_forbidden": true}
+    },
+    {
+      "logical_input_name": "u4_control_matrix_contract",
+      "repository_relative_path": "src/mineocclude/baselines/u4_control_matrix.py",
+      "owning_role": "person_d",
+      "owning_authority_commit": "5ea6ce92890da7faa46f6aa837135081633d5f3d",
+      "source_commit": "48bce1d906d9e9ea7209d03c93214f67465cd036",
+      "schema_or_contract_version": "Person D Roadmap Day 5 control-matrix implementation; frozen intervention request dependency v1.0",
+      "sha256": "29abe80032f3f52b17c64886d3fe7b8fffd5043f77b5ca8f415c4c58bcbb8dee",
+      "contract_dependency": {
+        "repository_relative_path": "docs/contracts/intervention_request_v1.md",
+        "source_commit": "21f24bb4eb9c0f2bdea061e53064298b72f03dd3",
+        "schema_or_contract_version": "1.0",
+        "sha256": "df0ab37cbcc755e2920603a50f49bfa8a33554b17dcf5aa5d87e1713cecc0c5f"
+      },
+      "identity_fields": {
+        "rollout": {"status": "future_contract_field", "fields": ["event_id", "seed"]},
+        "trajectory": {"status": "not_applicable_until_authorized_u4_rollout", "fields": []},
+        "sample": {"status": "control_identity_only", "fields": ["event_id", "seed", "control_id"]},
+        "activation": {"status": "contract_only_no_outputs_inspected", "fields": ["layer", "timestep", "direction_version"]},
+        "fold": {"status": "held_out_event_scope", "fields": ["event_id"]}
+      },
+      "registry_v2_binding": {
+        "status": "authority_bound_code_contract",
+        "binding_type": "person_d_authority_plus_no_u4_validation_receipt",
+        "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/validation_receipt.json",
+        "sha256": "eaf3081beddbf251727a8811524235f30605ac304464dd8a311067f8f78af026",
+        "u4_input_used": false,
+        "note": "No U4 output is a Registry input to this handoff and no U4 output was inspected."
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D future U4 control-matrix construction and completeness audit only",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "u4_outputs_inspected": false}
+    },
+    {
+      "logical_input_name": "person_d_registry_v2_baseline_authority",
+      "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/trusted_manifest_record.json",
+      "owning_role": "person_d",
+      "owning_authority_commit": "5ea6ce92890da7faa46f6aa837135081633d5f3d",
+      "source_commit": "5ea6ce92890da7faa46f6aa837135081633d5f3d",
+      "schema_or_contract_version": "person-d-phase4-step4-1-provenance-audited-completion-v0-1-output-inventory",
+      "sha256": "515ab761576fa1f7b87a6b8c43144a3ee86be044eec041374b814bba431ae3e7",
+      "identity_fields": {
+        "rollout": {"status": "bound", "fields": ["owner_authority_revision"]},
+        "trajectory": {"status": "transitively_bound", "fields": ["manifest_sha256"]},
+        "sample": {"status": "transitively_bound", "fields": ["artifact_identities"]},
+        "activation": {"status": "not_applicable_to_baseline_outputs", "fields": []},
+        "fold": {"status": "transitively_bound", "fields": ["manifest_sha256"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "trusted_manifest_record",
+        "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/trusted_manifest_record.json",
+        "sha256": "515ab761576fa1f7b87a6b8c43144a3ee86be044eec041374b814bba431ae3e7",
+        "record_id": "person_d_step4_1_baseline_manifest_v0_1"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D accepted baseline evidence lookup",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "decision": "accepted"}
+    },
+    {
+      "logical_input_name": "person_d_registry_v2_source_and_control_receipt",
+      "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/source_evidence.json",
+      "owning_role": "person_d",
+      "owning_authority_commit": "5ea6ce92890da7faa46f6aa837135081633d5f3d",
+      "source_commit": "5ea6ce92890da7faa46f6aa837135081633d5f3d",
+      "schema_or_contract_version": "person-d-step4-1-registry-v2-source-evidence-v0-1 / 1.0",
+      "sha256": "e9d85fcd73d210e620b91a50948041f54247598416aec793e30c0c9ea20bea7d",
+      "identity_fields": {
+        "rollout": {"status": "bound_by_authorization_chain", "fields": ["source_completion_authority_binding"]},
+        "trajectory": {"status": "bound_by_complete_source_context_lineage", "fields": ["complete_source_context_lineage"]},
+        "sample": {"status": "bound", "fields": ["frame_count", "baseline_prediction_count"], "frame_count": 1695, "prediction_count": 10776},
+        "activation": {"status": "not_used", "fields": ["u4_input_used"]},
+        "fold": {"status": "bound", "fields": ["complete_source_context_lineage.fold_manifest_sha256"], "cross_fold_leakage_count": 0}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "source_evidence_for_trusted_manifest",
+        "repository_relative_path": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/trusted_manifest_record.json",
+        "sha256": "515ab761576fa1f7b87a6b8c43144a3ee86be044eec041374b814bba431ae3e7",
+        "record_id": "person_d_step4_1_baseline_manifest_v0_1"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D source-lineage, leakage, and no-U4 gate",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "cross_fold_leakage_count": 0, "u4_input_used": false}
+    },
+    {
+      "logical_input_name": "registry_v2_final_closure_receipt",
+      "repository_relative_path": "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/registry_import_receipt.json",
+      "owning_role": "person_e",
+      "owning_authority_commit": "ab41a76ce0c855c0ac54c59c736bac7599f7e69d",
+      "source_commit": "ab41a76ce0c855c0ac54c59c736bac7599f7e69d",
+      "schema_or_contract_version": "person-e-step4-1-registry-v2-import-receipt-v0-1 / 1.0",
+      "sha256": "a68584586dc7a8fef2cbc6e1bd8fd2f0b8ce4927e78a6632446911659aca8233",
+      "identity_fields": {
+        "rollout": {"status": "bound_by_imported_run_records", "fields": ["registry_id"]},
+        "trajectory": {"status": "transitively_bound", "fields": ["imported_artifact_ids"]},
+        "sample": {"status": "bound_by_imported_baseline_and_metric_artifacts", "fields": ["imported_artifact_ids"]},
+        "activation": {"status": "bound", "fields": ["imported_artifact_ids"], "record_id": "person_a_step4_1_activation_store_v2_combined_index_v0_1"},
+        "fold": {"status": "bound_by_dependency_receipts", "fields": ["dependency_prerequisite_artifact_ids"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "strict_import_receipt",
+        "repository_relative_path": "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/registry_import_receipt.json",
+        "sha256": "a68584586dc7a8fef2cbc6e1bd8fd2f0b8ce4927e78a6632446911659aca8233",
+        "registry_v2_import_complete": true,
+        "artifact_count": 15
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D Registry v2 resolution and dependency gate",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "strict_validator_accepted": true}
+    },
+    {
+      "logical_input_name": "frozen_step4_1_decision_fail",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/layer_band_decision.json",
+      "owning_role": "person_b",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_commit": "1b9ac2e37d245896af95a5a929774829720387db",
+      "schema_or_contract_version": "person-b-step4-1-layer-band-decision-v0-1 / 1.0",
+      "sha256": "7737b43ed13b1a7c7f3af1ebb07dbd050224e50064873b4bdbce47273e72d36c",
+      "identity_fields": {
+        "rollout": {"status": "not_applicable", "fields": []},
+        "trajectory": {"status": "bound_by_final_comparison", "fields": ["decision_precedence"]},
+        "sample": {"status": "bound_by_final_comparison", "fields": ["layer_gates"]},
+        "activation": {"status": "bound_by_layer_gates", "fields": ["layer_gates"]},
+        "fold": {"status": "bound_by_final_comparison", "fields": ["layer_gates"]}
+      },
+      "registry_v2_binding": {
+        "status": "bound",
+        "binding_type": "closure_validation_receipt",
+        "repository_relative_path": "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json",
+        "sha256": "8d06b5ad672a8e7fb1a054ed71d62e1e5cd70e48140215f4602bed84e1ff23cd",
+        "acceptance_decision": "FAIL"
+      },
+      "required": true,
+      "frozen": true,
+      "downstream_consumer": "Person D next-phase entry condition; Step 4.1 must remain FAIL",
+      "validation": {"path_exists": true, "sha256_verified": true, "authority_blob_matches_candidate": true, "decision": "FAIL", "u4_output_inspected": false}
+    }
+  ],
+  "archive_input_policy": {
+    "archive_tags_used_as_active_inputs": false,
+    "active_input_rule": "Every active path is reachable from the integrated candidate and byte-identical at its owning authority commit."
+  },
+  "blocking_missing_inputs": [],
+  "readiness_basis": "All required paths and hashes are validated; Person B's exact fold membership and 1,695-row universe are frozen; activation-aligned identities, targets, baseline/applicability/leakage contracts, and Registry v2 receipts are bound; only the U4 control contract was inspected, never U4 outputs; and Step 4.1 remains FAIL.",
+  "PERSON_D_NEXT_PHASE_HANDOFF_READY": true
+}
