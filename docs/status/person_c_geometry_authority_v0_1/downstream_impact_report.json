@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "audit_starting_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+  "decision": {
+    "runtime_classification": "MIXED_OR_VERSIONED_GEOMETRY",
+    "accepted_geometry_owner": "UNRESOLVED",
+    "accepted_geometry_version": null,
+    "c_layout_update_required": true,
+    "e_homography_refit_required": true,
+    "runtime_observation_required": true
+  },
+  "immutable_evidence_policy": {
+    "frozen_evidence_edited": false,
+    "rule": "Never rewrite a historical C specification, E marker file, calibration input, homography authority record, capture, frame map, reset receipt, or runtime layout_meta to make geometries agree.",
+    "prohibited_transformations": [
+      "hidden offsets",
+      "layout-ID shifts used as geometry",
+      "+0.5 corrections",
+      "coordinate renumbering",
+      "compatibility adapters"
+    ],
+    "supersession": "Add a new version with explicit lineage, applicability bounds, source commit/blob, builder/JAR identity, and runtime receipts; retain prior artifacts as historical evidence."
+  },
+  "affected_artifacts": [
+    {
+      "path": "configs/scenes/layouts.yaml",
+      "role": "C geometry specification person-c-layout-config-v0.3",
+      "source_commit": "1f1937ad850b2476aca528032410a1938d0abe7f",
+      "git_blob": "55b609d343cea47c098e01921018bd3b9a1e405d",
+      "status": "does_not_describe_head_builder_markers_or_full_arena",
+      "required_action": "Do not edit v0.3. If C1.1 accepts current runtime, publish a new C-owned geometry version."
+    },
+    {
+      "path": "data/handoff_e/markers_layout_01.json through markers_layout_06.json",
+      "role": "E world-point claims",
+      "status": "all_six_literal_coordinate_sets_conflict_with_c; layouts_02_and_03_also_claim_unreceipted_runtime_overrides",
+      "required_action": "Retain unchanged and bind only to their stated historical captures. Publish new marker inputs after accepted geometry observation."
+    },
+    {
+      "path": "data/handoff_e/detector_calibration_inputs.json",
+      "role": "E fitting input aggregation",
+      "source_commit": "fa70424530f422a2e6140e0e90d0ff18f583141e",
+      "git_blob": "c96e646169a4a25977c44cab833610342a5f1b7a",
+      "sha256": "0da843761e7a502490d411d76dfdf3afc63642592182ba7d8f29e5d4a4c4d41c",
+      "status": "stale relative to current E marker files and recapture lineage",
+      "required_action": "Supersede with versioned inputs after geometry acceptance; do not patch in place."
+    },
+    {
+      "path": "data/handoff_e/independent_probe_points.json",
+      "role": "36 held-out/probe world points",
+      "source_commit": "fa70424530f422a2e6140e0e90d0ff18f583141e",
+      "git_blob": "6ae4e71dc34563919de4b89d2f64c33c873c5450",
+      "sha256": "fd496508ef3b00a3a48591c238fbc6d05aa657a25cd8b59dd4cc73af1f57fb2c",
+      "status": "applicability_unresolved_without_accepted_geometry_and_fit",
+      "required_action": "Regenerate or explicitly revalidate against the new fit version."
+    },
+    {
+      "path": "data/handoff_e/phase3_homography_authority_v0_1/marker_pose_resolution_bindings.json",
+      "role": "C phase-3 binding record",
+      "source_commit": "631e628ad69c46d6bf5652ab0ed5e90bc430df75",
+      "git_blob": "0300cf3cae2a17072cbb5105412fc62606b25a11",
+      "status": "historical_authority_only; not_an_E_fit_matrix",
+      "required_action": "Supersede applicability bindings after refit; retain the current record."
+    },
+    {
+      "path": "data/handoff_e/phase3_homography_authority_v0_1/homography_applicability_manifest.json",
+      "role": "phase-3 applicability",
+      "source_commit": "631e628ad69c46d6bf5652ab0ed5e90bc430df75",
+      "git_blob": "88430f4ef808f7eee6c1512fe1224851d716a4d6",
+      "status": "cannot_establish_fit_to_current_builder_geometry",
+      "required_action": "Create a new applicability version only after the fit and held-out validation exist."
+    },
+    {
+      "path": "data/handoff_e/phase3_homography_authority_v0_1/known_direction_validation_records.json",
+      "role": "wall-axis sign checks",
+      "source_commit": "631e628ad69c46d6bf5652ab0ed5e90bc430df75",
+      "git_blob": "ca5e9e223de11902220c5de59afb34ae90c50205",
+      "status": "supports_axis_direction_only_not_fit_quality",
+      "required_action": "Retain; repeat sign and held-out checks for a new fit."
+    },
+    {
+      "path": "data/handoff_e/phase3_homography_authority_v0_1/wall_axis_sign_authority.json",
+      "role": "wall-axis convention",
+      "source_commit": "631e628ad69c46d6bf5652ab0ed5e90bc430df75",
+      "git_blob": "461759ffc02321a65d5037296ccec000924e5f8e",
+      "status": "axis_convention_consistent_but_geometry_version_unbound",
+      "required_action": "Carry forward only with an explicit accepted-version binding."
+    },
+    {
+      "path": "data/handoff_e/phase3_homography_authority_v0_1/homography_authority_receipt.json",
+      "role": "authority receipt",
+      "source_commit": "631e628ad69c46d6bf5652ab0ed5e90bc430df75",
+      "git_blob": "32a561de3ff54dc9c94b1ce6350bb775d5a57007",
+      "status": "explicitly_does_not_refit_E_matrices",
+      "required_action": "Retain unchanged."
+    },
+    {
+      "path": "docs/reports/person_c_marker_worldcoord_convention_correction_v0_1.md",
+      "role": "historical +0.5 correction analysis",
+      "source_commit": "aa2e8ed127b829092e866af1f2c099acc3a20051",
+      "git_blob": "083c59ae010aa756da14d5f95267b161d4318c92",
+      "status": "historical_evidence_not_a_permitted_adapter",
+      "required_action": "Retain unchanged; do not apply its correction to this authority decision."
+    },
+    {
+      "path": "data/autonomous/*/capture_provenance.json and frame_map.parquet",
+      "role": "historical capture and observed camera records",
+      "status": "capture-specific; markers not receipted in the six calibration captures",
+      "required_action": "Keep capture lineage version-bounded."
+    },
+    {
+      "path": "data/server_evidence/episode_94*/layout_meta.json",
+      "role": "older runtime-observed marker block coordinates",
+      "status": "proves_a_pre-v1_geometry_distinct_from_C_E_and_HEAD",
+      "required_action": "Retain unchanged as evidence of versioned runtime behavior."
+    }
+  ],
+  "dependent_software_and_checks": [
+    {
+      "path": "src/mineocclude/data/layouts.py and tests/data/test_layout_contract.py",
+      "impact": "validates schema and internal geometry but does not prove Fabric construction equivalence"
+    },
+    {
+      "path": "tests/data/test_layout_id_resolves.py",
+      "impact": "layout-ID lineage must remain an explicit rename, never a hidden numeric shift"
+    },
+    {
+      "path": "tests/integration/test_c_e_marker_compatibility.py",
+      "impact": "focused run has six expected C-versus-E equality failures, one for every layout"
+    },
+    {
+      "path": "Fabric Java tests",
+      "impact": "no committed test locks ArenaBuilder marker placements to layouts.yaml"
+    },
+    {
+      "path": "screenshot and C6A capture consumers",
+      "impact": "blocked until accepted geometry, clean runtime, receipted markers/camera/resolution, refit, and held-out validation"
+    }
+  ],
+  "focused_existing_validator_result": {
+    "command": "python -m pytest tests/data/test_layout_id_resolves.py tests/integration/test_c_e_marker_compatibility.py tests/data/test_layout_contract.py -q",
+    "result": "6 failed, 31 passed, 29 subtests passed",
+    "interpretation": "The six failures are the literal C/E coordinate conflicts being audited; this package does not alter evidence or tests to suppress them."
+  },
+  "new_version_actions_after_c1_1": [
+    "Assign one immutable C-owned geometry version to the accepted builder/JAR and exact block placements.",
+    "Publish new C layouts rather than editing person-c-layout-config-v0.3.",
+    "Publish capture-specific E marker correspondences from runtime-receipted blocks without offsets or adapters.",
+    "Refit every affected E homography against the accepted world points and canonical image coordinates.",
+    "Publish fit matrices, fit hashes, residuals, independent held-out validation, and applicability bounds.",
+    "Add a builder-versus-layout validator before authorizing screenshots or C6A capture."
+  ]
+}
