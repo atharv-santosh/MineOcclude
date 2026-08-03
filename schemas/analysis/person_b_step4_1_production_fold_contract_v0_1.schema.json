@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authoritative_validation_mode": {
+      "const": "signed_explicit_mapping"
+    },
+    "authorities": {
+      "type": "object"
+    },
+    "contract_version": {
+      "const": "person-b-step4-1-production-fold-contract-v0.1"
+    },
+    "deterministic_test_vectors": {
+      "type": "array"
+    },
+    "fold_manifest": {
+      "type": "object"
+    },
+    "generation": {
+      "type": "object"
+    },
+    "leakage_restrictions": {
+      "type": "array"
+    },
+    "production_subset": {
+      "type": "object"
+    },
+    "schema_id": {
+      "const": "person-b-step4-1-production-fold-contract-v0-1"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "serialization_and_digest_rules": {
+      "type": "object"
+    },
+    "target_manifest": {
+      "type": "object"
+    },
+    "u4_output_inspected": {
+      "const": false
+    },
+    "validation_requirements": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "authoritative_validation_mode",
+    "authorities",
+    "contract_version",
+    "deterministic_test_vectors",
+    "fold_manifest",
+    "generation",
+    "leakage_restrictions",
+    "production_subset",
+    "schema_id",
+    "schema_version",
+    "serialization_and_digest_rules",
+    "target_manifest",
+    "u4_output_inspected",
+    "validation_requirements"
+  ],
+  "title": "Person B Step 4.1 production fold contract v0.1",
+  "type": "object"
+}

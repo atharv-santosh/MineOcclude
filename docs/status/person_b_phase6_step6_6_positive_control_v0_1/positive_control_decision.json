@@ -1,0 +1,27 @@
+{
+  "automatic_hidden_state_transition": false,
+  "decision": "PASS_FROZEN_VISIBLE_POSITION_POSITIVE_CONTROL",
+  "decision_owner": "person_b",
+  "decision_rationale": "The frozen grouped-OOF visible-position control exhibits coherent held-out-layout signal without adding a numeric threshold: layer 19 has positive global R2 and Pearson correlation, and its Pearson correlation is positive in every one of the five predeclared layout folds.",
+  "frozen_target_name": "x_true_blocks",
+  "frozen_threshold_policy": "human_scientific_gate_no_unfrozen_numeric_threshold",
+  "hidden_state_interpretation_authorized": false,
+  "lineage_receipt_sha256": "29fd15d6773f16843d3de6b8db58c2d100bcf47779b41bbd44a3c81a062f74f4",
+  "numeric_pass_threshold_added": false,
+  "positive_control_metrics_sha256": "e7bfebfa476c7815cf94c714965ab9249ea71588066621cd9201a650907d9bac",
+  "positive_control_pass": true,
+  "positive_control_predictions_sha256": "e2891b866adc58114439e636e21936e4ca281d2073cbbbc4d44d56627ded26d2",
+  "ratification_commit": "a24cc316ab45b0063a11141c21a76044439042a0",
+  "schema_id": "person-b-phase6-step6-6-positive-control-decision-v1.0",
+  "schema_version": "1.0",
+  "step6_6_complete": true,
+  "strongest_reviewed_layer": {
+    "all_five_fold_correlations_positive": true,
+    "global_pearson_r": 0.6422530664648437,
+    "global_r2": 0.33817067609613494,
+    "layer_idx": 19,
+    "maximum_fold_pearson_r": 0.9449100535428059,
+    "minimum_fold_pearson_r": 0.4005847065897939
+  },
+  "u4_output_inspected": false
+}

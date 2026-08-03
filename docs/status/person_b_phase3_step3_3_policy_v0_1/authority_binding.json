@@ -1,0 +1,48 @@
+{
+  "authority_binding_schema_id": "person-b-phase3-step3-3-authority-binding-v1.0",
+  "operational_integration_base": {
+    "branch": "role/person-b-methods",
+    "commit": "08b9677124f3ed04db49d5e5e720f04771c96b83",
+    "relationship_to_policy_parent": "descendant_on_person_b_branch_without_other_role_merge"
+  },
+  "person_a_model_preprocessing_provenance_authority": {
+    "commit": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+    "ownership_scope": "model_and_preprocessing_provenance_only",
+    "owns_wall_parallel_coordinate_frame": false
+  },
+  "person_b_coordinate_authority": {
+    "coordinate_schema": "person-b-wall-parallel-frame-v0.1",
+    "path": "src/mineocclude/analysis/coordinates.py",
+    "required_signoff_roles": [
+      "person_b",
+      "person_c"
+    ],
+    "sha256": "19e3946e0b0385989b639187e0eda8ff4cc7712938fd87c6084fb9d2306af493"
+  },
+  "person_b_parent_authority": {
+    "commit": "03a2c4663ce73873b4fed0369943c1f43edcd742"
+  },
+  "person_c_final_visibility_package": {
+    "commit": "3ba6c091426a537d60c950dd1bb38f5fc02826d5",
+    "disagreement_schema": {
+      "path": "data/handoff_e/phase3_visibility_interface_v0_1/visibility_disagreement_schema.json",
+      "sha256": "d8cd12786bb36211bd5b91d2f0c575809f89808fb44114e6589b8a20ee6ac963"
+    },
+    "empirical_import_contract": {
+      "path": "data/handoff_e/phase3_visibility_interface_v0_1/empirical_visibility_import_contract.json",
+      "sha256": "a286341bb157e6630d0b18adef26efc31ad97fc9e921cbbeca960974f3ce5f4c"
+    },
+    "final_interface": {
+      "path": "data/handoff_e/phase3_visibility_interface_v0_1/final_visibility_interface.json",
+      "sha256": "fd9a68681b002c0c3652e4299691e55417c18bdd9ef0f69d351c96bfd8822730"
+    }
+  },
+  "person_e_detector_and_homography_authority": {
+    "current_commit": "bfe7d55acc1fcf0b90aca5c152672070b15e6ee7",
+    "detector_identity_sha256": "0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+    "detector_version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+    "step_3_1_formal_evaluation_commit": "ed3ca072b184ccb45dbf154d4209c5893b67f42e",
+    "step_3_2_closure_commit": "bfe7d55acc1fcf0b90aca5c152672070b15e6ee7"
+  },
+  "schema_version": "1.0"
+}

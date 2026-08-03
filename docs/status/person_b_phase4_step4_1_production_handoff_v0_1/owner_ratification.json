@@ -1,0 +1,47 @@
+{
+  "accepted_activation_index_sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+  "accepted_pilot_count": 10,
+  "activation_chunk_count": 200,
+  "activation_row_count": 37480,
+  "decision": "RATIFY_PERSON_B_STEP4_1_PRODUCTION_INPUTS_AND_EXECUTION",
+  "fold_artifact_hash": "be30c65ed5bb8b4b05d87be21d846b60b918d450976e3901e40a71db481dcf96",
+  "frozen_folds_preserved": true,
+  "frozen_metrics_preserved": true,
+  "frozen_target_preserved": true,
+  "frozen_threshold_preserved": true,
+  "implementation_commit": "ca3bf19120d5553a34a5edc1bda6bfed54859127",
+  "implementation_files": [
+    {
+      "path": "scripts/prepare_person_b_step4_1_production_inputs.py",
+      "sha256": "f284616b6702c62b705bfbdbd5eee1882afa2fd026e4b4aaa56bab364507c189"
+    },
+    {
+      "path": "scripts/run_person_b_step4_1_production_sagemaker.py",
+      "sha256": "e4394541c18c9590f17ce8f3e74175829a52fb4b944b42e1f3da3c23aa55032c"
+    },
+    {
+      "path": "src/mineocclude/analysis/production_v2.py",
+      "sha256": "a29aee85501b008544273b6b620a875ba60c2ec1b7aac366d5c6d8b8f00a3abd"
+    },
+    {
+      "path": "src/mineocclude/oracle/schema.py",
+      "sha256": "a1149e236befcc2b3bcdb1e52ff18bbf91e77885382ac1b752d78f0602038a4b"
+    },
+    {
+      "path": "src/mineocclude/probes/splits.py",
+      "sha256": "48a4bec89f22b8bb2f8493445613a4d2670745d6c6e0f7d7beacb909e83f3e54"
+    },
+    {
+      "path": "tests/analysis/test_person_b_step4_1_production_v2.py",
+      "sha256": "a7e1ec6fba59f24482afb4842eabf17c2066323650e7147d71dc7baa91c3b65e"
+    }
+  ],
+  "oracle_target_artifact_hash": "c9d2406d3d1b9df336a8a0a6998e45bdc54dd9a68e0d0dde5872a3344fc7338b",
+  "owner": "person_b",
+  "person_d_handoff_inputs_ready": true,
+  "production_v2_consumer_ready": true,
+  "schema_id": "person-b-phase4-step4-1-production-handoff-v0-1-owner-ratification",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

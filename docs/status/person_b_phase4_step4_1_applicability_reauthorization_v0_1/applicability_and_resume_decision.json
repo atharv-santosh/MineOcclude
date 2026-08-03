@@ -1,0 +1,65 @@
+{
+  "applicability_contract": {
+    "path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+    "sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+    "source_commit": "248b7a174cb38a522f3638d7789b0e1d1b5befdf",
+    "version": "person-b-step4-1-family-target-applicability-v0.1"
+  },
+  "constant_velocity": {
+    "admitted_count": 1690,
+    "candidate_count": 1695,
+    "excluded_count": 5,
+    "excluded_identities": [
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_00_ep9441"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_01_ep9442"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_02_ep9432"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_03_ep9443"
+      },
+      {
+        "model_frame_idx": 0,
+        "trajectory_id": "layout_04_ep9444"
+      }
+    ],
+    "exclusion_reason": "missing_prior_visible_observation_for_estimated_velocity",
+    "target": "mu_oracle_blocks"
+  },
+  "global_1695_prediction_assumption_removed": true,
+  "global_frame_universe_count": 1695,
+  "preserved_outputs": {
+    "authorization_time_scientific_execution_performed": false,
+    "completed_families": [
+      "last_seen",
+      "constant_velocity",
+      "grouped_shuffled",
+      "time_only",
+      "explicit_feature"
+    ],
+    "decisions": {
+      "constant_velocity": "reusable",
+      "explicit_feature": "reusable",
+      "grouped_shuffled": "reusable",
+      "known_q_analytic": "absent",
+      "last_seen": "reusable",
+      "raw_pixel": "absent",
+      "time_only": "reusable",
+      "visible_history_q": "absent"
+    },
+    "prediction_count": 7691,
+    "reuse_decision_semantics": "reusable is conditional on the immediate runtime audit proving every exact identity, SHA-256 inventory, runner receipt, authorization receipt, environment receipt, and timestamp binding; otherwise the family is invalid-conflicting and the runner is blocked",
+    "runtime_revalidation_required": true
+  },
+  "schema_id": "person-b-phase4-step4-1-applicability-reauthorization-v0-1-applicability-and-resume-decision",
+  "schema_version": "1.0",
+  "u4_output_inspected": false
+}

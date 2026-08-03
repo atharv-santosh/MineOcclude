@@ -1,0 +1,52 @@
+{
+  "artifact_contract": {
+    "artifact_schema_version": "person-b-analysis-artifact-v0.1",
+    "artifact_type": "prediction",
+    "payload_artifact_type": "prediction_manifest",
+    "status_authority": "person_b"
+  },
+  "blocked_reason": "No accepted fitted_probe exists because the exact Person A production activation/model-input handoff is pending.",
+  "coverage_rules": [
+    "exactly one prediction per eligible trajectory_id plus model_frame_idx plus layer_idx plus hook_site",
+    "every prediction must be backed by the fitted probe for its held-out outer fold",
+    "prediction keys must exactly match the authorized probe matrix key set",
+    "no training row may be labeled out_of_fold",
+    "nonfinite predictions fail closed"
+  ],
+  "direct_input_artifact_types": [
+    "fitted_probe",
+    "activation",
+    "oracle_target",
+    "fold_manifest",
+    "probe_matrix_manifest"
+  ],
+  "execution_status": "BLOCKED_PENDING_PERSON_A_AND_FITTED_PROBE",
+  "required_input_bindings": [
+    "fitted_probe_artifact_ids_and_sha256s",
+    "activation_artifact_id_and_sha256",
+    "oracle_target_artifact_id_and_sha256",
+    "final_frame_fold_manifest_id_and_sha256",
+    "probe_matrix_manifest_id_and_sha256",
+    "analysis_config_literal_sha256"
+  ],
+  "required_row_fields": [
+    "trajectory_id",
+    "model_frame_idx",
+    "episode_id",
+    "layout_id",
+    "layer_idx",
+    "hook_site",
+    "fold_idx",
+    "prediction",
+    "fit_id",
+    "prediction_scope",
+    "target_id"
+  ],
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-prediction-input-contract",
+  "schema_version": "1.0",
+  "scientific_output_present": false,
+  "supported_prediction_scopes": [
+    "out_of_fold",
+    "held_out"
+  ]
+}

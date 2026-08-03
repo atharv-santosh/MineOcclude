@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -12,6 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from mineocclude.analysis.config import DEFAULT_CONFIG_PATH  # noqa: E402
+from mineocclude.experiments.registry import (  # noqa: E402
+    load_json_with_sha256,
+    write_json_exclusive,
+)
 from mineocclude.oracle.targets import build_regime_a_target_document  # noqa: E402
 
 
@@ -44,8 +47,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    with args.input.open("r", encoding="utf-8") as handle:
-        state_document = json.load(handle)
+    state_document, _state_file_hash = load_json_with_sha256(args.input)
     build_options = (
         {"oracle_config_hash": args.config_hash}
         if args.config_hash is not None
@@ -57,10 +59,7 @@ def main() -> None:
         oracle_code_sha=args.code_sha,
         **build_options,
     )
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("w", encoding="utf-8", newline="\n") as handle:
-        json.dump(target_document, handle, indent=2, sort_keys=True)
-        handle.write("\n")
+    write_json_exclusive(args.output, target_document)
 
 
 if __name__ == "__main__":

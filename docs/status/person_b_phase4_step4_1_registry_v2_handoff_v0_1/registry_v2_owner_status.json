@@ -1,0 +1,61 @@
+{
+  "artifact_owner_status": [
+    {
+      "artifact_type": "fold_manifest",
+      "owner": "person_b",
+      "status": "BLOCKED_PENDING_PERSON_A_FRAME_KEYS"
+    },
+    {
+      "artifact_type": "oracle_target",
+      "owner": "person_b",
+      "status": "CONTRACT_READY_EXECUTION_NOT_RUN"
+    },
+    {
+      "artifact_type": "fitted_probe",
+      "owner": "person_b",
+      "status": "BLOCKED_PENDING_PERSON_A"
+    },
+    {
+      "artifact_type": "prediction",
+      "owner": "person_b",
+      "status": "BLOCKED_PENDING_PERSON_A_AND_FITTED_PROBE"
+    },
+    {
+      "artifact_type": "baseline",
+      "owner": "person_d",
+      "status": "BLOCKED_PENDING_PERSON_D"
+    },
+    {
+      "artifact_type": "metric_table",
+      "owner": "person_b",
+      "status": "BLOCKED_PENDING_PERSON_A_PERSON_D_AND_PREDICTIONS"
+    }
+  ],
+  "ownership_rules": {
+    "person_a": [
+      "model_input",
+      "activation",
+      "checkpoint_identity",
+      "preprocessing_identity"
+    ],
+    "person_b": [
+      "oracle_target",
+      "fold_manifest",
+      "fitted_probe",
+      "prediction",
+      "metric_table"
+    ],
+    "person_c": [
+      "accepted_state_inputs",
+      "capture_identity",
+      "visible_flag"
+    ],
+    "person_d": [
+      "baseline"
+    ]
+  },
+  "registry_generation": "v2",
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-owner-status",
+  "schema_version": "1.0",
+  "status": "PREPARATION_READY_EXECUTION_BLOCKED"
+}

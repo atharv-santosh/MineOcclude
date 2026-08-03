@@ -1,0 +1,69 @@
+{
+  "accepted_authorization_authority_by_reusable_family": {
+    "constant_velocity": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+    "explicit_feature": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+    "grouped_shuffled": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+    "last_seen": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+    "time_only": "a6f1cedd390ecde129fc5b25ad50f81a0848530b"
+  },
+  "accepted_producing_authority_by_reusable_family": {
+    "constant_velocity": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "explicit_feature": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "grouped_shuffled": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "last_seen": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "time_only": "683077b58fdb73176936fcb131e9297eb102ea10"
+  },
+  "chronology_requirements": {
+    "preserved_run": {
+      "authorization_authority_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+      "completed_families": [
+        "last_seen",
+        "constant_velocity",
+        "grouped_shuffled",
+        "time_only",
+        "explicit_feature"
+      ],
+      "prediction_count": 7691,
+      "producing_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10"
+    },
+    "prior_oom_report": {
+      "authorization_authority_commit": "76e1d33788bcf1482b310d2b41a5db3d734d98a7",
+      "completed_family_count": 0,
+      "prediction_count": 0,
+      "producing_runner_commit": "5b90e5bf6c6975119f509d766a82a9786d64300c"
+    },
+    "timestamp_rule": "prior OOM receipt timestamp must precede every preserved-family completion and the preserved-run receipt timestamp"
+  },
+  "decision_vocabulary": [
+    "reusable",
+    "absent",
+    "invalid-conflicting"
+  ],
+  "failure_behavior": {
+    "absent": "family may execute in frozen order",
+    "invalid-conflicting": "do not delete, overwrite, repair, or start Person D",
+    "reusable": "family may be skipped only after every runtime check passes"
+  },
+  "per_family_required_evidence": [
+    "run_state output manifest with completed status and exact target inventory",
+    "every family-target prediction file",
+    "canonical JSON byte identity",
+    "SHA-256 and byte-size inventory",
+    "exact admitted identities under the applicability contract",
+    "no missing admitted identity, unauthorized extra identity, or duplicate identity",
+    "finite predictions and exact fit lineage",
+    "exact target, fold, frame, source-context, configuration, and seed lineage",
+    "runner receipt with exact producing commit, branch, clean worktree, and completion timestamp",
+    "authorization receipt with exact predecessor authority and authorization-record hash",
+    "environment receipt meeting both 20.0 GiB thresholds",
+    "explicit no-U4 receipt"
+  ],
+  "predecessor_authorization_record": {
+    "path": "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_memory_reauthorization_v0_1/person_d_authorization_record.json",
+    "sha256": "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
+  },
+  "runtime_provenance_filename": "preserved_output_provenance.json",
+  "schema_id": "person-b-phase4-step4-1-applicability-reauthorization-v0-1-provenance-audit-contract",
+  "schema_version": "1.0",
+  "u4_output_inspected": false
+}

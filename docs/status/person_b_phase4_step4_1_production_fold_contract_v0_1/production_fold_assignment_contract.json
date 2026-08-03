@@ -1,0 +1,446 @@
+{
+  "authoritative_validation_mode": "signed_explicit_mapping",
+  "authorities": {
+    "baseline_input_v0_2_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+    "corrected_baseline_input_v0_2_schema_commit": "4e0e0f49d4642cf069de8c66c3a8fee47806c4b0",
+    "original_layout_plan_commit": "08b9677124f3ed04db49d5e5e720f04771c96b83",
+    "production_consumer_commit": "ca3bf19120d5553a34a5edc1bda6bfed54859127",
+    "production_ratification_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c"
+  },
+  "contract_version": "person-b-step4-1-production-fold-contract-v0.1",
+  "deterministic_test_vectors": [
+    {
+      "expected_fold_by_ordered_layout": [
+        1,
+        2,
+        4,
+        0,
+        3,
+        4
+      ],
+      "expected_greedy_processing_order": [
+        "layout_03",
+        "layout_00",
+        "layout_01",
+        "layout_04",
+        "layout_02",
+        "layout_05"
+      ],
+      "layout_row_counts_in_canonical_layout_order": [
+        507,
+        502,
+        335,
+        524,
+        418,
+        170
+      ],
+      "ordered_layout_ids": [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04",
+        "layout_05"
+      ],
+      "seed": 20260719,
+      "test_vector_id": "full_prejoin_six_layout_generation"
+    },
+    {
+      "expected_historical_subset_reproduction": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "expected_signed_assignment": [
+        1,
+        2,
+        4,
+        0,
+        3
+      ],
+      "historical_subset_reproduction_is_authoritative": false,
+      "layout_row_counts_in_canonical_layout_order": [
+        409,
+        387,
+        335,
+        292,
+        272
+      ],
+      "ordered_layout_ids": [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04"
+      ],
+      "seed": 20260719,
+      "test_vector_id": "production_subset_preserves_prejoin_mapping"
+    },
+    {
+      "fold_to_layout": [
+        {
+          "fold_idx": 0,
+          "layout_id": "layout_03"
+        },
+        {
+          "fold_idx": 1,
+          "layout_id": "layout_00"
+        },
+        {
+          "fold_idx": 2,
+          "layout_id": "layout_01"
+        },
+        {
+          "fold_idx": 3,
+          "layout_id": "layout_04"
+        },
+        {
+          "fold_idx": 4,
+          "layout_id": "layout_02"
+        }
+      ],
+      "test_vector_id": "production_inverse_mapping"
+    }
+  ],
+  "fold_manifest": {
+    "artifact_hash": "be30c65ed5bb8b4b05d87be21d846b60b918d450976e3901e40a71db481dcf96",
+    "byte_size": 742601,
+    "fold_manifest_format_version": "person-b-ten-pilot-frame-fold-v0.1",
+    "fold_schema_version": "person-b-fold-v0.1",
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+    "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+  },
+  "generation": {
+    "assignment_algorithm": [
+      "count accepted prejoin rows by layout",
+      "order layouts by descending row count",
+      "break only equal-count ties by sha256 of the UTF-8 string seed:layout_id",
+      "assign each layout to the currently least-loaded fold",
+      "break equal fold-load ties by the lowest fold index",
+      "freeze the resulting layout mapping before any Person A join",
+      "preserve surviving layout assignments without rebalancing when forming the ten-pilot production subset"
+    ],
+    "counts_influence_ordering": true,
+    "initial_group_order": [
+      "layout_00",
+      "layout_01",
+      "layout_02",
+      "layout_03",
+      "layout_04",
+      "layout_05"
+    ],
+    "original_layout_plan": {
+      "accepted_row_count": 2456,
+      "artifact_hash": "ca265b64935880aede8c3bb8b6060cdda17c23932e5e98878a3fcf8ee5341f01",
+      "byte_size": 6540,
+      "path": "data/person_b/phase6_c_intake/layout_fold_plan.json",
+      "sha256": "a762cfe66984675e6af9177ff954540fe17cafc7747422fcad26ed1a2f7bbf8b"
+    },
+    "permutation_algorithm": "none",
+    "prng_implementation": "none",
+    "producing_code": [
+      {
+        "byte_size": 1655,
+        "path": "scripts/build_person_b_layout_fold_plan.py",
+        "sha256": "6fe1255196e4985368e66c1eb61ddbe0bf56a898485f3ff309eb6e414f6793a9"
+      },
+      {
+        "byte_size": 24157,
+        "path": "src/mineocclude/analysis/layout_fold_plan.py",
+        "sha256": "e8a23ce2a889271722305b9979a9c9d490a18e1d754a7b2cc9338a20bf224d91"
+      },
+      {
+        "byte_size": 17560,
+        "path": "src/mineocclude/probes/splits.py",
+        "sha256": "748d4135ccfe94c23f891ecb43ca7139cb075069fdf16f8126f8e2440a6f0510"
+      }
+    ],
+    "seed": 20260719,
+    "seed_affects_assignment_only_for_equal_layout_row_counts": true,
+    "seed_sensitive_for_frozen_prejoin_input": false,
+    "shuffle_algorithm": "none",
+    "tie_breaker": {
+      "digest_algorithm": "sha256",
+      "input_encoding": "UTF-8",
+      "input_template": "{seed}:{layout_id}",
+      "layout_digests": {
+        "layout_00": "5fb76399a4f9d0e793dfda1b5f739ec758130ed49aa87c43703aa853c814ec80",
+        "layout_01": "b1aafeb757863183a82a7365fc31a5363eb2e628a6f19d84108072fc354173bb",
+        "layout_02": "72bf058160523031bd6819b8f30e84f3d294196f18732917206e472ee84771d3",
+        "layout_03": "d3cf2a98c1682a3db661d180af5ea728f61c5ac98d2950659d2d48423f99291d",
+        "layout_04": "c8c5d067b98f8e5328f24916a34d537f2e43f9e4714feee1bb54950299d56872",
+        "layout_05": "bc3b1e5ef1d3078fadb232d08d83eace3a03f51bb63f12dd8fc30150ab206469"
+      }
+    }
+  },
+  "leakage_restrictions": [
+    "one layout belongs to exactly one fold",
+    "one trajectory belongs to its layout fold only",
+    "one admitted row belongs to exactly one fold",
+    "admitted and excluded row identities are disjoint",
+    "no random or row-order split is permitted",
+    "outcome fields did not participate in the frozen prejoin assignment",
+    "the production subset must not be rebalanced",
+    "U4 inputs and outputs are forbidden"
+  ],
+  "production_subset": {
+    "accepted_pilot_ids": [
+      "layout_00_ep9403",
+      "layout_00_ep9441",
+      "layout_01_ep9405",
+      "layout_01_ep9442",
+      "layout_02_ep9407",
+      "layout_02_ep9432",
+      "layout_03_ep9404",
+      "layout_03_ep9443",
+      "layout_04_ep9406",
+      "layout_04_ep9444"
+    ],
+    "admitted_by_fold": [
+      {
+        "fold_idx": 0,
+        "row_count": 292
+      },
+      {
+        "fold_idx": 1,
+        "row_count": 409
+      },
+      {
+        "fold_idx": 2,
+        "row_count": 387
+      },
+      {
+        "fold_idx": 3,
+        "row_count": 272
+      },
+      {
+        "fold_idx": 4,
+        "row_count": 335
+      }
+    ],
+    "admitted_by_pilot": [
+      {
+        "row_count": 209,
+        "trajectory_id": "layout_00_ep9403"
+      },
+      {
+        "row_count": 200,
+        "trajectory_id": "layout_00_ep9441"
+      },
+      {
+        "row_count": 187,
+        "trajectory_id": "layout_01_ep9405"
+      },
+      {
+        "row_count": 200,
+        "trajectory_id": "layout_01_ep9442"
+      },
+      {
+        "row_count": 135,
+        "trajectory_id": "layout_02_ep9407"
+      },
+      {
+        "row_count": 200,
+        "trajectory_id": "layout_02_ep9432"
+      },
+      {
+        "row_count": 92,
+        "trajectory_id": "layout_03_ep9404"
+      },
+      {
+        "row_count": 200,
+        "trajectory_id": "layout_03_ep9443"
+      },
+      {
+        "row_count": 72,
+        "trajectory_id": "layout_04_ep9406"
+      },
+      {
+        "row_count": 200,
+        "trajectory_id": "layout_04_ep9444"
+      }
+    ],
+    "admitted_row_count": 1695,
+    "assignment_source": "frozen_layout_plan_subset_without_reassignment",
+    "excluded_by_pilot": [
+      {
+        "row_count": 39,
+        "trajectory_id": "layout_00_ep9403"
+      },
+      {
+        "row_count": 0,
+        "trajectory_id": "layout_00_ep9441"
+      },
+      {
+        "row_count": 43,
+        "trajectory_id": "layout_01_ep9405"
+      },
+      {
+        "row_count": 0,
+        "trajectory_id": "layout_01_ep9442"
+      },
+      {
+        "row_count": 23,
+        "trajectory_id": "layout_02_ep9407"
+      },
+      {
+        "row_count": 0,
+        "trajectory_id": "layout_02_ep9432"
+      },
+      {
+        "row_count": 33,
+        "trajectory_id": "layout_03_ep9404"
+      },
+      {
+        "row_count": 0,
+        "trajectory_id": "layout_03_ep9443"
+      },
+      {
+        "row_count": 41,
+        "trajectory_id": "layout_04_ep9406"
+      },
+      {
+        "row_count": 0,
+        "trajectory_id": "layout_04_ep9444"
+      }
+    ],
+    "excluded_row_count": 179,
+    "fold_to_layout": [
+      {
+        "fold_idx": 0,
+        "layout_id": "layout_03"
+      },
+      {
+        "fold_idx": 1,
+        "layout_id": "layout_00"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "layout_01"
+      },
+      {
+        "fold_idx": 3,
+        "layout_id": "layout_04"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "layout_02"
+      }
+    ],
+    "layout_assignments": [
+      {
+        "fold_idx": 1,
+        "layout_id": "layout_00",
+        "row_count": 409
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "layout_01",
+        "row_count": 387
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "layout_02",
+        "row_count": 335
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "layout_03",
+        "row_count": 292
+      },
+      {
+        "fold_idx": 3,
+        "layout_id": "layout_04",
+        "row_count": 272
+      }
+    ],
+    "ordered_layout_ids": [
+      "layout_00",
+      "layout_01",
+      "layout_02",
+      "layout_03",
+      "layout_04"
+    ],
+    "row_level_mapping_identity": {
+      "canonicalization": "UTF-8 JSON, allow_nan=false, ensure_ascii=false, separators=(comma,colon), sort_keys=true, no trailing newline",
+      "digest_domain": "person-b-step4-1-production-fold-row-mapping-v0.1 followed by NUL",
+      "projection": "ordered memberships and excluded_memberships arrays exactly as stored",
+      "sha256": "6bc8ced64ebce10b27a2c9e1dceede31d92bf2013015fb81975e64bdf01ad52c"
+    },
+    "source_frame_counts": [
+      {
+        "source_frame_count": 248,
+        "trajectory_id": "layout_00_ep9403"
+      },
+      {
+        "source_frame_count": 200,
+        "trajectory_id": "layout_00_ep9441"
+      },
+      {
+        "source_frame_count": 230,
+        "trajectory_id": "layout_01_ep9405"
+      },
+      {
+        "source_frame_count": 200,
+        "trajectory_id": "layout_01_ep9442"
+      },
+      {
+        "source_frame_count": 158,
+        "trajectory_id": "layout_02_ep9407"
+      },
+      {
+        "source_frame_count": 200,
+        "trajectory_id": "layout_02_ep9432"
+      },
+      {
+        "source_frame_count": 125,
+        "trajectory_id": "layout_03_ep9404"
+      },
+      {
+        "source_frame_count": 200,
+        "trajectory_id": "layout_03_ep9443"
+      },
+      {
+        "source_frame_count": 113,
+        "trajectory_id": "layout_04_ep9406"
+      },
+      {
+        "source_frame_count": 200,
+        "trajectory_id": "layout_04_ep9444"
+      }
+    ]
+  },
+  "schema_id": "person-b-step4-1-production-fold-contract-v0-1",
+  "schema_version": "1.0",
+  "serialization_and_digest_rules": {
+    "artifact_hash": "SHA-256 over Person B analysis canonical JSON for every field except artifact_hash",
+    "literal_file_identity": "SHA-256 over exact UTF-8 bytes",
+    "literal_json_encoding": "sorted keys, two-space indentation, ensure_ascii=false, allow_nan=false, final newline",
+    "row_mapping_identity": "SHA-256 over the stated digest-domain prefix, NUL separator, and compact canonical JSON projection"
+  },
+  "target_manifest": {
+    "artifact_hash": "c9d2406d3d1b9df336a8a0a6998e45bdc54dd9a68e0d0dde5872a3344fc7338b",
+    "byte_size": 4934874,
+    "fold_artifact_binding": "be30c65ed5bb8b4b05d87be21d846b60b918d450976e3901e40a71db481dcf96",
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+    "row_count": 1695,
+    "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "u4_output_inspected": false,
+  "validation_requirements": [
+    "dispatch explicitly on contract_version and reject unknown versions",
+    "verify exact fold-manifest byte size and SHA-256 before parsing",
+    "verify exact formatted JSON serialization without rewriting bytes",
+    "verify the sealed artifact hash",
+    "verify exact accepted pilots, source manifests, row counts and explicit layout mapping",
+    "verify every admitted and excluded frame identity exactly once",
+    "verify no layout or trajectory crosses a fold",
+    "verify the row-level mapping identity",
+    "verify exact target-manifest byte size and SHA-256",
+    "verify target input_manifest_hash equals the fold artifact_hash",
+    "verify target and fold row identities match in deterministic order",
+    "reject historical subset reproduction as an authority for this production format"
+  ]
+}

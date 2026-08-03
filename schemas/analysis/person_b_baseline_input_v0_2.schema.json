@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted_pilot_ids": {
+      "const": [
+        "layout_00_ep9403",
+        "layout_00_ep9441",
+        "layout_01_ep9405",
+        "layout_01_ep9442",
+        "layout_02_ep9407",
+        "layout_02_ep9432",
+        "layout_03_ep9404",
+        "layout_03_ep9443",
+        "layout_04_ep9406",
+        "layout_04_ep9444"
+      ]
+    },
+    "baseline_family": {
+      "enum": [
+        "last_seen",
+        "constant_velocity",
+        "grouped_shuffled",
+        "time_only",
+        "explicit_feature",
+        "raw_pixel",
+        "visible_history_q",
+        "known_q_analytic"
+      ]
+    },
+    "baseline_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "baseline_input_schema_version": {
+      "const": "person-b-baseline-input-v0.2"
+    },
+    "config_hash": {
+      "const": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+    },
+    "direct_inputs": {
+      "type": "object"
+    },
+    "feature_access": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "fit_manifest_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "fold_manifest_hash": {
+      "const": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+    },
+    "input_manifest_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "legal_information": {
+      "additionalProperties": false,
+      "properties": {
+        "uses_future_information": {
+          "type": "boolean"
+        },
+        "uses_hidden_truth": {
+          "type": "boolean"
+        },
+        "uses_scripted_q": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "uses_future_information",
+        "uses_hidden_truth",
+        "uses_scripted_q"
+      ],
+      "type": "object"
+    },
+    "person_b_prediction_reservation": {
+      "type": "object"
+    },
+    "producer_role": {
+      "const": "person_d"
+    },
+    "random_split_used": {
+      "const": false
+    },
+    "rows": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "fit_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "fold_idx": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "model_frame_idx": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "prediction": {
+            "type": "number"
+          },
+          "prediction_scope": {
+            "const": "out_of_fold"
+          },
+          "trajectory_id": {
+            "enum": [
+              "layout_00_ep9403",
+              "layout_00_ep9441",
+              "layout_01_ep9405",
+              "layout_01_ep9442",
+              "layout_02_ep9407",
+              "layout_02_ep9432",
+              "layout_03_ep9404",
+              "layout_03_ep9443",
+              "layout_04_ep9406",
+              "layout_04_ep9444"
+            ]
+          }
+        },
+        "required": [
+          "fit_id",
+          "fold_idx",
+          "model_frame_idx",
+          "prediction",
+          "prediction_scope",
+          "trajectory_id"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "target_name": {
+      "enum": [
+        "log_sigma_oracle",
+        "mu_oracle_blocks"
+      ]
+    },
+    "u4_output_inspected": {
+      "const": false
+    }
+  },
+  "required": [
+    "accepted_pilot_ids",
+    "baseline_family",
+    "baseline_id",
+    "baseline_input_schema_version",
+    "config_hash",
+    "direct_inputs",
+    "feature_access",
+    "fit_manifest_hash",
+    "fold_manifest_hash",
+    "input_manifest_hash",
+    "legal_information",
+    "person_b_prediction_reservation",
+    "producer_role",
+    "random_split_used",
+    "rows",
+    "schema_version",
+    "target_name",
+    "u4_output_inspected"
+  ],
+  "title": "Person B eight-family baseline input v0.2",
+  "type": "object"
+}

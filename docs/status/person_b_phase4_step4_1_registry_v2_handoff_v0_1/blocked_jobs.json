@@ -1,0 +1,48 @@
+{
+  "jobs": [
+    {
+      "blocked_by": [
+        "person_a_production_activation_handoff",
+        "person_a_accepted_model_input_manifest",
+        "final_frame_fold_manifest"
+      ],
+      "job_id": "person_b_phase4_fit_ridge_probes",
+      "job_type": "fitted_probe",
+      "output_artifact_id": null,
+      "output_sha256": null,
+      "status": "BLOCKED"
+    },
+    {
+      "blocked_by": [
+        "accepted_fitted_probe",
+        "person_a_production_activation_handoff",
+        "final_frame_fold_manifest"
+      ],
+      "job_id": "person_b_phase4_generate_oof_predictions",
+      "job_type": "prediction",
+      "output_artifact_id": null,
+      "output_sha256": null,
+      "status": "BLOCKED"
+    },
+    {
+      "blocked_by": [
+        "accepted_oof_predictions",
+        "person_d_production_baseline_handoff",
+        "accepted_oracle_target",
+        "final_frame_fold_manifest"
+      ],
+      "job_id": "person_b_phase4_compute_u1_u2_u3_metrics",
+      "job_type": "metric_table",
+      "output_artifact_id": null,
+      "output_sha256": null,
+      "status": "BLOCKED"
+    }
+  ],
+  "person_a_dependency_status": "PENDING_EXACT_PRODUCTION_HANDOFF",
+  "person_d_dependency_status": "PENDING_EXACT_PRODUCTION_BASELINE_HANDOFF",
+  "probe_fitting_executed": false,
+  "production_metrics_executed": false,
+  "production_predictions_executed": false,
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-blocked-jobs",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,48 @@
+{
+  "baseline_prediction_documents": [
+    "last_seen__mu_oracle_blocks.json",
+    "constant_velocity__mu_oracle_blocks.json",
+    "grouped_shuffled__log_sigma_oracle.json",
+    "grouped_shuffled__mu_oracle_blocks.json",
+    "time_only__log_sigma_oracle.json",
+    "explicit_feature__mu_oracle_blocks.json",
+    "raw_pixel__mu_oracle_blocks.json",
+    "visible_history_q__log_sigma_oracle.json",
+    "known_q_analytic__log_sigma_oracle.json"
+  ],
+  "closure_state": {
+    "artifacts_present_in_this_package": false,
+    "execution_outputs_claimed": false,
+    "final_comparison_complete": false,
+    "final_comparison_performed": false,
+    "step4_1_complete": false,
+    "u4_output_inspected": false
+  },
+  "evidence_requirements": [
+    "per-family prediction documents with exact row, fold, target, and byte identities",
+    "run_state.json with one validated status entry per family",
+    "environment and exact-runner authorization receipts",
+    "fit receipts for each fitted family",
+    "missingness and exclusion receipts",
+    "exact coverage and matched-row lineage receipts",
+    "prediction and inventory trust records",
+    "later Person B matched-row comparison and metric table",
+    "Person E final Registry v2 trust import and formal Step 4.1 decision"
+  ],
+  "expected_run_state": {
+    "family_count": 8,
+    "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/run_state.json",
+    "schema_version": "1.0",
+    "status_required_before_completion": "completed"
+  },
+  "person_e_closure_requirements": {
+    "byte_size": 3556,
+    "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/person_e_closure_requirements.json",
+    "sha256": "c77148f0d2139bff6eef10da41bd55df2da878bee95029afd258bbcb63d741dd",
+    "source_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7"
+  },
+  "schema_id": "person-b-phase4-step4-1-final-person-d-authorization-v0-1-output-closure-requirements",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

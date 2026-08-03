@@ -1,0 +1,124 @@
+{
+  "authorization_boundary": {
+    "authorized_pilot_count": 1,
+    "authorized_step_range": "6.1-6.6",
+    "deterministic_seed": 20260725,
+    "device": "cuda:0",
+    "execution_host": "aws_sagemaker_linux_gpu",
+    "future_person_a_output_acceptance_authorized": false,
+    "hidden_state_interpretation_authorized": false,
+    "hidden_state_interpretation_unlock_condition": "positive_control_passes_and_separate_authorization_is_issued",
+    "selected_pilot": "layout_00_ep9403"
+  },
+  "exact_authorities": {
+    "person_a_activation_store_v2_commit": "a5841beea424f444bb364dae815d8a74de55f849",
+    "person_b_runtime_authorization_commit": "43e5ac83004cce2145384c1383f2c3820311af14",
+    "person_b_sagemaker_ratification_commit": "bf2640ed4680475da337aae40ef2982ea7d3833c",
+    "person_c_accepted_pilot_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+    "person_e_registry_v2_validator_commit": "b27d404c6aa913bac559754fa8b7accdff46e886"
+  },
+  "ratification": {
+    "activation_key_collision_count": 0,
+    "activation_store_v1_blob_oid": "883e4e68812908e4d0d8e276f86147482c3a8d07",
+    "activation_store_v1_semantics_preserved": true,
+    "backward_compatibility_ratified": true,
+    "context_local_identity_field": "context_local_pair_idx",
+    "context_local_identity_maximum": 15,
+    "context_local_identity_minimum": 0,
+    "context_local_identity_ratified": true,
+    "e_schema_change_required": false,
+    "expected_activation_row_count": 4960,
+    "explicit_schema_version_dispatch_required": true,
+    "global_frame_identity_field": "global_model_frame_idx",
+    "global_frame_identity_ratified": true,
+    "global_model_frame_count": 248,
+    "rollover_test": {
+      "context_local_transition": "15_to_0",
+      "global_frame_transition": "15_to_16",
+      "passed": true
+    },
+    "source_frame_and_tick_identity_preserved": true,
+    "store_v2_format_version": "person-a-activation-store-v2",
+    "token_position_derivation_ratified": true,
+    "token_positions_derived_only_from": "context_local_pair_idx"
+  },
+  "runner_authorization": {
+    "authorized": true,
+    "command": "bash scripts/run_person_a_phase6_single_pilot_sagemaker.sh",
+    "future_output_acceptance_granted": false,
+    "runner_path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+    "wrapper_path": "scripts/run_person_a_phase6_single_pilot_sagemaker.sh"
+  },
+  "schema_id": "person-b-phase6-activation-store-v2-ratification-v0-1",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "source_objects": [
+    {
+      "byte_size": 2328,
+      "path": "docs/status/person_a_phase6_activation_store_v2_preparation_v0_1/activation_store_v2_contract.json",
+      "sha256": "4177587b17ca210b2694b14f4c510657524d328c0860e2aa6ae468f3a2d73008",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 1147,
+      "path": "docs/status/person_a_phase6_activation_store_v2_preparation_v0_1/authority_binding.json",
+      "sha256": "d513f2bd89af0f758bb3b9cd1cf0082de91e05da1266b48e695294a11b1a5d5e",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 971,
+      "path": "docs/status/person_a_phase6_activation_store_v2_preparation_v0_1/registry_v2_compatibility.json",
+      "sha256": "81632d7d877abe9f6082c55aaf556917f802800bc23fdaca64f9dc7c91b35c31",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 1019,
+      "path": "docs/status/person_a_phase6_activation_store_v2_preparation_v0_1/runner_preparation.json",
+      "sha256": "1db9cc84865100931aca4a229c4fca654e97441269761a8f8f4001cac1516f6f",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 1321,
+      "path": "docs/status/person_a_phase6_activation_store_v2_preparation_v0_1/sha256_inventory.json",
+      "sha256": "9d3b0bd1ef6fd81656a50c116983e85931cb94223d0b8aa47cf770bb197291aa",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 595,
+      "path": "docs/status/person_a_phase6_activation_store_v2_preparation_v0_1/validation_receipt.json",
+      "sha256": "8cb601cefa8fbba135b9ebf0950ee2f239562fffdf5fe93094d4348c306a00d1",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 1894,
+      "path": "scripts/run_person_a_phase6_single_pilot_sagemaker.sh",
+      "sha256": "c975183be6f4ae835cbf84900af8abdef7fd17e247f4793fe3f1f65375851a8f",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 57218,
+      "path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+      "sha256": "03382ba999c0c228c52f6de17794717e39761e19a29dab625e59aae860c80d72",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 187239,
+      "path": "src/mineocclude/activations/store.py",
+      "sha256": "d27a9044b04e51c2cb74ff94c4109230a3b02fef62eb4b45c1e7cb5f2d9d00e1",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 50914,
+      "path": "src/mineocclude/activations/store_v2.py",
+      "sha256": "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    },
+    {
+      "byte_size": 15088,
+      "path": "tests/activations/test_phase6_activation_store_v2.py",
+      "sha256": "72548534c1e7965bcecfa53200f236ef941bb9caa6dfb07415bc481ce763862d",
+      "source_commit": "a5841beea424f444bb364dae815d8a74de55f849"
+    }
+  ],
+  "u4_output_inspected": false
+}

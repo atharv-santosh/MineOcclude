@@ -1,0 +1,33 @@
+{
+  "evidence_requirements": [
+    "one validated receipt for each ordered baseline family",
+    "run_state.json with fail-closed status and exact HEAD authorization",
+    "per-family predictions, fit receipts, lineage, missingness, coverage, and inventories",
+    "raw payload verification receipt for all 1,695 frames",
+    "Person B post-D matched-row comparison and metric table",
+    "Person E Registry v2 trust import and formal Step 4.1 closure"
+  ],
+  "final_comparison_complete": false,
+  "person_b_post_d_comparison_required": true,
+  "person_e_closure_required": true,
+  "person_e_handoff": {
+    "byte_size": 3556,
+    "path": "docs/status/person_e_phase6_to_step4_1_handoff_v0_1/person_e_closure_requirements.json",
+    "sha256": "c77148f0d2139bff6eef10da41bd55df2da878bee95029afd258bbcb63d741dd",
+    "source_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7"
+  },
+  "required_family_receipts": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "schema_id": "person-b-phase4-step4-1-memory-reauthorization-v0-1-output-closure-requirements",
+  "schema_version": "1.0",
+  "step4_1_complete": false,
+  "u4_output_inspected": false
+}

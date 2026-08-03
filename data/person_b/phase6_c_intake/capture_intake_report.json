@@ -1,0 +1,721 @@
+{
+  "artifact_hash": "1d976a5543ede07b43b0be3c6eb053afbb8cbcc823dc63d6fd5fd931988ce636",
+  "artifact_id": "person_b_phase6_c_capture_intake_2026_07_24",
+  "artifact_schema_version": "person-b-analysis-artifact-v0.1",
+  "artifact_type": "capture_intake_report",
+  "c_only_oracle_math_audit": {
+    "applicable_package_count": 15,
+    "fixed_tau_q_sensitivity": {
+      "comparison_count": 187,
+      "failure_count": 0,
+      "failures": []
+    },
+    "invariant_failure_count": 0,
+    "maximum_recursive_closed_form_error": 0.0,
+    "scope": "real_c_state_math_only_no_a_bound_target_artifact",
+    "status": "pass"
+  },
+  "capture_intake_schema_version": "person-b-c-capture-intake-v0.1",
+  "code_sha": "74129ecc86d2df22b5535e712359382877e94002",
+  "config_hash": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+  "coordinate_frame_count": 15,
+  "hidden_layout_ids": [
+    "layout_00",
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04",
+    "layout_05"
+  ],
+  "input_manifest_hash": "2f875f5c42e2c037aa4572a36ac859921295b7a6780971652df8f503a9189ccd",
+  "package_count": 16,
+  "package_records": [
+    {
+      "accepted_manifest_hash": "e01c1ddfd15347059700171b5b3dee3c2fb62c40cd5c7c46f24d4dff75bb8631",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "0d1ac175115ac35600716c3b040757e467f1ace5713ecb6b27247f97b70fae9c",
+      "coordinate_frame_hash": "efc076803bd4733ac5e401ca58b4090796725e02cd90f80aaeea438ee483cc20",
+      "coordinate_frame_id": "person_b_c_live_layout_00_ep9403_v1",
+      "episode_id": "9403",
+      "frame_count": 248,
+      "layout_id": "layout_00",
+      "literal_sha256": "20c2b193d4077055947095b75b84a706736c9689831f049459f264e3e755a5a4",
+      "oracle_math_audit": {
+        "hidden_row_count": 209,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 39,
+        "log_sigma_valid_count": 209,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 248,
+        "status": "pass",
+        "visible_row_count": 39
+      },
+      "path": "data/autonomous/layout_00_ep9403/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "20c2b193d4077055947095b75b84a706736c9689831f049459f264e3e755a5a4",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_00_ep9403",
+      "visibility_counts": {
+        "occluded": 209,
+        "visible": 39
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "4a547057feae598d4d0a665a8bbfe7bf8978e5c74a7e341124b5a57d3f803d53",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "b5813064b122759b4df45d9d1c3316f60bcac5c3209fd230c4cd0a56bc6f8b7b",
+      "coordinate_frame_hash": "343a0a563e0b5eeb8d27cde8efee666e76acf56235b377b0a881bc739c5daff5",
+      "coordinate_frame_id": "person_b_c_live_layout_00_ep9410_v1",
+      "episode_id": "9410",
+      "frame_count": 129,
+      "layout_id": "layout_00",
+      "literal_sha256": "0fba11305c4438c93f4818a84a0f6d62714a5849413bbcfb242169c997001f2c",
+      "oracle_math_audit": {
+        "hidden_row_count": 98,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 31,
+        "log_sigma_valid_count": 98,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 129,
+        "status": "pass",
+        "visible_row_count": 31
+      },
+      "path": "data/autonomous/layout_00_ep9410/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "0fba11305c4438c93f4818a84a0f6d62714a5849413bbcfb242169c997001f2c",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_00_ep9410",
+      "visibility_counts": {
+        "occluded": 98,
+        "visible": 31
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "c25c8585a6575e5c4522f7a6dc7180506a5f3bc531ea1030dfce62b86cd9fc08",
+      "classification": "visible_no_wall_control",
+      "condition": "no_wall_visible",
+      "coordinate_frame_document_hash": "ecf55ebb3d4237531268509ed37dc1dd11594e7966966e79be59ddb278790174",
+      "coordinate_frame_hash": "0ff1f35eff749f1256d4f8bcf825c8b2eda022589cf943b0f8ccdb471fac0da8",
+      "coordinate_frame_id": "person_b_c_live_layout_00_ep9441_v1",
+      "episode_id": "9441",
+      "frame_count": 200,
+      "layout_id": "layout_00",
+      "literal_sha256": "95751fdbb56f8c1fb119e29234cc924bc256a20bbd3901e44b015dd148731aab",
+      "oracle_math_audit": {
+        "hidden_row_count": 0,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 200,
+        "log_sigma_valid_count": 0,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 0,
+        "row_count": 200,
+        "status": "pass",
+        "visible_row_count": 200
+      },
+      "path": "data/autonomous/layout_00_ep9441/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "95751fdbb56f8c1fb119e29234cc924bc256a20bbd3901e44b015dd148731aab",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_00_ep9441",
+      "visibility_counts": {
+        "occluded": 0,
+        "visible": 200
+      },
+      "visibility_transitions": []
+    },
+    {
+      "accepted_manifest_hash": "7f7e1155e95f1e9d6c1eced7790575c75319f0c2c0ff31be875a9c33585d4e85",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "3d344a41f7a0392ee86d24ee20f5e85c6385ee29db7213171788b7ba10a17a26",
+      "coordinate_frame_hash": "6f3e17543ea7ffa86a4623e2ef2cf614e0b538084108ee7a9deb7501f38d2c60",
+      "coordinate_frame_id": "person_b_c_live_layout_01_ep9405_v1",
+      "episode_id": "9405",
+      "frame_count": 230,
+      "layout_id": "layout_01",
+      "literal_sha256": "1bab36ef4886ab1eb9d1a9f9e3b674f88b8593101e766f337751857179a95f73",
+      "oracle_math_audit": {
+        "hidden_row_count": 187,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 43,
+        "log_sigma_valid_count": 187,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 230,
+        "status": "pass",
+        "visible_row_count": 43
+      },
+      "path": "data/autonomous/layout_01_ep9405/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "1bab36ef4886ab1eb9d1a9f9e3b674f88b8593101e766f337751857179a95f73",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_01_ep9405",
+      "visibility_counts": {
+        "occluded": 187,
+        "visible": 43
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "5f5846778a5f9c40d1738091d0b9c513235fbea0e38dc16de494b4928cd50a29",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "7e8126d16df048210336adc340320dbecde389643c2249fc489efb40c744edff",
+      "coordinate_frame_hash": "90e494ff5ad237f5f6c0d21a6eb68d3fb65d835fdc400e2030e73d4463c7ff2d",
+      "coordinate_frame_id": "person_b_c_live_layout_01_ep9412_v1",
+      "episode_id": "9412",
+      "frame_count": 147,
+      "layout_id": "layout_01",
+      "literal_sha256": "0ed14ffa536e7b049dca146f6491c2e7016ed312d45063d33ba3c03ac8740432",
+      "oracle_math_audit": {
+        "hidden_row_count": 115,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 32,
+        "log_sigma_valid_count": 115,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 147,
+        "status": "pass",
+        "visible_row_count": 32
+      },
+      "path": "data/autonomous/layout_01_ep9412/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "0ed14ffa536e7b049dca146f6491c2e7016ed312d45063d33ba3c03ac8740432",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_01_ep9412",
+      "visibility_counts": {
+        "occluded": 115,
+        "visible": 32
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "ece8fee9dd52468adcb501fe8b98437cf698e01dd586aa5df8ef90af215257f8",
+      "classification": "visible_no_wall_control",
+      "condition": "no_wall_visible",
+      "coordinate_frame_document_hash": "a48d22865fec2e9d118977e22fb5a3aaf96209a829627a12ce47804e3d434387",
+      "coordinate_frame_hash": "7affd211d8985d16f6b039e2471f5dd085cc1af84e680a882d00f2fe1e34bb51",
+      "coordinate_frame_id": "person_b_c_live_layout_01_ep9442_v1",
+      "episode_id": "9442",
+      "frame_count": 200,
+      "layout_id": "layout_01",
+      "literal_sha256": "d0752b85d3eaf5125906695fbf8a899a21b81f6c4c6ea2c91ebaadd5a23992ec",
+      "oracle_math_audit": {
+        "hidden_row_count": 0,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 200,
+        "log_sigma_valid_count": 0,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 0,
+        "row_count": 200,
+        "status": "pass",
+        "visible_row_count": 200
+      },
+      "path": "data/autonomous/layout_01_ep9442/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "d0752b85d3eaf5125906695fbf8a899a21b81f6c4c6ea2c91ebaadd5a23992ec",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_01_ep9442",
+      "visibility_counts": {
+        "occluded": 0,
+        "visible": 200
+      },
+      "visibility_transitions": []
+    },
+    {
+      "accepted_manifest_hash": "086b6baa612c72d4010aed60051674a74e4ad6631a4acd63df937a83fb15c7d6",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "49865d89930519d9730e734a0b1c4274320580223f296345eadd127043e539bc",
+      "coordinate_frame_hash": "c2d9ca12480f4970e17f50a38d424bd8e9e61f857c5a0476ff89ab5fc09f00a7",
+      "coordinate_frame_id": "person_b_c_live_layout_02_ep9407_v1",
+      "episode_id": "9407",
+      "frame_count": 158,
+      "layout_id": "layout_02",
+      "literal_sha256": "86aeef005d75f0391ca5cd1f2b2b90b402ac4552eac65b80bc01998052a095ec",
+      "oracle_math_audit": {
+        "hidden_row_count": 135,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 23,
+        "log_sigma_valid_count": 135,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 158,
+        "status": "pass",
+        "visible_row_count": 23
+      },
+      "path": "data/autonomous/layout_02_ep9407/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "86aeef005d75f0391ca5cd1f2b2b90b402ac4552eac65b80bc01998052a095ec",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_02_ep9407",
+      "visibility_counts": {
+        "occluded": 135,
+        "visible": 23
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "ac9be31813112b249d61b7e81eb49e4df0a1f456e10b503f96a4349205c78fac",
+      "classification": "visible_no_wall_control",
+      "condition": "no_wall_visible",
+      "coordinate_frame_document_hash": "0867731538fb91bb338faded1a51850c91bbd45cc602708bf706cdd0d5b0756e",
+      "coordinate_frame_hash": "bf4279d1accecf1bba3bd25d374788f010e3a7695933f90ae5fc374b97e1b47d",
+      "coordinate_frame_id": "person_b_c_live_layout_02_ep9432_v1",
+      "episode_id": "9432",
+      "frame_count": 200,
+      "layout_id": "layout_02",
+      "literal_sha256": "e48d62aaba78f5e9cf28e749999099846132d6b7428fe981f4fe7bf33fee6231",
+      "oracle_math_audit": {
+        "hidden_row_count": 0,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 200,
+        "log_sigma_valid_count": 0,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 0,
+        "row_count": 200,
+        "status": "pass",
+        "visible_row_count": 200
+      },
+      "path": "data/autonomous/layout_02_ep9432/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "e48d62aaba78f5e9cf28e749999099846132d6b7428fe981f4fe7bf33fee6231",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_02_ep9432",
+      "visibility_counts": {
+        "occluded": 0,
+        "visible": 200
+      },
+      "visibility_transitions": []
+    },
+    {
+      "accepted_manifest_hash": "32dc814029089905d07083fa6f9d5605f6e73f82bc80d92d7c0d945c28931fa2",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "5e4adcdc4ef900cef8e8f740854496853e2f1d28d852e4a42e3764aab7cf6e89",
+      "coordinate_frame_hash": "41b4a27c0bc022630650168ccbb777d70f05c96f3aef47b90617eb5a82c896d6",
+      "coordinate_frame_id": "person_b_c_live_layout_03_ep9404_v1",
+      "episode_id": "9404",
+      "frame_count": 125,
+      "layout_id": "layout_03",
+      "literal_sha256": "7a2b93cb1f01849df795f8031726053e3fe788934b2574ad11c2dd6d65091d57",
+      "oracle_math_audit": {
+        "hidden_row_count": 92,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 33,
+        "log_sigma_valid_count": 92,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 125,
+        "status": "pass",
+        "visible_row_count": 33
+      },
+      "path": "data/autonomous/layout_03_ep9404/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "7a2b93cb1f01849df795f8031726053e3fe788934b2574ad11c2dd6d65091d57",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_03_ep9404",
+      "visibility_counts": {
+        "occluded": 92,
+        "visible": 33
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "a6ffc2ba803ea3b0509a57f1558c8a53f353598ce3a1893158e4b74d87b3f661",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "717bbee85b3aaffacc4a8bd0a3dc5bec463d1ab02a08f4762ce5eac8587f335e",
+      "coordinate_frame_hash": "e765376af0950a1343a17ba7797abbb387a2f8adf4ddf52a6567bd77eadd447d",
+      "coordinate_frame_id": "person_b_c_live_layout_03_ep9409_v1",
+      "episode_id": "9409",
+      "frame_count": 270,
+      "layout_id": "layout_03",
+      "literal_sha256": "200b440f07d1d50bb48dc36e24b6c2b2720584697c83fb6115e48d31b0cafc6d",
+      "oracle_math_audit": {
+        "hidden_row_count": 232,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 38,
+        "log_sigma_valid_count": 232,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 270,
+        "status": "pass",
+        "visible_row_count": 38
+      },
+      "path": "data/autonomous/layout_03_ep9409/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "200b440f07d1d50bb48dc36e24b6c2b2720584697c83fb6115e48d31b0cafc6d",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_03_ep9409",
+      "visibility_counts": {
+        "occluded": 232,
+        "visible": 38
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "64157f3776cb5b538ecccd62059eb2b8ddb6a9ec625cd09fb38c6284f46d1a29",
+      "classification": "visible_no_wall_control",
+      "condition": "no_wall_visible",
+      "coordinate_frame_document_hash": "bb93d5a49f8dddffbe9d12f0e0b0a91c888c1880da430ecf0ba58244911d6876",
+      "coordinate_frame_hash": "7c2c805048f79e2d3b315902a68620c1d6afffffbcd2fde5ab67f323a54b8aff",
+      "coordinate_frame_id": "person_b_c_live_layout_03_ep9443_v1",
+      "episode_id": "9443",
+      "frame_count": 200,
+      "layout_id": "layout_03",
+      "literal_sha256": "4cfb75abee6a15d7f8b9bd900ca87fb13a0fc919253d282d550a230a7e44185f",
+      "oracle_math_audit": {
+        "hidden_row_count": 0,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 200,
+        "log_sigma_valid_count": 0,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 0,
+        "row_count": 200,
+        "status": "pass",
+        "visible_row_count": 200
+      },
+      "path": "data/autonomous/layout_03_ep9443/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "4cfb75abee6a15d7f8b9bd900ca87fb13a0fc919253d282d550a230a7e44185f",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_03_ep9443",
+      "visibility_counts": {
+        "occluded": 0,
+        "visible": 200
+      },
+      "visibility_transitions": []
+    },
+    {
+      "accepted_manifest_hash": "5b642fd59375c14df06b373eacc002de032a5fb19d19cd5b3e14760718bb8c38",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "a5c588149c4a54f156673c40f14eae8f514b099687a5fd0dee6fa02a2cc0b4f1",
+      "coordinate_frame_hash": "d82752742b054fccc6a55e795f656d64e3c5fd15703b5dd7b7d8ff10f80b505a",
+      "coordinate_frame_id": "person_b_c_live_layout_04_ep9406_v1",
+      "episode_id": "9406",
+      "frame_count": 113,
+      "layout_id": "layout_04",
+      "literal_sha256": "d9e7fd7c973d3dd126e8a273a6eeedc6eb0984a42419b914be7c6b26178243b8",
+      "oracle_math_audit": {
+        "hidden_row_count": 72,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 41,
+        "log_sigma_valid_count": 72,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 113,
+        "status": "pass",
+        "visible_row_count": 41
+      },
+      "path": "data/autonomous/layout_04_ep9406/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "d9e7fd7c973d3dd126e8a273a6eeedc6eb0984a42419b914be7c6b26178243b8",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_04_ep9406",
+      "visibility_counts": {
+        "occluded": 72,
+        "visible": 41
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "c7dff3aac2d50dfa65964d7a04206654248da1631ecf896e626cbb457a2c78de",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "15ba57dd1a6e9a25679f83209dc859643192f40e760b207d1a42b6f41bbf0220",
+      "coordinate_frame_hash": "3ed6647bba299745073d68dd6953867d91de883eaf27d5736ae69fb872780601",
+      "coordinate_frame_id": "person_b_c_live_layout_04_ep9411_v1",
+      "episode_id": "9411",
+      "frame_count": 204,
+      "layout_id": "layout_04",
+      "literal_sha256": "811f23c05ea5ab42fd4de09533534caf6feca2d5d8a4b299b28395bbe70ebfd3",
+      "oracle_math_audit": {
+        "hidden_row_count": 146,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 58,
+        "log_sigma_valid_count": 146,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 1,
+        "row_count": 204,
+        "status": "pass",
+        "visible_row_count": 58
+      },
+      "path": "data/autonomous/layout_04_ep9411/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "811f23c05ea5ab42fd4de09533534caf6feca2d5d8a4b299b28395bbe70ebfd3",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_04_ep9411",
+      "visibility_counts": {
+        "occluded": 146,
+        "visible": 58
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "7411a5d22bf939caa79ee8a0c7d417717e06f8abb7477b14e95424ac6f21083a",
+      "classification": "visible_no_wall_control",
+      "condition": "no_wall_visible",
+      "coordinate_frame_document_hash": "91dfa6a6c70676ad554acfa609ecdfdf6e206ef971acc35805fca1cdea2bf9ab",
+      "coordinate_frame_hash": "cb5812a040ecf06cbe282d45d16763fb9d04bd38c606f83f45d928024cbeed30",
+      "coordinate_frame_id": "person_b_c_live_layout_04_ep9444_v1",
+      "episode_id": "9444",
+      "frame_count": 200,
+      "layout_id": "layout_04",
+      "literal_sha256": "7b21f1b7e09dea5d5f92e718103c5f819b80c952f3313f123731a1fae24dd311",
+      "oracle_math_audit": {
+        "hidden_row_count": 0,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 200,
+        "log_sigma_valid_count": 0,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 0,
+        "row_count": 200,
+        "status": "pass",
+        "visible_row_count": 200
+      },
+      "path": "data/autonomous/layout_04_ep9444/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "7b21f1b7e09dea5d5f92e718103c5f819b80c952f3313f123731a1fae24dd311",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_04_ep9444",
+      "visibility_counts": {
+        "occluded": 0,
+        "visible": 200
+      },
+      "visibility_transitions": []
+    },
+    {
+      "accepted_manifest_hash": "1294620e6d43949a5489047b66dcae17aedbd58173ebc8c69569941fa14cc7a9",
+      "classification": "oracle_eligible_core",
+      "condition": "core",
+      "coordinate_frame_document_hash": "c2b6ac44fe8c6968d6b94691c4e863b8875978f93bff4a9f38dd57254c71d717",
+      "coordinate_frame_hash": "2e423a94f662071380051616c365fa9a823963a74c93c956b10e1ff3fbfa1c09",
+      "coordinate_frame_id": "person_b_c_live_layout_05_ep9408_v1",
+      "episode_id": "9408",
+      "frame_count": 253,
+      "layout_id": "layout_05",
+      "literal_sha256": "2aa1cb2817bf8f72659435c695c78e3dfe2c68da5331f234344b7a083a02c118",
+      "oracle_math_audit": {
+        "hidden_row_count": 170,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 83,
+        "log_sigma_valid_count": 170,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 2,
+        "row_count": 253,
+        "status": "pass",
+        "visible_row_count": 83
+      },
+      "path": "data/autonomous/layout_05_ep9408/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "2aa1cb2817bf8f72659435c695c78e3dfe2c68da5331f234344b7a083a02c118",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_05_ep9408",
+      "visibility_counts": {
+        "occluded": 170,
+        "visible": 83
+      },
+      "visibility_transitions": [
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        },
+        {
+          "from": "visible",
+          "to": "occluded"
+        },
+        {
+          "from": "occluded",
+          "to": "visible"
+        }
+      ]
+    },
+    {
+      "accepted_manifest_hash": "a7d74d9941f7399660ffbf19e9bd81a176fa3fdd4fc3e91007da08c6faed8bbe",
+      "classification": "no_object_not_oracle_eligible",
+      "condition": "occluder_only_no_sheep",
+      "coordinate_frame_document_hash": null,
+      "coordinate_frame_hash": null,
+      "coordinate_frame_id": null,
+      "episode_id": "9422",
+      "frame_count": 200,
+      "layout_id": "layout_05",
+      "literal_sha256": "0669f4b7219a23abc285e405d0fc06ec6cfd8fe3629220ab1812d9bd6757ef91",
+      "oracle_math_audit": {
+        "hidden_row_count": 0,
+        "invariant_failures": [],
+        "log_sigma_not_applicable_count": 0,
+        "log_sigma_valid_count": 0,
+        "max_iterative_closed_mean_error": 0.0,
+        "max_iterative_closed_variance_error": 0.0,
+        "reveal_count": 0,
+        "row_count": 200,
+        "status": "not_applicable_no_object",
+        "visible_row_count": 0
+      },
+      "path": "data/autonomous/layout_05_ep9422/capture_package_v0_1.json",
+      "regime": "regime_a",
+      "sidecar_sha256": "0669f4b7219a23abc285e405d0fc06ec6cfd8fe3629220ab1812d9bd6757ef91",
+      "status": "accepted",
+      "superseded_by": null,
+      "trajectory_id": "layout_05_ep9422",
+      "visibility_counts": {
+        "occluded": 200,
+        "visible": 0
+      },
+      "visibility_transitions": []
+    }
+  ],
+  "phase_readiness": {
+    "person_c_capture_and_coordinate_evidence": "complete",
+    "step_6_1": "blocked_on_person_a_activation_handoff",
+    "step_6_2": "c_only_math_complete_final_target_blocked_on_person_a_model_and_preprocess_hashes",
+    "step_6_3": "blocked_on_person_a_activation_handoff",
+    "step_6_4": "blocked_on_person_a_activation_handoff",
+    "step_6_5": "blocked_on_person_a_activation_handoff",
+    "step_6_6": "blocked_on_person_a_person_d_person_e_receipts"
+  },
+  "producer_role": "person_b",
+  "scientific_use": "pending_person_a_provenance_and_activations",
+  "scope_limits": {
+    "grouped_oof_min_layouts": 5,
+    "hidden_layout_count": 6,
+    "visible_control_evidence": "eligible_for_grouped_oof",
+    "visible_no_wall_layout_count": 5
+  },
+  "source_branch": "role/person-c-data",
+  "source_commit": "260784ea4d0f130b5ce96a383008e5a4574f3cc2",
+  "source_role": "person_c",
+  "status": "accepted_c_inputs_pending_person_a",
+  "synthetic": false,
+  "visible_control_layout_ids": [
+    "layout_00",
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04"
+  ]
+}

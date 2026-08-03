@@ -1,0 +1,48 @@
+{
+  "acceptance_decision": "FAIL",
+  "artifacts": [
+    {
+      "artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+      "artifact_type": "fitted_probe",
+      "count": 40,
+      "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+      "schema": "person-b-step4-1-production-ridge-oof-v0-1",
+      "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+      "size_bytes": 84257218
+    },
+    {
+      "artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+      "artifact_type": "prediction",
+      "count": 27800,
+      "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+      "schema": "person-b-step4-1-production-ridge-oof-v0-1",
+      "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+      "size_bytes": 84257218
+    },
+    {
+      "artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+      "artifact_type": "prediction",
+      "count": 100,
+      "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1/post_reveal_predictions.json",
+      "schema": "person-b-step4-1-bounded-reveal-predictions-v0-1",
+      "sha256": "b7716ba00b1e45b20dab130965d03bba8947a87999be51e89404fad4982d288d",
+      "size_bytes": 101230
+    },
+    {
+      "artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+      "artifact_type": "metric_table",
+      "count": 520,
+      "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1/comparison_metric_table.json",
+      "schema": "person-b-step4-1-final-comparison-output-v0-1",
+      "sha256": "c471fddb9bdc1a87c2f7e11ad8dc55db9e407f0ea45a2e038f668bda178ad0a7",
+      "size_bytes": 1601171
+    }
+  ],
+  "dependency_owner_commits": {
+    "person_a": "397ba849adc63df80912c21dd1efacb1e29b8977",
+    "person_d": "5ea6ce92890da7faa46f6aa837135081633d5f3d"
+  },
+  "metric_production_registration_allowed": true,
+  "schema_id": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+  "schema_version": "1.0"
+}

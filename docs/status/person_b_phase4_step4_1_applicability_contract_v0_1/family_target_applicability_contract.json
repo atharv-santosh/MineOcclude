@@ -1,0 +1,700 @@
+{
+  "applicability_entries": [
+    {
+      "admitted_identity_set": "global_candidate_1695",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "fit_required": false,
+        "randomness": "none"
+      },
+      "excluded_identity_set": "empty",
+      "exclusion_reasons": [],
+      "expected_admitted_row_count": 1695,
+      "expected_excluded_row_count": 0,
+      "family": "last_seen",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "A causal last-visible position must exist; every frozen candidate has one.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/last_seen.py",
+        "sha256": "b1e7f4fc03f382bbadfd4d1f67930b8fce22cd73083f92162357c83e962f45ec"
+      },
+      "target": "mu_oracle_blocks",
+      "target_binding": {
+        "availability_rule": "finite mu_oracle_blocks on every global candidate",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "estimated_velocity_admitted_1690",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "fit_required": false,
+        "randomness": "none"
+      },
+      "excluded_identity_set": "estimated_velocity_excluded_5",
+      "exclusion_reasons": [
+        "missing_prior_visible_observation_for_estimated_velocity"
+      ],
+      "expected_admitted_row_count": 1690,
+      "expected_excluded_row_count": 5,
+      "family": "constant_velocity",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "Both causal last-visible position and a two-point visible-window velocity estimate are required.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/constant_velocity.py",
+        "sha256": "fcf1c9276de173d6b16a38764dff176bedc7c81dc50d832f9c2d47cb10718f8d"
+      },
+      "target": "mu_oracle_blocks",
+      "target_binding": {
+        "availability_rule": "finite mu_oracle_blocks and required causal velocity inputs",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "grouped_shuffled_log_sigma_admitted_493",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "alignment_key": "model_frame_idx",
+        "grouping_unit": "trajectory_id",
+        "permutation_seed": 20260720,
+        "requires_derangement": true
+      },
+      "excluded_identity_set": "grouped_shuffled_log_sigma_excluded_1202",
+      "exclusion_reasons": [
+        "seeded_donor_missing_target_at_explicit_model_frame_idx"
+      ],
+      "expected_admitted_row_count": 493,
+      "expected_excluded_row_count": 1202,
+      "family": "grouped_shuffled",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "The seeded donor must carry log_sigma_oracle at the same explicit model_frame_idx; recipient visibility does not substitute for donor target availability.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/shuffled.py",
+        "sha256": "e4bb2f5ad3e053d77bd5f85340bd86877efb70112adaef829c2ff1a9b983d6df"
+      },
+      "target": "log_sigma_oracle",
+      "target_binding": {
+        "availability_rule": "seeded donor has finite log_sigma_oracle at identical model_frame_idx",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "grouped_shuffled_mu_admitted_1428",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "alignment_key": "model_frame_idx",
+        "grouping_unit": "trajectory_id",
+        "permutation_seed": 20260720,
+        "requires_derangement": true
+      },
+      "excluded_identity_set": "grouped_shuffled_mu_excluded_267",
+      "exclusion_reasons": [
+        "seeded_donor_missing_target_at_explicit_model_frame_idx"
+      ],
+      "expected_admitted_row_count": 1428,
+      "expected_excluded_row_count": 267,
+      "family": "grouped_shuffled",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "The seeded donor must carry mu_oracle_blocks at the same explicit model_frame_idx.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/shuffled.py",
+        "sha256": "e4bb2f5ad3e053d77bd5f85340bd86877efb70112adaef829c2ff1a9b983d6df"
+      },
+      "target": "mu_oracle_blocks",
+      "target_binding": {
+        "availability_rule": "seeded donor has finite mu_oracle_blocks at identical model_frame_idx",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "hidden_target_admitted_695",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "fit_scope": "outer_training_folds_only",
+        "primary_polynomial_degree": 1,
+        "sensitivity_polynomial_degree": 2
+      },
+      "excluded_identity_set": "visible_target_excluded_1000",
+      "exclusion_reasons": [
+        "target_visible_no_log_sigma_oracle"
+      ],
+      "expected_admitted_row_count": 695,
+      "expected_excluded_row_count": 1000,
+      "family": "time_only",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "Only occluded rows with positive hidden time and a fold-trained polynomial are admitted.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/time_only.py",
+        "sha256": "0990117c370020e96a53a9e896f58ab92f8507e1f55d979b12344274d566d5c0"
+      },
+      "target": "log_sigma_oracle",
+      "target_binding": {
+        "availability_rule": "finite log_sigma_oracle on frozen hidden rows",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "estimated_velocity_admitted_1690",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "alpha_grid": [
+          0.1,
+          1.0,
+          10.0,
+          100.0
+        ],
+        "inner_fold_count": 4,
+        "scaler_fit_scope": "outer_training_rows_only",
+        "seed": 20260719
+      },
+      "excluded_identity_set": "estimated_velocity_excluded_5",
+      "exclusion_reasons": [
+        "missing_prior_visible_observation_for_estimated_velocity"
+      ],
+      "expected_admitted_row_count": 1690,
+      "expected_excluded_row_count": 5,
+      "family": "explicit_feature",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "Last-visible position, two-point estimated velocity, duration, and oracle-mean fit target must all exist.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/explicit_feature.py",
+        "sha256": "7357090241356663454a396277279390582a60409524e099dd1746c34f84b90d"
+      },
+      "target": "mu_oracle_blocks",
+      "target_binding": {
+        "availability_rule": "finite mu_oracle_blocks and complete frozen explicit feature vector",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "global_candidate_1695",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "alpha_grid": [
+          0.1,
+          1.0,
+          10.0,
+          100.0
+        ],
+        "frame_scope": "exact_current_preprocessed_frame_only",
+        "inner_fold_count": 4,
+        "scaler_fit_scope": "outer_training_rows_only",
+        "seed": 20260719
+      },
+      "excluded_identity_set": "empty",
+      "exclusion_reasons": [],
+      "expected_admitted_row_count": 1695,
+      "expected_excluded_row_count": 0,
+      "family": "raw_pixel",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "Every global candidate must have its exact current verified preprocessed frame and finite oracle-mean fit target.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/raw_pixel.py",
+        "sha256": "b1602ae5acb9b2b7c88ad41f4bac5c578b7a5fcddeff2f78b1a7321724a7de94"
+      },
+      "target": "mu_oracle_blocks",
+      "target_binding": {
+        "availability_rule": "finite mu_oracle_blocks and exact frame payload on every global candidate",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "hidden_target_admitted_695",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "dt_seconds": 0.05,
+        "fit_scope": "outer_training_folds_only",
+        "q_estimator": "visible_increment_residual_variance_over_dt"
+      },
+      "excluded_identity_set": "visible_target_excluded_1000",
+      "exclusion_reasons": [
+        "target_visible_no_log_sigma_oracle"
+      ],
+      "expected_admitted_row_count": 695,
+      "expected_excluded_row_count": 1000,
+      "family": "visible_history_q",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "Only occluded positive-tau rows whose held-out fold has sufficient training-fold visible-history residuals are admitted.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/visible_history_q.py",
+        "sha256": "a5ade045d9c592fe34ad482d1ca92a1642439469079e9d0b1dbf37ddfb15178a"
+      },
+      "target": "log_sigma_oracle",
+      "target_binding": {
+        "availability_rule": "finite log_sigma_oracle on frozen hidden rows",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    },
+    {
+      "admitted_identity_set": "hidden_target_admitted_695",
+      "candidate_identity_set": "global_candidate_1695",
+      "configuration": {
+        "fair_baseline": false,
+        "formula": "ln(sqrt(q_scripted_blocks2_per_s * tau))",
+        "randomness": "none"
+      },
+      "excluded_identity_set": "visible_target_excluded_1000",
+      "exclusion_reasons": [
+        "target_visible_no_log_sigma_oracle"
+      ],
+      "expected_admitted_row_count": 695,
+      "expected_excluded_row_count": 1000,
+      "family": "known_q_analytic",
+      "fold_binding": {
+        "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+        "validation_mode": "signed_explicit_mapping"
+      },
+      "history_visibility_requirements": "Only occluded positive-tau rows with positive scripted q are admitted.",
+      "producing_scientific_authority": {
+        "commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+        "path": "src/mineocclude/baselines/known_q_analytic.py",
+        "sha256": "856c7cdd690b04513a2beb7e0b814b450343d586889081d6399fc172a36075df"
+      },
+      "target": "log_sigma_oracle",
+      "target_binding": {
+        "availability_rule": "finite log_sigma_oracle on frozen hidden rows",
+        "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+      },
+      "validation_rule": "actual prediction identities must equal the referenced admitted identity set"
+    }
+  ],
+  "applicability_entry_count": 9,
+  "contract_version": "person-b-step4-1-family-target-applicability-v0.1",
+  "exclusion_reason_vocabulary": {
+    "missing_prior_visible_observation_for_estimated_velocity": "The first visible frame has no prior visible-window observation from which to estimate velocity.",
+    "seeded_donor_missing_target_at_explicit_model_frame_idx": "The frozen seeded donor lacks this target at the recipient's exact model_frame_idx.",
+    "target_visible_no_log_sigma_oracle": "The spread target is undefined while the target is visible."
+  },
+  "global_candidate_count": 1695,
+  "identity_encoding": "ordered_trajectory_inclusive_frame_ranges_v1",
+  "identity_sets": {
+    "empty": {
+      "expected_count": 0,
+      "identity_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "ranges": []
+    },
+    "estimated_velocity_admitted_1690": {
+      "expected_count": 1690,
+      "identity_sha256": "7d8d82a3dc73c75e95c8638dec86d56db30c3be1555299f9ab4c891416670c0b",
+      "ranges": [
+        [
+          "layout_00_ep9403",
+          19,
+          227
+        ],
+        [
+          "layout_00_ep9441",
+          1,
+          199
+        ],
+        [
+          "layout_01_ep9405",
+          23,
+          209
+        ],
+        [
+          "layout_01_ep9442",
+          1,
+          199
+        ],
+        [
+          "layout_02_ep9407",
+          3,
+          137
+        ],
+        [
+          "layout_02_ep9432",
+          1,
+          199
+        ],
+        [
+          "layout_03_ep9404",
+          14,
+          105
+        ],
+        [
+          "layout_03_ep9443",
+          1,
+          199
+        ],
+        [
+          "layout_04_ep9406",
+          21,
+          92
+        ],
+        [
+          "layout_04_ep9444",
+          1,
+          199
+        ]
+      ]
+    },
+    "estimated_velocity_excluded_5": {
+      "expected_count": 5,
+      "identity_sha256": "b6c07d4b69bcb10c0e8379d7e9cf356ba2ddad9f4bc190bba5f9fe0c2c17bb4c",
+      "ranges": [
+        [
+          "layout_00_ep9441",
+          0,
+          0
+        ],
+        [
+          "layout_01_ep9442",
+          0,
+          0
+        ],
+        [
+          "layout_02_ep9432",
+          0,
+          0
+        ],
+        [
+          "layout_03_ep9443",
+          0,
+          0
+        ],
+        [
+          "layout_04_ep9444",
+          0,
+          0
+        ]
+      ]
+    },
+    "global_candidate_1695": {
+      "expected_count": 1695,
+      "identity_sha256": "60fb45e255ea4a0613ffdf4a17f0aae7424f7afcd3623932003cf937b2f0d05a",
+      "ranges": [
+        [
+          "layout_00_ep9403",
+          19,
+          227
+        ],
+        [
+          "layout_00_ep9441",
+          0,
+          199
+        ],
+        [
+          "layout_01_ep9405",
+          23,
+          209
+        ],
+        [
+          "layout_01_ep9442",
+          0,
+          199
+        ],
+        [
+          "layout_02_ep9407",
+          3,
+          137
+        ],
+        [
+          "layout_02_ep9432",
+          0,
+          199
+        ],
+        [
+          "layout_03_ep9404",
+          14,
+          105
+        ],
+        [
+          "layout_03_ep9443",
+          0,
+          199
+        ],
+        [
+          "layout_04_ep9406",
+          21,
+          92
+        ],
+        [
+          "layout_04_ep9444",
+          0,
+          199
+        ]
+      ]
+    },
+    "grouped_shuffled_log_sigma_admitted_493": {
+      "expected_count": 493,
+      "identity_sha256": "028c2308f1d8da3ba823b9da8efdc0e769a8a5b07411b35663f779b8f01bcff9",
+      "ranges": [
+        [
+          "layout_00_ep9403",
+          19,
+          105
+        ],
+        [
+          "layout_01_ep9405",
+          23,
+          92
+        ],
+        [
+          "layout_03_ep9404",
+          23,
+          105
+        ],
+        [
+          "layout_03_ep9443",
+          19,
+          199
+        ],
+        [
+          "layout_04_ep9406",
+          21,
+          92
+        ]
+      ]
+    },
+    "grouped_shuffled_log_sigma_excluded_1202": {
+      "expected_count": 1202,
+      "identity_sha256": "2dc1977749a86e3d9e5753b8cab205037ea0707e2af60ce9b20901aa34bc5ae6",
+      "ranges": [
+        [
+          "layout_00_ep9403",
+          106,
+          227
+        ],
+        [
+          "layout_00_ep9441",
+          0,
+          199
+        ],
+        [
+          "layout_01_ep9405",
+          93,
+          209
+        ],
+        [
+          "layout_01_ep9442",
+          0,
+          199
+        ],
+        [
+          "layout_02_ep9407",
+          3,
+          137
+        ],
+        [
+          "layout_02_ep9432",
+          0,
+          199
+        ],
+        [
+          "layout_03_ep9404",
+          14,
+          22
+        ],
+        [
+          "layout_03_ep9443",
+          0,
+          18
+        ],
+        [
+          "layout_04_ep9444",
+          0,
+          199
+        ]
+      ]
+    },
+    "grouped_shuffled_mu_admitted_1428": {
+      "expected_count": 1428,
+      "identity_sha256": "e7022c81e4cdf8733b4d0fa54f91f1e4aed96b790c1fa955a0b6c0fdf6c0be0e",
+      "ranges": [
+        [
+          "layout_00_ep9403",
+          19,
+          105
+        ],
+        [
+          "layout_00_ep9441",
+          0,
+          199
+        ],
+        [
+          "layout_01_ep9405",
+          23,
+          92
+        ],
+        [
+          "layout_01_ep9442",
+          0,
+          199
+        ],
+        [
+          "layout_02_ep9407",
+          3,
+          137
+        ],
+        [
+          "layout_02_ep9432",
+          0,
+          199
+        ],
+        [
+          "layout_03_ep9404",
+          23,
+          105
+        ],
+        [
+          "layout_03_ep9443",
+          19,
+          199
+        ],
+        [
+          "layout_04_ep9406",
+          21,
+          92
+        ],
+        [
+          "layout_04_ep9444",
+          0,
+          199
+        ]
+      ]
+    },
+    "grouped_shuffled_mu_excluded_267": {
+      "expected_count": 267,
+      "identity_sha256": "3244146a72a13f2e93921950f9b890a6473469b2df7212e3e8bd239a3f0bb11c",
+      "ranges": [
+        [
+          "layout_00_ep9403",
+          106,
+          227
+        ],
+        [
+          "layout_01_ep9405",
+          93,
+          209
+        ],
+        [
+          "layout_03_ep9404",
+          14,
+          22
+        ],
+        [
+          "layout_03_ep9443",
+          0,
+          18
+        ]
+      ]
+    },
+    "hidden_target_admitted_695": {
+      "expected_count": 695,
+      "identity_sha256": "ec2b2691af579b39c1e239213cf348ab7f54af9f4296bdee454b7528aece1f1a",
+      "ranges": [
+        [
+          "layout_00_ep9403",
+          19,
+          227
+        ],
+        [
+          "layout_01_ep9405",
+          23,
+          209
+        ],
+        [
+          "layout_02_ep9407",
+          3,
+          137
+        ],
+        [
+          "layout_03_ep9404",
+          14,
+          105
+        ],
+        [
+          "layout_04_ep9406",
+          21,
+          92
+        ]
+      ]
+    },
+    "visible_target_excluded_1000": {
+      "expected_count": 1000,
+      "identity_sha256": "b7a06904056427cb37d7326a514ceaf9ffb15b71f7d7da26dc3e846b2c08d623",
+      "ranges": [
+        [
+          "layout_00_ep9441",
+          0,
+          199
+        ],
+        [
+          "layout_01_ep9442",
+          0,
+          199
+        ],
+        [
+          "layout_02_ep9432",
+          0,
+          199
+        ],
+        [
+          "layout_03_ep9443",
+          0,
+          199
+        ],
+        [
+          "layout_04_ep9444",
+          0,
+          199
+        ]
+      ]
+    }
+  },
+  "ordered_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "producing_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+  "schema_id": "person-b-phase4-step4-1-family-target-applicability-contract-v0-1",
+  "schema_version": "1.0",
+  "u4_output_inspected": false
+}

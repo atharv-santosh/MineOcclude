@@ -15,6 +15,7 @@ from typing import Any
 
 from mineocclude.analysis.config import DEFAULT_CONFIG_PATH, hash_core_analysis_config
 from mineocclude.analysis.manifests import (
+    canonicalize_evidence_numbers,
     build_event_manifest,
     seal_artifact,
     sha256_value,
@@ -175,7 +176,7 @@ def _metric(
     *,
     diagnostic: str = "synthetic_contract_only",
 ) -> dict[str, Any]:
-    return {
+    return canonicalize_evidence_numbers({
         "metric_id": metric_id,
         "metric_name": name,
         "value": float(value),
@@ -184,7 +185,7 @@ def _metric(
         "sample_unit": sample_unit,
         "status": "valid",
         "diagnostic": diagnostic,
-    }
+    })
 
 
 def run_synthetic_analysis_chain(

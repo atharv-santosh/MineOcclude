@@ -1,0 +1,26 @@
+{
+  "additional_pilots_authorized": false,
+  "additional_signers_required": [],
+  "authorized_execution": "person_b_frozen_visible_position_positive_control_only",
+  "authorized_pilot_count": 5,
+  "authorized_pilot_ids": [
+    "layout_00_ep9441",
+    "layout_01_ep9442",
+    "layout_02_ep9432",
+    "layout_03_ep9443",
+    "layout_04_ep9444"
+  ],
+  "core_visible_substitution_authorized": false,
+  "hidden_state_interpretation_authorized": false,
+  "person_b_runner_path": "scripts/run_person_b_phase6_v2_positive_control_sagemaker.py",
+  "person_b_runner_sha256": "5b4af77adfb661ca9b75b4bd4404748e7e430dafe319f814b4b232fe3a57f1fd",
+  "positive_control_execution_authorized": true,
+  "ratification_commit_requirement": "exact_commit_containing_this_owner_ratification_package",
+  "required_execution_host": "AWS SageMaker Linux GPU",
+  "required_execution_mode": "subsequent_step6_6_only_not_local_validation",
+  "sagemaker_command_template": "python scripts/run_person_b_phase6_v2_positive_control_sagemaker.py --repository-root $PWD --ratification-commit <EXACT_RATIFICATION_COMMIT> --output-root /home/sagemaker-user/person-b-phase6-approved-outputs/person-b-phase6-v2-positive-control-step6-6",
+  "schema_id": "person-b-phase6-v2-consumer-ratification-v0-1-execution-authorization-v1.0",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

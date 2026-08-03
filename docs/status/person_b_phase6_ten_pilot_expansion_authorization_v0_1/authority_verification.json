@@ -1,0 +1,52 @@
+{
+  "schema_id": "person-b-phase6-ten-pilot-expansion-authorization-v0-1-authority-verification",
+  "schema_version": "1.0",
+  "person_b_selection": {
+    "commit": "19f08b2e27217b781961da8f7299e1396a3ab703",
+    "manifest_path": "docs/status/person_b_phase6_ten_pilot_expansion_selection_v0_1/expansion_selection_manifest.json",
+    "manifest_sha256": "41d86cdc2cad78870f2f9ea9c104e91cc5c7b1c74db50e5e3a5d07b715026a71"
+  },
+  "person_c_expansion_acceptance": {
+    "accepted_manifest_sha256": "7a12b8a5c5ce8b81b32bcdb044f72d5c4d9ada41af9a9402d3ac52904e494be2",
+    "commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+    "decision_sha256": "8862cdfb329767c458f8744d3f1d4bcc479e2b2ed2fb2b30e37101070ece5bfe",
+    "inventory_sha256": "e6a3fa85ac0ad69bfd495657d35cc5f54d3eb427f7360cc2afb13d854a2d08d1",
+    "validation_receipt_sha256": "1c78b2c6a50374f92a913b22a8fd3152696976f01a2495c78e765041c0a6edcc"
+  },
+  "person_a_runner": {
+    "commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+    "preparation_package": {
+      "authority_binding_sha256": "ddb301e87eecc31c7fd5efef7f8fc959751aa5fc23d6f1e5b25a727143a1a12a",
+      "inventory_sha256": "7b34a6cb159711679c9e383d480d3349a460263b5111e12ca45a0fb0fe5c0325",
+      "runner_preparation_sha256": "56562a8ec3f31d4606deb934988594d42c70fd7ab5b063224284fc2930616669",
+      "validation_receipt_sha256": "22093bb948e2c88b95f24ad7f439e4b0d5243289239fcbfa2a0d5dcbde4ce7a2"
+    },
+    "runner_files": {
+      "focused_tests": {
+        "byte_size": 9348,
+        "path": "tests/models/test_person_a_phase6_ten_pilot_sagemaker_runner_v0_1.py",
+        "sha256": "f8ab6a7d9de72cb6128c7cada827f66bba56419bf1091e1bc8717eacef4ced9d"
+      },
+      "multi_pilot_runner": {
+        "byte_size": 42405,
+        "path": "scripts/run_person_a_phase6_ten_pilot_sagemaker.py",
+        "sha256": "0584a886b23a9b1a851dfb00ed91f8804501c4cc1615f9928abed0756ecf9cf2"
+      },
+      "sagemaker_wrapper": {
+        "byte_size": 2059,
+        "path": "scripts/run_person_a_phase6_ten_pilot_sagemaker.sh",
+        "sha256": "bd5507f5645743998d9ec80b3f47960fa60eed89dcabdedd373377d56a79a6ce"
+      },
+      "single_pilot_engine": {
+        "byte_size": 60304,
+        "path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+        "sha256": "52738bfba8ab94625a79fe6f6ebd1475a3f0462265c15d0f01ae9f6b691f5745"
+      }
+    }
+  },
+  "verification_method": "exact_git_object_reads_with_sha256_and_byte_size_recomputation",
+  "all_exact_git_objects_verified": true,
+  "runner_compatibility_validation_passed": true,
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

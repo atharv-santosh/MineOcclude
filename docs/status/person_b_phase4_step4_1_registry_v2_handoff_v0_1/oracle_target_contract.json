@@ -1,0 +1,85 @@
+{
+  "artifact_contract": {
+    "artifact_schema_version": "person-b-analysis-artifact-v0.1",
+    "artifact_type": "oracle_target",
+    "payload_artifact_type": "oracle_target_document",
+    "registry_status_authority": "person_b"
+  },
+  "construction_status": "READY_AS_CONTRACT_NOT_EXECUTED",
+  "coordinate_requirements": {
+    "coordinate_schema": "person-b-wall-parallel-frame-v0.1",
+    "person_b_signoff": true,
+    "person_c_signoff": true,
+    "signed_projection": true,
+    "unit_positive_direction_required": true,
+    "units": "blocks"
+  },
+  "document_contract": {
+    "join_key": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "schema_version": "1.0",
+    "target_schema_version": "person-b-oracle-target-v0.1"
+  },
+  "information_set": [
+    "last_visible_position_blocks",
+    "v",
+    "q",
+    "tau",
+    "visibility"
+  ],
+  "method": "primary_scalar_kalman_crosschecked_closed_form",
+  "production_artifact_created": false,
+  "provenance_requirements": {
+    "accepted_manifest_hash": "required_exact_sha256",
+    "analysis_config_hash": "required_exact_literal_file_sha256",
+    "code_sha": "required_exact_producer_code_identity",
+    "model_hash": "required_exact_person_a_checkpoint_identity",
+    "preprocess_hash": "required_exact_person_a_preprocessing_identity",
+    "source_run_id": "required_exact_person_c_state_run_identity"
+  },
+  "row_contract": {
+    "cross_row_rules": [
+      "unique_trajectory_id_plus_model_frame_idx",
+      "one_episode_per_trajectory",
+      "consecutive_model_frame_and_server_tick_timebase",
+      "one_source_run_per_trajectory",
+      "one_layout_per_trajectory",
+      "last_visible_position_fixed_during_occlusion",
+      "v_and_q_fixed_during_occlusion",
+      "tau_strictly_increases_before_reveal"
+    ],
+    "required_oracle_fields": [
+      "target_schema_version",
+      "target_id",
+      "target_source",
+      "oracle_method",
+      "oracle_information_set",
+      "accepted_manifest_hash",
+      "source_run_id",
+      "last_visible_position_blocks",
+      "mu_oracle_blocks",
+      "var_oracle_blocks2",
+      "sigma_oracle_blocks",
+      "log_sigma_oracle",
+      "x_true_blocks"
+    ],
+    "target_equations": {
+      "log_sigma_oracle": "ln(sigma_oracle_blocks / 1 block) when sigma_oracle_blocks > 0 else null",
+      "mu_oracle_blocks": "last_visible_position_blocks + v * tau",
+      "sigma_oracle_blocks": "sqrt(var_oracle_blocks2)",
+      "var_oracle_blocks2": "q * tau"
+    },
+    "target_id_rule": "{trajectory_id}:{model_frame_idx}:regime_a_primary_v1",
+    "target_source": "authoritative_visible_state_known_v_q"
+  },
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-oracle-target-contract",
+  "schema_version": "1.0",
+  "scientific_output_present": false,
+  "source_authority": {
+    "contract_path": "src/mineocclude/oracle/schema.py",
+    "contract_sha256": "f028bc86e05944d3df66d90f05b5dddfb31ec5d07a00623d5032e69fe527bdac",
+    "documentation_path": "docs/contracts/person_b_oracle_target_v0_1.md"
+  }
+}

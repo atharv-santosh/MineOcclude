@@ -1,0 +1,49 @@
+{
+  "activation_artifacts_may_substitute_for_pixels": false,
+  "blockers": [
+    {
+      "blocker_id": "person_a_preprocessed_frame_handoff_absent",
+      "evidence": {
+        "byte_size": 8431,
+        "git_blob_oid": "b6b33fdb0ef05f2eba34eab63b8ed59ed4654089",
+        "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+        "path": "docs/baselines/person_d_phase0.md",
+        "sha256": "affaa628339922e73bd37ffd491b01aeaaf52f197410db60f083ffddce9851a6"
+      },
+      "required_resolution": "Publish an immutable Person A-owned ten-pilot preprocessed-frame manifest with exact per-frame identities, SHA-256 values, byte sizes, preprocessing identity, and a trusted external-byte receipt.",
+      "scope": "raw_pixel"
+    },
+    {
+      "blocker_id": "person_d_v0_2_exporter_absent",
+      "evidence": {
+        "byte_size": 8772,
+        "git_blob_oid": "aa25a0f6f104dc33da64e6f70ce69c1c2eb8612c",
+        "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+        "path": "src/mineocclude/baselines/export.py",
+        "sha256": "f0d43fa53da783899b911cada668a997c58a0ec796d2280941be8f08fde9b20c"
+      },
+      "required_resolution": "Person D must add explicit person-b-baseline-input-v0.2 production export while preserving the historical v0.1 path.",
+      "scope": "seven_newly_supported_families"
+    },
+    {
+      "blocker_id": "person_d_single_production_cli_not_frozen",
+      "evidence": {
+        "byte_size": 4230,
+        "git_blob_oid": "f0caabc3244d6acaed04f925a7d331ad4d279305",
+        "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+        "path": "docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/execution_runbook.json",
+        "sha256": "5454f0635224ff3fce667ea29f518f8e1dbda7f6dd662143cdfad89abe66dce6"
+      },
+      "required_resolution": "Person D must publish an exact production runner or exact command implementing the committed API runbook without changing the frozen baseline contracts.",
+      "scope": "all_eight_families"
+    }
+  ],
+  "eight_family_input_manifest_created": false,
+  "person_a_reextraction_authorized": false,
+  "person_b_predictions_are_d_direct_input": false,
+  "person_d_execution_authorized": false,
+  "schema_id": "person-b-phase4-step4-1-baseline-family-contract-v0-2-execution-blocker-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

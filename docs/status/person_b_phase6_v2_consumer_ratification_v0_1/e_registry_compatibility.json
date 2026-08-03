@@ -1,0 +1,27 @@
+{
+  "decision": "COMPATIBLE_WITH_FROZEN_GENERIC_REGISTRY_V2",
+  "e_schema_change_required": false,
+  "existing_registry_binding_capabilities": [
+    "exact_artifact_id_and_sha256",
+    "exact_creator_run_identity",
+    "exact_direct_input_artifact_ids",
+    "owner_status_and_authorization_records",
+    "trusted_artifact_receipts",
+    "transitive_lineage_validation"
+  ],
+  "person_b_output_lineage": [
+    "per_row_activation_index_and_chunk_identity",
+    "per_row_person_c_artifact_identity",
+    "per_pilot_person_c_manifest_identity",
+    "per_pilot_literal_capture_package_sha256",
+    "per_pilot_canonical_state_object_sha256",
+    "person_a_model_checkpoint_config_and_preprocessing_identity"
+  ],
+  "person_e_registry_contract_path": "docs/contracts/immutable_registry_v2.md",
+  "person_e_registry_contract_sha256": "02c2190575c9dec296bcb963495edb119695465477c43a19720679eb53b5dd88",
+  "person_e_registry_implementation_path": "src/mineocclude/experiments/registry.py",
+  "person_e_registry_implementation_sha256": "f25637f3c3347a3548297b7a3b491ee07f6795915bd09d7ff40915f50d9a4541",
+  "person_e_registry_v2_authority_commit": "b27d404c6aa913bac559754fa8b7accdff46e886",
+  "schema_id": "person-b-phase6-v2-consumer-ratification-v0-1-e-registry-compatibility-v1.0",
+  "schema_version": "1.0"
+}

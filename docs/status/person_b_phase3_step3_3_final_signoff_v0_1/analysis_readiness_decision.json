@@ -1,0 +1,71 @@
+{
+  "analysis_readiness": "READY",
+  "coordinate_frame_validation": {
+    "origin_field": "wall_parallel_origin_world_xyz",
+    "person_a_owns_coordinate_frame": false,
+    "person_b_signoff": true,
+    "person_c_signoff": true,
+    "positive_axis_field": "wall_parallel_positive_unit_vector_world_xyz",
+    "schema": "person-b-wall-parallel-frame-v0.1",
+    "sha256": "19e3946e0b0385989b639187e0eda8ff4cc7712938fd87c6084fb9d2306af493",
+    "signed_projection": true,
+    "status": "PASS",
+    "unit_positive_direction_required": true,
+    "units": "blocks"
+  },
+  "detector_executed": false,
+  "detector_gate_validation": {
+    "false_negative": 0,
+    "false_positive": 0,
+    "formal_evaluation_report_sha256": "05b3cea58679e8097bdbf2953c1e933771311690a92794640b09c9a622678d90",
+    "formal_run_receipt_sha256": "dc91674814bbb9d0e18b9914b060887ab6bbc6828a53c6940052ee0634920174",
+    "minimum_precision": 0.95,
+    "minimum_recall": 0.95,
+    "precision": 1.0,
+    "recall": 1.0,
+    "status": "PASS",
+    "true_negative": 24,
+    "true_positive": 24
+  },
+  "homography_gate_validation": {
+    "applicability_fails_closed": true,
+    "closure_report_sha256": "48da82ac67f511210b5402a1e8962cad48c8c34c2666ad416c67c5731a91b9a4",
+    "homography_count": 6,
+    "median_error_blocks": 0.09341800000000022,
+    "median_threshold_blocks": 0.2,
+    "p95_error_blocks": 0.28720401897341596,
+    "p95_threshold_exclusive_blocks": 0.5,
+    "probe_count": 36,
+    "status": "PASS"
+  },
+  "joined_package_accepted": true,
+  "ownership_validation": {
+    "person_a_owns_model_preprocessing_provenance_only": true,
+    "person_b_recomputed_visible_flag": false,
+    "person_c_owns_visible_flag": true,
+    "person_e_owns_empirical_channel_only": true,
+    "status": "PASS"
+  },
+  "person_a_phase6_authorized": false,
+  "production_accuracy_metrics_computed": false,
+  "quarantine_totals": {
+    "geometry_hidden_detector_visible": 364,
+    "geometry_visible_detector_hidden": 53,
+    "input_rows": 1850,
+    "invalid_geometry": 0,
+    "missing_detector": 0,
+    "non_quarantined": 1433,
+    "none": 1433,
+    "quarantined": 417,
+    "visible_flag_false": 749,
+    "visible_flag_true": 1101
+  },
+  "schema_id": "person-b-phase3-step3-3-final-signoff-v0-1-analysis-readiness-decision-v1.0",
+  "schema_version": "1.0",
+  "step_3_3_final_decision": "PASS",
+  "structural_failure_count": 0,
+  "supporting_joined_records_sha256": "e9bb71ae4ebb046297abf700f6fabb1813facdd691be9f02e0e730dfe79ad17e",
+  "supporting_person_c_commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+  "u4_output_inspected": false,
+  "unresolved_owner_correction_count": 0
+}

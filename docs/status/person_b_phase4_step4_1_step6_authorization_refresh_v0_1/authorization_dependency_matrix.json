@@ -1,0 +1,62 @@
+{
+  "circularity_audit": {
+    "post_execution_outputs_required_for_runtime_authorization": false,
+    "result": "PASS",
+    "runtime_authorization_can_precede_candidate_output_generation": true
+  },
+  "decisions": [
+    {
+      "current_state": "BLOCKED_MISSING_REQUIRED_SIGNERS",
+      "decision_id": "person_a_runtime_execution",
+      "post_execution_dependencies": [],
+      "pre_execution_dependencies": [
+        "person_b_conditional_scope_approval",
+        "person_c_single_pilot_scientific_use_decision",
+        "person_a_bounded_runtime_acknowledgement",
+        "new_explicit_aggregate_authorization"
+      ],
+      "required_owners": [
+        "person_a",
+        "person_b",
+        "person_c"
+      ]
+    },
+    {
+      "current_state": "PENDING_PERSON_C_DECISION",
+      "decision_id": "person_c_scientific_use",
+      "post_execution_dependencies": [],
+      "pre_execution_dependencies": [
+        "exact_candidate_identity_from_refreshed_selection",
+        "person_c_owner_decision"
+      ],
+      "required_owners": [
+        "person_c"
+      ]
+    },
+    {
+      "current_state": "BLOCKED_PENDING_EXECUTION_AND_TRUST_RECORDS",
+      "decision_id": "registry_v2_artifact_acceptance",
+      "post_execution_dependencies": [
+        "exact_output_artifact_bytes",
+        "exact_output_sha256_and_byte_sizes",
+        "complete_owner_status_and_authorization_records",
+        "trusted_manifest_entries",
+        "verified_direct_input_lineage",
+        "independent_registry_v2_verification"
+      ],
+      "pre_execution_dependencies": [
+        "person_a_runtime_execution_authorization",
+        "person_c_scientific_use_authorization"
+      ],
+      "required_owners": [
+        "person_a",
+        "person_b",
+        "person_c",
+        "person_e"
+      ]
+    }
+  ],
+  "dependency_policy": "Pre-execution permission is decided from owner decisions and frozen scope; exact output bytes are required only for post-execution Registry v2 acceptance.",
+  "schema_id": "person-b-phase4-step4-1-step6-authorization-refresh-v0-1-authorization-dependency-matrix",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,30 @@
+{
+  "application_scope": [
+    "python",
+    "numpy",
+    "pytorch_cpu",
+    "pytorch_cuda",
+    "model_execution",
+    "repeat_extraction",
+    "deterministic_audit_row_selection"
+  ],
+  "canonical_seed": 20260725,
+  "enforcement_requirements": {
+    "deterministic_audit_selection_uses_canonical_seed": true,
+    "model_and_repeat_extraction_use_canonical_seed": true,
+    "numpy_seeded": true,
+    "python_seeded": true,
+    "pytorch_cpu_seeded": true,
+    "pytorch_cuda_seeded": true,
+    "runtime_receipt_records_effective_seed": true
+  },
+  "person_a_provenance_records_verified": 3,
+  "ratification_decision": "RATIFIED",
+  "schema_id": "person-b-phase6-sagemaker-runtime-ratification-v0-1-deterministic-seed-ratification",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "seed_derived_from_machine_state": false,
+  "seed_derived_from_random_output": false,
+  "seed_derived_from_wall_clock_time": false,
+  "u4_output_inspected": false
+}

@@ -6,6 +6,7 @@ from .bridge import (
     ProbeBridgeError,
     ProbeBridgeRejectionCode,
     ProbeReadyMatrix,
+    RidgePermutationExecution,
     RidgeProbeExecution,
     build_frame_fold_manifest,
     build_joined_frame_table,
@@ -14,6 +15,7 @@ from .bridge import (
     load_activation_vectors,
     propagate_frame_folds,
     run_ridge_oof_probe,
+    run_grouped_ridge_permutation,
     validate_joined_frame_table,
 )
 
@@ -72,6 +74,7 @@ __all__ = [
     "ProbeReadyMatrix",
     "RidgeModel",
     "RidgeOOFResult",
+    "RidgePermutationExecution",
     "RidgeProbeExecution",
     "StandardScaler",
     "GroupedSplitError",
@@ -98,6 +101,7 @@ __all__ = [
     "load_activation_vectors",
     "propagate_frame_folds",
     "run_ridge_oof_probe",
+    "run_grouped_ridge_permutation",
     "select_mlp_eligible_layers",
     "select_ridge_alpha_grouped",
     "validate_fold_manifest",

@@ -1,0 +1,40 @@
+{
+  "authorization_scope": {
+    "authorized_pilot_count": 1,
+    "authorized_steps": [
+      "6.1",
+      "6.2",
+      "6.3",
+      "6.4",
+      "6.5",
+      "6.6"
+    ],
+    "candidate_output_bytes_only": true,
+    "selected_capture_package_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+    "selected_trajectory_id": "layout_00_ep9403"
+  },
+  "decision": "AUTHORIZE_BOUNDED_PERSON_A_STEPS_6_1_THROUGH_6_6",
+  "decision_owner": "person_b",
+  "decision_status": "AUTHORIZED",
+  "future_person_a_registry_v2_output_acceptance_authorized": false,
+  "person_a_runtime_execution": {
+    "authorized": true,
+    "person_a_acknowledgement_commit": "ca3f5695dc37f9f2c8066e323b25485c042b6cf7",
+    "state": "AUTHORIZED_FOR_EXACT_BOUNDED_SCOPE"
+  },
+  "person_c_scientific_use": {
+    "accepted": true,
+    "person_c_signoff_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+    "scope": "single_pilot_steps_6_1_through_6_6",
+    "state": "ACCEPTED_FOR_EXACT_BOUNDED_SCOPE"
+  },
+  "pre_execution_decisions": {
+    "person_a": "ACKNOWLEDGEMENT_VERIFIED",
+    "person_b": "FINAL_COMBINED_AUTHORIZATION_RECORDED",
+    "person_c": "SCIENTIFIC_USE_SIGNOFF_VERIFIED"
+  },
+  "production_execution_started": false,
+  "schema_id": "person-b-phase4-step4-1-step6-final-runtime-authorization-v0-1-combined-runtime-authorization",
+  "schema_version": "1.0",
+  "u4_output_inspected": false
+}

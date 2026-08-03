@@ -1,0 +1,74 @@
+{
+  "authorities": {
+    "person_a_preflight": {
+      "branch": "role/person-a-model",
+      "commit": "0416ce88060277b28512f95dca0af94984a8211d",
+      "evidence": [
+        {
+          "byte_size": 3318,
+          "path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/authority_binding.json",
+          "sha256": "83b08e01c07783ac366b6f5c90111aadfc6bc4f973634633036e1d78a6aba68a"
+        },
+        {
+          "byte_size": 2152,
+          "path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/blocker_receipt.json",
+          "sha256": "def7c03e36a9c7ab0a57aeceadf224f8c9edc3c6ebb64f13169d05bf37018ea3"
+        },
+        {
+          "byte_size": 11716,
+          "path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/selected_c_inputs.json",
+          "sha256": "3a3046ddbff5569ea5d18d4441849d3368d7791124c02a8c10b03604ce57fc9e"
+        },
+        {
+          "byte_size": 2221,
+          "path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/validation_receipt.json",
+          "sha256": "764894b5c8bc6df0be55c8d461304823f2b842c678edb0146c54803d28484630"
+        }
+      ]
+    },
+    "person_b": {
+      "branch": "role/person-b-analysis",
+      "evidence": [
+        {
+          "path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/accepted_c_oracle_inputs.json",
+          "sha256": "67a4a61f77e2200b8570a5d13489c55796f5a2f00f95d525b22d7aefde2cb29c"
+        },
+        {
+          "path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/phase6_authorization_conditions.json",
+          "sha256": "fcea4c2fa2cf943ab40914aa397ccfb91e35307fc1a1f83257c83731ddb5ec24"
+        }
+      ],
+      "starting_authority": "a189c7f0c6a822f3dd0d9869a572e1e2d390c5f1"
+    },
+    "person_c": {
+      "branch": "role/person-c-data",
+      "commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+      "source_read_policy": "exact_git_object_bytes"
+    },
+    "person_e": {
+      "branch": "role/person-e-operations",
+      "commit": "b27d404c6aa913bac559754fa8b7accdff46e886",
+      "evidence": [
+        {
+          "path": "docs/status/person_e_phase4_step4_1_slice3a_v0_1/owner_handoffs/person_a_requirements.json",
+          "sha256": "26e56ecb95b8aa678eff320540eb1dd982dc51d51b12b71ac3653f7114b39879"
+        },
+        {
+          "path": "docs/status/person_e_phase4_step4_1_slice3a_v0_1/owner_handoffs/person_c_requirements.json",
+          "sha256": "7f42a6b8590bfd8229f815652e838540a987bd5da945f810464e105a20a50c53"
+        }
+      ]
+    }
+  },
+  "claims": {
+    "accepted_placeholder_created": false,
+    "accepted_scientific_artifact_created": false,
+    "model_work_performed": false,
+    "project_integration_claimed": false,
+    "scientific_execution_performed": false,
+    "u4_output_inspected": false
+  },
+  "package_purpose": "additive_evidence_repair_for_step_6_1_single_pilot_authorization",
+  "schema_id": "person-b-phase4-step4-1-step6-authorization-refresh-v0-1-authority-binding",
+  "schema_version": "1.0"
+}
