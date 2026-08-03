@@ -1,0 +1,27 @@
+{
+  "schema_version": "person-c-c1.5-reconstruction-manifest-v1.0",
+  "status": "BLOCKED_PRE_EXECUTION",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "selected_layout_id": "layout_01",
+  "deterministic_server_console_sequence": [
+    "mineocclude mode normal",
+    "mineocclude duration 0",
+    "mineocclude reveal 0",
+    "mineocclude impulse -1 0",
+    "mineocclude lockcam on",
+    "mineocclude warmup 1200",
+    "mineocclude start layout_01 11501 202608031501 0.0 0.0 20",
+    "mineocclude observegeometry c1_5_second_operator_layout_01",
+    "mineocclude stop"
+  ],
+  "reconstruction_command": "mineocclude start layout_01 11501 202608031501 0.0 0.0 20",
+  "execution_ready": false,
+  "must_not_execute_until": [
+    "target retention defect is corrected without weakening spawn-animals=false",
+    "a new JAR is built and hash-bound",
+    "a fresh runtime observation proves the core sheep remains alive"
+  ],
+  "independent_second_operator_required": true,
+  "required_second_operator_receipt_id": "c1_5_second_operator_layout_01",
+  "completion_claimed": false
+}

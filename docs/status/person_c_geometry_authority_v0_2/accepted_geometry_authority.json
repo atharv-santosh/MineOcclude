@@ -1,0 +1,150 @@
+{
+  "schema_version": "person-c-geometry-authority-v2.0",
+  "decision": "NEITHER_GEOMETRY_MATCHES_RUNTIME",
+  "accepted_geometry_owner": "SUCCESSOR",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "accepted_config_path": "configs/scenes/layouts_v0_4.yaml",
+  "accepted_config_identity": {
+    "path": "configs/scenes/layouts_v0_4.yaml",
+    "size_bytes": 45279,
+    "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "git_blob": "4b441a40379fcd9af2fdd6ea43a3ac3417f7cb1e"
+  },
+  "c_layout_successor_created": true,
+  "prior_c_version": "person-c-layout-config-v0.3",
+  "prior_c_status": "historical_and_superseded_for_new_evidence_not_invalidated",
+  "e_homography_refit_required": true,
+  "affected_e_layouts": [
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04",
+    "layout_05",
+    "layout_06"
+  ],
+  "downstream_dependent_artifacts": [
+    "data/handoff_e/markers_layout_01.json through markers_layout_06.json",
+    "data/handoff_e/detector_calibration_inputs.json",
+    "data/handoff_e/independent_probe_points.json",
+    "data/handoff_e/phase3_homography_authority_v0_1/marker_pose_resolution_bindings.json",
+    "data/handoff_e/phase3_homography_authority_v0_1/known_direction_validation_records.json",
+    "data/handoff_e/phase3_homography_authority_v0_1/homography_authority_receipt.json",
+    "data/handoff_e/phase3_homography_authority_v0_1/homography_applicability_manifest.json",
+    "data/handoff_e/phase3_homography_authority_v0_1/wall_axis_sign_authority.json"
+  ],
+  "frozen_e_evidence_modified": false,
+  "runtime_binding": {
+    "runtime_baseline_version": "person-c-c1-runtime-baseline-v0.2",
+    "jar_source_commit": "99b78b6578d17cffc0b5679118a42632284ce7f7",
+    "mineocclude_jar_sha256": "652fe5e34f0ee186a3b6c036ab70b1bf02e9373c985eeaa218e3ef28be087bda",
+    "minecraft": "1.16.5",
+    "fabric_loader": "0.15.11",
+    "yarn_mappings": "1.16.5+build.10",
+    "fabric_api": "0.42.0+1.16",
+    "java": "17.0.19"
+  },
+  "evidence_bindings": {
+    "server_log": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\logs\\latest.log",
+      "size_bytes": 21482,
+      "sha256": "bbf630d167ffee272394aba832efeecaf891cef86d8ccc57f95e0316dc2acdbd"
+    },
+    "client_log": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\logs\\latest.log",
+      "size_bytes": 8725,
+      "sha256": "096612ce1494259200d02ec96086e32002c7dec4aa68d0b0d9af1a7716fa9bc5"
+    },
+    "server_properties": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\server.properties",
+      "size_bytes": 1222,
+      "sha256": "292cdfa366f9a0d31a643acfa35bc14345c864cf62659a6b14aed9612e5cd9a0"
+    },
+    "client_options": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\options.txt",
+      "size_bytes": 3023,
+      "sha256": "13a43adde78280041f7adc29367b0a61ced6a9549f2430d9083a88665a0d9895"
+    },
+    "mineocclude_jar_sha256": "652fe5e34f0ee186a3b6c036ab70b1bf02e9373c985eeaa218e3ef28be087bda",
+    "screenshots": [
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.52.43.png",
+        "size_bytes": 248361,
+        "sha256": "b05195e796b1b294e6de85b801071142f35f228521911fe52d0b1c76d9bde594",
+        "file_name": "2026-08-03_17.52.43.png",
+        "width_pixels": 1920,
+        "height_pixels": 1046,
+        "evidence_role": "authoritative_displayed_fov"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.53.00.png",
+        "size_bytes": 180984,
+        "sha256": "9d25bbf462394a70ee2f895c075e6bd94d05a5e62c5d72187446e5723ccd206b",
+        "file_name": "2026-08-03_17.53.00.png",
+        "width_pixels": 1920,
+        "height_pixels": 1046,
+        "evidence_role": "supplemental_render_settings"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.53.21.png",
+        "size_bytes": 140074,
+        "sha256": "49a5da0c9f1f5e65c1f6d60b5432a29cfa21d5a01a02f33da7199ec9a139a47f",
+        "file_name": "2026-08-03_17.53.21.png",
+        "width_pixels": 1920,
+        "height_pixels": 1046,
+        "evidence_role": "supplemental_render_settings"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.53.23.png",
+        "size_bytes": 182098,
+        "sha256": "99b46290b6e4c7e2f9029c652e852dc72b5e9708235a5a9d472702f1e3bc214c",
+        "file_name": "2026-08-03_17.53.23.png",
+        "width_pixels": 1920,
+        "height_pixels": 1046,
+        "evidence_role": "supplemental_render_settings"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.54.04.png",
+        "size_bytes": 291786,
+        "sha256": "64e8cd133aca45e303e82c951d40b847ab2efcd7dc12253dc687cd5ca26d1277",
+        "file_name": "2026-08-03_17.54.04.png",
+        "width_pixels": 1920,
+        "height_pixels": 1046,
+        "evidence_role": "authoritative_raw_gameplay_framebuffer"
+      }
+    ],
+    "geometry_receipts": [
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_01.json",
+        "size_bytes": 11699,
+        "sha256": "d847a04868157707fd187ed0e2c8958850cb1646da4ec59b0e066ad9acbd3e40"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_02.json",
+        "size_bytes": 11704,
+        "sha256": "779d6cda58a1fa6b5fbd40f695cc43f2bd8ef0f2d9d449146c45ad231c05db0d"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_03.json",
+        "size_bytes": 13130,
+        "sha256": "0cdd9a0cce3b9465084fcbb20e540f397f64280176b861031f9208786b1426e3"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_04.json",
+        "size_bytes": 11709,
+        "sha256": "d86946f9029b32fbf44f1b84833edd0c5451d79c5a3e80bd3cafe0cd4ca41ce3"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_05.json",
+        "size_bytes": 10266,
+        "sha256": "757a5e492af8dc5f4183ed738b37af43e9907709c55cd8903084fd2e5c565106"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_06.json",
+        "size_bytes": 12021,
+        "sha256": "c72d0c624386af360b0975f31699db4922fd086361a2e58cae5329b169df9c44"
+      }
+    ],
+    "server_mod_inventory_digest": "d60568d1a62a259a8f7d9d801c3f40a720aadf3c9a0dcb11896fa38a37796c4e",
+    "client_mod_inventory_digest": "a19a3fdd4e486c9b9dfb7a0f4898937a25721e634e89e063eb699c1d5706c4e3"
+  }
+}
