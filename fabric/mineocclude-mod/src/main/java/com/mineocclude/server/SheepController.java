@@ -5,23 +5,18 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.registry.Registry;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
+import java.util.UUID;
 
 /**
- * Owns the authoritative sheep and advances it by the seeded Regime A random
- * walk on every server tick.
- *
- * The exact eta draw is exposed via {@link #lastNoiseDraw} so the logger can
- * record the process-noise realization BEFORE it is broadcast — reproducibility
- * requires the draw, not just the resulting position.
- *
- * Noise source (frozen RNG decision, C2.4): when an immutable Python-produced
- * {@link NoiseSchedule} is supplied, the server consumes its stored draws in
- * strict draw_idx order and NEVER generates its own. The seeded
- * java.util.Random path remains only as an explicitly non-scientific fallback
- * for smoke tests without a schedule; {@link #rngSource()} records which path
- * ran so the episode manifest can gate acceptance.
+ * Owns the one authoritative experiment sheep and advances its seeded Regime A
+ * random walk. A missing or altered target is episode-fatal; this controller
+ * never masks a retention failure by silently respawning during an episode.
  */
 public final class SheepController {
     public static final String RNG_IMMUTABLE_SCHEDULE = "immutable_numpy_schedule";
@@ -29,13 +24,13 @@ public final class SheepController {
 
     private EpisodeConfig cfg;
     private Random rng;
-    private NoiseSchedule schedule;  // null => non-scientific fallback
-
+    private NoiseSchedule schedule;
     private SheepEntity sheep;
-    private ServerWorld world;      // kept so the sheep can be respawned if removed
-    private double axisPos;         // current wall-parallel position (blocks)
-    private double lastNoiseDraw;   // eta_k used to reach axisPos
-    private double lastVelocity;    // realized per-tick velocity (blocks/s)
+    private ServerWorld world;
+    private UUID expectedUuid;
+    private double axisPos;
+    private double lastNoiseDraw;
+    private double lastVelocity;
 
     public SheepController(EpisodeConfig cfg) {
         this(cfg, null);
@@ -44,7 +39,6 @@ public final class SheepController {
     public SheepController(EpisodeConfig cfg, NoiseSchedule schedule) {
         this.cfg = cfg;
         this.schedule = schedule;
-        // Fallback generator, used ONLY when no immutable schedule exists.
         this.rng = new Random(cfg.seed);
         this.axisPos = cfg.startAxis();
         this.lastNoiseDraw = 0.0;
@@ -59,122 +53,206 @@ public final class SheepController {
         return schedule != null ? schedule.consumed() : -1;
     }
 
-    /** Spawn exactly one magenta NoAI/Silent/Persistent sheep at the current pose. */
+    /** Remove stale tagged targets, then spawn exactly one controlled target. */
     public void spawn(ServerWorld world) {
         this.world = world;
+        int staleRemoved = removeAllTaggedTargets(world);
+        if (staleRemoved > 0) {
+            MineOcclude.LOG.warn("[MineOcclude] removed {} stale tagged target(s) before spawn",
+                    staleRemoved);
+        }
         spawnAt(axisPos);
+        requireValid("spawn-to-reset");
         double[] xyz = toWorld(axisPos);
         MineOcclude.LOG.info("[MineOcclude] spawned magenta sheep at axis={} ({}, {}, {})",
                 axisPos, xyz[0], xyz[1], xyz[2]);
     }
 
     /**
-     * Reuse the existing sheep for a new episode: re-seed the motion, reset to
-     * the new start, and reposition the SAME entity (no despawn/respawn) so the
-     * client's entity tracker never loses it. Respawns only if it is truly gone.
+     * Reset the current target without changing its identity. A target already
+     * removed by another subsystem is a refusal, never a respawn opportunity.
      */
     public void reset(EpisodeConfig newCfg, ServerWorld world) {
+        requireValid("pre-reset");
         this.cfg = newCfg;
-        this.schedule = null;  // a new episode must supply its own schedule
+        this.schedule = null;
         this.rng = new Random(newCfg.seed);
         this.axisPos = newCfg.startAxis();
         this.lastNoiseDraw = 0.0;
         this.lastVelocity = 0.0;
         this.world = world;
+        removeTaggedTargetsExcept(world, sheep);
         double[] xyz = toWorld(axisPos);
-        if (sheep == null || sheep.removed || !sheep.isAlive()) {
-            spawnAt(axisPos);
-        } else {
-            sheep.refreshPositionAndAngles(xyz[0], xyz[1], xyz[2], 0.0f, 0.0f);
-            sheep.setVelocity(0, 0, 0);
-            sheep.velocityDirty = true;
-        }
+        sheep.refreshPositionAndAngles(xyz[0], xyz[1], xyz[2], 0.0f, 0.0f);
+        sheep.setVelocity(0, 0, 0);
+        sheep.velocityDirty = true;
+        requireValid("reset-to-armed");
     }
 
-    /** Create + place a fresh sheep entity at the given axis position. */
     private void spawnAt(double axis) {
-        SheepEntity s = EntityType.SHEEP.create(world);
-        if (s == null) {
-            throw new IllegalStateException("Failed to create SheepEntity");
+        SheepEntity created = EntityType.SHEEP.create(world);
+        if (created == null) throw new IllegalStateException("Failed to create SheepEntity");
+
+        UUID uuid = UUID.randomUUID();
+        created.setUuid(uuid);
+        if (!created.addScoreboardTag(TargetRetentionPolicy.EXPERIMENT_TARGET_TAG)) {
+            throw new IllegalStateException("Failed to apply experiment target tag");
         }
-        s.setUuid(java.util.UUID.randomUUID());
-        s.setColor(DyeColor.MAGENTA);
-        s.setAiDisabled(true);   // NoAI
-        s.setSilent(true);       // Silent
-        s.setPersistent();       // PersistenceRequired
-        s.setInvulnerable(true);
-        s.setBreedingAge(0);     // adult, stable size
+        created.setColor(DyeColor.MAGENTA);
+        created.setAiDisabled(true);
+        created.setSilent(true);
+        created.setPersistent();
+        created.setInvulnerable(true);
+        created.setBreedingAge(0);
 
         double[] xyz = toWorld(axis);
-        s.refreshPositionAndAngles(xyz[0], xyz[1], xyz[2], 0.0f, 0.0f);
-        boolean added = world.spawnEntity(s);
-        this.sheep = s;
-        if (respawnCount <= 1) {
-            int cx = ((int) Math.floor(xyz[0])) >> 4;
-            int cz = ((int) Math.floor(xyz[2])) >> 4;
-            boolean loaded = world.getChunkManager().isChunkLoaded(cx, cz);
-            MineOcclude.LOG.info("[MineOcclude/dbg] spawn added={} removed={} chunk({},{}) loaded={}",
-                    added, s.removed, cx, cz, loaded);
+        created.refreshPositionAndAngles(xyz[0], xyz[1], xyz[2], 0.0f, 0.0f);
+        boolean added = world.spawnEntity(created);
+        if (!added) {
+            throw new IllegalStateException("ServerWorld refused the experiment target entity");
         }
+        this.sheep = created;
+        this.expectedUuid = uuid;
+
+        int cx = ((int) Math.floor(xyz[0])) >> 4;
+        int cz = ((int) Math.floor(xyz[2])) >> 4;
+        boolean loaded = world.getChunkManager().isChunkLoaded(cx, cz);
+        MineOcclude.LOG.info("[MineOcclude/target] spawn added={} removed={} uuid={} tag={} chunk({},{}) loaded={}",
+                added, created.removed, uuid, TargetRetentionPolicy.EXPERIMENT_TARGET_TAG,
+                cx, cz, loaded);
     }
 
-    /**
-     * Advance one tick: x_{k+1} = x_k + v*dt + eta, eta ~ N(0, q*dt).
-     * Returns nothing; read state via getters after calling.
-     */
+    /** Advance one authoritative motion tick after passing the retention gate. */
     public void step() {
+        requireValid("armed-to-recording-pre-step");
         double dt = MineOcclude.DT_SECONDS;
         double eta;
         if (schedule != null) {
-            // Consume exactly one stored draw per tick, in draw_idx order.
-            // Exhaustion throws IllegalStateException; EpisodeManager fails
-            // the episode rather than generating a replacement draw.
             eta = schedule.nextNoiseDraw();
         } else {
-            double sigmaStep = Math.sqrt(cfg.processQ * dt); // std of eta
-            eta = rng.nextGaussian() * sigmaStep;
+            eta = rng.nextGaussian() * Math.sqrt(cfg.processQ * dt);
         }
         double proposed = axisPos + cfg.driftV * dt + eta;
         double clamped = cfg.clampAxis(proposed);
-
         this.lastNoiseDraw = eta;
         this.lastVelocity = (clamped - axisPos) / dt;
         this.axisPos = clamped;
 
-        if (world == null) return;
+        if (world == null) throw new IllegalStateException("target world is absent");
         double[] xyz = toWorld(axisPos);
-        if (sheep == null || sheep.removed || !sheep.isAlive()) {
-            // Sheep was removed (e.g. chunk churn) — respawn it at the current
-            // position so it is always present and correctly placed.
-            respawnCount++;
-            spawnAt(axisPos);
-        } else {
-            sheep.refreshPositionAndAngles(xyz[0], xyz[1], xyz[2],
-                    sheep.yaw, sheep.pitch); // 1.16.5: yaw/pitch are fields
-            sheep.setVelocity(0, 0, 0);
-            sheep.velocityDirty = true;
-        }
+        sheep.refreshPositionAndAngles(xyz[0], xyz[1], xyz[2], sheep.yaw, sheep.pitch);
+        sheep.setVelocity(0, 0, 0);
+        sheep.velocityDirty = true;
+        requireValid("recording-post-step");
     }
 
     private double[] toWorld(double axis) {
         if (cfg.wallAxis == EpisodeConfig.Axis.X) {
             return new double[]{axis, cfg.laneY, cfg.wallOrthoConst};
-        } else {
-            return new double[]{cfg.wallOrthoConst, cfg.laneY, axis};
         }
+        return new double[]{cfg.wallOrthoConst, cfg.laneY, axis};
     }
 
+    /** Stop/finalization owns deterministic target cleanup. */
     public void despawn() {
         if (sheep != null) {
-            sheep.remove(); // 1.16.5: remove() (discard() arrives in 1.17)
+            sheep.remove();
             sheep = null;
+        }
+        expectedUuid = null;
+        if (world != null) removeAllTaggedTargets(world);
+    }
+
+    /** Read-only hard-gate snapshot of identity, state, count, and pose. */
+    public TargetRetentionPolicy.Snapshot snapshot() {
+        double[] expected = toWorld(axisPos);
+        int count = world == null ? 0 : taggedTargets(world).size();
+        if (sheep == null) {
+            return new TargetRetentionPolicy.Snapshot(true, count, false, true,
+                    false, "none", "none", false, false, false, false,
+                    false, false, false,
+                    expected[0], expected[1], expected[2],
+                    Double.NaN, Double.NaN, Double.NaN);
+        }
+        return new TargetRetentionPolicy.Snapshot(true, count,
+                sheep.isAlive(), sheep.removed,
+                TargetRetentionPolicy.isTaggedExperimentTarget(sheep),
+                Registry.ENTITY_TYPE.getId(sheep.getType()).toString(),
+                sheep.getColor().getName(), sheep.isAiDisabled(), sheep.isSilent(),
+                sheep.isPersistent(), sheep.isInvulnerable(), !sheep.isBaby(),
+                expectedUuid != null && expectedUuid.equals(sheep.getUuid()),
+                sheep.getEntityWorld() == world,
+                expected[0], expected[1], expected[2],
+                sheep.getX(), sheep.getY(), sheep.getZ());
+    }
+
+    public List<String> validationProblems() {
+        return TargetRetentionPolicy.validate(snapshot());
+    }
+
+    public void requireValid(String phase) {
+        List<String> problems = validationProblems();
+        if (!problems.isEmpty()) {
+            throw new IllegalStateException("target retention failure at " + phase
+                    + ": " + String.join("; ", problems));
         }
     }
 
-    private int respawnCount = 0;
-    public int respawnCount()        { return respawnCount; }
+    public String statusLine(String layoutId, long episodeId, String lifecycle) {
+        TargetRetentionPolicy.Snapshot status = snapshot();
+        List<String> problems = TargetRetentionPolicy.validate(status);
+        return String.format(Locale.ROOT,
+                "target status: valid=%s required=true count=%d uuid=%s tag=%s "
+                        + "type=%s color=%s no_ai=%s silent=%s persistent=%s invulnerable=%s "
+                        + "adult=%s alive=%s removed=%s xyz=%.6f/%.6f/%.6f "
+                        + "expected_xyz=%.6f/%.6f/%.6f layout=%s episode=%d lifecycle=%s problems=%s",
+                problems.isEmpty(), status.taggedTargetCount,
+                sheep != null ? sheep.getUuidAsString() : "NONE",
+                TargetRetentionPolicy.EXPERIMENT_TARGET_TAG,
+                status.entityType, status.color, status.aiDisabled, status.silent,
+                status.persistent, status.invulnerable, status.adult,
+                status.alive, status.removed,
+                status.actualX, status.actualY, status.actualZ,
+                status.expectedX, status.expectedY, status.expectedZ,
+                layoutId, episodeId, lifecycle,
+                problems.isEmpty() ? "NONE" : String.join("|", problems));
+    }
+
+    public static TargetRetentionPolicy.Snapshot noTargetSnapshot(ServerWorld world) {
+        int count = world == null ? 0 : taggedTargets(world).size();
+        return new TargetRetentionPolicy.Snapshot(false, count, false, true,
+                false, "none", "none", false, false, false, false,
+                false, false, world != null,
+                Double.NaN, Double.NaN, Double.NaN,
+                Double.NaN, Double.NaN, Double.NaN);
+    }
+
+    public static int removeAllTaggedTargets(ServerWorld world) {
+        return removeTaggedTargetsExcept(world, null);
+    }
+
+    private static int removeTaggedTargetsExcept(ServerWorld world, SheepEntity keep) {
+        int removed = 0;
+        for (SheepEntity candidate : taggedTargets(world)) {
+            if (candidate != keep) {
+                candidate.remove();
+                removed++;
+            }
+        }
+        return removed;
+    }
+
+    private static List<SheepEntity> taggedTargets(ServerWorld world) {
+        Box arenaEnvelope = new Box(-64.0, 0.0, -64.0, 64.0, 256.0, 64.0);
+        return world.getEntitiesByClass(SheepEntity.class, arenaEnvelope,
+                entity -> !entity.removed
+                        && TargetRetentionPolicy.isTaggedExperimentTarget(entity));
+    }
+
+    public int respawnCount()        { return 0; }
     public boolean entityAlive()     { return sheep != null && sheep.isAlive() && !sheep.removed; }
     public SheepEntity entity()      { return sheep; }
+    public String targetUuid()       { return sheep != null ? sheep.getUuidAsString() : "NONE"; }
     public double axisPos()          { return axisPos; }
     public double lastNoiseDraw()    { return lastNoiseDraw; }
     public double lastVelocity()     { return lastVelocity; }

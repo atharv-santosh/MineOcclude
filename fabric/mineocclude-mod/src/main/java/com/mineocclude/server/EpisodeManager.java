@@ -167,12 +167,30 @@ public final class EpisodeManager {
         // delivers the spawn packet to the present player (spawning before the
         // teleport left some clients never seeing the sheep).
         if (sheep != null) { sheep.despawn(); sheep = null; }
-        if (cfg.spawnSheep()) { sheep = new SheepController(cfg, noiseSchedule); sheep.spawn(world); }
+        try {
+            if (cfg.spawnSheep()) {
+                sheep = new SheepController(cfg, noiseSchedule);
+                sheep.spawn(world);
+            } else {
+                SheepController.removeAllTaggedTargets(world);
+            }
+        } catch (IllegalStateException e) {
+            failureReason = e.getMessage();
+            lifecycle.fail(failureReason);
+            MineOcclude.LOG.error("[MineOcclude] REFUSED: {}", failureReason);
+            if (sheep != null) { sheep.despawn(); sheep = null; }
+            running = false;
+            return false;
+        }
 
-        // C2.3: reset must verify the target count before READY.
-        if (cfg.spawnSheep() && (sheep == null || !sheep.entityAlive())) {
-            lifecycle.fail("target count wrong after reset: expected 1 live sheep");
-            MineOcclude.LOG.error("[MineOcclude] reset failed: sheep did not spawn alive");
+        // C2.3/C1.5: reset must verify exact target identity/state/count before READY.
+        List<String> resetTargetProblems = targetValidationProblems(world);
+        if (!resetTargetProblems.isEmpty()) {
+            failureReason = "target retention failure at reset-to-armed: "
+                    + String.join("; ", resetTargetProblems);
+            lifecycle.fail(failureReason);
+            MineOcclude.LOG.error("[MineOcclude] REFUSED: {}", failureReason);
+            if (sheep != null) { sheep.despawn(); sheep = null; }
             running = false;
             return false;
         }
@@ -224,6 +242,7 @@ public final class EpisodeManager {
 
     /** Open the logs, snap the camera to canonical pose, and start recording. */
     private void beginCapture() {
+        if (!validateTargetOrFail("armed-to-capture")) return;
         ServerWorld world = server.getWorld(World.OVERWORLD);
         placeCameraAtCanonicalPose(world, camOrtho); // re-snap in case the operator moved during warmup
         try {
@@ -280,6 +299,8 @@ public final class EpisodeManager {
     /** Called once per server tick. */
     public void tick() {
         if (!running) return;
+        if (!validateTargetOrFail(capturing
+                ? "recording-retention" : "warmup-retention")) return;
 
         // Warmup delay: countdown, no motion, no capture.
         if (!capturing) {
@@ -323,8 +344,8 @@ public final class EpisodeManager {
             try {
                 sheep.step();  // null for the NO_SHEEP control
             } catch (IllegalStateException e) {
-                // Noise schedule exhausted: an episode-fatal condition. Never
-                // generate a replacement draw (frozen RNG decision).
+                // Noise exhaustion or target retention is episode-fatal. Never
+                // replace a draw or respawn a missing target silently.
                 MineOcclude.LOG.error("[MineOcclude] {} — failing episode {}", e.getMessage(),
                         cfg.episodeId);
                 failureReason = e.getMessage();
@@ -444,7 +465,15 @@ public final class EpisodeManager {
         int respawns = sheep != null ? sheep.respawnCount() : -1;
         String rngSource = sheep != null ? sheep.rngSource() : "no_target";
         int drawsConsumed = sheep != null ? sheep.scheduleDrawsConsumed() : -1;
-        if (sheep != null) { sheep.despawn(); sheep = null; }  // fresh sheep next episode
+        if (sheep != null) { sheep.despawn(); sheep = null; }
+        ServerWorld cleanupWorld = server.getWorld(World.OVERWORLD);
+        int staleAfterStop = cleanupWorld == null ? 0
+                : SheepController.removeAllTaggedTargets(cleanupWorld);
+        if (staleAfterStop > 0) {
+            MineOcclude.LOG.error("[MineOcclude] stop cleanup removed {} unexpected stale target(s)",
+                    staleAfterStop);
+            if (failureReason == null) failureReason = "stale targets remained after stop cleanup";
+        }
         if (wasCapturing) {
             broadcastEpisode(EpisodeEventPacket.Type.END);
             actionbar("§7Recording finished.");
@@ -555,6 +584,56 @@ public final class EpisodeManager {
         return players.isEmpty() ? null : players.get(0);
     }
 
+    /** Read-only target-status command payload. */
+    public String targetStatusLine() {
+        if (cfg == null) {
+            return "target status: valid=false required=unknown count=unknown "
+                    + "layout=NONE episode=NONE lifecycle=IDLE problems=no runtime scene";
+        }
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        if (!cfg.spawnSheep()) {
+            TargetRetentionPolicy.Snapshot status = SheepController.noTargetSnapshot(world);
+            List<String> problems = TargetRetentionPolicy.validate(status);
+            return "target status: valid=" + problems.isEmpty()
+                    + " required=false count=" + status.taggedTargetCount
+                    + " layout=" + cfg.layoutId + " episode=" + cfg.episodeId
+                    + " lifecycle=" + lifecycleState() + " problems="
+                    + (problems.isEmpty() ? "NONE" : String.join("|", problems));
+        }
+        return sheep == null
+                ? "target status: valid=false required=true count=0 layout=" + cfg.layoutId
+                    + " episode=" + cfg.episodeId + " lifecycle=" + lifecycleState()
+                    + " problems=target controller missing"
+                : sheep.statusLine(cfg.layoutId, cfg.episodeId, lifecycleState());
+    }
+
+    public boolean targetStatusValid() {
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        return cfg != null && targetValidationProblems(world).isEmpty();
+    }
+
+    private List<String> targetValidationProblems(ServerWorld world) {
+        if (cfg == null) return java.util.Collections.singletonList("runtime scene is absent");
+        if (!cfg.spawnSheep()) {
+            return TargetRetentionPolicy.validate(SheepController.noTargetSnapshot(world));
+        }
+        if (sheep == null) return java.util.Collections.singletonList("target controller is absent");
+        return sheep.validationProblems();
+    }
+
+    /** Fail closed at every lifecycle boundary and recorded tick. */
+    private boolean validateTargetOrFail(String phase) {
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        List<String> problems = targetValidationProblems(world);
+        if (problems.isEmpty()) return true;
+        failureReason = "target retention failure at " + phase + ": "
+                + String.join("; ", problems);
+        MineOcclude.LOG.error("[MineOcclude] REFUSED: {}", failureReason);
+        if (lifecycle != null && !lifecycle.isTerminal()) lifecycle.fail(failureReason);
+        end();
+        return false;
+    }
+
     /** Apply the additive post-C1 runtime baseline before any preview/reset. */
     private void applyRuntimeBaseline(ServerWorld world) {
         world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
@@ -636,6 +715,38 @@ public final class EpisodeManager {
         addNullableInt(override, "near_inset", ArenaBuilder.ovrNearInset);
         addNullableInt(override, "far_inset", ArenaBuilder.ovrFarInset);
         root.add("marker_override", override);
+
+        TargetRetentionPolicy.Snapshot targetStatus = cfg.spawnSheep()
+                ? (sheep == null ? new TargetRetentionPolicy.Snapshot(true, 0,
+                    false, true, false, "none", "none", false, false,
+                    false, false, false, false, false,
+                    Double.NaN, Double.NaN, Double.NaN,
+                    Double.NaN, Double.NaN, Double.NaN) : sheep.snapshot())
+                : SheepController.noTargetSnapshot(world);
+        List<String> targetProblems = TargetRetentionPolicy.validate(targetStatus);
+        JsonObject target = new JsonObject();
+        target.addProperty("required", targetStatus.targetRequired);
+        target.addProperty("valid", targetProblems.isEmpty());
+        target.addProperty("tag", TargetRetentionPolicy.EXPERIMENT_TARGET_TAG);
+        target.addProperty("tagged_target_count", targetStatus.taggedTargetCount);
+        target.addProperty("uuid", sheep != null ? sheep.targetUuid() : "NONE");
+        target.addProperty("entity_type", targetStatus.entityType);
+        target.addProperty("color", targetStatus.color);
+        target.addProperty("no_ai", targetStatus.aiDisabled);
+        target.addProperty("silent", targetStatus.silent);
+        target.addProperty("persistent", targetStatus.persistent);
+        target.addProperty("invulnerable", targetStatus.invulnerable);
+        target.addProperty("adult", targetStatus.adult);
+        target.addProperty("alive", targetStatus.alive);
+        target.addProperty("removed", targetStatus.removed);
+        target.add("actual_xyz", xyz(targetStatus.actualX,
+                targetStatus.actualY, targetStatus.actualZ));
+        target.add("expected_xyz", xyz(targetStatus.expectedX,
+                targetStatus.expectedY, targetStatus.expectedZ));
+        JsonArray targetProblemArray = new JsonArray();
+        for (String problem : targetProblems) targetProblemArray.add(problem);
+        target.add("problems", targetProblemArray);
+        root.add("target", target);
 
         JsonObject floor = new JsonObject();
         floor.addProperty("axis", cfg.wallAxis.name());
