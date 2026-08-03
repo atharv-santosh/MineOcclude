@@ -1,0 +1,116 @@
+{
+  "applicability_contract": {
+    "path": "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/family_target_applicability_contract.json",
+    "sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+    "source_commit": "248b7a174cb38a522f3638d7789b0e1d1b5befdf",
+    "version": "person-b-step4-1-family-target-applicability-v0.1"
+  },
+  "approved_roots": {
+    "frame_root": "/home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1",
+    "materialized_input_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1",
+    "output_root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1"
+  },
+  "authorities": {
+    "person_a_frame_handoff_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+    "person_b_applicability_validator_commit": "248b7a174cb38a522f3638d7789b0e1d1b5befdf",
+    "person_b_fold_contract_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+    "person_b_fold_interface_ratification_commit": "a612ec29108c8f69f19cdc283e40873e75796ea7",
+    "person_b_superseded_memory_reauthorization_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+    "person_d_memory_implementation_commit": "f6fb6e542f87462c366ea657ded2dc8a47c3428f",
+    "person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "person_d_signed_fold_validator_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5"
+  },
+  "authorized_person_d_branch": "role/person-d-baselines",
+  "authorized_person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+  "baseline_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "configuration": {
+    "constant_velocity": {
+      "fit_required": false,
+      "randomness": "none"
+    },
+    "explicit_feature": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "inner_fold_count": 4,
+      "scaler_fit_scope": "outer_training_rows_only",
+      "seed": 20260719
+    },
+    "grouped_shuffled": {
+      "alignment_key": "model_frame_idx",
+      "grouping_unit": "trajectory_id",
+      "permutation_seed": 20260720,
+      "requires_derangement": true
+    },
+    "known_q_analytic": {
+      "fair_baseline": false,
+      "formula": "ln(sqrt(q_scripted_blocks2_per_s * tau))",
+      "randomness": "none"
+    },
+    "last_seen": {
+      "fit_required": false,
+      "randomness": "none"
+    },
+    "raw_pixel": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "frame_scope": "exact_current_preprocessed_frame_only",
+      "inner_fold_count": 4,
+      "scaler_fit_scope": "outer_training_rows_only",
+      "seed": 20260719
+    },
+    "time_only": {
+      "fit_scope": "outer_training_folds_only",
+      "primary_polynomial_degree": 1,
+      "sensitivity_polynomial_degree": 2
+    },
+    "visible_history_q": {
+      "dt_seconds": 0.05,
+      "fit_scope": "outer_training_folds_only",
+      "q_estimator": "visible_increment_residual_variance_over_dt"
+    }
+  },
+  "fold_binding": {
+    "assignment_by_ordered_layout": [
+      1,
+      2,
+      4,
+      0,
+      3
+    ],
+    "manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+    "validation_mode": "signed_explicit_mapping"
+  },
+  "frame_binding": {
+    "global_frame_universe_count": 1695,
+    "manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+    "payload_revalidation_required": true
+  },
+  "memory_thresholds_gib": {
+    "available": 20.0,
+    "physical": 20.0,
+    "swap_counts_as_capacity": false
+  },
+  "person_d_code_change_required": false,
+  "schema_id": "person-b-phase4-step4-1-applicability-reauthorization-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "supersedes_authorization_commit": "a6f1cedd390ecde129fc5b25ad50f81a0848530b",
+  "target_manifest_sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282",
+  "u4_output_inspected": false
+}

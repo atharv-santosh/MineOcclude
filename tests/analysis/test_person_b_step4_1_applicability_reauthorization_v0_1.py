@@ -12,6 +12,10 @@ import pytest
 from scripts import validate_person_b_step4_1_memory_reauthorization_v0_1 as validator
 
 ROOT = Path(__file__).resolve().parents[2]
+AUTHORIZATION_PACKAGE = (
+    ROOT
+    / "docs/status/person_b_phase4_step4_1_applicability_reauthorization_v0_1"
+)
 
 
 @pytest.fixture(scope="module")
@@ -492,3 +496,124 @@ def test_no_scientific_execution_or_u4_access_is_part_of_contract() -> None:
     assert contract["u4_output_inspected"] is False
     source = inspect.getsource(validator.runtime_preflight)
     assert "run_person_d_step4_1_eight_family_production.py run" not in source
+
+
+def _authorization_documents() -> dict[str, dict]:
+    return {
+        path.name: json.loads(path.read_text(encoding="utf-8"))
+        for path in AUTHORIZATION_PACKAGE.glob("*.json")
+    }
+
+
+def test_superseding_authorization_record_binds_contract_roots_and_lineage() -> None:
+    record = _authorization_documents()["person_d_authorization_record.json"]
+    validator._validate_external_auth(ROOT, record)
+    assert (
+        record["supersedes_authorization_commit"]
+        == validator.PERSON_B_APPLICABILITY_STARTING_AUTHORITY
+    )
+    assert record["applicability_contract_version"] == (
+        validator.APPLICABILITY_CONTRACT_VERSION
+    )
+    assert record["minimum_physical_memory_gib"] == 20.0
+    assert record["minimum_available_memory_gib"] == 20.0
+    assert record["materialized_root"] == validator.MATERIALIZED_ROOT_ABSOLUTE_PATH
+    assert record["frame_root"] == validator.FRAME_ROOT_ABSOLUTE_PATH
+    assert record["output_root"] == validator.OUTPUT_ROOT_ABSOLUTE_PATH
+
+
+def test_superseding_authorization_rejects_contract_or_lineage_drift() -> None:
+    record = _authorization_documents()["person_d_authorization_record.json"]
+    wrong_contract = copy.deepcopy(record)
+    wrong_contract["applicability_contract_sha256"] = "0" * 64
+    with pytest.raises(
+        validator.MemoryReauthorizationError, match="applicability hash"
+    ):
+        validator._validate_external_auth(ROOT, wrong_contract)
+    wrong_lineage = copy.deepcopy(record)
+    wrong_lineage["accepted_producing_authority_by_reusable_family"][
+        "constant_velocity"
+    ] = validator.PERSON_D_PRIOR_RUNNER_COMMIT
+    with pytest.raises(
+        validator.MemoryReauthorizationError, match="preserved output decisions"
+    ):
+        validator._validate_external_auth(ROOT, wrong_lineage)
+
+
+def test_authorized_chain_has_exact_fail_closed_runtime_sequence() -> None:
+    commands = _authorization_documents()["production_commands.json"]
+    chain = commands["authorized_production_chain"]
+    reuse_index = chain.index(" reuse-validate ")
+    preflight_index = chain.index(" runtime-preflight ")
+    run_index = chain.index(
+        " scripts/run_person_d_step4_1_eight_family_production.py run "
+    )
+    assert reuse_index < preflight_index < run_index
+    assert "--verify-payloads" in chain
+    assert "--resume resume" in chain
+    assert commands["authorization_record_path"] in chain
+    assert validator.MATERIALIZED_ROOT_ABSOLUTE_PATH in chain
+    assert validator.FRAME_ROOT_ABSOLUTE_PATH in chain
+    assert validator.OUTPUT_ROOT_ABSOLUTE_PATH in chain
+    assert "resume-audit" in commands["resume_audit_command"]
+    assert commands["runtime_sequence"] == [
+        "materialized-input raw identity and reuse validation",
+        "all 1695 frame payload plus fold, target, signed mapping, and source-context semantic validation",
+        "physical and available memory preflight at 20.0 GiB each",
+        "preserved-output provenance, inventory, and applicability audit",
+        "Person D producing run with fail-closed resume",
+    ]
+
+
+def test_authorization_package_decisions_are_complete_and_conditional() -> None:
+    documents = _authorization_documents()
+    decision = documents["applicability_and_resume_decision.json"]
+    assert decision["global_frame_universe_count"] == 1695
+    assert decision["global_1695_prediction_assumption_removed"] is True
+    assert decision["constant_velocity"]["admitted_count"] == 1690
+    assert decision["constant_velocity"]["excluded_count"] == 5
+    assert decision["preserved_outputs"]["prediction_count"] == 7691
+    assert decision["preserved_outputs"]["runtime_revalidation_required"] is True
+    assert set(decision["preserved_outputs"]["decisions"]) == set(
+        validator.EXPECTED_FAMILIES
+    )
+    final = documents["final_authorization_decision.json"]
+    assert final["previous_authorization_superseded"] is True
+    assert final["person_d_code_change_required"] is False
+    assert final["production_execution_performed"] is False
+    assert final["final_comparison_metrics_computed"] is False
+
+
+def test_superseding_authorization_package_is_canonical_and_inventoried() -> None:
+    documents = _authorization_documents()
+    expected_names = {
+        "applicability_and_resume_decision.json",
+        "authority_binding.json",
+        "final_authorization_decision.json",
+        "person_d_authorization_record.json",
+        "production_commands.json",
+        "provenance_audit_contract.json",
+        "sha256_inventory.json",
+        "validation_receipt.json",
+    }
+    assert set(documents) == expected_names
+    for name, document in documents.items():
+        raw = (AUTHORIZATION_PACKAGE / name).read_bytes()
+        assert raw == validator.canonical_json_bytes(document)
+    inventory = documents["sha256_inventory.json"]
+    assert inventory["algorithm"] == "sha256"
+    assert inventory["inventory_excludes_self"] is True
+    expected_inventory_paths = {
+        (
+            "docs/status/person_b_phase4_step4_1_applicability_"
+            f"reauthorization_v0_1/{name}"
+        )
+        for name in expected_names - {"sha256_inventory.json"}
+    }
+    assert set(inventory["files"]) == expected_inventory_paths
+    for relative_path, expected in inventory["files"].items():
+        raw = (ROOT / relative_path).read_bytes()
+        assert expected == {
+            "byte_size": len(raw),
+            "sha256": validator._sha256(raw),
+        }
