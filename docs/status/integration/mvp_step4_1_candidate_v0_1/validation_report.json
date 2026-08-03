@@ -1,0 +1,127 @@
+{
+  "environment": {
+    "attrs": "25.3.0",
+    "host_python": "3.14.6",
+    "pyarrow": "25.0.0",
+    "pyyaml": "6.0.3",
+    "repository_python": "3.10.20",
+    "ruff": "0.16.0"
+  },
+  "environment_only_skips": [
+    "Windows process lacks symbolic-link creation privilege (1 Person A test)",
+    "Exact external Person A transfer evidence is not mounted (2 Person B tests)",
+    "MINEOCCLUDE_PERSON_C_STEP3_3_ROOT is not configured (4 Person E tests)",
+    "Person C Registry handoff records an authority-machine absolute source path not mounted on this host (1 deselected test)",
+    "Person E Phase 6 provenance acceptance requires an unmounted /home/sagemaker-user approved-output root (1 deselected test)",
+    "Host Python is 3.14.6 rather than the committed 3.10.20 environment; torch 2.6.0 and opencv-python 4.11.0.86 are unavailable in the host interpreter"
+  ],
+  "frozen_authority_exceptions": [
+    {
+      "authority": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+      "git_blob": "00c12c16f6b8fc2f62a67193f56c894034015402",
+      "path": "data/runtime_smoke/layout_00_ep9209/qa_report_9209.json",
+      "reason": "Contains a legacy Infinity token and is excluded from strict RFC JSON parsing because scientific-evidence preservation requires exact authority bytes."
+    }
+  ],
+  "lint": {
+    "candidate_repair_paths_core_rules": "PASS",
+    "command_candidate_repair_paths": "ruff check --isolated --select E4,E7,E9,F <candidate repair Python paths>",
+    "command_repository_fatal_rules": "ruff check --isolated --select E9,F63,F7,F82 src scripts tests",
+    "repository_fatal_rules": "PASS",
+    "repository_has_committed_ruff_configuration": false,
+    "whole_tree_isolated_core_audit": {
+      "classification": "inherited advisory lint debt across authority-owned files",
+      "error_count": 174,
+      "required_gate": false
+    }
+  },
+  "prohibited_scope_exclusions": [
+    "SageMaker jobs",
+    "production GPU execution",
+    "external MineWorld roots",
+    "activation or probe generation",
+    "baseline or bounded-reveal scientific execution",
+    "metrics or confidence-interval regeneration",
+    "Registry v2 import rerun",
+    "manual U4 inspection"
+  ],
+  "results": [
+    {
+      "command_scope": "Person A activation and Step 4.1 preflight validation",
+      "deselected": 4,
+      "passed": 134,
+      "skipped": 1,
+      "status": "PASS",
+      "subtests_passed": 152
+    },
+    {
+      "command_scope": "Person B analysis, oracle, probes, metrics, and intervention validation",
+      "deselected": 1,
+      "ignored_authority_context_modules": 6,
+      "passed": 280,
+      "skipped": 2,
+      "status": "PASS",
+      "subtests_passed": 39
+    },
+    {
+      "command_scope": "Person C data plus shared contracts and integration validation",
+      "deselected": 1,
+      "ignored_scientific_repair_modules": 1,
+      "passed": 362,
+      "skipped": 0,
+      "status": "PASS",
+      "subtests_passed": 179
+    },
+    {
+      "command_scope": "Person D baseline validation",
+      "deselected": 2,
+      "passed": 269,
+      "skipped": 0,
+      "status": "PASS",
+      "subtests_passed": 0
+    },
+    {
+      "command_scope": "Canonical Person E vision and experiments validation",
+      "deselected": 6,
+      "passed": 392,
+      "skipped": 4,
+      "status": "PASS",
+      "subtests_passed": 622
+    },
+    {
+      "command_scope": "Fabric Java Gradle wrapper test",
+      "result": "BUILD SUCCESSFUL; test UP-TO-DATE; 18 tests passed at merge checkpoint",
+      "status": "PASS"
+    },
+    {
+      "command_scope": "Strict JSON and JSONL parse",
+      "json_files_passed": 1255,
+      "jsonl_files_passed": 504,
+      "status": "PASS_WITH_ONE_FROZEN_AUTHORITY_EXCEPTION"
+    },
+    {
+      "command_scope": "Step 4.1 SHA-256 inventory bytes",
+      "files_passed": 69,
+      "inventories_passed": 6,
+      "status": "PASS"
+    },
+    {
+      "command_scope": "Python compileall and two-way shared-contract import order",
+      "status": "PASS"
+    },
+    {
+      "command_scope": "git diff --check and unresolved conflict-marker scan",
+      "status": "PASS",
+      "unresolved_conflict_markers": 0
+    }
+  ],
+  "schema_id": "mineocclude-mvp-step4-1-validation-report-v0.1",
+  "schema_version": "0.1",
+  "supported_python_tests": {
+    "deselected": 14,
+    "passed": 1437,
+    "skipped": 7,
+    "subtests_passed": 992
+  },
+  "validation_pass": true
+}

@@ -1,0 +1,61 @@
+{
+  "repaired_path_count": 40,
+  "repairs": [
+    {
+      "count": 32,
+      "owner": "person_c",
+      "paths": "data/autonomous/*/capture_package_v0_1.json and .sha256 conflict inventory entries",
+      "repair": "Exact authority blob preservation"
+    },
+    {
+      "count": 1,
+      "owner": "shared_contract",
+      "paths": "src/mineocclude/contracts/__init__.py",
+      "repair": "Additive shared export reconciliation"
+    },
+    {
+      "count": 1,
+      "owner": "person_c",
+      "paths": "fabric/mineocclude-mod/src/main/java/com/mineocclude/client/FrameCapture.java",
+      "repair": "Checkpoint formatting hygiene"
+    },
+    {
+      "count": 1,
+      "owner": "person_d",
+      "paths": "src/mineocclude/baselines/memory_planning.py",
+      "repair": "Windows GlobalMemoryStatusEx availability adapter with fail-closed behavior"
+    },
+    {
+      "count": 1,
+      "owner": "person_e",
+      "paths": "scripts/localize_u4_frames.py",
+      "repair": "Backward-compatible homography report v0.2/v0.3 adapter"
+    },
+    {
+      "count": 1,
+      "owner": "shared_integration",
+      "paths": "tests/fixtures/integration/synthetic_join_report.json",
+      "repair": "CPU-generated synthetic-only composition fixture refresh"
+    },
+    {
+      "count": 1,
+      "owner": "shared_integration",
+      "paths": "src/mineocclude/integration/synthetic_pipeline.py",
+      "repair": "Reproducible synthetic Person B fixture output and lint cleanup"
+    },
+    {
+      "count": 1,
+      "owner": "person_b",
+      "paths": "tests/fixtures/person_b/synthetic_analysis_chain_v1.json",
+      "repair": "CPU-generated synthetic-only fixture refresh"
+    },
+    {
+      "count": 1,
+      "owner": "person_c",
+      "paths": "tests/data/test_layout_id_resolves.py",
+      "repair": "Bind test to committed top-face-centre and coverage-recapture supersession records"
+    }
+  ],
+  "schema_id": "mineocclude-mvp-step4-1-changed-path-ownership-v0.1",
+  "schema_version": "0.1"
+}
