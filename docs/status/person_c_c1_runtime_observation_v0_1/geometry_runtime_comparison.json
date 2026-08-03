@@ -1,0 +1,96 @@
+{
+  "schema_version": "person-c-c1-geometry-runtime-comparison-v0.1",
+  "status": "pending_operator_observation",
+  "classification": "RUNTIME_OBSERVATION_INCOMPLETE",
+  "allowed_classifications": [
+    "C_GEOMETRY_MATCHES_RUNTIME",
+    "E_GEOMETRY_MATCHES_RUNTIME",
+    "NEITHER_GEOMETRY_MATCHES_RUNTIME",
+    "MIXED_RUNTIME_GEOMETRY",
+    "RUNTIME_OBSERVATION_INCOMPLETE"
+  ],
+  "accepted_geometry_owner": "UNRESOLVED",
+  "accepted_geometry_version": null,
+  "comparison_policy": {
+    "literal_coordinates_only": true,
+    "hidden_offsets_forbidden": true,
+    "layout_id_shifts_forbidden": true,
+    "half_block_corrections_forbidden": true,
+    "coordinate_renumbering_forbidden": true,
+    "compatibility_adapters_forbidden": true
+  },
+  "c_source": {
+    "path": "configs/scenes/layouts.yaml",
+    "version": "person-c-layout-config-v0.3",
+    "source_commit": "1f1937ad850b2476aca528032410a1938d0abe7f",
+    "git_blob": "55b609d343cea47c098e01921018bd3b9a1e405d",
+    "sha256": "5a39d2dcae44d72f07b0e645dcc3e64ea6178ef79f1c9e3f12bff11f857f82cb"
+  },
+  "runtime_source": {
+    "manifest": "layout_runtime_observations.json",
+    "receipt_schema": "person-c-c1-runtime-geometry-observation-v0.1",
+    "receipts_complete": false,
+    "all_receipts_hash_bound": false
+  },
+  "layouts": [
+    {
+      "layout_id": "layout_01",
+      "e_source": "data/handoff_e/markers_layout_01.json",
+      "e_git_blob": "e65374b0f980c564c51cf43f399a56be1cbce838",
+      "runtime_receipt": null,
+      "c_match": null,
+      "e_match": null,
+      "result": "PENDING"
+    },
+    {
+      "layout_id": "layout_02",
+      "e_source": "data/handoff_e/markers_layout_02.json",
+      "e_git_blob": "5e929b4e246d4914047a389b631954f9a05277af",
+      "runtime_receipt": null,
+      "c_match": null,
+      "e_match": null,
+      "result": "PENDING"
+    },
+    {
+      "layout_id": "layout_03",
+      "e_source": "data/handoff_e/markers_layout_03.json",
+      "e_git_blob": "42d37b75b8f88e9401c90e52b1f9a4173fcf96a6",
+      "runtime_receipt": null,
+      "c_match": null,
+      "e_match": null,
+      "result": "PENDING"
+    },
+    {
+      "layout_id": "layout_04",
+      "e_source": "data/handoff_e/markers_layout_04.json",
+      "e_git_blob": "6e427a71782c01ea2de74afe9b2c6e07ecda4459",
+      "runtime_receipt": null,
+      "c_match": null,
+      "e_match": null,
+      "result": "PENDING"
+    },
+    {
+      "layout_id": "layout_05",
+      "e_source": "data/handoff_e/markers_layout_05.json",
+      "e_git_blob": "788babe0413151a1ad633387f7968f76e966e842",
+      "runtime_receipt": null,
+      "c_match": null,
+      "e_match": null,
+      "result": "PENDING"
+    },
+    {
+      "layout_id": "layout_06",
+      "e_source": "data/handoff_e/markers_layout_06.json",
+      "e_git_blob": "f7bfeacf10df3b06ff9f693770f2106af2fe4b32",
+      "runtime_receipt": null,
+      "c_match": null,
+      "e_match": null,
+      "result": "PENDING"
+    }
+  ],
+  "successor_decision_package": {
+    "path": "docs/status/person_c_geometry_authority_v0_2/",
+    "created": false,
+    "reason": "Forbidden until all six fresh-runtime receipts and the production environment lock are complete and hash-bound."
+  }
+}

@@ -23,6 +23,8 @@ import java.nio.file.Path;
  *
  * Commands (op level 2):
  *   /mineocclude start <layoutId> <episodeId> <seed> <v> <q> <ticks>
+ *   /mineocclude markergeomstatus
+ *   /mineocclude observegeometry <receiptId>
  *   /mineocclude stop
  *   /mineocclude status
  */
@@ -114,6 +116,12 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
                         ctx.getSource().sendFeedback(new LiteralText("markergeom override cleared"), true);
                         return 1;
                     }))
+                .then(CommandManager.literal("markergeomstatus")
+                    .executes(ctx -> markerGeomStatusCmd(ctx.getSource())))
+                .then(CommandManager.literal("observegeometry")
+                    .then(CommandManager.argument("receiptId", StringArgumentType.word())
+                        .executes(ctx -> observeGeometryCmd(ctx.getSource(),
+                                StringArgumentType.getString(ctx, "receiptId")))))
                 .then(CommandManager.literal("warmup")
                     .then(CommandManager.argument("ticks", IntegerArgumentType.integer(0))
                         .executes(ctx -> {
@@ -291,6 +299,34 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
             src.sendFeedback(new LiteralText("No episode running"), false);
         }
         return 1;
+    }
+
+    private static int markerGeomStatusCmd(ServerCommandSource src) {
+        src.sendFeedback(new LiteralText("markergeom status: enabled="
+                + ArenaBuilder.markerGeomOverrideEnabled()
+                + " nearOrtho=" + ArenaBuilder.ovrNearOrtho
+                + " farOrtho=" + ArenaBuilder.ovrFarOrtho
+                + " nearInset=" + ArenaBuilder.ovrNearInset
+                + " farInset=" + ArenaBuilder.ovrFarInset
+                + " signature=" + ArenaBuilder.markerGeomSignature()), false);
+        return 1;
+    }
+
+    private static int observeGeometryCmd(ServerCommandSource src, String receiptId) {
+        if (manager == null) {
+            src.sendError(new LiteralText("MineOcclude not ready (server not started yet)"));
+            return 0;
+        }
+        try {
+            Path receipt = manager.writeGeometryObservation(receiptId);
+            src.sendFeedback(new LiteralText("Wrote observation-only geometry receipt: "
+                    + receipt), false);
+            return 1;
+        } catch (Exception e) {
+            MineOcclude.LOG.error("[MineOcclude/observation] geometry receipt failed", e);
+            src.sendError(new LiteralText("observegeometry failed: " + e.getMessage()));
+            return 0;
+        }
     }
 
     private static int statusCmd(ServerCommandSource src) {
