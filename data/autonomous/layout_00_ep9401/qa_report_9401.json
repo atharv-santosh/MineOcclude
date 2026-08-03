@@ -1,0 +1,112 @@
+{
+  "accepted": false,
+  "checks": [
+    {
+      "detail": "",
+      "expected": "strict one-to-one join",
+      "measured": [],
+      "name": "alignment",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "all channel counts equal",
+      "measured": {
+        "action": 60,
+        "frame": 60,
+        "state": 60,
+        "tick": 60
+      },
+      "name": "cardinality",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "consecutive from 0",
+      "measured": "60 ticks",
+      "name": "consecutive_ticks",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_render_frame_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_action_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_model_frame_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": null,
+      "measured": {
+        "hidden": 40,
+        "quarantined": 15,
+        "visible": 20
+      },
+      "name": "visibility_labels_present",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": null,
+      "measured": {
+        "missing_reveal": true,
+        "multiple_events": false,
+        "n_events": 1,
+        "rule_version": "person-c-event-stability-v0.1"
+      },
+      "name": "events_derived",
+      "status": "pass"
+    },
+    {
+      "detail": "impulse effect lies in transition 29->30 but the action step is at index 30 (offset -1); the frozen orientation requires the effect in (i -> i+1)",
+      "expected": "the impulse effect lies exactly in visual_i -> visual_(i+1)",
+      "measured": {
+        "action_idx": 30,
+        "action_step_deg": 20.0,
+        "effect_diff": 12.642786458333333,
+        "effect_transition": [
+          29,
+          30
+        ],
+        "offset": -1
+      },
+      "name": "impulse_orientation",
+      "status": "fail"
+    },
+    {
+      "detail": "",
+      "expected": {
+        "avg_frame_rate": "20/1",
+        "height": 360,
+        "nb_frames": 60,
+        "width": 640
+      },
+      "measured": {
+        "avg_frame_rate": "20/1",
+        "height": 360,
+        "nb_frames": 60,
+        "width": 640
+      },
+      "name": "media_ffprobe",
+      "status": "pass"
+    }
+  ],
+  "episode_id": "9401",
+  "status": "excluded",
+  "trajectory_id": "layout_00_ep9401",
+  "validator_version": "person-c-qa-v0.1"
+}

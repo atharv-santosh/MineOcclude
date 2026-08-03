@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "person_c_contract_version": "0.1",
+  "environment_lock_version": "0.1",
+  "template": false,
+  "evidence_scope": "developer_machine_prototype_runtime",
+  "runtime_status": "OBSERVED_ON_DEV_MACHINE; formal fresh-launch manifest comparison still pending (C1.1)",
+  "observed_at": "2026-07-22",
+  "observation_source": "Prototype capture runtime logs (2026-07-20 collection runs) plus the reproduced clean build of fabric/mineocclude-mod in this repository.",
+  "versions": {
+    "minecraft": "1.16.5",
+    "java_build": "17 (Oracle OpenJDK 17, x86_64)",
+    "java_runtime": "17 (dev-launched client/server; production dedicated server target is Java 8/11 bytecode)",
+    "fabric_loader": "0.15.11",
+    "yarn": "1.16.5+build.10",
+    "fabric_api": "0.42.0+1.16",
+    "gradle": "8.3 (wrapper-pinned)",
+    "loom": "1.4-SNAPSHOT",
+    "gson_bundled": "2.8.0",
+    "mixin": "0.8.5 (sponge-mixin 0.13.3)"
+  },
+  "mod_artifact": {
+    "name": "mineocclude-0.1.0.jar",
+    "sha256": "8b18dd79b5b0907c8da55be8cc854a36dccad8d5767f83b9d99140287f5a0c70",
+    "build_command": "JAVA_HOME=<jdk-17> ./gradlew build --no-daemon (fabric/mineocclude-mod)",
+    "unit_tests": "18 passed, 0 failed (lifecycle, noise schedule incl. Python cross-check, geometry)"
+  },
+  "world_observed": {
+    "level_type": "flat",
+    "level_seed": "(empty; superflat)",
+    "difficulty": "peaceful",
+    "online_mode": false,
+    "view_distance": 10,
+    "spawn_protection": 0
+  },
+  "discrepancies_vs_approved_lock": [
+    "server.properties intentionally sets spawn-animals=true, DEVIATING from the approved lock: with spawn-animals=false, ServerWorld removes every AnimalEntity (including the persistent invulnerable magenta sheep) each tick regardless of persistence flags. Natural spawns are blocked by doMobSpawning=false instead. The approved lock text should be amended to record this. spawn-monsters/spawn-npcs are enforced false.",
+    "Client runtime Java was 17 via the Gradle dev launcher; the production launcher/client installation versions are not yet observed from a clean machine.",
+    "Framebuffer size observed as the window size (Retina-doubled); the 640x360 canonical source is produced by deterministic Python normalization (see mineocclude.data.preprocess), not by the raw client capture."
+  ],
+  "remaining_c1_1_evidence": [
+    "Fresh dedicated-server + production-launcher client launch with a startup manifest equal to this lock.",
+    "server.properties corrected and hashed.",
+    "Resource pack, FOV, and graphics settings recorded from the production client installation."
+  ]
+}

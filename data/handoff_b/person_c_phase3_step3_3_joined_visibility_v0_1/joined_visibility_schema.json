@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "context_identities_must_match": [
+    "layout_id",
+    "canonical_camera_pose_id",
+    "resolution",
+    "coordinate_convention"
+  ],
+  "coordinate_convention_constraint": {
+    "const": "pixel_center_xy_zero_based",
+    "type": "string"
+  },
+  "detector_version_constraint": {
+    "const": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+    "type": "string"
+  },
+  "final_label_owner": "Person C",
+  "final_rule": "visible_flag = geometric_visible AND empirical_magenta_visible",
+  "one_to_one_join": true,
+  "package_level_fail_closed_conditions": [
+    "duplicate_c_primary_key",
+    "duplicate_e_primary_key",
+    "missing_e_primary_key",
+    "extra_e_primary_key",
+    "incomplete_c_input",
+    "incomplete_e_input",
+    "e_supplies_visible_flag",
+    "wrong_detector_version",
+    "malformed_empirical_boolean",
+    "wrong_layout_id",
+    "wrong_canonical_camera_pose_id",
+    "wrong_resolution",
+    "wrong_coordinate_convention",
+    "schema_mismatch",
+    "failure_to_preserve_source_field"
+  ],
+  "person_e_may_write_visible_flag": false,
+  "primary_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "quarantine_category_enum": [
+    "geometry_hidden_detector_visible",
+    "geometry_visible_detector_hidden",
+    "invalid_geometry",
+    "missing_detector",
+    "none"
+  ],
+  "raw_channels_preserved_separately": [
+    "geometric_visible",
+    "empirical_magenta_visible"
+  ],
+  "required_fields": {
+    "canonical_camera_pose_id": "string",
+    "coordinate_convention": "string",
+    "detector_version": "string",
+    "empirical_magenta_visible": "boolean|null",
+    "geometric_visible": "boolean|null",
+    "geometry_rule_version": "string",
+    "invalidity_reason": "string|null",
+    "layout_id": "string",
+    "model_frame_idx": "integer",
+    "quarantine_category": "string",
+    "quarantined": "boolean",
+    "resolution": "string",
+    "trajectory_id": "string",
+    "visible_flag": "boolean"
+  },
+  "resolution_constraint": {
+    "const": "640x360",
+    "type": "string"
+  },
+  "schema_id": "person-c-phase3-step3-3-joined-visibility-v0-1",
+  "schema_version": "1.0",
+  "title": "person-c-phase3-step3-3-joined-visibility-v0-1:joined_visibility_records"
+}

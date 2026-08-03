@@ -1,0 +1,103 @@
+{
+  "accepted": true,
+  "checks": [
+    {
+      "detail": "",
+      "expected": "strict one-to-one join",
+      "measured": [],
+      "name": "alignment",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "all channel counts equal",
+      "measured": {
+        "action": 40,
+        "frame": 40,
+        "state": 40,
+        "tick": 40
+      },
+      "name": "cardinality",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "consecutive from 0",
+      "measured": "40 ticks",
+      "name": "consecutive_ticks",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_render_frame_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_action_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_model_frame_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": null,
+      "measured": {
+        "hidden": 4,
+        "quarantined": 3,
+        "visible": 36
+      },
+      "name": "visibility_labels_present",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": null,
+      "measured": {
+        "missing_reveal": true,
+        "multiple_events": false,
+        "n_events": 1,
+        "rule_version": "person-c-event-stability-v0.1"
+      },
+      "name": "events_derived",
+      "status": "pass"
+    },
+    {
+      "detail": "no camera motion; orientation evidence comes from the designated impulse fixture",
+      "expected": null,
+      "measured": null,
+      "name": "impulse_orientation",
+      "status": "not_applicable"
+    },
+    {
+      "detail": "",
+      "expected": {
+        "avg_frame_rate": "20/1",
+        "height": 360,
+        "nb_frames": 40,
+        "width": 640
+      },
+      "measured": {
+        "avg_frame_rate": "20/1",
+        "height": 360,
+        "nb_frames": 40,
+        "width": 640
+      },
+      "name": "media_ffprobe",
+      "status": "pass"
+    }
+  ],
+  "episode_id": "10026",
+  "status": "accepted",
+  "trajectory_id": "layout_06_ep10026",
+  "validator_version": "person-c-qa-v0.1"
+}

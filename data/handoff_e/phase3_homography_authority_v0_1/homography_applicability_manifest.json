@@ -1,0 +1,45 @@
+{
+  "applicability_limits": {
+    "camera": "the canonical validated capture pose only",
+    "canonical_camera_pose_id": "must equal the record's pose id",
+    "coordinate_convention": "image pixel_center_xy_zero_based + world topface-centre",
+    "crop": "no crop; full frame",
+    "layout_id": "must equal the record's layout_id",
+    "resolution": "exactly 640x360",
+    "scaling": "no rescaling of the source 640x360 frame"
+  },
+  "canonical_camera_pose_ids": {
+    "layout_01": "layout_01_canonical_pose_v1",
+    "layout_02": "layout_02_canonical_pose_v1",
+    "layout_03": "layout_03_canonical_pose_v1",
+    "layout_04": "layout_04_canonical_pose_v1",
+    "layout_05": "layout_05_canonical_pose_v1",
+    "layout_06": "layout_06_canonical_pose_v1"
+  },
+  "capture_resolution": {
+    "height": 360,
+    "width": 640
+  },
+  "fail_closed_requirement": "If layout_id, canonical_camera_pose_id, resolution, crop, scaling, camera, or coordinate convention differs from these bindings, the homography is OUT OF DOMAIN and must be rejected fail-closed - no extrapolated application.",
+  "image_coordinate_convention": "pixel_center_xy_zero_based",
+  "layout_ids": [
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04",
+    "layout_05",
+    "layout_06"
+  ],
+  "marker_identities_and_ordering": [
+    "north_west",
+    "north_east",
+    "south_east",
+    "south_west"
+  ],
+  "owner": "Person C",
+  "package_id": "person-c-phase3-homography-authority-v0_1",
+  "refit_disclaimer": "Person C does not refit or alter Person E's matrices. C supplies axis-sign authority and ground truth; E performs and publishes the validation.",
+  "schema_version": "1.0",
+  "units": "blocks",
+  "world_coordinate_convention": "ground_plane_world_xz_blocks_topface_centre"
+}

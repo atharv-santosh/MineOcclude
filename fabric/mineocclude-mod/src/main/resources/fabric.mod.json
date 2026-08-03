@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "mineocclude",
+  "version": "${version}",
+  "name": "MineOcclude",
+  "description": "Synchronized occlusion-experiment capture for MineWorld probing (MC 1.16.5). Server owns arena/reset/sheep dynamics and authoritative tick-state logging; client records one 640x360 frame and one full action record per server tick.",
+  "authors": ["MineOcclude team"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.mineocclude.MineOcclude"],
+    "server": ["com.mineocclude.server.MineOccludeServer"],
+    "client": ["com.mineocclude.client.MineOccludeClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.16.x",
+    "java": ">=8",
+    "fabric": "*"
+  }
+}

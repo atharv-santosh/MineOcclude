@@ -1,0 +1,37 @@
+{
+  "c_geometric_records_sha256": "914a5bee842c92e707b94c6d58c91807681310ac6a393d18a06ba8dfa70572eb",
+  "command": "build_person_c_phase3_step3_3_joined_visibility_v0_1.py build --e-package-root <E_ROOT>",
+  "disagreement_counts": {
+    "geometry_hidden_detector_visible": 364,
+    "geometry_visible_detector_hidden": 53,
+    "invalid_geometry": 0,
+    "missing_detector": 0,
+    "none": 1433
+  },
+  "e_empirical_records_sha256": "b6da7d73e2eea0975469d59cb92a47aace90d1651c8e42cc22cfc40675d90681",
+  "e_package_root": "/private/tmp/claude-502/-Users-atharvsantosh-MineOcclude/219af340-4eb0-4f76-a098-9b3d727aa5d8/scratchpad/person_e_wt",
+  "final_rule": "visible_flag = geometric_visible AND empirical_magenta_visible",
+  "final_visibility_interface_version": "person-c-final-visibility-interface-v1.0",
+  "implementation_file": "src/mineocclude/data/visibility_join.py",
+  "implementation_sha256": "1f9e68cbb90f339fd94195f46f8b62adcafd2644fff0c4ebebf001a93917bba5",
+  "join_end_utc": "2026-07-29T07:13:35Z",
+  "join_start_utc": "2026-07-29T07:13:35Z",
+  "no_detector_rerun": true,
+  "no_dropped_rows": true,
+  "no_e_written_visible_flag": true,
+  "no_silent_repair": true,
+  "no_u4_inspection": true,
+  "one_to_one_join": true,
+  "schema_id": "person-c-phase3-step3-3-joined-visibility-v0-1",
+  "schema_version": "1.0",
+  "strict_join_import_path": "mineocclude.data.visibility_join.strict_join",
+  "structural_failure_counts": {
+    "context_mismatches": 0,
+    "detector_version_mismatch": 0,
+    "duplicate_c_keys": 0,
+    "duplicate_e_keys": 0,
+    "extra_e_keys": 0,
+    "malformed_empirical": 0,
+    "missing_e_keys": 0
+  }
+}

@@ -742,9 +742,15 @@ def run_c_e_marker_boundary(layout_document: Mapping[str, Any]) -> dict[str, Any
         ],
         "expected_probe": {
             "image_xy": [300.0, 180.0],
+            # The image-center probe reprojects to the MARKER-QUAD centroid
+            # (where the four image corners' centroid maps under the affine
+            # marker homography), not the arena centre. These coincided only
+            # in layouts v0.2, where markers were placed symmetric about the
+            # arena centre; v0.3 exports the mod's real geometry, where the
+            # marker quad is centred on the occlusion scene, not the arena.
             "world_xz_blocks": [
-                (layout["arena"]["min_x"] + layout["arena"]["max_x"]) / 2.0,
-                (layout["arena"]["min_z"] + layout["arena"]["max_z"]) / 2.0,
+                sum(m["world_blocks"]["x"] for m in layout["markers"]) / 4.0,
+                sum(m["world_blocks"]["z"] for m in layout["markers"]) / 4.0,
             ],
             "absolute_tolerance_blocks": 1e-9,
         },
