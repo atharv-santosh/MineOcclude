@@ -23,6 +23,7 @@ import subprocess
 import sys
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -47,6 +48,9 @@ DOCUMENT_NAMES = (
 INVENTORIED_NAMES = DOCUMENT_NAMES[:-1]
 
 PERSON_B_STARTING_AUTHORITY = "76e1d33788bcf1482b310d2b41a5db3d734d98a7"
+PERSON_B_APPLICABILITY_STARTING_AUTHORITY = (
+    "a6f1cedd390ecde129fc5b25ad50f81a0848530b"
+)
 PERSON_D_MEMORY_IMPLEMENTATION_COMMIT = (
     "f6fb6e542f87462c366ea657ded2dc8a47c3428f"
 )
@@ -112,6 +116,31 @@ ANALYSIS_CONFIG_SHA256 = "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f13
 ANALYSIS_CONFIG_SIZE = 4881
 EXPECTED_INPUT_MANIFEST_HASH = "69191b712cfc137388e0a7f27f25be4b3af2c672cf56c569feb3a8af707d3c37"
 EXPECTED_FIT_MANIFEST_HASH = "d754329cbc13d82b593908901d74d4b6539b0548db94a041e4db62bf835ecc8b"
+
+APPLICABILITY_CONTRACT_VERSION = (
+    "person-b-step4-1-family-target-applicability-v0.1"
+)
+APPLICABILITY_CONTRACT_RELATIVE_PATH = Path(
+    "docs/status/person_b_phase4_step4_1_applicability_contract_v0_1/"
+    "family_target_applicability_contract.json"
+)
+PRESERVED_PROVENANCE_FILENAME = "preserved_output_provenance.json"
+PREDECESSOR_AUTHORIZATION_RECORD_SHA256 = (
+    "f923ce73c111549fd63ab2679e4fe354406dcf525f03930e6f63b2239bd317ae"
+)
+PREDECESSOR_AUTHORIZATION_RECORD_PATH = (
+    "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/"
+    "person_b_phase4_step4_1_memory_reauthorization_v0_1/"
+    "person_d_authorization_record.json"
+)
+PRESERVED_COMPLETED_FAMILIES = (
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+)
+PRESERVED_PREDICTION_COUNT = 7691
 
 EXPECTED_FAMILIES = (
     "last_seen",
@@ -706,7 +735,133 @@ def _validate_compatibility(repo_root: Path, document: Mapping[str, Any]) -> Non
         _require(reference.get("source_commit") == commit and reference.get("path") == path and reference.get("byte_size") == size and reference.get("sha256") == digest, "compatibility_mismatch", f"historical {label}")
 
 
+def _validate_applicability_external_auth(
+    repo_root: Path, document: Mapping[str, Any]
+) -> None:
+    expected_decisions = {
+        family: ("reusable" if family in PRESERVED_COMPLETED_FAMILIES else "absent")
+        for family in EXPECTED_FAMILIES
+    }
+    expected_producing = {
+        family: PERSON_D_RUNNER_COMMIT for family in PRESERVED_COMPLETED_FAMILIES
+    }
+    expected_authorizations = {
+        family: PERSON_B_APPLICABILITY_STARTING_AUTHORITY
+        for family in PRESERVED_COMPLETED_FAMILIES
+    }
+    expected_fields = {
+        "accepted_authorization_authority_by_reusable_family",
+        "accepted_producing_authority_by_reusable_family",
+        "applicability_contract_path",
+        "applicability_contract_sha256",
+        "applicability_contract_version",
+        "authorization_scope",
+        "authorized_branch",
+        "authorized_runner_commit",
+        "frame_root",
+        "materialized_root",
+        "minimum_available_memory_gib",
+        "minimum_physical_memory_gib",
+        "output_root",
+        "preserved_output_decisions",
+        "preserved_output_runtime_revalidation_required",
+        "record_purpose",
+        "schema_id",
+        "schema_version",
+        "scientific_execution_performed",
+        "source_commit",
+        "supersedes_authorization_commit",
+        "u4_output_inspected",
+    }
+    _require(
+        set(document) == expected_fields,
+        "runtime_authorization_mismatch",
+        "applicability record fields",
+    )
+    _require(
+        document.get("schema_version") == "1.0"
+        and document.get("schema_id")
+        == "person-b-phase4-step4-1-applicability-reauthorization-v0-1-person-d-authorization-record",
+        "runtime_authorization_mismatch",
+        "applicability record schema",
+    )
+    _require(
+        document.get("authorized_runner_commit") == PERSON_D_RUNNER_COMMIT
+        and document.get("authorized_branch") == PERSON_D_BRANCH,
+        "runtime_authorization_mismatch",
+        "runner lineage",
+    )
+    _require(
+        document.get("supersedes_authorization_commit")
+        == PERSON_B_APPLICABILITY_STARTING_AUTHORITY,
+        "runtime_authorization_mismatch",
+        "supersession",
+    )
+    _require(
+        document.get("applicability_contract_version")
+        == APPLICABILITY_CONTRACT_VERSION
+        and document.get("applicability_contract_path")
+        == APPLICABILITY_CONTRACT_RELATIVE_PATH.as_posix(),
+        "runtime_authorization_mismatch",
+        "applicability binding",
+    )
+    contract_path = repo_root / APPLICABILITY_CONTRACT_RELATIVE_PATH
+    _require(
+        contract_path.is_file()
+        and document.get("applicability_contract_sha256")
+        == _sha256(contract_path.read_bytes()),
+        "runtime_authorization_mismatch",
+        "applicability hash",
+    )
+    _require(
+        document.get("preserved_output_decisions") == expected_decisions
+        and document.get("accepted_producing_authority_by_reusable_family")
+        == expected_producing
+        and document.get("accepted_authorization_authority_by_reusable_family")
+        == expected_authorizations
+        and document.get("preserved_output_runtime_revalidation_required") is True,
+        "runtime_authorization_mismatch",
+        "preserved output decisions",
+    )
+    _require(
+        document.get("minimum_physical_memory_gib")
+        == MINIMUM_PHYSICAL_MEMORY_GIB
+        and document.get("minimum_available_memory_gib")
+        == MINIMUM_AVAILABLE_MEMORY_GIB,
+        "runtime_authorization_mismatch",
+        "memory thresholds",
+    )
+    _require(
+        document.get("materialized_root") == MATERIALIZED_ROOT_ABSOLUTE_PATH
+        and document.get("frame_root") == FRAME_ROOT_ABSOLUTE_PATH
+        and document.get("output_root") == OUTPUT_ROOT_ABSOLUTE_PATH,
+        "runtime_authorization_mismatch",
+        "approved roots",
+    )
+    _require(
+        document.get("authorization_scope")
+        == "Person B applicability-aware fail-closed resume authorization for exact Person D runner HEAD"
+        and document.get("record_purpose")
+        == "External superseding authorization passed explicitly from the clean Person B checkout to D's loader"
+        and document.get("source_commit") == "external_person_b_package",
+        "runtime_authorization_mismatch",
+        "record purpose",
+    )
+    _require(
+        document.get("scientific_execution_performed") is False
+        and document.get("u4_output_inspected") is False,
+        "runtime_authorization_mismatch",
+        "safety",
+    )
+
+
 def _validate_external_auth(repo_root: Path, document: Mapping[str, Any]) -> None:
+    if (
+        document.get("schema_id")
+        == "person-b-phase4-step4-1-applicability-reauthorization-v0-1-person-d-authorization-record"
+    ):
+        _validate_applicability_external_auth(repo_root, document)
+        return
     _require(document.get("schema_version") == "1.0", "runtime_authorization_mismatch", "schema_version")
     _require(
         document.get("schema_id")
@@ -1140,9 +1295,11 @@ def _load_resume_lineage(
         key = (trajectory, frame_idx)
         _require(key not in target_by_key, "resume_manifest_lineage_invalid", "duplicate target key")
         target_by_key[key] = {
+            "condition_role": row.get("condition_role"),
             "fold_idx": row["fold_idx"],
             "mu_available": row.get("mu_oracle_blocks") is not None,
             "log_sigma_available": row.get("log_sigma_oracle") is not None,
+            "visibility": row.get("visibility"),
         }
 
     fold_by_key: dict[tuple[str, int], int] = {}
@@ -1179,32 +1336,838 @@ def _load_resume_lineage(
     return target_by_key, fold_by_key
 
 
+def _expand_identity_set(
+    set_name: str, specification: Any
+) -> set[tuple[str, int]]:
+    """Expand one compact, exact trajectory/frame-range identity set."""
+
+    _require(isinstance(specification, Mapping), "applicability_set_invalid", set_name)
+    _require(
+        set(specification) == {"expected_count", "identity_sha256", "ranges"},
+        "applicability_set_invalid",
+        f"{set_name}.fields",
+    )
+    ranges = specification.get("ranges")
+    _require(isinstance(ranges, list), "applicability_set_invalid", f"{set_name}.ranges")
+    ordered: list[dict[str, Any]] = []
+    identities: set[tuple[str, int]] = set()
+    pilot_order = {pilot: index for index, pilot in enumerate(EXPECTED_PILOTS)}
+    previous_order: tuple[int, int] | None = None
+    for item in ranges:
+        _require(
+            isinstance(item, list) and len(item) == 3,
+            "applicability_set_invalid",
+            f"{set_name}.range",
+        )
+        trajectory, start, end = item
+        _require(
+            trajectory in pilot_order
+            and isinstance(start, int)
+            and not isinstance(start, bool)
+            and isinstance(end, int)
+            and not isinstance(end, bool)
+            and 0 <= start <= end,
+            "applicability_set_invalid",
+            f"{set_name}.range_values",
+        )
+        current_order = (pilot_order[trajectory], start)
+        _require(
+            previous_order is None or current_order > previous_order,
+            "applicability_set_invalid",
+            f"{set_name}.range_order",
+        )
+        previous_order = current_order
+        for frame_idx in range(start, end + 1):
+            key = (trajectory, frame_idx)
+            _require(
+                key not in identities,
+                "applicability_set_invalid",
+                f"{set_name}.duplicate_identity",
+            )
+            identities.add(key)
+            ordered.append(
+                {"model_frame_idx": frame_idx, "trajectory_id": trajectory}
+            )
+    _require(
+        specification.get("expected_count") == len(identities),
+        "applicability_set_count_mismatch",
+        set_name,
+    )
+    _require(
+        specification.get("identity_sha256") == _sha256(canonical_json_bytes(ordered)),
+        "applicability_set_hash_mismatch",
+        set_name,
+    )
+    return identities
+
+
+def validate_applicability_contract(
+    document: Any,
+    target_by_key: Mapping[tuple[str, int], Mapping[str, Any]],
+    fold_by_key: Mapping[tuple[str, int], int],
+    *,
+    repo_root: Path = ROOT,
+) -> Mapping[str, Any]:
+    """Validate and expand the frozen family-by-target applicability contract.
+
+    The independent expected sets below are derived only from the frozen target
+    and fold manifests plus the exact scientific rules at the authorized D Git
+    objects.  No prediction output participates in this derivation.
+    """
+
+    _require(isinstance(document, Mapping), "applicability_contract_invalid", "document")
+    _require(
+        document.get("contract_version") == APPLICABILITY_CONTRACT_VERSION,
+        "applicability_contract_version_unknown",
+        str(document.get("contract_version")),
+    )
+    _require(
+        document.get("schema_id")
+        == "person-b-phase4-step4-1-family-target-applicability-contract-v0-1"
+        and document.get("schema_version") == "1.0",
+        "applicability_contract_invalid",
+        "schema",
+    )
+    _require(
+        document.get("identity_encoding")
+        == "ordered_trajectory_inclusive_frame_ranges_v1",
+        "applicability_contract_invalid",
+        "identity_encoding",
+    )
+    _require(
+        tuple(document.get("ordered_families", ())) == EXPECTED_FAMILIES,
+        "applicability_contract_invalid",
+        "family order",
+    )
+    _require(
+        document.get("producing_runner_commit") == PERSON_D_RUNNER_COMMIT,
+        "applicability_contract_invalid",
+        "runner authority",
+    )
+    _require(
+        document.get("global_candidate_count") == 1695,
+        "applicability_contract_invalid",
+        "global candidate count",
+    )
+    _require(
+        document.get("u4_output_inspected") is False,
+        "u4_reference",
+        "applicability contract",
+    )
+
+    reason_vocabulary = document.get("exclusion_reason_vocabulary")
+    expected_reasons = {
+        "missing_prior_visible_observation_for_estimated_velocity",
+        "seeded_donor_missing_target_at_explicit_model_frame_idx",
+        "target_visible_no_log_sigma_oracle",
+    }
+    _require(
+        isinstance(reason_vocabulary, Mapping)
+        and set(reason_vocabulary) == expected_reasons
+        and all(isinstance(value, str) and value for value in reason_vocabulary.values()),
+        "applicability_exclusion_reason_unknown",
+        "reason vocabulary",
+    )
+
+    raw_sets = document.get("identity_sets")
+    _require(isinstance(raw_sets, Mapping), "applicability_contract_invalid", "identity sets")
+    expanded = {
+        name: _expand_identity_set(name, specification)
+        for name, specification in raw_sets.items()
+    }
+    expected_set_names = {
+        "empty",
+        "estimated_velocity_admitted_1690",
+        "estimated_velocity_excluded_5",
+        "global_candidate_1695",
+        "grouped_shuffled_log_sigma_admitted_493",
+        "grouped_shuffled_log_sigma_excluded_1202",
+        "grouped_shuffled_mu_admitted_1428",
+        "grouped_shuffled_mu_excluded_267",
+        "hidden_target_admitted_695",
+        "visible_target_excluded_1000",
+    }
+    _require(
+        set(expanded) == expected_set_names,
+        "applicability_contract_invalid",
+        "identity set names",
+    )
+
+    global_candidates = set(target_by_key)
+    _require(
+        global_candidates == set(fold_by_key)
+        and len(global_candidates) == 1695
+        and expanded["global_candidate_1695"] == global_candidates,
+        "applicability_global_identity_mismatch",
+        "target/fold/global candidate identities",
+    )
+    exact_velocity_exclusions = {
+        ("layout_00_ep9441", 0),
+        ("layout_01_ep9442", 0),
+        ("layout_02_ep9432", 0),
+        ("layout_03_ep9443", 0),
+        ("layout_04_ep9444", 0),
+    }
+    for key in exact_velocity_exclusions:
+        row = target_by_key.get(key, {})
+        _require(
+            row.get("condition_role") == "no_wall_visible_control"
+            and row.get("visibility") == "visible"
+            and row.get("mu_available") is True,
+            "applicability_velocity_exclusion_mismatch",
+            str(key),
+        )
+    velocity_admitted = global_candidates - exact_velocity_exclusions
+    hidden_admitted = {
+        key for key, row in target_by_key.items() if row.get("log_sigma_available") is True
+    }
+    mu_available = {
+        key for key, row in target_by_key.items() if row.get("mu_available") is True
+    }
+    _require(
+        mu_available == global_candidates and len(hidden_admitted) == 695,
+        "applicability_target_binding_mismatch",
+        "frozen target availability",
+    )
+    grouped_mu = {
+        key
+        for key in global_candidates
+        if (EXPECTED_GROUPED_SHUFFLE_DONORS[key[0]], key[1]) in mu_available
+    }
+    grouped_log_sigma = {
+        key
+        for key in global_candidates
+        if (EXPECTED_GROUPED_SHUFFLE_DONORS[key[0]], key[1]) in hidden_admitted
+    }
+    expected_sets = {
+        "empty": set(),
+        "estimated_velocity_admitted_1690": velocity_admitted,
+        "estimated_velocity_excluded_5": exact_velocity_exclusions,
+        "global_candidate_1695": global_candidates,
+        "grouped_shuffled_log_sigma_admitted_493": grouped_log_sigma,
+        "grouped_shuffled_log_sigma_excluded_1202": global_candidates - grouped_log_sigma,
+        "grouped_shuffled_mu_admitted_1428": grouped_mu,
+        "grouped_shuffled_mu_excluded_267": global_candidates - grouped_mu,
+        "hidden_target_admitted_695": hidden_admitted,
+        "visible_target_excluded_1000": global_candidates - hidden_admitted,
+    }
+    for name, expected in expected_sets.items():
+        _require(
+            expanded[name] == expected,
+            "applicability_identity_set_mismatch",
+            name,
+        )
+
+    entries = document.get("applicability_entries")
+    expected_pairs = tuple(
+        (family, target)
+        for family in EXPECTED_FAMILIES
+        for target in EXPECTED_RESUME_TARGET_FAMILIES[family]
+    )
+    _require(
+        isinstance(entries, list)
+        and document.get("applicability_entry_count") == len(expected_pairs)
+        and tuple(
+            (entry.get("family"), entry.get("target"))
+            for entry in entries
+            if isinstance(entry, Mapping)
+        )
+        == expected_pairs,
+        "applicability_entry_coverage_mismatch",
+        "family-target entries",
+    )
+    expected_admitted_names = {
+        ("last_seen", "mu_oracle_blocks"): "global_candidate_1695",
+        ("constant_velocity", "mu_oracle_blocks"): "estimated_velocity_admitted_1690",
+        ("grouped_shuffled", "log_sigma_oracle"): "grouped_shuffled_log_sigma_admitted_493",
+        ("grouped_shuffled", "mu_oracle_blocks"): "grouped_shuffled_mu_admitted_1428",
+        ("time_only", "log_sigma_oracle"): "hidden_target_admitted_695",
+        ("explicit_feature", "mu_oracle_blocks"): "estimated_velocity_admitted_1690",
+        ("raw_pixel", "mu_oracle_blocks"): "global_candidate_1695",
+        ("visible_history_q", "log_sigma_oracle"): "hidden_target_admitted_695",
+        ("known_q_analytic", "log_sigma_oracle"): "hidden_target_admitted_695",
+    }
+    expected_excluded_names = {
+        ("last_seen", "mu_oracle_blocks"): "empty",
+        ("constant_velocity", "mu_oracle_blocks"): "estimated_velocity_excluded_5",
+        ("grouped_shuffled", "log_sigma_oracle"): "grouped_shuffled_log_sigma_excluded_1202",
+        ("grouped_shuffled", "mu_oracle_blocks"): "grouped_shuffled_mu_excluded_267",
+        ("time_only", "log_sigma_oracle"): "visible_target_excluded_1000",
+        ("explicit_feature", "mu_oracle_blocks"): "estimated_velocity_excluded_5",
+        ("raw_pixel", "mu_oracle_blocks"): "empty",
+        ("visible_history_q", "log_sigma_oracle"): "visible_target_excluded_1000",
+        ("known_q_analytic", "log_sigma_oracle"): "visible_target_excluded_1000",
+    }
+    expected_reason_by_excluded_set = {
+        "empty": [],
+        "estimated_velocity_excluded_5": [
+            "missing_prior_visible_observation_for_estimated_velocity"
+        ],
+        "grouped_shuffled_log_sigma_excluded_1202": [
+            "seeded_donor_missing_target_at_explicit_model_frame_idx"
+        ],
+        "grouped_shuffled_mu_excluded_267": [
+            "seeded_donor_missing_target_at_explicit_model_frame_idx"
+        ],
+        "visible_target_excluded_1000": ["target_visible_no_log_sigma_oracle"],
+    }
+    by_pair: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for entry in entries:
+        _require(isinstance(entry, Mapping), "applicability_contract_invalid", "entry")
+        pair = (entry.get("family"), entry.get("target"))
+        family, _target = pair
+        admitted_name = expected_admitted_names[pair]
+        excluded_name = expected_excluded_names[pair]
+        admitted = expanded[admitted_name]
+        excluded = expanded[excluded_name]
+        _require(
+            entry.get("candidate_identity_set") == "global_candidate_1695"
+            and entry.get("admitted_identity_set") == admitted_name
+            and entry.get("excluded_identity_set") == excluded_name
+            and entry.get("expected_admitted_row_count") == len(admitted)
+            and entry.get("expected_excluded_row_count") == len(excluded)
+            and admitted.isdisjoint(excluded)
+            and admitted | excluded == global_candidates,
+            "applicability_entry_identity_mismatch",
+            f"{family}/{_target}",
+        )
+        reasons = entry.get("exclusion_reasons")
+        _require(
+            reasons == expected_reason_by_excluded_set[excluded_name]
+            and set(reasons).issubset(expected_reasons),
+            "applicability_exclusion_reason_unknown",
+            f"{family}/{_target}",
+        )
+        _require(
+            entry.get("configuration") == EXPECTED_CONFIGURATION[family],
+            "applicability_configuration_mismatch",
+            str(family),
+        )
+        _require(
+            entry.get("fold_binding")
+            == {
+                "sha256": FOLD_MANIFEST_SHA256,
+                "validation_mode": "signed_explicit_mapping",
+            },
+            "applicability_fold_binding_mismatch",
+            f"{family}/{_target}",
+        )
+        target_binding = entry.get("target_binding")
+        _require(
+            isinstance(target_binding, Mapping)
+            and target_binding.get("sha256") == TARGET_MANIFEST_SHA256
+            and isinstance(target_binding.get("availability_rule"), str)
+            and bool(target_binding.get("availability_rule")),
+            "applicability_target_binding_mismatch",
+            f"{family}/{_target}",
+        )
+        _require(
+            isinstance(entry.get("history_visibility_requirements"), str)
+            and bool(entry.get("history_visibility_requirements")),
+            "applicability_history_requirement_missing",
+            f"{family}/{_target}",
+        )
+        _require(
+            entry.get("validation_rule")
+            == "actual prediction identities must equal the referenced admitted identity set",
+            "applicability_validation_rule_mismatch",
+            f"{family}/{_target}",
+        )
+        authority = entry.get("producing_scientific_authority")
+        _require(
+            isinstance(authority, Mapping)
+            and set(authority) == {"commit", "path", "sha256"}
+            and authority.get("commit") == PERSON_D_RUNNER_COMMIT,
+            "applicability_scientific_authority_mismatch",
+            f"{family}/{_target}",
+        )
+        source_path = authority.get("path")
+        _require(
+            isinstance(source_path, str)
+            and _sha256(_git_blob(repo_root, PERSON_D_RUNNER_COMMIT, source_path))
+            == authority.get("sha256"),
+            "applicability_scientific_authority_mismatch",
+            f"{family}/{_target}.source",
+        )
+        by_pair[pair] = entry
+    return {
+        "contract_version": APPLICABILITY_CONTRACT_VERSION,
+        "entries": by_pair,
+        "identity_sets": expanded,
+        "global_candidate_count": len(global_candidates),
+    }
+
+
+def load_applicability_contract(
+    target_by_key: Mapping[tuple[str, int], Mapping[str, Any]],
+    fold_by_key: Mapping[tuple[str, int], int],
+    *,
+    repo_root: Path = ROOT,
+) -> Mapping[str, Any]:
+    path = repo_root / APPLICABILITY_CONTRACT_RELATIVE_PATH
+    document = _parse_path(path, "family-target applicability contract")
+    return validate_applicability_contract(
+        document, target_by_key, fold_by_key, repo_root=repo_root
+    )
+
+
 def _expected_resume_keys(
     family: str,
     target_name: str,
     target_by_key: Mapping[tuple[str, int], Mapping[str, Any]],
+    fold_by_key: Mapping[tuple[str, int], int] | None = None,
+    *,
+    repo_root: Path = ROOT,
 ) -> set[tuple[str, int]]:
     """Return the exact applicable row keys for one frozen D output."""
 
-    availability_key = "mu_available" if target_name == "mu_oracle_blocks" else "log_sigma_available"
-    base = {
-        key for key, row in target_by_key.items() if row.get(availability_key) is True
-    }
-    if family != "grouped_shuffled":
-        return base
     _require(
-        set(EXPECTED_GROUPED_SHUFFLE_DONORS) == set(EXPECTED_PILOTS),
-        "resume_grouped_mapping_invalid",
-        "donor map",
+        family in EXPECTED_RESUME_TARGET_FAMILIES
+        and target_name in EXPECTED_RESUME_TARGET_FAMILIES[family],
+        "applicability_family_target_unknown",
+        f"{family}/{target_name}",
+    )
+    if fold_by_key is None:
+        fold_by_key = {key: int(row["fold_idx"]) for key, row in target_by_key.items()}
+    contract = load_applicability_contract(
+        target_by_key, fold_by_key, repo_root=repo_root
+    )
+    entry = contract["entries"][(family, target_name)]
+    return set(contract["identity_sets"][entry["admitted_identity_set"]])
+
+
+def _validate_resume_prediction_document(
+    *,
+    family: str,
+    target_name: str,
+    path: Path,
+    target_by_key: Mapping[tuple[str, int], Mapping[str, Any]],
+    fold_by_key: Mapping[tuple[str, int], int],
+    repo_root: Path,
+) -> Mapping[str, Any]:
+    """Validate one preserved prediction file against its exact admitted set."""
+
+    raw = path.read_bytes()
+    document = _parse_bytes(
+        raw, f"resume output {family}/{target_name}", canonical=False
+    )
+    _require(document.get("schema_version") == "1.0", "resume_schema_mismatch", family)
+    _require(
+        document.get("baseline_input_schema_version")
+        == "person-b-baseline-input-v0.2",
+        "resume_schema_mismatch",
+        family,
+    )
+    _require(
+        document.get("baseline_id") == f"{family}_v1",
+        "resume_family_mismatch",
+        family,
+    )
+    _require(
+        document.get("producer_role") == "person_d",
+        "resume_lineage_mismatch",
+        f"{family}.producer_role",
+    )
+    _require(
+        document.get("baseline_family") == family,
+        "resume_family_mismatch",
+        family,
+    )
+    _require(
+        document.get("target_name") == target_name,
+        "resume_target_mismatch",
+        family,
+    )
+    _require(
+        document.get("config_hash") == ANALYSIS_CONFIG_SHA256,
+        "resume_config_mismatch",
+        family,
+    )
+    _require(
+        document.get("fold_manifest_hash") == FOLD_MANIFEST_SHA256,
+        "resume_fold_hash_mismatch",
+        family,
+    )
+    _require(
+        tuple(document.get("accepted_pilot_ids", ())) == EXPECTED_PILOTS,
+        "resume_pilot_mismatch",
+        family,
+    )
+    _require(document.get("random_split_used") is False, "resume_split_mismatch", family)
+    _require(document.get("u4_output_inspected") is False, "u4_reference", family)
+    _require(
+        document.get("person_b_prediction_reservation")
+        == EXPECTED_PERSON_B_PREDICTION_RESERVATION,
+        "resume_prediction_boundary_mismatch",
+        family,
+    )
+    expected_direct_inputs = {
+        "analysis_config": {
+            "path": ANALYSIS_CONFIG_PATH,
+            "sha256": ANALYSIS_CONFIG_SHA256,
+            "byte_size": ANALYSIS_CONFIG_SIZE,
+            "producer_role": "person_b",
+        },
+        "fold_manifest": {
+            "path": FOLD_MANIFEST_PATH,
+            "sha256": FOLD_MANIFEST_SHA256,
+            "byte_size": FOLD_MANIFEST_SIZE,
+            "producer_role": "person_b",
+        },
+        "oracle_target": {
+            "path": TARGET_MANIFEST_PATH,
+            "sha256": TARGET_MANIFEST_SHA256,
+            "byte_size": TARGET_MANIFEST_SIZE,
+            "producer_role": "person_b",
+        },
+        "source_context_manifest": {
+            "path": SOURCE_CONTEXT_MANIFEST_PATH,
+            "sha256": SOURCE_CONTEXT_SHA256,
+            "byte_size": SOURCE_CONTEXT_SIZE,
+            "producer_role": "person_b",
+        },
+    }
+    direct_inputs = document.get("direct_inputs")
+    _require(isinstance(direct_inputs, Mapping), "resume_input_lineage_missing", family)
+    required_input_keys = set(expected_direct_inputs)
+    if family == "raw_pixel":
+        required_input_keys.add("preprocessed_frame_manifest")
+    _require(
+        set(direct_inputs) == required_input_keys,
+        "resume_input_lineage_mismatch",
+        f"{family}.direct_inputs",
+    )
+    for key, expected in expected_direct_inputs.items():
+        _require(
+            direct_inputs.get(key) == expected,
+            "resume_input_lineage_mismatch",
+            f"{family}.{key}",
+        )
+    if family == "raw_pixel":
+        _require(
+            direct_inputs.get("preprocessed_frame_manifest")
+            == {
+                "path": FRAME_MANIFEST_PATH,
+                "sha256": FRAME_MANIFEST_SHA256,
+                "byte_size": FRAME_MANIFEST_SIZE,
+            },
+            "resume_frame_lineage_mismatch",
+            family,
+        )
+    _require(
+        document.get("input_manifest_hash") == EXPECTED_INPUT_MANIFEST_HASH,
+        "resume_input_hash_mismatch",
+        family,
+    )
+    _require(
+        document.get("fit_manifest_hash") == EXPECTED_FIT_MANIFEST_HASH,
+        "resume_fit_hash_mismatch",
+        family,
+    )
+    rows = document.get("rows")
+    _require(isinstance(rows, list), "resume_row_lineage_mismatch", family)
+    expected_keys = _expected_resume_keys(
+        family,
+        target_name,
+        target_by_key,
+        fold_by_key,
+        repo_root=repo_root,
+    )
+    actual_keys: set[tuple[str, int]] = set()
+    for row in rows:
+        _require(isinstance(row, Mapping), "resume_row_lineage_mismatch", family)
+        trajectory = row.get("trajectory_id")
+        frame_idx = row.get("model_frame_idx")
+        fold_idx = row.get("fold_idx")
+        _require(
+            trajectory in EXPECTED_PILOTS
+            and isinstance(frame_idx, int)
+            and not isinstance(frame_idx, bool)
+            and isinstance(fold_idx, int)
+            and not isinstance(fold_idx, bool),
+            "resume_row_lineage_mismatch",
+            family,
+        )
+        key = (trajectory, frame_idx)
+        _require(key not in actual_keys, "resume_duplicate_row", family)
+        actual_keys.add(key)
+        _require(
+            fold_by_key.get(key) == fold_idx,
+            "resume_fold_lineage_mismatch",
+            family,
+        )
+        _require(
+            row.get("prediction_scope") == "out_of_fold",
+            "resume_row_lineage_mismatch",
+            family,
+        )
+        _require(
+            row.get("fit_id") == f"{family}:{target_name}:v0_2",
+            "resume_fit_lineage_mismatch",
+            family,
+        )
+        prediction = row.get("prediction")
+        _require(
+            isinstance(prediction, (int, float))
+            and not isinstance(prediction, bool)
+            and math.isfinite(prediction),
+            "resume_prediction_invalid",
+            family,
+        )
+    extras = actual_keys - expected_keys
+    missing = expected_keys - actual_keys
+    _require(
+        not extras,
+        "resume_unauthorized_extra_identity",
+        f"{family}/{target_name}:{sorted(extras)[:3]}",
+    )
+    _require(
+        not missing,
+        "resume_missing_admitted_identity",
+        f"{family}/{target_name}:{sorted(missing)[:3]}",
+    )
+    _require(
+        len(rows) == len(expected_keys),
+        "resume_row_count_mismatch",
+        f"{family}/{target_name}",
+    )
+    _require(
+        raw == canonical_json_bytes(document),
+        "noncanonical_json",
+        f"resume output {family}/{target_name}",
     )
     return {
-        key
-        for key in target_by_key
-        if (
-            EXPECTED_GROUPED_SHUFFLE_DONORS[key[0]],
-            key[1],
+        "byte_size": len(raw),
+        "path": path.name,
+        "row_count": len(rows),
+        "sha256": _sha256(raw),
+        "target": target_name,
+    }
+
+
+def _parse_utc_timestamp(value: Any, label: str) -> datetime:
+    _require(
+        isinstance(value, str) and value.endswith("Z"),
+        "resume_provenance_timestamp_invalid",
+        label,
+    )
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+    except ValueError as error:
+        _fail("resume_provenance_timestamp_invalid", f"{label}: {error}")
+    return parsed
+
+
+def _validate_preserved_output_provenance(
+    output_root: Path,
+    state: Mapping[str, Any],
+    output_inventory: Sequence[Mapping[str, Any]],
+) -> Mapping[str, Any]:
+    """Bind preserved files to runner, authorization, environment, and time."""
+
+    path = output_root / PRESERVED_PROVENANCE_FILENAME
+    _require(path.is_file(), "resume_provenance_missing", str(path))
+    document = _parse_path(path, "preserved output provenance")
+    _require(
+        document.get("schema_id")
+        == "person-b-step4-1-preserved-output-provenance-v0-1"
+        and document.get("schema_version") == "1.0",
+        "resume_provenance_invalid",
+        "schema",
+    )
+    _require(
+        document.get("output_root") == OUTPUT_ROOT_ABSOLUTE_PATH,
+        "resume_provenance_invalid",
+        "output root",
+    )
+    _require(
+        document.get("u4_output_inspected") is False,
+        "u4_reference",
+        "preserved provenance",
+    )
+    state_raw = (output_root / "run_state.json").read_bytes()
+    state_reference = {
+        "byte_size": len(state_raw),
+        "path": "run_state.json",
+        "sha256": _sha256(state_raw),
+    }
+    families_state = state.get("families")
+    _require(isinstance(families_state, Mapping), "resume_state_invalid", "families")
+    completed_families = tuple(
+        family
+        for family in EXPECTED_FAMILIES
+        if isinstance(families_state.get(family), Mapping)
+        and families_state[family].get("status") == "completed"
+    )
+    _require(
+        completed_families == PRESERVED_COMPLETED_FAMILIES,
+        "resume_provenance_chronology_mismatch",
+        "preserved completed family order",
+    )
+    inventory_by_family: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for item in output_inventory:
+        filename = item.get("path")
+        _require(
+            isinstance(filename, str) and "__" in filename,
+            "resume_inventory_invalid",
+            str(filename),
         )
-        in base
+        inventory_by_family[filename.split("__", 1)[0]].append(dict(item))
+    total_predictions = sum(
+        int(item["row_count"]) for item in output_inventory
+    )
+    _require(
+        total_predictions == PRESERVED_PREDICTION_COUNT,
+        "resume_provenance_chronology_mismatch",
+        "preserved prediction count",
+    )
+
+    chronology = document.get("chronology")
+    _require(isinstance(chronology, Mapping), "resume_provenance_invalid", "chronology")
+    prior_oom = chronology.get("prior_oom_report")
+    preserved_run = chronology.get("preserved_run")
+    _require(
+        isinstance(prior_oom, Mapping) and isinstance(preserved_run, Mapping),
+        "resume_provenance_invalid",
+        "chronology receipts",
+    )
+    _require(
+        prior_oom.get("producing_runner_commit") == PERSON_D_PRIOR_RUNNER_COMMIT
+        and prior_oom.get("authorization_authority_commit")
+        == PERSON_B_STARTING_AUTHORITY
+        and prior_oom.get("completed_family_count") == 0
+        and prior_oom.get("prediction_count") == 0,
+        "resume_provenance_chronology_mismatch",
+        "prior OOM report",
+    )
+    _require(
+        preserved_run.get("producing_runner_commit") == PERSON_D_RUNNER_COMMIT
+        and preserved_run.get("authorization_authority_commit")
+        == PERSON_B_APPLICABILITY_STARTING_AUTHORITY
+        and tuple(preserved_run.get("completed_families", ()))
+        == PRESERVED_COMPLETED_FAMILIES
+        and preserved_run.get("prediction_count") == PRESERVED_PREDICTION_COUNT,
+        "resume_provenance_chronology_mismatch",
+        "preserved run",
+    )
+    oom_time = _parse_utc_timestamp(prior_oom.get("recorded_at_utc"), "prior OOM")
+    preserved_time = _parse_utc_timestamp(
+        preserved_run.get("recorded_at_utc"), "preserved run"
+    )
+    _require(
+        oom_time < preserved_time,
+        "resume_provenance_chronology_mismatch",
+        "event timestamps",
+    )
+
+    provenance_families = document.get("families")
+    _require(
+        isinstance(provenance_families, Mapping)
+        and set(provenance_families) == set(PRESERVED_COMPLETED_FAMILIES),
+        "resume_provenance_invalid",
+        "family receipts",
+    )
+    decisions: dict[str, str] = {family: "absent" for family in EXPECTED_FAMILIES}
+    for family in PRESERVED_COMPLETED_FAMILIES:
+        record = provenance_families.get(family)
+        _require(isinstance(record, Mapping), "resume_provenance_invalid", family)
+        _require(
+            set(record)
+            == {
+                "authorization_receipt",
+                "configuration",
+                "environment_receipt",
+                "output_manifest",
+                "prediction_inventory",
+                "runner_receipt",
+            },
+            "resume_provenance_invalid",
+            f"{family}.fields",
+        )
+        _require(
+            record.get("configuration") == EXPECTED_CONFIGURATION[family],
+            "resume_config_mismatch",
+            f"{family}.provenance",
+        )
+        output_manifest = record.get("output_manifest")
+        _require(
+            isinstance(output_manifest, Mapping)
+            and output_manifest.get("run_state") == state_reference
+            and output_manifest.get("family_status") == "completed"
+            and output_manifest.get("targets")
+            == sorted(EXPECTED_RESUME_TARGET_FAMILIES[family]),
+            "resume_output_manifest_mismatch",
+            family,
+        )
+        expected_inventory = sorted(
+            inventory_by_family[family], key=lambda item: str(item["target"])
+        )
+        _require(
+            record.get("prediction_inventory") == expected_inventory,
+            "resume_inventory_mismatch",
+            family,
+        )
+        runner = record.get("runner_receipt")
+        _require(
+            isinstance(runner, Mapping)
+            and runner.get("producing_runner_commit") == PERSON_D_RUNNER_COMMIT
+            and runner.get("branch") == PERSON_D_BRANCH
+            and runner.get("worktree_clean") is True,
+            "resume_runner_lineage_mismatch",
+            family,
+        )
+        completed_at = _parse_utc_timestamp(
+            runner.get("completed_at_utc"), f"{family}.runner"
+        )
+        _require(
+            completed_at <= preserved_time,
+            "resume_provenance_chronology_mismatch",
+            f"{family}.completion",
+        )
+        authorization = record.get("authorization_receipt")
+        _require(
+            isinstance(authorization, Mapping)
+            and authorization.get("authorization_authority_commit")
+            == PERSON_B_APPLICABILITY_STARTING_AUTHORITY
+            and authorization.get("authorized_runner_commit")
+            == PERSON_D_RUNNER_COMMIT
+            and authorization.get("authorization_record_path")
+            == PREDECESSOR_AUTHORIZATION_RECORD_PATH
+            and authorization.get("authorization_record_sha256")
+            == PREDECESSOR_AUTHORIZATION_RECORD_SHA256,
+            "resume_authorization_lineage_mismatch",
+            family,
+        )
+        environment = record.get("environment_receipt")
+        physical = environment.get("physical_memory_gib") if isinstance(environment, Mapping) else None
+        available = environment.get("available_memory_gib") if isinstance(environment, Mapping) else None
+        _require(
+            isinstance(physical, (int, float))
+            and not isinstance(physical, bool)
+            and math.isfinite(physical)
+            and physical >= MINIMUM_PHYSICAL_MEMORY_GIB
+            and isinstance(available, (int, float))
+            and not isinstance(available, bool)
+            and math.isfinite(available)
+            and available >= MINIMUM_AVAILABLE_MEMORY_GIB
+            and environment.get("u4_output_inspected") is False,
+            "resume_environment_receipt_mismatch",
+            family,
+        )
+        environment_time = _parse_utc_timestamp(
+            environment.get("captured_at_utc"), f"{family}.environment"
+        )
+        _require(
+            environment_time <= completed_at,
+            "resume_provenance_chronology_mismatch",
+            f"{family}.environment time",
+        )
+        decisions[family] = "reusable"
+    return {
+        "chronology_reconciled": True,
+        "decisions": decisions,
+        "prediction_count": total_predictions,
+        "provenance_sha256": _sha256(path.read_bytes()),
     }
 
 
@@ -1226,7 +2189,22 @@ def validate_output_resume_state(
     output_root = output_root.resolve()
     state_path = output_root / "run_state.json"
     if not state_path.exists():
-        return {"checked": False, "completed_family_count": 0, "passed": True}
+        stray = sorted(
+            path.name
+            for path in output_root.glob("*__*.json")
+            if path.is_file()
+        ) if output_root.is_dir() else []
+        _require(
+            not stray and not (output_root / PRESERVED_PROVENANCE_FILENAME).exists(),
+            "resume_invalid_conflicting",
+            f"outputs exist without run_state: {stray[:3]}",
+        )
+        return {
+            "checked": False,
+            "completed_family_count": 0,
+            "decisions": {family: "absent" for family in EXPECTED_FAMILIES},
+            "passed": True,
+        }
     state = _parse_path(state_path, "D run_state", canonical=False)
     _require(state.get("schema_version") == "1.0", "resume_state_invalid", "schema_version")
     families = state.get("families")
@@ -1237,123 +2215,107 @@ def validate_output_resume_state(
     # a fresh run with no run_state remains a constant-time no-op.
     target_by_key, fold_by_key = _load_resume_lineage(repo_root.resolve(), materialized_root)
     completed = 0
-    lineage_hashes: set[tuple[str, str]] = set()
-    expected_direct_inputs = {
-        "analysis_config": {"path": ANALYSIS_CONFIG_PATH, "sha256": ANALYSIS_CONFIG_SHA256, "byte_size": ANALYSIS_CONFIG_SIZE, "producer_role": "person_b"},
-        "fold_manifest": {"path": FOLD_MANIFEST_PATH, "sha256": FOLD_MANIFEST_SHA256, "byte_size": FOLD_MANIFEST_SIZE, "producer_role": "person_b"},
-        "oracle_target": {"path": TARGET_MANIFEST_PATH, "sha256": TARGET_MANIFEST_SHA256, "byte_size": TARGET_MANIFEST_SIZE, "producer_role": "person_b"},
-        "source_context_manifest": {"path": SOURCE_CONTEXT_MANIFEST_PATH, "sha256": SOURCE_CONTEXT_SHA256, "byte_size": SOURCE_CONTEXT_SIZE, "producer_role": "person_b"},
-    }
+    inventory: list[Mapping[str, Any]] = []
     for family, record in families.items():
         _require(isinstance(record, Mapping), "resume_state_invalid", family)
         _require(record.get("status") in {"completed", "failed"}, "resume_state_invalid", family)
         if record.get("status") != "completed":
             continue
         completed += 1
-        path = _safe_output_path(output_root, record.get("output_path"))
-        _require(path.is_file(), "resume_output_missing", str(path))
         expected_targets = EXPECTED_RESUME_TARGET_FAMILIES[family]
+        recorded_path = _safe_output_path(output_root, record.get("output_path"))
         _require(
             record.get("targets") == sorted(expected_targets),
             "resume_state_invalid",
             f"{family}.targets",
         )
-        document = _parse_path(path, f"resume output {family}")
-        _require(document.get("schema_version") == "1.0", "resume_schema_mismatch", family)
+        expected_recorded_path = output_root / f"{family}__{min(expected_targets)}.json"
         _require(
-            document.get("baseline_input_schema_version") == "person-b-baseline-input-v0.2",
-            "resume_schema_mismatch",
+            recorded_path == expected_recorded_path,
+            "resume_output_path_mismatch",
             family,
         )
-        _require(document.get("baseline_id") == f"{family}_v1", "resume_family_mismatch", family)
-        _require(document.get("producer_role") == "person_d", "resume_lineage_mismatch", f"{family}.producer_role")
-        _require(document.get("baseline_family") == family, "resume_family_mismatch", family)
-        _require(document.get("config_hash") == ANALYSIS_CONFIG_SHA256, "resume_config_mismatch", family)
-        _require(document.get("fold_manifest_hash") == FOLD_MANIFEST_SHA256, "resume_fold_hash_mismatch", family)
-        _require(tuple(document.get("accepted_pilot_ids", ())) == EXPECTED_PILOTS, "resume_pilot_mismatch", family)
-        _require(document.get("random_split_used") is False, "resume_split_mismatch", family)
-        _require(document.get("u4_output_inspected") is False, "u4_reference", family)
-        _require(
-            document.get("person_b_prediction_reservation") == EXPECTED_PERSON_B_PREDICTION_RESERVATION,
-            "resume_prediction_boundary_mismatch",
-            family,
+        for target_name in expected_targets:
+            path = _safe_output_path(
+                output_root, f"{family}__{target_name}.json"
+            )
+            _require(path.is_file(), "resume_output_missing", str(path))
+            inventory.append(
+                _validate_resume_prediction_document(
+                    family=family,
+                    target_name=target_name,
+                    path=path,
+                    target_by_key=target_by_key,
+                    fold_by_key=fold_by_key,
+                    repo_root=repo_root,
+                )
+            )
+    provenance = (
+        _validate_preserved_output_provenance(
+            output_root, state, inventory
         )
-        direct_inputs = document.get("direct_inputs")
-        _require(isinstance(direct_inputs, Mapping), "resume_input_lineage_missing", family)
-        required_input_keys = set(expected_direct_inputs)
-        if family == "raw_pixel":
-            required_input_keys.add("preprocessed_frame_manifest")
-        _require(
-            set(direct_inputs) == required_input_keys,
-            "resume_input_lineage_mismatch",
-            f"{family}.direct_inputs",
+        if completed
+        else {
+            "chronology_reconciled": False,
+            "decisions": {family: "absent" for family in EXPECTED_FAMILIES},
+            "prediction_count": 0,
+        }
+    )
+    return {
+        "checked": True,
+        "completed_family_count": completed,
+        "decisions": provenance["decisions"],
+        "output_inventory": inventory,
+        "passed": True,
+        "preserved_output_provenance": provenance,
+    }
+
+
+def audit_preserved_outputs(
+    output_root: Path,
+    *,
+    materialized_root: Path | None = None,
+    repo_root: Path = ROOT,
+) -> Mapping[str, Any]:
+    """Return one bounded decision per family without changing any output."""
+
+    try:
+        result = validate_output_resume_state(
+            output_root,
+            materialized_root=materialized_root,
+            repo_root=repo_root,
         )
-        for key, expected in expected_direct_inputs.items():
-            _require(direct_inputs.get(key) == expected, "resume_input_lineage_mismatch", f"{family}.{key}")
-        if family == "raw_pixel":
-            frame_ref = direct_inputs.get("preprocessed_frame_manifest")
-            _require(
-                frame_ref == {
-                    "path": FRAME_MANIFEST_PATH,
-                    "sha256": FRAME_MANIFEST_SHA256,
-                    "byte_size": FRAME_MANIFEST_SIZE,
-                },
-                "resume_frame_lineage_mismatch",
-                family,
+    except (MemoryReauthorizationError, OSError, ValueError) as error:
+        resolved = output_root.resolve()
+        families: Mapping[str, Any] = {}
+        state_path = resolved / "run_state.json"
+        if state_path.is_file():
+            try:
+                state = json.loads(state_path.read_text(encoding="utf-8"))
+                candidate = state.get("families", {}) if isinstance(state, Mapping) else {}
+                if isinstance(candidate, Mapping):
+                    families = candidate
+            except (OSError, ValueError):
+                families = {}
+        decisions: dict[str, str] = {}
+        for family in EXPECTED_FAMILIES:
+            expected_files = tuple(
+                resolved / f"{family}__{target}.json"
+                for target in EXPECTED_RESUME_TARGET_FAMILIES[family]
             )
-        target_name = document.get("target_name")
-        _require(isinstance(target_name, str), "resume_target_mismatch", family)
-        _require(target_name in expected_targets, "resume_target_mismatch", family)
-        rows = document.get("rows")
-        _require(isinstance(rows, list), "resume_row_lineage_mismatch", family)
-        expected_keys = _expected_resume_keys(family, target_name, target_by_key)
-        _require(
-            len(rows) == len(expected_keys),
-            "resume_row_count_mismatch",
-            f"{family}/{target_name}",
-        )
-        input_hash = document.get("input_manifest_hash")
-        fit_hash = document.get("fit_manifest_hash")
-        _require(input_hash == EXPECTED_INPUT_MANIFEST_HASH, "resume_input_hash_mismatch", family)
-        _require(fit_hash == EXPECTED_FIT_MANIFEST_HASH, "resume_fit_hash_mismatch", family)
-        lineage_hashes.add((input_hash, fit_hash))
-        actual_keys: set[tuple[str, int]] = set()
-        for row in rows:
-            _require(isinstance(row, Mapping), "resume_row_lineage_mismatch", family)
-            trajectory = row.get("trajectory_id")
-            frame_idx = row.get("model_frame_idx")
-            fold_idx = row.get("fold_idx")
-            _require(
-                trajectory in EXPECTED_PILOTS
-                and isinstance(frame_idx, int)
-                and not isinstance(frame_idx, bool)
-                and isinstance(fold_idx, int)
-                and not isinstance(fold_idx, bool),
-                "resume_row_lineage_mismatch",
-                family,
+            present = any(path.exists() for path in expected_files)
+            record = families.get(family)
+            recorded = isinstance(record, Mapping) and record.get("status") == "completed"
+            decisions[family] = (
+                "invalid-conflicting" if present or recorded else "absent"
             )
-            key = (trajectory, frame_idx)
-            _require(key not in actual_keys, "resume_duplicate_row", family)
-            actual_keys.add(key)
-            _require(key in expected_keys, "resume_row_lineage_mismatch", family)
-            _require(fold_by_key.get(key) == fold_idx, "resume_fold_lineage_mismatch", family)
-            _require(row.get("prediction_scope") == "out_of_fold", "resume_row_lineage_mismatch", family)
-            _require(
-                row.get("fit_id") == f"{family}:{target_name}:v0_2",
-                "resume_fit_lineage_mismatch",
-                family,
-            )
-            prediction = row.get("prediction")
-            _require(
-                isinstance(prediction, (int, float))
-                and not isinstance(prediction, bool)
-                and math.isfinite(prediction),
-                "resume_prediction_invalid",
-                family,
-            )
-        _require(actual_keys == expected_keys, "resume_row_lineage_mismatch", family)
-    _require(len(lineage_hashes) <= 1, "resume_lineage_hash_mismatch", "completed families disagree")
-    return {"checked": True, "completed_family_count": completed, "passed": True}
+        return {
+            "checked": state_path.exists(),
+            "decisions": decisions,
+            "error": str(error),
+            "passed": False,
+        }
+    return result
 
 
 def validate_external_authorization_record(path: Path) -> Mapping[str, Any]:
@@ -1662,10 +2624,10 @@ def runtime_preflight(
 
     validate_d_checkout(d_checkout)
     record = validate_external_authorization_record(authorization_record_path)
-    resume = validate_output_resume_state(output_root, materialized_root=materialized_root) if output_root is not None else {"checked": False, "passed": True}
     detected = dict(memory) if memory is not None else detect_linux_memory()
     _require(platform.system() == "Linux" or memory is not None, "memory_platform_unsupported", "runtime gate requires Linux detection")
     gate = validate_memory_gate(detected)
+    resume = validate_output_resume_state(output_root, materialized_root=materialized_root) if output_root is not None else {"checked": False, "passed": True}
     return {"accepted": True, "authorization_record": dict(record), "d_checkout": str(d_checkout.resolve()), "memory": gate, "resume": resume}
 
 
@@ -1688,6 +2650,11 @@ def _run_cli(argv: Sequence[str]) -> int:
     preflight.add_argument("--output-root", type=Path)
     preflight.add_argument("--materialized-root", type=Path)
     preflight.add_argument("--json", action="store_true")
+    audit = sub.add_parser("resume-audit")
+    audit.add_argument("--repo-root", type=Path, default=ROOT)
+    audit.add_argument("--output-root", type=Path, required=True)
+    audit.add_argument("--materialized-root", type=Path)
+    audit.add_argument("--json", action="store_true")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     try:
@@ -1700,13 +2667,21 @@ def _run_cli(argv: Sequence[str]) -> int:
                 repo_root=args.repo_root,
                 package_root=args.package_root,
             )
-        else:
+        elif args.mode == "runtime-preflight":
             result = runtime_preflight(
                 args.d_checkout,
                 args.authorization_record_path,
                 output_root=args.output_root,
                 materialized_root=args.materialized_root,
             )
+        else:
+            result = audit_preserved_outputs(
+                args.output_root,
+                materialized_root=args.materialized_root,
+                repo_root=args.repo_root,
+            )
+            if result.get("passed") is not True:
+                raise MemoryReauthorizationError(str(result.get("error")))
     except (MemoryReauthorizationError, OSError) as error:
         if getattr(args, "json", False):
             print(json.dumps({"accepted": False, "error": str(error)}, sort_keys=True))
