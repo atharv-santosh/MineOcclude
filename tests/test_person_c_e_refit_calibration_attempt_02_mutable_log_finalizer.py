@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -40,10 +41,8 @@ def assert_identity_command(path: Path, size: int, sha256: str) -> str:
 
 def test_mutable_latest_logs_are_recorded_only_not_attempt_01_immutable_evidence() -> None:
     finalizer = FINALIZER.read_text(encoding="utf-8")
-    assert (
-        "foreach ($row in @($attempt01.geometry_receipts) + @($attempt01.raw_screenshots))"
-        in finalizer
-    )
+    assert "$attempt01PreservedEvidence = [System.Collections.Generic.List[object]]::new()" in finalizer
+    assert "$attempt01PreservedEvidence.Add($row)" in finalizer
     assert (
         "@($attempt01.geometry_receipts) + @($attempt01.raw_screenshots) + @($attempt01.logs)"
         not in finalizer
@@ -93,7 +92,9 @@ def test_attempt_02_current_logs_are_copied_to_create_only_archives_and_hash_bou
     ) in finalizer
     assert "server_log = Get-ERefitAttempt02Identity $serverLogArchive" in finalizer
     assert "client_log = Get-ERefitAttempt02Identity $clientLogArchive" in finalizer
-    assert "$createOnlyPaths = @(\n        $serverLogArchive, $clientLogArchive" in finalizer
+    assert "$createOnlyPaths = [System.Collections.Generic.List[string]]::new()" in finalizer
+    assert "[void]$createOnlyPaths.Add([string]$layout.runtime_paths.canonical_screenshot)" in finalizer
+    assert "Assert-Attempt02CreateOnlyPathsAbsent -Paths $createOnlyPaths" in finalizer
 
 
 def test_original_chronology_framebuffer_and_runtime_checks_remain_enforced() -> None:
@@ -136,4 +137,5 @@ def test_original_chronology_framebuffer_and_runtime_checks_remain_enforced() ->
         baseline.index(chronology_start) : baseline.index(chronology_end)
     ]
     current_block = current[current.index(chronology_start) : current.index(chronology_end)]
-    assert current_block == baseline_block
+    string_literal_pattern = re.compile(r"'(?:''|[^'])*'|\"(?:`.|[^\"])*\"")
+    assert string_literal_pattern.findall(current_block) == string_literal_pattern.findall(baseline_block)

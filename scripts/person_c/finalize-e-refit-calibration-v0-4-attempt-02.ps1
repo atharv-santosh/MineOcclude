@@ -53,14 +53,14 @@ Import-Module -Name $serverPropertiesModulePath -Force
 
 function Find-UniqueAttempt02LogEvent {
     param([string[]]$Lines, [string]$Pattern, [string]$Label)
-    $matches = @()
+    $eventMatches = [System.Collections.Generic.List[object]]::new()
     for ($index = 0; $index -lt $Lines.Count; $index++) {
         if ($Lines[$index] -match $Pattern) {
-            $matches += [pscustomobject]@{ Index = $index; Line = $Lines[$index] }
+            [void]$eventMatches.Add([pscustomobject]@{ Index = $index; Line = $Lines[$index] })
         }
     }
-    Assert-ERefitAttempt02Condition ($matches.Count -eq 1) "$Label must occur exactly once; observed $($matches.Count)"
-    return $matches[0]
+    Assert-ERefitAttempt02Condition ($eventMatches.Count -eq 1) "$Label must occur exactly once; observed $($eventMatches.Count)"
+    return $eventMatches[0]
 }
 
 function Get-Attempt02LineSeconds {
@@ -77,6 +77,13 @@ function Get-Attempt02OffsetSeconds {
 function Test-Attempt02JsonEqual {
     param($Left, $Right)
     return (($Left | ConvertTo-Json -Depth 50 -Compress) -ceq ($Right | ConvertTo-Json -Depth 50 -Compress))
+}
+
+function Assert-Attempt02CreateOnlyPathsAbsent {
+    param([Parameter(Mandatory = $true)][System.Collections.Generic.List[string]]$Paths)
+    foreach ($path in $Paths) {
+        Assert-ERefitAttempt02Condition (-not (Test-Path -LiteralPath $path)) "Create-only Attempt 02 output already exists: $path"
+    }
 }
 
 function Assert-Attempt02Identity {
@@ -158,7 +165,10 @@ try {
     $attempt01 = Get-Content -Raw -LiteralPath $attempt01RecordPath | ConvertFrom-Json
     Assert-ERefitAttempt02Condition ($attempt01.status -eq 'FAILED_PRESERVED_UNCERTIFIED' -and $attempt01.classification -ceq $attempt01Classification) 'Attempt 01 failure classification drift'
     Assert-ERefitAttempt02Condition ($attempt01.preserved_unchanged -eq $true -and $attempt01.certified -eq $false) 'Attempt 01 preservation contract drift'
-    foreach ($row in @($attempt01.geometry_receipts) + @($attempt01.raw_screenshots)) {
+    $attempt01PreservedEvidence = [System.Collections.Generic.List[object]]::new()
+    foreach ($row in @($attempt01.geometry_receipts)) { [void]$attempt01PreservedEvidence.Add($row) }
+    foreach ($row in @($attempt01.raw_screenshots)) { [void]$attempt01PreservedEvidence.Add($row) }
+    foreach ($row in $attempt01PreservedEvidence) {
         Assert-Attempt02Identity $row 'Preserved Attempt 01 evidence'
     }
     $attempt01MutableLatestLogIdentitiesRecordedOnly = @($attempt01.logs)
@@ -171,7 +181,7 @@ try {
     }
     # The latest.log aliases now contain Attempt 02 and are never asserted against Attempt 01 hashes.
     # If immutable Attempt 01 archive copies exist, validate those copies against the recorded historical identities.
-    $attempt01ImmutableLogArchives = @()
+    $attempt01ImmutableLogArchives = [System.Collections.Generic.List[object]]::new()
     foreach ($mapping in @(
         [pscustomobject]@{ ArchivePath = $attempt01ServerLogArchive; HistoricalIdentity = $attempt01HistoricalServerLog[0] },
         [pscustomobject]@{ ArchivePath = $attempt01ClientLogArchive; HistoricalIdentity = $attempt01HistoricalClientLog[0] }
@@ -183,7 +193,7 @@ try {
                 sha256 = [string]$mapping.HistoricalIdentity.sha256
             }
             Assert-ERefitAttempt02Identity -Identity $archiveIdentity -Label 'Immutable Attempt 01 archived log evidence'
-            $attempt01ImmutableLogArchives += Get-ERefitAttempt02Identity $mapping.ArchivePath
+            [void]$attempt01ImmutableLogArchives.Add((Get-ERefitAttempt02Identity $mapping.ArchivePath))
         }
     }
 
@@ -231,16 +241,17 @@ try {
     Assert-ERefitAttempt02Condition ((Get-ERefitAttempt02PrefixSha256 $clientLogPath ([int64]$preflight.client_session_prefix.size_bytes)) -ceq [string]$preflight.client_session_prefix.sha256) 'Client log is not an append-only continuation of the preflight session'
     Assert-ERefitAttempt02Condition ((Get-ERefitAttempt02Sha256 (Join-Path $clientRoot 'options.txt')) -ceq [string]$preflight.client_options.sha256) 'Client options changed after framebuffer preflight'
 
-    $createOnlyPaths = @(
+    $createOnlyPaths = [System.Collections.Generic.List[string]]::new()
+    foreach ($path in @(
         $serverLogArchive, $clientLogArchive, $attestationPath, $screenshotInventoryPath,
         $receiptInventoryPath, $fitOutputPath, $validationOutputPath, $handoffPath, $resultPath
-    )
+    )) {
+        [void]$createOnlyPaths.Add([string]$path)
+    }
     foreach ($layout in $manifest.layouts) {
-        $createOnlyPaths += [string]$layout.runtime_paths.canonical_screenshot
+        [void]$createOnlyPaths.Add([string]$layout.runtime_paths.canonical_screenshot)
     }
-    foreach ($path in $createOnlyPaths) {
-        Assert-ERefitAttempt02Condition (-not (Test-Path -LiteralPath $path)) "Create-only Attempt 02 output already exists: $path"
-    }
+    Assert-Attempt02CreateOnlyPathsAbsent -Paths $createOnlyPaths
 
     $serverLines = @(Get-Content -LiteralPath $serverLogPath)
     $clientLines = @(Get-Content -LiteralPath $clientLogPath)
@@ -264,9 +275,9 @@ try {
         'Camera lock ON',
         'Warmup delay set to 12000 ticks \(600\.0s\)'
     )
-    $controlEvents = @()
+    $controlEvents = [System.Collections.Generic.List[object]]::new()
     foreach ($pattern in $controlPatterns) {
-        $controlEvents += Find-UniqueAttempt02LogEvent $serverLines $pattern "single session control: $pattern"
+        [void]$controlEvents.Add((Find-UniqueAttempt02LogEvent $serverLines $pattern "single session control: $pattern"))
     }
     for ($index = 1; $index -lt $controlEvents.Count; $index++) {
         Assert-ERefitAttempt02Condition ($controlEvents[$index - 1].Index -lt $controlEvents[$index].Index) 'Attempt 02 session controls were not applied once in order'
@@ -274,7 +285,7 @@ try {
     $allArmed = @($serverLines | Where-Object { $_ -match '\[MineOcclude\] episode \d+ armed' })
     Assert-ERefitAttempt02Condition ($allArmed.Count -eq 6) 'Attempt 02 server session must contain exactly six armed episodes'
     $firstArmed = Find-UniqueAttempt02LogEvent $serverLines ("\[MineOcclude\] episode {0} armed" -f [int]$manifest.layouts[0].episode_id) 'first Attempt 02 episode armed'
-    Assert-ERefitAttempt02Condition ($controlEvents[-1].Index -lt $firstArmed.Index) 'Attempt 02 controls were not completed before the first episode'
+    Assert-ERefitAttempt02Condition ($controlEvents[$controlEvents.Count - 1].Index -lt $firstArmed.Index) 'Attempt 02 controls were not completed before the first episode'
     $sessionBaseSeconds = Get-Attempt02LineSeconds $firstArmed.Line 'first armed event'
     $preflightSeconds = Get-Attempt02LineSeconds $preflightEvent.Line 'preflight F2 event'
     $preflightToFirstArm = Get-Attempt02OffsetSeconds $preflightSeconds $sessionBaseSeconds
@@ -282,8 +293,8 @@ try {
 
     $previousAbortIndex = -1
     $seenRawScreenshots = @{}
-    $validatedLayouts = @()
-    $layoutScreenshotInputs = @()
+    $validatedLayouts = [System.Collections.Generic.List[object]]::new()
+    $layoutScreenshotInputs = [System.Collections.Generic.List[object]]::new()
     foreach ($layout in $manifest.layouts) {
         $layoutId = [string]$layout.layout_id
         $episodeId = [int]$layout.episode_id
@@ -311,12 +322,12 @@ try {
         Assert-ERefitAttempt02Condition ($statusOffsetFromArmed -ge 10) "$layoutId targetstatus occurred less than ten seconds after arming"
         $confirmationOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $confirmation.Line "$layoutId receipt confirmation")
         $abortOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $abort.Line "$layoutId abort")
-        $screenshotEvents = @()
+        $screenshotEvents = [System.Collections.Generic.List[object]]::new()
         foreach ($line in $clientLines) {
             if ($line -match 'Saved screenshot as ([^\\/\s]+\.png)') {
                 $eventOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $line 'screenshot event')
                 if ($eventOffset -gt $confirmationOffset -and $eventOffset -lt $abortOffset) {
-                    $screenshotEvents += [pscustomobject]@{ Offset = $eventOffset; FileName = $Matches[1]; Line = $line }
+                    [void]$screenshotEvents.Add([pscustomobject]@{ Offset = $eventOffset; FileName = $Matches[1]; Line = $line })
                 }
             }
         }
@@ -326,7 +337,7 @@ try {
         Assert-ERefitAttempt02Condition (Test-Path -LiteralPath $rawScreenshot -PathType Leaf) "$layoutId logged screenshot is absent: $rawScreenshot"
         Assert-ERefitAttempt02Condition (-not $seenRawScreenshots.ContainsKey($rawScreenshot)) "$layoutId reused a raw screenshot"
         $seenRawScreenshots[$rawScreenshot] = $true
-        $layoutScreenshotInputs += [pscustomobject]@{ layout_id = $layoutId; path = $rawScreenshot }
+        [void]$layoutScreenshotInputs.Add([pscustomobject]@{ layout_id = $layoutId; path = $rawScreenshot })
 
         $receipt = Get-Content -Raw -LiteralPath $receiptPath | ConvertFrom-Json
         Assert-ERefitAttempt02Condition ($receipt.schema_version -eq 'person-c-c1-runtime-geometry-observation-v0.1' -and $receipt.receipt_id -ceq $receiptId) "$layoutId receipt schema/ID mismatch"
@@ -356,7 +367,7 @@ try {
         Assert-ERefitAttempt02Condition (Test-Attempt02JsonEqual $receipt.camera.observed_players[0].feet_xyz $layout.layout_geometry.camera.feet_xyz) "$layoutId observed camera position mismatch"
         Assert-ERefitAttempt02Condition ([double]$receipt.camera.observed_players[0].yaw_degrees -eq [double]$layout.layout_geometry.camera.yaw_degrees -and [double]$receipt.camera.observed_players[0].pitch_degrees -eq [double]$layout.layout_geometry.camera.pitch_degrees) "$layoutId observed camera orientation mismatch"
 
-        $validatedLayouts += [pscustomobject]@{
+        [void]$validatedLayouts.Add([pscustomobject]@{
             Preparation = $layout
             ReceiptPath = $receiptPath
             RawScreenshotPath = $rawScreenshot
@@ -366,20 +377,20 @@ try {
             ReceiptConfirmationOffsetSeconds = $confirmationOffset
             ScreenshotOffsetSeconds = $screenshotEvents[0].Offset
             AbortOffsetSeconds = $abortOffset
-        }
+        })
     }
 
-    $validatedScreenshotIdentities = @(Assert-ERefitAttempt02LayoutScreenshotSet -Layouts $layoutScreenshotInputs -PreflightEvidencePath $preflightEvidencePath -PreflightSourcePath ([string]$preflight.source_screenshot.path))
+    $validatedScreenshotIdentities = @(Assert-ERefitAttempt02LayoutScreenshotSet -Layouts ([object[]]$layoutScreenshotInputs.ToArray()) -PreflightEvidencePath $preflightEvidencePath -PreflightSourcePath ([string]$preflight.source_screenshot.path))
     Assert-ERefitAttempt02Condition ($validatedLayouts.Count -eq 6 -and $seenRawScreenshots.Count -eq 6 -and $validatedScreenshotIdentities.Count -eq 6) 'All six distinct 1920x1046 Attempt 02 screenshots were not validated'
     Assert-ERefitAttempt02Condition ($accountEvent.Index -lt $fovEvent.Index -and $fovEvent.Index -lt $connectEvent.Index -and $connectEvent.Index -lt $preflightEvent.Index -and $preflightEvent.Index -lt $clientStop.Index) 'Client account/FOV/connection/preflight/stop order failed'
-    $lastAbortOffset = $validatedLayouts[-1].AbortOffsetSeconds
+    $lastAbortOffset = $validatedLayouts[$validatedLayouts.Count - 1].AbortOffsetSeconds
     Assert-ERefitAttempt02Condition ((Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $serverStop.Line 'server stop')) -gt $lastAbortOffset) 'Server did not stop after the sixth warmup abort'
     Assert-ERefitAttempt02Condition ((Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $clientStop.Line 'client stop')) -gt $lastAbortOffset) 'Client did not stop after the sixth warmup abort'
-    $inWindowScreenshotEvents = @()
+    $inWindowScreenshotEvents = [System.Collections.Generic.List[string]]::new()
     foreach ($line in $clientLines) {
         if ($line -match 'Saved screenshot as ([^\\/\s]+\.png)') {
             $eventOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $line 'session screenshot event')
-            if ($eventOffset -gt 0 -and $eventOffset -lt $lastAbortOffset) { $inWindowScreenshotEvents += $line }
+            if ($eventOffset -gt 0 -and $eventOffset -lt $lastAbortOffset) { [void]$inWindowScreenshotEvents.Add([string]$line) }
         }
     }
     Assert-ERefitAttempt02Condition ($inWindowScreenshotEvents.Count -eq 6) 'Exactly six layout F2 events must occur from first arm through sixth warmup abort; the preflight F2 is excluded'
@@ -419,9 +430,9 @@ try {
 
     $fitTemplate = Get-Content -Raw -LiteralPath $fitTemplatePath | ConvertFrom-Json
     $validationTemplate = Get-Content -Raw -LiteralPath $validationTemplatePath | ConvertFrom-Json
-    $screenshotRows = @()
-    $receiptRows = @()
-    $layoutEvidence = @()
+    $screenshotRows = [System.Collections.Generic.List[object]]::new()
+    $receiptRows = [System.Collections.Generic.List[object]]::new()
+    $layoutEvidence = [System.Collections.Generic.List[object]]::new()
     foreach ($validated in $validatedLayouts) {
         $layoutId = [string]$validated.Preparation.layout_id
         $canonical = Get-ERefitAttempt02Identity $validated.CanonicalScreenshotPath
@@ -435,7 +446,7 @@ try {
             $row.screenshot.size_bytes = $canonical.size_bytes
             $row.screenshot.sha256 = $canonical.sha256
         }
-        $screenshotRows += [ordered]@{
+        [void]$screenshotRows.Add([ordered]@{
             layout_id = $layoutId
             episode_id = [int]$validated.Preparation.episode_id
             raw_same_session_screenshot = $raw
@@ -444,16 +455,16 @@ try {
             height_pixels = 1046
             receipt_confirmation_offset_seconds = $validated.ReceiptConfirmationOffsetSeconds
             screenshot_offset_seconds = $validated.ScreenshotOffsetSeconds
-        }
-        $receiptRows += [ordered]@{
+        })
+        [void]$receiptRows.Add([ordered]@{
             layout_id = $layoutId
             episode_id = [int]$validated.Preparation.episode_id
             geometry_receipt = $receiptIdentity
             target_valid = $true
             literal_v0_4_geometry_valid = $true
             ready_warmup_observation = $true
-        }
-        $layoutEvidence += [ordered]@{
+        })
+        [void]$layoutEvidence.Add([ordered]@{
             layout_id = $layoutId
             episode_id = [int]$validated.Preparation.episode_id
             seed = [int64]$validated.Preparation.seed
@@ -472,7 +483,7 @@ try {
                 warmup_abort_offset_seconds = $validated.AbortOffsetSeconds
                 recording_started = $false
             }
-        }
+        })
     }
     $fitTemplate.status = 'READY_FOR_PERSON_E_IMAGE_ANNOTATION'
     $validationTemplate.status = 'READY_FOR_PERSON_E_INDEPENDENT_IMAGE_ANNOTATION'
@@ -486,7 +497,7 @@ try {
         preflight_screenshot_counted = $false
         same_client_session = $true
         framebuffer = [ordered]@{ width_pixels = 1920; height_pixels = 1046 }
-        screenshots = $screenshotRows
+        screenshots = [object[]]$screenshotRows.ToArray()
     }
     $receiptInventory = [ordered]@{
         schema_version = 'person-c-e-refit-calibration-attempt-02-geometry-receipt-inventory-v0.1'
@@ -494,7 +505,7 @@ try {
         receipt_count = 6
         accepted_geometry_version = $geometryVersion
         accepted_geometry_sha256 = $geometrySha256
-        receipts = $receiptRows
+        receipts = [object[]]$receiptRows.ToArray()
     }
     Write-ERefitAttempt02CreateOnlyJson $screenshotInventoryPath $screenshotInventory
     Write-ERefitAttempt02CreateOnlyJson $receiptInventoryPath $receiptInventory
@@ -512,7 +523,7 @@ try {
             immutable_repository_manifest = Get-ERefitAttempt02Identity $attempt01ManifestPath
             immutable_repository_package_inventory = Get-ERefitAttempt02Identity $attempt01PackageInventoryPath
             immutable_repair_package_inventory = Get-ERefitAttempt02Identity $attempt01RepairPackageInventoryPath
-            immutable_log_archives = @($attempt01ImmutableLogArchives)
+            immutable_log_archives = [object[]]$attempt01ImmutableLogArchives.ToArray()
             historical_mutable_latest_log_identities_recorded_only = @($attempt01MutableLatestLogIdentitiesRecordedOnly)
             mutable_latest_log_paths_are_preserved_artifacts = $false
         }
@@ -539,7 +550,7 @@ try {
         e_independent_validation_pair_template = Get-ERefitAttempt02Identity $validationOutputPath
         person_c_invented_image_coordinates = $false
         person_c_fit_homographies = $false
-        layouts = $layoutEvidence
+        layouts = [object[]]$layoutEvidence.ToArray()
     }
     Write-ERefitAttempt02CreateOnlyJson $handoffPath $handoff
     $result = [ordered]@{
