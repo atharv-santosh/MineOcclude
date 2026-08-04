@@ -12,9 +12,12 @@ $geometryVersion = 'person-c-layout-config-v0.4'
 $geometrySha256 = '34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d'
 $jarSha256 = '9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52'
 $optionsSha256 = '13a43adde78280041f7adc29367b0a61ced6a9549f2430d9083a88665a0d9895'
-$serverPropertiesSha256 = 'fbe750e18b1040eaf4d22ff73fa3492638822c726825c50fb249be240eea4c6e'
 $serverRoot = 'C:\Users\lollo\MineOcclude-Runtime\person-c-c1-v0_1\server'
 $clientRoot = 'C:\Users\lollo\MineOcclude-Runtime\person-c-c1-v0_1\client'
+$serverPropertiesAuthorityPath = Join-Path $RepoRoot 'fabric\mineocclude-mod\provisioning\person-c-c1-v0_2\server.properties'
+$serverPropertiesRuntimePath = Join-Path $serverRoot 'server.properties'
+$serverPropertiesModulePath = Join-Path $RepoRoot 'scripts\person_c\ServerPropertiesAuthority.psm1'
+$repairReceiptPath = Join-Path $RepoRoot 'docs\status\person_c_e_refit_calibration_finalizer_server_properties_repair_v0_1\repair_receipt.json'
 $packageRoot = Join-Path $RepoRoot 'docs\status\person_c_to_person_e_calibration_images_v0_4_v0_1'
 $manifestPath = Join-Path $packageRoot 'session_manifest.json'
 $packageInventoryPath = Join-Path $packageRoot 'sha256_inventory.json'
@@ -111,6 +114,8 @@ function Get-PngDimensions([string]$Path) {
     return [pscustomobject]@{ Width = $width; Height = $height }
 }
 
+Import-Module -Name $serverPropertiesModulePath -Force
+
 Push-Location -LiteralPath $RepoRoot
 try {
     $branch = (& git branch --show-current).Trim()
@@ -124,7 +129,7 @@ try {
     & git merge-base --is-ancestor $preparationCommit HEAD
     Require ($LASTEXITCODE -eq 0) 'Calibration preparation commit is not an ancestor of HEAD'
 
-    foreach ($requiredFile in @($manifestPath, $packageInventoryPath, $fitTemplatePath, $validationTemplatePath, $attestationTemplatePath, $coordinateConventionPath, $serverLogPath, $clientLogPath)) {
+    foreach ($requiredFile in @($manifestPath, $packageInventoryPath, $fitTemplatePath, $validationTemplatePath, $attestationTemplatePath, $coordinateConventionPath, $serverPropertiesAuthorityPath, $serverPropertiesRuntimePath, $serverPropertiesModulePath, $repairReceiptPath, $serverLogPath, $clientLogPath)) {
         Require (Test-Path -LiteralPath $requiredFile -PathType Leaf) "Required calibration input absent: $requiredFile"
     }
     $packageInventory = Get-Content -Raw -LiteralPath $packageInventoryPath | ConvertFrom-Json
@@ -154,11 +159,17 @@ try {
         Require ((Get-Item -LiteralPath $authorityPath).Length -eq [int64]$authority.size_bytes -and (Get-Sha256 $authorityPath) -eq $authority.sha256) "Runtime authority hash drift: $authorityPath"
     }
     $finalizerPath = Join-Path $RepoRoot 'scripts\person_c\finalize-e-refit-calibration-v0-4.ps1'
-    Require ((Get-Item -LiteralPath $finalizerPath).Length -eq [int64]$manifest.finalizer.size_bytes -and (Get-Sha256 $finalizerPath) -eq $manifest.finalizer.sha256) 'Finalizer identity drift'
+    $repairReceipt = Get-Content -Raw -LiteralPath $repairReceiptPath | ConvertFrom-Json
+    Require ($repairReceipt.schema_version -eq 'person-c-e-refit-calibration-finalizer-server-properties-repair-v0.1' -and $repairReceipt.status -eq 'PASS') 'Server-properties repair receipt is not authoritative'
+    Require ($repairReceipt.predecessor_finalizer.sha256 -eq $manifest.finalizer.sha256) 'Repair receipt does not bind the prepared predecessor finalizer'
+    Require ((Get-Item -LiteralPath $finalizerPath).Length -eq [int64]$repairReceipt.successor_finalizer.size_bytes -and (Get-Sha256 $finalizerPath) -eq $repairReceipt.successor_finalizer.sha256) 'Successor finalizer identity drift'
+    Require ((Get-Item -LiteralPath $serverPropertiesModulePath).Length -eq [int64]$repairReceipt.semantic_validator.size_bytes -and (Get-Sha256 $serverPropertiesModulePath) -eq $repairReceipt.semantic_validator.sha256) 'Server-properties semantic validator identity drift'
+    Require ((Get-Item -LiteralPath $serverPropertiesAuthorityPath).Length -eq [int64]$repairReceipt.authority_baseline.size_bytes -and (Get-Sha256 $serverPropertiesAuthorityPath) -eq $repairReceipt.authority_baseline.sha256) 'Repository server.properties authority baseline drift'
+    $serverPropertiesComparison = Compare-ServerPropertiesAuthority -AuthorityPath $serverPropertiesAuthorityPath -RuntimePath $serverPropertiesRuntimePath
+    Require ($serverPropertiesComparison.status -eq 'PASS' -and $serverPropertiesComparison.drift_classification -eq 'MINECRAFT_SERVER_PROPERTIES_AUTO_EXPANSION') 'Runtime server.properties does not match the accepted Minecraft auto-expansion classification'
     Require ((Get-Sha256 (Join-Path $serverRoot 'mods\mineocclude-0.1.1.jar')) -eq $jarSha256) 'Installed server JAR drift'
     Require ((Get-Sha256 (Join-Path $clientRoot 'mods\mineocclude-0.1.1.jar')) -eq $jarSha256) 'Installed client JAR drift'
     Require ((Get-Sha256 (Join-Path $clientRoot 'options.txt')) -eq $optionsSha256) 'Client options drift'
-    Require ((Get-Sha256 (Join-Path $serverRoot 'server.properties')) -eq $serverPropertiesSha256) 'server.properties drift'
     $optionsText = Get-Content -Raw -LiteralPath (Join-Path $clientRoot 'options.txt')
     Require ($optionsText -match '(?m)^fov:0\.0\r?$') 'Client options no longer encode FOV Normal/70.0'
     $propertiesText = Get-Content -Raw -LiteralPath (Join-Path $serverRoot 'server.properties')
@@ -433,6 +444,7 @@ try {
         framebuffer = [ordered]@{ width_pixels = 1920; height_pixels = 1046 }
         options = Get-Identity (Join-Path $clientRoot 'options.txt')
         environment_lock = Get-Identity (Join-Path $RepoRoot 'docs\status\person_c_c1_runtime_ingestion_v0_1\final_environment_lock_receipt.json')
+        server_properties_authority_validation = $serverPropertiesComparison
         coordinate_convention = Get-Identity $coordinateConventionPath
         authenticated_account = $observedAccount
         operator_attestation = Get-Identity $attestationPath
@@ -460,6 +472,7 @@ try {
         recording_never_started = $true
         homography_fit_performed = $false
         c6a_executed = $false
+        server_properties_authority_validation = $serverPropertiesComparison
         handoff = Get-Identity $handoffPath
     }
     Write-CreateOnlyJson $resultPath $result

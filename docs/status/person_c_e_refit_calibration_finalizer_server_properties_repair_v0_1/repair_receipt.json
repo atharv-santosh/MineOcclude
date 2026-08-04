@@ -1,0 +1,274 @@
+{
+  "schema_version": "person-c-e-refit-calibration-finalizer-server-properties-repair-v0.1",
+  "status": "PASS",
+  "source_commit": "e4deae0e5c3f3ed4fd820b1f0d0381ec0c5b39da",
+  "scope": "validator repair only; completed calibration session not rerun or modified",
+  "predecessor_finalizer": {
+    "path": "scripts/person_c/finalize-e-refit-calibration-v0-4.ps1",
+    "size_bytes": 31804,
+    "sha256": "2ac294bf1620eda73f3d94c5d2e5cfe1e2f9f6d361551035663c7a65493ff5f7",
+    "git_blob": "251c4c9b86e4f237451f674353169af4af8da261"
+  },
+  "successor_finalizer": {
+    "path": "scripts/person_c/finalize-e-refit-calibration-v0-4.ps1",
+    "size_bytes": 33818,
+    "sha256": "7ad372cbc65f6eec0db88b57353ac28bcd746889a14fb09afedaff217b90c38e",
+    "git_blob": "f104bececf96db4a69211f99135f47d0be205b1e"
+  },
+  "semantic_validator": {
+    "path": "scripts/person_c/ServerPropertiesAuthority.psm1",
+    "size_bytes": 6913,
+    "sha256": "ff7c5ebee58d9e78cf025fffb3bcc16d8956557a61c3bd09fe481b6542a937e2",
+    "git_blob": "c3595d557ffa496ae0ef3bb46520a7b09cc174f1"
+  },
+  "validator_cli": {
+    "path": "scripts/person_c/validate-server-properties-authority.ps1",
+    "size_bytes": 449,
+    "sha256": "53de2df150513702bafd3fb9f8ea89947441c740ad660782883cd712355f1387",
+    "git_blob": "6027f64a9a7a26a77844d941bc4b2af53b11d8cc"
+  },
+  "authority_baseline": {
+    "path": "fabric/mineocclude-mod/provisioning/person-c-c1-v0_2/server.properties",
+    "size_bytes": 1140,
+    "sha256": "8d6495e9e4c2aa3dfad783d863a3b03165cbe233564e5717aac38a5ebc5ed651",
+    "git_blob": "9abdbf68566116757fef093f651a7bd7095a187f"
+  },
+  "preparation_observed_runtime_server_properties": {
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\server.properties",
+    "size_bytes": 1222,
+    "sha256": "fbe750e18b1040eaf4d22ff73fa3492638822c726825c50fb249be240eea4c6e"
+  },
+  "semantic_comparison": {
+    "schema_version": "person-c-server-properties-semantic-authority-validation-v0.1",
+    "status": "PASS",
+    "drift_classification": "MINECRAFT_SERVER_PROPERTIES_AUTO_EXPANSION",
+    "raw_files_identical": false,
+    "authority": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A\\fabric\\mineocclude-mod\\provisioning\\person-c-c1-v0_2\\server.properties",
+      "property_count": 49,
+      "raw_sha256": "8d6495e9e4c2aa3dfad783d863a3b03165cbe233564e5717aac38a5ebc5ed651",
+      "canonical_semantic_sha256": "9d17905ca3ad56adf8c6464e1b06d6396bde9c890c55a0853c61ab39ef3a4f28"
+    },
+    "runtime": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\server.properties",
+      "property_count": 51,
+      "raw_sha256": "86546d98db3c7265bc474a54a13794b148007d1e50213bd41a071f3f8d860652",
+      "canonical_semantic_sha256": "69c60be5345e3fc22a109841b319c53338c2094b3b2918414221fce22ad5a3b9"
+    },
+    "shared_property_count": 49,
+    "shared_property_values_match": true,
+    "missing_authoritative_keys": [],
+    "changed_authoritative_keys": [],
+    "allowed_additional_keys": [
+      "query.port",
+      "text-filtering-config"
+    ],
+    "allowed_additional_keys_present": [
+      "query.port",
+      "text-filtering-config"
+    ],
+    "unexpected_additional_keys": [],
+    "query_port_matches_server_port": true,
+    "text_filtering_config_empty": true,
+    "safety_critical_values": {
+      "spawn-animals": "false",
+      "server-port": "25565",
+      "query.port": "25565",
+      "text-filtering-config": "",
+      "level-name": "world-c1-v0_2",
+      "online-mode": "false",
+      "difficulty": "peaceful",
+      "gamemode": "creative",
+      "enable-command-block": "false",
+      "enable-query": "false",
+      "enable-rcon": "false",
+      "max-players": "1",
+      "view-distance": "10",
+      "white-list": "false",
+      "enforce-whitelist": "false",
+      "spawn-npcs": "false",
+      "spawn-monsters": "false",
+      "force-gamemode": "true",
+      "hardcore": "false",
+      "pvp": "false"
+    },
+    "semantic_comparison_result": "PASS"
+  },
+  "accepted_difference_classification": "MINECRAFT_SERVER_PROPERTIES_AUTO_EXPANSION",
+  "raw_files_identical": false,
+  "raw_hash_check_replaced": true,
+  "fail_closed_for_other_drift": true,
+  "allowed_additional_keys": [
+    "query.port",
+    "text-filtering-config"
+  ],
+  "server_properties_validator_repair_ready": true,
+  "full_finalization_ready": false,
+  "unresolved_blockers": [
+    "CALIBRATION_SCREENSHOTS_ARE_640X360_BUT_FINALIZER_REQUIRES_1920X1046"
+  ],
+  "completed_calibration_evidence": {
+    "status": "PASS",
+    "completed_calibration_session_preserved": true,
+    "receipt_count": 6,
+    "raw_screenshot_count": 6,
+    "server_log": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\logs\\latest.log",
+      "size_bytes": 25721,
+      "sha256": "321cad029210f5968784f1e3c2d8afe7d934255aeb1a4749d8a7a6dc511f566b"
+    },
+    "client_log": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\logs\\latest.log",
+      "size_bytes": 8382,
+      "sha256": "41954eb94240375dbecebcdc5800d3dfcdefeec5f8d9dba586ac29803e388222"
+    },
+    "geometry_receipts": [
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\e_refit_calibration_v0_4_layout_01.json",
+        "size_bytes": 12261,
+        "sha256": "0edfb6b9c790cd8f32df30e34ac8a86109b970a7831582041d18273c2a047c8b"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\e_refit_calibration_v0_4_layout_02.json",
+        "size_bytes": 12265,
+        "sha256": "1e71d21bfeff424ca5ebf2f3a6dd847a986a0626ae0e1c80bc1164edd5fa78a2"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\e_refit_calibration_v0_4_layout_03.json",
+        "size_bytes": 13693,
+        "sha256": "e26288ffdbd88a85baeedf32ed445a3309b8c2c61d5f09e256b93441f423e7cf"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\e_refit_calibration_v0_4_layout_04.json",
+        "size_bytes": 12270,
+        "sha256": "845a56058678554556a56f26c35db800147209e9bf148032b029c55382f58756"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\e_refit_calibration_v0_4_layout_05.json",
+        "size_bytes": 10829,
+        "sha256": "b11498fe03564f28ccec933417144f35c0c80f9ed107c3c48fad2d4853e696bd"
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\e_refit_calibration_v0_4_layout_06.json",
+        "size_bytes": 12584,
+        "sha256": "97a94493421c9cd70972d1f9d7791744c4ff6fa893cc2555b67dc31c10ee039e"
+      }
+    ],
+    "raw_screenshots": [
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-04_00.14.28.png",
+        "size_bytes": 71306,
+        "sha256": "2a92c44cdacf156347abc39124a4ee0b273db49ba9a13079479f6ab6f30f469b",
+        "width_pixels": 640,
+        "height_pixels": 360
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-04_00.15.11.png",
+        "size_bytes": 71995,
+        "sha256": "1437f8d87154f31217eb14aa69804a08ed591cd963871e115d37c02ba47485f8",
+        "width_pixels": 640,
+        "height_pixels": 360
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-04_00.15.47.png",
+        "size_bytes": 70300,
+        "sha256": "7dc4a34f81f87befc9c3c8dc55c1dcb920373ab31a59e806dc059e51ec2be12c",
+        "width_pixels": 640,
+        "height_pixels": 360
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-04_00.16.30.png",
+        "size_bytes": 70565,
+        "sha256": "9dde84cc77b6edb3a68f21408afed9e1b2fe6c8b871ba896b1f568a82d0fc3e9",
+        "width_pixels": 640,
+        "height_pixels": 360
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-04_00.17.07.png",
+        "size_bytes": 71485,
+        "sha256": "b8b9008c99b2e4c9b516c76376b3d7dddde4ee91415868a15dcca1eb819bd7d2",
+        "width_pixels": 640,
+        "height_pixels": 360
+      },
+      {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-04_00.17.44.png",
+        "size_bytes": 73857,
+        "sha256": "2729cbaa95fb6a3aef42d76eb44b399956ae4b243f4b0f4f967fea894f5a1353",
+        "width_pixels": 640,
+        "height_pixels": 360
+      }
+    ],
+    "observed_screenshot_dimensions": {
+      "width_pixels": 640,
+      "height_pixels": 360
+    },
+    "required_finalizer_screenshot_dimensions": {
+      "width_pixels": 1920,
+      "height_pixels": 1046
+    },
+    "screenshot_dimensions_match_finalizer_requirement": false,
+    "chronology": [
+      {
+        "layout_id": "layout_01",
+        "episode_id": 12701,
+        "targetstatus_after_arming_seconds": 11,
+        "receipt_confirmation_session_offset_seconds": 18,
+        "screenshot_session_offset_seconds": 22,
+        "warmup_abort_session_offset_seconds": 29,
+        "recording_started": false
+      },
+      {
+        "layout_id": "layout_02",
+        "episode_id": 12702,
+        "targetstatus_after_arming_seconds": 12,
+        "receipt_confirmation_session_offset_seconds": 60,
+        "screenshot_session_offset_seconds": 65,
+        "warmup_abort_session_offset_seconds": 70,
+        "recording_started": false
+      },
+      {
+        "layout_id": "layout_03",
+        "episode_id": 12703,
+        "targetstatus_after_arming_seconds": 12,
+        "receipt_confirmation_session_offset_seconds": 98,
+        "screenshot_session_offset_seconds": 101,
+        "warmup_abort_session_offset_seconds": 107,
+        "recording_started": false
+      },
+      {
+        "layout_id": "layout_04",
+        "episode_id": 12704,
+        "targetstatus_after_arming_seconds": 12,
+        "receipt_confirmation_session_offset_seconds": 140,
+        "screenshot_session_offset_seconds": 144,
+        "warmup_abort_session_offset_seconds": 150,
+        "recording_started": false
+      },
+      {
+        "layout_id": "layout_05",
+        "episode_id": 12705,
+        "targetstatus_after_arming_seconds": 12,
+        "receipt_confirmation_session_offset_seconds": 177,
+        "screenshot_session_offset_seconds": 181,
+        "warmup_abort_session_offset_seconds": 187,
+        "recording_started": false
+      },
+      {
+        "layout_id": "layout_06",
+        "episode_id": 12706,
+        "targetstatus_after_arming_seconds": 12,
+        "receipt_confirmation_session_offset_seconds": 213,
+        "screenshot_session_offset_seconds": 218,
+        "warmup_abort_session_offset_seconds": 225,
+        "recording_started": false
+      }
+    ],
+    "all_target_objects_valid": true,
+    "all_episodes_aborted_during_warmup": true,
+    "recording_never_started": true,
+    "partial_finalization_output_present": false,
+    "partial_finalization_paths_present": [],
+    "minecraft_rerun_by_repair": false,
+    "runtime_evidence_modified_by_repair": false
+  }
+}

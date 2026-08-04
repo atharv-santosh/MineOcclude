@@ -134,11 +134,23 @@ def test_session_manifest_binds_all_literal_layout_geometry_and_commands() -> No
         )
 
 
-def test_all_runtime_evidence_paths_are_fresh_create_only() -> None:
+def test_runtime_observation_state_is_coherent_and_finalization_outputs_remain_create_only() -> None:
     manifest = load(DOC_DIR / "session_manifest.json")
+    receipt_count = 0
     for row in manifest["layouts"]:
-        assert not Path(row["runtime_paths"]["geometry_receipt"]).exists()
+        receipt_path = Path(row["runtime_paths"]["geometry_receipt"])
+        if receipt_path.exists():
+            receipt_count += 1
+            receipt = load(receipt_path)
+            assert receipt["receipt_id"] == f"e_refit_calibration_v0_4_{row['layout_id']}"
+            assert receipt["layout_id"] == row["layout_id"]
+            assert receipt["episode_id"] == row["episode_id"]
+            assert receipt["target"]["valid"] is True
+            assert receipt["target"]["required"] is True
+            assert receipt["target"]["tagged_target_count"] == 1
+            assert receipt["target"]["problems"] == []
         assert not Path(row["runtime_paths"]["canonical_screenshot"]).exists()
+    assert receipt_count in (0, 6), "runtime observation state must be wholly pending or wholly captured"
     for path in (
         SERVER_EVIDENCE_DIR / "operator_attestation.json",
         SERVER_EVIDENCE_DIR / "server_latest.log",
