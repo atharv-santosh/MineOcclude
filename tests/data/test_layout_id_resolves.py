@@ -6,7 +6,8 @@ These guard the two defects found in the C0-C6 audit:
   artifacts, where they either do not resolve at all (``layout_00``) or
   resolve to the *wrong* geometry (each legacy id is one short of its
   contract meaning);
-* Person E marker sets drifting away from the layout geometry they claim.
+* Person E marker sets drifting away from the corrected top-face-centre
+  geometry they claim.
 
 Legacy C6 pilot bundles are deliberately exempt: they keep their as-captured
 ids as historical evidence, per
@@ -83,14 +84,35 @@ class TestPersonEHandoff:
         data = json.loads(path.read_text())
         assert data["layout_id"] == layout_id
 
-        got = sorted(tuple(m["world_xz_blocks"]) for m in data["marker_correspondences"])
-        want = sorted(
-            (float(m["world_blocks"]["x"]), float(m["world_blocks"]["z"]))
-            for m in contract_layouts()[layout_id]["markers"]
+        markers = data["marker_correspondences"]
+        assert all(
+            marker["world_point_convention"] == "block_top_face_centre"
+            for marker in markers
         )
+        got = sorted(tuple(marker["world_xz_blocks"]) for marker in markers)
+        recaptured_geometry = {
+            "layout_02": ((0.5, -2.5), (0.5, 3.5), (7.5, -7.5), (7.5, 8.5)),
+            "layout_03": ((-8.5, 7.5), (-3.5, 0.5), (4.5, 0.5), (9.5, 7.5)),
+        }
+        if layout_id in recaptured_geometry:
+            assert data[f"{layout_id}_coverage_recapture"]["markergeom_param"] == [
+                0,
+                7,
+                5,
+                0,
+            ]
+            want = sorted(recaptured_geometry[layout_id])
+        else:
+            want = sorted(
+                (
+                    float(marker["world_blocks"]["x"]) + 0.5,
+                    float(marker["world_blocks"]["z"]) + 0.5,
+                )
+                for marker in contract_layouts()[layout_id]["markers"]
+            )
         assert got == want, (
-            f"{path.name} marker world coordinates do not match the frozen "
-            f"{layout_id} geometry; got {got}, contract says {want}"
+            f"{path.name} marker world coordinates do not match the corrected "
+            f"{layout_id} top-face-centre geometry; got {got}, expected {want}"
         )
 
     @pytest.mark.parametrize("layout_id", [f"layout_{i:02d}" for i in range(1, 7)])
