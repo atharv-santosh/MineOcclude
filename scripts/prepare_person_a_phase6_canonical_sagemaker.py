@@ -341,6 +341,23 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
     for path in (input_root, session_root, activation_root):
         if not path.is_dir() or path.is_symlink():
             raise FileNotFoundError(f"required successful output root is absent: {path}")
+    accepted_source = input_root / "accepted_pilot_manifest.json"
+    accepted_manifest = json.loads(accepted_source.read_bytes())
+    accepted_trajectory_id = accepted_manifest.get("selected_trajectory_id")
+    accepted_episode_id = accepted_manifest.get("selected_episode_id")
+    expected_trajectory_id = vars(namespace).get(
+        "trajectory_id", accepted_trajectory_id
+    )
+    expected_episode_id = vars(namespace).get("episode_id", accepted_episode_id)
+    if (
+        not isinstance(expected_trajectory_id, str)
+        or not expected_trajectory_id
+        or not isinstance(expected_episode_id, int)
+        or isinstance(expected_episode_id, bool)
+        or expected_trajectory_id != accepted_trajectory_id
+        or expected_episode_id != accepted_episode_id
+    ):
+        raise RuntimeError("accepted input identity differs from requested output")
     if destination.exists() or destination.is_symlink():
         raise FileExistsError(f"create-only retrieved bundle exists: {destination}")
     final_report = json.loads((session_root / "final_report.json").read_bytes())
@@ -348,7 +365,7 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
     certification = step6_5.get("result", {})
     if (
         final_report.get("status") != "PASS"
-        or final_report.get("selected_pilot") != "layout_01_ep12602"
+        or final_report.get("selected_pilot") != expected_trajectory_id
         or certification.get("status") != "PASS"
         or certification.get("direct_pooling_audit") != "PASS"
         or "repeatability_maximum_absolute_difference" not in certification
@@ -356,7 +373,6 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
     ):
         raise RuntimeError("scientific output certification is not PASS")
     destination.mkdir(parents=False)
-    accepted_source = input_root / "accepted_pilot_manifest.json"
     accepted_destination = destination / "accepted_pilot_manifest.json"
     _exclusive_copy(accepted_source, accepted_destination)
     step6_4 = json.loads((session_root / "step6_4.json").read_bytes())
@@ -423,7 +439,7 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
         "activation_index_count": len(indexes),
         "bounded_unpooled_audit_count": len(audits),
         "direct_pooling_validation": "PASS",
-        "episode_id": 12602,
+        "episode_id": expected_episode_id,
         "person_b_handoff_present": True,
         "person_e_handoff_present": True,
         "process_exit_status": 0,
@@ -431,7 +447,7 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
         "schema_version": "person-a-canonical-sagemaker-terminal-receipt-v0.1",
         "source_identity_joins": "PASS",
         "status": "PASS",
-        "trajectory_id": "layout_01_ep12602",
+        "trajectory_id": expected_trajectory_id,
     }
     terminal_path = destination / "terminal_execution_receipt.json"
     _exclusive_write(terminal_path, _json_bytes(terminal_receipt))
@@ -440,13 +456,13 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
         "activation_chunk_count": len(chunks),
         "activation_index": indexes[0].relative_to(destination).as_posix(),
         "bounded_unpooled_audit": audits[0].relative_to(destination).as_posix(),
-        "episode_id": 12602,
+        "episode_id": expected_episode_id,
         "person_b_handoff": "person_a_to_person_b_canonical_pilot_handoff.json",
         "person_e_handoff": "person_a_to_person_e_canonical_provenance_handoff.json",
         "schema_version": OUTPUT_BUNDLE_SCHEMA,
         "status": "READY_FOR_LOCAL_RETRIEVAL",
         "terminal_execution_receipt": terminal_path.relative_to(destination).as_posix(),
-        "trajectory_id": "layout_01_ep12602",
+        "trajectory_id": expected_trajectory_id,
         "validation_receipt": "step6_5.json",
     }
     manifest_path = destination / "output_bundle_manifest.json"

@@ -1,0 +1,132 @@
+{
+  "activation_chunk_count": 100,
+  "activation_row_count": 6000,
+  "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+  "certification": {
+    "all_direct_pooling_audits": "PASS",
+    "all_repeatability_checks": "PASS",
+    "all_source_identity_joins": "PASS",
+    "missing_extra_duplicate_stale_or_reordered_rows": 0
+  },
+  "episode_ids": [
+    12602,
+    12610,
+    12645,
+    12626,
+    12634
+  ],
+  "grouping": {
+    "key": "layout_id",
+    "values": [
+      "layout_01",
+      "layout_02",
+      "layout_03",
+      "layout_04",
+      "layout_05"
+    ]
+  },
+  "immutable": true,
+  "label_authority": {
+    "source": "canonical_server_state.axis_pos",
+    "target_name": "x_true_blocks",
+    "unit": "blocks"
+  },
+  "multi_index_collection": {
+    "index_count": 5,
+    "logical_order": [
+      {
+        "activation_index_sha256": "a6ba07a50ff20e9b90f0b036a0acd18783bad4fa3aacbebc0dd70df825f00a27",
+        "logical_row_start_inclusive": 0,
+        "logical_row_stop_exclusive": 1200,
+        "trajectory_id": "layout_01_ep12602"
+      },
+      {
+        "activation_index_sha256": "29a750527e6b8bd3b8987d5a481f292280dec7e22263e292505fbce0103b711d",
+        "logical_row_start_inclusive": 1200,
+        "logical_row_stop_exclusive": 2400,
+        "trajectory_id": "layout_02_ep12610"
+      },
+      {
+        "activation_index_sha256": "2a4b0112f648f23cbe95a50404e073fd4839280a74973273d20afaf9d5b1c683",
+        "logical_row_start_inclusive": 2400,
+        "logical_row_stop_exclusive": 3600,
+        "trajectory_id": "layout_03_ep12645"
+      },
+      {
+        "activation_index_sha256": "a4a8b5943d2f2ad75b1e95d613ce44a6f88c9edba22f666837a671c5db1d5376",
+        "logical_row_start_inclusive": 3600,
+        "logical_row_stop_exclusive": 4800,
+        "trajectory_id": "layout_04_ep12626"
+      },
+      {
+        "activation_index_sha256": "32bf62d734dd2a0b8e6fee0599f28a920f7bf6d3ae9beb6b6222fdbc4321d4b3",
+        "logical_row_start_inclusive": 4800,
+        "logical_row_stop_exclusive": 6000,
+        "trajectory_id": "layout_05_ep12634"
+      }
+    ],
+    "physical_combined_index_created": false
+  },
+  "per_run_handoffs": [
+    {
+      "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/person_a_to_person_b_canonical_pilot_handoff.json",
+      "sha256": "da875c21a2875338eb432ba85f0c185ee02f4676178b3a3487fe95b55f4c50da"
+    },
+    {
+      "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/person_a_to_person_b_canonical_pilot_handoff.json",
+      "sha256": "3f4649822fc8eca7bc5bbb386008ad5dec031cdd528883ef260d8ba8dbc4ee0b"
+    },
+    {
+      "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/person_a_to_person_b_canonical_pilot_handoff.json",
+      "sha256": "cd6579521f8c894e5f03df2a0fecb94a56702ba7a854591c4420b387a0ed08c3"
+    },
+    {
+      "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/person_a_to_person_b_canonical_pilot_handoff.json",
+      "sha256": "fc0610547dac01ccff598253dbd3a6a874775dfa3553bdf0c20d3e24b494aaf6"
+    },
+    {
+      "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/person_a_to_person_b_canonical_pilot_handoff.json",
+      "sha256": "a5d6f117c2bc93e7d334273c60675b0618c7275aeecdc3d92828290b89e8a493"
+    }
+  ],
+  "person_b_frozen_execution": {
+    "five_layouts_and_five_trajectories_sufficient": true,
+    "grouping_key": "layout_id",
+    "inner_fold_count": 4,
+    "label_requirements": "x_true_blocks from finite canonical_server_state.axis_pos on 60 fully geometric-visible NO_WALL frames with nonzero position range",
+    "outer_fold_count": 5,
+    "required_distinct_layout_count": 5,
+    "required_distinct_trajectory_count": 5,
+    "shuffled_control": {
+      "minimum_trajectory_count": 2,
+      "permutation_count": 999,
+      "permutation_p_value": "add_one_greater_or_equal",
+      "permutation_seed": 20260720,
+      "permutation_unit": "whole_trajectory_block"
+    }
+  },
+  "schema_version": "person-a-to-person-b-canonical-multilayout-handoff-v0.1",
+  "scientific_use_acceptance_claimed": false,
+  "status": "READY_FOR_PERSON_B_FROZEN_POSITIVE_CONTROL",
+  "supersession": {
+    "preserved_predecessors": [
+      {
+        "kind": "a_to_b",
+        "sha256": "da875c21a2875338eb432ba85f0c185ee02f4676178b3a3487fe95b55f4c50da"
+      },
+      {
+        "kind": "a_to_e",
+        "sha256": "7414956699d9d37f0b4b486b7c800ff2482b453ffd634cb2bf99d92bcb042cfe"
+      }
+    ],
+    "scope": "five-layout canonical positive-control successor",
+    "supersedes_without_modification": true
+  },
+  "trajectory_ids": [
+    "layout_01_ep12602",
+    "layout_02_ep12610",
+    "layout_03_ep12645",
+    "layout_04_ep12626",
+    "layout_05_ep12634"
+  ]
+}

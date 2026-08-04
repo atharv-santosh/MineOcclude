@@ -158,9 +158,15 @@ class CanonicalC6ASageMakerPreparationTests(unittest.TestCase):
             (activation_root / "chunks").mkdir(parents=True)
             (activation_root / "indexes").mkdir()
             (input_root / "accepted_pilot_manifest.json").write_text(
-                "{}", encoding="utf-8"
+                json.dumps(
+                    {
+                        "selected_episode_id": 12610,
+                        "selected_trajectory_id": "layout_02_ep12610",
+                    }
+                ),
+                encoding="utf-8",
             )
-            final_report = {"selected_pilot": "layout_01_ep12602", "status": "PASS"}
+            final_report = {"selected_pilot": "layout_02_ep12610", "status": "PASS"}
             step6_5 = {
                 "result": {
                     "direct_pooling_audit": "PASS",
@@ -205,9 +211,18 @@ class CanonicalC6ASageMakerPreparationTests(unittest.TestCase):
                 output_session_root=session_root,
                 activation_store_root=activation_root,
                 destination=destination,
+                episode_id=12610,
+                trajectory_id="layout_02_ep12610",
             )
             result = prep.collect_output(namespace)
             self.assertEqual(result["status"], "PASS")
+            output_manifest = json.loads(
+                (destination / "output_bundle_manifest.json").read_bytes()
+            )
+            self.assertEqual(output_manifest["episode_id"], 12610)
+            self.assertEqual(
+                output_manifest["trajectory_id"], "layout_02_ep12610"
+            )
             self.assertTrue((destination / "sha256_inventory.json").is_file())
             self.assertTrue((destination / "terminal_execution_receipt.json").is_file())
             self.assertTrue((destination / "activation_store/chunks/chunk.npy").is_file())

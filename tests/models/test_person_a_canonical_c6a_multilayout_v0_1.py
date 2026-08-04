@@ -192,6 +192,20 @@ def test_frozen_blocker_and_selection_are_exact() -> None:
 
 def test_selected_sources_are_unique_complete_and_canonical() -> None:
     document = json.loads(SELECTION.read_bytes())
+    input_manifest = json.loads(INPUT_MANIFEST.read_bytes())
+    staged_paths = {}
+    for child in input_manifest["new_trajectory_bundles"]:
+        child_manifest_path = INPUT_ROOT / child["bundle_manifest"]
+        child_manifest = json.loads(child_manifest_path.read_bytes())
+        for staged in child_manifest["direct_artifacts"]:
+            source = staged["source"]
+            staged_paths[
+                (
+                    child["trajectory_id"],
+                    source["side"],
+                    source["relative_path"],
+                )
+            ] = child_manifest_path.parent / staged["bundle_path"]
     source_identities = []
     source_paths = []
     for trajectory in document["selected_new_trajectories"]:
@@ -211,6 +225,14 @@ def test_selected_sources_are_unique_complete_and_canonical() -> None:
             )
             source_paths.append(artifact["path"])
             path = Path(artifact["path"])
+            if not path.is_file():
+                path = staged_paths[
+                    (
+                        trajectory["trajectory_id"],
+                        artifact["side"],
+                        artifact["relative_path"],
+                    )
+                ]
             assert path.stat().st_size == artifact["size_bytes"]
             assert _sha256(path) == artifact["sha256"]
     assert len(source_identities) == len(set(source_identities)) == 268
