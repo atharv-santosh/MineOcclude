@@ -14,9 +14,11 @@ Set-StrictMode -Version Latest
 if (-not $ExecuteScientificCapture) {
     throw 'Scientific capture is fail-closed. Re-run with -ExecuteScientificCapture only after every manifest manual gate is PASS.'
 }
-foreach ($path in @($Manifest, $JavaExe, (Join-Path $ServerRoot 'fabric-server-launch.jar'))) {
+$liveLogModule = Join-Path $RepositoryRoot 'scripts\person_c\C6ALiveLog.psm1'
+foreach ($path in @($Manifest, $JavaExe, (Join-Path $ServerRoot 'fabric-server-launch.jar'), $liveLogModule)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required file absent: $path" }
 }
+Import-Module -Name $liveLogModule -Force
 $plan = Get-Content -Raw -LiteralPath $Manifest | ConvertFrom-Json
 if (-not $plan.manifest_ready -or $plan.c6b_episode_count -ne 0) {
     throw 'Manifest is not ready or contains C6B episodes.'
@@ -59,8 +61,9 @@ $process.StartInfo = [Diagnostics.ProcessStartInfo]@{
 }
 
 function Read-Log([string] $Path) {
-    if (Test-Path -LiteralPath $Path -PathType Leaf) { return Get-Content -Raw -LiteralPath $Path -ErrorAction SilentlyContinue }
-    return ''
+    $text = Read-C6ALiveLogText -Path $Path
+    if ($null -eq $text) { return '' }
+    return $text
 }
 function Wait-Log([string] $Path, [string] $Pattern, [int] $Seconds) {
     $deadline = [DateTime]::UtcNow.AddSeconds($Seconds)
@@ -79,6 +82,7 @@ try {
     if (-not (Wait-Log $clientLog 'Connecting to 127.0.0.1, 25565' 30)) { throw 'Client connection log missing.' }
 
     foreach ($episode in $plan.episodes) {
+        $scheduleLogOffset = Get-C6ALiveLogLength -Path $latestLog
         foreach ($command in @(
             "mineocclude mode $($episode.scene_command)",
             "mineocclude duration $($episode.hidden_frames)",
@@ -91,7 +95,8 @@ try {
             $process.StandardInput.WriteLine($command)
         }
         $process.StandardInput.Flush()
-        if (-not (Wait-Log $latestLog ("loaded immutable noise schedule .*episode_{0}\.jsonl" -f $episode.episode_id) 30)) {
+        $scheduleFileName = 'episode_{0}.jsonl' -f $episode.episode_id
+        if (-not (Wait-C6AScheduleLoadEvent -Path $latestLog -EpisodeId $episode.episode_id -DrawCount $episode.noise_schedule.n_draws -ScheduleFileName $scheduleFileName -StartOffset $scheduleLogOffset -TimeoutMilliseconds 60000 -PollIntervalMilliseconds 200)) {
             throw "Schedule load not observed for episode $($episode.episode_id)."
         }
         if (-not (Wait-Log $latestLog ("episode {0} recording started" -f $episode.episode_id) 180)) {
