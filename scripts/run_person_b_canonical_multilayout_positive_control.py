@@ -452,7 +452,7 @@ def _verify_run(
     ):
         _fail(f"Per-run accepted or A-to-B authority differs for {trajectory_id}.")
     direct_rows = accepted.get("direct_episode_artifacts")
-    if not isinstance(direct_rows, list) or len(direct_rows) != 64:
+    if not isinstance(direct_rows, list) or len(direct_rows) != 67:
         _fail(f"Direct canonical source inventory differs for {trajectory_id}.")
     for descriptor in direct_rows:
         if not isinstance(descriptor, Mapping):
