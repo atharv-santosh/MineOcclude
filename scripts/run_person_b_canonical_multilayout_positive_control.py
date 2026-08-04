@@ -531,6 +531,13 @@ def _verify_run(
     metadata: list[dict[str, Any]] = []
     matched = 0
     source_root = PurePosixPath(str(handoff["capture_package"]["path"])).parent
+    if trajectory_id == "layout_01_ep12602":
+        # The preserved predecessor was extracted from the original staged
+        # handoff before its additive output-package retry was assembled.
+        source_root = PurePosixPath(
+            "/home/sagemaker-user/MineOcclude/data/handoff_a/"
+            "person_a_canonical_c6a_sagemaker_input_v0_1"
+        )
     for frame_idx, (client, state) in enumerate(zip(clients, states, strict=True)):
         if (
             client.get("episode_id") != episode_id
