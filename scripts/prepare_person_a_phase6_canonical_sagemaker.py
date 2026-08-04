@@ -359,7 +359,40 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
     accepted_source = input_root / "accepted_pilot_manifest.json"
     accepted_destination = destination / "accepted_pilot_manifest.json"
     _exclusive_copy(accepted_source, accepted_destination)
-    _copy_tree_create_only(activation_root, destination / "activation_store")
+    step6_4 = json.loads((session_root / "step6_4.json").read_bytes())
+    extraction = step6_4.get("result", {})
+    terminal_index_value = extraction.get("activation_index_path")
+    expected_chunk_count = extraction.get("chunk_count")
+    if (
+        extraction.get("status") != "PASS"
+        or not isinstance(terminal_index_value, str)
+        or not terminal_index_value
+        or not isinstance(expected_chunk_count, int)
+        or isinstance(expected_chunk_count, bool)
+        or expected_chunk_count < 1
+    ):
+        raise RuntimeError("certified activation store receipt is invalid")
+    terminal_index_source = Path(terminal_index_value).resolve()
+    try:
+        terminal_index_relative = terminal_index_source.relative_to(activation_root)
+    except ValueError as error:
+        raise RuntimeError("certified activation index escapes store root") from error
+    if (
+        terminal_index_relative.parent != Path("indexes")
+        or not terminal_index_source.is_file()
+        or terminal_index_source.is_symlink()
+    ):
+        raise RuntimeError("certified activation index is unavailable")
+    activation_destination = destination / "activation_store"
+    activation_destination.mkdir()
+    _copy_tree_create_only(
+        activation_root / "chunks", activation_destination / "chunks"
+    )
+    index_destination = activation_destination / "indexes"
+    index_destination.mkdir()
+    _exclusive_copy(
+        terminal_index_source, index_destination / terminal_index_source.name
+    )
     _copy_tree_create_only(session_root / "bounded_audit", destination / "bounded_audit")
     required_session_names = (
         "final_report.json",
@@ -375,10 +408,14 @@ def collect_output(namespace: argparse.Namespace) -> dict[str, Any]:
     )
     for name in required_session_names:
         _exclusive_copy(session_root / name, destination / name)
-    chunks = sorted((destination / "activation_store").rglob("*.npz"))
+    chunks = sorted((destination / "activation_store/chunks").glob("*.npy"))
     indexes = sorted((destination / "activation_store").rglob("index-*.json"))
     audits = sorted((destination / "bounded_audit").rglob("*.npz"))
-    if not chunks or len(indexes) != 1 or len(audits) != 1:
+    if (
+        len(chunks) != expected_chunk_count
+        or len(indexes) != 1
+        or len(audits) != 1
+    ):
         raise RuntimeError("retrieved activation/index/audit cardinality differs")
     terminal_receipt = {
         "accepted_manifest_present": True,

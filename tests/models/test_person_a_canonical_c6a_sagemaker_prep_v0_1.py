@@ -169,6 +169,8 @@ class CanonicalC6ASageMakerPreparationTests(unittest.TestCase):
                     "status": "PASS",
                 }
             }
+            terminal_index = activation_root / "indexes/index-terminal.json"
+            prior_index = activation_root / "indexes/index-prior.json"
             required = {
                 "final_report.json": final_report,
                 "step6_5.json": step6_5,
@@ -178,7 +180,13 @@ class CanonicalC6ASageMakerPreparationTests(unittest.TestCase):
                 "step6_1.json": {},
                 "step6_2.json": {},
                 "step6_3.json": {},
-                "step6_4.json": {},
+                "step6_4.json": {
+                    "result": {
+                        "activation_index_path": str(terminal_index),
+                        "chunk_count": 1,
+                        "status": "PASS",
+                    }
+                },
                 "step6_6_handoff.json": {},
             }
             for name, document in required.items():
@@ -189,10 +197,9 @@ class CanonicalC6ASageMakerPreparationTests(unittest.TestCase):
             (session_root / "bounded_audit/audit.manifest.json").write_text(
                 "{}", encoding="utf-8"
             )
-            (activation_root / "chunks/chunk.npz").write_bytes(b"chunk")
-            (activation_root / "indexes/index-test.json").write_text(
-                "{}", encoding="utf-8"
-            )
+            (activation_root / "chunks/chunk.npy").write_bytes(b"chunk")
+            terminal_index.write_text("{}", encoding="utf-8")
+            prior_index.write_text("{}", encoding="utf-8")
             namespace = mock.Mock(
                 input_session_root=input_root,
                 output_session_root=session_root,
@@ -203,7 +210,13 @@ class CanonicalC6ASageMakerPreparationTests(unittest.TestCase):
             self.assertEqual(result["status"], "PASS")
             self.assertTrue((destination / "sha256_inventory.json").is_file())
             self.assertTrue((destination / "terminal_execution_receipt.json").is_file())
-            self.assertTrue((destination / "activation_store/chunks/chunk.npz").is_file())
+            self.assertTrue((destination / "activation_store/chunks/chunk.npy").is_file())
+            self.assertTrue(
+                (destination / "activation_store/indexes/index-terminal.json").is_file()
+            )
+            self.assertFalse(
+                (destination / "activation_store/indexes/index-prior.json").exists()
+            )
             verified = prep.verify_output(mock.Mock(bundle_root=destination))
             self.assertEqual(verified["status"], "PASS")
 
