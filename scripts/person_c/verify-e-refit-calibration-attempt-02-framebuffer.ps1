@@ -86,8 +86,10 @@ if (-not (Test-Path -LiteralPath $EvidenceDir)) {
 Copy-ERefitAttempt02CreateOnly $candidate.FullName $evidenceScreenshotPath
 Assert-ERefitAttempt02Condition ((Get-ERefitAttempt02Sha256 $candidate.FullName) -ceq (Get-ERefitAttempt02Sha256 $evidenceScreenshotPath)) 'Preflight screenshot create-only copy hash mismatch'
 
-$clientLogItem = Get-Item -LiteralPath $clientLogPath
-$serverLogItem = Get-Item -LiteralPath $serverLogPath
+$clientLogIdentity = Get-ERefitAttempt02Identity $clientLogPath
+$serverLogIdentity = Get-ERefitAttempt02Identity $serverLogPath
+$clientLogCreationTimeUtc = (Get-Item -LiteralPath $clientLogPath).CreationTimeUtc.ToString('o')
+$serverLogCreationTimeUtc = (Get-Item -LiteralPath $serverLogPath).CreationTimeUtc.ToString('o')
 $receipt = [ordered]@{
     schema_version = 'person-c-e-refit-calibration-attempt-02-framebuffer-preflight-v0.1'
     status = 'PASS'
@@ -99,16 +101,16 @@ $receipt = [ordered]@{
     client_options = Get-ERefitAttempt02Identity $optionsPath
     observed_account = $observedAccount
     server_session_prefix = [ordered]@{
-        path = $serverLogItem.FullName
-        size_bytes = [int64]$serverLogItem.Length
-        sha256 = Get-ERefitAttempt02Sha256 $serverLogItem.FullName
-        creation_time_utc = $serverLogItem.CreationTimeUtc.ToString('o')
+        path = $serverLogIdentity.path
+        size_bytes = [int64]$serverLogIdentity.size_bytes
+        sha256 = $serverLogIdentity.sha256
+        creation_time_utc = $serverLogCreationTimeUtc
     }
     client_session_prefix = [ordered]@{
-        path = $clientLogItem.FullName
-        size_bytes = [int64]$clientLogItem.Length
-        sha256 = Get-ERefitAttempt02Sha256 $clientLogItem.FullName
-        creation_time_utc = $clientLogItem.CreationTimeUtc.ToString('o')
+        path = $clientLogIdentity.path
+        size_bytes = [int64]$clientLogIdentity.size_bytes
+        sha256 = $clientLogIdentity.sha256
+        creation_time_utc = $clientLogCreationTimeUtc
     }
     mineocclude_episode_running = $false
     mineocclude_episode_armed_before_preflight = $false

@@ -9,18 +9,63 @@ function Assert-ERefitAttempt02Condition {
     if (-not $Condition) { throw $Message }
 }
 
+function Get-ERefitAttempt02ReadOnlySnapshot {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "File is absent: $Path"
+    }
+    $item = Get-Item -LiteralPath $Path
+    $share = [System.IO.FileShare]::ReadWrite -bor [System.IO.FileShare]::Delete
+    $stream = [System.IO.FileStream]::new(
+        $item.FullName,
+        [System.IO.FileMode]::Open,
+        [System.IO.FileAccess]::Read,
+        $share
+    )
+    $algorithm = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $snapshotLength = [int64]$stream.Length
+        $snapshotLastWriteUtc = [System.IO.File]::GetLastWriteTimeUtc($item.FullName)
+        $remaining = $snapshotLength
+        $buffer = [byte[]]::new(65536)
+        while ($remaining -gt 0) {
+            $wanted = [int][Math]::Min($buffer.Length, $remaining)
+            $read = $stream.Read($buffer, 0, $wanted)
+            Assert-ERefitAttempt02Condition ($read -gt 0) "Unexpected end of file while hashing: $Path"
+            [void]$algorithm.TransformBlock($buffer, 0, $read, $null, 0)
+            $remaining -= $read
+        }
+        [void]$algorithm.TransformFinalBlock([byte[]]::new(0), 0, 0)
+        $finalLength = [int64]$stream.Length
+        $finalLastWriteUtc = [System.IO.File]::GetLastWriteTimeUtc($item.FullName)
+        Assert-ERefitAttempt02Condition (
+            $finalLength -eq $snapshotLength -and $finalLastWriteUtc -eq $snapshotLastWriteUtc
+        ) "File changed while hashing: $Path"
+        return [pscustomobject]@{
+            FullName = $item.FullName
+            Length = $snapshotLength
+            Sha256 = ([BitConverter]::ToString($algorithm.Hash)).Replace('-', '').ToLowerInvariant()
+        }
+    }
+    finally {
+        $algorithm.Dispose()
+        $stream.Dispose()
+    }
+}
+
 function Get-ERefitAttempt02Sha256 {
     param([Parameter(Mandatory = $true)][string]$Path)
-    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    return (Get-ERefitAttempt02ReadOnlySnapshot $Path).Sha256
 }
 
 function Get-ERefitAttempt02Identity {
     param([Parameter(Mandatory = $true)][string]$Path)
-    $item = Get-Item -LiteralPath $Path
+    $snapshot = Get-ERefitAttempt02ReadOnlySnapshot $Path
     return [ordered]@{
-        path = $item.FullName
-        size_bytes = [int64]$item.Length
-        sha256 = Get-ERefitAttempt02Sha256 $item.FullName
+        path = $snapshot.FullName
+        size_bytes = [int64]$snapshot.Length
+        sha256 = $snapshot.Sha256
     }
 }
 
@@ -51,7 +96,13 @@ function Get-ERefitAttempt02PrefixSha256 {
     )
     $item = Get-Item -LiteralPath $Path
     Assert-ERefitAttempt02Condition ($Length -ge 0 -and $item.Length -ge $Length) "File is shorter than required prefix: $Path"
-    $stream = [System.IO.File]::OpenRead($item.FullName)
+    $share = [System.IO.FileShare]::ReadWrite -bor [System.IO.FileShare]::Delete
+    $stream = [System.IO.FileStream]::new(
+        $item.FullName,
+        [System.IO.FileMode]::Open,
+        [System.IO.FileAccess]::Read,
+        $share
+    )
     $algorithm = [System.Security.Cryptography.SHA256]::Create()
     try {
         $remaining = $Length
