@@ -74,6 +74,201 @@ function Get-Attempt02OffsetSeconds {
     return ($EventSeconds - $BaseSeconds + 86400) % 86400
 }
 
+function New-Attempt02SemanticRepresentation {
+    param(
+        [Parameter(Mandatory = $true)][int]$Index,
+        [Parameter(Mandatory = $true)][string]$Line,
+        [Parameter(Mandatory = $true)][string]$EventType,
+        [Parameter(Mandatory = $true)][int]$EpisodeId,
+        [Parameter(Mandatory = $true)][string]$LayoutId,
+        [Parameter(Mandatory = $true)][string]$RepresentationKind,
+        [string]$ReceiptPath = ''
+    )
+    Assert-ERefitAttempt02Condition ($Line -match '^\[(\d{2}:\d{2}:\d{2})\]') "$EventType event has no HH:MM:SS timestamp"
+    return [pscustomobject]@{
+        Index = $Index
+        Line = $Line
+        EventType = $EventType
+        EpisodeId = $EpisodeId
+        LayoutId = $LayoutId
+        Timestamp = $Matches[1]
+        TimestampSeconds = Get-Attempt02LineSeconds $Line "$LayoutId $EventType"
+        ReceiptPath = $ReceiptPath
+        RepresentationKind = $RepresentationKind
+    }
+}
+
+function Get-Attempt02SemanticEvent {
+    param(
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][System.Collections.Generic.List[object]]$Representations,
+        [Parameter(Mandatory = $true)][string]$Label
+    )
+    Assert-ERefitAttempt02Condition ($Representations.Count -gt 0) "$Label is absent"
+    $semanticGroups = @{}
+    foreach ($representation in $Representations) {
+        $normalizedReceiptPath = ([string]$representation.ReceiptPath).Replace('/', '\').ToLowerInvariant()
+        $semanticKey = '{0}|{1}|{2}|{3}|{4}' -f (
+            [string]$representation.EventType,
+            [int]$representation.EpisodeId,
+            [string]$representation.LayoutId,
+            [string]$representation.Timestamp,
+            $normalizedReceiptPath
+        )
+        if (-not $semanticGroups.ContainsKey($semanticKey)) {
+            $semanticGroups[$semanticKey] = [System.Collections.Generic.List[object]]::new()
+        }
+        [void]$semanticGroups[$semanticKey].Add($representation)
+    }
+    Assert-ERefitAttempt02Condition ($semanticGroups.Count -eq 1) "$Label must occur exactly once by semantic identity; observed $($semanticGroups.Count)"
+    $semanticKey = [string]@($semanticGroups.Keys)[0]
+    $group = $semanticGroups[$semanticKey]
+    $orderedRepresentations = @($group | Sort-Object -Property Index)
+    $first = $orderedRepresentations[0]
+    $last = $orderedRepresentations[$orderedRepresentations.Count - 1]
+    return [pscustomobject]@{
+        Index = [int]$first.Index
+        FirstIndex = [int]$first.Index
+        LastIndex = [int]$last.Index
+        Line = [string]$first.Line
+        Lines = [string[]]@($orderedRepresentations | ForEach-Object { [string]$_.Line })
+        EventType = [string]$first.EventType
+        EpisodeId = [int]$first.EpisodeId
+        LayoutId = [string]$first.LayoutId
+        Timestamp = [string]$first.Timestamp
+        TimestampSeconds = [int]$first.TimestampSeconds
+        ReceiptPath = [string]$first.ReceiptPath
+        RepresentationCount = $orderedRepresentations.Count
+    }
+}
+
+function Get-Attempt02LayoutChronology {
+    param(
+        [Parameter(Mandatory = $true)][string[]]$Lines,
+        [Parameter(Mandatory = $true)][string]$LayoutId,
+        [Parameter(Mandatory = $true)][int]$EpisodeId,
+        [Parameter(Mandatory = $true)][int64]$Seed,
+        [Parameter(Mandatory = $true)][string]$ReceiptId,
+        [Parameter(Mandatory = $true)][int]$PreviousAbortIndex,
+        [Parameter(Mandatory = $true)][int]$ServerStopIndex
+    )
+    $startRepresentations = [System.Collections.Generic.List[object]]::new()
+    $scheduleRepresentations = [System.Collections.Generic.List[object]]::new()
+    $armedRepresentations = [System.Collections.Generic.List[object]]::new()
+    $targetRepresentations = [System.Collections.Generic.List[object]]::new()
+    $abortRepresentations = [System.Collections.Generic.List[object]]::new()
+    $recordingRepresentations = [System.Collections.Generic.List[object]]::new()
+
+    for ($index = 0; $index -lt $Lines.Count; $index++) {
+        $line = $Lines[$index]
+        if ($line -match '\[MineOcclude\] /start requested: layout=(?<layout>layout_\d{2}) ep=(?<episode>\d+) seed=(?<seed>-?\d+) v=(?<v>-?[0-9.]+) q=(?<q>-?[0-9.]+) ticks=(?<ticks>\d+) warmup=(?<warmup>\d+)') {
+            $parsedLayout = [string]$Matches['layout']
+            $parsedEpisode = [int]$Matches['episode']
+            if ($parsedLayout -ceq $LayoutId -or $parsedEpisode -eq $EpisodeId) {
+                Assert-ERefitAttempt02Condition ($parsedLayout -ceq $LayoutId -and $parsedEpisode -eq $EpisodeId) "$LayoutId start command identity mismatch"
+                Assert-ERefitAttempt02Condition ([int64]$Matches['seed'] -eq $Seed -and [double]$Matches['v'] -eq 0.0 -and [double]$Matches['q'] -eq 0.0 -and [int]$Matches['ticks'] -eq 20 -and [int]$Matches['warmup'] -eq 12000) "$LayoutId start command parameters drifted"
+                [void]$startRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'START_REQUESTED' $EpisodeId $LayoutId 'INFORMATIONAL'))
+            }
+        }
+        if ($line -match 'loaded immutable noise schedule \(20 draws\) from .*episode_(?<episode>\d+)\.jsonl') {
+            $parsedEpisode = [int]$Matches['episode']
+            if ($parsedEpisode -eq $EpisodeId) {
+                [void]$scheduleRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'SCHEDULE_LOADED' $EpisodeId $LayoutId 'INFORMATIONAL'))
+            }
+        }
+        if ($line -match '\[MineOcclude\] episode (?<episode>\d+) armed \(layout=(?<layout>layout_\d{2}), (?<warmup>\d+) warmup \+ (?<record>\d+) record ticks, v=(?<v>-?[0-9.]+), q=(?<q>-?[0-9.]+), seed=(?<seed>-?\d+), rng=(?<rng>[^)]+)\)') {
+            $parsedLayout = [string]$Matches['layout']
+            $parsedEpisode = [int]$Matches['episode']
+            if ($parsedLayout -ceq $LayoutId -or $parsedEpisode -eq $EpisodeId) {
+                Assert-ERefitAttempt02Condition ($parsedLayout -ceq $LayoutId -and $parsedEpisode -eq $EpisodeId) "$LayoutId armed event identity mismatch"
+                Assert-ERefitAttempt02Condition ([int]$Matches['warmup'] -eq 12000 -and [int]$Matches['record'] -eq 20 -and [double]$Matches['v'] -eq 0.0 -and [double]$Matches['q'] -eq 0.0 -and [int64]$Matches['seed'] -eq $Seed -and [string]$Matches['rng'] -ceq 'immutable_numpy_schedule') "$LayoutId armed event parameters drifted"
+                [void]$armedRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'ARMED' $EpisodeId $LayoutId 'INFORMATIONAL'))
+            }
+        }
+        elseif ($line -match 'Armed episode (?<episode>\d+) \((?<layout>layout_\d{2}), scene (?<scene>[A-Z]+), warmup (?<warmup>\d+)t, record (?<record>\d+)t, hiddenTarget (?<hidden>\d+)\)') {
+            $parsedLayout = [string]$Matches['layout']
+            $parsedEpisode = [int]$Matches['episode']
+            if ($parsedLayout -ceq $LayoutId -or $parsedEpisode -eq $EpisodeId) {
+                Assert-ERefitAttempt02Condition ($parsedLayout -ceq $LayoutId -and $parsedEpisode -eq $EpisodeId) "$LayoutId armed console event identity mismatch"
+                Assert-ERefitAttempt02Condition ([string]$Matches['scene'] -ceq 'NORMAL' -and [int]$Matches['warmup'] -eq 12000 -and [int]$Matches['record'] -eq 20 -and [int]$Matches['hidden'] -eq 0) "$LayoutId armed console event parameters drifted"
+                [void]$armedRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'ARMED' $EpisodeId $LayoutId 'CONSOLE'))
+            }
+        }
+        if ($line -match 'target status: valid=(?<valid>\w+) required=(?<required>\w+) count=(?<count>\d+).*layout=(?<layout>layout_\d{2}) episode=(?<episode>\d+) lifecycle=(?<lifecycle>\w+) problems=(?<problems>\S+)') {
+            $parsedLayout = [string]$Matches['layout']
+            $parsedEpisode = [int]$Matches['episode']
+            if ($parsedLayout -ceq $LayoutId -or $parsedEpisode -eq $EpisodeId) {
+                Assert-ERefitAttempt02Condition ($parsedLayout -ceq $LayoutId -and $parsedEpisode -eq $EpisodeId) "$LayoutId targetstatus identity mismatch"
+                Assert-ERefitAttempt02Condition ([string]$Matches['valid'] -ceq 'true' -and [string]$Matches['required'] -ceq 'true' -and [int]$Matches['count'] -eq 1 -and [string]$Matches['lifecycle'] -ceq 'READY' -and [string]$Matches['problems'] -ceq 'NONE') "$LayoutId targetstatus did not pass"
+                $representationKind = if ($line -match '\[MineOcclude/target\]') { 'INFORMATIONAL' } else { 'CONSOLE' }
+                [void]$targetRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'TARGET_STATUS' $EpisodeId $LayoutId $representationKind))
+            }
+        }
+        if ($line -match 'episode (?<episode>\d+) aborted during warmup') {
+            $parsedEpisode = [int]$Matches['episode']
+            if ($parsedEpisode -eq $EpisodeId) {
+                $representationKind = if ($line -match '\[MineOcclude\]') { 'INFORMATIONAL' } else { 'CONSOLE' }
+                [void]$abortRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'WARMUP_ABORT' $EpisodeId $LayoutId $representationKind))
+            }
+        }
+        if ($line -match 'episode (?<episode>\d+) recording started') {
+            $parsedEpisode = [int]$Matches['episode']
+            if ($parsedEpisode -eq $EpisodeId) {
+                [void]$recordingRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'RECORDING_STARTED' $EpisodeId $LayoutId 'INFORMATIONAL'))
+            }
+        }
+    }
+
+    $start = Get-Attempt02SemanticEvent $startRepresentations "$LayoutId start command"
+    $schedule = Get-Attempt02SemanticEvent $scheduleRepresentations "$LayoutId immutable schedule load"
+    $armed = Get-Attempt02SemanticEvent $armedRepresentations "$LayoutId armed"
+    $targetStatus = Get-Attempt02SemanticEvent $targetRepresentations "$LayoutId targetstatus"
+    $abort = Get-Attempt02SemanticEvent $abortRepresentations "$LayoutId warmup abort"
+    Assert-ERefitAttempt02Condition ($recordingRepresentations.Count -eq 0) "$layoutId entered recording"
+
+    $receiptRepresentations = [System.Collections.Generic.List[object]]::new()
+    for ($index = 0; $index -lt $Lines.Count; $index++) {
+        if ($index -le $start.FirstIndex -or $index -ge $abort.LastIndex) { continue }
+        $line = $Lines[$index]
+        if ($line -match '(?:wrote read-only geometry receipt|Wrote observation-only geometry receipt:)\s+(?<path>\S+\.json)') {
+            $receiptPath = [string]$Matches['path']
+            Assert-ERefitAttempt02Condition ($receiptPath -match '(?<layout>layout_\d{2})\.json$') "$LayoutId receipt path has no layout identity"
+            $receiptLayout = [string]$Matches['layout']
+            $representationKind = if ($line -match '\[MineOcclude/observation\]') { 'INFORMATIONAL' } else { 'CONSOLE' }
+            [void]$receiptRepresentations.Add((New-Attempt02SemanticRepresentation $index $line 'RECEIPT_WRITTEN' $EpisodeId $receiptLayout $representationKind $receiptPath))
+        }
+    }
+    $receipt = Get-Attempt02SemanticEvent $receiptRepresentations "$LayoutId geometry receipt"
+    Assert-ERefitAttempt02Condition ($receipt.LayoutId -ceq $LayoutId -and $receipt.EpisodeId -eq $EpisodeId -and (Split-Path -Leaf $receipt.ReceiptPath) -ceq ($ReceiptId + '.json')) "$LayoutId receipt belongs to another layout or episode"
+
+    Assert-ERefitAttempt02Condition (
+        $PreviousAbortIndex -lt $start.FirstIndex -and
+        $start.LastIndex -lt $schedule.FirstIndex -and
+        $schedule.LastIndex -lt $armed.FirstIndex -and
+        $armed.LastIndex -lt $targetStatus.FirstIndex -and
+        $targetStatus.LastIndex -lt $receipt.FirstIndex -and
+        $receipt.LastIndex -lt $abort.FirstIndex -and
+        $abort.LastIndex -lt $ServerStopIndex
+    ) "$layoutId server chronology failed"
+    $armToTargetSeconds = Get-Attempt02OffsetSeconds $armed.TimestampSeconds $targetStatus.TimestampSeconds
+    Assert-ERefitAttempt02Condition ($armToTargetSeconds -ge 10) "$layoutId targetstatus occurred less than ten seconds after arming"
+
+    return [pscustomobject]@{
+        Start = $start
+        Schedule = $schedule
+        Armed = $armed
+        TargetStatus = $targetStatus
+        Receipt = $receipt
+        Abort = $abort
+        ArmToTargetSeconds = $armToTargetSeconds
+        DuplicateRepresentationCount = (
+            ($armed.RepresentationCount - 1) +
+            ($targetStatus.RepresentationCount - 1) +
+            ($receipt.RepresentationCount - 1) +
+            ($abort.RepresentationCount - 1)
+        )
+    }
+}
+
 function Test-Attempt02JsonEqual {
     param($Left, $Right)
     return (($Left | ConvertTo-Json -Depth 50 -Compress) -ceq ($Right | ConvertTo-Json -Depth 50 -Compress))
@@ -307,21 +502,17 @@ try {
         }
         Assert-ERefitAttempt02Condition ((Get-ERefitAttempt02Sha256 $schedulePath) -ceq [string]$layout.schedule.runtime_schedule.sha256) "$layoutId runtime schedule hash mismatch"
 
-        $armed = Find-UniqueAttempt02LogEvent $serverLines ("\[MineOcclude\] episode {0} armed \(layout={1}, 12000 warmup \+ 20 record ticks, v=0\.0, q=0\.0, seed={2}, rng=immutable_numpy_schedule\)" -f $episodeId, $layoutId, $seed) "$layoutId armed"
-        $scheduleLoaded = Find-UniqueAttempt02LogEvent $serverLines ("loaded immutable noise schedule \(20 draws\) from .*episode_{0}\.jsonl" -f $episodeId) "$layoutId immutable schedule load"
-        $targetStatus = Find-UniqueAttempt02LogEvent $serverLines ("\[MineOcclude/target\] target status: valid=true required=true count=1.*layout={0} episode={1} lifecycle=READY problems=NONE" -f $layoutId, $episodeId) "$layoutId passing targetstatus"
-        $observe = Find-UniqueAttempt02LogEvent $serverLines ("\[MineOcclude/observation\] wrote read-only geometry receipt .*{0}\.json" -f $receiptId) "$layoutId observegeometry"
-        $confirmation = Find-UniqueAttempt02LogEvent $serverLines ("Wrote observation-only geometry receipt: .*{0}\.json" -f $receiptId) "$layoutId receipt confirmation"
-        $abort = Find-UniqueAttempt02LogEvent $serverLines ("\[MineOcclude\] episode {0} aborted during warmup" -f $episodeId) "$layoutId warmup abort"
-        Assert-ERefitAttempt02Condition ($previousAbortIndex -lt $armed.Index -and $armed.Index -le $scheduleLoaded.Index -and $scheduleLoaded.Index -lt $targetStatus.Index -and $targetStatus.Index -lt $observe.Index -and $observe.Index -le $confirmation.Index -and $confirmation.Index -lt $abort.Index -and $abort.Index -lt $serverStop.Index) "$layoutId server chronology failed"
-        Assert-ERefitAttempt02Condition (-not ($serverLines -match ("episode {0} recording started" -f $episodeId))) "$layoutId entered recording"
-        $previousAbortIndex = $abort.Index
+        $chronology = Get-Attempt02LayoutChronology -Lines $serverLines -LayoutId $layoutId -EpisodeId $episodeId -Seed $seed -ReceiptId $receiptId -PreviousAbortIndex $previousAbortIndex -ServerStopIndex $serverStop.Index
+        $armed = $chronology.Armed
+        $targetStatus = $chronology.TargetStatus
+        $receiptEvent = $chronology.Receipt
+        $abort = $chronology.Abort
+        $previousAbortIndex = $abort.LastIndex
 
-        $armedSeconds = Get-Attempt02LineSeconds $armed.Line "$layoutId armed"
-        $statusOffsetFromArmed = Get-Attempt02OffsetSeconds $armedSeconds (Get-Attempt02LineSeconds $targetStatus.Line "$layoutId targetstatus")
-        Assert-ERefitAttempt02Condition ($statusOffsetFromArmed -ge 10) "$layoutId targetstatus occurred less than ten seconds after arming"
-        $confirmationOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $confirmation.Line "$layoutId receipt confirmation")
-        $abortOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $abort.Line "$layoutId abort")
+        $armedSeconds = $armed.TimestampSeconds
+        $statusOffsetFromArmed = $chronology.ArmToTargetSeconds
+        $confirmationOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds $receiptEvent.TimestampSeconds
+        $abortOffset = Get-Attempt02OffsetSeconds $sessionBaseSeconds $abort.TimestampSeconds
         $screenshotEvents = [System.Collections.Generic.List[object]]::new()
         foreach ($line in $clientLines) {
             if ($line -match 'Saved screenshot as ([^\\/\s]+\.png)') {
@@ -373,7 +564,7 @@ try {
             RawScreenshotPath = $rawScreenshot
             CanonicalScreenshotPath = [string]$layout.runtime_paths.canonical_screenshot
             ArmedOffsetSeconds = Get-Attempt02OffsetSeconds $sessionBaseSeconds $armedSeconds
-            TargetStatusOffsetSeconds = Get-Attempt02OffsetSeconds $sessionBaseSeconds (Get-Attempt02LineSeconds $targetStatus.Line "$layoutId targetstatus")
+            TargetStatusOffsetSeconds = Get-Attempt02OffsetSeconds $sessionBaseSeconds $targetStatus.TimestampSeconds
             ReceiptConfirmationOffsetSeconds = $confirmationOffset
             ScreenshotOffsetSeconds = $screenshotEvents[0].Offset
             AbortOffsetSeconds = $abortOffset

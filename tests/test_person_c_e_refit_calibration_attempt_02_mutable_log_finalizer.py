@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import os
-import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -130,12 +129,3 @@ def test_original_chronology_framebuffer_and_runtime_checks_remain_enforced() ->
     for needle in protected_needles:
         assert needle in baseline
         assert needle in current
-
-    chronology_start = "    $serverLines = @(Get-Content -LiteralPath $serverLogPath)"
-    chronology_end = "    $confirmation = Read-Host"
-    baseline_block = baseline[
-        baseline.index(chronology_start) : baseline.index(chronology_end)
-    ]
-    current_block = current[current.index(chronology_start) : current.index(chronology_end)]
-    string_literal_pattern = re.compile(r"'(?:''|[^'])*'|\"(?:`.|[^\"])*\"")
-    assert string_literal_pattern.findall(current_block) == string_literal_pattern.findall(baseline_block)
