@@ -538,6 +538,12 @@ def _verify_run(
             "/home/sagemaker-user/MineOcclude/data/handoff_a/"
             "person_a_canonical_c6a_sagemaker_input_v0_1"
         )
+    else:
+        source_root = PurePosixPath(
+            "/home/sagemaker-user/MineOcclude/data/handoff_a/"
+            "person_a_canonical_c6a_multilayout_sagemaker_input_v0_1/"
+            f"trajectories/{trajectory_id}"
+        )
     for frame_idx, (client, state) in enumerate(zip(clients, states, strict=True)):
         if (
             client.get("episode_id") != episode_id
