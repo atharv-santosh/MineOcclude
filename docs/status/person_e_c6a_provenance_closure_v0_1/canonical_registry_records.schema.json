@@ -1,0 +1,79 @@
+{
+  "$id": "person-e-c6a-canonical-registry-schema-v0.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonical_c6a_id": {
+      "const": "person-c-c6a-post-c1-v0.1"
+    },
+    "immutable": {
+      "const": true
+    },
+    "record_count": {
+      "const": 66
+    },
+    "record_index": {
+      "minItems": 66,
+      "type": "array"
+    },
+    "records": {
+      "items": {
+        "properties": {
+          "outputs": {
+            "items": {
+              "required": [
+                "expected_record_count",
+                "expected_schema_id",
+                "path",
+                "relative_path",
+                "sha256",
+                "side",
+                "size_bytes"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "accepted_geometry",
+          "canonical_c6a_id",
+          "episode_id",
+          "homography",
+          "layout_id",
+          "noise_schedule",
+          "outputs",
+          "record_status",
+          "registry_record_id",
+          "repaired_jar_sha256",
+          "seed"
+        ],
+        "type": "object"
+      },
+      "minItems": 66,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "person-e-c6a-canonical-registry-v0.1"
+    },
+    "source_registry_policy": {
+      "type": "string"
+    },
+    "total_output_file_count": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "canonical_c6a_id",
+    "immutable",
+    "record_count",
+    "record_index",
+    "records",
+    "schema_version",
+    "source_registry_policy",
+    "total_output_file_count"
+  ],
+  "title": "Person E canonical post-C1 C6A provenance registry",
+  "type": "object"
+}
