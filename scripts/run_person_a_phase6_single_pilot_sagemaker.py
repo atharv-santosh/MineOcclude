@@ -45,7 +45,7 @@ from mineocclude.activations.store_v2 import (
     validate_activation_index_snapshot_v2,
 )
 
-RUNNER_VERSION = "person-a-phase6-single-pilot-sagemaker-runner-v0.3"
+RUNNER_VERSION = "person-a-phase6-single-pilot-sagemaker-runner-v0.4"
 REQUIRED_BRANCH = "role/person-a-model"
 PERSON_A_STARTING_AUTHORITY = "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
 PERSON_A_ACKNOWLEDGEMENT = "ca3f5695dc37f9f2c8066e323b25485c042b6cf7"
@@ -68,6 +68,16 @@ EXPECTED_SAGEMAKER_MINEWORLD_ROOT = Path(
 EXPECTED_SAGEMAKER_MODEL_CONFIG_PATH = (
     EXPECTED_SAGEMAKER_MINEWORLD_ROOT / MODEL_CONFIG_PATH
 )
+EXPECTED_SAGEMAKER_REPOSITORY_ROOT = Path("/home/sagemaker-user/MineOcclude")
+EXPECTED_SAGEMAKER_ASSET_ROOT = Path("/home/sagemaker-user/MineWorld-Assets-Pinned")
+EXPECTED_SAGEMAKER_INPUT_ROOT = Path(
+    "/home/sagemaker-user/person-a-phase6-approved-inputs"
+)
+EXPECTED_SAGEMAKER_OUTPUT_ROOT = Path(
+    "/home/sagemaker-user/person-a-phase6-approved-outputs"
+)
+EXPECTED_SAGEMAKER_FFMPEG = Path("/home/sagemaker-user/tools/ffmpeg/bin/ffmpeg")
+EXPECTED_SAGEMAKER_FFPROBE = Path("/home/sagemaker-user/tools/ffmpeg/bin/ffprobe")
 MODEL_CONFIG_GIT_BLOB_SHA256 = (
     "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018"
 )
@@ -127,6 +137,9 @@ MINIMUM_GPU_MEMORY_BYTES = 12 * 1024**3
 
 HISTORICAL_RUNTIME_HOST = "aws_sagemaker_linux_gpu"
 CANONICAL_WINDOWS_RUNTIME_HOST = "windows_cuda"
+CANONICAL_SAGEMAKER_BUNDLE_SCHEMA = (
+    "person-a-canonical-sagemaker-input-bundle-v0.1"
+)
 CANONICAL_C6A_ID = "person-c-c6a-post-c1-v0.1"
 CANONICAL_PERSON_C_COMMIT = "b810bae554ba4f31018d39beb304c9b936387ca4"
 CANONICAL_PERSON_E_COMMIT = "d76f2df885d6b0e2e6cc5ade7025e799030ecea1"
@@ -362,10 +375,19 @@ class RunnerArguments:
     expected_activation_index_format: str = ACTIVATION_INDEX_V2_FORMAT_VERSION
     ffmpeg: Path | None = None
     ffprobe: Path | None = None
+    canonical_input_bundle_manifest: Path | None = None
+    canonical_input_bundle_manifest_sha256: str = ""
 
     @property
     def canonical_mode(self) -> bool:
-        return self.canonical_c6a_package is not None
+        return (
+            self.canonical_c6a_package is not None
+            or self.canonical_input_bundle_manifest is not None
+        )
+
+    @property
+    def staged_canonical_mode(self) -> bool:
+        return self.canonical_input_bundle_manifest is not None
 
 
 @dataclass(frozen=True)
@@ -661,11 +683,292 @@ def _validate_direct_artifact(row: Mapping[str, Any]) -> Path:
     return path
 
 
+def _staged_bundle_files(
+    manifest_path: Path,
+    manifest: Mapping[str, Any],
+) -> dict[str, Path]:
+    bundle_root = manifest_path.parent.resolve()
+    rows = manifest.get("files")
+    if not isinstance(rows, list) or not rows:
+        _fail("invalid_input_bundle", "bundle files must be non-empty", step="preflight")
+    resolved: dict[str, Path] = {}
+    for position, row in enumerate(rows):
+        if not isinstance(row, Mapping):
+            _fail(
+                "invalid_input_bundle",
+                f"bundle files[{position}] must be a mapping",
+                step="preflight",
+            )
+        relative = str(row.get("path", ""))
+        path = (bundle_root / relative.replace("/", os.sep)).resolve()
+        try:
+            path.relative_to(bundle_root)
+        except ValueError:
+            _fail("invalid_input_bundle", "bundle path escapes its root", step="preflight")
+        if (
+            not relative
+            or relative in resolved
+            or not path.is_file()
+            or path.is_symlink()
+            or path.stat().st_size != row.get("size_bytes")
+            or _sha256_file(path) != row.get("sha256")
+        ):
+            _fail(
+                "input_bundle_file_mismatch",
+                f"staged bundle file differs: {relative!r}",
+                step="preflight",
+            )
+        resolved[relative] = path
+    return resolved
+
+
+def _staged_authority_path(
+    authority: Mapping[str, Any],
+    files: Mapping[str, Path],
+    name: str,
+) -> Path:
+    descriptor = authority.get(name)
+    if not isinstance(descriptor, Mapping):
+        _fail("invalid_input_bundle", f"bundle authority {name} is missing", step="preflight")
+    relative = str(descriptor.get("path", ""))
+    path = files.get(relative)
+    if path is None or _sha256_file(path) != descriptor.get("file_sha256"):
+        _fail(
+            "input_bundle_authority_mismatch",
+            f"staged authority differs: {name}",
+            step="preflight",
+        )
+    return path
+
+
+def load_staged_canonical_pilot_binding(
+    arguments: RunnerArguments,
+) -> CanonicalPilotBinding:
+    """Load one independently hashed, relocatable SageMaker input bundle."""
+
+    assert arguments.canonical_input_bundle_manifest is not None
+    manifest_path = arguments.canonical_input_bundle_manifest.resolve()
+    manifest_hash = _require_sha256(
+        arguments.canonical_input_bundle_manifest_sha256,
+        "canonical input bundle manifest sha256",
+    )
+    if _sha256_file(manifest_path) != manifest_hash:
+        _fail("input_bundle_hash_mismatch", "input bundle manifest differs", step="preflight")
+    manifest = _read_json_object(manifest_path, "canonical SageMaker input bundle")
+    if (
+        manifest.get("schema_version") != CANONICAL_SAGEMAKER_BUNDLE_SCHEMA
+        or manifest.get("status") != "IMMUTABLE_READY_FOR_SAGEMAKER"
+        or manifest.get("canonical_c6a_id") != CANONICAL_C6A_ID
+        or manifest.get("trajectory_id") != arguments.trajectory_id
+        or manifest.get("episode_id") != arguments.episode_id
+        or manifest.get("person_c_commit") != CANONICAL_PERSON_C_COMMIT
+        or manifest.get("person_e_commit") != CANONICAL_PERSON_E_COMMIT
+        or manifest.get("selection_rule") != CANONICAL_SELECTION_RULE
+    ):
+        _fail("invalid_input_bundle", "bundle identity fields differ", step="preflight")
+    files = _staged_bundle_files(manifest_path, manifest)
+    authority = manifest.get("authority")
+    if not isinstance(authority, Mapping):
+        _fail("invalid_input_bundle", "bundle authority is missing", step="preflight")
+    package_path = _staged_authority_path(authority, files, "canonical_c6a_package")
+    handoff_path = _staged_authority_path(authority, files, "person_e_handoff")
+    registry_path = _staged_authority_path(authority, files, "episode_registry_record")
+    capture_path = _staged_authority_path(authority, files, "capture_episode_record")
+    inventory_path = _staged_authority_path(authority, files, "episode_inventory_record")
+    package_hash = _require_sha256(
+        arguments.canonical_c6a_package_sha256,
+        "canonical C6A package sha256",
+    )
+    handoff_hash = _require_sha256(
+        arguments.person_e_provenance_handoff_sha256,
+        "Person E handoff sha256",
+    )
+    registry_hash = _require_sha256(
+        arguments.episode_artifact_manifest_sha256,
+        "episode artifact manifest sha256",
+    )
+    if (
+        authority["canonical_c6a_package"].get("source_sha256") != package_hash
+        or _sha256_file(package_path) != package_hash
+        or authority["person_e_handoff"].get("source_sha256") != handoff_hash
+        or _sha256_file(handoff_path) != handoff_hash
+        or authority["episode_registry_record"].get("source_manifest_sha256")
+        != registry_hash
+    ):
+        _fail("input_bundle_authority_mismatch", "source authority hashes differ", step="preflight")
+    package = _read_json_object(package_path, "staged canonical C6A package")
+    handoff = _read_json_object(handoff_path, "staged Person E handoff")
+    record = _read_json_object(registry_path, "staged episode registry record")
+    capture_row = _read_json_object(capture_path, "staged capture episode record")
+    inventory_row = _read_json_object(inventory_path, "staged episode inventory record")
+    registry_record_hash = str(
+        authority["episode_registry_record"].get("registry_record_sha256", "")
+    )
+    if (
+        package.get("canonical_c6a_id") != CANONICAL_C6A_ID
+        or package.get("status") != "PASS"
+        or package.get("immutable") is not True
+        or handoff.get("canonical_c6a_id") != CANONICAL_C6A_ID
+        or handoff.get("status") != "READY_FOR_A6_6_PROVENANCE_CONSUMPTION"
+        or handoff.get("person_c_certification_commit") != CANONICAL_PERSON_C_COMMIT
+        or handoff.get("person_c_c6a_package", {}).get("sha256") != package_hash
+        or handoff.get("canonical_registry", {}).get("sha256") != registry_hash
+        or _sha256_file(registry_path) != registry_record_hash
+        or record.get("registry_record_id")
+        != authority["episode_registry_record"].get("registry_record_id")
+        or record.get("episode_id") != arguments.episode_id
+        or capture_row.get("episode_id") != arguments.episode_id
+        or inventory_row.get("episode_id") != arguments.episode_id
+    ):
+        _fail("input_bundle_authority_mismatch", "staged authority content differs", step="preflight")
+    expected_layout = str(capture_row.get("layout_id", ""))
+    if (
+        arguments.trajectory_id != f"{expected_layout}_ep{arguments.episode_id}"
+        or capture_row.get("scene") != "nowall"
+        or capture_row.get("set") != "nowall"
+        or capture_row.get("accepted_geometry_version") != CANONICAL_GEOMETRY_VERSION
+        or capture_row.get("accepted_geometry_sha256") != CANONICAL_GEOMETRY_SHA256
+        or inventory_row.get("status") != "PASS"
+        or inventory_row.get("target_check_valid") is not True
+        or inventory_row.get("target_expected_count") != 1
+        or inventory_row.get("target_observed_count") != 1
+        or record.get("layout_id") != expected_layout
+        or record.get("record_status") != "accepted"
+        or record.get("byte_hashes_valid") is not True
+        or record.get("output_counts_valid") is not True
+        or record.get("output_schemas_valid") is not True
+    ):
+        _fail("canonical_authority_mismatch", "staged selected pilot differs", step="preflight")
+    direct_rows = manifest.get("direct_artifacts")
+    if not isinstance(direct_rows, list) or len(direct_rows) != 67:
+        _fail("episode_artifact_set_mismatch", "bundle must contain 67 artifacts", step="preflight")
+    record_outputs = record.get("outputs")
+    record_by_key = {
+        _artifact_key(row): row
+        for row in record_outputs
+        if isinstance(row, Mapping)
+    } if isinstance(record_outputs, list) else {}
+    staged_by_key: dict[tuple[str, str], tuple[Mapping[str, Any], Path]] = {}
+    for row in direct_rows:
+        if not isinstance(row, Mapping) or not isinstance(row.get("source"), Mapping):
+            _fail("invalid_input_bundle", "direct artifact descriptor differs", step="preflight")
+        source = row["source"]
+        key = _artifact_key(source)
+        path = files.get(str(row.get("bundle_path", "")))
+        if path is None or key in staged_by_key:
+            _fail("episode_artifact_set_mismatch", "staged artifact key differs", step="preflight")
+        expected = record_by_key.get(key)
+        if expected is None or any(
+            source.get(field) != expected.get(field)
+            for field in ("path", "relative_path", "sha256", "side", "size_bytes")
+        ) or path.stat().st_size != source.get("size_bytes") or _sha256_file(path) != source.get("sha256"):
+            _fail("episode_artifact_identity_mismatch", f"staged artifact differs: {key}", step="preflight")
+        staged_by_key[key] = (source, path)
+    if set(staged_by_key) != set(record_by_key):
+        _fail("episode_artifact_set_mismatch", "registry and staged sets differ", step="preflight")
+    required = {
+        ("client", "client_tick.jsonl"),
+        ("client", "raw_actions.jsonl"),
+        ("server", "server_state.jsonl"),
+        ("server", "reset_result.json"),
+    }
+    if not required.issubset(staged_by_key):
+        _fail("episode_artifact_set_mismatch", "required staged records are missing", step="preflight")
+    frame_rows = sorted(
+        (
+            (int(Path(key[1]).stem), path, source)
+            for key, (source, path) in staged_by_key.items()
+            if key[0] == "client" and key[1].startswith("frames/")
+        ),
+        key=lambda item: item[0],
+    )
+    frame_count = int(inventory_row.get("frame_count", -1))
+    if [index for index, _path, _row in frame_rows] != list(range(frame_count)):
+        _fail("frame_identity_mismatch", "staged frame identities differ", step="preflight")
+    direct_paths = {
+        name: staged_by_key[key][1]
+        for name, key in {
+            "client_tick": ("client", "client_tick.jsonl"),
+            "raw_actions": ("client", "raw_actions.jsonl"),
+            "server_state": ("server", "server_state.jsonl"),
+            "reset_result": ("server", "reset_result.json"),
+        }.items()
+    }
+    client_rows = tuple(_json_lines(direct_paths["client_tick"].read_bytes(), label="client_tick"))
+    action_rows = tuple(_json_lines(direct_paths["raw_actions"].read_bytes(), label="raw_actions"))
+    state_rows = tuple(_json_lines(direct_paths["server_state"].read_bytes(), label="server_state"))
+    if not (len(client_rows) == len(action_rows) == len(state_rows) == frame_count):
+        _fail("source_cardinality_mismatch", "staged record counts differ", step="preflight")
+    positions: list[float] = []
+    for index, (client, action, state) in enumerate(zip(client_rows, action_rows, state_rows, strict=True)):
+        if (
+            client.get("episode_id") != arguments.episode_id
+            or action.get("episode_id") != arguments.episode_id
+            or state.get("episode_id") != arguments.episode_id
+            or client.get("server_tick") != index
+            or client.get("render_frame_idx") != index
+            or action.get("server_tick") != index
+            or action.get("render_frame_idx") != index
+            or action.get("action_idx") != index
+            or state.get("server_tick") != index
+            or state.get("layout_id") != expected_layout
+            or state.get("scene") != "NO_WALL"
+            or state.get("geometric_visible") is not True
+            or client.get("server_epoch_nanos") != state.get("server_epoch_nanos")
+        ):
+            _fail("source_identity_mismatch", f"staged row {index} does not join", step="preflight")
+        position = state.get("axis_pos")
+        if isinstance(position, bool) or not isinstance(position, (int, float)) or not math.isfinite(float(position)):
+            _fail("visible_position_invalid", f"staged row {index} is invalid", step="preflight")
+        positions.append(float(position))
+    if max(positions) - min(positions) <= 0.0:
+        _fail("visible_position_movement_missing", "staged movement is zero", step="preflight")
+    direct_hashes = {
+        name: str(staged_by_key[key][0]["sha256"])
+        for name, key in {
+            "client_tick": ("client", "client_tick.jsonl"),
+            "raw_actions": ("client", "raw_actions.jsonl"),
+            "server_state": ("server", "server_state.jsonl"),
+            "reset_result": ("server", "reset_result.json"),
+        }.items()
+    }
+    return CanonicalPilotBinding(
+        canonical_c6a_id=CANONICAL_C6A_ID,
+        trajectory_id=arguments.trajectory_id,
+        episode_id=int(arguments.episode_id),
+        layout_id=expected_layout,
+        frame_count=frame_count,
+        package_path=package_path,
+        package_sha256=package_hash,
+        person_c_commit=CANONICAL_PERSON_C_COMMIT,
+        person_e_handoff_path=handoff_path,
+        person_e_handoff_sha256=handoff_hash,
+        person_e_commit=CANONICAL_PERSON_E_COMMIT,
+        artifact_manifest_path=registry_path,
+        artifact_manifest_sha256=registry_hash,
+        registry_record_id=str(record["registry_record_id"]),
+        registry_record_sha256=registry_record_hash,
+        capture_row=capture_row,
+        inventory_row=inventory_row,
+        registry_record=record,
+        direct_artifacts=tuple(dict(record_by_key[key]) for key in sorted(record_by_key)),
+        direct_paths=direct_paths,
+        direct_hashes=direct_hashes,
+        frame_paths=tuple(path for _index, path, _row in frame_rows),
+        frame_hashes=tuple(str(row["sha256"]) for _index, _path, row in frame_rows),
+        client_tick_rows=client_rows,
+        raw_action_rows=action_rows,
+        state_rows=state_rows,
+    )
+
+
 def load_canonical_pilot_binding(arguments: RunnerArguments) -> CanonicalPilotBinding:
     """Validate the selected post-C1 C6A pilot without creating outputs."""
 
     if not arguments.canonical_mode:
         _fail("canonical_mode_required", "canonical package is required", step="preflight")
+    if arguments.staged_canonical_mode:
+        return load_staged_canonical_pilot_binding(arguments)
     assert arguments.canonical_c6a_package is not None
     assert arguments.episode_artifact_manifest is not None
     assert arguments.person_e_provenance_handoff is not None
@@ -945,8 +1248,9 @@ def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
             "runtime_host must identify the frozen historical or Windows CUDA host",
             step="preflight",
         )
-    if arguments.canonical_mode != (
+    if (
         arguments.runtime_host == CANONICAL_WINDOWS_RUNTIME_HOST
+        and not arguments.canonical_mode
     ):
         _fail(
             "runtime_mode_mismatch",
@@ -966,13 +1270,17 @@ def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
                 step="preflight",
             )
     if arguments.canonical_mode:
-        required_paths = (
-            "canonical_c6a_package",
-            "episode_artifact_manifest",
-            "person_e_provenance_handoff",
-            "ffmpeg",
-            "ffprobe",
-        )
+        required_paths = ["ffmpeg", "ffprobe"]
+        if arguments.staged_canonical_mode:
+            required_paths.append("canonical_input_bundle_manifest")
+        else:
+            required_paths.extend(
+                (
+                    "canonical_c6a_package",
+                    "episode_artifact_manifest",
+                    "person_e_provenance_handoff",
+                )
+            )
         for field_name in required_paths:
             value = getattr(arguments, field_name)
             if (
@@ -1016,7 +1324,10 @@ def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
                 "frozen identities differ: " + ", ".join(mismatches),
                 step="preflight",
             )
-        _validate_create_only_roots(arguments)
+        if arguments.runtime_host == CANONICAL_WINDOWS_RUNTIME_HOST:
+            _validate_create_only_roots(arguments)
+        else:
+            _validate_sagemaker_canonical_paths(arguments)
     else:
         for field_name in ("approved_input_root", "approved_output_root"):
             value = getattr(arguments, field_name)
@@ -1100,6 +1411,53 @@ def _validate_create_only_roots(arguments: RunnerArguments) -> None:
         )
 
 
+def _validate_sagemaker_canonical_paths(arguments: RunnerArguments) -> None:
+    """Bind the successor to the existing SageMaker layout and absent outputs."""
+
+    expected = {
+        "repository_root": EXPECTED_SAGEMAKER_REPOSITORY_ROOT,
+        "mineworld_root": EXPECTED_SAGEMAKER_MINEWORLD_ROOT,
+        "asset_root": EXPECTED_SAGEMAKER_ASSET_ROOT,
+        "main_checkpoint": EXPECTED_SAGEMAKER_ASSET_ROOT / "checkpoints/700M_16f.ckpt",
+        "vae_config": EXPECTED_SAGEMAKER_ASSET_ROOT / "checkpoints/vae/config.json",
+        "vae_checkpoint": EXPECTED_SAGEMAKER_ASSET_ROOT / "checkpoints/vae/vae.ckpt",
+        "approved_input_root": EXPECTED_SAGEMAKER_INPUT_ROOT,
+        "approved_output_root": EXPECTED_SAGEMAKER_OUTPUT_ROOT,
+        "ffmpeg": EXPECTED_SAGEMAKER_FFMPEG,
+        "ffprobe": EXPECTED_SAGEMAKER_FFPROBE,
+    }
+    mismatches = [
+        name
+        for name, path in expected.items()
+        if getattr(arguments, name).resolve() != path.resolve()
+    ]
+    if mismatches:
+        _fail(
+            "sagemaker_path_mismatch",
+            "existing SageMaker paths differ: " + ", ".join(mismatches),
+            step="preflight",
+        )
+    for path in (arguments.approved_input_root, arguments.approved_output_root):
+        if not path.is_dir() or path.is_symlink():
+            _fail(
+                "invalid_path",
+                f"existing SageMaker root is unavailable: {path}",
+                step="preflight",
+            )
+    for path in (
+        arguments.approved_input_root / arguments.session_id,
+        arguments.approved_output_root / arguments.session_id,
+        arguments.approved_output_root
+        / f"{arguments.session_id}-activation-store-v2",
+    ):
+        if path.exists() or path.is_symlink():
+            _fail(
+                "output_exists",
+                f"create-only SageMaker path already exists: {path}",
+                step="preflight",
+            )
+
+
 def cuda_preflight(torch_module: Any | None = None) -> dict[str, Any]:
     """Read-only visibility and capacity gate for the required CUDA device."""
 
@@ -1173,7 +1531,11 @@ def runtime_preflight(
     """Run the complete fail-closed SageMaker gate before Step 6.1."""
 
     _validate_runtime_arguments(arguments)
-    expected_system = "Windows" if arguments.canonical_mode else "Linux"
+    expected_system = (
+        "Windows"
+        if arguments.runtime_host == CANONICAL_WINDOWS_RUNTIME_HOST
+        else "Linux"
+    )
     if platform.system() != expected_system:
         _fail(
             "runtime_host_mismatch",
@@ -1234,7 +1596,7 @@ def runtime_preflight(
         )
     model_config_blob, file_hashes = model_assets_preflight(arguments)
     physical_model_config = None
-    if not arguments.canonical_mode:
+    if arguments.runtime_host != CANONICAL_WINDOWS_RUNTIME_HOST:
         physical_model_config = validated_physical_model_config_path(
             mineworld_root=arguments.mineworld_root,
             git_blob_bytes=model_config_blob,
@@ -1690,10 +2052,14 @@ def canonical_step6_1_intake(context: RunContext) -> dict[str, Any]:
     if intake_root.exists() or intake_root.is_symlink():
         _fail("output_exists", "immutable approved intake already exists", step="6.1")
     intake_root.mkdir()
-    runtime_root, model_config_path = _materialize_exact_mineworld_checkout(
-        context.arguments.mineworld_root,
-        intake_root,
-    )
+    if context.arguments.runtime_host == CANONICAL_WINDOWS_RUNTIME_HOST:
+        runtime_root, model_config_path = _materialize_exact_mineworld_checkout(
+            context.arguments.mineworld_root,
+            intake_root,
+        )
+    else:
+        runtime_root = context.arguments.mineworld_root
+        model_config_path = runtime_root / MODEL_CONFIG_PATH
     assert context.arguments.ffmpeg is not None
     assert context.arguments.ffprobe is not None
     media_path, canonical_frames, media_probe = _encode_canonical_media(
@@ -2061,7 +2427,7 @@ def _runtime_load_request(context: RunContext) -> Any:
     environment_receipt = (
         context.session_root / "runtime_preflight_receipt.json"
     )
-    if context.arguments.canonical_mode:
+    if context.arguments.runtime_host == CANONICAL_WINDOWS_RUNTIME_HOST:
         physical_model_config_path = context.state["model_config_provenance_path"]
         mineworld_source_root = context.state["mineworld_runtime_root"]
     else:
@@ -2873,7 +3239,7 @@ def run(arguments: RunnerArguments) -> int:
     _validate_runtime_arguments(arguments)
     binding = load_canonical_pilot_binding(arguments) if arguments.canonical_mode else None
     receipt = runtime_preflight(arguments, binding)
-    if arguments.canonical_mode:
+    if arguments.runtime_host == CANONICAL_WINDOWS_RUNTIME_HOST:
         arguments.approved_input_root.mkdir()
         arguments.approved_output_root.mkdir()
     session_root = arguments.approved_output_root / arguments.session_id
@@ -2992,6 +3358,8 @@ def _parser() -> argparse.ArgumentParser:
     )
     execute.add_argument("--ffmpeg", type=Path)
     execute.add_argument("--ffprobe", type=Path)
+    execute.add_argument("--canonical-input-bundle-manifest", type=Path)
+    execute.add_argument("--canonical-input-bundle-manifest-sha256", default="")
     execute.add_argument(
         "--session-id",
         default="person-a-phase6-layout-00-ep9403-seed-20260725",
@@ -3057,6 +3425,14 @@ def _arguments(namespace: argparse.Namespace) -> RunnerArguments:
         expected_activation_index_format=namespace.expected_activation_index_format,
         ffmpeg=None if namespace.ffmpeg is None else namespace.ffmpeg.resolve(),
         ffprobe=None if namespace.ffprobe is None else namespace.ffprobe.resolve(),
+        canonical_input_bundle_manifest=(
+            None
+            if namespace.canonical_input_bundle_manifest is None
+            else namespace.canonical_input_bundle_manifest.resolve()
+        ),
+        canonical_input_bundle_manifest_sha256=(
+            namespace.canonical_input_bundle_manifest_sha256
+        ),
     )
 
 
