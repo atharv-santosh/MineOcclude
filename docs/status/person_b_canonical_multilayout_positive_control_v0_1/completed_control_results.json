@@ -1,0 +1,93 @@
+{
+  "adaptive_rerun_performed": false,
+  "execution_semantics": {
+    "real_label_execution_count": 1,
+    "real_label_implementation": "mineocclude.probes.ridge.fit_ridge_oof",
+    "shuffled_equivalence_audit_permutation_indices": [
+      0,
+      1,
+      2
+    ],
+    "shuffled_execution_count": 1,
+    "shuffled_implementation": "vectorized_multiple_rhs_exact_equivalent_refit_scaler_alpha_and_ridge_inside_each_permutation"
+  },
+  "frozen_configuration": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "inner_fold_count": 4,
+    "outer_fold_count": 5,
+    "permutation_count": 999,
+    "permutation_seed": 20260720,
+    "permutation_unit": "whole_trajectory_block",
+    "split_seed": 20260719,
+    "target_name": "x_true_blocks"
+  },
+  "immutable": true,
+  "real_label_positive_control": {
+    "complete": true,
+    "metrics": [
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.1686206080386398, "global_r2": -0.7550648458212894, "layer_idx": 0, "maximum_fold_pearson_r": 0.9473349378118675, "minimum_fold_pearson_r": 0.4118625947597228, "selected_alphas_by_outer_fold": [100.0, 100.0, 100.0, 100.0, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.31441880783741577, "global_r2": -0.22838381544205077, "layer_idx": 1, "maximum_fold_pearson_r": 0.92715220094603, "minimum_fold_pearson_r": 0.49477390686446493, "selected_alphas_by_outer_fold": [100.0, 100.0, 100.0, 100.0, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.4670717850203352, "global_r2": 0.10647815469096378, "layer_idx": 2, "maximum_fold_pearson_r": 0.9517869574320259, "minimum_fold_pearson_r": 0.7305818200153613, "selected_alphas_by_outer_fold": [100.0, 100.0, 100.0, 100.0, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.5525919968749169, "global_r2": 0.2493364945441724, "layer_idx": 3, "maximum_fold_pearson_r": 0.9683270470904485, "minimum_fold_pearson_r": 0.698419933700716, "selected_alphas_by_outer_fold": [10.0, 100.0, 100.0, 0.1, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.4693036383169195, "global_r2": 0.10806245765224187, "layer_idx": 4, "maximum_fold_pearson_r": 0.9674116781155775, "minimum_fold_pearson_r": 0.7725926437799452, "selected_alphas_by_outer_fold": [10.0, 100.0, 10.0, 0.1, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.5621233331212091, "global_r2": 0.27784948592892034, "layer_idx": 5, "maximum_fold_pearson_r": 0.951358453663853, "minimum_fold_pearson_r": 0.8851040002447269, "selected_alphas_by_outer_fold": [100.0, 100.0, 10.0, 100.0, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.6501766599824075, "global_r2": 0.3905140572993966, "layer_idx": 6, "maximum_fold_pearson_r": 0.9565023497851326, "minimum_fold_pearson_r": 0.8426426399278384, "selected_alphas_by_outer_fold": [100.0, 0.1, 0.1, 0.1, 10.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.48465246241468607, "global_r2": 0.1454987854230766, "layer_idx": 7, "maximum_fold_pearson_r": 0.944684906182224, "minimum_fold_pearson_r": 0.6718719569139865, "selected_alphas_by_outer_fold": [100.0, 100.0, 1.0, 0.1, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.17314633178515496, "global_r2": -0.8513007571111177, "layer_idx": 8, "maximum_fold_pearson_r": 0.9295376995381627, "minimum_fold_pearson_r": 0.42362711043509826, "selected_alphas_by_outer_fold": [10.0, 100.0, 0.1, 0.1, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.34037979296948156, "global_r2": -0.40458736051859545, "layer_idx": 9, "maximum_fold_pearson_r": 0.9098636219000185, "minimum_fold_pearson_r": 0.3975517252073688, "selected_alphas_by_outer_fold": [0.1, 0.1, 0.1, 0.1, 100.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.261935501508961, "global_r2": -0.714868615327878, "layer_idx": 10, "maximum_fold_pearson_r": 0.9511922559891994, "minimum_fold_pearson_r": 0.29625288452513776, "selected_alphas_by_outer_fold": [10.0, 0.1, 0.1, 0.1, 0.1]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.1643356776958944, "global_r2": -1.002960573272194, "layer_idx": 11, "maximum_fold_pearson_r": 0.9479683980625817, "minimum_fold_pearson_r": 0.3100707037273165, "selected_alphas_by_outer_fold": [0.1, 1.0, 0.1, 0.1, 10.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.3466883797234609, "global_r2": -0.35629102415823355, "layer_idx": 12, "maximum_fold_pearson_r": 0.9458601967501965, "minimum_fold_pearson_r": 0.3658710172057113, "selected_alphas_by_outer_fold": [0.1, 0.1, 100.0, 1.0, 10.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.36200699892763033, "global_r2": -0.3513790155948622, "layer_idx": 13, "maximum_fold_pearson_r": 0.9404093036693804, "minimum_fold_pearson_r": 0.5047906180719793, "selected_alphas_by_outer_fold": [0.1, 0.1, 100.0, 0.1, 1.0]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.36532257766065585, "global_r2": -0.2852385944728364, "layer_idx": 14, "maximum_fold_pearson_r": 0.9645503026725895, "minimum_fold_pearson_r": 0.5483412966432564, "selected_alphas_by_outer_fold": [100.0, 100.0, 100.0, 1.0, 0.1]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.5050318130017487, "global_r2": -0.01102063483815563, "layer_idx": 15, "maximum_fold_pearson_r": 0.9514486926252056, "minimum_fold_pearson_r": 0.5659880350452051, "selected_alphas_by_outer_fold": [10.0, 100.0, 100.0, 0.1, 0.1]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.3907027732475866, "global_r2": -0.2548730451759411, "layer_idx": 16, "maximum_fold_pearson_r": 0.9371450849665844, "minimum_fold_pearson_r": 0.39111027243509583, "selected_alphas_by_outer_fold": [10.0, 100.0, 100.0, 100.0, 0.1]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.4914957826887395, "global_r2": -0.015654604048391807, "layer_idx": 17, "maximum_fold_pearson_r": 0.9546203864907498, "minimum_fold_pearson_r": 0.556927427032753, "selected_alphas_by_outer_fold": [0.1, 0.1, 100.0, 100.0, 0.1]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.3799596380969461, "global_r2": -0.12377365998508782, "layer_idx": 18, "maximum_fold_pearson_r": 0.9406854759796505, "minimum_fold_pearson_r": 0.5220705355302221, "selected_alphas_by_outer_fold": [0.1, 100.0, 100.0, 100.0, 0.1]},
+      {"all_five_fold_correlations_positive": true, "global_pearson_r": 0.2920877839149881, "global_r2": -0.3529329985049585, "layer_idx": 19, "maximum_fold_pearson_r": 0.9473038524146955, "minimum_fold_pearson_r": 0.16215964291108778, "selected_alphas_by_outer_fold": [100.0, 100.0, 100.0, 100.0, 100.0]}
+    ],
+    "qualified_layer_indices": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "status": "COMPLETE_FROZEN_LAYOUT_GROUPED_OOF",
+    "strongest_reviewed_layer": {
+      "all_five_fold_correlations_positive": true,
+      "global_pearson_r": 0.6501766599824075,
+      "global_r2": 0.3905140572993966,
+      "layer_idx": 6,
+      "maximum_fold_pearson_r": 0.9565023497851326,
+      "minimum_fold_pearson_r": 0.8426426399278384
+    }
+  },
+  "results_selected_for_preference": false,
+  "schema_version": "person-b-canonical-multilayout-completed-control-results-v0.1",
+  "shuffled_control": {
+    "complete": true,
+    "metrics": {
+      "extreme_null_count": 239,
+      "hook_site": "decoder_layer_output_residual_stream",
+      "null_r2_maximum": 0.707115844174111,
+      "null_r2_mean": 0.23889686647206693,
+      "null_r2_minimum": -0.29212277691199384,
+      "observed_r2": 0.3905140572993966,
+      "p_value": 0.24,
+      "p_value_rule": "add_one_greater_or_equal",
+      "permutation_count": 999,
+      "permutation_refit_policy": "refit_scaler_alpha_and_ridge_inside_each_permutation",
+      "permutation_seed": 20260720,
+      "permutation_unit": "whole_trajectory_block",
+      "reviewed_layer_idx": 6
+    },
+    "status": "COMPLETE_FROZEN_WHOLE_TRAJECTORY_GROUPED_SHUFFLE"
+  }
+}
