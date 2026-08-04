@@ -1,0 +1,54 @@
+{
+  "phase_6": {
+    "step_6_1": {
+      "status": "completed",
+      "note": "Resolved by this evidence package: mvp_input_manifest.json binds the real, accepted 66-trajectory identity (48 core + 6 sentinel + 6 nowall + 6 nosheep) with zero shortfall."
+    },
+    "step_6_2": {
+      "status": "still_blocked",
+      "blocker": "Person B has no real fold/target manifest at the 66-trajectory (layout_01..06, ep100xx) scale. The only real Person B fold artifacts found (docs/status/person_b_phase4_step4_1_production_handoff_v0_1/, data/person_b/phase6_c_intake/layout_fold_plan.json) are scoped to the earlier, smaller 15-trajectory/6-layout pre-C7 pilot set (layout_00..04, ep94xx) already consumed by the Step 4.1 production run -- a different, smaller collection than this 66-trajectory MVP.",
+      "checked": "git grep -l \"ep100\\\\|layout_01_ep10\" across origin/role/person-b-analysis and origin/role/person-b-methods: no hits, 2026-08-03."
+    },
+    "step_6_3": {
+      "status": "still_blocked",
+      "blocker": "Depends on Step 6.2's real fold/prediction data existing first."
+    },
+    "step_6_4": {
+      "status": "still_blocked",
+      "blocker": "Depends on Steps 6.2-6.3."
+    },
+    "step_6_5": {
+      "status": "still_blocked",
+      "blocker": "Depends on Steps 6.2-6.4."
+    }
+  },
+  "phase_7": {
+    "step_7_1": {
+      "status": "still_partially_completed",
+      "complete": "Person D's control-matrix machinery (src/mineocclude/baselines/u4_control_matrix.py, controls.py) already exists on this branch.",
+      "remaining": "No real, frozen, pre-outcome control manifest was found anywhere across role/person-a-model, role/person-b-analysis, role/person-b-methods, or role/person-e-operations -- only synthetic test fixtures (e.g. tests/fixtures/integration/synthetic_rollout_manifest.json). Building one would require inventing data D does not own; not attempted."
+    },
+    "step_7_2": {
+      "status": "still_partially_completed",
+      "complete": "Completeness/norm/orthogonality audit logic already exists on this branch.",
+      "remaining": "No real Person B direction-control construction artifacts found on any branch."
+    },
+    "step_7_3": {
+      "status": "still_blocked",
+      "blocker": "No real Person E measurement/control-join artifacts found; only synthetic fixtures under tests/fixtures/."
+    },
+    "step_7_4": {
+      "status": "still_blocked",
+      "blocker": "Depends on Step 7.3."
+    },
+    "step_7_5": {
+      "status": "still_partially_completed",
+      "complete": "Documentation requiring control failures to remain visible already exists.",
+      "remaining": "No real outcome-bearing claim record exists yet -- depends on Steps 7.1-7.4 producing real data first."
+    }
+  },
+  "record_date": "2026-08-03",
+  "schema_id": "person-d-phase6-and-7-remaining-status-v0-1",
+  "schema_version": "1.0",
+  "verification_method": "git ls-tree -r / git grep across origin/role/person-a-model, origin/role/person-b-analysis, origin/role/person-b-methods, origin/role/person-c-data, origin/role/person-e-operations, origin/integration/mvp, origin/integration/mvp-step4-1-candidate, and this branch's own tree. Performed 2026-08-03. No branch was merged or checked out; all reads were git show / git grep against remote refs."
+}
