@@ -114,6 +114,33 @@ class TestAttempt02RefitFinalize(unittest.TestCase):
                 self.inputs["tasks"],
             )
 
+    def test_emitted_package_inventory_and_handoff_are_immutable(self) -> None:
+        inventory_path = MODULE.PACKAGE_DIR / "sha256_inventory.json"
+        manifest_path = MODULE.PACKAGE_DIR / "package_manifest.json"
+        handoff_path = MODULE.PACKAGE_DIR / "person_e_to_person_c_refit_handoff.json"
+        inventory = MODULE.load_json(inventory_path)
+        manifest = MODULE.load_json(manifest_path)
+        handoff = MODULE.load_json(handoff_path)
+
+        for record in inventory["files"]:
+            path = MODULE.PACKAGE_DIR / record["path"]
+            self.assertEqual(path.stat().st_size, record["size_bytes"])
+            self.assertEqual(MODULE.sha256_file(path), record["sha256"])
+        self.assertEqual(
+            MODULE.hash_json_value(inventory["files"]),
+            inventory["package_bundle_sha256"],
+        )
+        self.assertEqual(
+            manifest["package_bundle_sha256"], inventory["package_bundle_sha256"]
+        )
+        self.assertEqual(
+            handoff["person_e_refit_package"]["sha256"],
+            MODULE.sha256_file(manifest_path),
+        )
+        self.assertFalse(manifest["c6a_execution_authorized"])
+        self.assertFalse(handoff["c6a_execution_authorized"])
+        self.assertEqual(handoff["blocking_layout_ids"], ["layout_04", "layout_06"])
+
 
 if __name__ == "__main__":
     unittest.main()

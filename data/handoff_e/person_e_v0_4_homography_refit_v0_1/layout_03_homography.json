@@ -1,0 +1,317 @@
+{
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "condition_number": 27076.366709050784,
+  "condition_number_method": "matrix_infinity_norm_v0.1",
+  "coordinate_order_guard": {
+    "mirrored_validation_error_blocks": 9.018039014509943,
+    "passed": true,
+    "transposed_point_inside_frame": true,
+    "transposed_validation_error_blocks": 175.16673997489684
+  },
+  "determinant": -1.4936322045849666e-05,
+  "fit_correspondence_count": 4,
+  "fit_residuals": [
+    {
+      "image_xy_pixels": [
+        1484.0,
+        644.0
+      ],
+      "point_id": "near_west",
+      "predicted_world_xz_blocks": [
+        -6.499999999999998,
+        4.500000000000004
+      ],
+      "reprojected_image_xy_pixels": [
+        1484.0000000000002,
+        644.0
+      ],
+      "reprojection_error_pixels": 2.2737367544323206e-13,
+      "world_euclidean_error_blocks": 4.782987168225453e-15,
+      "world_xz_blocks": [
+        -6.5,
+        4.5
+      ]
+    },
+    {
+      "image_xy_pixels": [
+        438.0,
+        644.0
+      ],
+      "point_id": "near_east",
+      "predicted_world_xz_blocks": [
+        7.500000000000011,
+        4.500000000000006
+      ],
+      "reprojected_image_xy_pixels": [
+        438.0000000000005,
+        644.0000000000001
+      ],
+      "reprojection_error_pixels": 5.240704272917405e-13,
+      "world_euclidean_error_blocks": 1.233896894832203e-14,
+      "world_xz_blocks": [
+        7.5,
+        4.5
+      ]
+    },
+    {
+      "image_xy_pixels": [
+        480.0,
+        609.0
+      ],
+      "point_id": "far_east",
+      "predicted_world_xz_blocks": [
+        9.500000000000009,
+        8.500000000000016
+      ],
+      "reprojected_image_xy_pixels": [
+        479.99999999999994,
+        609.0
+      ],
+      "reprojection_error_pixels": 5.684341886080802e-14,
+      "world_euclidean_error_blocks": 1.8288713016877624e-14,
+      "world_xz_blocks": [
+        9.5,
+        8.5
+      ]
+    },
+    {
+      "image_xy_pixels": [
+        1408.0,
+        682.0
+      ],
+      "point_id": "wall_near_face_ground_negative_end",
+      "predicted_world_xz_blocks": [
+        -3.999999999999997,
+        2.0000000000000058
+      ],
+      "reprojected_image_xy_pixels": [
+        1408.0000000000005,
+        682.0000000000001
+      ],
+      "reprojection_error_pixels": 4.687428401686771e-13,
+      "world_euclidean_error_blocks": 6.556898606395034e-15,
+      "world_xz_blocks": [
+        -4.0,
+        2.0
+      ]
+    }
+  ],
+  "heldout_localization": {
+    "by_image_region": {
+      "opposite_wall_endpoint": {
+        "median_absolute_wall_parallel_error_blocks": 0.1667229155637111,
+        "median_euclidean_error_blocks": 0.22115272918754378,
+        "p95_absolute_wall_parallel_error_blocks": 0.1667229155637111,
+        "p95_euclidean_error_blocks": 0.22115272918754378,
+        "sample_count": 1
+      }
+    },
+    "homography_fit_hash": "4550fedac559bf5602a87cbe277b44c9677eaaf4c1f75517975e5e6407ef3452",
+    "homography_version_id": "four_point_projective_gauss_jordan_v0.1:4550fedac559bf5602a87cbe277b44c9677eaaf4c1f75517975e5e6407ef3452",
+    "median_absolute_wall_parallel_error_blocks": 0.1667229155637111,
+    "median_euclidean_error_blocks": 0.22115272918754378,
+    "minimum_shift_if_gate_fails_blocks": null,
+    "p95_absolute_wall_parallel_error_blocks": 0.1667229155637111,
+    "p95_euclidean_error_blocks": 0.22115272918754378,
+    "percentile_method": "linear_interpolation_rank_n_minus_1",
+    "planning_gate_passed": true,
+    "records": [
+      {
+        "absolute_wall_parallel_error_blocks": 0.1667229155637111,
+        "euclidean_error_blocks": 0.22115272918754378,
+        "image_region": "opposite_wall_endpoint",
+        "image_xy": [
+          512.0,
+          681.0
+        ],
+        "predicted_wall_parallel_blocks": 9.16672291556371,
+        "predicted_world_xz": [
+          5.166722915563711,
+          2.145299687036947
+        ],
+        "sample_index": 0,
+        "signed_wall_parallel_error_blocks": 0.1667229155637111,
+        "true_wall_parallel_blocks": 9.0,
+        "true_world_xz": [
+          5.0,
+          2.0
+        ]
+      }
+    ],
+    "sample_count": 1
+  },
+  "homography": {
+    "algorithm_version": "four_point_projective_gauss_jordan_v0.1",
+    "canonical_camera_pose_id": "layout_03_canonical_pose_v1",
+    "denominator_tolerance": 1e-12,
+    "detector_version": "person-e-tkinter-manual-point-selector-v0.2",
+    "fit_hash": "4550fedac559bf5602a87cbe277b44c9677eaaf4c1f75517975e5e6407ef3452",
+    "homography_version_id": "four_point_projective_gauss_jordan_v0.1:4550fedac559bf5602a87cbe277b44c9677eaaf4c1f75517975e5e6407ef3452",
+    "image_coordinate_convention": "pixel_center_xy_zero_based",
+    "image_height_px": 1046,
+    "image_width_px": 1920,
+    "layout_id": "layout_03",
+    "marker_ids": [
+      "near_west",
+      "near_east",
+      "far_east",
+      "wall_near_face_ground_negative_end"
+    ],
+    "matrix": [
+      [
+        0.003169989611283357,
+        -0.0008703319712740423,
+        -2.6538988889147106
+      ],
+      [
+        6.129307553215651e-05,
+        0.011267579322525687,
+        -8.378729787993477
+      ],
+      [
+        1.3620683451590239e-05,
+        -0.0019400996219071543,
+        1.0
+      ]
+    ],
+    "pivot_tolerance": 1e-12,
+    "resolution_id": "framebuffer_1920x1046_rgb8",
+    "software_runtime_hash": "08e462d2c36ee0c7905eafe819f39f27fee1780e63f1cf381fe4ebe098730fc3",
+    "source_correspondence_hash": "2d4b25a7f3f091da4b9643c0be58cea70579c4e642b02e7f72248b6a6cf6b458",
+    "world_coordinate_convention": "ground_plane_world_xz_blocks"
+  },
+  "homography_algorithm": "four_point_projective_gauss_jordan_v0.1",
+  "independent_validation_count": 1,
+  "independent_validation_residuals": [
+    {
+      "image_xy_pixels": [
+        512.0,
+        681.0
+      ],
+      "point_id": "wall_near_face_ground_positive_end",
+      "predicted_world_xz_blocks": [
+        5.166722915563711,
+        2.145299687036947
+      ],
+      "reprojected_image_xy_pixels": [
+        520.3627568380726,
+        683.995379364704
+      ],
+      "reprojection_error_pixels": 8.883017475566819,
+      "world_euclidean_error_blocks": 0.22115272918754378,
+      "world_xz_blocks": [
+        5.0,
+        2.0
+      ]
+    }
+  ],
+  "inverse_matrix": [
+    [
+      333.950430093242,
+      -402.9881107116209,
+      -2490.2578120496264
+    ],
+    [
+      11.744330442417606,
+      -214.65374930454692,
+      -1767.3574978903118
+    ],
+    [
+      0.018236537954064613,
+      -0.4109606843759471,
+      -2.3949306000609907
+    ]
+  ],
+  "layout_id": "layout_03",
+  "matrix": [
+    [
+      0.003169989611283357,
+      -0.0008703319712740423,
+      -2.6538988889147106
+    ],
+    [
+      6.129307553215651e-05,
+      0.011267579322525687,
+      -8.378729787993477
+    ],
+    [
+      1.3620683451590239e-05,
+      -0.0019400996219071543,
+      1.0
+    ]
+  ],
+  "matrix_gate_passed": true,
+  "maximum_fit_reprojection_error_pixels": 5.240704272917405e-13,
+  "maximum_independent_validation_error_pixels": 8.883017475566819,
+  "maximum_roundtrip_error_pixels": 2.5421149729252077e-13,
+  "rank": 3,
+  "repository_tolerance_passed": true,
+  "roundtrip_residuals": [
+    {
+      "input_image_xy_pixels": [
+        1484.0,
+        644.0
+      ],
+      "point_id": "near_west",
+      "roundtrip_error_pixels": 2.2737367544323206e-13,
+      "roundtrip_image_xy_pixels": [
+        1483.9999999999998,
+        644.0
+      ]
+    },
+    {
+      "input_image_xy_pixels": [
+        438.0,
+        644.0
+      ],
+      "point_id": "near_east",
+      "roundtrip_error_pixels": 5.684341886080802e-14,
+      "roundtrip_image_xy_pixels": [
+        437.99999999999994,
+        644.0
+      ]
+    },
+    {
+      "input_image_xy_pixels": [
+        480.0,
+        609.0
+      ],
+      "point_id": "far_east",
+      "roundtrip_error_pixels": 5.684341886080802e-14,
+      "roundtrip_image_xy_pixels": [
+        479.99999999999994,
+        609.0
+      ]
+    },
+    {
+      "input_image_xy_pixels": [
+        1408.0,
+        682.0
+      ],
+      "point_id": "wall_near_face_ground_negative_end",
+      "roundtrip_error_pixels": 2.2737367544323206e-13,
+      "roundtrip_image_xy_pixels": [
+        1408.0000000000002,
+        682.0
+      ]
+    },
+    {
+      "input_image_xy_pixels": [
+        512.0,
+        681.0
+      ],
+      "point_id": "wall_near_face_ground_positive_end",
+      "roundtrip_error_pixels": 2.5421149729252077e-13,
+      "roundtrip_image_xy_pixels": [
+        512.0000000000002,
+        680.9999999999999
+      ]
+    }
+  ],
+  "schema_version": "person-e-v0.4-layout-homography-refit-v0.1",
+  "source_annotation_sha256": "9747e1dc9a497d29df8aaff83fc605465a980a73edfaddee1f43d6e8a92671c0",
+  "source_code_commit": "ce4ef3fd8833f13b6dba50074b239b46a02c5c9d",
+  "status": "PASS",
+  "tolerance_result": true
+}
