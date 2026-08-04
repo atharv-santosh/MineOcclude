@@ -1,0 +1,55 @@
+{
+  "schema_version": "person-c-c1-unresolved-observations-v0.1",
+  "runtime_execution_complete": false,
+  "geometry_classification": "RUNTIME_OBSERVATION_INCOMPLETE",
+  "accepted_geometry_owner": "UNRESOLVED",
+  "accepted_geometry_version": null,
+  "blockers": [
+    {
+      "code": "PRODUCTION_DEDICATED_SERVER_ROOT_AND_LAUNCH_COMMAND_MISSING",
+      "detail": "The repository has build logic and runtime commands but no production dedicated-server launcher; C:\\Users\\lollo\\mineocclude-server is absent."
+    },
+    {
+      "code": "PRODUCTION_1_16_5_CLIENT_PROFILE_MISSING",
+      "detail": "The default launcher profiles do not contain a Minecraft 1.16.5 Fabric profile, and no repository-bound production client launcher exists."
+    },
+    {
+      "code": "SERVER_PROPERTIES_AND_WORLD_IDENTITY_UNOBSERVED",
+      "detail": "No production server.properties, level seed, world folder, gamerule receipt, time/weather receipt, or pack receipt is available."
+    },
+    {
+      "code": "SPAWN_ANIMALS_EXPECTATION_CONFLICT_UNRESOLVED",
+      "detail": "The frozen expected lock says spawn-animals=false while the prior dev observation reports that the experiment sheep requires true."
+    },
+    {
+      "code": "SERVER_AND_CLIENT_MOD_INVENTORIES_UNOBSERVED",
+      "detail": "The exact production game directories do not exist or are not identified, so installed mod versions and hashes cannot be bound."
+    },
+    {
+      "code": "MARKER_OVERRIDE_RUNTIME_STATE_UNOBSERVED",
+      "detail": "The read-only markergeomstatus command is prepared and tested but has not run in a fresh production server process."
+    },
+    {
+      "code": "SIX_LAYOUT_GEOMETRY_RECEIPTS_UNOBSERVED",
+      "detail": "No fresh observegeometry receipts exist for layouts 01 through 06."
+    },
+    {
+      "code": "PRODUCTION_CAMERA_CONNECTION_UNOBSERVED",
+      "detail": "No production client has connected, so actual feet/eye position, yaw, and pitch are unobserved."
+    },
+    {
+      "code": "RAW_FRAMEBUFFER_RESOLUTION_UNOBSERVED",
+      "detail": "No fresh raw PNG from the production client is available for byte and dimension inspection."
+    },
+    {
+      "code": "PRODUCTION_FOV_AND_RENDER_SETTINGS_UNOBSERVED",
+      "detail": "The only local options.txt is not bound to a 1.16.5 production profile; its raw values are not accepted."
+    },
+    {
+      "code": "ACCEPTED_GEOMETRY_VERSION_NOT_ASSIGNED",
+      "detail": "Assignment is forbidden until all runtime receipts are complete and hash-bound."
+    }
+  ],
+  "next_state": "operator_provisions_or_identifies_pinned_server_and_client_then_executes_operator_runbook",
+  "c1_1_complete": false
+}

@@ -1,0 +1,1392 @@
+{
+  "schema_version": "person-c-runtime-geometry-comparison-v2.0",
+  "classification": "NEITHER_GEOMETRY_MATCHES_RUNTIME",
+  "accepted_geometry_owner": "SUCCESSOR",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "comparison_policy": "literal values only; no offsets, ID shifts, corrections, renumbering, or adapters",
+  "summary": {
+    "layout_count": 6,
+    "c_full_geometry_match_count": 0,
+    "e_marker_geometry_match_count": 0,
+    "runtime_layout_ids": [
+      "layout_01",
+      "layout_02",
+      "layout_03",
+      "layout_04",
+      "layout_05",
+      "layout_06"
+    ],
+    "c_wall_and_camera_match_count": 6,
+    "c_floor_match_count": 0,
+    "c_marker_match_count_by_layout": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "e_marker_match_count_by_layout": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "layouts": [
+    {
+      "layout_id": "layout_01",
+      "layout_id_correspondence": {
+        "runtime": "layout_01",
+        "c": "layout_01",
+        "e": "layout_01",
+        "legacy_e_id_not_applied": "layout_00"
+      },
+      "marker_coordinate_conventions": {
+        "runtime": "block_pos_xyz_and_block_top_face_centre_world_xyz",
+        "c": "literal_world_blocks_xyz_as_declared_no_transform",
+        "e": "ground_plane_world_xz_blocks_topface_centre"
+      },
+      "markers": [
+        {
+          "color": "blue",
+          "runtime_block_pos_xyz": [
+            -6,
+            3,
+            4
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -5.5,
+            4.0,
+            4.5
+          ],
+          "c_literal_world_xyz": [
+            -7.0,
+            4.0,
+            1.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -6.5,
+            4.0,
+            1.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            3.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "yellow",
+          "runtime_block_pos_xyz": [
+            6,
+            3,
+            4
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            6.5,
+            4.0,
+            4.5
+          ],
+          "c_literal_world_xyz": [
+            7.0,
+            4.0,
+            1.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            1.5
+          ],
+          "runtime_minus_e_xyz": [
+            -1.0,
+            0.0,
+            3.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "lime",
+          "runtime_block_pos_xyz": [
+            -8,
+            3,
+            8
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -7.5,
+            4.0,
+            8.5
+          ],
+          "c_literal_world_xyz": [
+            -7.0,
+            4.0,
+            5.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -6.5,
+            4.0,
+            5.5
+          ],
+          "runtime_minus_e_xyz": [
+            -1.0,
+            0.0,
+            3.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "white",
+          "runtime_block_pos_xyz": [
+            8,
+            3,
+            8
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            8.5,
+            4.0,
+            8.5
+          ],
+          "c_literal_world_xyz": [
+            7.0,
+            4.0,
+            5.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            5.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            3.0
+          ],
+          "e_literal_match": false
+        }
+      ],
+      "c_literal_marker_match_count": 0,
+      "e_literal_marker_match_count": 0,
+      "wall_axis": "x",
+      "c_wall_exact_match": true,
+      "runtime_floor": {
+        "axis": "X",
+        "axis_min_block_inclusive": -10,
+        "axis_max_block_inclusive": 10,
+        "ortho_min_block_inclusive": -9,
+        "ortho_max_block_inclusive": 9,
+        "y_block": 3,
+        "default_block_id": "minecraft:grass_block",
+        "expected_position_count": 399,
+        "matching_position_count": 399,
+        "mismatches": []
+      },
+      "c_floor_declaration": {
+        "arena": {
+          "min_x": -19,
+          "max_x": 20,
+          "min_z": -9,
+          "max_z": 10,
+          "floor_y": 3
+        },
+        "block": "minecraft:smooth_stone"
+      },
+      "c_floor_exact_match": false,
+      "runtime_camera": {
+        "canonical_feet_xyz": [
+          0.5,
+          4.0,
+          -5.5
+        ],
+        "canonical_yaw_degrees": 0.0,
+        "canonical_pitch_degrees": 0.0,
+        "fov_status": "not_server_observable",
+        "observed_players": [
+          {
+            "name": "overatedusername",
+            "feet_xyz": [
+              0.5,
+              4.0,
+              -5.5
+            ],
+            "eye_y": 5.620000004768372,
+            "yaw_degrees": 0.0,
+            "pitch_degrees": 0.0
+          }
+        ]
+      },
+      "c_camera_exact_match": true,
+      "e_camera_coordinates_available_in_marker_file": false,
+      "runtime_override": {
+        "enabled": false,
+        "signature": "null/null/null/null"
+      },
+      "result": "neither_literal_geometry_matches_runtime"
+    },
+    {
+      "layout_id": "layout_02",
+      "layout_id_correspondence": {
+        "runtime": "layout_02",
+        "c": "layout_02",
+        "e": "layout_02",
+        "legacy_e_id_not_applied": "layout_01"
+      },
+      "marker_coordinate_conventions": {
+        "runtime": "block_pos_xyz_and_block_top_face_centre_world_xyz",
+        "c": "literal_world_blocks_xyz_as_declared_no_transform",
+        "e": "ground_plane_world_xz_blocks_topface_centre"
+      },
+      "markers": [
+        {
+          "color": "blue",
+          "runtime_block_pos_xyz": [
+            4,
+            3,
+            -6
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            4.5,
+            4.0,
+            -5.5
+          ],
+          "c_literal_world_xyz": [
+            1.0,
+            4.0,
+            -7.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            1.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            0.5,
+            4.0,
+            -2.5
+          ],
+          "runtime_minus_e_xyz": [
+            4.0,
+            0.0,
+            -3.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "yellow",
+          "runtime_block_pos_xyz": [
+            4,
+            3,
+            6
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            4.5,
+            4.0,
+            6.5
+          ],
+          "c_literal_world_xyz": [
+            1.0,
+            4.0,
+            7.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            -0.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            0.5,
+            4.0,
+            3.5
+          ],
+          "runtime_minus_e_xyz": [
+            4.0,
+            0.0,
+            3.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "lime",
+          "runtime_block_pos_xyz": [
+            8,
+            3,
+            -8
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            8.5,
+            4.0,
+            -7.5
+          ],
+          "c_literal_world_xyz": [
+            5.0,
+            4.0,
+            -7.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            -0.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            -7.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "white",
+          "runtime_block_pos_xyz": [
+            8,
+            3,
+            8
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            8.5,
+            4.0,
+            8.5
+          ],
+          "c_literal_world_xyz": [
+            5.0,
+            4.0,
+            7.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            1.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            8.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "e_literal_match": false
+        }
+      ],
+      "c_literal_marker_match_count": 0,
+      "e_literal_marker_match_count": 0,
+      "wall_axis": "z",
+      "c_wall_exact_match": true,
+      "runtime_floor": {
+        "axis": "Z",
+        "axis_min_block_inclusive": -10,
+        "axis_max_block_inclusive": 10,
+        "ortho_min_block_inclusive": -9,
+        "ortho_max_block_inclusive": 9,
+        "y_block": 3,
+        "default_block_id": "minecraft:grass_block",
+        "expected_position_count": 399,
+        "matching_position_count": 399,
+        "mismatches": []
+      },
+      "c_floor_declaration": {
+        "arena": {
+          "min_x": -19,
+          "max_x": 20,
+          "min_z": -9,
+          "max_z": 10,
+          "floor_y": 3
+        },
+        "block": "minecraft:smooth_stone"
+      },
+      "c_floor_exact_match": false,
+      "runtime_camera": {
+        "canonical_feet_xyz": [
+          -5.5,
+          4.0,
+          0.5
+        ],
+        "canonical_yaw_degrees": -90.0,
+        "canonical_pitch_degrees": 0.0,
+        "fov_status": "not_server_observable",
+        "observed_players": [
+          {
+            "name": "overatedusername",
+            "feet_xyz": [
+              -5.5,
+              4.0,
+              0.5
+            ],
+            "eye_y": 5.620000004768372,
+            "yaw_degrees": -90.0,
+            "pitch_degrees": 0.0
+          }
+        ]
+      },
+      "c_camera_exact_match": true,
+      "e_camera_coordinates_available_in_marker_file": false,
+      "runtime_override": {
+        "enabled": false,
+        "signature": "null/null/null/null"
+      },
+      "result": "neither_literal_geometry_matches_runtime"
+    },
+    {
+      "layout_id": "layout_03",
+      "layout_id_correspondence": {
+        "runtime": "layout_03",
+        "c": "layout_03",
+        "e": "layout_03",
+        "legacy_e_id_not_applied": "layout_02"
+      },
+      "marker_coordinate_conventions": {
+        "runtime": "block_pos_xyz_and_block_top_face_centre_world_xyz",
+        "c": "literal_world_blocks_xyz_as_declared_no_transform",
+        "e": "ground_plane_world_xz_blocks_topface_centre"
+      },
+      "markers": [
+        {
+          "color": "blue",
+          "runtime_block_pos_xyz": [
+            -7,
+            3,
+            4
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -6.5,
+            4.0,
+            4.5
+          ],
+          "c_literal_world_xyz": [
+            -8.0,
+            4.0,
+            1.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -3.5,
+            4.0,
+            0.5
+          ],
+          "runtime_minus_e_xyz": [
+            -3.0,
+            0.0,
+            4.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "yellow",
+          "runtime_block_pos_xyz": [
+            7,
+            3,
+            4
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            4.5
+          ],
+          "c_literal_world_xyz": [
+            8.0,
+            4.0,
+            1.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            4.5,
+            4.0,
+            0.5
+          ],
+          "runtime_minus_e_xyz": [
+            3.0,
+            0.0,
+            4.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "lime",
+          "runtime_block_pos_xyz": [
+            -9,
+            3,
+            8
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -8.5,
+            4.0,
+            8.5
+          ],
+          "c_literal_world_xyz": [
+            -8.0,
+            4.0,
+            5.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -8.5,
+            4.0,
+            7.5
+          ],
+          "runtime_minus_e_xyz": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "white",
+          "runtime_block_pos_xyz": [
+            9,
+            3,
+            8
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            9.5,
+            4.0,
+            8.5
+          ],
+          "c_literal_world_xyz": [
+            8.0,
+            4.0,
+            5.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            3.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            9.5,
+            4.0,
+            7.5
+          ],
+          "runtime_minus_e_xyz": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "e_literal_match": false
+        }
+      ],
+      "c_literal_marker_match_count": 0,
+      "e_literal_marker_match_count": 0,
+      "wall_axis": "x",
+      "c_wall_exact_match": true,
+      "runtime_floor": {
+        "axis": "X",
+        "axis_min_block_inclusive": -11,
+        "axis_max_block_inclusive": 11,
+        "ortho_min_block_inclusive": -9,
+        "ortho_max_block_inclusive": 9,
+        "y_block": 3,
+        "default_block_id": "minecraft:grass_block",
+        "expected_position_count": 437,
+        "matching_position_count": 437,
+        "mismatches": []
+      },
+      "c_floor_declaration": {
+        "arena": {
+          "min_x": -19,
+          "max_x": 20,
+          "min_z": -9,
+          "max_z": 10,
+          "floor_y": 3
+        },
+        "block": "minecraft:smooth_stone"
+      },
+      "c_floor_exact_match": false,
+      "runtime_camera": {
+        "canonical_feet_xyz": [
+          0.5,
+          4.0,
+          -5.5
+        ],
+        "canonical_yaw_degrees": 0.0,
+        "canonical_pitch_degrees": 0.0,
+        "fov_status": "not_server_observable",
+        "observed_players": [
+          {
+            "name": "overatedusername",
+            "feet_xyz": [
+              0.5,
+              4.0,
+              -5.5
+            ],
+            "eye_y": 5.620000004768372,
+            "yaw_degrees": 0.0,
+            "pitch_degrees": 0.0
+          }
+        ]
+      },
+      "c_camera_exact_match": true,
+      "e_camera_coordinates_available_in_marker_file": false,
+      "runtime_override": {
+        "enabled": false,
+        "signature": "null/null/null/null"
+      },
+      "result": "neither_literal_geometry_matches_runtime"
+    },
+    {
+      "layout_id": "layout_04",
+      "layout_id_correspondence": {
+        "runtime": "layout_04",
+        "c": "layout_04",
+        "e": "layout_04",
+        "legacy_e_id_not_applied": "layout_03"
+      },
+      "marker_coordinate_conventions": {
+        "runtime": "block_pos_xyz_and_block_top_face_centre_world_xyz",
+        "c": "literal_world_blocks_xyz_as_declared_no_transform",
+        "e": "ground_plane_world_xz_blocks_topface_centre"
+      },
+      "markers": [
+        {
+          "color": "blue",
+          "runtime_block_pos_xyz": [
+            -6,
+            3,
+            6
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -5.5,
+            4.0,
+            6.5
+          ],
+          "c_literal_world_xyz": [
+            -7.0,
+            4.0,
+            2.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            4.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -6.5,
+            4.0,
+            2.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            4.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "yellow",
+          "runtime_block_pos_xyz": [
+            6,
+            3,
+            6
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            6.5,
+            4.0,
+            6.5
+          ],
+          "c_literal_world_xyz": [
+            7.0,
+            4.0,
+            2.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            4.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            2.5
+          ],
+          "runtime_minus_e_xyz": [
+            -1.0,
+            0.0,
+            4.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "lime",
+          "runtime_block_pos_xyz": [
+            -8,
+            3,
+            10
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -7.5,
+            4.0,
+            10.5
+          ],
+          "c_literal_world_xyz": [
+            -7.0,
+            4.0,
+            6.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            4.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -6.5,
+            4.0,
+            6.5
+          ],
+          "runtime_minus_e_xyz": [
+            -1.0,
+            0.0,
+            4.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "white",
+          "runtime_block_pos_xyz": [
+            8,
+            3,
+            10
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            8.5,
+            4.0,
+            10.5
+          ],
+          "c_literal_world_xyz": [
+            7.0,
+            4.0,
+            6.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            4.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            6.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            4.0
+          ],
+          "e_literal_match": false
+        }
+      ],
+      "c_literal_marker_match_count": 0,
+      "e_literal_marker_match_count": 0,
+      "wall_axis": "x",
+      "c_wall_exact_match": true,
+      "runtime_floor": {
+        "axis": "X",
+        "axis_min_block_inclusive": -10,
+        "axis_max_block_inclusive": 10,
+        "ortho_min_block_inclusive": -9,
+        "ortho_max_block_inclusive": 11,
+        "y_block": 3,
+        "default_block_id": "minecraft:grass_block",
+        "expected_position_count": 441,
+        "matching_position_count": 441,
+        "mismatches": []
+      },
+      "c_floor_declaration": {
+        "arena": {
+          "min_x": -19,
+          "max_x": 20,
+          "min_z": -8,
+          "max_z": 11,
+          "floor_y": 3
+        },
+        "block": "minecraft:smooth_stone"
+      },
+      "c_floor_exact_match": false,
+      "runtime_camera": {
+        "canonical_feet_xyz": [
+          0.5,
+          4.0,
+          -5.5
+        ],
+        "canonical_yaw_degrees": 0.0,
+        "canonical_pitch_degrees": 0.0,
+        "fov_status": "not_server_observable",
+        "observed_players": [
+          {
+            "name": "overatedusername",
+            "feet_xyz": [
+              0.5,
+              4.0,
+              -5.5
+            ],
+            "eye_y": 5.620000004768372,
+            "yaw_degrees": 0.0,
+            "pitch_degrees": 0.0
+          }
+        ]
+      },
+      "c_camera_exact_match": true,
+      "e_camera_coordinates_available_in_marker_file": false,
+      "runtime_override": {
+        "enabled": false,
+        "signature": "null/null/null/null"
+      },
+      "result": "neither_literal_geometry_matches_runtime"
+    },
+    {
+      "layout_id": "layout_05",
+      "layout_id_correspondence": {
+        "runtime": "layout_05",
+        "c": "layout_05",
+        "e": "layout_05",
+        "legacy_e_id_not_applied": "layout_04"
+      },
+      "marker_coordinate_conventions": {
+        "runtime": "block_pos_xyz_and_block_top_face_centre_world_xyz",
+        "c": "literal_world_blocks_xyz_as_declared_no_transform",
+        "e": "ground_plane_world_xz_blocks_topface_centre"
+      },
+      "markers": [
+        {
+          "color": "blue",
+          "runtime_block_pos_xyz": [
+            -5,
+            3,
+            3
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -4.5,
+            4.0,
+            3.5
+          ],
+          "c_literal_world_xyz": [
+            -6.0,
+            4.0,
+            1.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            2.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -5.5,
+            4.0,
+            1.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            2.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "yellow",
+          "runtime_block_pos_xyz": [
+            5,
+            3,
+            3
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            5.5,
+            4.0,
+            3.5
+          ],
+          "c_literal_world_xyz": [
+            6.0,
+            4.0,
+            1.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            2.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            6.5,
+            4.0,
+            1.5
+          ],
+          "runtime_minus_e_xyz": [
+            -1.0,
+            0.0,
+            2.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "lime",
+          "runtime_block_pos_xyz": [
+            -7,
+            3,
+            7
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            -6.5,
+            4.0,
+            7.5
+          ],
+          "c_literal_world_xyz": [
+            -6.0,
+            4.0,
+            5.0
+          ],
+          "runtime_minus_c_xyz": [
+            -0.5,
+            0.0,
+            2.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            -5.5,
+            4.0,
+            5.5
+          ],
+          "runtime_minus_e_xyz": [
+            -1.0,
+            0.0,
+            2.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "white",
+          "runtime_block_pos_xyz": [
+            7,
+            3,
+            7
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            7.5,
+            4.0,
+            7.5
+          ],
+          "c_literal_world_xyz": [
+            6.0,
+            4.0,
+            5.0
+          ],
+          "runtime_minus_c_xyz": [
+            1.5,
+            0.0,
+            2.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            6.5,
+            4.0,
+            5.5
+          ],
+          "runtime_minus_e_xyz": [
+            1.0,
+            0.0,
+            2.0
+          ],
+          "e_literal_match": false
+        }
+      ],
+      "c_literal_marker_match_count": 0,
+      "e_literal_marker_match_count": 0,
+      "wall_axis": "x",
+      "c_wall_exact_match": true,
+      "runtime_floor": {
+        "axis": "X",
+        "axis_min_block_inclusive": -9,
+        "axis_max_block_inclusive": 9,
+        "ortho_min_block_inclusive": -8,
+        "ortho_max_block_inclusive": 8,
+        "y_block": 3,
+        "default_block_id": "minecraft:grass_block",
+        "expected_position_count": 323,
+        "matching_position_count": 323,
+        "mismatches": []
+      },
+      "c_floor_declaration": {
+        "arena": {
+          "min_x": -19,
+          "max_x": 20,
+          "min_z": -9,
+          "max_z": 10,
+          "floor_y": 3
+        },
+        "block": "minecraft:smooth_stone"
+      },
+      "c_floor_exact_match": false,
+      "runtime_camera": {
+        "canonical_feet_xyz": [
+          0.5,
+          4.0,
+          -4.5
+        ],
+        "canonical_yaw_degrees": 0.0,
+        "canonical_pitch_degrees": 0.0,
+        "fov_status": "not_server_observable",
+        "observed_players": [
+          {
+            "name": "overatedusername",
+            "feet_xyz": [
+              0.5,
+              4.0,
+              -4.5
+            ],
+            "eye_y": 5.620000004768372,
+            "yaw_degrees": 0.0,
+            "pitch_degrees": 0.0
+          }
+        ]
+      },
+      "c_camera_exact_match": true,
+      "e_camera_coordinates_available_in_marker_file": false,
+      "runtime_override": {
+        "enabled": false,
+        "signature": "null/null/null/null"
+      },
+      "result": "neither_literal_geometry_matches_runtime"
+    },
+    {
+      "layout_id": "layout_06",
+      "layout_id_correspondence": {
+        "runtime": "layout_06",
+        "c": "layout_06",
+        "e": "layout_06",
+        "legacy_e_id_not_applied": "layout_05"
+      },
+      "marker_coordinate_conventions": {
+        "runtime": "block_pos_xyz_and_block_top_face_centre_world_xyz",
+        "c": "literal_world_blocks_xyz_as_declared_no_transform",
+        "e": "ground_plane_world_xz_blocks_topface_centre"
+      },
+      "markers": [
+        {
+          "color": "blue",
+          "runtime_block_pos_xyz": [
+            5,
+            3,
+            -7
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            5.5,
+            4.0,
+            -6.5
+          ],
+          "c_literal_world_xyz": [
+            2.0,
+            4.0,
+            -8.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            1.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            2.5,
+            4.0,
+            -7.5
+          ],
+          "runtime_minus_e_xyz": [
+            3.0,
+            0.0,
+            1.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "yellow",
+          "runtime_block_pos_xyz": [
+            5,
+            3,
+            7
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            5.5,
+            4.0,
+            7.5
+          ],
+          "c_literal_world_xyz": [
+            2.0,
+            4.0,
+            8.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            -0.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            2.5,
+            4.0,
+            8.5
+          ],
+          "runtime_minus_e_xyz": [
+            3.0,
+            0.0,
+            -1.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "lime",
+          "runtime_block_pos_xyz": [
+            9,
+            3,
+            -9
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            9.5,
+            4.0,
+            -8.5
+          ],
+          "c_literal_world_xyz": [
+            6.0,
+            4.0,
+            -8.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            -0.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            6.5,
+            4.0,
+            -7.5
+          ],
+          "runtime_minus_e_xyz": [
+            3.0,
+            0.0,
+            -1.0
+          ],
+          "e_literal_match": false
+        },
+        {
+          "color": "white",
+          "runtime_block_pos_xyz": [
+            9,
+            3,
+            9
+          ],
+          "runtime_top_face_centre_world_xyz": [
+            9.5,
+            4.0,
+            9.5
+          ],
+          "c_literal_world_xyz": [
+            6.0,
+            4.0,
+            8.0
+          ],
+          "runtime_minus_c_xyz": [
+            3.5,
+            0.0,
+            1.5
+          ],
+          "c_literal_match": false,
+          "e_literal_top_face_centre_world_xyz": [
+            6.5,
+            4.0,
+            8.5
+          ],
+          "runtime_minus_e_xyz": [
+            3.0,
+            0.0,
+            1.0
+          ],
+          "e_literal_match": false
+        }
+      ],
+      "c_literal_marker_match_count": 0,
+      "e_literal_marker_match_count": 0,
+      "wall_axis": "z",
+      "c_wall_exact_match": true,
+      "runtime_floor": {
+        "axis": "Z",
+        "axis_min_block_inclusive": -11,
+        "axis_max_block_inclusive": 11,
+        "ortho_min_block_inclusive": -10,
+        "ortho_max_block_inclusive": 10,
+        "y_block": 3,
+        "default_block_id": "minecraft:grass_block",
+        "expected_position_count": 483,
+        "matching_position_count": 483,
+        "mismatches": []
+      },
+      "c_floor_declaration": {
+        "arena": {
+          "min_x": -19,
+          "max_x": 20,
+          "min_z": -9,
+          "max_z": 10,
+          "floor_y": 3
+        },
+        "block": "minecraft:smooth_stone"
+      },
+      "c_floor_exact_match": false,
+      "runtime_camera": {
+        "canonical_feet_xyz": [
+          -6.5,
+          4.0,
+          0.5
+        ],
+        "canonical_yaw_degrees": -90.0,
+        "canonical_pitch_degrees": 0.0,
+        "fov_status": "not_server_observable",
+        "observed_players": [
+          {
+            "name": "overatedusername",
+            "feet_xyz": [
+              -6.5,
+              4.0,
+              0.5
+            ],
+            "eye_y": 5.620000004768372,
+            "yaw_degrees": -90.0,
+            "pitch_degrees": 0.0
+          }
+        ]
+      },
+      "c_camera_exact_match": true,
+      "e_camera_coordinates_available_in_marker_file": false,
+      "runtime_override": {
+        "enabled": false,
+        "signature": "null/null/null/null"
+      },
+      "result": "neither_literal_geometry_matches_runtime"
+    }
+  ],
+  "source_authorities": {
+    "runtime_builder_source_commit": "99b78b6578d17cffc0b5679118a42632284ce7f7",
+    "runtime_builder_sources_unchanged_through_ingestion_starting_commit": "8f3c82df658871b793f9530b8e04eded93682c20",
+    "historical_c_config": {
+      "path": "configs/scenes/layouts.yaml",
+      "size_bytes": 25518,
+      "sha256": "5a39d2dcae44d72f07b0e645dcc3e64ea6178ef79f1c9e3f12bff11f857f82cb",
+      "git_blob": "55b609d343cea47c098e01921018bd3b9a1e405d"
+    },
+    "historical_e_marker_files": [
+      {
+        "path": "data/handoff_e/markers_layout_01.json",
+        "size_bytes": 4291,
+        "sha256": "8a755a77232ce4c86c66f3df422a172b7bb832c15adfae3f6d112efe87ca4ecc",
+        "git_blob": "e65374b0f980c564c51cf43f399a56be1cbce838"
+      },
+      {
+        "path": "data/handoff_e/markers_layout_02.json",
+        "size_bytes": 3965,
+        "sha256": "d11277f517f584822cededd50512fd7279a377ec26caa7edb63ad3c06a6a2ce7",
+        "git_blob": "5e929b4e246d4914047a389b631954f9a05277af"
+      },
+      {
+        "path": "data/handoff_e/markers_layout_03.json",
+        "size_bytes": 3915,
+        "sha256": "fe10e98196652acd8431e4c19fe940379bbca5e3e6ac0eb061de74273f232be0",
+        "git_blob": "42d37b75b8f88e9401c90e52b1f9a4173fcf96a6"
+      },
+      {
+        "path": "data/handoff_e/markers_layout_04.json",
+        "size_bytes": 4291,
+        "sha256": "9a9baf5f91950785334f1ac83c2f32d0788a0bcf92523183d4933c41079ec460",
+        "git_blob": "6e427a71782c01ea2de74afe9b2c6e07ecda4459"
+      },
+      {
+        "path": "data/handoff_e/markers_layout_05.json",
+        "size_bytes": 4291,
+        "sha256": "e3b4506058d04e373a90a8f8357a204e83880e444ad0b0b09a79d8ad2d51d6fc",
+        "git_blob": "788babe0413151a1ad633387f7968f76e966e842"
+      },
+      {
+        "path": "data/handoff_e/markers_layout_06.json",
+        "size_bytes": 4291,
+        "sha256": "479671a39cf308427a1b4e5290dc7b6daa7ec9b86757b3853c58d71e88a2e924",
+        "git_blob": "f7bfeacf10df3b06ff9f693770f2106af2fe4b32"
+      }
+    ],
+    "runtime_builder_sources": [
+      {
+        "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ArenaBuilder.java",
+        "size_bytes": 10885,
+        "sha256": "87327ef4bc54aa43db38eff5b5378cf3929c08354aed881a07067ebcc99b968d",
+        "git_blob": "11cd6ffd8caf4c6edd7e69027d08c42ef75b9b02"
+      },
+      {
+        "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/Layouts.java",
+        "size_bytes": 3209,
+        "sha256": "316da835f696c4c5dc53b5abc7a7e9f6e566e6948f15db3b063b00a121bd0c0f",
+        "git_blob": "48c94b559253a378d8e938cc3375fbfc8ab7f1c3"
+      },
+      {
+        "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java",
+        "size_bytes": 48952,
+        "sha256": "4f6d3f5ec03bf36510ff16b27a883ac06b4abd9bb6455cfab684f27df79d9690",
+        "git_blob": "83e58615259abaa30d98483289d561d5e5bfba79"
+      },
+      {
+        "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java",
+        "size_bytes": 19686,
+        "sha256": "8aa7d9e6c89495d6574821e57362160a202fba6083b837ece46ce8e68bb2fca9",
+        "git_blob": "27af75b41bf6bcf837656a32d4d96b381779eab4"
+      }
+    ]
+  }
+}

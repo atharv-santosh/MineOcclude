@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0",
+  "package_id": "person-c-geometry-authority-v0_1",
+  "audit_starting_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+  "runtime_classification": "MIXED_OR_VERSIONED_GEOMETRY",
+  "accepted_geometry_owner": "UNRESOLVED",
+  "accepted_geometry_version": null,
+  "conflicted_layout_count": 6,
+  "runtime_observation_required": true,
+  "comparison_rule": {
+    "delta": "E minus C, componentwise [dx,dy,dz]",
+    "conversion_applied": false,
+    "note": "No hidden offset, +0.5 correction, layout-id shift, coordinate renumbering, or compatibility adapter was applied."
+  },
+  "shared_evidence": {
+    "c_layout_source": {
+      "path": "configs/scenes/layouts.yaml",
+      "version": "person-c-layout-config-v0.3",
+      "schema_version": "0.3",
+      "source_commit": "1f1937ad850b2476aca528032410a1938d0abe7f",
+      "git_blob": "55b609d343cea47c098e01921018bd3b9a1e405d",
+      "sha256": "5a39d2dcae44d72f07b0e645dcc3e64ea6178ef79f1c9e3f12bff11f857f82cb",
+      "evidence_kind": "specification_only",
+      "runtime_evidence_value": "RUNTIME EVIDENCE REQUIRED LATER"
+    },
+    "current_builder": {
+      "layouts_path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/Layouts.java",
+      "layouts_source_commit": "1f1937ad850b2476aca528032410a1938d0abe7f",
+      "layouts_git_blob": "48c94b559253a378d8e938cc3375fbfc8ab7f1c3",
+      "arena_builder_path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ArenaBuilder.java",
+      "arena_builder_source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356",
+      "arena_builder_git_blob": "3c157928d2e001cb4cc7fc0c3de12f66e2562727",
+      "marker_geometry_generation": "builder_v2_default_or_process_global_markergeom_override",
+      "layout_meta_writer_path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java",
+      "layout_meta_writer_source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356",
+      "layout_meta_writer_git_blob": "b9c5568d85c0107ad37b71d3bdde5ff16ec1806c"
+    },
+    "image_geometry": {
+      "canonical_resolution": [640, 360],
+      "canonical_resolution_record": "configs/scenes/environment_lock.template.yaml",
+      "canonical_resolution_source_commit": "4b724329338d9251697f458ce182efcbaf27a312",
+      "canonical_resolution_git_blob": "75e97445ccb1cdd504ab3b15e89f4d4e3afb9d4f",
+      "raw_historical_framebuffer_resolution": [1280, 720],
+      "raw_resolution_basis": "data/handoff_e/README.md",
+      "raw_resolution_source_commit": "487532ba1e7745fe07174090c0851269fb70a6a7",
+      "raw_resolution_git_blob": "bc2fc81cd7eebbb3a3452346eddc394d12c14f42",
+      "pixel_convention": "pixel-center"
+    },
+    "camera_observation": {
+      "feet_pose_and_yaw_pitch": "runtime_observed_in_each_capture_frame_map",
+      "eye_height": 1.6200000047683725,
+      "roll": "specified_as_0_not_independently_observed",
+      "vertical_fov_degrees": "specified_as_70_not_runtime_locked",
+      "environment_record": "configs/scenes/environment_lock.observed_dev_v0_1.json",
+      "environment_source_commit": "436427855900526c2f4be8123f73d49140bc3e89",
+      "environment_git_blob": "92f38bd36d2ac8cac80e7392783ce4eb53337d25"
+    },
+    "e_homography_status": {
+      "committed_fit_matrix_found": false,
+      "committed_fit_hash_found": false,
+      "committed_held_out_validation_found": false,
+      "marker_image_xy_are_null": true,
+      "same_world_geometry_as_e_claim": "NOT_PROVEN"
+    }
+  },
+  "layouts": [
+    {
+      "layout_id": "layout_01",
+      "layout_id_correspondence": {"current": "layout_01", "historical_legacy": "layout_00", "capture": "layout_00_ep9762", "rule": "historical rename only"},
+      "wall_axis": {"axis": "x", "positive_direction": "increasing_x"},
+      "camera": {"feet_xyz": [0.5, 4.0, -5.5], "eye_xyz": [0.5, 5.6200000047683725, -5.5], "yaw_pitch_roll_degrees": [0.0, 0.0, 0.0], "vertical_fov_degrees": 70.0},
+      "image_resolution": [640, 360],
+      "markers": {
+        "blue": {"c_world_xyz": [-7.0, 4.0, 1.0], "e_world_xyz": [-6.5, 4.0, 1.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "yellow": {"c_world_xyz": [7.0, 4.0, 1.0], "e_world_xyz": [7.5, 4.0, 1.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "lime": {"c_world_xyz": [-7.0, 4.0, 5.0], "e_world_xyz": [-6.5, 4.0, 5.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "white": {"c_world_xyz": [7.0, 4.0, 5.0], "e_world_xyz": [7.5, 4.0, 5.5], "delta_e_minus_c": [0.5, 0.0, 0.5]}
+      },
+      "coordinate_status": {"c": "specification_only; x/z equal historical builder-v1 BlockPos and y is the top plane", "e": "capture-associated top-face-centre claim; exact marker coordinates not receipted in layout_meta"},
+      "builder": {"head_constructs_c_markers": false, "head_constructs_full_c_layout": false, "historical_builder_v1_constructed_c_marker_block_xz": true},
+      "e_fitted_against_same_geometry": "NOT_PROVEN",
+      "sources": {
+        "e_marker": {"path": "data/handoff_e/markers_layout_01.json", "source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356", "git_blob": "e65374b0f980c564c51cf43f399a56be1cbce838", "sha256": "8a755a77232ce4c86c66f3df422a172b7bb832c15adfae3f6d112efe87ca4ecc"},
+        "capture_provenance": {"path": "data/autonomous/layout_00_ep9762/capture_provenance.json", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "0fbdfeb974c37425762805099dea97021147415b", "capture_git_sha": "1dc322af7e461b9a4744c177e9e40b02f10b2e58"},
+        "camera_frame_map": {"path": "data/autonomous/layout_00_ep9762/frame_map.parquet", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "0203979986eaec19d2ffb0065e6ac3d77f17d93d"}
+      },
+      "downstream_dependents": ["data/handoff_e/detector_calibration_inputs.json", "data/handoff_e/independent_probe_points.json", "data/handoff_e/phase3_homography_authority_v0_1/"]
+    },
+    {
+      "layout_id": "layout_02",
+      "layout_id_correspondence": {"current": "layout_02", "historical_legacy": "layout_01", "capture": "layout_02_ep31002", "rule": "capture already uses current one-based id; legacy id is lineage only"},
+      "wall_axis": {"axis": "z", "positive_direction": "increasing_z"},
+      "camera": {"feet_xyz": [-5.5, 4.0, 0.5], "eye_xyz": [-5.5, 5.6200000047683725, 0.5], "yaw_pitch_roll_degrees": [-90.0, 0.0, 0.0], "vertical_fov_degrees": 70.0},
+      "image_resolution": [640, 360],
+      "markers": {
+        "blue": {"c_world_xyz": [1.0, 4.0, -7.0], "e_world_xyz": [0.5, 4.0, -2.5], "delta_e_minus_c": [-0.5, 0.0, 4.5]},
+        "yellow": {"c_world_xyz": [1.0, 4.0, 7.0], "e_world_xyz": [0.5, 4.0, 3.5], "delta_e_minus_c": [-0.5, 0.0, -3.5]},
+        "lime": {"c_world_xyz": [5.0, 4.0, -7.0], "e_world_xyz": [7.5, 4.0, -7.5], "delta_e_minus_c": [2.5, 0.0, -0.5]},
+        "white": {"c_world_xyz": [5.0, 4.0, 7.0], "e_world_xyz": [7.5, 4.0, 8.5], "delta_e_minus_c": [2.5, 0.0, 1.5]}
+      },
+      "coordinate_status": {"c": "specification_only", "e": "recapture-associated override claim; markergeom command and resulting marker blocks absent from committed runtime receipts"},
+      "builder": {"head_constructs_c_markers": false, "head_constructs_full_c_layout": false, "historical_builder_v1_constructed_c_marker_block_xz": true},
+      "e_fitted_against_same_geometry": "NOT_PROVEN",
+      "sources": {
+        "e_marker": {"path": "data/handoff_e/markers_layout_02.json", "source_commit": "aa2e8ed127b829092e866af1f2c099acc3a20051", "git_blob": "5e929b4e246d4914047a389b631954f9a05277af", "sha256": "d11277f517f584822cededd50512fd7279a377ec26caa7edb63ad3c06a6a2ce7"},
+        "capture_provenance": {"path": "data/autonomous/layout_02_ep31002/capture_provenance.json", "source_commit": "aa2e8ed127b829092e866af1f2c099acc3a20051", "git_blob": "d2f47f3f71a5d3e8ed0f4053b2d9e374746f4a91", "capture_git_sha": "3cc5f619689da42e4d6a01c319d2ce1d3636d356"},
+        "camera_frame_map": {"path": "data/autonomous/layout_02_ep31002/frame_map.parquet", "source_commit": "aa2e8ed127b829092e866af1f2c099acc3a20051", "git_blob": "5fbfffcd3af2fbd4ab6fccd4aeee7b20b5558a85"}
+      },
+      "downstream_dependents": ["data/handoff_e/detector_calibration_inputs.json", "data/handoff_e/independent_probe_points.json", "data/handoff_e/phase3_homography_authority_v0_1/"]
+    },
+    {
+      "layout_id": "layout_03",
+      "layout_id_correspondence": {"current": "layout_03", "historical_legacy": "layout_02", "capture": "layout_03_ep33005", "rule": "capture already uses current one-based id; legacy id is lineage only"},
+      "wall_axis": {"axis": "x", "positive_direction": "increasing_x"},
+      "camera": {"feet_xyz": [0.5, 4.0, -5.5], "eye_xyz": [0.5, 5.6200000047683725, -5.5], "yaw_pitch_roll_degrees": [0.0, 0.0, 0.0], "vertical_fov_degrees": 70.0},
+      "image_resolution": [640, 360],
+      "markers": {
+        "blue": {"c_world_xyz": [-8.0, 4.0, 1.0], "e_world_xyz": [-3.5, 4.0, 0.5], "delta_e_minus_c": [4.5, 0.0, -0.5]},
+        "yellow": {"c_world_xyz": [8.0, 4.0, 1.0], "e_world_xyz": [4.5, 4.0, 0.5], "delta_e_minus_c": [-3.5, 0.0, -0.5]},
+        "lime": {"c_world_xyz": [-8.0, 4.0, 5.0], "e_world_xyz": [-8.5, 4.0, 7.5], "delta_e_minus_c": [-0.5, 0.0, 2.5]},
+        "white": {"c_world_xyz": [8.0, 4.0, 5.0], "e_world_xyz": [9.5, 4.0, 7.5], "delta_e_minus_c": [1.5, 0.0, 2.5]}
+      },
+      "coordinate_status": {"c": "specification_only", "e": "recapture-associated override claim; markergeom command and resulting marker blocks absent from committed runtime receipts"},
+      "builder": {"head_constructs_c_markers": false, "head_constructs_full_c_layout": false, "historical_builder_v1_constructed_c_marker_block_xz": true},
+      "e_fitted_against_same_geometry": "NOT_PROVEN",
+      "sources": {
+        "e_marker": {"path": "data/handoff_e/markers_layout_03.json", "source_commit": "fa70424530f422a2e6140e0e90d0ff18f583141e", "git_blob": "42d37b75b8f88e9401c90e52b1f9a4173fcf96a6", "sha256": "fe10e98196652acd8431e4c19fe940379bbca5e3e6ac0eb061de74273f232be0"},
+        "capture_provenance": {"path": "data/autonomous/layout_03_ep33005/capture_provenance.json", "source_commit": "fa70424530f422a2e6140e0e90d0ff18f583141e", "git_blob": "b33a69cb2ef667e284edd8eb58a317b9a8eb1b4a", "capture_git_sha": "aa2e8ed127b829092e866af1f2c099acc3a20051"},
+        "camera_frame_map": {"path": "data/autonomous/layout_03_ep33005/frame_map.parquet", "source_commit": "fa70424530f422a2e6140e0e90d0ff18f583141e", "git_blob": "ac528e3cf02934072a2d3cb879b3c78ce3b18456"}
+      },
+      "downstream_dependents": ["data/handoff_e/detector_calibration_inputs.json", "data/handoff_e/independent_probe_points.json", "data/handoff_e/phase3_homography_authority_v0_1/"]
+    },
+    {
+      "layout_id": "layout_04",
+      "layout_id_correspondence": {"current": "layout_04", "historical_legacy": "layout_03", "capture": "layout_03_ep9768", "rule": "historical rename only"},
+      "wall_axis": {"axis": "x", "positive_direction": "increasing_x"},
+      "camera": {"feet_xyz": [0.5, 4.0, -5.5], "eye_xyz": [0.5, 5.6200000047683725, -5.5], "yaw_pitch_roll_degrees": [0.0, 0.0, 0.0], "vertical_fov_degrees": 70.0},
+      "image_resolution": [640, 360],
+      "markers": {
+        "blue": {"c_world_xyz": [-7.0, 4.0, 2.0], "e_world_xyz": [-6.5, 4.0, 2.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "yellow": {"c_world_xyz": [7.0, 4.0, 2.0], "e_world_xyz": [7.5, 4.0, 2.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "lime": {"c_world_xyz": [-7.0, 4.0, 6.0], "e_world_xyz": [-6.5, 4.0, 6.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "white": {"c_world_xyz": [7.0, 4.0, 6.0], "e_world_xyz": [7.5, 4.0, 6.5], "delta_e_minus_c": [0.5, 0.0, 0.5]}
+      },
+      "coordinate_status": {"c": "specification_only; x/z equal historical builder-v1 BlockPos and y is the top plane", "e": "capture-associated top-face-centre claim; exact marker coordinates not receipted in layout_meta"},
+      "builder": {"head_constructs_c_markers": false, "head_constructs_full_c_layout": false, "historical_builder_v1_constructed_c_marker_block_xz": true},
+      "e_fitted_against_same_geometry": "NOT_PROVEN",
+      "sources": {
+        "e_marker": {"path": "data/handoff_e/markers_layout_04.json", "source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356", "git_blob": "6e427a71782c01ea2de74afe9b2c6e07ecda4459", "sha256": "9a9baf5f91950785334f1ac83c2f32d0788a0bcf92523183d4933c41079ec460"},
+        "capture_provenance": {"path": "data/autonomous/layout_03_ep9768/capture_provenance.json", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "871b7fb578db55eee7fb6e268bebb837c26aa399", "capture_git_sha": "1dc322af7e461b9a4744c177e9e40b02f10b2e58"},
+        "camera_frame_map": {"path": "data/autonomous/layout_03_ep9768/frame_map.parquet", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "eae9de5564d9b51ed56033d82bbd698422ba3766"}
+      },
+      "downstream_dependents": ["data/handoff_e/detector_calibration_inputs.json", "data/handoff_e/independent_probe_points.json", "data/handoff_e/phase3_homography_authority_v0_1/"]
+    },
+    {
+      "layout_id": "layout_05",
+      "layout_id_correspondence": {"current": "layout_05", "historical_legacy": "layout_04", "capture": "layout_04_ep9770", "rule": "historical rename only"},
+      "wall_axis": {"axis": "x", "positive_direction": "increasing_x"},
+      "camera": {"feet_xyz": [0.5, 4.0, -4.5], "eye_xyz": [0.5, 5.6200000047683725, -4.5], "yaw_pitch_roll_degrees": [0.0, 0.0, 0.0], "vertical_fov_degrees": 70.0},
+      "image_resolution": [640, 360],
+      "markers": {
+        "blue": {"c_world_xyz": [-6.0, 4.0, 1.0], "e_world_xyz": [-5.5, 4.0, 1.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "yellow": {"c_world_xyz": [6.0, 4.0, 1.0], "e_world_xyz": [6.5, 4.0, 1.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "lime": {"c_world_xyz": [-6.0, 4.0, 5.0], "e_world_xyz": [-5.5, 4.0, 5.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "white": {"c_world_xyz": [6.0, 4.0, 5.0], "e_world_xyz": [6.5, 4.0, 5.5], "delta_e_minus_c": [0.5, 0.0, 0.5]}
+      },
+      "coordinate_status": {"c": "specification_only; x/z equal historical builder-v1 BlockPos and y is the top plane", "e": "capture-associated top-face-centre claim; exact marker coordinates not receipted in layout_meta"},
+      "builder": {"head_constructs_c_markers": false, "head_constructs_full_c_layout": false, "historical_builder_v1_constructed_c_marker_block_xz": true},
+      "e_fitted_against_same_geometry": "NOT_PROVEN",
+      "sources": {
+        "e_marker": {"path": "data/handoff_e/markers_layout_05.json", "source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356", "git_blob": "788babe0413151a1ad633387f7968f76e966e842", "sha256": "e3b4506058d04e373a90a8f8357a204e83880e444ad0b0b09a79d8ad2d51d6fc"},
+        "capture_provenance": {"path": "data/autonomous/layout_04_ep9770/capture_provenance.json", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "26664aa4475823b589922488c03d0b0840229d39", "capture_git_sha": "1dc322af7e461b9a4744c177e9e40b02f10b2e58"},
+        "camera_frame_map": {"path": "data/autonomous/layout_04_ep9770/frame_map.parquet", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "931b73c034524d330ff98cb64d8f2b50ced675c1"}
+      },
+      "downstream_dependents": ["data/handoff_e/detector_calibration_inputs.json", "data/handoff_e/independent_probe_points.json", "data/handoff_e/phase3_homography_authority_v0_1/"]
+    },
+    {
+      "layout_id": "layout_06",
+      "layout_id_correspondence": {"current": "layout_06", "historical_legacy": "layout_05", "capture": "layout_05_ep9772", "rule": "historical rename only"},
+      "wall_axis": {"axis": "z", "positive_direction": "increasing_z"},
+      "camera": {"feet_xyz": [-6.5, 4.0, 0.5], "eye_xyz": [-6.5, 5.6200000047683725, 0.5], "yaw_pitch_roll_degrees": [-90.0, 0.0, 0.0], "vertical_fov_degrees": 70.0},
+      "image_resolution": [640, 360],
+      "markers": {
+        "blue": {"c_world_xyz": [2.0, 4.0, -8.0], "e_world_xyz": [2.5, 4.0, -7.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "yellow": {"c_world_xyz": [2.0, 4.0, 8.0], "e_world_xyz": [2.5, 4.0, 8.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "lime": {"c_world_xyz": [6.0, 4.0, -8.0], "e_world_xyz": [6.5, 4.0, -7.5], "delta_e_minus_c": [0.5, 0.0, 0.5]},
+        "white": {"c_world_xyz": [6.0, 4.0, 8.0], "e_world_xyz": [6.5, 4.0, 8.5], "delta_e_minus_c": [0.5, 0.0, 0.5]}
+      },
+      "coordinate_status": {"c": "specification_only; x/z equal historical builder-v1 BlockPos and y is the top plane", "e": "capture-associated top-face-centre claim; exact marker coordinates not receipted in layout_meta"},
+      "builder": {"head_constructs_c_markers": false, "head_constructs_full_c_layout": false, "historical_builder_v1_constructed_c_marker_block_xz": true},
+      "e_fitted_against_same_geometry": "NOT_PROVEN",
+      "sources": {
+        "e_marker": {"path": "data/handoff_e/markers_layout_06.json", "source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356", "git_blob": "f7bfeacf10df3b06ff9f693770f2106af2fe4b32", "sha256": "479671a39cf308427a1b4e5290dc7b6daa7ec9b86757b3853c58d71e88a2e924"},
+        "capture_provenance": {"path": "data/autonomous/layout_05_ep9772/capture_provenance.json", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "07a9bc100b1498dd7be231da6528306d184fa87d", "capture_git_sha": "1dc322af7e461b9a4744c177e9e40b02f10b2e58"},
+        "camera_frame_map": {"path": "data/autonomous/layout_05_ep9772/frame_map.parquet", "source_commit": "82ef1212091b3f32eac02d7eabe25d55376086f2", "git_blob": "1e8bcec7f1552429d01ede10d4f2286cc2c258f6"}
+      },
+      "downstream_dependents": ["data/handoff_e/detector_calibration_inputs.json", "data/handoff_e/independent_probe_points.json", "data/handoff_e/phase3_homography_authority_v0_1/"]
+    }
+  ]
+}

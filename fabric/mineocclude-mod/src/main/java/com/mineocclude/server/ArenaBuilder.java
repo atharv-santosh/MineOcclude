@@ -54,6 +54,78 @@ public final class ArenaBuilder {
         return ovrNearOrtho + "/" + ovrFarOrtho + "/" + ovrNearInset + "/" + ovrFarInset;
     }
 
+    /** Observation-only query: true only when at least one live override is set. */
+    public static boolean markerGeomOverrideEnabled() {
+        return ovrNearOrtho != null || ovrFarOrtho != null
+                || ovrNearInset != null || ovrFarInset != null;
+    }
+
+    /** Pure observation helper shared with marker construction and unit tests. */
+    public static int[][] markerAxesForObservation(
+            double laneMin, double laneMax, double sheepOrthoValue) {
+        int sheepOrtho = (int) Math.round(sheepOrthoValue);
+        int nearOrtho = ovrNearOrtho != null ? ovrNearOrtho : sheepOrtho - 2;
+        int farOrtho = ovrFarOrtho != null ? ovrFarOrtho : sheepOrtho + 2;
+        int nearInset = ovrNearInset != null ? ovrNearInset : 2;
+        int farInset = ovrFarInset != null ? ovrFarInset : 0;
+        return new int[][]{
+                {(int) Math.floor(laneMin) + nearInset, nearOrtho},
+                {(int) Math.ceil(laneMax) - nearInset, nearOrtho},
+                {(int) Math.floor(laneMin) + farInset, farOrtho},
+                {(int) Math.ceil(laneMax) - farInset, farOrtho},
+        };
+    }
+
+    /** Pure inclusive floor bounds: axis min/max, ortho min/max, floor y. */
+    public static int[] floorBoundsForObservation(
+            double laneMin, double laneMax, double orthoMin,
+            double orthoMax, double laneY) {
+        return new int[]{(int) Math.floor(laneMin) - 2,
+                (int) Math.ceil(laneMax) + 2,
+                (int) Math.floor(orthoMin),
+                (int) Math.ceil(orthoMax),
+                (int) Math.floor(laneY) - 1};
+    }
+
+    /** Pure axis/ortho to x/y/z projection used by the runtime builder. */
+    public static int[] blockCoordinatesForObservation(
+            EpisodeConfig.Axis wallAxis, double axis, double yy, double ortho) {
+        if (wallAxis == EpisodeConfig.Axis.X) {
+            return new int[]{(int) Math.floor(axis), (int) Math.floor(yy),
+                    (int) Math.floor(ortho)};
+        }
+        return new int[]{(int) Math.floor(ortho), (int) Math.floor(yy),
+                (int) Math.floor(axis)};
+    }
+
+    /** Inclusive block bounds used by {@link #build(ServerWorld)}. */
+    public int floorAxisMinBlock() {
+        return floorBoundsForObservation(cfg.laneMin, cfg.laneMax,
+                orthoMin, orthoMax, cfg.laneY)[0];
+    }
+    public int floorAxisMaxBlock() {
+        return floorBoundsForObservation(cfg.laneMin, cfg.laneMax,
+                orthoMin, orthoMax, cfg.laneY)[1];
+    }
+    public int floorOrthoMinBlock() {
+        return floorBoundsForObservation(cfg.laneMin, cfg.laneMax,
+                orthoMin, orthoMax, cfg.laneY)[2];
+    }
+    public int floorOrthoMaxBlock() {
+        return floorBoundsForObservation(cfg.laneMin, cfg.laneMax,
+                orthoMin, orthoMax, cfg.laneY)[3];
+    }
+    public int floorYBlock() {
+        return floorBoundsForObservation(cfg.laneMin, cfg.laneMax,
+                orthoMin, orthoMax, cfg.laneY)[4];
+    }
+    public int wallOrthoBlock() { return (int) Math.floor(wallOrtho); }
+
+    /** Observation-only coordinate projection matching the builder exactly. */
+    public BlockPos observedBlockPos(double axis, double yy, double ortho) {
+        return axisPos(axis, yy, ortho);
+    }
+
     public ArenaBuilder(EpisodeConfig cfg, double wallOrtho, double orthoMin, double orthoMax) {
         this.cfg = cfg;
         this.wallOrtho = wallOrtho;
@@ -92,19 +164,8 @@ public final class ArenaBuilder {
         // near/far depth and per-row axis inset are runtime-tunable
         // (`mineocclude markergeom`) so the border-safe geometry can be dialled
         // in live per layout without a rebuild. ovr* == null uses the defaults.
-        int sheepOrtho = (int) Math.round(cfg.wallOrthoConst);  // sheep depth
-        int nearOrtho = ovrNearOrtho != null ? ovrNearOrtho : sheepOrtho - 2;
-        int farOrtho = ovrFarOrtho != null ? ovrFarOrtho : sheepOrtho + 2;
-        int nearInset = ovrNearInset != null ? ovrNearInset : 2;
-        int farInset = ovrFarInset != null ? ovrFarInset : 0;   // far row wider
-        int nearWest = (int) Math.floor(cfg.laneMin) + nearInset;
-        int nearEast = (int) Math.ceil(cfg.laneMax) - nearInset;
-        int farWest = (int) Math.floor(cfg.laneMin) + farInset;
-        int farEast = (int) Math.ceil(cfg.laneMax) - farInset;
-        int[][] markerAxes = {
-                {nearWest, nearOrtho}, {nearEast, nearOrtho},
-                {farWest, farOrtho}, {farEast, farOrtho},
-        };
+        int[][] markerAxes = markerAxesForObservation(
+                cfg.laneMin, cfg.laneMax, cfg.wallOrthoConst);
         for (int[] axes : markerAxes) {
             BlockPos pos = axisPos(axes[0], floorY, axes[1]);
             markerBlocks.add(new int[]{pos.getX(), pos.getY(), pos.getZ()});
@@ -115,10 +176,10 @@ public final class ArenaBuilder {
     public void build(ServerWorld world) {
         int y = (int) Math.floor(cfg.laneY);
         int floorY = y - 1;
-        int aMin = (int) Math.floor(cfg.laneMin) - 2;
-        int aMax = (int) Math.ceil(cfg.laneMax) + 2;
-        int oMin = (int) Math.floor(orthoMin);
-        int oMax = (int) Math.ceil(orthoMax);
+        int aMin = floorAxisMinBlock();
+        int aMax = floorAxisMaxBlock();
+        int oMin = floorOrthoMinBlock();
+        int oMax = floorOrthoMaxBlock();
 
         for (int a = aMin; a <= aMax; a++) {
             for (int o = oMin; o <= oMax; o++) {
@@ -167,10 +228,7 @@ public final class ArenaBuilder {
     }
 
     private BlockPos axisPos(double axis, double yy, double ortho) {
-        if (cfg.wallAxis == EpisodeConfig.Axis.X) {
-            return new BlockPos((int) Math.floor(axis), (int) Math.floor(yy), (int) Math.floor(ortho));
-        } else {
-            return new BlockPos((int) Math.floor(ortho), (int) Math.floor(yy), (int) Math.floor(axis));
-        }
+        int[] xyz = blockCoordinatesForObservation(cfg.wallAxis, axis, yy, ortho);
+        return new BlockPos(xyz[0], xyz[1], xyz[2]);
     }
 }

@@ -1,0 +1,35 @@
+{
+  "schema_version": "person-c-c1-installed-mods-inventory-v0.1",
+  "status": "pending_operator_observation",
+  "runtime_execution_complete": false,
+  "server": {
+    "mods_directory": null,
+    "directory_exists": false,
+    "entries": [],
+    "complete": false
+  },
+  "client": {
+    "production_game_directory": null,
+    "mods_directory": null,
+    "entries": [],
+    "complete": false
+  },
+  "preparation_host_candidates_not_accepted_as_production": [
+    {
+      "scope": "default .minecraft mods directory",
+      "path": "C:\\Users\\lollo\\AppData\\Roaming\\.minecraft\\mods\\Jujutsuverse-1.4 (1).zip",
+      "file_name": "Jujutsuverse-1.4 (1).zip",
+      "size_bytes": 175469,
+      "sha256": "ab693006abaad710e43480e29823c6f4551459418f778dc55c211d6203ee846d",
+      "mod_id": null,
+      "version": null,
+      "status": "unbound_candidate_not_a_verified_1_16_5_production_mod"
+    }
+  ],
+  "required_for_completion": [
+    "Enumerate every regular file in the exact server mods directory.",
+    "Enumerate every regular file in the exact production client mods directory.",
+    "Record file name, byte size, SHA-256, mod id, and version from fabric.mod.json where present.",
+    "Bind both inventories to the startup receipts and exact game directories."
+  ]
+}

@@ -4,17 +4,28 @@ import com.mineocclude.MineOcclude;
 import com.mineocclude.net.EpisodeEventPacket;
 import com.mineocclude.net.NetworkingIds;
 import com.mineocclude.net.TickSyncPacket;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 /**
@@ -131,11 +142,7 @@ public final class EpisodeManager {
 
         // Fixed, controlled lighting/weather (plan requirement + so the magenta
         // sheep is clearly lit): permanent noon, no weather.
-        world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_WEATHER_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, server);
-        world.setTimeOfDay(6000L);                    // noon
-        world.setWeather(1_000_000, 0, false, false); // clear, no rain/thunder
+        applyRuntimeBaseline(world);
 
         this.cfg = config;
         this.wallOrtho = cfg.wallOrthoConst + cfg.wallOrthoOffset;
@@ -160,12 +167,30 @@ public final class EpisodeManager {
         // delivers the spawn packet to the present player (spawning before the
         // teleport left some clients never seeing the sheep).
         if (sheep != null) { sheep.despawn(); sheep = null; }
-        if (cfg.spawnSheep()) { sheep = new SheepController(cfg, noiseSchedule); sheep.spawn(world); }
+        try {
+            if (cfg.spawnSheep()) {
+                sheep = new SheepController(cfg, noiseSchedule);
+                sheep.spawn(world);
+            } else {
+                SheepController.removeAllTaggedTargets(world);
+            }
+        } catch (IllegalStateException e) {
+            failureReason = e.getMessage();
+            lifecycle.fail(failureReason);
+            MineOcclude.LOG.error("[MineOcclude] REFUSED: {}", failureReason);
+            if (sheep != null) { sheep.despawn(); sheep = null; }
+            running = false;
+            return false;
+        }
 
-        // C2.3: reset must verify the target count before READY.
-        if (cfg.spawnSheep() && (sheep == null || !sheep.entityAlive())) {
-            lifecycle.fail("target count wrong after reset: expected 1 live sheep");
-            MineOcclude.LOG.error("[MineOcclude] reset failed: sheep did not spawn alive");
+        // C2.3/C1.5: reset must verify exact target identity/state/count before READY.
+        List<String> resetTargetProblems = targetValidationProblems(world);
+        if (!resetTargetProblems.isEmpty()) {
+            failureReason = "target retention failure at reset-to-armed: "
+                    + String.join("; ", resetTargetProblems);
+            lifecycle.fail(failureReason);
+            MineOcclude.LOG.error("[MineOcclude] REFUSED: {}", failureReason);
+            if (sheep != null) { sheep.despawn(); sheep = null; }
             running = false;
             return false;
         }
@@ -204,11 +229,7 @@ public final class EpisodeManager {
         this.camOrtho = wallOrtho - c.cameraDist;
         this.arena = new ArenaBuilder(c, wallOrtho, camOrtho - 3, c.wallOrthoConst + 3);
 
-        world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_WEATHER_CYCLE).set(false, server);
-        world.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, server);
-        world.setTimeOfDay(6000L);
-        world.setWeather(1_000_000, 0, false, false);
+        applyRuntimeBaseline(world);
 
         buildArenaIfChanged(world, camOrtho - 3, c.wallOrthoConst + 3);
         forceLoadArena(world);
@@ -221,6 +242,7 @@ public final class EpisodeManager {
 
     /** Open the logs, snap the camera to canonical pose, and start recording. */
     private void beginCapture() {
+        if (!validateTargetOrFail("armed-to-capture")) return;
         ServerWorld world = server.getWorld(World.OVERWORLD);
         placeCameraAtCanonicalPose(world, camOrtho); // re-snap in case the operator moved during warmup
         try {
@@ -277,6 +299,8 @@ public final class EpisodeManager {
     /** Called once per server tick. */
     public void tick() {
         if (!running) return;
+        if (!validateTargetOrFail(capturing
+                ? "recording-retention" : "warmup-retention")) return;
 
         // Warmup delay: countdown, no motion, no capture.
         if (!capturing) {
@@ -320,8 +344,8 @@ public final class EpisodeManager {
             try {
                 sheep.step();  // null for the NO_SHEEP control
             } catch (IllegalStateException e) {
-                // Noise schedule exhausted: an episode-fatal condition. Never
-                // generate a replacement draw (frozen RNG decision).
+                // Noise exhaustion or target retention is episode-fatal. Never
+                // replace a draw or respawn a missing target silently.
                 MineOcclude.LOG.error("[MineOcclude] {} — failing episode {}", e.getMessage(),
                         cfg.episodeId);
                 failureReason = e.getMessage();
@@ -441,7 +465,15 @@ public final class EpisodeManager {
         int respawns = sheep != null ? sheep.respawnCount() : -1;
         String rngSource = sheep != null ? sheep.rngSource() : "no_target";
         int drawsConsumed = sheep != null ? sheep.scheduleDrawsConsumed() : -1;
-        if (sheep != null) { sheep.despawn(); sheep = null; }  // fresh sheep next episode
+        if (sheep != null) { sheep.despawn(); sheep = null; }
+        ServerWorld cleanupWorld = server.getWorld(World.OVERWORLD);
+        int staleAfterStop = cleanupWorld == null ? 0
+                : SheepController.removeAllTaggedTargets(cleanupWorld);
+        if (staleAfterStop > 0) {
+            MineOcclude.LOG.error("[MineOcclude] stop cleanup removed {} unexpected stale target(s)",
+                    staleAfterStop);
+            if (failureReason == null) failureReason = "stale targets remained after stop cleanup";
+        }
         if (wasCapturing) {
             broadcastEpisode(EpisodeEventPacket.Type.END);
             actionbar("§7Recording finished.");
@@ -550,6 +582,400 @@ public final class EpisodeManager {
     private ServerPlayerEntity firstPlayer() {
         List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
         return players.isEmpty() ? null : players.get(0);
+    }
+
+    /** Read-only target-status command payload. */
+    public String targetStatusLine() {
+        if (cfg == null) {
+            return "target status: valid=false required=unknown count=unknown "
+                    + "layout=NONE episode=NONE lifecycle=IDLE problems=no runtime scene";
+        }
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        if (!cfg.spawnSheep()) {
+            TargetRetentionPolicy.Snapshot status = SheepController.noTargetSnapshot(world);
+            List<String> problems = TargetRetentionPolicy.validate(status);
+            return "target status: valid=" + problems.isEmpty()
+                    + " required=false count=" + status.taggedTargetCount
+                    + " layout=" + cfg.layoutId + " episode=" + cfg.episodeId
+                    + " lifecycle=" + lifecycleState() + " problems="
+                    + (problems.isEmpty() ? "NONE" : String.join("|", problems));
+        }
+        return sheep == null
+                ? "target status: valid=false required=true count=0 layout=" + cfg.layoutId
+                    + " episode=" + cfg.episodeId + " lifecycle=" + lifecycleState()
+                    + " problems=target controller missing"
+                : sheep.statusLine(cfg.layoutId, cfg.episodeId, lifecycleState());
+    }
+
+    public boolean targetStatusValid() {
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        return cfg != null && targetValidationProblems(world).isEmpty();
+    }
+
+    private List<String> targetValidationProblems(ServerWorld world) {
+        if (cfg == null) return java.util.Collections.singletonList("runtime scene is absent");
+        if (!cfg.spawnSheep()) {
+            return TargetRetentionPolicy.validate(SheepController.noTargetSnapshot(world));
+        }
+        if (sheep == null) return java.util.Collections.singletonList("target controller is absent");
+        return sheep.validationProblems();
+    }
+
+    /** Fail closed at every lifecycle boundary and recorded tick. */
+    private boolean validateTargetOrFail(String phase) {
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        List<String> problems = targetValidationProblems(world);
+        if (problems.isEmpty()) return true;
+        failureReason = "target retention failure at " + phase + ": "
+                + String.join("; ", problems);
+        MineOcclude.LOG.error("[MineOcclude] REFUSED: {}", failureReason);
+        if (lifecycle != null && !lifecycle.isTerminal()) lifecycle.fail(failureReason);
+        end();
+        return false;
+    }
+
+    /** Apply the additive post-C1 runtime baseline before any preview/reset. */
+    private void applyRuntimeBaseline(ServerWorld world) {
+        world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
+        world.getGameRules().get(GameRules.DO_WEATHER_CYCLE).set(false, server);
+        world.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, server);
+        world.getGameRules().get(GameRules.DO_MOB_GRIEFING).set(false, server);
+        // Yarn 1.16.5 exposes no direct IntRule setter; use the vanilla command
+        // path so callbacks and command-result semantics remain authoritative.
+        server.getCommandManager().execute(server.getCommandSource(),
+                "gamerule randomTickSpeed 0");
+        world.getGameRules().get(GameRules.DO_FIRE_TICK).set(false, server);
+        world.getGameRules().get(GameRules.KEEP_INVENTORY).set(true, server);
+        world.setTimeOfDay(6000L);
+        world.setWeather(1_000_000, 0, false, false);
+    }
+
+    /**
+     * C1.1 non-scientific observation tooling. This reads the currently standing
+     * arena and connected-player camera state without moving blocks, entities,
+     * markers, camera, or target and without changing reset/capture timing.
+     * Receipts are create-only so an earlier observation is never overwritten.
+     */
+    public Path writeGeometryObservation(String receiptId) throws IOException {
+        if (!receiptId.matches("[A-Za-z0-9][A-Za-z0-9_-]{0,63}")) {
+            throw new IllegalArgumentException(
+                    "receiptId must match [A-Za-z0-9][A-Za-z0-9_-]{0,63}");
+        }
+        if (cfg == null || arena == null) {
+            throw new IllegalStateException("no runtime layout is currently available");
+        }
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        if (world == null) throw new IllegalStateException("overworld is unavailable");
+
+        JsonObject root = new JsonObject();
+        root.addProperty("schema_version", "person-c-c1-runtime-geometry-observation-v0.1");
+        root.addProperty("receipt_id", receiptId);
+        root.addProperty("observation_only", true);
+        root.addProperty("scientific_use", "forbidden");
+        root.addProperty("mutates_runtime_state", false);
+        root.addProperty("layout_id", cfg.layoutId);
+        root.addProperty("episode_id", cfg.episodeId);
+        root.addProperty("scene", cfg.scene.name());
+        root.addProperty("running", running);
+        root.addProperty("capturing", capturing);
+        root.addProperty("lifecycle_state", lifecycleState());
+        root.addProperty("warmup_ticks_remaining", warmupRemaining);
+
+        JsonObject worldState = new JsonObject();
+        worldState.addProperty("world_seed", world.getSeed());
+        worldState.addProperty("difficulty", world.getDifficulty().name().toLowerCase());
+        worldState.addProperty("time_of_day_ticks", world.getTimeOfDay() % 24000L);
+        worldState.addProperty("raining", world.isRaining());
+        worldState.addProperty("thundering", world.isThundering());
+        worldState.addProperty("connected_player_count",
+                server.getPlayerManager().getPlayerList().size());
+        JsonObject gamerules = new JsonObject();
+        gamerules.addProperty("doMobSpawning",
+                world.getGameRules().get(GameRules.DO_MOB_SPAWNING).get());
+        gamerules.addProperty("doWeatherCycle",
+                world.getGameRules().get(GameRules.DO_WEATHER_CYCLE).get());
+        gamerules.addProperty("doDaylightCycle",
+                world.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).get());
+        gamerules.addProperty("mobGriefing",
+                world.getGameRules().get(GameRules.DO_MOB_GRIEFING).get());
+        gamerules.addProperty("randomTickSpeed",
+                world.getGameRules().get(GameRules.RANDOM_TICK_SPEED).get());
+        gamerules.addProperty("doFireTick",
+                world.getGameRules().get(GameRules.DO_FIRE_TICK).get());
+        gamerules.addProperty("keepInventory",
+                world.getGameRules().get(GameRules.KEEP_INVENTORY).get());
+        worldState.add("gamerules", gamerules);
+        root.add("world_state", worldState);
+
+        JsonObject override = new JsonObject();
+        override.addProperty("enabled", ArenaBuilder.markerGeomOverrideEnabled());
+        override.addProperty("signature", ArenaBuilder.markerGeomSignature());
+        addNullableInt(override, "near_ortho", ArenaBuilder.ovrNearOrtho);
+        addNullableInt(override, "far_ortho", ArenaBuilder.ovrFarOrtho);
+        addNullableInt(override, "near_inset", ArenaBuilder.ovrNearInset);
+        addNullableInt(override, "far_inset", ArenaBuilder.ovrFarInset);
+        root.add("marker_override", override);
+
+        TargetRetentionPolicy.Snapshot targetStatus = cfg.spawnSheep()
+                ? (sheep == null ? new TargetRetentionPolicy.Snapshot(true, 0,
+                    false, true, false, "none", "none", false, false,
+                    false, false, false, false, false,
+                    Double.NaN, Double.NaN, Double.NaN,
+                    Double.NaN, Double.NaN, Double.NaN) : sheep.snapshot())
+                : SheepController.noTargetSnapshot(world);
+        List<String> targetProblems = TargetRetentionPolicy.validate(targetStatus);
+        JsonObject target = new JsonObject();
+        target.addProperty("required", targetStatus.targetRequired);
+        target.addProperty("valid", targetProblems.isEmpty());
+        target.addProperty("tag", TargetRetentionPolicy.EXPERIMENT_TARGET_TAG);
+        target.addProperty("tagged_target_count", targetStatus.taggedTargetCount);
+        target.addProperty("uuid", sheep != null ? sheep.targetUuid() : "NONE");
+        target.addProperty("entity_type", targetStatus.entityType);
+        target.addProperty("color", targetStatus.color);
+        target.addProperty("no_ai", targetStatus.aiDisabled);
+        target.addProperty("silent", targetStatus.silent);
+        target.addProperty("persistent", targetStatus.persistent);
+        target.addProperty("invulnerable", targetStatus.invulnerable);
+        target.addProperty("adult", targetStatus.adult);
+        target.addProperty("alive", targetStatus.alive);
+        target.addProperty("removed", targetStatus.removed);
+        target.add("actual_xyz", xyz(targetStatus.actualX,
+                targetStatus.actualY, targetStatus.actualZ));
+        target.add("expected_xyz", xyz(targetStatus.expectedX,
+                targetStatus.expectedY, targetStatus.expectedZ));
+        JsonArray targetProblemArray = new JsonArray();
+        for (String problem : targetProblems) targetProblemArray.add(problem);
+        target.add("problems", targetProblemArray);
+        root.add("target", target);
+
+        JsonObject floor = new JsonObject();
+        floor.addProperty("axis", cfg.wallAxis.name());
+        floor.addProperty("axis_min_block_inclusive", arena.floorAxisMinBlock());
+        floor.addProperty("axis_max_block_inclusive", arena.floorAxisMaxBlock());
+        floor.addProperty("ortho_min_block_inclusive", arena.floorOrthoMinBlock());
+        floor.addProperty("ortho_max_block_inclusive", arena.floorOrthoMaxBlock());
+        floor.addProperty("y_block", arena.floorYBlock());
+        floor.addProperty("default_block_id", "minecraft:grass_block");
+        JsonArray floorMismatches = new JsonArray();
+        int floorExpected = 0;
+        int floorMatches = 0;
+        Block[] markerBlocks = markerStateBlocks();
+        JsonArray observedMarkerBlocks = new JsonArray();
+        for (int a = arena.floorAxisMinBlock(); a <= arena.floorAxisMaxBlock(); a++) {
+            for (int o = arena.floorOrthoMinBlock(); o <= arena.floorOrthoMaxBlock(); o++) {
+                BlockPos pos = arena.observedBlockPos(a, arena.floorYBlock(), o);
+                Block expected = Blocks.GRASS_BLOCK;
+                for (int m = 0; m < arena.markerBlocks.size(); m++) {
+                    int[] b = arena.markerBlocks.get(m);
+                    if (b[0] == pos.getX() && b[1] == pos.getY() && b[2] == pos.getZ()) {
+                        expected = markerBlocks[m];
+                        break;
+                    }
+                }
+                BlockState actual = world.getBlockState(pos);
+                int observedMarkerIndex = markerStateIndex(actual.getBlock());
+                if (observedMarkerIndex >= 0) {
+                    JsonObject observedMarker = new JsonObject();
+                    observedMarker.addProperty("role", ArenaBuilder.MARKER_ROLES[observedMarkerIndex]);
+                    observedMarker.addProperty("color", ArenaBuilder.MARKER_COLORS[observedMarkerIndex]);
+                    observedMarker.addProperty("actual_block_id", blockId(actual.getBlock()));
+                    observedMarker.add("block_pos_xyz", blockPosition(pos));
+                    observedMarker.add("top_face_centre_world_xyz",
+                            xyz(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5));
+                    observedMarkerBlocks.add(observedMarker);
+                }
+                floorExpected++;
+                if (actual.getBlock() == expected) {
+                    floorMatches++;
+                } else {
+                    floorMismatches.add(blockComparison(pos, expected, actual));
+                }
+            }
+        }
+        floor.addProperty("expected_position_count", floorExpected);
+        floor.addProperty("matching_position_count", floorMatches);
+        floor.add("mismatches", floorMismatches);
+        root.add("floor", floor);
+        root.addProperty("observed_marker_block_count", observedMarkerBlocks.size());
+        root.add("observed_marker_blocks", observedMarkerBlocks);
+
+        JsonObject wall = new JsonObject();
+        wall.addProperty("axis", cfg.wallAxis.name());
+        int wallAxisMin = (int) Math.floor(cfg.wallSegMin);
+        int wallAxisMax = (int) Math.ceil(cfg.wallSegMax);
+        wall.addProperty("declared_axis_min_block_inclusive", wallAxisMin);
+        wall.addProperty("declared_axis_max_block_inclusive", wallAxisMax);
+        wall.addProperty("scan_axis_min_block_inclusive", arena.floorAxisMinBlock());
+        wall.addProperty("scan_axis_max_block_inclusive", arena.floorAxisMaxBlock());
+        wall.addProperty("ortho_block", arena.wallOrthoBlock());
+        wall.addProperty("y_min_block_inclusive", (int) Math.floor(cfg.laneY));
+        wall.addProperty("y_max_block_inclusive",
+                (int) Math.floor(cfg.laneY) + ArenaBuilder.WALL_HEIGHT - 1);
+        wall.addProperty("declared_block_id",
+                cfg.buildWall() ? "minecraft:stone" : "minecraft:air");
+        JsonArray observedNonAir = new JsonArray();
+        JsonArray wallMismatches = new JsonArray();
+        int wallMatches = 0;
+        int wallExpected = 0;
+        for (int a = arena.floorAxisMinBlock(); a <= arena.floorAxisMaxBlock(); a++) {
+            for (int h = 0; h < ArenaBuilder.WALL_HEIGHT; h++) {
+                BlockPos pos = arena.observedBlockPos(
+                        a, Math.floor(cfg.laneY) + h, arena.wallOrthoBlock());
+                BlockState actual = world.getBlockState(pos);
+                Block expectedWall = cfg.buildWall() && a >= wallAxisMin && a <= wallAxisMax
+                        ? Blocks.STONE : Blocks.AIR;
+                wallExpected++;
+                if (!actual.isAir()) {
+                    observedNonAir.add(blockComparison(pos, expectedWall, actual));
+                }
+                if (actual.getBlock() == expectedWall) {
+                    wallMatches++;
+                } else {
+                    wallMismatches.add(blockComparison(pos, expectedWall, actual));
+                }
+            }
+        }
+        wall.addProperty("expected_position_count", wallExpected);
+        wall.addProperty("matching_position_count", wallMatches);
+        wall.add("observed_non_air_positions", observedNonAir);
+        wall.add("mismatches", wallMismatches);
+        root.add("wall", wall);
+
+        JsonObject lane = new JsonObject();
+        lane.addProperty("axis", cfg.wallAxis.name());
+        lane.addProperty("axis_min", cfg.laneMin);
+        lane.addProperty("axis_max", cfg.laneMax);
+        lane.addProperty("ortho", cfg.wallOrthoConst);
+        lane.addProperty("feet_y", cfg.laneY);
+        lane.addProperty("start_axis", cfg.startPos);
+        lane.add("world_start_xyz", worldPoint(cfg.laneMin, cfg.laneY, cfg.wallOrthoConst));
+        lane.add("world_end_xyz", worldPoint(cfg.laneMax, cfg.laneY, cfg.wallOrthoConst));
+        root.add("lane", lane);
+
+        JsonArray markers = new JsonArray();
+        for (int m = 0; m < arena.markerBlocks.size(); m++) {
+            int[] b = arena.markerBlocks.get(m);
+            BlockPos pos = new BlockPos(b[0], b[1], b[2]);
+            BlockState actual = world.getBlockState(pos);
+            JsonObject marker = new JsonObject();
+            marker.addProperty("role", ArenaBuilder.MARKER_ROLES[m]);
+            marker.addProperty("color", ArenaBuilder.MARKER_COLORS[m]);
+            marker.add("block_pos_xyz", blockPosition(pos));
+            marker.add("top_face_centre_world_xyz",
+                    xyz(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5));
+            marker.addProperty("expected_block_id", blockId(markerBlocks[m]));
+            marker.addProperty("actual_block_id", blockId(actual.getBlock()));
+            marker.addProperty("matches", actual.getBlock() == markerBlocks[m]);
+            markers.add(marker);
+        }
+        root.add("markers", markers);
+
+        JsonObject camera = new JsonObject();
+        camera.add("canonical_feet_xyz", xyz(
+                camPoseX + 0.5, camPoseFeetY, camPoseZ + 0.5));
+        camera.addProperty("canonical_yaw_degrees", basePoseYaw);
+        camera.addProperty("canonical_pitch_degrees", 0.0);
+        camera.addProperty("fov_status", "not_server_observable");
+        JsonArray players = new JsonArray();
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            JsonObject p = new JsonObject();
+            p.addProperty("name", player.getGameProfile().getName());
+            p.add("feet_xyz", xyz(player.getX(), player.getY(), player.getZ()));
+            p.addProperty("eye_y", player.getEyeY());
+            p.addProperty("yaw_degrees", player.yaw);
+            p.addProperty("pitch_degrees", player.pitch);
+            players.add(p);
+        }
+        camera.add("observed_players", players);
+        root.add("camera", camera);
+
+        ServerPlayerEntity player = firstPlayer();
+        double cameraX = player != null ? player.getX() : camPoseX + 0.5;
+        double cameraY = player != null ? player.getEyeY() : camPoseFeetY + 1.62;
+        double cameraZ = player != null ? player.getZ() : camPoseZ + 0.5;
+        JsonObject shadow = new JsonObject();
+        shadow.addProperty("definition", "GeometryUtil.segmentHitsWall");
+        shadow.addProperty("camera_source",
+                player != null ? "observed_first_player" : "canonical_fallback");
+        shadow.addProperty("target_centre_y", cfg.laneY + 0.5);
+        JsonArray samples = new JsonArray();
+        for (int a = (int) Math.floor(cfg.laneMin); a <= (int) Math.ceil(cfg.laneMax); a++) {
+            double targetX = cfg.wallAxis == EpisodeConfig.Axis.X ? a : cfg.wallOrthoConst;
+            double targetZ = cfg.wallAxis == EpisodeConfig.Axis.X ? cfg.wallOrthoConst : a;
+            boolean occluded = cfg.buildWall() && GeometryUtil.segmentHitsWall(
+                    cfg.wallAxis, cameraX, cameraY, cameraZ,
+                    targetX, cfg.laneY + 0.5, targetZ,
+                    Math.floor(wallOrtho) + 0.5,
+                    Math.floor(cfg.wallSegMin), Math.ceil(cfg.wallSegMax) + 1.0,
+                    cfg.laneY, cfg.laneY + ArenaBuilder.WALL_HEIGHT, 0.5);
+            JsonObject sample = new JsonObject();
+            sample.addProperty("axis_position", a);
+            sample.add("target_world_xyz", xyz(targetX, cfg.laneY, targetZ));
+            sample.addProperty("occluded", occluded);
+            samples.add(sample);
+        }
+        shadow.add("integer_lane_samples", samples);
+        root.add("shadow", shadow);
+
+        Path observationRoot = outputRoot.resolveSibling("mineocclude_observations");
+        Files.createDirectories(observationRoot);
+        Path receipt = observationRoot.resolve(receiptId + ".json");
+        byte[] bytes = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
+                .create().toJson(root).getBytes(StandardCharsets.UTF_8);
+        Files.write(receipt, bytes, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+        MineOcclude.LOG.info("[MineOcclude/observation] wrote read-only geometry receipt {}", receipt);
+        return receipt;
+    }
+
+    private static void addNullableInt(JsonObject object, String name, Integer value) {
+        if (value == null) object.add(name, JsonNull.INSTANCE);
+        else object.addProperty(name, value);
+    }
+
+    private static Block[] markerStateBlocks() {
+        return new Block[]{Blocks.BLUE_CONCRETE, Blocks.YELLOW_CONCRETE,
+                Blocks.LIME_CONCRETE, Blocks.WHITE_CONCRETE};
+    }
+
+    private static int markerStateIndex(Block block) {
+        Block[] markers = markerStateBlocks();
+        for (int i = 0; i < markers.length; i++) {
+            if (block == markers[i]) return i;
+        }
+        return -1;
+    }
+
+    private static String blockId(Block block) {
+        return Registry.BLOCK.getId(block).toString();
+    }
+
+    private static JsonObject blockComparison(BlockPos pos, Block expected, BlockState actual) {
+        JsonObject object = new JsonObject();
+        object.add("block_pos_xyz", blockPosition(pos));
+        object.addProperty("expected_block_id", blockId(expected));
+        object.addProperty("actual_block_id", blockId(actual.getBlock()));
+        return object;
+    }
+
+    private JsonArray worldPoint(double axis, double y, double ortho) {
+        return cfg.wallAxis == EpisodeConfig.Axis.X
+                ? xyz(axis, y, ortho) : xyz(ortho, y, axis);
+    }
+
+    private static JsonArray blockPosition(BlockPos pos) {
+        JsonArray array = new JsonArray();
+        array.add(pos.getX());
+        array.add(pos.getY());
+        array.add(pos.getZ());
+        return array;
+    }
+
+    private static JsonArray xyz(double x, double y, double z) {
+        JsonArray array = new JsonArray();
+        array.add(x);
+        array.add(y);
+        array.add(z);
+        return array;
     }
 
     /**

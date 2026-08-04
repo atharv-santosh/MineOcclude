@@ -1,0 +1,26 @@
+{
+  "schema_version": "person-c-c1-provisioning-launch-commands-v0.1",
+  "status": "NOT_READY_JAVA_AND_RUN_CONFIG_GATES",
+  "repository_root": "C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A",
+  "fabric_project": "C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A\\fabric\\mineocclude-mod",
+  "selected_java_executable": null,
+  "server": {
+    "script_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\start-mineocclude-server.ps1",
+    "script_created": false,
+    "repository_supported_task": "runServer",
+    "committed_task_description": "Starts the 'null' run configuration",
+    "absolute_runtime_directory_configured": false,
+    "explicit_jvm_arguments_configured": false,
+    "launch_command_ready": false
+  },
+  "client": {
+    "script_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\start-mineocclude-client.ps1",
+    "script_created": false,
+    "repository_supported_task": "runClient",
+    "committed_task_description": "Starts the 'null' run configuration",
+    "absolute_runtime_directory_configured": false,
+    "explicit_jvm_arguments_configured": false,
+    "launch_command_ready": false
+  },
+  "reason": "The Java gate forbids provisioning. Additionally, the committed Loom project does not define named isolated run configurations or an external run-directory property; no command is invented here."
+}

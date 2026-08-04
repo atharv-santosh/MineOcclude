@@ -1,0 +1,409 @@
+{
+  "schema_version": "person-c-c1.5-first-operator-attempt-02-manifest-v0.1",
+  "status": "READY_FOR_MANUAL_RUNTIME_RETRY",
+  "runtime_executed_by_preparation": false,
+  "source_commit": "8cbf09bc59ff0cbe0e3af5ec075593349e910a34",
+  "accepted_geometry": {
+    "version": "person-c-layout-config-v0.4",
+    "path": "configs/scenes/layouts_v0_4.yaml",
+    "size_bytes": 45279,
+    "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "git_blob": "4b441a40379fcd9af2fdd6ea43a3ac3417f7cb1e"
+  },
+  "layout": {
+    "layout_id": "layout_01",
+    "config_version": "person-c-layout-config-v0.4",
+    "authority_basis": "fresh_runtime_observed_literal_geometry",
+    "floor": {
+      "axis": "x",
+      "bounds": {
+        "min_x": -10,
+        "max_x": 10,
+        "min_z": -9,
+        "max_z": 9,
+        "y": 3
+      },
+      "block": "minecraft:grass_block",
+      "observed_position_count": 399
+    },
+    "wall": {
+      "axis": "x",
+      "bounds": {
+        "min_x": -3,
+        "max_x": 3,
+        "min_z": 2,
+        "max_z": 2,
+        "min_y": 4,
+        "max_y": 6
+      },
+      "block": "minecraft:stone",
+      "observed_position_count": 63
+    },
+    "lane": {
+      "axis": "X",
+      "axis_min": -8.0,
+      "axis_max": 8.0,
+      "ortho": 6.0,
+      "feet_y": 4.0,
+      "start_axis": -6.0,
+      "world_start_xyz": [
+        -8.0,
+        4.0,
+        6.0
+      ],
+      "world_end_xyz": [
+        8.0,
+        4.0,
+        6.0
+      ]
+    },
+    "scalar_axis": {
+      "world_axis": "x",
+      "origin_world_coordinate_blocks": 0.0,
+      "positive_world_direction": "+x",
+      "unit": "blocks"
+    },
+    "motion_sign": 1,
+    "target_start": {
+      "axis_position": -6.0,
+      "world_xyz": [
+        -6.0,
+        4.0,
+        6.0
+      ],
+      "source": "runtime receipt lane declaration and server spawn log"
+    },
+    "shadow": {
+      "definition": "GeometryUtil.segmentHitsWall",
+      "camera_source": "observed_first_player",
+      "target_centre_y": 4.5,
+      "integer_lane_samples": [
+        {
+          "axis_position": -8,
+          "target_world_xyz": [
+            -8.0,
+            4.0,
+            6.0
+          ],
+          "occluded": false
+        },
+        {
+          "axis_position": -7,
+          "target_world_xyz": [
+            -7.0,
+            4.0,
+            6.0
+          ],
+          "occluded": false
+        },
+        {
+          "axis_position": -6,
+          "target_world_xyz": [
+            -6.0,
+            4.0,
+            6.0
+          ],
+          "occluded": false
+        },
+        {
+          "axis_position": -5,
+          "target_world_xyz": [
+            -5.0,
+            4.0,
+            6.0
+          ],
+          "occluded": false
+        },
+        {
+          "axis_position": -4,
+          "target_world_xyz": [
+            -4.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": -3,
+          "target_world_xyz": [
+            -3.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": -2,
+          "target_world_xyz": [
+            -2.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": -1,
+          "target_world_xyz": [
+            -1.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": 0,
+          "target_world_xyz": [
+            0.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": 1,
+          "target_world_xyz": [
+            1.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": 2,
+          "target_world_xyz": [
+            2.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": 3,
+          "target_world_xyz": [
+            3.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": 4,
+          "target_world_xyz": [
+            4.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": 5,
+          "target_world_xyz": [
+            5.0,
+            4.0,
+            6.0
+          ],
+          "occluded": true
+        },
+        {
+          "axis_position": 6,
+          "target_world_xyz": [
+            6.0,
+            4.0,
+            6.0
+          ],
+          "occluded": false
+        },
+        {
+          "axis_position": 7,
+          "target_world_xyz": [
+            7.0,
+            4.0,
+            6.0
+          ],
+          "occluded": false
+        },
+        {
+          "axis_position": 8,
+          "target_world_xyz": [
+            8.0,
+            4.0,
+            6.0
+          ],
+          "occluded": false
+        }
+      ]
+    },
+    "camera": {
+      "feet_xyz": [
+        0.5,
+        4.0,
+        -5.5
+      ],
+      "yaw_degrees": 0.0,
+      "pitch_degrees": 0.0,
+      "roll_degrees": 0.0,
+      "fov_degrees": 70.0
+    },
+    "markers": [
+      {
+        "role": "near_west",
+        "color": "blue",
+        "block": "minecraft:blue_concrete",
+        "block_pos_xyz": [
+          -6,
+          3,
+          4
+        ],
+        "top_face_centre_world_xyz": [
+          -5.5,
+          4.0,
+          4.5
+        ],
+        "world_point_convention": "block_top_face_centre"
+      },
+      {
+        "role": "near_east",
+        "color": "yellow",
+        "block": "minecraft:yellow_concrete",
+        "block_pos_xyz": [
+          6,
+          3,
+          4
+        ],
+        "top_face_centre_world_xyz": [
+          6.5,
+          4.0,
+          4.5
+        ],
+        "world_point_convention": "block_top_face_centre"
+      },
+      {
+        "role": "far_west",
+        "color": "lime",
+        "block": "minecraft:lime_concrete",
+        "block_pos_xyz": [
+          -8,
+          3,
+          8
+        ],
+        "top_face_centre_world_xyz": [
+          -7.5,
+          4.0,
+          8.5
+        ],
+        "world_point_convention": "block_top_face_centre"
+      },
+      {
+        "role": "far_east",
+        "color": "white",
+        "block": "minecraft:white_concrete",
+        "block_pos_xyz": [
+          8,
+          3,
+          8
+        ],
+        "top_face_centre_world_xyz": [
+          8.5,
+          4.0,
+          8.5
+        ],
+        "world_point_convention": "block_top_face_centre"
+      }
+    ],
+    "runtime_evidence": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_01.json",
+      "size_bytes": 11699,
+      "sha256": "d847a04868157707fd187ed0e2c8958850cb1646da4ec59b0e066ad9acbd3e40"
+    }
+  },
+  "spawn_animals": false,
+  "mineocclude_jar": {
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\artifacts\\mineocclude-0.1.1-538a176e1c83dc3b40e220dee8ebb2ac841bd9b4.jar",
+    "size_bytes": 84102,
+    "sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+  },
+  "attempt_01_failure_record": {
+    "path": "docs/status/person_c_c1_5_attempt_02_v0_1/attempt_01_failure_record.json",
+    "size_bytes": 12616,
+    "sha256": "32ae9707a727777ec261655ae5828266fb0efc1a33cfb7df0942041d706529b6"
+  },
+  "reserved_second_operator": {
+    "episode_id": 11502,
+    "seed": 202608031502,
+    "schedule": {
+      "path": "configs/collection/person_c_c1_5_v0_2/schedules/episode_11502.jsonl",
+      "size_bytes": 3380,
+      "sha256": "b399dd08b7e2dcdecc136400cb47afa680995edf04239f3a79e36bcc688655c7",
+      "git_blob": "b7b290a8febdc12c621d2e71809e89859ddf1068"
+    },
+    "still_required": true,
+    "reused_for_retry": false
+  },
+  "retry": {
+    "attempt": 2,
+    "operator_role": "first",
+    "episode_id": 11503,
+    "seed": 202608031503,
+    "schedule": {
+      "episode_id": 11503,
+      "seed": 202608031503,
+      "q": 0.0,
+      "n_draws": 20,
+      "dt_seconds": 0.05,
+      "repository": {
+        "path": "configs/collection/person_c_c1_5_attempt_02_v0_1/schedules/episode_11503.jsonl",
+        "size_bytes": 3369,
+        "sha256": "acff4ec8e22ecc04459f18780d4ce59153e2615385fd13291c4c92ac9ca35b8b"
+      },
+      "runtime": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_schedules\\episode_11503.jsonl",
+        "size_bytes": 3369,
+        "sha256": "acff4ec8e22ecc04459f18780d4ce59153e2615385fd13291c4c92ac9ca35b8b"
+      }
+    },
+    "configuration_commands": [
+      "mineocclude mode normal",
+      "mineocclude duration 0",
+      "mineocclude reveal 0",
+      "mineocclude impulse -1 0",
+      "mineocclude lockcam on",
+      "mineocclude warmup 1200"
+    ],
+    "start_command": "mineocclude start layout_01 11503 202608031503 0.0 0.0 20",
+    "wait_seconds_before_status": 10,
+    "target_status_command": "mineocclude targetstatus",
+    "required_target_status": "valid=true required=true count=1 lifecycle=READY problems=NONE",
+    "observe_command": "mineocclude observegeometry c1_5_first_operator_attempt_02_layout_01",
+    "stop_command": "mineocclude stop",
+    "observe_must_occur_before_recording": true,
+    "warning": "observegeometry must execute during warmup and before recording or episode finalization"
+  },
+  "runtime_paths": {
+    "geometry_receipt": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_5_first_operator_attempt_02_layout_01.json",
+    "screenshot": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\first_operator_attempt_02_layout_01.png",
+    "attestation": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_02_attestation.json",
+    "ingested_output": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_02_ingested.json",
+    "server_episode_output_guard": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11503",
+    "client_episode_output_guard": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503"
+  },
+  "server_start_command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\start-mineocclude-server.ps1\"",
+  "authenticated_client_action": "Open the official authenticated Minecraft Launcher; select profile fabric-loader-1.16.5 using version fabric-loader-0.15.11-1.16.5 and Game Directory C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client; click Play; confirm the authenticated account name in the client log; connect to 127.0.0.1:25565.",
+  "ingestion_validator": {
+    "path": "scripts/person_c/ingest_c1_5_attempt_02_runtime.py",
+    "size_bytes": 11852,
+    "sha256": "4de9b76d88d219a337af1821fa3dee1f15daf4d707ee90506700d7d0566762ec",
+    "git_blob": "a1887d5dd3e42be127d145ef5cb8f7fcf99617b9"
+  },
+  "ingestion_command": "python scripts/person_c/ingest_c1_5_attempt_02_runtime.py --geometry-receipt \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_5_first_operator_attempt_02_layout_01.json\" --screenshot \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\first_operator_attempt_02_layout_01.png\" --attestation \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_02_attestation.json\" --output \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_02_ingested.json\"",
+  "collision_audit": {
+    "candidate_episode_id": 11503,
+    "candidate_seed": 202608031503,
+    "repository_schedule_collision": false,
+    "runtime_identity_collision": false,
+    "create_only_output_collision": false,
+    "reserved_second_operator_unchanged": true
+  },
+  "c1_5_complete": false,
+  "independent_second_operator_still_required": true
+}

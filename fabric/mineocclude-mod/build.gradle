@@ -1,7 +1,7 @@
 plugins {
     // Loom 1.4 is the last comfortable line for 1.16.5. Build with JDK 17;
     // the produced mod targets Java 8 bytecode (MC 1.16.5 runs on Java 8/11).
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.4.6'
     id 'maven-publish'
 }
 
@@ -14,6 +14,32 @@ base {
 
 repositories {
     mavenCentral() // JUnit for the pure-Java unit tests
+}
+
+def c1ServerRunDir = providers.gradleProperty('mineoccludeServerRunDir')
+        .getOrElse('C:/Users/lollo/MineOcclude-Runtime/person-c-c1-v0_1/server')
+def c1ClientRunDir = providers.gradleProperty('mineoccludeClientRunDir')
+        .getOrElse('C:/Users/lollo/MineOcclude-Runtime/person-c-c1-v0_1/client')
+
+loom {
+    runs {
+        mineoccludeServer {
+            server()
+            name 'MineOcclude Dedicated Server'
+            runDir c1ServerRunDir
+            vmArgs '-Xms1G', '-Xmx2G', '-Dfile.encoding=UTF-8'
+            programArg 'nogui'
+            ideConfigGenerated false
+        }
+        mineoccludeClient {
+            client()
+            name 'MineOcclude Production Client'
+            runDir c1ClientRunDir
+            vmArgs '-Xms1G', '-Xmx2G', '-Dfile.encoding=UTF-8'
+            programArgs '--width', '640', '--height', '360'
+            ideConfigGenerated false
+        }
+    }
 }
 
 dependencies {

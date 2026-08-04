@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "package_id": "person-c-c1-runtime-observation-v0_1",
+  "starting_commit": "de16fabef5dfe326cbff71118c99d32234337a53",
+  "preparation_commit": null,
+  "algorithm": "SHA-256",
+  "generated_on": "2026-08-03",
+  "runtime_execution_complete": false,
+  "self_hash_policy": "sha256_inventory.json is intentionally excluded to avoid a recursive self-hash",
+  "package_files": [
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/operator_runbook.md", "size_bytes": 21603, "sha256": "a5d630cb445f37bd06453995e6539734af0b2089524045e99f3546f76e434329"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/expected_environment_lock.json", "size_bytes": 2724, "sha256": "e884dc083b562700b7652dca7a4eb8c602f5e272382d546a6dda2c275ec960b4"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/observed_environment_lock.json", "size_bytes": 2724, "sha256": "e884dc083b562700b7652dca7a4eb8c602f5e272382d546a6dda2c275ec960b4"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/environment_comparison.json", "size_bytes": 3318, "sha256": "029652030e08efb09c11b6b29a65f19507b5a095f666c551dec11096512a5ab3"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/server_startup_receipt.json", "size_bytes": 1358, "sha256": "b3892160f5bc02dddc91308024b4b8c1d50903ce94eefee2baae7024035b340b"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/client_startup_receipt.json", "size_bytes": 1179, "sha256": "a11b0f8bbc21dd98ba134874c6a48d7e7ca34efc3d7d8a3da3e27a0582e6c38f"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/installed_mods_inventory.json", "size_bytes": 1273, "sha256": "2abc8bb0cf1796ba4b887a292fa304b18d669b02cb1a0c607b063bd7b77c122d"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/server_properties_receipt.json", "size_bytes": 858, "sha256": "40a79d16351ec8d7ab8a3b590ca1505cd355f33c414313ab5e0c0fd48fdaf0a7"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/render_settings_receipt.json", "size_bytes": 1703, "sha256": "1a5e6f7aece44c934a601426cc9cb58391f472c8485c8b2c5db126a14b5427b7"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/marker_override_receipt.json", "size_bytes": 864, "sha256": "28fa12d4e3d5d594c90661c47521a8e6cd4d965213570b5d6d43e01323dd173a"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/layout_runtime_observations.json", "size_bytes": 3445, "sha256": "b8e882a1a528aeb4a5c5f0fa1c8d2e9461ec03400573d352864ef84040cb7ddf"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/geometry_runtime_comparison.json", "size_bytes": 3173, "sha256": "f00ba22b8848ad36b27ae8ef79f29da044a849081833fbd6755531fc37596c7e"},
+    {"path": "docs/status/person_c_c1_runtime_observation_v0_1/unresolved_observations.json", "size_bytes": 2644, "sha256": "8e40772594da5fadeec58a8f0939329e7493bc3eac72393ccc35c8420c5a9265"}
+  ],
+  "observation_tooling_files": [
+    {"path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ArenaBuilder.java", "size_bytes": 10885, "sha256": "87327ef4bc54aa43db38eff5b5378cf3929c08354aed881a07067ebcc99b968d"},
+    {"path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java", "size_bytes": 48603, "sha256": "162d34009e65f264ebd4b89925846d23418c5aaf90b0b852ad95b0abbaf4b1cc"},
+    {"path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java", "size_bytes": 19686, "sha256": "8aa7d9e6c89495d6574821e57362160a202fba6083b837ece46ce8e68bb2fca9"},
+    {"path": "fabric/mineocclude-mod/src/test/java/com/mineocclude/server/RuntimeObservationToolingTest.java", "size_bytes": 2081, "sha256": "9f92b8524f037efd77f541d06df2c8afdc540c13871239c3f9fb7582b12e499d"}
+  ],
+  "primary_inputs_unchanged": [
+    {"path": "configs/scenes/layouts.yaml", "size_bytes": 25518, "sha256": "5a39d2dcae44d72f07b0e645dcc3e64ea6178ef79f1c9e3f12bff11f857f82cb"},
+    {"path": "configs/scenes/environment_lock.template.yaml", "size_bytes": 2724, "sha256": "e884dc083b562700b7652dca7a4eb8c602f5e272382d546a6dda2c275ec960b4"},
+    {"path": "configs/scenes/environment_lock.observed_dev_v0_1.json", "size_bytes": 2609, "sha256": "bffd4341c01d14f77f01880353c33f3b378c3308c0b3a94fec4522fa0c86585d"},
+    {"path": "data/handoff_e/markers_layout_01.json", "size_bytes": 4291, "sha256": "8a755a77232ce4c86c66f3df422a172b7bb832c15adfae3f6d112efe87ca4ecc"},
+    {"path": "data/handoff_e/markers_layout_02.json", "size_bytes": 3965, "sha256": "d11277f517f584822cededd50512fd7279a377ec26caa7edb63ad3c06a6a2ce7"},
+    {"path": "data/handoff_e/markers_layout_03.json", "size_bytes": 3915, "sha256": "fe10e98196652acd8431e4c19fe940379bbca5e3e6ac0eb061de74273f232be0"},
+    {"path": "data/handoff_e/markers_layout_04.json", "size_bytes": 4291, "sha256": "9a9baf5f91950785334f1ac83c2f32d0788a0bcf92523183d4933c41079ec460"},
+    {"path": "data/handoff_e/markers_layout_05.json", "size_bytes": 4291, "sha256": "e3b4506058d04e373a90a8f8357a204e83880e444ad0b0b09a79d8ad2d51d6fc"},
+    {"path": "data/handoff_e/markers_layout_06.json", "size_bytes": 4291, "sha256": "479671a39cf308427a1b4e5290dc7b6daa7ec9b86757b3853c58d71e88a2e924"},
+    {"path": "docs/status/person_c_geometry_authority_v0_1/geometry_conflict_matrix.json", "size_bytes": 17826, "sha256": "4c3776f803a0a8f879040f186bbf3bb60e2fd1d35aa045cc31bcb8470ab5f436"},
+    {"path": "docs/status/person_c_geometry_authority_v0_1/runtime_builder_comparison.json", "size_bytes": 7796, "sha256": "64d79f5c451769e9e6d11c5df397ae18c37481a85ed557bdea9d6895d98a1ef3"},
+    {"path": "docs/status/person_c_geometry_authority_v0_1/authority_decision.md", "size_bytes": 7823, "sha256": "b3d9a8b2c4466b825d0adb89cda2918dad119ab87ff9e7fa1eb4954648623a37"}
+  ],
+  "preparation_validation": {
+    "focused_java_test": "PASS: RuntimeObservationToolingTest (3 tests)",
+    "full_fabric_build": "PASS: Gradle build, 21 tests",
+    "focused_python_contract_tests": "PASS: 27 tests and 48 subtests",
+    "known_geometry_conflict_test": "EXPECTED UNRESOLVED: 46 passed and 6 C-versus-E coordinate assertions failed for layouts 01-06; frozen inputs were not changed",
+    "package_membership_json_hash_and_pending_state": "PASS: 14 files and 29 hash-bound entries",
+    "operator_runbook_structure": "PASS: 22 chronological action sections contain location, purpose, expected result, success condition, failure response, and writes declaration",
+    "expected_lock_structure": "PASS; runtime_ready=false as required for pending evidence",
+    "observed_lock_structure": "PASS; runtime_ready=false as required for pending evidence",
+    "runtime_observation": "NOT EXECUTED"
+  }
+}

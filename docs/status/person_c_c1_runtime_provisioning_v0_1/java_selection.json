@@ -1,0 +1,42 @@
+{
+  "schema_version": "person-c-c1-java-selection-v0.1",
+  "status": "BLOCKED_NO_COMPATIBLE_JDK",
+  "required_java_major": 17,
+  "requirement_basis": [
+    "fabric/mineocclude-mod/build.gradle explicitly says to build with JDK 17",
+    "Gradle wrapper 8.3 requires a Java 17 or newer build JVM",
+    "Java 21 is not accepted because the committed project does not designate it as the pinned toolchain"
+  ],
+  "environment_variables_found": [],
+  "path_java": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.11.10-hotspot\\bin\\java.exe",
+  "searched_locations": [
+    {"path": "C:\\Program Files\\Eclipse Adoptium", "exists": true},
+    {"path": "C:\\Program Files\\Java", "exists": false},
+    {"path": "C:\\Program Files\\Microsoft", "exists": true},
+    {"path": "C:\\Program Files\\Amazon Corretto", "exists": false},
+    {"path": "C:\\Program Files\\BellSoft", "exists": false},
+    {"path": "C:\\Program Files\\Zulu", "exists": false},
+    {"path": "C:\\Program Files (x86)\\Java", "exists": false},
+    {"path": "C:\\Users\\lollo\\.jdks", "exists": false},
+    {"path": "C:\\Users\\lollo\\AppData\\Local\\Programs\\Eclipse Adoptium", "exists": false},
+    {"path": "C:\\Users\\lollo\\AppData\\Local\\Programs\\Microsoft", "exists": false},
+    {"path": "C:\\Users\\lollo\\.vscode\\extensions\\redhat.java-*\\jre\\*\\bin\\java.exe", "exists": true}
+  ],
+  "candidates": [
+    {"path": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.11.10-hotspot\\bin\\java.exe", "version": "21.0.11+10-LTS", "compatible": false, "reason": "wrong uncommitted major"},
+    {"path": "C:\\Users\\lollo\\.vscode\\extensions\\redhat.java-1.55.0-win32-x64\\jre\\21.0.11-win32-x86_64\\bin\\java.exe", "version": "21.0.11+10-LTS", "compatible": false, "reason": "wrong major and extension-owned JRE"}
+  ],
+  "selected_java_executable": null,
+  "compatible_java_found": false,
+  "installation_prerequisite": {
+    "distribution": "Eclipse Temurin",
+    "exact_version": "17.0.19+10",
+    "platform": "Windows x64",
+    "image_type": "JDK",
+    "jvm": "HotSpot",
+    "official_release": "https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.19%2B10",
+    "operator_requirement": "Install or extract this exact JDK without changing system-wide JAVA_HOME or PATH, provide its absolute bin\\java.exe path, and hash the installer/archive before use."
+  },
+  "acceptance_command": "& '<ABSOLUTE_JDK17_BIN_JAVA_EXE>' -version",
+  "accepted_output_prefix": "openjdk version \"17.0.19\""
+}
