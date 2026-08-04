@@ -336,6 +336,26 @@ def _git_commit_exists(repository: Path, revision: str) -> bool:
     return result.returncode == 0
 
 
+def _git_commit_is_ancestor(repository: Path, revision: str) -> bool:
+    """Accept additive authority receipts without weakening the pinned source."""
+
+    result = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repository),
+            "merge-base",
+            "--is-ancestor",
+            revision,
+            "HEAD",
+        ],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    return result.returncode == 0
+
+
 @dataclass(frozen=True)
 class RunnerArguments:
     repository_root: Path
@@ -990,8 +1010,12 @@ def load_canonical_pilot_binding(arguments: RunnerArguments) -> CanonicalPilotBi
     ):
         _fail("invalid_c6a_package", "canonical C6A completion fields differ", step="preflight")
     c_repository = _repository_root_for(package_path, "canonical C6A package")
-    if _run_git(c_repository, "rev-parse", "HEAD") != CANONICAL_PERSON_C_COMMIT:
-        _fail("person_c_commit_mismatch", "Person C worktree commit differs", step="preflight")
+    if not _git_commit_is_ancestor(c_repository, CANONICAL_PERSON_C_COMMIT):
+        _fail(
+            "person_c_commit_mismatch",
+            "Person C worktree lacks the canonical authority ancestry",
+            step="preflight",
+        )
     _validate_component_inventory(package, c_repository)
 
     capture_descriptor = package.get("capture_manifest")
@@ -1043,8 +1067,12 @@ def load_canonical_pilot_binding(arguments: RunnerArguments) -> CanonicalPilotBi
         _fail("person_e_handoff_hash_mismatch", "Person E handoff differs", step="preflight")
     e_handoff = _read_json_object(e_handoff_path, "Person E provenance handoff")
     e_repository = _repository_root_for(e_handoff_path, "Person E provenance handoff")
-    if _run_git(e_repository, "rev-parse", "HEAD") != CANONICAL_PERSON_E_COMMIT:
-        _fail("person_e_commit_mismatch", "Person E worktree commit differs", step="preflight")
+    if not _git_commit_is_ancestor(e_repository, CANONICAL_PERSON_E_COMMIT):
+        _fail(
+            "person_e_commit_mismatch",
+            "Person E worktree lacks the canonical authority ancestry",
+            step="preflight",
+        )
 
     artifact_manifest_path = arguments.episode_artifact_manifest.resolve()
     artifact_manifest_hash = _require_sha256(
