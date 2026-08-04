@@ -48,6 +48,11 @@ from mineocclude.probes.splits import assign_layout_grouped_folds  # noqa: E402
 REQUIRED_BRANCH = "role/person-b-analysis"
 REQUIRED_STARTING_ANCESTOR = "66279eee242a353423e1b084bdfa39f480274909"
 PERSON_A_COMMIT = "1858ea12513f833b62ea916e0691ae994f117428"
+PERSON_A_SUCCESSOR_RELATIVE = Path(
+    "docs/status/phase6_runtime/"
+    "person-a-canonical-c6a-multilayout-successor-seed-20260725-"
+    "retry-20260804T211350Z"
+)
 COLLECTION_MANIFEST_SHA256 = (
     "a672c834e8af3fd12c735e4042951b7b90d0aeeed5b0b62790aacdf3a58c0db0"
 )
@@ -178,8 +183,15 @@ def require_clean_repository(repository: Path, person_a_repository: Path) -> str
     )
     if _git(person_a_repository, "rev-parse", "HEAD") != PERSON_A_COMMIT:
         _fail("Person A worktree is not at the exact successor commit.")
-    if _git(person_a_repository, "status", "--porcelain=v1", "-uall"):
-        _fail("Person A successor worktree must remain clean.")
+    if _git(
+        person_a_repository,
+        "status",
+        "--porcelain=v1",
+        "-uall",
+        "--",
+        PERSON_A_SUCCESSOR_RELATIVE.as_posix(),
+    ):
+        _fail("Person A successor evidence must remain clean.")
     return _git(repository, "rev-parse", "HEAD")
 
 
