@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
-"""Fail-closed one-pilot SageMaker runner for Person A Phase 6.
+"""Fail-closed one-pilot GPU runner for Person A Phase 6.
 
 Importing this module and using ``plan`` perform no CUDA query, model load,
-media decode, or scientific operation.  ``run`` is restricted to the exact
-ratified Linux GPU workflow and executes Steps 6.1 through 6.5 in order.
+media decode, or scientific operation. ``run`` preserves the ratified Linux
+pilot and adds the manifest-bound canonical Windows CUDA successor; both
+execute Steps 6.1 through 6.5 in order.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import dataclasses
 import hashlib
 import importlib
 import json
+import math
 import os
 import platform
 import shutil
@@ -42,7 +45,7 @@ from mineocclude.activations.store_v2 import (
     validate_activation_index_snapshot_v2,
 )
 
-RUNNER_VERSION = "person-a-phase6-single-pilot-sagemaker-runner-v0.2"
+RUNNER_VERSION = "person-a-phase6-single-pilot-sagemaker-runner-v0.3"
 REQUIRED_BRANCH = "role/person-a-model"
 PERSON_A_STARTING_AUTHORITY = "5cbb42179e9069e25eac44ef5e1746b9f3b4a96c"
 PERSON_A_ACKNOWLEDGEMENT = "ca3f5695dc37f9f2c8066e323b25485c042b6cf7"
@@ -121,6 +124,44 @@ C_INPUT_PATHS = {
 PHASE6_STEPS = ("6.1", "6.2", "6.3", "6.4", "6.5")
 MINIMUM_FREE_DISK_BYTES = 10 * 1024**3
 MINIMUM_GPU_MEMORY_BYTES = 12 * 1024**3
+
+HISTORICAL_RUNTIME_HOST = "aws_sagemaker_linux_gpu"
+CANONICAL_WINDOWS_RUNTIME_HOST = "windows_cuda"
+CANONICAL_C6A_ID = "person-c-c6a-post-c1-v0.1"
+CANONICAL_PERSON_C_COMMIT = "b810bae554ba4f31018d39beb304c9b936387ca4"
+CANONICAL_PERSON_E_COMMIT = "d76f2df885d6b0e2e6cc5ade7025e799030ecea1"
+CANONICAL_GEOMETRY_VERSION = "person-c-layout-config-v0.4"
+CANONICAL_GEOMETRY_SHA256 = (
+    "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+)
+CANONICAL_SELECTION_RULE = (
+    "LOWEST_EPISODE_ID_SATISFYING_ALL_REPOSITORY_REQUIRED_"
+    "VISIBLE_POSITION_POSITIVE_CONTROL_CONDITIONS"
+)
+CANONICAL_CONDITION_ROLE = "no_wall_visible_control"
+CANONICAL_GROUPING_KEY = "layout_id"
+CANONICAL_POOLING_METHOD = "mean"
+CANONICAL_TOKEN_REGION = "visual"
+CANONICAL_ACTION_CONVERSION_IDENTITY = (
+    "mineworld_mcdataset_json_action_to_env_action@1.0:"
+    "7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746"
+)
+CANONICAL_PREPROCESSING_IDENTITY = (
+    "mineworld_gradio_step_video_preprocessing@1.0:"
+    "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab"
+)
+CANONICAL_IMPULSE_ORIENTATION = {
+    "camera_component_0_observed_effect": "runtime_no_component_0_effect",
+    "camera_component_1_observed_effect": (
+        "runtime_positive_component_1_step_in_visual_i_to_i_plus_1"
+    ),
+    "evidence_hash": (
+        "9b8d58c383cee1e37de0119acd23794719d1892d14e2186c3e0585e6769a3914"
+    ),
+    "evidence_scope": "frozen_person_a_runtime_scripted_impulse",
+    "fixture_id": "runtime_scripted_impulse",
+    "status": "verified",
+}
 
 
 class Phase6RunnerError(RuntimeError):
@@ -297,6 +338,70 @@ class RunnerArguments:
     seed: int
     device: str
     precision: str
+    runtime_host: str = HISTORICAL_RUNTIME_HOST
+    canonical_c6a_package: Path | None = None
+    canonical_c6a_package_sha256: str = ""
+    trajectory_id: str = SELECTED_PILOT
+    episode_id: int | None = None
+    episode_artifact_manifest: Path | None = None
+    episode_artifact_manifest_sha256: str = ""
+    person_e_provenance_handoff: Path | None = None
+    person_e_provenance_handoff_sha256: str = ""
+    expected_model_config_sha256: str = MODEL_CONFIG_GIT_BLOB_SHA256
+    expected_main_checkpoint_sha256: str = MAIN_CHECKPOINT_SHA256
+    expected_vae_config_sha256: str = VAE_CONFIG_SHA256
+    expected_vae_checkpoint_sha256: str = VAE_CHECKPOINT_SHA256
+    expected_preprocessing_identity: str = CANONICAL_PREPROCESSING_IDENTITY
+    expected_action_conversion_identity: str = (
+        CANONICAL_ACTION_CONVERSION_IDENTITY
+    )
+    expected_hook_site: str = HOOK_SITE
+    expected_pooling_method: str = CANONICAL_POOLING_METHOD
+    expected_token_region: str = CANONICAL_TOKEN_REGION
+    expected_activation_store_format: str = ACTIVATION_STORE_V2_FORMAT_VERSION
+    expected_activation_index_format: str = ACTIVATION_INDEX_V2_FORMAT_VERSION
+    ffmpeg: Path | None = None
+    ffprobe: Path | None = None
+
+    @property
+    def canonical_mode(self) -> bool:
+        return self.canonical_c6a_package is not None
+
+
+@dataclass(frozen=True)
+class CanonicalPilotBinding:
+    """Validated, read-only post-C1 C6A and Person E pilot authority."""
+
+    canonical_c6a_id: str
+    trajectory_id: str
+    episode_id: int
+    layout_id: str
+    frame_count: int
+    package_path: Path
+    package_sha256: str
+    person_c_commit: str
+    person_e_handoff_path: Path
+    person_e_handoff_sha256: str
+    person_e_commit: str
+    artifact_manifest_path: Path
+    artifact_manifest_sha256: str
+    registry_record_id: str
+    registry_record_sha256: str
+    capture_row: Mapping[str, Any]
+    inventory_row: Mapping[str, Any]
+    registry_record: Mapping[str, Any]
+    direct_artifacts: tuple[Mapping[str, Any], ...]
+    direct_paths: Mapping[str, Path]
+    direct_hashes: Mapping[str, str]
+    frame_paths: tuple[Path, ...]
+    frame_hashes: tuple[str, ...]
+    client_tick_rows: tuple[Mapping[str, Any], ...]
+    raw_action_rows: tuple[Mapping[str, Any], ...]
+    state_rows: tuple[Mapping[str, Any], ...]
+
+    @property
+    def expected_activation_rows(self) -> int:
+        return self.frame_count * len(FROZEN_PHASE6_LAYERS)
 
 
 @dataclass
@@ -435,6 +540,383 @@ def _verify_git_authorities(repository: Path) -> dict[str, bool]:
     return result
 
 
+def _require_sha256(value: object, label: str, *, step: str = "preflight") -> str:
+    if not isinstance(value, str) or len(value) != 64:
+        _fail("invalid_identity", f"{label} must be one SHA-256", step=step)
+    try:
+        int(value, 16)
+    except ValueError:
+        _fail("invalid_identity", f"{label} must be hexadecimal", step=step)
+    return value.lower()
+
+
+def _read_json_object(path: Path, label: str) -> dict[str, Any]:
+    if not path.is_absolute() or not path.is_file() or path.is_symlink():
+        _fail(
+            "invalid_path",
+            f"{label} must be an existing absolute ordinary file",
+            step="preflight",
+        )
+    try:
+        document = json.loads(path.read_bytes())
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        _fail("invalid_json", f"{label} is not valid JSON: {error}", step="preflight")
+    if not isinstance(document, dict):
+        _fail("invalid_json", f"{label} must contain one JSON object", step="preflight")
+    return document
+
+
+def _repository_root_for(path: Path, label: str) -> Path:
+    result = _run_git(path.parent, "rev-parse", "--show-toplevel", check=False)
+    if not result:
+        _fail(
+            "authority_repository_missing",
+            f"{label} is not inside a Git worktree",
+            step="preflight",
+        )
+    return Path(str(result)).resolve()
+
+
+def _component_path(
+    package: Mapping[str, Any],
+    repository: Path,
+    suffix: str,
+) -> Path:
+    rows = package.get("component_files")
+    if not isinstance(rows, list):
+        _fail("invalid_c6a_package", "component_files must be a list", step="preflight")
+    matches = [
+        row
+        for row in rows
+        if isinstance(row, Mapping) and str(row.get("path", "")).endswith(suffix)
+    ]
+    if len(matches) != 1:
+        _fail(
+            "invalid_c6a_package",
+            f"package must name exactly one {suffix}",
+            step="preflight",
+        )
+    row = matches[0]
+    path = repository / str(row["path"]).replace("/", os.sep)
+    if (
+        not path.is_file()
+        or path.is_symlink()
+        or path.stat().st_size != row.get("size_bytes")
+        or _sha256_file(path) != row.get("sha256")
+    ):
+        _fail(
+            "c6a_component_identity_mismatch",
+            f"C6A component identity differs: {suffix}",
+            step="preflight",
+        )
+    return path
+
+
+def _validate_component_inventory(
+    package: Mapping[str, Any], repository: Path
+) -> None:
+    rows = package.get("component_files")
+    if not isinstance(rows, list) or not rows:
+        _fail("invalid_c6a_package", "component_files must be non-empty", step="preflight")
+    for position, row in enumerate(rows):
+        if not isinstance(row, Mapping):
+            _fail(
+                "invalid_c6a_package",
+                f"component_files[{position}] must be a mapping",
+                step="preflight",
+            )
+        path = repository / str(row.get("path", "")).replace("/", os.sep)
+        if (
+            not path.is_file()
+            or path.is_symlink()
+            or path.stat().st_size != row.get("size_bytes")
+            or _sha256_file(path) != row.get("sha256")
+        ):
+            _fail(
+                "c6a_component_identity_mismatch",
+                f"C6A component identity differs: {row.get('path')!r}",
+                step="preflight",
+            )
+
+
+def _artifact_key(row: Mapping[str, Any]) -> tuple[str, str]:
+    return str(row.get("side", "")), str(row.get("relative_path", ""))
+
+
+def _validate_direct_artifact(row: Mapping[str, Any]) -> Path:
+    path = Path(str(row.get("path", ""))).resolve()
+    expected_hash = _require_sha256(row.get("sha256"), "episode artifact sha256")
+    if (
+        not path.is_absolute()
+        or not path.is_file()
+        or path.is_symlink()
+        or path.stat().st_size != row.get("size_bytes")
+        or _sha256_file(path) != expected_hash
+    ):
+        _fail(
+            "episode_artifact_identity_mismatch",
+            f"episode artifact bytes differ: {path}",
+            step="preflight",
+        )
+    return path
+
+
+def load_canonical_pilot_binding(arguments: RunnerArguments) -> CanonicalPilotBinding:
+    """Validate the selected post-C1 C6A pilot without creating outputs."""
+
+    if not arguments.canonical_mode:
+        _fail("canonical_mode_required", "canonical package is required", step="preflight")
+    assert arguments.canonical_c6a_package is not None
+    assert arguments.episode_artifact_manifest is not None
+    assert arguments.person_e_provenance_handoff is not None
+
+    package_path = arguments.canonical_c6a_package.resolve()
+    package_hash = _require_sha256(
+        arguments.canonical_c6a_package_sha256,
+        "canonical C6A package sha256",
+    )
+    if _sha256_file(package_path) != package_hash:
+        _fail("c6a_package_hash_mismatch", "canonical C6A package differs", step="preflight")
+    package = _read_json_object(package_path, "canonical C6A package")
+    if (
+        package.get("canonical_c6a_id") != CANONICAL_C6A_ID
+        or package.get("status") != "PASS"
+        or package.get("immutable") is not True
+        or package.get("required_episode_count") != 66
+        or package.get("completed_episode_count") != 66
+    ):
+        _fail("invalid_c6a_package", "canonical C6A completion fields differ", step="preflight")
+    c_repository = _repository_root_for(package_path, "canonical C6A package")
+    if _run_git(c_repository, "rev-parse", "HEAD") != CANONICAL_PERSON_C_COMMIT:
+        _fail("person_c_commit_mismatch", "Person C worktree commit differs", step="preflight")
+    _validate_component_inventory(package, c_repository)
+
+    capture_descriptor = package.get("capture_manifest")
+    if not isinstance(capture_descriptor, Mapping):
+        _fail("invalid_c6a_package", "capture_manifest descriptor is missing", step="preflight")
+    capture_path = c_repository / str(capture_descriptor.get("path", "")).replace("/", os.sep)
+    if (
+        not capture_path.is_file()
+        or capture_path.stat().st_size != capture_descriptor.get("size_bytes")
+        or _sha256_file(capture_path) != capture_descriptor.get("sha256")
+    ):
+        _fail("c6a_capture_manifest_mismatch", "capture manifest differs", step="preflight")
+    capture = _read_json_object(capture_path.resolve(), "C6A capture manifest")
+    capture_rows = capture.get("episodes")
+    matches = [
+        row
+        for row in capture_rows if isinstance(row, Mapping)
+        and row.get("episode_id") == arguments.episode_id
+    ] if isinstance(capture_rows, list) else []
+    if len(matches) != 1:
+        _fail("episode_identity_mismatch", "capture manifest episode is not unique", step="preflight")
+    capture_row = matches[0]
+
+    inventory_path = _component_path(package, c_repository, "episode_inventory.json")
+    output_path = _component_path(package, c_repository, "output_inventory.json")
+    inventory = _read_json_object(inventory_path.resolve(), "C6A episode inventory")
+    output = _read_json_object(output_path.resolve(), "C6A output inventory")
+    inventory_rows = inventory.get("episodes")
+    inventory_matches = [
+        row
+        for row in inventory_rows if isinstance(row, Mapping)
+        and row.get("episode_id") == arguments.episode_id
+    ] if isinstance(inventory_rows, list) else []
+    if len(inventory_matches) != 1:
+        _fail("episode_identity_mismatch", "episode inventory row is not unique", step="preflight")
+    inventory_row = inventory_matches[0]
+    output_rows = output.get("files")
+    c_artifacts = tuple(
+        row for row in output_rows
+        if isinstance(row, Mapping) and row.get("episode_id") == arguments.episode_id
+    ) if isinstance(output_rows, list) else ()
+
+    e_handoff_path = arguments.person_e_provenance_handoff.resolve()
+    e_handoff_hash = _require_sha256(
+        arguments.person_e_provenance_handoff_sha256,
+        "Person E handoff sha256",
+    )
+    if _sha256_file(e_handoff_path) != e_handoff_hash:
+        _fail("person_e_handoff_hash_mismatch", "Person E handoff differs", step="preflight")
+    e_handoff = _read_json_object(e_handoff_path, "Person E provenance handoff")
+    e_repository = _repository_root_for(e_handoff_path, "Person E provenance handoff")
+    if _run_git(e_repository, "rev-parse", "HEAD") != CANONICAL_PERSON_E_COMMIT:
+        _fail("person_e_commit_mismatch", "Person E worktree commit differs", step="preflight")
+
+    artifact_manifest_path = arguments.episode_artifact_manifest.resolve()
+    artifact_manifest_hash = _require_sha256(
+        arguments.episode_artifact_manifest_sha256,
+        "episode artifact manifest sha256",
+    )
+    if _sha256_file(artifact_manifest_path) != artifact_manifest_hash:
+        _fail("artifact_manifest_hash_mismatch", "episode artifact manifest differs", step="preflight")
+    registry = _read_json_object(artifact_manifest_path, "episode artifact manifest")
+    records = registry.get("records")
+    record_matches = [
+        row for row in records
+        if isinstance(row, Mapping) and row.get("episode_id") == arguments.episode_id
+    ] if isinstance(records, list) else []
+    if len(record_matches) != 1:
+        _fail("episode_identity_mismatch", "E registry episode is not unique", step="preflight")
+    record = record_matches[0]
+    identities = e_handoff.get("canonical_registry", {}).get("record_identities", [])
+    identity_matches = [
+        row for row in identities
+        if isinstance(row, Mapping) and row.get("episode_id") == arguments.episode_id
+    ] if isinstance(identities, list) else []
+    if len(identity_matches) != 1:
+        _fail("episode_identity_mismatch", "E handoff episode identity is not unique", step="preflight")
+    registry_identity = identity_matches[0]
+
+    expected_layout = str(capture_row.get("layout_id", ""))
+    expected_trajectory = f"{expected_layout}_ep{arguments.episode_id}"
+    if (
+        arguments.trajectory_id != expected_trajectory
+        or capture_row.get("scene") != "nowall"
+        or capture_row.get("set") != "nowall"
+        or capture_row.get("accepted_geometry_version") != CANONICAL_GEOMETRY_VERSION
+        or capture_row.get("accepted_geometry_sha256") != CANONICAL_GEOMETRY_SHA256
+        or inventory_row.get("status") != "PASS"
+        or inventory_row.get("target_check_valid") is not True
+        or inventory_row.get("target_expected_count") != 1
+        or inventory_row.get("target_observed_count") != 1
+        or record.get("record_status") != "accepted"
+        or record.get("byte_hashes_valid") is not True
+        or record.get("output_counts_valid") is not True
+        or record.get("output_schemas_valid") is not True
+        or e_handoff.get("canonical_c6a_id") != CANONICAL_C6A_ID
+        or e_handoff.get("status") != "READY_FOR_A6_6_PROVENANCE_CONSUMPTION"
+        or e_handoff.get("person_c_certification_commit") != CANONICAL_PERSON_C_COMMIT
+        or e_handoff.get("person_c_c6a_package", {}).get("sha256") != package_hash
+        or e_handoff.get("canonical_registry", {}).get("sha256") != artifact_manifest_hash
+        or registry_identity.get("registry_record_id") != record.get("registry_record_id")
+    ):
+        _fail(
+            "canonical_authority_mismatch",
+            "selected pilot, geometry, target, or provenance authority differs",
+            step="preflight",
+        )
+
+    e_outputs = record.get("outputs")
+    e_by_key = {
+        _artifact_key(row): row
+        for row in e_outputs if isinstance(row, Mapping)
+    } if isinstance(e_outputs, list) else {}
+    c_by_key = {_artifact_key(row): row for row in c_artifacts}
+    if set(e_by_key) != set(c_by_key) or len(c_by_key) != len(c_artifacts):
+        _fail("episode_artifact_set_mismatch", "C and E artifact sets differ", step="preflight")
+    direct_paths_by_key: dict[tuple[str, str], Path] = {}
+    for key, c_row in c_by_key.items():
+        e_row = e_by_key[key]
+        for field in ("path", "sha256", "size_bytes"):
+            if c_row.get(field) != e_row.get(field):
+                _fail(
+                    "episode_artifact_identity_mismatch",
+                    f"C and E differ for {key!r}.{field}",
+                    step="preflight",
+                )
+        direct_paths_by_key[key] = _validate_direct_artifact(c_row)
+
+    required_keys = {
+        ("client", "client_tick.jsonl"),
+        ("client", "raw_actions.jsonl"),
+        ("server", "server_state.jsonl"),
+        ("server", "reset_result.json"),
+    }
+    if not required_keys.issubset(direct_paths_by_key):
+        _fail("episode_artifact_set_mismatch", "required episode records are missing", step="preflight")
+    frame_rows = sorted(
+        (
+            (int(Path(relative).stem), direct_paths_by_key[(side, relative)], c_by_key[(side, relative)])
+            for side, relative in direct_paths_by_key
+            if side == "client" and relative.startswith("frames/")
+        ),
+        key=lambda item: item[0],
+    )
+    frame_count = int(inventory_row.get("frame_count", -1))
+    if [index for index, _path, _row in frame_rows] != list(range(frame_count)):
+        _fail("frame_identity_mismatch", "frame identities are not consecutive", step="preflight")
+
+    client_tick_path = direct_paths_by_key[("client", "client_tick.jsonl")]
+    raw_action_path = direct_paths_by_key[("client", "raw_actions.jsonl")]
+    state_path = direct_paths_by_key[("server", "server_state.jsonl")]
+    client_rows = tuple(_json_lines(client_tick_path.read_bytes(), label="client_tick"))
+    action_rows = tuple(_json_lines(raw_action_path.read_bytes(), label="raw_actions"))
+    state_rows = tuple(_json_lines(state_path.read_bytes(), label="server_state"))
+    if not (len(client_rows) == len(action_rows) == len(state_rows) == frame_count):
+        _fail("source_cardinality_mismatch", "episode record counts differ", step="preflight")
+    positions: list[float] = []
+    for index, (client, action, state) in enumerate(
+        zip(client_rows, action_rows, state_rows, strict=True)
+    ):
+        if (
+            client.get("episode_id") != arguments.episode_id
+            or action.get("episode_id") != arguments.episode_id
+            or state.get("episode_id") != arguments.episode_id
+            or client.get("server_tick") != index
+            or client.get("render_frame_idx") != index
+            or action.get("server_tick") != index
+            or action.get("render_frame_idx") != index
+            or action.get("action_idx") != index
+            or state.get("server_tick") != index
+            or state.get("layout_id") != expected_layout
+            or state.get("scene") != "NO_WALL"
+            or state.get("geometric_visible") is not True
+            or client.get("server_epoch_nanos") != state.get("server_epoch_nanos")
+        ):
+            _fail("source_identity_mismatch", f"source row {index} does not join exactly", step="preflight")
+        position = state.get("axis_pos")
+        if isinstance(position, bool) or not isinstance(position, (int, float)) or not math.isfinite(float(position)):
+            _fail("visible_position_invalid", f"source row {index} lacks a finite label", step="preflight")
+        positions.append(float(position))
+    if max(positions) - min(positions) <= 0.0:
+        _fail("visible_position_movement_missing", "wall-parallel movement is zero", step="preflight")
+
+    direct_paths = {
+        "client_tick": client_tick_path,
+        "raw_actions": raw_action_path,
+        "server_state": state_path,
+        "reset_result": direct_paths_by_key[("server", "reset_result.json")],
+    }
+    direct_hashes = {
+        name: str(c_by_key[key]["sha256"])
+        for name, key in {
+            "client_tick": ("client", "client_tick.jsonl"),
+            "raw_actions": ("client", "raw_actions.jsonl"),
+            "server_state": ("server", "server_state.jsonl"),
+            "reset_result": ("server", "reset_result.json"),
+        }.items()
+    }
+    return CanonicalPilotBinding(
+        canonical_c6a_id=CANONICAL_C6A_ID,
+        trajectory_id=arguments.trajectory_id,
+        episode_id=int(arguments.episode_id),
+        layout_id=expected_layout,
+        frame_count=frame_count,
+        package_path=package_path,
+        package_sha256=package_hash,
+        person_c_commit=CANONICAL_PERSON_C_COMMIT,
+        person_e_handoff_path=e_handoff_path,
+        person_e_handoff_sha256=e_handoff_hash,
+        person_e_commit=CANONICAL_PERSON_E_COMMIT,
+        artifact_manifest_path=artifact_manifest_path,
+        artifact_manifest_sha256=artifact_manifest_hash,
+        registry_record_id=str(record["registry_record_id"]),
+        registry_record_sha256=str(registry_identity["registry_record_sha256"]),
+        capture_row=dict(capture_row),
+        inventory_row=dict(inventory_row),
+        registry_record=dict(record),
+        direct_artifacts=tuple(dict(c_by_key[key]) for key in sorted(c_by_key)),
+        direct_paths=direct_paths,
+        direct_hashes=direct_hashes,
+        frame_paths=tuple(path for _index, path, _row in frame_rows),
+        frame_hashes=tuple(str(row["sha256"]) for _index, _path, row in frame_rows),
+        client_tick_rows=client_rows,
+        raw_action_rows=action_rows,
+        state_rows=state_rows,
+    )
+
+
 def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
     if arguments.seed != DETERMINISTIC_SEED:
         _fail(
@@ -454,12 +936,27 @@ def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
             "the frozen single-pilot precision is float16",
             step="preflight",
         )
+    if arguments.runtime_host not in {
+        HISTORICAL_RUNTIME_HOST,
+        CANONICAL_WINDOWS_RUNTIME_HOST,
+    }:
+        _fail(
+            "runtime_host_invalid",
+            "runtime_host must identify the frozen historical or Windows CUDA host",
+            step="preflight",
+        )
+    if arguments.canonical_mode != (
+        arguments.runtime_host == CANONICAL_WINDOWS_RUNTIME_HOST
+    ):
+        _fail(
+            "runtime_mode_mismatch",
+            "the canonical C6A package and Windows CUDA runtime must be selected together",
+            step="preflight",
+        )
     for field_name in (
         "repository_root",
         "mineworld_root",
         "asset_root",
-        "approved_input_root",
-        "approved_output_root",
     ):
         value = getattr(arguments, field_name)
         if not value.is_absolute() or not value.is_dir() or value.is_symlink():
@@ -468,6 +965,67 @@ def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
                 f"{field_name} must be an existing absolute ordinary directory",
                 step="preflight",
             )
+    if arguments.canonical_mode:
+        required_paths = (
+            "canonical_c6a_package",
+            "episode_artifact_manifest",
+            "person_e_provenance_handoff",
+            "ffmpeg",
+            "ffprobe",
+        )
+        for field_name in required_paths:
+            value = getattr(arguments, field_name)
+            if (
+                not isinstance(value, Path)
+                or not value.is_absolute()
+                or not value.is_file()
+                or value.is_symlink()
+            ):
+                _fail(
+                    "invalid_path",
+                    f"{field_name} must be an existing absolute ordinary file",
+                    step="preflight",
+                )
+        if arguments.episode_id is None or arguments.episode_id < 0:
+            _fail(
+                "episode_identity_invalid",
+                "canonical episode_id must be a non-negative integer",
+                step="preflight",
+            )
+        expected_identities = {
+            "expected_model_config_sha256": MODEL_CONFIG_GIT_BLOB_SHA256,
+            "expected_main_checkpoint_sha256": MAIN_CHECKPOINT_SHA256,
+            "expected_vae_config_sha256": VAE_CONFIG_SHA256,
+            "expected_vae_checkpoint_sha256": VAE_CHECKPOINT_SHA256,
+            "expected_preprocessing_identity": CANONICAL_PREPROCESSING_IDENTITY,
+            "expected_action_conversion_identity": CANONICAL_ACTION_CONVERSION_IDENTITY,
+            "expected_hook_site": HOOK_SITE,
+            "expected_pooling_method": CANONICAL_POOLING_METHOD,
+            "expected_token_region": CANONICAL_TOKEN_REGION,
+            "expected_activation_store_format": ACTIVATION_STORE_V2_FORMAT_VERSION,
+            "expected_activation_index_format": ACTIVATION_INDEX_V2_FORMAT_VERSION,
+        }
+        mismatches = [
+            name
+            for name, expected in expected_identities.items()
+            if getattr(arguments, name) != expected
+        ]
+        if mismatches:
+            _fail(
+                "scientific_identity_mismatch",
+                "frozen identities differ: " + ", ".join(mismatches),
+                step="preflight",
+            )
+        _validate_create_only_roots(arguments)
+    else:
+        for field_name in ("approved_input_root", "approved_output_root"):
+            value = getattr(arguments, field_name)
+            if not value.is_absolute() or not value.is_dir() or value.is_symlink():
+                _fail(
+                    "invalid_path",
+                    f"{field_name} must be an existing absolute ordinary directory",
+                    step="preflight",
+                )
     for field_name in (
         "main_checkpoint",
         "vae_config",
@@ -480,6 +1038,15 @@ def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
                 f"{field_name} must be an existing absolute ordinary file",
                 step="preflight",
             )
+        if arguments.canonical_mode:
+            try:
+                value.resolve().relative_to(arguments.asset_root.resolve())
+            except ValueError:
+                _fail(
+                    "invalid_path",
+                    f"{field_name} must be contained by the pinned asset root",
+                    step="preflight",
+                )
     try:
         arguments.approved_output_root.resolve().relative_to(
             arguments.repository_root.resolve()
@@ -494,14 +1061,123 @@ def _validate_runtime_arguments(arguments: RunnerArguments) -> None:
         )
 
 
-def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
+def _existing_parent(path: Path) -> Path:
+    candidate = path
+    while not candidate.exists() and candidate != candidate.parent:
+        candidate = candidate.parent
+    if not candidate.is_dir() or candidate.is_symlink():
+        _fail(
+            "invalid_path",
+            f"no ordinary existing parent directory exists for {path}",
+            step="preflight",
+        )
+    return candidate
+
+
+def _validate_create_only_roots(arguments: RunnerArguments) -> None:
+    """Prove all canonical roots are absent without creating anything."""
+
+    for field_name in ("approved_input_root", "approved_output_root"):
+        path = getattr(arguments, field_name)
+        if not path.is_absolute():
+            _fail(
+                "invalid_path",
+                f"{field_name} must be absolute",
+                step="preflight",
+            )
+        if path.exists() or path.is_symlink():
+            _fail(
+                "output_exists",
+                f"create-only {field_name} already exists: {path}",
+                step="preflight",
+            )
+        _existing_parent(path)
+    if arguments.approved_input_root == arguments.approved_output_root:
+        _fail(
+            "invalid_path",
+            "approved input and output roots must differ",
+            step="preflight",
+        )
+
+
+def cuda_preflight(torch_module: Any | None = None) -> dict[str, Any]:
+    """Read-only visibility and capacity gate for the required CUDA device."""
+
+    torch = torch_module or importlib.import_module("torch")
+    if not torch.cuda.is_available() or int(torch.cuda.device_count()) < 1:
+        _fail(
+            "cuda_unavailable",
+            "torch.cuda.is_available() and visible cuda:0 are required",
+            step="preflight",
+        )
+    properties = torch.cuda.get_device_properties(0)
+    if int(properties.total_memory) < MINIMUM_GPU_MEMORY_BYTES:
+        _fail(
+            "insufficient_gpu_memory",
+            f"cuda:0 must expose at least {MINIMUM_GPU_MEMORY_BYTES} bytes",
+            step="preflight",
+        )
+    torch.cuda.set_device(0)
+    if int(torch.cuda.current_device()) != 0:
+        _fail(
+            "cuda_device_mismatch",
+            "selected CUDA device is not cuda:0",
+            step="preflight",
+        )
+    return {
+        "available": True,
+        "device": REQUIRED_DEVICE,
+        "device_count": int(torch.cuda.device_count()),
+        "device_name": str(properties.name),
+        "total_memory_bytes": int(properties.total_memory),
+        "torch_cuda_version": str(torch.version.cuda),
+    }
+
+
+def model_assets_preflight(arguments: RunnerArguments) -> tuple[bytes, dict[str, str]]:
+    """Validate all frozen model/config bytes without importing the runtime."""
+
+    model_config_blob = _git_object_bytes(
+        arguments.mineworld_root,
+        f"{MINEWORLD_REVISION}:{MODEL_CONFIG_PATH}",
+    )
+    if _sha256_bytes(model_config_blob) != arguments.expected_model_config_sha256:
+        _fail(
+            "model_config_identity_mismatch",
+            "authoritative Git-blob model configuration hash differs",
+            step="preflight",
+        )
+    file_hashes = {
+        "main_checkpoint": _sha256_file(arguments.main_checkpoint),
+        "vae_config": _sha256_file(arguments.vae_config),
+        "vae_checkpoint": _sha256_file(arguments.vae_checkpoint),
+    }
+    expected_file_hashes = {
+        "main_checkpoint": arguments.expected_main_checkpoint_sha256,
+        "vae_config": arguments.expected_vae_config_sha256,
+        "vae_checkpoint": arguments.expected_vae_checkpoint_sha256,
+    }
+    if file_hashes != expected_file_hashes:
+        _fail(
+            "checkpoint_identity_mismatch",
+            "checkpoint or VAE bytes differ from frozen identities",
+            step="preflight",
+        )
+    return model_config_blob, file_hashes
+
+
+def runtime_preflight(
+    arguments: RunnerArguments,
+    canonical_binding: CanonicalPilotBinding | None = None,
+) -> dict[str, Any]:
     """Run the complete fail-closed SageMaker gate before Step 6.1."""
 
     _validate_runtime_arguments(arguments)
-    if platform.system() != "Linux":
+    expected_system = "Windows" if arguments.canonical_mode else "Linux"
+    if platform.system() != expected_system:
         _fail(
-            "linux_required",
-            "scientific execution is restricted to Linux SageMaker",
+            "runtime_host_mismatch",
+            f"{arguments.runtime_host} execution requires {expected_system}",
             step="preflight",
         )
     repository = arguments.repository_root
@@ -518,14 +1194,27 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
     module_path = (
         repository / "src" / "mineocclude" / "activations" / "store_v2.py"
     )
-    ratification = verify_activation_store_v2_ratification(
-        repository=repository,
-        object_expression=(
-            arguments.activation_store_v2_ratification_object
-        ),
-        current_commit=str(current_commit),
-        module_sha256=_sha256_file(module_path),
-    )
+    if arguments.canonical_mode:
+        if canonical_binding is None:
+            _fail(
+                "canonical_binding_missing",
+                "validated canonical authority binding is required",
+                step="preflight",
+            )
+        ratification: dict[str, Any] = {
+            "canonical_c6a_id": canonical_binding.canonical_c6a_id,
+            "mode": "canonical_manifest_driven_successor",
+            "status": "BOUND",
+        }
+    else:
+        ratification = verify_activation_store_v2_ratification(
+            repository=repository,
+            object_expression=(
+                arguments.activation_store_v2_ratification_object
+            ),
+            current_commit=str(current_commit),
+            module_sha256=_sha256_file(module_path),
+        )
     mineworld_commit = _run_git(
         arguments.mineworld_root,
         "rev-parse",
@@ -543,37 +1232,19 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
             "MineWorld checkout must be exact and clean",
             step="preflight",
         )
-    model_config_blob = _git_object_bytes(
-        arguments.mineworld_root,
-        f"{MINEWORLD_REVISION}:{MODEL_CONFIG_PATH}",
-    )
-    if _sha256_bytes(model_config_blob) != MODEL_CONFIG_GIT_BLOB_SHA256:
-        _fail(
-            "model_config_identity_mismatch",
-            "authoritative Git-blob model configuration hash differs",
-            step="preflight",
+    model_config_blob, file_hashes = model_assets_preflight(arguments)
+    physical_model_config = None
+    if not arguments.canonical_mode:
+        physical_model_config = validated_physical_model_config_path(
+            mineworld_root=arguments.mineworld_root,
+            git_blob_bytes=model_config_blob,
         )
-    physical_model_config = validated_physical_model_config_path(
-        mineworld_root=arguments.mineworld_root,
-        git_blob_bytes=model_config_blob,
+    disk_probe = (
+        _existing_parent(arguments.approved_output_root)
+        if arguments.canonical_mode
+        else arguments.approved_output_root
     )
-    file_hashes = {
-        "main_checkpoint": _sha256_file(arguments.main_checkpoint),
-        "vae_config": _sha256_file(arguments.vae_config),
-        "vae_checkpoint": _sha256_file(arguments.vae_checkpoint),
-    }
-    expected_file_hashes = {
-        "main_checkpoint": MAIN_CHECKPOINT_SHA256,
-        "vae_config": VAE_CONFIG_SHA256,
-        "vae_checkpoint": VAE_CHECKPOINT_SHA256,
-    }
-    if file_hashes != expected_file_hashes:
-        _fail(
-            "checkpoint_identity_mismatch",
-            "checkpoint or VAE bytes differ from frozen identities",
-            step="preflight",
-        )
-    free_disk = shutil.disk_usage(arguments.approved_output_root).free
+    free_disk = shutil.disk_usage(disk_probe).free
     if free_disk < MINIMUM_FREE_DISK_BYTES:
         _fail(
             "insufficient_disk",
@@ -581,37 +1252,23 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
             step="preflight",
         )
     torch = importlib.import_module("torch")
-    if not torch.cuda.is_available() or torch.cuda.device_count() < 1:
-        _fail(
-            "cuda_unavailable",
-            "torch.cuda.is_available() and cuda:0 are required",
-            step="preflight",
+    cuda = cuda_preflight(torch)
+    nvidia_binary = shutil.which("nvidia-smi")
+    nvidia = None
+    if nvidia_binary is not None:
+        nvidia = subprocess.run(
+            [
+                nvidia_binary,
+                "--query-gpu=name,uuid,memory.total,driver_version",
+                "--format=csv,noheader",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
         )
-    properties = torch.cuda.get_device_properties(0)
-    if int(properties.total_memory) < MINIMUM_GPU_MEMORY_BYTES:
-        _fail(
-            "insufficient_gpu_memory",
-            f"cuda:0 must expose at least {MINIMUM_GPU_MEMORY_BYTES} bytes",
-            step="preflight",
-        )
-    torch.cuda.set_device(0)
-    if torch.cuda.current_device() != 0:
-        _fail(
-            "cuda_device_mismatch",
-            "selected CUDA device is not cuda:0",
-            step="preflight",
-        )
-    nvidia = subprocess.run(
-        [
-            "nvidia-smi",
-            "--query-gpu=name,uuid,memory.total,driver_version",
-            "--format=csv,noheader",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if nvidia.returncode != 0 or not nvidia.stdout.strip():
+    if not arguments.canonical_mode and (
+        nvidia is None or nvidia.returncode != 0 or not nvidia.stdout.strip()
+    ):
         _fail(
             "nvidia_identity_unavailable",
             "nvidia-smi identity query must succeed",
@@ -630,14 +1287,16 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
         "aws_sagemaker_environment": environment,
         "b_activation_store_v2_ratification": ratification,
         "branch": branch,
-        "cuda": {
-            "available": True,
-            "device": REQUIRED_DEVICE,
-            "device_count": int(torch.cuda.device_count()),
-            "device_name": str(properties.name),
-            "total_memory_bytes": int(properties.total_memory),
-            "torch_cuda_version": str(torch.version.cuda),
+        "canonical_authority": None if canonical_binding is None else {
+            "canonical_c6a_id": canonical_binding.canonical_c6a_id,
+            "c6a_package_sha256": canonical_binding.package_sha256,
+            "episode_artifact_manifest_sha256": canonical_binding.artifact_manifest_sha256,
+            "person_e_handoff_sha256": canonical_binding.person_e_handoff_sha256,
+            "trajectory_id": canonical_binding.trajectory_id,
+            "episode_id": canonical_binding.episode_id,
+            "direct_artifact_count": len(canonical_binding.direct_artifacts),
         },
+        "cuda": cuda,
         "dependency_identities": {
             "numpy": importlib.import_module("numpy").__version__,
             "torch": torch.__version__,
@@ -655,11 +1314,18 @@ def runtime_preflight(arguments: RunnerArguments) -> dict[str, Any]:
         },
         "mineworld_commit": mineworld_commit,
         "model_config_git_blob_sha256": _sha256_bytes(model_config_blob),
-        "model_config_physical_path": str(physical_model_config),
-        "model_config_physical_sha256": _sha256_file(
-            physical_model_config
+        "model_config_physical_path": (
+            None if physical_model_config is None else str(physical_model_config)
         ),
-        "nvidia_smi": nvidia.stdout.strip().splitlines(),
+        "model_config_physical_sha256": (
+            None if physical_model_config is None else _sha256_file(physical_model_config)
+        ),
+        "nvidia_smi": (
+            nvidia.stdout.strip().splitlines()
+            if nvidia is not None and nvidia.returncode == 0
+            else []
+        ),
+        "runtime_host": arguments.runtime_host,
         "runner_version": RUNNER_VERSION,
         "seed": arguments.seed,
         "status": "PASS",
@@ -687,6 +1353,487 @@ def _source_object_payloads(repository: Path) -> dict[str, bytes]:
         }
     )
     return payloads
+
+
+@contextlib.contextmanager
+def _canonical_pilot_constants(binding: CanonicalPilotBinding) -> Any:
+    """Temporarily bind the frozen successor pipeline to one validated pilot."""
+
+    global SELECTED_PILOT
+    global GLOBAL_MODEL_FRAME_COUNT
+    global EXPECTED_ACTIVATION_ROW_COUNT
+    global C_CAPTURE_PACKAGE_SHA256
+    global C_FRAME_MAP_SHA256
+    global C_STATE_SHA256
+    old = (
+        SELECTED_PILOT,
+        GLOBAL_MODEL_FRAME_COUNT,
+        EXPECTED_ACTIVATION_ROW_COUNT,
+        C_CAPTURE_PACKAGE_SHA256,
+        C_FRAME_MAP_SHA256,
+        C_STATE_SHA256,
+    )
+    SELECTED_PILOT = binding.trajectory_id
+    GLOBAL_MODEL_FRAME_COUNT = binding.frame_count
+    EXPECTED_ACTIVATION_ROW_COUNT = binding.expected_activation_rows
+    C_CAPTURE_PACKAGE_SHA256 = binding.artifact_manifest_sha256
+    C_FRAME_MAP_SHA256 = binding.direct_hashes["client_tick"]
+    C_STATE_SHA256 = binding.direct_hashes["server_state"]
+    try:
+        yield
+    finally:
+        (
+            SELECTED_PILOT,
+            GLOBAL_MODEL_FRAME_COUNT,
+            EXPECTED_ACTIVATION_ROW_COUNT,
+            C_CAPTURE_PACKAGE_SHA256,
+            C_FRAME_MAP_SHA256,
+            C_STATE_SHA256,
+        ) = old
+
+
+def _canonical_jsonl_bytes(rows: Sequence[Mapping[str, Any]]) -> bytes:
+    return b"".join(_canonical_document_bytes(row) + b"\n" for row in rows)
+
+
+def _canonical_raw_action(source: Mapping[str, Any]) -> dict[str, Any]:
+    key_map = {
+        "back": "key.keyboard.s",
+        "drop": "key.keyboard.q",
+        "forward": "key.keyboard.w",
+        "jump": "key.keyboard.space",
+        "left": "key.keyboard.a",
+        "right": "key.keyboard.d",
+        "sneak": "key.keyboard.left.shift",
+        "sprint": "key.keyboard.left.control",
+    }
+    keys = [value for name, value in key_map.items() if source.get(name) is True]
+    hotbar = source.get("hotbar")
+    if isinstance(hotbar, int) and not isinstance(hotbar, bool) and 1 <= hotbar <= 9:
+        keys.append(f"key.keyboard.{hotbar}")
+    buttons = [
+        button
+        for name, button in (("attack", 0), ("use", 1), ("pick_item", 2))
+        if source.get(name) is True
+    ]
+    return {
+        "keyboard": {"keys": keys},
+        "mouse": {
+            "buttons": buttons,
+            "dx": float(source.get("camera_dx", 0.0)),
+            "dy": float(source.get("camera_dy", 0.0)),
+        },
+    }
+
+
+def _canonical_streams(binding: CanonicalPilotBinding) -> dict[str, list[dict[str, Any]]]:
+    """Create the contract streams while retaining every direct source join."""
+
+    streams = {
+        name: []
+        for name in (
+            "frame_map",
+            "raw_actions",
+            "normalized_actions",
+            "server_state",
+            "client_tick_log",
+            "visibility",
+            "seed_noise",
+        )
+    }
+    episode = str(binding.episode_id)
+    for index, (client, source_action, source_state) in enumerate(
+        zip(
+            binding.client_tick_rows,
+            binding.raw_action_rows,
+            binding.state_rows,
+            strict=True,
+        )
+    ):
+        identity = {
+            "action_idx": index,
+            "episode_id": episode,
+            "model_frame_idx": index,
+            "render_frame_idx": index,
+            "server_tick": index,
+            "trajectory_id": binding.trajectory_id,
+        }
+        client_hash = _sha256_bytes(_canonical_document_bytes(client))
+        action_hash = _sha256_bytes(_canonical_document_bytes(source_action))
+        state_hash = _sha256_bytes(_canonical_document_bytes(source_state))
+        streams["frame_map"].append(
+            {
+                **identity,
+                "source_client_tick_row_sha256": client_hash,
+                "source_frame_path": str(binding.frame_paths[index]),
+                "source_frame_sha256": binding.frame_hashes[index],
+                "source_server_epoch_nanos": client["server_epoch_nanos"],
+            }
+        )
+        streams["raw_actions"].append(
+            {
+                **identity,
+                "raw_action": _canonical_raw_action(source_action),
+                "raw_action_flat": dict(source_action),
+                "source_raw_action_row_sha256": action_hash,
+            }
+        )
+        if any(
+            source_action.get(name) not in (False, 0, 0.0)
+            for name in (
+                "forward", "back", "left", "right", "jump", "sneak",
+                "sprint", "use", "attack", "drop", "pick_item", "hotbar",
+                "camera_dx", "camera_dy",
+            )
+        ):
+            _fail(
+                "canonical_action_profile_mismatch",
+                "the selected canonical positive control must retain its no-op action rows",
+                step="6.1",
+            )
+        streams["normalized_actions"].append(
+            {
+                **identity,
+                "normalized_action": {
+                    "camera_component_0": 5,
+                    "camera_component_1": 5,
+                    "drop_pick_item": 0,
+                    "forward_back": 0,
+                    "hotbar": 0,
+                    "jump": 0,
+                    "left_right": 0,
+                    "sprint_sneak": 0,
+                    "use_attack": 0,
+                },
+                "source_raw_action_row_sha256": action_hash,
+            }
+        )
+        streams["server_state"].append(
+            {
+                **identity,
+                "source_server_state_row_sha256": state_hash,
+                "state": {
+                    "position_x_blocks": float(source_state["sheep_x"]),
+                    "position_y_blocks": float(source_state["sheep_y"]),
+                    "position_z_blocks": float(source_state["sheep_z"]),
+                    "target_entity_id": f"canonical_sheep_{binding.episode_id}",
+                    "target_present": True,
+                    "velocity_x_blocks_per_second": float(source_state["axis_velocity"]),
+                    "velocity_y_blocks_per_second": 0.0,
+                    "velocity_z_blocks_per_second": 0.0,
+                    "wall_parallel_position_blocks": float(source_state["axis_pos"]),
+                },
+            }
+        )
+        streams["client_tick_log"].append(
+            {
+                **identity,
+                "client_capture_nanos": client["client_capture_nanos"],
+                "client_recv_nanos": client["client_recv_nanos"],
+                "client_tick": index,
+                "server_epoch_nanos": client["server_epoch_nanos"],
+                "source_client_tick_row_sha256": client_hash,
+            }
+        )
+        streams["visibility"].append(
+            {
+                **identity,
+                "source_geometric_visible": True,
+                "source_server_state_row_sha256": state_hash,
+                "visibility": "visible",
+            }
+        )
+        noise = float(source_state["noise_draw"])
+        q = float(source_state["q"])
+        noise_std = math.sqrt(q * 0.05)
+        streams["seed_noise"].append(
+            {
+                **identity,
+                "draw_idx": index,
+                "dt_seconds": 0.05,
+                "noise_draw": noise,
+                "noise_std_blocks": noise_std,
+                "q": q,
+                "seed": int(source_state["seed"]),
+                "standard_normal_draw": noise / noise_std,
+            }
+        )
+    return streams
+
+
+def _encode_canonical_media(
+    binding: CanonicalPilotBinding,
+    intake_root: Path,
+    ffmpeg: Path,
+    ffprobe: Path,
+) -> tuple[Path, list[dict[str, Any]], dict[str, Any]]:
+    """Apply Person C's established center-crop/resize and fixed MP4 encode."""
+
+    image_module = importlib.import_module("PIL.Image")
+    frame_root = intake_root / "frames_640x360"
+    frame_root.mkdir()
+    rows: list[dict[str, Any]] = []
+    list_lines: list[str] = []
+    target_aspect = 640.0 / 360.0
+    for index, source in enumerate(binding.frame_paths):
+        with image_module.open(source) as opened:
+            image = opened.convert("RGB")
+            width, height = image.size
+            aspect = width / height
+            if aspect > target_aspect:
+                new_width = round(height * target_aspect)
+                left = (width - new_width) // 2
+                image = image.crop((left, 0, left + new_width, height))
+            elif aspect < target_aspect:
+                new_height = round(width / target_aspect)
+                top = (height - new_height) // 2
+                image = image.crop((0, top, width, top + new_height))
+            resized = image.resize((640, 360), image_module.Resampling.BILINEAR)
+            destination = frame_root / f"{index:06d}.png"
+            with destination.open("xb") as handle:
+                resized.save(handle, format="PNG")
+        rows.append(
+            {
+                "model_frame_idx": index,
+                "path": str(destination),
+                "sha256": _sha256_file(destination),
+                "source_path": str(source),
+                "source_sha256": binding.frame_hashes[index],
+            }
+        )
+        escaped = str(destination).replace("'", "'\\''")
+        list_lines.extend((f"file '{escaped}'", "duration 0.05"))
+    concat_path = intake_root / "canonical_frames.ffconcat"
+    _exclusive_write(concat_path, ("\n".join(list_lines) + "\n").encode("utf-8"))
+    media_path = intake_root / "video_640x360.mp4"
+    encoded = subprocess.run(
+        [
+            str(ffmpeg), "-n", "-loglevel", "error", "-f", "concat",
+            "-safe", "0", "-i", str(concat_path), "-fps_mode", "cfr",
+            "-r", "20", "-c:v", "libx264", "-preset", "veryfast",
+            "-crf", "18", "-pix_fmt", "yuv420p", str(media_path),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if encoded.returncode != 0 or not media_path.is_file():
+        _fail("canonical_media_encode_failed", encoded.stderr.strip(), step="6.1")
+    probed = subprocess.run(
+        [
+            str(ffprobe), "-v", "error", "-select_streams", "v:0",
+            "-count_frames", "-show_entries",
+            "stream=width,height,r_frame_rate,nb_read_frames", "-of", "json",
+            str(media_path),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    try:
+        stream = json.loads(probed.stdout)["streams"][0]
+    except (KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
+        _fail("canonical_media_probe_failed", str(error), step="6.1")
+    if (
+        probed.returncode != 0
+        or stream.get("width") != 640
+        or stream.get("height") != 360
+        or stream.get("r_frame_rate") != "20/1"
+        or int(stream.get("nb_read_frames", -1)) != binding.frame_count
+    ):
+        _fail("canonical_media_contract_mismatch", "ffprobe contract differs", step="6.1")
+    return media_path, rows, dict(stream)
+
+
+def _materialize_exact_mineworld_checkout(
+    source_root: Path,
+    intake_root: Path,
+) -> tuple[Path, Path]:
+    """Create an LF-exact pinned checkout without modifying the source checkout."""
+
+    runtime_root = intake_root / "MineWorld-Upstream-exact"
+    if runtime_root.exists() or runtime_root.is_symlink():
+        _fail("output_exists", "exact MineWorld runtime checkout exists", step="6.1")
+    clone = subprocess.run(
+        [
+            "git", "clone", "--quiet", "--no-local", "--no-checkout",
+            str(source_root), str(runtime_root),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if clone.returncode != 0:
+        _fail("mineworld_materialization_failed", clone.stderr.strip(), step="6.1")
+    _run_git(runtime_root, "config", "core.autocrlf", "false")
+    _run_git(runtime_root, "checkout", "--quiet", "--detach", MINEWORLD_REVISION)
+    model_config = runtime_root / MODEL_CONFIG_PATH
+    if (
+        _run_git(runtime_root, "rev-parse", "HEAD") != MINEWORLD_REVISION
+        or _run_git(runtime_root, "status", "--porcelain=v1", "-uall")
+        or _sha256_file(model_config) != MODEL_CONFIG_GIT_BLOB_SHA256
+    ):
+        _fail(
+            "mineworld_materialization_failed",
+            "isolated MineWorld checkout is not exact and clean",
+            step="6.1",
+        )
+    return runtime_root, model_config
+
+
+def canonical_step6_1_intake(context: RunContext) -> dict[str, Any]:
+    """Materialize one validated post-C1 C6A pilot into the frozen contract."""
+
+    global C_CAPTURE_PACKAGE_SHA256
+    binding: CanonicalPilotBinding = context.state["canonical_binding"]
+    intake_root = context.arguments.approved_input_root / context.arguments.session_id
+    if intake_root.exists() or intake_root.is_symlink():
+        _fail("output_exists", "immutable approved intake already exists", step="6.1")
+    intake_root.mkdir()
+    runtime_root, model_config_path = _materialize_exact_mineworld_checkout(
+        context.arguments.mineworld_root,
+        intake_root,
+    )
+    assert context.arguments.ffmpeg is not None
+    assert context.arguments.ffprobe is not None
+    media_path, canonical_frames, media_probe = _encode_canonical_media(
+        binding,
+        intake_root,
+        context.arguments.ffmpeg,
+        context.arguments.ffprobe,
+    )
+    streams = _canonical_streams(binding)
+    output_names = {
+        "frame_map": "frame_map.jsonl",
+        "raw_actions": "raw_actions.jsonl",
+        "normalized_actions": "normalized_actions.jsonl",
+        "server_state": "server_state.jsonl",
+        "client_tick_log": "client_tick_log.jsonl",
+        "visibility": "visibility.jsonl",
+        "seed_noise": "seed_noise.jsonl",
+    }
+    input_paths: dict[str, Path] = {"media": media_path}
+    artifacts: dict[str, dict[str, Any]] = {}
+    for name, filename in output_names.items():
+        path = intake_root / filename
+        payload = _canonical_jsonl_bytes(streams[name])
+        _exclusive_write(path, payload)
+        input_paths[name] = path
+        artifacts[name] = {
+            "format": "jsonl",
+            "path": str(path),
+            "sha256": _sha256_bytes(payload),
+        }
+    config_path = intake_root / "reset_result.json"
+    _exclusive_write(config_path, binding.direct_paths["reset_result"].read_bytes())
+    diagnostics = {
+        "canonical_frame_derivatives": canonical_frames,
+        "direct_artifact_count": len(binding.direct_artifacts),
+        "exact_source_identity_joins": "PASS",
+        "media_probe": media_probe,
+        "selection_rule": CANONICAL_SELECTION_RULE,
+        "status": "PASS",
+    }
+    diagnostics_path = intake_root / "canonical_intake_diagnostics.json"
+    _write_json(diagnostics_path, diagnostics)
+    artifacts["config"] = {
+        "format": "json",
+        "path": str(config_path),
+        "sha256": _sha256_file(config_path),
+    }
+    artifacts["diagnostics"] = {
+        "format": "json",
+        "path": str(diagnostics_path),
+        "sha256": _sha256_file(diagnostics_path),
+    }
+    package = {
+        "artifacts": artifacts,
+        "episode_id": str(binding.episode_id),
+        "impulse_orientation": dict(CANONICAL_IMPULSE_ORIENTATION),
+        "media": {
+            "fps": 20.0,
+            "frame_count": binding.frame_count,
+            "height": 360,
+            "mode": "mp4",
+            "path": str(media_path),
+            "sha256": _sha256_file(media_path),
+            "width": 640,
+        },
+        "schema_version": "1.0",
+        "seed": int(binding.state_rows[0]["seed"]),
+        "streams": streams,
+        "trajectory_id": binding.trajectory_id,
+    }
+    trajectory_contract = importlib.import_module("mineocclude.contracts.trajectory")
+    validation = trajectory_contract.validate_trajectory_package(package)
+    if not validation.accepted:
+        _fail(
+            "canonical_package_validation_failed",
+            "; ".join(item.code.value for item in validation.rejections),
+            step="6.1",
+        )
+    package_path = intake_root / "capture_package_v0_1.json"
+    _write_json(package_path, package)
+    C_CAPTURE_PACKAGE_SHA256 = _sha256_file(package_path)
+    accepted_manifest = {
+        "accepted_pilot_count": 1,
+        "canonical_c6a_id": binding.canonical_c6a_id,
+        "direct_episode_artifacts": list(binding.direct_artifacts),
+        "episode_artifact_manifest": {
+            "path": str(binding.artifact_manifest_path),
+            "sha256": binding.artifact_manifest_sha256,
+        },
+        "expected_identities": {
+            "activation_index_format": context.arguments.expected_activation_index_format,
+            "activation_store_format": context.arguments.expected_activation_store_format,
+            "action_conversion": context.arguments.expected_action_conversion_identity,
+            "hook_site": context.arguments.expected_hook_site,
+            "pooling_method": context.arguments.expected_pooling_method,
+            "preprocessing": context.arguments.expected_preprocessing_identity,
+            "token_region": context.arguments.expected_token_region,
+        },
+        "grouping": {"key": CANONICAL_GROUPING_KEY, "value": binding.layout_id},
+        "person_c": {
+            "commit": binding.person_c_commit,
+            "package_path": str(binding.package_path),
+            "package_sha256": binding.package_sha256,
+        },
+        "person_e": {
+            "handoff_path": str(binding.person_e_handoff_path),
+            "handoff_sha256": binding.person_e_handoff_sha256,
+            "registry_record_id": binding.registry_record_id,
+            "registry_record_sha256": binding.registry_record_sha256,
+        },
+        "schema_version": "person-a-canonical-pilot-accepted-manifest-v0.1",
+        "selection_rule": CANONICAL_SELECTION_RULE,
+        "selected_episode_id": binding.episode_id,
+        "selected_trajectory_id": binding.trajectory_id,
+        "status": "ACCEPTED_FOR_FROZEN_A6_1_TO_A6_5",
+    }
+    accepted_path = intake_root / "accepted_pilot_manifest.json"
+    _write_json(accepted_path, accepted_manifest)
+    input_paths["accepted_manifest"] = accepted_path
+    input_paths["capture_package"] = package_path
+    context.state.update(
+        {
+            "accepted_manifest": accepted_manifest,
+            "capture_package": package,
+            "input_paths": input_paths,
+            "model_config_provenance_path": model_config_path,
+            "mineworld_runtime_root": runtime_root,
+            "payloads": {},
+        }
+    )
+    return {
+        "accepted_manifest_path": str(accepted_path),
+        "accepted_manifest_sha256": _sha256_file(accepted_path),
+        "capture_package_sha256": C_CAPTURE_PACKAGE_SHA256,
+        "direct_artifact_count": len(binding.direct_artifacts),
+        "exact_source_identity_joins": "PASS",
+        "input_root": str(intake_root),
+        "pilot": binding.trajectory_id,
+        "status": "PASS",
+    }
 
 
 def step6_1_intake(context: RunContext) -> dict[str, Any]:
@@ -914,14 +2061,19 @@ def _runtime_load_request(context: RunContext) -> Any:
     environment_receipt = (
         context.session_root / "runtime_preflight_receipt.json"
     )
-    model_config_blob = _git_object_bytes(
-        context.arguments.mineworld_root,
-        f"{MINEWORLD_REVISION}:{MODEL_CONFIG_PATH}",
-    )
-    physical_model_config_path = validated_physical_model_config_path(
-        mineworld_root=context.arguments.mineworld_root,
-        git_blob_bytes=model_config_blob,
-    )
+    if context.arguments.canonical_mode:
+        physical_model_config_path = context.state["model_config_provenance_path"]
+        mineworld_source_root = context.state["mineworld_runtime_root"]
+    else:
+        model_config_blob = _git_object_bytes(
+            context.arguments.mineworld_root,
+            f"{MINEWORLD_REVISION}:{MODEL_CONFIG_PATH}",
+        )
+        physical_model_config_path = validated_physical_model_config_path(
+            mineworld_root=context.arguments.mineworld_root,
+            git_blob_bytes=model_config_blob,
+        )
+        mineworld_source_root = context.arguments.mineworld_root
     return adapter_module.RuntimeLoadRequest(
         schema_version=identity_module.SCHEMA_VERSION,
         runtime_id=f"{context.arguments.session_id}:runtime",
@@ -932,15 +2084,15 @@ def _runtime_load_request(context: RunContext) -> Any:
         ),
         mineworld_source_revision=MINEWORLD_REVISION,
         modelscope_asset_revision=wave2.PINNED_ASSET_REVISION,
-        mineworld_source_root=context.arguments.mineworld_root,
+        mineworld_source_root=mineworld_source_root,
         model_config_path=physical_model_config_path,
         main_checkpoint_path=context.arguments.main_checkpoint,
         vae_config_path=context.arguments.vae_config,
         vae_checkpoint_path=context.arguments.vae_checkpoint,
-        model_config_sha256=MODEL_CONFIG_GIT_BLOB_SHA256,
-        main_checkpoint_sha256=MAIN_CHECKPOINT_SHA256,
-        vae_config_sha256=VAE_CONFIG_SHA256,
-        vae_checkpoint_sha256=VAE_CHECKPOINT_SHA256,
+        model_config_sha256=context.arguments.expected_model_config_sha256,
+        main_checkpoint_sha256=context.arguments.expected_main_checkpoint_sha256,
+        vae_config_sha256=context.arguments.expected_vae_config_sha256,
+        vae_checkpoint_sha256=context.arguments.expected_vae_checkpoint_sha256,
         environment_report_sha256=_sha256_file(environment_receipt),
         precision=context.arguments.precision,
         device=context.arguments.device,
@@ -964,6 +2116,10 @@ def step6_3_tokenize(context: RunContext) -> dict[str, Any]:
         runtime.layer_count != len(FROZEN_PHASE6_LAYERS)
         or runtime.hidden_size != HIDDEN_WIDTH
         or runtime.device != REQUIRED_DEVICE
+        or runtime.preprocessing_identity
+        != context.arguments.expected_preprocessing_identity
+        or runtime.action_conversion_identity
+        != context.arguments.expected_action_conversion_identity
     ):
         _fail(
             "runtime_identity_mismatch",
@@ -1206,13 +2362,13 @@ def step6_4_extract_store(context: RunContext) -> dict[str, Any]:
         schema_version="1.0",
         format_version=ACTIVATION_STORE_V2_FORMAT_VERSION,
         run_id=context.arguments.session_id,
-        checkpoint_hash=MAIN_CHECKPOINT_SHA256,
-        model_hash=MAIN_CHECKPOINT_SHA256,
+        checkpoint_hash=context.arguments.expected_main_checkpoint_sha256,
+        model_hash=context.arguments.expected_main_checkpoint_sha256,
         config_hash=PHASE6_CONFIG_HASH,
         preprocess_hash=PREPROCESS_HASH,
         accepted_manifest_hash=C_CAPTURE_PACKAGE_SHA256,
         code_sha=str(current_commit),
-        hook_site=HOOK_SITE,
+        hook_site=context.arguments.expected_hook_site,
         requested_layers=FROZEN_PHASE6_LAYERS,
         dtype="float32",
         hidden_width=HIDDEN_WIDTH,
@@ -1297,10 +2453,10 @@ def step6_4_extract_store(context: RunContext) -> dict[str, Any]:
                     mineocclude_revision=runtime.mineocclude_revision,
                     mineworld_revision=runtime.mineworld_source_revision,
                     asset_revision=runtime.modelscope_asset_revision,
-                    model_config_sha256=MODEL_CONFIG_GIT_BLOB_SHA256,
-                    main_checkpoint_sha256=MAIN_CHECKPOINT_SHA256,
-                    vae_config_sha256=VAE_CONFIG_SHA256,
-                    vae_checkpoint_sha256=VAE_CHECKPOINT_SHA256,
+                    model_config_sha256=context.arguments.expected_model_config_sha256,
+                    main_checkpoint_sha256=context.arguments.expected_main_checkpoint_sha256,
+                    vae_config_sha256=context.arguments.expected_vae_config_sha256,
+                    vae_checkpoint_sha256=context.arguments.expected_vae_checkpoint_sha256,
                     environment_report_sha256=_sha256_file(
                         context.session_root
                         / "runtime_preflight_receipt.json"
@@ -1375,6 +2531,7 @@ def step6_4_extract_store(context: RunContext) -> dict[str, Any]:
             "activation_store_root": store_root,
             "source_bindings": source_bindings,
             "repeatability_maximum_absolute_difference": repeat_maximum,
+            "bounded_unpooled_artifact": limited_unpooled,
         }
     )
     return {
@@ -1494,6 +2651,121 @@ def _prepare_step6_6_handoff(context: RunContext) -> dict[str, Any]:
             "type": "activation_index",
         }
     )
+    if context.arguments.canonical_mode:
+        binding: CanonicalPilotBinding = context.state["canonical_binding"]
+        audit = context.state["bounded_unpooled_artifact"]
+        audit_artifacts = []
+        if audit is not None:
+            for kind, path, digest in (
+                ("bounded_unpooled_activation", audit.artifact_path, audit.artifact_sha256),
+                ("bounded_unpooled_manifest", audit.manifest_path, audit.manifest_sha256),
+            ):
+                audit_artifacts.append(
+                    {
+                        "byte_size": path.stat().st_size,
+                        "path": str(path),
+                        "sha256": digest,
+                        "type": kind,
+                    }
+                )
+        certification_path = context.session_root / "step6_5.json"
+        certification_artifact = {
+            "byte_size": certification_path.stat().st_size,
+            "path": str(certification_path),
+            "sha256": _sha256_file(certification_path),
+            "type": "direct_pooling_repeatability_source_join_validation",
+        }
+        accepted_path = context.state["input_paths"]["accepted_manifest"]
+        package_path = context.state["input_paths"]["capture_package"]
+        common = {
+            "accepted_manifest": {
+                "path": str(accepted_path),
+                "sha256": _sha256_file(accepted_path),
+            },
+            "activation_artifacts": artifacts,
+            "bounded_unpooled_audit_artifacts": audit_artifacts,
+            "canonical_c6a_id": binding.canonical_c6a_id,
+            "capture_package": {
+                "path": str(package_path),
+                "sha256": _sha256_file(package_path),
+            },
+            "certification_artifact": certification_artifact,
+            "episode_id": binding.episode_id,
+            "exact_source_identity_joins": {
+                "c_frame_map_source_sha256": C_FRAME_MAP_SHA256,
+                "c_server_state_source_sha256": C_STATE_SHA256,
+                "failure_count": 0,
+                "status": "PASS",
+            },
+            "expected_activation_row_count": EXPECTED_ACTIVATION_ROW_COUNT,
+            "grouping": {
+                "key": CANONICAL_GROUPING_KEY,
+                "value": binding.layout_id,
+            },
+            "identities": {
+                "activation_index_format": context.arguments.expected_activation_index_format,
+                "activation_store_format": context.arguments.expected_activation_store_format,
+                "action_conversion": context.arguments.expected_action_conversion_identity,
+                "hook_site": context.arguments.expected_hook_site,
+                "model_config_sha256": context.arguments.expected_model_config_sha256,
+                "model_sha256": context.arguments.expected_main_checkpoint_sha256,
+                "pooling_method": context.arguments.expected_pooling_method,
+                "preprocessing": context.arguments.expected_preprocessing_identity,
+                "token_region": context.arguments.expected_token_region,
+            },
+            "repeatability_validation": {
+                "atol": 1e-3,
+                "maximum_absolute_difference": context.state[
+                    "repeatability_maximum_absolute_difference"
+                ],
+                "rtol": 1e-3,
+                "status": "PASS",
+            },
+            "runner_version": RUNNER_VERSION,
+            "trajectory_id": binding.trajectory_id,
+        }
+        b_handoff = {
+            **common,
+            "direct_pooling_validation": "PASS",
+            "no_wall_visible_positive_control": True,
+            "schema_version": "person-a-to-person-b-canonical-pilot-handoff-v0.1",
+            "scientific_use_acceptance_claimed": False,
+            "shuffled_comparison_required": True,
+            "status": "READY_FOR_PERSON_B_CONSUMPTION",
+        }
+        e_handoff = {
+            **common,
+            "direct_episode_artifacts": list(binding.direct_artifacts),
+            "person_c": {
+                "commit": binding.person_c_commit,
+                "package_sha256": binding.package_sha256,
+            },
+            "person_e_source": {
+                "handoff_sha256": binding.person_e_handoff_sha256,
+                "registry_record_id": binding.registry_record_id,
+                "registry_record_sha256": binding.registry_record_sha256,
+            },
+            "schema_version": "person-a-to-person-e-canonical-provenance-handoff-v0.1",
+            "status": "READY_FOR_PERSON_E_PROVENANCE_CONSUMPTION",
+        }
+        b_path = context.session_root / "person_a_to_person_b_canonical_pilot_handoff.json"
+        e_path = context.session_root / "person_a_to_person_e_canonical_provenance_handoff.json"
+        _write_json(b_path, b_handoff)
+        _write_json(e_path, e_handoff)
+        handoff = {
+            "b_facing_handoff": {
+                "path": str(b_path),
+                "sha256": _sha256_file(b_path),
+            },
+            "e_facing_handoff": {
+                "path": str(e_path),
+                "sha256": _sha256_file(e_path),
+            },
+            "schema_version": "person-a-canonical-dual-handoff-summary-v0.1",
+            "status": "HANDOFF_PREPARED_NOT_ACCEPTED",
+        }
+        _write_json(context.session_root / "step6_6_handoff.json", handoff)
+        return handoff
     handoff = {
         "artifacts": artifacts,
         "expected_activation_row_count": EXPECTED_ACTIVATION_ROW_COUNT,
@@ -1587,7 +2859,7 @@ def _final_report(
         "global_model_frame_count": GLOBAL_MODEL_FRAME_COUNT,
         "handoff": None if handoff is None else dict(handoff),
         "runner_version": RUNNER_VERSION,
-        "scientific_execution_environment": "aws_sagemaker_linux_gpu",
+        "scientific_execution_environment": context.arguments.runtime_host,
         "selected_pilot": SELECTED_PILOT,
         "sequence": dict(sequence),
         "status": sequence["status"],
@@ -1596,9 +2868,14 @@ def _final_report(
 
 
 def run(arguments: RunnerArguments) -> int:
-    """Execute the authorized one-pilot workflow on SageMaker only."""
+    """Execute the historical or canonical manifest-bound one-pilot workflow."""
 
-    receipt = runtime_preflight(arguments)
+    _validate_runtime_arguments(arguments)
+    binding = load_canonical_pilot_binding(arguments) if arguments.canonical_mode else None
+    receipt = runtime_preflight(arguments, binding)
+    if arguments.canonical_mode:
+        arguments.approved_input_root.mkdir()
+        arguments.approved_output_root.mkdir()
     session_root = arguments.approved_output_root / arguments.session_id
     if session_root.exists() or session_root.is_symlink():
         _fail(
@@ -1613,25 +2890,33 @@ def run(arguments: RunnerArguments) -> int:
         session_root=session_root,
         runtime_receipt=receipt,
     )
-    sequence = execute_step_sequence(
-        context,
-        {
-            "6.1": step6_1_intake,
-            "6.2": step6_2_model_boundary,
-            "6.3": step6_3_tokenize,
-            "6.4": step6_4_extract_store,
-            "6.5": step6_5_certify,
-        },
+    if binding is not None:
+        context.state["canonical_binding"] = binding
+    manager = (
+        _canonical_pilot_constants(binding)
+        if binding is not None
+        else contextlib.nullcontext()
     )
-    handoff = (
-        _prepare_step6_6_handoff(context)
-        if sequence["status"] == "PASS"
-        else None
-    )
-    report = _final_report(context, sequence, handoff)
-    _write_json(session_root / "final_report.json", report)
-    print(json.dumps(report, sort_keys=True, allow_nan=False))
-    return 0 if sequence["status"] == "PASS" else 1
+    with manager:
+        sequence = execute_step_sequence(
+            context,
+            {
+                "6.1": canonical_step6_1_intake if binding else step6_1_intake,
+                "6.2": step6_2_model_boundary,
+                "6.3": step6_3_tokenize,
+                "6.4": step6_4_extract_store,
+                "6.5": step6_5_certify,
+            },
+        )
+        handoff = (
+            _prepare_step6_6_handoff(context)
+            if sequence["status"] == "PASS"
+            else None
+        )
+        report = _final_report(context, sequence, handoff)
+        _write_json(session_root / "final_report.json", report)
+        print(json.dumps(report, sort_keys=True, allow_nan=False))
+        return 0 if sequence["status"] == "PASS" else 1
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -1643,7 +2928,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     execute = subparsers.add_parser(
         "run",
-        help="execute once in the ratified SageMaker Linux GPU environment",
+        help="execute once on the selected frozen GPU runtime host",
     )
     execute.add_argument("--repository-root", type=Path, default=ROOT)
     execute.add_argument("--mineworld-root", type=Path, required=True)
@@ -1660,6 +2945,53 @@ def _parser() -> argparse.ArgumentParser:
             "",
         ),
     )
+    execute.add_argument(
+        "--runtime-host",
+        choices=(HISTORICAL_RUNTIME_HOST, CANONICAL_WINDOWS_RUNTIME_HOST),
+        default=HISTORICAL_RUNTIME_HOST,
+    )
+    execute.add_argument("--canonical-c6a-package", type=Path)
+    execute.add_argument("--canonical-c6a-package-sha256", default="")
+    execute.add_argument("--trajectory-id", default=SELECTED_PILOT)
+    execute.add_argument("--episode-id", type=int)
+    execute.add_argument("--episode-artifact-manifest", type=Path)
+    execute.add_argument("--episode-artifact-manifest-sha256", default="")
+    execute.add_argument("--person-e-provenance-handoff", type=Path)
+    execute.add_argument("--person-e-provenance-handoff-sha256", default="")
+    execute.add_argument(
+        "--expected-model-config-sha256",
+        default=MODEL_CONFIG_GIT_BLOB_SHA256,
+    )
+    execute.add_argument(
+        "--expected-main-checkpoint-sha256",
+        default=MAIN_CHECKPOINT_SHA256,
+    )
+    execute.add_argument("--expected-vae-config-sha256", default=VAE_CONFIG_SHA256)
+    execute.add_argument(
+        "--expected-vae-checkpoint-sha256",
+        default=VAE_CHECKPOINT_SHA256,
+    )
+    execute.add_argument(
+        "--expected-preprocessing-identity",
+        default=CANONICAL_PREPROCESSING_IDENTITY,
+    )
+    execute.add_argument(
+        "--expected-action-conversion-identity",
+        default=CANONICAL_ACTION_CONVERSION_IDENTITY,
+    )
+    execute.add_argument("--expected-hook-site", default=HOOK_SITE)
+    execute.add_argument("--expected-pooling-method", default=CANONICAL_POOLING_METHOD)
+    execute.add_argument("--expected-token-region", default=CANONICAL_TOKEN_REGION)
+    execute.add_argument(
+        "--expected-activation-store-format",
+        default=ACTIVATION_STORE_V2_FORMAT_VERSION,
+    )
+    execute.add_argument(
+        "--expected-activation-index-format",
+        default=ACTIVATION_INDEX_V2_FORMAT_VERSION,
+    )
+    execute.add_argument("--ffmpeg", type=Path)
+    execute.add_argument("--ffprobe", type=Path)
     execute.add_argument(
         "--session-id",
         default="person-a-phase6-layout-00-ep9403-seed-20260725",
@@ -1691,6 +3023,40 @@ def _arguments(namespace: argparse.Namespace) -> RunnerArguments:
         seed=namespace.seed,
         device=namespace.device,
         precision=namespace.precision,
+        runtime_host=namespace.runtime_host,
+        canonical_c6a_package=(
+            None
+            if namespace.canonical_c6a_package is None
+            else namespace.canonical_c6a_package.resolve()
+        ),
+        canonical_c6a_package_sha256=namespace.canonical_c6a_package_sha256,
+        trajectory_id=namespace.trajectory_id,
+        episode_id=namespace.episode_id,
+        episode_artifact_manifest=(
+            None
+            if namespace.episode_artifact_manifest is None
+            else namespace.episode_artifact_manifest.resolve()
+        ),
+        episode_artifact_manifest_sha256=namespace.episode_artifact_manifest_sha256,
+        person_e_provenance_handoff=(
+            None
+            if namespace.person_e_provenance_handoff is None
+            else namespace.person_e_provenance_handoff.resolve()
+        ),
+        person_e_provenance_handoff_sha256=namespace.person_e_provenance_handoff_sha256,
+        expected_model_config_sha256=namespace.expected_model_config_sha256,
+        expected_main_checkpoint_sha256=namespace.expected_main_checkpoint_sha256,
+        expected_vae_config_sha256=namespace.expected_vae_config_sha256,
+        expected_vae_checkpoint_sha256=namespace.expected_vae_checkpoint_sha256,
+        expected_preprocessing_identity=namespace.expected_preprocessing_identity,
+        expected_action_conversion_identity=namespace.expected_action_conversion_identity,
+        expected_hook_site=namespace.expected_hook_site,
+        expected_pooling_method=namespace.expected_pooling_method,
+        expected_token_region=namespace.expected_token_region,
+        expected_activation_store_format=namespace.expected_activation_store_format,
+        expected_activation_index_format=namespace.expected_activation_index_format,
+        ffmpeg=None if namespace.ffmpeg is None else namespace.ffmpeg.resolve(),
+        ffprobe=None if namespace.ffprobe is None else namespace.ffprobe.resolve(),
     )
 
 
