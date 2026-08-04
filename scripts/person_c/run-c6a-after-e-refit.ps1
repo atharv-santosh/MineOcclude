@@ -1,10 +1,16 @@
 [CmdletBinding()]
 param(
     [string]$Manifest = 'C:\Users\lollo\MineOcclude-Person-C-C1-C6A\docs\status\person_c_c6a_capture_manifest_v0_2\c6a_capture_manifest.json',
+    [string]$ScheduleManifest = 'C:\Users\lollo\MineOcclude-Person-C-C1-C6A\configs\collection\person_c_c6a_v0_1\schedule_set_manifest.json',
+    [string]$Authorization = 'C:\Users\lollo\MineOcclude-Person-C-C1-C6A\docs\status\person_c_c6a_e_refit_authorization_v0_1\c6a_execution_authorization.json',
+    [string]$PackageManifest = 'C:\Users\lollo\MineOcclude-Person-E-Refit\data\handoff_e\person_e_v0_4_homography_refit_v0_2\package_manifest.json',
+    [string]$HandoffPath = 'C:\Users\lollo\MineOcclude-Person-E-Refit\data\handoff_e\person_e_v0_4_homography_refit_v0_2\person_e_to_person_c_refit_handoff.json',
+    [string]$PersonERepositoryRoot = 'C:\Users\lollo\MineOcclude-Person-E-Refit',
     [string]$RepositoryRoot = 'C:\Users\lollo\MineOcclude-Person-C-C1-C6A',
     [string]$ServerRoot = 'C:\Users\lollo\MineOcclude-Runtime\person-c-c1-v0_1\server',
     [string]$ClientRoot = 'C:\Users\lollo\MineOcclude-Runtime\person-c-c1-v0_1\client',
     [string]$JavaExe = 'C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot\bin\java.exe',
+    [switch]$PreflightOnly,
     [switch]$ExecuteScientificCapture
 )
 
@@ -13,15 +19,15 @@ $ErrorActionPreference = 'Stop'
 
 $geometryVersion = 'person-c-layout-config-v0.4'
 $geometrySha256 = '34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d'
-$handoffBundleSha256 = 'c6e6bc0da867ffafd938bcae6a381a4def692b76157f14e80dd69ae4463dbc28'
-$eRoot = Join-Path $RepositoryRoot 'data\handoff_e\person_e_v0_4_homography_refit_v0_1'
-$closurePath = Join-Path $RepositoryRoot 'docs\status\person_c_c1_closure_v0_1\c1_closure_status.json'
-$handoffInventoryPath = Join-Path $RepositoryRoot 'docs\status\person_c_to_person_e_homography_refit_v0_1\sha256_inventory.json'
-$handoffPath = Join-Path $RepositoryRoot 'docs\status\person_c_to_person_e_homography_refit_v0_1\refit_input_authority.json'
-$inputPath = Join-Path $eRoot 'homography_input.json'
-$reportPath = Join-Path $eRoot 'homography_report.json'
-$receiptPath = Join-Path $eRoot 'validation_receipt.json'
-$inventoryPath = Join-Path $eRoot 'sha256_inventory.json'
+$personECommit = 'c46d838b5a277e71a39090900f9e8ca814b743a7'
+$personESourceCommit = '96457cbae22159b2fe1828e0de12d313710dcdf5'
+$packageSha256 = 'f5a90bb97d0f54e754cfa11c971532d8d2e29cbe6ce0151dfeb17faae61a17bc'
+$handoffSha256 = '0937dcc6335927a1c724e8e3f1510be94b76ff91e3583c10d59d10ec60fb38ca'
+$scheduleManifestSha256 = '1abf0fc1e9f5633e17616a512d0bf84d66e048eef9986427c1908b834945346e'
+$scheduleSetSha256 = '79a81668362421fa91cb591d355b655e9b1a60aae088057de7bda977df663806'
+$captureManifestSha256 = '174def13f71ad8c2df5615a0ef5ec7fc9e10b431c105fc995dc6508e87c2dc7d'
+$executionCommand = 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\lollo\MineOcclude-Person-C-C1-C6A\scripts\person_c\run-c6a-after-e-refit.ps1" -ExecuteScientificCapture'
+$geometryPath = Join-Path $RepositoryRoot 'configs\scenes\layouts_v0_4.yaml'
 $captureScript = Join-Path $RepositoryRoot 'scripts\person_c\run-c6a-capture.ps1'
 
 function Require([bool]$Condition, [string]$Message) {
@@ -32,95 +38,87 @@ function Get-Sha256([string]$Path) {
     return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 
-Require $ExecuteScientificCapture 'C6A is fail-closed. Pass -ExecuteScientificCapture only after Person E commits the complete v0.4 refit package.'
-foreach ($path in @($Manifest, $closurePath, $handoffInventoryPath, $handoffPath, $inputPath, $reportPath, $receiptPath, $inventoryPath, $captureScript)) {
-    Require (Test-Path -LiteralPath $path -PathType Leaf) "C6A remains blocked by missing Person E refit/authority file: $path"
+Require ($PreflightOnly.IsPresent -xor $ExecuteScientificCapture.IsPresent) 'Specify exactly one of -PreflightOnly or -ExecuteScientificCapture.'
+foreach ($path in @($Manifest, $ScheduleManifest, $Authorization, $PackageManifest, $HandoffPath, $geometryPath, $captureScript)) {
+    Require (Test-Path -LiteralPath $path -PathType Leaf) "C6A authorization file is missing: $path"
 }
 
-$closure = Get-Content -Raw -LiteralPath $closurePath | ConvertFrom-Json
-Require ($closure.status -eq 'PASS') 'Person C C1 closure status is not PASS.'
-Require ($closure.c1_1_complete -and $closure.c1_3_complete -and $closure.c1_5_first_operator_complete -and $closure.c1_5_second_operator_complete -and $closure.c1_5_complete -and $closure.person_c_c1_stop_gate_closed) 'Person C C1 stop gate is not fully closed.'
-Require ($closure.accepted_geometry_version -eq $geometryVersion -and $closure.accepted_geometry_sha256 -eq $geometrySha256) 'Person C closure geometry identity mismatch.'
+Require ((Get-Sha256 $PackageManifest) -eq $packageSha256) 'Person E package manifest SHA-256 mismatch.'
+Require ((Get-Sha256 $HandoffPath) -eq $handoffSha256) 'Person E-to-C handoff SHA-256 mismatch.'
+Require ((Get-Sha256 $ScheduleManifest) -eq $scheduleManifestSha256) 'Person C C6A schedule manifest SHA-256 mismatch.'
+Require ((Get-Sha256 $Manifest) -eq $captureManifestSha256) 'Person C C6A capture manifest SHA-256 mismatch.'
+Require ((Get-Sha256 $geometryPath) -eq $geometrySha256) 'Accepted geometry file SHA-256 mismatch.'
 
-$handoffInventory = Get-Content -Raw -LiteralPath $handoffInventoryPath | ConvertFrom-Json
-Require ($handoffInventory.package_bundle_sha256 -eq $handoffBundleSha256) 'Person C to Person E handoff bundle hash mismatch.'
-$handoff = Get-Content -Raw -LiteralPath $handoffPath | ConvertFrom-Json
-Require ($handoff.e_homography_refit_required -eq $true -and $handoff.accepted_geometry_version -eq $geometryVersion -and $handoff.accepted_geometry_sha256 -eq $geometrySha256) 'Person E handoff geometry/refit authority mismatch.'
+$personEHead = (& git -C $PersonERepositoryRoot rev-parse HEAD 2>&1 | Out-String).Trim()
+Require ($LASTEXITCODE -eq 0 -and $personEHead -eq $personECommit) 'Person E repository HEAD does not match the authorized commit.'
 
-$receipt = Get-Content -Raw -LiteralPath $receiptPath | ConvertFrom-Json
-$report = Get-Content -Raw -LiteralPath $reportPath | ConvertFrom-Json
-$input = Get-Content -Raw -LiteralPath $inputPath | ConvertFrom-Json
-$eInventory = Get-Content -Raw -LiteralPath $inventoryPath | ConvertFrom-Json
-Require ($receipt.schema_version -eq 'person-e-person-c-v0.4-homography-refit-validation-v0.1') 'Unknown Person E validation receipt schema.'
-Require ($receipt.status -eq 'PASS' -and $receipt.owner -eq 'Person E') 'Person E validation receipt is not an E-owned PASS.'
-Require ($receipt.source_commit -match '^[0-9a-f]{40}$') 'Person E validation source_commit is not a full Git hash.'
-Require ($receipt.accepted_geometry_version -eq $geometryVersion -and $receipt.accepted_geometry_sha256 -eq $geometrySha256) 'Person E validation geometry identity mismatch.'
-Require ($receipt.person_c_handoff_bundle_sha256 -eq $handoffBundleSha256) 'Person E validation does not bind the exact Person C handoff.'
-Require ($receipt.homography_input_sha256 -eq (Get-Sha256 $inputPath)) 'Person E input hash binding mismatch.'
-Require ($receipt.homography_report_sha256 -eq (Get-Sha256 $reportPath)) 'Person E report hash binding mismatch.'
-Require ($receipt.layout_count -eq 6 -and $receipt.all_layouts_planning_gate_passed -eq $true -and $receipt.no_hidden_offsets_or_compatibility_adapters -eq $true) 'Person E validation receipt did not pass all six layouts without adapters.'
-Require ($input.homography_input_schema_version -eq 'person-e-homography-input-v0.1' -and $input.layouts.Count -eq 6) 'Person E homography input schema/layout count mismatch.'
-Require ($report.homography_report_schema_version -eq 'person-e-homography-report-v0.2' -and $report.layouts.Count -eq 6) 'Person E homography report schema/layout count mismatch.'
-Require ($report.code_sha -match '^[0-9a-f]{40}$') 'Person E report code_sha is not a full Git hash.'
-Require ($report.config_hash -eq 'da05329029cb7119f0c48cfed12657d1a2e4ae6b7d0cb6dcd3b8353292b95a56') 'Person E config hash mismatch.'
-Require ($report.algorithm_version -eq 'four_point_projective_gauss_jordan_v0.1') 'Person E homography algorithm version mismatch.'
-Require ([double]$report.singular_pivot_tolerance -eq 1e-12 -and [double]$report.maximum_median_wall_parallel_error_blocks -eq 0.2 -and [double]$report.maximum_p95_wall_parallel_error_blocks -eq 0.5 -and [double]$report.minimum_shift_error_multiplier_on_gate_failure -eq 2.0) 'Person E validation tolerances changed.'
+$package = Get-Content -Raw -LiteralPath $PackageManifest | ConvertFrom-Json
+$handoffRecord = Get-Content -Raw -LiteralPath $HandoffPath | ConvertFrom-Json
+$authorizationRecord = Get-Content -Raw -LiteralPath $Authorization | ConvertFrom-Json
+$schedule = Get-Content -Raw -LiteralPath $ScheduleManifest | ConvertFrom-Json
+$capture = Get-Content -Raw -LiteralPath $Manifest | ConvertFrom-Json
 
-$expectedIds = @(1..6 | ForEach-Object { 'layout_{0:D2}' -f $_ })
-$actualIds = @($report.layouts | ForEach-Object { $_.layout_id } | Sort-Object)
-Require (($actualIds -join ',') -eq ($expectedIds -join ',')) 'Person E report does not contain exactly layout_01 through layout_06.'
-$inputIds = @($input.layouts | ForEach-Object { $_.layout_id } | Sort-Object)
-Require (($inputIds -join ',') -eq ($expectedIds -join ',')) 'Person E input does not contain exactly layout_01 through layout_06.'
-$receiptIds = @($receipt.layout_ids | Sort-Object)
-Require (($receiptIds -join ',') -eq ($expectedIds -join ',')) 'Person E validation receipt layout IDs mismatch.'
-Require ($receipt.per_layout.Count -eq 6) 'Person E validation receipt requires six per-layout rows.'
-Require ($eInventory.schema_version -eq 'person-e-v0.4-homography-refit-sha256-inventory-v0.1') 'Unknown Person E SHA-256 inventory schema.'
-$expectedInventoryPaths = @(
-    'data/handoff_e/person_e_v0_4_homography_refit_v0_1/homography_input.json',
-    'data/handoff_e/person_e_v0_4_homography_refit_v0_1/homography_report.json',
-    'data/handoff_e/person_e_v0_4_homography_refit_v0_1/validation_receipt.json'
-)
-Require ($eInventory.files.Count -eq 3) 'Person E SHA-256 inventory must list exactly input, report, and validation receipt.'
-foreach ($expectedPath in $expectedInventoryPaths) {
-    $row = @($eInventory.files | Where-Object { $_.path -eq $expectedPath })
-    Require ($row.Count -eq 1) "Person E SHA-256 inventory path missing or duplicated: $expectedPath"
-    $diskPath = Join-Path $RepositoryRoot ($expectedPath -replace '/', '\')
-    Require ([int64]$row[0].size_bytes -eq (Get-Item -LiteralPath $diskPath).Length -and $row[0].sha256 -eq (Get-Sha256 $diskPath)) "Person E SHA-256 inventory binding mismatch: $expectedPath"
+Require ($package.schema_version -eq 'person-e-v0.4-homography-refit-package-v0.2') 'Unknown Person E package schema.'
+Require ($package.status -eq 'PASS' -and $package.all_tolerances_pass -eq $true -and $package.c6a_execution_authorized -eq $true) 'Person E package does not authorize C6A.'
+Require ($package.passing_layout_count -eq 6 -and $package.successor_homography_count -eq 6 -and @($package.failed_layout_ids).Count -eq 0) 'Person E package does not certify six passing homographies.'
+Require ($package.accepted_geometry_version -eq $geometryVersion -and $package.accepted_geometry_sha256 -eq $geometrySha256) 'Person E package geometry identity mismatch.'
+Require ($package.source_code_commit -eq $personESourceCommit) 'Person E refit source-code commit mismatch.'
+
+Require ($handoffRecord.schema_version -eq 'person-e-to-person-c-v0.4-refit-handoff-v0.2') 'Unknown Person E-to-C handoff schema.'
+Require ($handoffRecord.status -eq 'READY_FOR_C6A' -and $handoffRecord.all_tolerances_pass -eq $true -and $handoffRecord.c6a_execution_authorized -eq $true) 'Person E-to-C handoff does not authorize C6A.'
+Require ($handoffRecord.successor_homography_count -eq 6 -and @($handoffRecord.blocking_layout_ids).Count -eq 0) 'Person E-to-C handoff contains blockers or the wrong homography count.'
+Require ($handoffRecord.accepted_geometry_version -eq $geometryVersion -and $handoffRecord.accepted_geometry_sha256 -eq $geometrySha256) 'Person E-to-C handoff geometry identity mismatch.'
+Require ($handoffRecord.source_code_commit -eq $personESourceCommit) 'Person E-to-C handoff source-code commit mismatch.'
+Require ($handoffRecord.person_e_refit_package.path -eq $PackageManifest -and $handoffRecord.person_e_refit_package.sha256 -eq $packageSha256) 'Person E-to-C handoff package binding mismatch.'
+$expectedLayoutIds = @(1..6 | ForEach-Object { 'layout_{0:D2}' -f $_ })
+$handoffLayoutIds = @($handoffRecord.layout_results | ForEach-Object { $_.layout_id } | Sort-Object)
+Require (@($handoffRecord.layout_results).Count -eq 6 -and ($handoffLayoutIds -join ',') -eq ($expectedLayoutIds -join ',')) 'Person E-to-C handoff does not contain exactly layout_01 through layout_06.'
+Require (@($handoffRecord.layout_results | Where-Object { $_.tolerance_result -ne $true }).Count -eq 0) 'At least one Person E homography tolerance record failed.'
+
+Require ($authorizationRecord.schema_version -eq 'person-c-c6a-e-refit-authorization-v0.1') 'Unknown Person C C6A authorization schema.'
+Require ($authorizationRecord.status -eq 'AUTHORIZED' -and $authorizationRecord.c6a_execution_authorized -eq $true -and $authorizationRecord.c6a_executed -eq $false) 'Person C C6A authorization record is not an unexecuted authorization.'
+Require (@($authorizationRecord.unresolved_blockers).Count -eq 0) 'Person C C6A authorization record contains blockers.'
+Require ($authorizationRecord.person_e.commit -eq $personECommit -and $authorizationRecord.person_e.refit_source_code_commit -eq $personESourceCommit) 'Person C authorization does not bind the expected Person E commits.'
+Require ($authorizationRecord.person_e.package.path -eq $PackageManifest -and $authorizationRecord.person_e.package.sha256 -eq $packageSha256) 'Person C authorization package binding mismatch.'
+Require ($authorizationRecord.person_e.handoff.path -eq $HandoffPath -and $authorizationRecord.person_e.handoff.sha256 -eq $handoffSha256) 'Person C authorization handoff binding mismatch.'
+Require ($authorizationRecord.accepted_geometry.version -eq $geometryVersion -and $authorizationRecord.accepted_geometry.sha256 -eq $geometrySha256) 'Person C authorization geometry binding mismatch.'
+Require ($authorizationRecord.c6a_schedule_manifest.path -eq 'configs/collection/person_c_c6a_v0_1/schedule_set_manifest.json' -and $authorizationRecord.c6a_schedule_manifest.sha256 -eq $scheduleManifestSha256 -and $authorizationRecord.c6a_schedule_manifest.schedule_set_sha256 -eq $scheduleSetSha256) 'Person C authorization schedule binding mismatch.'
+Require ($authorizationRecord.c6a_capture_manifest.path -eq 'docs/status/person_c_c6a_capture_manifest_v0_2/c6a_capture_manifest.json' -and $authorizationRecord.c6a_capture_manifest.sha256 -eq $captureManifestSha256) 'Person C authorization capture-manifest binding mismatch.'
+Require ($authorizationRecord.execution_command -eq $executionCommand) 'Person C authorization execution command mismatch.'
+
+Require ($schedule.schema_version -eq 'person-c-c6a-noise-schedule-set-v0.1' -and $schedule.schedule_version -eq 'person-c-c6a-noise-schedules-v0.1') 'Unknown C6A schedule manifest schema/version.'
+Require ($schedule.schedule_count -eq 66 -and @($schedule.schedules).Count -eq 66) 'C6A schedule manifest must contain exactly 66 schedules.'
+Require ($schedule.schedule_set_sha256 -eq $scheduleSetSha256) 'C6A schedule-set digest mismatch.'
+Require ($schedule.accepted_geometry.version -eq $geometryVersion -and $schedule.accepted_geometry.sha256 -eq $geometrySha256) 'C6A schedule geometry identity mismatch.'
+
+Require ($capture.schema_version -eq 'person-c-c6a-capture-manifest-v0.2' -and $capture.manifest_ready -eq $true) 'C6A capture manifest is not ready or has an unknown schema.'
+Require ($capture.execution_authorized_now -eq $false) 'The immutable pre-refit capture manifest authorization state changed unexpectedly.'
+Require ($capture.episode_count -eq 66 -and $capture.c6b_episode_count -eq 0 -and @($capture.episodes).Count -eq 66) 'C6A capture manifest episode counts are invalid.'
+Require ($capture.schedule_version -eq $schedule.schedule_version -and $capture.schedule_set_sha256 -eq $scheduleSetSha256) 'C6A capture manifest schedule binding mismatch.'
+Require ($capture.accepted_geometry.version -eq $geometryVersion -and $capture.accepted_geometry.sha256 -eq $geometrySha256) 'C6A capture manifest geometry identity mismatch.'
+
+foreach ($row in $schedule.schedules) {
+    $diskPath = Join-Path $RepositoryRoot ($row.path -replace '/', '\')
+    Require (Test-Path -LiteralPath $diskPath -PathType Leaf) "C6A schedule is missing: $($row.path)"
+    Require ([int64]$row.size_bytes -eq (Get-Item -LiteralPath $diskPath).Length -and $row.sha256 -eq (Get-Sha256 $diskPath)) "C6A schedule hash/size mismatch: $($row.path)"
+    Require (Test-Path -LiteralPath $row.runtime_install.path -PathType Leaf) "Installed C6A schedule is missing: $($row.runtime_install.path)"
+    Require ([int64]$row.runtime_install.size_bytes -eq (Get-Item -LiteralPath $row.runtime_install.path).Length -and $row.runtime_install.sha256 -eq (Get-Sha256 $row.runtime_install.path)) "Installed C6A schedule hash/size mismatch: $($row.runtime_install.path)"
+    $captureRow = @($capture.episodes | Where-Object { $_.episode_id -eq $row.episode_id })
+    Require ($captureRow.Count -eq 1) "C6A capture manifest episode is missing or duplicated: $($row.episode_id)"
+    $captureRow = $captureRow[0]
+    Require ($captureRow.collection_order -eq ($row.episode_id - 12601) -and $captureRow.seed -eq $row.seed) "C6A capture manifest order/seed mismatch: $($row.episode_id)"
+    Require ($captureRow.noise_schedule.path -eq $row.path -and $captureRow.noise_schedule.size_bytes -eq $row.size_bytes -and $captureRow.noise_schedule.sha256 -eq $row.sha256) "C6A capture manifest schedule binding mismatch: $($row.episode_id)"
+    Require (-not (Test-Path -LiteralPath $captureRow.expected_output_paths.server) -and -not (Test-Path -LiteralPath $captureRow.expected_output_paths.client)) "C6A output path already exists: $($row.episode_id)"
 }
 
-foreach ($layout in $report.layouts) {
-    $authority = @($handoff.layouts | Where-Object { $_.layout_id -eq $layout.layout_id })
-    Require ($authority.Count -eq 1) "Missing unique Person C handoff layout: $($layout.layout_id)"
-    $authority = $authority[0]
-    $inputLayout = @($input.layouts | Where-Object { $_.layout_id -eq $layout.layout_id })
-    Require ($inputLayout.Count -eq 1) "Missing unique Person E input layout: $($layout.layout_id)"
-    $inputLayout = $inputLayout[0]
-    Require ($inputLayout.canonical_camera_pose_id -eq $authority.canonical_camera_pose_id) "Input camera pose mismatch: $($layout.layout_id)"
-    Require ($inputLayout.marker_set_source_hash -eq $authority.marker_set_source_hash) "Input marker-set source hash mismatch: $($layout.layout_id)"
-    Require (($inputLayout.marker_ids -join ',') -eq ($authority.marker_order -join ',')) "Input marker order mismatch: $($layout.layout_id)"
-    Require (($inputLayout.wall_parallel_origin_xz | ConvertTo-Json -Compress) -eq ($authority.wall_parallel_origin_xz | ConvertTo-Json -Compress)) "Input wall-parallel origin mismatch: $($layout.layout_id)"
-    Require (($inputLayout.wall_parallel_positive_unit_xz | ConvertTo-Json -Compress) -eq ($authority.wall_parallel_positive_unit_xz | ConvertTo-Json -Compress)) "Input wall-axis convention mismatch: $($layout.layout_id)"
-    foreach ($marker in $authority.markers) {
-        $inputWorldPoint = $inputLayout.world_points_by_marker.PSObject.Properties[$marker.marker_id].Value
-        Require ($null -ne $inputWorldPoint -and ($inputWorldPoint | ConvertTo-Json -Compress) -eq ($marker.world_xz_blocks | ConvertTo-Json -Compress)) "Input literal marker world point mismatch: $($layout.layout_id) $($marker.marker_id)"
-        $inputImagePoint = $inputLayout.image_points_by_marker.PSObject.Properties[$marker.marker_id].Value
-        Require ($null -ne $inputImagePoint -and $inputImagePoint.Count -eq 2) "Input marker image point missing or malformed: $($layout.layout_id) $($marker.marker_id)"
-    }
-    Require ($layout.canonical_camera_pose_id -eq $authority.canonical_camera_pose_id) "Camera pose mismatch: $($layout.layout_id)"
-    Require ($layout.marker_set_source_hash -eq $authority.marker_set_source_hash) "Marker-set source hash mismatch: $($layout.layout_id)"
-    Require ($layout.validation_source_hash -eq $inputLayout.validation_source_hash) "Validation-source hash mismatch: $($layout.layout_id)"
-    Require (($layout.wall_parallel_origin_xz | ConvertTo-Json -Compress) -eq ($authority.wall_parallel_origin_xz | ConvertTo-Json -Compress)) "Report wall-parallel origin mismatch: $($layout.layout_id)"
-    Require (($layout.wall_parallel_positive_unit_xz | ConvertTo-Json -Compress) -eq ($authority.wall_parallel_positive_unit_xz | ConvertTo-Json -Compress)) "Report wall-axis convention mismatch: $($layout.layout_id)"
-    Require ($layout.homography.layout_id -eq $layout.layout_id -and $layout.homography.canonical_camera_pose_id -eq $authority.canonical_camera_pose_id) "Homography identity mismatch: $($layout.layout_id)"
-    Require ($layout.homography.algorithm_version -eq 'four_point_projective_gauss_jordan_v0.1' -and $layout.homography.image_coordinate_convention -eq 'pixel_center_xy_zero_based' -and $layout.homography.world_coordinate_convention -eq 'ground_plane_world_xz_blocks') "Homography convention mismatch: $($layout.layout_id)"
-    Require (($layout.homography.marker_ids -join ',') -eq ($authority.marker_order -join ',')) "Homography marker order mismatch: $($layout.layout_id)"
-    Require ($layout.homography.matrix.Count -eq 3 -and @($layout.homography.matrix | Where-Object { $_.Count -ne 3 }).Count -eq 0) "Homography matrix is not 3x3: $($layout.layout_id)"
-    $heldout = $layout.heldout_localization
-    Require ($heldout.planning_gate_passed -eq $true) "Held-out gate failed: $($layout.layout_id)"
-    Require ([double]$heldout.median_absolute_wall_parallel_error_blocks -le 0.2) "Median error exceeds 0.2 blocks: $($layout.layout_id)"
-    Require ([double]$heldout.p95_absolute_wall_parallel_error_blocks -lt 0.5) "P95 error is not below 0.5 blocks: $($layout.layout_id)"
-    $receiptRow = @($receipt.per_layout | Where-Object { $_.layout_id -eq $layout.layout_id })
-    Require ($receiptRow.Count -eq 1 -and $receiptRow[0].planning_gate_passed -eq $true) "Person E per-layout validation receipt failed: $($layout.layout_id)"
+Require (Test-Path -LiteralPath $ServerRoot -PathType Container) 'C6A server root is missing.'
+Require (Test-Path -LiteralPath $ClientRoot -PathType Container) 'C6A client root is missing.'
+Require (Test-Path -LiteralPath $JavaExe -PathType Leaf) 'Pinned Java executable is missing.'
+
+if ($PreflightOnly) {
+    Write-Output 'C6A_AUTHORIZATION_PREFLIGHT_PASS=True'
+    Write-Output "C6A_EXECUTION_COMMAND=$executionCommand"
+    exit 0
 }
 
 & $captureScript -Manifest $Manifest -RepositoryRoot $RepositoryRoot -ServerRoot $ServerRoot -ClientRoot $ClientRoot -JavaExe $JavaExe -ExecuteScientificCapture

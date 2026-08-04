@@ -1,0 +1,51 @@
+{
+  "schema_version": "person-c-c6a-e-refit-authorization-v0.1",
+  "status": "AUTHORIZED",
+  "authorization_scope": "Person C C6A scientific capture only",
+  "additive_to_immutable_capture_manifest": true,
+  "c6a_execution_authorized": true,
+  "c6a_executed": false,
+  "person_e": {
+    "commit": "c46d838b5a277e71a39090900f9e8ca814b743a7",
+    "refit_source_code_commit": "96457cbae22159b2fe1828e0de12d313710dcdf5",
+    "package": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\data\\handoff_e\\person_e_v0_4_homography_refit_v0_2\\package_manifest.json",
+      "sha256": "f5a90bb97d0f54e754cfa11c971532d8d2e29cbe6ce0151dfeb17faae61a17bc"
+    },
+    "handoff": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\data\\handoff_e\\person_e_v0_4_homography_refit_v0_2\\person_e_to_person_c_refit_handoff.json",
+      "sha256": "0937dcc6335927a1c724e8e3f1510be94b76ff91e3583c10d59d10ec60fb38ca"
+    }
+  },
+  "accepted_geometry": {
+    "version": "person-c-layout-config-v0.4",
+    "path": "configs/scenes/layouts_v0_4.yaml",
+    "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+  },
+  "certification": {
+    "layout_results": [
+      {"layout_id": "layout_01", "pass": true},
+      {"layout_id": "layout_02", "pass": true},
+      {"layout_id": "layout_03", "pass": true},
+      {"layout_id": "layout_04", "pass": true},
+      {"layout_id": "layout_05", "pass": true},
+      {"layout_id": "layout_06", "pass": true}
+    ],
+    "successor_homography_count": 6,
+    "all_tolerances_pass": true
+  },
+  "c6a_schedule_manifest": {
+    "path": "configs/collection/person_c_c6a_v0_1/schedule_set_manifest.json",
+    "sha256": "1abf0fc1e9f5633e17616a512d0bf84d66e048eef9986427c1908b834945346e",
+    "schedule_set_sha256": "79a81668362421fa91cb591d355b655e9b1a60aae088057de7bda977df663806",
+    "schedule_count": 66
+  },
+  "c6a_capture_manifest": {
+    "path": "docs/status/person_c_c6a_capture_manifest_v0_2/c6a_capture_manifest.json",
+    "sha256": "174def13f71ad8c2df5615a0ef5ec7fc9e10b431c105fc995dc6508e87c2dc7d",
+    "episode_count": 66,
+    "pre_refit_execution_authorized_now": false
+  },
+  "execution_command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A\\scripts\\person_c\\run-c6a-after-e-refit.ps1\" -ExecuteScientificCapture",
+  "unresolved_blockers": []
+}
