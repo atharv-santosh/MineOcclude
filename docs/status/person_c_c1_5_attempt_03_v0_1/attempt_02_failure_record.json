@@ -1,0 +1,278 @@
+{
+  "schema_version": "person-c-c1.5-first-operator-failed-attempt-v0.2",
+  "attempt": 2,
+  "episode_id": 11503,
+  "seed": 202608031503,
+  "warmup_ticks": 1200,
+  "classification": "POST_FINALIZATION_OBSERVATION_INVALID_NOT_TARGET_RETENTION_FAILURE",
+  "ingestion_eligible": false,
+  "target_retention_implementation_failure": false,
+  "cause": "observegeometry executed after episode finalization and deterministic target cleanup",
+  "chronology": [
+    {
+      "local_time": "20:08:12",
+      "event": "episode armed with warmup 1200"
+    },
+    {
+      "local_time": "20:09:07",
+      "event": "targetstatus valid=true required=true count=1 lifecycle=READY problems=NONE"
+    },
+    {
+      "local_time": "20:09:12",
+      "event": "recording started"
+    },
+    {
+      "local_time": "20:09:13",
+      "event": "episode ended and target cleanup completed"
+    },
+    {
+      "local_time": "20:09:17",
+      "event": "observegeometry wrote the invalid create-only receipt"
+    }
+  ],
+  "invalid_receipt_target": {
+    "valid": false,
+    "tagged_target_count": 0,
+    "problems": [
+      "tagged target count is not exactly one",
+      "target is not alive",
+      "target is marked removed",
+      "target tag is missing",
+      "target entity type is not minecraft:sheep",
+      "target color is not magenta",
+      "target NoAI state is missing",
+      "target Silent state is missing",
+      "target PersistenceRequired state is missing",
+      "target invulnerable state is missing",
+      "target is not an adult",
+      "target UUID changed",
+      "target world changed",
+      "target location differs from the authoritative pose"
+    ]
+  },
+  "preservation": {
+    "status": "PRESERVED_HASH_BOUND",
+    "original_files_modified": false,
+    "latest_logs_archived_byte_identically": true,
+    "files": {
+      "geometry_receipt": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_5_first_operator_attempt_02_layout_01.json",
+        "size_bytes": 12789,
+        "sha256": "d7519d1e4b702e468edfc2eabc051259121757aaff106ce76f96115eb7efb49b"
+      },
+      "canonical_screenshot": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\first_operator_attempt_02_layout_01.png",
+        "present": false
+      },
+      "attestation": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_02_attestation.json",
+        "present": false
+      },
+      "ingested_output": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_02_ingested.json",
+        "present": false
+      },
+      "raw_f2_screenshots": [
+        {
+          "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_20.09.27.png",
+          "size_bytes": 72305,
+          "sha256": "482a83e7c996b9ccf05b6ccf7ebe535cfe84bfa60909727be228584e91878fd1"
+        },
+        {
+          "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_20.09.36.png",
+          "size_bytes": 72590,
+          "sha256": "b0c8af0b8bf3d6e0835063b271aad936341dd64ceede2a1c383251102a335d5e"
+        }
+      ],
+      "session_started_marker": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_02_session_started.txt",
+        "size_bytes": 35,
+        "sha256": "f68288ff6c6cd797b587ff5643dcc90ccd06539c35daa517e817c51a7ffc0cfe"
+      },
+      "immutable_schedule": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_schedules\\episode_11503.jsonl",
+        "size_bytes": 3369,
+        "sha256": "acff4ec8e22ecc04459f18780d4ce59153e2615385fd13291c4c92ac9ca35b8b"
+      },
+      "server_latest_log_original": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\logs\\latest.log",
+        "size_bytes": 11866,
+        "sha256": "e8ba5b25d2b534f8df8a539e4f5cd93612629ffd2c501b8c399d34b820cde5bc"
+      },
+      "client_latest_log_original": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\logs\\latest.log",
+        "size_bytes": 7300,
+        "sha256": "a11384d9adbb3239031e709a77a16016669fdf477e4f9c5c6d59b11b89a855c3"
+      },
+      "server_latest_log_preserved_copy": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\attempt_02_preserved\\server_latest.log",
+        "size_bytes": 11866,
+        "sha256": "e8ba5b25d2b534f8df8a539e4f5cd93612629ffd2c501b8c399d34b820cde5bc"
+      },
+      "client_latest_log_preserved_copy": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\attempt_02_preserved\\client_latest.log",
+        "size_bytes": 7300,
+        "sha256": "a11384d9adbb3239031e709a77a16016669fdf477e4f9c5c6d59b11b89a855c3"
+      },
+      "server_episode_output": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11503",
+        "file_count": 5,
+        "files": [
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11503\\finalization.json",
+            "size_bytes": 142,
+            "sha256": "b7c7f524f4e8ebaacd3f6e42320ca9395598ce6e62be1bc35ad47efd76a94c64"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11503\\layout_meta.json",
+            "size_bytes": 468,
+            "sha256": "307039375caa117e164ac7ecae02bf6ab4093f9be67a4ca70747bcbfe053bc7d"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11503\\lifecycle.jsonl",
+            "size_bytes": 527,
+            "sha256": "9b13a5b151e09dd08a727f2186cf7fb2e4066ebadb6f8438cc776ba83764f32e"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11503\\reset_result.json",
+            "size_bytes": 330,
+            "sha256": "5d6d757906439c4b79afe8c490103d03d37f3eaab8c0ae3b452b3eaeb8e5e163"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11503\\server_state.jsonl",
+            "size_bytes": 8019,
+            "sha256": "a9a139b24a0bd17ca9dd736b44a181dc776d2d1a0416290033f54973e8220a95"
+          }
+        ]
+      },
+      "client_episode_output": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503",
+        "file_count": 22,
+        "files": [
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\client_tick.jsonl",
+            "size_bytes": 4080,
+            "sha256": "bcf1be42bcfceb7059bc0714a1d61d245ce329044f98452a750436cc53fee9cf"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000000.png",
+            "size_bytes": 75066,
+            "sha256": "de145cab98591fff62d29ed80d5c45941dfa2b2b58e043ab691c64a0a0bfd4d8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000001.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000002.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000003.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000004.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000005.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000006.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000007.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000008.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000009.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000010.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000011.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000012.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000013.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000014.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000015.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000016.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000017.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000018.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\frames\\000019.png",
+            "size_bytes": 70094,
+            "sha256": "33d156cc244dce34524b61a750bcc78017baa961f35280f88e314c10110c94e8"
+          },
+          {
+            "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11503\\raw_actions.jsonl",
+            "size_bytes": 5590,
+            "sha256": "63268a26937970d1c9c11f6a898005a84d8bb89b3ba5764cb093f7c4e4bf532e"
+          }
+        ]
+      },
+      "attempt_02_manifest": {
+        "path": "docs/status/person_c_c1_5_attempt_02_v0_1/attempt_02_manifest.json",
+        "size_bytes": 12195,
+        "sha256": "f897130e57917a09f42c06b4ad9a9207f360bc07eecbae0e8b6b71cd7a81fd36",
+        "git_blob": "09b1bc033f30af0eb7aa949907f23b604ff28bc8"
+      },
+      "attempt_01_failure_record": {
+        "path": "docs/status/person_c_c1_5_attempt_02_v0_1/attempt_01_failure_record.json",
+        "size_bytes": 12616,
+        "sha256": "32ae9707a727777ec261655ae5828266fb0efc1a33cfb7df0942041d706529b6",
+        "git_blob": "aabc78d7591bd7361262b60056348aa4f61e8e78"
+      }
+    }
+  }
+}
