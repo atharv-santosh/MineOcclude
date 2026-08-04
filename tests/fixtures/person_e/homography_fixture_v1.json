@@ -1,0 +1,79 @@
+{
+  "canonical_camera_pose_id": "pose_1",
+  "expected_probe": {
+    "absolute_tolerance_blocks": 1e-09,
+    "image_xy": [
+      300.0,
+      180.0
+    ],
+    "world_xz_blocks": [
+      2.0,
+      2.0
+    ]
+  },
+  "fixture_id": "synthetic_person_e_homography",
+  "homography_fixture_schema_version": "person-e-homography-fixture-v1.0",
+  "image_coordinate_system": "pixel_center_xy_zero_based",
+  "image_height_px": 360,
+  "image_width_px": 640,
+  "layout_id": "layout_1",
+  "marker_correspondences": [
+    {
+      "image_xy": [
+        100.0,
+        80.0
+      ],
+      "marker_id": "north_west",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "north_west",
+      "world_xz_blocks": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "image_xy": [
+        500.0,
+        80.0
+      ],
+      "marker_id": "north_east",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "north_east",
+      "world_xz_blocks": [
+        4.0,
+        0.0
+      ]
+    },
+    {
+      "image_xy": [
+        500.0,
+        280.0
+      ],
+      "marker_id": "south_east",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "south_east",
+      "world_xz_blocks": [
+        4.0,
+        4.0
+      ]
+    },
+    {
+      "image_xy": [
+        100.0,
+        280.0
+      ],
+      "marker_id": "south_west",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "south_west",
+      "world_xz_blocks": [
+        0.0,
+        4.0
+      ]
+    }
+  ],
+  "resolution_id": "resolution_640x360_rgb",
+  "schema_version": "1.0",
+  "scientific_use": "forbidden",
+  "synthetic": true,
+  "world_coordinate_system": "ground_plane_world_xz_blocks"
+}

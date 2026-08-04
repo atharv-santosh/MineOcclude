@@ -1,0 +1,50 @@
+{
+  "schema_version": "person-c-c1-c6a-deterministic-repair-v0.1",
+  "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4",
+  "root_cause": "Minecraft 1.16.5 ServerWorld.tick removes every AnimalEntity when MinecraftServer.shouldSpawnAnimals() is false; the old controller then silently respawned the removed explicit sheep, masking invalid identity continuity.",
+  "fix": "tag the one controlled sheep, redirect only vanilla's spawn-animals removal call for that tagged sheep, retain spawn-animals=false for natural mobs, remove silent respawn, and hard-refuse on count/identity/state/world/pose drift at every lifecycle gate",
+  "accepted_geometry_modified": false,
+  "accepted_geometry": {
+    "version": "person-c-layout-config-v0.4",
+    "path": "configs/scenes/layouts_v0_4.yaml",
+    "size_bytes": 45279,
+    "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "git_blob": "4b441a40379fcd9af2fdd6ea43a3ac3417f7cb1e"
+  },
+  "target_retention_regression_test_count": 11,
+  "jar": {
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\artifacts\\mineocclude-0.1.1-538a176e1c83dc3b40e220dee8ebb2ac841bd9b4.jar",
+    "size_bytes": 84102,
+    "sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "fabric_metadata": {
+      "id": "mineocclude",
+      "version": "0.1.1"
+    },
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+  },
+  "installed": {
+    "server": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mods\\mineocclude-0.1.1.jar",
+      "size_bytes": 84102,
+      "sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52"
+    },
+    "client": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mods\\mineocclude-0.1.1.jar",
+      "size_bytes": 84102,
+      "sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52"
+    }
+  },
+  "server_smoke": {
+    "status": "PASS",
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\logs\\target-retention-smoke\\target-retention-smoke-receipt.json",
+    "size_bytes": 1231,
+    "sha256": "721062229daa0a81660152f2c2562fd7621bd955a523daa0a555a19536f471ba"
+  },
+  "c1_5_reconstruction_ready": true,
+  "c1_5_complete": false,
+  "second_operator_still_required": true,
+  "c6a_schedule_set_ready": true,
+  "c6a_schedule_set_sha256": "79a81668362421fa91cb591d355b655e9b1a60aae088057de7bda977df663806",
+  "c6a_manifest_ready": true,
+  "scientific_capture_started": false
+}

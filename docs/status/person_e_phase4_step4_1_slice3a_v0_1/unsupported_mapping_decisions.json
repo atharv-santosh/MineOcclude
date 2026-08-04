@@ -1,0 +1,38 @@
+{
+  "catalog_changed": false,
+  "closed_catalog_authority": "25509bb4ba292a83d933058539aca1ca6002524a",
+  "mappings": [
+    {
+      "artifact": "Person C joined visibility",
+      "blocks_twelve_type_chain": true,
+      "closest_existing_v2_type": "raw_trajectory",
+      "current_semantics": "Owner-produced geometric and empirical visibility join keyed to trajectory frames.",
+      "existing_type_faithful": false,
+      "explanation": "The joined result is derived mapping evidence, not raw trajectory bytes.",
+      "owner_responsible_for_schema_decision": "person_c",
+      "remains_external_evidence": true
+    },
+    {
+      "artifact": "Person A preprocessing metadata",
+      "blocks_twelve_type_chain": true,
+      "closest_existing_v2_type": "model_input",
+      "current_semantics": "Preprocessing identity and parameters describing how model inputs are produced.",
+      "existing_type_faithful": false,
+      "explanation": "Metadata alone is not the production model-input artifact.",
+      "owner_responsible_for_schema_decision": "person_a",
+      "remains_external_evidence": true
+    },
+    {
+      "artifact": "Person D composite comparison outputs",
+      "blocks_twelve_type_chain": true,
+      "closest_existing_v2_type": "baseline",
+      "current_semantics": "Composite comparison output may combine baseline predictions and metric-ready comparisons.",
+      "existing_type_faithful": false,
+      "explanation": "A composite cannot be silently registered as only baseline or only metric_table without an owner schema decision.",
+      "owner_responsible_for_schema_decision": "person_d",
+      "remains_external_evidence": true
+    }
+  ],
+  "schema_id": "person-e-phase4-step4-1-slice3a-unsupported-mappings-v0.1",
+  "schema_version": "1.0"
+}

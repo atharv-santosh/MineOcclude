@@ -1,0 +1,59 @@
+{
+  "accepted_artifact_types": [
+    "fitted_probe",
+    "prediction",
+    "baseline",
+    "metric_table"
+  ],
+  "artifact_exact_fields": [
+    "schema_version",
+    "artifact_schema_version",
+    "artifact_id",
+    "direct_input_artifact_ids",
+    "creator_run_id",
+    "artifact_type",
+    "uri",
+    "sha256",
+    "size_bytes",
+    "status",
+    "status_authority",
+    "status_reason",
+    "superseded_by"
+  ],
+  "direct_input_requirements": "Explicit, duplicate-free artifact IDs with verified hashes; every accepted direct input must exist and be accepted before its consumer is imported.",
+  "import_order": [
+    "existing Person B fitted_probe and prediction",
+    "nine Person D baseline prediction artifacts",
+    "Person B bounded reveal prediction",
+    "Person B final metric_table"
+  ],
+  "minimum_trust_records_per_output": [
+    "trusted owner authority",
+    "verified owner status record bytes",
+    "trusted exact-artifact authorization",
+    "verified authorization record bytes",
+    "trusted manifest with exact artifact identity/type/schema/size/SHA-256",
+    "verified local bytes or trusted external receipt",
+    "exact direct-input artifact IDs and hashes"
+  ],
+  "registry_fields": [
+    "immutable_registry_schema_version",
+    "registry_id",
+    "schema_version",
+    "scientific_use",
+    "synthetic",
+    "owner_authorities",
+    "owner_status_records",
+    "trusted_artifact_authorizations",
+    "trusted_authorization_record_bytes",
+    "manifests",
+    "byte_verifications",
+    "runs",
+    "artifacts"
+  ],
+  "registry_generation": "v2",
+  "schema_id": "person-e-step4-1-registry-v2-import-contract-v0-1",
+  "schema_version": "1.0",
+  "u4_output_inspected": false,
+  "unknown_or_extra_type_policy": "REJECT"
+}

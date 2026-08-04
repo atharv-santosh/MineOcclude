@@ -1,0 +1,253 @@
+{
+  "absent_scene_element_strata": [
+    "marker_adjacent",
+    "wall_adjacent",
+    "open_background",
+    "marker_and_wall"
+  ],
+  "design": "Per layout: 4 truth-present and 4 truth-absent frames. Present frames span the four horizontal image-region strata via the sheep's planned visible lane position; each is tagged with a scene-element stratum (open / near-marker / near-wall-edge / lane-extreme) to exercise recall across contexts. Absent frames span the same four image regions with scene-element strata (marker / wall / open background / marker+wall) to exercise false-positive rejection. Enough present and absent cases per layout to make precision and recall gates meaningful.",
+  "image_region_strata": [
+    "region_1_left",
+    "region_2_center_left",
+    "region_3_center_right",
+    "region_4_right"
+  ],
+  "package_id": "person-c-phase3-detector-v1-untouched-test-v0_1",
+  "per_layout_matrix": {
+    "layout_01": {
+      "absent": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "marker_adjacent"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "wall_adjacent"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "open_background"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "marker_and_wall"
+        }
+      ],
+      "present": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "sheep_open_ground"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "sheep_near_marker"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "sheep_near_wall_edge"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "sheep_lane_extreme"
+        }
+      ]
+    },
+    "layout_02": {
+      "absent": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "marker_adjacent"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "wall_adjacent"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "open_background"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "marker_and_wall"
+        }
+      ],
+      "present": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "sheep_open_ground"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "sheep_near_marker"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "sheep_near_wall_edge"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "sheep_lane_extreme"
+        }
+      ]
+    },
+    "layout_03": {
+      "absent": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "marker_adjacent"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "wall_adjacent"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "open_background"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "marker_and_wall"
+        }
+      ],
+      "present": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "sheep_open_ground"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "sheep_near_marker"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "sheep_near_wall_edge"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "sheep_lane_extreme"
+        }
+      ]
+    },
+    "layout_04": {
+      "absent": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "marker_adjacent"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "wall_adjacent"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "open_background"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "marker_and_wall"
+        }
+      ],
+      "present": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "sheep_open_ground"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "sheep_near_marker"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "sheep_near_wall_edge"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "sheep_lane_extreme"
+        }
+      ]
+    },
+    "layout_05": {
+      "absent": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "marker_adjacent"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "wall_adjacent"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "open_background"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "marker_and_wall"
+        }
+      ],
+      "present": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "sheep_open_ground"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "sheep_near_marker"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "sheep_near_wall_edge"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "sheep_lane_extreme"
+        }
+      ]
+    },
+    "layout_06": {
+      "absent": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "marker_adjacent"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "wall_adjacent"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "open_background"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "marker_and_wall"
+        }
+      ],
+      "present": [
+        {
+          "image_region_stratum": "region_1_left",
+          "scene_element_stratum": "sheep_open_ground"
+        },
+        {
+          "image_region_stratum": "region_2_center_left",
+          "scene_element_stratum": "sheep_near_marker"
+        },
+        {
+          "image_region_stratum": "region_3_center_right",
+          "scene_element_stratum": "sheep_near_wall_edge"
+        },
+        {
+          "image_region_stratum": "region_4_right",
+          "scene_element_stratum": "sheep_lane_extreme"
+        }
+      ]
+    }
+  },
+  "present_scene_element_strata": [
+    "sheep_open_ground",
+    "sheep_near_marker",
+    "sheep_near_wall_edge",
+    "sheep_lane_extreme"
+  ],
+  "schema_version": "1.0"
+}

@@ -1,0 +1,33 @@
+{
+  "byte_size": 662116,
+  "decision": "ACCEPT_SINGLE_PILOT_FOR_SCIENTIFIC_USE",
+  "decision_authority": "person_c owner decision on role/person-c-data",
+  "decision_id": "person_c_scientific_use_accept_layout_00_ep9403_v0_2",
+  "decision_timestamp": "2026-07-30T19:36:57Z",
+  "git_object_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+  "owner": "person_c",
+  "owner_authority_commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+  "person_a_phase6_authorized": false,
+  "person_c_contract_version": "0.2",
+  "previous_scientific_use": "pending_cross_role_signoff",
+  "prohibited_uses_and_limitations": [
+    "Does not authorize Person A Phase 6 or any runtime execution.",
+    "Scope limited to this one pilot for Steps 6.1-6.6.",
+    "Does not grant Registry v2 output-artifact acceptance (post-execution).",
+    "No second pilot and no placeholder is accepted."
+  ],
+  "reason": "Person C owns final scientific-use of its own capture pilot. Person B's refreshed authorization (8942d5d) explicitly requests this owner decision, binds the candidate identity to Person C authority bf09c23, and states person_b_may_supply_this_decision=false. The pilot passes Person C's strict capture validator with zero rejections, every referenced artifact checksum matches at the approved location, and the refreshed hash/size equal the current bytes. Package-local acceptance is not scientific acceptance; this record is the C-owned scientific-use acceptance.",
+  "schema_id": "person-c-phase4-step4-1-registry-v2-handoff-v0-1-selected-pilot-acceptance",
+  "schema_version": "1.0",
+  "scientific_use": "accepted_for_single_pilot_step_6_1",
+  "scientific_use_transition": {
+    "from": "pending_cross_role_signoff",
+    "to": "accepted_for_single_pilot_step_6_1"
+  },
+  "scope": "single_pilot_steps_6_1_through_6_6",
+  "signers": {
+    "person_c": true
+  },
+  "source_path": "data/autonomous/layout_00_ep9403/capture_package_v0_1.json",
+  "trajectory_id": "layout_00_ep9403"
+}

@@ -1,0 +1,584 @@
+{
+  "comparison_and_acceptance": {
+    "engineering_gate_rule": "A failed runtime, alignment, oracle, positive-control, or reproducibility gate is an invalid pipeline, not a negative scientific finding.",
+    "frozen_mvp_criteria": {
+      "U1_green": "A contiguous band of at least two layers has held-out R2 greater than zero, beats last-seen, and beats grouped shuffle at p<0.01.",
+      "U2_green": "Partial correlation of decoded/oracle spread controlling tau has a hierarchical 95% bootstrap CI above zero; average absolute 50/80/95% coverage error is at most 0.10 and improves on time-only and visible-history-q baselines.",
+      "U3_green": "Positive hidden-time growth, decoded/oracle slope ratio in [0.5, 2.0], and a reveal decrease with CI below zero and median spread reduction of at least 25%.",
+      "decision_rule": {
+        "GREEN": "Engineering gates pass; U1 and U2 are green; U3 is directionally correct.",
+        "RED": "Runtime, alignment, oracle, positive control, detector, or reproduction fails; do not interpret negative science.",
+        "YELLOW": "Engineering and controls pass, but a frozen scientific criterion fails cleanly; report the valid alternative result."
+      }
+    },
+    "metric_families": {
+      "U1": [
+        "r2",
+        "mae",
+        "grouped_permutation",
+        "baseline_comparison"
+      ],
+      "U2": [
+        "partial_correlation_controlling_tau",
+        "coverage",
+        "ece",
+        "z_diagnostics"
+      ],
+      "U3": [
+        "hidden_growth",
+        "oracle_slope_ratio",
+        "reveal_snapback"
+      ]
+    },
+    "metric_rules": {
+      "coverage_interval": "central_gaussian_inclusive",
+      "coverage_levels": [
+        0.5,
+        0.8,
+        0.95
+      ],
+      "duration_binning": "exact_duration_seconds",
+      "ece_aggregation": "mean_absolute_nominal_empirical_gap",
+      "near_zero_sigma_threshold_blocks": 1e-12,
+      "nonfinite_policy": "count_and_fail_result_no_clipping",
+      "partial_correlation_controls": [
+        "tau"
+      ],
+      "reveal_window_seconds": [
+        -1.0,
+        1.0
+      ]
+    },
+    "positive_control_override": {
+      "authority_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "decision": "PASS_FROZEN_VISIBLE_POSITION_POSITIVE_CONTROL",
+      "numeric_pass_threshold_added": false,
+      "policy": "human_scientific_gate_no_unfrozen_numeric_threshold",
+      "rule": "The exact completed Phase 6 decision is controlling; this handoff does not reapply the older planning-only R2 threshold."
+    },
+    "resampling_rules": {
+      "bootstrap_count_mvp": 1000,
+      "bootstrap_hierarchy": [
+        "layout_id",
+        "trajectory_id"
+      ],
+      "bootstrap_seed": 20260721,
+      "permutation_count_mvp": 999,
+      "permutation_seed": 20260720,
+      "permutation_unit": "whole_trajectory_block"
+    },
+    "source": {
+      "byte_size": 17790,
+      "git_blob_oid": "cb6d9c65141ca065f8d62875595745586644edfc",
+      "git_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "path": "PERSON_B_MVP_ROADMAP.md",
+      "role": "person_b",
+      "sha256": "c17386cbb4295c1e22ff499c116cb4801c118e58b43e01760f92cc4f831b408b"
+    }
+  },
+  "execution_order": [
+    {
+      "order": 1,
+      "owner": "person_b",
+      "sequence_id": "PERSON_B_V2_CONSUMER_AND_TEN_PILOT_FRAME_FOLD_RATIFICATION",
+      "task": "Close and ratify the v2 production-consumer and exact ten-pilot frame-fold blockers without changing the frozen science."
+    },
+    {
+      "order": 2,
+      "owner": "person_b",
+      "sequence_id": "PERSON_B_ORACLE_PROBE_PREDICTIONS",
+      "task": "Materialize the production oracle, bound frame folds, fitted probes, and OOF predictions under the frozen target/config."
+    },
+    {
+      "order": 3,
+      "owner": "person_d",
+      "sequence_id": "PERSON_D_BASELINES",
+      "task": "Validate B's real target/fold package, require READY, then produce accepted scientific baseline prediction documents."
+    },
+    {
+      "order": 4,
+      "owner": "person_b",
+      "sequence_id": "PERSON_B_FINAL_COMPARISON_METRICS",
+      "task": "Compute the final matched-row comparison and metric table from accepted OOF probe and D baseline predictions."
+    },
+    {
+      "order": 5,
+      "owner": "person_e",
+      "sequence_id": "PERSON_E_REGISTRY_IMPORT_EVIDENCE_AND_DECISION",
+      "task": "Verify bytes/receipts and direct lineage, import complete Registry v2 trust packages, produce required evidence, and issue the formal Step 4.1 pass/fail decision."
+    }
+  ],
+  "fold_contract": {
+    "final_frame_fold_manifest": {
+      "required_identity_key": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "required_scope": "exact accepted ten-pilot set",
+      "status": "ABSENT_BLOCKING_PERSON_B_AND_PERSON_D"
+    },
+    "frozen_layout_plan": {
+      "accepted_row_count": 2456,
+      "artifact_hash": "ca265b64935880aede8c3bb8b6060cdda17c23932e5e98878a3fcf8ee5341f01",
+      "artifact_id": "person_b_c_layout_fold_plan_2026_07_28",
+      "file": {
+        "analysis_config_version": "person-b-phase1-v0.2",
+        "byte_size": 6540,
+        "git_blob_oid": "75dfb420975dcdc84ac22acc071575a6b21630ac",
+        "git_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+        "path": "data/person_b/phase6_c_intake/layout_fold_plan.json",
+        "role": "person_b",
+        "sha256": "a762cfe66984675e6af9177ff954540fe17cafc7747422fcad26ed1a2f7bbf8b"
+      },
+      "layout_assignments": [
+        {
+          "fold_idx": 1,
+          "layout_id": "layout_00"
+        },
+        {
+          "fold_idx": 2,
+          "layout_id": "layout_01"
+        },
+        {
+          "fold_idx": 4,
+          "layout_id": "layout_02"
+        },
+        {
+          "fold_idx": 0,
+          "layout_id": "layout_03"
+        },
+        {
+          "fold_idx": 3,
+          "layout_id": "layout_04"
+        },
+        {
+          "fold_idx": 4,
+          "layout_id": "layout_05"
+        }
+      ],
+      "n_splits": 5,
+      "seed": 20260719,
+      "strategy": "layout_grouped",
+      "trajectory_count": 15
+    },
+    "frozen_split_definition": {
+      "analysis_config_version": "person-b-phase1-v0.2",
+      "config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "fold_schema_version": "person-b-fold-v0.1",
+      "folds_populated_required": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "grouping_field": "layout_id",
+      "row_order_has_scientific_meaning": false,
+      "validator_path": "src/mineocclude/probes/splits.py",
+      "validator_sha256": "748d4135ccfe94c23f891ecb43ca7139cb075069fdf16f8126f8e2440a6f0510"
+    },
+    "source": {
+      "byte_size": 3255,
+      "git_blob_oid": "b8dab97d91e6168c38530c432bd5a11efe580727",
+      "git_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/sealed_fold_split_identity.json",
+      "role": "person_b",
+      "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-sealed-fold-split-identity",
+      "schema_version": "1.0",
+      "sha256": "133d8e2aa01896bd90fc0a4f1492d205ae9fffa4e55870d05666dfcca4fb58e5"
+    }
+  },
+  "person_b_scope": {
+    "authorized_now": [
+      "Provenance-only intake and verification of the exact accepted ten-pilot sources, indexes, and chunks.",
+      "Owner preparation needed to close the v2 consumer and ten-pilot frame-fold blockers without changing targets, folds, metrics, thresholds, or membership."
+    ],
+    "blocked_scientific_scope_after_owner_gates": [
+      "Production oracle-target materialization.",
+      "Hidden-mean and hidden-spread fitted probes and OOF predictions.",
+      "Final matched-row metric/comparison computation after Person D returns accepted baselines."
+    ],
+    "consumable_artifacts": [
+      "Exact ten accepted Person C capture packages and their Registry v2 trust records.",
+      "Exact ten Person A Activation Store v2 indexes and 200 external chunks.",
+      "The immutable Person B Phase 6 positive-control PASS package.",
+      "The frozen target/config contracts and layout-to-fold assignments."
+    ],
+    "expected_output_package": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/",
+    "forbidden_actions": [
+      "Do not change targets, pilot membership, row selection, layouts, folds, thresholds, metrics, or accepted source identities.",
+      "Do not reinterpret Activation Store v2 as the historical v1 handoff.",
+      "Do not use U4 outcomes or authorize hidden-state interpretation before all exact gates pass.",
+      "Do not alter or overwrite Phase 6 activation artifacts."
+    ],
+    "required_outputs": [
+      "oracle_target",
+      "sealed ten-pilot frame fold manifest",
+      "joined frame table and selection/filter/intake/oracle receipts",
+      "fitted_probe",
+      "prediction",
+      "runner and environment receipts",
+      "D request with exact row/fold/target identity",
+      "metric_table after accepted D baselines",
+      "complete Registry v2 owner trust package and direct-input lineage"
+    ],
+    "runner_contract": {
+      "current_production_runner": "scripts/run_person_b_pilot.py",
+      "current_runner_status": "BLOCKED_INCOMPATIBLE_WITH_ACCEPTED_ACTIVATION_STORE_V2",
+      "preparation_tasks": [
+        "scripts/build_person_b_state_input.py",
+        "scripts/build_oracle_targets.py",
+        "scripts/build_person_b_d_request.py",
+        "scripts/build_person_b_e_registration.py"
+      ],
+      "required_argument_sources_after_resolution": {
+        "activation_handoff": "ratified exact ten-pilot v2 production input",
+        "artifact_id_prefix": "new append-only Person B production run identity",
+        "control_gate": "exact passing control bundle accepted for the same production input identity",
+        "layout_fold_plan": "data/person_b/phase6_c_intake/layout_fold_plan.json",
+        "output_directory": "new no-overwrite Person B production output root",
+        "scope": [
+          "hidden_mean",
+          "hidden_spread"
+        ],
+        "selection_source": "data/person_b/phase6_c_intake/condition_selection_source.json",
+        "target_document": "new sealed production oracle target"
+      }
+    },
+    "source": {
+      "byte_size": 2178,
+      "git_blob_oid": "53a56d5d8773f15dd6fbf728f6bcd685dddc2d4f",
+      "git_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/fitted_probe_input_contract.json",
+      "role": "person_b",
+      "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-fitted-probe-input-contract",
+      "schema_version": "1.0",
+      "sha256": "0b78510da874058e2fc5e900b4d9d1ace3c2d623daf0db332b5b27a34f5f9571"
+    }
+  },
+  "person_d_scope": {
+    "activation_artifacts_consumed_directly": false,
+    "authorized_now": [
+      "Verify the handoff authority and prepare for the frozen readiness-gate call.",
+      "Consume no scientific inputs until B publishes a real sealed frame-fold manifest and real oracle target."
+    ],
+    "baseline_families": [
+      {
+        "baseline": "last_seen",
+        "role": "memory heuristic floor",
+        "targets": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "baseline": "constant_velocity",
+        "role": "Regime A reference",
+        "targets": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "baseline": "grouped_shuffled",
+        "role": "trajectory-level chance floor",
+        "targets": [
+          "mu_oracle_blocks",
+          "log_sigma_oracle"
+        ]
+      },
+      {
+        "baseline": "time_only",
+        "role": "clock-substitution test",
+        "targets": [
+          "log_sigma_oracle"
+        ]
+      },
+      {
+        "baseline": "explicit_feature",
+        "role": "non-privileged feature ceiling",
+        "targets": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "baseline": "raw_pixel",
+        "role": "visual-leakage/scene-cue check",
+        "targets": [
+          "mu_oracle_blocks"
+        ]
+      },
+      {
+        "baseline": "visible_history_q",
+        "role": "fair spread baseline",
+        "targets": [
+          "log_sigma_oracle"
+        ]
+      },
+      {
+        "baseline": "known_q_analytic",
+        "role": "privileged non-fair reference ceiling",
+        "targets": [
+          "log_sigma_oracle"
+        ]
+      }
+    ],
+    "consumable_inputs_after_b_gate": [
+      "Exact accepted source contexts for the ten pilots.",
+      "Exact sealed Person B frame-fold manifest.",
+      "Exact sealed Person B oracle-target document.",
+      "Literal frozen analysis config bytes.",
+      "Accepted preprocessed source frames and model/preprocess identities only where the raw-pixel contract requires them."
+    ],
+    "direct_input_hashes": [
+      "fold_manifest_hash",
+      "oracle_target_hash",
+      "config_hash"
+    ],
+    "expected_output_package": "docs/status/person_d_phase4_step4_1_scientific_baseline_v0_1/",
+    "forbidden_actions": [
+      "Do not consume activation indexes or chunks directly.",
+      "Do not assign or recompute folds.",
+      "Do not promote docs/status/person_d_real_pilot_baseline_preview.json.",
+      "Do not fit when the readiness gate is BLOCKED or carries any reason.",
+      "Do not change target, row, fold, comparison, or missingness rules."
+    ],
+    "readiness_gate": {
+      "function": "mineocclude.baselines.scientific_readiness.validate_scientific_baseline_readiness",
+      "invocation_contract": {
+        "keyword_arguments": {
+          "candidate_scientific_use": "accepted",
+          "fold_manifest": {
+            "required_source": "Person B sealed production frame-fold manifest",
+            "status": "ABSENT_BLOCKING_EXECUTION"
+          },
+          "oracle_target_document": {
+            "required_source": "Person B sealed production oracle-target document",
+            "status": "ABSENT_BLOCKING_EXECUTION"
+          }
+        },
+        "positional_arguments": [
+          {
+            "name": "contexts",
+            "required_source": "exact accepted ten-pilot source contexts with Person B fold assignments"
+          }
+        ]
+      },
+      "required_result": {
+        "blocked_reasons": [],
+        "status": "READY"
+      }
+    },
+    "required_outputs": [
+      "Accepted person-b-baseline-input-v0.1 prediction documents with exact matching row/fold coverage.",
+      "Fit and missingness/exclusion receipts and matched-row validation.",
+      "Runner and environment receipts.",
+      "Owner status, exact-artifact authorization, trusted manifest, byte verification receipt, and direct-input hashes."
+    ],
+    "runner_contract": {
+      "authoritative_steps": [
+        {
+          "action": "Verify the exact handoff, input, and code authorities before consuming any scientific inputs.",
+          "person_b_starting_authority": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+          "person_d_starting_authority": "853e0acadf050a0b1f318b399b524e57379d03bf",
+          "step": 0
+        },
+        {
+          "action": "Validate the sealed frame-fold manifest and oracle-target document with the committed Person D validators.",
+          "fold_validator": "mineocclude.probes.splits.validate_fold_manifest",
+          "oracle_validator": "mineocclude.oracle.schema.validate_oracle_target_document",
+          "step": 1
+        },
+        {
+          "action": "Run the committed scientific readiness gate and require READY with an empty reason list.",
+          "function": "mineocclude.baselines.scientific_readiness.validate_scientific_baseline_readiness",
+          "required_result": {
+            "blocked_reasons": [],
+            "status": "READY"
+          },
+          "step": 2
+        },
+        {
+          "action": "Fit the frozen baseline families only after the readiness gate passes.",
+          "step": 3
+        },
+        {
+          "action": "Mint a new append-only production artifact identity and emit prediction, fit, missingness, runner, and environment receipts.",
+          "step": 4
+        },
+        {
+          "action": "Build and validate the Person D scientific baseline document against exact Person B row, fold, and target identities.",
+          "step": 5
+        },
+        {
+          "action": "Publish the complete Registry v2 trust package with all direct-input hashes and byte-verification evidence.",
+          "step": 6
+        },
+        {
+          "action": "Append accepted production status without promoting preview artifacts or overwriting prior artifacts.",
+          "step": 7
+        }
+      ],
+      "production_cli_status": "NO_SINGLE_PRODUCTION_CLI_FROZEN;_USE_THE_COMMITTED_API_RUNBOOK",
+      "source": {
+        "byte_size": 4230,
+        "git_blob_oid": "f0caabc3244d6acaed04f925a7d331ad4d279305",
+        "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+        "path": "docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/execution_runbook.json",
+        "role": "person_d",
+        "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-execution-runbook",
+        "schema_version": "1.0",
+        "sha256": "5454f0635224ff3fce667ea29f518f8e1dbda7f6dd662143cdfad89abe66dce6"
+      }
+    },
+    "source": {
+      "byte_size": 4114,
+      "git_blob_oid": "02ffe4d360279409b74e1d0372cc424cddedd3a0",
+      "git_commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+      "path": "docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/scientific_baseline_input_contract.json",
+      "role": "person_d",
+      "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-scientific-baseline-input-contract",
+      "schema_version": "1.0",
+      "sha256": "a3e823b32451ef83f6b1e4cf5c59ed26a9e480918e03016c11b1fb56948e3f07"
+    }
+  },
+  "schema_id": "person-e-phase6-to-step4-1-handoff-v0-1-step4-1-execution-contract",
+  "schema_version": "1.0",
+  "target_contract": {
+    "config": {
+      "analysis_config_version": "person-b-phase1-v0.2",
+      "byte_size": 4881,
+      "git_blob_oid": "10d589b753a8b4d310b76bf1ee2ed2427f349360",
+      "git_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "path": "configs/analysis/core.yaml",
+      "role": "person_b",
+      "schema_version": "1.0",
+      "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab"
+    },
+    "definitions": {
+      "log_sigma_oracle": {
+        "eligibility": "accepted_hidden_positive_spread_rows",
+        "null_policy": "null_outside_eligibility",
+        "source": "ln(sigma_oracle_blocks / 1 block)",
+        "unit": "dimensionless",
+        "use": "hidden_row_probe_target"
+      },
+      "mu_oracle_blocks": {
+        "eligibility": "accepted_post_first_seen_rows",
+        "source": "primary_regime_a_oracle",
+        "unit": "blocks",
+        "use": "probe_target"
+      },
+      "sigma_oracle_blocks": {
+        "eligibility": "accepted_post_first_seen_rows",
+        "source": "sqrt(var_oracle_blocks2)",
+        "unit": "blocks",
+        "use": "calibration"
+      },
+      "tau": {
+        "eligibility": "accepted_post_first_seen_rows",
+        "source": "schema_v1_identity",
+        "unit": "seconds",
+        "use": "oracle_input_and_time_control"
+      },
+      "var_oracle_blocks2": {
+        "eligibility": "accepted_post_first_seen_rows",
+        "source": "primary_regime_a_oracle",
+        "unit": "blocks_squared",
+        "use": "oracle_audit"
+      },
+      "x_true_blocks": {
+        "eligibility": "accepted_post_first_seen_rows",
+        "source": "authoritative_server_state",
+        "unit": "blocks",
+        "use": "scoring_only"
+      }
+    },
+    "information_set": [
+      "last_visible_position_blocks",
+      "v",
+      "q",
+      "tau",
+      "visibility"
+    ],
+    "method": "primary_scalar_kalman_crosschecked_closed_form",
+    "production_target_manifest": {
+      "status": "ABSENT_BLOCKING_PERSON_B_AND_PERSON_D"
+    },
+    "row_contract": {
+      "cross_row_rules": [
+        "unique_trajectory_id_plus_model_frame_idx",
+        "one_episode_per_trajectory",
+        "consecutive_model_frame_and_server_tick_timebase",
+        "one_source_run_per_trajectory",
+        "one_layout_per_trajectory",
+        "last_visible_position_fixed_during_occlusion",
+        "v_and_q_fixed_during_occlusion",
+        "tau_strictly_increases_before_reveal"
+      ],
+      "required_oracle_fields": [
+        "target_schema_version",
+        "target_id",
+        "target_source",
+        "oracle_method",
+        "oracle_information_set",
+        "accepted_manifest_hash",
+        "source_run_id",
+        "last_visible_position_blocks",
+        "mu_oracle_blocks",
+        "var_oracle_blocks2",
+        "sigma_oracle_blocks",
+        "log_sigma_oracle",
+        "x_true_blocks"
+      ],
+      "target_equations": {
+        "log_sigma_oracle": "ln(sigma_oracle_blocks / 1 block) when sigma_oracle_blocks > 0 else null",
+        "mu_oracle_blocks": "last_visible_position_blocks + v * tau",
+        "sigma_oracle_blocks": "sqrt(var_oracle_blocks2)",
+        "var_oracle_blocks2": "q * tau"
+      },
+      "target_id_rule": "{trajectory_id}:{model_frame_idx}:regime_a_primary_v1",
+      "target_source": "authoritative_visible_state_known_v_q"
+    },
+    "source": {
+      "byte_size": 3022,
+      "git_blob_oid": "84d94a33a00e81871d32f8629c3de020c703c815",
+      "git_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/oracle_target_contract.json",
+      "role": "person_b",
+      "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-oracle-target-contract",
+      "schema_version": "1.0",
+      "sha256": "7da5b5e1f7668de7ffc652bb20399b653f2e483e34ea936285cd060861305f84"
+    }
+  },
+  "unresolved_blockers": [
+    {
+      "blocker_id": "person_b_activation_store_v2_production_consumer_absent",
+      "detail": "The accepted Phase 6 artifacts are person-a-activation-index-v2 / person-a-activation-store-v2, while scripts/run_person_b_pilot.py joins through mineocclude.contracts.activation.validate_activation_handoff and therefore accepts only the historical v1 handoff shape. The only committed v2 execution path is the completed visible-control runner.",
+      "owner": "person_b",
+      "required_resolution": "Publish and ratify a production v2 oracle/probe consumer or an exact contract-preserving adapter before any Step 4.1 scientific execution."
+    },
+    {
+      "blocker_id": "ten_pilot_frame_fold_manifest_absent",
+      "detail": "The frozen layout plan covers 15 target-present trajectories and 2,456 condition rows, but the immutable Phase 6 selection contains exactly ten pilots (five core and five controls). The historical frame-fold binder requires exact equality with all 15 planned trajectories; the v2 positive-control path validates only the five control assignments. No ratified ten-pilot production frame-fold manifest exists.",
+      "owner": "person_b",
+      "required_resolution": "Publish a sealed, ratified frame-level fold identity for exactly the accepted ten-pilot set without changing pilot membership or layout folds."
+    },
+    {
+      "blocker_id": "production_oracle_target_absent",
+      "detail": "The oracle definition is frozen, but Person B's committed Step 4.1 contract records production_artifact_created=false and no real target manifest has subsequently been published.",
+      "owner": "person_b",
+      "required_resolution": "Materialize and seal the exact production oracle target after the v2 consumer/fold contract is ratified."
+    },
+    {
+      "blocker_id": "person_d_readiness_gate_waits_for_person_b",
+      "detail": "Person D's immutable readiness gate requires a real sealed B frame-fold manifest and real B oracle-target document with exact matching coverage.",
+      "owner": "person_d",
+      "required_resolution": "Run the frozen D readiness gate only after the required B artifacts exist; fit no baseline unless it returns READY with zero blocked reasons."
+    },
+    {
+      "blocker_id": "step4_1_result_trust_packages_absent",
+      "detail": "No production fitted-probe, prediction, accepted scientific baseline, final comparison metric table, evidence figure, or final Registry v2 trusted manifest exists yet.",
+      "owner": "persons_b_d_e_in_frozen_order",
+      "required_resolution": "Produce the frozen B then D then B outputs and submit their exact bytes or trusted receipts to Person E for final import and pass/fail closure."
+    }
+  ]
+}

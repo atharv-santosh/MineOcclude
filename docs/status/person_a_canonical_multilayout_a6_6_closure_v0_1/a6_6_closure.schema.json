@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "a6_6_complete": {
+      "const": true
+    },
+    "authority_binding": {
+      "type": "object"
+    },
+    "collection_identity": {
+      "type": "object"
+    },
+    "consumed_receipts": {
+      "type": "object"
+    },
+    "decision": {
+      "type": "object"
+    },
+    "historical_preservation": {
+      "type": "object"
+    },
+    "immutable": {
+      "const": true
+    },
+    "remaining_blockers": {
+      "maxItems": 0,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "person-a-canonical-multilayout-a6-6-closure-v0.1"
+    },
+    "status": {
+      "const": "A6_6_COMPLETE"
+    },
+    "step": {
+      "const": "A6.6"
+    }
+  },
+  "required": [
+    "a6_6_complete",
+    "authority_binding",
+    "collection_identity",
+    "consumed_receipts",
+    "decision",
+    "historical_preservation",
+    "immutable",
+    "remaining_blockers",
+    "schema_version",
+    "status",
+    "step"
+  ],
+  "title": "Person A canonical multi-layout A6.6 closure",
+  "type": "object"
+}

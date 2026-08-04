@@ -1,0 +1,46 @@
+{
+  "authority_prerequisites": {
+    "person_a_acknowledgement_commit": "ca3f5695dc37f9f2c8066e323b25485c042b6cf7",
+    "person_b_final_authorization_commit": "43e5ac83004cce2145384c1383f2c3820311af14",
+    "person_b_seed_ratification_present": false,
+    "person_b_seed_ratification_required": true,
+    "person_c_accepted_pilot_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+  },
+  "execution_gate": {
+    "cuda_device": "cuda:0",
+    "local_cpu_execution_authorized": false,
+    "preflight_gate_open": false,
+    "production_execution_started": false,
+    "sagemaker_gpu_execution_required": true
+  },
+  "frozen_runtime_bindings": {
+    "deterministic_seed": 20260725,
+    "main_checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "model_config_git_blob_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "preprocessing_identity": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+    "required_cuda_device": "cuda:0",
+    "vae_checkpoint_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+  },
+  "required_checks_before_step6_1": [
+    "person_b_ratifies_exact_seed_20260725",
+    "sagemaker_runtime_receipt_is_complete",
+    "torch_cuda_is_available_is_true",
+    "cuda_device_zero_identity_is_captured",
+    "mineocclude_checkout_is_exact_and_clean",
+    "mineworld_checkout_is_exact_and_clean",
+    "model_config_identity_matches_exact_git_blob_bytes",
+    "checkpoint_and_vae_bytes_match_frozen_sha256",
+    "dependency_environment_matches_qualified_lock",
+    "accepted_pilot_git_objects_match_declared_hashes"
+  ],
+  "schema_id": "person-a-phase6-sagemaker-runtime-addendum-v0.1-runtime-preflight-contract",
+  "schema_version": "1.0",
+  "step_execution_state": {
+    "step6_1_complete": false,
+    "step6_2_complete": false,
+    "step6_3_complete": false,
+    "step6_4_complete": false,
+    "step6_5_complete": false,
+    "step6_6_complete": false
+  }
+}

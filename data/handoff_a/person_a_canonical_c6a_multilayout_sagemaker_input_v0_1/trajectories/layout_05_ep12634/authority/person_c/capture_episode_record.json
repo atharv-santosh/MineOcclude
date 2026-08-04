@@ -1,0 +1,86 @@
+{
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "camera": {
+    "feet_xyz": [
+      0.5,
+      4.0,
+      -4.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+  },
+  "collection_order": 33,
+  "environment_lock": {
+    "git_blob": "e0a6b347b9346f2e4435e47e4ac9100f6cab7e85",
+    "path": "docs/status/person_c_c1_runtime_ingestion_v0_1/final_environment_lock_receipt.json",
+    "sha256": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+    "size_bytes": 2207,
+    "version": "person-c-c1-final-environment-lock-v1.0"
+  },
+  "episode_id": 12634,
+  "execution_command": "mineocclude start layout_05 12634 202608309246 1.0 0.05 60",
+  "expected_output_paths": {
+    "client": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12634",
+    "server": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12634"
+  },
+  "hidden_frames": 0,
+  "impulse": {
+    "at_tick": 0,
+    "axis": -1
+  },
+  "layout_definition_sha256": "f917417538373e796e4e7c42afc6b4b40ca74f7b598c06e61f061086e07e205a",
+  "layout_id": "layout_05",
+  "layout_version": "person-c-layout-config-v0.4",
+  "max_ticks": 60,
+  "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+  "noise_schedule": {
+    "dt_seconds": 0.05,
+    "episode_id": 12634,
+    "n_draws": 60,
+    "path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12634.jsonl",
+    "q": 0.05,
+    "runtime_install": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_schedules\\episode_12634.jsonl",
+      "sha256": "8f38646704341e5471aa036a114b6ecdeabf53a4d0c4819441379239c7c20a83",
+      "size_bytes": 10805
+    },
+    "seed": 202608309246,
+    "sha256": "8f38646704341e5471aa036a114b6ecdeabf53a4d0c4819441379239c7c20a83",
+    "size_bytes": 10805
+  },
+  "q": 0.05,
+  "reset_build_version": "person-c-target-retention-v0.1",
+  "runtime_identities": {
+    "fabric_api": "0.42.0+1.16",
+    "fabric_loader": "0.15.11",
+    "java": "17.0.19",
+    "minecraft": "1.16.5",
+    "yarn": "1.16.5+build.10"
+  },
+  "scene": "nowall",
+  "scene_command": "nowall",
+  "seed": 202608309246,
+  "set": "nowall",
+  "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4",
+  "target": {
+    "color": "magenta",
+    "entity_type": "minecraft:sheep",
+    "exact_count": 1,
+    "invulnerable": true,
+    "no_ai": true,
+    "persistent": true,
+    "required": true,
+    "silent": true,
+    "start_world_xyz": [
+      -5.25,
+      4.0,
+      5.0
+    ],
+    "tag": "mineocclude_experimental_target"
+  },
+  "v": 1.0,
+  "warmup_ticks": 60
+}

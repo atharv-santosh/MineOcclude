@@ -1,0 +1,59 @@
+{
+  "artifact_id_rule": "person_a_rollout__<accepted_model_input_artifact_id>__<runtime_configuration_digest>__<run_id>",
+  "artifact_type": "rollout",
+  "dependencies": [
+    {
+      "accepted_required": true,
+      "artifact_id": null,
+      "artifact_type": "model_input"
+    },
+    {
+      "accepted_required": true,
+      "artifact_id": null,
+      "artifact_type": "runtime_configuration"
+    }
+  ],
+  "direct_input_lineage_required": true,
+  "future_artifact_id": null,
+  "future_byte_size": null,
+  "future_sha256": null,
+  "instantiated_output_artifact": false,
+  "manifest_requirements": [
+    "canonical rollout manifest bytes",
+    "rendered media SHA-256 and byte size",
+    "checkpoint and preprocessing identities",
+    "input artifact identities",
+    "run identity and completed lifecycle"
+  ],
+  "no_overwrite": true,
+  "owner": "person_a",
+  "package_schema_version": "1.0",
+  "prohibited_promotion_records": [
+    {
+      "path": "docs/status/phase3_runtime/person-a-phase3-aws-20260726-034000/rollout/person-a-phase3-aws-20260726-034000-rollout.rollout.json",
+      "promotion_allowed": false,
+      "promotion_id": "certification_rollout",
+      "reason": "runtime_certification_not_production_rollout",
+      "registry_v2_accepted": false,
+      "scientific_artifact": false,
+      "sha256": "a2fa59e143b8904b43199335f182b4f9e3274c791ddb0fe33b6da63e7c9cc20a"
+    }
+  ],
+  "prohibited_promotions": [
+    "certification_rollout"
+  ],
+  "registry_v2_accepted": false,
+  "registry_v2_requirements": [
+    "trusted_owner_authority",
+    "verified_owner_status_record_bytes",
+    "trusted_exact_artifact_authorization",
+    "verified_authorization_record_bytes",
+    "trusted_manifest_exact_artifact_entry",
+    "verified_artifact_bytes_or_trusted_receipt",
+    "exact_direct_input_artifact_identities"
+  ],
+  "rendered_byte_verification_required": true,
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-rollout-contract-v0.1",
+  "schema_version": "1.0",
+  "status": "contract_only_not_executed"
+}

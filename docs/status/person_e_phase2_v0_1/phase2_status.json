@@ -1,0 +1,36 @@
+{
+  "detector_heldout_performance_claimed": false,
+  "evidence_schema_version": "person-e-phase2-evidence-v0.1",
+  "homography_planning_gate_passed": false,
+  "overall_status": "PARTIAL",
+  "provenance_index_hash": "fe261cf00b685e66d631fa6f48df01696ef45ac0de2b205810c0913e78e5e6b1",
+  "real_completed_a_or_c_pilot_records_emitted": true,
+  "schema_version": "1.0",
+  "status_schema_version": "person-e-phase2-status-v0.1",
+  "steps": [
+    {
+      "evidence": "step2_1_registry_receipt.json",
+      "remaining_blocker": null,
+      "status": "PASS",
+      "step": "2.1"
+    },
+    {
+      "evidence": "frozen_split_manifest.json",
+      "remaining_blocker": null,
+      "status": "PASS",
+      "step": "2.2"
+    },
+    {
+      "evidence": "calibration_report.json",
+      "remaining_blocker": null,
+      "status": "PASS",
+      "step": "2.3"
+    },
+    {
+      "evidence": "localization_validation_report.json",
+      "remaining_blocker": "measured_independent_probe_localization_gate_failed",
+      "status": "PARTIAL",
+      "step": "2.4"
+    }
+  ]
+}

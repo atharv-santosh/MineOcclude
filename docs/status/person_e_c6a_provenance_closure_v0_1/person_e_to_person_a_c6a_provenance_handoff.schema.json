@@ -1,0 +1,46 @@
+{
+  "$id": "person-e-to-person-a-c6a-provenance-handoff-schema-v0.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "a6_6_provenance_consumption_authorized": {
+      "const": true
+    },
+    "a6_6_provenance_consumption_statement": {
+      "const": "A6.6 may consume this canonical C6A provenance. This handoff does not perform A6.6."
+    },
+    "canonical_c6a_id": {
+      "const": "person-c-c6a-post-c1-v0.1"
+    },
+    "immutable": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "person-e-to-person-a-c6a-provenance-handoff-v0.1"
+    },
+    "status": {
+      "const": "READY_FOR_A6_6_PROVENANCE_CONSUMPTION"
+    },
+    "unresolved_blockers": {
+      "maxItems": 0,
+      "type": "array"
+    }
+  },
+  "required": [
+    "a6_6_provenance_consumption_authorized",
+    "a6_6_provenance_consumption_statement",
+    "accepted_geometry",
+    "canonical_c6a_id",
+    "canonical_registry",
+    "person_c_c6a_handoff",
+    "person_c_c6a_package",
+    "person_e_refit_handoff",
+    "person_e_refit_package",
+    "provenance_receipt",
+    "schema_version",
+    "status",
+    "unresolved_blockers"
+  ],
+  "title": "Person E to Person A canonical C6A provenance handoff",
+  "type": "object"
+}

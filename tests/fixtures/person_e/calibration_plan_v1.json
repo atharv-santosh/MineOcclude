@@ -1,0 +1,155 @@
+{
+  "calibration_plan_schema_version": "person-e-detector-calibration-plan-v1.0",
+  "plan_id": "synthetic_person_e_calibration_plan",
+  "requested_c_inputs": {
+    "canonical_camera_pose_identity": true,
+    "layout_identity": true,
+    "negative_marker_frames": true,
+    "negative_wall_frames": true,
+    "resolution_identity": true,
+    "visible_magenta_sheep_frames": true
+  },
+  "samples": [
+    {
+      "canonical_camera_pose_id": "pose_1",
+      "event_id": "event_calibration_visible_magenta_sheep",
+      "frame_id": "frame_calibration_visible_magenta_sheep",
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "layout_id": "layout_1",
+      "model_frame_idx": 0,
+      "resolution_id": "resolution_640x360_rgb",
+      "sample_id": "sample_calibration_visible_magenta_sheep",
+      "source_artifact_id": "capture_calibration_visible_magenta_sheep",
+      "source_frame_idx": 0,
+      "source_kind": "visible_magenta_sheep",
+      "split": "calibration",
+      "threshold_selection_eligible": true,
+      "trajectory_id": "trajectory_calibration_visible_magenta_sheep"
+    },
+    {
+      "canonical_camera_pose_id": "pose_1",
+      "event_id": "event_calibration_negative_wall",
+      "frame_id": "frame_calibration_negative_wall",
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "layout_id": "layout_1",
+      "model_frame_idx": 1,
+      "resolution_id": "resolution_640x360_rgb",
+      "sample_id": "sample_calibration_negative_wall",
+      "source_artifact_id": "capture_calibration_negative_wall",
+      "source_frame_idx": 1,
+      "source_kind": "negative_wall",
+      "split": "calibration",
+      "threshold_selection_eligible": true,
+      "trajectory_id": "trajectory_calibration_negative_wall"
+    },
+    {
+      "canonical_camera_pose_id": "pose_1",
+      "event_id": "event_calibration_negative_marker",
+      "frame_id": "frame_calibration_negative_marker",
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "layout_id": "layout_1",
+      "model_frame_idx": 2,
+      "resolution_id": "resolution_640x360_rgb",
+      "sample_id": "sample_calibration_negative_marker",
+      "source_artifact_id": "capture_calibration_negative_marker",
+      "source_frame_idx": 2,
+      "source_kind": "negative_marker",
+      "split": "calibration",
+      "threshold_selection_eligible": true,
+      "trajectory_id": "trajectory_calibration_negative_marker"
+    },
+    {
+      "canonical_camera_pose_id": "pose_1",
+      "event_id": "event_heldout_visible_magenta_sheep",
+      "frame_id": "frame_heldout_visible_magenta_sheep",
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "layout_id": "layout_1",
+      "model_frame_idx": 3,
+      "resolution_id": "resolution_640x360_rgb",
+      "sample_id": "sample_heldout_visible_magenta_sheep",
+      "source_artifact_id": "capture_heldout_visible_magenta_sheep",
+      "source_frame_idx": 3,
+      "source_kind": "visible_magenta_sheep",
+      "split": "heldout",
+      "threshold_selection_eligible": false,
+      "trajectory_id": "trajectory_heldout_visible_magenta_sheep"
+    },
+    {
+      "canonical_camera_pose_id": "pose_1",
+      "event_id": "event_heldout_negative_wall",
+      "frame_id": "frame_heldout_negative_wall",
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "layout_id": "layout_1",
+      "model_frame_idx": 4,
+      "resolution_id": "resolution_640x360_rgb",
+      "sample_id": "sample_heldout_negative_wall",
+      "source_artifact_id": "capture_heldout_negative_wall",
+      "source_frame_idx": 4,
+      "source_kind": "negative_wall",
+      "split": "heldout",
+      "threshold_selection_eligible": false,
+      "trajectory_id": "trajectory_heldout_negative_wall"
+    },
+    {
+      "canonical_camera_pose_id": "pose_1",
+      "event_id": "event_heldout_negative_marker",
+      "frame_id": "frame_heldout_negative_marker",
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "layout_id": "layout_1",
+      "model_frame_idx": 5,
+      "resolution_id": "resolution_640x360_rgb",
+      "sample_id": "sample_heldout_negative_marker",
+      "source_artifact_id": "capture_heldout_negative_marker",
+      "source_frame_idx": 5,
+      "source_kind": "negative_marker",
+      "split": "heldout",
+      "threshold_selection_eligible": false,
+      "trajectory_id": "trajectory_heldout_negative_marker"
+    }
+  ],
+  "schema_version": "1.0",
+  "scientific_use": "forbidden",
+  "synthetic": true,
+  "threshold_selection_inputs": {
+    "connectivity": [
+      8
+    ],
+    "hsv_ranges": [
+      {
+        "hue_max_degrees": 320.0,
+        "hue_min_degrees": 280.0,
+        "saturation_max": 1.0,
+        "saturation_min": 0.5,
+        "value_max": 1.0,
+        "value_min": 0.5
+      }
+    ],
+    "max_area_pixels": [
+      null,
+      256
+    ],
+    "min_area_pixels": [
+      1,
+      4
+    ],
+    "morphology_iterations": [
+      0,
+      1
+    ],
+    "morphology_radius_pixels": [
+      1
+    ]
+  }
+}

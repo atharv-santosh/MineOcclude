@@ -1,0 +1,64 @@
+{
+  "authorization_output_root": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1",
+  "bounded_reveal_authorization": {
+    "commit": "99fb896ed8e6a3b187272fe078706bc7b17666d8",
+    "path": "docs/status/person_e_phase4_step4_1_bounded_reveal_authorization_v0_1/bounded_reveal_authorization.json",
+    "sha256": "b41b98c90a89c42e3e8119999679dd35644cd277a758722438794583f86cb7a2"
+  },
+  "broad_hidden_state_interpretation_authorized": false,
+  "comparison_contract": {
+    "commit": "4da02023a376df77eacb48084b1406ec1accfcb1",
+    "file": {
+      "byte_size": 18881,
+      "sha256": "ca80d850ce9a9d320dcba878de1abdfcfed3648d2770d6b91ab2156a6cb6340e"
+    },
+    "version": "person-b-step4-1-final-comparison-v0.1"
+  },
+  "decision": "RATIFY_EXACT_PERSON_B_STEP4_1_FINAL_COMPARISON_INTERFACE",
+  "exact_final_comparison_metrics_authorized": true,
+  "exploratory_metrics_authorized": false,
+  "manual_u4_inspection_authorized": false,
+  "permitted_execution_sequence": [
+    {
+      "order": 1,
+      "owner": "person_b",
+      "required_input": "exact_bounded_reveal_authorization_commit",
+      "required_output": "100 exact post-reveal predictions and receipts",
+      "step": "BOUNDED_REVEAL_PREDICTIONS"
+    },
+    {
+      "order": 2,
+      "owner": "person_b",
+      "required_input": "verified post-reveal package plus exact preserved B and D predictions",
+      "required_output": "frozen comparison metric package and receipts",
+      "step": "FINAL_COMPARISON_METRICS"
+    },
+    {
+      "order": 3,
+      "owner": "person_e",
+      "required_input": "complete exact B and D trust packages",
+      "required_output": "Registry v2 import, closure report, and PASS/FAIL/INCONCLUSIVE decision",
+      "step": "VERIFY_IMPORT_AND_CLOSE"
+    }
+  ],
+  "person_b_comparison_contract_commit": "4da02023a376df77eacb48084b1406ec1accfcb1",
+  "person_b_post_reveal_contract_commit": "53c2cd287a63e18e9b1fa5565b77f5c476baf9c4",
+  "post_hoc_layer_selection_authorized": false,
+  "post_hoc_test_selection_authorized": false,
+  "post_reveal_contract": {
+    "commit": "53c2cd287a63e18e9b1fa5565b77f5c476baf9c4",
+    "file": {
+      "byte_size": 15476,
+      "sha256": "28684ece32b8898a7a669482f6b640504738cb4eaf3aea091e6988c79a79d835"
+    },
+    "version": "person-b-step4-1-bounded-reveal-v0.1"
+  },
+  "probe_refitting_authorized": false,
+  "ratification_version": "person-e-step4-1-final-comparison-ratification-v0.1",
+  "schema_id": "person-e-step4-1-final-comparison-ratification-v0-1",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "step4_1_complete": false,
+  "u4_output_inspected": false,
+  "unknown_version_or_changed_hash_policy": "FAIL_CLOSED_INCONCLUSIVE"
+}

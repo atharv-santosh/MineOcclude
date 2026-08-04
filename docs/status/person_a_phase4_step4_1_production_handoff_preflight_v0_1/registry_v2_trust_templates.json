@@ -1,0 +1,581 @@
+{
+  "accepted_record_count": 0,
+  "all_future_output_values_null_or_pending": true,
+  "artifact_type_template_count": 4,
+  "frozen_registry_v2_binding": {
+    "field_sets": {
+      "artifact_authorization": [
+        "artifact_id",
+        "artifact_schema_version",
+        "artifact_sha256",
+        "artifact_size_bytes",
+        "artifact_type",
+        "authority_id",
+        "authorization_id",
+        "authorization_record_id",
+        "authorization_record_receipt_authority_revision",
+        "authorization_record_receipt_id",
+        "authorization_record_receipt_sha256",
+        "authorization_record_sha256",
+        "authorization_record_verification_mode",
+        "decision",
+        "manifest_artifact_identity",
+        "manifest_id",
+        "manifest_schema_version",
+        "manifest_sha256",
+        "owner_authority_revision",
+        "owner_id",
+        "owner_status"
+      ],
+      "authorization_receipt": [
+        "receipt_authority_revision",
+        "receipt_id",
+        "receipt_sha256",
+        "verified_artifact_id",
+        "verified_artifact_sha256",
+        "verified_artifact_size",
+        "verified_artifact_type",
+        "verified_authority_id",
+        "verified_authorization_record_id",
+        "verified_authorization_record_sha256",
+        "verified_decision",
+        "verified_manifest_artifact_identity",
+        "verified_manifest_id",
+        "verified_manifest_sha256",
+        "verified_owner_id",
+        "verified_owner_revision",
+        "verified_owner_status"
+      ],
+      "authorization_record": [
+        "artifact_id",
+        "artifact_schema_version",
+        "artifact_sha256",
+        "artifact_size_bytes",
+        "artifact_type",
+        "authority_id",
+        "authorization_id",
+        "authorization_record_id",
+        "decision",
+        "manifest_artifact_identity",
+        "manifest_id",
+        "manifest_schema_version",
+        "manifest_sha256",
+        "owner_authority_revision",
+        "owner_id",
+        "owner_status"
+      ],
+      "authorization_record_verification": [
+        "external_receipt",
+        "mode"
+      ],
+      "trusted_artifact_authorization": [
+        "authorization",
+        "authorization_record_verification"
+      ]
+    },
+    "records": {
+      "completed_fixture": {
+        "byte_size": 4525,
+        "path": "tests/fixtures/person_e/immutable_registry_v2_completed.json",
+        "sha256": "a66c8408de1fb0a03c1d1ff9e65d15f2c9a7a35cd8094d25b2def59c0c9b5ec4",
+        "source_commit": "b27d404c6aa913bac559754fa8b7accdff46e886"
+      },
+      "contract_document": {
+        "byte_size": 22329,
+        "path": "docs/contracts/immutable_registry_v2.md",
+        "sha256": "02c2190575c9dec296bcb963495edb119695465477c43a19720679eb53b5dd88",
+        "source_commit": "b27d404c6aa913bac559754fa8b7accdff46e886"
+      },
+      "validator": {
+        "byte_size": 202645,
+        "path": "src/mineocclude/contracts/rollout_registry.py",
+        "sha256": "386a6bce4f5ba727aa51b40c69ef444c0d984984697da63f6ea4045a44c07356",
+        "source_commit": "b27d404c6aa913bac559754fa8b7accdff46e886"
+      }
+    },
+    "source_commit": "b27d404c6aa913bac559754fa8b7accdff46e886",
+    "source_read_policy": "exact_git_commit_object"
+  },
+  "registry_v2_acceptance_authorized": false,
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-registry-v2-trust-templates-v0.1",
+  "schema_version": "1.0",
+  "template_count": 6,
+  "template_types": [
+    "artifact_byte_or_receipt_verification",
+    "direct_input_lineage",
+    "exact_artifact_authorization",
+    "owner_status_record",
+    "trusted_manifest",
+    "verified_authorization_record"
+  ],
+  "templates": {
+    "activation": {
+      "artifact_byte_or_receipt_verification": {
+        "artifact_byte_size": null,
+        "artifact_sha256": null,
+        "receipt_id": null,
+        "state": "pending_future_execution"
+      },
+      "direct_input_lineage": {
+        "direct_input_artifact_ids": null,
+        "state": "pending_future_execution"
+      },
+      "exact_artifact_authorization": {
+        "accepted": false,
+        "artifact_id": null,
+        "authorization_decision": null,
+        "authorization_record_sha256": null,
+        "state": "template_only"
+      },
+      "owner_status_record": {
+        "artifact_id": null,
+        "owner": "person_a",
+        "record_sha256": null,
+        "state": "pending_future_execution",
+        "status": null
+      },
+      "trusted_manifest": {
+        "artifact_entry": null,
+        "manifest_id": null,
+        "manifest_sha256": null,
+        "state": "template_only"
+      },
+      "verified_authorization_record": {
+        "authorization_receipt": {
+          "receipt_authority_revision": null,
+          "receipt_id": null,
+          "receipt_sha256": null,
+          "verified_artifact_id": null,
+          "verified_artifact_sha256": null,
+          "verified_artifact_size": null,
+          "verified_artifact_type": null,
+          "verified_authority_id": null,
+          "verified_authorization_record_id": null,
+          "verified_authorization_record_sha256": null,
+          "verified_decision": null,
+          "verified_manifest_artifact_identity": null,
+          "verified_manifest_id": null,
+          "verified_manifest_sha256": null,
+          "verified_owner_id": null,
+          "verified_owner_revision": null,
+          "verified_owner_status": null
+        },
+        "authorization_record": {
+          "artifact_id": null,
+          "artifact_schema_version": null,
+          "artifact_sha256": null,
+          "artifact_size_bytes": null,
+          "artifact_type": "activation",
+          "authority_id": null,
+          "authorization_id": null,
+          "authorization_record_id": null,
+          "decision": "pending",
+          "manifest_artifact_identity": null,
+          "manifest_id": null,
+          "manifest_schema_version": null,
+          "manifest_sha256": null,
+          "owner_authority_revision": null,
+          "owner_id": "person_a",
+          "owner_status": "pending"
+        },
+        "authorization_record_bytes": {
+          "authorization_record_id": null,
+          "byte_size": null,
+          "canonical_utf8_json_bytes": null,
+          "sha256": null
+        },
+        "trusted_artifact_authorization": {
+          "authorization": {
+            "artifact_id": null,
+            "artifact_schema_version": null,
+            "artifact_sha256": null,
+            "artifact_size_bytes": null,
+            "artifact_type": "activation",
+            "authority_id": null,
+            "authorization_id": null,
+            "authorization_record_id": null,
+            "authorization_record_receipt_authority_revision": null,
+            "authorization_record_receipt_id": null,
+            "authorization_record_receipt_sha256": null,
+            "authorization_record_sha256": null,
+            "authorization_record_verification_mode": null,
+            "decision": "pending",
+            "manifest_artifact_identity": null,
+            "manifest_id": null,
+            "manifest_schema_version": null,
+            "manifest_sha256": null,
+            "owner_authority_revision": null,
+            "owner_id": "person_a",
+            "owner_status": "pending"
+          },
+          "authorization_record_verification": {
+            "external_receipt": null,
+            "mode": null
+          }
+        },
+        "verification_context": {
+          "accepted": false,
+          "artifact_id": null,
+          "owner_id": "person_a",
+          "source_authority_revision": null,
+          "status": "pending_future_authorization_verification",
+          "verification_receipt_id": null,
+          "verification_result": false,
+          "verified": false,
+          "verifier_authority_id": null
+        }
+      }
+    },
+    "extraction": {
+      "artifact_byte_or_receipt_verification": {
+        "artifact_byte_size": null,
+        "artifact_sha256": null,
+        "receipt_id": null,
+        "state": "pending_future_execution"
+      },
+      "direct_input_lineage": {
+        "direct_input_artifact_ids": null,
+        "state": "pending_future_execution"
+      },
+      "exact_artifact_authorization": {
+        "accepted": false,
+        "artifact_id": null,
+        "authorization_decision": null,
+        "authorization_record_sha256": null,
+        "state": "template_only"
+      },
+      "owner_status_record": {
+        "artifact_id": null,
+        "owner": "person_a",
+        "record_sha256": null,
+        "state": "pending_future_execution",
+        "status": null
+      },
+      "trusted_manifest": {
+        "artifact_entry": null,
+        "manifest_id": null,
+        "manifest_sha256": null,
+        "state": "template_only"
+      },
+      "verified_authorization_record": {
+        "authorization_receipt": {
+          "receipt_authority_revision": null,
+          "receipt_id": null,
+          "receipt_sha256": null,
+          "verified_artifact_id": null,
+          "verified_artifact_sha256": null,
+          "verified_artifact_size": null,
+          "verified_artifact_type": null,
+          "verified_authority_id": null,
+          "verified_authorization_record_id": null,
+          "verified_authorization_record_sha256": null,
+          "verified_decision": null,
+          "verified_manifest_artifact_identity": null,
+          "verified_manifest_id": null,
+          "verified_manifest_sha256": null,
+          "verified_owner_id": null,
+          "verified_owner_revision": null,
+          "verified_owner_status": null
+        },
+        "authorization_record": {
+          "artifact_id": null,
+          "artifact_schema_version": null,
+          "artifact_sha256": null,
+          "artifact_size_bytes": null,
+          "artifact_type": "extraction",
+          "authority_id": null,
+          "authorization_id": null,
+          "authorization_record_id": null,
+          "decision": "pending",
+          "manifest_artifact_identity": null,
+          "manifest_id": null,
+          "manifest_schema_version": null,
+          "manifest_sha256": null,
+          "owner_authority_revision": null,
+          "owner_id": "person_a",
+          "owner_status": "pending"
+        },
+        "authorization_record_bytes": {
+          "authorization_record_id": null,
+          "byte_size": null,
+          "canonical_utf8_json_bytes": null,
+          "sha256": null
+        },
+        "trusted_artifact_authorization": {
+          "authorization": {
+            "artifact_id": null,
+            "artifact_schema_version": null,
+            "artifact_sha256": null,
+            "artifact_size_bytes": null,
+            "artifact_type": "extraction",
+            "authority_id": null,
+            "authorization_id": null,
+            "authorization_record_id": null,
+            "authorization_record_receipt_authority_revision": null,
+            "authorization_record_receipt_id": null,
+            "authorization_record_receipt_sha256": null,
+            "authorization_record_sha256": null,
+            "authorization_record_verification_mode": null,
+            "decision": "pending",
+            "manifest_artifact_identity": null,
+            "manifest_id": null,
+            "manifest_schema_version": null,
+            "manifest_sha256": null,
+            "owner_authority_revision": null,
+            "owner_id": "person_a",
+            "owner_status": "pending"
+          },
+          "authorization_record_verification": {
+            "external_receipt": null,
+            "mode": null
+          }
+        },
+        "verification_context": {
+          "accepted": false,
+          "artifact_id": null,
+          "owner_id": "person_a",
+          "source_authority_revision": null,
+          "status": "pending_future_authorization_verification",
+          "verification_receipt_id": null,
+          "verification_result": false,
+          "verified": false,
+          "verifier_authority_id": null
+        }
+      }
+    },
+    "model_input": {
+      "artifact_byte_or_receipt_verification": {
+        "artifact_byte_size": null,
+        "artifact_sha256": null,
+        "receipt_id": null,
+        "state": "pending_future_execution"
+      },
+      "direct_input_lineage": {
+        "direct_input_artifact_ids": null,
+        "state": "pending_future_execution"
+      },
+      "exact_artifact_authorization": {
+        "accepted": false,
+        "artifact_id": null,
+        "authorization_decision": null,
+        "authorization_record_sha256": null,
+        "state": "template_only"
+      },
+      "owner_status_record": {
+        "artifact_id": null,
+        "owner": "person_a",
+        "record_sha256": null,
+        "state": "pending_future_execution",
+        "status": null
+      },
+      "trusted_manifest": {
+        "artifact_entry": null,
+        "manifest_id": null,
+        "manifest_sha256": null,
+        "state": "template_only"
+      },
+      "verified_authorization_record": {
+        "authorization_receipt": {
+          "receipt_authority_revision": null,
+          "receipt_id": null,
+          "receipt_sha256": null,
+          "verified_artifact_id": null,
+          "verified_artifact_sha256": null,
+          "verified_artifact_size": null,
+          "verified_artifact_type": null,
+          "verified_authority_id": null,
+          "verified_authorization_record_id": null,
+          "verified_authorization_record_sha256": null,
+          "verified_decision": null,
+          "verified_manifest_artifact_identity": null,
+          "verified_manifest_id": null,
+          "verified_manifest_sha256": null,
+          "verified_owner_id": null,
+          "verified_owner_revision": null,
+          "verified_owner_status": null
+        },
+        "authorization_record": {
+          "artifact_id": null,
+          "artifact_schema_version": null,
+          "artifact_sha256": null,
+          "artifact_size_bytes": null,
+          "artifact_type": "model_input",
+          "authority_id": null,
+          "authorization_id": null,
+          "authorization_record_id": null,
+          "decision": "pending",
+          "manifest_artifact_identity": null,
+          "manifest_id": null,
+          "manifest_schema_version": null,
+          "manifest_sha256": null,
+          "owner_authority_revision": null,
+          "owner_id": "person_a",
+          "owner_status": "pending"
+        },
+        "authorization_record_bytes": {
+          "authorization_record_id": null,
+          "byte_size": null,
+          "canonical_utf8_json_bytes": null,
+          "sha256": null
+        },
+        "trusted_artifact_authorization": {
+          "authorization": {
+            "artifact_id": null,
+            "artifact_schema_version": null,
+            "artifact_sha256": null,
+            "artifact_size_bytes": null,
+            "artifact_type": "model_input",
+            "authority_id": null,
+            "authorization_id": null,
+            "authorization_record_id": null,
+            "authorization_record_receipt_authority_revision": null,
+            "authorization_record_receipt_id": null,
+            "authorization_record_receipt_sha256": null,
+            "authorization_record_sha256": null,
+            "authorization_record_verification_mode": null,
+            "decision": "pending",
+            "manifest_artifact_identity": null,
+            "manifest_id": null,
+            "manifest_schema_version": null,
+            "manifest_sha256": null,
+            "owner_authority_revision": null,
+            "owner_id": "person_a",
+            "owner_status": "pending"
+          },
+          "authorization_record_verification": {
+            "external_receipt": null,
+            "mode": null
+          }
+        },
+        "verification_context": {
+          "accepted": false,
+          "artifact_id": null,
+          "owner_id": "person_a",
+          "source_authority_revision": null,
+          "status": "pending_future_authorization_verification",
+          "verification_receipt_id": null,
+          "verification_result": false,
+          "verified": false,
+          "verifier_authority_id": null
+        }
+      }
+    },
+    "rollout": {
+      "artifact_byte_or_receipt_verification": {
+        "artifact_byte_size": null,
+        "artifact_sha256": null,
+        "receipt_id": null,
+        "state": "pending_future_execution"
+      },
+      "direct_input_lineage": {
+        "direct_input_artifact_ids": null,
+        "state": "pending_future_execution"
+      },
+      "exact_artifact_authorization": {
+        "accepted": false,
+        "artifact_id": null,
+        "authorization_decision": null,
+        "authorization_record_sha256": null,
+        "state": "template_only"
+      },
+      "owner_status_record": {
+        "artifact_id": null,
+        "owner": "person_a",
+        "record_sha256": null,
+        "state": "pending_future_execution",
+        "status": null
+      },
+      "trusted_manifest": {
+        "artifact_entry": null,
+        "manifest_id": null,
+        "manifest_sha256": null,
+        "state": "template_only"
+      },
+      "verified_authorization_record": {
+        "authorization_receipt": {
+          "receipt_authority_revision": null,
+          "receipt_id": null,
+          "receipt_sha256": null,
+          "verified_artifact_id": null,
+          "verified_artifact_sha256": null,
+          "verified_artifact_size": null,
+          "verified_artifact_type": null,
+          "verified_authority_id": null,
+          "verified_authorization_record_id": null,
+          "verified_authorization_record_sha256": null,
+          "verified_decision": null,
+          "verified_manifest_artifact_identity": null,
+          "verified_manifest_id": null,
+          "verified_manifest_sha256": null,
+          "verified_owner_id": null,
+          "verified_owner_revision": null,
+          "verified_owner_status": null
+        },
+        "authorization_record": {
+          "artifact_id": null,
+          "artifact_schema_version": null,
+          "artifact_sha256": null,
+          "artifact_size_bytes": null,
+          "artifact_type": "rollout",
+          "authority_id": null,
+          "authorization_id": null,
+          "authorization_record_id": null,
+          "decision": "pending",
+          "manifest_artifact_identity": null,
+          "manifest_id": null,
+          "manifest_schema_version": null,
+          "manifest_sha256": null,
+          "owner_authority_revision": null,
+          "owner_id": "person_a",
+          "owner_status": "pending"
+        },
+        "authorization_record_bytes": {
+          "authorization_record_id": null,
+          "byte_size": null,
+          "canonical_utf8_json_bytes": null,
+          "sha256": null
+        },
+        "trusted_artifact_authorization": {
+          "authorization": {
+            "artifact_id": null,
+            "artifact_schema_version": null,
+            "artifact_sha256": null,
+            "artifact_size_bytes": null,
+            "artifact_type": "rollout",
+            "authority_id": null,
+            "authorization_id": null,
+            "authorization_record_id": null,
+            "authorization_record_receipt_authority_revision": null,
+            "authorization_record_receipt_id": null,
+            "authorization_record_receipt_sha256": null,
+            "authorization_record_sha256": null,
+            "authorization_record_verification_mode": null,
+            "decision": "pending",
+            "manifest_artifact_identity": null,
+            "manifest_id": null,
+            "manifest_schema_version": null,
+            "manifest_sha256": null,
+            "owner_authority_revision": null,
+            "owner_id": "person_a",
+            "owner_status": "pending"
+          },
+          "authorization_record_verification": {
+            "external_receipt": null,
+            "mode": null
+          }
+        },
+        "verification_context": {
+          "accepted": false,
+          "artifact_id": null,
+          "owner_id": "person_a",
+          "source_authority_revision": null,
+          "status": "pending_future_authorization_verification",
+          "verification_receipt_id": null,
+          "verification_result": false,
+          "verified": false,
+          "verifier_authority_id": null
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+    "schema_version":  "1.0",
+    "successor_to":  "docs/status/person_c_c1_runtime_observation_v0_1/",
+    "runtime_baseline_version":  "person-c-c1-runtime-baseline-v0.2",
+    "jar_source_commit":  "99b78b6578d17cffc0b5679118a42632284ce7f7",
+    "mod_jar":  {
+                    "path":  "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mods\\mineocclude-0.1.0.jar",
+                    "bytes":  72117,
+                    "sha256":  "652fe5e34f0ee186a3b6c036ab70b1bf02e9373c985eeaa218e3ef28be087bda"
+                },
+    "server_smoke_receipt":  {
+                                 "path":  "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\logs\\smoke\\server-smoke-receipt.json",
+                                 "bytes":  963,
+                                 "sha256":  "4642368e1f73ebe6a9e2881b94dc911f7df0c3a1a1c14d90a6b1f2d9335b413a"
+                             },
+    "server_smoke_pass":  true,
+    "server_stopped_cleanly":  true,
+    "client_runtime_provisioned":  true,
+    "client_gui_validation_complete":  false,
+    "geometry_observation_complete":  false,
+    "geometry_authority_assigned":  false,
+    "c6a_started":  false,
+    "first_runtime_observation_command":  "mineocclude markergeomstatus",
+    "session_control_commands":  [
+                                     "mineocclude mode normal",
+                                     "mineocclude duration 0",
+                                     "mineocclude reveal 0",
+                                     "mineocclude impulse -1 0",
+                                     "mineocclude lockcam on",
+                                     "mineocclude warmup 1200"
+                                 ],
+    "layout_observation_commands":  [
+                                        "mineocclude start layout_01 11101 202608031101 0.0 0.0 20",
+                                        "mineocclude observegeometry c1_1_layout_01",
+                                        "mineocclude stop",
+                                        "mineocclude start layout_02 11102 202608031102 0.0 0.0 20",
+                                        "mineocclude observegeometry c1_1_layout_02",
+                                        "mineocclude stop",
+                                        "mineocclude start layout_03 11103 202608031103 0.0 0.0 20",
+                                        "mineocclude observegeometry c1_1_layout_03",
+                                        "mineocclude stop",
+                                        "mineocclude start layout_04 11104 202608031104 0.0 0.0 20",
+                                        "mineocclude observegeometry c1_1_layout_04",
+                                        "mineocclude stop",
+                                        "mineocclude start layout_05 11105 202608031105 0.0 0.0 20",
+                                        "mineocclude observegeometry c1_1_layout_05",
+                                        "mineocclude stop",
+                                        "mineocclude start layout_06 11106 202608031106 0.0 0.0 20",
+                                        "mineocclude observegeometry c1_1_layout_06",
+                                        "mineocclude stop"
+                                    ]
+}

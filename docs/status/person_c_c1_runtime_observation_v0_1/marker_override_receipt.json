@@ -1,0 +1,26 @@
+{
+  "schema_version": "person-c-c1-marker-override-receipt-v0.1",
+  "status": "pending_operator_observation",
+  "runtime_execution_complete": false,
+  "observation_tool": {
+    "command": "mineocclude markergeomstatus",
+    "source": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java",
+    "observation_only": true,
+    "mutates_override_state": false,
+    "tested": true
+  },
+  "fresh_server_process_proven": false,
+  "query_utc": null,
+  "server_log_path": null,
+  "server_log_sha256": null,
+  "raw_command_output": null,
+  "enabled": null,
+  "near_ortho": null,
+  "far_ortho": null,
+  "near_inset": null,
+  "far_inset": null,
+  "signature": null,
+  "classification": "PENDING",
+  "success": false,
+  "prohibition": "Do not run markergeomreset before this query; clearing state would destroy the observation being requested."
+}

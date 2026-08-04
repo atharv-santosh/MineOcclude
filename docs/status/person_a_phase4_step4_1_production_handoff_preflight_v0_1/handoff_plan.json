@@ -1,0 +1,68 @@
+{
+  "execution_started": false,
+  "plan_only": true,
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-handoff-plan-v0.1",
+  "schema_version": "1.0",
+  "steps": [
+    {
+      "owner": "required_signing_owners",
+      "sequence": 1,
+      "state": "future_blocked",
+      "step_id": "explicit_phase6_authorization"
+    },
+    {
+      "owner": "person_c",
+      "sequence": 2,
+      "state": "future_blocked",
+      "step_id": "accepted_c_input_freeze"
+    },
+    {
+      "owner": "person_a",
+      "sequence": 3,
+      "state": "future_blocked",
+      "step_id": "production_model_input"
+    },
+    {
+      "owner": "person_a",
+      "sequence": 4,
+      "state": "future_blocked",
+      "step_id": "production_extraction"
+    },
+    {
+      "owner": "person_a",
+      "sequence": 5,
+      "state": "future_blocked",
+      "step_id": "production_activation"
+    },
+    {
+      "owner": "person_a",
+      "sequence": 6,
+      "state": "future_blocked",
+      "step_id": "activation_key_set_handoff_to_b"
+    },
+    {
+      "owner": "person_b",
+      "sequence": 7,
+      "state": "future_blocked",
+      "step_id": "final_b_frame_membership"
+    },
+    {
+      "owner": "person_a",
+      "sequence": 8,
+      "state": "future_blocked",
+      "step_id": "production_rollout"
+    },
+    {
+      "owner": "person_a",
+      "sequence": 9,
+      "state": "future_blocked",
+      "step_id": "person_a_registry_v2_trust_package"
+    },
+    {
+      "owner": "person_b_and_person_e",
+      "sequence": 10,
+      "state": "future_blocked",
+      "step_id": "person_b_and_person_e_import"
+    }
+  ]
+}

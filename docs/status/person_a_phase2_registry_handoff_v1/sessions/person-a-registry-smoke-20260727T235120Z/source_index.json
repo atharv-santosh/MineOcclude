@@ -1,0 +1,38 @@
+{
+  "generated_evidence": [
+    "session_receipt.json",
+    "run_record.json",
+    "attempt_scope.json",
+    "artifact_verification.json",
+    "source_index.json",
+    "environment_report.txt",
+    "exact_command.json",
+    "launcher_stdout_stderr.log",
+    "step2_6/"
+  ],
+  "receipt_version": "person-a-registry-source-index-v1",
+  "schema_version": "1.0",
+  "session_id": "person-a-registry-smoke-20260727T235120Z",
+  "sources": [
+    {
+      "path": "/home/sagemaker-user/MineOcclude-Person-A-Registry",
+      "revision": "85224f1951c224698a2cf6f8a0a3088de5b67664",
+      "source_id": "person_a_repository"
+    },
+    {
+      "path": "/home/sagemaker-user/MineWorld-Upstream",
+      "revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+      "source_id": "mineworld_repository"
+    },
+    {
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned",
+      "revision": "0dd5561ab317115831badc50e09a6ebe98693d0e",
+      "source_id": "asset_repository"
+    },
+    {
+      "path": "/home/sagemaker-user/MineOcclude-Person-A-Registry/scripts/run_phase2_rollout.py",
+      "sha256": "4b44064343a04f582fd0234dd1a53bbb6d34cee69c5a459ba4c146ce50833474",
+      "source_id": "finalized_launcher"
+    }
+  ]
+}

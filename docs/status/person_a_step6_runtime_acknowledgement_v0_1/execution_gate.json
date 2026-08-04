@@ -1,0 +1,31 @@
+{
+  "aggregate_authorization_present": false,
+  "aggregate_authorization_required": true,
+  "c_accepted_pilot_required": true,
+  "candidate_selection_binding": {
+    "candidate_count": 15,
+    "person_b_refresh_commit": "8942d5d514a4d124ac0baa36ffc803dc598c4f1f",
+    "source_commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+    "source_path": "docs/status/person_b_phase4_step4_1_step6_authorization_refresh_v0_1/refreshed_c_candidate_selection.json",
+    "source_set_digest": "75e9563a2d38b9c023e64c39a9c0176d427378e4c1a67bfb61f510d2406e04d7"
+  },
+  "execution_gate_open": false,
+  "person_a_acknowledgement_complete": true,
+  "person_b_conditional_scope_approval_verified": true,
+  "production_execution_started": false,
+  "required_person_c_pilot_decision": {
+    "accepted_person_c_decision_id": null,
+    "decision": "ACCEPT_SINGLE_PILOT_FOR_SCIENTIFIC_USE",
+    "git_object_sha256": null,
+    "owner": "person_c",
+    "owner_authority_commit": null,
+    "scientific_use": "accepted_for_single_pilot_step_6_1",
+    "scope": "single_pilot_steps_6_1_through_6_6",
+    "source_path": null,
+    "state": "MISSING_REQUIRED_C_SIGNED_ACCEPTED_PILOT",
+    "trajectory_id": null
+  },
+  "schema_id": "person-a-step6-runtime-ack-v0.1-execution-gate",
+  "schema_version": "1.0",
+  "state": "BLOCKED_PENDING_C_PILOT_AND_AGGREGATE_AUTHORIZATION"
+}

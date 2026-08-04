@@ -1,0 +1,87 @@
+{
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "all_tolerances_pass": false,
+  "annotation_path": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\data\\handoff_e\\person_e_v0_4_homography_refit_v0_1\\person_e_attempt_02_image_points_v0_1.json",
+  "annotation_sha256": "9747e1dc9a497d29df8aaff83fc605465a980a73edfaddee1f43d6e8a92671c0",
+  "config_path": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\configs\\vision\\person_e_phase1.yaml",
+  "config_sha256": "da05329029cb7119f0c48cfed12657d1a2e4ae6b7d0cb6dcd3b8353292b95a56",
+  "failed_layout_ids": [
+    "layout_04",
+    "layout_06"
+  ],
+  "fov_degrees": 70.0,
+  "framebuffer": {
+    "height_pixels": 1046,
+    "width_pixels": 1920
+  },
+  "homography_algorithm": "four_point_projective_gauss_jordan_v0.1",
+  "homography_implementation_sha256": "08e462d2c36ee0c7905eafe819f39f27fee1780e63f1cf381fe4ebe098730fc3",
+  "layout_count": 6,
+  "layouts": [
+    {
+      "condition_number": 25644.958118911403,
+      "determinant": -1.4166750894030067e-05,
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:5cc0233d74b83da629e2f1100023651edaf5deb71456a411d4113534a2e62391",
+      "layout_id": "layout_01",
+      "rank": 3,
+      "status": "PASS",
+      "tolerance_result": true
+    },
+    {
+      "condition_number": 22682.07561279983,
+      "determinant": -1.2609688850664323e-05,
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:2c35bf28f14690414463248dffcc33469401f957fd17408c7271edc2d0b048e3",
+      "layout_id": "layout_02",
+      "rank": 3,
+      "status": "PASS",
+      "tolerance_result": true
+    },
+    {
+      "condition_number": 27076.366709050784,
+      "determinant": -1.4936322045849666e-05,
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:4550fedac559bf5602a87cbe277b44c9677eaaf4c1f75517975e5e6407ef3452",
+      "layout_id": "layout_03",
+      "rank": 3,
+      "status": "PASS",
+      "tolerance_result": true
+    },
+    {
+      "condition_number": 30883.014362418835,
+      "determinant": -1.6895122594639484e-05,
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:9d25662366496287bacbfffb8a211636d66f18dcbbef6db2d77499d40d18e46c",
+      "layout_id": "layout_04",
+      "rank": 3,
+      "status": "FAIL_REPOSITORY_TOLERANCE",
+      "tolerance_result": false
+    },
+    {
+      "condition_number": 21730.01097885912,
+      "determinant": -2.021110888867166e-05,
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:fcc481dbdcbc694925e346e5c1a81b7d976c87858ad917bf4cc45708cfae8516",
+      "layout_id": "layout_05",
+      "rank": 3,
+      "status": "PASS",
+      "tolerance_result": true
+    },
+    {
+      "condition_number": 35195.92309949551,
+      "determinant": -1.7001105728314208e-05,
+      "homography_version_id": "four_point_projective_gauss_jordan_v0.1:4de68a6390100985bc5f7ccaf405eeae989fce46ab5b012e1796a79a6b2c9f06",
+      "layout_id": "layout_06",
+      "rank": 3,
+      "status": "FAIL_REPOSITORY_TOLERANCE",
+      "tolerance_result": false
+    }
+  ],
+  "maximum_independent_validation_error_pixels": 13.340280398319223,
+  "maximum_reprojection_error_pixels": 4.1179124028246485e-12,
+  "maximum_roundtrip_error_pixels": 4.687428401686771e-13,
+  "passing_layout_count": 4,
+  "person_c_handoff_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json",
+  "person_c_handoff_sha256": "c27bcb9e56647bd01c650fd3360e7a8d4fbd0a44a456cf45073d1a926544ef39",
+  "schema_version": "person-e-v0.4-homography-refit-summary-v0.1",
+  "source_code_commit": "ce4ef3fd8833f13b6dba50074b239b46a02c5c9d",
+  "status": "FAIL_REPOSITORY_TOLERANCE",
+  "successor_homography_count": 6
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "person-c-c1-provisioning-configuration-conflicts-v0.1",
+  "status": "UNRESOLVED",
+  "conflicts": [
+    {
+      "code": "SPAWN_ANIMALS_AUTHORITY_CONFLICT",
+      "field": "server.properties.spawn-animals",
+      "authority_a": {"path": "configs/scenes/environment_lock.template.yaml", "value": false},
+      "authority_b": {"path": "configs/scenes/environment_lock.observed_dev_v0_1.json", "value": true},
+      "effect": "The developer observation reports that false removes the experiment sheep despite persistence; no candidate file is written and no production observation server may launch."
+    },
+    {
+      "code": "LOOM_SNAPSHOT_NOT_IMMUTABLY_PINNED",
+      "field": "build.gradle plugins.fabric-loom.version",
+      "committed_value": "1.4-SNAPSHOT",
+      "resolved_value_on_preparation_host": "1.4.6",
+      "effect": "The resolved plugin is observed but the committed declaration is dynamic, so dependency resolution is not an immutable repository pin."
+    }
+  ],
+  "unresolved_nonconflict_fields": [
+    "online-mode",
+    "level-seed",
+    "level-name/world identity",
+    "op-permission-level",
+    "client GUI scale",
+    "client entity shadows",
+    "raw framebuffer dimensions",
+    "first-launch options serialization"
+  ],
+  "provisioning_blockers": [
+    "REQUIRED_JDK_17_NOT_FOUND",
+    "LOOM_SNAPSHOT_NOT_IMMUTABLY_PINNED",
+    "ISOLATED_NAMED_LOOM_RUN_CONFIGURATIONS_NOT_COMMITTED",
+    "SPAWN_ANIMALS_AUTHORITY_CONFLICT",
+    "SERVER_CONFIGURATION_FIELDS_UNPINNED",
+    "CLIENT_PIXEL_AFFECTING_SETTINGS_PENDING"
+  ],
+  "server_configuration_complete": false,
+  "client_configuration_complete": false
+}

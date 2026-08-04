@@ -1,0 +1,49 @@
+{
+  "content_hash_rule": "sha256(C-order bytes of the finite float32 CHW array)",
+  "implementation_authority": "55776dc88302b89b52eef483a710fbf6811cf536",
+  "operations_in_order": [
+    "require source NumPy array shape (360, 640, 3) and dtype uint8",
+    "make the source BGR array C-contiguous",
+    "convert BGR to RGB with cv2.cvtColor(COLOR_BGR2RGB)",
+    "resize RGB to width 384 and height 224 with cv2.INTER_LINEAR",
+    "transpose HWC to CHW",
+    "cast to float32 and divide by float32(255.0)",
+    "normalize with (tensor - float32(0.5)) / float32(0.5)",
+    "make the resulting tensor C-contiguous"
+  ],
+  "output_contract": {
+    "channels": 3,
+    "color_order": "RGB",
+    "dtype": "float32",
+    "height": 224,
+    "layout": "CHW",
+    "payload_byte_size": 1032192,
+    "shape": [
+      3,
+      224,
+      384
+    ],
+    "value_range_inclusive": [
+      -1.0,
+      1.0
+    ],
+    "width": 384
+  },
+  "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+  "preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+  "runtime_lifetime": {
+    "accepted_phase6_behavior": "preprocessed frames existed only in process memory during Step 6.3",
+    "content_sha256_records_retained": false,
+    "serialized_frame_payloads_retained": false
+  },
+  "schema_id": "person-a-step4-1-preprocessing-contract-v0-1",
+  "schema_version": "1.0",
+  "source_contract": {
+    "channels": 3,
+    "color_order": "BGR",
+    "dtype": "uint8",
+    "height": 360,
+    "layout": "HWC",
+    "width": 640
+  }
+}

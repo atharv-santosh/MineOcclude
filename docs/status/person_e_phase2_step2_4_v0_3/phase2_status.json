@@ -1,0 +1,42 @@
+{
+  "correction_schema_version": "person-e-phase2-step2.4-correction-v0.3",
+  "detector_heldout_performance_claimed": false,
+  "evidence_schema_version": "person-e-phase2-evidence-v0.1",
+  "homography_planning_gate_passed": false,
+  "overall_status": "PARTIAL",
+  "previous_status": {
+    "path": "../person_e_phase2_v0_1/phase2_status.json",
+    "sha256": "852b1455ad142f08522342e7030dfcb3ce1d189d2fbf3c6aa4a1536f8a76dfd3",
+    "status": "retained_not_overwritten"
+  },
+  "provenance_index_hash": "1b2aa8656c7a30ce643a1cffa3cbb5fa4c7dd0c74000e14b3102fb8127c0e295",
+  "real_completed_a_or_c_pilot_records_emitted": true,
+  "schema_version": "1.0",
+  "status_schema_version": "person-e-phase2-status-v0.3",
+  "steps": [
+    {
+      "evidence": "../person_e_phase2_v0_1/step2_1_registry_receipt.json",
+      "remaining_blocker": null,
+      "status": "PASS",
+      "step": "2.1"
+    },
+    {
+      "evidence": "../person_e_phase2_v0_1/frozen_split_manifest.json",
+      "remaining_blocker": null,
+      "status": "PASS",
+      "step": "2.2"
+    },
+    {
+      "evidence": "../person_e_phase2_v0_1/calibration_report.json",
+      "remaining_blocker": null,
+      "status": "PASS",
+      "step": "2.3"
+    },
+    {
+      "evidence": "localization_validation_report.json",
+      "remaining_blocker": "layout_03_clipped_markers_block_complete_probe_coverage",
+      "status": "PARTIAL",
+      "step": "2.4"
+    }
+  ]
+}

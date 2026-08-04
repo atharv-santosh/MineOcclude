@@ -1,0 +1,59 @@
+{
+  "annotation_command": "python C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\scripts\\annotate_person_e_homography_refit_attempt_02.py",
+  "annotation_method": "person-e-tkinter-manual-point-selector-v0.2",
+  "annotation_output": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\data\\handoff_e\\person_e_v0_4_homography_refit_v0_1\\person_e_attempt_02_image_points_v0_1.json",
+  "annotation_output_create_only": true,
+  "annotation_task_count": 30,
+  "automated_extraction_assessment": {
+    "decision": "MANUAL_ANNOTATION_REQUIRED",
+    "diagnostic_only_gameplay_vertical_roi_fraction": [
+      0.4,
+      0.75
+    ],
+    "existing_marker_detector": "person-e-marker-detect-v1.0",
+    "failure": {
+      "largest_lime_candidate_pixels": 37,
+      "layout_id": "layout_06",
+      "reason": "two_comparable_lime_blobs",
+      "second_lime_candidate_pixels": 20
+    },
+    "full_frame_white_gate_confounded_by_tutorial_overlay": true,
+    "pixel_coordinates_emitted_by_diagnostic": false,
+    "rationale": "The repository detector correctly fails closed on ambiguous Attempt 02 evidence; automated coordinates are not authorized."
+  },
+  "expected_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "expected_geometry_version": "person-c-layout-config-v0.4",
+  "expected_handoff_sha256": "c27bcb9e56647bd01c650fd3360e7a8d4fbd0a44a456cf45073d1a926544ef39",
+  "fit_points_per_layout": 4,
+  "framebuffer": {
+    "height_pixels": 1046,
+    "width_pixels": 1920
+  },
+  "handoff_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json",
+  "independent_validation_points_per_layout": 1,
+  "layout_ids": [
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04",
+    "layout_05",
+    "layout_06"
+  ],
+  "manual_selection_uses_original_resolution": true,
+  "schema_version": "person-e-v0.4-manual-annotation-preparation-attempt-02-v0.2",
+  "visibility_fix": {
+    "fit_correspondences_per_layout": [
+      "near_west_blue_marker_top_face_centre",
+      "near_east_yellow_marker_top_face_centre",
+      "far_east_white_marker_top_face_centre",
+      "wall_near_face_ground_negative_end"
+    ],
+    "independent_validation_correspondences_per_layout": [
+      "wall_near_face_ground_positive_end"
+    ],
+    "lime_marker_requested": false,
+    "preflight_status": "READY",
+    "replacement_screenshots_required": []
+  },
+  "status": "MANUAL_ANNOTATION_REQUIRED"
+}

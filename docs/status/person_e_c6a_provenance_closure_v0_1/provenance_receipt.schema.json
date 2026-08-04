@@ -1,0 +1,44 @@
+{
+  "$id": "person-e-c6a-provenance-receipt-schema-v0.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "canonical_c6a_id": {
+      "const": "person-c-c6a-post-c1-v0.1"
+    },
+    "canonical_registry_records_complete": {
+      "const": true
+    },
+    "e4_1_complete": {
+      "const": true
+    },
+    "immutable": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "person-e-c6a-provenance-receipt-v0.1"
+    },
+    "status": {
+      "const": "PASS"
+    },
+    "unresolved_blockers": {
+      "maxItems": 0,
+      "type": "array"
+    },
+    "valid_episode_count": {
+      "const": 66
+    }
+  },
+  "required": [
+    "canonical_c6a_id",
+    "canonical_registry_records_complete",
+    "e4_1_complete",
+    "immutable",
+    "schema_version",
+    "status",
+    "unresolved_blockers",
+    "valid_episode_count"
+  ],
+  "title": "Person E canonical C6A provenance receipt",
+  "type": "object"
+}

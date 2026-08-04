@@ -1,0 +1,80 @@
+{
+  "schema_version": "person-c-c1-environment-comparison-v0.1",
+  "status": "pending_operator_observation",
+  "runtime_execution_complete": false,
+  "expected_lock": "docs/status/person_c_c1_runtime_observation_v0_1/expected_environment_lock.json",
+  "observed_lock": "docs/status/person_c_c1_runtime_observation_v0_1/observed_environment_lock.json",
+  "canonical_expected_source": {
+    "path": "configs/scenes/environment_lock.template.yaml",
+    "sha256": "e884dc083b562700b7652dca7a4eb8c602f5e272382d546a6dda2c275ec960b4",
+    "source_commit": "4b724329338d9251697f458ce182efcbaf27a312",
+    "git_blob": "75e97445ccb1cdd504ab3b15e89f4d4e3afb9d4f"
+  },
+  "prior_dev_observation": {
+    "path": "configs/scenes/environment_lock.observed_dev_v0_1.json",
+    "sha256": "bffd4341c01d14f77f01880353c33f3b378c3308c0b3a94fec4522fa0c86585d",
+    "source_commit": "436427855900526c2f4be8123f73d49140bc3e89",
+    "git_blob": "92f38bd36d2ac8cac80e7392783ce4eb53337d25",
+    "authority": "historical developer-machine evidence only; not C1.1"
+  },
+  "preparation_host_discovery": {
+    "observed_on": "2026-08-03",
+    "host_java": "Temurin OpenJDK 21.0.11+10",
+    "host_java_status": "build-host candidate only; not a running Minecraft server/client receipt",
+    "expected_external_server_root": "C:\\Users\\lollo\\mineocclude-server",
+    "expected_external_server_root_exists": false,
+    "expected_external_client_root": "C:\\Users\\lollo\\mineocclude-client",
+    "expected_external_client_root_exists": false,
+    "default_minecraft_root": "C:\\Users\\lollo\\AppData\\Roaming\\.minecraft",
+    "default_minecraft_root_exists": true,
+    "production_1_16_5_profile_found": false,
+    "launcher_profile_ids_seen": [
+      "latest-snapshot",
+      "1.20.1-OptiFine_HD_U_I6",
+      "latest-release",
+      "fabric-loader-0.15.11-1.20.1"
+    ],
+    "java_processes": [
+      {
+        "role": "VS Code Java language server",
+        "runtime": "Temurin 21.0.11",
+        "is_minecraft_runtime": false
+      }
+    ]
+  },
+  "known_differences_or_unresolved_items": [
+    {
+      "field": "world.server_properties.properties.spawn-animals",
+      "expected": false,
+      "prior_dev_observed_requirement": true,
+      "status": "BLOCKING_CONTRACT_CONFLICT",
+      "reason": "The prior developer receipt reports that spawn-animals=false removes the experiment sheep even with doMobSpawning=false. Frozen expected evidence is not edited here; C1.1 must observe and version a successor lock."
+    },
+    {
+      "field": "versions.java",
+      "expected": "RUNTIME EVIDENCE REQUIRED LATER",
+      "local_candidate": "21.0.11",
+      "status": "NOT_RUNTIME_BOUND"
+    },
+    {
+      "field": "production_server_launcher",
+      "expected": "fabric_dedicated_server",
+      "local_candidate": null,
+      "status": "MISSING"
+    },
+    {
+      "field": "production_client_launcher",
+      "expected": "Minecraft 1.16.5 + Fabric Loader 0.15.11",
+      "local_candidate": null,
+      "status": "MISSING"
+    },
+    {
+      "field": "client.options",
+      "expected": "production 1.16.5 profile options",
+      "local_candidate": "default .minecraft options.txt from an unbound profile",
+      "status": "NOT_PRODUCTION_BOUND"
+    }
+  ],
+  "comparison_result": "RUNTIME_OBSERVATION_INCOMPLETE",
+  "accepted_geometry_version": null
+}

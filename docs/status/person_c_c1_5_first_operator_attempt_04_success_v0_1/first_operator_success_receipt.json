@@ -1,0 +1,117 @@
+{
+  "schema_version": "person-c-c1.5-first-operator-attempt-04-success-v0.1",
+  "status": "PASS",
+  "c1_5_first_operator_complete": true,
+  "c1_5_complete": false,
+  "independent_second_operator_still_required": true,
+  "source_commit": "a4d55394d5fb411b6bf7a2c4b36d527733a445d5",
+  "operator_role": "first",
+  "attempt": 4,
+  "episode_id": 11505,
+  "seed": 202608031505,
+  "layout_id": "layout_01",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+  "geometry_receipt_valid": true,
+  "screenshot_valid": true,
+  "attestation_valid": true,
+  "ingested_output_valid": true,
+  "target": {
+    "valid": true,
+    "required": true,
+    "tagged_target_count": 1,
+    "problems": []
+  },
+  "chronology": {
+    "warmup_ticks": 12000,
+    "observation_window_seconds": 600,
+    "armed_line_index": 101,
+    "target_status_line_index": 109,
+    "observation_line_index": 111,
+    "screenshot_line_index": 85,
+    "warmup_abort_line_index": 113,
+    "shutdown_line_index": 118,
+    "armed_to_status_seconds": 11,
+    "armed_to_observation_seconds": 20,
+    "armed_to_screenshot_seconds": 29,
+    "armed_to_abort_seconds": 51,
+    "screenshot_file_name": "2026-08-03_21.24.04.png",
+    "recording_started": false,
+    "episode_aborted_during_warmup": true,
+    "screenshot_after_receipt_before_abort": true
+  },
+  "runtime_evidence": {
+    "geometry_receipt": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_5_first_operator_attempt_04_layout_01.json",
+      "size_bytes": 12267,
+      "sha256": "fcf58263571210aeb4c926cddccbebc48ac9324b903143ceae2c15c09868878c"
+    },
+    "screenshot": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\first_operator_attempt_04_layout_01.png",
+      "size_bytes": 71354,
+      "sha256": "1df5bea1be63e0f900f74871b40eafa480015f5173b70253f9a8175d5d224057"
+    },
+    "raw_same_session_screenshot": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_21.24.04.png",
+      "size_bytes": 71354,
+      "sha256": "1df5bea1be63e0f900f74871b40eafa480015f5173b70253f9a8175d5d224057"
+    },
+    "attestation": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_04_attestation.json",
+      "size_bytes": 1700,
+      "sha256": "bd4b0f5070a6d2b96b03e81dbe8e90ac9b7e51e31fbebb9e556cea9532605edd"
+    },
+    "ingested_output": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_04_ingested.json",
+      "size_bytes": 4314,
+      "sha256": "55efd6c247d873f0bda59f48a66817952fbb22e3566c4e416a63e4b42461f5b9"
+    },
+    "immutable_schedule": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_schedules\\episode_11505.jsonl",
+      "size_bytes": 3371,
+      "sha256": "7c907b9d8cec0100c418879eceb706f66b6d3c77785fb101ea169d48bfbb1580"
+    },
+    "server_log_archive": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\attempt_04_success_preserved\\server_latest.log",
+      "size_bytes": 11347,
+      "sha256": "f2e533a79b12496ae353346b9e65d04cedd541f364abdeb65b8bcc4727ca0158"
+    },
+    "client_log_archive": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\attempt_04_success_preserved\\client_latest.log",
+      "size_bytes": 6652,
+      "sha256": "e2ea65dadeff45e91ef9ac68e90688994b68d7043e6eee2eb8de7517c9bcecc5"
+    },
+    "installed_jar": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mods\\mineocclude-0.1.1.jar",
+      "size_bytes": 84102,
+      "sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52"
+    },
+    "accepted_geometry": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A\\configs\\scenes\\layouts_v0_4.yaml",
+      "size_bytes": 45279,
+      "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+    }
+  },
+  "ingested_output_schema": "person-c-c1.5-ingested-first-operator-attempt-04-v0.1",
+  "failed_timing_history": [
+    {
+      "path": "docs/status/person_c_c1_5_attempt_02_v0_1/attempt_01_failure_record.json",
+      "size_bytes": 12616,
+      "sha256": "32ae9707a727777ec261655ae5828266fb0efc1a33cfb7df0942041d706529b6",
+      "git_blob": "aabc78d7591bd7361262b60056348aa4f61e8e78"
+    },
+    {
+      "path": "docs/status/person_c_c1_5_attempt_03_v0_1/attempt_02_failure_record.json",
+      "size_bytes": 13916,
+      "sha256": "22f21e5518e762fd4518cfc6b54cccaa9847a97c04437d61e7061aadfcb8fc61",
+      "git_blob": "77ee17a7f729e012a0ebf35619bf419942604317"
+    },
+    {
+      "path": "docs/status/person_c_c1_5_attempt_04_v0_1/attempt_03_failure_record.json",
+      "size_bytes": 12008,
+      "sha256": "2c42a8960d7845f67669b393144f4aae6a303357bc93a1dd18436ac2dfec99ff",
+      "git_blob": "146415c0a326c692341d03724f3f5695e90ced8f"
+    }
+  ],
+  "attempts_01_through_03_preserved_unchanged": true
+}

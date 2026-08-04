@@ -1,0 +1,228 @@
+{
+  "accepted_manifest": {
+    "accepted_manifest_hash": "26d58a19619de38452c96832a44361cdebc240436e23c15fca4432f8e2be4757",
+    "byte_size": 11053,
+    "path": "accepted_manifest/accepted_manifest_rows.json",
+    "row_count": 10,
+    "sha256": "c17f5edfce5be6db449fb7f01ad84f88c8374086984fef38c28e0d5dceaf5a7d"
+  },
+  "activation_store": {
+    "analysis_dtype_expected_by_person_b": "float64",
+    "chunks": [
+      {
+        "byte_size": 82048,
+        "chunk_id": "activation-chunk-c49022922054024bfed962fb",
+        "path": "chunks/activation-chunk-c49022922054024bfed962fb.npy",
+        "row_count": 10,
+        "sha256": "92664dfd43ebf589d71f70605311b5c5661d9b6089b31870a34a6fc82f217a3c"
+      }
+    ],
+    "index_path": "indexes/index-4421b16a6cd64014ac154f9a789eef74bca52f604643ce3006a315091b71da85.json",
+    "index_sha256": "7a4c68838ecf567748c56c1ed70d151b2ed7d1cdb5cead793d0627f465968834",
+    "index_snapshot_id": "4421b16a6cd64014ac154f9a789eef74bca52f604643ce3006a315091b71da85",
+    "row_count": 10,
+    "run_binding_digest": "ce44526f314aabc2cda91bfdc265a686126b66e1143da3f82381ae664a219a51",
+    "run_binding_path": "run_bindings/run-ebe3cdf411abd3fd21feef7f74579cc5deeef22d5ff71dfdc806574fae9a35c2.json",
+    "run_binding_sha256": "bcd19137879b130ab196bf3aecfcb6fb2aa2896ddd1c903616d9fdcda384e498",
+    "store_identity_digest": "2ef22ab95ab25cc64a85ecf026f21bb30324bed441d839b54824f56f18d00c1a",
+    "stored_dtype": "float32",
+    "vector_width": 2048
+  },
+  "audit2_certified_storage_sha": "b0b71653311902fffce769aca6c4e81475ba0766",
+  "consumer_compatibility": {
+    "activation_handoff_hash": "5e1dceba15541d3c8770e510c3fddcd2ce351fa10e3dd1886315ecd5f3e86040",
+    "consumer_chunk_id": "phase5-handoff-v1-2-person-b-consumer-chunk",
+    "consumer_chunk_sha256": "4f9fdf08744e4aec5527a5bbd4007034baa2f24698a448af3f50a5ff5cf2be15",
+    "description": "deterministic in-memory Person B JSON fixture envelope built only from vectors verified by the public Phase 5 reader",
+    "persisted": false,
+    "private_assistance_required": false
+  },
+  "deterministic_probe": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "feature_shape": [
+      10,
+      2048
+    ],
+    "finite": true,
+    "horizon": {
+      "kind": "same_model_frame",
+      "model_frame_offset": 0
+    },
+    "inner_fold_count": 4,
+    "outer_fold_assignments": [
+      {
+        "fold_idx": 3,
+        "layout_id": "phase5-handoff-v1-2-layout-00"
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "phase5-handoff-v1-2-layout-01"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "phase5-handoff-v1-2-layout-02"
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "phase5-handoff-v1-2-layout-03"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "phase5-handoff-v1-2-layout-04"
+      },
+      {
+        "fold_idx": 1,
+        "layout_id": "phase5-handoff-v1-2-layout-05"
+      },
+      {
+        "fold_idx": 1,
+        "layout_id": "phase5-handoff-v1-2-layout-06"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "phase5-handoff-v1-2-layout-07"
+      },
+      {
+        "fold_idx": 3,
+        "layout_id": "phase5-handoff-v1-2-layout-08"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "phase5-handoff-v1-2-layout-09"
+      }
+    ],
+    "outer_fold_counts": {
+      "0": 2,
+      "1": 2,
+      "2": 2,
+      "3": 2,
+      "4": 2
+    },
+    "outer_fold_manifest_hash": "fcdae5ba2d1883f231c177d90de4a4fc86c2815698e9a7d933c26ef6326000d1",
+    "outer_fold_seed": 20260719,
+    "output_shape": [
+      10
+    ],
+    "probe_output_hash": "50bad375850e7ca1bdbcfccc28397b5bf695804cae0a4c9db857c7385e5f9c61",
+    "target_name": "mu_oracle_blocks"
+  },
+  "expected_join": {
+    "duplicate_activation_key_count": 0,
+    "duplicate_target_key_count": 0,
+    "joined_row_count": 10,
+    "universal_join_key": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "unmatched_activation_count": 0,
+    "unmatched_target_count": 0
+  },
+  "fixed_seed": 20260727,
+  "generation_source_sha": "9c8a2f63d88d0c648e3f702557727be87ab56487",
+  "grouped_inner_fold_viability": [
+    {
+      "inner_fold_counts": {
+        "0": 2,
+        "1": 2,
+        "2": 2,
+        "3": 2
+      },
+      "outer_fold_idx": 0,
+      "outer_training_group_count": 8,
+      "outer_training_row_count": 8
+    },
+    {
+      "inner_fold_counts": {
+        "0": 2,
+        "1": 2,
+        "2": 2,
+        "3": 2
+      },
+      "outer_fold_idx": 1,
+      "outer_training_group_count": 8,
+      "outer_training_row_count": 8
+    },
+    {
+      "inner_fold_counts": {
+        "0": 2,
+        "1": 2,
+        "2": 2,
+        "3": 2
+      },
+      "outer_fold_idx": 2,
+      "outer_training_group_count": 8,
+      "outer_training_row_count": 8
+    },
+    {
+      "inner_fold_counts": {
+        "0": 2,
+        "1": 2,
+        "2": 2,
+        "3": 2
+      },
+      "outer_fold_idx": 3,
+      "outer_training_group_count": 8,
+      "outer_training_row_count": 8
+    },
+    {
+      "inner_fold_counts": {
+        "0": 2,
+        "1": 2,
+        "2": 2,
+        "3": 2
+      },
+      "outer_fold_idx": 4,
+      "outer_training_group_count": 8,
+      "outer_training_row_count": 8
+    }
+  ],
+  "handoff_format": "mineocclude-phase5-coordinated-synthetic-handoff",
+  "migration_required": false,
+  "model_frame_count": 10,
+  "package_version": "1.2",
+  "person_b_public_functions": [
+    "mineocclude.oracle.schema.validate_oracle_target_document",
+    "mineocclude.probes.bridge.build_joined_frame_table",
+    "mineocclude.probes.bridge.build_probe_ready_matrices",
+    "mineocclude.probes.bridge.run_ridge_oof_probe"
+  ],
+  "person_b_target": {
+    "byte_size": 18468,
+    "horizons": [
+      {
+        "kind": "same_model_frame",
+        "model_frame_offset": 0
+      }
+    ],
+    "path": "targets/synthetic_oracle_targets.json",
+    "row_count": 10,
+    "sha256": "4f8e2d25b57bbd4621844020e341303a28027d7ace3e334aea50c1b7c15d66bd",
+    "target_names": [
+      "mu_oracle_blocks"
+    ],
+    "target_schema_version": "person-b-oracle-target-v0.1"
+  },
+  "prior_failed_receipt_commits": [
+    "1b229fdec74eb602c03d8301fd5744bc9c73b30e",
+    "7791c938ce2d97014216974a02f5174b42893874"
+  ],
+  "private_assistance_required": false,
+  "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+  "public_store_functions": [
+    "mineocclude.activations.store.publish_activation_chunk",
+    "mineocclude.activations.store.load_activation_index_snapshot",
+    "mineocclude.activations.store.read_activation_vectors"
+  ],
+  "schema_version": "1.0",
+  "scientific_status": "synthetic_non_scientific",
+  "site": {
+    "hook_site": "residual_stream",
+    "layer_idx": 0
+  },
+  "trajectory_group_count": 10
+}

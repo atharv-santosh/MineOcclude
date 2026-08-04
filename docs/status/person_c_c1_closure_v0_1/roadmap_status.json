@@ -1,0 +1,19 @@
+{
+  "schema_version": "person-c-roadmap-additive-status-v0.1",
+  "milestone": "C1_CLOSED_E_REFIT_HANDOFF_READY",
+  "completed": [
+    "C1.1",
+    "C1.3",
+    "C1.5_FIRST_OPERATOR",
+    "C1.5_SECOND_OPERATOR",
+    "C1.5",
+    "PERSON_C_C1_STOP_GATE"
+  ],
+  "next_owner": "Person E",
+  "next_required_action": "REFIT_AND_VALIDATE_ALL_SIX_HOMOGRAPHIES_FOR_PERSON_C_LAYOUT_CONFIG_V0.4",
+  "person_c_c6a_state": "READY_BUT_NOT_AUTHORIZED_UNTIL_E_REFIT_VALIDATION",
+  "remaining_blockers": [
+    "E_HOMOGRAPHY_REFIT_AND_VALIDATION_FOR_PERSON_C_LAYOUT_CONFIG_V0_4"
+  ],
+  "c6a_execution_command_after_gate_passes": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A\\scripts\\person_c\\run-c6a-after-e-refit.ps1\" -ExecuteScientificCapture"
+}

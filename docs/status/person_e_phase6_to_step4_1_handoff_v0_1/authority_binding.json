@@ -1,0 +1,86 @@
+{
+  "branch_authorities_observed_after_fetch": {
+    "person_b": {
+      "branch": "role/person-b-analysis",
+      "commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+      "remote_ref": "origin/role/person-b-analysis"
+    },
+    "person_d": {
+      "branch": "role/person-d-baselines",
+      "commit": "853e0acadf050a0b1f318b399b524e57379d03bf",
+      "remote_ref": "origin/role/person-d-baselines"
+    },
+    "person_e": {
+      "branch": "role/person-e-operations",
+      "handoff_parent_commit": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+      "handoff_revision_semantics": "The Git commit containing this package is the handoff authority; the exact parent authority is recorded here to avoid a circular self-hash field.",
+      "remote_ref_before_handoff": "origin/role/person-e-operations",
+      "remote_tip_before_handoff": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8"
+    }
+  },
+  "completed_authorities": {
+    "person_a_existing_pilot_completion_commit": "e6e0340f301abb84c127034b154be55a38bdc8f6",
+    "person_a_ten_pilot_activation_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+    "person_b_final_source_row_implementation_commit": "c6f2d1d3495fa1b4a567408e1a84a5b5484e5ecb",
+    "person_b_final_source_row_ratification_commit": "a24cc316ab45b0063a11141c21a76044439042a0",
+    "person_b_step6_6_pass_commit": "e39fef4a59142a84dfb5991d51deeb506eb23a7b",
+    "person_b_ten_pilot_selection_commit": "19f08b2e27217b781961da8f7299e1396a3ab703",
+    "person_c_ten_pilot_input_acceptance_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+    "person_e_phase6_acceptance_commit": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+    "person_e_registry_v2_authority_commit": "b27d404c6aa913bac559754fa8b7accdff46e886"
+  },
+  "handoff_owner": "person_e",
+  "record_date": "2026-07-31",
+  "schema_id": "person-e-phase6-to-step4-1-handoff-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "state": {
+    "accepted_pilot_count": 10,
+    "accepted_placeholder_count": 0,
+    "activation_chunk_count": 200,
+    "activation_row_count": 37480,
+    "hidden_state_interpretation_authorized": false,
+    "no_wall_control_layout_count": 5,
+    "person_a_reextraction_authorized": false,
+    "phase6_artifacts_immutable": true,
+    "phase6_complete": true,
+    "phase6_reexecution_required": false,
+    "registry_v2_trust_chain_complete": true,
+    "step4_1_contract_complete": false,
+    "step4_1_scientific_execution_performed": false,
+    "step6_6_complete": true,
+    "u4_output_inspected": false,
+    "visible_control_row_count": 1000
+  },
+  "unresolved_blockers": [
+    {
+      "blocker_id": "person_b_activation_store_v2_production_consumer_absent",
+      "detail": "The accepted Phase 6 artifacts are person-a-activation-index-v2 / person-a-activation-store-v2, while scripts/run_person_b_pilot.py joins through mineocclude.contracts.activation.validate_activation_handoff and therefore accepts only the historical v1 handoff shape. The only committed v2 execution path is the completed visible-control runner.",
+      "owner": "person_b",
+      "required_resolution": "Publish and ratify a production v2 oracle/probe consumer or an exact contract-preserving adapter before any Step 4.1 scientific execution."
+    },
+    {
+      "blocker_id": "ten_pilot_frame_fold_manifest_absent",
+      "detail": "The frozen layout plan covers 15 target-present trajectories and 2,456 condition rows, but the immutable Phase 6 selection contains exactly ten pilots (five core and five controls). The historical frame-fold binder requires exact equality with all 15 planned trajectories; the v2 positive-control path validates only the five control assignments. No ratified ten-pilot production frame-fold manifest exists.",
+      "owner": "person_b",
+      "required_resolution": "Publish a sealed, ratified frame-level fold identity for exactly the accepted ten-pilot set without changing pilot membership or layout folds."
+    },
+    {
+      "blocker_id": "production_oracle_target_absent",
+      "detail": "The oracle definition is frozen, but Person B's committed Step 4.1 contract records production_artifact_created=false and no real target manifest has subsequently been published.",
+      "owner": "person_b",
+      "required_resolution": "Materialize and seal the exact production oracle target after the v2 consumer/fold contract is ratified."
+    },
+    {
+      "blocker_id": "person_d_readiness_gate_waits_for_person_b",
+      "detail": "Person D's immutable readiness gate requires a real sealed B frame-fold manifest and real B oracle-target document with exact matching coverage.",
+      "owner": "person_d",
+      "required_resolution": "Run the frozen D readiness gate only after the required B artifacts exist; fit no baseline unless it returns READY with zero blocked reasons."
+    },
+    {
+      "blocker_id": "step4_1_result_trust_packages_absent",
+      "detail": "No production fitted-probe, prediction, accepted scientific baseline, final comparison metric table, evidence figure, or final Registry v2 trusted manifest exists yet.",
+      "owner": "persons_b_d_e_in_frozen_order",
+      "required_resolution": "Produce the frozen B then D then B outputs and submit their exact bytes or trusted receipts to Person E for final import and pass/fail closure."
+    }
+  ]
+}

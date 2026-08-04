@@ -1,0 +1,13 @@
+[VAE] Loading VQGAN from checkpoints/vae/config.json
+/home/sagemaker-user/.conda/envs/mineworld/lib/python3.10/site-packages/diffusers/configuration_utils.py:245: FutureWarning: It is deprecated to pass a pretrained model name or path to `from_config`.If you were trying to load a model, please use <class 'diffusers.models.autoencoders.vq_model.VQModel'>.load_config(...) followed by <class 'diffusers.models.autoencoders.vq_model.VQModel'>.from_config(...) instead. Otherwise, please make sure to pass a configuration dictionary instead. This functionality will be removed in v1.0.0.
+  deprecate("config-passed-as-path", "1.0.0", deprecation_message, standard_warn=False)
+[VAE] Use ckpt_path: checkpoints/vae/vae.ckpt
+[tvae.models.amused_vqvae][AutoencodingLegacy] Restored from checkpoints/vae/vae.ckpt with
+0 missing and 1250 unexpected keys
+* Running on local URL:  http://0.0.0.0:7861
+* Running on public URL: <redacted-temporary-gradio-url>
+
+This share link expires in 72 hours. For free permanent hosting and GPU upgrades, run `gradio deploy` from the terminal in the working directory to deploy to Hugging Face Spaces (https://huggingface.co/spaces)
+W0724 18:18:29.941000 6876 .conda/envs/mineworld/lib/python3.10/site-packages/torch/_inductor/utils.py:1137] [0/0] Not enough SMs to use max_autotune_gemm mode
+/home/sagemaker-user/.conda/envs/mineworld/lib/python3.10/site-packages/torch/_inductor/compile_fx.py:194: UserWarning: TensorFloat32 tensor cores for float32 matrix multiplication available but not enabled. Consider setting `torch.set_float32_matmul_precision('high')` for better performance.
+  warnings.warn(

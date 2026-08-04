@@ -1,0 +1,354 @@
+{
+  "blockers": [
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [],
+      "job_id": "run_person_c_raw_capture_promotion",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Promote selected package identities and publish complete v2 trust records.",
+      "owner": "person_c",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "raw_trajectory",
+      "upstream_blockers": [
+        "39 packages remain pending_cross_role_signoff"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_c_raw_capture_promotion"
+      ],
+      "job_id": "run_person_c_joined_visibility_mapping_decision",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Publish a mapping or exclusion decision without changing the closed catalog.",
+      "owner": "person_c",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "raw_trajectory",
+      "upstream_blockers": [
+        "Joined visibility has no faithful owner-approved v2 mapping"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_c_raw_capture_promotion"
+      ],
+      "job_id": "run_person_a_production_model_input",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Produce a trusted production model-input package from accepted raw inputs.",
+      "owner": "person_a",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "model_input",
+      "upstream_blockers": [
+        "Accepted Person C raw inputs are unavailable"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_a_production_model_input"
+      ],
+      "job_id": "run_person_a_production_extraction",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Run production extraction with exact checkpoint and preprocessing identity.",
+      "owner": "person_a",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "extraction",
+      "upstream_blockers": [
+        "Only bounded non-scientific extraction pilot evidence exists"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_a_production_extraction"
+      ],
+      "job_id": "run_person_a_production_activation",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Publish production activation tensors and complete v2 trust records.",
+      "owner": "person_a",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "activation",
+      "upstream_blockers": [
+        "Only limited non-scientific activation pilot evidence exists"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_a_production_activation"
+      ],
+      "job_id": "run_person_a_production_rollout",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Run and trust-register the later production rollout.",
+      "owner": "person_a",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "rollout",
+      "upstream_blockers": [
+        "Existing rollout is certification evidence, not production"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_c_raw_capture_promotion",
+        "run_person_c_joined_visibility_mapping_decision"
+      ],
+      "job_id": "run_person_b_oracle",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Publish the sealed fold and actual oracle target with v2 trust.",
+      "owner": "person_b",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "oracle_target",
+      "upstream_blockers": [
+        "No actual oracle artifact exists"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_a_production_activation",
+        "run_person_b_oracle"
+      ],
+      "job_id": "run_person_b_fitted_probe",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Fit the predeclared probe on accepted activation and oracle inputs.",
+      "owner": "person_b",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "fitted_probe",
+      "upstream_blockers": [
+        "Accepted production activation and oracle inputs are unavailable"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_b_fitted_probe"
+      ],
+      "job_id": "run_person_b_prediction",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Publish predictions from the trusted fitted probe.",
+      "owner": "person_b",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "prediction",
+      "upstream_blockers": [
+        "No actual scientific prediction exists"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_b_oracle",
+        "run_person_b_prediction"
+      ],
+      "job_id": "run_person_d_scientific_baseline",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Produce accepted scientific baseline predictions on the sealed fold.",
+      "owner": "person_d",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "baseline",
+      "upstream_blockers": [
+        "Current preview is scientific_use=forbidden"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_b_prediction",
+        "run_person_d_scientific_baseline"
+      ],
+      "job_id": "run_person_b_metric_table",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Compute the predeclared metric table from accepted inputs.",
+      "owner": "person_b",
+      "person_e_can_resolve": false,
+      "required_artifact_type": "metric_table",
+      "upstream_blockers": [
+        "No actual scientific metric table exists"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [],
+      "job_id": "run_person_e_existing_trust_preparation",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Publish owner-authored status, authorization, manifest, and local-byte verification.",
+      "owner": "person_e",
+      "person_e_can_resolve": true,
+      "required_artifact_type": "detection",
+      "upstream_blockers": [
+        "Existing E bytes lack complete v2 owner trust packages"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_c_raw_capture_promotion",
+        "run_person_e_existing_trust_preparation"
+      ],
+      "job_id": "run_person_e_production_detection_registration",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Register only after exact C inputs and E trust records are accepted.",
+      "owner": "person_e",
+      "person_e_can_resolve": true,
+      "required_artifact_type": "detection",
+      "upstream_blockers": [
+        "Exact proven C inputs are not accepted Registry v2 artifacts"
+      ]
+    },
+    {
+      "blocks_step4_1_closure": true,
+      "current_state": "pending",
+      "dependency_job_ids": [
+        "run_person_a_production_rollout",
+        "run_person_b_metric_table",
+        "run_person_e_production_detection_registration"
+      ],
+      "job_id": "run_person_e_production_figure",
+      "missing_trust_chain_links": [
+        "trusted_owner_authority",
+        "verified_owner_status_record_bytes",
+        "trusted_exact_artifact_authorization",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_exact_entry",
+        "verified_artifact_bytes_or_receipt"
+      ],
+      "next_eligible_owner_action": "Render and register only after all displayed inputs are accepted.",
+      "owner": "person_e",
+      "person_e_can_resolve": true,
+      "required_artifact_type": "figure",
+      "upstream_blockers": [
+        "No production figure or complete accepted lineage exists"
+      ]
+    }
+  ],
+  "dependency_policy": "Edges encode required production ordering only; no Registry v2 artifact edge is claimed until exact accepted artifacts exist.",
+  "detection_branch": {
+    "dependencies": [
+      "run_person_c_raw_capture_promotion",
+      "run_person_e_existing_trust_preparation",
+      "run_person_e_production_detection_registration"
+    ],
+    "source_basis": "Existing E detections bind exact proven Person C source packages, but those inputs are not yet accepted v2 artifacts."
+  },
+  "production_chain": [
+    "run_person_c_raw_capture_promotion",
+    "run_person_a_production_model_input",
+    "run_person_a_production_extraction",
+    "run_person_a_production_activation",
+    "run_person_b_fitted_probe",
+    "run_person_b_prediction",
+    "run_person_d_scientific_baseline",
+    "run_person_b_metric_table",
+    "run_person_e_production_figure"
+  ],
+  "production_state": "pending",
+  "schema_id": "person-e-phase4-step4-1-slice3a-blocker-matrix-v0.1",
+  "schema_version": "1.0",
+  "scientific_acceptance_claimed": false,
+  "step4_1_closure_state": "blocked"
+}

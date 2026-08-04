@@ -1,0 +1,1652 @@
+{
+  "accepted_pilot_count": 10,
+  "accepted_pilot_ids": [
+    "layout_00_ep9403",
+    "layout_00_ep9441",
+    "layout_01_ep9405",
+    "layout_01_ep9442",
+    "layout_02_ep9407",
+    "layout_02_ep9432",
+    "layout_03_ep9404",
+    "layout_03_ep9443",
+    "layout_04_ep9406",
+    "layout_04_ep9444"
+  ],
+  "admitted_frame_count": 1695,
+  "excluded_frame_count": 179,
+  "external_referenced_file_count": 90,
+  "fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+  "full_source_frame_inventory": {
+    "byte_size": 2618278,
+    "git_blob_oid": "dab6356f1426a53c4a896a79d74d198478290e1e",
+    "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+    "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/source_context_inventory.json",
+    "role": "person_a",
+    "sha256": "ab2f07b7c4a5f3717f3e737a8f95762d43e05dcdf1405eca52d8e6049f7dea69"
+  },
+  "schema_id": "person-a-step4-1-frame-handoff-v0-2-source-context-manifest",
+  "schema_version": "1.0",
+  "source_context_artifact_count": 10,
+  "source_contexts": [
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_00_ep9403",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 662116,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_00_ep9403/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+          "uri": "git://role/person-c-data/data/autonomous/layout_00_ep9403/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9403",
+          "authorization_id": "authorization_person_c_9403",
+          "authorization_record_id": "person_c_9403_authorization_v0_1",
+          "authorization_record_sha256": "a45a4a4901e49f922df8c3e122aa28846ecf4d3c067413f345ce7d1ee8d2b5ab",
+          "decision": "accepted",
+          "owner_authority_revision": "bf09c23bb12f59acae724811eed6b82bab17c0ed"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_00_ep9403"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9403",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "a2d74c7efc162b8afd50c5206c6d9e34f2e66983d813c44be2d2f2b18c2075e2",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9403",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9403",
+          "verified_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+          "verified_size_bytes": 662116
+        }
+      },
+      "admitted_frame_count": 209,
+      "condition_role": "core_occluded",
+      "control": false,
+      "excluded_frame_count": 39,
+      "fold_idx": 1,
+      "frame_count": 248,
+      "layout_id": "layout_00",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 32502224,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-step6-3-continuation-a102aa4d1ca5d4760e9c9997-activation-store-v2/indexes/index-82dc0e18607a1a89135a1a88cbec5d53531682db970e9a1323672e7f4d28677b.json",
+          "producing_commit": "e6e0340f301abb84c127034b154be55a38bdc8f6",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "473efef1eb52514c097051ec8f4501cb621f92c9ceaeb847249c7e3ae042ad55"
+        },
+        "committed_inventory": {
+          "byte_size": 9175,
+          "git_blob_oid": "22ecb277ffaf25e4ef2446606818ad09607a4e72",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_00_ep9403.json",
+          "role": "person_a",
+          "sha256": "31d352d51804dac1708527b5b24e27aa9bc952912ce1fc7e8c93de791dc97cbd"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9175,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_00_ep9403.json",
+          "sha256": "31d352d51804dac1708527b5b24e27aa9bc952912ce1fc7e8c93de791dc97cbd"
+        },
+        "index_validation": {
+          "activation_row_count": 4960,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "5a4a42f1059501d288c8a5b2a0278bd4db74cf0c",
+          "producing_run_id": "person-a-phase6-step6-3-continuation-a102aa4d1ca5d4760e9c9997",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "e6e0340f301abb84c127034b154be55a38bdc8f6",
+        "status": "REUSED_EXACT_EXISTING_ARTIFACTS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 662116,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725/capture_package_v0_1.json",
+          "sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213"
+        },
+        "frame_map": {
+          "byte_size": 36264,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725/frame_map.jsonl",
+          "sha256": "eb1ff07b794a5f4aab6fb1ce6cfcca784cb3dc233a786c67d565f1f3efcd645b"
+        },
+        "media": {
+          "byte_size": 46347,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 248,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725/video_640x360.mp4",
+          "sha256": "694ddc9a6d9b234c1939a6a0ce818a56f84a0f921f91764c860bdc16b89b0560"
+        },
+        "normalized_actions": {
+          "byte_size": 83384,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725/normalized_actions.jsonl",
+          "sha256": "8774d0d2619cdd5cc463ddc2d19e38573439d7b4eec6f8e6ae8146467f99ae77"
+        },
+        "raw_actions": {
+          "byte_size": 120088,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725/raw_actions.jsonl",
+          "sha256": "4218b4566ad3918ed34660d074a6450e49b09a7fd4acb7a2d4988afc185d519d"
+        },
+        "server_state": {
+          "byte_size": 122474,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725/server_state.jsonl",
+          "sha256": "ef6213e4e67ecec4164bd405e8e9520464d5fd6a985d46cd847eb97165352ea4"
+        },
+        "visibility": {
+          "byte_size": 42673,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-layout-00-ep9403-seed-20260725/visibility.jsonl",
+          "sha256": "786cadb110cc02fe11658edbe6e804c081449112c240147b29226f2a9f683a8f"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_00_ep9403",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+        "admitted_target_row_count": 209,
+        "canonical_episode_manifest_sha256": "2233abd1c2dff4e3c8a1491d324950fb6b285a13f0fdced1cb1bf99f4179cdee",
+        "canonical_state_object_sha256": "7044bc3ec71ed7956af6470ff8b0a2430b2f0356117047a2f993bd628029223e",
+        "condition_role": "core_occluded",
+        "coordinate_frame_hash": "efc076803bd4733ac5e401ca58b4090796725e02cd90f80aaeea438ee483cc20",
+        "excluded_frame_count": 39,
+        "fold_idx": 1,
+        "last_visible_anchor": {
+          "model_frame_idx": 18,
+          "position_blocks": -4.869750598356,
+          "server_tick": 18,
+          "source_frame_id": "layout_00_ep9403:render_frame:18"
+        },
+        "layout_id": "layout_00",
+        "literal_capture_package_sha256": "21ea1dba91cf92ad82080088f70905fba053557392437b19591cad1333667213",
+        "source_frame_count": 248,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_00_ep9403"
+      },
+      "trajectory_id": "layout_00_ep9403"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_00_ep9441",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 531375,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_00_ep9441/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "5e5d5d8cbeecaa07bd93af1faab23d6bdd0643df4f59e9b72397842efc3d3664",
+          "uri": "git://role/person-c-data/data/autonomous/layout_00_ep9441/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9441",
+          "authorization_id": "authorization_person_c_9441",
+          "authorization_record_id": "person_c_9441_authorization_v0_1",
+          "authorization_record_sha256": "1a2bc74ba5da908fb584e4ea2e8f7a0e85e1007dedbfa152c923454b38ab8c38",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_00_ep9441"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9441",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "56aeeedb9cb6f532b3b264b4630296a312e35c0431a23d0f0b58fb23bf58402d",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9441",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9441",
+          "verified_sha256": "5e5d5d8cbeecaa07bd93af1faab23d6bdd0643df4f59e9b72397842efc3d3664",
+          "verified_size_bytes": 531375
+        }
+      },
+      "admitted_frame_count": 200,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "excluded_frame_count": 0,
+      "fold_idx": 1,
+      "frame_count": 200,
+      "layout_id": "layout_00",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 26233589,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441-activation-store-v2/indexes/index-bf518a89b761223fac62c1bb3c5b6457d9796a2abd62f0030ab2cc4da10a50bf.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "a553a431e3cb8bef174552f0ac77d1afa881db255b1ca8d76f8461ad02b3c6ce"
+        },
+        "committed_inventory": {
+          "byte_size": 9223,
+          "git_blob_oid": "c88ca90d14ef0b21ffe881bee5d7561a751c097c",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_00_ep9441.json",
+          "role": "person_a",
+          "sha256": "851259ac5c311a659d6a7920fcbf06f5f55d24e3ddee5ef5988892810bb7dc75"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9223,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_00_ep9441.json",
+          "sha256": "851259ac5c311a659d6a7920fcbf06f5f55d24e3ddee5ef5988892810bb7dc75"
+        },
+        "index_validation": {
+          "activation_row_count": 4000,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 531375,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441/capture_package_v0_1.json",
+          "sha256": "5e5d5d8cbeecaa07bd93af1faab23d6bdd0643df4f59e9b72397842efc3d3664"
+        },
+        "frame_map": {
+          "byte_size": 29160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441/frame_map.jsonl",
+          "sha256": "f570b852f664539c890cac36b29846ce269ecd0eab5b287a347bf9c487d05b9a"
+        },
+        "media": {
+          "byte_size": 52439,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 200,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441/video_640x360.mp4",
+          "sha256": "51bd8748fb58f37dd9e5338571836068a7f1c4daf8bded4cdac1d0aa49bdb5f8"
+        },
+        "normalized_actions": {
+          "byte_size": 67160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441/normalized_actions.jsonl",
+          "sha256": "8797cc6af694cf93cd47f1f226923b6c1c114cd51eeb42ccf620ae7ecf1c1aa4"
+        },
+        "raw_actions": {
+          "byte_size": 96760,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441/raw_actions.jsonl",
+          "sha256": "a44df14bc811ecaaa23847369aadf4edf7a4a5751a888530d7c3867b48da6959"
+        },
+        "server_state": {
+          "byte_size": 98833,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441/server_state.jsonl",
+          "sha256": "2eb8dded4b1b3de17d935824583c2a4181680e04dd436883c541c43d4658ba05"
+        },
+        "visibility": {
+          "byte_size": 34160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_00_ep9441/visibility.jsonl",
+          "sha256": "5b96355d8cfc5ab3d3ee513c8658db60d89d376adc4ada49e62da358960a3d80"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_00_ep9441",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "5e5d5d8cbeecaa07bd93af1faab23d6bdd0643df4f59e9b72397842efc3d3664",
+        "admitted_target_row_count": 200,
+        "canonical_episode_manifest_sha256": "abb826b7be7b65197994108ced10ebc599a85dabdc02dbae92d5d0ef2571320c",
+        "canonical_state_object_sha256": "55958a41aefb0508e568675fde9054370cb5e37ee134585ac451fc4de1457d26",
+        "condition_role": "no_wall_visible_control",
+        "coordinate_frame_hash": "0ff1f35eff749f1256d4f8bcf825c8b2eda022589cf943b0f8ccdb471fac0da8",
+        "excluded_frame_count": 0,
+        "fold_idx": 1,
+        "last_visible_anchor": null,
+        "layout_id": "layout_00",
+        "literal_capture_package_sha256": "5e5d5d8cbeecaa07bd93af1faab23d6bdd0643df4f59e9b72397842efc3d3664",
+        "source_frame_count": 200,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_00_ep9441"
+      },
+      "trajectory_id": "layout_00_ep9441"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_01_ep9405",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 610140,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_01_ep9405/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "c139247e3be9132ddf2781f6d8abbe7d4498fa158464e3f47c534cf19b5c614f",
+          "uri": "git://role/person-c-data/data/autonomous/layout_01_ep9405/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9405",
+          "authorization_id": "authorization_person_c_9405",
+          "authorization_record_id": "person_c_9405_authorization_v0_1",
+          "authorization_record_sha256": "f34d146d08847e1942c87d5784c31091b44f971bb1eecb79a68318186ae89a42",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_01_ep9405"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9405",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "6613751e1d10bd20431e48b081680be01e4bddbfa60dc84db462dcf1c06d8b6e",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9405",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9405",
+          "verified_sha256": "c139247e3be9132ddf2781f6d8abbe7d4498fa158464e3f47c534cf19b5c614f",
+          "verified_size_bytes": 610140
+        }
+      },
+      "admitted_frame_count": 187,
+      "condition_role": "core_occluded",
+      "control": false,
+      "excluded_frame_count": 43,
+      "fold_idx": 2,
+      "frame_count": 230,
+      "layout_id": "layout_01",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 30164409,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405-activation-store-v2/indexes/index-0ceffdaab158e7edec75816bc1958922531fe2baa7c2189b558153de4f3ad7b9.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "023786fd7fb3002e5acebcddd82e8f1e7ddb597138820c9401bd5dd7af5f10e6"
+        },
+        "committed_inventory": {
+          "byte_size": 9214,
+          "git_blob_oid": "5d7676045daba6e62c804aef14fdd572da270b20",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_01_ep9405.json",
+          "role": "person_a",
+          "sha256": "c96e918631b9d2e8d751744f2cf019caac3e523635d32a66b4dc74c22e261b3f"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9214,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_01_ep9405.json",
+          "sha256": "c96e918631b9d2e8d751744f2cf019caac3e523635d32a66b4dc74c22e261b3f"
+        },
+        "index_validation": {
+          "activation_row_count": 4600,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 610140,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405/capture_package_v0_1.json",
+          "sha256": "c139247e3be9132ddf2781f6d8abbe7d4498fa158464e3f47c534cf19b5c614f"
+        },
+        "frame_map": {
+          "byte_size": 33600,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405/frame_map.jsonl",
+          "sha256": "0e65608514d54d05f6978fd791524a95625f77a6db8f39c743ac6a3c166f6401"
+        },
+        "media": {
+          "byte_size": 45341,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 230,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405/video_640x360.mp4",
+          "sha256": "b400ac6f1138b08b1301492e14866362bcc7081b675668f3c0073c820fe1df10"
+        },
+        "normalized_actions": {
+          "byte_size": 77300,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405/normalized_actions.jsonl",
+          "sha256": "3994596b9dee237c3123f449276c3f6b96acb3d8fc2c0178ce5a8a662373d927"
+        },
+        "raw_actions": {
+          "byte_size": 111340,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405/raw_actions.jsonl",
+          "sha256": "0c3bcdd4b2fabd95e7b4256d81b3fc46c2d6681057bdbf8aa0ec7270e257976b"
+        },
+        "server_state": {
+          "byte_size": 113539,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405/server_state.jsonl",
+          "sha256": "cafbb26666dbec4d49dd9aa588294ea99032c6ca277b8875e45f371d214defb0"
+        },
+        "visibility": {
+          "byte_size": 39537,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9405/visibility.jsonl",
+          "sha256": "033307b39c0376c5d4a144e0c5e25450d3acacf48d3c7d8fa96a1496e1841d15"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_01_ep9405",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "c139247e3be9132ddf2781f6d8abbe7d4498fa158464e3f47c534cf19b5c614f",
+        "admitted_target_row_count": 187,
+        "canonical_episode_manifest_sha256": "1e0fc327f9a4872af7690817a5e1e9c40a6c07f0b97ab80c6bdce374957c181e",
+        "canonical_state_object_sha256": "7205f8b7df690711886bb6aa8f5e836a20fff532838e63436aabaac176b476df",
+        "condition_role": "core_occluded",
+        "coordinate_frame_hash": "6f3e17543ea7ffa86a4623e2ef2cf614e0b538084108ee7a9deb7501f38d2c60",
+        "excluded_frame_count": 43,
+        "fold_idx": 2,
+        "last_visible_anchor": {
+          "model_frame_idx": 22,
+          "position_blocks": -4.855523334833,
+          "server_tick": 22,
+          "source_frame_id": "layout_01_ep9405:render_frame:22"
+        },
+        "layout_id": "layout_01",
+        "literal_capture_package_sha256": "c139247e3be9132ddf2781f6d8abbe7d4498fa158464e3f47c534cf19b5c614f",
+        "source_frame_count": 230,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_01_ep9405"
+      },
+      "trajectory_id": "layout_01_ep9405"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_01_ep9442",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 531371,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_01_ep9442/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "4cb40c2b8b62268fba0556ed38f25644710dede5c1be9cf579e3aea445ab4096",
+          "uri": "git://role/person-c-data/data/autonomous/layout_01_ep9442/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9442",
+          "authorization_id": "authorization_person_c_9442",
+          "authorization_record_id": "person_c_9442_authorization_v0_1",
+          "authorization_record_sha256": "bd13ba3317f039d862c0bebb36e802c4e3580d3853d7838eac84e8fe51329ceb",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_01_ep9442"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9442",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "cf2ec5113deaae7d476710b746f6f8a3df78689235ee9b8a53a7d856414228c1",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9442",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9442",
+          "verified_sha256": "4cb40c2b8b62268fba0556ed38f25644710dede5c1be9cf579e3aea445ab4096",
+          "verified_size_bytes": 531371
+        }
+      },
+      "admitted_frame_count": 200,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "excluded_frame_count": 0,
+      "fold_idx": 2,
+      "frame_count": 200,
+      "layout_id": "layout_01",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 26233589,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442-activation-store-v2/indexes/index-6f0488a2e8d5fc16db98e5218b56038738cbc937b872fad1e85f14a627fd74ee.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "f8708f04e72a3e73ce9ac7136f6f7c191fdee9dbfba026d6867445cd2ffaa2eb"
+        },
+        "committed_inventory": {
+          "byte_size": 9223,
+          "git_blob_oid": "4bbb3ef99d709c8b93f4c1a9a87c06519638972b",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_01_ep9442.json",
+          "role": "person_a",
+          "sha256": "9346544dd0e01ad2974d16167928828b034b26b44827d77a9c800975753e290e"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9223,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_01_ep9442.json",
+          "sha256": "9346544dd0e01ad2974d16167928828b034b26b44827d77a9c800975753e290e"
+        },
+        "index_validation": {
+          "activation_row_count": 4000,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 531371,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442/capture_package_v0_1.json",
+          "sha256": "4cb40c2b8b62268fba0556ed38f25644710dede5c1be9cf579e3aea445ab4096"
+        },
+        "frame_map": {
+          "byte_size": 29160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442/frame_map.jsonl",
+          "sha256": "75e80f89978872d0aa08ad7541a8c149ecca4e0b95ec705d32edb4a398b76904"
+        },
+        "media": {
+          "byte_size": 53708,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 200,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442/video_640x360.mp4",
+          "sha256": "4b2b24066394fcfcb3646bec4667b41fe1af97e6e09d44fa6455cbaca9491ef9"
+        },
+        "normalized_actions": {
+          "byte_size": 67160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442/normalized_actions.jsonl",
+          "sha256": "778fe3f54b6b4e6c314436185450670d8e78b468b8a0061214d3364f8cf0f770"
+        },
+        "raw_actions": {
+          "byte_size": 96760,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442/raw_actions.jsonl",
+          "sha256": "f72b0ed034c5302116a5812c5ad1966c53a7b2b9a0d97ecd64b641031962129e"
+        },
+        "server_state": {
+          "byte_size": 98790,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442/server_state.jsonl",
+          "sha256": "a5ae7b6b141cbb8fcd40f4cedad47895e2ced81ea43f1adc565d3f662529e9f7"
+        },
+        "visibility": {
+          "byte_size": 34160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_01_ep9442/visibility.jsonl",
+          "sha256": "c6e9fe233c288a1ca50076a2be11ddf13d76314a8cd961510eda1eb3b01b1acf"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_01_ep9442",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "4cb40c2b8b62268fba0556ed38f25644710dede5c1be9cf579e3aea445ab4096",
+        "admitted_target_row_count": 200,
+        "canonical_episode_manifest_sha256": "4882c4587e521231ad8956d527771a79c7dfcd61aa70ebe6c134d835e031a0a6",
+        "canonical_state_object_sha256": "949cb51c89f58219a749b1e145c266fd8e705f61be44e3cd77a435b6b3083895",
+        "condition_role": "no_wall_visible_control",
+        "coordinate_frame_hash": "7affd211d8985d16f6b039e2471f5dd085cc1af84e680a882d00f2fe1e34bb51",
+        "excluded_frame_count": 0,
+        "fold_idx": 2,
+        "last_visible_anchor": null,
+        "layout_id": "layout_01",
+        "literal_capture_package_sha256": "4cb40c2b8b62268fba0556ed38f25644710dede5c1be9cf579e3aea445ab4096",
+        "source_frame_count": 200,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_01_ep9442"
+      },
+      "trajectory_id": "layout_01_ep9442"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_02_ep9407",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 422479,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_02_ep9407/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "ed7884bcc5e72db1d8b1c642f0ce668544c7cb348567b0ec820d69db6016004f",
+          "uri": "git://role/person-c-data/data/autonomous/layout_02_ep9407/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9407",
+          "authorization_id": "authorization_person_c_9407",
+          "authorization_record_id": "person_c_9407_authorization_v0_1",
+          "authorization_record_sha256": "03cee23d7756c339b99dd2d01106ef6813abfc4093f8b279503eb6b6bf8d278d",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_02_ep9407"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9407",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "e6de79a73cfe56684a05901fef3efa33a37f37f6ea57478bf006387faa52d09d",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9407",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9407",
+          "verified_sha256": "ed7884bcc5e72db1d8b1c642f0ce668544c7cb348567b0ec820d69db6016004f",
+          "verified_size_bytes": 422479
+        }
+      },
+      "admitted_frame_count": 135,
+      "condition_role": "core_occluded",
+      "control": false,
+      "excluded_frame_count": 23,
+      "fold_idx": 4,
+      "frame_count": 158,
+      "layout_id": "layout_02",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 20734849,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407-activation-store-v2/indexes/index-e6ede10a3d0f2115275a5e287acea472785fde798da0820935117bc0ba5fba81.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "c76bf46818c70a798276d52d1d46a4f27aee255e44e0bd20fa1a583f23c3c467"
+        },
+        "committed_inventory": {
+          "byte_size": 9214,
+          "git_blob_oid": "3b5ac279249c93e82bb7bc1982ec8004a9f6585f",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_02_ep9407.json",
+          "role": "person_a",
+          "sha256": "0f05f649750f8f8c0328e6b270d0bb23347c844f7c214e6ad66ed3d9347ccc68"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9214,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_02_ep9407.json",
+          "sha256": "0f05f649750f8f8c0328e6b270d0bb23347c844f7c214e6ad66ed3d9347ccc68"
+        },
+        "index_validation": {
+          "activation_row_count": 3160,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 422479,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407/capture_package_v0_1.json",
+          "sha256": "ed7884bcc5e72db1d8b1c642f0ce668544c7cb348567b0ec820d69db6016004f"
+        },
+        "frame_map": {
+          "byte_size": 22944,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407/frame_map.jsonl",
+          "sha256": "5ffe24debcd8eec66c3914c1af1c409edd1e09f024b541203ca1532c9aa5d3d8"
+        },
+        "media": {
+          "byte_size": 44245,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 158,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407/video_640x360.mp4",
+          "sha256": "ea91dec776e9d28fc53f60aec7b38647bac27b4097c8a9bcfe3cf36a16c2a7a4"
+        },
+        "normalized_actions": {
+          "byte_size": 52964,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407/normalized_actions.jsonl",
+          "sha256": "26f8ca7a088dc571243005042a0e82445d99ae77a081158d29825f6e3910c28b"
+        },
+        "raw_actions": {
+          "byte_size": 76348,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407/raw_actions.jsonl",
+          "sha256": "772a5134a47f580b7021245861908f8105ee85856d2929e5786cbb966ada4c2e"
+        },
+        "server_state": {
+          "byte_size": 77680,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407/server_state.jsonl",
+          "sha256": "c24de44433ab52f0f90c3dcc1bce1115a1e52c040066c12729ef257cba37da82"
+        },
+        "visibility": {
+          "byte_size": 27029,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9407/visibility.jsonl",
+          "sha256": "138dff54bd70c939f359ebd9b15ca4f6e8bebfb92cd4bc1cae45965923dd2fa2"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_02_ep9407",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "ed7884bcc5e72db1d8b1c642f0ce668544c7cb348567b0ec820d69db6016004f",
+        "admitted_target_row_count": 135,
+        "canonical_episode_manifest_sha256": "69a1783dc33296beadeebd64b3114457fbdf9d4a61e3c4741b8ad24cf28c9d1b",
+        "canonical_state_object_sha256": "07009577962beb45332c120e38c23031fa9069d3c39ba09f297ddb2144c8d525",
+        "condition_role": "core_occluded",
+        "coordinate_frame_hash": "c2d9ca12480f4970e17f50a38d424bd8e9e61f857c5a0476ff89ab5fc09f00a7",
+        "excluded_frame_count": 23,
+        "fold_idx": 4,
+        "last_visible_anchor": {
+          "model_frame_idx": 2,
+          "position_blocks": -6.445623936586,
+          "server_tick": 2,
+          "source_frame_id": "layout_02_ep9407:render_frame:2"
+        },
+        "layout_id": "layout_02",
+        "literal_capture_package_sha256": "ed7884bcc5e72db1d8b1c642f0ce668544c7cb348567b0ec820d69db6016004f",
+        "source_frame_count": 158,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_02_ep9407"
+      },
+      "trajectory_id": "layout_02_ep9407"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_02_ep9432",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 531379,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_02_ep9432/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "fae0107e2ceb60e62dbc5a89fe459b4d7a952ce8c28cb97faa490d3fde4d4d0c",
+          "uri": "git://role/person-c-data/data/autonomous/layout_02_ep9432/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9432",
+          "authorization_id": "authorization_person_c_9432",
+          "authorization_record_id": "person_c_9432_authorization_v0_1",
+          "authorization_record_sha256": "fa44baed9a51dc9bd9cbea3f1d1dd56a7b5a7acd4f14af6b447037a5740ec78d",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_02_ep9432"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9432",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "5a27687c9bd93dc69e6446f72f44346a663ecde8bcf96515da9dd90e6ad3f648",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9432",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9432",
+          "verified_sha256": "fae0107e2ceb60e62dbc5a89fe459b4d7a952ce8c28cb97faa490d3fde4d4d0c",
+          "verified_size_bytes": 531379
+        }
+      },
+      "admitted_frame_count": 200,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "excluded_frame_count": 0,
+      "fold_idx": 4,
+      "frame_count": 200,
+      "layout_id": "layout_02",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 26233589,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432-activation-store-v2/indexes/index-058396bacb360c159a670d6b48c40024d1314ce1fa66be21ecb8fb53ca9faac1.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "33ef1f8d3f6bf3487e33fdfe14a38446a37d421f90cb24e885c4594f53783fab"
+        },
+        "committed_inventory": {
+          "byte_size": 9223,
+          "git_blob_oid": "9c73b0ceeb005ce866ce56990417dbc2b782c5ac",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_02_ep9432.json",
+          "role": "person_a",
+          "sha256": "5f36923abc5327c32e6da1c0e4887794d3c7e0423026190cd5b277581a13f78e"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9223,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_02_ep9432.json",
+          "sha256": "5f36923abc5327c32e6da1c0e4887794d3c7e0423026190cd5b277581a13f78e"
+        },
+        "index_validation": {
+          "activation_row_count": 4000,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 531379,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432/capture_package_v0_1.json",
+          "sha256": "fae0107e2ceb60e62dbc5a89fe459b4d7a952ce8c28cb97faa490d3fde4d4d0c"
+        },
+        "frame_map": {
+          "byte_size": 29160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432/frame_map.jsonl",
+          "sha256": "a1ec8933078d2a8d2e1802dec0aa3bf7c21a1de27c4782aafd5d74c941aa636c"
+        },
+        "media": {
+          "byte_size": 53638,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 200,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432/video_640x360.mp4",
+          "sha256": "728e34a076dac4e7bfc914292c6007b778ea7736aa5dca69194a356f935db6a8"
+        },
+        "normalized_actions": {
+          "byte_size": 67160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432/normalized_actions.jsonl",
+          "sha256": "2b1a423c18fa5b806e2c5bfadf69fbcb482d4dbb1c63434ce2c7b41a55f1d211"
+        },
+        "raw_actions": {
+          "byte_size": 96760,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432/raw_actions.jsonl",
+          "sha256": "a818d10633cbdf2dd1ce56feca2de9e55e428e5cad8bf6d95b2f92367f5e0356"
+        },
+        "server_state": {
+          "byte_size": 98834,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432/server_state.jsonl",
+          "sha256": "7207bb95963b5a6ff9d76ed4596235140eefa6bb6f5ad44c0cd6aae749d897bd"
+        },
+        "visibility": {
+          "byte_size": 34160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_02_ep9432/visibility.jsonl",
+          "sha256": "ebb8b1ef4036e12ab0597d34837a03f82d36d8b967cd247908a329e1dd9f853c"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_02_ep9432",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "fae0107e2ceb60e62dbc5a89fe459b4d7a952ce8c28cb97faa490d3fde4d4d0c",
+        "admitted_target_row_count": 200,
+        "canonical_episode_manifest_sha256": "8468e95c0256abc0f435805bcbed759f6e96f404d04016045c9d6069233a5998",
+        "canonical_state_object_sha256": "8deac7d10a3fd9f939dbfde4ae54818211db1d392f159b11921ebeac8339d4c4",
+        "condition_role": "no_wall_visible_control",
+        "coordinate_frame_hash": "bf4279d1accecf1bba3bd25d374788f010e3a7695933f90ae5fc374b97e1b47d",
+        "excluded_frame_count": 0,
+        "fold_idx": 4,
+        "last_visible_anchor": null,
+        "layout_id": "layout_02",
+        "literal_capture_package_sha256": "fae0107e2ceb60e62dbc5a89fe459b4d7a952ce8c28cb97faa490d3fde4d4d0c",
+        "source_frame_count": 200,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_02_ep9432"
+      },
+      "trajectory_id": "layout_02_ep9432"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_03_ep9404",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 332665,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_03_ep9404/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "c9bc91d934643a53c5b3c39d519e5b3533788021adac57373af5edea12795ac7",
+          "uri": "git://role/person-c-data/data/autonomous/layout_03_ep9404/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9404",
+          "authorization_id": "authorization_person_c_9404",
+          "authorization_record_id": "person_c_9404_authorization_v0_1",
+          "authorization_record_sha256": "8395ef10630842d9d0ffb245d669503b6663ef154f20d71366b32098c7cb33ce",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_03_ep9404"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9404",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "d53cc3e4c517d6a7bb178dfab6346698bd565f9ad926d1272f137d649bc03e47",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9404",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9404",
+          "verified_sha256": "c9bc91d934643a53c5b3c39d519e5b3533788021adac57373af5edea12795ac7",
+          "verified_size_bytes": 332665
+        }
+      },
+      "admitted_frame_count": 92,
+      "condition_role": "core_occluded",
+      "control": false,
+      "excluded_frame_count": 33,
+      "fold_idx": 0,
+      "frame_count": 125,
+      "layout_id": "layout_03",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 16406599,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404-activation-store-v2/indexes/index-b4b5232cb549a41882998312071b88200ff7c047ab9c045b89d4e9a6ad0b6cbf.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "66b162bb09a170d82563838cf5ebc1eea4e7e9c6fe0f10927e155d1e765633fe"
+        },
+        "committed_inventory": {
+          "byte_size": 9214,
+          "git_blob_oid": "5433b850f1b758778a6dd6a3298d9bfafc205a79",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_03_ep9404.json",
+          "role": "person_a",
+          "sha256": "b24b8a49c836722f9b30f0f57ba9aa291d162327d1a7794e36d4f4bdb058039a"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9214,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_03_ep9404.json",
+          "sha256": "b24b8a49c836722f9b30f0f57ba9aa291d162327d1a7794e36d4f4bdb058039a"
+        },
+        "index_validation": {
+          "activation_row_count": 2500,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 332665,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404/capture_package_v0_1.json",
+          "sha256": "c9bc91d934643a53c5b3c39d519e5b3533788021adac57373af5edea12795ac7"
+        },
+        "frame_map": {
+          "byte_size": 18060,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404/frame_map.jsonl",
+          "sha256": "a7bfaefb854dd66e607b7db1d645d56b205e52a361835621517239fe47919559"
+        },
+        "media": {
+          "byte_size": 41458,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 125,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404/video_640x360.mp4",
+          "sha256": "4b8ec2373bc62e31dbf90fc5882895c4e6abf9fb5b965c0a0d0305ea6e19cd27"
+        },
+        "normalized_actions": {
+          "byte_size": 41810,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404/normalized_actions.jsonl",
+          "sha256": "64cf8efaf2b4d64cf4668299df95260bc761952acf996c0ce443e28eca3275af"
+        },
+        "raw_actions": {
+          "byte_size": 60310,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404/raw_actions.jsonl",
+          "sha256": "9b440beb7311f670aeeaa364849b3cf5e8c9691bc685a5eb701cc646d28ad02e"
+        },
+        "server_state": {
+          "byte_size": 61487,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404/server_state.jsonl",
+          "sha256": "6afa996fd24cca7524794b6594e28e79132786161f4a4d295afa56f16e2c0e00"
+        },
+        "visibility": {
+          "byte_size": 21277,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9404/visibility.jsonl",
+          "sha256": "afbaadfdcfc9df46f2d1bb9bc3fed88848b49af2fbcb4fe81dc13d2cb89b1328"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_03_ep9404",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "c9bc91d934643a53c5b3c39d519e5b3533788021adac57373af5edea12795ac7",
+        "admitted_target_row_count": 92,
+        "canonical_episode_manifest_sha256": "c50c326d3a9a365aacb1569017164bf7d59a9ea56dac1595be3e717572cc434a",
+        "canonical_state_object_sha256": "8439dff83058b977e5d06099a73323245c7b908b8518f3318fc604c1e74e75b7",
+        "condition_role": "core_occluded",
+        "coordinate_frame_hash": "41b4a27c0bc022630650168ccbb777d70f05c96f3aef47b90617eb5a82c896d6",
+        "excluded_frame_count": 33,
+        "fold_idx": 0,
+        "last_visible_anchor": {
+          "model_frame_idx": 13,
+          "position_blocks": -4.972041006889,
+          "server_tick": 13,
+          "source_frame_id": "layout_03_ep9404:render_frame:13"
+        },
+        "layout_id": "layout_03",
+        "literal_capture_package_sha256": "c9bc91d934643a53c5b3c39d519e5b3533788021adac57373af5edea12795ac7",
+        "source_frame_count": 125,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_03_ep9404"
+      },
+      "trajectory_id": "layout_03_ep9404"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_03_ep9443",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 531261,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_03_ep9443/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "affb4273939c84a869548633f51888a8c2e429466360d906049b63e9e0f6bb83",
+          "uri": "git://role/person-c-data/data/autonomous/layout_03_ep9443/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9443",
+          "authorization_id": "authorization_person_c_9443",
+          "authorization_record_id": "person_c_9443_authorization_v0_1",
+          "authorization_record_sha256": "4c02f64de34e3dcbfd7f03b99ca14dd71ca1a11a318236d46cfccc503d60aeae",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_03_ep9443"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9443",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "de46e5135279485f5bdf1a5a12b2a0f226721d33f6806169f016cf0c403ed9af",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9443",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9443",
+          "verified_sha256": "affb4273939c84a869548633f51888a8c2e429466360d906049b63e9e0f6bb83",
+          "verified_size_bytes": 531261
+        }
+      },
+      "admitted_frame_count": 200,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "excluded_frame_count": 0,
+      "fold_idx": 0,
+      "frame_count": 200,
+      "layout_id": "layout_03",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 26233589,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443-activation-store-v2/indexes/index-f15423703da1ce45f65fe13ed350c79ce73ccfdff9f415e6b252b4b29f2dca01.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "2d48a43da1c720a81f5bb8ce6a4a2e1d1ea3344b5884fb62df2846409d8dca6f"
+        },
+        "committed_inventory": {
+          "byte_size": 9223,
+          "git_blob_oid": "6f1c483be0ea8dee3ea5c0b242eb0d4adcc98848",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_03_ep9443.json",
+          "role": "person_a",
+          "sha256": "bc43fae0d596f95863d0376b3ff105c8814853dd32b1d2bea197c6c772e8a360"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9223,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_03_ep9443.json",
+          "sha256": "bc43fae0d596f95863d0376b3ff105c8814853dd32b1d2bea197c6c772e8a360"
+        },
+        "index_validation": {
+          "activation_row_count": 4000,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 531261,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443/capture_package_v0_1.json",
+          "sha256": "affb4273939c84a869548633f51888a8c2e429466360d906049b63e9e0f6bb83"
+        },
+        "frame_map": {
+          "byte_size": 29160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443/frame_map.jsonl",
+          "sha256": "09670728eec7f3b7798a8925d497024ca7b5526bd4a8762a7aa9d7f7c9df4ccd"
+        },
+        "media": {
+          "byte_size": 49155,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 200,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443/video_640x360.mp4",
+          "sha256": "466912a1092a66c08688424b64b3cdad9cacaee2cdbc595e35a9602b5f04c79d"
+        },
+        "normalized_actions": {
+          "byte_size": 67160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443/normalized_actions.jsonl",
+          "sha256": "4ae3c0d9d6f2b55fa250af441e70f043ce199924455cade69fc6f81879062c22"
+        },
+        "raw_actions": {
+          "byte_size": 96760,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443/raw_actions.jsonl",
+          "sha256": "e2930eb7327c9f7a89927aef27dc4ba3a1b97228092b426d065a8068f20965f0"
+        },
+        "server_state": {
+          "byte_size": 98729,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443/server_state.jsonl",
+          "sha256": "753d1822a7f8b05d6482af7d91e6fc87d4b65bede39cd957ddcc18084b150e83"
+        },
+        "visibility": {
+          "byte_size": 34160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_03_ep9443/visibility.jsonl",
+          "sha256": "aa8f931105f060ca67bb78f108c31273c1de0be73084c11444931c3d456a52a4"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_03_ep9443",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "affb4273939c84a869548633f51888a8c2e429466360d906049b63e9e0f6bb83",
+        "admitted_target_row_count": 200,
+        "canonical_episode_manifest_sha256": "0ae2edd9ec65a52a6f030b374f0882c65def2fe3780c9bdd1b65dd5c902c9ae2",
+        "canonical_state_object_sha256": "2689c8d27e15b06ec769e66026c7fc2f30e9fb4480ac6e9f746556d02fc380f6",
+        "condition_role": "no_wall_visible_control",
+        "coordinate_frame_hash": "7c2c805048f79e2d3b315902a68620c1d6afffffbcd2fde5ab67f323a54b8aff",
+        "excluded_frame_count": 0,
+        "fold_idx": 0,
+        "last_visible_anchor": null,
+        "layout_id": "layout_03",
+        "literal_capture_package_sha256": "affb4273939c84a869548633f51888a8c2e429466360d906049b63e9e0f6bb83",
+        "source_frame_count": 200,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_03_ep9443"
+      },
+      "trajectory_id": "layout_03_ep9443"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_04_ep9406",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 302914,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_04_ep9406/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "3cc2917fb0698d83d4ec12aa7cd7288e4a929dd5f13e810d303fbd1cc348f021",
+          "uri": "git://role/person-c-data/data/autonomous/layout_04_ep9406/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9406",
+          "authorization_id": "authorization_person_c_9406",
+          "authorization_record_id": "person_c_9406_authorization_v0_1",
+          "authorization_record_sha256": "9b60f4ae3a6a03f71720f165710a1ad95dc22897950ed23183307b5b0face7ca",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_04_ep9406"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9406",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "147793ced022017fdf1faadf5f7027da0aa65a5ebcfdde4a20cda50382577140",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9406",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9406",
+          "verified_sha256": "3cc2917fb0698d83d4ec12aa7cd7288e4a929dd5f13e810d303fbd1cc348f021",
+          "verified_size_bytes": 302914
+        }
+      },
+      "admitted_frame_count": 72,
+      "condition_role": "core_occluded",
+      "control": false,
+      "excluded_frame_count": 41,
+      "fold_idx": 3,
+      "frame_count": 113,
+      "layout_id": "layout_04",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 14829719,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406-activation-store-v2/indexes/index-3e8d24985d51b9ffbaf81f8b0e8be6bedc8b082c6e2dda721b6e14961ff20e47.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "df8f0541c872e3d6daf7a6a1165e6deafe6256ec745ffb5329befe0e3c697a78"
+        },
+        "committed_inventory": {
+          "byte_size": 9194,
+          "git_blob_oid": "5783f2033d4fa09006ff1a47fb7f943d6b40652f",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_04_ep9406.json",
+          "role": "person_a",
+          "sha256": "618aaae8dfdcd39cd013491b18c10e99e74981c7d707b93f12363728d636cb9c"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9194,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_04_ep9406.json",
+          "sha256": "618aaae8dfdcd39cd013491b18c10e99e74981c7d707b93f12363728d636cb9c"
+        },
+        "index_validation": {
+          "activation_row_count": 2260,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 302914,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406/capture_package_v0_1.json",
+          "sha256": "3cc2917fb0698d83d4ec12aa7cd7288e4a929dd5f13e810d303fbd1cc348f021"
+        },
+        "frame_map": {
+          "byte_size": 16284,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406/frame_map.jsonl",
+          "sha256": "ce88c2e722181214b6c41565efd033f7fc71c09df1fb88cfc40833092305a36b"
+        },
+        "media": {
+          "byte_size": 44140,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 113,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406/video_640x360.mp4",
+          "sha256": "af24aa500cb020131c744a005aaf29f3e369946a737037595199bea1bae79ed7"
+        },
+        "normalized_actions": {
+          "byte_size": 37754,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406/normalized_actions.jsonl",
+          "sha256": "89bec07f2601916854a055fe6b6ef67a2f380805f33d054d97d3d9b7611336bb"
+        },
+        "raw_actions": {
+          "byte_size": 54478,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406/raw_actions.jsonl",
+          "sha256": "32f5516cdfe43626ec7f39d27267b128d92d4852b4ec3f242673d8fd75129ac1"
+        },
+        "server_state": {
+          "byte_size": 55518,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406/server_state.jsonl",
+          "sha256": "020df1553095132bff119b65f9c220de5df6b44f9779f0d51cae2d2318d4d684"
+        },
+        "visibility": {
+          "byte_size": 19181,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9406/visibility.jsonl",
+          "sha256": "6337d449c310d100f3177066e0eac7a706668bf4c7cb7adb5aa1c7c58f16351f"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_04_ep9406",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "3cc2917fb0698d83d4ec12aa7cd7288e4a929dd5f13e810d303fbd1cc348f021",
+        "admitted_target_row_count": 72,
+        "canonical_episode_manifest_sha256": "cebb6b0bd48ed0bdf67456136f911a89a00ec6656f5364951230f6444e7e1177",
+        "canonical_state_object_sha256": "2bc3b6cf95f40a9a61f14289ec3e30a70e064c8406eaa8c2a8ccfcd02886b4c7",
+        "condition_role": "core_occluded",
+        "coordinate_frame_hash": "d82752742b054fccc6a55e795f656d64e3c5fd15703b5dd7b7d8ff10f80b505a",
+        "excluded_frame_count": 41,
+        "fold_idx": 3,
+        "last_visible_anchor": {
+          "model_frame_idx": 20,
+          "position_blocks": -3.202849661672,
+          "server_tick": 20,
+          "source_frame_id": "layout_04_ep9406:render_frame:20"
+        },
+        "layout_id": "layout_04",
+        "literal_capture_package_sha256": "3cc2917fb0698d83d4ec12aa7cd7288e4a929dd5f13e810d303fbd1cc348f021",
+        "source_frame_count": 113,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_04_ep9406"
+      },
+      "trajectory_id": "layout_04_ep9406"
+    },
+    {
+      "accepted_c_manifest_binding": {
+        "accepted_artifact": {
+          "artifact_id": "layout_04_ep9444",
+          "artifact_schema_version": "person-c-capture-package-v0.1",
+          "artifact_source_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+          "artifact_type": "raw_trajectory",
+          "byte_size": 531250,
+          "direct_input_artifact_ids": [],
+          "path": "data/autonomous/layout_04_ep9444/capture_package_v0_1.json",
+          "producing_role": "person_c",
+          "sha256": "4fe5bd8bedfdb78be17c580662dda5511b1314d7ee522c64db529d50dfc7c0a0",
+          "uri": "git://role/person-c-data/data/autonomous/layout_04_ep9444/capture_package_v0_1.json"
+        },
+        "accepted_by_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+        "authorization": {
+          "authority_id": "authority_person_c_raw_trajectory_9444",
+          "authorization_id": "authorization_person_c_9444",
+          "authorization_record_id": "person_c_9444_authorization_v0_1",
+          "authorization_record_sha256": "206302e6b485a7abf0e44123c7a703749a4d13428cb5a83cb58023c7083201a9",
+          "decision": "accepted",
+          "owner_authority_revision": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0"
+        },
+        "manifest": {
+          "artifact_identities": [
+            "person-c-raw-trajectory-layout_04_ep9444"
+          ],
+          "decision": "accepted",
+          "manifest_id": "manifest_person_c_raw_trajectory_9444",
+          "manifest_schema_version": "person-c-registry-v2-manifest-v1.0",
+          "manifest_sha256": "72c810723fcd3e34ffdc5422f667e57eb55196fe405d0a84b9ff5411b882d198",
+          "owner_authority_id": "authority_person_c_raw_trajectory_9444",
+          "schema_version": "1.0"
+        },
+        "verification": {
+          "mode": "local_bytes",
+          "verification_id": "verification_person_c_9444",
+          "verified_sha256": "4fe5bd8bedfdb78be17c580662dda5511b1314d7ee522c64db529d50dfc7c0a0",
+          "verified_size_bytes": 531250
+        }
+      },
+      "admitted_frame_count": 200,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "excluded_frame_count": 0,
+      "fold_idx": 3,
+      "frame_count": 200,
+      "layout_id": "layout_04",
+      "person_a_index_binding": {
+        "accepted_by_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "activation_index": {
+          "byte_size": 26233589,
+          "format": "person-a-activation-index-v2-json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444-activation-store-v2/indexes/index-451de28efa43dcc476a258b7637df4fb7eb6c30784025f786afd1bcbbcdaa876.json",
+          "producing_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_role": "person_a",
+          "schema_version": "person-a-activation-index-v2",
+          "sha256": "2ab37112dfabe22c773e02512f894d7aa0c2f63d32493a743a6dbee6fb30c933"
+        },
+        "committed_inventory": {
+          "byte_size": 9223,
+          "git_blob_oid": "b09cd68ae40dda35db9ba103fab17d7ddfe642d4",
+          "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+          "path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_04_ep9444.json",
+          "role": "person_a",
+          "sha256": "77da36a83bb3428b25336a9acce0fc9bc5d9d719758677d425c5da6086768442"
+        },
+        "external_inventory_copy": {
+          "byte_size": 9223,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/per_pilot_inventories/layout_04_ep9444.json",
+          "sha256": "77da36a83bb3428b25336a9acce0fc9bc5d9d719758677d425c5da6086768442"
+        },
+        "index_validation": {
+          "activation_row_count": 4000,
+          "context_local_pair_idx_range": [
+            0,
+            15
+          ],
+          "extraction_code_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+          "producing_run_id": "person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444",
+          "scientific_identity_duplicate_count": 0
+        },
+        "producer_contract_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+        "runtime_execution_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+        "status": "PASS"
+      },
+      "source_artifacts": {
+        "capture_package": {
+          "byte_size": 531250,
+          "format": "json",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444/capture_package_v0_1.json",
+          "sha256": "4fe5bd8bedfdb78be17c580662dda5511b1314d7ee522c64db529d50dfc7c0a0"
+        },
+        "frame_map": {
+          "byte_size": 29160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444/frame_map.jsonl",
+          "sha256": "07ef4f88c0b004acf247dcf5a739bf374e3eb8364b17bfee75e139688a7f02d0"
+        },
+        "media": {
+          "byte_size": 60102,
+          "ffprobe": {
+            "average_frame_rate": "20/1",
+            "codec_name": "h264",
+            "frame_count": 200,
+            "height": 360,
+            "pixel_format": "yuv420p",
+            "real_frame_rate": "20/1",
+            "width": 640
+          },
+          "format": "mp4",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444/video_640x360.mp4",
+          "sha256": "9e5a8a4a9c98b16758a6bed8627cb670476c17a46a076364ed3cc2c18d3c30b4"
+        },
+        "normalized_actions": {
+          "byte_size": 67160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444/normalized_actions.jsonl",
+          "sha256": "12908faeefd92a0ee9438f7ae5a3bf06eaa945c3ce1df45ef09be4d4a1c7936b"
+        },
+        "raw_actions": {
+          "byte_size": 96760,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444/raw_actions.jsonl",
+          "sha256": "34428fb28c608b8cc2608c7fbb65f2e25ed338ce37c8177ccbc1382c9b458eda"
+        },
+        "server_state": {
+          "byte_size": 98714,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444/server_state.jsonl",
+          "sha256": "05a8237c3452affd4cc351e0d11da54a810950ca392b2c62c36523b2bd1f982f"
+        },
+        "visibility": {
+          "byte_size": 34160,
+          "format": "jsonl",
+          "path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-phase6-ten-pilot-expansion-seed-20260725-layout_04_ep9444/visibility.jsonl",
+          "sha256": "02b1f280f3473fb01704f18a9009866c12f8328907576495528ffe061d1fa4a8"
+        }
+      },
+      "source_context_id": "person_a_source_context__layout_04_ep9444",
+      "target_lineage": {
+        "accepted_c_manifest_sha256": "4fe5bd8bedfdb78be17c580662dda5511b1314d7ee522c64db529d50dfc7c0a0",
+        "admitted_target_row_count": 200,
+        "canonical_episode_manifest_sha256": "8a9c0167af50d44d4759a752836291db7b890fd645ac6f574395b829f1e3e1be",
+        "canonical_state_object_sha256": "4ceae47cb109a6b1062a98afdde728f7ed994561237eae2cac20219d4048b510",
+        "condition_role": "no_wall_visible_control",
+        "coordinate_frame_hash": "cb5812a040ecf06cbe282d45d16763fb9d04bd38c606f83f45d928024cbeed30",
+        "excluded_frame_count": 0,
+        "fold_idx": 3,
+        "last_visible_anchor": null,
+        "layout_id": "layout_04",
+        "literal_capture_package_sha256": "4fe5bd8bedfdb78be17c580662dda5511b1314d7ee522c64db529d50dfc7c0a0",
+        "source_frame_count": 200,
+        "source_run_id": "runtime_pilot_session_2026_07_22",
+        "trajectory_id": "layout_04_ep9444"
+      },
+      "trajectory_id": "layout_04_ep9444"
+    }
+  ],
+  "source_frame_count": 1874,
+  "source_identities_verified": true,
+  "source_identity_set_sha256": "53a5a00b69d5b55c099fd20ff53f7c571236a83ab149e820fa4cf2dc0b8f2bef",
+  "target_manifest_sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282",
+  "u4_output_inspected": false
+}

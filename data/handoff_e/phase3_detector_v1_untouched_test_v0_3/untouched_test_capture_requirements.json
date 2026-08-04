@@ -1,0 +1,29 @@
+{
+  "absent_frame_capture_constraint": "Each absent frame holds a NoAI cow at exactly its predeclared foreground distractor_world_position; no magenta sheep present; the four positions per layout must render distinct, unoccluded images.",
+  "capture_source_revision_must_postdate_this_predeclaration_commit": true,
+  "captured_bytes_must_not_match_any_historical_c_hash": true,
+  "captured_bytes_must_not_match_forbidden_development_hashes": true,
+  "captured_bytes_must_not_match_v0_1_or_v0_2_png_hashes": true,
+  "duplicate_negative_hashes_pre_authorized": false,
+  "duplicate_png_hashes_fail_closed": true,
+  "missing_duplicate_or_extra_frame_behavior": "reject_fail_closed",
+  "overwrite_forbidden": true,
+  "package_id": "person-c-phase3-detector-v1-untouched-test-v0_3",
+  "partial_evaluation_forbidden": true,
+  "present_frame_capture_constraint": "Capture must be designed so the magenta sheep is geometrically visible at every reserved present frame index; if not achievable, retire v0_3 and re-predeclare.",
+  "schema_version": "1.0",
+  "source_commit_must_postdate_freeze": true,
+  "untouched_test_rules": [
+    "All image bytes will be produced AFTER this v0_3 predeclaration is committed and pushed.",
+    "No v0_1 or v0_2 PNG bytes may be reused in v0_3.",
+    "No old PNG, episode, capture session, source path, or SHA-256 may be reused.",
+    "All 48 predeclared rows are mandatory.",
+    "No frame may be removed because it is difficult.",
+    "No frame may be selected or replaced based on detector behavior.",
+    "No substitutions are allowed after capture begins.",
+    "A substitution requires retiring this package version and committing a new predeclaration first.",
+    "Person E receives exactly one formal evaluation run.",
+    "A failed or retired package may not be reused for detector tuning.",
+    "No detector outcomes are disclosed during capture or package construction."
+  ]
+}
