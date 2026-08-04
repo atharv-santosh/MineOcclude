@@ -1,0 +1,612 @@
+{
+  "a_to_b_handoff": {
+    "path": "C:\\Users\\lollo\\MineOcclude\\docs\\status\\phase6_runtime\\person-a-canonical-c6a-multilayout-successor-seed-20260725-retry-20260804T211350Z\\person_a_to_person_b_canonical_multilayout_handoff.json",
+    "sha256": "9d932df3aec859b17a4bbdd2afaa31d81dcb21c2bb62db668ed4158cbb855d94",
+    "valid": true
+  },
+  "activation_chunk_count": 100,
+  "activation_index_count": 5,
+  "activation_index_identities": [
+    {
+      "activation_index_byte_size": 7902620,
+      "activation_index_sha256": "a6ba07a50ff20e9b90f0b036a0acd18783bad4fa3aacbebc0dd70df825f00a27",
+      "trajectory_id": "layout_01_ep12602"
+    },
+    {
+      "activation_index_byte_size": 7923717,
+      "activation_index_sha256": "29a750527e6b8bd3b8987d5a481f292280dec7e22263e292505fbce0103b711d",
+      "trajectory_id": "layout_02_ep12610"
+    },
+    {
+      "activation_index_byte_size": 7895174,
+      "activation_index_sha256": "2a4b0112f648f23cbe95a50404e073fd4839280a74973273d20afaf9d5b1c683",
+      "trajectory_id": "layout_03_ep12645"
+    },
+    {
+      "activation_index_byte_size": 7895174,
+      "activation_index_sha256": "a4a8b5943d2f2ad75b1e95d613ce44a6f88c9edba22f666837a671c5db1d5376",
+      "trajectory_id": "layout_04_ep12626"
+    },
+    {
+      "activation_index_byte_size": 7895174,
+      "activation_index_sha256": "32bf62d734dd2a0b8e6fee0599f28a920f7bf6d3ae9beb6b6222fdbc4321d4b3",
+      "trajectory_id": "layout_05_ep12634"
+    }
+  ],
+  "activation_row_count": 6000,
+  "collection_manifest": {
+    "path": "C:\\Users\\lollo\\MineOcclude\\docs\\status\\phase6_runtime\\person-a-canonical-c6a-multilayout-successor-seed-20260725-retry-20260804T211350Z\\collection_manifest.json",
+    "sha256": "a672c834e8af3fd12c735e4042951b7b90d0aeeed5b0b62790aacdf3a58c0db0",
+    "valid": true
+  },
+  "completed_control_results": {
+    "path": "C:\\Users\\lollo\\MineOcclude-Person-B-Analysis\\docs\\status\\person_b_canonical_multilayout_positive_control_v0_1\\completed_control_results.json",
+    "sha256": "c71e26fc259cfde87c49ef9fb146b70db183b8303228ce4ce150a4c981ff96e0",
+    "valid": true
+  },
+  "decision": {
+    "automatic_hidden_state_transition": false,
+    "frozen_acceptance_rule": "at_least_one_reviewed_layer_has_positive_global_r2_and_positive_global_pearson_r_and_positive_pearson_r_in_every_one_of_five_held_out_layouts",
+    "positive_control_pass": true,
+    "status": "PASS_FROZEN_CANONICAL_MULTILAYOUT_VISIBLE_POSITION_POSITIVE_CONTROL"
+  },
+  "execution": {
+    "branch": "role/person-b-analysis",
+    "person_a_commit": "1858ea12513f833b62ea916e0691ae994f117428",
+    "person_b_execution_commit": "9b046088410bc9016ca3903d89d7bb1b016ffe29",
+    "receipt_generation_recomputed_scientific_control": false,
+    "required_starting_ancestor": "66279eee242a353423e1b084bdfa39f480274909",
+    "scientific_execution_semantics": {
+      "real_label_execution_count": 1,
+      "real_label_implementation": "mineocclude.probes.ridge.fit_ridge_oof",
+      "shuffled_equivalence_audit_permutation_indices": [
+        0,
+        1,
+        2
+      ],
+      "shuffled_execution_count": 1,
+      "shuffled_implementation": "vectorized_multiple_rhs_exact_equivalent_refit_scaler_alpha_and_ridge_inside_each_permutation"
+    },
+    "scientific_fit_performed": true
+  },
+  "external_activation_inventory": {
+    "artifact_count": 105,
+    "sha256": "342807be961eb9734bcc6ee935906a98bda7d44ed6d2f6fcf7691169dba0df02",
+    "valid": true
+  },
+  "fold_identities": {
+    "assignment_implementation": "mineocclude.probes.splits.assign_layout_grouped_folds",
+    "grouping_key": "layout_id",
+    "inner_fold_count": 4,
+    "inner_strategy": "layout_grouped",
+    "layout_assignments": [
+      {
+        "fold_idx": 1,
+        "layout_id": "layout_01"
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "layout_02"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "layout_03"
+      },
+      {
+        "fold_idx": 3,
+        "layout_id": "layout_04"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "layout_05"
+      }
+    ],
+    "outer_fold_count": 5,
+    "outer_split_seed": 20260719,
+    "outer_strategy": "layout_grouped"
+  },
+  "frozen_authorities": {
+    "core_config_path": "C:\\Users\\lollo\\MineOcclude-Person-B-Analysis\\configs\\analysis\\core.yaml",
+    "core_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+    "predecessor_blocker_receipt_path": "C:\\Users\\lollo\\MineOcclude-Person-B-Analysis\\docs\\status\\person_b_canonical_positive_control_layout_01_ep12602_v0_1\\b_to_a_receipt.json",
+    "predecessor_blocker_receipt_sha256": "6e777d11273bf25267b694b551eb2627dc6dc30f6226988cced4bc0134a45fe8",
+    "predecessor_preserved_unchanged": true
+  },
+  "generated_at_utc": "2026-08-04T21:53:39.145159Z",
+  "immutable": true,
+  "label_authority": {
+    "frame_count_per_trajectory": 60,
+    "label_source": "canonical_server_state.axis_pos",
+    "maximum_x_true_blocks": -1.5798347097697911,
+    "minimum_x_true_blocks": -6.628791703126696,
+    "nonzero_position_range_per_trajectory": true,
+    "target_name": "x_true_blocks",
+    "target_unit": "blocks"
+  },
+  "layout_count": 5,
+  "real_label_positive_control": {
+    "attempted": true,
+    "complete": true,
+    "metrics": [
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.1686206080386398,
+        "global_r2": -0.7550648458212894,
+        "layer_idx": 0,
+        "maximum_fold_pearson_r": 0.9473349378118675,
+        "minimum_fold_pearson_r": 0.4118625947597228,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.31441880783741577,
+        "global_r2": -0.22838381544205077,
+        "layer_idx": 1,
+        "maximum_fold_pearson_r": 0.92715220094603,
+        "minimum_fold_pearson_r": 0.49477390686446493,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.4670717850203352,
+        "global_r2": 0.10647815469096378,
+        "layer_idx": 2,
+        "maximum_fold_pearson_r": 0.9517869574320259,
+        "minimum_fold_pearson_r": 0.7305818200153613,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.5525919968749169,
+        "global_r2": 0.2493364945441724,
+        "layer_idx": 3,
+        "maximum_fold_pearson_r": 0.9683270470904485,
+        "minimum_fold_pearson_r": 0.698419933700716,
+        "selected_alphas_by_outer_fold": [
+          10.0,
+          100.0,
+          100.0,
+          0.1,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.4693036383169195,
+        "global_r2": 0.10806245765224187,
+        "layer_idx": 4,
+        "maximum_fold_pearson_r": 0.9674116781155775,
+        "minimum_fold_pearson_r": 0.7725926437799452,
+        "selected_alphas_by_outer_fold": [
+          10.0,
+          100.0,
+          10.0,
+          0.1,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.5621233331212091,
+        "global_r2": 0.27784948592892034,
+        "layer_idx": 5,
+        "maximum_fold_pearson_r": 0.951358453663853,
+        "minimum_fold_pearson_r": 0.8851040002447269,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          100.0,
+          10.0,
+          100.0,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.6501766599824075,
+        "global_r2": 0.3905140572993966,
+        "layer_idx": 6,
+        "maximum_fold_pearson_r": 0.9565023497851326,
+        "minimum_fold_pearson_r": 0.8426426399278384,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          0.1,
+          0.1,
+          0.1,
+          10.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.48465246241468607,
+        "global_r2": 0.1454987854230766,
+        "layer_idx": 7,
+        "maximum_fold_pearson_r": 0.944684906182224,
+        "minimum_fold_pearson_r": 0.6718719569139865,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          100.0,
+          1.0,
+          0.1,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.17314633178515496,
+        "global_r2": -0.8513007571111177,
+        "layer_idx": 8,
+        "maximum_fold_pearson_r": 0.9295376995381627,
+        "minimum_fold_pearson_r": 0.42362711043509826,
+        "selected_alphas_by_outer_fold": [
+          10.0,
+          100.0,
+          0.1,
+          0.1,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.34037979296948156,
+        "global_r2": -0.40458736051859545,
+        "layer_idx": 9,
+        "maximum_fold_pearson_r": 0.9098636219000185,
+        "minimum_fold_pearson_r": 0.3975517252073688,
+        "selected_alphas_by_outer_fold": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          100.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.261935501508961,
+        "global_r2": -0.714868615327878,
+        "layer_idx": 10,
+        "maximum_fold_pearson_r": 0.9511922559891994,
+        "minimum_fold_pearson_r": 0.29625288452513776,
+        "selected_alphas_by_outer_fold": [
+          10.0,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.1643356776958944,
+        "global_r2": -1.002960573272194,
+        "layer_idx": 11,
+        "maximum_fold_pearson_r": 0.9479683980625817,
+        "minimum_fold_pearson_r": 0.3100707037273165,
+        "selected_alphas_by_outer_fold": [
+          0.1,
+          1.0,
+          0.1,
+          0.1,
+          10.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.3466883797234609,
+        "global_r2": -0.35629102415823355,
+        "layer_idx": 12,
+        "maximum_fold_pearson_r": 0.9458601967501965,
+        "minimum_fold_pearson_r": 0.3658710172057113,
+        "selected_alphas_by_outer_fold": [
+          0.1,
+          0.1,
+          100.0,
+          1.0,
+          10.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.36200699892763033,
+        "global_r2": -0.3513790155948622,
+        "layer_idx": 13,
+        "maximum_fold_pearson_r": 0.9404093036693804,
+        "minimum_fold_pearson_r": 0.5047906180719793,
+        "selected_alphas_by_outer_fold": [
+          0.1,
+          0.1,
+          100.0,
+          0.1,
+          1.0
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.36532257766065585,
+        "global_r2": -0.2852385944728364,
+        "layer_idx": 14,
+        "maximum_fold_pearson_r": 0.9645503026725895,
+        "minimum_fold_pearson_r": 0.5483412966432564,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          100.0,
+          100.0,
+          1.0,
+          0.1
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.5050318130017487,
+        "global_r2": -0.01102063483815563,
+        "layer_idx": 15,
+        "maximum_fold_pearson_r": 0.9514486926252056,
+        "minimum_fold_pearson_r": 0.5659880350452051,
+        "selected_alphas_by_outer_fold": [
+          10.0,
+          100.0,
+          100.0,
+          0.1,
+          0.1
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.3907027732475866,
+        "global_r2": -0.2548730451759411,
+        "layer_idx": 16,
+        "maximum_fold_pearson_r": 0.9371450849665844,
+        "minimum_fold_pearson_r": 0.39111027243509583,
+        "selected_alphas_by_outer_fold": [
+          10.0,
+          100.0,
+          100.0,
+          100.0,
+          0.1
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.4914957826887395,
+        "global_r2": -0.015654604048391807,
+        "layer_idx": 17,
+        "maximum_fold_pearson_r": 0.9546203864907498,
+        "minimum_fold_pearson_r": 0.556927427032753,
+        "selected_alphas_by_outer_fold": [
+          0.1,
+          0.1,
+          100.0,
+          100.0,
+          0.1
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.3799596380969461,
+        "global_r2": -0.12377365998508782,
+        "layer_idx": 18,
+        "maximum_fold_pearson_r": 0.9406854759796505,
+        "minimum_fold_pearson_r": 0.5220705355302221,
+        "selected_alphas_by_outer_fold": [
+          0.1,
+          100.0,
+          100.0,
+          100.0,
+          0.1
+        ]
+      },
+      {
+        "all_five_fold_correlations_positive": true,
+        "global_pearson_r": 0.2920877839149881,
+        "global_r2": -0.3529329985049585,
+        "layer_idx": 19,
+        "maximum_fold_pearson_r": 0.9473038524146955,
+        "minimum_fold_pearson_r": 0.16215964291108778,
+        "selected_alphas_by_outer_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      }
+    ],
+    "qualified_layer_indices": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "status": "COMPLETE_FROZEN_LAYOUT_GROUPED_OOF",
+    "strongest_reviewed_layer": {
+      "all_five_fold_correlations_positive": true,
+      "global_pearson_r": 0.6501766599824075,
+      "global_r2": 0.3905140572993966,
+      "layer_idx": 6,
+      "maximum_fold_pearson_r": 0.9565023497851326,
+      "minimum_fold_pearson_r": 0.8426426399278384
+    }
+  },
+  "remaining_blockers": [],
+  "schema_version": "person-b-canonical-multilayout-positive-control-b-to-a-receipt-v0.1",
+  "shuffled_control": {
+    "attempted": true,
+    "complete": true,
+    "metrics": {
+      "extreme_null_count": 239,
+      "hook_site": "decoder_layer_output_residual_stream",
+      "null_r2_maximum": 0.707115844174111,
+      "null_r2_mean": 0.23889686647206693,
+      "null_r2_minimum": -0.29212277691199384,
+      "observed_r2": 0.3905140572993966,
+      "p_value": 0.24,
+      "p_value_rule": "add_one_greater_or_equal",
+      "permutation_count": 999,
+      "permutation_refit_policy": "refit_scaler_alpha_and_ridge_inside_each_permutation",
+      "permutation_seed": 20260720,
+      "permutation_unit": "whole_trajectory_block",
+      "reviewed_layer_idx": 6
+    },
+    "status": "COMPLETE_FROZEN_WHOLE_TRAJECTORY_GROUPED_SHUFFLE"
+  },
+  "source_identity_join": {
+    "activation_rows_matched": 6000,
+    "frame_rows_matched": 300,
+    "identity_error_count": 0,
+    "pass": true,
+    "trajectory_results": [
+      {
+        "activation_rows_matched": 1200,
+        "frame_count": 60,
+        "source_client_tick_sha256": "17db86534745c168d4c47e7eb90869d9136b8c3bd907d7d1da0bc56aaaa6c37a",
+        "source_server_state_sha256": "54ea0d57e76bb84d1b08178117fa1a1244baa5eebbedc212eacdfa890fff9865",
+        "trajectory_id": "layout_01_ep12602"
+      },
+      {
+        "activation_rows_matched": 1200,
+        "frame_count": 60,
+        "source_client_tick_sha256": "00fd6cabcbdd7d14ec757e89f4c208fe3fc7d8517c74d38d57f4a3132bcb17ae",
+        "source_server_state_sha256": "63537a6ceec685e58870690479f8a9c9600bdae26ac0286547a902859f87bd97",
+        "trajectory_id": "layout_02_ep12610"
+      },
+      {
+        "activation_rows_matched": 1200,
+        "frame_count": 60,
+        "source_client_tick_sha256": "7d620bf4b3f175f5ea09153c4e8b3809e864e282d9a9e89f98f80c7bdcfaaa96",
+        "source_server_state_sha256": "8e07ef03667a6e0652b0e2eda84accb70ee49a2e642133e3b625c4c861ba24f7",
+        "trajectory_id": "layout_03_ep12645"
+      },
+      {
+        "activation_rows_matched": 1200,
+        "frame_count": 60,
+        "source_client_tick_sha256": "785217eea3834b7d04e5e42e1de17e411ad9f5d2c255ccb898c6977bb3984743",
+        "source_server_state_sha256": "d83d4eb0926ca589c989daf11473d54a058481790b6e5038bf451097eb720cb5",
+        "trajectory_id": "layout_04_ep12626"
+      },
+      {
+        "activation_rows_matched": 1200,
+        "frame_count": 60,
+        "source_client_tick_sha256": "8ace79eb3865c9de0537cf222c74ce3c374ff1ca48f611bb2639fdcde2247c13",
+        "source_server_state_sha256": "4cdbade4fc9e7a754b0062dd83210e459adc6af6c94330508634bcf14f35fbf3",
+        "trajectory_id": "layout_05_ep12634"
+      }
+    ]
+  },
+  "thresholds": {
+    "numeric_pass_threshold_added": false,
+    "policy": "human_scientific_gate_no_unfrozen_numeric_threshold"
+  },
+  "trajectory_count": 5,
+  "trajectory_identities": [
+    {
+      "accepted_manifest_sha256": "e6716f4fbe015ebb098da2a6fb800c636cc9eac1a56dcbe1d7543ab377c7a40d",
+      "activation_index_byte_size": 7902620,
+      "activation_index_sha256": "a6ba07a50ff20e9b90f0b036a0acd18783bad4fa3aacbebc0dd70df825f00a27",
+      "activation_rows_matched": 1200,
+      "chunk_count": 20,
+      "chunk_inventory_sha256": "a5fccb6fdc3eb2a51d0055c1f9bf37b1ad3b06f2a52c5a4ee0f535681bd9b526",
+      "episode_id": 12602,
+      "frame_count": 60,
+      "layout_id": "layout_01",
+      "maximum_x_true_blocks": -3.2200635630541745,
+      "minimum_x_true_blocks": -5.988137988913424,
+      "output_bundle_root": "C:\\Users\\lollo\\MineOcclude\\docs\\status\\phase6_runtime\\person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z",
+      "source_client_tick_sha256": "17db86534745c168d4c47e7eb90869d9136b8c3bd907d7d1da0bc56aaaa6c37a",
+      "source_identity_join_pass": true,
+      "source_server_state_sha256": "54ea0d57e76bb84d1b08178117fa1a1244baa5eebbedc212eacdfa890fff9865",
+      "trajectory_id": "layout_01_ep12602"
+    },
+    {
+      "accepted_manifest_sha256": "acc2e244e28b29cd0511497cea4124e2e43511613b2c67d959b11dd5aac21525",
+      "activation_index_byte_size": 7923717,
+      "activation_index_sha256": "29a750527e6b8bd3b8987d5a481f292280dec7e22263e292505fbce0103b711d",
+      "activation_rows_matched": 1200,
+      "chunk_count": 20,
+      "chunk_inventory_sha256": "9dff369816916da4f6ba153da84330742b67082ddaaefbb8524633dd947bfe22",
+      "episode_id": 12610,
+      "frame_count": 60,
+      "layout_id": "layout_02",
+      "maximum_x_true_blocks": -3.086767911440599,
+      "minimum_x_true_blocks": -5.920504677604512,
+      "output_bundle_root": "C:\\Users\\lollo\\MineOcclude\\docs\\status\\phase6_runtime\\person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z",
+      "source_client_tick_sha256": "00fd6cabcbdd7d14ec757e89f4c208fe3fc7d8517c74d38d57f4a3132bcb17ae",
+      "source_identity_join_pass": true,
+      "source_server_state_sha256": "63537a6ceec685e58870690479f8a9c9600bdae26ac0286547a902859f87bd97",
+      "trajectory_id": "layout_02_ep12610"
+    },
+    {
+      "accepted_manifest_sha256": "1c45fe8571792558f7fc766d88b5e176ae2ac8b6c296de13b720e8d8de156da6",
+      "activation_index_byte_size": 7895174,
+      "activation_index_sha256": "2a4b0112f648f23cbe95a50404e073fd4839280a74973273d20afaf9d5b1c683",
+      "activation_rows_matched": 1200,
+      "chunk_count": 20,
+      "chunk_inventory_sha256": "589da04d4d07b06ed4357ddb197f04c8a8580ef6799b56098d206080381f5983",
+      "episode_id": 12645,
+      "frame_count": 60,
+      "layout_id": "layout_03",
+      "maximum_x_true_blocks": -3.401916690044616,
+      "minimum_x_true_blocks": -6.628791703126696,
+      "output_bundle_root": "C:\\Users\\lollo\\MineOcclude\\docs\\status\\phase6_runtime\\person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1",
+      "source_client_tick_sha256": "7d620bf4b3f175f5ea09153c4e8b3809e864e282d9a9e89f98f80c7bdcfaaa96",
+      "source_identity_join_pass": true,
+      "source_server_state_sha256": "8e07ef03667a6e0652b0e2eda84accb70ee49a2e642133e3b625c4c861ba24f7",
+      "trajectory_id": "layout_03_ep12645"
+    },
+    {
+      "accepted_manifest_sha256": "ea3ea9d28a20f25154b7c7765eda2fe1e1a2c8b64972db37b8d22ad7bc187f6a",
+      "activation_index_byte_size": 7895174,
+      "activation_index_sha256": "a4a8b5943d2f2ad75b1e95d613ce44a6f88c9edba22f666837a671c5db1d5376",
+      "activation_rows_matched": 1200,
+      "chunk_count": 20,
+      "chunk_inventory_sha256": "8187595362f33e11f5953404b2dcc91585a2c30aeac5514cc463d3b2e1ec3e2e",
+      "episode_id": 12626,
+      "frame_count": 60,
+      "layout_id": "layout_04",
+      "maximum_x_true_blocks": -3.1454969776229413,
+      "minimum_x_true_blocks": -5.976126592802599,
+      "output_bundle_root": "C:\\Users\\lollo\\MineOcclude\\docs\\status\\phase6_runtime\\person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1",
+      "source_client_tick_sha256": "785217eea3834b7d04e5e42e1de17e411ad9f5d2c255ccb898c6977bb3984743",
+      "source_identity_join_pass": true,
+      "source_server_state_sha256": "d83d4eb0926ca589c989daf11473d54a058481790b6e5038bf451097eb720cb5",
+      "trajectory_id": "layout_04_ep12626"
+    },
+    {
+      "accepted_manifest_sha256": "88565b973285fb98aecf415b5f341a11abd037767a461a5df5447a36ddcf8d91",
+      "activation_index_byte_size": 7895174,
+      "activation_index_sha256": "32bf62d734dd2a0b8e6fee0599f28a920f7bf6d3ae9beb6b6222fdbc4321d4b3",
+      "activation_rows_matched": 1200,
+      "chunk_count": 20,
+      "chunk_inventory_sha256": "41bae266ec2deeb706c723b6f4fb07f45d26bd0e010e8f2b22c20921fd8a40d6",
+      "episode_id": 12634,
+      "frame_count": 60,
+      "layout_id": "layout_05",
+      "maximum_x_true_blocks": -1.5798347097697911,
+      "minimum_x_true_blocks": -5.16430713135784,
+      "output_bundle_root": "C:\\Users\\lollo\\MineOcclude\\docs\\status\\phase6_runtime\\person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1",
+      "source_client_tick_sha256": "8ace79eb3865c9de0537cf222c74ce3c374ff1ca48f611bb2639fdcde2247c13",
+      "source_identity_join_pass": true,
+      "source_server_state_sha256": "4cdbade4fc9e7a754b0062dd83210e459adc6af6c94330508634bcf14f35fbf3",
+      "trajectory_id": "layout_05_ep12634"
+    }
+  ]
+}
