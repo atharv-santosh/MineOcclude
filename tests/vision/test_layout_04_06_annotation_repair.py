@@ -146,7 +146,11 @@ class TestLayout0406AnnotationRepair(unittest.TestCase):
 
     def test_original_annotation_package_and_handoff_still_match(self) -> None:
         MODULE.verify_preserved_artifacts()
-        self.assertFalse(MODULE.DEFAULT_OUTPUT.exists())
+        self.assertTrue(MODULE.DEFAULT_OUTPUT.exists())
+        self.assertEqual(
+            MODULE.sha256_file(MODULE.DEFAULT_OUTPUT),
+            "9f4df0ddc91499271d556d1ece049fa246a61c1e7f410bb978ab30bfee50cda4",
+        )
 
 
 if __name__ == "__main__":
