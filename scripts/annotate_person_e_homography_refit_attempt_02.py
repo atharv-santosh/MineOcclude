@@ -40,8 +40,249 @@ EXPECTED_GEOMETRY_SHA256 = (
 )
 EXPECTED_LAYOUT_IDS = tuple(f"layout_{index:02d}" for index in range(1, 7))
 EXPECTED_FRAMEBUFFER = (1920, 1046)
-ANNOTATION_METHOD = "person-e-tkinter-manual-point-selector-v0.1"
-OUTPUT_SCHEMA_VERSION = "person-e-v0.4-image-point-annotations-attempt-02-v0.1"
+ANNOTATION_METHOD = "person-e-tkinter-manual-point-selector-v0.2"
+OUTPUT_SCHEMA_VERSION = "person-e-v0.4-image-point-annotations-attempt-02-v0.2"
+
+
+def _point(
+    source_kind: str,
+    source_id: str,
+    marker_color: str,
+    location_description: str,
+) -> dict[str, str]:
+    return {
+        "source_kind": source_kind,
+        "source_id": source_id,
+        "marker_color": marker_color,
+        "location_description": location_description,
+        "visibility_status": "visible_unambiguous",
+    }
+
+
+VISIBLE_POINT_PLAN = {
+    "layout_01": {
+        "fit": [
+            _point(
+                "marker",
+                "near_west",
+                "blue",
+                "centre of the large blue ground-marker top face at screen right, immediately below the sheep",
+            ),
+            _point(
+                "marker",
+                "near_east",
+                "yellow",
+                "centre of the large yellow ground-marker top face at screen left",
+            ),
+            _point(
+                "marker",
+                "far_east",
+                "white",
+                "centre of the small white ground-marker top face above the yellow marker at screen left",
+            ),
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_negative_end",
+                "stone_gray",
+                "right bottom corner of the gray wall where its right edge meets the near-face ground edge",
+            ),
+        ],
+        "validation": [
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_positive_end",
+                "stone_gray",
+                "left bottom corner of the gray wall where its left edge meets the near-face ground edge",
+            )
+        ],
+        "excluded_lime_reason": "far_west lime marker top-face centre is fully occluded by the wall",
+    },
+    "layout_02": {
+        "fit": [
+            _point(
+                "marker",
+                "near_west",
+                "blue",
+                "centre of the large blue ground-marker top face at screen left, immediately below the sheep",
+            ),
+            _point(
+                "marker",
+                "near_east",
+                "yellow",
+                "centre of the large yellow ground-marker top face at screen right",
+            ),
+            _point(
+                "marker",
+                "far_east",
+                "white",
+                "centre of the small white ground-marker top face above the yellow marker at screen right",
+            ),
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_negative_end",
+                "stone_gray",
+                "left bottom corner of the gray wall where its left edge meets the near-face ground edge",
+            ),
+        ],
+        "validation": [
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_positive_end",
+                "stone_gray",
+                "right bottom corner of the gray wall where its right edge meets the near-face ground edge",
+            )
+        ],
+        "excluded_lime_reason": "far_west lime marker top-face centre is occluded by the target; only a partial fragment is visible",
+    },
+    "layout_03": {
+        "fit": [
+            _point(
+                "marker",
+                "near_west",
+                "blue",
+                "centre of the large blue ground-marker top face at screen right, immediately below the sheep",
+            ),
+            _point(
+                "marker",
+                "near_east",
+                "yellow",
+                "centre of the large yellow ground-marker top face at screen left",
+            ),
+            _point(
+                "marker",
+                "far_east",
+                "white",
+                "centre of the small white ground-marker top face above the yellow marker at screen left",
+            ),
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_negative_end",
+                "stone_gray",
+                "right bottom corner of the gray wall where its right edge meets the near-face ground edge",
+            ),
+        ],
+        "validation": [
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_positive_end",
+                "stone_gray",
+                "left bottom corner of the gray wall where its left edge meets the near-face ground edge",
+            )
+        ],
+        "excluded_lime_reason": "far_west lime marker top-face centre is occluded by the target and wall; only a partial fragment is visible",
+    },
+    "layout_04": {
+        "fit": [
+            _point(
+                "marker",
+                "near_west",
+                "blue",
+                "centre of the blue ground-marker top face at screen right, immediately below the sheep",
+            ),
+            _point(
+                "marker",
+                "near_east",
+                "yellow",
+                "centre of the yellow ground-marker top face at screen left",
+            ),
+            _point(
+                "marker",
+                "far_east",
+                "white",
+                "centre of the small white ground-marker top face above the yellow marker at screen left",
+            ),
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_negative_end",
+                "stone_gray",
+                "right bottom corner of the gray wall where its right edge meets the near-face ground edge",
+            ),
+        ],
+        "validation": [
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_positive_end",
+                "stone_gray",
+                "left bottom corner of the gray wall where its left edge meets the near-face ground edge",
+            )
+        ],
+        "excluded_lime_reason": "far_west lime marker top-face centre is occluded by the target; only a narrow fragment is visible",
+    },
+    "layout_05": {
+        "fit": [
+            _point(
+                "marker",
+                "near_west",
+                "blue",
+                "centre of the large blue ground-marker top face at screen right, immediately below the sheep",
+            ),
+            _point(
+                "marker",
+                "near_east",
+                "yellow",
+                "centre of the large yellow ground-marker top face at screen left",
+            ),
+            _point(
+                "marker",
+                "far_east",
+                "white",
+                "centre of the larger lower white ground-marker top face immediately above the yellow marker at screen left",
+            ),
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_negative_end",
+                "stone_gray",
+                "right bottom corner of the gray wall where its right edge meets the near-face ground edge",
+            ),
+        ],
+        "validation": [
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_positive_end",
+                "stone_gray",
+                "left bottom corner of the gray wall where its left edge meets the near-face ground edge",
+            )
+        ],
+        "excluded_lime_reason": "far_west lime marker top-face centre is occluded by the target; only narrow lime strips are visible",
+    },
+    "layout_06": {
+        "fit": [
+            _point(
+                "marker",
+                "near_west",
+                "blue",
+                "centre of the blue ground-marker top face at screen left, immediately below the sheep",
+            ),
+            _point(
+                "marker",
+                "near_east",
+                "yellow",
+                "centre of the yellow ground-marker top face at screen right",
+            ),
+            _point(
+                "marker",
+                "far_east",
+                "white",
+                "centre of the small white ground-marker top face above the yellow marker at screen right",
+            ),
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_negative_end",
+                "stone_gray",
+                "left bottom corner of the gray wall where its left edge meets the near-face ground edge",
+            ),
+        ],
+        "validation": [
+            _point(
+                "validation_feature",
+                "wall_near_face_ground_positive_end",
+                "stone_gray",
+                "right bottom corner of the gray wall where its right edge meets the near-face ground edge",
+            )
+        ],
+        "excluded_lime_reason": "far_west lime marker top-face centre is not unambiguous because multiple comparable lime fragments are visible",
+    },
+}
 
 
 class AnnotationInputError(ValueError):
@@ -140,6 +381,101 @@ def _layouts_by_id(document: dict[str, Any], label: str) -> dict[str, dict[str, 
     return by_id
 
 
+def _world_xz_from_xyz(value: Any, label: str) -> list[float]:
+    if (
+        not isinstance(value, list)
+        or len(value) != 3
+        or any(
+            not isinstance(coordinate, (int, float))
+            or isinstance(coordinate, bool)
+            for coordinate in value
+        )
+    ):
+        raise AnnotationInputError(f"{label} must be a three-coordinate list.")
+    return [float(value[0]), float(value[2])]
+
+
+def verify_receipt_geometry(
+    receipt: dict[str, Any],
+    annotation_layout: dict[str, Any],
+    validation_layout: dict[str, Any],
+    layout_id: str,
+) -> None:
+    if receipt.get("layout_id") != layout_id:
+        raise AnnotationInputError(f"{layout_id} receipt identity changed.")
+    receipt_markers = receipt.get("markers")
+    if not isinstance(receipt_markers, list) or len(receipt_markers) != 4:
+        raise AnnotationInputError(f"{layout_id} receipt marker set is malformed.")
+    marker_by_role = {
+        marker.get("role"): marker
+        for marker in receipt_markers
+        if isinstance(marker, dict) and isinstance(marker.get("role"), str)
+    }
+    if len(marker_by_role) != 4:
+        raise AnnotationInputError(f"{layout_id} receipt marker identities changed.")
+    for point in annotation_layout["fit_correspondences"]:
+        marker = marker_by_role.get(point["marker_id"])
+        if (
+            marker is None
+            or marker.get("matches") is not True
+            or marker.get("color") != point["color"]
+            or _world_xz_from_xyz(
+                marker.get("top_face_centre_world_xyz"),
+                f"{layout_id} receipt marker {point['marker_id']}",
+            )
+            != [float(value) for value in point["world_xz_blocks"]]
+        ):
+            raise AnnotationInputError(
+                f"{layout_id} marker {point['marker_id']} disagrees with its receipt."
+            )
+
+    wall = receipt.get("wall")
+    if not isinstance(wall, dict) or wall.get("mismatches") != []:
+        raise AnnotationInputError(f"{layout_id} wall receipt is not clean.")
+    axis = wall.get("axis")
+    axis_min = wall.get("declared_axis_min_block_inclusive")
+    axis_max = wall.get("declared_axis_max_block_inclusive")
+    ortho = wall.get("ortho_block")
+    if axis not in {"X", "Z"} or any(
+        not isinstance(value, int) or isinstance(value, bool)
+        for value in (axis_min, axis_max, ortho)
+    ):
+        raise AnnotationInputError(f"{layout_id} wall receipt geometry is malformed.")
+    negative_axis = float(axis_min)
+    positive_axis = float(axis_max + 1)
+    midpoint_axis = (negative_axis + positive_axis) / 2.0
+    if axis == "X":
+        wall_world = {
+            "wall_near_face_ground_negative_end": [negative_axis, float(ortho)],
+            "wall_near_face_ground_midpoint": [midpoint_axis, float(ortho)],
+            "wall_near_face_ground_positive_end": [positive_axis, float(ortho)],
+        }
+    else:
+        wall_world = {
+            "wall_near_face_ground_negative_end": [float(ortho), negative_axis],
+            "wall_near_face_ground_midpoint": [float(ortho), midpoint_axis],
+            "wall_near_face_ground_positive_end": [float(ortho), positive_axis],
+        }
+    target = receipt.get("target")
+    if not isinstance(target, dict) or target.get("valid") is not True:
+        raise AnnotationInputError(f"{layout_id} target receipt is not valid.")
+    target_world = _world_xz_from_xyz(
+        target.get("actual_xyz"), f"{layout_id} receipt target"
+    )
+    expected_validation_world = {
+        "target_ground_contact": target_world,
+        **wall_world,
+    }
+    for point in validation_layout["validation_points"]:
+        point_id = point["point_id"]
+        if expected_validation_world.get(point_id) != [
+            float(value) for value in point["world_xz_blocks"]
+        ]:
+            raise AnnotationInputError(
+                f"{layout_id} validation point {point_id} disagrees with its receipt."
+            )
+
+
 def verify_sources(handoff_path: Path) -> dict[str, Any]:
     if not handoff_path.is_file():
         raise AnnotationInputError(f"Handoff does not exist: {handoff_path}")
@@ -186,6 +522,7 @@ def verify_sources(handoff_path: Path) -> dict[str, Any]:
 
     screenshots: list[dict[str, Any]] = []
     receipts: list[dict[str, Any]] = []
+    receipt_documents: dict[str, dict[str, Any]] = {}
     for layout_id in EXPECTED_LAYOUT_IDS:
         handoff_layout = handoff_layouts[layout_id]
         screenshot = verify_file_record(
@@ -195,6 +532,13 @@ def verify_sources(handoff_path: Path) -> dict[str, Any]:
         )
         receipt = verify_file_record(
             handoff_layout.get("geometry_receipt"), f"{layout_id} geometry receipt"
+        )
+        receipt_document = load_json(Path(receipt["path"]))
+        verify_receipt_geometry(
+            receipt_document,
+            annotation_layouts[layout_id],
+            validation_layouts[layout_id],
+            layout_id,
         )
         for template_name, template_layout in (
             ("annotation", annotation_layouts[layout_id]),
@@ -245,6 +589,7 @@ def verify_sources(handoff_path: Path) -> dict[str, Any]:
             )
         screenshots.append({"layout_id": layout_id, **screenshot})
         receipts.append({"layout_id": layout_id, **receipt})
+        receipt_documents[layout_id] = receipt_document
 
     return {
         "handoff": handoff,
@@ -260,10 +605,29 @@ def verify_sources(handoff_path: Path) -> dict[str, Any]:
         "coordinate_convention_record": coordinate_record,
         "screenshots": screenshots,
         "receipts": receipts,
+        "receipt_documents": receipt_documents,
     }
 
 
-def build_tasks(verified: dict[str, Any]) -> list[dict[str, Any]]:
+def _fit_world_points_are_valid(points: list[list[float]]) -> bool:
+    if len(points) != 4 or len({tuple(point) for point in points}) != 4:
+        return False
+    for first in range(4):
+        for second in range(first + 1, 4):
+            for third in range(second + 1, 4):
+                ax, az = points[first]
+                bx, bz = points[second]
+                cx, cz = points[third]
+                twice_area = (bx - ax) * (cz - az) - (bz - az) * (cx - ax)
+                if abs(twice_area) <= 1e-12:
+                    return False
+    return True
+
+
+def build_tasks(
+    verified: dict[str, Any],
+    point_plan: dict[str, dict[str, Any]] = VISIBLE_POINT_PLAN,
+) -> list[dict[str, Any]]:
     annotation_layouts = _layouts_by_id(
         verified["annotation_template"], "annotation template"
     )
@@ -271,35 +635,130 @@ def build_tasks(verified: dict[str, Any]) -> list[dict[str, Any]]:
         verified["validation_template"], "validation template"
     )
     screenshots = {row["layout_id"]: row for row in verified["screenshots"]}
+    if tuple(sorted(point_plan)) != EXPECTED_LAYOUT_IDS:
+        raise AnnotationInputError("Visibility plan layout identities changed.")
     tasks: list[dict[str, Any]] = []
     for layout_id in EXPECTED_LAYOUT_IDS:
-        for point in annotation_layouts[layout_id]["fit_correspondences"]:
-            tasks.append(
-                {
-                    "layout_id": layout_id,
-                    "kind": "fit_marker",
-                    "point_id": point["marker_id"],
-                    "feature": (
-                        f"{point['color']} marker top-face centre "
-                        f"({point['marker_id']})"
-                    ),
-                    "world_xz_blocks": point["world_xz_blocks"],
-                    "source_point": dict(point),
-                    "screenshot": screenshots[layout_id],
-                }
+        marker_by_id = {
+            point["marker_id"]: point
+            for point in annotation_layouts[layout_id]["fit_correspondences"]
+        }
+        validation_by_id = {
+            point["point_id"]: point
+            for point in validation_layouts[layout_id]["validation_points"]
+        }
+        layout_plan = point_plan[layout_id]
+        if (
+            not isinstance(layout_plan.get("excluded_lime_reason"), str)
+            or not layout_plan["excluded_lime_reason"].strip()
+        ):
+            raise AnnotationInputError(
+                f"{layout_id} must document the excluded lime marker."
             )
-        for point in validation_layouts[layout_id]["validation_points"]:
-            tasks.append(
-                {
-                    "layout_id": layout_id,
-                    "kind": "independent_validation",
-                    "point_id": point["point_id"],
-                    "feature": point["feature"],
-                    "world_xz_blocks": point["world_xz_blocks"],
-                    "source_point": dict(point),
-                    "screenshot": screenshots[layout_id],
-                }
+        fit_plan = layout_plan.get("fit")
+        validation_plan = layout_plan.get("validation")
+        if not isinstance(fit_plan, list) or len(fit_plan) != 4:
+            raise AnnotationInputError(
+                f"{layout_id} visibility preflight requires four fit points."
             )
+        if not isinstance(validation_plan, list) or not validation_plan:
+            raise AnnotationInputError(
+                f"{layout_id} visibility preflight requires validation points."
+            )
+        layout_tasks: list[dict[str, Any]] = []
+        for kind, planned_points in (
+            ("fit_correspondence", fit_plan),
+            ("independent_validation", validation_plan),
+        ):
+            for plan_point in planned_points:
+                if not isinstance(plan_point, dict):
+                    raise AnnotationInputError(
+                        f"{layout_id} visibility-plan point is malformed."
+                    )
+                if plan_point.get("visibility_status") != "visible_unambiguous":
+                    raise AnnotationInputError(
+                        f"{layout_id} requested point {plan_point.get('source_id')} "
+                        "is not visible and unambiguous."
+                    )
+                if any(
+                    not isinstance(plan_point.get(field), str)
+                    or not plan_point[field].strip()
+                    for field in (
+                        "source_kind",
+                        "source_id",
+                        "marker_color",
+                        "location_description",
+                    )
+                ):
+                    raise AnnotationInputError(
+                        f"{layout_id} visibility-plan description is incomplete."
+                    )
+                source_kind = plan_point["source_kind"]
+                source_id = plan_point["source_id"]
+                if source_kind == "marker":
+                    source_point = marker_by_id.get(source_id)
+                    if (
+                        source_point is None
+                        or source_point["color"] != plan_point["marker_color"]
+                    ):
+                        raise AnnotationInputError(
+                            f"{layout_id} marker {source_id} is not source-authorized."
+                        )
+                    feature = f"{source_point['color']} marker top-face centre"
+                elif source_kind == "validation_feature":
+                    source_point = validation_by_id.get(source_id)
+                    if source_point is None:
+                        raise AnnotationInputError(
+                            f"{layout_id} feature {source_id} is not source-authorized."
+                        )
+                    feature = source_point["feature"]
+                else:
+                    raise AnnotationInputError(
+                        f"{layout_id} point {source_id} has an unknown source kind."
+                    )
+                layout_tasks.append(
+                    {
+                        "layout_id": layout_id,
+                        "kind": kind,
+                        "point_id": source_id,
+                        "marker_color": plan_point["marker_color"],
+                        "location_description": plan_point[
+                            "location_description"
+                        ],
+                        "visibility_status": plan_point["visibility_status"],
+                        "feature": feature,
+                        "world_xz_blocks": source_point["world_xz_blocks"],
+                        "source_kind": source_kind,
+                        "source_point": dict(source_point),
+                        "screenshot": screenshots[layout_id],
+                    }
+                )
+        point_ids = [task["point_id"] for task in layout_tasks]
+        if len(point_ids) != len(set(point_ids)):
+            raise AnnotationInputError(
+                f"{layout_id} fit and validation point identities overlap."
+            )
+        fit_tasks = [
+            task for task in layout_tasks if task["kind"] == "fit_correspondence"
+        ]
+        if {task["point_id"] for task in fit_tasks if task["source_kind"] == "marker"} != {
+            "near_west",
+            "near_east",
+            "far_east",
+        }:
+            raise AnnotationInputError(
+                f"{layout_id} visible marker selection changed."
+            )
+        if not _fit_world_points_are_valid(
+            [
+                [float(value) for value in task["world_xz_blocks"]]
+                for task in fit_tasks
+            ]
+        ):
+            raise AnnotationInputError(
+                f"{layout_id} fit world points are duplicate or collinear."
+            )
+        tasks.extend(layout_tasks)
     return tasks
 
 
@@ -322,8 +781,14 @@ def build_output_document(
     tasks: list[dict[str, Any]],
     selections: list[tuple[int, int]],
 ) -> dict[str, Any]:
-    if len(tasks) != 48 or len(selections) != len(tasks):
-        raise AnnotationInputError("All 48 fit and validation points are required.")
+    expected_task_count = sum(
+        len(layout_plan["fit"]) + len(layout_plan["validation"])
+        for layout_plan in VISIBLE_POINT_PLAN.values()
+    )
+    if len(tasks) != expected_task_count or len(selections) != len(tasks):
+        raise AnnotationInputError(
+            f"All {expected_task_count} visible fit and validation points are required."
+        )
     layouts: dict[str, dict[str, Any]] = {}
     for task, image_xy in zip(tasks, selections):
         width = task["screenshot"]["width_pixels"]
@@ -342,14 +807,26 @@ def build_output_document(
         )
         record = dict(task["source_point"])
         record["point_id"] = task["point_id"]
+        record["source_kind"] = task["source_kind"]
+        record["marker_color"] = task["marker_color"]
+        record["location_description"] = task["location_description"]
+        record["visibility_status"] = task["visibility_status"]
         record["image_xy_pixels"] = [x, y]
         record["selection_status"] = "operator_selected"
         destination = (
             "fit_correspondences"
-            if task["kind"] == "fit_marker"
+            if task["kind"] == "fit_correspondence"
             else "independent_validation_points"
         )
         layout[destination].append(record)
+
+    for layout_id, layout in layouts.items():
+        if len(layout["fit_correspondences"]) != 4:
+            raise AnnotationInputError(f"{layout_id} does not have four fit points.")
+        if not layout["independent_validation_points"]:
+            raise AnnotationInputError(
+                f"{layout_id} has no independent validation points."
+            )
 
     return {
         "schema_version": "1.0",
@@ -370,10 +847,25 @@ def build_output_document(
             "algorithm_id": ANNOTATION_METHOD,
             "selection": "manual_left_click_on_original_resolution_pixels",
             "coordinate_transform": "none",
-            "fit_point_definition": "rendered_marker_top_face_centre",
+            "fit_point_definition": (
+                "receipt_authorized_visible_ground_plane_feature"
+            ),
             "validation_point_definitions_source": verified[
                 "validation_template_record"
             ],
+            "visibility_preflight": {
+                "status": "passed",
+                "basis": (
+                    "manual_visibility_review_bound_to_exact_screenshot_sha256"
+                ),
+                "fully_occluded_or_ambiguous_points_requested": 0,
+                "excluded_lime_markers": {
+                    layout_id: VISIBLE_POINT_PLAN[layout_id][
+                        "excluded_lime_reason"
+                    ]
+                    for layout_id in EXPECTED_LAYOUT_IDS
+                },
+            },
             "operator_final_confirmation": True,
         },
         "source_verification": {
@@ -481,8 +973,10 @@ class AnnotationWindow:
             self.canvas.yview_moveto(0.0)
         self.prompt.configure(
             text=(
-                f"Point {self.task_index + 1}/48 | {task['layout_id']} | "
-                f"{task['kind']} | {task['feature']} | "
+                f"Point {self.task_index + 1}/{len(self.tasks)} | "
+                f"layout={task['layout_id']} | {task['kind']} | "
+                f"color={task['marker_color']} | "
+                f"location={task['location_description']} | "
                 f"world_xz={task['world_xz_blocks']}"
             )
         )
@@ -496,7 +990,11 @@ class AnnotationWindow:
         ):
             if task["layout_id"] != self.loaded_layout_id:
                 continue
-            colour = "#00ffff" if task["kind"] == "fit_marker" else "#ff4040"
+            colour = (
+                "#00ffff"
+                if task["kind"] == "fit_correspondence"
+                else "#ff4040"
+            )
             self.canvas.create_line(x - 10, y, x + 10, y, fill=colour, width=2)
             self.canvas.create_line(x, y - 10, x, y + 10, fill=colour, width=2)
             self.canvas.create_text(
@@ -535,7 +1033,8 @@ class AnnotationWindow:
     def _finish(self) -> None:
         confirmed = self.messagebox.askyesno(
             "Confirm annotation",
-            "All 48 points are selected. Write the immutable create-only output?",
+            f"All {len(self.tasks)} points are selected. "
+            "Write the immutable create-only output?",
         )
         if not confirmed:
             self._undo()
@@ -591,12 +1090,29 @@ def main() -> None:
         )
     verified = verify_sources(args.handoff.resolve())
     tasks = build_tasks(verified)
-    if len(tasks) != 48:
-        raise AnnotationInputError(f"Expected 48 annotation tasks, got {len(tasks)}.")
+    expected_tasks = 5 * len(EXPECTED_LAYOUT_IDS)
+    if len(tasks) != expected_tasks:
+        raise AnnotationInputError(
+            f"Expected {expected_tasks} visible annotation tasks, got {len(tasks)}."
+        )
     if args.verify_only:
         print("C_HANDOFF_VALID=True")
         print("SIX_SCREENSHOTS_VALID=True")
         print("SIX_GEOMETRY_RECEIPTS_VALID=True")
+        print("VISIBILITY_PREFLIGHT_READY=True")
+        for layout_id in EXPECTED_LAYOUT_IDS:
+            layout_tasks = [task for task in tasks if task["layout_id"] == layout_id]
+            fit_count = sum(
+                task["kind"] == "fit_correspondence" for task in layout_tasks
+            )
+            validation_count = sum(
+                task["kind"] == "independent_validation" for task in layout_tasks
+            )
+            print(f"{layout_id.upper()}_VISIBLE_FIT_POINT_COUNT={fit_count}")
+            print(
+                f"{layout_id.upper()}_VISIBLE_VALIDATION_POINT_COUNT="
+                f"{validation_count}"
+            )
         print(f"ANNOTATION_TASK_COUNT={len(tasks)}")
         return
     AnnotationWindow(verified, output_path).run()

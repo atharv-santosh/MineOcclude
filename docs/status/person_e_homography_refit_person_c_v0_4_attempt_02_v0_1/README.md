@@ -11,9 +11,12 @@ Run this one command from any directory:
 python C:\Users\lollo\MineOcclude-Person-E-Refit\scripts\annotate_person_e_homography_refit_attempt_02.py
 ```
 
-The window prompts for four fit-marker centres and four independent validation
-points on each of the six original-resolution screenshots. The result is
-written once to:
+The visibility-fixed window prompts for three visible marker centres plus one
+visible wall endpoint for fitting, and the opposite visible wall endpoint for
+independent validation, on each of the six original-resolution screenshots.
+It never requests a lime marker centre. Every prompt includes the layout,
+color, visible location description, and receipt-authorized world coordinates.
+The result is written once to:
 
 `C:\Users\lollo\MineOcclude-Person-E-Refit\data\handoff_e\person_e_v0_4_homography_refit_v0_1\person_e_attempt_02_image_points_v0_1.json`
 

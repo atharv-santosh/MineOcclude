@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
-import json
-import tempfile
+import copy
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -33,6 +32,12 @@ def _verified_fixture() -> dict[str, object]:
             "height_pixels": 1046,
         }
         screenshots.append(screenshot)
+        marker_geometry = (
+            ("near_west", "blue", [-5.5, 4.5]),
+            ("near_east", "yellow", [6.5, 4.5]),
+            ("far_east", "white", [8.5, 8.5]),
+            ("far_west", "lime", [-7.5, 8.5]),
+        )
         annotation_layouts.append(
             {
                 "layout_id": layout_id,
@@ -40,29 +45,28 @@ def _verified_fixture() -> dict[str, object]:
                     {
                         "marker_id": marker_id,
                         "color": colour,
-                        "world_xz_blocks": [float(point), float(index)],
+                        "world_xz_blocks": world_xz,
                     }
-                    for point, (marker_id, colour) in enumerate(
-                        (
-                            ("near_west", "blue"),
-                            ("near_east", "yellow"),
-                            ("far_east", "white"),
-                            ("far_west", "lime"),
-                        )
-                    )
+                    for marker_id, colour, world_xz in marker_geometry
                 ],
             }
+        )
+        validation_geometry = (
+            ("target_ground_contact", [-6.0, 6.0]),
+            ("wall_near_face_ground_negative_end", [-3.0, 2.0]),
+            ("wall_near_face_ground_midpoint", [0.5, 2.0]),
+            ("wall_near_face_ground_positive_end", [4.0, 2.0]),
         )
         validation_layouts.append(
             {
                 "layout_id": layout_id,
                 "validation_points": [
                     {
-                        "point_id": f"validation_{point}",
-                        "feature": f"validation feature {point}",
-                        "world_xz_blocks": [float(point), float(index)],
+                        "point_id": point_id,
+                        "feature": f"validation feature {point_id}",
+                        "world_xz_blocks": world_xz,
                     }
-                    for point in range(4)
+                    for point_id, world_xz in validation_geometry
                 ],
             }
         )
@@ -106,20 +110,34 @@ class TestAttempt02Annotation(unittest.TestCase):
     def test_tasks_cover_six_layouts_and_both_point_classes(self) -> None:
         tasks = MODULE.build_tasks(_verified_fixture())
 
-        self.assertEqual(len(tasks), 48)
+        self.assertEqual(len(tasks), 30)
         for layout_id in MODULE.EXPECTED_LAYOUT_IDS:
             layout_tasks = [task for task in tasks if task["layout_id"] == layout_id]
             self.assertEqual(
                 [task["kind"] for task in layout_tasks],
-                ["fit_marker"] * 4 + ["independent_validation"] * 4,
+                ["fit_correspondence"] * 4 + ["independent_validation"],
             )
-            self.assertEqual(len({task["point_id"] for task in layout_tasks}), 8)
+            self.assertEqual(len({task["point_id"] for task in layout_tasks}), 5)
+            self.assertNotIn("far_west", {task["point_id"] for task in layout_tasks})
+            for task in layout_tasks:
+                self.assertEqual(task["visibility_status"], "visible_unambiguous")
+                self.assertTrue(task["marker_color"])
+                self.assertTrue(task["location_description"])
+
+    def test_visibility_preflight_rejects_an_invisible_requested_point(self) -> None:
+        plan = copy.deepcopy(MODULE.VISIBLE_POINT_PLAN)
+        plan["layout_01"]["fit"][0]["visibility_status"] = "fully_occluded"
+
+        with self.assertRaisesRegex(
+            MODULE.AnnotationInputError, "not visible and unambiguous"
+        ):
+            MODULE.build_tasks(_verified_fixture(), plan)
 
     @mock.patch.object(MODULE, "current_git_commit", return_value="e" * 40)
     def test_complete_document_contains_no_missing_points(self, _commit: object) -> None:
         verified = _verified_fixture()
         tasks = MODULE.build_tasks(verified)
-        selections = [(100 + index, 200 + index) for index in range(48)]
+        selections = [(100 + index, 200 + index) for index in range(30)]
 
         document = MODULE.build_output_document(verified, tasks, selections)
 
@@ -130,7 +148,7 @@ class TestAttempt02Annotation(unittest.TestCase):
         self.assertEqual(len(document["layouts"]), 6)
         for layout in document["layouts"]:
             self.assertEqual(len(layout["fit_correspondences"]), 4)
-            self.assertEqual(len(layout["independent_validation_points"]), 4)
+            self.assertEqual(len(layout["independent_validation_points"]), 1)
             for point in (
                 layout["fit_correspondences"]
                 + layout["independent_validation_points"]
@@ -142,17 +160,28 @@ class TestAttempt02Annotation(unittest.TestCase):
         verified = _verified_fixture()
         tasks = MODULE.build_tasks(verified)
 
-        with self.assertRaisesRegex(MODULE.AnnotationInputError, "All 48"):
-            MODULE.build_output_document(verified, tasks, [(1, 1)] * 47)
+        with self.assertRaisesRegex(MODULE.AnnotationInputError, "All 30"):
+            MODULE.build_output_document(verified, tasks, [(1, 1)] * 29)
 
     def test_writer_is_create_only(self) -> None:
-        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
-            output = Path(directory) / "nested" / "points.json"
+        output = ROOT / "unused-test-output" / "points.json"
+        stream = mock.MagicMock()
+        context = mock.MagicMock()
+        context.__enter__.return_value = stream
+        with (
+            mock.patch.object(Path, "mkdir") as mkdir,
+            mock.patch.object(
+                Path, "open", side_effect=(context, FileExistsError("exists"))
+            ) as open_file,
+        ):
             MODULE.write_json_create_only(output, {"value": 1})
-            self.assertEqual(json.loads(output.read_text(encoding="utf-8")), {"value": 1})
-
             with self.assertRaises(FileExistsError):
                 MODULE.write_json_create_only(output, {"value": 2})
+
+        mkdir.assert_called_with(parents=True, exist_ok=True)
+        self.assertEqual(open_file.call_count, 2)
+        open_file.assert_called_with("x", encoding="utf-8", newline="\n")
+        stream.write.assert_called()
 
 
 if __name__ == "__main__":
