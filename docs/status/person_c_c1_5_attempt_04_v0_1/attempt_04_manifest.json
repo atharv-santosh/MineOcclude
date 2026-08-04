@@ -1,0 +1,204 @@
+{
+  "schema_version": "person-c-c1.5-first-operator-attempt-04-manifest-v0.1",
+  "status": "READY_FOR_FINAL_MANUAL_RUNTIME_RETRY",
+  "runtime_executed_by_preparation": false,
+  "source_commit": "a2c1544a528ed0b96bea6d1213f1d79ceb508dc0",
+  "accepted_geometry": {
+    "path": "configs/scenes/layouts_v0_4.yaml",
+    "size_bytes": 45279,
+    "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "git_blob": "4b441a40379fcd9af2fdd6ea43a3ac3417f7cb1e"
+  },
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "layout_id": "layout_01",
+  "spawn_animals": false,
+  "mineocclude_jar": {
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\artifacts\\mineocclude-0.1.1-538a176e1c83dc3b40e220dee8ebb2ac841bd9b4.jar",
+    "size_bytes": 84102,
+    "sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+  },
+  "historical_attempts": {
+    "attempt_01": {
+      "failure_record": {
+        "path": "docs/status/person_c_c1_5_attempt_02_v0_1/attempt_01_failure_record.json",
+        "size_bytes": 12616,
+        "sha256": "32ae9707a727777ec261655ae5828266fb0efc1a33cfb7df0942041d706529b6",
+        "git_blob": "aabc78d7591bd7361262b60056348aa4f61e8e78"
+      },
+      "preserved": true
+    },
+    "attempt_02": {
+      "failure_record": {
+        "path": "docs/status/person_c_c1_5_attempt_03_v0_1/attempt_02_failure_record.json",
+        "size_bytes": 13916,
+        "sha256": "22f21e5518e762fd4518cfc6b54cccaa9847a97c04437d61e7061aadfcb8fc61",
+        "git_blob": "77ee17a7f729e012a0ebf35619bf419942604317"
+      },
+      "preserved": true
+    },
+    "attempt_03": {
+      "failure_record": {
+        "path": "docs/status/person_c_c1_5_attempt_04_v0_1/attempt_03_failure_record.json",
+        "size_bytes": 12008,
+        "sha256": "2c42a8960d7845f67669b393144f4aae6a303357bc93a1dd18436ac2dfec99ff"
+      },
+      "preserved": true,
+      "classification": "GEOMETRY_RECEIPT_VALID_BUT_SCREENSHOT_AND_ABORT_OCCURRED_AFTER_RECORDING_STARTED"
+    }
+  },
+  "reserved_second_operator": {
+    "episode_id": 11502,
+    "seed": 202608031502,
+    "schedule": {
+      "path": "configs/collection/person_c_c1_5_v0_2/schedules/episode_11502.jsonl",
+      "size_bytes": 3380,
+      "sha256": "b399dd08b7e2dcdecc136400cb47afa680995edf04239f3a79e36bcc688655c7",
+      "git_blob": "b7b290a8febdc12c621d2e71809e89859ddf1068"
+    },
+    "still_required": true,
+    "reused_for_retry": false
+  },
+  "retry": {
+    "attempt": 4,
+    "operator_role": "first",
+    "episode_id": 11505,
+    "seed": 202608031505,
+    "layout_id": "layout_01",
+    "geometry_version": "person-c-layout-config-v0.4",
+    "mode": "normal",
+    "duration": 0,
+    "reveal": 0,
+    "impulse": [
+      -1,
+      0
+    ],
+    "lockcam": "on",
+    "warmup_ticks": 12000,
+    "observation_window_seconds": 600,
+    "record_ticks": 20,
+    "schedule": {
+      "episode_id": 11505,
+      "seed": 202608031505,
+      "q": 0.0,
+      "n_draws": 20,
+      "dt_seconds": 0.05,
+      "repository": {
+        "path": "configs/collection/person_c_c1_5_attempt_04_v0_1/schedules/episode_11505.jsonl",
+        "size_bytes": 3371,
+        "sha256": "7c907b9d8cec0100c418879eceb706f66b6d3c77785fb101ea169d48bfbb1580"
+      },
+      "runtime": {
+        "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_schedules\\episode_11505.jsonl",
+        "size_bytes": 3371,
+        "sha256": "7c907b9d8cec0100c418879eceb706f66b6d3c77785fb101ea169d48bfbb1580"
+      }
+    },
+    "ordered_start_commands": [
+      "mineocclude mode normal",
+      "mineocclude duration 0",
+      "mineocclude reveal 0",
+      "mineocclude impulse -1 0",
+      "mineocclude lockcam on",
+      "mineocclude warmup 12000",
+      "mineocclude start layout_01 11505 202608031505 0.0 0.0 20"
+    ],
+    "start_command": "mineocclude start layout_01 11505 202608031505 0.0 0.0 20",
+    "wait_seconds_before_status": 10,
+    "target_status_command": "mineocclude targetstatus",
+    "required_target_status": "valid=true required=true count=1 lifecycle=READY problems=NONE",
+    "observe_command": "mineocclude observegeometry c1_5_first_operator_attempt_04_layout_01",
+    "stop_command": "mineocclude stop",
+    "operator_must_not_wait_for_recording": true,
+    "warning": "Wait only for the receipt-written confirmation; F2 and stop must both occur before recording."
+  },
+  "runtime_paths": {
+    "geometry_receipt": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_5_first_operator_attempt_04_layout_01.json",
+    "screenshot": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\first_operator_attempt_04_layout_01.png",
+    "attestation": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_04_attestation.json",
+    "ingested_output": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_04_ingested.json",
+    "server_episode_output_guard": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_11505",
+    "client_episode_output_guard": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_11505"
+  },
+  "attestation_contract": {
+    "schema_version": "person-c-c1.5-operator-attestation-v0.5",
+    "required_fields": [
+      "schema_version",
+      "template",
+      "operator_role",
+      "attempt",
+      "operator_id",
+      "independent_from_first_operator",
+      "utc_start",
+      "utc_end",
+      "package_source_commit",
+      "preparation_commit",
+      "source_commit",
+      "runtime_source_commit",
+      "mineocclude_jar_sha256",
+      "accepted_geometry_version",
+      "accepted_geometry_sha256",
+      "layout_id",
+      "episode_id",
+      "seed",
+      "warmup_ticks",
+      "observed_account_name",
+      "fresh_runtime_session",
+      "all_runbook_steps_performed_without_memory_or_prior_artifact_reuse",
+      "targetstatus_passed_after_ten_seconds",
+      "observegeometry_completed_during_warmup_before_recording",
+      "receipt_write_confirmed_before_f2",
+      "f2_pressed_immediately_after_receipt_confirmation",
+      "mineocclude_stop_issued_immediately_after_f2",
+      "screenshot_from_same_session",
+      "server_stopped_cleanly",
+      "notes"
+    ],
+    "attempt_specific_fields": [
+      "template",
+      "operator_role",
+      "attempt",
+      "independent_from_first_operator",
+      "targetstatus_passed_after_ten_seconds",
+      "observegeometry_completed_during_warmup_before_recording",
+      "receipt_write_confirmed_before_f2",
+      "f2_pressed_immediately_after_receipt_confirmation",
+      "mineocclude_stop_issued_immediately_after_f2"
+    ],
+    "identity_source_account_time_fresh_run_fields_present": true,
+    "generic_template_forbidden": true,
+    "single_yes_confirmation_populates_completed_attestation": true
+  },
+  "ingestion_validator": {
+    "path": "scripts/person_c/ingest_c1_5_attempt_04_runtime.py",
+    "size_bytes": 20363,
+    "sha256": "5c2e7aa3155757a1e3e6934cbd9d05246800f1905f27b572d61506e8cd63a2ff",
+    "git_blob": "4a91d98d55e5e7e1ce289b047e2fc5809af1d307"
+  },
+  "ingestion_command": "python scripts/person_c/ingest_c1_5_attempt_04_runtime.py --geometry-receipt \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_5_first_operator_attempt_04_layout_01.json\" --screenshot \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\first_operator_attempt_04_layout_01.png\" --attestation \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_04_attestation.json\" --output \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\first_operator_attempt_04_ingested.json\"",
+  "finalization": {
+    "script": {
+      "path": "scripts/person_c/finalize-c1-5-attempt-04.ps1",
+      "size_bytes": 12715,
+      "sha256": "8371709870095363747f8be459f526aafeddef3ef652024d7120ed4df010c24c",
+      "git_blob": "57d40a2d745cd12c40a189bfa287db69bc178919"
+    },
+    "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A\\scripts\\person_c\\finalize-c1-5-attempt-04.ps1\"",
+    "one_yes_confirmation": true,
+    "creates_attestation_without_post_session_json_editing": true,
+    "validates_before_ingestion": true,
+    "bounded_final_report": true,
+    "preparation_commit_derived_from_git_and_required_as_head_ancestor": true
+  },
+  "server_start_command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\start-mineocclude-server.ps1\"",
+  "collision_audit": {
+    "candidate_episode_id": 11505,
+    "candidate_seed": 202608031505,
+    "repository_schedule_collision": false,
+    "runtime_identity_collision": false,
+    "create_only_output_collision": false,
+    "reserved_second_operator_unchanged": true
+  },
+  "c1_5_complete": false,
+  "independent_second_operator_still_required": true
+}
