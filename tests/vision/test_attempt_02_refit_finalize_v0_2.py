@@ -155,6 +155,20 @@ class TestAttempt02RefitFinalizeV02(unittest.TestCase):
             MODULE.sha256_file(MODULE.V1_HANDOFF), MODULE.V1_HANDOFF_SHA256
         )
 
+    def test_emitted_package_inventory_schema_and_handoff_validate(self) -> None:
+        result = MODULE.validate_emitted_package()
+        manifest = MODULE.load_json(MODULE.PACKAGE_DIR / "package_manifest.json")
+        handoff = MODULE.load_json(
+            MODULE.PACKAGE_DIR / "person_e_to_person_c_refit_handoff.json"
+        )
+        self.assertEqual(result["package_manifest_sha256"], MODULE.sha256_file(
+            MODULE.PACKAGE_DIR / "package_manifest.json"
+        ))
+        self.assertEqual(manifest["schema_version"], MODULE.PACKAGE_SCHEMA_VERSION)
+        self.assertEqual(handoff["schema_version"], MODULE.HANDOFF_SCHEMA_VERSION)
+        self.assertTrue(handoff["c6a_execution_authorized"])
+        self.assertFalse(handoff["c6a_executed"])
+
 
 if __name__ == "__main__":
     unittest.main()
