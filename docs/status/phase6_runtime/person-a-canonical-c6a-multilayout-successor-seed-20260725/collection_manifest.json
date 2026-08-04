@@ -1,0 +1,906 @@
+{
+  "activation_chunk_count": 100,
+  "activation_index_count": 5,
+  "activation_row_count": 6000,
+  "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+  "collection_contract": {
+    "index_semantics": "five_independent_immutable_person_a_activation_index_v2_documents",
+    "logical_order_is_not_a_physical_index": true,
+    "physical_combined_index_created": false
+  },
+  "external_activation_inventory": {
+    "path": "external_activation_inventory.json",
+    "sha256": "342807be961eb9734bcc6ee935906a98bda7d44ed6d2f6fcf7691169dba0df02"
+  },
+  "immutable": true,
+  "input_bundle_manifest": {
+    "path": "/home/sagemaker-user/MineOcclude/data/handoff_a/person_a_canonical_c6a_multilayout_sagemaker_input_v0_1/bundle_manifest.json",
+    "sha256": "ff7801c1a331f173bc5fc197454889b72d8554a8e31b5a88731de8eb7d9ed987"
+  },
+  "layout_count": 5,
+  "logical_order": [
+    {
+      "activation_index_sha256": "a6ba07a50ff20e9b90f0b036a0acd18783bad4fa3aacbebc0dd70df825f00a27",
+      "logical_row_start_inclusive": 0,
+      "logical_row_stop_exclusive": 1200,
+      "trajectory_id": "layout_01_ep12602"
+    },
+    {
+      "activation_index_sha256": "29a750527e6b8bd3b8987d5a481f292280dec7e22263e292505fbce0103b711d",
+      "logical_row_start_inclusive": 1200,
+      "logical_row_stop_exclusive": 2400,
+      "trajectory_id": "layout_02_ep12610"
+    },
+    {
+      "activation_index_sha256": "2a4b0112f648f23cbe95a50404e073fd4839280a74973273d20afaf9d5b1c683",
+      "logical_row_start_inclusive": 2400,
+      "logical_row_stop_exclusive": 3600,
+      "trajectory_id": "layout_03_ep12645"
+    },
+    {
+      "activation_index_sha256": "a4a8b5943d2f2ad75b1e95d613ce44a6f88c9edba22f666837a671c5db1d5376",
+      "logical_row_start_inclusive": 3600,
+      "logical_row_stop_exclusive": 4800,
+      "trajectory_id": "layout_04_ep12626"
+    },
+    {
+      "activation_index_sha256": "32bf62d734dd2a0b8e6fee0599f28a920f7bf6d3ae9beb6b6222fdbc4321d4b3",
+      "logical_row_start_inclusive": 4800,
+      "logical_row_stop_exclusive": 6000,
+      "trajectory_id": "layout_05_ep12634"
+    }
+  ],
+  "no_missing_extra_duplicate_stale_or_reordered_rows": true,
+  "person_a_to_person_b_handoff": {
+    "path": "person_a_to_person_b_canonical_multilayout_handoff.json",
+    "sha256": "9d932df3aec859b17a4bbdd2afaa31d81dcb21c2bb62db668ed4158cbb855d94"
+  },
+  "person_a_to_person_e_handoff": {
+    "path": "person_a_to_person_e_canonical_multilayout_handoff.json",
+    "sha256": "75d35991f34dabc3851dd2e31dc9e2b2912fa66a776034b7ecb7932bc854575b"
+  },
+  "runs": [
+    {
+      "a_to_b_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/person_a_to_person_b_canonical_pilot_handoff.json",
+        "sha256": "da875c21a2875338eb432ba85f0c185ee02f4676178b3a3487fe95b55f4c50da"
+      },
+      "a_to_e_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/person_a_to_person_e_canonical_provenance_handoff.json",
+        "sha256": "7414956699d9d37f0b4b486b7c800ff2482b453ffd634cb2bf99d92bcb042cfe"
+      },
+      "accepted_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/accepted_pilot_manifest.json",
+        "sha256": "e6716f4fbe015ebb098da2a6fb800c636cc9eac1a56dcbe1d7543ab377c7a40d"
+      },
+      "activation_artifacts": [
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-0bc0f1935461a693345e6bb8.npy",
+          "sha256": "6f4f3a71563f98652b2694aeb4b91f54ff0f7415f1548b8f3253c45cb65efd8f",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-14d896114ee28d10b6081722.npy",
+          "sha256": "699792b47e228b6e437a25f85822d9d48fc68e27e625913202216d6e1b378bae",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-22e4778d21d31fd504cb41f6.npy",
+          "sha256": "4b0f0ea01902096c7597b73ff34f3321f036dd5673715b409358f5f3398487ed",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-2b46a6bd55469e6e0103767b.npy",
+          "sha256": "d9e06409e84b3ef42e30f444253b3e58ff027d2f0b6446d5686f0cb9b10ca357",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-2bb4694dd1e939409c69640a.npy",
+          "sha256": "7cf82caa1ccb35e38f7b1281661406024aee20aa949b617ab92b0bd836870e0e",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-4162384d998a41fc8a5b465f.npy",
+          "sha256": "6ff413f5fb45fd981fd6a0ef65e6cbf3d3803749569a5a078fa70ac5d7c686ea",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-4da1c7cc92fb5c5231cf1ebe.npy",
+          "sha256": "1253afb66c494e3c731e273d7b81a41f9d53f0c147a4301d849f87afe4aade46",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-5ad288ff5fb4d9c1787cb869.npy",
+          "sha256": "940ec8545b2494ef516dbd7f6fb5514eedd4afb758e2298ef0aa25e383701c2c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-686ef00f6eeb994377d9892c.npy",
+          "sha256": "73d9fe5970754a871593e73d5f42f737689462f00d30d8bc15b267d1ef748dec",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-9e1a99a506ea660426bec312.npy",
+          "sha256": "ff8c0106ab603424688d1438ef8ac3ea1beaa05bba12753cb4e715eeb7ba7fb1",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-a6553385e8637d758e7f1dd8.npy",
+          "sha256": "fb190c3d63410129a95aca13992f8f8cff44a45097bfc4566b4f21e1d85e9351",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-abcd33c7acc0f0a79e6d0cfe.npy",
+          "sha256": "39409c3b5708c4c90457f70086082f8fb20a8a44982e6438ed55a432012d1ccb",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-be404edf0135670164d3a4df.npy",
+          "sha256": "7283b09f3666281f0722d00e1728102340784cc07766c142096d88ec6258ff0a",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-c3b7647e5d6195075c494cfb.npy",
+          "sha256": "e523f69e4ead5ea2a8258ccd6709dfc6d294fb68baf45ae2c688499f7f0f7b08",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-c9588549d97943d59ca9b0c8.npy",
+          "sha256": "a8b19973c1b1bf4674995e165f90b97aac11c30579a10e74c837b9df8216599b",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-d84b7129533006eb8c0af558.npy",
+          "sha256": "868fb12138cbc464a749e361e288b521fb55a3461141b8d5dd3920823449e32b",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-e307ccc80d2f128b878f0e3d.npy",
+          "sha256": "45ffa7dfcc27fe13bd3b2322d43c11a2cd2d50a301505902f5bb7918ad787d5d",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-f159b06a701f1b6d70d9d3cd.npy",
+          "sha256": "9fe4ac62dbd54f686f757633ef9e26300c92397849991ae99cde7026056aae72",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-f28d5e629479712f2a5762b1.npy",
+          "sha256": "c9b3226a37dd06d6a1405c2d7e94856a906f3fbc8dc167a3da27c6b02d73f5a8",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/chunks/activation-v2-chunk-f3fe364aab46104757ff41aa.npy",
+          "sha256": "c94122dfc7990bcc3c63c0868b4160d91a2c93771e079668cb91c75d9d4ac52a",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 7902620,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/indexes/index-b1453d4193bd61027e31c59eddd0188165aeb1449b03ef5b62798ab5ac0d5a5f.json",
+          "sha256": "a6ba07a50ff20e9b90f0b036a0acd18783bad4fa3aacbebc0dd70df825f00a27",
+          "type": "activation_index"
+        }
+      ],
+      "activation_chunk_count": 20,
+      "activation_index": {
+        "byte_size": 7902620,
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/activation_store/indexes/index-b1453d4193bd61027e31c59eddd0188165aeb1449b03ef5b62798ab5ac0d5a5f.json",
+        "sha256": "a6ba07a50ff20e9b90f0b036a0acd18783bad4fa3aacbebc0dd70df825f00a27",
+        "type": "activation_index"
+      },
+      "activation_row_count": 1200,
+      "certification": {
+        "direct_pooling_audit": "PASS",
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/step6_5.json",
+        "repeatability_maximum_absolute_difference": 0.0,
+        "sha256": "180fe48a6102692b828608dcb4312ba0d193882e01ea9385994497850f4a833a",
+        "source_identity_join_failure_count": 0,
+        "status": "PASS"
+      },
+      "episode_id": 12602,
+      "layout_id": "layout_01",
+      "output_bundle_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/output_bundle_manifest.json",
+        "sha256": "e03251f2a8e7f7546b354db411f801c0908739d5929e0a9475ee04ddc903b72b"
+      },
+      "output_bundle_root": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z",
+      "source_frame_count": 60,
+      "trajectory_id": "layout_01_ep12602"
+    },
+    {
+      "a_to_b_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/person_a_to_person_b_canonical_pilot_handoff.json",
+        "sha256": "3f4649822fc8eca7bc5bbb386008ad5dec031cdd528883ef260d8ba8dbc4ee0b"
+      },
+      "a_to_e_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/person_a_to_person_e_canonical_provenance_handoff.json",
+        "sha256": "85adeb8c8cfbf57f457ab9dfe320df9fab98832dd51769bf581c8ef419b1f4d2"
+      },
+      "accepted_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/accepted_pilot_manifest.json",
+        "sha256": "acc2e244e28b29cd0511497cea4124e2e43511613b2c67d959b11dd5aac21525"
+      },
+      "activation_artifacts": [
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-0afc69ac089597a373ab2e5d.npy",
+          "sha256": "f75c43f5bc96d99ca0d0528a509625373545ccabd75d2e9d1d1b9322b6f5c388",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-11d95d31595cf5529c519373.npy",
+          "sha256": "95e3e083564238313f5b72b37da5da22fa299ce2331b482a073ea39e21bce44d",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-2052dcb47310cbf12c03a898.npy",
+          "sha256": "70b89db79baf3595c46155bccc0be23f3526dfae622fb1f528114922bed7c189",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-27a2ddaae070729f2413e9a7.npy",
+          "sha256": "323be6e51f2de69d67b1a66430738c3687c04b50ef443027f20c89b7afa09729",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-2b52bf6f53a2d63690080627.npy",
+          "sha256": "c11b487349bda818fb46d15590d366578c7023f16af5ba425a18d0aae50fbe3e",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-4bd7cb4d5a4609db1b6929eb.npy",
+          "sha256": "7cd5886ce70abc1e5f9af489f3dc55797069281ba4da30affa1504295893b279",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-57edd9bfcc8be40ce3c4ccd0.npy",
+          "sha256": "72af61a321147ea18f8b39289ea6a9c8d96f8e5b85eb43a8f2adbf3f612dfb51",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-5875abdc484eab1cadce05d1.npy",
+          "sha256": "2190e557474b9bfc92afc2cf95d649fbb14c57ecf46863e7146dd35767f5fb7d",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-6479e9593953ed6d81a6f307.npy",
+          "sha256": "5e422c42b5196fc1ae312a45d5581d72b366555efd20835082328d593132d3d9",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-6f08c7d775dc979e0dd0bd85.npy",
+          "sha256": "d4660134e0ff09d091e95bcb7b41e5e26242d07a7ff6dbf1c1c2eaaacc599d6c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-8e6979e143c9d435e240bd9a.npy",
+          "sha256": "5cdbab66e3a9e5f9030fa20bd46ccbf2242483d36a30849d997e300c8a2de8d8",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-aa0d1020903c88528c267d06.npy",
+          "sha256": "a9312a29719859a6a08cdd50e86f2b1b88eacf9c5518b46e3328e755a4558079",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-b2efb7ce5fee69f4e97d3833.npy",
+          "sha256": "87849896b86abae90f96a5b2144783f22a4372d9e54c8d50b6798834d7856135",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-ba67493ba705430c34e4e32f.npy",
+          "sha256": "fb2ab265645e51e1773de5de1161d9197f8bfcfab5d364fa905effd36a02effc",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-be66288bb76bde236f8f737e.npy",
+          "sha256": "f6da0670aa9ce251377567a4d2ce61fc2cd06f0017c641ee62cafbf74c6ed6f1",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-e8d42335f0e5f1f3bdd28eff.npy",
+          "sha256": "f06945c633833f846a935dd310685bbe23dca2811c3aafb853b56b6a9808cf7c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-ec616e45e11136be2d55ed89.npy",
+          "sha256": "921361672ff95263b0be0a8170010a5318bf103235d83280e6f0d4f29f8f025a",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-ef04168fb8005f606a00192a.npy",
+          "sha256": "143100f2bf33675beeb6d3b5dedb882bde7b020ae6067ac8d49a273652b01c74",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-f54ba24471dfd296f21b1d48.npy",
+          "sha256": "723355f2e98b3c52240735161812d8bbd51a2030e2939f010f81db426c10abc0",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/chunks/activation-v2-chunk-f70e8878e59df2ec42feb8b0.npy",
+          "sha256": "96e8bdf86ff2702ac6c70dab0e40baddcde6f2743740131d42b7c28410c21f77",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 7923717,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/indexes/index-a073d7972e493f77653fcdb00ab6b8b7a3db55621c9aae290c51ed1fc9128c25.json",
+          "sha256": "29a750527e6b8bd3b8987d5a481f292280dec7e22263e292505fbce0103b711d",
+          "type": "activation_index"
+        }
+      ],
+      "activation_chunk_count": 20,
+      "activation_index": {
+        "byte_size": 7923717,
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/activation_store/indexes/index-a073d7972e493f77653fcdb00ab6b8b7a3db55621c9aae290c51ed1fc9128c25.json",
+        "sha256": "29a750527e6b8bd3b8987d5a481f292280dec7e22263e292505fbce0103b711d",
+        "type": "activation_index"
+      },
+      "activation_row_count": 1200,
+      "certification": {
+        "direct_pooling_audit": "PASS",
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/step6_5.json",
+        "repeatability_maximum_absolute_difference": 0.0,
+        "sha256": "4fe4961594f68bb4b0842bbc108ce5cad89765398bd89837ef249457d34a1d43",
+        "source_identity_join_failure_count": 0,
+        "status": "PASS"
+      },
+      "episode_id": 12610,
+      "layout_id": "layout_02",
+      "output_bundle_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/output_bundle_manifest.json",
+        "sha256": "e95f941b06c11304e58f371d7de4b6d0786a5e738e57e8b795bec11e2e024b22"
+      },
+      "output_bundle_root": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z",
+      "source_frame_count": 60,
+      "trajectory_id": "layout_02_ep12610"
+    },
+    {
+      "a_to_b_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/person_a_to_person_b_canonical_pilot_handoff.json",
+        "sha256": "cd6579521f8c894e5f03df2a0fecb94a56702ba7a854591c4420b387a0ed08c3"
+      },
+      "a_to_e_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/person_a_to_person_e_canonical_provenance_handoff.json",
+        "sha256": "4730d078c9d9f1a526a7c9900f94dc0a7278bd1657fc14623912d7c8805742de"
+      },
+      "accepted_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/accepted_pilot_manifest.json",
+        "sha256": "1c45fe8571792558f7fc766d88b5e176ae2ac8b6c296de13b720e8d8de156da6"
+      },
+      "activation_artifacts": [
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-1b145a0db1bbe6663a091e00.npy",
+          "sha256": "8ad893a982462b44ce982f4e9e787dd0c9d7f817c2caca656bbbc29aa813b170",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-1fd692f366e6dae5e5a1fa12.npy",
+          "sha256": "27e7c7cd4fb857d62c7304cbe1e38d3cc6e3a8a6af83331932899d5e5bff85d4",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-2433531b23b3415c0b218c80.npy",
+          "sha256": "161e82796374b90382ed3612df04ce67a6d857184ed965ba632ff67ab1940b07",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-37438ae4843430c847cddd44.npy",
+          "sha256": "c94bcff0c88435034f3f2f1abb23c8588e2ab656c87f9865bb1162a3e1b1a920",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-41c26c9114aa21f83470a0ad.npy",
+          "sha256": "19debe6c6f1bfd1fcde93f8ea12a1110152836c860dee06ad9da5a4a94b97de5",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-49c64aacd85793fd099336bb.npy",
+          "sha256": "18ff3de18cd58677824d109fcd66342a68d1db91fd908a8efff5f994f1b2b119",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-4e7119ce4fd20830e729f5dc.npy",
+          "sha256": "3d9b6f187780222e4b5ad8ac816cec72fa2bc687d3bf0891109d6610fb416e89",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-52cca7235a6d337ea4a201b4.npy",
+          "sha256": "7c911bd649157c011eedd43de1a14220ebc6090dc6f5fa3d9275568850539478",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-5d45c3b5484a387903bf75c5.npy",
+          "sha256": "3cccde88f53c3522080984d89483b76bd2edba2877ee31b1e5f9ffeb8ff0cb71",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-734b14ceeea128d973c82132.npy",
+          "sha256": "00fd8fc094603070675d81de05e28aef87841c3dc8e6515866271502a256964f",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-a0be888db241a8c4e205dea4.npy",
+          "sha256": "f7b454e41276fa6cb92178a20b6d68244d9baf50f7473b374f49a927f7e3a0b8",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-a7355ef20fa49480eeb594d9.npy",
+          "sha256": "f8494b45a829f2835fa7d229c7f8e8437b925554013702b9c8382ce3a6c32114",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-b81cdd940b989b723f355a1c.npy",
+          "sha256": "720eedba00302a5ae491898ecbd39e6dacf7e14dedf814c9b848c4478605645c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-c7dee43eb66d0d87b4a7b2b5.npy",
+          "sha256": "e6ff0a7c606b70c2968371a47043d3eb8cef286a25283777834d69955b42ae97",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-c9e6fb2600803a8cae255257.npy",
+          "sha256": "87af8a640ca6c9e7928016c01c46419e89a256308a67526ee16848d7ad1f3eab",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-d4d31a94ae9aa0423015e8bf.npy",
+          "sha256": "c8075300d2a0c6c818da31d5384001bd4532251b23db37e54ffe3dba1d9af16a",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-d5ead232f97d2dc5818ef7ea.npy",
+          "sha256": "f6742d8adceff6ef654969345e6bc93a7f8dc86c06908242fb9174d9782baa94",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-da9cb0ed622630dc0e65eb38.npy",
+          "sha256": "5475c8608babdc1dfdab029db19d8b39aa706e91be55517aa06d2a7eccf35059",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-e68d076ceeae9cc908770e76.npy",
+          "sha256": "136a23416e001545fd86df4b56a1e7d2d0a56039a39cbb2bb509a16131577f84",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-ea2f3db0ecf92a8a0b504e97.npy",
+          "sha256": "17cc206f4bddaf8782277be761c797a153daee79334fa6fb15b0f92868de6e47",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 7895174,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/indexes/index-176125e691945b1f5172bcb712b8d2284cebe2f966ab5961954a5cd678b57aaa.json",
+          "sha256": "2a4b0112f648f23cbe95a50404e073fd4839280a74973273d20afaf9d5b1c683",
+          "type": "activation_index"
+        }
+      ],
+      "activation_chunk_count": 20,
+      "activation_index": {
+        "byte_size": 7895174,
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/activation_store/indexes/index-176125e691945b1f5172bcb712b8d2284cebe2f966ab5961954a5cd678b57aaa.json",
+        "sha256": "2a4b0112f648f23cbe95a50404e073fd4839280a74973273d20afaf9d5b1c683",
+        "type": "activation_index"
+      },
+      "activation_row_count": 1200,
+      "certification": {
+        "direct_pooling_audit": "PASS",
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/step6_5.json",
+        "repeatability_maximum_absolute_difference": 0.0,
+        "sha256": "2206f451b586d711771649198d93d47251732eaca869acb5063ff36a90503278",
+        "source_identity_join_failure_count": 0,
+        "status": "PASS"
+      },
+      "episode_id": 12645,
+      "layout_id": "layout_03",
+      "output_bundle_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/output_bundle_manifest.json",
+        "sha256": "07b510840b9408a9946fa490cb7aac72cb007a3d7cc77a9931086934a46e3d18"
+      },
+      "output_bundle_root": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1",
+      "source_frame_count": 60,
+      "trajectory_id": "layout_03_ep12645"
+    },
+    {
+      "a_to_b_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/person_a_to_person_b_canonical_pilot_handoff.json",
+        "sha256": "fc0610547dac01ccff598253dbd3a6a874775dfa3553bdf0c20d3e24b494aaf6"
+      },
+      "a_to_e_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/person_a_to_person_e_canonical_provenance_handoff.json",
+        "sha256": "bfbc990f79b247cb83aed802ee46a71e1b1ff69fdc5f8f1263f6971024011163"
+      },
+      "accepted_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/accepted_pilot_manifest.json",
+        "sha256": "ea3ea9d28a20f25154b7c7765eda2fe1e1a2c8b64972db37b8d22ad7bc187f6a"
+      },
+      "activation_artifacts": [
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-27e3603a0697de904ad799d9.npy",
+          "sha256": "b6b31381aca86998dbfd905576a62fe7470cbcce83849401abce70f356d6fb77",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-3ea42e7aa747fef8901152e4.npy",
+          "sha256": "2a49ccfde6d71d7f76d7f00a2fbb40329c094c1b3f588a607abb3184256b45a3",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-4dba80015854ee9500fd0940.npy",
+          "sha256": "8a7063c2a5f1cdab53becaf64f544323760222fc393d20ff5f60b7008018e970",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-548a724cc2c3aa93b28a2e5d.npy",
+          "sha256": "5407f54bbac395a9e795d3c8d63639e6f10fad173ca435c826efc6e283eb04d4",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-574f69c92cb2e4ad1b7c2eca.npy",
+          "sha256": "5d00d98a24b1cff527d94aea55e1e9c5a35ad4a4715e7834c7c042ea18b2d674",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-616fa99cfa8406dde84bee53.npy",
+          "sha256": "6b3351d8730e2cbb6af220c09306ee12e16e50f7f99352a5e840b35ece751a3c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-6ac02b8c5e777381d1d691d2.npy",
+          "sha256": "bf73dea1b8b8d56511724610d679c9ee3d2cc04ee6c9f1b61dcbda4dc121e5e9",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-78e2f308de8f355f3f935b5d.npy",
+          "sha256": "9297870948173834202f4d4020f839631dba1681be6110ec50304592e914114c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-955898832fe03a1c282e0449.npy",
+          "sha256": "12c07b41fea0370f228ceea8c4d043629850f6ee91f1ba957bb43022ffcd4645",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-a1b6d11c36d483eb24b573a1.npy",
+          "sha256": "23ddb5bc5fe1c2ba88127956a67ba33ed3a1b76c0b234f0972245abdfce8dde5",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-a448736189ce5307e41285b7.npy",
+          "sha256": "5c5ebb59e4a9a3e25ae1edd50fadf1afe05d13d7e2a9482999839c141e8daafd",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-a8f0456c69ca91250a924a68.npy",
+          "sha256": "427d012c4ce19ccdc25a5382e0f9f9f5e53a1449359c72e96c1536e4ea41ef53",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-ab881c396f67ab4db33435f6.npy",
+          "sha256": "bc8a72923d3283b7083da5d2a4898c06d3debcba88d75512b09504f5290a0156",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-b3bce4dea90091d8348991df.npy",
+          "sha256": "1a4fa73e64be69106d3ceeb43b184a318cd96dc5189b12aa0cde2fc7d7f48d09",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-c8a356505a95a3865f5d2b64.npy",
+          "sha256": "ac68fd8a27a662863435ddf76584045277dd973490e7c28fc1a2fd66ebed0d37",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-d6002098164d35d7dc8800c3.npy",
+          "sha256": "67952ab2294b36c23f0b0ecd48af616441369e96e26b6fd5102e90db607a3365",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-db76864c586ddfc1737cb926.npy",
+          "sha256": "d5fce79c1c07d9db627bb989ab5357ba2ad6dc3cd3bc8749894f33af48c2da5d",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-f3a09181fcd28de2b325f2c4.npy",
+          "sha256": "6cb79969509c25768efa66dcb74518a78838feb40907ced0bf4682996ae16bd7",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-fc7c0ebbb8a62ce6098f76c9.npy",
+          "sha256": "4b97372477061393caae7465f57e941ed75a7243bc3ac1b9c4b97a8e7e9b4204",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-fe73c25b8c8fdf4c24320f0d.npy",
+          "sha256": "8f7aedb15e455c00b6c9e88fd7eb8d4cc9e9d92cfbb10f14affb4c37a3101ed8",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 7895174,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/indexes/index-74ef0a105693426c46106ea517481c0db08228e6dbd9e8e89e6b780f71c3eec6.json",
+          "sha256": "a4a8b5943d2f2ad75b1e95d613ce44a6f88c9edba22f666837a671c5db1d5376",
+          "type": "activation_index"
+        }
+      ],
+      "activation_chunk_count": 20,
+      "activation_index": {
+        "byte_size": 7895174,
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/activation_store/indexes/index-74ef0a105693426c46106ea517481c0db08228e6dbd9e8e89e6b780f71c3eec6.json",
+        "sha256": "a4a8b5943d2f2ad75b1e95d613ce44a6f88c9edba22f666837a671c5db1d5376",
+        "type": "activation_index"
+      },
+      "activation_row_count": 1200,
+      "certification": {
+        "direct_pooling_audit": "PASS",
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/step6_5.json",
+        "repeatability_maximum_absolute_difference": 0.0,
+        "sha256": "5bab20ac782ce900f38ff35fc08ff8eb8f4d53816e2577c7bcab140b210e64c7",
+        "source_identity_join_failure_count": 0,
+        "status": "PASS"
+      },
+      "episode_id": 12626,
+      "layout_id": "layout_04",
+      "output_bundle_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/output_bundle_manifest.json",
+        "sha256": "4550e1a2e0137193bccdb4d196877cd003148dff71852115d7a66425093b9a33"
+      },
+      "output_bundle_root": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1",
+      "source_frame_count": 60,
+      "trajectory_id": "layout_04_ep12626"
+    },
+    {
+      "a_to_b_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/person_a_to_person_b_canonical_pilot_handoff.json",
+        "sha256": "a5d6f117c2bc93e7d334273c60675b0618c7275aeecdc3d92828290b89e8a493"
+      },
+      "a_to_e_handoff": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/person_a_to_person_e_canonical_provenance_handoff.json",
+        "sha256": "9c404eec61c89b8da15cc35b0ec1caf47111b4e8c9e5b1265d6db2ed66f0b101"
+      },
+      "accepted_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/accepted_pilot_manifest.json",
+        "sha256": "88565b973285fb98aecf415b5f341a11abd037767a461a5df5447a36ddcf8d91"
+      },
+      "activation_artifacts": [
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-124632a9dd519f6831e68f70.npy",
+          "sha256": "0fa0dc5d24aa73e456d307f9bc0688addcb8d1c0218206bb269014340b1f9241",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-29ee1bdd5bab0c7b3c358c7c.npy",
+          "sha256": "c52645f47b451c66bdf4e46782a631c6d13d48b58fcd10555a223c3fda6266fb",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-3600f9b6146f2d5a3c4dddeb.npy",
+          "sha256": "ff5edc06495ce248e8a99f920829d7ba54dff27cbd2137b3dddf32e03ad90174",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-44148db6e0f7822264a41c22.npy",
+          "sha256": "ed498f1ba85f6c677f8d5430c442599075742b3e7f94cb2d34d428094b3e9400",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-4dc80ba7f35c4c3699eeeb5f.npy",
+          "sha256": "8ec5d2e90584110e130b54ee4251a576728cd8ef9e7b95d65bc82d30b1a42806",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-5fb9037b55cea1e66623d87d.npy",
+          "sha256": "7406f567e8b9cfa318f9c2af489885aa0b4c2dcc2935c58f3b4de8cc8315c751",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-70d34a160ef65fe9788c7140.npy",
+          "sha256": "390ea8cb97a6c1fc442a9bd376919a1535c6744e62304626f896c1f45b1e3a1c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-7914f08b3f2c1c15da49da5b.npy",
+          "sha256": "64e3d154a36196f7296f3bcec142370344a325286139409a0d303ff096ab40f6",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-7a9a9a7c88ee97db173b9ebb.npy",
+          "sha256": "b8c90321a68419844012f2e32a6fcd9a1b33821d4aaeb77b0030d9ad8c289263",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-84e8a6cacf3e943c79e4e307.npy",
+          "sha256": "b0650ef5f81de41642acfbd2da45ca0031e5094579c653232470f4cdf0d08040",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-9455da204e26552e699609c0.npy",
+          "sha256": "f40b60d98dfcd36bd80540d44e2eef9c32deaad5a482adaab412e11cea3b946a",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-a8d2a970cd807245c9d4a670.npy",
+          "sha256": "a72b291872e4d01acc472e3711cfd5faea39dcf667dff40925fe903520c06f5f",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-ad31fe44ce30a1c6fe5a8e02.npy",
+          "sha256": "cedce967e133fb6e593c27129ec189e75719946fb9568398e16dd90fa84dd981",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-afcd5fa234224125cb01e2f0.npy",
+          "sha256": "fa5490b5a0802331307e2063a3257d99fd3741e2e71a134a5312b5902e2bf8fd",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-c7393d37ceb202903b12cd91.npy",
+          "sha256": "a31439ac2b2e3c65e5a6340b8af17850bc7aeb07cf850318d03b734c9f8709a5",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-ca9fb532c2e86bc5d022c292.npy",
+          "sha256": "dc984006915df201308ff21e319f386c31e5163fe17c2e4e5720e7a0156fb7b3",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-e28d3488fc3a4f1ede5d4a61.npy",
+          "sha256": "0e708a7a7324511dd25ae5a7e43acf29ad2677d0199093096ae0b15361acca5c",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-e50cf3473ebe3e4237c0a3db.npy",
+          "sha256": "6ec2a3cab8a060a9a067f1f445b1ba64ba8c30c0dab88eb4e7c10bf1a63e6256",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-ebb9f3c061f9865b2fcc66ae.npy",
+          "sha256": "54d1d551523403e2a30493621fd6c9db3fc10f19daadc9c67b1e36ed945a448f",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 491648,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/chunks/activation-v2-chunk-f2da8b38a64ef86a3ede3ed5.npy",
+          "sha256": "287b51b66df91fee640b476a78084fa2e1c74616ba8bd0e2b9326f41d389cffa",
+          "type": "activation_chunk"
+        },
+        {
+          "byte_size": 7895174,
+          "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/indexes/index-377a0aa74ce902a95b15225f85a88241df9847729c02d1eca6944ab369f65817.json",
+          "sha256": "32bf62d734dd2a0b8e6fee0599f28a920f7bf6d3ae9beb6b6222fdbc4321d4b3",
+          "type": "activation_index"
+        }
+      ],
+      "activation_chunk_count": 20,
+      "activation_index": {
+        "byte_size": 7895174,
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/activation_store/indexes/index-377a0aa74ce902a95b15225f85a88241df9847729c02d1eca6944ab369f65817.json",
+        "sha256": "32bf62d734dd2a0b8e6fee0599f28a920f7bf6d3ae9beb6b6222fdbc4321d4b3",
+        "type": "activation_index"
+      },
+      "activation_row_count": 1200,
+      "certification": {
+        "direct_pooling_audit": "PASS",
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/step6_5.json",
+        "repeatability_maximum_absolute_difference": 0.0,
+        "sha256": "e8bdde0a750366bce387c4337885cd9ba3ddcb16a39677f9afd2afc2df245ab0",
+        "source_identity_join_failure_count": 0,
+        "status": "PASS"
+      },
+      "episode_id": 12634,
+      "layout_id": "layout_05",
+      "output_bundle_manifest": {
+        "path": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/output_bundle_manifest.json",
+        "sha256": "9208c30e457964f79b5fc9baf02bf31d346c6c91e2fb23a938266a898abd3a8c"
+      },
+      "output_bundle_root": "/home/sagemaker-user/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1",
+      "source_frame_count": 60,
+      "trajectory_id": "layout_05_ep12634"
+    }
+  ],
+  "schema_version": "person-a-canonical-c6a-multirun-collection-v0.1",
+  "selection_record": {
+    "path": "/home/sagemaker-user/MineOcclude/docs/status/person_a_canonical_c6a_multilayout_preparation_v0_1/selection_record.json",
+    "sha256": "b6274d000fe2760bb8e3750c22ddefb6bff004cac80e5f5e247a3029713ab81a"
+  },
+  "status": "READY_FOR_PERSON_B_AND_PERSON_E_REVIEW",
+  "trajectory_count": 5
+}

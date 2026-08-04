@@ -1,0 +1,218 @@
+PERSON A CANONICAL C6A MULTI-LAYOUT SUCCESSOR — SAGEMAKER CONTINUATION
+
+Complete the GPU-only continuation for Person A. Do not stop after diagnostics,
+one trajectory, or collection preparation. Run all four missing canonical
+trajectories, collect the five-index successor, run only the focused tests,
+commit, push, and return the exact terminal report requested below.
+
+Authority and safety
+====================
+
+Repository: /home/sagemaker-user/MineOcclude
+Branch: role/person-a-model
+Remote: origin
+
+The preparation commit is the exact current origin/role/person-a-model commit
+that contains this prompt. Fetch that branch, require a clean worktree, check
+out role/person-a-model, fast-forward only, set PREPARATION_COMMIT to
+origin/role/person-a-model, and require HEAD == PREPARATION_COMMIT. Do not merge
+another role branch. Do not modify Person B, C, or E branches or worktrees.
+
+Do not rerun layout_01_ep12602. Preserve this exact certified predecessor:
+
+docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z
+
+Its output-bundle manifest SHA-256 must be:
+e03251f2a8e7f7546b354db411f801c0908739d5929e0a9475ee04ddc903b72b
+
+Its activation-index SHA-256 must be:
+a6ba07a50ff20e9b90f0b036a0acd18783bad4fa3aacbebc0dd70df825f00a27
+
+Run only these missing trajectories, in this order:
+
+1. layout_02_ep12610 (episode 12610)
+2. layout_03_ep12645 (episode 12645)
+3. layout_04_ep12626 (episode 12626)
+4. layout_05_ep12634 (episode 12634)
+
+The immutable multi-layout input manifest is:
+
+data/handoff_a/person_a_canonical_c6a_multilayout_sagemaker_input_v0_1/bundle_manifest.json
+
+Its SHA-256 must be:
+ff7801c1a331f173bc5fc197454889b72d8554a8e31b5a88731de8eb7d9ed987
+
+The immutable selection record is:
+
+docs/status/person_a_canonical_c6a_multilayout_preparation_v0_1/selection_record.json
+
+Its SHA-256 must be:
+b6274d000fe2760bb8e3750c22ddefb6bff004cac80e5f5e247a3029713ab81a
+
+Every child bundle must bind canonical C6A package
+person-c-c6a-post-c1-v0.1 at package-manifest SHA-256:
+612b03fea372d10c5f5b87cb581dd5f993035112e16aa1de7341801bdc35a9ef
+
+Scientific identities are frozen:
+
+- seed: 20260725
+- device: cuda:0
+- precision: float16
+- hook: decoder_layer_output_residual_stream
+- pooling: mean over visual positions
+- activation store/index: v2
+- model config SHA-256: e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018
+- main checkpoint SHA-256: a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5
+- VAE config SHA-256: 32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb
+- VAE checkpoint SHA-256: 370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab
+- preprocessing: mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab
+- action conversion: mineworld_mcdataset_json_action_to_env_action@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746
+
+Required execution
+==================
+
+1. Verify the repository gate before any GPU work:
+
+   git fetch origin role/person-a-model
+   git checkout role/person-a-model
+   git pull --ff-only origin role/person-a-model
+   test -z "$(git status --porcelain=v1 -uall)"
+   export PERSON_A_MULTILAYOUT_PREPARATION_COMMIT="$(git rev-parse origin/role/person-a-model)"
+   test "$(git rev-parse HEAD)" = "${PERSON_A_MULTILAYOUT_PREPARATION_COMMIT}"
+
+2. Verify the host is an NVIDIA L4 with visible CUDA device 0. Require
+   nvidia-smi to report L4. In the MineWorld conda environment require
+   torch.cuda.is_available(), at least one device, cuda:0 selected, and at
+   least 12 GiB visible device memory. Stop only if the GPU resource is truly
+   unavailable.
+
+3. Use the already established absolute environment paths:
+
+   MINEWORLD_ROOT=/home/sagemaker-user/MineWorld-Upstream
+   MODELSCOPE_ASSET_ROOT=/home/sagemaker-user/MineWorld-Assets-Pinned
+   MINEWORLD_MAIN_CHECKPOINT=/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt
+   MINEWORLD_VAE_CONFIG=/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/config.json
+   MINEWORLD_VAE_CHECKPOINT=/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt
+   PERSON_A_PHASE6_APPROVED_INPUT_ROOT=/home/sagemaker-user/person-a-phase6-approved-inputs
+   PERSON_A_PHASE6_APPROVED_OUTPUT_ROOT=/home/sagemaker-user/person-a-phase6-approved-outputs
+   ffmpeg=/home/sagemaker-user/tools/ffmpeg/bin/ffmpeg
+   ffprobe=/home/sagemaker-user/tools/ffmpeg/bin/ffprobe
+
+   Verify ffmpeg and ffprobe are ordinary executable files and both return a
+   version. If the persistent SageMaker environment lost either executable,
+   repair only that software dependency using the previously established
+   MineWorld conda/static-ffmpeg installation, materialize ordinary executable
+   files at the two exact paths above (not symlinks), and verify them. Do not
+   change repository code, inputs, frames, model assets, or scientific
+   identities merely to repair ffmpeg/ffprobe. If the established binary or a
+   safe equivalent cannot be recovered, stop and report that external asset.
+
+4. Hash all four model assets and require the four frozen hashes above. Verify
+   the physical MineWorld model config matches its pinned Git-object bytes.
+   Stop for an unavailable or hash-mismatched immutable model asset; never
+   download or substitute an unpinned checkpoint.
+
+5. Run the local, non-GPU input verification before extraction:
+
+   /home/sagemaker-user/.conda/envs/mineworld/bin/python \
+     scripts/prepare_person_a_phase6_canonical_multilayout.py verify-input \
+     --bundle-manifest \
+       data/handoff_a/person_a_canonical_c6a_multilayout_sagemaker_input_v0_1/bundle_manifest.json \
+     --bundle-manifest-sha256 \
+       ff7801c1a331f173bc5fc197454889b72d8554a8e31b5a88731de8eb7d9ed987
+
+   Require PASS, 301 inventoried files, four child bundles, 67 direct artifacts
+   per child, 60 frames per child, and 1,200 expected activation rows per child.
+
+6. Export every environment variable listed in step 3 and run exactly one
+   end-to-end task:
+
+   bash scripts/run_person_a_phase6_canonical_multilayout_sagemaker.sh
+
+   The launcher automatically skips an already retrieved, fully verified new
+   trajectory, uses a new additive session identity whenever any earlier
+   session/input/store path exists, runs each still-missing trajectory through
+   the certified single-trajectory extraction implementation, retrieves each
+   successful immutable output, and collects the successor. Do not remove,
+   overwrite, rename, or edit a failed attempt. If a run fails for a
+   software-level cause, preserve it, make only the smallest safe software
+   repair, and invoke the same launcher again; its retry identity must be
+   additive. Never reuse a failed activation store. Stop only for a genuine
+   external GPU/resource failure or unavailable immutable pinned asset.
+
+7. The successor must contain five separate immutable activation indexes; it
+   must not claim that they are one physical index. Require exactly:
+
+   - 5 layouts and 5 trajectories
+   - 300 source frames
+   - 6,000 activation rows
+   - 100 activation chunks
+   - 5 activation indexes
+   - 60 rows per layer per trajectory
+   - all direct-pooling audits PASS
+   - all repeatability checks PASS
+   - all exact source-row joins PASS
+   - zero missing, extra, duplicate, stale, or reordered rows
+   - A-to-B successor status READY_FOR_PERSON_B_FROZEN_POSITIVE_CONTROL
+   - A-to-E successor status READY_FOR_NEW_PERSON_E_PROVENANCE_REVIEW
+   - person_e_successor_acceptance_claimed false
+   - requires_new_person_e_receipt true
+   - both successor handoffs explicitly supersede, without modifying, the
+     single-trajectory A-to-B and A-to-E handoffs
+
+8. Run only these focused tests (the launcher also runs them after collection):
+
+   /home/sagemaker-user/.conda/envs/mineworld/bin/python -m pytest -q \
+     tests/models/test_person_a_canonical_c6a_multilayout_v0_1.py \
+     tests/models/test_person_a_canonical_c6a_sagemaker_prep_v0_1.py \
+     tests/models/test_person_a_canonical_c6a_launcher_v0_1.py \
+     tests/activations/test_phase6_activation_store_v2.py \
+     tests/activations/test_pool.py
+
+   Do not run the complete repository test suite and do not run Person B's
+   scientific probe locally. The real-label and shuffled probes belong to
+   Person B after the new A handoff.
+
+9. The launcher must commit only additive Person A runtime/successor evidence
+   and run `git push origin role/person-a-model`; push no other branch. If a
+   safe repair required a repository
+   code change, inspect and test that focused change, include it in the same
+   Person A commit, and still push only role/person-a-model. Require a clean
+   worktree after the push. Do not amend, rewrite, or delete any predecessor or
+   failure evidence.
+
+10. Return exactly this report, with real absolute paths and lowercase hashes:
+
+PERSON_A_MULTILAYOUT_SAGEMAKER_RESULT_BEGIN
+PREPARATION_COMMIT=<full-hash>
+GPU_NAME=<exact-name>
+CUDA_AVAILABLE=<True-or-False>
+FFMPEG_READY=<True-or-False>
+FFPROBE_READY=<True-or-False>
+INPUT_BUNDLE_VALID=<True-or-False>
+EXECUTED_TRAJECTORIES=<ordered-list-or-NONE>
+REUSED_TRAJECTORIES=<ordered-list-or-NONE>
+FAILED_IMMUTABLE_ATTEMPTS=<ordered-list-or-NONE>
+SUCCESSOR_PACKAGE=<absolute-path-or-NONE>
+SUCCESSOR_COLLECTION_MANIFEST=<absolute-path-or-NONE>
+SUCCESSOR_COLLECTION_MANIFEST_SHA256=<sha256-or-NONE>
+SELECTED_LAYOUT_COUNT=<integer-or-NONE>
+SELECTED_TRAJECTORY_COUNT=<integer-or-NONE>
+ACTIVATION_INDEX_COUNT=<integer-or-NONE>
+ACTIVATION_ROW_COUNT=<integer-or-NONE>
+ACTIVATION_CHUNK_COUNT=<integer-or-NONE>
+DIRECT_POOLING_AUDITS_PASS=<True-or-False>
+REPEATABILITY_CHECKS_PASS=<True-or-False>
+SOURCE_IDENTITY_JOINS_PASS=<True-or-False>
+IDENTITY_ERROR_COUNT=<integer-or-NONE>
+SUCCESSOR_A_TO_B_HANDOFF=<absolute-path-or-NONE>
+SUCCESSOR_A_TO_B_HANDOFF_SHA256=<sha256-or-NONE>
+SUCCESSOR_A_TO_E_HANDOFF=<absolute-path-or-NONE>
+SUCCESSOR_A_TO_E_HANDOFF_SHA256=<sha256-or-NONE>
+NEW_PERSON_E_RECEIPT_REQUIRED=<True-or-False>
+FOCUSED_TESTS_PASS=<True-or-False>
+FINAL_COMMIT=<full-hash-or-NONE>
+BRANCH_PUSHED=<True-or-False>
+WORKTREE_CLEAN=<True-or-False>
+UNRESOLVED_BLOCKERS=<exact-list-or-NONE>
+PERSON_A_MULTILAYOUT_SAGEMAKER_RESULT_END

@@ -1,0 +1,110 @@
+{
+  "authority": {
+    "person_b_blocker_receipt": {
+      "path": "authority/person_b_blocker_receipt/b_to_a_receipt.json",
+      "role": "selection_authority",
+      "sha256": "6e777d11273bf25267b694b551eb2627dc6dc30f6226988cced4bc0134a45fe8",
+      "size_bytes": 14123
+    },
+    "person_b_core_config": {
+      "path": "authority/person_b_core_config/core.yaml",
+      "role": "selection_authority",
+      "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "size_bytes": 4881
+    },
+    "person_b_fold_plan": {
+      "path": "authority/person_b_fold_plan/layout_fold_plan.json",
+      "role": "selection_authority",
+      "sha256": "a762cfe66984675e6af9177ff954540fe17cafc7747422fcad26ed1a2f7bbf8b",
+      "size_bytes": 6540
+    },
+    "person_e_current_single_trajectory_receipt": {
+      "path": "authority/person_e_current_single_trajectory_receipt/person_e_to_person_a_activation_provenance_receipt.json",
+      "role": "selection_authority",
+      "sha256": "1d4fb69ec6b5693cfafc56eaeb11fe6bedbb1bfa9fe420de5f288a9ad544c7f4",
+      "size_bytes": 14320
+    },
+    "selection_record": {
+      "path": "authority/selection_record/selection_record.json",
+      "role": "selection_authority",
+      "sha256": "b6274d000fe2760bb8e3750c22ddefb6bff004cac80e5f5e247a3029713ab81a",
+      "size_bytes": 110247
+    }
+  },
+  "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+  "current_certified_trajectory": {
+    "output_bundle_manifest_sha256": "e03251f2a8e7f7546b354db411f801c0908739d5929e0a9475ee04ddc903b72b",
+    "reuse_required": true,
+    "trajectory_id": "layout_01_ep12602"
+  },
+  "expected_new_activation_chunk_count": 80,
+  "expected_new_activation_row_count": 4800,
+  "expected_total_activation_chunk_count": 100,
+  "expected_total_activation_row_count": 6000,
+  "immutable": true,
+  "new_trajectory_bundles": [
+    {
+      "bundle_manifest": "trajectories/layout_02_ep12610/bundle_manifest.json",
+      "bundle_manifest_sha256": "2e5b97851a5004cba535418472c1b2551fdfc7f5fdbfaf3e1a1c62bc2ae57e73",
+      "direct_artifact_count": 67,
+      "episode_id": 12610,
+      "expected_activation_chunk_count": 20,
+      "expected_activation_row_count": 1200,
+      "layout_id": "layout_02",
+      "trajectory_id": "layout_02_ep12610"
+    },
+    {
+      "bundle_manifest": "trajectories/layout_03_ep12645/bundle_manifest.json",
+      "bundle_manifest_sha256": "ba687b1f089c96c1af3a054483f9882b511381f3ca0497694902825752268a6e",
+      "direct_artifact_count": 67,
+      "episode_id": 12645,
+      "expected_activation_chunk_count": 20,
+      "expected_activation_row_count": 1200,
+      "layout_id": "layout_03",
+      "trajectory_id": "layout_03_ep12645"
+    },
+    {
+      "bundle_manifest": "trajectories/layout_04_ep12626/bundle_manifest.json",
+      "bundle_manifest_sha256": "65bc267d8dd8db0e56c8208c135a95007e2b1b5498a230c8bc792b5efa34b2a9",
+      "direct_artifact_count": 67,
+      "episode_id": 12626,
+      "expected_activation_chunk_count": 20,
+      "expected_activation_row_count": 1200,
+      "layout_id": "layout_04",
+      "trajectory_id": "layout_04_ep12626"
+    },
+    {
+      "bundle_manifest": "trajectories/layout_05_ep12634/bundle_manifest.json",
+      "bundle_manifest_sha256": "9a9dba601c8399203518cfdd45cf368fca1ac681cd57de5658498501f7318453",
+      "direct_artifact_count": 67,
+      "episode_id": 12634,
+      "expected_activation_chunk_count": 20,
+      "expected_activation_row_count": 1200,
+      "layout_id": "layout_05",
+      "trajectory_id": "layout_05_ep12634"
+    }
+  ],
+  "schema_version": "person-a-canonical-c6a-multilayout-sagemaker-input-v0.1",
+  "scientific_identities": {
+    "five_layouts_and_five_trajectories_sufficient": true,
+    "grouping_key": "layout_id",
+    "inner_fold_count": 4,
+    "label_requirements": "x_true_blocks from finite canonical_server_state.axis_pos on 60 fully geometric-visible NO_WALL frames with nonzero position range",
+    "outer_fold_count": 5,
+    "required_distinct_layout_count": 5,
+    "required_distinct_trajectory_count": 5,
+    "shuffled_control": {
+      "minimum_trajectory_count": 2,
+      "permutation_count": 999,
+      "permutation_p_value": "add_one_greater_or_equal",
+      "permutation_seed": 20260720,
+      "permutation_unit": "whole_trajectory_block"
+    }
+  },
+  "selection_record_sha256": "b6274d000fe2760bb8e3750c22ddefb6bff004cac80e5f5e247a3029713ab81a",
+  "sha256_inventory": {
+    "path": "sha256_inventory.json",
+    "sha256": "d0601ab1ecaa183b54b160b0a93b63d2ed855c61d182dfeeb0d6e6371f4f9813"
+  },
+  "status": "IMMUTABLE_READY_FOR_SAGEMAKER"
+}

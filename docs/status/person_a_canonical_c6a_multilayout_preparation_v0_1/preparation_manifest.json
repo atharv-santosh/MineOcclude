@@ -1,0 +1,97 @@
+{
+  "b_blocker_receipt": {
+    "sha256": "6e777d11273bf25267b694b551eb2627dc6dc30f6226988cced4bc0134a45fe8",
+    "valid": true
+  },
+  "canonical_c6a": {
+    "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+    "package_manifest_sha256": "612b03fea372d10c5f5b87cb581dd5f993035112e16aa1de7341801bdc35a9ef",
+    "person_c_authority_commit": "b810bae554ba4f31018d39beb304c9b936387ca4"
+  },
+  "expected_successor": {
+    "activation_chunk_count": 100,
+    "activation_index_count": 5,
+    "activation_row_count": 6000,
+    "layout_count": 5,
+    "new_activation_chunk_count": 80,
+    "new_activation_row_count": 4800,
+    "new_trajectory_count": 4,
+    "trajectory_count": 5
+  },
+  "frozen_person_b_minimum": {
+    "grouping_key": "layout_id",
+    "inner_fold_count": 4,
+    "label_source": "canonical_server_state.axis_pos",
+    "outer_fold_count": 5,
+    "required_distinct_layout_count": 5,
+    "required_distinct_trajectory_count": 5,
+    "shuffled_permutation_count": 999,
+    "shuffled_permutation_seed": 20260720,
+    "shuffled_permutation_unit": "whole_trajectory_block",
+    "target_name": "x_true_blocks"
+  },
+  "immutable": true,
+  "implementation": {
+    "multilayout_preparation_and_collection": {
+      "path": "scripts/prepare_person_a_phase6_canonical_multilayout.py",
+      "sha256": "3b91873ac16c1dedf8f77fcb3df0504001e236fbc8ccc237e1a5571ad012d0bb"
+    },
+    "sagemaker_launcher": {
+      "path": "scripts/run_person_a_phase6_canonical_multilayout_sagemaker.sh",
+      "sha256": "65df4c7c4fd25ff6b82a26af319549b8f2e3399100b6e186e4620d1a449c0e9c"
+    },
+    "single_trajectory_runner": {
+      "authority_ancestry_support_added": true,
+      "path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+      "sha256": "9b57b5bf29b56615e1a9f2cc1093ba559caeae7611a5c46ad88a1767559a3b05"
+    }
+  },
+  "input_bundle": {
+    "actual_file_count_including_manifest_and_inventory": 303,
+    "path": "data/handoff_a/person_a_canonical_c6a_multilayout_sagemaker_input_v0_1/bundle_manifest.json",
+    "sha256": "ff7801c1a331f173bc5fc197454889b72d8554a8e31b5a88731de8eb7d9ed987",
+    "staged_file_count": 301,
+    "total_byte_size": 60971606,
+    "verified": true
+  },
+  "multirun_collection_ready": true,
+  "person_e_scope": {
+    "current_receipt_sha256": "1d4fb69ec6b5693cfafc56eaeb11fe6bedbb1bfa9fe420de5f288a9ad544c7f4",
+    "current_receipt_valid_for_existing_single_trajectory_only": true,
+    "new_successor_receipt_required_after_extraction": true,
+    "successor_acceptance_claimed": false
+  },
+  "sagemaker_continuation_prompt": {
+    "path": "docs/status/person_a_canonical_c6a_multilayout_preparation_v0_1/sagemaker_continuation_prompt.txt",
+    "sha256": "4d5217733137657b58093a0309a3136dcf1824c1473fa01e72d84e6544f19299"
+  },
+  "schema_version": "person-a-canonical-c6a-multilayout-preparation-manifest-v0.1",
+  "selected_episodes": [
+    12602,
+    12610,
+    12645,
+    12626,
+    12634
+  ],
+  "selected_layouts": [
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04",
+    "layout_05"
+  ],
+  "selected_trajectories": [
+    "layout_01_ep12602",
+    "layout_02_ep12610",
+    "layout_03_ep12645",
+    "layout_04_ep12626",
+    "layout_05_ep12634"
+  ],
+  "selection_record": {
+    "path": "docs/status/person_a_canonical_c6a_multilayout_preparation_v0_1/selection_record.json",
+    "sha256": "b6274d000fe2760bb8e3750c22ddefb6bff004cac80e5f5e247a3029713ab81a"
+  },
+  "status": "READY_FOR_SAGEMAKER_GPU_CONTINUATION",
+  "successor_a_to_b_handoff_generation_ready": true,
+  "successor_a_to_e_handoff_generation_ready": true
+}
