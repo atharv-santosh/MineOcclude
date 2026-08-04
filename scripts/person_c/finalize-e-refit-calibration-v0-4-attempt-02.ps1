@@ -19,6 +19,10 @@ $packageRoot = Join-Path $RepoRoot 'docs\status\person_c_to_person_e_calibration
 $manifestPath = Join-Path $packageRoot 'session_manifest.json'
 $packageInventoryPath = Join-Path $packageRoot 'sha256_inventory.json'
 $attempt01RecordPath = Join-Path $packageRoot 'attempt_01_failure_record.json'
+$attempt01PackageRoot = Join-Path $RepoRoot 'docs\status\person_c_to_person_e_calibration_images_v0_4_v0_1'
+$attempt01ManifestPath = Join-Path $attempt01PackageRoot 'session_manifest.json'
+$attempt01PackageInventoryPath = Join-Path $attempt01PackageRoot 'sha256_inventory.json'
+$attempt01RepairPackageInventoryPath = Join-Path $RepoRoot 'docs\status\person_c_e_refit_calibration_finalizer_server_properties_repair_v0_1\sha256_inventory.json'
 $fitTemplatePath = Join-Path $packageRoot 'e_image_point_annotation_template.json'
 $validationTemplatePath = Join-Path $packageRoot 'e_independent_validation_pair_template.json'
 $attestationTemplatePath = Join-Path $packageRoot 'operator_attestation_template.json'
@@ -41,6 +45,8 @@ $fitOutputPath = Join-Path $serverEvidenceDir ($attemptName + '_e_image_point_an
 $validationOutputPath = Join-Path $serverEvidenceDir ($attemptName + '_e_independent_validation_pair_template.json')
 $handoffPath = Join-Path $serverEvidenceDir ($attemptName + '_person_c_to_e_calibration_handoff.json')
 $resultPath = Join-Path $serverEvidenceDir ($attemptName + '_finalization_result.json')
+$attempt01ServerLogArchive = Join-Path $serverRoot 'e_refit_calibration_v0_4_v0_1\server_latest.log'
+$attempt01ClientLogArchive = Join-Path $clientRoot 'e_refit_calibration_v0_4_v0_1\client_latest.log'
 
 Import-Module -Name $authorityModulePath -Force
 Import-Module -Name $serverPropertiesModulePath -Force
@@ -75,10 +81,7 @@ function Test-Attempt02JsonEqual {
 
 function Assert-Attempt02Identity {
     param($Identity, [string]$Label)
-    $path = [string]$Identity.path
-    Assert-ERefitAttempt02Condition (Test-Path -LiteralPath $path -PathType Leaf) "$Label is absent: $path"
-    $item = Get-Item -LiteralPath $path
-    Assert-ERefitAttempt02Condition ($item.Length -eq [int64]$Identity.size_bytes -and (Get-ERefitAttempt02Sha256 $item.FullName) -ceq [string]$Identity.sha256) "$Label identity drift: $path"
+    Assert-ERefitAttempt02Identity -Identity $Identity -Label $Label
 }
 
 Push-Location -LiteralPath $RepoRoot
@@ -96,7 +99,9 @@ try {
     Assert-ERefitAttempt02Condition ($LASTEXITCODE -eq 0) 'Attempt 02 preparation commit is not an ancestor of HEAD'
 
     foreach ($requiredFile in @(
-        $manifestPath, $packageInventoryPath, $attempt01RecordPath, $fitTemplatePath,
+        $manifestPath, $packageInventoryPath, $attempt01RecordPath,
+        $attempt01ManifestPath, $attempt01PackageInventoryPath, $attempt01RepairPackageInventoryPath,
+        $fitTemplatePath,
         $validationTemplatePath, $attestationTemplatePath, $coordinateConventionPath,
         $authorityModulePath, $serverPropertiesModulePath, $serverPropertiesAuthorityPath,
         $serverPropertiesRuntimePath, $repairReceiptPath, $serverLogPath, $clientLogPath
@@ -124,11 +129,62 @@ try {
     $manifestLayoutIdDifferences = @(Compare-Object $expectedLayoutIds $manifestLayoutIds)
     Assert-ERefitAttempt02Condition ($manifestLayoutIdDifferences.Count -eq 0) 'Attempt 02 layout IDs drifted'
 
+    $attempt01PackageInventory = Get-Content -Raw -LiteralPath $attempt01PackageInventoryPath | ConvertFrom-Json
+    Assert-ERefitAttempt02Condition ($attempt01PackageInventory.schema_version -eq 'person-c-package-sha256-inventory-v1.0') 'Unknown Attempt 01 package inventory schema'
+    foreach ($row in $attempt01PackageInventory.files) {
+        $path = Join-Path $RepoRoot ([string]$row.path -replace '/', '\')
+        Assert-ERefitAttempt02Identity -Identity ([ordered]@{
+            path = $path
+            size_bytes = [int64]$row.size_bytes
+            sha256 = [string]$row.sha256
+        }) -Label 'Immutable Attempt 01 repository package evidence'
+    }
+    $attempt01ManifestInventoryRows = @($attempt01PackageInventory.files | Where-Object { $_.path -ceq 'docs/status/person_c_to_person_e_calibration_images_v0_4_v0_1/session_manifest.json' })
+    Assert-ERefitAttempt02Condition ($attempt01ManifestInventoryRows.Count -eq 1) 'Attempt 01 package inventory does not uniquely bind its repository manifest'
+    $attempt01Manifest = Get-Content -Raw -LiteralPath $attempt01ManifestPath | ConvertFrom-Json
+    Assert-ERefitAttempt02Condition ($attempt01Manifest.layout_count -eq 6 -and $attempt01Manifest.accepted_geometry_version -eq $geometryVersion -and $attempt01Manifest.accepted_geometry_sha256 -eq $geometrySha256) 'Immutable Attempt 01 repository manifest drift'
+
+    $attempt01RepairPackageInventory = Get-Content -Raw -LiteralPath $attempt01RepairPackageInventoryPath | ConvertFrom-Json
+    Assert-ERefitAttempt02Condition ($attempt01RepairPackageInventory.schema_version -eq 'person-c-package-sha256-inventory-v1.0') 'Unknown Attempt 01 repair-package inventory schema'
+    foreach ($row in $attempt01RepairPackageInventory.files) {
+        $path = Join-Path $RepoRoot ([string]$row.path -replace '/', '\')
+        Assert-ERefitAttempt02Identity -Identity ([ordered]@{
+            path = $path
+            size_bytes = [int64]$row.size_bytes
+            sha256 = [string]$row.sha256
+        }) -Label 'Immutable Attempt 01 repair-package evidence'
+    }
+
     $attempt01 = Get-Content -Raw -LiteralPath $attempt01RecordPath | ConvertFrom-Json
     Assert-ERefitAttempt02Condition ($attempt01.status -eq 'FAILED_PRESERVED_UNCERTIFIED' -and $attempt01.classification -ceq $attempt01Classification) 'Attempt 01 failure classification drift'
     Assert-ERefitAttempt02Condition ($attempt01.preserved_unchanged -eq $true -and $attempt01.certified -eq $false) 'Attempt 01 preservation contract drift'
-    foreach ($row in @($attempt01.geometry_receipts) + @($attempt01.raw_screenshots) + @($attempt01.logs)) {
+    foreach ($row in @($attempt01.geometry_receipts) + @($attempt01.raw_screenshots)) {
         Assert-Attempt02Identity $row 'Preserved Attempt 01 evidence'
+    }
+    $attempt01MutableLatestLogIdentitiesRecordedOnly = @($attempt01.logs)
+    Assert-ERefitAttempt02Condition ($attempt01MutableLatestLogIdentitiesRecordedOnly.Count -eq 2) 'Attempt 01 historical mutable-log identity count drift'
+    $attempt01HistoricalServerLog = @($attempt01MutableLatestLogIdentitiesRecordedOnly | Where-Object { [string]$_.path -ceq $serverLogPath })
+    $attempt01HistoricalClientLog = @($attempt01MutableLatestLogIdentitiesRecordedOnly | Where-Object { [string]$_.path -ceq $clientLogPath })
+    Assert-ERefitAttempt02Condition ($attempt01HistoricalServerLog.Count -eq 1 -and $attempt01HistoricalClientLog.Count -eq 1) 'Attempt 01 historical mutable latest.log aliases drift'
+    foreach ($row in $attempt01MutableLatestLogIdentitiesRecordedOnly) {
+        Assert-ERefitAttempt02Condition ([int64]$row.size_bytes -gt 0 -and [string]$row.sha256 -match '^[0-9a-f]{64}$') 'Attempt 01 recorded historical mutable-log identity is malformed'
+    }
+    # The latest.log aliases now contain Attempt 02 and are never asserted against Attempt 01 hashes.
+    # If immutable Attempt 01 archive copies exist, validate those copies against the recorded historical identities.
+    $attempt01ImmutableLogArchives = @()
+    foreach ($mapping in @(
+        [pscustomobject]@{ ArchivePath = $attempt01ServerLogArchive; HistoricalIdentity = $attempt01HistoricalServerLog[0] },
+        [pscustomobject]@{ ArchivePath = $attempt01ClientLogArchive; HistoricalIdentity = $attempt01HistoricalClientLog[0] }
+    )) {
+        if (Test-Path -LiteralPath $mapping.ArchivePath -PathType Leaf) {
+            $archiveIdentity = [ordered]@{
+                path = $mapping.ArchivePath
+                size_bytes = [int64]$mapping.HistoricalIdentity.size_bytes
+                sha256 = [string]$mapping.HistoricalIdentity.sha256
+            }
+            Assert-ERefitAttempt02Identity -Identity $archiveIdentity -Label 'Immutable Attempt 01 archived log evidence'
+            $attempt01ImmutableLogArchives += Get-ERefitAttempt02Identity $mapping.ArchivePath
+        }
     }
 
     foreach ($authority in @(
@@ -449,7 +505,17 @@ try {
         immutable = $true
         preparation_commit = $preparationCommit
         package_bundle_sha256 = $packageInventory.package_bundle_sha256
-        attempt_01 = [ordered]@{ preserved = $true; classification = $attempt01Classification; certified = $false }
+        attempt_01 = [ordered]@{
+            preserved = $true
+            classification = $attempt01Classification
+            certified = $false
+            immutable_repository_manifest = Get-ERefitAttempt02Identity $attempt01ManifestPath
+            immutable_repository_package_inventory = Get-ERefitAttempt02Identity $attempt01PackageInventoryPath
+            immutable_repair_package_inventory = Get-ERefitAttempt02Identity $attempt01RepairPackageInventoryPath
+            immutable_log_archives = @($attempt01ImmutableLogArchives)
+            historical_mutable_latest_log_identities_recorded_only = @($attempt01MutableLatestLogIdentitiesRecordedOnly)
+            mutable_latest_log_paths_are_preserved_artifacts = $false
+        }
         attempt_name = $attemptName
         accepted_geometry_version = $geometryVersion
         accepted_geometry_sha256 = $geometrySha256
@@ -464,6 +530,7 @@ try {
         coordinate_convention = Get-ERefitAttempt02Identity $coordinateConventionPath
         authenticated_account = $observedAccount
         operator_attestation = Get-ERefitAttempt02Identity $attestationPath
+        current_latest_logs_classification = 'ATTEMPT_02_SESSION_EVIDENCE_ONLY'
         server_log = Get-ERefitAttempt02Identity $serverLogArchive
         client_log = Get-ERefitAttempt02Identity $clientLogArchive
         screenshot_inventory = Get-ERefitAttempt02Identity $screenshotInventoryPath
@@ -481,6 +548,8 @@ try {
         preparation_commit = $preparationCommit
         attempt_01_preserved = $true
         attempt_01_classification = $attempt01Classification
+        attempt_01_mutable_latest_log_paths_are_preserved_artifacts = $false
+        current_latest_logs_classification = 'ATTEMPT_02_SESSION_EVIDENCE_ONLY'
         framebuffer_preflight_valid = $true
         preflight_screenshot_counted_as_layout = $false
         operator_id = $observedAccount

@@ -69,6 +69,19 @@ function Get-ERefitAttempt02Identity {
     }
 }
 
+function Assert-ERefitAttempt02Identity {
+    param(
+        [Parameter(Mandatory = $true)]$Identity,
+        [Parameter(Mandatory = $true)][string]$Label
+    )
+    $path = [string]$Identity.path
+    Assert-ERefitAttempt02Condition (Test-Path -LiteralPath $path -PathType Leaf) "$Label is absent: $path"
+    $actual = Get-ERefitAttempt02Identity $path
+    Assert-ERefitAttempt02Condition (
+        $actual.size_bytes -eq [int64]$Identity.size_bytes -and $actual.sha256 -ceq [string]$Identity.sha256
+    ) "$Label identity drift: $path"
+}
+
 function Get-ERefitAttempt02PngDimensions {
     param([Parameter(Mandatory = $true)][string]$Path)
     $stream = [System.IO.File]::OpenRead($Path)
@@ -208,6 +221,7 @@ Export-ModuleMember -Function @(
     'Assert-ERefitAttempt02Condition',
     'Get-ERefitAttempt02Sha256',
     'Get-ERefitAttempt02Identity',
+    'Assert-ERefitAttempt02Identity',
     'Get-ERefitAttempt02PngDimensions',
     'Get-ERefitAttempt02PrefixSha256',
     'Copy-ERefitAttempt02CreateOnly',
