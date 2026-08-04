@@ -96,3 +96,20 @@ def test_receipt_rejects_invented_single_layout_pass() -> None:
         match="fail-closed execution decision",
     ):
         runner.validate_receipt(document)
+
+
+def test_committed_b_to_a_receipt_is_valid_and_canonical() -> None:
+    path = (
+        ROOT
+        / "docs/status/"
+        "person_b_canonical_positive_control_layout_01_ep12602_v0_1/"
+        "b_to_a_receipt.json"
+    )
+    document = runner._load_object(path, "committed B-to-A receipt")
+
+    runner.validate_receipt(document)
+    assert document["activation_artifact_count"] == 21
+    assert document["source_hashes"]["activation_index_sha256"] == (
+        runner.EXPECTED_INDEX_SHA256
+    )
+    assert document["execution"]["scientific_fit_performed"] is False
