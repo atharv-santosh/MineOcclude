@@ -231,7 +231,13 @@ def _inspect_source(source_root: Path) -> tuple[str, bool]:
             )
         return result.stdout.strip()
 
-    return run("rev-parse", "HEAD"), not bool(run("status", "--porcelain"))
+    # Interpreter caches and other untracked files do not change the audited
+    # Git objects used by the adapter.  Require the pinned revision and no
+    # tracked-file modifications while leaving unrelated untracked files out
+    # of the scientific authority decision.
+    return run("rev-parse", "HEAD"), not bool(
+        run("status", "--porcelain", "--untracked-files=no")
+    )
 
 
 def _git_blob_sha256(source_root: Path, revision: str, relative_path: str) -> str:

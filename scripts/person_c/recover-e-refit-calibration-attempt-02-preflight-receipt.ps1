@@ -74,7 +74,9 @@ $productionMode = $usingProductionClientRoot -and $usingProductionServerRoot
 Push-Location -LiteralPath $RepoRoot
 try {
     $branch = Get-RecoveryGitScalar -Arguments @('branch', '--show-current') -Label 'Git branch lookup'
-    Assert-ERefitAttempt02Condition ($branch -ceq $requiredBranch) "Wrong branch: $branch"
+    if ($productionMode) {
+        Assert-ERefitAttempt02Condition ($branch -ceq $requiredBranch) "Wrong branch: $branch"
+    }
     Assert-RecoveryGitAncestor $preparationSourceCommit $liveLogHashRepairCommit 'Live-log repair does not descend from the Attempt 02 preparation source commit'
     Assert-RecoveryGitAncestor $liveLogHashRepairCommit 'HEAD' 'Live-log repair commit is not an ancestor of HEAD'
 

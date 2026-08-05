@@ -21,6 +21,10 @@ from mineocclude.analysis.manifests import (
     validate_sealed_artifact,
 )
 from mineocclude.analysis.outputs import build_prediction_artifact, build_result_artifact
+from mineocclude.analysis.synthetic_numbers import (
+    canonical_synthetic_float,
+    canonicalize_synthetic_artifact_payload,
+)
 from mineocclude.contracts.intervention_request import validate_intervention_request
 from mineocclude.intervention.directions import (
     derive_time_orthogonal_direction,
@@ -178,7 +182,7 @@ def _metric(
     return {
         "metric_id": metric_id,
         "metric_name": name,
-        "value": float(value),
+        "value": canonical_synthetic_float(float(value)),
         "unit": unit,
         "sample_count": count,
         "sample_unit": sample_unit,
@@ -226,6 +230,19 @@ def run_synthetic_analysis_chain(
         raise SyntheticAnalysisChainError("No authenticated activation matrix was built.")
     authenticated_execution = run_ridge_oof_probe(
         matrices[0], artifact_id_prefix="synthetic_b_chain_authenticated_mean"
+    )
+    authenticated_prediction = seal_artifact(
+        canonicalize_synthetic_artifact_payload(
+            authenticated_execution.prediction_artifact
+        )
+    )
+    authenticated_u1 = seal_artifact(
+        canonicalize_synthetic_artifact_payload(
+            authenticated_execution.u1_result_artifact,
+            prediction_manifest_hashes=[
+                authenticated_prediction["artifact_hash"]
+            ],
+        )
     )
 
     matrix = matrices[0]
@@ -547,8 +564,8 @@ def run_synthetic_analysis_chain(
         "fold_manifest": fold_manifest,
         "authenticated_activation_probe": {
             "matrix_hash": matrix.matrix_hash,
-            "prediction_artifact_hash": authenticated_execution.prediction_artifact["artifact_hash"],
-            "u1_artifact_hash": authenticated_execution.u1_result_artifact["artifact_hash"],
+            "prediction_artifact_hash": authenticated_prediction["artifact_hash"],
+            "u1_artifact_hash": authenticated_u1["artifact_hash"],
         },
         "eligibility_ledger": ledger,
         "prediction_artifacts": {

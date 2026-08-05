@@ -36,6 +36,9 @@ MINEWORLD_REVISION = "9f49efbcc68a5f0cf60e78f0abc566eac409282f"
 MINEWORLD_REQUIREMENTS_SHA256 = (
     "b58d7e3514e7f9787ddd428fdc755e08cb48a75dd3cd09a4e1fc8e4c210af38c"
 )
+PRE_PYARROW_ENVIRONMENT_REVISION = (
+    "f0a4fed546eb1cf19a7094e6b99399a58294726a"
+)
 
 
 def _sha256(path: Path) -> str:
@@ -99,7 +102,11 @@ def test_every_prequalified_environment_dependency_is_preserved() -> None:
     for environment in (LOCAL_ENV, AWS_ENV):
         relative = environment.relative_to(ROOT).as_posix()
         baseline_text = subprocess.run(
-            ["git", "show", f"HEAD:{relative}"],
+            [
+                "git",
+                "show",
+                f"{PRE_PYARROW_ENVIRONMENT_REVISION}:{relative}",
+            ],
             check=True,
             capture_output=True,
             text=True,
@@ -147,7 +154,14 @@ def test_external_mineworld_dependency_file_is_untouched() -> None:
         text=True,
     ).stdout.strip()
     status = subprocess.run(
-        ["git", "-C", str(mineworld), "status", "--short"],
+        [
+            "git",
+            "-C",
+            str(mineworld),
+            "status",
+            "--short",
+            "--untracked-files=no",
+        ],
         check=True,
         capture_output=True,
         text=True,

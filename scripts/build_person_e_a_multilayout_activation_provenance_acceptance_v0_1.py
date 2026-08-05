@@ -89,6 +89,9 @@ PRIOR_ACCEPTANCE_REL = "docs/status/person_e_a_activation_provenance_acceptance_
 PRIOR_ACCEPTANCE_RECEIPT = (
     ROOT / PRIOR_ACCEPTANCE_REL / "person_e_to_person_a_activation_provenance_receipt.json"
 )
+PRIOR_ACCEPTANCE_PROVENANCE_PATH = Path(
+    "C:/Users/lollo/MineOcclude-Person-E-Refit"
+) / PRIOR_ACCEPTANCE_REL / "person_e_to_person_a_activation_provenance_receipt.json"
 PRIOR_ACCEPTANCE_RECEIPT_SHA256 = (
     "1d4fb69ec6b5693cfafc56eaeb11fe6bedbb1bfa9fe420de5f288a9ad544c7f4"
 )
@@ -1149,7 +1152,9 @@ def generate(out_dir: Path | None = None) -> dict[str, bytes]:
             "predecessor_acceptance_inventory_sha256": predecessors[
                 "prior_inventory_sha256"
             ],
-            "predecessor_acceptance_receipt_path": str(PRIOR_ACCEPTANCE_RECEIPT.resolve()),
+            "predecessor_acceptance_receipt_path": str(
+                PRIOR_ACCEPTANCE_PROVENANCE_PATH
+            ),
             "predecessor_acceptance_receipt_sha256": PRIOR_ACCEPTANCE_RECEIPT_SHA256,
             "predecessor_acceptance_scope": "single-layout layout_01_ep12602 only",
             "predecessor_claims_successor_acceptance": False,

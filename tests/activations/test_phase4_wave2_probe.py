@@ -190,7 +190,7 @@ class PoolingProbePreflightTests(unittest.TestCase):
         )
 
     def test_preflight_records_no_runtime_or_session_side_effects(self):
-        self.assertNotIn("torch", sys.modules)
+        torch_before = sys.modules.get("torch")
         probe = _load_probe()
         from mineocclude.models import phase3_certification
 
@@ -266,10 +266,10 @@ class PoolingProbePreflightTests(unittest.TestCase):
         self.assertEqual(report["expected_layer_count"], 20)
         self.assertEqual(report["expected_hidden_size"], 2048)
         self.assertFalse(session_root.exists())
-        self.assertNotIn("torch", sys.modules)
+        self.assertIs(sys.modules.get("torch"), torch_before)
 
     def test_preflight_rejects_noncanonical_probe_shape(self):
-        self.assertNotIn("torch", sys.modules)
+        torch_before = sys.modules.get("torch")
         probe = _load_probe()
         from mineocclude.models import phase3_certification
 
@@ -310,7 +310,7 @@ class PoolingProbePreflightTests(unittest.TestCase):
         ), self.assertRaises(Exception) as caught:
             probe.preflight(args)
         self.assertIn("probe_shape_mismatch", str(caught.exception))
-        self.assertNotIn("torch", sys.modules)
+        self.assertIs(sys.modules.get("torch"), torch_before)
 
     def test_validate_fails_closed_for_missing_report(self):
         probe = _load_probe()

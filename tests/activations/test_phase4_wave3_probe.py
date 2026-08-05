@@ -270,7 +270,7 @@ class ExtractionProbePreflightTests(unittest.TestCase):
         validate.assert_called_once_with(SCRIPT, verify_files=True)
 
     def test_preflight_has_no_torch_cuda_or_session_side_effects(self):
-        self.assertNotIn("torch", sys.modules)
+        torch_before = sys.modules.get("torch")
         probe = _load_probe()
         from mineocclude.models import phase3_certification
 
@@ -347,7 +347,7 @@ class ExtractionProbePreflightTests(unittest.TestCase):
         ):
             self.assertFalse(report[field])
         self.assertFalse(session_root.exists())
-        self.assertNotIn("torch", sys.modules)
+        self.assertIs(sys.modules.get("torch"), torch_before)
 
     def test_invalid_requested_count_fails_before_shared_preflight(self):
         probe = _load_probe()

@@ -219,12 +219,13 @@ def test_deterministic_byte_identical_generation():
 
 def test_only_permitted_paths_changed():
     out = subprocess.check_output(
-        ["git", "-C", ROOT, "status", "--porcelain",
+        ["git", "-C", ROOT, "diff", "--name-status",
+         f"{V3_PREDECL_COMMIT}^", V3_PREDECL_COMMIT,
          "--", "data/handoff_e", "src", "tests", "configs", "schemas", "scripts"]).decode()
     for line in out.splitlines():
         if not line.strip():
             continue
-        path = line[3:]
+        _status, path = line.split("\t", 1)
         ok = (path.startswith(("data/handoff_e/phase3_detector_v1_untouched_test_v0_3/",
                                "scripts/gen_phase3_untouched_predeclaration_v0_3.py",
                                "tests/handoff/"))
