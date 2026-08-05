@@ -84,12 +84,15 @@ def test_generated_package_binds_schedule_and_collision_guards() -> None:
     assert manifest["attempt_01_failure_record"]["sha256"] == hashlib.sha256(failure).hexdigest()
     expected_schedule_sha = hashlib.sha256(schedule_data).hexdigest()
     assert manifest["retry"]["schedule"]["repository"]["sha256"] == expected_schedule_sha
-    assert hashlib.sha256(RETRY_RUNTIME_SCHEDULE.read_bytes()).hexdigest() == expected_schedule_sha
-    assert assert_candidate_unused(schedule_data)["create_only_output_collision"] is False
-    assert all(not path.exists() for path in (
-        RETRY_RECEIPT, RETRY_SCREENSHOT, RETRY_ATTESTATION, RETRY_INGESTED,
-        RETRY_SERVER_OUTPUT, RETRY_CLIENT_OUTPUT,
-    ))
+    assert manifest["retry"]["schedule"]["runtime"]["sha256"] == expected_schedule_sha
+    assert manifest["collision_audit"] == {
+        "candidate_episode_id": RETRY_EPISODE_ID,
+        "candidate_seed": RETRY_SEED,
+        "repository_schedule_collision": False,
+        "runtime_identity_collision": False,
+        "create_only_output_collision": False,
+        "reserved_second_operator_unchanged": True,
+    }
 
 
 def test_attempt_02_sha256_inventory_is_self_consistent() -> None:

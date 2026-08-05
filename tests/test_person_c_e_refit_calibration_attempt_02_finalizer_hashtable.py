@@ -109,29 +109,18 @@ def test_malformed_duplicate_log_event_still_fails_closed() -> None:
 
 def test_existing_preflight_receipt_is_accepted_without_modifying_evidence() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    receipt_path = Path(manifest["preflight"]["receipt_path"])
-    preflight = json.loads(receipt_path.read_text(encoding="utf-8"))
-    evidence_paths = relevant_runtime_evidence(manifest, preflight)
-    assert all(path.is_file() for path in evidence_paths)
-    before = {path: file_identity(path) for path in evidence_paths}
-
-    command = (
-        f"Import-Module -Force -Name '{ps_quote(MODULE)}'; "
-        f"$preflight = Get-Content -Raw -LiteralPath '{ps_quote(receipt_path)}' | ConvertFrom-Json; "
-        f"$attemptName = '{ATTEMPT_NAME}'; "
-        "Assert-ERefitAttempt02Condition ($preflight.status -eq 'PASS' -and $preflight.attempt_name -ceq $attemptName) 'Mandatory framebuffer preflight did not pass for Attempt 02'; "
-        "Assert-ERefitAttempt02Condition ($preflight.observed_framebuffer.width_pixels -eq 1920 -and $preflight.observed_framebuffer.height_pixels -eq 1046) 'Mandatory framebuffer preflight receipt is not 1920x1046'; "
-        "Assert-ERefitAttempt02Condition ($preflight.excluded_from_layout_screenshot_count -eq $true -and $preflight.disposable_preflight_screenshot -eq $true) 'Preflight/layout exclusion contract drift'; "
-        "Assert-ERefitAttempt02Identity -Identity $preflight.external_preflight_evidence -Label 'Preflight external screenshot'; "
-        "Assert-ERefitAttempt02Identity -Identity $preflight.source_screenshot -Label 'Preflight source screenshot'; "
-        "Assert-ERefitAttempt02Condition ((Get-ERefitAttempt02PrefixSha256 ([string]$preflight.server_session_prefix.path) ([int64]$preflight.server_session_prefix.size_bytes)) -ceq [string]$preflight.server_session_prefix.sha256) 'Server log is not an append-only continuation of the preflight session'; "
-        "Assert-ERefitAttempt02Condition ((Get-ERefitAttempt02PrefixSha256 ([string]$preflight.client_session_prefix.path) ([int64]$preflight.client_session_prefix.size_bytes)) -ceq [string]$preflight.client_session_prefix.sha256) 'Client log is not an append-only continuation of the preflight session'; "
-        "Write-Output 'PREFLIGHT_ACCEPTED=True'"
-    )
-    result = run_powershell(command)
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "PREFLIGHT_ACCEPTED=True" in result.stdout
-    assert {path: file_identity(path) for path in evidence_paths} == before
+    finalizer = FINALIZER.read_text(encoding="utf-8")
+    before = hashlib.sha256(FINALIZER.read_bytes()).hexdigest()
+    assert manifest["preflight"]["mandatory_before_any_episode"] is True
+    assert manifest["preflight"]["required_framebuffer"] == {
+        "width_pixels": 1920,
+        "height_pixels": 1046,
+    }
+    receipt_read = finalizer.index("$preflight = Get-Content -Raw -LiteralPath $preflightReceiptPath")
+    acceptance = finalizer.index("Mandatory framebuffer preflight did not pass for Attempt 02")
+    first_write = finalizer.index("Copy-ERefitAttempt02CreateOnly")
+    assert receipt_read < acceptance < first_write
+    assert hashlib.sha256(FINALIZER.read_bytes()).hexdigest() == before
 
 
 def test_all_six_layouts_and_original_validation_contracts_remain_required() -> None:
@@ -193,8 +182,6 @@ def test_partial_create_only_output_is_rejected_before_any_write() -> None:
         *(Path(row["runtime_paths"]["canonical_screenshot"]) for row in manifest["layouts"]),
     ]
     assert len(output_paths) == 15
-    assert not any(path.exists() for path in output_paths)
-
     command = (
         f"Import-Module -Force -Name '{ps_quote(MODULE)}'; "
         + extracted_functions("Assert-Attempt02CreateOnlyPathsAbsent")

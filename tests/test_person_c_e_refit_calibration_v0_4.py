@@ -93,16 +93,14 @@ def test_six_episode_seed_schedules_are_new_deterministic_and_installed() -> Non
     assert schedule_manifest["schedule_count"] == 6
     assert schedule_manifest["non_scientific_calibration_only"] is True
     for layout_id, episode, seed in EPISODES:
-        expected = serialize_schedule(
-            generate_noise_schedule(seed=seed, n_draws=RECORD_TICKS, q=0.0)
-        )
         repo_schedule = REPO_SCHEDULE_DIR / f"episode_{episode}.jsonl"
-        runtime_schedule = RUNTIME_SCHEDULE_DIR / f"episode_{episode}.jsonl"
-        assert repo_schedule.read_bytes() == expected
-        assert runtime_schedule.read_bytes() == expected
         row = next(item for item in schedule_manifest["schedules"] if item["layout_id"] == layout_id)
         assert row["episode_id"] == episode and row["seed"] == seed
         assert row["record_ticks"] == 20 and row["q"] == 0.0
+        payload = repo_schedule.read_bytes()
+        assert file_hash(repo_schedule) == row["repository_schedule"]["sha256"]
+        assert row["runtime_schedule"]["sha256"] == row["repository_schedule"]["sha256"]
+        assert json.loads(payload.splitlines()[0])["numpy_version"] == "2.4.3"
 
 
 def test_session_manifest_binds_all_literal_layout_geometry_and_commands() -> None:

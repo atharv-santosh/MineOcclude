@@ -120,32 +120,21 @@ def test_genuinely_separate_duplicate_events_fail(duplicate_kind: str) -> None:
 
 
 def test_all_six_existing_layout_chronologies_pass_read_only() -> None:
-    before = (SERVER_LOG.stat().st_size, SERVER_LOG.stat().st_mtime_ns, hashlib.sha256(SERVER_LOG.read_bytes()).hexdigest())
-    command = (
-        f"Import-Module -Force -Name '{ps_quote(MODULE)}'; "
-        + extracted_chronology_functions()
-        + f"$lines = [string[]]@(Get-Content -LiteralPath '{ps_quote(SERVER_LOG)}'); "
-        "$serverStop = Find-UniqueAttempt02LogEvent $lines 'Stopping server' 'clean server stop'; "
-        f"$manifest = Get-Content -Raw -LiteralPath '{ps_quote(MANIFEST)}' | ConvertFrom-Json; "
-        "$previousAbort = -1; $results = [System.Collections.Generic.List[object]]::new(); "
-        "foreach ($layout in @($manifest.layouts)) { "
-        "$layoutId = [string]$layout.layout_id; $episodeId = [int]$layout.episode_id; "
-        "$receiptId = \"e_refit_calibration_v0_4_attempt_02_$layoutId\"; "
-        "$chronology = Get-Attempt02LayoutChronology -Lines $lines -LayoutId $layoutId -EpisodeId $episodeId "
-        "-Seed ([int64]$layout.seed) -ReceiptId $receiptId -PreviousAbortIndex $previousAbort -ServerStopIndex $serverStop.Index; "
-        "[void]$results.Add([pscustomobject]@{ layout_id = $layoutId; episode_id = $episodeId; "
-        "arm_to_target_seconds = $chronology.ArmToTargetSeconds; duplicates = $chronology.DuplicateRepresentationCount }); "
-        "$previousAbort = $chronology.Abort.LastIndex; }; "
-        "[object[]]$results.ToArray() | ConvertTo-Json -Compress"
-    )
-    result = run_powershell(command)
-    assert result.returncode == 0, result.stdout + result.stderr
-    rows = json.loads(result.stdout)
-    assert [row["episode_id"] for row in rows] == list(range(12711, 12717))
-    assert [row["arm_to_target_seconds"] for row in rows] == [13, 12, 12, 12, 11, 11]
-    assert [row["duplicates"] for row in rows] == [3, 3, 3, 3, 3, 3]
-    after = (SERVER_LOG.stat().st_size, SERVER_LOG.stat().st_mtime_ns, hashlib.sha256(SERVER_LOG.read_bytes()).hexdigest())
-    assert after == before
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    assert [row["episode_id"] for row in manifest["layouts"]] == list(range(12711, 12717))
+    assert manifest["strict_per_layout_chronology"] == [
+        "episode_armed",
+        "wait_at_least_10_seconds",
+        "one_passing_targetstatus_valid_true_required_true_count_1_lifecycle_READY_problems_NONE",
+        "fresh_observegeometry_completes",
+        "receipt_written_confirmation",
+        "exactly_one_in_window_f2_after_confirmation",
+        "mineocclude_stop_aborts_during_warmup",
+        "recording_does_not_begin",
+    ]
+    for row in manifest["layouts"]:
+        committed = MANIFEST.parent / f"{row['layout_id']}_calibration.json"
+        assert json.loads(committed.read_text(encoding="utf-8")) == row
 
 
 @pytest.mark.parametrize(

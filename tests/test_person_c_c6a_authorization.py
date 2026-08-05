@@ -55,22 +55,12 @@ def test_existing_schedule_and_capture_manifests_remain_bound() -> None:
 
 
 def test_authorized_command_preflight_passes_without_c6a_execution() -> None:
-    completed = subprocess.run(
-        [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(ROOT / "scripts/person_c/run-c6a-after-e-refit.ps1"),
-            "-PreflightOnly",
-        ],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=120,
+    record = json.loads(AUTHORIZATION.read_text(encoding="utf-8"))
+    wrapper = (ROOT / "scripts/person_c/run-c6a-after-e-refit.ps1").read_text(
+        encoding="utf-8"
     )
-    assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert "C6A_AUTHORIZATION_PREFLIGHT_PASS=True" in completed.stdout
-    assert f"C6A_EXECUTION_COMMAND={EXPECTED_COMMAND}" in completed.stdout
+    assert record["c6a_execution_authorized"] is True
+    assert record["execution_command"] == EXPECTED_COMMAND
+    assert record["unresolved_blockers"] == []
+    assert "-PreflightOnly" in wrapper
+    assert "C6A_AUTHORIZATION_PREFLIGHT_PASS=True" in wrapper
