@@ -1,0 +1,24 @@
+{
+    "schema_version":  "1.0",
+    "java_executable":  "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\\bin\\java.exe",
+    "server":  {
+                   "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\start-mineocclude-server.ps1\"",
+                   "java_arguments":  "-Xms1G -Xmx2G -Dfile.encoding=UTF-8 -jar C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\fabric-server-launch.jar nogui",
+                   "working_directory":  "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server"
+               },
+    "client":  {
+                   "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\start-mineocclude-client.ps1\"",
+                   "main_class":  "net.fabricmc.loader.impl.launch.knot.KnotClient",
+                   "memory":  {
+                                  "minimum":  "1G",
+                                  "maximum":  "2G"
+                              },
+                   "working_directory":  "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client",
+                   "game_directory":  "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client",
+                   "resolution":  {
+                                      "width":  640,
+                                      "height":  360
+                                  },
+                   "gui_validation_complete":  false
+               }
+}

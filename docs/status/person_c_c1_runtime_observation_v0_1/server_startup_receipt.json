@@ -1,0 +1,38 @@
+{
+  "schema_version": "person-c-c1-server-startup-receipt-v0.1",
+  "status": "pending_operator_observation",
+  "runtime_execution_complete": false,
+  "required_starting_commit": "de16fabef5dfe326cbff71118c99d32234337a53",
+  "preparation_commit": null,
+  "launch_working_directory": null,
+  "launch_command": null,
+  "launcher_artifact": null,
+  "launcher_sha256": null,
+  "java_executable": null,
+  "java_version_output": null,
+  "minecraft_version": null,
+  "fabric_loader_version": null,
+  "fabric_api_version": null,
+  "mineocclude_jar": null,
+  "mineocclude_jar_sha256": null,
+  "server_start_utc": null,
+  "stable_ready_utc": null,
+  "stable_ready_log_patterns_required": [
+    "Done (",
+    "[MineOcclude] server ready; output ->"
+  ],
+  "stable_ready_log_excerpt": null,
+  "latest_log_path": null,
+  "latest_log_size_bytes": null,
+  "latest_log_sha256": null,
+  "server_stop_utc": null,
+  "clean_stop_log_excerpt": null,
+  "production_launcher_discovery": {
+    "repository_launcher_found": false,
+    "external_expected_root": "C:\\Users\\lollo\\mineocclude-server",
+    "external_expected_root_exists_on_preparation_host": false,
+    "loom_dev_server_is_production_authority": false
+  },
+  "success": false,
+  "failure_reason": "A production dedicated-server root and exact launcher command are not present in the repository or preparation host."
+}

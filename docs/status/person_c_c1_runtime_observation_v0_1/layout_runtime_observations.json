@@ -1,0 +1,96 @@
+{
+  "schema_version": "person-c-c1-layout-runtime-observations-v0.1",
+  "status": "pending_operator_observation",
+  "runtime_execution_complete": false,
+  "observation_tool": {
+    "command_shape": "mineocclude observegeometry <receiptId>",
+    "output_root_relative_to_server": "mineocclude_observations",
+    "receipt_schema": "person-c-c1-runtime-geometry-observation-v0.1",
+    "observation_only": true,
+    "scientific_use": "forbidden",
+    "create_only": true
+  },
+  "episode_parameters": {
+    "scene": "normal",
+    "warmup_ticks": 1200,
+    "lock_camera": true,
+    "v_blocks_per_second": 0.0,
+    "q_blocks_squared_per_second": 0.0,
+    "record_ticks_if_not_stopped": 20,
+    "usage": "non-scientific observation only; stop immediately after receipt"
+  },
+  "layouts": [
+    {
+      "layout_id_requested": "layout_01",
+      "episode_id": 11101,
+      "seed": 202608031101,
+      "start_command": "mineocclude start layout_01 11101 202608031101 0.0 0.0 20",
+      "observation_command": "mineocclude observegeometry c1_1_layout_01",
+      "runtime_receipt_path": null,
+      "runtime_receipt_size_bytes": null,
+      "runtime_receipt_sha256": null,
+      "layout_id_reported": null,
+      "complete": false
+    },
+    {
+      "layout_id_requested": "layout_02",
+      "episode_id": 11102,
+      "seed": 202608031102,
+      "start_command": "mineocclude start layout_02 11102 202608031102 0.0 0.0 20",
+      "observation_command": "mineocclude observegeometry c1_1_layout_02",
+      "runtime_receipt_path": null,
+      "runtime_receipt_size_bytes": null,
+      "runtime_receipt_sha256": null,
+      "layout_id_reported": null,
+      "complete": false
+    },
+    {
+      "layout_id_requested": "layout_03",
+      "episode_id": 11103,
+      "seed": 202608031103,
+      "start_command": "mineocclude start layout_03 11103 202608031103 0.0 0.0 20",
+      "observation_command": "mineocclude observegeometry c1_1_layout_03",
+      "runtime_receipt_path": null,
+      "runtime_receipt_size_bytes": null,
+      "runtime_receipt_sha256": null,
+      "layout_id_reported": null,
+      "complete": false
+    },
+    {
+      "layout_id_requested": "layout_04",
+      "episode_id": 11104,
+      "seed": 202608031104,
+      "start_command": "mineocclude start layout_04 11104 202608031104 0.0 0.0 20",
+      "observation_command": "mineocclude observegeometry c1_1_layout_04",
+      "runtime_receipt_path": null,
+      "runtime_receipt_size_bytes": null,
+      "runtime_receipt_sha256": null,
+      "layout_id_reported": null,
+      "complete": false
+    },
+    {
+      "layout_id_requested": "layout_05",
+      "episode_id": 11105,
+      "seed": 202608031105,
+      "start_command": "mineocclude start layout_05 11105 202608031105 0.0 0.0 20",
+      "observation_command": "mineocclude observegeometry c1_1_layout_05",
+      "runtime_receipt_path": null,
+      "runtime_receipt_size_bytes": null,
+      "runtime_receipt_sha256": null,
+      "layout_id_reported": null,
+      "complete": false
+    },
+    {
+      "layout_id_requested": "layout_06",
+      "episode_id": 11106,
+      "seed": 202608031106,
+      "start_command": "mineocclude start layout_06 11106 202608031106 0.0 0.0 20",
+      "observation_command": "mineocclude observegeometry c1_1_layout_06",
+      "runtime_receipt_path": null,
+      "runtime_receipt_size_bytes": null,
+      "runtime_receipt_sha256": null,
+      "layout_id_reported": null,
+      "complete": false
+    }
+  ]
+}

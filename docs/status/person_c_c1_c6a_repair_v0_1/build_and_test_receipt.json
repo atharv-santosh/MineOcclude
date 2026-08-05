@@ -1,0 +1,24 @@
+{
+  "schema_version": "person-c-c1-c6a-build-test-receipt-v0.1",
+  "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4",
+  "java_executable": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\\bin\\java.exe",
+  "gradle_command": ".\\gradlew.bat clean build test --no-daemon",
+  "gradle_clean_build_pass": true,
+  "fabric_test_pass": true,
+  "junit_test_count": 32,
+  "target_retention_regression_test_count": 11,
+  "focused_repository_command": "python -m pytest tests/test_person_c_c1_c6a_plan.py tests/data/test_noise_schedule.py tests/data/test_layout_contract.py tests/data/test_environment_lock.py -q",
+  "focused_repository_test_pass": true,
+  "focused_pytest_count": 30,
+  "focused_subtest_count": 30,
+  "built_jar": {
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\artifacts\\mineocclude-0.1.1-538a176e1c83dc3b40e220dee8ebb2ac841bd9b4.jar",
+    "size_bytes": 84102,
+    "sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "fabric_metadata": {
+      "id": "mineocclude",
+      "version": "0.1.1"
+    },
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+  }
+}

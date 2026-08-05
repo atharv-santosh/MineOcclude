@@ -1,0 +1,25 @@
+{
+  "schema_version": "person-c-c1-runtime-baseline-decision-v0.2",
+  "baseline_version": "person-c-c1-runtime-baseline-v0.2",
+  "status": "ACCEPTED_FOR_NEW_POST_C1_EVIDENCE_ONLY",
+  "predecessor": "docs/status/person_c_c1_runtime_provisioning_v0_1/",
+  "starting_commit": "cc285852d6be02ddb878957aed82a4360e96e9ac",
+  "decisions": {
+    "loom": {"declared_version": "1.4.6", "immutable": true},
+    "java": {"major": 17, "distribution_observed": "Eclipse Temurin 17.0.19+10"},
+    "spawn-animals": false,
+    "natural_spawning": false,
+    "experimental_sheep_source": "MineOcclude reset/preview system only",
+    "server_network": {"bind": "127.0.0.1", "port": 25565, "online_mode": false, "max_players": 1},
+    "world": {"level_name": "world-c1-v0_2", "seed": "202608030101", "type": "flat", "structures": false, "difficulty": "peaceful"},
+    "time_weather": {"time_ticks": 6000, "daylight_cycle": false, "weather": "clear", "weather_cycle": false},
+    "gamerules": {"doMobSpawning": false, "mobGriefing": false, "randomTickSpeed": 0, "doFireTick": false, "keepInventory": true},
+    "client": {"launch_width": 640, "launch_height": 360, "fov_degrees": 70.0, "graphics": "fancy", "render_distance_chunks": 10, "gui_scale": 2, "entity_shadows": true, "ambient_occlusion": "maximum", "fullscreen": false, "resource_packs": ["vanilla"]}
+  },
+  "supersession": {
+    "historical_files_edited": false,
+    "retroactive": false,
+    "geometry_authority_changed": false,
+    "applies_from": "first evidence hash-bound to the completed v0.2 provisioning receipt"
+  }
+}
