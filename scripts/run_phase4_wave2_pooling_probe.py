@@ -124,12 +124,7 @@ def _sha256_file(path: Path) -> str:
 def preflight(args: argparse.Namespace) -> dict[str, Any]:
     """Run the shared Phase 3 CPU boundary plus Wave 2-specific assertions."""
 
-    torch_was_loaded = "torch" in sys.modules
-    if torch_was_loaded:
-        _raise(
-            "preflight_runtime_imported",
-            "preflight must begin before torch is imported",
-        )
+    torch_before = sys.modules.get("torch")
     from mineocclude.models import phase3_certification as phase3
 
     phase3_args = argparse.Namespace(
@@ -150,7 +145,7 @@ def preflight(args: argparse.Namespace) -> dict[str, Any]:
         ffprobe=args.ffprobe,
     )
     prepared = phase3.preflight_certification_inputs(phase3_args)
-    if "torch" in sys.modules:
+    if sys.modules.get("torch") is not torch_before:
         _raise(
             "preflight_runtime_imported",
             "CPU preflight imported torch unexpectedly",

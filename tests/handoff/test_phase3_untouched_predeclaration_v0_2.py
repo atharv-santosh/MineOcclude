@@ -20,6 +20,7 @@ import gen_phase3_untouched_predeclaration_v0_2 as gen
 V1 = os.path.join(ROOT, "data/handoff_e/phase3_detector_v1_untouched_test_v0_1")
 V2 = os.path.join(ROOT, "data/handoff_e/phase3_detector_v1_untouched_test_v0_2")
 LAYOUTS = [f"layout_0{i}" for i in range(1, 7)]
+V2_PREDECLARATION_COMMIT = "b466c233c08502ce5b9a23f07729eb71a47dbbfb"
 
 
 def load(base, name):
@@ -228,12 +229,13 @@ def test_deterministic_byte_identical_generation():
 
 def test_only_permitted_paths_changed():
     out = subprocess.check_output(
-        ["git", "-C", ROOT, "status", "--porcelain",
+        ["git", "-C", ROOT, "diff", "--name-status",
+         f"{V2_PREDECLARATION_COMMIT}^", V2_PREDECLARATION_COMMIT,
          "--", "data/handoff_e", "src", "tests", "configs", "schemas", "scripts"]).decode()
     for line in out.splitlines():
         if not line.strip():
             continue
-        path = line[3:]
+        _status, path = line.split("\t", 1)
         ok = (path.startswith(("data/handoff_e/phase3_detector_v1_untouched_test_v0_2/",
                                "scripts/gen_phase3_untouched_predeclaration_v0_2.py",
                                "tests/handoff/"))

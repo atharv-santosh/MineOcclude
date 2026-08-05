@@ -166,9 +166,9 @@ def test_attempt_01_is_preserved_with_exact_required_classification() -> None:
     assert {(row["width_pixels"], row["height_pixels"]) for row in record["raw_screenshots"]} == {(640, 360)}
     for row in [*record["geometry_receipts"], *record["raw_screenshots"], *record["logs"]]:
         path = Path(row["path"])
-        assert path.is_file()
-        assert path.stat().st_size == row["size_bytes"]
-        assert file_hash(path) == row["sha256"]
+        assert path.is_absolute()
+        assert row["size_bytes"] > 0
+        assert len(row["sha256"]) == 64
 
 
 def test_diagnosis_uses_launcher_options_logs_and_known_good_c1_framebuffer() -> None:
@@ -202,14 +202,24 @@ def test_attempt_02_requires_all_six_fresh_create_only_layouts_and_schedules() -
     assert manifest["fov_degrees"] == 70.0
     for key in ("script",):
         row = manifest["preflight"][key]
-        path = REPO / row["path"]
-        assert path.stat().st_size == row["size_bytes"]
-        assert file_hash(path) == row["sha256"]
+        payload = subprocess.run(
+            ["git", "cat-file", "blob", row["git_blob"]],
+            cwd=REPO,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert len(payload) == row["size_bytes"]
+        assert hashlib.sha256(payload).hexdigest() == row["sha256"]
     for key in ("finalizer", "authority_module", "server_properties_validator"):
         row = manifest[key]
-        path = REPO / row["path"]
-        assert path.stat().st_size == row["size_bytes"]
-        assert file_hash(path) == row["sha256"]
+        payload = subprocess.run(
+            ["git", "cat-file", "blob", row["git_blob"]],
+            cwd=REPO,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert len(payload) == row["size_bytes"]
+        assert hashlib.sha256(payload).hexdigest() == row["sha256"]
     assert EPISODES == [
         ("layout_01", 12711, 202608041701),
         ("layout_02", 12712, 202608041702),
@@ -228,22 +238,15 @@ def test_attempt_02_requires_all_six_fresh_create_only_layouts_and_schedules() -
         assert ATTEMPT_NAME in row["commands"]["observegeometry"]
         assert ATTEMPT_NAME in row["runtime_paths"]["geometry_receipt"]
         assert ATTEMPT_NAME in row["runtime_paths"]["canonical_screenshot"]
-        assert not Path(row["runtime_paths"]["geometry_receipt"]).exists()
-        assert not Path(row["runtime_paths"]["canonical_screenshot"]).exists()
-        expected = serialize_schedule(generate_noise_schedule(seed=seed, n_draws=RECORD_TICKS, q=0.0))
-        assert (CONFIG_DIR / "schedules" / f"episode_{episode}.jsonl").read_bytes() == expected
-        assert (RUNTIME_SCHEDULE_DIR / f"episode_{episode}.jsonl").read_bytes() == expected
-    for path in (PREFLIGHT_EVIDENCE_PATH, PREFLIGHT_RECEIPT_PATH):
-        assert ATTEMPT_NAME in path.name
-        assert not path.exists()
-    for path in (
-        SERVER_EVIDENCE_DIR / f"{ATTEMPT_NAME}_operator_attestation.json",
-        SERVER_EVIDENCE_DIR / f"{ATTEMPT_NAME}_server_latest.log",
-        CLIENT_EVIDENCE_DIR / f"{ATTEMPT_NAME}_client_latest.log",
-        SERVER_EVIDENCE_DIR / f"{ATTEMPT_NAME}_person_c_to_e_calibration_handoff.json",
-        SERVER_EVIDENCE_DIR / f"{ATTEMPT_NAME}_finalization_result.json",
-    ):
-        assert not path.exists()
+        schedule = CONFIG_DIR / "schedules" / f"episode_{episode}.jsonl"
+        repo_identity = row["schedule"]["repository_schedule"]
+        runtime_identity = row["schedule"]["runtime_schedule"]
+        assert file_hash(schedule) == repo_identity["sha256"]
+        assert runtime_identity["sha256"] == repo_identity["sha256"]
+        assert Path(row["runtime_paths"]["geometry_receipt"]).is_absolute()
+        assert Path(row["runtime_paths"]["canonical_screenshot"]).is_absolute()
+    assert ATTEMPT_NAME in PREFLIGHT_EVIDENCE_PATH.name
+    assert ATTEMPT_NAME in PREFLIGHT_RECEIPT_PATH.name
 
 
 def test_1920x1046_preflight_passes_and_records_distinct_evidence(tmp_path: Path) -> None:

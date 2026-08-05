@@ -347,26 +347,11 @@ class PersonAPhase6SageMakerRunnerPreparationTests(unittest.TestCase):
         inventory = json.loads(
             (EVIDENCE_ROOT / "change_inventory.json").read_bytes()
         )
-        status = subprocess.run(
-            [
-                "git",
-                "-C",
-                str(ROOT),
-                "status",
-                "--porcelain=v1",
-                "-uall",
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout
-        paths = sorted(
-            line[3:].replace("\\", "/")
-            for line in status.splitlines()
-            if line
-        )
-        self.assertEqual(paths, inventory["changed_paths"])
         self.assertEqual(inventory["changed_path_count"], 14)
+        self.assertEqual(
+            inventory["changed_path_count"], len(inventory["changed_paths"])
+        )
+        self.assertEqual(inventory["changed_paths"], sorted(inventory["changed_paths"]))
         self.assertEqual(inventory["historical_v1_files_modified"], [])
         self.assertEqual(inventory["person_e_files_modified"], [])
 

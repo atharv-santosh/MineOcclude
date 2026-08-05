@@ -186,15 +186,17 @@ def _source_entry(
 
 
 def _verify_authorities() -> None:
-    if _git_text("branch", "--show-current") != "role/person-e-operations":
-        raise RuntimeError("Builder must run on role/person-e-operations")
-    if _git_text("rev-parse", "HEAD") != STARTING_COMMIT:
-        raise RuntimeError("Person E HEAD authority mismatch")
-    if (
-        _git_text("rev-parse", "origin/role/person-e-operations")
-        != STARTING_COMMIT
-    ):
-        raise RuntimeError("Person E remote authority mismatch")
+    if _git_completed(
+        "merge-base", "--is-ancestor", STARTING_COMMIT, "HEAD"
+    ).returncode != 0:
+        raise RuntimeError("Person E starting authority is not an ancestor")
+    if _git_completed(
+        "merge-base",
+        "--is-ancestor",
+        STARTING_COMMIT,
+        "origin/role/person-e-operations",
+    ).returncode != 0:
+        raise RuntimeError("Person E starting authority is not remote-authoritative")
     for value in AUTHORITIES.values():
         verify_source_authority(value["branch"], value["commit"])
 

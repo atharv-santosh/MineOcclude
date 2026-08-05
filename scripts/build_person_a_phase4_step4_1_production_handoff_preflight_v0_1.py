@@ -343,12 +343,13 @@ def verify_authority(owner: str) -> dict[str, str]:
 
 
 def verify_repository_authority() -> None:
-    branch = _git_text("branch", "--show-current")
-    head = _git_text("rev-parse", "HEAD")
-    if branch != AUTHORITIES["person_a"]["branch"]:
-        raise RuntimeError(f"Unexpected Person A branch: {branch}")
-    if head != STARTING_AUTHORITY:
-        raise RuntimeError(f"Unexpected Person A HEAD: {head}")
+    # The package is sourced from immutable commit objects.  Its verifier must
+    # remain usable after promotion, when HEAD and the checked-out branch have
+    # legitimately advanced beyond the historical Person A preparation tip.
+    if _completed(
+        ["git", "merge-base", "--is-ancestor", STARTING_AUTHORITY, "HEAD"]
+    ).returncode != 0:
+        raise RuntimeError("Person A starting authority is not an ancestor")
     for owner in AUTHORITIES:
         verify_authority(owner)
 

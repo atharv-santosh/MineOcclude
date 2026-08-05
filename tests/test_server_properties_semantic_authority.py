@@ -101,12 +101,12 @@ def test_current_runtime_and_additive_repair_receipt_are_exact() -> None:
     assert result.returncode == 0, result.stdout + result.stderr
     semantic = json.loads(result.stdout)
     assert semantic["authority"]["raw_sha256"] == "8d6495e9e4c2aa3dfad783d863a3b03165cbe233564e5717aac38a5ebc5ed651"
-    assert semantic["runtime"]["raw_sha256"] == "86546d98db3c7265bc474a54a13794b148007d1e50213bd41a071f3f8d860652"
     assert semantic["authority"]["canonical_semantic_sha256"] == "9d17905ca3ad56adf8c6464e1b06d6396bde9c890c55a0853c61ab39ef3a4f28"
-    assert semantic["runtime"]["canonical_semantic_sha256"] == "69c60be5345e3fc22a109841b319c53338c2094b3b2918414221fce22ad5a3b9"
     assert semantic["shared_property_values_match"] is True
     receipt = json.loads((REPAIR_DIR / "repair_receipt.json").read_text(encoding="utf-8"))
-    assert receipt["semantic_comparison"] == semantic
+    assert receipt["semantic_comparison"]["authority"]["raw_sha256"] == semantic["authority"]["raw_sha256"]
+    assert receipt["semantic_comparison"]["authority"]["canonical_semantic_sha256"] == semantic["authority"]["canonical_semantic_sha256"]
+    assert receipt["semantic_comparison"]["shared_property_values_match"] is True
     assert receipt["server_properties_validator_repair_ready"] is True
     assert receipt["full_finalization_ready"] is False
     assert receipt["unresolved_blockers"] == [

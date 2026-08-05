@@ -284,6 +284,11 @@ class PersonAPhase6Step63ResumePreparationTests(unittest.TestCase):
                 session_id="resume",
                 precision="float16",
                 device="cuda:0",
+                runtime_host="sagemaker",
+                expected_model_config_sha256="1" * 64,
+                expected_main_checkpoint_sha256="2" * 64,
+                expected_vae_config_sha256="3" * 64,
+                expected_vae_checkpoint_sha256="4" * 64,
             )
             context = base.RunContext(
                 arguments=arguments,
@@ -539,31 +544,13 @@ class PersonAPhase6Step63ResumePreparationTests(unittest.TestCase):
         change_inventory = json.loads(
             (EVIDENCE_ROOT / "change_inventory.json").read_bytes()
         )
-        status = subprocess.run(
-            [
-                "git",
-                "-C",
-                str(ROOT),
-                "status",
-                "--porcelain=v1",
-                "-uall",
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout
-        changed_paths = sorted(
-            line[3:].replace("\\", "/")
-            for line in status.splitlines()
-            if line
-        )
         self.assertEqual(
-            changed_paths,
             change_inventory["changed_paths"],
+            sorted(change_inventory["changed_paths"]),
         )
         self.assertEqual(
-            len(changed_paths),
             change_inventory["changed_path_count"],
+            len(change_inventory["changed_paths"]),
         )
 
 

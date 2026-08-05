@@ -5,7 +5,6 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
-import os
 import sys
 import tarfile
 from pathlib import Path
@@ -27,13 +26,10 @@ OUTPUT = ROOT / GEN.OUTPUT_RELATIVE_PATH
 
 
 def _person_c_root() -> Path:
-    value = os.environ.get("MINEOCCLUDE_PERSON_C_STEP3_3_ROOT")
-    if not value:
-        pytest.skip("MINEOCCLUDE_PERSON_C_STEP3_3_ROOT is not configured.")
-    root = Path(value)
-    if not root.is_dir():
-        pytest.skip("Detached Person C Step 3.3 worktree is unavailable.")
-    return root
+    package = ROOT / GEN.C_PACKAGE_RELATIVE_PATH
+    if not package.is_dir():
+        raise AssertionError(f"committed Person C Step 3.3 package is missing: {package}")
+    return ROOT
 
 
 def _person_c_package() -> Path:

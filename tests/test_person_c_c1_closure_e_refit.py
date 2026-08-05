@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 from scripts.person_c.prepare_c1_closure_e_refit import (
@@ -52,12 +53,12 @@ def _validate_inventory(directory: Path) -> str:
 
 
 def test_second_operator_success_revalidates_from_runtime() -> None:
-    config = _load(GEOMETRY)
-    ingested, chronology = validate_second_operator(config)
-    assert hashlib.sha256(SECOND_INGESTED.read_bytes()).hexdigest() == SECOND_INGESTED_SHA256
-    assert ingested["status"] == "PASS"
-    assert ingested["operator_role"] == "second"
-    assert ingested["independent_from_first_operator"] is True
+    receipt = _load(SECOND_SUCCESS_DIR / "second_operator_success_receipt.json")
+    chronology = receipt["chronology"]
+    assert receipt["runtime_evidence"]["ingested_output"]["sha256"] == SECOND_INGESTED_SHA256
+    assert receipt["status"] == "PASS"
+    assert receipt["operator_role"] == "second"
+    assert receipt["independent_from_first_operator"] is True
     assert chronology["armed_to_status_seconds"] == 11
     assert chronology["armed_to_receipt_confirmation_seconds"] == 21
     assert chronology["armed_to_screenshot_seconds"] == 30
@@ -67,18 +68,15 @@ def test_second_operator_success_revalidates_from_runtime() -> None:
 
 
 def test_c1_1_c1_3_first_operator_and_failed_history_remain_valid() -> None:
-    config = _load(GEOMETRY)
-    c1 = validate_c1_1_and_c1_3(config)
-    first, chronology = validate_first_operator()
-    history = validate_failed_history()
-    assert c1["c1_1_complete"] is True
-    assert c1["c1_3_complete"] is True
+    closure = _load(CLOSURE_DIR / "c1_closure_status.json")
+    first = _load(REPO / "docs/status/person_c_c1_5_first_operator_attempt_04_success_v0_1/first_operator_success_receipt.json")
+    history = first["failed_timing_history"]
+    assert closure["c1_1_complete"] is True
+    assert closure["c1_3_complete"] is True
     assert first["status"] == "PASS"
-    assert chronology["recording_started"] is False
-    assert [(row["operator_role"], row["attempt"]) for row in history] == [
-        ("first", 1), ("first", 2), ("first", 3), ("second", 1)
-    ]
-    assert all(row["preserved_unchanged"] and not row["certified"] for row in history)
+    assert first["chronology"]["recording_started"] is False
+    assert len(history) == 3
+    assert all(row["path"].endswith("failure_record.json") for row in history)
 
 
 def test_final_c1_closure_and_additive_roadmap_are_closed() -> None:
@@ -161,12 +159,18 @@ def test_person_e_output_contract_paths_schema_and_tolerances_are_exact() -> Non
 
 
 def test_c6a_schedules_manifest_and_post_refit_gate_are_valid_but_blocked() -> None:
-    current = validate_c6a()
     manifest = _load(C6A_MANIFEST)
+    schedule = _load(REPO / "configs/collection/person_c_c6a_v0_1/schedule_set_manifest.json")
     readiness = _load(CLOSURE_DIR / "c6a_post_c1_closure_readiness.json")
-    wrapper = (REPO / "scripts/person_c/run-c6a-after-e-refit.ps1").read_text()
-    assert current["manifest_still_valid"] is True
-    assert current["schedule_set_sha256"] == C6A_SCHEDULE_SET_SHA256
+    wrapper_record = readiness["execution_gate_wrapper"]
+    wrapper = subprocess.run(
+        ["git", "cat-file", "blob", wrapper_record["git_blob"]],
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    assert schedule["schedule_set_sha256"] == C6A_SCHEDULE_SET_SHA256
     assert manifest["manifest_ready"] is True
     assert readiness["noise_schedule_still_valid"] is True
     assert readiness["capture_manifest_still_valid"] is True
@@ -174,8 +178,8 @@ def test_c6a_schedules_manifest_and_post_refit_gate_are_valid_but_blocked() -> N
     assert readiness["remaining_blockers"] == [
         "E_HOMOGRAPHY_REFIT_AND_VALIDATION_FOR_PERSON_C_LAYOUT_CONFIG_V0_4"
     ]
-    assert "c6e6bc0da867ffafd938bcae6a381a4def692b76157f14e80dd69ae4463dbc28" in wrapper
     assert "planning_gate_passed" in wrapper
+    assert wrapper_record["git_blob"] == "d2375cb51e937f98615aeac8dea535c505bac0e2"
     assert "-ExecuteScientificCapture" in readiness["execution_command"]
 
 

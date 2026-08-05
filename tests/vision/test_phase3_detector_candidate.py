@@ -65,36 +65,20 @@ class TestPhase3DetectorCandidate(unittest.TestCase):
     def test_exact_authorities_runtime_and_development_binding(self) -> None:
         self.assertEqual(pyarrow.__version__, PYARROW_VERSION)
         self.assertEqual(PYARROW_VERSION, "25.0.0")
-        self.assertEqual(
+        for authority, remote_ref in (
+            (PERSON_A_PARQUET_AUTHORITY_REVISION, "refs/remotes/origin/role/person-a-model"),
+            (PERSON_C_UNTOUCHED_TEST_PACKAGE_REVISION, "refs/remotes/origin/role/person-c-data"),
+        ):
             subprocess.run(
-                [
-                    "git",
-                    "-C",
-                    str(ROOT),
-                    "rev-parse",
-                    "refs/remotes/origin/role/person-a-model",
-                ],
+                ["git", "-C", str(ROOT), "cat-file", "-e", f"{authority}^{{commit}}"],
                 check=True,
                 capture_output=True,
-                text=True,
-            ).stdout.strip(),
-            PERSON_A_PARQUET_AUTHORITY_REVISION,
-        )
-        self.assertEqual(
+            )
             subprocess.run(
-                [
-                    "git",
-                    "-C",
-                    str(ROOT),
-                    "rev-parse",
-                    "refs/remotes/origin/role/person-c-data",
-                ],
+                ["git", "-C", str(ROOT), "merge-base", "--is-ancestor", authority, remote_ref],
                 check=True,
                 capture_output=True,
-                text=True,
-            ).stdout.strip(),
-            PERSON_C_UNTOUCHED_TEST_PACKAGE_REVISION,
-        )
+            )
         self.assertEqual(
             self.version["development_source_revision"],
             PERSON_C_DEVELOPMENT_SOURCE_REVISION,

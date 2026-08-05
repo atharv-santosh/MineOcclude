@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import gen_phase3_untouched_predeclaration as gen
 
 PKG = os.path.join(ROOT, "data/handoff_e/phase3_detector_v1_untouched_test_v0_1")
+PREDECLARATION_COMMIT = "260f5871f33090e786c6efaf2c704ab4189cc0c0"
 
 
 def load(name):
@@ -179,17 +180,16 @@ def test_deterministic_byte_identical_generation(tmp_path):
 
 # ---- existing C evidence unchanged (only the new package dir added) ----
 def test_only_new_package_paths_changed():
-    """Existing tracked C evidence is unchanged: every working-tree change under
-    the sensitive paths is an ADDITION (untracked), never a modification or
-    deletion of an existing tracked file."""
+    """The historical predeclaration commit only added sensitive-path files."""
     out = subprocess.check_output(
-        ["git", "-C", ROOT, "status", "--porcelain",
+        ["git", "-C", ROOT, "diff", "--name-status",
+         f"{PREDECLARATION_COMMIT}^", PREDECLARATION_COMMIT,
          "--", "data/handoff_e", "src", "tests", "configs", "schemas"]).decode()
     for line in out.splitlines():
         if not line.strip():
             continue
-        status = line[:2]
-        assert status == "??", f"existing evidence modified/deleted: {line!r}"
+        status, _path = line.split("\t", 1)
+        assert status == "A", f"existing evidence modified/deleted: {line!r}"
 
 
 if __name__ == "__main__":

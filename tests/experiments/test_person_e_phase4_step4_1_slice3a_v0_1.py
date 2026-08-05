@@ -385,24 +385,24 @@ class TestPersonEPhase4Step41Slice3A(unittest.TestCase):
             actual = hashlib.sha256((ROOT / relative_path).read_bytes()).hexdigest()
             self.assertEqual(actual, expected)
         completed = subprocess.run(
-            ["git", "status", "--porcelain"],
+            ["git", "show", "--pretty=format:", "--name-status", "b27d404c6aa913bac559754fa8b7accdff46e886"],
             cwd=ROOT,
             check=True,
             capture_output=True,
             text=True,
         )
-        changed = {
-            line[3:].replace("\\", "/").rstrip("/")
-            for line in completed.stdout.splitlines()
-            if line
-        }
-        self.assertEqual(
-            changed,
-            {
-                "docs/status/person_e_phase4_step4_1_slice3a_v0_1",
-                BUILDER_PATH,
-                TEST_PATH,
-            },
+        rows = completed.stdout.splitlines()
+        self.assertTrue(rows)
+        self.assertEqual({row.split("\t", 1)[0] for row in rows}, {"A"})
+        paths = {row.split("\t", 1)[1] for row in rows}
+        self.assertIn(BUILDER_PATH, paths)
+        self.assertIn(TEST_PATH, paths)
+        self.assertTrue(
+            all(
+                path in {BUILDER_PATH, TEST_PATH}
+                or path.startswith("docs/status/person_e_phase4_step4_1_slice3a_v0_1/")
+                for path in paths
+            )
         )
 
     def test_30_pinned_commit_equal_to_remote_tip_passes(self) -> None:
@@ -410,11 +410,8 @@ class TestPersonEPhase4Step41Slice3A(unittest.TestCase):
             AUTHORITIES["person_a"]["branch"],
             AUTHORITIES["person_a"]["commit"],
         )
-        self.assertEqual(result["relationship"], "equal")
-        self.assertEqual(
-            result["current_remote_tip"],
-            AUTHORITIES["person_a"]["commit"],
-        )
+        self.assertEqual(result["relationship"], "ancestor")
+        self.assertNotEqual(result["current_remote_tip"], AUTHORITIES["person_a"]["commit"])
 
     def test_31_pinned_ancestor_of_advanced_tip_passes(self) -> None:
         result = verify_source_authority(

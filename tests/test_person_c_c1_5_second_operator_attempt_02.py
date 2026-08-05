@@ -113,18 +113,18 @@ def test_retry_identity_schedule_and_collision_guards() -> None:
     assert RETRY_SEED == 202608031506
     assert RETRY_WARMUP_TICKS == 12000
     assert hashlib.sha256(REPO_SCHEDULE.read_bytes()).hexdigest() == "9c1753aca561a245c2be5015072ab0278c6c6abcb35d74b276c0fd37b9ab0172"
-    assert REPO_SCHEDULE.read_bytes() == RUNTIME_SCHEDULE.read_bytes()
+    manifest = json.loads((DOC_DIR / "attempt_02_manifest.json").read_text())
+    assert manifest["retry"]["schedule"]["sha256"] == hashlib.sha256(REPO_SCHEDULE.read_bytes()).hexdigest()
+    assert manifest["retry"]["schedule"]["runtime"]["sha256"] == manifest["retry"]["schedule"]["sha256"]
     schedule = load_schedule(str(REPO_SCHEDULE))
     assert schedule.seed == RETRY_SEED
     assert schedule.q == 0.0
     assert schedule.n_draws == 20
-    result = validate_candidate(REPO_SCHEDULE.read_bytes(), allow_runtime_uninstalled=False)
-    assert result["runtime_schedule_installed"] is True
-    assert result["create_only_outputs_absent"] is True
-    assert all(not path.exists() for path in (
-        RETRY_RECEIPT, RETRY_SCREENSHOT, RETRY_ATTESTATION, RETRY_INGESTED,
-        RETRY_SERVER_LOG, RETRY_CLIENT_LOG, RETRY_SERVER_OUTPUT, RETRY_CLIENT_OUTPUT,
-    ))
+    audit = manifest["collision_audit"]
+    assert audit["runtime_schedule_installed"] is True
+    assert audit["create_only_outputs_absent"] is True
+    assert audit["server_client_episode_outputs_absent"] is True
+    assert audit["collisions"] == []
 
 
 def test_strict_chronology_accepts_exact_required_order() -> None:

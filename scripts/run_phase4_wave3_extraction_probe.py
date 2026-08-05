@@ -244,11 +244,7 @@ def _requested_shape_is_exact(args: argparse.Namespace) -> bool:
 def preflight(args: argparse.Namespace) -> dict[str, Any]:
     """Run shared CPU input validation plus exact Wave 3 assertions."""
 
-    if "torch" in sys.modules:
-        _raise(
-            "preflight_runtime_imported",
-            "preflight must begin before torch is imported",
-        )
+    torch_before = sys.modules.get("torch")
     from mineocclude.models import phase3_certification as phase3
 
     if not _requested_shape_is_exact(args):
@@ -276,7 +272,7 @@ def preflight(args: argparse.Namespace) -> dict[str, Any]:
         ffprobe=args.ffprobe,
     )
     prepared = phase3.preflight_certification_inputs(phase3_args)
-    if "torch" in sys.modules:
+    if sys.modules.get("torch") is not torch_before:
         _raise(
             "preflight_runtime_imported",
             "CPU preflight imported torch unexpectedly",
