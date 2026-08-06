@@ -1,0 +1,128 @@
+{
+  "blocked_stage_count": 9,
+  "boundary_hashes": {},
+  "complete": false,
+  "completed_stage_count": 0,
+  "failed_stage_count": 0,
+  "identity": {
+    "code_sha": "bb5cebe86725e58b82514740ae588b2ad1d36a37",
+    "config_file_sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3",
+    "config_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
+    "config_id": "person-a-mvp-v1.0",
+    "config_path": "configs/experiments/mvp.yaml",
+    "config_version": "1.0",
+    "mode": "real",
+    "model_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "schema_version": "1.0",
+    "seed": 20260725
+  },
+  "mode": "real",
+  "run_id": "mineocclude-run-3d12ae4e2989295c465f8493bdd9792c",
+  "schema_version": "person-a-mvp-stage-graph-v0.1",
+  "scientific_use": "permitted",
+  "stage_count": 9,
+  "stages": [
+    {
+      "detail": "no entry point is registered for this stage",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_a_model",
+      "produced": [],
+      "stage_id": "manifest_validation",
+      "started_at": null,
+      "status": "blocked",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: manifest_validation",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_b_analysis",
+      "produced": [],
+      "stage_id": "oracle",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: manifest_validation",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_a_model",
+      "produced": [],
+      "stage_id": "model_extraction",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: model_extraction",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_a_model",
+      "produced": [],
+      "stage_id": "activation_audit",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: activation_audit, oracle",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_b_analysis",
+      "produced": [],
+      "stage_id": "probes",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: activation_audit, oracle",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_d_baselines",
+      "produced": [],
+      "stage_id": "baselines",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: baselines, probes",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_b_analysis",
+      "produced": [],
+      "stage_id": "u1_u3_metrics",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: u1_u3_metrics",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_a_model",
+      "produced": [],
+      "stage_id": "u4_generation",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    },
+    {
+      "detail": "blocked by upstream stages: u4_generation",
+      "ended_at": null,
+      "output_hashes": {},
+      "owner": "person_e_operations",
+      "produced": [],
+      "stage_id": "measurement",
+      "started_at": null,
+      "status": "skipped_upstream_gate",
+      "synthetic": false
+    }
+  ],
+  "step": "7.3",
+  "synthetic": false
+}

@@ -1,0 +1,65 @@
+{
+  "artifact_count": 0,
+  "artifact_status_counts": {},
+  "artifacts": [],
+  "failed_and_superseded_records_retained": true,
+  "person_e_registry_validation": {
+    "accepted": false,
+    "artifact_count": 0,
+    "registry_id": "person-a-mvp-real-8493bdd9792c",
+    "rejections": [
+      {
+        "code": "missing_required_field",
+        "message": "Immutable registry requires a non-empty artifacts list."
+      }
+    ],
+    "run_count": 1
+  },
+  "registry_id": "person-a-mvp-real-8493bdd9792c",
+  "run_count": 1,
+  "run_status_counts": {
+    "failed": 1
+  },
+  "runs": [
+    {
+      "attempt": 1,
+      "checkpoint_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "code_sha": "bb5cebe86725e58b82514740ae588b2ad1d36a37",
+      "command": [
+        "python",
+        "scripts/run_mvp.py",
+        "run",
+        "--mode",
+        "real"
+      ],
+      "command_line": "python scripts/run_mvp.py run --mode real",
+      "config_snapshot_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
+      "data_identity_hash": "ff7801c1a331f173bc5fc197454889b72d8554a8e31b5a88731de8eb7d9ed987",
+      "ended_at": "2026-08-06T07:42:35Z",
+      "environment_hash": "b50ebfcc7887a74638c206a39be41e291ac83063b2bc11baad7c5db7743c8847",
+      "failure_reason": "one or more stages were blocked or failed; see the stage report",
+      "git_dirty": true,
+      "input_artifact_ids": [],
+      "is_retry_of_parent": false,
+      "log_uris": [],
+      "output_artifact_ids": [],
+      "owner": "person_a_model",
+      "parent_run_id": null,
+      "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+      "run_id": "mineocclude-run-3d12ae4e2989295c465f8493bdd9792c",
+      "schema_version": "1.0",
+      "seeds": {
+        "extraction": 20260725
+      },
+      "stage_id": "integrated_real",
+      "started_at": "2026-08-06T07:42:35Z",
+      "status": "failed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    }
+  ],
+  "schema_version": "person-a-mvp-lineage-v0.1",
+  "scientific_use": "permitted",
+  "step": "7.4",
+  "synthetic": false
+}
