@@ -64,6 +64,7 @@ DEFAULT_COMPONENT_PATHS = (
     "src/mineocclude/vision/measurement.py",
     "src/mineocclude/vision/ssim.py",
     "src/mineocclude/vision/config.py",
+    "src/mineocclude/vision/report_schemas.py",
     "src/mineocclude/vision/detection_records.py",
     "src/mineocclude/experiments/registry.py",
     "scripts/fit_homographies.py",

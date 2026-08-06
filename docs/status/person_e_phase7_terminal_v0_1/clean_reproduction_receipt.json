@@ -7,10 +7,10 @@
     "person_d_control_manifest"
   ],
   "clean_reproduction_receipt_schema_version": "person-e-clean-reproduction-receipt-v0.1",
-  "code_commit": "3b0814f1c91f6f49a7dd394e33a16700cc7ffc03",
+  "code_commit": "d3cb6f198d563aed6fbc126045ea8b7fa4a3e0bb",
   "comparison": null,
   "component_verification": {
-    "component_count": 12,
+    "component_count": 13,
     "mismatched_components": [],
     "verified": true
   },
@@ -30,7 +30,7 @@
     "verified": true
   },
   "real_clean_reproduction_complete": false,
-  "receipt_content_hash": "ecb27fe72798eb4d2aa875382e1e3946c003a007398e79fbde941c8d52b9a89a",
+  "receipt_content_hash": "52a85140fb9769dd421e61934907d21a1768403de4ae54a4c435da3e573dd792",
   "skipped_stages": [],
   "source_edited_between_stages": false,
   "source_edited_components": [],
@@ -50,7 +50,7 @@
       ],
       "exit_code": 0,
       "outcome": "passed",
-      "runtime_seconds": 0.188,
+      "runtime_seconds": 0.172,
       "stage": "registry",
       "stderr_tail": "",
       "stdout_tail": "registry stage: 1 accepted rollout row(s)\n"
@@ -63,7 +63,7 @@
       ],
       "exit_code": 0,
       "outcome": "passed",
-      "runtime_seconds": 0.203,
+      "runtime_seconds": 0.171,
       "stage": "detector",
       "stderr_tail": "",
       "stdout_tail": "detector stage: 3 frame(s) queued\n"
@@ -82,7 +82,7 @@
       ],
       "exit_code": 0,
       "outcome": "passed",
-      "runtime_seconds": 1.016,
+      "runtime_seconds": 0.969,
       "stage": "homography",
       "stderr_tail": "",
       "stdout_tail": ""
@@ -102,7 +102,7 @@
       ],
       "exit_code": 0,
       "outcome": "passed",
-      "runtime_seconds": 1.093,
+      "runtime_seconds": 1.0,
       "stage": "displacement",
       "stderr_tail": "",
       "stdout_tail": ""
@@ -116,7 +116,7 @@
       ],
       "exit_code": 0,
       "outcome": "passed",
-      "runtime_seconds": 1.282,
+      "runtime_seconds": 0.969,
       "stage": "ssim",
       "stderr_tail": "",
       "stdout_tail": ""
@@ -127,5 +127,5 @@
     "known_answer_recovered": true,
     "observed_wall_parallel_blocks": 1.5
   },
-  "total_runtime_seconds": 3.782
+  "total_runtime_seconds": 3.281
 }

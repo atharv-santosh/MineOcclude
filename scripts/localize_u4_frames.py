@@ -26,9 +26,11 @@ from mineocclude.vision.config import (  # noqa: E402
 )
 from mineocclude.vision.homography import (  # noqa: E402
     HOMOGRAPHY_ALGORITHM_VERSION,
-    HOMOGRAPHY_REPORT_SCHEMA_VERSION,
     homography_from_record,
     summarize_localization,
+)
+from mineocclude.vision.report_schemas import (  # noqa: E402
+    HOMOGRAPHY_REPORT_SCHEMA_VERSION,
 )
 from mineocclude.vision.magenta import HsvRange, detect_magenta  # noqa: E402
 from mineocclude.vision.measurement import (  # noqa: E402

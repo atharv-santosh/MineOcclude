@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -99,7 +100,26 @@ def test_successor_authorizes_a6_6_and_preserves_single_layout_predecessor():
 
 
 def test_schema_fails_closed_and_generated_package_is_byte_exact():
-    mod.validate_package(PACKAGE)
+    # Regeneration loads Person A's validator from their worktree, and that
+    # module imports Person A's `mineocclude` package. In a shared pytest
+    # process `mineocclude` is already bound to this worktree, so the import
+    # resolves against the wrong tree. A fresh interpreter is the only way to
+    # exercise the real regeneration path.
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / f"{mod.__name__}.py"),
+            "--validate",
+            "--out-dir",
+            str(PACKAGE),
+        ],
+        cwd=str(ROOT),
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr or completed.stdout
+
     schema = load(mod.SCHEMA_NAME)
     receipt = load(mod.RECEIPT_NAME)
     mod.validate_receipt_schema(receipt, schema)

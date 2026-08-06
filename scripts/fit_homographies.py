@@ -19,10 +19,10 @@ from mineocclude.experiments.registry import (
 from mineocclude.vision.config import validate_person_e_config
 from mineocclude.vision.homography import (
     HOMOGRAPHY_ALGORITHM_VERSION,
-    HOMOGRAPHY_REPORT_SCHEMA_VERSION,
     fit_marker_homography,
     summarize_localization,
 )
+from mineocclude.vision.report_schemas import HOMOGRAPHY_REPORT_SCHEMA_VERSION
 
 HOMOGRAPHY_INPUT_SCHEMA_VERSION = "person-e-homography-input-v0.1"
 BOUND_HOMOGRAPHY_INPUT_SCHEMA_VERSION = "person-e-homography-input-v0.2"

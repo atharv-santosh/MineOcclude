@@ -15,7 +15,6 @@ class HomographyError(ValueError):
 
 
 HOMOGRAPHY_ALGORITHM_VERSION = "four_point_projective_gauss_jordan_v0.1"
-HOMOGRAPHY_REPORT_SCHEMA_VERSION = "person-e-homography-report-v0.3"
 HOMOGRAPHY_FIXTURE_SCHEMA_VERSION = "person-e-homography-fixture-v1.0"
 HOMOGRAPHY_FIXTURE_SCHEMA_VERSION_V1_1 = "person-e-homography-fixture-v1.1"
 SUPPORTED_HOMOGRAPHY_FIXTURE_SCHEMA_VERSIONS = frozenset(
