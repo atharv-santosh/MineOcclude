@@ -45,6 +45,7 @@ Nothing in this module computes a metric or reads a U4 artifact.
 from __future__ import annotations
 
 import os
+import sys
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -95,14 +96,62 @@ class MemoryPlan:
         return self.compact_payload_bytes / BYTES_PER_GIB
 
 
+def _detect_host_memory_windows() -> dict[str, int | None]:
+    """Read physical/available memory from the Win32 memory-status API.
+
+    POSIX ``sysconf`` does not exist on Windows, so without this branch
+    every plan built on a Windows development machine fails closed with
+    ``host_memory_undetected`` -- a portability defect, not a real
+    memory shortage. ``GlobalMemoryStatusEx`` is the direct Win32
+    equivalent and needs no third-party dependency. Returns ``None``
+    values (never a guess) if the call is unavailable or fails.
+    """
+
+    try:
+        import ctypes
+        from ctypes import wintypes
+    except (ImportError, ValueError):  # pragma: no cover - non-Windows
+        return {"physical_bytes": None, "available_bytes": None}
+
+    class _MemoryStatusEx(ctypes.Structure):
+        _fields_ = [
+            ("dwLength", wintypes.DWORD),
+            ("dwMemoryLoad", wintypes.DWORD),
+            ("ullTotalPhys", ctypes.c_ulonglong),
+            ("ullAvailPhys", ctypes.c_ulonglong),
+            ("ullTotalPageFile", ctypes.c_ulonglong),
+            ("ullAvailPageFile", ctypes.c_ulonglong),
+            ("ullTotalVirtual", ctypes.c_ulonglong),
+            ("ullAvailVirtual", ctypes.c_ulonglong),
+            ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
+        ]
+
+    status = _MemoryStatusEx()
+    status.dwLength = ctypes.sizeof(_MemoryStatusEx)
+    try:
+        ok = ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
+    except (AttributeError, OSError):  # pragma: no cover - non-Windows
+        return {"physical_bytes": None, "available_bytes": None}
+    if not ok:  # pragma: no cover - API failure
+        return {"physical_bytes": None, "available_bytes": None}
+
+    physical = int(status.ullTotalPhys) or None
+    available = int(status.ullAvailPhys) or None
+    return {"physical_bytes": physical, "available_bytes": available}
+
+
 def detect_host_memory() -> dict[str, int | None]:
     """Best-effort, dependency-free host memory detection.
 
     ``physical_bytes`` uses POSIX ``sysconf`` (portable across the
-    Linux SageMaker target and any POSIX development machine).
-    ``available_bytes`` reads Linux's ``/proc/meminfo`` ``MemAvailable``
-    line when present; ``None`` elsewhere -- this function never guesses
-    at a value it cannot actually read.
+    Linux SageMaker target and any POSIX development machine) and falls
+    back to the Win32 ``GlobalMemoryStatusEx`` API on Windows, where
+    ``sysconf`` does not exist at all. ``available_bytes`` reads Linux's
+    ``/proc/meminfo`` ``MemAvailable`` line when present, or Win32
+    ``ullAvailPhys`` on Windows; ``None`` elsewhere -- this function
+    never guesses at a value it cannot actually read, and the admission
+    decision in :func:`build_raw_pixel_memory_plan` still fails closed
+    on ``None``.
     """
 
     physical_bytes: int | None
@@ -124,6 +173,12 @@ def detect_host_memory() -> dict[str, int | None]:
                 if len(parts) >= 2 and parts[1].isdigit():
                     available_bytes = int(parts[1]) * 1024
                 break
+
+    if physical_bytes is None and sys.platform == "win32":
+        windows = _detect_host_memory_windows()
+        physical_bytes = windows["physical_bytes"]
+        if available_bytes is None:
+            available_bytes = windows["available_bytes"]
 
     return {"physical_bytes": physical_bytes, "available_bytes": available_bytes}
 

@@ -35,7 +35,10 @@ def test_feature_dim_times_row_count_matches_the_confirmed_incident_report():
 def test_detect_host_memory_returns_a_plausible_physical_value():
     host = detect_host_memory()
     assert set(host) == {"physical_bytes", "available_bytes"}
-    # Portable POSIX sysconf must succeed on any machine running this suite.
+    # POSIX sysconf on Linux/macOS, Win32 GlobalMemoryStatusEx on Windows:
+    # detection must succeed on any machine running this suite, so a
+    # `host_memory_undetected` plan rejection always means a real budget
+    # shortfall rather than an unportable probe.
     assert isinstance(host["physical_bytes"], int)
     assert host["physical_bytes"] > 0
     assert host["available_bytes"] is None or isinstance(host["available_bytes"], int)

@@ -812,6 +812,18 @@ def _six_pilot_fixture():
     return contexts, mu_oracle_by_key, log_sigma_oracle_by_key, visible_positions_by_trajectory, pixel_features_by_key
 
 
+#: The approved Step 4.1 production host (15 GiB physical, zero swap).
+#: Orchestration tests pin this so they assert on runner behavior --
+#: family ordering, provider laziness, post-raw_pixel release, resume --
+#: rather than on the transient free memory of whatever machine runs the
+#: suite. Tests that exercise the memory gate *itself* supply their own
+#: budget or a rejecting plan explicitly.
+APPROVED_PRODUCTION_HOST_MEMORY = {
+    "physical_bytes": 15 * 1024**3,
+    "available_bytes": 15 * 1024**3,
+}
+
+
 def _base_run_production_kwargs(tmp_path):
     from mineocclude.baselines.frame_handoff_v0_2 import (
         build_frame_manifest_direct_input_reference,
@@ -819,6 +831,7 @@ def _base_run_production_kwargs(tmp_path):
 
     contexts, mu, log_sigma, visible, pixel_features = _six_pilot_fixture()
     return {
+        "host_memory": APPROVED_PRODUCTION_HOST_MEMORY,
         "contexts": contexts,
         "mu_oracle_by_key": mu,
         "log_sigma_oracle_by_key": log_sigma,

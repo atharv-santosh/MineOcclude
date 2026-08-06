@@ -751,6 +751,7 @@ def run_production(
     preprocessed_frame_manifest_reference: Mapping[str, object],
     output_root: Path,
     force_rerun: bool = False,
+    host_memory: dict[str, int | None] | None = None,
 ) -> dict:
     """Fit, validate, and persist every family not already verified.
 
@@ -782,6 +783,13 @@ def run_production(
     checks whether the unchanged ridge-fitting pipeline's estimated peak
     memory fits the detected host budget, and fails closed -- before any
     fitting begins -- if it does not.
+
+    ``host_memory`` is an explicit override for that preflight's budget.
+    The real production path leaves it ``None`` so the plan probes the
+    real execution host; orchestration tests that exercise family
+    ordering / laziness / release semantics pin a documented budget so
+    they assert on the runner's behavior rather than on whatever the
+    developer machine happened to have free at that moment.
     """
 
     existing_state = load_run_state(output_root)
@@ -801,6 +809,7 @@ def run_production(
                     feature_dim=RAW_PIXEL_FEATURE_DIM,
                     outer_fold_row_counts=list(Counter(ctx.fold for ctx in contexts).values()),
                     inner_fold_count=RAW_PIXEL_INNER_FOLD_COUNT,
+                    host_memory=host_memory,
                 )
                 if not memory_plan.admitted:
                     error = ProductionRunnerError(
