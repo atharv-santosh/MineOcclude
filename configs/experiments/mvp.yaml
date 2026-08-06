@@ -1,1 +1,145 @@
 # Frozen configuration for MineOcclude MVP model, data, extraction, seeds, and intervention settings.
+#
+# Step 7.1 freeze. Changing any value listed in RESULT_CHANGING_PATHS in
+# `src/mineocclude/experiments/mvp_config.py` requires a dated decision record
+# and a new run identity; it must never be edited in place on an accepted run.
+
+schema_version: "1.0"
+config_id: "person-a-mvp-v1.0"
+config_version: "1.0"
+frozen: true
+freeze_step: "7.1"
+freeze_date: "2026-08-06"
+
+# ---------------------------------------------------------------------------
+# Model identity (Phase 2.10 runtime record)
+# ---------------------------------------------------------------------------
+model:
+  name: "mineworld-700m"
+  model_class: "LlamaLVM"
+  transformer_class: "LlamaForCausalLM"
+  vae_class: "VAE"
+  source_revision: "9f49efbcc68a5f0cf60e78f0abc566eac409282f"
+  asset_revision: "0dd5561ab317115831badc50e09a6ebe98693d0e"
+  checkpoint_sha256: "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5"
+  vae_checkpoint_sha256: "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+  config_sha256: "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018"
+  vae_config_sha256: "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb"
+  decoder_layer_count: 20
+  decoder_layer_module_pattern: "transformer.model.layers.{layer_idx}"
+  hidden_size: 2048
+  precision: "float16"
+
+# ---------------------------------------------------------------------------
+# Preprocessing (frozen by the Phase 2 sample audit)
+# ---------------------------------------------------------------------------
+preprocess:
+  identity: "person-a-bgr2rgb-inter-linear-224x384-v1.0"
+  source_resolution: [360, 640]
+  model_resolution: [224, 384]
+  interpolation: "cv2.INTER_LINEAR"
+  color_conversion: "BGR2RGB"
+  dtype: "uint8"
+
+# ---------------------------------------------------------------------------
+# Token and context geometry
+# ---------------------------------------------------------------------------
+tokens:
+  visual_tokens_per_frame: 336
+  action_tokens_per_frame: 11
+  tokens_per_frame_action_pair: 347
+  max_model_frames_per_context: 16
+
+# ---------------------------------------------------------------------------
+# Extraction
+# ---------------------------------------------------------------------------
+extraction:
+  mode: "teacher_forced"
+  hook_site: "decoder_layer_output_residual_stream"
+  hook_discovery_version: "person-a-phase4-decoder-output-v1.0:9f49efbcc68a5f0cf60e78f0abc566eac409282f"
+  layers: "all"
+  pooling: "mean_over_visual_tokens"
+  pooling_identity: "person-a-visual-token-mean-v1.0"
+  store_format: "person-a-activation-store-v2"
+  stored_dtype: "float16"
+  vector_width: 2048
+  rows_per_frame: 20
+  chunks_per_trajectory: 20
+
+# ---------------------------------------------------------------------------
+# Seeds
+# ---------------------------------------------------------------------------
+seeds:
+  extraction_seed: 20260725
+  rollout_seeds: [20260801, 20260802]
+  control_seed: 20260803
+
+# ---------------------------------------------------------------------------
+# Expected MVP matrix (Step 7.2)
+# ---------------------------------------------------------------------------
+matrix:
+  expected_cell_count: 66
+  core_regime_a_cells: 48
+  no_wall_visible_control_cells: 6
+  occluder_only_no_sheep_control_cells: 6
+  context_sentinel_cells: 6
+  sentinel_context_multiple: 1.5
+  expected_matrix_source:
+    role: "person_c_data"
+    handoff_id: "person_c_mvp_expected_matrix_v0_1"
+    path: "data/handoff_a/person_c_mvp_expected_matrix_v0_1/episode_matrix.csv"
+    sha256: "016acbfdd65b8f77dba6ad7b4171fb95f7be4292d37d83269bc9e568627e4625"
+    producing_commit: "365e748addcb1e1926d7e2c5a382a92fa39ebc40"
+
+# ---------------------------------------------------------------------------
+# Accepted-manifest authority (Person C)
+# ---------------------------------------------------------------------------
+accepted_manifest:
+  canonical_collection_id: "person-c-c6a-post-c1-v0.1"
+  capture_completion_commit: "365e748addcb1e1926d7e2c5a382a92fa39ebc40"
+  capture_completion_receipt: "docs/status/person_c_c6a_completion_v0_1/c6a_completion_receipt.json"
+  capture_output_bundle_sha256: "c8453cb8a459d0d56d69f5bf39233997537e28a14b10a3a2ba4aeb3f421c624b"
+  per_trajectory_handoff_required: true
+
+# ---------------------------------------------------------------------------
+# Storage and queue
+# ---------------------------------------------------------------------------
+storage:
+  bytes_per_activation_row: 8192.68303094984
+  bytes_per_model_frame: 163853.6606189968
+  chunk_layout: "one_chunk_per_decoder_layer"
+
+queue:
+  max_transient_retries: 3
+  transient_retry_backoff_seconds: [5, 30, 120]
+  quarantine_on: ["identity_failure", "data_failure", "model_failure"]
+  skip_rule: "checksum_valid_completed_only"
+
+# ---------------------------------------------------------------------------
+# U4 pilot settings (Step 8.5)
+# ---------------------------------------------------------------------------
+u4_pilot:
+  heldout_event_count: 5
+  intended_block_shifts: [-2, -1, 0, 1, 2]
+  seeds_per_cell: 2
+  primary_clip_count: 50
+  random_direction_control_count: 20
+  random_control_block_mapping: 2
+  max_relative_activation_norm: 0.25
+  injection_scope: "final_context_frame_visual_positions_only"
+  injected_position_count: 336
+
+# ---------------------------------------------------------------------------
+# Reproducibility gate (Step 9.3)
+# ---------------------------------------------------------------------------
+repeatability:
+  rtol: 0.001
+  atol: 0.001
+  mode: "eval_teacher_forced_same_machine_same_seed"
+
+# ---------------------------------------------------------------------------
+# Frozen scientific decisions that this configuration does not reopen
+# ---------------------------------------------------------------------------
+frozen_decisions:
+  step_4_1_decision: "FAIL"
+  step_4_1_rerun_authorized: false
