@@ -1,0 +1,92 @@
+{
+  "byte_policy": "metadata handoff only; no episode payload bytes committed",
+  "required_sections": {
+    "10_provenance": [
+      "episode_inventory",
+      "output_inventory",
+      "sha256_inventory",
+      "builder",
+      "source_commit"
+    ],
+    "1_schema": [
+      "schema_id",
+      "schema_version"
+    ],
+    "2_identity": [
+      "episode_id",
+      "trajectory_id",
+      "planned_cell_id",
+      "collection_order",
+      "set_id",
+      "control_type",
+      "layout_id"
+    ],
+    "3_condition": [
+      "speed_blocks_per_second",
+      "q_blocks_squared_per_second",
+      "hidden_frames",
+      "hidden_seconds",
+      "context_fraction",
+      "seed",
+      "noise_schedule_identity",
+      "target_variant"
+    ],
+    "4_acceptance": [
+      "status",
+      "accepted",
+      "exclusion_reason_codes",
+      "acceptance_authority_path",
+      "acceptance_authority_sha256",
+      "source_revision"
+    ],
+    "5_locations": [
+      "runtime_path",
+      "durable_uri",
+      "s3_uri",
+      "repository_metadata_paths",
+      "external_storage_status"
+    ],
+    "6_artifacts": [
+      "artifact_role",
+      "path_or_uri",
+      "byte_size",
+      "sha256",
+      "media_type",
+      "side"
+    ],
+    "7_authorities": [
+      "episode_schema",
+      "configuration",
+      "server_build",
+      "client_build",
+      "environment",
+      "preprocessing",
+      "frame_action_state_mapping"
+    ],
+    "8_visibility": [
+      "geometric_visibility_version",
+      "detector_version",
+      "strict_join_visibility_rule_version",
+      "visibility_artifact_path",
+      "visibility_artifact_sha256",
+      "disagreement_quarantine_summary"
+    ],
+    "9_qa_summary": [
+      "structural_status",
+      "realized_condition_status",
+      "cardinality_counts",
+      "continuity_alignment_status",
+      "duration_error",
+      "motion_noise_realization_status",
+      "target_count_status",
+      "camera_marker_status",
+      "visibility_disagreement_counts",
+      "warning_reason_codes",
+      "qa_report_paths_and_hashes"
+    ]
+  },
+  "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0",
+  "schema_version": "1.0",
+  "title": "Person C C7.5 per-trajectory MVP handoff bundle",
+  "value_rule": "every value derived from committed inventories/immutable receipts; no field without a committed source"
+}

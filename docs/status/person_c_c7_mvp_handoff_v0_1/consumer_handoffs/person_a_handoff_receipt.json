@@ -1,0 +1,57 @@
+{
+  "accepted_count": 66,
+  "accepted_excluded_ledger": {
+    "path": "docs/status/person_c_c7_mvp_handoff_v0_1/accepted_excluded_ledger.json",
+    "sha256": "fa5f8e4251c7d4243b6f62f9992bf68bab2ef5dfcdbdac8dec61954ff952d8a1"
+  },
+  "authoritative_c_inputs": {
+    "accepted_manifest_hash": "trajectories_mvp_manifest.json sha256",
+    "accepted_trajectory_identities": "66 per_trajectory bundles + trajectories_mvp_manifest.json",
+    "model_facing_references": "locations.runtime_path + artifacts[].path_or_uri (metadata references only)",
+    "source_hashes": "artifacts[].sha256 (from output_inventory.json)"
+  },
+  "authorization_commit": "28cac05a8c804372c71814fcf15c8f1a3b8fbe03",
+  "bundle_schema": {
+    "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0",
+    "schema_version": "1.0"
+  },
+  "consumer_role": "person_a",
+  "consumer_validation_command": "python scripts/build_person_c_c7_5_mvp_handoff_v0_1.py validate && PYTHONDONTWRITEBYTECODE=1 python -m pytest tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py -q",
+  "downstream_acceptance_claimed": false,
+  "excluded_count": 0,
+  "expected_count_by_consumer": 66,
+  "fields_unavailable": [
+    {
+      "field": "actual episode payload bytes",
+      "owner": "person_c_runtime",
+      "reason": "external on Windows runtime; not in Git"
+    },
+    {
+      "field": "durable/S3 URI",
+      "owner": "person_c",
+      "reason": "no authoritative durable URI assigned"
+    },
+    {
+      "field": "frozen preprocessing / frame_map authority",
+      "owner": "person_a_and_person_c",
+      "reason": "downstream build_dataset product, not at C6A raw layer"
+    }
+  ],
+  "manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+  "manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+  "owner": "person_c",
+  "package_path": "docs/status/person_c_c7_mvp_handoff_v0_1",
+  "person_c_states_ready_for_consumer_validation": true,
+  "ready_for_consumer_validation": true,
+  "required_fields_available": [
+    "episode/trajectory/planned_cell identity",
+    "condition + seed + noise schedule",
+    "accepted status + QA summary",
+    "per-artifact path/byte_size/sha256 (metadata)",
+    "server/client build + environment authorities",
+    "source commit"
+  ],
+  "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0-consumer-handoff-a",
+  "schema_version": "1.0",
+  "source_commit": "c836641c894c88e3add207ef2190a2db88726024"
+}
