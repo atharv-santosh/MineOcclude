@@ -1,0 +1,118 @@
+{
+  "clean_reproduction_plan_schema_version": "person-e-clean-reproduction-plan-v0.1",
+  "code_commit": "3b0814f1c91f6f49a7dd394e33a16700cc7ffc03",
+  "component_hashes": {
+    "scripts/compose_u4_evidence.py": "4b54420da69e29de8ea366dcb262e1d2df355ec3e8e24f4bd8260a3a18a9300a",
+    "scripts/fit_homographies.py": "4a3bf1325693818a67d006421ff9ddce1a8c5f67dae8dc747870b45a46869140",
+    "scripts/localize_u4_frames.py": "0d78c928336ae86dd09ce009a1da93e361ab73d9ebba8d5dcc5553cd057de6b5",
+    "scripts/measure_ssim.py": "c3dec03565962bdca178e1f702e2bb932e6b35c940d696c52b4e1b823012c405",
+    "scripts/measure_u4.py": "f88411991b113302eb5b0e53ec42824e999b302287236f8f89cc824f6e14b7aa",
+    "src/mineocclude/experiments/registry.py": "f25637f3c3347a3548297b7a3b491ee07f6795915bd09d7ff40915f50d9a4541",
+    "src/mineocclude/vision/config.py": "4c221b9922f4fff1a1df574962ee608cdaa6a2ad509a5a67571768e2f7d9d3e7",
+    "src/mineocclude/vision/detection_records.py": "f218e7ab59e41a86667914dcd49c36739c22f47a827e3449a81bf97f977983f8",
+    "src/mineocclude/vision/homography.py": "90af951754308bf10ee2a47a715fb2a678af57710b8f4516d0f9be04efa99e37",
+    "src/mineocclude/vision/magenta.py": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "src/mineocclude/vision/measurement.py": "169fe0ad0c5d8e5aba72bece232bec89f63956d6b5483a9fa8536714e24ced1b",
+    "src/mineocclude/vision/ssim.py": "b40d9ccddd3316437a92021090e7c9c6d014a2c5526ebfa24a3033c7537d4b7b"
+  },
+  "environment_lock": {
+    "implementation": "CPython",
+    "machine": "AMD64",
+    "python_version": "3.10.20",
+    "system": "Windows"
+  },
+  "evidence_class": "synthetic_fixture",
+  "inputs": [
+    {
+      "input_id": "person_e_config",
+      "owner": "person_e",
+      "repository_path": "configs/vision/person_e_phase1.yaml",
+      "sha256": "da05329029cb7119f0c48cfed12657d1a2e4ae6b7d0cb6dcd3b8353292b95a56"
+    },
+    {
+      "input_id": "person_e_frozen_split_manifest",
+      "owner": "person_e",
+      "repository_path": "docs/status/person_e_phase2_v0_1/frozen_split_manifest.json",
+      "sha256": "03097dda9c1c68ae120b291845a65aba7166cff20c234f51d30b5cdd2d10811c"
+    },
+    {
+      "input_id": "person_e_detector_formal_evaluation",
+      "owner": "person_e",
+      "repository_path": "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/formal_evaluation_report.json",
+      "sha256": "05b3cea58679e8097bdbf2953c1e933771311690a92794640b09c9a622678d90"
+    },
+    {
+      "input_id": "person_e_homography_refit_v0_2",
+      "owner": "person_e",
+      "repository_path": "data/handoff_e/person_e_v0_4_homography_refit_v0_2/fit_summary.json",
+      "sha256": "d5449cec9d1cc1a527e4f74535019b9188122623f277c8e2bba54791df78855d"
+    }
+  ],
+  "stages": [
+    {
+      "command": [
+        "-c",
+        "import json,sys;d=json.load(open(sys.argv[1],encoding='utf-8'));assert d['rollout_rows'],'empty manifest';print('registry stage: %d accepted rollout row(s)'%len(d['rollout_rows']))",
+        "{workdir}/manifest.json"
+      ],
+      "expected_outputs": [],
+      "stage": "registry"
+    },
+    {
+      "command": [
+        "-c",
+        "import json,sys;d=json.load(open(sys.argv[1],encoding='utf-8'));print('detector stage: %d frame(s) queued'%len(d['frames']))",
+        "{workdir}/frames.json"
+      ],
+      "expected_outputs": [],
+      "stage": "detector"
+    },
+    {
+      "command": [
+        "scripts/fit_homographies.py",
+        "{workdir}/homography_input.json",
+        "{workdir}/homography_report.json",
+        "--config",
+        "{workdir}/person_e_live_config.json",
+        "--producer-run-id",
+        "person_e_measurement_run_1",
+        "--code-sha",
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "expected_outputs": [
+        "{workdir}/homography_report.json"
+      ],
+      "stage": "homography"
+    },
+    {
+      "command": [
+        "scripts/localize_u4_frames.py",
+        "{workdir}/frames.json",
+        "{workdir}/homography_report.json",
+        "{workdir}/manifest.json",
+        "{workdir}/registry.json",
+        "{workdir}/localization.json",
+        "--config",
+        "{workdir}/person_e_live_config.json",
+        "--run-id",
+        "person_e_measurement_run_1"
+      ],
+      "expected_outputs": [
+        "{workdir}/localization.json"
+      ],
+      "stage": "displacement"
+    },
+    {
+      "command": [
+        "scripts/compose_u4_evidence.py",
+        "{workdir}/localization.json",
+        "{workdir}/ssim_report.json",
+        "{workdir}/composed.json"
+      ],
+      "expected_outputs": [
+        "{workdir}/composed.json"
+      ],
+      "stage": "ssim"
+    }
+  ]
+}

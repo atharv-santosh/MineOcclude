@@ -1,0 +1,131 @@
+{
+  "blocking_external_inputs": [
+    "person_a_clean_run_bundle",
+    "person_a_u4_rollout_clips",
+    "person_b_event_dose_table",
+    "person_b_ssim_matching_rule",
+    "person_d_control_manifest"
+  ],
+  "clean_reproduction_receipt_schema_version": "person-e-clean-reproduction-receipt-v0.1",
+  "code_commit": "3b0814f1c91f6f49a7dd394e33a16700cc7ffc03",
+  "comparison": null,
+  "component_verification": {
+    "component_count": 12,
+    "mismatched_components": [],
+    "verified": true
+  },
+  "environment_lock": {
+    "implementation": "CPython",
+    "machine": "AMD64",
+    "python_version": "3.10.20",
+    "system": "Windows"
+  },
+  "evidence_class": "synthetic_fixture",
+  "executed_stage_count": 5,
+  "failed_stages": [],
+  "input_verification": {
+    "input_count": 4,
+    "mismatched_inputs": [],
+    "missing_inputs": [],
+    "verified": true
+  },
+  "real_clean_reproduction_complete": false,
+  "receipt_content_hash": "ecb27fe72798eb4d2aa875382e1e3946c003a007398e79fbde941c8d52b9a89a",
+  "skipped_stages": [],
+  "source_edited_between_stages": false,
+  "source_edited_components": [],
+  "stage_order": [
+    "registry",
+    "detector",
+    "homography",
+    "displacement",
+    "ssim"
+  ],
+  "stage_results": [
+    {
+      "command": [
+        "-c",
+        "import json,sys;d=json.load(open(sys.argv[1],encoding='utf-8'));assert d['rollout_rows'],'empty manifest';print('registry stage: %d accepted rollout row(s)'%len(d['rollout_rows']))",
+        "{workdir}/manifest.json"
+      ],
+      "exit_code": 0,
+      "outcome": "passed",
+      "runtime_seconds": 0.188,
+      "stage": "registry",
+      "stderr_tail": "",
+      "stdout_tail": "registry stage: 1 accepted rollout row(s)\n"
+    },
+    {
+      "command": [
+        "-c",
+        "import json,sys;d=json.load(open(sys.argv[1],encoding='utf-8'));print('detector stage: %d frame(s) queued'%len(d['frames']))",
+        "{workdir}/frames.json"
+      ],
+      "exit_code": 0,
+      "outcome": "passed",
+      "runtime_seconds": 0.203,
+      "stage": "detector",
+      "stderr_tail": "",
+      "stdout_tail": "detector stage: 3 frame(s) queued\n"
+    },
+    {
+      "command": [
+        "scripts/fit_homographies.py",
+        "{workdir}/homography_input.json",
+        "{workdir}/homography_report.json",
+        "--config",
+        "{workdir}/person_e_live_config.json",
+        "--producer-run-id",
+        "person_e_measurement_run_1",
+        "--code-sha",
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "exit_code": 0,
+      "outcome": "passed",
+      "runtime_seconds": 1.016,
+      "stage": "homography",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "command": [
+        "scripts/localize_u4_frames.py",
+        "{workdir}/frames.json",
+        "{workdir}/homography_report.json",
+        "{workdir}/manifest.json",
+        "{workdir}/registry.json",
+        "{workdir}/localization.json",
+        "--config",
+        "{workdir}/person_e_live_config.json",
+        "--run-id",
+        "person_e_measurement_run_1"
+      ],
+      "exit_code": 0,
+      "outcome": "passed",
+      "runtime_seconds": 1.093,
+      "stage": "displacement",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "command": [
+        "scripts/compose_u4_evidence.py",
+        "{workdir}/localization.json",
+        "{workdir}/ssim_report.json",
+        "{workdir}/composed.json"
+      ],
+      "exit_code": 0,
+      "outcome": "passed",
+      "runtime_seconds": 1.282,
+      "stage": "ssim",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    }
+  ],
+  "synthetic_known_answer": {
+    "expected_wall_parallel_blocks": 1.5,
+    "known_answer_recovered": true,
+    "observed_wall_parallel_blocks": 1.5
+  },
+  "total_runtime_seconds": 3.782
+}
