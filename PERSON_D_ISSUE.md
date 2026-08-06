@@ -119,10 +119,32 @@ the current A/B/C authorities and does not vendor copies of them.
       FAILED) unless the caller explicitly declares real no-wall data
       provenance; currently `BLOCKED`, since real no-wall rows, a real B
       fold manifest, and real oracle targets do not exist yet.
+- [x] Phase 6-8 machinery (Steps 6.1-8.4). Step 6.1 binds the **real**
+      accepted 66-cell MVP identity (48 core + 6 no-wall + 6 no-sheep +
+      6 sentinel, zero shortfall), re-derived byte-identically from
+      Person C's current tip `365e748`. Steps 6.3-8.3 add grouped nulls
+      and paired comparisons (`grouped_nulls_v0_1`), the preliminary
+      comparison report pipeline (`preliminary_report_v0_1`), the
+      versioned result lock (`result_lock_v0_1`), the pre-outcome U4
+      control manifest and D-to-A/E handoff (`u4_control_manifest_v0_1`),
+      the direction-control audit (`direction_control_audit_v0_1`), the
+      fail-closed E measurement join (`u4_measurement_join_v0_1`), the
+      specificity/damage report (`specificity_damage_report_v0_1`), the
+      control-failure claim-impact record
+      (`control_failure_record_v0_1`), and the clean workflow,
+      checkpoint demonstration, and GREEN/YELLOW/RED classifier
+      (`clean_workflow_v0_1`). Every package regenerates
+      byte-identically from
+      `scripts/run_person_d_phase6to8_completion.py`. Step 8.4's frozen
+      operating handoff is at
+      `docs/status/person_d_terminal_handoff_v0_1/`.
 - [ ] Run all of the above against real accepted rows/folds/targets once
-      C/B/A hand off real data -- everything above is currently exercised
-      only against synthetic fixtures (`tests/baselines/`), except the
-      non-scientific real-capture preview and ingest adapter noted above.
+      C/B/A hand off real data. Every Phase 6-8 document is currently
+      labeled `evidence_kind = "synthetic"`; blocked sections are
+      structurally empty and name the missing artifact, its owner, its
+      schema, and the exact command to run on receipt. The five exact
+      remaining external dependencies are listed in
+      `docs/status/person_d_terminal_handoff_v0_1/person_d_terminal_status_package.json`.
 
 ## Post-MVP work
 

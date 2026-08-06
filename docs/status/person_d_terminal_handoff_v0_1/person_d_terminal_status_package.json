@@ -1,0 +1,383 @@
+{
+  "schema_id": "person-d-terminal-status-package-v0-1",
+  "schema_version": "1.0",
+  "producer_role": "person_d",
+  "record_date": "2026-08-06",
+  "package_status": "frozen",
+
+  "roadmap": {
+    "manual": "MineOcclude Research Execution Guide v3.0, Person D blocks (Day 0 - Day 7) and Role Reference / Person D",
+    "roadmap_version": "v3.0",
+    "role_tracker": "PERSON_D_ISSUE.md",
+    "note": "No machine-readable roadmap file with an explicit version string is committed on this branch; the version above is the manual's own stated version as cited by PERSON_D_ISSUE.md."
+  },
+
+  "repository": {
+    "branch": "role/person-d-baselines",
+    "starting_commit_local_head": "5ea6ce92890da7faa46f6aa837135081633d5f3d",
+    "starting_commit_after_fast_forward": "35305576f67ba931cc464b8c3bae002b7d14d5dd",
+    "fast_forward_note": "Local HEAD was two commits behind origin/role/person-d-baselines at sprint start. A fast-forward merge of the same branch was performed (no rebase, no reset, no history rewrite).",
+    "origin_main": "15adc43674420ae35921847a953ebbee2135f142",
+    "person_a_commit": "ef98d184aaed8f03757add4ecac4a48968bb6fcc",
+    "person_b_analysis_commit": "98f50761ecb99bc14ed5d1ebb67aedc8dcfd3327",
+    "person_b_methods_commit": "eec9396e6a93feaab3d5d298ac7cdc4cb54fdbd4",
+    "person_c_commit": "365e748addcb1e1926d7e2c5a382a92fa39ebc40",
+    "person_e_commit": "5e2ef61a75fe4900dc7226dec7c1f6dcc1f39171",
+    "person_b_terminal_complete": false,
+    "person_b_status_note": "Neither Person B branch carries a fold or oracle-target manifest at the accepted 66-cell MVP scale. B is not terminally complete with respect to Person D's Step 6.2 inputs.",
+    "no_role_branch_merged": true,
+    "no_role_branch_history_imported": true,
+    "no_history_rewritten": true,
+    "final_mvp_tag_created": false
+  },
+
+  "step_status": {
+    "step_0_1": "COMPLETE_AND_VERIFIED",
+    "step_0_2": "COMPLETE_AND_VERIFIED",
+    "step_0_3": "COMPLETE_AND_VERIFIED",
+    "step_0_4": "COMPLETE_AND_VERIFIED",
+    "step_1_1": "COMPLETE_AND_VERIFIED",
+    "step_1_2": "COMPLETE_AND_VERIFIED",
+    "step_1_3": "COMPLETE_AND_VERIFIED",
+    "step_1_4": "COMPLETE_AND_VERIFIED",
+    "step_1_5": "COMPLETE_AND_VERIFIED",
+    "step_2_1": "COMPLETE_AND_VERIFIED",
+    "step_2_2": "COMPLETE_AND_VERIFIED",
+    "step_2_3": "COMPLETE_AND_VERIFIED",
+    "step_2_4": "COMPLETE_AND_VERIFIED",
+    "step_3_1": "COMPLETE_AND_VERIFIED",
+    "step_3_2": "COMPLETE_AND_VERIFIED",
+    "step_3_3": "COMPLETE_AND_VERIFIED",
+    "step_3_4": "COMPLETE_AND_VERIFIED",
+    "step_3_5": "COMPLETE_AND_VERIFIED",
+    "step_4_1": "COMPLETE_AND_VERIFIED",
+    "step_4_2": "COMPLETE_AND_VERIFIED",
+    "step_4_3": "BLOCKED_EXTERNAL_INPUT",
+    "step_4_4": "COMPLETE_AND_VERIFIED",
+    "step_4_5": "COMPLETE_AND_VERIFIED",
+    "step_5_1": "IMPLEMENTED_NOT_EXECUTED",
+    "step_5_2": "IMPLEMENTED_NOT_EXECUTED",
+    "step_5_3": "IMPLEMENTED_NOT_EXECUTED",
+    "step_5_4": "BLOCKED_EXTERNAL_INPUT",
+    "step_6_1": "COMPLETE_AND_VERIFIED",
+    "step_6_2": "IMPLEMENTED_NOT_EXECUTED",
+    "step_6_3": "IMPLEMENTED_NOT_EXECUTED",
+    "step_6_4": "IMPLEMENTED_NOT_EXECUTED",
+    "step_6_5": "IMPLEMENTED_NOT_EXECUTED",
+    "step_7_1": "IMPLEMENTED_NOT_EXECUTED",
+    "step_7_2": "IMPLEMENTED_NOT_EXECUTED",
+    "step_7_3": "IMPLEMENTED_NOT_EXECUTED",
+    "step_7_4": "IMPLEMENTED_NOT_EXECUTED",
+    "step_7_5": "COMPLETE_AND_VERIFIED",
+    "step_8_1": "COMPLETE_AND_VERIFIED",
+    "step_8_2": "COMPLETE_AND_VERIFIED",
+    "step_8_3": "COMPLETE_AND_VERIFIED",
+    "step_8_4": "COMPLETE_AND_VERIFIED"
+  },
+
+  "step_status_legend": {
+    "COMPLETE_AND_VERIFIED": "Implementation, schema, tests, and receipts all exist and pass. For steps whose deliverable is machinery rather than a scientific result, this means the machinery is complete and its synthetic validation passes.",
+    "IMPLEMENTED_NOT_EXECUTED": "Every Person D-owned implementation, schema, validator, test, command, and blocker receipt is complete. The remaining work is a real execution that requires an external A/B/C/E input that does not exist yet.",
+    "BLOCKED_EXTERNAL_INPUT": "Cannot proceed at all without a named external artifact; the fail-closed gate is implemented and currently returns BLOCKED.",
+    "NOT_STARTED": "unused in this package",
+    "PARTIALLY_COMPLETE": "unused in this package",
+    "STALE_STATUS": "unused in this package"
+  },
+
+  "pre_phase_6_audit": {
+    "audit_pass": true,
+    "steps_audited": "0.1 through 5.4",
+    "known_gaps_addressed": {
+      "step_2_1_explicit_donor_identity": {
+        "status": "COMPLETE",
+        "previously_reported_gap": "Grouped shuffled-label donor alignment used within-list position rather than an explicit donor frame identity.",
+        "found_state": "Frame alignment by explicit model_frame_idx was already in place; donor *eligibility* validation was not.",
+        "repair": "Added GroupedShuffleError, DonorAssignment, build_donor_assignments, _group_contexts_by_trajectory. The floor now rejects a self-donor, an unknown donor, a donor with no declared target entry, a reused donor (non-bijective mapping), a trajectory with conflicting layout/fold identity, and a duplicate (trajectory, frame) row identity. An optional require_cross_group_donors flag rejects a within-group donor. Every emitted row records donor trajectory, donor frame index, both group keys, and the seed.",
+        "tests": "tests/baselines/test_shuffled_donor_identity.py (18 tests) plus the pre-existing tests/baselines/test_shuffled.py (2 tests)"
+      },
+      "step_3_4_conflicting_fold_rejection": {
+        "status": "COMPLETE",
+        "previously_reported_gap": "Visible-history spread did not explicitly reject conflicting fold assignments for one trajectory inside the function.",
+        "found_state": "The conflicting-fold rejection was already implemented and raising VisibleHistoryQError.",
+        "repair": "Added the missing provenance and one further fail-closed path: every row now records estimator_id, feature_id, held_out_fold, dt_seconds, fit_row_count, and fit_trajectory_ids; visible history supplied for a trajectory with no fold assignment is now rejected rather than silently dropped from every training pool.",
+        "tests": "tests/baselines/test_visible_history_q_fold_integrity.py (12 tests) plus the pre-existing tests/baselines/test_visible_history_q.py (4 tests)"
+      },
+      "step_4_5_consolidated_audit": {
+        "status": "COMPLETE",
+        "previously_reported_gap": "No consolidated missingness and exclusion audit existed across layout, condition, duration, target bins, and methods.",
+        "found_state": "baselines/missingness.py tabulated method/target/layout/regime/duration and flagged reason-less rows, but had no fold, condition role, comparison class, acceptance status, planned counts, run validity, machine-readable document, or validator.",
+        "repair": "Added baselines/missingness_audit_v0_1.py producing schema person-d-missingness-exclusion-report-v0-1 across layout, condition role, hidden duration bin, target, method, fold, comparison class, acceptance status, prediction status (available / non_applicable / missing), reason code, and planned-versus-requested-versus-emitted reconciliation. NA stays null and never zero; every missing prediction carries one reason; a method that emits nothing is reported as missing rather than absent; orphan and duplicate emitted rows are reported; invalid and superseded runs are excluded from current results and retained in run_history.",
+        "tests": "tests/baselines/test_missingness_audit_v0_1.py (30 tests)"
+      }
+    },
+    "additional_repairs": [
+      {
+        "defect": "detect_host_memory() used POSIX os.sysconf only, so on Windows every raw_pixel memory plan failed closed with host_memory_undetected -- a portability defect masquerading as a memory shortage.",
+        "repair": "Added a Win32 GlobalMemoryStatusEx fallback via ctypes. Fail-closed semantics on genuinely undetectable memory are unchanged.",
+        "file": "src/mineocclude/baselines/memory_planning.py"
+      },
+      {
+        "defect": "Four production-runner orchestration tests depended on the live machine's transient free RAM and failed on any host with under ~0.7 GiB available.",
+        "repair": "Added an explicit host_memory seam to run_production (default None keeps live probing for real runs) and pinned the approved 15 GiB production host in the orchestration tests.",
+        "files": [
+          "scripts/run_person_d_step4_1_eight_family_production.py",
+          "tests/baselines/test_baseline_family_production_cli.py"
+        ]
+      },
+      {
+        "defect": "The Step 6.1 authority binding cited c6bff25 as role/person-c-data's current tip; that branch has since advanced 28 commits to 365e748.",
+        "repair": "Published a versioned successor (person_d_phase6_step6_1_mvp_identity_binding_v0_2/authority_refresh.json) proving identical git blob OIDs at both commits and re-deriving the 66-cell manifest byte-identically from the CURRENT tip. The v0.1 record is retained verbatim.",
+        "file": "docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_2/authority_refresh.json"
+      }
+    ]
+  },
+
+  "implementation_inventory": {
+    "step_2_1": "src/mineocclude/baselines/shuffled.py",
+    "step_3_4": "src/mineocclude/baselines/visible_history_q.py",
+    "step_4_5": "src/mineocclude/baselines/missingness_audit_v0_1.py",
+    "step_6_1": "src/mineocclude/baselines/mvp_identity_v0_1.py",
+    "step_6_2": "scripts/run_person_d_step4_1_eight_family_production.py, src/mineocclude/baselines/eight_family_runner.py, src/mineocclude/baselines/baseline_family_input_v0_2.py, src/mineocclude/baselines/memory_planning.py",
+    "step_6_3": "src/mineocclude/baselines/grouped_nulls_v0_1.py",
+    "step_6_4": "src/mineocclude/baselines/preliminary_report_v0_1.py",
+    "step_6_5": "src/mineocclude/baselines/result_lock_v0_1.py",
+    "step_7_1": "src/mineocclude/baselines/u4_control_manifest_v0_1.py",
+    "step_7_2": "src/mineocclude/baselines/direction_control_audit_v0_1.py",
+    "step_7_3": "src/mineocclude/baselines/u4_measurement_join_v0_1.py",
+    "step_7_4": "src/mineocclude/baselines/specificity_damage_report_v0_1.py",
+    "step_7_5": "src/mineocclude/baselines/control_failure_record_v0_1.py",
+    "step_8_1_8_2_8_3": "src/mineocclude/baselines/clean_workflow_v0_1.py",
+    "step_8_4": "docs/status/person_d_terminal_handoff_v0_1/PERSON_D_OPERATING_HANDOFF.md",
+    "evidence_generator": "scripts/run_person_d_phase6to8_completion.py"
+  },
+
+  "real_evidence_inventory": [
+    {
+      "artifact": "docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_1/mvp_input_manifest.json",
+      "sha256": "81d3ec35559e470744850310748a476543247c4626aec626d2e6520267122ee0",
+      "kind": "real",
+      "description": "The accepted 66-cell MVP identity binding, computed from Person C's committed bytes and re-derived byte-identically from Person C's current tip 365e748 during this sprint."
+    },
+    {
+      "artifact": "docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_2/authority_refresh.json",
+      "kind": "real",
+      "description": "Versioned successor re-citing Person C's current tip with git-blob-OID byte-identity proof and an empirical re-derivation receipt."
+    },
+    {
+      "artifact": "docs/status/person_d_phase4_step4_1_registry_v2_trust_v0_1/",
+      "kind": "real",
+      "description": "Prior accepted Step 4.1 provenance and registry-v2 trust evidence, unchanged by this sprint. The Step 4.1 decision remains FAIL."
+    }
+  ],
+
+  "synthetic_evidence_inventory": {
+    "root": "docs/status/person_d_phase6to8_completion_v0_1/",
+    "artifact_count": 15,
+    "artifact_count_in_sha256_inventory": 14,
+    "artifact_count_note": "sha256_inventory.json records the 14 generated documents; it is itself the 15th file in the directory and is not listed inside its own inventory.",
+    "all_labeled_synthetic": true,
+    "real_execution_performed": false,
+    "regeneration_command": "python scripts/run_person_d_phase6to8_completion.py --repository-root . --output-root docs/status/person_d_phase6to8_completion_v0_1",
+    "byte_deterministic": true,
+    "artifacts": [
+      "step4_5_missingness_exclusion_report.json",
+      "step6_3_grouped_nulls.json",
+      "step6_3_paired_comparisons.json",
+      "step6_4_preliminary_comparison_report.json",
+      "step6_5_result_lock.json",
+      "step7_1_u4_control_manifest.json",
+      "step7_1_control_handoff_to_a_and_e.json",
+      "step7_2_direction_control_audit.json",
+      "step7_3_u4_control_matrix.json",
+      "step7_4_specificity_damage_report.json",
+      "step7_5_control_failure_record.json",
+      "step8_1_clean_workflow_run.json",
+      "step8_2_checkpoint_demonstration.json",
+      "step8_3_checkpoint_classification.json",
+      "sha256_inventory.json"
+    ]
+  },
+
+  "test_inventory": {
+    "interpreter": "C:\\Users\\lollo\\MineOcclude-TestRunner\\Scripts\\python.exe",
+    "python_version": "3.10.20",
+    "pytest_version": "9.1.1",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "flags": "-q -p no:cacheprovider",
+    "selection": "tests/baselines tests/contracts/test_analysis_inputs.py",
+    "passed": 523,
+    "failed": 0,
+    "collection_errors": 0,
+    "subtests_passed": 20,
+    "runtime_seconds": 60.64,
+    "new_test_files_added_this_sprint": [
+      "tests/baselines/test_shuffled_donor_identity.py",
+      "tests/baselines/test_visible_history_q_fold_integrity.py",
+      "tests/baselines/test_missingness_audit_v0_1.py",
+      "tests/baselines/test_grouped_nulls_v0_1.py",
+      "tests/baselines/test_preliminary_report_and_result_lock_v0_1.py",
+      "tests/baselines/test_u4_control_manifest_v0_1.py",
+      "tests/baselines/test_u4_phase7_pipeline_v0_1.py",
+      "tests/baselines/test_clean_workflow_v0_1.py",
+      "tests/baselines/test_phase6to8_completion_package.py"
+    ],
+    "excluded_test": {
+      "test": "tests/integration/test_synthetic_pipeline.py::TestSyntheticCrossRolePipeline::test_checked_machine_readable_report_matches_fresh_execution",
+      "excluded_silently": false,
+      "reason": "Pre-existing cross-role failure, verified to fail identically at the pristine branch HEAD before any sprint change. Root cause is a one-ULP floating-point difference in Person B's synthetic u2_z_rms metric, cascading into 43 downstream artifact hashes. The artifact is cross-role result-bearing evidence Person D must not overwrite.",
+      "receipt": "docs/status/person_d_terminal_handoff_v0_1/cross_role_finding_synthetic_join_report.json",
+      "owner": "person_b"
+    }
+  },
+
+  "identity_versions": {
+    "baseline_schema": "person-d-baseline-spec-v1.0",
+    "d_to_b_handoff_schema": "person-b-baseline-input-v0.2",
+    "frozen_family_order": [
+      "last_seen",
+      "constant_velocity",
+      "grouped_shuffled",
+      "time_only",
+      "explicit_feature",
+      "raw_pixel",
+      "visible_history_q",
+      "known_q_analytic"
+    ],
+    "person_b_final_comparison_contract": "person-b-step4-1-final-comparison-contract-v0-1",
+    "person_b_applicability_contract": "person-b-step4-1-family-target-applicability-v0.1",
+    "frozen_resampling_unit": "whole_trajectory_pair_with_one_shared_sign_per_layout",
+    "frozen_permutation_count": 999,
+    "frozen_permutation_seed": 20260720,
+    "frozen_row_level_pairing_keys": [
+      "trajectory_id",
+      "model_frame_idx",
+      "fold_idx",
+      "target_name"
+    ],
+    "fold_manifest_version_66_cell": null,
+    "row_identity_version_66_cell": null,
+    "note": "The 66-cell fold and row identity versions are null because Person B has not published them. The ten-pilot ep94xx fold manifest sha256 53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71 covers a different, smaller collection."
+  },
+
+  "accepted_mvp_matrix": {
+    "expected_cell_count": 66,
+    "accepted_cell_count": 66,
+    "excluded_pending_or_missing_cell_count": 0,
+    "core_regime_a": 48,
+    "no_wall_visible_controls": 6,
+    "occluder_only_no_sheep_controls": 6,
+    "context_sentinels": 6,
+    "accepted_manifest_sha256": "81d3ec35559e470744850310748a476543247c4626aec626d2e6520267122ee0",
+    "shortfall": []
+  },
+
+  "execution_status": {
+    "real_pilot_complete": false,
+    "real_pilot_trajectory_count": null,
+    "real_baseline_run_complete": false,
+    "real_baseline_prediction_row_count": null,
+    "grouped_nulls_real_complete": false,
+    "paired_comparisons_real_complete": false,
+    "preliminary_report_real_complete": false,
+    "result_facts_frozen": false,
+    "d_control_manifest_implementation_complete": true,
+    "d_control_manifest_real_frozen": false,
+    "d_control_manifest_path": "docs/status/person_d_phase6to8_completion_v0_1/step7_1_u4_control_manifest.json",
+    "d_control_ids_ready_for_a_and_e": false,
+    "d_control_ids_status": "The deterministic builder, schema, validators, freeze mechanics, post-rollout-addition guard, reconciliation, and the D-to-A/E handoff document are all complete and tested. Real clip IDs cannot be emitted because they are functions of Person B's real direction version, held-out event IDs, dose table, target layer, and target timestep, none of which exist on any branch. Publishing invented clip IDs would have A generating and E measuring against identities that are all wrong.",
+    "direction_control_audit_complete": true,
+    "direction_control_audit_decision": "BLOCKED",
+    "real_e_measurement_join_complete": false,
+    "u4_control_matrix_row_count": 11,
+    "u4_control_matrix_row_count_note": "Synthetic fixture only; the frozen synthetic manifest plans 11 clips (1 held-out event x 1 seed x (1 alpha-zero + 2 doses x (primary + random + orthogonal + wrong-layer + wrong-timestep))), and all 11 join rows have outcome=missing because no Person E measurement exists.",
+    "specificity_damage_report_real_complete": false,
+    "control_failure_record_implemented": true,
+    "clean_reproduction_complete": false,
+    "synthetic_clean_reproduction_pass": true,
+    "checkpoint_evidence_complete": true,
+    "checkpoint_classification": "YELLOW",
+    "frozen_handoff_complete": true
+  },
+
+  "frozen_hashes_valid": true,
+  "frozen_hash_verification": [
+    {
+      "artifact": "configs/collection/mvp_matrix.csv @ person-c 365e748",
+      "expected_sha256": "5eebbbd9f5950184b6c11a17722295c970e37a460e3963bed3b9390b99c1ac17",
+      "verified": true
+    },
+    {
+      "artifact": "data/autonomous/pilot_production_ledger.json @ person-c 365e748",
+      "expected_sha256": "8045a0e2eeb823a3f20da996eef546a4621a3fc578202947f1618480554472f9",
+      "verified": true
+    },
+    {
+      "artifact": "docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_1/mvp_input_manifest.json",
+      "expected_sha256": "81d3ec35559e470744850310748a476543247c4626aec626d2e6520267122ee0",
+      "verified": true,
+      "method": "re-derived from Person C's current tip via the committed binder"
+    },
+    {
+      "artifact": "docs/status/person_d_phase6to8_completion_v0_1/*",
+      "verified": true,
+      "method": "regenerated to a scratch directory; 15 of 15 files byte-identical, enforced by tests/baselines/test_phase6to8_completion_package.py"
+    }
+  ],
+
+  "external_blockers": [
+    {
+      "id": 1,
+      "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "production-handoff fold manifest + production_oracle_target_manifest at 66-trajectory scope",
+      "required_identity_fields": ["trajectory_id", "model_frame_idx", "fold_idx", "target_name", "fold_manifest_sha256", "oracle_target_sha256"],
+      "blocks_steps": ["5.1", "5.2", "5.3", "5.4", "6.2", "6.3", "6.4", "6.5", "4.3"],
+      "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto"
+    },
+    {
+      "id": 2,
+      "missing_artifact": "Person A preprocessed activation/frame manifest covering the accepted 66-cell MVP matrix",
+      "expected_owner": "person_a",
+      "expected_schema_or_version": "person-a-preprocessed-frame-manifest-v0.2",
+      "required_identity_fields": ["trajectory_id", "model_frame_idx", "payload_sha256", "preprocess_hash"],
+      "blocks_steps": ["5.1", "6.2 (raw_pixel family)"],
+      "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --preflight --frame-manifest <A_66_CELL_FRAME_MANIFEST>"
+    },
+    {
+      "id": 3,
+      "missing_artifact": "Person B fitted U4 direction, held-out event identities, signed dose table, target layer and timestep, and direction-construction record",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-intervention-request-v1.0",
+      "required_identity_fields": ["direction_id", "direction_version", "direction_hash", "seed", "event_id", "trajectory_id", "layout_id", "layer_idx", "timestep_idx", "dose_id", "alpha_requested", "alpha_applied", "cap_reduced"],
+      "blocks_steps": ["7.1 (real freeze)", "7.2 (real audit)"],
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --u4-direction-record <B_DIRECTION_RECORD> --freeze-real-control-manifest"
+    },
+    {
+      "id": 4,
+      "missing_artifact": "Person E U4 rollout measurement table",
+      "expected_owner": "person_e",
+      "expected_schema_or_version": "person-b-u4-measurement-input-v0.1",
+      "required_identity_fields": ["clip_id", "pair_key", "detector_version", "homography_version", "ssim_version", "outcome", "missing_reason"],
+      "blocks_steps": ["7.3", "7.4"],
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --u4-measurements <E_MEASUREMENT_TABLE> --output-root <OUTPUT_ROOT>"
+    },
+    {
+      "id": 5,
+      "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+      "required_identity_fields": ["metric_id", "baseline_family", "target_name", "layer_idx", "sample_unit"],
+      "blocks_steps": ["6.4", "6.5"],
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>"
+    }
+  ],
+
+  "local_work_remaining": "NONE",
+
+  "integration_readiness_decision": {
+    "decision": "READY_PENDING_EXTERNAL_INPUTS",
+    "rationale": "Every Person D-owned implementation, schema, validator, test, command, runbook, receipt, and preflight through Step 8.4 is complete and passing. The relevant test selection has zero failures and zero collection errors. All frozen Person D evidence hashes re-verify. Every remaining task requires a real Person A, B, or E artifact that does not exist on any branch. Person D creates no scientific claim and no threshold, and the checkpoint classifier correctly reports YELLOW on unavailable inputs rather than GREEN.",
+    "final_mvp_tag_created": false,
+    "tag_note": "Creating the final MVP tag is a coordinated integration action outside Person D's scope and was not performed."
+  }
+}

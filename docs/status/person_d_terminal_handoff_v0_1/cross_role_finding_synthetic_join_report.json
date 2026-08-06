@@ -1,0 +1,54 @@
+{
+  "schema_id": "person-d-cross-role-finding-v0-1",
+  "schema_version": "1.0",
+  "producer_role": "person_d",
+  "record_date": "2026-08-06",
+  "finding_id": "cross-role-synthetic-join-report-ulp-drift",
+  "severity": "reported_not_repaired",
+  "ownership": "NOT_PERSON_D",
+  "failing_test": "tests/integration/test_synthetic_pipeline.py::TestSyntheticCrossRolePipeline::test_checked_machine_readable_report_matches_fresh_execution",
+  "affected_artifact": {
+    "path": "tests/fixtures/integration/synthetic_join_report.json",
+    "producer": "src/mineocclude/integration/synthetic_pipeline.py",
+    "kind": "cross_role_step_1_7_synthetic_integration_evidence",
+    "owning_roles": ["person_a", "person_b", "person_e"]
+  },
+  "root_cause": {
+    "summary": "One floating-point unit-in-the-last-place difference in a Person B synthetic U2 metric, which cascades into every downstream artifact hash in the report.",
+    "metric_id": "u2_z_rms",
+    "metric_path": "/person_b_synthetic_analysis_chain/result_artifacts/U2/metric_records[1]/value",
+    "checked_in_value": 0.17781833022759722,
+    "value_on_this_host": 0.17781833022759724,
+    "absolute_delta": 2.7755575615628914e-17,
+    "relative_delta": 1.5608950764582807e-16,
+    "one_ulp_at_this_magnitude": 3.9483600883815576e-17,
+    "difference_is_within_one_ulp": true,
+    "total_report_differences": 44,
+    "non_hash_value_differences": 1,
+    "explanation": "43 of the 44 differences are SHA-256 artifact hashes computed downstream of the single differing float. The checked-in fixture was generated on a host whose BLAS/libm produced the other last bit. Nothing in the report's structure, identities, counts, or statuses differs."
+  },
+  "pre_existing": {
+    "verified": true,
+    "method": "git stash push --include-untracked, re-ran the failing test at the pristine branch HEAD 35305576f67ba931cc464b8c3bae002b7d14d5dd, observed the identical failure, then git stash pop.",
+    "conclusion": "The failure exists independently of every change made in this Person D sprint."
+  },
+  "why_person_d_did_not_repair_it": [
+    "The artifact is cross-role result-bearing evidence, not a Person D artifact. Regenerating it would overwrite a result-bearing artifact, which the provenance rules forbid.",
+    "The differing value is produced by Person B's synthetic analysis chain. Person D must not modify another role's scientific implementation.",
+    "Regenerating on this host would replace the recorded value with this machine's floating-point result, silently rebasing shared cross-role evidence onto one developer's BLAS build.",
+    "Adding a floating-point tolerance to the comparison would weaken a byte-exactness guarantee that Person D does not own."
+  ],
+  "recommended_owner_action": {
+    "owner": "person_b",
+    "options": [
+      "Regenerate tests/fixtures/integration/synthetic_join_report.json on the canonical reference host and re-publish it as a versioned successor.",
+      "Or make the synthetic U2 metric bit-reproducible across BLAS builds (for example by fixing the reduction order) and then regenerate."
+    ],
+    "person_d_dependency": "none; no Person D output depends on this fixture"
+  },
+  "person_d_relevant_selection_impact": {
+    "excluded_from_person_d_selection": true,
+    "excluded_silently": false,
+    "reason": "Documented here and reported in the sprint's final status package. The Person D relevant selection is tests/baselines plus tests/contracts/test_analysis_inputs.py, both of which pass with zero failures."
+  }
+}
