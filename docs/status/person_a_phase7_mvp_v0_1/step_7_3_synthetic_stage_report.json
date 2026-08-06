@@ -1,14 +1,14 @@
 {
   "blocked_stage_count": 0,
   "boundary_hashes": {
-    "activation_audit_report": "0288ffdc5298fc028a9bebbaec1be000e81287a7b3cba900843afcd2a294a903",
+    "activation_audit_report": "6f23057cee9f7b66b9498d2ad97ae3c39509ac933b0ef44beb52a665dbd14343",
     "activation_index": "7ad135530bb2438845d2bd59e682299dd80c5a92aeddd04fc6307a24fd2c80c7",
     "baseline_results": "284693e4978f3bb4ef1edb103006861ed45ef705846f3f197e34bdcaacd1cc50",
     "expected_vs_accepted_matrix": "e5528db8355ef10573e55ddb2f382736c61d8db870702f80fee9ee4b53021528",
     "measurement_tables": "73fbd695231d66b732211fb733601d13a0db4f24c8c65589254c9ccee57f7e01",
     "oracle_targets": "4eeda1e3624ddfb45ad190c38661fc6714bc08b3cdcdfa31baba2315af599930",
     "probe_results": "5ef033bc1f8766b28a3984033de509e5f9aa6bc1efcdd85ab1e18da5461771ad",
-    "queue_status": "ae522112a24c39511a132df518e5cd6443ff303dbfa0cc29ff1f10743c3fad51",
+    "queue_status": "640fe089f1d6687f0f8615199870423b1ef8c6c2c52ef0674b1b8c92f1859e9f",
     "rollout_bundle": "b8a1a3ce3ca25a23e5305755f780927c5884bfd3b00e3bb82bc7713e3ffb02d2",
     "rollout_manifest": "355ccdb61236552b910b76ff84b786a0ed78dfbb272807a97700539b89207e35",
     "u1_u3_metrics": "75a43dc03ed79437993c50af43dbb844013f02b4eb6088517190cd70ebf77632"
@@ -17,7 +17,7 @@
   "completed_stage_count": 9,
   "failed_stage_count": 0,
   "identity": {
-    "code_sha": "b9732eb32bb6bd40bdef86c931ac9d543f2ca4fc",
+    "code_sha": "df211ed4db0d9fc58681a1787af2d63fbf4d5682",
     "config_file_sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3",
     "config_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
     "config_id": "person-a-mvp-v1.0",
@@ -30,14 +30,14 @@
     "seed": 20260725
   },
   "mode": "synthetic",
-  "run_id": "mineocclude-run-61df5ac204c0625748827cc0efe12bb4",
+  "run_id": "mineocclude-run-469701b59e36934174d01b3e5a85b2eb",
   "schema_version": "person-a-mvp-stage-graph-v0.1",
   "scientific_use": "forbidden",
   "stage_count": 9,
   "stages": [
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "expected_vs_accepted_matrix": "e5528db8355ef10573e55ddb2f382736c61d8db870702f80fee9ee4b53021528"
       },
@@ -46,13 +46,13 @@
         "expected_vs_accepted_matrix"
       ],
       "stage_id": "manifest_validation",
-      "started_at": "2026-08-06T07:02:46.335055+00:00",
+      "started_at": "2026-08-06T07:22:11.101134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "oracle_targets": "4eeda1e3624ddfb45ad190c38661fc6714bc08b3cdcdfa31baba2315af599930"
       },
@@ -61,16 +61,16 @@
         "oracle_targets"
       ],
       "stage_id": "oracle",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "activation_index": "7ad135530bb2438845d2bd59e682299dd80c5a92aeddd04fc6307a24fd2c80c7",
-        "queue_status": "ae522112a24c39511a132df518e5cd6443ff303dbfa0cc29ff1f10743c3fad51"
+        "queue_status": "640fe089f1d6687f0f8615199870423b1ef8c6c2c52ef0674b1b8c92f1859e9f"
       },
       "owner": "person_a_model",
       "produced": [
@@ -78,28 +78,28 @@
         "queue_status"
       ],
       "stage_id": "model_extraction",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
-        "activation_audit_report": "0288ffdc5298fc028a9bebbaec1be000e81287a7b3cba900843afcd2a294a903"
+        "activation_audit_report": "6f23057cee9f7b66b9498d2ad97ae3c39509ac933b0ef44beb52a665dbd14343"
       },
       "owner": "person_a_model",
       "produced": [
         "activation_audit_report"
       ],
       "stage_id": "activation_audit",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "probe_results": "5ef033bc1f8766b28a3984033de509e5f9aa6bc1efcdd85ab1e18da5461771ad"
       },
@@ -108,13 +108,13 @@
         "probe_results"
       ],
       "stage_id": "probes",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "baseline_results": "284693e4978f3bb4ef1edb103006861ed45ef705846f3f197e34bdcaacd1cc50"
       },
@@ -123,13 +123,13 @@
         "baseline_results"
       ],
       "stage_id": "baselines",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "u1_u3_metrics": "75a43dc03ed79437993c50af43dbb844013f02b4eb6088517190cd70ebf77632"
       },
@@ -138,13 +138,13 @@
         "u1_u3_metrics"
       ],
       "stage_id": "u1_u3_metrics",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "rollout_bundle": "b8a1a3ce3ca25a23e5305755f780927c5884bfd3b00e3bb82bc7713e3ffb02d2",
         "rollout_manifest": "355ccdb61236552b910b76ff84b786a0ed78dfbb272807a97700539b89207e35"
@@ -155,13 +155,13 @@
         "rollout_manifest"
       ],
       "stage_id": "u4_generation",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     },
     {
       "detail": null,
-      "ended_at": "2026-08-06T07:02:46.336066+00:00",
+      "ended_at": "2026-08-06T07:22:11.102134+00:00",
       "output_hashes": {
         "measurement_tables": "73fbd695231d66b732211fb733601d13a0db4f24c8c65589254c9ccee57f7e01"
       },
@@ -170,7 +170,7 @@
         "measurement_tables"
       ],
       "stage_id": "measurement",
-      "started_at": "2026-08-06T07:02:46.336066+00:00",
+      "started_at": "2026-08-06T07:22:11.102134+00:00",
       "status": "completed",
       "synthetic": true
     }
