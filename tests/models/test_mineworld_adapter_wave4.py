@@ -1526,8 +1526,14 @@ class Wave4CertificationHarnessTests(unittest.TestCase):
             text=True,
             check=True,
         ).stdout
+        tracked_changes = [
+            line
+            for line in status.splitlines()
+            if line.strip()
+            and not wave2._is_generated_cache_status(line)
+        ]
         self.assertEqual(revision, wave2.PINNED_SOURCE_REVISION)
-        self.assertEqual(status, "")
+        self.assertEqual(tracked_changes, [])
         inference_source = (EXTERNAL_SOURCE / "inference.py").read_text("utf-8")
         lvm_source = (EXTERNAL_SOURCE / "lvm.py").read_text("utf-8")
         self.assertIn("model.transformer.naive_generate(", inference_source)

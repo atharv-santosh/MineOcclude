@@ -231,7 +231,23 @@ def _inspect_source(source_root: Path) -> tuple[str, bool]:
             )
         return result.stdout.strip()
 
-    return run("rev-parse", "HEAD"), not bool(run("status", "--porcelain"))
+    # Importing the pinned source makes Python write a bytecode cache into it.
+    # A generated cache is not a modification of the dependency, so it is
+    # excluded; any tracked change or other untracked file still marks the
+    # checkout unclean.
+    status_lines = [
+        line
+        for line in run("status", "--porcelain").splitlines()
+        if line.strip() and not _is_generated_cache_status(line)
+    ]
+    return run("rev-parse", "HEAD"), not status_lines
+
+
+def _is_generated_cache_status(line: str) -> bool:
+    """Return True for a status line that only reports Python bytecode cache."""
+
+    path = line[3:].strip().strip('"').replace("\\", "/")
+    return path.endswith("__pycache__/") or path.endswith(".pyc")
 
 
 def _git_blob_sha256(source_root: Path, revision: str, relative_path: str) -> str:

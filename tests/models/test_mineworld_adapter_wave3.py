@@ -952,8 +952,14 @@ class Wave3OwnershipTests(unittest.TestCase):
             text=True,
             check=True,
         ).stdout
+        tracked_changes = [
+            line
+            for line in status.splitlines()
+            if line.strip()
+            and not wave2._is_generated_cache_status(line)
+        ]
         self.assertEqual(revision, wave2.PINNED_SOURCE_REVISION)
-        self.assertEqual(status, "")
+        self.assertEqual(tracked_changes, [])
         vae_source = (EXTERNAL_SOURCE / "vae.py").read_text(encoding="utf-8")
         lvm_source = (EXTERNAL_SOURCE / "lvm.py").read_text(encoding="utf-8")
         gradio_source = (EXTERNAL_SOURCE / "mineworld.py").read_text(

@@ -48,30 +48,6 @@ PERSON_A_TEST_SELECTION = (
 # historical evidence.
 PREEXISTING_FAILURES = (
     {
-        "test": "tests/activations/test_phase4_wave2_probe.py::PoolingProbePreflightTests::test_preflight_records_no_runtime_or_session_side_effects",
-        "kind": "expired_in_flight_preflight_guard",
-    },
-    {
-        "test": "tests/activations/test_phase4_wave2_probe.py::PoolingProbePreflightTests::test_preflight_rejects_noncanonical_probe_shape",
-        "kind": "expired_in_flight_preflight_guard",
-    },
-    {
-        "test": "tests/activations/test_phase4_wave3_probe.py::ExtractionProbePreflightTests::test_preflight_has_no_torch_cuda_or_session_side_effects",
-        "kind": "expired_in_flight_preflight_guard",
-    },
-    {
-        "test": "tests/models/test_mineworld_adapter_wave3.py::Wave3OwnershipTests::test_direct_pinned_source_parity_for_wave3_boundaries",
-        "kind": "external_pinned_source_parity",
-    },
-    {
-        "test": "tests/models/test_mineworld_adapter_wave4.py::Wave4CertificationHarnessTests::test_certification_rechecks_committed_action_fixture",
-        "kind": "external_pinned_source_parity",
-    },
-    {
-        "test": "tests/models/test_mineworld_adapter_wave4.py::Wave4CertificationHarnessTests::test_direct_pinned_source_generation_parity",
-        "kind": "external_pinned_source_parity",
-    },
-    {
         "test": "tests/models/test_person_a_phase4_step4_1_production_handoff_preflight_v0_1.py::ProductionHandoffPreflightTests::test_01_exact_authorities_are_bound",
         "kind": "expired_in_flight_preparation_guard",
     },
@@ -96,14 +72,15 @@ PREEXISTING_FAILURES = (
         "kind": "expired_in_flight_preparation_guard",
     },
     {
-        "test": "tests/models/test_phase3_certification_inputs.py::WindowAndDerivativeTests::test_action_provenance_detects_raw_mutation_without_torch",
-        "kind": "external_pinned_source_parity",
-    },
-    {
         "test": "tests/integration/test_synthetic_pipeline.py::TestSyntheticCrossRolePipeline::test_checked_machine_readable_report_matches_fresh_execution",
         "kind": "cross_machine_float64_last_ulp_difference",
     },
 )
+
+# Each entry above asserts a moment that has passed (the exact worktree scope of
+# an earlier in-flight preparation package) or a byte-exact cross-machine float
+# equality. They are preserved historical evidence guards, not regressions, and
+# are left untouched rather than rewritten.
 
 STEP_STATUS: dict[str, dict[str, Any]] = {
     "6.7": {
@@ -777,7 +754,7 @@ def main() -> int:
                 + " ".join(PERSON_A_TEST_SELECTION)
                 + " -q"
             ),
-            "result": "14 failed, 880 passed, 1 skipped, 632 subtests passed",
+            "result": "7 failed, 887 passed, 1 skipped, 632 subtests passed",
             "new_person_a_tests_added": 239,
             "new_person_a_tests_passing": 239,
             "new_person_a_test_failures": 0,
@@ -785,9 +762,9 @@ def main() -> int:
             "preexisting_failures": list(PREEXISTING_FAILURES),
             "preexisting_failure_proof": (
                 "The identical selection was run in a detached worktree at the "
-                "starting commit be2d530; every failure listed here also fails "
-                "there. That baseline run reported 17 failed / 9 errors; this "
-                "branch reports 14 failed / 0 errors."
+                "starting commit be2d530; all seven failures listed here also "
+                "fail there on a clean checkout. That baseline run reported 17 "
+                "failed / 9 errors; this branch reports 7 failed / 0 errors."
             ),
             "repaired_in_this_sprint": [
                 "tests/test_parquet_dependency_authority.py::"
@@ -801,6 +778,19 @@ def main() -> int:
                 "(passed once the external cache directory was cleaned)",
                 "tests/models/test_mineworld_adapter_wave2.py "
                 "(9 collection errors cleared with the external cache)",
+                "src/mineocclude/models/_mineworld_adapter_wave2.py::"
+                "_inspect_source (importing the pinned source writes a bytecode "
+                "cache into it, which made the next cleanliness check fail; a "
+                "generated cache is now excluded while any tracked change still "
+                "marks the checkout unclean)",
+                "tests/models/test_mineworld_adapter_wave3.py and _wave4.py "
+                "(same cache-tolerant cleanliness predicate)",
+                "tests/activations/test_phase4_wave2_probe.py and "
+                "test_phase4_wave3_probe.py (the probe refuses to start once "
+                "torch is imported, which is correct for its fresh-process CLI "
+                "use; the tests now supply that documented precondition instead "
+                "of requiring torch to be globally absent from the pytest "
+                "session)",
             ],
         },
         "immutable_artifact_inventory": dict(sorted(inventory.items())),

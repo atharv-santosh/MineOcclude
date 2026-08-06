@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import copy
 import hashlib
 import importlib.util
@@ -18,6 +19,42 @@ import numpy
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "run_phase4_wave3_extraction_probe.py"
 
+
+def _torch_modules() -> set[str]:
+    """Return the torch modules currently imported into this process."""
+
+    return {
+        name
+        for name in sys.modules
+        if name == "torch" or name.startswith("torch.")
+    }
+
+
+@contextlib.contextmanager
+def _fresh_runtime_process():
+    """Recreate the probe's documented precondition: torch not yet imported.
+
+    The probe is a standalone command that runs in a fresh process and refuses
+    to start once torch is loaded. A pytest session may already have imported
+    torch through a sibling module, so the imported torch modules are removed
+    for the duration of the call and restored exactly afterwards. Nothing is
+    re-imported in between, because the property under test is that preflight
+    imports no runtime of its own.
+    """
+
+    saved = {name: sys.modules[name] for name in _torch_modules()}
+    for name in saved:
+        del sys.modules[name]
+    try:
+        yield
+    finally:
+        sys.modules.update(saved)
+
+
+def _assert_no_new_torch_import(test, before: set[str]) -> None:
+    """Assert the guarded code path imported no torch module of its own."""
+
+    test.assertEqual(_torch_modules() - before, set())
 
 def _load_probe():
     spec = importlib.util.spec_from_file_location(
@@ -270,7 +307,7 @@ class ExtractionProbePreflightTests(unittest.TestCase):
         validate.assert_called_once_with(SCRIPT, verify_files=True)
 
     def test_preflight_has_no_torch_cuda_or_session_side_effects(self):
-        self.assertNotIn("torch", sys.modules)
+        torch_before = _torch_modules()
         probe = _load_probe()
         from mineocclude.models import phase3_certification
 
@@ -335,7 +372,7 @@ class ExtractionProbePreflightTests(unittest.TestCase):
             phase3_certification,
             "preflight_certification_inputs",
             return_value=prepared,
-        ):
+        ), _fresh_runtime_process():
             report = probe.preflight(args)
         self.assertEqual(report["status"], "preflight_passed")
         for field in (
@@ -347,7 +384,7 @@ class ExtractionProbePreflightTests(unittest.TestCase):
         ):
             self.assertFalse(report[field])
         self.assertFalse(session_root.exists())
-        self.assertNotIn("torch", sys.modules)
+        _assert_no_new_torch_import(self, torch_before)
 
     def test_invalid_requested_count_fails_before_shared_preflight(self):
         probe = _load_probe()

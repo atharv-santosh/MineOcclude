@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import copy
 import importlib.util
 import sys
@@ -13,6 +14,42 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "run_phase4_wave2_pooling_probe.py"
 
+
+def _torch_modules() -> set[str]:
+    """Return the torch modules currently imported into this process."""
+
+    return {
+        name
+        for name in sys.modules
+        if name == "torch" or name.startswith("torch.")
+    }
+
+
+@contextlib.contextmanager
+def _fresh_runtime_process():
+    """Recreate the probe's documented precondition: torch not yet imported.
+
+    The probe is a standalone command that runs in a fresh process and refuses
+    to start once torch is loaded. A pytest session may already have imported
+    torch through a sibling module, so the imported torch modules are removed
+    for the duration of the call and restored exactly afterwards. Nothing is
+    re-imported in between, because the property under test is that preflight
+    imports no runtime of its own.
+    """
+
+    saved = {name: sys.modules[name] for name in _torch_modules()}
+    for name in saved:
+        del sys.modules[name]
+    try:
+        yield
+    finally:
+        sys.modules.update(saved)
+
+
+def _assert_no_new_torch_import(test, before: set[str]) -> None:
+    """Assert the guarded code path imported no torch module of its own."""
+
+    test.assertEqual(_torch_modules() - before, set())
 
 def _load_probe():
     spec = importlib.util.spec_from_file_location("phase4_wave2_probe", SCRIPT)
@@ -190,7 +227,7 @@ class PoolingProbePreflightTests(unittest.TestCase):
         )
 
     def test_preflight_records_no_runtime_or_session_side_effects(self):
-        self.assertNotIn("torch", sys.modules)
+        torch_before = _torch_modules()
         probe = _load_probe()
         from mineocclude.models import phase3_certification
 
@@ -252,7 +289,7 @@ class PoolingProbePreflightTests(unittest.TestCase):
             phase3_certification,
             "preflight_certification_inputs",
             return_value=prepared,
-        ) as shared:
+        ) as shared, _fresh_runtime_process():
             report = probe.preflight(args)
 
         shared.assert_called_once()
@@ -266,10 +303,10 @@ class PoolingProbePreflightTests(unittest.TestCase):
         self.assertEqual(report["expected_layer_count"], 20)
         self.assertEqual(report["expected_hidden_size"], 2048)
         self.assertFalse(session_root.exists())
-        self.assertNotIn("torch", sys.modules)
+        _assert_no_new_torch_import(self, torch_before)
 
     def test_preflight_rejects_noncanonical_probe_shape(self):
-        self.assertNotIn("torch", sys.modules)
+        torch_before = _torch_modules()
         probe = _load_probe()
         from mineocclude.models import phase3_certification
 
@@ -307,10 +344,10 @@ class PoolingProbePreflightTests(unittest.TestCase):
             phase3_certification,
             "preflight_certification_inputs",
             return_value=prepared,
-        ), self.assertRaises(Exception) as caught:
+        ), _fresh_runtime_process(), self.assertRaises(Exception) as caught:
             probe.preflight(args)
         self.assertIn("probe_shape_mismatch", str(caught.exception))
-        self.assertNotIn("torch", sys.modules)
+        _assert_no_new_torch_import(self, torch_before)
 
     def test_validate_fails_closed_for_missing_report(self):
         probe = _load_probe()

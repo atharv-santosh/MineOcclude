@@ -88,33 +88,9 @@
     "new_person_a_test_failures": 0,
     "new_person_a_tests_added": 239,
     "new_person_a_tests_passing": 239,
-    "preexisting_failure_count": 14,
-    "preexisting_failure_proof": "The identical selection was run in a detached worktree at the starting commit be2d530; every failure listed here also fails there. That baseline run reported 17 failed / 9 errors; this branch reports 14 failed / 0 errors.",
+    "preexisting_failure_count": 7,
+    "preexisting_failure_proof": "The identical selection was run in a detached worktree at the starting commit be2d530; all seven failures listed here also fail there on a clean checkout. That baseline run reported 17 failed / 9 errors; this branch reports 7 failed / 0 errors.",
     "preexisting_failures": [
-      {
-        "kind": "expired_in_flight_preflight_guard",
-        "test": "tests/activations/test_phase4_wave2_probe.py::PoolingProbePreflightTests::test_preflight_records_no_runtime_or_session_side_effects"
-      },
-      {
-        "kind": "expired_in_flight_preflight_guard",
-        "test": "tests/activations/test_phase4_wave2_probe.py::PoolingProbePreflightTests::test_preflight_rejects_noncanonical_probe_shape"
-      },
-      {
-        "kind": "expired_in_flight_preflight_guard",
-        "test": "tests/activations/test_phase4_wave3_probe.py::ExtractionProbePreflightTests::test_preflight_has_no_torch_cuda_or_session_side_effects"
-      },
-      {
-        "kind": "external_pinned_source_parity",
-        "test": "tests/models/test_mineworld_adapter_wave3.py::Wave3OwnershipTests::test_direct_pinned_source_parity_for_wave3_boundaries"
-      },
-      {
-        "kind": "external_pinned_source_parity",
-        "test": "tests/models/test_mineworld_adapter_wave4.py::Wave4CertificationHarnessTests::test_certification_rechecks_committed_action_fixture"
-      },
-      {
-        "kind": "external_pinned_source_parity",
-        "test": "tests/models/test_mineworld_adapter_wave4.py::Wave4CertificationHarnessTests::test_direct_pinned_source_generation_parity"
-      },
       {
         "kind": "expired_in_flight_preparation_guard",
         "test": "tests/models/test_person_a_phase4_step4_1_production_handoff_preflight_v0_1.py::ProductionHandoffPreflightTests::test_01_exact_authorities_are_bound"
@@ -140,10 +116,6 @@
         "test": "tests/models/test_person_a_phase6_step6_3_resume_preparation_v0_1.py::PersonAPhase6Step63ResumePreparationTests::test_evidence_is_canonical_and_inventory_is_exact"
       },
       {
-        "kind": "external_pinned_source_parity",
-        "test": "tests/models/test_phase3_certification_inputs.py::WindowAndDerivativeTests::test_action_provenance_detects_raw_mutation_without_torch"
-      },
-      {
         "kind": "cross_machine_float64_last_ulp_difference",
         "test": "tests/integration/test_synthetic_pipeline.py::TestSyntheticCrossRolePipeline::test_checked_machine_readable_report_matches_fresh_execution"
       }
@@ -152,9 +124,12 @@
       "tests/test_parquet_dependency_authority.py::test_every_prequalified_environment_dependency_is_preserved (compared against HEAD, which only held while the pyarrow change was uncommitted; now pinned to the pre-pyarrow commit)",
       "tests/test_parquet_dependency_authority.py::test_external_mineworld_dependency_file_is_untouched (a generated __pycache__ is not a dependency modification)",
       "tests/models/test_person_a_step6_runtime_acknowledgement_v0_1.py (passed once the external cache directory was cleaned)",
-      "tests/models/test_mineworld_adapter_wave2.py (9 collection errors cleared with the external cache)"
+      "tests/models/test_mineworld_adapter_wave2.py (9 collection errors cleared with the external cache)",
+      "src/mineocclude/models/_mineworld_adapter_wave2.py::_inspect_source (importing the pinned source writes a bytecode cache into it, which made the next cleanliness check fail; a generated cache is now excluded while any tracked change still marks the checkout unclean)",
+      "tests/models/test_mineworld_adapter_wave3.py and _wave4.py (same cache-tolerant cleanliness predicate)",
+      "tests/activations/test_phase4_wave2_probe.py and test_phase4_wave3_probe.py (the probe refuses to start once torch is imported, which is correct for its fresh-process CLI use; the tests now supply that documented precondition instead of requiring torch to be globally absent from the pytest session)"
     ],
-    "result": "14 failed, 880 passed, 1 skipped, 632 subtests passed",
+    "result": "7 failed, 887 passed, 1 skipped, 632 subtests passed",
     "selection": [
       "tests/activations",
       "tests/models",
@@ -175,7 +150,7 @@
     "rerun_or_relabelled": false
   },
   "identity": {
-    "code_sha": "21b2e637f81499f67e37c8f46f2f51cd772bdb80",
+    "code_sha": "195c7890f59b563694be8e001cfb97b47bc5bd59",
     "config_file_sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3",
     "config_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
     "config_id": "person-a-mvp-v1.0",
