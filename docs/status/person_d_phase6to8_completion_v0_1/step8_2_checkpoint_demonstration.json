@@ -1,0 +1,205 @@
+{
+  "artifact_index": [
+    {
+      "artifact_id": "person-d-step6-1-mvp-input-manifest",
+      "owner_role": "person_d",
+      "path": "docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_1/mvp_input_manifest.json",
+      "section_id": "accepted_input_identity",
+      "sha256": "81d3ec35559e470744850310748a476543247c4626aec626d2e6520267122ee0"
+    },
+    {
+      "artifact_id": "person-d-step6-3-grouped-nulls",
+      "owner_role": "person_d",
+      "path": "docs/status/person_d_phase6to8_completion_v0_1/step6_3_grouped_nulls.json",
+      "section_id": "grouped_nulls",
+      "sha256": "a827cd2583d4a567efe96ef7e6160e4da4ca8bafc12129dc39248b98c64e2f7e"
+    },
+    {
+      "artifact_id": "person-d-step4-5-missingness-exclusion-report",
+      "owner_role": "person_d",
+      "path": "docs/status/person_d_phase6to8_completion_v0_1/step4_5_missingness_exclusion_report.json",
+      "section_id": "missingness_and_exclusions",
+      "sha256": "b8bc2e79d4af4641b7d9d0baf346dc6e00d9e7af26f3706290be41cc17dcc8b3"
+    },
+    {
+      "artifact_id": "person-d-step7-1-u4-control-manifest",
+      "owner_role": "person_d",
+      "path": "docs/status/person_d_phase6to8_completion_v0_1/step7_1_u4_control_manifest.json",
+      "section_id": "u4_control_manifest",
+      "sha256": "a477e42d70c6e2eb0cf5db8e55a8ae3340c8bb21ed7be1d7f3570dcfd554f822"
+    }
+  ],
+  "blocked_section_count": 10,
+  "demonstration_complete": false,
+  "evidence_kind": "synthetic",
+  "producer_role": "person_d",
+  "resolved_section_count": 4,
+  "run_id": "person-d-step8-2-checkpoint-demonstration-v0-1",
+  "schema_id": "person-d-checkpoint-demonstration-v0-1",
+  "schema_version": "1.0",
+  "section_count": 14,
+  "sections": [
+    {
+      "blocker": null,
+      "blocker_owner": null,
+      "displayed_values": {
+        "note": "Machine-readable source; no value on this page was typed by hand."
+      },
+      "owner_role": "person_d",
+      "section_id": "accepted_input_identity",
+      "source_artifact_id": "person-d-step6-1-mvp-input-manifest",
+      "source_path": "docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_1/mvp_input_manifest.json",
+      "source_sha256": "81d3ec35559e470744850310748a476543247c4626aec626d2e6520267122ee0",
+      "status": "resolved"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "split_integrity_audit",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "legal_input_firewall",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "prediction_runs",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": null,
+      "blocker_owner": null,
+      "displayed_values": {
+        "note": "Machine-readable source; no value on this page was typed by hand."
+      },
+      "owner_role": "person_d",
+      "section_id": "grouped_nulls",
+      "source_artifact_id": "person-d-step6-3-grouped-nulls",
+      "source_path": "docs/status/person_d_phase6to8_completion_v0_1/step6_3_grouped_nulls.json",
+      "source_sha256": "a827cd2583d4a567efe96ef7e6160e4da4ca8bafc12129dc39248b98c64e2f7e",
+      "status": "resolved"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "paired_metrics",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "positive_control",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "negative_control",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": null,
+      "blocker_owner": null,
+      "displayed_values": {
+        "note": "Machine-readable source; no value on this page was typed by hand."
+      },
+      "owner_role": "person_d",
+      "section_id": "missingness_and_exclusions",
+      "source_artifact_id": "person-d-step4-5-missingness-exclusion-report",
+      "source_path": "docs/status/person_d_phase6to8_completion_v0_1/step4_5_missingness_exclusion_report.json",
+      "source_sha256": "b8bc2e79d4af4641b7d9d0baf346dc6e00d9e7af26f3706290be41cc17dcc8b3",
+      "status": "resolved"
+    },
+    {
+      "blocker": null,
+      "blocker_owner": null,
+      "displayed_values": {
+        "note": "Machine-readable source; no value on this page was typed by hand."
+      },
+      "owner_role": "person_d",
+      "section_id": "u4_control_manifest",
+      "source_artifact_id": "person-d-step7-1-u4-control-manifest",
+      "source_path": "docs/status/person_d_phase6to8_completion_v0_1/step7_1_u4_control_manifest.json",
+      "source_sha256": "a477e42d70c6e2eb0cf5db8e55a8ae3340c8bb21ed7be1d7f3570dcfd554f822",
+      "status": "resolved"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_e",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "e_measurement_join",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_e",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "specificity_and_damage_report",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "evidence_and_version_matrix",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    },
+    {
+      "blocker": "no real upstream output exists for this slot yet; see step8_3_checkpoint_classification.json for the owner",
+      "blocker_owner": "person_b",
+      "displayed_values": {},
+      "owner_role": null,
+      "section_id": "provenance_path",
+      "source_artifact_id": null,
+      "source_path": null,
+      "source_sha256": null,
+      "status": "blocked"
+    }
+  ]
+}

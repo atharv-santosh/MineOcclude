@@ -1,0 +1,66 @@
+{
+  "classification": "YELLOW",
+  "computed_classification": "YELLOW",
+  "definitions": {
+    "GREEN": "Contracts, controls, result lineage, and clean reproducibility pass.",
+    "RED": "Split leakage, metadata leakage, positive-control failure, measurement failure, or reproduction failure invalidates interpretation.",
+    "YELLOW": "The pipeline is valid but a scientific baseline or control result weakens a claim."
+  },
+  "engineering_failure_count": 0,
+  "findings": [
+    {
+      "affected_claims": [
+        "U1",
+        "U2"
+      ],
+      "detail": "Person B's only real fold/target artifacts are scoped to the earlier ten-pilot ep94xx set; no 66-cell equivalent exists at 98f50761ecb99bc14ed5d1ebb67aedc8dcfd3327.",
+      "evidence_artifact_id": "person-d-step6-1-mvp-input-manifest",
+      "evidence_sha256": null,
+      "failure_kind": "real_person_b_fold_and_target_manifest_absent",
+      "finding_id": "unavailable-b-66-cell-folds",
+      "nature": "unavailable_input",
+      "next_action": "publish fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+      "owner_role": "person_b"
+    },
+    {
+      "affected_claims": [
+        "U4"
+      ],
+      "detail": "Only contract text and synthetic fixtures exist on role/person-a-model and role/person-b-analysis.",
+      "evidence_artifact_id": "person-d-step7-2-direction-control-audit",
+      "evidence_sha256": null,
+      "failure_kind": "real_u4_direction_and_heldout_events_absent",
+      "finding_id": "unavailable-b-u4-direction",
+      "nature": "unavailable_input",
+      "next_action": "publish the fitted U4 direction, held-out event identities, signed dose table, and target layer/timestep",
+      "owner_role": "person_b"
+    },
+    {
+      "affected_claims": [
+        "U4"
+      ],
+      "detail": "Person E has real homography refits at 5e2ef61a75fe4900dc7226dec7c1f6dcc1f39171 but no U4 measurement artifact.",
+      "evidence_artifact_id": "person-d-step7-3-u4-control-matrix",
+      "evidence_sha256": null,
+      "failure_kind": "real_u4_measurement_table_absent",
+      "finding_id": "unavailable-e-u4-measurements",
+      "nature": "unavailable_input",
+      "next_action": "publish the U4 rollout measurement table",
+      "owner_role": "person_e"
+    }
+  ],
+  "gates": {
+    "clean_reproduction_pass": true,
+    "contracts_pass": true,
+    "controls_pass": true,
+    "result_lineage_pass": true
+  },
+  "manual_override": null,
+  "manual_override_accepted": false,
+  "manual_override_rejection_reason": null,
+  "negative_science_count": 0,
+  "producer_role": "person_d",
+  "schema_id": "person-d-checkpoint-classification-v0-1",
+  "schema_version": "1.0",
+  "unavailable_input_count": 3
+}

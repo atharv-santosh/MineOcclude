@@ -1,0 +1,527 @@
+{
+  "accepted_manifest_sha256": null,
+  "blocked_section_count": 10,
+  "blockers": [
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+      "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+      "required_identity_fields": [
+        "metric_id",
+        "baseline_family",
+        "target_name",
+        "layer_idx",
+        "sample_unit"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+      "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+      "required_identity_fields": [
+        "trajectory_id",
+        "model_frame_idx",
+        "fold_idx",
+        "target_name",
+        "fold_manifest_sha256",
+        "oracle_target_sha256"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+      "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+      "required_identity_fields": [
+        "trajectory_id",
+        "model_frame_idx",
+        "fold_idx",
+        "target_name",
+        "fold_manifest_sha256",
+        "oracle_target_sha256"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+      "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+      "required_identity_fields": [
+        "trajectory_id",
+        "model_frame_idx",
+        "fold_idx",
+        "target_name",
+        "fold_manifest_sha256",
+        "oracle_target_sha256"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --preflight --frame-manifest <A_66_CELL_FRAME_MANIFEST>",
+      "expected_owner": "person_a",
+      "expected_schema_or_version": "person-a-preprocessed-frame-manifest-v0.2",
+      "missing_artifact": "Person A preprocessed activation/frame manifest covering the accepted 66-cell MVP matrix",
+      "required_identity_fields": [
+        "trajectory_id",
+        "model_frame_idx",
+        "payload_sha256",
+        "preprocess_hash"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+      "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+      "required_identity_fields": [
+        "metric_id",
+        "baseline_family",
+        "target_name",
+        "layer_idx",
+        "sample_unit"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+      "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+      "required_identity_fields": [
+        "metric_id",
+        "baseline_family",
+        "target_name",
+        "layer_idx",
+        "sample_unit"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+      "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+      "required_identity_fields": [
+        "metric_id",
+        "baseline_family",
+        "target_name",
+        "layer_idx",
+        "sample_unit"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+      "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+      "required_identity_fields": [
+        "metric_id",
+        "baseline_family",
+        "target_name",
+        "layer_idx",
+        "sample_unit"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+      "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+      "required_identity_fields": [
+        "trajectory_id",
+        "model_frame_idx",
+        "fold_idx",
+        "target_name",
+        "fold_manifest_sha256",
+        "oracle_target_sha256"
+      ]
+    }
+  ],
+  "evidence_kind": "synthetic",
+  "fold_manifest_sha256": null,
+  "generated_from_registered_sources_only": true,
+  "manual_scientific_values_present": false,
+  "metric_identity": {
+    "loss_by_target": {
+      "log_sigma_oracle": "squared_error_in_log_sigma",
+      "mu_oracle_blocks": "squared_error_in_blocks"
+    },
+    "owner_role": "person_b",
+    "positive_direction": "probe_better",
+    "primary_statistic": "layout_macro_paired_loss_improvement"
+  },
+  "metric_run_ids": [],
+  "objective_baselines": {
+    "U1": [
+      "last_seen",
+      "grouped_shuffled"
+    ],
+    "U2": [
+      "time_only",
+      "visible_history_q"
+    ]
+  },
+  "person_b_contract_id": "person-b-step4-1-final-comparison-contract-v0-1",
+  "planning_thresholds": {
+    "owner_role": "person_d",
+    "scope": "operational_readiness_only_never_a_scientific_verdict",
+    "targets": {
+      "maximum_tolerated_missing_prediction_fraction": 0.0,
+      "minimum_accepted_trajectories_to_execute": 2,
+      "minimum_layouts_for_layout_macro_aggregation": 2
+    }
+  },
+  "prediction_run_ids": [],
+  "producer_role": "person_d",
+  "rendered_section_count": 0,
+  "report_complete": false,
+  "resampling_unit": "whole_trajectory_pair_with_one_shared_sign_per_layout",
+  "run_id": "person-d-step6-4-preliminary-report-v0-1",
+  "sample_unit": "whole_trajectory",
+  "schema_id": "person-d-preliminary-comparison-report-v0-1",
+  "schema_version": "1.0",
+  "scientific_thresholds": {
+    "gates": {
+      "U1_green": {
+        "held_out_r2_strictly_greater_than": 0.0,
+        "max_t_adjusted_p_strictly_less_than": 0.01,
+        "paired_loss_improvement_strictly_greater_than": 0.0,
+        "required_primary_baselines": [
+          "last_seen",
+          "grouped_shuffled"
+        ]
+      },
+      "U2_green": {
+        "average_absolute_coverage_error_at_most": 0.1,
+        "coverage_error_strictly_better_than": [
+          "time_only",
+          "visible_history_q"
+        ],
+        "coverage_levels": [
+          0.5,
+          0.8,
+          0.95
+        ],
+        "partial_correlation_bootstrap_ci_lower_strictly_greater_than": 0.0
+      }
+    },
+    "owner_role": "person_b",
+    "source_contract_id": "person-b-step4-1-final-comparison-contract-v0-1"
+  },
+  "section_count": 10,
+  "sections": [
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+          "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+          "required_identity_fields": [
+            "metric_id",
+            "baseline_family",
+            "target_name",
+            "layer_idx",
+            "sample_unit"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "u1_vs_last_seen",
+      "status": "blocked",
+      "target_name": null,
+      "title": "u1 vs last seen",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+          "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+          "required_identity_fields": [
+            "metric_id",
+            "baseline_family",
+            "target_name",
+            "layer_idx",
+            "sample_unit"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "u1_vs_grouped_shuffled_floor",
+      "status": "blocked",
+      "target_name": null,
+      "title": "u1 vs grouped shuffled floor",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+          "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+          "required_identity_fields": [
+            "metric_id",
+            "baseline_family",
+            "target_name",
+            "layer_idx",
+            "sample_unit"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "u2_vs_time_only",
+      "status": "blocked",
+      "target_name": null,
+      "title": "u2 vs time only",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+          "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+          "required_identity_fields": [
+            "metric_id",
+            "baseline_family",
+            "target_name",
+            "layer_idx",
+            "sample_unit"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "u2_vs_visible_history_spread",
+      "status": "blocked",
+      "target_name": null,
+      "title": "u2 vs visible history spread",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --preflight --frame-manifest <A_66_CELL_FRAME_MANIFEST>",
+          "expected_owner": "person_a",
+          "expected_schema_or_version": "person-a-preprocessed-frame-manifest-v0.2",
+          "missing_artifact": "Person A preprocessed activation/frame manifest covering the accepted 66-cell MVP matrix",
+          "required_identity_fields": [
+            "trajectory_id",
+            "model_frame_idx",
+            "payload_sha256",
+            "preprocess_hash"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "raw_pixel_comparison",
+      "status": "blocked",
+      "target_name": null,
+      "title": "raw pixel comparison",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+          "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+          "required_identity_fields": [
+            "trajectory_id",
+            "model_frame_idx",
+            "fold_idx",
+            "target_name",
+            "fold_manifest_sha256",
+            "oracle_target_sha256"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "visible_positive_control",
+      "status": "blocked",
+      "target_name": null,
+      "title": "visible positive control",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+          "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+          "required_identity_fields": [
+            "trajectory_id",
+            "model_frame_idx",
+            "fold_idx",
+            "target_name",
+            "fold_manifest_sha256",
+            "oracle_target_sha256"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "no_object_negative_control",
+      "status": "blocked",
+      "target_name": null,
+      "title": "no object negative control",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+          "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+          "required_identity_fields": [
+            "trajectory_id",
+            "model_frame_idx",
+            "fold_idx",
+            "target_name",
+            "fold_manifest_sha256",
+            "oracle_target_sha256"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "known_q_oracle_ceiling",
+      "status": "blocked",
+      "target_name": null,
+      "title": "known q oracle ceiling",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --metric-table <B_METRIC_TABLE> --output-root <OUTPUT_ROOT>",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-final-comparison-output-v0-1",
+          "missing_artifact": "Person B metric table over Person D's 66-cell predictions",
+          "required_identity_fields": [
+            "metric_id",
+            "baseline_family",
+            "target_name",
+            "layer_idx",
+            "sample_unit"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "failed_controls",
+      "status": "blocked",
+      "target_name": null,
+      "title": "failed controls",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto",
+          "expected_owner": "person_b",
+          "expected_schema_or_version": "person-b-step4-1-production-handoff fold manifest + production_oracle_target_manifest, at 66-trajectory scope",
+          "missing_artifact": "Person B fold and oracle-target manifests covering the accepted 66-cell MVP matrix (layout_01..06, ep100xx)",
+          "required_identity_fields": [
+            "trajectory_id",
+            "model_frame_idx",
+            "fold_idx",
+            "target_name",
+            "fold_manifest_sha256",
+            "oracle_target_sha256"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "paired",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Structurally empty and explicitly blocked. This is not a null result: no real metric for this comparison exists yet."
+      ],
+      "section_id": "na_and_missing_cells",
+      "status": "blocked",
+      "target_name": null,
+      "title": "na and missing cells",
+      "values": []
+    }
+  ],
+  "totals": {
+    "missing_cells": 0,
+    "na_cells": 0
+  },
+  "uncertainty": {
+    "bootstrap_count": 2000,
+    "coverage": 0.95,
+    "owner_role": "person_b",
+    "type": "equal_tailed_percentile_bootstrap",
+    "unit": "whole_layout_then_whole_trajectory"
+  }
+}

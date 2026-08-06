@@ -1,0 +1,52 @@
+{
+  "blocking_inputs": [
+    {
+      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --u4-direction-record <B_DIRECTION_RECORD> --freeze-real-control-manifest",
+      "expected_owner": "person_b",
+      "expected_schema_or_version": "person-b-intervention-request-v1.0",
+      "missing_artifact": "Person B fitted U4 direction, held-out event identities, signed dose table, target layer/timestep, and direction-construction record"
+    }
+  ],
+  "clip_count": 11,
+  "clip_ids": [
+    "synthetic:reveal:0|seed20260720|alpha_zero|dosenone|L12|T7",
+    "synthetic:reveal:0|seed20260720|orthogonal_direction|doseneg_1+SYNTHETIC_ORTHOGONAL_NOT_A_REAL_DIRECTION|L12|T7",
+    "synthetic:reveal:0|seed20260720|orthogonal_direction|dosepos_1+SYNTHETIC_ORTHOGONAL_NOT_A_REAL_DIRECTION|L12|T7",
+    "synthetic:reveal:0|seed20260720|primary_signed_dose|doseneg_1|L12|T7",
+    "synthetic:reveal:0|seed20260720|primary_signed_dose|dosepos_1|L12|T7",
+    "synthetic:reveal:0|seed20260720|random_direction|doseneg_1+SYNTHETIC_RANDOM_NOT_A_REAL_DIRECTION|L12|T7",
+    "synthetic:reveal:0|seed20260720|random_direction|dosepos_1+SYNTHETIC_RANDOM_NOT_A_REAL_DIRECTION|L12|T7",
+    "synthetic:reveal:0|seed20260720|wrong_layer|doseneg_1|L3|T7",
+    "synthetic:reveal:0|seed20260720|wrong_layer|dosepos_1|L3|T7",
+    "synthetic:reveal:0|seed20260720|wrong_timestep|doseneg_1|L12|T1",
+    "synthetic:reveal:0|seed20260720|wrong_timestep|dosepos_1|L12|T1"
+  ],
+  "consumer_roles": [
+    "person_a",
+    "person_e"
+  ],
+  "evidence_kind": "synthetic",
+  "join_keys": [
+    "clip_id",
+    "pair_key"
+  ],
+  "join_rule": "Join on clip_id and pair_key only. Filenames, paths, and row order are not identity and must never be used to match a measurement to a control.",
+  "manifest_checksum": "16f4faba14e72c8dedfa2c0a74ba0c6ca65515bc701ae1ef4a4ab7d04213f871",
+  "manifest_id": "person-d-u4-control-manifest-synthetic-v0-1",
+  "manifest_path": "docs/status/person_d_phase6to8_completion_v0_1/step7_1_u4_control_manifest.json",
+  "manifest_sha256": "a477e42d70c6e2eb0cf5db8e55a8ae3340c8bb21ed7be1d7f3570dcfd554f822",
+  "manifest_status": "frozen",
+  "manifest_version": "0.1.0-synthetic",
+  "pair_keys": [
+    "synthetic:reveal:0|seed20260720|doseneg_1",
+    "synthetic:reveal:0|seed20260720|dosenone",
+    "synthetic:reveal:0|seed20260720|dosepos_1"
+  ],
+  "person_a_obligation": "Generate exactly one rollout per clip_id at the declared direction, layer, timestep, and alpha; report generation_failed rather than omitting a clip.",
+  "person_e_obligation": "Measure every generated clip and return one measurement row per clip_id, using an explicit reason code for any clip that is not measured.",
+  "post_rollout_addition_permitted": false,
+  "producer_role": "person_d",
+  "real_manifest_status": "NOT_FROZEN_AS_REAL_EVIDENCE",
+  "schema_id": "person-d-u4-control-handoff-v0-1",
+  "schema_version": "1.0"
+}

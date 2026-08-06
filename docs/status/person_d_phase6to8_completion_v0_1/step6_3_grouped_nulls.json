@@ -1,0 +1,57 @@
+{
+  "alignment_key": "model_frame_idx",
+  "cross_group_donors_required": false,
+  "donor_assignments": [
+    {
+      "donor_group_key": "synthetic_layout_01:fold1",
+      "donor_trajectory_id": "synthetic_layout_01_ep00001",
+      "recipient_fold_idx": 0,
+      "recipient_group_key": "synthetic_layout_00:fold0",
+      "recipient_layout_id": "synthetic_layout_00",
+      "recipient_trajectory_id": "synthetic_layout_00_ep00000"
+    },
+    {
+      "donor_group_key": "synthetic_layout_02:fold2",
+      "donor_trajectory_id": "synthetic_layout_02_ep00002",
+      "recipient_fold_idx": 1,
+      "recipient_group_key": "synthetic_layout_01:fold1",
+      "recipient_layout_id": "synthetic_layout_01",
+      "recipient_trajectory_id": "synthetic_layout_01_ep00001"
+    },
+    {
+      "donor_group_key": "synthetic_layout_03:fold3",
+      "donor_trajectory_id": "synthetic_layout_03_ep00003",
+      "recipient_fold_idx": 2,
+      "recipient_group_key": "synthetic_layout_02:fold2",
+      "recipient_layout_id": "synthetic_layout_02",
+      "recipient_trajectory_id": "synthetic_layout_02_ep00002"
+    },
+    {
+      "donor_group_key": "synthetic_layout_00:fold0",
+      "donor_trajectory_id": "synthetic_layout_00_ep00000",
+      "recipient_fold_idx": 3,
+      "recipient_group_key": "synthetic_layout_03:fold3",
+      "recipient_layout_id": "synthetic_layout_03",
+      "recipient_trajectory_id": "synthetic_layout_03_ep00003"
+    }
+  ],
+  "evidence_kind": "synthetic",
+  "grouping_unit": "trajectory_id",
+  "null_family": "grouped_shuffled",
+  "null_hypothesis": "layout-macro paired improvement is less than or equal to zero",
+  "null_row_count": 32,
+  "permutation_count": 999,
+  "person_b_contract_id": "person-b-step4-1-final-comparison-contract-v0-1",
+  "producer_role": "person_d",
+  "requires_derangement": true,
+  "resampling_unit": "whole_trajectory_pair_with_one_shared_sign_per_layout",
+  "row_status_counts": {
+    "available": 32
+  },
+  "run_id": "person-d-step6-3-synthetic-grouped-nulls-v0-1",
+  "schema_id": "person-d-grouped-nulls-v0-1",
+  "schema_version": "1.0",
+  "seed": 20260720,
+  "sidedness": "one_sided_in_predeclared_improvement_direction",
+  "trajectory_count": 4
+}

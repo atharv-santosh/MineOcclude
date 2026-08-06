@@ -1,0 +1,182 @@
+{
+  "environment": {
+    "interpreter_path": "C:\\Users\\lollo\\MineOcclude-TestRunner\\Scripts\\python.exe",
+    "platform": "win32",
+    "python_version": "3.10.20"
+  },
+  "evidence_kind": "synthetic",
+  "package_lock_sha256": "776181854b284ddc91b4872a6f2df8ef1054c2752fa216941c00d5b43fec9b22",
+  "producer_role": "person_d",
+  "reproduction_complete": false,
+  "reproduction_kind": "synthetic_clean_reproduction",
+  "resume_policy": "A stage is skipped only when the run registry already records its verified output under the named state key. Manually moved files never satisfy a resume.",
+  "run_id": "person-d-step8-1-synthetic-clean-run-v0-1",
+  "schema_id": "person-d-clean-workflow-run-v0-1",
+  "schema_version": "1.0",
+  "stage_count": 13,
+  "stage_status_counts": {
+    "blocked": 2,
+    "failed": 0,
+    "passed": 11,
+    "skipped_resumed": 0
+  },
+  "stages": [
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage validate_environment_and_package_lock",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "validate_environment_and_package_lock",
+      "status": "passed",
+      "stderr_path": "logs/validate_environment_and_package_lock.err",
+      "stdout_path": "logs/validate_environment_and_package_lock.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage verify_input_hashes",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "verify_input_hashes",
+      "status": "passed",
+      "stderr_path": "logs/verify_input_hashes.err",
+      "stdout_path": "logs/verify_input_hashes.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage validate_accepted_manifest_and_folds",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "validate_accepted_manifest_and_folds",
+      "status": "passed",
+      "stderr_path": "logs/validate_accepted_manifest_and_folds.err",
+      "stdout_path": "logs/validate_accepted_manifest_and_folds.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage run_legal_input_audit",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "run_legal_input_audit",
+      "status": "passed",
+      "stderr_path": "logs/run_legal_input_audit.err",
+      "stdout_path": "logs/run_legal_input_audit.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage run_split_integrity_audit",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "run_split_integrity_audit",
+      "status": "passed",
+      "stderr_path": "logs/run_split_integrity_audit.err",
+      "stdout_path": "logs/run_split_integrity_audit.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage run_baselines",
+      "failure_detail": "no real Person B 66-cell fold/target manifest exists",
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "run_baselines",
+      "status": "blocked",
+      "stderr_path": "logs/run_baselines.err",
+      "stdout_path": "logs/run_baselines.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage generate_grouped_nulls",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "generate_grouped_nulls",
+      "status": "passed",
+      "stderr_path": "logs/generate_grouped_nulls.err",
+      "stdout_path": "logs/generate_grouped_nulls.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage generate_paired_comparisons",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "generate_paired_comparisons",
+      "status": "passed",
+      "stderr_path": "logs/generate_paired_comparisons.err",
+      "stdout_path": "logs/generate_paired_comparisons.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage generate_missingness_exclusion_audit",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "generate_missingness_exclusion_audit",
+      "status": "passed",
+      "stderr_path": "logs/generate_missingness_exclusion_audit.err",
+      "stdout_path": "logs/generate_missingness_exclusion_audit.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage generate_controls",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "generate_controls",
+      "status": "passed",
+      "stderr_path": "logs/generate_controls.err",
+      "stdout_path": "logs/generate_controls.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage build_u4_control_matrix",
+      "failure_detail": "no real Person E U4 measurement table exists",
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "build_u4_control_matrix",
+      "status": "blocked",
+      "stderr_path": "logs/build_u4_control_matrix.err",
+      "stdout_path": "logs/build_u4_control_matrix.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage build_result_receipt",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "build_result_receipt",
+      "status": "passed",
+      "stderr_path": "logs/build_result_receipt.err",
+      "stdout_path": "logs/build_result_receipt.out"
+    },
+    {
+      "command": "python scripts/run_person_d_phase6to8_completion.py --stage build_checkpoint_receipt",
+      "failure_detail": null,
+      "output_paths": [],
+      "registered_state_key": null,
+      "resumed_from_registered_state": false,
+      "runtime_seconds": 0.0,
+      "stage_id": "build_checkpoint_receipt",
+      "status": "passed",
+      "stderr_path": "logs/build_checkpoint_receipt.err",
+      "stdout_path": "logs/build_checkpoint_receipt.out"
+    }
+  ],
+  "total_runtime_seconds": 0.0
+}
