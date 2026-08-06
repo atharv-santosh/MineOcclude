@@ -1,0 +1,43 @@
+{
+  "entry_points": {
+    "scripts/build_artifact_index.py": "333b7e679f6e56364775848bedd36bf149e32e850a45ec9e65ef8dcb165f8068",
+    "scripts/build_figure_input.py": "373252ba955242380192ab382acd0098733921c45b5f39a8f556b84a4c6aaaa0",
+    "scripts/build_person_e_phase7_terminal_v0_1.py": "5096bec734865ec62a2bed121849da31029f4f27b46cd1801435eef4a56852eb",
+    "scripts/build_person_e_terminal_status_v0_1.py": "b4a776e7e41cc11363cfb39573aa9e5852795ac0f7722534735e515643cbfde8",
+    "scripts/compose_u4_evidence.py": "4b54420da69e29de8ea366dcb262e1d2df355ec3e8e24f4bd8260a3a18a9300a",
+    "scripts/evaluate_magenta_detector.py": "c52c3d01f62476627605cfc4f80fad2efbdb36319fc4184cfe7359a9fc8b3ba3",
+    "scripts/fit_homographies.py": "637d6c0d460eda4a87e1aa7c4b0d31ed91fcf64e142b9fb48837c2438b1ec963",
+    "scripts/localize_u4_frames.py": "4c0ef779a8b8973985f625c1a2e92321a0910e1e0f22967c1e11258b0a402b86",
+    "scripts/measure_ssim.py": "c3dec03565962bdca178e1f702e2bb932e6b35c940d696c52b4e1b823012c405",
+    "scripts/measure_u4.py": "f88411991b113302eb5b0e53ec42824e999b302287236f8f89cc824f6e14b7aa",
+    "scripts/render_figure_svg.py": "55da825d4ac3bd4dfde6e1d7c45f3c7942e2a9b3b6329f499600a16524787a0d",
+    "scripts/trace_artifact.py": "706f6e63308c3ba39e46ee1eeb5c7aa4972733617e8d91d5b7bd3474e0fc3a74"
+  },
+  "implementation_inventory_schema_version": "person-e-terminal-implementation-inventory-v0.1",
+  "modules": {
+    "src/mineocclude/experiments/figure_inputs.py": "ff99a02c4f42a154b12a9f647d0e3cfe3a5ae89707cc8b64aca305964055b0ab",
+    "src/mineocclude/experiments/registry.py": "f25637f3c3347a3548297b7a3b491ee07f6795915bd09d7ff40915f50d9a4541",
+    "src/mineocclude/operations/checkpoint_evidence.py": "207e6c6d53541aeff4476a2c61c4cb6b5289409ca369c68c0df5b0fade6f9f9f",
+    "src/mineocclude/operations/clean_reproduction.py": "daf5a034a607fe760ecf76eb44a96d29c005e85755bf3ce8c1daafde79bd059e",
+    "src/mineocclude/operations/handoff.py": "7d1cd4d26e4ee645b592d8c7212cd81260266155afb97737a439ea0802c5b886",
+    "src/mineocclude/operations/rehearsal_fixture.py": "deaaaed3c8bf47d24d87a7626101e1e88008f58b84296a5fda67a5ca333602fc",
+    "src/mineocclude/vision/calibration.py": "31c2534eebeb6a7487a288dc45b62efd569d23d608eecbfe25f49e21fa431dc0",
+    "src/mineocclude/vision/config.py": "4c221b9922f4fff1a1df574962ee608cdaa6a2ad509a5a67571768e2f7d9d3e7",
+    "src/mineocclude/vision/detection_records.py": "f218e7ab59e41a86667914dcd49c36739c22f47a827e3449a81bf97f977983f8",
+    "src/mineocclude/vision/homography.py": "08e462d2c36ee0c7905eafe819f39f27fee1780e63f1cf381fe4ebe098730fc3",
+    "src/mineocclude/vision/magenta.py": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "src/mineocclude/vision/markers.py": "ae2ca253ce0540ac2a2c58d774a253ad018623c9dcea6f8b0f4180fa1c59b3f1",
+    "src/mineocclude/vision/measurement.py": "169fe0ad0c5d8e5aba72bece232bec89f63956d6b5483a9fa8536714e24ced1b",
+    "src/mineocclude/vision/phase3_detector_candidate.py": "6bab574e6a15e79d75310ea1152a8057c2bdcc8e1d8003d6d866447f358d62da",
+    "src/mineocclude/vision/png_decode.py": "6e823ab70f8ce58f329c65f81f925a75899f805b431c6299a3ed5ccce5cba131",
+    "src/mineocclude/vision/report_schemas.py": "e8a808b47d11fae3d6301fafa192acaceae0491e93bd82cd65a00a4e6b02f31c",
+    "src/mineocclude/vision/ssim.py": "b40d9ccddd3316437a92021090e7c9c6d014a2c5526ebfa24a3033c7537d4b7b"
+  },
+  "runbooks": {
+    "docs/runbooks/person_e_detector_runbook.md": "50a767731a8ed39213067fc49019f2fc34b08ca636d81bea318b6d5facec6316",
+    "docs/runbooks/person_e_homography_runbook.md": "e56fa89b78e1520cfa56908b8174819daf14409b85e65cd6b7a9a1841ac614f2",
+    "docs/runbooks/person_e_preliminary_figures_runbook.md": "32f1063d5623a54bc339619d6f18745f38ed017433908f06ab7c8706472e9f6a",
+    "docs/runbooks/person_e_registry_runbook.md": "6ae8802382312d53c9b28238eeadbc3ba03ac70a2ed937710d12d7bdb1feb89e",
+    "docs/runbooks/person_e_u4_measurement_runbook.md": "6e950e35fe24c08e6584305d981046473c8219ecf7be92c52036898b280d39d7"
+  }
+}

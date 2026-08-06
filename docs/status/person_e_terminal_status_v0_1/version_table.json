@@ -1,0 +1,33 @@
+{
+  "checkpoint_evidence_schema_version": "person-e-checkpoint-evidence-v0.1",
+  "clean_reproduction_plan_schema_version": "person-e-clean-reproduction-plan-v0.1",
+  "clean_reproduction_receipt_schema_version": "person-e-clean-reproduction-receipt-v0.1",
+  "detector_version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+  "figure_input_schema_version": "person-e-figure-input-v0.2",
+  "homography_algorithm_version": "four_point_projective_gauss_jordan_v0.1",
+  "homography_report_schema_version": "person-e-homography-report-v0.3",
+  "homography_version": "person-e-v0.4-homography-refit-package-v0.2",
+  "measurement_evidence_schema_version": "person-e-measurement-evidence-v0.2",
+  "measurement_input_schema_version": "person-b-u4-measurement-input-v0.1",
+  "operating_handoff_schema_version": "person-e-operating-handoff-v0.1",
+  "registry_version": "mineocclude-immutable-registry-v2.0",
+  "rollout_intake_schema_version": "mineocclude-rollout-registry-v1.0",
+  "second_operator_receipt_schema_version": "person-e-second-operator-receipt-v0.1",
+  "ssim": {
+    "algorithm": "global_ssim_per_channel_mean_v0.1",
+    "alignment": "exact_frame_identity_and_equal_dimensions",
+    "background_mask": "exclude_union_of_pushed_and_baseline_boxes_plus_margin",
+    "background_mask_margin_pixels": null,
+    "channel_handling": "rgb_per_channel_mean",
+    "data_range": 255.0,
+    "k1": 0.01,
+    "k2": 0.03,
+    "mask_status": "pending_person_b_person_e_signoff",
+    "sample_covariance": true,
+    "ssim_version": null
+  },
+  "ssim_report_schema_version": "person-e-ssim-report-v0.2",
+  "u4_evidence_input_schema_version": "person-e-u4-evidence-input-v0.1",
+  "u4_frame_input_schema_version": "person-e-u4-frame-input-v0.1",
+  "version_table_schema_version": "person-e-terminal-version-table-v0.1"
+}
