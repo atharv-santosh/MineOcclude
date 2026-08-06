@@ -62,38 +62,42 @@ class TestPhase3DetectorCandidate(unittest.TestCase):
         cls.parquet_payload = (EVIDENCE / "development_detections.parquet").read_bytes()
         cls.rows = read_detection_parquet_bytes(cls.parquet_payload, schema=cls.schema)
 
+    def assert_still_published(self, branch: str, pinned_commit: str) -> None:
+        """Assert a frozen upstream revision is still reachable from ``branch``.
+
+        The detector package is bound to the exact upstream revisions it froze
+        against. Person A and Person C keep publishing afterwards, so requiring
+        the pin to equal the live tip would expire the evidence on every
+        upstream commit. The invariant that actually protects the package is
+        that the pinned revision remains part of the published history.
+        """
+
+        completed = subprocess.run(
+            ["git", "-C", str(ROOT), "merge-base", "--is-ancestor", pinned_commit, branch],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(
+            completed.returncode,
+            0,
+            f"{pinned_commit} is no longer published on {branch}",
+        )
+
     def test_exact_authorities_runtime_and_development_binding(self) -> None:
         self.assertEqual(pyarrow.__version__, PYARROW_VERSION)
         self.assertEqual(PYARROW_VERSION, "25.0.0")
-        self.assertEqual(
-            subprocess.run(
-                [
-                    "git",
-                    "-C",
-                    str(ROOT),
-                    "rev-parse",
-                    "refs/remotes/origin/role/person-a-model",
-                ],
-                check=True,
-                capture_output=True,
-                text=True,
-            ).stdout.strip(),
+        self.assert_still_published(
+            "refs/remotes/origin/role/person-a-model",
             PERSON_A_PARQUET_AUTHORITY_REVISION,
         )
-        self.assertEqual(
-            subprocess.run(
-                [
-                    "git",
-                    "-C",
-                    str(ROOT),
-                    "rev-parse",
-                    "refs/remotes/origin/role/person-c-data",
-                ],
-                check=True,
-                capture_output=True,
-                text=True,
-            ).stdout.strip(),
+        self.assert_still_published(
+            "refs/remotes/origin/role/person-c-data",
             PERSON_C_UNTOUCHED_TEST_PACKAGE_REVISION,
+        )
+        self.assert_still_published(
+            "refs/remotes/origin/role/person-c-data",
+            PERSON_C_DEVELOPMENT_SOURCE_REVISION,
         )
         self.assertEqual(
             self.version["development_source_revision"],

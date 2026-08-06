@@ -80,6 +80,17 @@ class AcceptanceError(RuntimeError):
     """Fail-closed acceptance error."""
 
 
+class ExternalArtifactsUnavailable(AcceptanceError):
+    """Raised when the upstream external artifact store is not mounted here.
+
+    Person A's activation store and Person B's positive-control report live
+    outside this repository. Regenerating the acceptance package re-hashes
+    those bytes, so it can only run on a host where the store is reachable.
+    Their absence is an external-input condition, never a defect in this
+    package: the committed bytes stay valid and every other check still runs.
+    """
+
+
 def fail(message: str) -> None:
     raise AcceptanceError(message)
 
@@ -528,7 +539,46 @@ def verify_person_b() -> dict[str, Any]:
     }
 
 
+def missing_external_artifacts() -> list[str]:
+    """List the recorded external artifact paths that are absent on this host.
+
+    Only existence is probed; byte verification stays inside ``verify_person_a``
+    and ``verify_person_b`` so their fail-closed behaviour is unchanged when the
+    store is present.
+    """
+
+    missing: list[str] = []
+    if not B_EXTERNAL_REPORT.is_file():
+        missing.append(str(B_EXTERNAL_REPORT))
+    manifest = git_json(PERSON_A_COMPLETION, f"{A_ROOT}/artifact_manifest.json")
+    for key in ("combined_activation_index", "final_report"):
+        row = manifest[key]
+        path = Path(row.get("external_path", row.get("path")))
+        if not path.is_file():
+            missing.append(str(path))
+    for pilot_id in EXPECTED_PILOTS:
+        inventory = git_json(
+            PERSON_A_COMPLETION, f"{A_ROOT}/per_pilot_inventories/{pilot_id}.json"
+        )
+        candidates = [inventory["activation_index"]["path"]]
+        candidates.extend(chunk["path"] for chunk in inventory["chunks"])
+        for candidate in candidates:
+            if not Path(candidate).is_file():
+                missing.append(candidate)
+    return missing
+
+
+def require_external_artifacts() -> None:
+    missing = missing_external_artifacts()
+    if missing:
+        raise ExternalArtifactsUnavailable(
+            f"{len(missing)} external upstream artifact(s) are not reachable "
+            f"from this host; first missing path: {missing[0]}"
+        )
+
+
 def generate(out_dir: Path | None = None) -> dict[str, bytes]:
+    require_external_artifacts()
     validator_bytes = git_show(
         PERSON_E_REGISTRY_AUTHORITY,
         "src/mineocclude/contracts/rollout_registry.py",

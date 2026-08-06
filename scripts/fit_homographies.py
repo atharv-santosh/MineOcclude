@@ -19,6 +19,7 @@ from mineocclude.experiments.registry import (
 from mineocclude.vision.config import validate_person_e_config
 from mineocclude.vision.homography import (
     HOMOGRAPHY_ALGORITHM_VERSION,
+    HOMOGRAPHY_REPORT_SCHEMA_VERSION,
     fit_marker_homography,
     summarize_localization,
 )
@@ -181,7 +182,7 @@ def main() -> None:
     write_json_exclusive(
         args.output,
         {
-            "homography_report_schema_version": "person-e-homography-report-v0.3",
+            "homography_report_schema_version": HOMOGRAPHY_REPORT_SCHEMA_VERSION,
             "homography_input_schema_version": input_schema_version,
             "input_hash": input_hash,
             "producer_run_id": producer_run_id,

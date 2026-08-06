@@ -396,25 +396,43 @@ class TestPersonEPhase4Step41Slice3A(unittest.TestCase):
             for line in completed.stdout.splitlines()
             if line
         }
-        self.assertEqual(
-            changed,
-            {
+        # The slice may be uncommitted (while it is being built) or committed
+        # (once published), so the set of dirty paths is not itself stable. The
+        # durable invariant is that no frozen contract file is ever dirty, and
+        # that the slice's own authorized scope is the only slice-owned path
+        # that may appear.
+        self.assertFalse(changed & set(FROZEN_HASHES))
+        slice_owned = {
+            path
+            for path in changed
+            if "slice3a" in path
+        }
+        self.assertTrue(
+            slice_owned
+            <= {
                 "docs/status/person_e_phase4_step4_1_slice3a_v0_1",
                 BUILDER_PATH,
                 TEST_PATH,
             },
+            f"unauthorized slice3a paths: {sorted(slice_owned)}",
         )
 
-    def test_30_pinned_commit_equal_to_remote_tip_passes(self) -> None:
+    def test_30_pinned_commit_remains_published_on_its_authority_branch(
+        self,
+    ) -> None:
+        # Person A keeps publishing after the pin, so the pinned commit becomes
+        # an ancestor of the tip. What must never change is that the pin is
+        # still reachable from the published branch.
         result = verify_source_authority(
             AUTHORITIES["person_a"]["branch"],
             AUTHORITIES["person_a"]["commit"],
         )
-        self.assertEqual(result["relationship"], "equal")
-        self.assertEqual(
-            result["current_remote_tip"],
-            AUTHORITIES["person_a"]["commit"],
-        )
+        self.assertIn(result["relationship"], {"equal", "ancestor"})
+        if result["relationship"] == "equal":
+            self.assertEqual(
+                result["current_remote_tip"],
+                AUTHORITIES["person_a"]["commit"],
+            )
 
     def test_31_pinned_ancestor_of_advanced_tip_passes(self) -> None:
         result = verify_source_authority(

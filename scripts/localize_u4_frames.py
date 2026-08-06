@@ -26,6 +26,7 @@ from mineocclude.vision.config import (  # noqa: E402
 )
 from mineocclude.vision.homography import (  # noqa: E402
     HOMOGRAPHY_ALGORITHM_VERSION,
+    HOMOGRAPHY_REPORT_SCHEMA_VERSION,
     homography_from_record,
     summarize_localization,
 )
@@ -119,7 +120,7 @@ def main() -> None:
         raise ValueError("Unknown U4 frame-input schema version.")
     if (
         homography_report.get("homography_report_schema_version")
-        != "person-e-homography-report-v0.2"
+        != HOMOGRAPHY_REPORT_SCHEMA_VERSION
     ):
         raise ValueError("Unknown homography-report schema version.")
     if homography_report.get("config_hash") != config_hash:

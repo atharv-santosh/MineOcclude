@@ -188,15 +188,29 @@ def _source_entry(
 def _verify_authorities() -> None:
     if _git_text("branch", "--show-current") != "role/person-e-operations":
         raise RuntimeError("Builder must run on role/person-e-operations")
-    if _git_text("rev-parse", "HEAD") != STARTING_COMMIT:
+    # Package bytes stay bound to STARTING_COMMIT. Person E keeps committing
+    # after the freeze, so the live HEAD and remote tip must contain that
+    # commit rather than equal it; a detached or rewritten history still fails.
+    if not _contains_commit("HEAD", STARTING_COMMIT):
         raise RuntimeError("Person E HEAD authority mismatch")
-    if (
-        _git_text("rev-parse", "origin/role/person-e-operations")
-        != STARTING_COMMIT
-    ):
+    if not _contains_commit("origin/role/person-e-operations", STARTING_COMMIT):
         raise RuntimeError("Person E remote authority mismatch")
     for value in AUTHORITIES.values():
         verify_source_authority(value["branch"], value["commit"])
+
+
+def _contains_commit(reference: str, commit: str) -> bool:
+    """Return whether ``reference`` is ``commit`` or a descendant of it."""
+
+    return (
+        _git_completed(
+            "merge-base",
+            "--is-ancestor",
+            commit,
+            reference,
+        ).returncode
+        == 0
+    )
 
 
 def verify_source_authority(
