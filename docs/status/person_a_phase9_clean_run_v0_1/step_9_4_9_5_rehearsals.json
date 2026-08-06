@@ -1,0 +1,187 @@
+{
+  "all_rehearsals_completed": false,
+  "baseline_rehearsal": {
+    "blocked_reason": "Person D's baseline workflow has no complete clean-run input to consume until the 66-cell extraction completes.",
+    "blocked_step_count": 2,
+    "completed_step_count": 1,
+    "credentials_in_git_s3_logs_notebooks_or_chat": false,
+    "documented_instruction_gaps": [],
+    "instruction_gap_count": 0,
+    "not_attempted_step_count": 0,
+    "operated_by": [
+      "person_a_model",
+      "person_b_analysis"
+    ],
+    "owning_role": "person_d_baselines",
+    "owning_role_changed_experiment_code": false,
+    "produced_artifacts": [],
+    "rehearsal_id": "person-a-d-baseline-rehearsal-v0.1",
+    "runbook_path": "docs/baselines/person_d_phase1.md",
+    "runbook_sha256": "4f96d7403ef550f95b88e1556aa0621000d18dd3f40a61ca903c8bd42044792d",
+    "schema_version": "person-a-handoff-rehearsal-v0.1",
+    "secret_channel": "approved_out_of_band_channel",
+    "status": "BLOCKED",
+    "step_count": 3,
+    "steps": [
+      {
+        "description": "Read Person D's locked baseline workflow.",
+        "detail": null,
+        "instruction_gap": null,
+        "status": "completed",
+        "step_id": "D.1"
+      },
+      {
+        "description": "Invoke the baseline workflow from the clean accepted manifest and folds.",
+        "detail": "The complete MVP accepted manifest and activation index do not exist yet, so there is no clean run to consume.",
+        "instruction_gap": null,
+        "status": "blocked",
+        "step_id": "D.2"
+      },
+      {
+        "description": "Compare baseline output identity against the clean run.",
+        "detail": "Blocked by D.2.",
+        "instruction_gap": null,
+        "status": "blocked",
+        "step_id": "D.3"
+      }
+    ],
+    "succeeded": false
+  },
+  "collection_rehearsal": {
+    "blocked_reason": "A collection rehearsal requires a Minecraft runtime and the approved credential channel; neither is available here.",
+    "blocked_step_count": 3,
+    "completed_step_count": 1,
+    "credentials_in_git_s3_logs_notebooks_or_chat": false,
+    "documented_instruction_gaps": [
+      {
+        "description": "Start the Minecraft server and reset world state.",
+        "detail": "No Minecraft server, Java runtime, or approved credential channel is available in this environment.",
+        "instruction_gap": "Person C's runbook does not yet publish a single clean-machine server start/reset/shutdown command sequence that Person A or B can run without C present.",
+        "status": "blocked",
+        "step_id": "C.2"
+      },
+      {
+        "description": "Upload, download, append, and shut down cleanly.",
+        "detail": "Blocked by C.2.",
+        "instruction_gap": "The approved secret channel for capture credentials is named but its access procedure is not documented for A/B.",
+        "status": "blocked",
+        "step_id": "C.4"
+      }
+    ],
+    "instruction_gap_count": 2,
+    "not_attempted_step_count": 0,
+    "operated_by": [
+      "person_a_model",
+      "person_b_analysis"
+    ],
+    "owning_role": "person_c_data",
+    "owning_role_changed_experiment_code": false,
+    "produced_artifacts": [],
+    "rehearsal_id": "person-a-c-collection-rehearsal-v0.1",
+    "runbook_path": "docs/runbooks/person_c_layout_reconstruction_checklist.md",
+    "runbook_sha256": "7c8cac41deaf4fc44b0854fc7817a88492a8041feac6a6bb186e6390f495bd58",
+    "schema_version": "person-a-handoff-rehearsal-v0.1",
+    "secret_channel": "approved_out_of_band_channel",
+    "status": "BLOCKED",
+    "step_count": 4,
+    "steps": [
+      {
+        "description": "Read Person C's clean-machine collection runbook.",
+        "detail": "The layout reconstruction checklist is published and readable.",
+        "instruction_gap": null,
+        "status": "completed",
+        "step_id": "C.1"
+      },
+      {
+        "description": "Start the Minecraft server and reset world state.",
+        "detail": "No Minecraft server, Java runtime, or approved credential channel is available in this environment.",
+        "instruction_gap": "Person C's runbook does not yet publish a single clean-machine server start/reset/shutdown command sequence that Person A or B can run without C present.",
+        "status": "blocked",
+        "step_id": "C.2"
+      },
+      {
+        "description": "Capture, validate, and accept one new trajectory.",
+        "detail": "Blocked by C.2.",
+        "instruction_gap": null,
+        "status": "blocked",
+        "step_id": "C.3"
+      },
+      {
+        "description": "Upload, download, append, and shut down cleanly.",
+        "detail": "Blocked by C.2.",
+        "instruction_gap": "The approved secret channel for capture credentials is named but its access procedure is not documented for A/B.",
+        "status": "blocked",
+        "step_id": "C.4"
+      }
+    ],
+    "succeeded": false
+  },
+  "documented_instruction_gaps": [
+    {
+      "description": "Start the Minecraft server and reset world state.",
+      "detail": "No Minecraft server, Java runtime, or approved credential channel is available in this environment.",
+      "instruction_gap": "Person C's runbook does not yet publish a single clean-machine server start/reset/shutdown command sequence that Person A or B can run without C present.",
+      "status": "blocked",
+      "step_id": "C.2"
+    },
+    {
+      "description": "Upload, download, append, and shut down cleanly.",
+      "detail": "Blocked by C.2.",
+      "instruction_gap": "The approved secret channel for capture credentials is named but its access procedure is not documented for A/B.",
+      "status": "blocked",
+      "step_id": "C.4"
+    }
+  ],
+  "measurement_rehearsal": {
+    "blocked_reason": "Measurement has no rollout clips to consume until U4 generation is unblocked.",
+    "blocked_step_count": 1,
+    "completed_step_count": 2,
+    "credentials_in_git_s3_logs_notebooks_or_chat": false,
+    "documented_instruction_gaps": [],
+    "instruction_gap_count": 0,
+    "not_attempted_step_count": 0,
+    "operated_by": [
+      "person_a_model",
+      "person_b_analysis"
+    ],
+    "owning_role": "person_e_operations",
+    "owning_role_changed_experiment_code": false,
+    "produced_artifacts": [],
+    "rehearsal_id": "person-a-e-measurement-rehearsal-v0.1",
+    "runbook_path": "docs/operations/person_e_phase1_runbook.md",
+    "runbook_sha256": "f8f03d8ba2bffd98dfc42b86d34b5ca4810bbf4b162f326f789eb631499fc734",
+    "schema_version": "person-a-handoff-rehearsal-v0.1",
+    "secret_channel": "approved_out_of_band_channel",
+    "status": "BLOCKED",
+    "step_count": 3,
+    "steps": [
+      {
+        "description": "Read Person E's Phase 1 runbook and measurement contract.",
+        "detail": null,
+        "instruction_gap": null,
+        "status": "completed",
+        "step_id": "E.1"
+      },
+      {
+        "description": "Confirm Person E's immutable registry accepts a Person A run/artifact ledger unchanged.",
+        "detail": "mineocclude.experiments.mvp_lineage projects onto Person E's immutable registry schema and the validator accepts it; see tests/experiments/test_mvp_lineage.py.",
+        "instruction_gap": null,
+        "status": "completed",
+        "step_id": "E.2"
+      },
+      {
+        "description": "Invoke Person E's measurement entry point on clean-run clips.",
+        "detail": "No U4 rollout clips exist: generation requires Person B's final direction/dose request and an authorized model runtime.",
+        "instruction_gap": null,
+        "status": "blocked",
+        "step_id": "E.3"
+      }
+    ],
+    "succeeded": false
+  },
+  "schema_version": "person-a-phase9-rehearsals-v0.1",
+  "steps": [
+    "9.4",
+    "9.5"
+  ]
+}

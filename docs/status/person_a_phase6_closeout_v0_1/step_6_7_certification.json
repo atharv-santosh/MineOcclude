@@ -1,0 +1,605 @@
+{
+  "activation_index": {
+    "combined_activation_index_byte_size": 245491346,
+    "combined_activation_index_external_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json",
+    "combined_activation_index_sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+    "per_pilot_activation_index_sha256": {
+      "layout_00_ep9403": "473efef1eb52514c097051ec8f4501cb621f92c9ceaeb847249c7e3ae042ad55",
+      "layout_00_ep9441": "a553a431e3cb8bef174552f0ac77d1afa881db255b1ca8d76f8461ad02b3c6ce",
+      "layout_01_ep9405": "023786fd7fb3002e5acebcddd82e8f1e7ddb597138820c9401bd5dd7af5f10e6",
+      "layout_01_ep9442": "f8708f04e72a3e73ce9ac7136f6f7c191fdee9dbfba026d6867445cd2ffaa2eb",
+      "layout_02_ep9407": "c76bf46818c70a798276d52d1d46a4f27aee255e44e0bd20fa1a583f23c3c467",
+      "layout_02_ep9432": "33ef1f8d3f6bf3487e33fdfe14a38446a37d421f90cb24e885c4594f53783fab",
+      "layout_03_ep9404": "66b162bb09a170d82563838cf5ebc1eea4e7e9c6fe0f10927e155d1e765633fe",
+      "layout_03_ep9443": "2d48a43da1c720a81f5bb8ce6a4a2e1d1ea3344b5884fb62df2846409d8dca6f",
+      "layout_04_ep9406": "df8f0541c872e3d6daf7a6a1165e6deafe6256ec745ffb5329befe0e3c697a78",
+      "layout_04_ep9444": "2ab37112dfabe22c773e02512f894d7aa0c2f63d32493a743a6dbee6fb30c933"
+    },
+    "producing_authority": {
+      "person_a_expansion_runner_commit": "c099fe970e2ea0dbf36d994923c9e40af357e585",
+      "person_b_expansion_authorization_object": "a838c9703003176d8e793bbd43dd6de917740be6:docs/status/person_b_phase6_ten_pilot_expansion_authorization_v0_1/expansion_execution_authorization.json",
+      "person_b_expansion_selection_commit": "19f08b2e27217b781961da8f7299e1396a3ab703",
+      "person_c_expansion_acceptance_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960"
+    },
+    "staged_in_git": false
+  },
+  "audits": {
+    "duplicate_activation_row_count": 0,
+    "missing_activation_row_count": 0,
+    "nonfinite_activation_count": 0,
+    "pooling_audit_pass": true,
+    "repeatability_audit_pass": true,
+    "source_identity_join_pass": true,
+    "u4_output_inspected": false
+  },
+  "benchmark": {
+    "bytes_per_activation_row": 8192.68303094984,
+    "bytes_per_frame": 163853.6606189968,
+    "measured_frame_count": 1626,
+    "measured_pilot_count": 9,
+    "measured_wall_seconds": 1834.081083837007,
+    "per_pilot": [
+      {
+        "activation_bytes": 40634880,
+        "activation_row_count": 4960,
+        "bytes_per_frame": 163850.32258064515,
+        "chunk_count": 20,
+        "frame_count": 248,
+        "measured_seconds": null,
+        "seconds_per_frame": null,
+        "step_elapsed_seconds": {},
+        "timing_measured": false,
+        "trajectory_id": "layout_00_ep9403"
+      },
+      {
+        "activation_bytes": 32770560,
+        "activation_row_count": 4000,
+        "bytes_per_frame": 163852.8,
+        "chunk_count": 20,
+        "frame_count": 200,
+        "measured_seconds": 184.96595808000166,
+        "seconds_per_frame": 0.9248297904000082,
+        "step_elapsed_seconds": {
+          "6.1": 0.0786202150011377,
+          "6.2": 0.04091369100024167,
+          "6.3": 37.63963693699952,
+          "6.4": 145.32439838900063,
+          "6.5": 1.8823888480001187
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_00_ep9441"
+      },
+      {
+        "activation_bytes": 37685760,
+        "activation_row_count": 4600,
+        "bytes_per_frame": 163851.13043478262,
+        "chunk_count": 20,
+        "frame_count": 230,
+        "measured_seconds": 240.03081374300018,
+        "seconds_per_frame": 1.0436122336652183,
+        "step_elapsed_seconds": {
+          "6.1": 0.10015946000021358,
+          "6.2": 0.023147081999923103,
+          "6.3": 69.22016086999975,
+          "6.4": 168.71141781400001,
+          "6.5": 1.975928517000284
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_01_ep9405"
+      },
+      {
+        "activation_bytes": 32770560,
+        "activation_row_count": 4000,
+        "bytes_per_frame": 163852.8,
+        "chunk_count": 20,
+        "frame_count": 200,
+        "measured_seconds": 224.40056259099947,
+        "seconds_per_frame": 1.1220028129549973,
+        "step_elapsed_seconds": {
+          "6.1": 0.0929635539996525,
+          "6.2": 0.01999676100058423,
+          "6.3": 73.96226124199893,
+          "6.4": 148.55838529700122,
+          "6.5": 1.7669557369990798
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_01_ep9442"
+      },
+      {
+        "activation_bytes": 25889280,
+        "activation_row_count": 3160,
+        "bytes_per_frame": 163856.20253164557,
+        "chunk_count": 20,
+        "frame_count": 158,
+        "measured_seconds": 194.0582278910024,
+        "seconds_per_frame": 1.2282166322215342,
+        "step_elapsed_seconds": {
+          "6.1": 0.087994064000668,
+          "6.2": 0.01739209300103539,
+          "6.3": 76.88808207799957,
+          "6.4": 115.69240419500056,
+          "6.5": 1.3723554610005522
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_02_ep9407"
+      },
+      {
+        "activation_bytes": 32770560,
+        "activation_row_count": 4000,
+        "bytes_per_frame": 163852.8,
+        "chunk_count": 20,
+        "frame_count": 200,
+        "measured_seconds": 223.97497201200167,
+        "seconds_per_frame": 1.1198748600600084,
+        "step_elapsed_seconds": {
+          "6.1": 0.09446191700044437,
+          "6.2": 0.03685287100051937,
+          "6.3": 75.39612177100025,
+          "6.4": 146.6763974080004,
+          "6.5": 1.7711380450000433
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_02_ep9432"
+      },
+      {
+        "activation_bytes": 20482560,
+        "activation_row_count": 2500,
+        "bytes_per_frame": 163860.48,
+        "chunk_count": 20,
+        "frame_count": 125,
+        "measured_seconds": 157.31347283300056,
+        "seconds_per_frame": 1.2585077826640045,
+        "step_elapsed_seconds": {
+          "6.1": 0.0864421799997217,
+          "6.2": 0.01524548199995479,
+          "6.3": 66.34221932999935,
+          "6.4": 89.65321492100156,
+          "6.5": 1.216350919999968
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_03_ep9404"
+      },
+      {
+        "activation_bytes": 32770560,
+        "activation_row_count": 4000,
+        "bytes_per_frame": 163852.8,
+        "chunk_count": 20,
+        "frame_count": 200,
+        "measured_seconds": 229.01425067499804,
+        "seconds_per_frame": 1.1450712533749903,
+        "step_elapsed_seconds": {
+          "6.1": 0.09096063099968887,
+          "6.2": 0.021166280001125415,
+          "6.3": 80.47503657099878,
+          "6.4": 146.67019711699868,
+          "6.5": 1.7568900759997632
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_03_ep9443"
+      },
+      {
+        "activation_bytes": 18516480,
+        "activation_row_count": 2260,
+        "bytes_per_frame": 163862.65486725664,
+        "chunk_count": 20,
+        "frame_count": 113,
+        "measured_seconds": 155.98562531500284,
+        "seconds_per_frame": 1.3804037638495825,
+        "step_elapsed_seconds": {
+          "6.1": 0.08936732700021821,
+          "6.2": 0.013725473001613864,
+          "6.3": 72.46862658600003,
+          "6.4": 82.45756888300093,
+          "6.5": 0.9563370460000442
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_04_ep9406"
+      },
+      {
+        "activation_bytes": 32770560,
+        "activation_row_count": 4000,
+        "bytes_per_frame": 163852.8,
+        "chunk_count": 20,
+        "frame_count": 200,
+        "measured_seconds": 224.3372006970003,
+        "seconds_per_frame": 1.1216860034850016,
+        "step_elapsed_seconds": {
+          "6.1": 0.08931390199904854,
+          "6.2": 0.02253636900059064,
+          "6.3": 76.38968037999985,
+          "6.4": 145.88812142700044,
+          "6.5": 1.9475486190003721
+        },
+        "timing_measured": true,
+        "trajectory_id": "layout_04_ep9444"
+      }
+    ],
+    "schema_version": "person-a-phase6-ten-pilot-certification-v0.1",
+    "seconds_per_frame": 1.127971146271222,
+    "seconds_per_trajectory_mean": 203.78678709300078,
+    "timing_scope": "Wall time is the sum of committed step 6.1-6.5 elapsed_seconds for pilots that recorded step receipts. Reused pilots contribute storage and cardinality only.",
+    "total_activation_bytes": 307061760,
+    "total_activation_row_count": 37480,
+    "total_frame_count": 1874,
+    "total_pilot_count": 10
+  },
+  "cardinality": {
+    "all_pilots_exact": true,
+    "layer_count": 20,
+    "per_pilot": [
+      {
+        "actual_activation_row_count": 4960,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 4960,
+        "frame_count": 248,
+        "layer_count": 20,
+        "trajectory_id": "layout_00_ep9403"
+      },
+      {
+        "actual_activation_row_count": 4000,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 4000,
+        "frame_count": 200,
+        "layer_count": 20,
+        "trajectory_id": "layout_00_ep9441"
+      },
+      {
+        "actual_activation_row_count": 4600,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 4600,
+        "frame_count": 230,
+        "layer_count": 20,
+        "trajectory_id": "layout_01_ep9405"
+      },
+      {
+        "actual_activation_row_count": 4000,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 4000,
+        "frame_count": 200,
+        "layer_count": 20,
+        "trajectory_id": "layout_01_ep9442"
+      },
+      {
+        "actual_activation_row_count": 3160,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 3160,
+        "frame_count": 158,
+        "layer_count": 20,
+        "trajectory_id": "layout_02_ep9407"
+      },
+      {
+        "actual_activation_row_count": 4000,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 4000,
+        "frame_count": 200,
+        "layer_count": 20,
+        "trajectory_id": "layout_02_ep9432"
+      },
+      {
+        "actual_activation_row_count": 2500,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 2500,
+        "frame_count": 125,
+        "layer_count": 20,
+        "trajectory_id": "layout_03_ep9404"
+      },
+      {
+        "actual_activation_row_count": 4000,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 4000,
+        "frame_count": 200,
+        "layer_count": 20,
+        "trajectory_id": "layout_03_ep9443"
+      },
+      {
+        "actual_activation_row_count": 2260,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 2260,
+        "frame_count": 113,
+        "layer_count": 20,
+        "trajectory_id": "layout_04_ep9406"
+      },
+      {
+        "actual_activation_row_count": 4000,
+        "chunk_count": 20,
+        "exact": true,
+        "expected_activation_row_count": 4000,
+        "frame_count": 200,
+        "layer_count": 20,
+        "trajectory_id": "layout_04_ep9444"
+      }
+    ],
+    "rule": "activation_rows == model_frames * decoder_layers",
+    "total_activation_row_count": 37480,
+    "total_chunk_count": 200,
+    "total_frame_count": 1874
+  },
+  "certified_from_committed_evidence_without_rerun": true,
+  "deterministic_seed": 20260725,
+  "downstream_fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+  "downstream_joins": {
+    "activation_chunk_join": "exact",
+    "activation_row_join": "exact",
+    "downstream_accepted_trajectory_ids": [
+      "layout_00_ep9403",
+      "layout_00_ep9441",
+      "layout_01_ep9405",
+      "layout_01_ep9442",
+      "layout_02_ep9407",
+      "layout_02_ep9432",
+      "layout_03_ep9404",
+      "layout_03_ep9443",
+      "layout_04_ep9406",
+      "layout_04_ep9444"
+    ],
+    "downstream_consumer": "person_b_step4_1_ten_pilot_frame_folds_v0_1",
+    "downstream_consumer_artifact_hash": "be30c65ed5bb8b4b05d87be21d846b60b918d450976e3901e40a71db481dcf96",
+    "downstream_input_manifest_hash": "de5c8c0fab0006a6f8f8f63157fcaea0aed215ac4c5191df3fd1a52920b9b451",
+    "person_a_produced_trajectory_ids": [
+      "layout_00_ep9403",
+      "layout_00_ep9441",
+      "layout_01_ep9405",
+      "layout_01_ep9442",
+      "layout_02_ep9407",
+      "layout_02_ep9432",
+      "layout_03_ep9404",
+      "layout_03_ep9443",
+      "layout_04_ep9406",
+      "layout_04_ep9444"
+    ],
+    "repository_input_hash_mismatch_count": 0,
+    "trajectory_identity_join": "exact"
+  },
+  "exclusions": {
+    "admission_arithmetic_holds": true,
+    "downstream_admitted_frame_count": 1695,
+    "downstream_excluded_frame_count": 179,
+    "downstream_source_frame_count": 1874,
+    "exclusion_owner": "person_b_analysis_admission_rule",
+    "note": "Person A extracted every aligned model frame. Frames removed from analysis were removed by Person B's frozen admission rule, not by a Person A extraction failure.",
+    "per_pilot_downstream_exclusions": {
+      "layout_00_ep9403": 39,
+      "layout_01_ep9405": 43,
+      "layout_02_ep9407": 23,
+      "layout_03_ep9404": 33,
+      "layout_04_ep9406": 41
+    },
+    "person_a_extracted_frame_count": 1874,
+    "person_a_extraction_exclusion_count": 0,
+    "person_a_extraction_exclusions": [],
+    "schema_version": "person-a-phase6-ten-pilot-certification-v0.1"
+  },
+  "expected_layer_count": 20,
+  "forecast": {
+    "basis": "measured_ten_pilot_expansion",
+    "forecast_is_measured_projection_not_a_run": true,
+    "mean_frames_per_trajectory": 187.4,
+    "projected_activation_bytes": 2026607616.0,
+    "projected_activation_row_count": 247368.0,
+    "projected_frame_count": 12368.4,
+    "projected_wall_seconds": 13951.198325540983,
+    "schema_version": "person-a-phase6-ten-pilot-certification-v0.1",
+    "target_trajectory_count": 66
+  },
+  "identity_schema_version": "1.0",
+  "per_pilot_status": [
+    {
+      "activation_index_sha256": "473efef1eb52514c097051ec8f4501cb621f92c9ceaeb847249c7e3ae042ad55",
+      "activation_row_count": 4960,
+      "chunk_count": 20,
+      "condition_role": "core_occluded",
+      "control": false,
+      "expected_activation_row_count": 4960,
+      "fold_idx": 1,
+      "frame_count": 248,
+      "layout_id": "layout_00",
+      "reused_without_reextraction": true,
+      "status": "REUSED_EXACT_EXISTING_ARTIFACTS",
+      "step_receipts_present": [],
+      "trajectory_id": "layout_00_ep9403"
+    },
+    {
+      "activation_index_sha256": "a553a431e3cb8bef174552f0ac77d1afa881db255b1ca8d76f8461ad02b3c6ce",
+      "activation_row_count": 4000,
+      "chunk_count": 20,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "expected_activation_row_count": 4000,
+      "fold_idx": 1,
+      "frame_count": 200,
+      "layout_id": "layout_00",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_00_ep9441"
+    },
+    {
+      "activation_index_sha256": "023786fd7fb3002e5acebcddd82e8f1e7ddb597138820c9401bd5dd7af5f10e6",
+      "activation_row_count": 4600,
+      "chunk_count": 20,
+      "condition_role": "core_occluded",
+      "control": false,
+      "expected_activation_row_count": 4600,
+      "fold_idx": 2,
+      "frame_count": 230,
+      "layout_id": "layout_01",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_01_ep9405"
+    },
+    {
+      "activation_index_sha256": "f8708f04e72a3e73ce9ac7136f6f7c191fdee9dbfba026d6867445cd2ffaa2eb",
+      "activation_row_count": 4000,
+      "chunk_count": 20,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "expected_activation_row_count": 4000,
+      "fold_idx": 2,
+      "frame_count": 200,
+      "layout_id": "layout_01",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_01_ep9442"
+    },
+    {
+      "activation_index_sha256": "c76bf46818c70a798276d52d1d46a4f27aee255e44e0bd20fa1a583f23c3c467",
+      "activation_row_count": 3160,
+      "chunk_count": 20,
+      "condition_role": "core_occluded",
+      "control": false,
+      "expected_activation_row_count": 3160,
+      "fold_idx": 4,
+      "frame_count": 158,
+      "layout_id": "layout_02",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_02_ep9407"
+    },
+    {
+      "activation_index_sha256": "33ef1f8d3f6bf3487e33fdfe14a38446a37d421f90cb24e885c4594f53783fab",
+      "activation_row_count": 4000,
+      "chunk_count": 20,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "expected_activation_row_count": 4000,
+      "fold_idx": 4,
+      "frame_count": 200,
+      "layout_id": "layout_02",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_02_ep9432"
+    },
+    {
+      "activation_index_sha256": "66b162bb09a170d82563838cf5ebc1eea4e7e9c6fe0f10927e155d1e765633fe",
+      "activation_row_count": 2500,
+      "chunk_count": 20,
+      "condition_role": "core_occluded",
+      "control": false,
+      "expected_activation_row_count": 2500,
+      "fold_idx": 0,
+      "frame_count": 125,
+      "layout_id": "layout_03",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_03_ep9404"
+    },
+    {
+      "activation_index_sha256": "2d48a43da1c720a81f5bb8ce6a4a2e1d1ea3344b5884fb62df2846409d8dca6f",
+      "activation_row_count": 4000,
+      "chunk_count": 20,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "expected_activation_row_count": 4000,
+      "fold_idx": 0,
+      "frame_count": 200,
+      "layout_id": "layout_03",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_03_ep9443"
+    },
+    {
+      "activation_index_sha256": "df8f0541c872e3d6daf7a6a1165e6deafe6256ec745ffb5329befe0e3c697a78",
+      "activation_row_count": 2260,
+      "chunk_count": 20,
+      "condition_role": "core_occluded",
+      "control": false,
+      "expected_activation_row_count": 2260,
+      "fold_idx": 3,
+      "frame_count": 113,
+      "layout_id": "layout_04",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_04_ep9406"
+    },
+    {
+      "activation_index_sha256": "2ab37112dfabe22c773e02512f894d7aa0c2f63d32493a743a6dbee6fb30c933",
+      "activation_row_count": 4000,
+      "chunk_count": 20,
+      "condition_role": "no_wall_visible_control",
+      "control": true,
+      "expected_activation_row_count": 4000,
+      "fold_idx": 3,
+      "frame_count": 200,
+      "layout_id": "layout_04",
+      "reused_without_reextraction": false,
+      "status": "PASS",
+      "step_receipts_present": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ],
+      "trajectory_id": "layout_04_ep9444"
+    }
+  ],
+  "schema_version": "person-a-phase6-ten-pilot-certification-v0.1",
+  "session_id": "person-a-phase6-ten-pilot-expansion-seed-20260725",
+  "status": "CERTIFIED",
+  "step": "6.7",
+  "visual_tokens_per_frame": 336
+}

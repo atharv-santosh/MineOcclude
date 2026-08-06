@@ -1,0 +1,87 @@
+{
+  "certification_session_id": "person-a-phase6-ten-pilot-expansion-seed-20260725",
+  "certified_step_6_7": true,
+  "change_classification_counts": {
+    "defect_correction": 1,
+    "interface_migration": 1,
+    "operational_improvement": 4,
+    "scientific_change": 0
+  },
+  "change_count": 6,
+  "changes": [
+    {
+      "change_id": "A6-C01",
+      "classification": "interface_migration",
+      "commit": "a5841be",
+      "result_changing": false,
+      "review": "person_a_internal_plus_person_b_consumer_reratification",
+      "summary": "Extend the activation store to carry global Phase 6 frame identity so an activation row joins one legal source frame.",
+      "supersedes_previous_runs": false
+    },
+    {
+      "change_id": "A6-C02",
+      "classification": "operational_improvement",
+      "commit": "5cbb421",
+      "result_changing": false,
+      "review": "person_a_internal",
+      "summary": "Bind the SageMaker runtime identity and deterministic seed 20260725 to every Phase 6 extraction session.",
+      "supersedes_previous_runs": false
+    },
+    {
+      "change_id": "A6-C03",
+      "classification": "defect_correction",
+      "commit": "5a4a42f",
+      "result_changing": false,
+      "review": "person_a_internal",
+      "summary": "Repair the Phase 6 configuration path and add a Step 6.3 resume entry point after an interrupted context-alignment stage.",
+      "supersedes_previous_runs": false
+    },
+    {
+      "change_id": "A6-C04",
+      "classification": "operational_improvement",
+      "commit": "65fa575",
+      "result_changing": false,
+      "review": "person_a_internal",
+      "summary": "Parameterize the canonical pilot launcher so multiple layouts run from one immutable queue without editing the runner.",
+      "supersedes_previous_runs": false
+    },
+    {
+      "change_id": "A6-C05",
+      "classification": "operational_improvement",
+      "commit": "c099fe9",
+      "result_changing": false,
+      "review": "person_b_expansion_authorization_a838c97",
+      "summary": "Add the ten-pilot expansion runner that reuses the existing checksum-valid pilot instead of re-extracting it.",
+      "supersedes_previous_runs": false
+    },
+    {
+      "change_id": "A6-C06",
+      "classification": "operational_improvement",
+      "commit": "55776dc",
+      "result_changing": false,
+      "review": "person_a_internal_operational_retry_receipt",
+      "summary": "Recover from host OOM, a missing libGL runtime dependency, and an existing-output-root preflight rejection during the expansion.",
+      "supersedes_previous_runs": false
+    }
+  ],
+  "final_throughput_and_storage": {
+    "bytes_per_activation_row": 8192.68303094984,
+    "bytes_per_frame": 163853.6606189968,
+    "measured_pilot_count": 9,
+    "seconds_per_frame": 1.127971146271222,
+    "seconds_per_trajectory_mean": 203.78678709300078
+  },
+  "locked_contract": {
+    "path": "docs/contracts/person_a_locked_extraction_contract_v1_0.md",
+    "sha256": "a2b16448d58473ebac5ad63163fb503d2c611129952db6431bea1d62d06c0d69"
+  },
+  "no_unresolved_alignment_schema_or_model_blocker": true,
+  "remaining_blockers": [],
+  "result_changing_change_count": 0,
+  "result_changing_changes": [],
+  "schema_version": "person-a-phase6-closeout-v0.1",
+  "scientific_change_requires_mentor_approval": true,
+  "status": "CLOSED",
+  "step": "6.8",
+  "superseding_rule": "A result-changing change creates a new run identity; it never rewrites an accepted run in place."
+}

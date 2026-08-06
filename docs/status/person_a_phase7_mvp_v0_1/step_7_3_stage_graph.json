@@ -1,0 +1,228 @@
+{
+  "boundary_producers": {
+    "activation_audit_report": "activation_audit",
+    "activation_index": "model_extraction",
+    "baseline_results": "baselines",
+    "expected_vs_accepted_matrix": "manifest_validation",
+    "measurement_tables": "measurement",
+    "oracle_targets": "oracle",
+    "probe_results": "probes",
+    "queue_status": "model_extraction",
+    "rollout_bundle": "u4_generation",
+    "rollout_manifest": "u4_generation",
+    "u1_u3_metrics": "u1_u3_metrics"
+  },
+  "delegated_stages": [
+    "oracle",
+    "probes",
+    "baselines",
+    "u1_u3_metrics",
+    "measurement"
+  ],
+  "execution_order": [
+    "manifest_validation",
+    "oracle",
+    "model_extraction",
+    "activation_audit",
+    "probes",
+    "baselines",
+    "u1_u3_metrics",
+    "u4_generation",
+    "measurement"
+  ],
+  "owners": [
+    "person_a_model",
+    "person_b_analysis",
+    "person_d_baselines",
+    "person_e_operations"
+  ],
+  "person_a_owned_stages": [
+    "manifest_validation",
+    "model_extraction",
+    "activation_audit",
+    "u4_generation"
+  ],
+  "schema_version": "person-a-mvp-stage-graph-v0.1",
+  "scientific_logic_owned_by_declared_role": true,
+  "stage_count": 9,
+  "stages": [
+    {
+      "consumes": [],
+      "description": "Validate the accepted manifest against the expected 66-cell matrix.",
+      "owner": "person_a_model",
+      "produces": [
+        "expected_vs_accepted_matrix"
+      ],
+      "requires": [],
+      "requires_model_identity": false,
+      "stage_id": "manifest_validation",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "expected_vs_accepted_matrix"
+      ],
+      "description": "Invoke Person B's frozen oracle/target entry point.",
+      "owner": "person_b_analysis",
+      "produces": [
+        "oracle_targets"
+      ],
+      "requires": [
+        "manifest_validation"
+      ],
+      "requires_model_identity": false,
+      "stage_id": "oracle",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "expected_vs_accepted_matrix"
+      ],
+      "description": "Run the resumable teacher-forced activation extraction queue.",
+      "owner": "person_a_model",
+      "produces": [
+        "activation_index",
+        "queue_status"
+      ],
+      "requires": [
+        "manifest_validation"
+      ],
+      "requires_model_identity": true,
+      "stage_id": "model_extraction",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "activation_index",
+        "queue_status"
+      ],
+      "description": "Certify activation cardinality, shape, joins, and duplicates.",
+      "owner": "person_a_model",
+      "produces": [
+        "activation_audit_report"
+      ],
+      "requires": [
+        "model_extraction"
+      ],
+      "requires_model_identity": false,
+      "stage_id": "activation_audit",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "activation_audit_report",
+        "oracle_targets"
+      ],
+      "description": "Invoke Person B's probe fitting on accepted rows and folds.",
+      "owner": "person_b_analysis",
+      "produces": [
+        "probe_results"
+      ],
+      "requires": [
+        "activation_audit",
+        "oracle"
+      ],
+      "requires_model_identity": false,
+      "stage_id": "probes",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "activation_audit_report",
+        "oracle_targets"
+      ],
+      "description": "Invoke Person D's locked baseline workflow.",
+      "owner": "person_d_baselines",
+      "produces": [
+        "baseline_results"
+      ],
+      "requires": [
+        "activation_audit",
+        "oracle"
+      ],
+      "requires_model_identity": false,
+      "stage_id": "baselines",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "probe_results",
+        "baseline_results"
+      ],
+      "description": "Invoke Person B's U1-U3 metric entry point.",
+      "owner": "person_b_analysis",
+      "produces": [
+        "u1_u3_metrics"
+      ],
+      "requires": [
+        "probes",
+        "baselines"
+      ],
+      "requires_model_identity": false,
+      "stage_id": "u1_u3_metrics",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "u1_u3_metrics"
+      ],
+      "description": "Generate the immutable U4 pilot and control rollouts.",
+      "owner": "person_a_model",
+      "produces": [
+        "rollout_manifest",
+        "rollout_bundle"
+      ],
+      "requires": [
+        "u1_u3_metrics"
+      ],
+      "requires_model_identity": true,
+      "stage_id": "u4_generation",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    },
+    {
+      "consumes": [
+        "rollout_manifest",
+        "rollout_bundle"
+      ],
+      "description": "Invoke Person E's measurement/registry entry point.",
+      "owner": "person_e_operations",
+      "produces": [
+        "measurement_tables"
+      ],
+      "requires": [
+        "u4_generation"
+      ],
+      "requires_model_identity": false,
+      "stage_id": "measurement",
+      "supported_modes": [
+        "synthetic",
+        "real"
+      ]
+    }
+  ],
+  "step": "7.3"
+}

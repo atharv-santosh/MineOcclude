@@ -32,7 +32,16 @@ PHASE5_DECISION_SHA256 = (
 PHASE5_STORE_SHA256 = (
     "d27a9044b04e51c2cb74ff94c4109230a3b02fef62eb4b45c1e7cb5f2d9d00e1"
 )
+# The commit immediately before pyarrow was authorized. Comparing against this
+# fixed point keeps the guard durable; comparing against HEAD only held while
+# the pyarrow change was still uncommitted.
+PRE_PYARROW_COMMIT = "f0a4fed546eb1cf19a7094e6b99399a58294726a"
 MINEWORLD_REVISION = "9f49efbcc68a5f0cf60e78f0abc566eac409282f"
+
+# Python writes bytecode caches into any package it imports, including the
+# pinned external checkout. A generated cache is not a modification of the
+# dependency, so it is excluded; every other status line still fails the guard.
+IGNORED_EXTERNAL_STATUS_PATHS = ("__pycache__/",)
 MINEWORLD_REQUIREMENTS_SHA256 = (
     "b58d7e3514e7f9787ddd428fdc755e08cb48a75dd3cd09a4e1fc8e4c210af38c"
 )
@@ -99,7 +108,7 @@ def test_every_prequalified_environment_dependency_is_preserved() -> None:
     for environment in (LOCAL_ENV, AWS_ENV):
         relative = environment.relative_to(ROOT).as_posix()
         baseline_text = subprocess.run(
-            ["git", "show", f"HEAD:{relative}"],
+            ["git", "show", f"{PRE_PYARROW_COMMIT}:{relative}"],
             check=True,
             capture_output=True,
             text=True,
@@ -152,8 +161,16 @@ def test_external_mineworld_dependency_file_is_untouched() -> None:
         capture_output=True,
         text=True,
     ).stdout.strip()
+    tracked_changes = [
+        line
+        for line in status.splitlines()
+        if not any(
+            line.strip().endswith(ignored) or ignored in line
+            for ignored in IGNORED_EXTERNAL_STATUS_PATHS
+        )
+    ]
     assert revision == MINEWORLD_REVISION
-    assert status == ""
+    assert tracked_changes == []
     assert _sha256(mineworld / "requirements.txt") == (
         MINEWORLD_REQUIREMENTS_SHA256
     )

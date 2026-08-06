@@ -1,0 +1,58 @@
+{
+  "blocked_reason": "The MVP activation dataset is not complete: 0 of 66 expected cells have completed extraction, so Person B's and Person D's entry points have no complete accepted input to consume.",
+  "entry_points": [
+    {
+      "command": [
+        "python",
+        "scripts/run_person_b_pilot.py"
+      ],
+      "command_line": "python scripts/run_person_b_pilot.py",
+      "entry_point": "scripts/run_person_b_pilot.py",
+      "frozen_config_path": "configs/analysis/core.yaml",
+      "frozen_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "owner": "person_b_analysis"
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "mineocclude.baselines"
+      ],
+      "command_line": "python -m mineocclude.baselines",
+      "entry_point": "person_d_locked_baseline_workflow",
+      "frozen_config_path": "configs/analysis/core.yaml",
+      "frozen_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "owner": "person_d_baselines"
+    }
+  ],
+  "executed": false,
+  "identity": {
+    "code_sha": "b9732eb32bb6bd40bdef86c931ac9d543f2ca4fc",
+    "config_file_sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3",
+    "config_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
+    "config_id": "person-a-mvp-v1.0",
+    "config_path": "configs/experiments/mvp.yaml",
+    "config_version": "1.0",
+    "model_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "schema_version": "1.0",
+    "seed": 20260725
+  },
+  "inputs": {
+    "accepted_manifest_sha256": "ff7801c1a331f173bc5fc197454889b72d8554a8e31b5a88731de8eb7d9ed987",
+    "accepted_row_count": null,
+    "activation_index_sha256": null,
+    "exclusion_count": 61,
+    "fold_count": 5,
+    "fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+  },
+  "interpretation_gate": "Metrics are not interpreted until the model, alignment, oracle, positive/negative control, and reproducibility gates are known.",
+  "logs": [],
+  "metrics_interpreted_by_person_a": false,
+  "output_paths": [],
+  "regenerable_by_owning_role": true,
+  "run_id": "mineocclude-run-d8ed34a61adad8597cf6e406bdeffd2e",
+  "schema_version": "person-a-u1-u3-invocation-v0.1",
+  "status": "BLOCKED",
+  "step": "7.7"
+}

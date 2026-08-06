@@ -1,0 +1,57 @@
+{
+  "alternative_results_ladder_applies": true,
+  "cut_breadth_before_validity": true,
+  "decision": "yellow",
+  "detail": "Every Person A engineering gate that can be evaluated without the complete accepted MVP dataset passes. U1-U3 are not evaluated because the dataset is incomplete, so the decision is YELLOW on unevaluated science rather than on failed engineering.",
+  "engineering_gates": {
+    "hook_site": true,
+    "input_alignment": true,
+    "model_runtime": true,
+    "pooling": true,
+    "reproducibility": true,
+    "storage": true,
+    "visible_positive_control": true
+  },
+  "failed_engineering_gate_ids": [],
+  "failed_engineering_reported_as_negative_model_finding": false,
+  "frozen_step_4_1_decision": "FAIL",
+  "frozen_step_4_1_rerun": false,
+  "rationale": "engineering passes but the scientific tests are not yet evaluated: u1, u2, u3",
+  "red_engineering_areas_triggered": [],
+  "schema_version": "person-a-checkpoint-decision-v0.1",
+  "scientific": {
+    "u1_green": null,
+    "u2_green": null,
+    "u3_directionally_correct": null,
+    "u4_smoke_test_only": true,
+    "unevaluated": [
+      "u1",
+      "u2",
+      "u3"
+    ]
+  },
+  "scope_cuts": [
+    {
+      "cut": "Run the MVP on the accepted subset of C6A cells rather than waiting for all 66 handoff bundles.",
+      "cut_id": "SC-1",
+      "kind": "breadth",
+      "owner": "person_a_model",
+      "preserves_validity": true
+    },
+    {
+      "cut": "Treat U4 as plumbing-only for Week 1 rather than claiming a causal pilot without a predeclared held-out partition.",
+      "cut_id": "SC-2",
+      "kind": "claim_strength",
+      "owner": "person_a_model",
+      "preserves_validity": true
+    },
+    {
+      "cut": "Defer paper-scale expansion until the MVP extraction and U1-U3 gates are known.",
+      "cut_id": "SC-3",
+      "kind": "breadth",
+      "owner": "person_a_model",
+      "preserves_validity": true
+    }
+  ],
+  "step": "9.7"
+}

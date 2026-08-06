@@ -1,0 +1,82 @@
+{
+  "followable_without_accepting_assertions": true,
+  "link_count": 7,
+  "links": [
+    {
+      "claim": "Model, source, checkpoint, and VAE identity plus official generation.",
+      "detail": null,
+      "evidence_path": "docs/status/person_a_phase2_runtime_record.md",
+      "evidence_sha256": "be77a4750fce31a217aa5cd8bc6069da0ee275f12b69b2b0dddc2072937bfa62",
+      "order": 1,
+      "real": true
+    },
+    {
+      "claim": "Teacher forcing, FrameTokenMap, and the verified all-layer hook site.",
+      "detail": null,
+      "evidence_path": "docs/status/phase6_runtime/person-a-phase6-ten-pilot-expansion-seed-20260725/pilots/layout_01_ep9405/step6_3.json",
+      "evidence_sha256": "0f9ef78f22eaec39ec500ef9be04128640661900e1dc30bc6ba16f86dbefc560",
+      "order": 2,
+      "real": true
+    },
+    {
+      "claim": "Visual-only pooling and the activation index cardinality certification.",
+      "detail": null,
+      "evidence_path": "docs/status/person_a_phase6_closeout_v0_1/step_6_7_certification.json",
+      "evidence_sha256": "a5be22ac8480800bc1e2c9c96e62a837751b6922c2748b180447a5270a0dd56e",
+      "order": 3,
+      "real": true
+    },
+    {
+      "claim": "The frozen MVP identity and the encoded 66-cell matrix.",
+      "detail": null,
+      "evidence_path": "docs/status/person_a_phase7_mvp_v0_1/step_7_2_matrix_report.json",
+      "evidence_sha256": "3efabe856602e8e7e0a6764c06acf93414d99889162b2e0480d6f4618632a960",
+      "order": 4,
+      "real": true
+    },
+    {
+      "claim": "The integrated stage graph and its run/artifact lineage.",
+      "detail": "Synthetic wiring proof; scientific use forbidden.",
+      "evidence_path": "docs/status/person_a_phase7_mvp_v0_1/step_7_4_synthetic_lineage.json",
+      "evidence_sha256": "70be68f3e313c110efd0bc282c23616344dcca71103f7e701a8ef270f0c0b90c",
+      "order": 5,
+      "real": false
+    },
+    {
+      "claim": "Exact U4 injection scope proved by a direct tensor difference mask.",
+      "detail": "Direct tensor test, not a model run.",
+      "evidence_path": "tests/intervention/test_inject.py",
+      "evidence_sha256": "a9b7c415223b3ecbda93949c6a3d07edafb025afa017a6483a9759ef916f47f8",
+      "order": 6,
+      "real": true
+    },
+    {
+      "claim": "The one documented clean-run workflow and its captured output.",
+      "detail": "Workflow validated without real accepted inputs.",
+      "evidence_path": "docs/status/person_a_phase9_clean_run_v0_1/step_9_2_clean_run_record.json",
+      "evidence_sha256": "de05b819662297466fd5d14b1e9463443d67788cb24972e4a890772937e20463",
+      "order": 7,
+      "real": false
+    }
+  ],
+  "real_evidence_count": 5,
+  "schema_version": "person-a-evidence-chain-v0.1",
+  "step": "9.6",
+  "synthetic_evidence_count": 2,
+  "traced_example": {
+    "artifact_id": "mineocclude-artifact-262657e76198ec8431f7df852d3cebdf",
+    "artifact_sha256": "73fbd695231d66b732211fb733601d13a0db4f24c8c65589254c9ccee57f7e01",
+    "code_sha": "b9732eb32bb6bd40bdef86c931ac9d543f2ca4fc",
+    "config_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
+    "data_identity_hash": "ff7801c1a331f173bc5fc197454889b72d8554a8e31b5a88731de8eb7d9ed987",
+    "environment_hash": "e24b2372c60707fe834e772d3f86c890eac5d7ad1da974c398051fe23098559f",
+    "model_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "run_id": "mineocclude-run-61df5ac204c0625748827cc0efe12bb4",
+    "seed": 20260725,
+    "synthetic": true
+  },
+  "unbound_evidence": [],
+  "unbound_evidence_count": 0,
+  "verbal_assertion_required": false
+}
