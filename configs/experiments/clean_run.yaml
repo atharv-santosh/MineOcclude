@@ -1,0 +1,82 @@
+# The one documented Person A clean-run workflow (Step 9.2).
+#
+# Every command below runs from a clean checkout with no source edits between
+# commands. Stage resume happens through recorded status, never by moving files
+# or editing a CSV.
+
+schema_version: "1.0"
+workflow_id: "person-a-clean-run-v1.0"
+mvp_config: "configs/experiments/mvp.yaml"
+
+# Identities verified before the first command runs (Step 9.1).
+verify_file_identities:
+  - "configs/experiments/mvp.yaml"
+  - "docs/contracts/person_a_locked_extraction_contract_v1_0.md"
+  - "data/handoff_a/person_c_mvp_expected_matrix_v0_1/episode_matrix.csv"
+  - "data/handoff_a/person_b_ten_pilot_fold_manifest_v0_1/ten_pilot_frame_fold_manifest.json"
+
+require_clean_worktree: true
+
+steps:
+  - step_id: "9.2.1"
+    description: "Verify the frozen MVP identity and write the signed record."
+    command: ["python", "scripts/run_mvp.py", "freeze"]
+    owner: "person_a_model"
+    required: true
+  - step_id: "9.2.2"
+    description: "Validate the accepted manifest against the expected 66-cell matrix."
+    command: ["python", "scripts/run_mvp.py", "matrix"]
+    owner: "person_a_model"
+    required: true
+  - step_id: "9.2.3"
+    description: "Publish the integrated stage graph."
+    command: ["python", "scripts/run_mvp.py", "graph"]
+    owner: "person_a_model"
+    required: true
+  - step_id: "9.2.4"
+    description: "Build or resume the immutable extraction queue."
+    command: ["python", "scripts/run_mvp.py", "queue-plan"]
+    owner: "person_a_model"
+    required: true
+  - step_id: "9.2.5"
+    description: "Run the integrated stage graph in CPU synthetic mode."
+    command: ["python", "scripts/run_mvp.py", "run", "--mode", "synthetic"]
+    owner: "person_a_model"
+    required: true
+  - step_id: "9.2.6"
+    description: "Archive the U1-U3 entry-point invocation record."
+    command: ["python", "scripts/run_mvp.py", "u1-u3"]
+    owner: "person_a_model"
+    required: true
+  - step_id: "9.2.7"
+    description: "Publish the MVP implementation closeout."
+    command: ["python", "scripts/run_mvp.py", "closeout"]
+    owner: "person_a_model"
+    required: true
+
+# Steps that require real accepted inputs and an authorized model runtime. They
+# are documented here so the clean workflow is complete, and are skipped with a
+# recorded reason when their inputs are unavailable.
+real_only_steps:
+  - step_id: "9.2.R1"
+    description: "Run the integrated stage graph in real GPU mode."
+    command: ["python", "scripts/run_mvp.py", "run", "--mode", "real"]
+    requires:
+      - "person_c_data: per-trajectory accepted handoff bundles for all 66 cells"
+      - "person_a_model: authorized GPU runtime with the pinned checkpoint"
+  - step_id: "9.2.R2"
+    description: "Freeze and generate the Week 1 U4 rollouts."
+    command: ["python", "scripts/run_u4_rollouts.py", "freeze-manifest", "--request", "PATH"]
+    requires:
+      - "person_b_analysis: final hash-bound direction/dose request"
+      - "person_d_baselines: control manifest"
+      - "person_e_operations: measurement contract and rollout schema"
+
+# Large artifacts are resolved through this approved index, never through an
+# operator's private directory (Step 9.1).
+external_artifact_index: "docs/status/person_a_phase9_clean_run_v0_1/external_artifact_index.json"
+
+repeatability:
+  rtol: 0.001
+  atol: 0.001
+  mode: "eval_teacher_forced_same_machine_same_seed"
