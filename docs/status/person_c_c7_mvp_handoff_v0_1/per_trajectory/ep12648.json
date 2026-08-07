@@ -616,16 +616,27 @@
       "version": "person-c-c6a-episode-inventory-v0.1"
     },
     "frame_action_state_mapping": {
-      "client_tick_sha256": "43cc5e092177a6d271e084aef64c84a7f67b486e30832578b18e0830e6906909",
-      "finalization_sha256": "01e900bca1f544d085a6e1b2e62e3fde2e649fe3bd1655b5590a06b613329ec2",
-      "lifecycle_sha256": "b28800300b51a95cba3c2c02a2ec0bd8783d39151a77353213ee4b2db97bdb6a",
-      "raw_actions_sha256": "3cfeeeecf9fcdf7ef74ab827e9462c61804c65bd50056f5c4e3b28e925b696f2",
-      "row_counts_aligned": true,
-      "server_state_sha256": "fb25fe4da73f4e17f4dbef768881eab6134b96a4182e147365ba7a9f3f7e8b9d"
+      "c_side_raw_stream_identities": {
+        "client_tick_sha256": "43cc5e092177a6d271e084aef64c84a7f67b486e30832578b18e0830e6906909",
+        "finalization_sha256": "01e900bca1f544d085a6e1b2e62e3fde2e649fe3bd1655b5590a06b613329ec2",
+        "lifecycle_sha256": "b28800300b51a95cba3c2c02a2ec0bd8783d39151a77353213ee4b2db97bdb6a",
+        "raw_actions_sha256": "3cfeeeecf9fcdf7ef74ab827e9462c61804c65bd50056f5c4e3b28e925b696f2",
+        "row_counts_aligned": true,
+        "server_state_sha256": "fb25fe4da73f4e17f4dbef768881eab6134b96a4182e147365ba7a9f3f7e8b9d"
+      },
+      "expected_receipt": "person_a/person_c successor acknowledgement binding the exact production frame-map schema/version and per-trajectory frame-map identity",
+      "model_facing_key": [
+        "trajectory_id",
+        "model_frame_idx"
+      ],
+      "owner": "person_a_and_person_c",
+      "status": "pending_person_a_owner_acknowledgement"
     },
     "preprocessing": {
-      "applicable": false,
-      "status": "raw_capture_layer_no_preprocessing_applied",
+      "expected_receipt": "person_a owner receipt with the exact 64-hex production preprocessing SHA-256 and implementation/config path",
+      "note": "Person A owns the pinned production preprocessing identity (640x360 preserved -> BGR->RGB -> 384x224 pinned interpolation -> [0,1] -> mean/std 0.5; VAE/tokenization Person A-owned). Not derived in Person C.",
+      "owner": "person_a",
+      "status": "pending_person_a_owner_acknowledgement",
       "value": null
     },
     "server_build": {

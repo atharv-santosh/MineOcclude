@@ -33,8 +33,8 @@
     },
     {
       "field": "frozen preprocessing / frame_map authority",
-      "owner": "person_a_and_person_c",
-      "reason": "downstream build_dataset product, not at C6A raw layer"
+      "owner": "person_a",
+      "reason": "Person A owns the pinned production identity; pending A owner acknowledgement"
     }
   ],
   "manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
@@ -51,6 +51,33 @@
     "server/client build + environment authorities",
     "source commit"
   ],
+  "role_specific": {
+    "downstream_a_production_handoff_note": "The exact 66-trajectory production A model-input/activation handoff does not exist yet. After C's C7.5 package is committed/pushed, Person A consumes C's exact accepted-manifest identity and produces it, hash-bound to C's 66 accepted trajectory universe. Person C does not populate these from historical five-pilot/ten-pilot evidence.",
+    "downstream_a_production_handoff_required_fields": [
+      "person_c_accepted_manifest_path/version/sha256",
+      "person_c_source_commit",
+      "exact_accepted_trajectory_ids",
+      "exact_(trajectory_id,model_frame_idx)_model_input_key_set",
+      "checkpoint/model_identity_and_sha256",
+      "preprocessing_implementation/config_identity_and_sha256",
+      "action_converter_identity_and_sha256",
+      "frame_map_schema/version_and_source_identity",
+      "frame_token_map_identity",
+      "hook_site_identity",
+      "exact_layer_indices",
+      "run_id_and_execution/code/config_binding",
+      "activation_storage_schema",
+      "activation_chunk_inventory",
+      "chunk_sha256_values",
+      "activation_index",
+      "one_index_row_per_legal_trajectory/frame/layer_key",
+      "cardinality_and_duplicate/missing_audit",
+      "source_frame/action/state/frame_map_traceability",
+      "status/supersession_information",
+      "person_a_owner_acknowledgement"
+    ],
+    "downstream_a_production_handoff_status": "pending_person_a_owner_acknowledgement"
+  },
   "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0-consumer-handoff-a",
   "schema_version": "1.0",
   "source_commit": "c836641c894c88e3add207ef2190a2db88726024"

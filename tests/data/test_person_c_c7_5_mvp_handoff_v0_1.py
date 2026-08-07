@@ -105,6 +105,30 @@ def test_no_episode_payload_bytes_committed():
             assert os.path.getsize(p) < 200_000, p  # metadata only
 
 
+def test_preprocessing_and_frame_map_pending_person_a_not_null():
+    for b in bundles():
+        pp = b["authorities"]["preprocessing"]
+        fm = b["authorities"]["frame_action_state_mapping"]
+        assert pp["status"] == "pending_person_a_owner_acknowledgement" and pp["owner"] == "person_a"
+        assert fm["status"] == "pending_person_a_owner_acknowledgement"
+        assert fm["model_facing_key"] == ["trajectory_id", "model_frame_idx"]
+        # C-side raw stream identities are still present + sourced (not discarded)
+        assert fm["c_side_raw_stream_identities"]["server_state_sha256"]
+
+
+def test_phase6_authorization_not_claimed():
+    hr = loadj("handoff_receipt.json")
+    assert hr["person_c_phase6_input_ready"] is True
+    assert hr["phase_6_runtime_authorized"] is False
+    assert hr["downstream_a_production_handoff_status"] == "pending_person_a_owner_acknowledgement"
+    a = loadj("consumer_handoffs/person_a_handoff_receipt.json")
+    rs = a["role_specific"]
+    assert rs["downstream_a_production_handoff_status"] == "pending_person_a_owner_acknowledgement"
+    assert "person_a_owner_acknowledgement" in rs["downstream_a_production_handoff_required_fields"]
+    # never claims phase 6 authorized
+    assert "phase_6_runtime_authorized\": true" not in json.dumps(hr).lower()
+
+
 def test_metadata_handoff_bytes_stay_on_runtime():
     for b in bundles():
         loc = b["locations"]

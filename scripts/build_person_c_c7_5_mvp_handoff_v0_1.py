@@ -207,15 +207,28 @@ def build_bundle(co, cm_ep, inv, mrow, out_files, ctx):
             "client_build": {"mineocclude_jar_sha256": cm_ep["mineocclude_jar_sha256"],
                              "runtime_identities": cm_ep["runtime_identities"]},
             "environment": cm_ep["environment_lock"],
-            "preprocessing": {"applicable": False, "value": None,
-                              "status": "raw_capture_layer_no_preprocessing_applied"},
+            "preprocessing": {
+                "status": "pending_person_a_owner_acknowledgement", "owner": "person_a",
+                "value": None,
+                "expected_receipt": ("person_a owner receipt with the exact 64-hex production "
+                                     "preprocessing SHA-256 and implementation/config path"),
+                "note": ("Person A owns the pinned production preprocessing identity "
+                         "(640x360 preserved -> BGR->RGB -> 384x224 pinned interpolation -> [0,1] "
+                         "-> mean/std 0.5; VAE/tokenization Person A-owned). Not derived in Person C."),
+            },
             "frame_action_state_mapping": {
-                "finalization_sha256": ctx["role_sha"][ep].get("finalization.json"),
-                "server_state_sha256": ctx["role_sha"][ep].get("server_state.jsonl"),
-                "raw_actions_sha256": ctx["role_sha"][ep].get("raw_actions.jsonl"),
-                "client_tick_sha256": ctx["role_sha"][ep].get("client_tick.jsonl"),
-                "lifecycle_sha256": ctx["role_sha"][ep].get("lifecycle.jsonl"),
-                "row_counts_aligned": aligned,
+                "status": "pending_person_a_owner_acknowledgement", "owner": "person_a_and_person_c",
+                "model_facing_key": ["trajectory_id", "model_frame_idx"],
+                "expected_receipt": ("person_a/person_c successor acknowledgement binding the exact "
+                                     "production frame-map schema/version and per-trajectory frame-map identity"),
+                "c_side_raw_stream_identities": {
+                    "finalization_sha256": ctx["role_sha"][ep].get("finalization.json"),
+                    "server_state_sha256": ctx["role_sha"][ep].get("server_state.jsonl"),
+                    "raw_actions_sha256": ctx["role_sha"][ep].get("raw_actions.jsonl"),
+                    "client_tick_sha256": ctx["role_sha"][ep].get("client_tick.jsonl"),
+                    "lifecycle_sha256": ctx["role_sha"][ep].get("lifecycle.jsonl"),
+                    "row_counts_aligned": aligned,
+                },
             },
         },
         "visibility": {
@@ -387,6 +400,17 @@ def generate(out_dir):
         "canonical_c6a_id": comp["canonical_c6a_id"], "bundle_count": 66,
         "accepted_count": 66, "excluded_count": 0, "byte_payload_committed": False,
         "data_location_policy": "metadata_handoff_bytes_on_runtime", "durable_s3_assigned": False,
+        "person_c_phase6_input_ready": True,
+        "phase_6_runtime_authorized": False,
+        "phase_6_runtime_authorization_status": "pending_coordinated_owner_review_after_a_b_c_e_reconcile",
+        "downstream_a_production_handoff_status": "pending_person_a_owner_acknowledgement",
+        "downstream_statements": [
+            "66 accepted C trajectories are ready",
+            "exact C accepted-manifest identity is frozen",
+            "C-side paths/hashes/QA are complete",
+            "downstream A production preprocessing/frame-map/activation acknowledgement is pending",
+            "Phase 6 aggregate runtime authorization is pending coordinated review",
+        ],
         "c8_scope_completed": ["c7_5_locked_mvp_metadata_handoff", "c8_1_qa_exclusion_closure",
                                "c8_3_collection_runbook"],
         "external_blockers_out_of_scope": {
@@ -416,6 +440,7 @@ def generate(out_dir):
             "required_fields_available": spec["available"],
             "fields_unavailable": spec["unavailable"],
             "consumer_validation_command": spec["command"],
+            "role_specific": spec.get("extra", {}),
             "ready_for_consumer_validation": True,
         })
 
@@ -463,8 +488,26 @@ def _consumer_specs():
             "unavailable": [
                 {"field": "actual episode payload bytes", "reason": "external on Windows runtime; not in Git", "owner": "person_c_runtime"},
                 {"field": "durable/S3 URI", "reason": "no authoritative durable URI assigned", "owner": "person_c"},
-                {"field": "frozen preprocessing / frame_map authority", "reason": "downstream build_dataset product, not at C6A raw layer", "owner": "person_a_and_person_c"}],
-            "command": val},
+                {"field": "frozen preprocessing / frame_map authority", "reason": "Person A owns the pinned production identity; pending A owner acknowledgement", "owner": "person_a"}],
+            "command": val,
+            "extra": {
+                "downstream_a_production_handoff_status": "pending_person_a_owner_acknowledgement",
+                "downstream_a_production_handoff_note": (
+                    "The exact 66-trajectory production A model-input/activation handoff does not exist yet. "
+                    "After C's C7.5 package is committed/pushed, Person A consumes C's exact accepted-manifest "
+                    "identity and produces it, hash-bound to C's 66 accepted trajectory universe. Person C "
+                    "does not populate these from historical five-pilot/ten-pilot evidence."),
+                "downstream_a_production_handoff_required_fields": [
+                    "person_c_accepted_manifest_path/version/sha256", "person_c_source_commit",
+                    "exact_accepted_trajectory_ids", "exact_(trajectory_id,model_frame_idx)_model_input_key_set",
+                    "checkpoint/model_identity_and_sha256", "preprocessing_implementation/config_identity_and_sha256",
+                    "action_converter_identity_and_sha256", "frame_map_schema/version_and_source_identity",
+                    "frame_token_map_identity", "hook_site_identity", "exact_layer_indices",
+                    "run_id_and_execution/code/config_binding", "activation_storage_schema",
+                    "activation_chunk_inventory", "chunk_sha256_values", "activation_index",
+                    "one_index_row_per_legal_trajectory/frame/layer_key", "cardinality_and_duplicate/missing_audit",
+                    "source_frame/action/state/frame_map_traceability", "status/supersession_information",
+                    "person_a_owner_acknowledgement"]}},
         "b": {
             "inputs": {"accepted_conditions": "condition_count_table.json + per-bundle condition section",
                        "oracle_relevant_identity": "identity + condition + target_variant per accepted trajectory",
