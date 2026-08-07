@@ -1,0 +1,1393 @@
+{
+ "artifacts": {
+  "client_tick_log": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12622/package_v0_1/client_tick_log.jsonl",
+   "sha256": "1090b0d74d89ac130b9459f69df54e0e30b8023bd5153fddc04d2f343d03045a"
+  },
+  "config": {
+   "format": "json",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\reset_result.json",
+   "sha256": "2d600e0a701218311b494639f8081ac990318f48481973f873bc4a151ee76d01"
+  },
+  "diagnostics": {
+   "format": "json",
+   "path": "docs/status/person_c_c7_mvp_handoff_v0_1/per_trajectory/ep12622.json",
+   "sha256": "e20d431817c1f54e7dc1be665a7d864aec85330b3f3b148f79dd046214f73eee"
+  },
+  "frame_map": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12622/package_v0_1/frame_map.jsonl",
+   "sha256": "7e5febd4ce8bbd5358f840b05e1c746a0018da07e329c2b1ae8e7c29d220b442"
+  },
+  "layout_meta": {
+   "format": "json",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\layout_meta.json",
+   "sha256": "bd70b4eca63eb7ec4423107bcaee960749a3675e1845b6d33f91e6b1c9f48914"
+  },
+  "normalized_actions": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12622/package_v0_1/normalized_actions.jsonl",
+   "sha256": "2980743d62de3c6f16410a75a29248472d38445a117f21902ac41d5efbeca80e"
+  },
+  "raw_actions": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12622/package_v0_1/raw_actions.jsonl",
+   "sha256": "8ca61153b6e41d5650a7dbc8776b0e43a041ecc1f549c1786d1eba4161f0cb25"
+  },
+  "raw_client_actions": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12622\\raw_actions.jsonl",
+   "sha256": "448f181800fc7cfa310678df9ed202f569e0ff09f3d1e49d2cbc1827f87c64cf"
+  },
+  "raw_client_tick_log": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12622\\client_tick.jsonl",
+   "sha256": "16b03904735646d8cc3721cc0d0d90bf945915ec67a64c66e8d372077a55dd8e"
+  },
+  "raw_server_state": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\server_state.jsonl",
+   "sha256": "06c4e4da1e05ef8572da0a40ed9572d04d8b9a11fe273ec7b4482433f622638a"
+  },
+  "seed_noise": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12622/package_v0_1/seed_noise.jsonl",
+   "sha256": "7f9362c2b5ddfb7d185a9897bf6de618a33bbb893b6fc0ccbb21af25c81742d2"
+  },
+  "seed_noise_source": {
+   "format": "jsonl",
+   "path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12622.jsonl",
+   "sha256": "4ac66282feb47eacbf6fe21c94591e376d8ea824682faa07d8e098410379b3f3"
+  },
+  "server_state": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12622/package_v0_1/server_state.jsonl",
+   "sha256": "51768121a57e2b1dd8b4c7c9614bfdf6a15b392942dfa21274fe0bc19ee9a0b7"
+  },
+  "visibility": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12622/package_v0_1/visibility.jsonl",
+   "sha256": "16e4b2cf0ea1277b12f4003eb844d63e1b0f87e39456ae11222785696e0638c4"
+  }
+ },
+ "condition": "core",
+ "episode_id": "12622",
+ "episode_manifest": {
+  "code_sha": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+  "condition": "core",
+  "config_hash": "2d600e0a701218311b494639f8081ac990318f48481973f873bc4a151ee76d01",
+  "dt_seconds": 0.05,
+  "duration": 0.25,
+  "environment_lock_hash": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+  "episode_id": "12622",
+  "layout_config_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "layout_id": "layout_03",
+  "lifecycle_version": "person-c-tick-lifecycle-v0.1",
+  "noise_schedule_hash": "7f9362c2b5ddfb7d185a9897bf6de618a33bbb893b6fc0ccbb21af25c81742d2",
+  "person_c_contract_version": "0.1",
+  "q": 0.2,
+  "regime": "regime_a",
+  "rng": {
+   "bit_generator": "PCG64",
+   "immutable_schedule": true,
+   "java_consumption": "stored_draws_in_draw_idx_order",
+   "numpy_version": "2.4.3",
+   "producer": "numpy.random.Generator"
+  },
+  "run_id": "person-c-c6a-post-c1-v0.1",
+  "schema_version": "1.0",
+  "seed": 202608214218,
+  "status": "accepted",
+  "tick_rate_hz": 20.0,
+  "trajectory_id": "layout_03_ep12622",
+  "v": 2.0
+ },
+ "exclusion_ledger": [],
+ "impulse_orientation": {
+  "camera_component_0_observed_effect": "runtime_no_component_0_effect",
+  "camera_component_1_observed_effect": "runtime_positive_component_1_step_in_visual_i_to_i_plus_1",
+  "evidence_hash": "d0261e6179d65727d9788fb7a37d28c2f950aee1f8022c617d9de604757375a0",
+  "evidence_path": "data/handoff_a/impulse_fixture_9440/qa_report.json",
+  "evidence_scope": "synthetic_contract_only",
+  "evidence_scope_note": "the underlying evidence is a real runtime pixel-level check; the v0.1 contract fixes evidence_scope to the literal 'synthetic_contract_only', so the literal is preserved rather than widening a frozen vocabulary",
+  "fixture_id": "runtime_scripted_impulse_9440",
+  "pixel_evidence_path": "data/handoff_a/impulse_fixture_9440/IMPULSE_EVIDENCE.txt",
+  "pixel_evidence_sha256": "0f4756efb3e57c59b6badc8618ed9427a4fb99ece02c3982b3003b38473de85a",
+  "status": "verified"
+ },
+ "layout_id": "layout_03",
+ "media": {
+  "fps": 20.0,
+  "frame_count": 5,
+  "height": 360,
+  "mode": "numbered_frames",
+  "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12622\\frames",
+  "sha256": "b2f58da02e4e05aa355f08bd19a54e96741165c31a2a9dd96461a3a55ffee14a",
+  "width": 640
+ },
+ "person_c_authority": {
+  "accepted_manifest_identity": {
+   "accepted": true,
+   "accepted_count": 66,
+   "excluded_count": 0,
+   "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+   "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+   "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+  },
+  "authority_schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1",
+  "authority_schema_version": "0.1",
+  "camera_pose_authority": {
+   "accepted_geometry_camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "camera_pose_recorded": true,
+   "canonical_pose_matches_accepted_geometry": true,
+   "geometry_version": "person-c-layout-config-v0.4",
+   "status": "PASS"
+  },
+  "condition_identity": {
+   "condition": "core",
+   "context_fraction": 0.25,
+   "hidden_frames": 4,
+   "hidden_frames_realized": 4,
+   "hidden_seconds": 0.2,
+   "noise_schedule_identity": {
+    "schedule_path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12622.jsonl",
+    "schedule_set_sha256": "79a81668362421fa91cb591d355b655e9b1a60aae088057de7bda977df663806",
+    "schedule_sha256": "4ac66282feb47eacbf6fe21c94591e376d8ea824682faa07d8e098410379b3f3",
+    "schedule_version": "person-c-c6a-noise-schedules-v0.1"
+   },
+   "planned_seed": 20442863,
+   "q_blocks_squared_per_second": 0.2,
+   "scene": "NORMAL",
+   "seed": 202608214218,
+   "speed_blocks_per_second": 2.0,
+   "target_variant": "magenta_sheep_occluded_oracle"
+  },
+  "coordinate_frame_binding": {
+   "coordinate_frame_hash": "b640ba429b7e0e1494b844385b3d5a1b3f5619ad100e9f3519f9365e294f9acc",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_03-v0.1",
+   "coordinate_frame_path": "data/person_b/c6a_c_intake/coordinate_frames/layout_03.json",
+   "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+   "person_b_cosigned": false,
+   "person_c_signed": true,
+   "projection_agreement_with_runtime_axis_pos": "exact",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    0.0,
+    4.0,
+    6.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  "environment_config_build_identity": {
+   "client_build": {
+    "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "runtime_identities": {
+     "fabric_api": "0.42.0+1.16",
+     "fabric_loader": "0.15.11",
+     "java": "17.0.19",
+     "minecraft": "1.16.5",
+     "yarn": "1.16.5+build.10"
+    }
+   },
+   "config_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\reset_result.json",
+   "config_sha256": "2d600e0a701218311b494639f8081ac990318f48481973f873bc4a151ee76d01",
+   "configuration": {
+    "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "accepted_geometry_version": "person-c-layout-config-v0.4",
+    "layout_definition_sha256": "4f0b503bb971f64b6397a1d8a94c513d6e410af34f012d2557a5f173eb26ef82",
+    "layout_version": "person-c-layout-config-v0.4",
+    "reset_build_version": "person-c-target-retention-v0.1"
+   },
+   "environment_lock_path": "docs/status/person_c_c1_runtime_ingestion_v0_1/final_environment_lock_receipt.json",
+   "environment_lock_sha256": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+   "episode_schema": {
+    "capture_manifest_schema": "person-c-c6a-capture-manifest-v0.2",
+    "version": "person-c-c6a-episode-inventory-v0.1"
+   },
+   "server_build": {
+    "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "repaired_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "runtime_identities": {
+     "fabric_api": "0.42.0+1.16",
+     "fabric_loader": "0.15.11",
+     "java": "17.0.19",
+     "minecraft": "1.16.5",
+     "yarn": "1.16.5+build.10"
+    },
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+   }
+  },
+  "frame_map_authority": {
+   "model_frame_key_count": 5,
+   "owner_role": "person_a",
+   "package_root": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+   "package_sha256_inventory_sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+   "per_trajectory_frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12622.jsonl",
+   "per_trajectory_frame_map_sha256": "b308f238e90196a30127d429ddfd83cec5808808d7195169d94ab6191886633d",
+   "person_a_commit": "77e43bd1665671b9e23d6d6ef927ee4944611342",
+   "person_c_agreement_with_person_a": "exact",
+   "person_c_independently_rederived": true
+  },
+  "identity": {
+   "collection_order": 21,
+   "control_type": "core_regime_a",
+   "episode_id": 12622,
+   "layout_id": "layout_03",
+   "planned_cell_id": "person-c-mvp-cell-23",
+   "set_id": "core",
+   "trajectory_id": "layout_03_ep12622"
+  },
+  "layout_meta_identity": {
+   "byte_identity_verified": true,
+   "note": "per-episode runtime echo; differs between scenes of the same layout, so it is not the per-layout geometry identity",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\layout_meta.json",
+   "scene": "NORMAL",
+   "sha256": "bd70b4eca63eb7ec4423107bcaee960749a3675e1845b6d33f91e6b1c9f48914"
+  },
+  "model_frame_key_relationship": {
+   "capture_key": [
+    "episode_id",
+    "trajectory_id",
+    "server_tick",
+    "render_frame_idx",
+    "action_idx",
+    "model_frame_idx"
+   ],
+   "model_facing_key": [
+    "trajectory_id",
+    "model_frame_idx"
+   ],
+   "relationship": "server_tick == render_frame_idx == action_idx == model_frame_idx",
+   "verified_against_person_a_frame_map": true,
+   "zero_based_dense": true
+  },
+  "oracle_eligibility": {
+   "person_b_adapter_code_when_ineligible": null,
+   "person_b_oracle_eligible": true,
+   "reason": "target-bearing capture"
+  },
+  "provenance": {
+   "acceptance_authority_path": "docs/status/person_c_c6a_completion_v0_1/c6a_completion_receipt.json",
+   "acceptance_authority_sha256": "5cc653f01db1363179253aeb8bdb0ad509f20e03b419f9945aa023e0ac7fbe46",
+   "authorization_commit": "28cac05a8c804372c71814fcf15c8f1a3b8fbe03",
+   "builder": "scripts/build_person_c_66_cell_capture_authority_v0_1.py",
+   "c7_5_provenance": {
+    "builder": {
+     "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+     "repaired_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+     "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+    },
+    "episode_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/episode_inventory.json",
+     "sha256": "9846b705b747aa19e3abab1d08d4cbaf37546f7cfb0b163ede7ce0143875a82a"
+    },
+    "output_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/output_inventory.json",
+     "sha256": "3a33e1188ff517b6008893bb59063b2a72a8226e24e0b8931e2e9e2046cb4ade"
+    },
+    "sha256_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/sha256_inventory.json",
+     "sha256": "724fca747565cc10071e91810072e1dbca3fd680b80492385d3d048589f8f4db"
+    },
+    "source_commit": "c836641c894c88e3add207ef2190a2db88726024"
+   },
+   "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+   "episode_bytes_copied_into_repository": false,
+   "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3"
+  },
+  "qa_status": {
+   "accepted": true,
+   "cardinality_counts": {
+    "action_row_count": 5,
+    "client_tick_count": 5,
+    "completed_record_ticks": 5,
+    "frame_count": 5,
+    "schedule_draw_count": 300,
+    "server_row_count": 5
+   },
+   "continuity_alignment_status": "PASS",
+   "duration_error": {
+    "planned_max_ticks": 300,
+    "realized_record_ticks": 5,
+    "record_tick_limit": 300
+   },
+   "exclusion_reason_codes": [],
+   "motion_noise_realization_status": "PASS",
+   "realized_condition_status": "PASS",
+   "status": "PASS",
+   "structural_status": "PASS",
+   "warning_reason_codes": []
+  },
+  "raw_action_identity": {
+   "normalized_action_encoding": "mineocclude.data.package_episode reference conversion",
+   "normalized_action_owner": "person_a",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12622\\raw_actions.jsonl",
+   "row_count": 5,
+   "sha256": "448f181800fc7cfa310678df9ed202f569e0ff09f3d1e49d2cbc1827f87c64cf"
+  },
+  "server_state_identity": {
+   "byte_identity_verified": true,
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\server_state.jsonl",
+   "row_count": 5,
+   "sha256": "06c4e4da1e05ef8572da0a40ed9572d04d8b9a11fe273ec7b4482433f622638a"
+  },
+  "source_media_identity": {
+   "canonical_derivative_height_pixels": 360,
+   "canonical_derivative_width_pixels": 640,
+   "fps": 20.0,
+   "frame_bytes_location": "retained on the Person C Windows runtime machine; only frame identities are published",
+   "frame_count": 5,
+   "frame_inventory_path": "data/autonomous/layout_03_ep12622/package_v0_1/frame_inventory.jsonl",
+   "frame_inventory_sha256": "b2f58da02e4e05aa355f08bd19a54e96741165c31a2a9dd96461a3a55ffee14a",
+   "mode": "numbered_frames",
+   "raw_framebuffer_height_pixels": 1046,
+   "raw_framebuffer_width_pixels": 1920
+  },
+  "source_sha256_inventory": {
+   "client_tick_log": {
+    "byte_size": 1015,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12622\\client_tick.jsonl",
+    "sha256": "16b03904735646d8cc3721cc0d0d90bf945915ec67a64c66e8d372077a55dd8e"
+   },
+   "finalization": {
+    "byte_size": 140,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\finalization.json",
+    "sha256": "2c3fb95ff52354627307f7d742df4c19e68b6cd1d9e61772e2bfd2773d4f5ebc"
+   },
+   "layout_meta": {
+    "byte_size": 468,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\layout_meta.json",
+    "sha256": "bd70b4eca63eb7ec4423107bcaee960749a3675e1845b6d33f91e6b1c9f48914"
+   },
+   "lifecycle": {
+    "byte_size": 525,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\lifecycle.jsonl",
+    "sha256": "dcd19643f42c5509f7d73e1a6a85f1c61752c87a74a4022c9574911bda504cd5"
+   },
+   "noise_schedule": {
+    "path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12622.jsonl",
+    "sha256": "4ac66282feb47eacbf6fe21c94591e376d8ea824682faa07d8e098410379b3f3"
+   },
+   "raw_actions": {
+    "byte_size": 1390,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12622\\raw_actions.jsonl",
+    "sha256": "448f181800fc7cfa310678df9ed202f569e0ff09f3d1e49d2cbc1827f87c64cf"
+   },
+   "reset_result": {
+    "byte_size": 332,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\reset_result.json",
+    "sha256": "2d600e0a701218311b494639f8081ac990318f48481973f873bc4a151ee76d01"
+   },
+   "server_state": {
+    "byte_size": 2302,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622\\server_state.jsonl",
+    "sha256": "06c4e4da1e05ef8572da0a40ed9572d04d8b9a11fe273ec7b4482433f622638a"
+   }
+  },
+  "successor_of": {
+   "additive_successor": true,
+   "person_c_c7_5_bundle_path": "docs/status/person_c_c7_mvp_handoff_v0_1/per_trajectory/ep12622.json",
+   "person_c_c7_5_bundle_sha256": "e20d431817c1f54e7dc1be665a7d864aec85330b3f3b148f79dd046214f73eee",
+   "rewrites_history": false
+  },
+  "target_count_identity": {
+   "expected": 1,
+   "observed": 1,
+   "required": true,
+   "target_present": true,
+   "valid": true
+  },
+  "visibility_channel_status": {
+   "c_to_e_request_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json",
+   "empirical_magenta_channel_present": false,
+   "empirical_magenta_channel_status": "absent_pending_person_e_frozen_detector",
+   "empirical_magenta_detector_version": null,
+   "empirical_magenta_owner_role": "person_e",
+   "geometric_channel_present": true,
+   "geometric_occluded_frame_count": 4,
+   "geometric_visibility_source": "server_state.geometric_visible",
+   "geometric_visibility_version": "person-c-layout-config-v0.4",
+   "geometric_visible_frame_count": 1,
+   "person_c_invented_empirical_values": false,
+   "visible_flag_final_available": false,
+   "visible_flag_final_blocked_by": "person_e_empirical_magenta_visibility_absent",
+   "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+  },
+  "wall_lane_shadow_geometry_authority": {
+   "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+   "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "accepted_geometry_version": "person-c-layout-config-v0.4",
+   "floor": {
+    "axis": "x",
+    "block": "minecraft:grass_block",
+    "bounds": {
+     "max_x": 11,
+     "max_z": 9,
+     "min_x": -11,
+     "min_z": -9,
+     "y": 3
+    },
+    "observed_position_count": 437
+   },
+   "lane": {
+    "axis": "X",
+    "axis_max": 9.0,
+    "axis_min": -9.0,
+    "feet_y": 4.0,
+    "ortho": 6.0,
+    "start_axis": -6.75,
+    "world_end_xyz": [
+     9.0,
+     4.0,
+     6.0
+    ],
+    "world_start_xyz": [
+     -9.0,
+     4.0,
+     6.0
+    ]
+   },
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      -7,
+      3,
+      4
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      -6.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      7,
+      3,
+      4
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      7.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      -9,
+      3,
+      8
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      -8.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      9,
+      3,
+      8
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      9.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "motion_sign": 1,
+   "scalar_axis": {
+    "origin_world_coordinate_blocks": 0.0,
+    "positive_world_direction": "+x",
+    "unit": "blocks",
+    "world_axis": "x"
+   },
+   "shadow": {
+    "camera_source": "observed_first_player",
+    "definition": "GeometryUtil.segmentHitsWall",
+    "integer_lane_samples": [
+     {
+      "axis_position": -9,
+      "occluded": false,
+      "target_world_xyz": [
+       -9.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -8,
+      "occluded": false,
+      "target_world_xyz": [
+       -8.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -7,
+      "occluded": false,
+      "target_world_xyz": [
+       -7.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -6,
+      "occluded": true,
+      "target_world_xyz": [
+       -6.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -5,
+      "occluded": true,
+      "target_world_xyz": [
+       -5.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -4,
+      "occluded": true,
+      "target_world_xyz": [
+       -4.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -3,
+      "occluded": true,
+      "target_world_xyz": [
+       -3.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -2,
+      "occluded": true,
+      "target_world_xyz": [
+       -2.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -1,
+      "occluded": true,
+      "target_world_xyz": [
+       -1.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 0,
+      "occluded": true,
+      "target_world_xyz": [
+       0.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 1,
+      "occluded": true,
+      "target_world_xyz": [
+       1.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 2,
+      "occluded": true,
+      "target_world_xyz": [
+       2.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 3,
+      "occluded": true,
+      "target_world_xyz": [
+       3.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 4,
+      "occluded": true,
+      "target_world_xyz": [
+       4.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 5,
+      "occluded": true,
+      "target_world_xyz": [
+       5.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 6,
+      "occluded": true,
+      "target_world_xyz": [
+       6.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 7,
+      "occluded": true,
+      "target_world_xyz": [
+       7.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 8,
+      "occluded": false,
+      "target_world_xyz": [
+       8.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 9,
+      "occluded": false,
+      "target_world_xyz": [
+       9.0,
+       4.0,
+       6.0
+      ]
+     }
+    ],
+    "target_centre_y": 4.5
+   },
+   "target_start": {
+    "axis_position": -6.75,
+    "source": "runtime receipt lane declaration and server spawn log",
+    "world_xyz": [
+     -6.75,
+     4.0,
+     6.0
+    ]
+   },
+   "wall": {
+    "axis": "x",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 4,
+     "max_y": 6,
+     "max_z": 2,
+     "min_x": -4,
+     "min_y": 4,
+     "min_z": 2
+    },
+    "observed_position_count": 69
+   }
+  }
+ },
+ "person_c_contract_version": "0.1",
+ "run_id": "person-c-c6a-post-c1-v0.1",
+ "schema_version": "1.0",
+ "scientific_use": "pending_cross_role_signoff",
+ "seed": 202608214218,
+ "streams": {
+  "client_tick_log": [
+   {
+    "action_idx": 0,
+    "client_tick": 0,
+    "episode_id": "12622",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 1,
+    "client_tick": 1,
+    "episode_id": "12622",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 2,
+    "client_tick": 2,
+    "episode_id": "12622",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 3,
+    "client_tick": 3,
+    "episode_id": "12622",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 4,
+    "client_tick": 4,
+    "episode_id": "12622",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12622"
+   }
+  ],
+  "frame_map": [
+   {
+    "action_idx": 0,
+    "episode_id": "12622",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "source_frame_role": "frames/000000.png",
+    "source_frame_sha256": "c22b4621a8e1106c1d46d9b7c34e4d8043c82a28365cf1ddb965775e7bc25740",
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12622",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "source_frame_role": "frames/000001.png",
+    "source_frame_sha256": "c22b4621a8e1106c1d46d9b7c34e4d8043c82a28365cf1ddb965775e7bc25740",
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12622",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "source_frame_role": "frames/000002.png",
+    "source_frame_sha256": "0004d6bddd4b9e367df8c60df7eccf4a6f7fc730d4a213b32c74b61ca5536896",
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12622",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "source_frame_role": "frames/000003.png",
+    "source_frame_sha256": "1204adc96deb2bc85f7d7674e9d84c69abe4657ade3817fc4e99d494a38a2635",
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12622",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "source_frame_role": "frames/000004.png",
+    "source_frame_sha256": "e7f61b0ea7f99bcd98e02b2ef992074d79ae096094fbc17c5f3c6fa14c0a73a3",
+    "trajectory_id": "layout_03_ep12622"
+   }
+  ],
+  "normalized_actions": [
+   {
+    "action_idx": 0,
+    "episode_id": "12622",
+    "model_frame_idx": 0,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12622",
+    "model_frame_idx": 1,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12622",
+    "model_frame_idx": 2,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12622",
+    "model_frame_idx": 3,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12622",
+    "model_frame_idx": 4,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12622"
+   }
+  ],
+  "raw_actions": [
+   {
+    "action_idx": 0,
+    "episode_id": "12622",
+    "model_frame_idx": 0,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12622",
+    "model_frame_idx": 1,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12622",
+    "model_frame_idx": 2,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12622",
+    "model_frame_idx": 3,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12622",
+    "model_frame_idx": 4,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12622"
+   }
+  ],
+  "seed_noise": [
+   {
+    "action_idx": 0,
+    "draw_idx": 0,
+    "dt_seconds": 0.05,
+    "episode_id": "12622",
+    "model_frame_idx": 0,
+    "noise_draw": 0.02073544310328993,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 0,
+    "seed": 202608214218,
+    "server_tick": 0,
+    "standard_normal_draw": 0.2073544310328993,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 1,
+    "draw_idx": 1,
+    "dt_seconds": 0.05,
+    "episode_id": "12622",
+    "model_frame_idx": 1,
+    "noise_draw": 0.2576995388420419,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 1,
+    "seed": 202608214218,
+    "server_tick": 1,
+    "standard_normal_draw": 2.5769953884204186,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 2,
+    "draw_idx": 2,
+    "dt_seconds": 0.05,
+    "episode_id": "12622",
+    "model_frame_idx": 2,
+    "noise_draw": -0.09012730806491276,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 2,
+    "seed": 202608214218,
+    "server_tick": 2,
+    "standard_normal_draw": -0.9012730806491275,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 3,
+    "draw_idx": 3,
+    "dt_seconds": 0.05,
+    "episode_id": "12622",
+    "model_frame_idx": 3,
+    "noise_draw": 0.12902278284976074,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 3,
+    "seed": 202608214218,
+    "server_tick": 3,
+    "standard_normal_draw": 1.2902278284976074,
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 4,
+    "draw_idx": 4,
+    "dt_seconds": 0.05,
+    "episode_id": "12622",
+    "model_frame_idx": 4,
+    "noise_draw": -0.08301095928079519,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 4,
+    "seed": 202608214218,
+    "server_tick": 4,
+    "standard_normal_draw": -0.8301095928079518,
+    "trajectory_id": "layout_03_ep12622"
+   }
+  ],
+  "server_state": [
+   {
+    "action_idx": 0,
+    "episode_id": "12622",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "state": {
+     "position_x_blocks": -6.62926455689671,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12622",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.4147088620657975,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.62926455689671
+    },
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12622",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "state": {
+     "position_x_blocks": -6.271565018054669,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12622",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 7.153990776840828,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.271565018054669
+    },
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12622",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "state": {
+     "position_x_blocks": -6.261692326119582,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12622",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.19745383870173328,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.261692326119582
+    },
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12622",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "state": {
+     "position_x_blocks": -6.032669543269821,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12622",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 4.580455656995213,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.032669543269821
+    },
+    "trajectory_id": "layout_03_ep12622"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12622",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "state": {
+     "position_x_blocks": -6.015680502550617,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12622",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.3397808143840919,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.015680502550617
+    },
+    "trajectory_id": "layout_03_ep12622"
+   }
+  ],
+  "visibility": [
+   {
+    "action_idx": 0,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12622",
+    "geometric_visible": true,
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12622",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 1,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12622",
+    "geometric_visible": false,
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12622",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 2,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12622",
+    "geometric_visible": false,
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12622",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 3,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12622",
+    "geometric_visible": false,
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12622",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 4,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12622",
+    "geometric_visible": false,
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12622",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   }
+  ]
+ },
+ "synthetic": false,
+ "temporal_alignment": {
+  "action_idx": 1,
+  "effect_server_tick": 2,
+  "evidence_hash": "e20d431817c1f54e7dc1be665a7d864aec85330b3f3b148f79dd046214f73eee",
+  "evidence_scope": "synthetic_contract_only",
+  "status": "verified",
+  "visual_after_model_frame_idx": 2,
+  "visual_before_model_frame_idx": 1
+ },
+ "trajectory_id": "layout_03_ep12622"
+}

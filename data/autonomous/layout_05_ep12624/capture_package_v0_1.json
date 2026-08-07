@@ -1,0 +1,5505 @@
+{
+ "artifacts": {
+  "client_tick_log": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_05_ep12624/package_v0_1/client_tick_log.jsonl",
+   "sha256": "6824e73ed0bb75397cd1c8346d417c6e2dc4ef71d0213e86ff6b92b59ce3f917"
+  },
+  "config": {
+   "format": "json",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\reset_result.json",
+   "sha256": "3d7f1e3aa3ee2d6900478d97f85e2e8a3811640a4690e629a214e5caf721321e"
+  },
+  "diagnostics": {
+   "format": "json",
+   "path": "docs/status/person_c_c7_mvp_handoff_v0_1/per_trajectory/ep12624.json",
+   "sha256": "6c3df357c8a3be446c25719df0099504b22227c87d61520f04ed1c0fa409861a"
+  },
+  "frame_map": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_05_ep12624/package_v0_1/frame_map.jsonl",
+   "sha256": "63ac918cf52395105c738b153b8c5065eb643b1e87aced67d47b916010b49883"
+  },
+  "layout_meta": {
+   "format": "json",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\layout_meta.json",
+   "sha256": "65a68a362950cbe54a1fae74f44247e5d69899a7e4eda8a821b1b7a146754c7a"
+  },
+  "normalized_actions": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_05_ep12624/package_v0_1/normalized_actions.jsonl",
+   "sha256": "6944c5b16369978ff80996e510e23396763fb45cf895e7a86c327a3854ae2351"
+  },
+  "raw_actions": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_05_ep12624/package_v0_1/raw_actions.jsonl",
+   "sha256": "4dea4dfbd8a18c249c9477daef26d90703adf47093edaacc787889f082d298b3"
+  },
+  "raw_client_actions": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12624\\raw_actions.jsonl",
+   "sha256": "3f73557ab2a93840c917120fe756fd090e4ad9f1a158413d1318964bf6e4da37"
+  },
+  "raw_client_tick_log": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12624\\client_tick.jsonl",
+   "sha256": "82af48b1659407211e7cd9c7e865e8ddf489ab4c2aa13a2ce8dcc7bc8ddcf962"
+  },
+  "raw_server_state": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\server_state.jsonl",
+   "sha256": "ed646729bad642aad953aa0995fc258faed46f61b84c48263dbe0f7c27581bac"
+  },
+  "seed_noise": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_05_ep12624/package_v0_1/seed_noise.jsonl",
+   "sha256": "b7cce9cbabdf2b8cc1544e4036cc822da6b92a54c90445b17ad382ca83d7911b"
+  },
+  "seed_noise_source": {
+   "format": "jsonl",
+   "path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12624.jsonl",
+   "sha256": "8a2474138de01d0ab37dff2cb20e28ed42cad544f5b6ea6b2cd3efb807d9f41d"
+  },
+  "server_state": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_05_ep12624/package_v0_1/server_state.jsonl",
+   "sha256": "fcd77ff7ffe5d926437ccd96136447fe978f98a68b1221c6a69c87e1ff58f636"
+  },
+  "visibility": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_05_ep12624/package_v0_1/visibility.jsonl",
+   "sha256": "690e4f58fb66b3244041a84b7ddce4c5675d5248867b51807bd6e778c58d4425"
+  }
+ },
+ "condition": "core",
+ "episode_id": "12624",
+ "episode_manifest": {
+  "code_sha": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+  "condition": "core",
+  "config_hash": "3d7f1e3aa3ee2d6900478d97f85e2e8a3811640a4690e629a214e5caf721321e",
+  "dt_seconds": 0.05,
+  "duration": 1.9500000000000002,
+  "environment_lock_hash": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+  "episode_id": "12624",
+  "layout_config_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "layout_id": "layout_05",
+  "lifecycle_version": "person-c-tick-lifecycle-v0.1",
+  "noise_schedule_hash": "b7cce9cbabdf2b8cc1544e4036cc822da6b92a54c90445b17ad382ca83d7911b",
+  "person_c_contract_version": "0.1",
+  "q": 0.2,
+  "regime": "regime_a",
+  "rng": {
+   "bit_generator": "PCG64",
+   "immutable_schedule": true,
+   "java_consumption": "stored_draws_in_draw_idx_order",
+   "numpy_version": "2.4.3",
+   "producer": "numpy.random.Generator"
+  },
+  "run_id": "person-c-c6a-post-c1-v0.1",
+  "schema_version": "1.0",
+  "seed": 202608230056,
+  "status": "accepted",
+  "tick_rate_hz": 20.0,
+  "trajectory_id": "layout_05_ep12624",
+  "v": 2.0
+ },
+ "exclusion_ledger": [],
+ "impulse_orientation": {
+  "camera_component_0_observed_effect": "runtime_no_component_0_effect",
+  "camera_component_1_observed_effect": "runtime_positive_component_1_step_in_visual_i_to_i_plus_1",
+  "evidence_hash": "d0261e6179d65727d9788fb7a37d28c2f950aee1f8022c617d9de604757375a0",
+  "evidence_path": "data/handoff_a/impulse_fixture_9440/qa_report.json",
+  "evidence_scope": "synthetic_contract_only",
+  "evidence_scope_note": "the underlying evidence is a real runtime pixel-level check; the v0.1 contract fixes evidence_scope to the literal 'synthetic_contract_only', so the literal is preserved rather than widening a frozen vocabulary",
+  "fixture_id": "runtime_scripted_impulse_9440",
+  "pixel_evidence_path": "data/handoff_a/impulse_fixture_9440/IMPULSE_EVIDENCE.txt",
+  "pixel_evidence_sha256": "0f4756efb3e57c59b6badc8618ed9427a4fb99ece02c3982b3003b38473de85a",
+  "status": "verified"
+ },
+ "layout_id": "layout_05",
+ "media": {
+  "fps": 20.0,
+  "frame_count": 39,
+  "height": 360,
+  "mode": "numbered_frames",
+  "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12624\\frames",
+  "sha256": "f59a9528daf0cdcc0cf0a3eaafcad82605be2eaeabfefad5abc545ae4363057b",
+  "width": 640
+ },
+ "person_c_authority": {
+  "accepted_manifest_identity": {
+   "accepted": true,
+   "accepted_count": 66,
+   "excluded_count": 0,
+   "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+   "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+   "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+  },
+  "authority_schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1",
+  "authority_schema_version": "0.1",
+  "camera_pose_authority": {
+   "accepted_geometry_camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -4.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -4.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "camera_pose_recorded": true,
+   "canonical_pose_matches_accepted_geometry": true,
+   "geometry_version": "person-c-layout-config-v0.4",
+   "status": "PASS"
+  },
+  "condition_identity": {
+   "condition": "core",
+   "context_fraction": 1.0,
+   "hidden_frames": 16,
+   "hidden_frames_realized": 16,
+   "hidden_seconds": 0.8,
+   "noise_schedule_identity": {
+    "schedule_path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12624.jsonl",
+    "schedule_set_sha256": "79a81668362421fa91cb591d355b655e9b1a60aae088057de7bda977df663806",
+    "schedule_sha256": "8a2474138de01d0ab37dff2cb20e28ed42cad544f5b6ea6b2cd3efb807d9f41d",
+    "schedule_version": "person-c-c6a-noise-schedules-v0.1"
+   },
+   "planned_seed": 20577486,
+   "q_blocks_squared_per_second": 0.2,
+   "scene": "NORMAL",
+   "seed": 202608230056,
+   "speed_blocks_per_second": 2.0,
+   "target_variant": "magenta_sheep_occluded_oracle"
+  },
+  "coordinate_frame_binding": {
+   "coordinate_frame_hash": "f6f9be4aef99a6e773a7e1cdb1a995e738a4bd867b14f36e3744bfcbd50d5679",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_05-v0.1",
+   "coordinate_frame_path": "data/person_b/c6a_c_intake/coordinate_frames/layout_05.json",
+   "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+   "person_b_cosigned": false,
+   "person_c_signed": true,
+   "projection_agreement_with_runtime_axis_pos": "exact",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    0.0,
+    4.0,
+    5.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  "environment_config_build_identity": {
+   "client_build": {
+    "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "runtime_identities": {
+     "fabric_api": "0.42.0+1.16",
+     "fabric_loader": "0.15.11",
+     "java": "17.0.19",
+     "minecraft": "1.16.5",
+     "yarn": "1.16.5+build.10"
+    }
+   },
+   "config_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\reset_result.json",
+   "config_sha256": "3d7f1e3aa3ee2d6900478d97f85e2e8a3811640a4690e629a214e5caf721321e",
+   "configuration": {
+    "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "accepted_geometry_version": "person-c-layout-config-v0.4",
+    "layout_definition_sha256": "f917417538373e796e4e7c42afc6b4b40ca74f7b598c06e61f061086e07e205a",
+    "layout_version": "person-c-layout-config-v0.4",
+    "reset_build_version": "person-c-target-retention-v0.1"
+   },
+   "environment_lock_path": "docs/status/person_c_c1_runtime_ingestion_v0_1/final_environment_lock_receipt.json",
+   "environment_lock_sha256": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+   "episode_schema": {
+    "capture_manifest_schema": "person-c-c6a-capture-manifest-v0.2",
+    "version": "person-c-c6a-episode-inventory-v0.1"
+   },
+   "server_build": {
+    "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "repaired_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "runtime_identities": {
+     "fabric_api": "0.42.0+1.16",
+     "fabric_loader": "0.15.11",
+     "java": "17.0.19",
+     "minecraft": "1.16.5",
+     "yarn": "1.16.5+build.10"
+    },
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+   }
+  },
+  "frame_map_authority": {
+   "model_frame_key_count": 39,
+   "owner_role": "person_a",
+   "package_root": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+   "package_sha256_inventory_sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+   "per_trajectory_frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12624.jsonl",
+   "per_trajectory_frame_map_sha256": "34c2e7d58f366cf86ad589d8bc964d5b2c038af3e91dc0f6e0728ecc4f36cc91",
+   "person_a_commit": "77e43bd1665671b9e23d6d6ef927ee4944611342",
+   "person_c_agreement_with_person_a": "exact",
+   "person_c_independently_rederived": true
+  },
+  "identity": {
+   "collection_order": 23,
+   "control_type": "core_regime_a",
+   "episode_id": 12624,
+   "layout_id": "layout_05",
+   "planned_cell_id": "person-c-mvp-cell-40",
+   "set_id": "core",
+   "trajectory_id": "layout_05_ep12624"
+  },
+  "layout_meta_identity": {
+   "byte_identity_verified": true,
+   "note": "per-episode runtime echo; differs between scenes of the same layout, so it is not the per-layout geometry identity",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\layout_meta.json",
+   "scene": "NORMAL",
+   "sha256": "65a68a362950cbe54a1fae74f44247e5d69899a7e4eda8a821b1b7a146754c7a"
+  },
+  "model_frame_key_relationship": {
+   "capture_key": [
+    "episode_id",
+    "trajectory_id",
+    "server_tick",
+    "render_frame_idx",
+    "action_idx",
+    "model_frame_idx"
+   ],
+   "model_facing_key": [
+    "trajectory_id",
+    "model_frame_idx"
+   ],
+   "relationship": "server_tick == render_frame_idx == action_idx == model_frame_idx",
+   "verified_against_person_a_frame_map": true,
+   "zero_based_dense": true
+  },
+  "oracle_eligibility": {
+   "person_b_adapter_code_when_ineligible": null,
+   "person_b_oracle_eligible": true,
+   "reason": "target-bearing capture"
+  },
+  "provenance": {
+   "acceptance_authority_path": "docs/status/person_c_c6a_completion_v0_1/c6a_completion_receipt.json",
+   "acceptance_authority_sha256": "5cc653f01db1363179253aeb8bdb0ad509f20e03b419f9945aa023e0ac7fbe46",
+   "authorization_commit": "28cac05a8c804372c71814fcf15c8f1a3b8fbe03",
+   "builder": "scripts/build_person_c_66_cell_capture_authority_v0_1.py",
+   "c7_5_provenance": {
+    "builder": {
+     "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+     "repaired_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+     "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+    },
+    "episode_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/episode_inventory.json",
+     "sha256": "9846b705b747aa19e3abab1d08d4cbaf37546f7cfb0b163ede7ce0143875a82a"
+    },
+    "output_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/output_inventory.json",
+     "sha256": "3a33e1188ff517b6008893bb59063b2a72a8226e24e0b8931e2e9e2046cb4ade"
+    },
+    "sha256_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/sha256_inventory.json",
+     "sha256": "724fca747565cc10071e91810072e1dbca3fd680b80492385d3d048589f8f4db"
+    },
+    "source_commit": "c836641c894c88e3add207ef2190a2db88726024"
+   },
+   "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+   "episode_bytes_copied_into_repository": false,
+   "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3"
+  },
+  "qa_status": {
+   "accepted": true,
+   "cardinality_counts": {
+    "action_row_count": 39,
+    "client_tick_count": 39,
+    "completed_record_ticks": 39,
+    "frame_count": 39,
+    "schedule_draw_count": 300,
+    "server_row_count": 39
+   },
+   "continuity_alignment_status": "PASS",
+   "duration_error": {
+    "planned_max_ticks": 300,
+    "realized_record_ticks": 39,
+    "record_tick_limit": 300
+   },
+   "exclusion_reason_codes": [],
+   "motion_noise_realization_status": "PASS",
+   "realized_condition_status": "PASS",
+   "status": "PASS",
+   "structural_status": "PASS",
+   "warning_reason_codes": []
+  },
+  "raw_action_identity": {
+   "normalized_action_encoding": "mineocclude.data.package_episode reference conversion",
+   "normalized_action_owner": "person_a",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12624\\raw_actions.jsonl",
+   "row_count": 39,
+   "sha256": "3f73557ab2a93840c917120fe756fd090e4ad9f1a158413d1318964bf6e4da37"
+  },
+  "server_state_identity": {
+   "byte_identity_verified": true,
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\server_state.jsonl",
+   "row_count": 39,
+   "sha256": "ed646729bad642aad953aa0995fc258faed46f61b84c48263dbe0f7c27581bac"
+  },
+  "source_media_identity": {
+   "canonical_derivative_height_pixels": 360,
+   "canonical_derivative_width_pixels": 640,
+   "fps": 20.0,
+   "frame_bytes_location": "retained on the Person C Windows runtime machine; only frame identities are published",
+   "frame_count": 39,
+   "frame_inventory_path": "data/autonomous/layout_05_ep12624/package_v0_1/frame_inventory.jsonl",
+   "frame_inventory_sha256": "f59a9528daf0cdcc0cf0a3eaafcad82605be2eaeabfefad5abc545ae4363057b",
+   "mode": "numbered_frames",
+   "raw_framebuffer_height_pixels": 1046,
+   "raw_framebuffer_width_pixels": 1920
+  },
+  "source_sha256_inventory": {
+   "client_tick_log": {
+    "byte_size": 7975,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12624\\client_tick.jsonl",
+    "sha256": "82af48b1659407211e7cd9c7e865e8ddf489ab4c2aa13a2ce8dcc7bc8ddcf962"
+   },
+   "finalization": {
+    "byte_size": 142,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\finalization.json",
+    "sha256": "84dbb5c731db23b0fd28b0fb05af3034985031ddb0368672473e9c8e311764d3"
+   },
+   "layout_meta": {
+    "byte_size": 468,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\layout_meta.json",
+    "sha256": "65a68a362950cbe54a1fae74f44247e5d69899a7e4eda8a821b1b7a146754c7a"
+   },
+   "lifecycle": {
+    "byte_size": 525,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\lifecycle.jsonl",
+    "sha256": "a700794e7326265a2d6a7699cd602732a7172e4023c3efbaabd8e6df9be73f1e"
+   },
+   "noise_schedule": {
+    "path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12624.jsonl",
+    "sha256": "8a2474138de01d0ab37dff2cb20e28ed42cad544f5b6ea6b2cd3efb807d9f41d"
+   },
+   "raw_actions": {
+    "byte_size": 10929,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12624\\raw_actions.jsonl",
+    "sha256": "3f73557ab2a93840c917120fe756fd090e4ad9f1a158413d1318964bf6e4da37"
+   },
+   "reset_result": {
+    "byte_size": 332,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\reset_result.json",
+    "sha256": "3d7f1e3aa3ee2d6900478d97f85e2e8a3811640a4690e629a214e5caf721321e"
+   },
+   "server_state": {
+    "byte_size": 18047,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624\\server_state.jsonl",
+    "sha256": "ed646729bad642aad953aa0995fc258faed46f61b84c48263dbe0f7c27581bac"
+   }
+  },
+  "successor_of": {
+   "additive_successor": true,
+   "person_c_c7_5_bundle_path": "docs/status/person_c_c7_mvp_handoff_v0_1/per_trajectory/ep12624.json",
+   "person_c_c7_5_bundle_sha256": "6c3df357c8a3be446c25719df0099504b22227c87d61520f04ed1c0fa409861a",
+   "rewrites_history": false
+  },
+  "target_count_identity": {
+   "expected": 1,
+   "observed": 1,
+   "required": true,
+   "target_present": true,
+   "valid": true
+  },
+  "visibility_channel_status": {
+   "c_to_e_request_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json",
+   "empirical_magenta_channel_present": false,
+   "empirical_magenta_channel_status": "absent_pending_person_e_frozen_detector",
+   "empirical_magenta_detector_version": null,
+   "empirical_magenta_owner_role": "person_e",
+   "geometric_channel_present": true,
+   "geometric_occluded_frame_count": 16,
+   "geometric_visibility_source": "server_state.geometric_visible",
+   "geometric_visibility_version": "person-c-layout-config-v0.4",
+   "geometric_visible_frame_count": 23,
+   "person_c_invented_empirical_values": false,
+   "visible_flag_final_available": false,
+   "visible_flag_final_blocked_by": "person_e_empirical_magenta_visibility_absent",
+   "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+  },
+  "wall_lane_shadow_geometry_authority": {
+   "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+   "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "accepted_geometry_version": "person-c-layout-config-v0.4",
+   "floor": {
+    "axis": "x",
+    "block": "minecraft:grass_block",
+    "bounds": {
+     "max_x": 9,
+     "max_z": 8,
+     "min_x": -9,
+     "min_z": -8,
+     "y": 3
+    },
+    "observed_position_count": 323
+   },
+   "lane": {
+    "axis": "X",
+    "axis_max": 7.0,
+    "axis_min": -7.0,
+    "feet_y": 4.0,
+    "ortho": 5.0,
+    "start_axis": -5.25,
+    "world_end_xyz": [
+     7.0,
+     4.0,
+     5.0
+    ],
+    "world_start_xyz": [
+     -7.0,
+     4.0,
+     5.0
+    ]
+   },
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      -5,
+      3,
+      3
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      -4.5,
+      4.0,
+      3.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      5,
+      3,
+      3
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      5.5,
+      4.0,
+      3.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      -7,
+      3,
+      7
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      -6.5,
+      4.0,
+      7.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      7,
+      3,
+      7
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      7.5,
+      4.0,
+      7.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "motion_sign": 1,
+   "scalar_axis": {
+    "origin_world_coordinate_blocks": 0.0,
+    "positive_world_direction": "+x",
+    "unit": "blocks",
+    "world_axis": "x"
+   },
+   "shadow": {
+    "camera_source": "observed_first_player",
+    "definition": "GeometryUtil.segmentHitsWall",
+    "integer_lane_samples": [
+     {
+      "axis_position": -7,
+      "occluded": false,
+      "target_world_xyz": [
+       -7.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": -6,
+      "occluded": false,
+      "target_world_xyz": [
+       -6.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": -5,
+      "occluded": false,
+      "target_world_xyz": [
+       -5.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": -4,
+      "occluded": false,
+      "target_world_xyz": [
+       -4.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": -3,
+      "occluded": true,
+      "target_world_xyz": [
+       -3.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": -2,
+      "occluded": true,
+      "target_world_xyz": [
+       -2.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": -1,
+      "occluded": true,
+      "target_world_xyz": [
+       -1.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 0,
+      "occluded": true,
+      "target_world_xyz": [
+       0.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 1,
+      "occluded": true,
+      "target_world_xyz": [
+       1.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 2,
+      "occluded": true,
+      "target_world_xyz": [
+       2.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 3,
+      "occluded": true,
+      "target_world_xyz": [
+       3.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 4,
+      "occluded": true,
+      "target_world_xyz": [
+       4.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 5,
+      "occluded": false,
+      "target_world_xyz": [
+       5.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 6,
+      "occluded": false,
+      "target_world_xyz": [
+       6.0,
+       4.0,
+       5.0
+      ]
+     },
+     {
+      "axis_position": 7,
+      "occluded": false,
+      "target_world_xyz": [
+       7.0,
+       4.0,
+       5.0
+      ]
+     }
+    ],
+    "target_centre_y": 4.5
+   },
+   "target_start": {
+    "axis_position": -5.25,
+    "source": "runtime receipt lane declaration and server spawn log",
+    "world_xyz": [
+     -5.25,
+     4.0,
+     5.0
+    ]
+   },
+   "wall": {
+    "axis": "x",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 2,
+     "max_y": 6,
+     "max_z": 2,
+     "min_x": -2,
+     "min_y": 4,
+     "min_z": 2
+    },
+    "observed_position_count": 57
+   }
+  }
+ },
+ "person_c_contract_version": "0.1",
+ "run_id": "person-c-c6a-post-c1-v0.1",
+ "schema_version": "1.0",
+ "scientific_use": "pending_cross_role_signoff",
+ "seed": 202608230056,
+ "streams": {
+  "client_tick_log": [
+   {
+    "action_idx": 0,
+    "client_tick": 0,
+    "episode_id": "12624",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 1,
+    "client_tick": 1,
+    "episode_id": "12624",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 2,
+    "client_tick": 2,
+    "episode_id": "12624",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 3,
+    "client_tick": 3,
+    "episode_id": "12624",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 4,
+    "client_tick": 4,
+    "episode_id": "12624",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 5,
+    "client_tick": 5,
+    "episode_id": "12624",
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 6,
+    "client_tick": 6,
+    "episode_id": "12624",
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 7,
+    "client_tick": 7,
+    "episode_id": "12624",
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 8,
+    "client_tick": 8,
+    "episode_id": "12624",
+    "model_frame_idx": 8,
+    "render_frame_idx": 8,
+    "server_tick": 8,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 9,
+    "client_tick": 9,
+    "episode_id": "12624",
+    "model_frame_idx": 9,
+    "render_frame_idx": 9,
+    "server_tick": 9,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 10,
+    "client_tick": 10,
+    "episode_id": "12624",
+    "model_frame_idx": 10,
+    "render_frame_idx": 10,
+    "server_tick": 10,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 11,
+    "client_tick": 11,
+    "episode_id": "12624",
+    "model_frame_idx": 11,
+    "render_frame_idx": 11,
+    "server_tick": 11,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 12,
+    "client_tick": 12,
+    "episode_id": "12624",
+    "model_frame_idx": 12,
+    "render_frame_idx": 12,
+    "server_tick": 12,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 13,
+    "client_tick": 13,
+    "episode_id": "12624",
+    "model_frame_idx": 13,
+    "render_frame_idx": 13,
+    "server_tick": 13,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 14,
+    "client_tick": 14,
+    "episode_id": "12624",
+    "model_frame_idx": 14,
+    "render_frame_idx": 14,
+    "server_tick": 14,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 15,
+    "client_tick": 15,
+    "episode_id": "12624",
+    "model_frame_idx": 15,
+    "render_frame_idx": 15,
+    "server_tick": 15,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 16,
+    "client_tick": 16,
+    "episode_id": "12624",
+    "model_frame_idx": 16,
+    "render_frame_idx": 16,
+    "server_tick": 16,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 17,
+    "client_tick": 17,
+    "episode_id": "12624",
+    "model_frame_idx": 17,
+    "render_frame_idx": 17,
+    "server_tick": 17,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 18,
+    "client_tick": 18,
+    "episode_id": "12624",
+    "model_frame_idx": 18,
+    "render_frame_idx": 18,
+    "server_tick": 18,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 19,
+    "client_tick": 19,
+    "episode_id": "12624",
+    "model_frame_idx": 19,
+    "render_frame_idx": 19,
+    "server_tick": 19,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 20,
+    "client_tick": 20,
+    "episode_id": "12624",
+    "model_frame_idx": 20,
+    "render_frame_idx": 20,
+    "server_tick": 20,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 21,
+    "client_tick": 21,
+    "episode_id": "12624",
+    "model_frame_idx": 21,
+    "render_frame_idx": 21,
+    "server_tick": 21,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 22,
+    "client_tick": 22,
+    "episode_id": "12624",
+    "model_frame_idx": 22,
+    "render_frame_idx": 22,
+    "server_tick": 22,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 23,
+    "client_tick": 23,
+    "episode_id": "12624",
+    "model_frame_idx": 23,
+    "render_frame_idx": 23,
+    "server_tick": 23,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 24,
+    "client_tick": 24,
+    "episode_id": "12624",
+    "model_frame_idx": 24,
+    "render_frame_idx": 24,
+    "server_tick": 24,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 25,
+    "client_tick": 25,
+    "episode_id": "12624",
+    "model_frame_idx": 25,
+    "render_frame_idx": 25,
+    "server_tick": 25,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 26,
+    "client_tick": 26,
+    "episode_id": "12624",
+    "model_frame_idx": 26,
+    "render_frame_idx": 26,
+    "server_tick": 26,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 27,
+    "client_tick": 27,
+    "episode_id": "12624",
+    "model_frame_idx": 27,
+    "render_frame_idx": 27,
+    "server_tick": 27,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 28,
+    "client_tick": 28,
+    "episode_id": "12624",
+    "model_frame_idx": 28,
+    "render_frame_idx": 28,
+    "server_tick": 28,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 29,
+    "client_tick": 29,
+    "episode_id": "12624",
+    "model_frame_idx": 29,
+    "render_frame_idx": 29,
+    "server_tick": 29,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 30,
+    "client_tick": 30,
+    "episode_id": "12624",
+    "model_frame_idx": 30,
+    "render_frame_idx": 30,
+    "server_tick": 30,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 31,
+    "client_tick": 31,
+    "episode_id": "12624",
+    "model_frame_idx": 31,
+    "render_frame_idx": 31,
+    "server_tick": 31,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 32,
+    "client_tick": 32,
+    "episode_id": "12624",
+    "model_frame_idx": 32,
+    "render_frame_idx": 32,
+    "server_tick": 32,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 33,
+    "client_tick": 33,
+    "episode_id": "12624",
+    "model_frame_idx": 33,
+    "render_frame_idx": 33,
+    "server_tick": 33,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 34,
+    "client_tick": 34,
+    "episode_id": "12624",
+    "model_frame_idx": 34,
+    "render_frame_idx": 34,
+    "server_tick": 34,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 35,
+    "client_tick": 35,
+    "episode_id": "12624",
+    "model_frame_idx": 35,
+    "render_frame_idx": 35,
+    "server_tick": 35,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 36,
+    "client_tick": 36,
+    "episode_id": "12624",
+    "model_frame_idx": 36,
+    "render_frame_idx": 36,
+    "server_tick": 36,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 37,
+    "client_tick": 37,
+    "episode_id": "12624",
+    "model_frame_idx": 37,
+    "render_frame_idx": 37,
+    "server_tick": 37,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 38,
+    "client_tick": 38,
+    "episode_id": "12624",
+    "model_frame_idx": 38,
+    "render_frame_idx": 38,
+    "server_tick": 38,
+    "trajectory_id": "layout_05_ep12624"
+   }
+  ],
+  "frame_map": [
+   {
+    "action_idx": 0,
+    "episode_id": "12624",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "source_frame_role": "frames/000000.png",
+    "source_frame_sha256": "190545cf833773059059a48d77402f44ae403c435afa5127c2fc64de27768a93",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12624",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "source_frame_role": "frames/000001.png",
+    "source_frame_sha256": "190545cf833773059059a48d77402f44ae403c435afa5127c2fc64de27768a93",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12624",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "source_frame_role": "frames/000002.png",
+    "source_frame_sha256": "05c09dc57a9b0a3f65947e6b8daaa7ee616b2557af6a3dd21179b5cfbe7669cd",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12624",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "source_frame_role": "frames/000003.png",
+    "source_frame_sha256": "a580a3d919bbe5244a59d63cea55e14c27ec94317dc7a6da070c45e0fcef8d3b",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12624",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "source_frame_role": "frames/000004.png",
+    "source_frame_sha256": "d7027310f09d24804bd6fe80c5ba6c7e42bdffda807e1a4dfaebc268584cd27f",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12624",
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "source_frame_role": "frames/000005.png",
+    "source_frame_sha256": "edf14e8de87e745f2ec6a6e1d15a50d88c3e6965d32eb8b55a3ea125f791f46c",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12624",
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "source_frame_role": "frames/000006.png",
+    "source_frame_sha256": "3097a17dcd72211665ce5ce3e8e37ad34884aebec69efe0cf85f31a61c6ce33e",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12624",
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "source_frame_role": "frames/000007.png",
+    "source_frame_sha256": "e16119a59e194cbe053baf5c723f17e49a1fb644e3856650c22478fbd17d5d58",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 8,
+    "episode_id": "12624",
+    "model_frame_idx": 8,
+    "render_frame_idx": 8,
+    "server_tick": 8,
+    "source_frame_role": "frames/000008.png",
+    "source_frame_sha256": "98b587257daef10310a465c337fe8cef009822d54c0489286be3f8fe51e7ac73",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 9,
+    "episode_id": "12624",
+    "model_frame_idx": 9,
+    "render_frame_idx": 9,
+    "server_tick": 9,
+    "source_frame_role": "frames/000009.png",
+    "source_frame_sha256": "6459b9814e42fa1f55ac35a35eb9a137b016b2e12177125c10c14e27e518a0dd",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 10,
+    "episode_id": "12624",
+    "model_frame_idx": 10,
+    "render_frame_idx": 10,
+    "server_tick": 10,
+    "source_frame_role": "frames/000010.png",
+    "source_frame_sha256": "c811537b7ddaf49676a07fbad22cc7596e6287cf5c406c855c0eb704d4b5f22d",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 11,
+    "episode_id": "12624",
+    "model_frame_idx": 11,
+    "render_frame_idx": 11,
+    "server_tick": 11,
+    "source_frame_role": "frames/000011.png",
+    "source_frame_sha256": "c6ddeb114b7806cea1d2f821345551d4c14c194d7b04e599c996458d979f7124",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 12,
+    "episode_id": "12624",
+    "model_frame_idx": 12,
+    "render_frame_idx": 12,
+    "server_tick": 12,
+    "source_frame_role": "frames/000012.png",
+    "source_frame_sha256": "935198d926c93704193cf651d4f2cc0d3fecd4a1448971c2d4d1ba107f191e10",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 13,
+    "episode_id": "12624",
+    "model_frame_idx": 13,
+    "render_frame_idx": 13,
+    "server_tick": 13,
+    "source_frame_role": "frames/000013.png",
+    "source_frame_sha256": "6bd03f1a3143faf78a841f4554bbacfbd84f52f8c5fd9d6217919890a910832b",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 14,
+    "episode_id": "12624",
+    "model_frame_idx": 14,
+    "render_frame_idx": 14,
+    "server_tick": 14,
+    "source_frame_role": "frames/000014.png",
+    "source_frame_sha256": "980a7a03d5ccf2e9004726822def11815f0d9142ae378fb2ddc1568a16bb8832",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 15,
+    "episode_id": "12624",
+    "model_frame_idx": 15,
+    "render_frame_idx": 15,
+    "server_tick": 15,
+    "source_frame_role": "frames/000015.png",
+    "source_frame_sha256": "9d2e09537a29a579189194fc0c83161c7418ab78dd0508c4f5eb02a233a179d5",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 16,
+    "episode_id": "12624",
+    "model_frame_idx": 16,
+    "render_frame_idx": 16,
+    "server_tick": 16,
+    "source_frame_role": "frames/000016.png",
+    "source_frame_sha256": "41940a335da4699d7f454f2502de986bb549467461eb2a9828a906e0f8a96afa",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 17,
+    "episode_id": "12624",
+    "model_frame_idx": 17,
+    "render_frame_idx": 17,
+    "server_tick": 17,
+    "source_frame_role": "frames/000017.png",
+    "source_frame_sha256": "ccf828ae901895b0698d2f223761ce59ba6c995676522ff353d762f6bb25bb34",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 18,
+    "episode_id": "12624",
+    "model_frame_idx": 18,
+    "render_frame_idx": 18,
+    "server_tick": 18,
+    "source_frame_role": "frames/000018.png",
+    "source_frame_sha256": "9348f50fc7b4aad1bab2496d476875bc9bc13f4c690d4ca5445b8b67ae34ddbd",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 19,
+    "episode_id": "12624",
+    "model_frame_idx": 19,
+    "render_frame_idx": 19,
+    "server_tick": 19,
+    "source_frame_role": "frames/000019.png",
+    "source_frame_sha256": "7ed3cb7645142a1f17813d3cc593c1c06ee47cecaaa50c0ea4e362f708b7f8d2",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 20,
+    "episode_id": "12624",
+    "model_frame_idx": 20,
+    "render_frame_idx": 20,
+    "server_tick": 20,
+    "source_frame_role": "frames/000020.png",
+    "source_frame_sha256": "bbf91cb25a62aac7be8b19499ba53b27111fdc177c8e5b813b2143fe70ddba03",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 21,
+    "episode_id": "12624",
+    "model_frame_idx": 21,
+    "render_frame_idx": 21,
+    "server_tick": 21,
+    "source_frame_role": "frames/000021.png",
+    "source_frame_sha256": "7901df341935738ed9567ba7594b2b8c0daebe80138de024c9aae5031f4d7989",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 22,
+    "episode_id": "12624",
+    "model_frame_idx": 22,
+    "render_frame_idx": 22,
+    "server_tick": 22,
+    "source_frame_role": "frames/000022.png",
+    "source_frame_sha256": "934546992487ad485b447e3692c750cfb0393a8ede953f93067c61ce88931329",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 23,
+    "episode_id": "12624",
+    "model_frame_idx": 23,
+    "render_frame_idx": 23,
+    "server_tick": 23,
+    "source_frame_role": "frames/000023.png",
+    "source_frame_sha256": "514eef5e99562b030b998f7884dc6a32ecef54eadb1e9af1aca3fe2aef1dd46f",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 24,
+    "episode_id": "12624",
+    "model_frame_idx": 24,
+    "render_frame_idx": 24,
+    "server_tick": 24,
+    "source_frame_role": "frames/000024.png",
+    "source_frame_sha256": "252a031b094db5180e78ce4572c9012cadc67f09c3f86e4390882c51916395fb",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 25,
+    "episode_id": "12624",
+    "model_frame_idx": 25,
+    "render_frame_idx": 25,
+    "server_tick": 25,
+    "source_frame_role": "frames/000025.png",
+    "source_frame_sha256": "d98781e25656450908b08a124b19d6810159c2fb6817528e4222d6ebecb598ff",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 26,
+    "episode_id": "12624",
+    "model_frame_idx": 26,
+    "render_frame_idx": 26,
+    "server_tick": 26,
+    "source_frame_role": "frames/000026.png",
+    "source_frame_sha256": "6ec2a94a6148a6699a7d696cb30825b15209929eacfe76fba0fc6b7582aaf6e5",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 27,
+    "episode_id": "12624",
+    "model_frame_idx": 27,
+    "render_frame_idx": 27,
+    "server_tick": 27,
+    "source_frame_role": "frames/000027.png",
+    "source_frame_sha256": "3ecc653af0e8b11346d57d780e0acff859991c6d7b552068f27e69ed023fa697",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 28,
+    "episode_id": "12624",
+    "model_frame_idx": 28,
+    "render_frame_idx": 28,
+    "server_tick": 28,
+    "source_frame_role": "frames/000028.png",
+    "source_frame_sha256": "55cc521be249fffabb41c142601689599cc32cf21070b3bbbb32e7b9dbc1a8f4",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 29,
+    "episode_id": "12624",
+    "model_frame_idx": 29,
+    "render_frame_idx": 29,
+    "server_tick": 29,
+    "source_frame_role": "frames/000029.png",
+    "source_frame_sha256": "d902fea945087cc80a3140deae6f5ef38f9a26d1d6f4955a0aad479b08bfe041",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 30,
+    "episode_id": "12624",
+    "model_frame_idx": 30,
+    "render_frame_idx": 30,
+    "server_tick": 30,
+    "source_frame_role": "frames/000030.png",
+    "source_frame_sha256": "720bff464e9296ac7b860d3f1b630d73e45265a0d8099e256c3c4523f4d84163",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 31,
+    "episode_id": "12624",
+    "model_frame_idx": 31,
+    "render_frame_idx": 31,
+    "server_tick": 31,
+    "source_frame_role": "frames/000031.png",
+    "source_frame_sha256": "5d4164d9b3aeae07f567d1d45c37279ddd49904bb66484eea451e2b432f47d2d",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 32,
+    "episode_id": "12624",
+    "model_frame_idx": 32,
+    "render_frame_idx": 32,
+    "server_tick": 32,
+    "source_frame_role": "frames/000032.png",
+    "source_frame_sha256": "ebc7ef90b90a043b420998520c53118cb4268c7a9e955079080e4feb420a532a",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 33,
+    "episode_id": "12624",
+    "model_frame_idx": 33,
+    "render_frame_idx": 33,
+    "server_tick": 33,
+    "source_frame_role": "frames/000033.png",
+    "source_frame_sha256": "fd346ae0dab4a8a08bca989693b420d5fbbd2bafabd10e970531c78c0c854b87",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 34,
+    "episode_id": "12624",
+    "model_frame_idx": 34,
+    "render_frame_idx": 34,
+    "server_tick": 34,
+    "source_frame_role": "frames/000034.png",
+    "source_frame_sha256": "c0fa759c36cc671a6e076435ad48078fd04af6c538ccea24f2366a473c89347b",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 35,
+    "episode_id": "12624",
+    "model_frame_idx": 35,
+    "render_frame_idx": 35,
+    "server_tick": 35,
+    "source_frame_role": "frames/000035.png",
+    "source_frame_sha256": "d0679392ff7556cacb3c74497be9e5519665e5d7751330fab514ad1929e577df",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 36,
+    "episode_id": "12624",
+    "model_frame_idx": 36,
+    "render_frame_idx": 36,
+    "server_tick": 36,
+    "source_frame_role": "frames/000036.png",
+    "source_frame_sha256": "79d9335d9c627fd7699a9c8d5ce9b2f21381fe7f8e803d9abd9f5a0c1f2f5d3e",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 37,
+    "episode_id": "12624",
+    "model_frame_idx": 37,
+    "render_frame_idx": 37,
+    "server_tick": 37,
+    "source_frame_role": "frames/000037.png",
+    "source_frame_sha256": "d54178d69f956e933719215a327f7def6fc42f0111a830763d60d56e9ae4dcd3",
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 38,
+    "episode_id": "12624",
+    "model_frame_idx": 38,
+    "render_frame_idx": 38,
+    "server_tick": 38,
+    "source_frame_role": "frames/000038.png",
+    "source_frame_sha256": "0799472cdc204b608238d95f320226aec525fe4be2b3ad8225b2e64dd076771c",
+    "trajectory_id": "layout_05_ep12624"
+   }
+  ],
+  "normalized_actions": [
+   {
+    "action_idx": 0,
+    "episode_id": "12624",
+    "model_frame_idx": 0,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12624",
+    "model_frame_idx": 1,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12624",
+    "model_frame_idx": 2,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12624",
+    "model_frame_idx": 3,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12624",
+    "model_frame_idx": 4,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12624",
+    "model_frame_idx": 5,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12624",
+    "model_frame_idx": 6,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12624",
+    "model_frame_idx": 7,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 8,
+    "episode_id": "12624",
+    "model_frame_idx": 8,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 8,
+    "server_tick": 8,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 9,
+    "episode_id": "12624",
+    "model_frame_idx": 9,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 9,
+    "server_tick": 9,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 10,
+    "episode_id": "12624",
+    "model_frame_idx": 10,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 10,
+    "server_tick": 10,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 11,
+    "episode_id": "12624",
+    "model_frame_idx": 11,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 11,
+    "server_tick": 11,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 12,
+    "episode_id": "12624",
+    "model_frame_idx": 12,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 12,
+    "server_tick": 12,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 13,
+    "episode_id": "12624",
+    "model_frame_idx": 13,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 13,
+    "server_tick": 13,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 14,
+    "episode_id": "12624",
+    "model_frame_idx": 14,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 14,
+    "server_tick": 14,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 15,
+    "episode_id": "12624",
+    "model_frame_idx": 15,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 15,
+    "server_tick": 15,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 16,
+    "episode_id": "12624",
+    "model_frame_idx": 16,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 16,
+    "server_tick": 16,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 17,
+    "episode_id": "12624",
+    "model_frame_idx": 17,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 17,
+    "server_tick": 17,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 18,
+    "episode_id": "12624",
+    "model_frame_idx": 18,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 18,
+    "server_tick": 18,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 19,
+    "episode_id": "12624",
+    "model_frame_idx": 19,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 19,
+    "server_tick": 19,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 20,
+    "episode_id": "12624",
+    "model_frame_idx": 20,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 20,
+    "server_tick": 20,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 21,
+    "episode_id": "12624",
+    "model_frame_idx": 21,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 21,
+    "server_tick": 21,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 22,
+    "episode_id": "12624",
+    "model_frame_idx": 22,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 22,
+    "server_tick": 22,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 23,
+    "episode_id": "12624",
+    "model_frame_idx": 23,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 23,
+    "server_tick": 23,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 24,
+    "episode_id": "12624",
+    "model_frame_idx": 24,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 24,
+    "server_tick": 24,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 25,
+    "episode_id": "12624",
+    "model_frame_idx": 25,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 25,
+    "server_tick": 25,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 26,
+    "episode_id": "12624",
+    "model_frame_idx": 26,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 26,
+    "server_tick": 26,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 27,
+    "episode_id": "12624",
+    "model_frame_idx": 27,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 27,
+    "server_tick": 27,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 28,
+    "episode_id": "12624",
+    "model_frame_idx": 28,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 28,
+    "server_tick": 28,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 29,
+    "episode_id": "12624",
+    "model_frame_idx": 29,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 29,
+    "server_tick": 29,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 30,
+    "episode_id": "12624",
+    "model_frame_idx": 30,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 30,
+    "server_tick": 30,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 31,
+    "episode_id": "12624",
+    "model_frame_idx": 31,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 31,
+    "server_tick": 31,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 32,
+    "episode_id": "12624",
+    "model_frame_idx": 32,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 32,
+    "server_tick": 32,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 33,
+    "episode_id": "12624",
+    "model_frame_idx": 33,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 33,
+    "server_tick": 33,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 34,
+    "episode_id": "12624",
+    "model_frame_idx": 34,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 34,
+    "server_tick": 34,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 35,
+    "episode_id": "12624",
+    "model_frame_idx": 35,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 35,
+    "server_tick": 35,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 36,
+    "episode_id": "12624",
+    "model_frame_idx": 36,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 36,
+    "server_tick": 36,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 37,
+    "episode_id": "12624",
+    "model_frame_idx": 37,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 37,
+    "server_tick": 37,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 38,
+    "episode_id": "12624",
+    "model_frame_idx": 38,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 38,
+    "server_tick": 38,
+    "trajectory_id": "layout_05_ep12624"
+   }
+  ],
+  "raw_actions": [
+   {
+    "action_idx": 0,
+    "episode_id": "12624",
+    "model_frame_idx": 0,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12624",
+    "model_frame_idx": 1,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12624",
+    "model_frame_idx": 2,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12624",
+    "model_frame_idx": 3,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12624",
+    "model_frame_idx": 4,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12624",
+    "model_frame_idx": 5,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12624",
+    "model_frame_idx": 6,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12624",
+    "model_frame_idx": 7,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 8,
+    "episode_id": "12624",
+    "model_frame_idx": 8,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 8,
+    "server_tick": 8,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 9,
+    "episode_id": "12624",
+    "model_frame_idx": 9,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 9,
+    "server_tick": 9,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 10,
+    "episode_id": "12624",
+    "model_frame_idx": 10,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 10,
+    "server_tick": 10,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 11,
+    "episode_id": "12624",
+    "model_frame_idx": 11,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 11,
+    "server_tick": 11,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 12,
+    "episode_id": "12624",
+    "model_frame_idx": 12,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 12,
+    "server_tick": 12,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 13,
+    "episode_id": "12624",
+    "model_frame_idx": 13,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 13,
+    "server_tick": 13,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 14,
+    "episode_id": "12624",
+    "model_frame_idx": 14,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 14,
+    "server_tick": 14,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 15,
+    "episode_id": "12624",
+    "model_frame_idx": 15,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 15,
+    "server_tick": 15,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 16,
+    "episode_id": "12624",
+    "model_frame_idx": 16,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 16,
+    "server_tick": 16,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 17,
+    "episode_id": "12624",
+    "model_frame_idx": 17,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 17,
+    "server_tick": 17,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 18,
+    "episode_id": "12624",
+    "model_frame_idx": 18,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 18,
+    "server_tick": 18,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 19,
+    "episode_id": "12624",
+    "model_frame_idx": 19,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 19,
+    "server_tick": 19,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 20,
+    "episode_id": "12624",
+    "model_frame_idx": 20,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 20,
+    "server_tick": 20,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 21,
+    "episode_id": "12624",
+    "model_frame_idx": 21,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 21,
+    "server_tick": 21,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 22,
+    "episode_id": "12624",
+    "model_frame_idx": 22,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 22,
+    "server_tick": 22,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 23,
+    "episode_id": "12624",
+    "model_frame_idx": 23,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 23,
+    "server_tick": 23,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 24,
+    "episode_id": "12624",
+    "model_frame_idx": 24,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 24,
+    "server_tick": 24,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 25,
+    "episode_id": "12624",
+    "model_frame_idx": 25,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 25,
+    "server_tick": 25,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 26,
+    "episode_id": "12624",
+    "model_frame_idx": 26,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 26,
+    "server_tick": 26,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 27,
+    "episode_id": "12624",
+    "model_frame_idx": 27,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 27,
+    "server_tick": 27,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 28,
+    "episode_id": "12624",
+    "model_frame_idx": 28,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 28,
+    "server_tick": 28,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 29,
+    "episode_id": "12624",
+    "model_frame_idx": 29,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 29,
+    "server_tick": 29,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 30,
+    "episode_id": "12624",
+    "model_frame_idx": 30,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 30,
+    "server_tick": 30,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 31,
+    "episode_id": "12624",
+    "model_frame_idx": 31,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 31,
+    "server_tick": 31,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 32,
+    "episode_id": "12624",
+    "model_frame_idx": 32,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 32,
+    "server_tick": 32,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 33,
+    "episode_id": "12624",
+    "model_frame_idx": 33,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 33,
+    "server_tick": 33,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 34,
+    "episode_id": "12624",
+    "model_frame_idx": 34,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 34,
+    "server_tick": 34,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 35,
+    "episode_id": "12624",
+    "model_frame_idx": 35,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 35,
+    "server_tick": 35,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 36,
+    "episode_id": "12624",
+    "model_frame_idx": 36,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 36,
+    "server_tick": 36,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 37,
+    "episode_id": "12624",
+    "model_frame_idx": 37,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 37,
+    "server_tick": 37,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 38,
+    "episode_id": "12624",
+    "model_frame_idx": 38,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 38,
+    "server_tick": 38,
+    "trajectory_id": "layout_05_ep12624"
+   }
+  ],
+  "seed_noise": [
+   {
+    "action_idx": 0,
+    "draw_idx": 0,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 0,
+    "noise_draw": 0.20625288569296552,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 0,
+    "seed": 202608230056,
+    "server_tick": 0,
+    "standard_normal_draw": 2.062528856929655,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 1,
+    "draw_idx": 1,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 1,
+    "noise_draw": 0.05977313093563972,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 1,
+    "seed": 202608230056,
+    "server_tick": 1,
+    "standard_normal_draw": 0.5977313093563972,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 2,
+    "draw_idx": 2,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 2,
+    "noise_draw": -0.09072699033050761,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 2,
+    "seed": 202608230056,
+    "server_tick": 2,
+    "standard_normal_draw": -0.9072699033050761,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 3,
+    "draw_idx": 3,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 3,
+    "noise_draw": -0.08191427601384078,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 3,
+    "seed": 202608230056,
+    "server_tick": 3,
+    "standard_normal_draw": -0.8191427601384078,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 4,
+    "draw_idx": 4,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 4,
+    "noise_draw": 0.09231340525663466,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 4,
+    "seed": 202608230056,
+    "server_tick": 4,
+    "standard_normal_draw": 0.9231340525663465,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 5,
+    "draw_idx": 5,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 5,
+    "noise_draw": -0.08815234825855672,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 5,
+    "seed": 202608230056,
+    "server_tick": 5,
+    "standard_normal_draw": -0.8815234825855671,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 6,
+    "draw_idx": 6,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 6,
+    "noise_draw": -0.08706644090315585,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 6,
+    "seed": 202608230056,
+    "server_tick": 6,
+    "standard_normal_draw": -0.8706644090315584,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 7,
+    "draw_idx": 7,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 7,
+    "noise_draw": 0.09592942908062821,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 7,
+    "seed": 202608230056,
+    "server_tick": 7,
+    "standard_normal_draw": 0.959294290806282,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 8,
+    "draw_idx": 8,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 8,
+    "noise_draw": -0.07233976068730064,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 8,
+    "seed": 202608230056,
+    "server_tick": 8,
+    "standard_normal_draw": -0.7233976068730064,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 9,
+    "draw_idx": 9,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 9,
+    "noise_draw": 0.2415695350501833,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 9,
+    "seed": 202608230056,
+    "server_tick": 9,
+    "standard_normal_draw": 2.415695350501833,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 10,
+    "draw_idx": 10,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 10,
+    "noise_draw": -0.02732596960609456,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 10,
+    "seed": 202608230056,
+    "server_tick": 10,
+    "standard_normal_draw": -0.2732596960609456,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 11,
+    "draw_idx": 11,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 11,
+    "noise_draw": 0.024337281580844368,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 11,
+    "seed": 202608230056,
+    "server_tick": 11,
+    "standard_normal_draw": 0.24337281580844367,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 12,
+    "draw_idx": 12,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 12,
+    "noise_draw": -0.015408065488022232,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 12,
+    "seed": 202608230056,
+    "server_tick": 12,
+    "standard_normal_draw": -0.15408065488022232,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 13,
+    "draw_idx": 13,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 13,
+    "noise_draw": -0.07629709883955686,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 13,
+    "seed": 202608230056,
+    "server_tick": 13,
+    "standard_normal_draw": -0.7629709883955685,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 14,
+    "draw_idx": 14,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 14,
+    "noise_draw": 0.012393731655264433,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 14,
+    "seed": 202608230056,
+    "server_tick": 14,
+    "standard_normal_draw": 0.12393731655264432,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 15,
+    "draw_idx": 15,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 15,
+    "noise_draw": 0.18033781024018167,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 15,
+    "seed": 202608230056,
+    "server_tick": 15,
+    "standard_normal_draw": 1.8033781024018165,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 16,
+    "draw_idx": 16,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 16,
+    "noise_draw": -0.05448295821172035,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 16,
+    "seed": 202608230056,
+    "server_tick": 16,
+    "standard_normal_draw": -0.5448295821172034,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 17,
+    "draw_idx": 17,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 17,
+    "noise_draw": -0.08643130381998211,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 17,
+    "seed": 202608230056,
+    "server_tick": 17,
+    "standard_normal_draw": -0.8643130381998211,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 18,
+    "draw_idx": 18,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 18,
+    "noise_draw": -0.08747225663844331,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 18,
+    "seed": 202608230056,
+    "server_tick": 18,
+    "standard_normal_draw": -0.874722566384433,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 19,
+    "draw_idx": 19,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 19,
+    "noise_draw": -0.1585945087398931,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 19,
+    "seed": 202608230056,
+    "server_tick": 19,
+    "standard_normal_draw": -1.5859450873989307,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 20,
+    "draw_idx": 20,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 20,
+    "noise_draw": -0.05291690299272039,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 20,
+    "seed": 202608230056,
+    "server_tick": 20,
+    "standard_normal_draw": -0.5291690299272038,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 21,
+    "draw_idx": 21,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 21,
+    "noise_draw": -0.13760996641301035,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 21,
+    "seed": 202608230056,
+    "server_tick": 21,
+    "standard_normal_draw": -1.3760996641301035,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 22,
+    "draw_idx": 22,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 22,
+    "noise_draw": -0.06271352602501798,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 22,
+    "seed": 202608230056,
+    "server_tick": 22,
+    "standard_normal_draw": -0.6271352602501797,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 23,
+    "draw_idx": 23,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 23,
+    "noise_draw": 0.03975746695030953,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 23,
+    "seed": 202608230056,
+    "server_tick": 23,
+    "standard_normal_draw": 0.3975746695030953,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 24,
+    "draw_idx": 24,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 24,
+    "noise_draw": -0.06438573511029014,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 24,
+    "seed": 202608230056,
+    "server_tick": 24,
+    "standard_normal_draw": -0.6438573511029013,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 25,
+    "draw_idx": 25,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 25,
+    "noise_draw": -0.10432942540363965,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 25,
+    "seed": 202608230056,
+    "server_tick": 25,
+    "standard_normal_draw": -1.0432942540363965,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 26,
+    "draw_idx": 26,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 26,
+    "noise_draw": 0.01239301590209196,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 26,
+    "seed": 202608230056,
+    "server_tick": 26,
+    "standard_normal_draw": 0.1239301590209196,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 27,
+    "draw_idx": 27,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 27,
+    "noise_draw": -0.1833268088455669,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 27,
+    "seed": 202608230056,
+    "server_tick": 27,
+    "standard_normal_draw": -1.833268088455669,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 28,
+    "draw_idx": 28,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 28,
+    "noise_draw": -0.09846157199428446,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 28,
+    "seed": 202608230056,
+    "server_tick": 28,
+    "standard_normal_draw": -0.9846157199428446,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 29,
+    "draw_idx": 29,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 29,
+    "noise_draw": 0.05867469801275993,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 29,
+    "seed": 202608230056,
+    "server_tick": 29,
+    "standard_normal_draw": 0.5867469801275993,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 30,
+    "draw_idx": 30,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 30,
+    "noise_draw": -0.0796827770232229,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 30,
+    "seed": 202608230056,
+    "server_tick": 30,
+    "standard_normal_draw": -0.7968277702322291,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 31,
+    "draw_idx": 31,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 31,
+    "noise_draw": -0.11850191376233186,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 31,
+    "seed": 202608230056,
+    "server_tick": 31,
+    "standard_normal_draw": -1.1850191376233186,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 32,
+    "draw_idx": 32,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 32,
+    "noise_draw": 0.02301690650846916,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 32,
+    "seed": 202608230056,
+    "server_tick": 32,
+    "standard_normal_draw": 0.23016906508469157,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 33,
+    "draw_idx": 33,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 33,
+    "noise_draw": -0.06410150151162372,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 33,
+    "seed": 202608230056,
+    "server_tick": 33,
+    "standard_normal_draw": -0.6410150151162372,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 34,
+    "draw_idx": 34,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 34,
+    "noise_draw": 0.09288825287111047,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 34,
+    "seed": 202608230056,
+    "server_tick": 34,
+    "standard_normal_draw": 0.9288825287111045,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 35,
+    "draw_idx": 35,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 35,
+    "noise_draw": 0.016316485924568,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 35,
+    "seed": 202608230056,
+    "server_tick": 35,
+    "standard_normal_draw": 0.16316485924568,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 36,
+    "draw_idx": 36,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 36,
+    "noise_draw": 0.0053396248273926035,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 36,
+    "seed": 202608230056,
+    "server_tick": 36,
+    "standard_normal_draw": 0.05339624827392603,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 37,
+    "draw_idx": 37,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 37,
+    "noise_draw": -0.13771051785249874,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 37,
+    "seed": 202608230056,
+    "server_tick": 37,
+    "standard_normal_draw": -1.3771051785249875,
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 38,
+    "draw_idx": 38,
+    "dt_seconds": 0.05,
+    "episode_id": "12624",
+    "model_frame_idx": 38,
+    "noise_draw": 0.13423838585063286,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 38,
+    "seed": 202608230056,
+    "server_tick": 38,
+    "standard_normal_draw": 1.3423838585063286,
+    "trajectory_id": "layout_05_ep12624"
+   }
+  ],
+  "server_state": [
+   {
+    "action_idx": 0,
+    "episode_id": "12624",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "state": {
+     "position_x_blocks": -4.943747114307035,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 6.125057713859299,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.943747114307035
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12624",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "state": {
+     "position_x_blocks": -4.7839739833713955,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 3.195462618712792,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.7839739833713955
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12624",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "state": {
+     "position_x_blocks": -4.774700973701903,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.18546019338984365,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.774700973701903
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12624",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "state": {
+     "position_x_blocks": -4.756615249715744,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.36171447972318305,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.756615249715744
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12624",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "state": {
+     "position_x_blocks": -4.56430184445911,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 3.8462681051326797,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.56430184445911
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12624",
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "state": {
+     "position_x_blocks": -4.552454192717668,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.23695303482885066,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.552454192717668
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12624",
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "state": {
+     "position_x_blocks": -4.539520633620824,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.2586711819368759,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.539520633620824
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12624",
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "state": {
+     "position_x_blocks": -4.343591204540196,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 3.91858858161255,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.343591204540196
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 8,
+    "episode_id": "12624",
+    "model_frame_idx": 8,
+    "render_frame_idx": 8,
+    "server_tick": 8,
+    "state": {
+     "position_x_blocks": -4.315930965227498,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.5532047862539713,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -4.315930965227498
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 9,
+    "episode_id": "12624",
+    "model_frame_idx": 9,
+    "render_frame_idx": 9,
+    "server_tick": 9,
+    "state": {
+     "position_x_blocks": -3.9743614301773147,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 6.831390701003661,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.9743614301773147
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 10,
+    "episode_id": "12624",
+    "model_frame_idx": 10,
+    "render_frame_idx": 10,
+    "server_tick": 10,
+    "state": {
+     "position_x_blocks": -3.901687399783409,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 1.4534806078781148,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.901687399783409
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 11,
+    "episode_id": "12624",
+    "model_frame_idx": 11,
+    "render_frame_idx": 11,
+    "server_tick": 11,
+    "state": {
+     "position_x_blocks": -3.7773501182025644,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.486745631616891,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.7773501182025644
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 12,
+    "episode_id": "12624",
+    "model_frame_idx": 12,
+    "render_frame_idx": 12,
+    "server_tick": 12,
+    "state": {
+     "position_x_blocks": -3.6927581836905867,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 1.6918386902395532,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.6927581836905867
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 13,
+    "episode_id": "12624",
+    "model_frame_idx": 13,
+    "render_frame_idx": 13,
+    "server_tick": 13,
+    "state": {
+     "position_x_blocks": -3.6690552825301435,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.47405802320886536,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.6690552825301435
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 14,
+    "episode_id": "12624",
+    "model_frame_idx": 14,
+    "render_frame_idx": 14,
+    "server_tick": 14,
+    "state": {
+     "position_x_blocks": -3.556661550874879,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.247874633105287,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.556661550874879
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 15,
+    "episode_id": "12624",
+    "model_frame_idx": 15,
+    "render_frame_idx": 15,
+    "server_tick": 15,
+    "state": {
+     "position_x_blocks": -3.2763237406346972,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 5.606756204803638,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.2763237406346972
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 16,
+    "episode_id": "12624",
+    "model_frame_idx": 16,
+    "render_frame_idx": 16,
+    "server_tick": 16,
+    "state": {
+     "position_x_blocks": -3.2308066988464175,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.9103408357655951,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.2308066988464175
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 17,
+    "episode_id": "12624",
+    "model_frame_idx": 17,
+    "render_frame_idx": 17,
+    "server_tick": 17,
+    "state": {
+     "position_x_blocks": -3.2172380026663996,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.2713739236003576,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.2172380026663996
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 18,
+    "episode_id": "12624",
+    "model_frame_idx": 18,
+    "render_frame_idx": 18,
+    "server_tick": 18,
+    "state": {
+     "position_x_blocks": -3.204710259304843,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.2505548672311342,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.204710259304843
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 19,
+    "episode_id": "12624",
+    "model_frame_idx": 19,
+    "render_frame_idx": 19,
+    "server_tick": 19,
+    "state": {
+     "position_x_blocks": -3.263304768044736,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -1.1718901747978627,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.263304768044736
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 20,
+    "episode_id": "12624",
+    "model_frame_idx": 20,
+    "render_frame_idx": 20,
+    "server_tick": 20,
+    "state": {
+     "position_x_blocks": -3.2162216710374563,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.941661940145595,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.2162216710374563
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 21,
+    "episode_id": "12624",
+    "model_frame_idx": 21,
+    "render_frame_idx": 21,
+    "server_tick": 21,
+    "state": {
+     "position_x_blocks": -3.2538316374504666,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -0.7521993282602057,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.2538316374504666
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 22,
+    "episode_id": "12624",
+    "model_frame_idx": 22,
+    "render_frame_idx": 22,
+    "server_tick": 22,
+    "state": {
+     "position_x_blocks": -3.2165451634754842,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.7457294794996461,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.2165451634754842
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 23,
+    "episode_id": "12624",
+    "model_frame_idx": 23,
+    "render_frame_idx": 23,
+    "server_tick": 23,
+    "state": {
+     "position_x_blocks": -3.076787696525175,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.795149339006189,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.076787696525175
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 24,
+    "episode_id": "12624",
+    "model_frame_idx": 24,
+    "render_frame_idx": 24,
+    "server_tick": 24,
+    "state": {
+     "position_x_blocks": -3.041173431635465,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.7122852977941996,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.041173431635465
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 25,
+    "episode_id": "12624",
+    "model_frame_idx": 25,
+    "render_frame_idx": 25,
+    "server_tick": 25,
+    "state": {
+     "position_x_blocks": -3.0455028570391045,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -0.0865885080727935,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.0455028570391045
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 26,
+    "episode_id": "12624",
+    "model_frame_idx": 26,
+    "render_frame_idx": 26,
+    "server_tick": 26,
+    "state": {
+     "position_x_blocks": -2.9331098411370125,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.247860318041841,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.9331098411370125
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 27,
+    "episode_id": "12624",
+    "model_frame_idx": 27,
+    "render_frame_idx": 27,
+    "server_tick": 27,
+    "state": {
+     "position_x_blocks": -3.0164366499825794,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -1.6665361769113396,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.0164366499825794
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 28,
+    "episode_id": "12624",
+    "model_frame_idx": 28,
+    "render_frame_idx": 28,
+    "server_tick": 28,
+    "state": {
+     "position_x_blocks": -3.0148982219768636,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.030768560114315946,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -3.0148982219768636
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 29,
+    "episode_id": "12624",
+    "model_frame_idx": 29,
+    "render_frame_idx": 29,
+    "server_tick": 29,
+    "state": {
+     "position_x_blocks": -2.8562235239641036,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 3.1734939602552004,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.8562235239641036
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 30,
+    "episode_id": "12624",
+    "model_frame_idx": 30,
+    "render_frame_idx": 30,
+    "server_tick": 30,
+    "state": {
+     "position_x_blocks": -2.835906300987326,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.4063444595355481,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.835906300987326
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 31,
+    "episode_id": "12624",
+    "model_frame_idx": 31,
+    "render_frame_idx": 31,
+    "server_tick": 31,
+    "state": {
+     "position_x_blocks": -2.854408214749658,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -0.3700382752466336,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.854408214749658
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 32,
+    "episode_id": "12624",
+    "model_frame_idx": 32,
+    "render_frame_idx": 32,
+    "server_tick": 32,
+    "state": {
+     "position_x_blocks": -2.7313913082411885,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.4603381301693883,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.7313913082411885
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 33,
+    "episode_id": "12624",
+    "model_frame_idx": 33,
+    "render_frame_idx": 33,
+    "server_tick": 33,
+    "state": {
+     "position_x_blocks": -2.695492809752812,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.7179699697675268,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.695492809752812
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 34,
+    "episode_id": "12624",
+    "model_frame_idx": 34,
+    "render_frame_idx": 34,
+    "server_tick": 34,
+    "state": {
+     "position_x_blocks": -2.5026045568817015,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 3.8577650574222133,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.5026045568817015
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 35,
+    "episode_id": "12624",
+    "model_frame_idx": 35,
+    "render_frame_idx": 35,
+    "server_tick": 35,
+    "state": {
+     "position_x_blocks": -2.3862880709571335,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.32632971849136,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.3862880709571335
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 36,
+    "episode_id": "12624",
+    "model_frame_idx": 36,
+    "render_frame_idx": 36,
+    "server_tick": 36,
+    "state": {
+     "position_x_blocks": -2.2809484461297407,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.1067924965478557,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.2809484461297407
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 37,
+    "episode_id": "12624",
+    "model_frame_idx": 37,
+    "render_frame_idx": 37,
+    "server_tick": 37,
+    "state": {
+     "position_x_blocks": -2.3186589639822395,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -0.7542103570499759,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.3186589639822395
+    },
+    "trajectory_id": "layout_05_ep12624"
+   },
+   {
+    "action_idx": 38,
+    "episode_id": "12624",
+    "model_frame_idx": 38,
+    "render_frame_idx": 38,
+    "server_tick": 38,
+    "state": {
+     "position_x_blocks": -2.0844205781316063,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 5.0,
+     "target_entity_id": "magenta_sheep_12624",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 4.684767717012663,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -2.0844205781316063
+    },
+    "trajectory_id": "layout_05_ep12624"
+   }
+  ],
+  "visibility": [
+   {
+    "action_idx": 0,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 1,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 2,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 3,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 4,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 5,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 6,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 7,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 8,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 8,
+    "render_frame_idx": 8,
+    "server_tick": 8,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 9,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 9,
+    "render_frame_idx": 9,
+    "server_tick": 9,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 10,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 10,
+    "render_frame_idx": 10,
+    "server_tick": 10,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 11,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 11,
+    "render_frame_idx": 11,
+    "server_tick": 11,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 12,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 12,
+    "render_frame_idx": 12,
+    "server_tick": 12,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 13,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 13,
+    "render_frame_idx": 13,
+    "server_tick": 13,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 14,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 14,
+    "render_frame_idx": 14,
+    "server_tick": 14,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 15,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 15,
+    "render_frame_idx": 15,
+    "server_tick": 15,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 16,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 16,
+    "render_frame_idx": 16,
+    "server_tick": 16,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 17,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 17,
+    "render_frame_idx": 17,
+    "server_tick": 17,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 18,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 18,
+    "render_frame_idx": 18,
+    "server_tick": 18,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 19,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 19,
+    "render_frame_idx": 19,
+    "server_tick": 19,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 20,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 20,
+    "render_frame_idx": 20,
+    "server_tick": 20,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 21,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 21,
+    "render_frame_idx": 21,
+    "server_tick": 21,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 22,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": true,
+    "model_frame_idx": 22,
+    "render_frame_idx": 22,
+    "server_tick": 22,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 23,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 23,
+    "render_frame_idx": 23,
+    "server_tick": 23,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 24,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 24,
+    "render_frame_idx": 24,
+    "server_tick": 24,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 25,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 25,
+    "render_frame_idx": 25,
+    "server_tick": 25,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 26,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 26,
+    "render_frame_idx": 26,
+    "server_tick": 26,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 27,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 27,
+    "render_frame_idx": 27,
+    "server_tick": 27,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 28,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 28,
+    "render_frame_idx": 28,
+    "server_tick": 28,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 29,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 29,
+    "render_frame_idx": 29,
+    "server_tick": 29,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 30,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 30,
+    "render_frame_idx": 30,
+    "server_tick": 30,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 31,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 31,
+    "render_frame_idx": 31,
+    "server_tick": 31,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 32,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 32,
+    "render_frame_idx": 32,
+    "server_tick": 32,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 33,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 33,
+    "render_frame_idx": 33,
+    "server_tick": 33,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 34,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 34,
+    "render_frame_idx": 34,
+    "server_tick": 34,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 35,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 35,
+    "render_frame_idx": 35,
+    "server_tick": 35,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 36,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 36,
+    "render_frame_idx": 36,
+    "server_tick": 36,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 37,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 37,
+    "render_frame_idx": 37,
+    "server_tick": 37,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 38,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12624",
+    "geometric_visible": false,
+    "model_frame_idx": 38,
+    "render_frame_idx": 38,
+    "server_tick": 38,
+    "trajectory_id": "layout_05_ep12624",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   }
+  ]
+ },
+ "synthetic": false,
+ "temporal_alignment": {
+  "action_idx": 1,
+  "effect_server_tick": 2,
+  "evidence_hash": "6c3df357c8a3be446c25719df0099504b22227c87d61520f04ed1c0fa409861a",
+  "evidence_scope": "synthetic_contract_only",
+  "status": "verified",
+  "visual_after_model_frame_idx": 2,
+  "visual_before_model_frame_idx": 1
+ },
+ "trajectory_id": "layout_05_ep12624"
+}

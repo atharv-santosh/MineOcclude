@@ -1,0 +1,199 @@
+{
+ "PERSON_C_COORDINATE_FRAME_SIGNED": true,
+ "accepted_geometry_identity_independently_verified": true,
+ "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+ "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+ "accepted_geometry_version": "person-c-layout-config-v0.4",
+ "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+ "cosign_instructions": {
+  "action": "set adapter_signoff.person_b = true in each layout frame on the Person B branch",
+  "consumer_role": "person_b",
+  "coordinate_frame_hash_scope": [
+   "coordinate_frame_schema_version",
+   "coordinate_frame_id",
+   "wall_parallel_origin_world_xyz",
+   "wall_parallel_positive_unit_vector_world_xyz",
+   "source_layout_manifest_hash"
+  ],
+  "cosign_preserves_coordinate_frame_hash": true,
+  "validator": "mineocclude.analysis.coordinates.validate_coordinate_frame"
+ },
+ "frames": [
+  {
+   "adapter_signoff": {
+    "cosign_preserves_coordinate_frame_hash": true,
+    "person_b": false,
+    "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+    "person_c": true,
+    "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+   },
+   "coordinate_frame_hash": "3d75d33ccfae95b55d4c2a6cf6cc2e0f8b08bb8a5bf8235d643bceae025fa0dc",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_01-v0.1",
+   "layout_id": "layout_01",
+   "motion_sign": 1,
+   "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_01.json",
+   "positive_world_direction": "+x",
+   "sha256": "f4d1b1d327bcbacec0ef88f99cb7dd475ffec4c67d95b2c0cefc50beb69a6518",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    0.0,
+    4.0,
+    6.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "wall_parallel_scalar_axis": "x"
+  },
+  {
+   "adapter_signoff": {
+    "cosign_preserves_coordinate_frame_hash": true,
+    "person_b": false,
+    "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+    "person_c": true,
+    "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+   },
+   "coordinate_frame_hash": "f309e51adfb941d963084afc7b5cdf7c7480e923fd01cfb8203f4e24e6eb5061",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_02-v0.1",
+   "layout_id": "layout_02",
+   "motion_sign": 1,
+   "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_02.json",
+   "positive_world_direction": "+z",
+   "sha256": "297b4dc85ac9c9c2a21305e04811d0c25853fcbc87e17d61e16bf050340b4dbb",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    6.0,
+    4.0,
+    0.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "wall_parallel_scalar_axis": "z"
+  },
+  {
+   "adapter_signoff": {
+    "cosign_preserves_coordinate_frame_hash": true,
+    "person_b": false,
+    "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+    "person_c": true,
+    "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+   },
+   "coordinate_frame_hash": "b640ba429b7e0e1494b844385b3d5a1b3f5619ad100e9f3519f9365e294f9acc",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_03-v0.1",
+   "layout_id": "layout_03",
+   "motion_sign": 1,
+   "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_03.json",
+   "positive_world_direction": "+x",
+   "sha256": "b4d3a17edb9ebbe3afddb851ff20180ac0b85d5917b18b25c65f94ec3fb615db",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    0.0,
+    4.0,
+    6.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "wall_parallel_scalar_axis": "x"
+  },
+  {
+   "adapter_signoff": {
+    "cosign_preserves_coordinate_frame_hash": true,
+    "person_b": false,
+    "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+    "person_c": true,
+    "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+   },
+   "coordinate_frame_hash": "3510cdd23ad9577398b34edf031779a69176d735e776c4736d08859847cb76a7",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_04-v0.1",
+   "layout_id": "layout_04",
+   "motion_sign": 1,
+   "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_04.json",
+   "positive_world_direction": "+x",
+   "sha256": "8fa448ff4a991283ff30d3d83280403f2d202fb5510ae63a90a77f5894c1551f",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    0.0,
+    4.0,
+    8.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "wall_parallel_scalar_axis": "x"
+  },
+  {
+   "adapter_signoff": {
+    "cosign_preserves_coordinate_frame_hash": true,
+    "person_b": false,
+    "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+    "person_c": true,
+    "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+   },
+   "coordinate_frame_hash": "f6f9be4aef99a6e773a7e1cdb1a995e738a4bd867b14f36e3744bfcbd50d5679",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_05-v0.1",
+   "layout_id": "layout_05",
+   "motion_sign": 1,
+   "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_05.json",
+   "positive_world_direction": "+x",
+   "sha256": "cf76bee1a1a9c4d6e768664db960f40e37fef6417c67029457c5fd6f6d5073da",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    0.0,
+    4.0,
+    5.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "wall_parallel_scalar_axis": "x"
+  },
+  {
+   "adapter_signoff": {
+    "cosign_preserves_coordinate_frame_hash": true,
+    "person_b": false,
+    "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+    "person_c": true,
+    "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+   },
+   "coordinate_frame_hash": "b57a4448516c469435a08d24cfd587da1b8fc154188ee0fed97d62fc034a59de",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_06-v0.1",
+   "layout_id": "layout_06",
+   "motion_sign": 1,
+   "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_06.json",
+   "positive_world_direction": "+z",
+   "sha256": "e84a894f28cbcee0cffe4f96c492f41e8263e12a33e50bdb900b9dfe79dbeaeb",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    7.0,
+    4.0,
+    0.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "wall_parallel_scalar_axis": "z"
+  }
+ ],
+ "layout_count": 6,
+ "owner_role": "person_c",
+ "person_b_cosign_present": false,
+ "person_b_cosign_required_before_live_use": true,
+ "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+ "person_c_signed_person_b_side": false,
+ "schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1-coordinate-frame-authority",
+ "schema_version": "0.1"
+}

@@ -1,0 +1,300 @@
+{
+ "adapter_signoff": {
+  "cosign_preserves_coordinate_frame_hash": true,
+  "person_b": false,
+  "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+  "person_c": true,
+  "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+ },
+ "coordinate_frame_hash": "f309e51adfb941d963084afc7b5cdf7c7480e923fd01cfb8203f4e24e6eb5061",
+ "coordinate_frame_id": "person-c-wall-parallel-layout_02-v0.1",
+ "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+ "person_c_authority": {
+  "authority_basis": "fresh_runtime_observed_literal_geometry",
+  "authority_schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1",
+  "authority_schema_version": "0.1",
+  "axis_direction": {
+   "positive_unit_vector_world_xyz": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "positive_world_direction": "+z",
+   "unit_norm": 1.0
+  },
+  "axis_origin": {
+   "origin_derivation": "the lane world anchor with the scalar component replaced by scalar_axis.origin_world_coordinate_blocks",
+   "origin_world_coordinate_blocks": 0.0,
+   "origin_world_xyz": [
+    6.0,
+    4.0,
+    0.0
+   ]
+  },
+  "camera_canonical_pose": {
+   "feet_xyz": [
+    -5.5,
+    4.0,
+    0.5
+   ],
+   "fov_degrees": 70.0,
+   "pitch_degrees": 0.0,
+   "roll_degrees": 0.0,
+   "yaw_degrees": -90.0
+  },
+  "camera_relationship": "the shadow bounds above are the accepted geometry's segmentHitsWall result for this camera pose; changing the camera invalidates the shadow bounds",
+  "geometry_source_paths": [
+   {
+    "path": "configs/scenes/layouts_v0_4.yaml",
+    "role": "accepted_geometry_authority",
+    "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+   },
+   {
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_1_layout_02.json",
+    "role": "runtime_observed_layout_evidence",
+    "sha256": "779d6cda58a1fa6b5fbd40f695cc43f2bd8ef0f2d9d449146c45ad231c05db0d"
+   }
+  ],
+  "lane_bounds": {
+   "axis": "Z",
+   "axis_max": 8.0,
+   "axis_min": -8.0,
+   "feet_y": 4.0,
+   "ortho": 6.0,
+   "world_end_xyz": [
+    6.0,
+    4.0,
+    8.0
+   ],
+   "world_start_xyz": [
+    6.0,
+    4.0,
+    -8.0
+   ]
+  },
+  "lane_relation": "wall_parallel",
+  "layout_config_version": "person-c-layout-config-v0.4",
+  "layout_id": "layout_02",
+  "marker_restriction": "non_magenta_ground_markers",
+  "motion_sign": 1,
+  "owner_role": "person_c",
+  "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+  "positive_sign_convention": "increasing world z is increasing wall-parallel scalar position (+z)",
+  "private_axis_reinterpretation": false,
+  "runtime_projection_verification": {
+   "agreement": "exact",
+   "comparison": "project(sheep_x, sheep_y, sheep_z) == axis_pos for every target-bearing frame",
+   "episode_count": 11,
+   "max_abs_projection_error_blocks": 0.0,
+   "target_bearing_episode_count": 10,
+   "verified_against": "person_c_runtime_server_state.axis_pos",
+   "verified_frame_count": 319
+  },
+  "scalar_axis_unit": "blocks",
+  "shadow_bounds": {
+   "camera_source": "observed_first_player",
+   "continuous_boundary_measured": false,
+   "continuous_boundary_note": "the accepted geometry samples occlusion at integer lane positions only; the continuous shadow edge is bracketed between the last unoccluded and first occluded sample and is not interpolated here",
+   "definition": "GeometryUtil.segmentHitsWall",
+   "integer_lane_samples": [
+    {
+     "axis_position": -8,
+     "occluded": false,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -8.0
+     ]
+    },
+    {
+     "axis_position": -7,
+     "occluded": false,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -7.0
+     ]
+    },
+    {
+     "axis_position": -6,
+     "occluded": false,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -6.0
+     ]
+    },
+    {
+     "axis_position": -5,
+     "occluded": false,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -5.0
+     ]
+    },
+    {
+     "axis_position": -4,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -4.0
+     ]
+    },
+    {
+     "axis_position": -3,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -3.0
+     ]
+    },
+    {
+     "axis_position": -2,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -2.0
+     ]
+    },
+    {
+     "axis_position": -1,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      -1.0
+     ]
+    },
+    {
+     "axis_position": 0,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      0.0
+     ]
+    },
+    {
+     "axis_position": 1,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      1.0
+     ]
+    },
+    {
+     "axis_position": 2,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      2.0
+     ]
+    },
+    {
+     "axis_position": 3,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      3.0
+     ]
+    },
+    {
+     "axis_position": 4,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      4.0
+     ]
+    },
+    {
+     "axis_position": 5,
+     "occluded": true,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      5.0
+     ]
+    },
+    {
+     "axis_position": 6,
+     "occluded": false,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      6.0
+     ]
+    },
+    {
+     "axis_position": 7,
+     "occluded": false,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      7.0
+     ]
+    },
+    {
+     "axis_position": 8,
+     "occluded": false,
+     "target_world_xyz": [
+      6.0,
+      4.0,
+      8.0
+     ]
+    }
+   ],
+   "occluded_integer_axis_max": 5,
+   "occluded_integer_axis_min": -4,
+   "occluded_integer_axis_positions": [
+    -4,
+    -3,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "occluded_interval_contiguous": true,
+   "sample_resolution": "integer_lane_samples_only",
+   "target_centre_y": 4.5
+  },
+  "silent_axis_inference": false,
+  "source_world_axis_component": "z",
+  "source_x_coordinate_role": "orthogonal_fixed",
+  "source_z_coordinate_role": "wall_parallel_scalar",
+  "wall_axis": "z",
+  "wall_block": "minecraft:stone",
+  "wall_bounds": {
+   "max_x": 2,
+   "max_y": 6,
+   "max_z": 3,
+   "min_x": 2,
+   "min_y": 4,
+   "min_z": -3
+  },
+  "wall_parallel_scalar_axis": "z",
+  "world_coordinate_system": "minecraft_world_x_y_z"
+ },
+ "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+ "wall_parallel_origin_world_xyz": [
+  6.0,
+  4.0,
+  0.0
+ ],
+ "wall_parallel_positive_unit_vector_world_xyz": [
+  0.0,
+  0.0,
+  1.0
+ ]
+}
