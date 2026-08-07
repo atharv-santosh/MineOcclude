@@ -1,0 +1,39 @@
+{
+  "activation_chunk_count": 200,
+  "activation_row_count": 37480,
+  "admitted_sample_count": 1695,
+  "all_assigned_steps_complete": false,
+  "branch": "role/person-b-analysis",
+  "candidate_input_hash_count": 12,
+  "candidate_input_hash_mismatch_count": 0,
+  "certification_test": {
+    "command": "python -m pytest tests/analysis/test_person_b_final_integration_readiness_v0_1.py -q",
+    "passed": 24,
+    "result": "24 passed",
+    "status": "PASS"
+  },
+  "decision": "NOT_INTEGRATION_READY",
+  "external_activation_index_sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+  "final_handoff_path": "docs/status/person_b_final_integration_readiness_certification_v0_1/final_integration_handoff.json",
+  "final_handoff_sha256": "c5682deecce7beaf39f4272fb758a5507027405461cc2dac48a6788e3f6ea450",
+  "focused_test_evidence": [
+    {
+      "command": "python -m pytest -q tests/analysis/test_person_b_week1_closeout_v0_1.py tests/analysis/test_person_b_phase6_v2_consumer.py tests/analysis/test_person_b_phase6_v2_producer_canonicalization.py tests/analysis/test_person_b_phase6_v2_source_row_canonicalization.py tests/analysis/test_person_b_step4_1_production_v2.py tests/analysis/test_person_b_step4_1_production_fold_contract_v0_1.py tests/analysis/test_person_b_step4_1_fold_validation_interface_v0_1.py tests/analysis/test_person_b_step4_1_final_comparison_contract_v0_1.py tests/analysis/test_person_b_step4_1_final_comparison_entrypoint_v0_1.py tests/analysis/test_person_b_step4_1_final_comparison_preparation_v0_1.py tests/analysis/test_person_b_step4_1_bounded_reveal_contract_v0_1.py tests/analysis/test_person_b_canonical_positive_control.py tests/analysis/test_person_b_canonical_multilayout_positive_control.py tests/contracts/test_activation_contract.py tests/contracts/test_baseline_family_inputs_v0_2.py tests/metrics/test_person_b_metrics.py tests/probes/test_join_and_splits.py",
+      "passed": 222,
+      "result": "222 passed, 2 skipped",
+      "skipped": 2,
+      "status": "PASS"
+    }
+  ],
+  "frozen_step4_1_decision": "FAIL",
+  "inventory_verified": true,
+  "main_ancestor_of_branch": true,
+  "package_canonical": true,
+  "schema_id": "person-b-final-integration-readiness-v0-1-integration-readiness-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed_by_validator": false,
+  "trajectory_count": 10,
+  "u4_authorized": false,
+  "u4_output_inspected": false,
+  "verified_main_commit": "15adc43674420ae35921847a953ebbee2135f142"
+}
