@@ -1,0 +1,41 @@
+{
+  "attempts": [
+    {
+      "acceptance_authority": "person-c-qa-v0.1",
+      "attempt_id": "layout_03_ep10002-attempt-1",
+      "ended_at": "2026-07-27T21:12:10Z",
+      "episode_id": 10002,
+      "failure_or_supersession_reason": null,
+      "started_at": "2026-07-27T21:12:05Z",
+      "status": "accepted",
+      "trajectory_id": "layout_03_ep10002"
+    }
+  ],
+  "capture_session_boundary": {
+    "authoritative_source": "data/autonomous/pilot_production_ledger.json",
+    "definition": "the single finalized-launcher production run at base-id 10000 (scripts/run_autonomous_pilot.py --plan production), executed 2026-07-27",
+    "launcher": "scripts/run_autonomous_pilot.py (finalized, unchanged)"
+  },
+  "inventory_is_authoritative_and_complete_for_scope": true,
+  "non_accepted_attempts_excluded_from_registry": {
+    "note": "session-level pre-pilot pairing-calibration episodes are not pilots and must be excluded from accepted-only registry queries; they are not accepted trajectories and carry no trajectory_id in the ledger."
+  },
+  "pilot_cell_attempt_inventory": {
+    "accepted": 1,
+    "attempts": 1,
+    "failed": 0,
+    "interrupted": 0,
+    "rejected": 0,
+    "source": "pilot_production_ledger.json cell for episode 10002 (attempts array length 1, problems=[])",
+    "superseded": 0
+  },
+  "registered_pilot": {
+    "attempt_id": "layout_03_ep10002-attempt-1",
+    "episode_id": 10002,
+    "layout_id": "layout_03",
+    "trajectory_id": "layout_03_ep10002"
+  },
+  "schema_version": "1.0",
+  "scope_of_completeness": "the capture cell that produced episode 10002; the production ledger authoritatively enumerates its attempts.",
+  "session_id": "person-c-production-run-base10000-2026-07-27"
+}

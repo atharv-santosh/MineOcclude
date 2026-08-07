@@ -1,0 +1,79 @@
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+
+=== SYSTEM ===
+OS: Linux-6.12.90-120.164.amzn2023.x86_64-x86_64-with-glibc2.39
+System: Linux
+Release: 6.12.90-120.164.amzn2023.x86_64
+Machine: x86_64
+Processor: x86_64
+Python executable: /home/sagemaker-user/.conda/envs/mineworld/bin/python
+Python version: 3.10.20
+Python implementation: CPython
+Python compiler: GCC 14.3.0
+Runtime libc: ('glibc', '2.39')
+Conda environment: mineworld
+
+=== PACKAGE VERSIONS ===
+torch: installed=2.6.0+cu126 expected=2.6.0 match=True
+torchvision: installed=0.21.0+cu126 expected=0.21.0 match=True
+omegaconf: installed=2.3.0 expected=2.3.0 match=True
+transformers: installed=4.48.1 expected=4.48.1 match=True
+opencv-python: installed=4.11.0.86 expected=4.11.0.86 match=True
+attrs: installed=25.3.0 expected=25.3.0 match=True
+diffusers: installed=0.32.2 expected=0.32.2 match=True
+gradio: installed=5.24.0 expected=5.24.0 match=True
+einops: installed=0.8.1 expected=0.8.1 match=True
+scipy: installed=1.15.2 expected=1.15.2 match=True
+torch-fidelity: installed=0.3.0 expected=0.3.0 match=True
+gym3: installed=0.3.3 expected=0.3.3 match=True
+gym: installed=0.26.2 expected=0.26.2 match=True
+scikit-learn: installed=1.6.1 expected=1.6.1 match=True
+modelscope: installed=1.38.1 expected=1.38.1 match=True
+modelscope-hub: installed=0.1.8 expected=0.1.8 match=True
+
+=== IMPORT CHECKS ===
+torch: PASS
+torchvision: PASS
+omegaconf: PASS
+transformers: PASS
+opencv-python: PASS
+attrs: PASS
+diffusers: PASS
+gradio: PASS
+einops: PASS
+scipy: PASS
+torch-fidelity: PASS
+gym3: PASS
+gym: PASS
+scikit-learn: PASS
+modelscope: PASS
+
+=== PIP CHECK ===
+No broken requirements found.
+
+=== PYTORCH / CUDA ===
+torch.__version__: 2.6.0+cu126
+torch.version.cuda: 12.6
+CUDA available: True
+CUDA device count: 1
+cuDNN version: 91002
+GPU 0 name: NVIDIA L4
+GPU 0 total memory bytes: 23661248512
+GPU 0 compute capability: 8.9
+
+=== NVIDIA DRIVER ===
+NVIDIA L4, 595.71.05, 23034 MiB
+
+=== CUDA TOOLKIT ===
+nvcc: NOT FOUND
+
+=== COMPILER / RUNTIME COMMANDS ===
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+cl: NOT FOUND
+
+=== FINAL RESULT ===
+PASS: Official CUDA-capable environment validated.

@@ -1,0 +1,46 @@
+{
+  "all_required_artifacts_present": true,
+  "all_required_hashes_verified": true,
+  "all_required_sizes_verified": true,
+  "baseline_execution_performed": false,
+  "fold_manifest_bound": true,
+  "immutable_artifact_requirements": [
+    "retain the exact accepted Phase 6 source/input and output trees without overwrite, relocation, or deletion",
+    "retain the exact read-only preprocessed-frame output root without overwrite, relocation, or deletion",
+    "consume frame payloads only through explicit manifest identity, path, byte size, SHA-256, and preprocessing identity",
+    "do not substitute source MP4, activations, or Person B predictions for preprocessed-frame direct inputs"
+  ],
+  "person_a_reextraction_authorized": false,
+  "person_a_reextraction_required": false,
+  "person_d_frame_handoff_ready": true,
+  "preprocessed_frame_artifact_count": 1695,
+  "preprocessed_frames_materialized": true,
+  "preprocessed_frames_modified": false,
+  "probe_execution_performed": false,
+  "record_date": "2026-08-01",
+  "retention_requirements": [
+    {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-inputs",
+      "requirement": "retain immutable accepted source contexts"
+    },
+    {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-outputs",
+      "requirement": "retain accepted Phase 6 receipts and artifacts"
+    },
+    {
+      "path": "/home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1",
+      "requirement": "retain all 1,695 exact read-only frame payloads"
+    }
+  ],
+  "schema_id": "person-a-step4-1-frame-handoff-v0-2-decision",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "scientific_model_execution_performed": false,
+  "source_contexts_modified": false,
+  "source_identities_verified": true,
+  "status": "COMPLETE_PREPROCESSED_FRAME_DIRECT_INPUT_HANDOFF",
+  "superseded_handoff_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+  "target_manifest_bound": true,
+  "u4_output_inspected": false,
+  "unresolved_blockers": []
+}

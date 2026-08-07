@@ -44,7 +44,8 @@ external account or hardware access.
 |---|---|---|---|---|
 | Frozen A/B/C/D/E contracts and synthetic fixtures | AVAILABLE | Current repository and tests | Role owners | Validators and joins pass |
 | Local CPU test execution | AVAILABLE | Repository test history and current repair verification | Project environment | CPU synthetic suite passes |
-| MineWorld source/assets/checkpoint | UNVERIFIED | No repository evidence proves local bytes or access | A/project | Record exact paths and hashes after access is verified |
+| Pinned MineWorld source and A0.4 code-reading evidence | COMPLETE | `docs/status/person_a_mineworld_code_reading.md`; Microsoft revision `9f49efbcc68a5f0cf60e78f0abc566eac409282f`; paired ModelScope sample hashes recorded | A | Re-open only if the pinned source revision or reviewed evidence changes |
+| MineWorld 700M_16f checkpoint and VAE runtime bytes | UNVERIFIED | Required runtime assets have not yet been locally hash-verified in this record | A/project | Download, inspect, and record exact checkpoint/VAE paths and SHA-256 hashes before the first real model run |
 | GPU capacity | UNVERIFIED | No measured device or allocation record | A/project | Save device/capacity check |
 | AWS/account permissions | UNVERIFIED | No permission evidence in repository | Project owner | Save non-secret access check |
 | Durable artifact storage and quota | UNVERIFIED | URI conventions are frozen; deployment root/quota are not | Project owner/E | Record approved root, quota, and retention |
@@ -64,8 +65,43 @@ exists, not evidence of a person's historical reading.
 | `docs/contracts/trajectory_v1.md` preprocessing/action boundary | AVAILABLE | Personal reading UNVERIFIED |
 | `docs/contracts/intervention_request_v1.md` layer/timestep/dose limits | AVAILABLE | Personal reading UNVERIFIED |
 | `docs/contracts/rollout_registry_v1.md` rollout/runtime provenance | AVAILABLE | Personal reading UNVERIFIED |
-| `src/mineocclude/models/mineworld_adapter.py` owned runtime boundary | AVAILABLE skeleton | Pinned upstream code/checkpoint UNVERIFIED |
+| `src/mineocclude/models/mineworld_adapter.py` owned runtime boundary | AVAILABLE skeleton | Pinned upstream code reading COMPLETE for A0.4; real checkpoint/runtime verification still pending |
 | `configs/analysis/core.yaml` downstream analysis contract | AVAILABLE | Runtime compatibility UNVERIFIED |
+
+## A0.4 completion record
+
+Status: **COMPLETE**
+
+Evidence:
+
+- `docs/status/person_a_mineworld_code_reading.md`
+- Microsoft MineWorld source revision:
+  `9f49efbcc68a5f0cf60e78f0abc566eac409282f`
+
+Reviewed pinned upstream materials:
+
+- `mcdataset.py`
+- `utils.py`
+- `configs/700M_16f.yaml`
+- `mineworld.py`
+- `inference.py`
+- paired `gradio_scene/scene.jsonl`
+- paired `gradio_scene/scene.mp4`
+
+The review records authoritative evidence for:
+
+- 640 × 360 source frames;
+- 20 FPS paired sample cadence;
+- 384 × 224 model preprocessing in the interactive path;
+- 336 visual tokens per frame;
+- 11 action tokens;
+- 347 tokens per complete visual/action group;
+- 16-frame context for `700M_16f`;
+- action vocabulary offset 8192;
+- pinned model/config/tokenizer ownership paths;
+- exact paired-sample SHA-256 identities.
+
+The actual `700M_16f` checkpoint and shared VAE runtime bytes remain a later runtime verification requirement. A0.4 completion does not claim that those model assets have already been downloaded, loaded, or hash-verified.
 
 ## Dependency and decision register
 

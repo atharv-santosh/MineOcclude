@@ -1,10 +1,11 @@
-"""Public contract helpers without import-time dependency cycles.
+"""Public cross-role contract helpers without import-time dependency cycles.
 
 The analysis-input validators depend on the Person C capture contract through
 the coordinate adapter. Importing them eagerly here made a direct import of
 ``mineocclude.data.capture_contract`` recurse back into itself. Keep the
-package-level convenience API, but resolve it only when a caller requests one
-of these names.
+package-level convenience API, but resolve it lazily (PEP 562) when a caller
+requests one of these names. This preserves the existing main-branch API and
+the Person B analysis validators without making import order significant.
 """
 
 from __future__ import annotations
@@ -30,6 +31,8 @@ __all__ = [
 
 
 def __getattr__(name: str) -> Any:
+    """Resolve the package-level analysis-input convenience exports lazily."""
+
     if name not in __all__:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
     from . import analysis_inputs

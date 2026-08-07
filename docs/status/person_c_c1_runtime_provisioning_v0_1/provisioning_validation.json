@@ -1,0 +1,29 @@
+{
+  "schema_version": "person-c-c1-runtime-provisioning-validation-v0.1",
+  "status": "BLOCKED_BEFORE_PROVISIONING",
+  "checks": [
+    {"check": "required_branch", "result": "PASS", "observed": "completion/person-c-c1-c6a"},
+    {"check": "required_head", "result": "PASS", "observed": "8213c794a1da3ffcfb507b4f774d2047b1b20a43"},
+    {"check": "pre_mutation_git_status", "result": "PASS", "observed": "clean"},
+    {"check": "fabric_project_exists", "result": "PASS", "observed": "fabric/mineocclude-mod"},
+    {"check": "committed_pin_inspection", "result": "PASS", "observed": "all required files read and hash-bound"},
+    {"check": "gradle_task_inventory", "result": "PASS", "observed": "tasks --all exit 0"},
+    {"check": "compatible_jdk_17", "result": "FAIL_BLOCKING", "observed": "only Java 21.0.11 candidates"},
+    {"check": "clean_gradle_build", "result": "NOT_RUN", "reason": "Java gate"},
+    {"check": "fabric_tests", "result": "NOT_RUN", "reason": "Java gate"},
+    {"check": "jar_inspection", "result": "NOT_RUN", "reason": "no accepted clean build"},
+    {"check": "server_dependency_resolution", "result": "NOT_RUN", "reason": "Java gate"},
+    {"check": "client_dependency_resolution", "result": "NOT_RUN", "reason": "Java gate"},
+    {"check": "runtime_root_inventory", "result": "PASS", "observed": "both required roots absent and untouched"},
+    {"check": "launch_script_syntax", "result": "NOT_RUN", "reason": "scripts not created"},
+    {"check": "server_configuration", "result": "FAIL_BLOCKING", "reason": "spawn-animals authority conflict and unpinned fields"},
+    {"check": "client_configuration", "result": "INCOMPLETE", "reason": "first-launch/render fields pending"},
+    {"check": "server_smoke_launch", "result": "NOT_RUN", "reason": "Java and configuration gates"},
+    {"check": "client_gui_validation", "result": "NOT_RUN", "reason": "runtime not provisioned"}
+  ],
+  "paid_compute_started": false,
+  "default_minecraft_used": false,
+  "runtime_roots_mutated": false,
+  "scientific_capture_started": false,
+  "accepted_geometry_assigned": false
+}

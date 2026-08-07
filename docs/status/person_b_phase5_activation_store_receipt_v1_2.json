@@ -1,0 +1,510 @@
+{
+  "acceptance_base_commit": "b6d4304adb0f82c1722342795133dde4aa59ea7f",
+  "acceptance_branch": "work/person-b-phase5-acceptance-v1.2",
+  "accepted_manifest_hash": "26d58a19619de38452c96832a44361cdebc240436e23c15fca4432f8e2be4757",
+  "activation_keys": [
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-00"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-01"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-02"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-03"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-04"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-05"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-06"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-07"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-08"
+    },
+    {
+      "hook_site": "residual_stream",
+      "layer_idx": 0,
+      "model_frame_idx": 0,
+      "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+      "trajectory_id": "phase5-handoff-v1-2-trajectory-09"
+    }
+  ],
+  "activation_rows_loaded": 10,
+  "analysis_dtype": "float64",
+  "audit2_certified_storage_sha": "b0b71653311902fffce769aca6c4e81475ba0766",
+  "certified_person_a_package_sha": "b6d4304adb0f82c1722342795133dde4aa59ea7f",
+  "chunks_read": 1,
+  "chunks_validated": 1,
+  "deterministic_repeat": {
+    "accepted_activation_keys_identical": true,
+    "counts_identical": true,
+    "fold_assignments_identical": true,
+    "fresh_process_count": 2,
+    "inventory_and_hashes_identical": true,
+    "joined_key_hash_identical": true,
+    "package_validation_identical": true,
+    "probe_configuration_identical": true,
+    "probe_output_bytes_identical": true,
+    "probe_output_hash_identical": true,
+    "promoted_vector_bytes_hash_identical": true,
+    "status": "PASS",
+    "target_keys_identical": true
+  },
+  "failure_reasons": [],
+  "fixture_path": "docs/status/fixtures/phase5_activation_store_handoff_v1_2",
+  "fold_viability": {
+    "group_leakage_count": 0,
+    "grouping_field": "layout_id",
+    "inner": [
+      {
+        "fold_counts": {
+          "0": 2,
+          "1": 2,
+          "2": 2,
+          "3": 2
+        },
+        "outer_fold_idx": 0,
+        "training_group_count": 8,
+        "training_row_count": 8
+      },
+      {
+        "fold_counts": {
+          "0": 2,
+          "1": 2,
+          "2": 2,
+          "3": 2
+        },
+        "outer_fold_idx": 1,
+        "training_group_count": 8,
+        "training_row_count": 8
+      },
+      {
+        "fold_counts": {
+          "0": 2,
+          "1": 2,
+          "2": 2,
+          "3": 2
+        },
+        "outer_fold_idx": 2,
+        "training_group_count": 8,
+        "training_row_count": 8
+      },
+      {
+        "fold_counts": {
+          "0": 2,
+          "1": 2,
+          "2": 2,
+          "3": 2
+        },
+        "outer_fold_idx": 3,
+        "training_group_count": 8,
+        "training_row_count": 8
+      },
+      {
+        "fold_counts": {
+          "0": 2,
+          "1": 2,
+          "2": 2,
+          "3": 2
+        },
+        "outer_fold_idx": 4,
+        "training_group_count": 8,
+        "training_row_count": 8
+      }
+    ],
+    "outer_fold_assignments": [
+      {
+        "fold_idx": 3,
+        "layout_id": "phase5-handoff-v1-2-layout-00"
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "phase5-handoff-v1-2-layout-01"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "phase5-handoff-v1-2-layout-02"
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "phase5-handoff-v1-2-layout-03"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "phase5-handoff-v1-2-layout-04"
+      },
+      {
+        "fold_idx": 1,
+        "layout_id": "phase5-handoff-v1-2-layout-05"
+      },
+      {
+        "fold_idx": 1,
+        "layout_id": "phase5-handoff-v1-2-layout-06"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "phase5-handoff-v1-2-layout-07"
+      },
+      {
+        "fold_idx": 3,
+        "layout_id": "phase5-handoff-v1-2-layout-08"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "phase5-handoff-v1-2-layout-09"
+      }
+    ],
+    "outer_fold_counts": {
+      "0": 2,
+      "1": 2,
+      "2": 2,
+      "3": 2,
+      "4": 2
+    },
+    "outer_fold_manifest_hash": "fcdae5ba2d1883f231c177d90de4a4fc86c2815698e9a7d933c26ef6326000d1",
+    "outer_training_groups_per_fold": 8,
+    "populated_inner_folds_per_outer_fold": 4,
+    "populated_outer_fold_count": 5,
+    "trajectory_layout_group_count": 10
+  },
+  "focused_tests": {
+    "documented_store_first_consumer_path": {
+      "fresh_process_runs": 2,
+      "result": "PASS"
+    },
+    "person_b_bridge_and_fold_tests": {
+      "passed": 17,
+      "result": "PASS",
+      "subtests_passed": 5
+    },
+    "target_first_collection_observation": {
+      "failure_class": "pre-existing circular import ordering",
+      "result": "COLLECTION_ERROR",
+      "test_files": [
+        "tests/oracle/test_regime_a_oracle.py",
+        "tests/probes/test_join_and_splits.py"
+      ]
+    },
+    "v1_2_package_tests": {
+      "passed": 10,
+      "result": "PASS",
+      "subtests_passed": 3
+    }
+  },
+  "index_snapshot_id": "4421b16a6cd64014ac154f9a789eef74bca52f604643ce3006a315091b71da85",
+  "inventory": [
+    {
+      "byte_size": 1486,
+      "path": "README.md",
+      "sha256": "8381c7bca7698e1aaa50948a4676b9895060be505ffc410a0436fc3e4cdae9ef"
+    },
+    {
+      "byte_size": 802,
+      "path": "SHA256SUMS",
+      "sha256": "7a39d0f72fba5ac8c8219b37de8899685892954e63d5637808793173cf574fcf"
+    },
+    {
+      "byte_size": 11053,
+      "path": "accepted_manifest/accepted_manifest_rows.json",
+      "sha256": "c17f5edfce5be6db449fb7f01ad84f88c8374086984fef38c28e0d5dceaf5a7d"
+    },
+    {
+      "byte_size": 82048,
+      "path": "chunks/activation-chunk-c49022922054024bfed962fb.npy",
+      "sha256": "92664dfd43ebf589d71f70605311b5c5661d9b6089b31870a34a6fc82f217a3c"
+    },
+    {
+      "byte_size": 6740,
+      "path": "handoff_manifest.json",
+      "sha256": "3fa99342284b540ade254792c2cf125117ac1b925632f3444ccd767c49cb7df5"
+    },
+    {
+      "byte_size": 61125,
+      "path": "indexes/index-4421b16a6cd64014ac154f9a789eef74bca52f604643ce3006a315091b71da85.json",
+      "sha256": "7a4c68838ecf567748c56c1ed70d151b2ed7d1cdb5cead793d0627f465968834"
+    },
+    {
+      "byte_size": 1368,
+      "path": "run_bindings/run-ebe3cdf411abd3fd21feef7f74579cc5deeef22d5ff71dfdc806574fae9a35c2.json",
+      "sha256": "bcd19137879b130ab196bf3aecfcb6fb2aa2896ddd1c903616d9fdcda384e498"
+    },
+    {
+      "byte_size": 18468,
+      "path": "targets/synthetic_oracle_targets.json",
+      "sha256": "4f8e2d25b57bbd4621844020e341303a28027d7ace3e334aea50c1b7c15d66bd"
+    }
+  ],
+  "join": {
+    "duplicate_activation_key_count": 0,
+    "duplicate_target_key_count": 0,
+    "joined_key_sha256": "62448525246b86c7f3e89fbe5365fff7033f637dd1a3a91bd4c14f914d25276f",
+    "joined_row_count": 10,
+    "universal_join_key": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "unmatched_activation_count": 0,
+    "unmatched_target_count": 0
+  },
+  "migration_required": false,
+  "package_validation": {
+    "cross_references_match": true,
+    "exact_inventory": true,
+    "handoff_manifest_canonical_json": true,
+    "public_validator": "PASS",
+    "sha256sums_covers_all_nonself_files": true,
+    "sha256sums_intentionally_omits_self": true,
+    "symlink_count": 0,
+    "text_bytes": {
+      "lf_only": true,
+      "no_bom": true,
+      "terminal_lf": true,
+      "utf8": true
+    },
+    "unexpected_file_count": 0
+  },
+  "package_version": "v1.2",
+  "prior_failed_receipt_commits": {
+    "v1.0": "1b229fdec74eb602c03d8301fd5744bc9c73b30e",
+    "v1.1": "7791c938ce2d97014216974a02f5174b42893874"
+  },
+  "private_assistance_used": false,
+  "probe": {
+    "configuration": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "analysis_dtype": "float64",
+      "feature_width": 2048,
+      "hook_site": "residual_stream",
+      "horizon": {
+        "kind": "same_model_frame",
+        "model_frame_offset": 0
+      },
+      "inner_fold_count": 4,
+      "joined_rows": 10,
+      "layer_idx": 0,
+      "outer_fold_count": 5,
+      "outer_seed": 20260719,
+      "target_name": "mu_oracle_blocks"
+    },
+    "finite": true,
+    "independently_computed_output_hash": "50bad375850e7ca1bdbcfccc28397b5bf695804cae0a4c9db857c7385e5f9c61",
+    "output_shape": [
+      10
+    ],
+    "package_declared_output_hash": "50bad375850e7ca1bdbcfccc28397b5bf695804cae0a4c9db857c7385e5f9c61",
+    "status": "PASS"
+  },
+  "producing_run_id": "phase5-synthetic-handoff-v1-2-activation-run",
+  "promoted_vector_bytes": {
+    "byte_order": "little-endian",
+    "canonical_key_order": true,
+    "contiguous_order": "C",
+    "sha256": "56dbf9f08ac74171248201b651978d77aedf7e81db14da17dc164c63e0e2de4f"
+  },
+  "public_interfaces_used": [
+    "mineocclude.activations.store.load_activation_index_snapshot",
+    "mineocclude.activations.store.validate_activation_index_snapshot",
+    "mineocclude.activations.store.read_activation_vectors",
+    "mineocclude.activations.store.ActivationRowKey",
+    "mineocclude.oracle.schema.validate_oracle_target_document",
+    "mineocclude.probes.bridge.build_joined_frame_table",
+    "mineocclude.probes.bridge.build_frame_fold_manifest",
+    "mineocclude.probes.splits.build_grouped_inner_folds",
+    "mineocclude.probes.bridge.build_probe_ready_matrices",
+    "mineocclude.probes.bridge.run_ridge_oof_probe"
+  ],
+  "receipt_format": "mineocclude-person-b-phase5-activation-store-receipt",
+  "receipt_version": "1.2",
+  "run_binding_digest": "ce44526f314aabc2cda91bfdc265a686126b66e1143da3f82381ae664a219a51",
+  "schema_version": "1.0",
+  "scientific_status": "synthetic_non_scientific",
+  "status": "PASS",
+  "store_identity_digest": "2ef22ab95ab25cc64a85ecf026f21bb30324bed441d839b54824f56f18d00c1a",
+  "stored_dtype": "float32",
+  "target": {
+    "horizons": [
+      {
+        "kind": "same_model_frame",
+        "model_frame_offset": 0
+      }
+    ],
+    "path": "targets/synthetic_oracle_targets.json",
+    "row_count": 10,
+    "sha256": "4f8e2d25b57bbd4621844020e341303a28027d7ace3e334aea50c1b7c15d66bd",
+    "target_names": [
+      "mu_oracle_blocks"
+    ],
+    "validated_key_set": [
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-00",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-00",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-01",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-01",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-02",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-02",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-03",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-03",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-04",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-04",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-05",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-05",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-06",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-06",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-07",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-07",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-08",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-08",
+        "validity_state": "accepted"
+      },
+      {
+        "horizon": {
+          "kind": "same_model_frame",
+          "model_frame_offset": 0
+        },
+        "layout_id": "phase5-handoff-v1-2-layout-09",
+        "model_frame_idx": 0,
+        "target_name": "mu_oracle_blocks",
+        "trajectory_id": "phase5-handoff-v1-2-trajectory-09",
+        "validity_state": "accepted"
+      }
+    ],
+    "validity_states": [
+      "accepted"
+    ]
+  },
+  "vector_width": 2048,
+  "warnings": [
+    {
+      "classification": "YELLOW",
+      "detail": "Direct target-first collection of tests/oracle/test_regime_a_oracle.py and tests/probes/test_join_and_splits.py encountered the repository's circular import ordering issue. The documented complete store-first public consumer path succeeded in two fresh processes, and the package, join, fold, matrix, and probe checks all passed."
+    }
+  ]
+}

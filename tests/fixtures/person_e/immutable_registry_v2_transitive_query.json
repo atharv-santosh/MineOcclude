@@ -1,0 +1,918 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "artifact_raw",
+      "artifact_schema_version": "synthetic-raw_trajectory-v0.1",
+      "artifact_type": "raw_trajectory",
+      "byte_verification_id": "verification_raw",
+      "creator_run_id": "run_raw",
+      "direct_input_artifact_ids": [],
+      "manifest_artifact_identity": "synthetic-query-raw-entry",
+      "manifest_id": "manifest_raw",
+      "manifest_schema_version": "synthetic-raw-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0",
+      "owner_authority_id": "authority_person_c_synthetic_query",
+      "owner_authority_revision": "3333333333333333333333333333333333333333",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_c_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "64806dfbc2a4a25f5c21c3edff523027c07267c4fe3da357bf592c9f0c47ed2d",
+      "schema_version": "1.0",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "size_bytes": 100,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/raw"
+    },
+    {
+      "artifact_id": "artifact_unaffected",
+      "artifact_schema_version": "synthetic-raw_trajectory-v0.1",
+      "artifact_type": "raw_trajectory",
+      "byte_verification_id": "verification_unaffected",
+      "creator_run_id": "run_unaffected",
+      "direct_input_artifact_ids": [],
+      "manifest_artifact_identity": "synthetic-query-unaffected-entry",
+      "manifest_id": "manifest_unaffected",
+      "manifest_schema_version": "synthetic-unaffected-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+      "owner_authority_id": "authority_person_c_synthetic_query",
+      "owner_authority_revision": "3333333333333333333333333333333333333333",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_c_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "64806dfbc2a4a25f5c21c3edff523027c07267c4fe3da357bf592c9f0c47ed2d",
+      "schema_version": "1.0",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "size_bytes": 101,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/unaffected"
+    },
+    {
+      "artifact_id": "artifact_model",
+      "artifact_schema_version": "synthetic-model_input-v0.1",
+      "artifact_type": "model_input",
+      "byte_verification_id": "verification_model",
+      "creator_run_id": "run_model",
+      "direct_input_artifact_ids": [
+        "artifact_raw"
+      ],
+      "manifest_artifact_identity": "synthetic-query-model-entry",
+      "manifest_id": "manifest_model",
+      "manifest_schema_version": "synthetic-model-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2",
+      "owner_authority_id": "authority_person_a_synthetic_query",
+      "owner_authority_revision": "1111111111111111111111111111111111111111",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_a_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "e93b72af6bd2b4e78ad6883474d4813ad81c83bbb1a9c3b7bbec5e006b7bc596",
+      "schema_version": "1.0",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "size_bytes": 102,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/model"
+    },
+    {
+      "artifact_id": "artifact_extraction",
+      "artifact_schema_version": "synthetic-extraction-v0.1",
+      "artifact_type": "extraction",
+      "byte_verification_id": "verification_extraction",
+      "creator_run_id": "run_extraction",
+      "direct_input_artifact_ids": [
+        "artifact_model"
+      ],
+      "manifest_artifact_identity": "synthetic-query-extraction-entry",
+      "manifest_id": "manifest_extraction",
+      "manifest_schema_version": "synthetic-extraction-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3",
+      "owner_authority_id": "authority_person_a_synthetic_query",
+      "owner_authority_revision": "1111111111111111111111111111111111111111",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_a_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "e93b72af6bd2b4e78ad6883474d4813ad81c83bbb1a9c3b7bbec5e006b7bc596",
+      "schema_version": "1.0",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "size_bytes": 103,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/extraction"
+    },
+    {
+      "artifact_id": "artifact_activation",
+      "artifact_schema_version": "synthetic-activation-v0.1",
+      "artifact_type": "activation",
+      "byte_verification_id": "verification_activation",
+      "creator_run_id": "run_activation",
+      "direct_input_artifact_ids": [
+        "artifact_extraction"
+      ],
+      "manifest_artifact_identity": "synthetic-query-activation-entry",
+      "manifest_id": "manifest_activation",
+      "manifest_schema_version": "synthetic-activation-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4",
+      "owner_authority_id": "authority_person_a_synthetic_query",
+      "owner_authority_revision": "1111111111111111111111111111111111111111",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_a_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "e93b72af6bd2b4e78ad6883474d4813ad81c83bbb1a9c3b7bbec5e006b7bc596",
+      "schema_version": "1.0",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "size_bytes": 104,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/activation"
+    },
+    {
+      "artifact_id": "artifact_detection",
+      "artifact_schema_version": "synthetic-detection-v0.1",
+      "artifact_type": "detection",
+      "byte_verification_id": "verification_detection",
+      "creator_run_id": "run_detection",
+      "direct_input_artifact_ids": [
+        "artifact_raw"
+      ],
+      "manifest_artifact_identity": "synthetic-query-detection-entry",
+      "manifest_id": "manifest_detection",
+      "manifest_schema_version": "synthetic-detection-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5",
+      "owner_authority_id": "authority_person_e_synthetic_query",
+      "owner_authority_revision": "5555555555555555555555555555555555555555",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_e_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "1345d3dfd2a9ac7ddad18c40c77d50581b3bd293b95486a6e078ee269de681ce",
+      "schema_version": "1.0",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "size_bytes": 105,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/detection"
+    },
+    {
+      "artifact_id": "artifact_fitted",
+      "artifact_schema_version": "synthetic-fitted_probe-v0.1",
+      "artifact_type": "fitted_probe",
+      "byte_verification_id": "verification_fitted",
+      "creator_run_id": "run_fitted",
+      "direct_input_artifact_ids": [
+        "artifact_activation"
+      ],
+      "manifest_artifact_identity": "synthetic-query-fitted-entry",
+      "manifest_id": "manifest_fitted",
+      "manifest_schema_version": "synthetic-fitted-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa6",
+      "owner_authority_id": "authority_person_b_synthetic_query",
+      "owner_authority_revision": "2222222222222222222222222222222222222222",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_b_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "c94299e9eaaca443ddd7573825b14be0f3374e71be1af7d6775cccedd494f9da",
+      "schema_version": "1.0",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "size_bytes": 106,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/fitted"
+    },
+    {
+      "artifact_id": "artifact_prediction",
+      "artifact_schema_version": "synthetic-prediction-v0.1",
+      "artifact_type": "prediction",
+      "byte_verification_id": "verification_prediction",
+      "creator_run_id": "run_prediction",
+      "direct_input_artifact_ids": [
+        "artifact_fitted"
+      ],
+      "manifest_artifact_identity": "synthetic-query-prediction-entry",
+      "manifest_id": "manifest_prediction",
+      "manifest_schema_version": "synthetic-prediction-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa7",
+      "owner_authority_id": "authority_person_b_synthetic_query",
+      "owner_authority_revision": "2222222222222222222222222222222222222222",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_b_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "c94299e9eaaca443ddd7573825b14be0f3374e71be1af7d6775cccedd494f9da",
+      "schema_version": "1.0",
+      "sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "size_bytes": 107,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/prediction"
+    },
+    {
+      "artifact_id": "artifact_metric",
+      "artifact_schema_version": "synthetic-metric_table-v0.1",
+      "artifact_type": "metric_table",
+      "byte_verification_id": "verification_metric",
+      "creator_run_id": "run_metric",
+      "direct_input_artifact_ids": [
+        "artifact_detection",
+        "artifact_prediction"
+      ],
+      "manifest_artifact_identity": "synthetic-query-metric-entry",
+      "manifest_id": "manifest_metric",
+      "manifest_schema_version": "synthetic-metric-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa8",
+      "owner_authority_id": "authority_person_b_synthetic_query",
+      "owner_authority_revision": "2222222222222222222222222222222222222222",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_b_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "c94299e9eaaca443ddd7573825b14be0f3374e71be1af7d6775cccedd494f9da",
+      "schema_version": "1.0",
+      "sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+      "size_bytes": 108,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/metric"
+    },
+    {
+      "artifact_id": "artifact_figure",
+      "artifact_schema_version": "synthetic-figure-v0.1",
+      "artifact_type": "figure",
+      "byte_verification_id": "verification_figure",
+      "creator_run_id": "run_figure",
+      "direct_input_artifact_ids": [
+        "artifact_metric"
+      ],
+      "manifest_artifact_identity": "synthetic-query-figure-entry",
+      "manifest_id": "manifest_figure",
+      "manifest_schema_version": "synthetic-figure-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa9",
+      "owner_authority_id": "authority_person_e_synthetic_query",
+      "owner_authority_revision": "5555555555555555555555555555555555555555",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_e_synthetic_query_status_v0_1",
+      "owner_status_record_sha256": "1345d3dfd2a9ac7ddad18c40c77d50581b3bd293b95486a6e078ee269de681ce",
+      "schema_version": "1.0",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "size_bytes": 109,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2-query/figure"
+    }
+  ],
+  "byte_verifications": [
+    {
+      "artifact_id": "artifact_raw",
+      "external_receipt_authority_revision": "3333333333333333333333333333333333333333",
+      "external_receipt_id": "receipt_raw",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_raw",
+      "verified_at": "2026-07-29T12:00:00Z",
+      "verified_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "verified_size_bytes": 100
+    },
+    {
+      "artifact_id": "artifact_unaffected",
+      "external_receipt_authority_revision": "3333333333333333333333333333333333333333",
+      "external_receipt_id": "receipt_unaffected",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_unaffected",
+      "verified_at": "2026-07-29T12:00:01Z",
+      "verified_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "verified_size_bytes": 101
+    },
+    {
+      "artifact_id": "artifact_model",
+      "external_receipt_authority_revision": "1111111111111111111111111111111111111111",
+      "external_receipt_id": "receipt_model",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff2",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_model",
+      "verified_at": "2026-07-29T12:00:02Z",
+      "verified_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "verified_size_bytes": 102
+    },
+    {
+      "artifact_id": "artifact_extraction",
+      "external_receipt_authority_revision": "1111111111111111111111111111111111111111",
+      "external_receipt_id": "receipt_extraction",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff3",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_extraction",
+      "verified_at": "2026-07-29T12:00:03Z",
+      "verified_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "verified_size_bytes": 103
+    },
+    {
+      "artifact_id": "artifact_activation",
+      "external_receipt_authority_revision": "1111111111111111111111111111111111111111",
+      "external_receipt_id": "receipt_activation",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff4",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_activation",
+      "verified_at": "2026-07-29T12:00:04Z",
+      "verified_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "verified_size_bytes": 104
+    },
+    {
+      "artifact_id": "artifact_detection",
+      "external_receipt_authority_revision": "5555555555555555555555555555555555555555",
+      "external_receipt_id": "receipt_detection",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_detection",
+      "verified_at": "2026-07-29T12:00:05Z",
+      "verified_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "verified_size_bytes": 105
+    },
+    {
+      "artifact_id": "artifact_fitted",
+      "external_receipt_authority_revision": "2222222222222222222222222222222222222222",
+      "external_receipt_id": "receipt_fitted",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff6",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_fitted",
+      "verified_at": "2026-07-29T12:00:06Z",
+      "verified_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "verified_size_bytes": 106
+    },
+    {
+      "artifact_id": "artifact_prediction",
+      "external_receipt_authority_revision": "2222222222222222222222222222222222222222",
+      "external_receipt_id": "receipt_prediction",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_prediction",
+      "verified_at": "2026-07-29T12:00:07Z",
+      "verified_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "verified_size_bytes": 107
+    },
+    {
+      "artifact_id": "artifact_metric",
+      "external_receipt_authority_revision": "2222222222222222222222222222222222222222",
+      "external_receipt_id": "receipt_metric",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_metric",
+      "verified_at": "2026-07-29T12:00:08Z",
+      "verified_sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+      "verified_size_bytes": 108
+    },
+    {
+      "artifact_id": "artifact_figure",
+      "external_receipt_authority_revision": "5555555555555555555555555555555555555555",
+      "external_receipt_id": "receipt_figure",
+      "external_receipt_sha256": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_figure",
+      "verified_at": "2026-07-29T12:00:09Z",
+      "verified_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "verified_size_bytes": 109
+    }
+  ],
+  "immutable_registry_schema_version": "mineocclude-immutable-registry-v2.0",
+  "manifests": [
+    {
+      "artifact_identities": [
+        "synthetic-query-raw-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_raw",
+      "manifest_schema_version": "synthetic-raw-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0",
+      "owner_authority_id": "authority_person_c_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-unaffected-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_unaffected",
+      "manifest_schema_version": "synthetic-unaffected-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+      "owner_authority_id": "authority_person_c_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-model-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_model",
+      "manifest_schema_version": "synthetic-model-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2",
+      "owner_authority_id": "authority_person_a_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-extraction-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_extraction",
+      "manifest_schema_version": "synthetic-extraction-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3",
+      "owner_authority_id": "authority_person_a_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-activation-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_activation",
+      "manifest_schema_version": "synthetic-activation-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4",
+      "owner_authority_id": "authority_person_a_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-detection-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_detection",
+      "manifest_schema_version": "synthetic-detection-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5",
+      "owner_authority_id": "authority_person_e_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-fitted-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_fitted",
+      "manifest_schema_version": "synthetic-fitted-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa6",
+      "owner_authority_id": "authority_person_b_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-prediction-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_prediction",
+      "manifest_schema_version": "synthetic-prediction-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa7",
+      "owner_authority_id": "authority_person_b_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-metric-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_metric",
+      "manifest_schema_version": "synthetic-metric-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa8",
+      "owner_authority_id": "authority_person_b_synthetic_query",
+      "schema_version": "1.0"
+    },
+    {
+      "artifact_identities": [
+        "synthetic-query-figure-entry"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_figure",
+      "manifest_schema_version": "synthetic-figure-manifest-v0.1",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa9",
+      "owner_authority_id": "authority_person_e_synthetic_query",
+      "schema_version": "1.0"
+    }
+  ],
+  "owner_authorities": [
+    {
+      "authority_id": "authority_person_a_synthetic_query",
+      "authority_revision": "1111111111111111111111111111111111111111",
+      "authorized_artifact_types": [
+        "activation",
+        "extraction",
+        "model_input"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_a",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_a_synthetic_query_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "e93b72af6bd2b4e78ad6883474d4813ad81c83bbb1a9c3b7bbec5e006b7bc596",
+      "status_record_verification_mode": "local_bytes"
+    },
+    {
+      "authority_id": "authority_person_b_synthetic_query",
+      "authority_revision": "2222222222222222222222222222222222222222",
+      "authorized_artifact_types": [
+        "fitted_probe",
+        "metric_table",
+        "prediction"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_b",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_b_synthetic_query_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "c94299e9eaaca443ddd7573825b14be0f3374e71be1af7d6775cccedd494f9da",
+      "status_record_verification_mode": "local_bytes"
+    },
+    {
+      "authority_id": "authority_person_c_synthetic_query",
+      "authority_revision": "3333333333333333333333333333333333333333",
+      "authorized_artifact_types": [
+        "raw_trajectory"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_c",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_c_synthetic_query_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "64806dfbc2a4a25f5c21c3edff523027c07267c4fe3da357bf592c9f0c47ed2d",
+      "status_record_verification_mode": "local_bytes"
+    },
+    {
+      "authority_id": "authority_person_e_synthetic_query",
+      "authority_revision": "5555555555555555555555555555555555555555",
+      "authorized_artifact_types": [
+        "detection",
+        "figure"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_e",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_e_synthetic_query_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "1345d3dfd2a9ac7ddad18c40c77d50581b3bd293b95486a6e078ee269de681ce",
+      "status_record_verification_mode": "local_bytes"
+    }
+  ],
+  "registry_id": "synthetic_person_e_v2_transitive_query",
+  "runs": [
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "3333333333333333333333333333333333333333",
+      "command": [
+        "synthetic-query",
+        "raw"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:00:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:00:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [],
+      "output_artifact_ids": [
+        "artifact_raw"
+      ],
+      "owner": "person_c",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_raw",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 0
+      },
+      "started_at": "2026-07-29T11:00:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "3333333333333333333333333333333333333333",
+      "command": [
+        "synthetic-query",
+        "unaffected"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:01:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:01:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [],
+      "output_artifact_ids": [
+        "artifact_unaffected"
+      ],
+      "owner": "person_c",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_unaffected",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 1
+      },
+      "started_at": "2026-07-29T11:01:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "1111111111111111111111111111111111111111",
+      "command": [
+        "synthetic-query",
+        "model"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:02:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:02:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_raw"
+      ],
+      "output_artifact_ids": [
+        "artifact_model"
+      ],
+      "owner": "person_a",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_model",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 2
+      },
+      "started_at": "2026-07-29T11:02:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "1111111111111111111111111111111111111111",
+      "command": [
+        "synthetic-query",
+        "extraction"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:03:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:03:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_model"
+      ],
+      "output_artifact_ids": [
+        "artifact_extraction"
+      ],
+      "owner": "person_a",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_extraction",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 3
+      },
+      "started_at": "2026-07-29T11:03:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "1111111111111111111111111111111111111111",
+      "command": [
+        "synthetic-query",
+        "activation"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:04:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:04:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_extraction"
+      ],
+      "output_artifact_ids": [
+        "artifact_activation"
+      ],
+      "owner": "person_a",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_activation",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 4
+      },
+      "started_at": "2026-07-29T11:04:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "5555555555555555555555555555555555555555",
+      "command": [
+        "synthetic-query",
+        "detection"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:05:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:05:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_raw"
+      ],
+      "output_artifact_ids": [
+        "artifact_detection"
+      ],
+      "owner": "person_e",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_detection",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 5
+      },
+      "started_at": "2026-07-29T11:05:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "2222222222222222222222222222222222222222",
+      "command": [
+        "synthetic-query",
+        "fitted"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:06:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:06:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_activation"
+      ],
+      "output_artifact_ids": [
+        "artifact_fitted"
+      ],
+      "owner": "person_b",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_fitted",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 6
+      },
+      "started_at": "2026-07-29T11:06:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "2222222222222222222222222222222222222222",
+      "command": [
+        "synthetic-query",
+        "prediction"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:07:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:07:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_fitted"
+      ],
+      "output_artifact_ids": [
+        "artifact_prediction"
+      ],
+      "owner": "person_b",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_prediction",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 7
+      },
+      "started_at": "2026-07-29T11:07:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "2222222222222222222222222222222222222222",
+      "command": [
+        "synthetic-query",
+        "metric"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:08:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:08:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_detection",
+        "artifact_prediction"
+      ],
+      "output_artifact_ids": [
+        "artifact_metric"
+      ],
+      "owner": "person_b",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_metric",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 8
+      },
+      "started_at": "2026-07-29T11:08:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "5555555555555555555555555555555555555555",
+      "command": [
+        "synthetic-query",
+        "figure"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-07-29T11:09:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-07-29T11:09:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "artifact_metric"
+      ],
+      "output_artifact_ids": [
+        "artifact_figure"
+      ],
+      "owner": "person_e",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_figure",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 9
+      },
+      "started_at": "2026-07-29T11:09:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    }
+  ],
+  "schema_version": "1.0",
+  "scientific_use": "forbidden",
+  "synthetic": true
+}

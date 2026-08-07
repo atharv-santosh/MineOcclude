@@ -1,0 +1,70 @@
+{
+  "blocker_count": 7,
+  "blockers": [
+    {
+      "blocker_id": "person_a_phase6_authorization",
+      "blocks_registry_v2_acceptance": true,
+      "blocks_runtime_execution": true,
+      "blocks_scientific_use": true,
+      "owner": "person_a",
+      "resolver": "required_signing_owners_under_person_b_contract",
+      "state": "blocked"
+    },
+    {
+      "blocker_id": "person_c_scientific_use_signoff",
+      "blocks_registry_v2_acceptance": true,
+      "blocks_runtime_execution": true,
+      "blocks_scientific_use": true,
+      "owner": "person_c",
+      "resolver": "person_c",
+      "state": "blocked"
+    },
+    {
+      "blocker_id": "person_c_registry_v2_input_trust_package",
+      "blocks_registry_v2_acceptance": true,
+      "blocks_runtime_execution": true,
+      "blocks_scientific_use": true,
+      "owner": "person_c",
+      "resolver": "person_c",
+      "state": "blocked"
+    },
+    {
+      "blocker_id": "production_model_input",
+      "blocks_registry_v2_acceptance": true,
+      "blocks_runtime_execution": true,
+      "blocks_scientific_use": true,
+      "owner": "person_a",
+      "resolver": "person_a_after_authorization",
+      "state": "blocked"
+    },
+    {
+      "blocker_id": "production_extraction",
+      "blocks_registry_v2_acceptance": true,
+      "blocks_runtime_execution": true,
+      "blocks_scientific_use": true,
+      "owner": "person_a",
+      "resolver": "person_a_after_authorization",
+      "state": "blocked"
+    },
+    {
+      "blocker_id": "production_activation",
+      "blocks_registry_v2_acceptance": true,
+      "blocks_runtime_execution": true,
+      "blocks_scientific_use": true,
+      "owner": "person_a",
+      "resolver": "person_a_after_authorization",
+      "state": "blocked"
+    },
+    {
+      "blocker_id": "production_rollout",
+      "blocks_registry_v2_acceptance": true,
+      "blocks_runtime_execution": true,
+      "blocks_scientific_use": true,
+      "owner": "person_a",
+      "resolver": "person_a_after_authorization",
+      "state": "blocked"
+    }
+  ],
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-blocker-receipt-v0.1",
+  "schema_version": "1.0"
+}

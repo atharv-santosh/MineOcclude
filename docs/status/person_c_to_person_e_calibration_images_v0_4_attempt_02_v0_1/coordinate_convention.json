@@ -1,0 +1,38 @@
+{
+  "schema_version": "person-c-to-person-e-v0.4-calibration-coordinate-convention-v0.1",
+  "image_coordinates": {
+    "convention": "pixel_center_xy_zero_based",
+    "origin": "top_left_pixel_center",
+    "positive_x": "right",
+    "positive_y": "down",
+    "width_pixels": 1920,
+    "height_pixels": 1046,
+    "valid_x_center_range": [
+      0,
+      1919
+    ],
+    "valid_y_center_range": [
+      0,
+      1045
+    ]
+  },
+  "world_coordinates": {
+    "system": "minecraft_world_x_y_z",
+    "homography_plane": "world_y_equals_4_blocks",
+    "homography_output_axes": [
+      "world_x",
+      "world_z"
+    ],
+    "fit_marker_point": "literal top-face centre declared by person-c-layout-config-v0.4",
+    "wall_validation_point": "literal near-face/ground-plane intersection; block boundary, not block centre"
+  },
+  "forbidden": [
+    "hidden_offsets",
+    "plus_0.5_corrections",
+    "layout_id_shifts",
+    "coordinate_renumbering",
+    "compatibility_adapters",
+    "invented_image_pixel_coordinates"
+  ],
+  "attempt_name": "e_refit_calibration_v0_4_attempt_02"
+}

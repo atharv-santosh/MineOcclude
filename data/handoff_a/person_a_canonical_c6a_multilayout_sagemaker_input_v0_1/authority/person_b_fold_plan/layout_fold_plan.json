@@ -1,0 +1,276 @@
+{
+  "accepted_row_count": 2456,
+  "analysis_config_version": "person-b-phase1-v0.2",
+  "artifact_hash": "ca265b64935880aede8c3bb8b6060cdda17c23932e5e98878a3fcf8ee5341f01",
+  "artifact_id": "person_b_c_layout_fold_plan_2026_07_28",
+  "artifact_schema_version": "person-b-analysis-artifact-v0.1",
+  "artifact_type": "layout_fold_plan",
+  "assignment_basis": "person_c_accepted_condition_rows_only",
+  "code_sha": "c5963cc8cfe1db521523659164abb7124b289582",
+  "config_hash": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+  "fold_assignment_source": "person_c_prejoin_layout_fold_plan",
+  "fold_schema_version": "person-b-fold-v0.1",
+  "input_manifest_hash": "b5f0f22978bc62911f284da8b700bd8f166144586d0925bb03f8a730963a50aa",
+  "layout_assignments": [
+    {
+      "fold_idx": 1,
+      "layout_id": "layout_00"
+    },
+    {
+      "fold_idx": 2,
+      "layout_id": "layout_01"
+    },
+    {
+      "fold_idx": 4,
+      "layout_id": "layout_02"
+    },
+    {
+      "fold_idx": 0,
+      "layout_id": "layout_03"
+    },
+    {
+      "fold_idx": 3,
+      "layout_id": "layout_04"
+    },
+    {
+      "fold_idx": 4,
+      "layout_id": "layout_05"
+    }
+  ],
+  "layout_count": 6,
+  "layout_evidence": [
+    {
+      "accepted_row_count": 507,
+      "condition_roles": [
+        "core_occluded",
+        "no_wall_visible_control"
+      ],
+      "layout_id": "layout_00",
+      "trajectory_count": 3,
+      "trajectory_ids": [
+        "layout_00_ep9403",
+        "layout_00_ep9410",
+        "layout_00_ep9441"
+      ]
+    },
+    {
+      "accepted_row_count": 502,
+      "condition_roles": [
+        "core_occluded",
+        "no_wall_visible_control"
+      ],
+      "layout_id": "layout_01",
+      "trajectory_count": 3,
+      "trajectory_ids": [
+        "layout_01_ep9405",
+        "layout_01_ep9412",
+        "layout_01_ep9442"
+      ]
+    },
+    {
+      "accepted_row_count": 335,
+      "condition_roles": [
+        "core_occluded",
+        "no_wall_visible_control"
+      ],
+      "layout_id": "layout_02",
+      "trajectory_count": 2,
+      "trajectory_ids": [
+        "layout_02_ep9407",
+        "layout_02_ep9432"
+      ]
+    },
+    {
+      "accepted_row_count": 524,
+      "condition_roles": [
+        "core_occluded",
+        "no_wall_visible_control"
+      ],
+      "layout_id": "layout_03",
+      "trajectory_count": 3,
+      "trajectory_ids": [
+        "layout_03_ep9404",
+        "layout_03_ep9409",
+        "layout_03_ep9443"
+      ]
+    },
+    {
+      "accepted_row_count": 418,
+      "condition_roles": [
+        "core_occluded",
+        "no_wall_visible_control"
+      ],
+      "layout_id": "layout_04",
+      "trajectory_count": 3,
+      "trajectory_ids": [
+        "layout_04_ep9406",
+        "layout_04_ep9411",
+        "layout_04_ep9444"
+      ]
+    },
+    {
+      "accepted_row_count": 170,
+      "condition_roles": [
+        "core_occluded"
+      ],
+      "layout_id": "layout_05",
+      "trajectory_count": 1,
+      "trajectory_ids": [
+        "layout_05_ep9408"
+      ]
+    }
+  ],
+  "layout_fold_plan_schema_version": "person-b-layout-fold-plan-v0.1",
+  "n_splits": 5,
+  "outcome_fields_used": false,
+  "person_a_artifacts_used": false,
+  "producer_role": "person_b",
+  "scientific_use": "permitted",
+  "scope_fold_coverage": [
+    {
+      "accepted_row_count": 1456,
+      "fold_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "layout_ids": [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04",
+        "layout_05"
+      ],
+      "scope": "hidden_mean"
+    },
+    {
+      "accepted_row_count": 1456,
+      "fold_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "layout_ids": [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04",
+        "layout_05"
+      ],
+      "scope": "hidden_spread"
+    },
+    {
+      "accepted_row_count": 1000,
+      "fold_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "layout_ids": [
+        "layout_00",
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04"
+      ],
+      "scope": "visible_no_wall_control"
+    }
+  ],
+  "seed": 20260719,
+  "source_branch": "role/person-c-data",
+  "source_capture_set_hash": "2f875f5c42e2c037aa4572a36ac859921295b7a6780971652df8f503a9189ccd",
+  "source_commit": "260784ea4d0f130b5ce96a383008e5a4574f3cc2",
+  "source_intake_artifact_hash": "1d976a5543ede07b43b0be3c6eb053afbb8cbcc823dc63d6fd5fd931988ce636",
+  "source_intake_file_hash": "c99a9000b41bbd660f00ffc4db5813445a72fe6c44696d9d2c7214f41e439607",
+  "source_role": "person_c",
+  "source_selection_canonical_hash": "1c4dabf667d277cf92394877b77d9696678d017663c69433fdbf599da31f0d78",
+  "status": "frozen_before_person_a_join",
+  "strategy": "layout_grouped",
+  "synthetic": false,
+  "trajectory_assignments": [
+    {
+      "fold_idx": 1,
+      "layout_id": "layout_00",
+      "trajectory_id": "layout_00_ep9403"
+    },
+    {
+      "fold_idx": 1,
+      "layout_id": "layout_00",
+      "trajectory_id": "layout_00_ep9410"
+    },
+    {
+      "fold_idx": 1,
+      "layout_id": "layout_00",
+      "trajectory_id": "layout_00_ep9441"
+    },
+    {
+      "fold_idx": 2,
+      "layout_id": "layout_01",
+      "trajectory_id": "layout_01_ep9405"
+    },
+    {
+      "fold_idx": 2,
+      "layout_id": "layout_01",
+      "trajectory_id": "layout_01_ep9412"
+    },
+    {
+      "fold_idx": 2,
+      "layout_id": "layout_01",
+      "trajectory_id": "layout_01_ep9442"
+    },
+    {
+      "fold_idx": 4,
+      "layout_id": "layout_02",
+      "trajectory_id": "layout_02_ep9407"
+    },
+    {
+      "fold_idx": 4,
+      "layout_id": "layout_02",
+      "trajectory_id": "layout_02_ep9432"
+    },
+    {
+      "fold_idx": 0,
+      "layout_id": "layout_03",
+      "trajectory_id": "layout_03_ep9404"
+    },
+    {
+      "fold_idx": 0,
+      "layout_id": "layout_03",
+      "trajectory_id": "layout_03_ep9409"
+    },
+    {
+      "fold_idx": 0,
+      "layout_id": "layout_03",
+      "trajectory_id": "layout_03_ep9443"
+    },
+    {
+      "fold_idx": 3,
+      "layout_id": "layout_04",
+      "trajectory_id": "layout_04_ep9406"
+    },
+    {
+      "fold_idx": 3,
+      "layout_id": "layout_04",
+      "trajectory_id": "layout_04_ep9411"
+    },
+    {
+      "fold_idx": 3,
+      "layout_id": "layout_04",
+      "trajectory_id": "layout_04_ep9444"
+    },
+    {
+      "fold_idx": 4,
+      "layout_id": "layout_05",
+      "trajectory_id": "layout_05_ep9408"
+    }
+  ],
+  "trajectory_count": 15
+}

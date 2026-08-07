@@ -1,0 +1,78 @@
+{
+  "fields": [
+    {
+      "json_type": "boolean",
+      "name": "accepted",
+      "nullable": false
+    },
+    {
+      "json_type": "array[integer]|null",
+      "name": "bounding_box_xyxy"
+    },
+    {
+      "json_type": "integer",
+      "name": "candidate_blob_count",
+      "nullable": false
+    },
+    {
+      "json_type": "array[number]|null",
+      "name": "centroid_xy"
+    },
+    {
+      "json_type": "integer",
+      "name": "decision_ordinal",
+      "nullable": false
+    },
+    {
+      "json_type": "string",
+      "name": "detector_identity_sha256",
+      "nullable": false
+    },
+    {
+      "json_type": "string",
+      "name": "detector_status",
+      "nullable": false
+    },
+    {
+      "json_type": "string",
+      "name": "detector_version",
+      "nullable": false
+    },
+    {
+      "json_type": "boolean",
+      "name": "empirical_magenta_visible",
+      "nullable": false
+    },
+    {
+      "json_type": "string",
+      "name": "frame_640_sha256",
+      "nullable": false
+    },
+    {
+      "json_type": "integer",
+      "name": "model_frame_idx",
+      "nullable": false
+    },
+    {
+      "json_type": "string|null",
+      "name": "rejection_reason"
+    },
+    {
+      "json_type": "integer|null",
+      "name": "selected_blob_area_pixels"
+    },
+    {
+      "json_type": "integer",
+      "name": "threshold_match_pixels",
+      "nullable": false
+    },
+    {
+      "json_type": "string",
+      "name": "trajectory_id",
+      "nullable": false
+    }
+  ],
+  "record_format": "compact_sorted_key_jsonl",
+  "schema_id": "person-e-phase3-step3-3-empirical-visibility-v0-1-detector-diagnostics-schema-v1.0",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "person-c-c1-candidate-server-properties-v0.1",
+  "status": "CANDIDATE_NOT_WRITTEN_CONFLICTED",
+  "target_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\server.properties",
+  "target_exists": false,
+  "source_authorities": [
+    {"path": "configs/scenes/environment_lock.template.yaml", "sha256": "e884dc083b562700b7652dca7a4eb8c602f5e272382d546a6dda2c275ec960b4"},
+    {"path": "configs/scenes/environment_lock.observed_dev_v0_1.json", "sha256": "bffd4341c01d14f77f01880353c33f3b378c3308c0b3a94fec4522fa0c86585d"}
+  ],
+  "candidate_properties": {
+    "level-type": "flat",
+    "generate-structures": false,
+    "spawn-animals": "UNRESOLVED_FALSE_VS_TRUE",
+    "spawn-monsters": false,
+    "spawn-npcs": false,
+    "allow-flight": true,
+    "view-distance": 10,
+    "pvp": false,
+    "difficulty": "peaceful",
+    "online-mode": "PENDING_NO_COMMITTED_AUTHORITY",
+    "level-seed": "PENDING_RUNTIME_OBSERVATION",
+    "level-name": "PENDING_WORLD_IDENTITY",
+    "resource-pack": "",
+    "op-permission-level": "PENDING_NO_COMMITTED_AUTHORITY",
+    "simulation-distance": "NOT_SUPPORTED_AS_A_1_16_5_SERVER_PROPERTY"
+  },
+  "candidate_runtime_commands_or_receipts": {
+    "doMobSpawning": false,
+    "doWeatherCycle": false,
+    "doDaylightCycle": false,
+    "mobGriefing": false,
+    "randomTickSpeed": 0,
+    "doFireTick": false,
+    "keepInventory": true,
+    "time_ticks": 6000,
+    "weather": "clear"
+  },
+  "command_permissions_note": "MineOccludeServer.java grants operator rights to joining players, but the server.properties op level remains unpinned.",
+  "written": false,
+  "configuration_complete": false
+}

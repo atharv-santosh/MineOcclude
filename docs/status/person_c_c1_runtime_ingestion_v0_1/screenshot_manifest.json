@@ -1,0 +1,72 @@
+{
+  "schema_version": "person-c-c1-screenshot-manifest-v1.0",
+  "status": "PASS",
+  "session_screenshot_count": 5,
+  "required_authoritative_pair_count": 2,
+  "authoritative_pair": [
+    "2026-08-03_17.52.43.png",
+    "2026-08-03_17.54.04.png"
+  ],
+  "supplemental_render_setting_screenshot_count": 3,
+  "screenshots": [
+    {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.52.43.png",
+      "size_bytes": 248361,
+      "sha256": "b05195e796b1b294e6de85b801071142f35f228521911fe52d0b1c76d9bde594",
+      "file_name": "2026-08-03_17.52.43.png",
+      "width_pixels": 1920,
+      "height_pixels": 1046,
+      "evidence_role": "authoritative_displayed_fov"
+    },
+    {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.53.00.png",
+      "size_bytes": 180984,
+      "sha256": "9d25bbf462394a70ee2f895c075e6bd94d05a5e62c5d72187446e5723ccd206b",
+      "file_name": "2026-08-03_17.53.00.png",
+      "width_pixels": 1920,
+      "height_pixels": 1046,
+      "evidence_role": "supplemental_render_settings"
+    },
+    {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.53.21.png",
+      "size_bytes": 140074,
+      "sha256": "49a5da0c9f1f5e65c1f6d60b5432a29cfa21d5a01a02f33da7199ec9a139a47f",
+      "file_name": "2026-08-03_17.53.21.png",
+      "width_pixels": 1920,
+      "height_pixels": 1046,
+      "evidence_role": "supplemental_render_settings"
+    },
+    {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.53.23.png",
+      "size_bytes": 182098,
+      "sha256": "99b46290b6e4c7e2f9029c652e852dc72b5e9708235a5a9d472702f1e3bc214c",
+      "file_name": "2026-08-03_17.53.23.png",
+      "width_pixels": 1920,
+      "height_pixels": 1046,
+      "evidence_role": "supplemental_render_settings"
+    },
+    {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_17.54.04.png",
+      "size_bytes": 291786,
+      "sha256": "64e8cd133aca45e303e82c951d40b847ab2efcd7dc12253dc687cd5ca26d1277",
+      "file_name": "2026-08-03_17.54.04.png",
+      "width_pixels": 1920,
+      "height_pixels": 1046,
+      "evidence_role": "authoritative_raw_gameplay_framebuffer"
+    }
+  ],
+  "visual_inspection": {
+    "2026-08-03_17.52.43.png": "Options screen visibly displays FOV: Normal while connected gameplay is behind the menu",
+    "2026-08-03_17.53.00.png": "supplemental Video Settings screen",
+    "2026-08-03_17.53.21.png": "supplemental Options screen visibly displays FOV: Normal",
+    "2026-08-03_17.53.23.png": "supplemental Video Settings screen",
+    "2026-08-03_17.54.04.png": "raw gameplay framebuffer visibly shows the canonical preview wall and markers"
+  },
+  "c1_3_acceptance": {
+    "displayed_fov_screenshot_present": true,
+    "raw_gameplay_framebuffer_screenshot_present": true,
+    "same_client_session": true,
+    "all_files_hash_bound": true,
+    "result": "PASS"
+  }
+}

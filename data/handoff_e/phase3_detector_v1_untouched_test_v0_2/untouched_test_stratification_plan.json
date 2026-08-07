@@ -1,0 +1,157 @@
+{
+  "absent_scene_element_strata": [
+    "cow_far_negative_end_open",
+    "cow_left_of_wall_segment",
+    "cow_right_of_wall_segment",
+    "cow_far_positive_end_open"
+  ],
+  "design": "Per layout: 4 truth-present (moving magenta sheep -> distinct frames) and 4 truth-absent (a static NoAI cow distractor at 4 distinct, unoccluded world positions -> distinct frames). The cow is never the detection target; the binary truth stays absent. Enough distinct positives and negatives per layout to make precision and recall gates meaningful.",
+  "image_region_strata": [
+    "region_1_left",
+    "region_2_center_left",
+    "region_3_center_right",
+    "region_4_right"
+  ],
+  "package_id": "person-c-phase3-detector-v1-untouched-test-v0_2",
+  "per_layout_absent_cow_positions": {
+    "layout_01": [
+      {
+        "x": -7.0,
+        "y": 4.0,
+        "z": 6.0
+      },
+      {
+        "x": -4.0,
+        "y": 4.0,
+        "z": 6.0
+      },
+      {
+        "x": 4.0,
+        "y": 4.0,
+        "z": 6.0
+      },
+      {
+        "x": 7.0,
+        "y": 4.0,
+        "z": 6.0
+      }
+    ],
+    "layout_02": [
+      {
+        "x": 6.0,
+        "y": 4.0,
+        "z": -7.0
+      },
+      {
+        "x": 6.0,
+        "y": 4.0,
+        "z": -4.0
+      },
+      {
+        "x": 6.0,
+        "y": 4.0,
+        "z": 4.0
+      },
+      {
+        "x": 6.0,
+        "y": 4.0,
+        "z": 7.0
+      }
+    ],
+    "layout_03": [
+      {
+        "x": -8.0,
+        "y": 4.0,
+        "z": 6.0
+      },
+      {
+        "x": -5.0,
+        "y": 4.0,
+        "z": 6.0
+      },
+      {
+        "x": 5.0,
+        "y": 4.0,
+        "z": 6.0
+      },
+      {
+        "x": 8.0,
+        "y": 4.0,
+        "z": 6.0
+      }
+    ],
+    "layout_04": [
+      {
+        "x": -7.0,
+        "y": 4.0,
+        "z": 8.0
+      },
+      {
+        "x": -4.0,
+        "y": 4.0,
+        "z": 8.0
+      },
+      {
+        "x": 4.0,
+        "y": 4.0,
+        "z": 8.0
+      },
+      {
+        "x": 7.0,
+        "y": 4.0,
+        "z": 8.0
+      }
+    ],
+    "layout_05": [
+      {
+        "x": -6.0,
+        "y": 4.0,
+        "z": 5.0
+      },
+      {
+        "x": -3.0,
+        "y": 4.0,
+        "z": 5.0
+      },
+      {
+        "x": 3.0,
+        "y": 4.0,
+        "z": 5.0
+      },
+      {
+        "x": 6.0,
+        "y": 4.0,
+        "z": 5.0
+      }
+    ],
+    "layout_06": [
+      {
+        "x": 7.0,
+        "y": 4.0,
+        "z": -8.0
+      },
+      {
+        "x": 7.0,
+        "y": 4.0,
+        "z": -4.0
+      },
+      {
+        "x": 7.0,
+        "y": 4.0,
+        "z": 4.0
+      },
+      {
+        "x": 7.0,
+        "y": 4.0,
+        "z": 8.0
+      }
+    ]
+  },
+  "present_scene_element_strata": [
+    "sheep_open_ground",
+    "sheep_near_marker",
+    "sheep_near_wall_edge",
+    "sheep_lane_extreme"
+  ],
+  "schema_version": "1.0"
+}

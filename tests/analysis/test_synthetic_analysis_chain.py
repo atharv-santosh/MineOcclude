@@ -10,6 +10,10 @@ import pytest
 
 from mineocclude.analysis.manifests import validate_sealed_artifact
 from mineocclude.analysis.synthetic_chain import run_synthetic_analysis_chain
+from mineocclude.analysis.synthetic_numbers import (
+    SYNTHETIC_SIGNIFICANT_DIGITS,
+    canonical_synthetic_float,
+)
 from mineocclude.integration.synthetic_pipeline import (
     build_authenticated_probe_bridge_inputs,
     load_pipeline_inputs,
@@ -52,6 +56,22 @@ def test_full_chain_is_sealed_non_scientific_and_matches_saved_evidence():
     for artifact in report["result_artifacts"].values():
         validate_sealed_artifact(artifact)
         assert artifact["scientific_use"] == "forbidden"
+
+
+def test_numeric_canonicalization_collapses_supported_numpy_last_bit_pairs():
+    """Recorded NumPy 1.26.4/2.4.3 results serialize identically."""
+
+    observed_pairs = (
+        (0.17781833022759722, 0.17781833022759724),
+        (8.888905555555551, 8.888905555555553),
+        (15.556958355544333, 15.556958355544335),
+        (-0.5621745611958644, -0.5621745611958648),
+    )
+    assert SYNTHETIC_SIGNIFICANT_DIGITS == 14
+    for numpy_2_4_3_value, numpy_1_26_4_value in observed_pairs:
+        assert canonical_synthetic_float(
+            numpy_2_4_3_value
+        ) == canonical_synthetic_float(numpy_1_26_4_value)
 
 
 def test_signal_expectations_and_oof_audit_are_explicit():

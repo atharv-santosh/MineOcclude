@@ -1,0 +1,1123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mineocclude.local/schemas/person_a/phase2_runtime_evidence_v1.schema.json",
+  "title": "MineOcclude Person A Phase 2.6-2.9 Runtime Evidence",
+  "description": "Additive runtime-evidence sub-schema. The frozen cross-role schema_version remains 1.0; the Python validators enforce the complete semantic contract.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/rollout"
+    },
+    {
+      "$ref": "#/$defs/architecture"
+    },
+    {
+      "$ref": "#/$defs/teacherForced"
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "gitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "checkpointProfileProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_revision",
+        "asset_revision",
+        "main_checkpoint_sha256",
+        "vae_checkpoint_sha256"
+      ],
+      "properties": {
+        "source_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "asset_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "main_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "vae_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "checkpointKeyFamily": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prefix",
+        "expected_count"
+      ],
+      "properties": {
+        "prefix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expected_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "checkpointComponentClassification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_missing_key_count",
+        "observed_missing_key_count",
+        "expected_unexpected_key_count",
+        "observed_unexpected_key_count",
+        "allowed_families",
+        "observed_family_counts",
+        "unmatched_keys",
+        "duplicate_keys",
+        "key_hash_serialization",
+        "expected_sorted_key_list_sha256",
+        "sorted_key_list_sha256",
+        "decision"
+      ],
+      "properties": {
+        "expected_missing_key_count": {
+          "const": 0
+        },
+        "observed_missing_key_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_unexpected_key_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "observed_unexpected_key_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allowed_families": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/checkpointKeyFamily"
+          }
+        },
+        "observed_family_counts": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "unmatched_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "duplicate_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "key_hash_serialization": {
+          "const": "UTF-8 lexicographically sorted keys; one key plus LF per line"
+        },
+        "expected_sorted_key_list_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sorted_key_list_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "decision": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        }
+      }
+    },
+    "checkpointLoadClassification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification_status",
+        "profile_id",
+        "profile_version",
+        "expected_provenance",
+        "observed_provenance",
+        "provenance_matches",
+        "transformer",
+        "vae",
+        "final_decision"
+      ],
+      "properties": {
+        "classification_status": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "profile_id": {
+          "const": "mineworld-700m-16f-pinned-runtime-load-v1"
+        },
+        "profile_version": {
+          "const": "1.0"
+        },
+        "expected_provenance": {
+          "$ref": "#/$defs/checkpointProfileProvenance"
+        },
+        "observed_provenance": {
+          "$ref": "#/$defs/checkpointProfileProvenance"
+        },
+        "provenance_matches": {
+          "type": "boolean"
+        },
+        "transformer": {
+          "$ref": "#/$defs/checkpointComponentClassification"
+        },
+        "vae": {
+          "$ref": "#/$defs/checkpointComponentClassification"
+        },
+        "final_decision": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        }
+      }
+    },
+    "architectureLoadState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transformer_missing_keys",
+        "transformer_unexpected_keys",
+        "vae_missing_keys",
+        "vae_unexpected_keys",
+        "classification"
+      ],
+      "properties": {
+        "transformer_missing_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "transformer_unexpected_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "vae_missing_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "vae_unexpected_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "classification": {
+          "$ref": "#/$defs/checkpointLoadClassification"
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "seed",
+        "source_revision",
+        "asset_revision",
+        "mineocclude_code_sha",
+        "mineocclude_dirty",
+        "model_config_sha256",
+        "main_checkpoint_sha256",
+        "vae_config_sha256",
+        "vae_checkpoint_sha256",
+        "environment_report_sha256",
+        "command"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "asset_revision": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "mineocclude_code_sha": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "mineocclude_dirty": {
+          "type": "boolean"
+        },
+        "model_config_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "main_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "vae_config_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "vae_checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "environment_report_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "command": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "canonical_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "path",
+        "size_bytes",
+        "sha256"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "videoPreprocessing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original",
+        "derived",
+        "tokenization"
+      ],
+      "properties": {
+        "original": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "path",
+            "size_bytes",
+            "sha256",
+            "asset_revision",
+            "width",
+            "height",
+            "r_frame_rate",
+            "avg_frame_rate",
+            "frame_count",
+            "decoded_frame_count",
+            "duration_seconds",
+            "pre_size_bytes",
+            "pre_sha256",
+            "post_size_bytes",
+            "post_sha256",
+            "canonical_input",
+            "unchanged"
+          ],
+          "properties": {
+            "classification": {
+              "const": "original"
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "asset_revision": {
+              "$ref": "#/$defs/gitSha"
+            },
+            "width": {
+              "const": 640
+            },
+            "height": {
+              "const": 360
+            },
+            "r_frame_rate": {
+              "const": "20/1"
+            },
+            "avg_frame_rate": {
+              "const": "20/1"
+            },
+            "frame_count": {
+              "const": 4152
+            },
+            "decoded_frame_count": {
+              "const": 4152
+            },
+            "duration_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pre_size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "pre_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "post_size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "post_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "canonical_input": {
+              "const": true
+            },
+            "unchanged": {
+              "const": true
+            }
+          }
+        },
+        "derived": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "transformation_name",
+            "transformation_version",
+            "matched_source_path",
+            "selected_source_frame_indices",
+            "requested_context_frames",
+            "original_frame_shape",
+            "processed_frame_shape",
+            "color_conversion",
+            "interpolation",
+            "pre_normalization_dtype",
+            "normalization_rule",
+            "processed_frame_count",
+            "processed_frames_sha256",
+            "processed_frames_size_bytes",
+            "frame_records",
+            "frames_dropped",
+            "frames_added",
+            "frames_duplicated",
+            "frame_order_preserved",
+            "storage_classification"
+          ],
+          "properties": {
+            "classification": {
+              "const": "derived"
+            },
+            "transformation_name": {
+              "const": "mineworld_gradio_step_video_preprocessing"
+            },
+            "transformation_version": {
+              "const": "1.0"
+            },
+            "matched_source_path": {
+              "const": "mineworld.py:step_video"
+            },
+            "selected_source_frame_indices": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "requested_context_frames": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "original_frame_shape": {
+              "const": [
+                360,
+                640,
+                3
+              ]
+            },
+            "processed_frame_shape": {
+              "const": [
+                224,
+                384,
+                3
+              ]
+            },
+            "color_conversion": {
+              "const": "BGR_to_RGB"
+            },
+            "interpolation": {
+              "const": "cv2.INTER_LINEAR"
+            },
+            "pre_normalization_dtype": {
+              "const": "uint8"
+            },
+            "normalization_rule": {
+              "type": "string",
+              "minLength": 1
+            },
+            "processed_frame_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "processed_frames_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "processed_frames_size_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "frame_records": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_frame_index",
+                  "processed_sha256",
+                  "size_bytes"
+                ],
+                "properties": {
+                  "source_frame_index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "processed_sha256": {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  "size_bytes": {
+                    "const": 258048
+                  }
+                }
+              }
+            },
+            "frames_dropped": {
+              "const": 0
+            },
+            "frames_added": {
+              "const": 0
+            },
+            "frames_duplicated": {
+              "const": 0
+            },
+            "frame_order_preserved": {
+              "const": true
+            },
+            "storage_classification": {
+              "const": "runtime_only_in_memory_outside_git"
+            }
+          }
+        },
+        "tokenization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "raw_visual_token_shape",
+            "flattened_visual_token_shape",
+            "visual_tokens_per_frame",
+            "total_visual_prompt_tokens",
+            "action_token_shape",
+            "action_token_count",
+            "prompt_positions",
+            "requested_generated_positions",
+            "conservative_position_budget",
+            "max_position_embeddings",
+            "position_budget_status",
+            "tokenizer_module",
+            "tokenizer_class",
+            "vae_config_sha256",
+            "vae_checkpoint_sha256",
+            "visual_token_dtype",
+            "visual_token_device",
+            "visual_token_sha256",
+            "action_token_dtype",
+            "action_token_device",
+            "action_token_sha256"
+          ],
+          "properties": {
+            "classification": {
+              "const": "tokenized"
+            },
+            "raw_visual_token_shape": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "flattened_visual_token_shape": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "visual_tokens_per_frame": {
+              "const": 336
+            },
+            "total_visual_prompt_tokens": {
+              "type": "integer",
+              "minimum": 336
+            },
+            "action_token_shape": {
+              "const": [
+                1,
+                1,
+                11
+              ]
+            },
+            "action_token_count": {
+              "const": 11
+            },
+            "prompt_positions": {
+              "type": "integer",
+              "minimum": 347
+            },
+            "requested_generated_positions": {
+              "const": 336
+            },
+            "conservative_position_budget": {
+              "type": "integer",
+              "maximum": 5552
+            },
+            "max_position_embeddings": {
+              "const": 5552
+            },
+            "position_budget_status": {
+              "const": "PASS"
+            },
+            "tokenizer_module": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tokenizer_class": {
+              "type": "string",
+              "minLength": 1
+            },
+            "vae_config_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "vae_checkpoint_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "visual_token_dtype": {
+              "type": "string",
+              "minLength": 1
+            },
+            "visual_token_device": {
+              "type": "string",
+              "minLength": 1
+            },
+            "visual_token_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "action_token_dtype": {
+              "type": "string",
+              "minLength": 1
+            },
+            "action_token_device": {
+              "type": "string",
+              "minLength": 1
+            },
+            "action_token_sha256": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        }
+      }
+    },
+    "header": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "evidence_schema_version",
+        "evidence_type",
+        "status",
+        "identity",
+        "manifest_integrity"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "evidence_schema_version": {
+          "const": "mineocclude-phase2-runtime-evidence-v1.0"
+        },
+        "status": {
+          "const": "completed"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "manifest_integrity": {
+          "$ref": "#/$defs/integrity"
+        }
+      }
+    },
+    "rollout": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "evidence_schema_version",
+            "evidence_type",
+            "status",
+            "identity",
+            "inputs",
+            "runtime",
+            "outputs",
+            "action_compatibility",
+            "video_preprocessing",
+            "ffprobe",
+            "manifest_integrity"
+          ],
+          "properties": {
+            "schema_version": true,
+            "evidence_schema_version": true,
+            "evidence_type": {
+              "const": "phase2.6_formal_rollout"
+            },
+            "status": true,
+            "identity": true,
+            "inputs": {
+              "type": "array",
+              "minItems": 7,
+              "maxItems": 7,
+              "items": {
+                "$ref": "#/$defs/artifact"
+              }
+            },
+            "runtime": {
+              "type": "object"
+            },
+            "outputs": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "$ref": "#/$defs/artifact"
+              }
+            },
+            "action_compatibility": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "original",
+                "derived",
+                "generated"
+              ],
+              "properties": {
+                "original": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "classification",
+                    "path",
+                    "size_bytes",
+                    "sha256",
+                    "row_count",
+                    "asset_revision",
+                    "pre_size_bytes",
+                    "pre_sha256",
+                    "post_size_bytes",
+                    "post_sha256",
+                    "row_sequence_sha256",
+                    "canonical_input",
+                    "unchanged"
+                  ],
+                  "properties": {
+                    "classification": {
+                      "const": "original"
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "asset_revision": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{40}$"
+                    },
+                    "pre_size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "pre_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "post_size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "post_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "canonical_input": {
+                      "const": true
+                    },
+                    "unchanged": {
+                      "const": true
+                    }
+                  }
+                },
+                "derived": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "classification",
+                    "path",
+                    "size_bytes",
+                    "sha256",
+                    "row_count",
+                    "transformation_name",
+                    "transformation_version",
+                    "deterministic_serialization",
+                    "parent_original_sha256",
+                    "parent_row_sequence_sha256",
+                    "row_sequence_sha256",
+                    "source_to_derived_sequence_sha256",
+                    "rows_dropped",
+                    "rows_added",
+                    "row_order_preserved",
+                    "storage_classification"
+                  ],
+                  "properties": {
+                    "classification": {
+                      "const": "derived"
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "transformation_name": {
+                      "const": "mineworld_mcdataset_json_action_to_env_action"
+                    },
+                    "transformation_version": {
+                      "const": "1.0"
+                    },
+                    "deterministic_serialization": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "parent_original_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "parent_row_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "source_to_derived_sequence_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "rows_dropped": {
+                      "const": 0
+                    },
+                    "rows_added": {
+                      "const": 0
+                    },
+                    "row_order_preserved": {
+                      "const": true
+                    },
+                    "storage_classification": {
+                      "const": "runtime_only_outside_git"
+                    }
+                  }
+                },
+                "generated": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "classification",
+                    "path",
+                    "size_bytes",
+                    "sha256",
+                    "row_count",
+                    "relationship_to_generated_mp4",
+                    "generated_video_sha256",
+                    "relationship_to_original",
+                    "original_jsonl_sha256",
+                    "relationship_to_derived",
+                    "derived_jsonl_sha256",
+                    "materialization_method"
+                  ],
+                  "properties": {
+                    "classification": {
+                      "const": "generated"
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "relationship_to_generated_mp4": {
+                      "const": "paired_action_metadata_for_generated_video"
+                    },
+                    "generated_video_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "relationship_to_original": {
+                      "const": "derived_from_original_via_compatibility_jsonl"
+                    },
+                    "original_jsonl_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "relationship_to_derived": {
+                      "const": "byte_identical_copy_of_derived_jsonl"
+                    },
+                    "derived_jsonl_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "materialization_method": {
+                      "const": "project_owned_byte_copy_of_derived_jsonl"
+                    }
+                  }
+                }
+              }
+            },
+            "video_preprocessing": {
+              "$ref": "#/$defs/videoPreprocessing"
+            },
+            "ffprobe": {
+              "type": "object"
+            },
+            "manifest_integrity": true
+          }
+        }
+      ]
+    },
+    "architecture": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "evidence_schema_version",
+            "evidence_type",
+            "status",
+            "identity",
+            "architecture",
+            "load_state",
+            "module_tree",
+            "cuda_memory",
+            "manifest_integrity"
+          ],
+          "properties": {
+            "schema_version": true,
+            "evidence_schema_version": true,
+            "evidence_type": {
+              "const": "phase2.7_architecture"
+            },
+            "status": true,
+            "identity": true,
+            "architecture": {
+              "type": "object"
+            },
+            "load_state": {
+              "$ref": "#/$defs/architectureLoadState"
+            },
+            "module_tree": {
+              "type": "array",
+              "minItems": 1
+            },
+            "cuda_memory": {
+              "type": "object"
+            },
+            "manifest_integrity": true
+          }
+        }
+      ]
+    },
+    "teacherForced": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "evidence_schema_version",
+            "evidence_type",
+            "status",
+            "identity",
+            "load_state",
+            "execution",
+            "input",
+            "token_layout",
+            "hooks",
+            "repeatability",
+            "timing",
+            "memory",
+            "cleanup",
+            "manifest_integrity"
+          ],
+          "properties": {
+            "schema_version": true,
+            "evidence_schema_version": true,
+            "evidence_type": {
+              "const": "phase2.8_2.9_teacher_forced"
+            },
+            "status": true,
+            "identity": true,
+            "load_state": {
+              "$ref": "#/$defs/architectureLoadState"
+            },
+            "execution": {
+              "type": "object"
+            },
+            "input": {
+              "type": "object"
+            },
+            "token_layout": {
+              "type": "object"
+            },
+            "hooks": {
+              "type": "array",
+              "minItems": 40
+            },
+            "repeatability": {
+              "type": "array",
+              "minItems": 20,
+              "maxItems": 20
+            },
+            "timing": {
+              "type": "object"
+            },
+            "memory": {
+              "type": "object"
+            },
+            "cleanup": {
+              "type": "object"
+            },
+            "manifest_integrity": true
+          }
+        }
+      ]
+    }
+  }
+}

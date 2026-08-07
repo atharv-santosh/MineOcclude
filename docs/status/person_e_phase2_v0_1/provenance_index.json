@@ -1,0 +1,162 @@
+{
+  "evidence_schema_version": "person-e-phase2-evidence-v0.1",
+  "provenance_index_schema_version": "person-e-phase2-provenance-index-v0.1",
+  "records": [
+    {
+      "artifact_id": "person_e_phase2_v0_1:calibration_detection_records.json",
+      "direct_inputs": [
+        "frozen_split_manifest.json",
+        "frozen_detector_config.json"
+      ],
+      "path": "calibration_detection_records.json",
+      "sha256": "94bbaa87687e83b8ffc2571f6f59e35bea7ca0625d77ef72d93ff837d4f75e15",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 90728,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:calibration_report.json",
+      "direct_inputs": [
+        "calibration_detection_records.json",
+        "frozen_detector_config.json"
+      ],
+      "path": "calibration_report.json",
+      "sha256": "229ef456963345f2fffc38c537c4d981a9d275bfd56fba74a40fea1c7875f2e7",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 5817,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:detector_version_record.json",
+      "direct_inputs": [
+        "frozen_detector_config.json",
+        "calibration_report.json"
+      ],
+      "path": "detector_version_record.json",
+      "sha256": "667fb0a27f6f3c31832c390dba2d87ef5930f51808a7f5191de8b5a4ac2dafc0",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 1165,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:frozen_detector_config.json",
+      "direct_inputs": [
+        "frozen_split_manifest.json"
+      ],
+      "path": "frozen_detector_config.json",
+      "sha256": "0333e21002cf94878ae3d945337a34aec280fb1d07f87bac6346a7daf9c0605a",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 3877,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:frozen_split_manifest.json",
+      "direct_inputs": [
+        "git:00784756f21895d19aff44572496c956cc5d932f:data/handoff_e/detector_calibration_inputs.json",
+        "git:00784756f21895d19aff44572496c956cc5d932f:data/handoff_e/provenance_calibration_clean.json",
+        "git:03a2c4663ce73873b4fed0369943c1f43edcd742:src/mineocclude/probes/splits.py"
+      ],
+      "path": "frozen_split_manifest.json",
+      "sha256": "03097dda9c1c68ae120b291845a65aba7166cff20c234f51d30b5cdd2d10811c",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 91181,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:homography_correspondences.json",
+      "direct_inputs": [
+        "frozen_split_manifest.json",
+        "git:00784756f21895d19aff44572496c956cc5d932f:data/handoff_e/independent_probe_points.json"
+      ],
+      "path": "homography_correspondences.json",
+      "sha256": "38dd835d1e845e29781557ce8352bcdc986bb86e783a356d13b524fb3825f88c",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 31982,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:homography_record.json",
+      "direct_inputs": [
+        "homography_correspondences.json",
+        "detector_version_record.json"
+      ],
+      "path": "homography_record.json",
+      "sha256": "df999f2383262751adb4ae4b61e349c1132ca31ba235e17eb8c2b0c159781aa4",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 10708,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:localization_validation_report.json",
+      "direct_inputs": [
+        "homography_record.json",
+        "git:00784756f21895d19aff44572496c956cc5d932f:data/handoff_e/independent_probe_points.json"
+      ],
+      "path": "localization_validation_report.json",
+      "sha256": "68c1a92ae03efac953396460e3fd543ce9075027b06e36b74a0ffc3a0106e06c",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 148662,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:registry_query_example.json",
+      "direct_inputs": [
+        "registry_snapshot.json"
+      ],
+      "path": "registry_query_example.json",
+      "sha256": "dd65835d38fc45068a23d54ddcf1ae3f1810481343546f6da473f3d79ec3ab43",
+      "shared_immutable_registry_emitted": true,
+      "size_bytes": 126973,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:registry_snapshot.json",
+      "direct_inputs": [
+        "git:f0a4fed546eb1cf19a7094e6b99399a58294726a:docs/status/person_a_phase2_registry_handoff_v1/handoff_index.json",
+        "git:f2fa76739fd9949afe8c8ac3207f8003c018baea:data/handoff_e/person_c_phase2_registry_handoff_v1/pilot_registry_handoff.json",
+        "git:f2fa76739fd9949afe8c8ac3207f8003c018baea:data/handoff_e/person_c_phase2_registry_handoff_v1/artifact_verification.json"
+      ],
+      "path": "registry_snapshot.json",
+      "sha256": "0a181a866d50ec296c9c3db0ceda26ef342d7ace014d330e9bd70bc6fa6e2e88",
+      "shared_immutable_registry_emitted": true,
+      "size_bytes": 76165,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:split_coverage_report.json",
+      "direct_inputs": [
+        "frozen_split_manifest.json"
+      ],
+      "path": "split_coverage_report.json",
+      "sha256": "1c63f83271b1be5bcca45c118d9dc311ad55b68ba895bb22b370b0afc1e8c7e6",
+      "shared_immutable_registry_emitted": false,
+      "size_bytes": 4556,
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person_e_phase2_v0_1:step2_1_registry_receipt.json",
+      "direct_inputs": [
+        "registry_snapshot.json",
+        "registry_query_example.json",
+        "git:f0a4fed546eb1cf19a7094e6b99399a58294726a:docs/status/person_a_phase2_registry_handoff_v1/handoff_index.json",
+        "git:f2fa76739fd9949afe8c8ac3207f8003c018baea:data/handoff_e/person_c_phase2_registry_handoff_v1/attempt_scope.json"
+      ],
+      "path": "step2_1_registry_receipt.json",
+      "sha256": "873522fa0457200fb0b109ab89764315eff3e6b7299332564a54ad8c250d573a",
+      "shared_immutable_registry_emitted": true,
+      "size_bytes": 7269,
+      "status": "accepted"
+    }
+  ],
+  "schema_version": "1.0",
+  "shared_immutable_registry_status": "step2_1_real_registry_emitted_and_validated",
+  "source_revisions": {
+    "person_a_registry_handoff": "f0a4fed546eb1cf19a7094e6b99399a58294726a",
+    "person_a_registry_source": "85224f1951c224698a2cf6f8a0a3088de5b67664",
+    "person_b": "03a2c4663ce73873b4fed0369943c1f43edcd742",
+    "person_c": "00784756f21895d19aff44572496c956cc5d932f",
+    "person_c_registry_handoff": "f2fa76739fd9949afe8c8ac3207f8003c018baea",
+    "person_c_registry_source": "487532ba1e7745fe07174090c0851269fb70a6a7",
+    "person_e_base": "24e4556fa03b25fd7256474593b518bdf03cdbe2"
+  }
+}

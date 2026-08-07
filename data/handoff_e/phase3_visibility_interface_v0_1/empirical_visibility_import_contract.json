@@ -1,0 +1,57 @@
+{
+  "context_mismatch_covers": [
+    "wrong_layout",
+    "wrong_camera_pose",
+    "wrong_resolution",
+    "wrong_coordinate_convention"
+  ],
+  "e_fail_closed_condition_coverage": {
+    "conflicting_identities": "context_identity_mismatch (+ duplicate_c/e_record)",
+    "duplicate_c_records": "duplicate_c_record",
+    "duplicate_e_records": "duplicate_e_record",
+    "extra_e_records_no_c_frame": "extra_unmatched_e_record",
+    "incomplete_package_input": "incomplete_c_input / incomplete_e_input",
+    "missing_e_records": "missing_e_record",
+    "unmatched_c_records": "missing_e_record",
+    "wrong_camera_pose": "context_identity_mismatch",
+    "wrong_coordinate_convention": "context_identity_mismatch",
+    "wrong_detector_version": "wrong_detector_version",
+    "wrong_layout": "context_identity_mismatch",
+    "wrong_resolution": "context_identity_mismatch"
+  },
+  "e_forbidden_fields": [
+    "visible_flag"
+  ],
+  "e_may_supply_only": "empirical_magenta_visible + identity + context",
+  "empirical_source": "Person E frozen detector",
+  "fail_closed_categories": [
+    "incomplete_c_input",
+    "incomplete_e_input",
+    "e_cannot_write_visible_flag",
+    "wrong_detector_version",
+    "duplicate_c_record",
+    "duplicate_e_record",
+    "extra_unmatched_e_record",
+    "missing_e_record",
+    "context_identity_mismatch"
+  ],
+  "join_primary_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "no_mismatch_may_silently_become_visible": true,
+  "owner": "Person C",
+  "package_id": "person-c-phase3-visibility-interface-v0_1",
+  "required_detector_version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+  "required_e_record_fields": [
+    "trajectory_id",
+    "model_frame_idx",
+    "empirical_magenta_visible",
+    "detector_version",
+    "layout_id",
+    "canonical_camera_pose_id",
+    "resolution",
+    "coordinate_convention"
+  ],
+  "schema_version": "1.0"
+}

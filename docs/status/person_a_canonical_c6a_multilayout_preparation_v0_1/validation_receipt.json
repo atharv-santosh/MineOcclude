@@ -1,0 +1,34 @@
+{
+  "b_blocker_interpretation": {
+    "focused_test_count": 4,
+    "focused_tests_pass": true,
+    "receipt_sha256_valid": true
+  },
+  "checks": {
+    "additive_create_only_execution": "PASS",
+    "canonical_c6a_source_validation": "PASS",
+    "deterministic_selection": "PASS",
+    "direct_pooling_audit_recomputed_with_numpy": "PASS",
+    "expected_activation_cardinality": "PASS",
+    "input_bundle_manifest": "PASS",
+    "multirun_successor_collection": "PASS",
+    "no_duplicate_episode_layout_trajectory_frame_or_source_identity": "PASS",
+    "sagemaker_prompt_completeness": "PASS",
+    "staged_input_sha256_inventory": "PASS",
+    "successor_a_to_b_handoff": "PASS",
+    "successor_a_to_e_handoff": "PASS"
+  },
+  "focused_person_a_test_count": 36,
+  "focused_person_a_tests_pass": true,
+  "gpu_extraction_performed_locally": false,
+  "immutable": true,
+  "local_torch_available": false,
+  "sagemaker_torch_pooling_tests_required": true,
+  "schema_version": "person-a-canonical-c6a-multilayout-validation-receipt-v0.1",
+  "status": "PASS",
+  "test_commands": [
+    "python -m pytest -q tests/models/test_person_a_canonical_c6a_multilayout_v0_1.py tests/models/test_person_a_canonical_c6a_sagemaker_prep_v0_1.py tests/models/test_person_a_canonical_c6a_launcher_v0_1.py tests/activations/test_phase6_activation_store_v2.py",
+    "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider tests/analysis/test_person_b_canonical_positive_control.py"
+  ],
+  "unresolved_blockers": []
+}

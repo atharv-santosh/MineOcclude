@@ -1,0 +1,118 @@
+{
+  "authorities": {
+    "person_a_phase6_completion": "55776dc88302b89b52eef483a710fbf6811cf536",
+    "person_a_previous_fail_closed_handoff": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+    "person_b_baseline_input_v0_2": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+    "person_b_production_ratification": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+    "person_d_recorded_starting_authority": "853e0acadf050a0b1f318b399b524e57379d03bf",
+    "person_e_phase6_acceptance": "5bbe7c7021fe3b1c4c35c78fadfbd92ab51484e8",
+    "person_e_phase6_to_step4_1_handoff": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7"
+  },
+  "bindings": {
+    "fold_manifest": {
+      "byte_size": 742601,
+      "git_blob_oid": "2bf314b91fecdea55b8170837932803a2a950d70",
+      "git_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "role": "person_b",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+    },
+    "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+    "preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+    "target_manifest": {
+      "byte_size": 4934874,
+      "git_blob_oid": "017553803c56587767bccf19192ae3f7d72c04b5",
+      "git_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+      "role": "person_b",
+      "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+    }
+  },
+  "materialization_boundary": {
+    "activation_extraction_performed": false,
+    "baseline_execution_performed": false,
+    "model_loaded_or_executed": false,
+    "probe_execution_performed": false,
+    "source_trajectory_regenerated": false,
+    "u4_output_inspected": false
+  },
+  "person_a_accepted_implementation": [
+    {
+      "byte_size": 67511,
+      "git_blob_oid": "a7a96f76b8897740c49f21dc379119fb1f1fd3a0",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "src/mineocclude/models/phase3_certification.py",
+      "role": "person_a",
+      "sha256": "65644bf69cb4ff8375236142357df9e63831f207e8ddc482f4b2625eb224ea53"
+    },
+    {
+      "byte_size": 36608,
+      "git_blob_oid": "7bac2d47a9b1ecb7d9326b543e78f39c5ede3a7f",
+      "git_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+      "path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+      "role": "person_a",
+      "sha256": "e165dad8f8fb53087da08668b4687c27576d6c7e680300e6577ea35e18d3e076"
+    }
+  ],
+  "previous_handoff_package": {
+    "authority_binding.json": {
+      "byte_size": 13467,
+      "git_blob_oid": "c75f47ba03a8fc989784662cd8d2520af51c9acf",
+      "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/authority_binding.json",
+      "role": "person_a",
+      "sha256": "81aa1f18f82d496327ec06f1d7df747637292c6bc320cf9c78a78e7674cf5c6c"
+    },
+    "handoff_decision.json": {
+      "byte_size": 2254,
+      "git_blob_oid": "addaa291ac82af4ceebd7f71f1afbdb47fa6ad40",
+      "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/handoff_decision.json",
+      "role": "person_a",
+      "sha256": "6c8390cc9f68978dea0b241a212e217382e16c2c54a6cd05143e29e4d6998094"
+    },
+    "preprocessed_frame_gap_manifest.json": {
+      "byte_size": 806280,
+      "git_blob_oid": "e855801f6e56be2972dfc7c9674384fdac4fb360",
+      "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/preprocessed_frame_gap_manifest.json",
+      "role": "person_a",
+      "sha256": "fed0a3ffb00560dcf64a7ce9718b734020739efff6c46e876e0ca3dafd244009"
+    },
+    "preprocessing_contract.json": {
+      "byte_size": 1615,
+      "git_blob_oid": "958e9d06fa4bef7e9f5fcdcd81a150401f617135",
+      "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/preprocessing_contract.json",
+      "role": "person_a",
+      "sha256": "aae1b413f1dd5e8ae04ee60fd5aea7cd643ebff6924822f3f516ab94514e6dfa"
+    },
+    "sha256_inventory.json": {
+      "byte_size": 1160,
+      "git_blob_oid": "efce788d5c8fde7f70d6daaece873f4200aa82d4",
+      "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/sha256_inventory.json",
+      "role": "person_a",
+      "sha256": "e880401a0e9da65a7884d99ad05cdecc8e3653b01665990e2dc228f8bbcf682b"
+    },
+    "source_context_inventory.json": {
+      "byte_size": 2618278,
+      "git_blob_oid": "dab6356f1426a53c4a896a79d74d198478290e1e",
+      "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/source_context_inventory.json",
+      "role": "person_a",
+      "sha256": "ab2f07b7c4a5f3717f3e737a8f95762d43e05dcdf1405eca52d8e6049f7dea69"
+    },
+    "validation_receipt.json": {
+      "byte_size": 1523,
+      "git_blob_oid": "84287a1fa10326f90fa0a240416ebb5381b24124",
+      "git_commit": "2799c1e95e4b3a7f65cd02e6557568a556010933",
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_1/validation_receipt.json",
+      "role": "person_a",
+      "sha256": "c563d166468e1971477deb4abff1827e485a654b7332f126c5dd0212f0253876"
+    }
+  },
+  "schema_id": "person-a-step4-1-frame-handoff-v0-2-authority-binding",
+  "schema_version": "1.0",
+  "supersedes_status_only": "FAIL_CLOSED_MISSING_PREPROCESSED_FRAME_DIRECT_INPUT"
+}

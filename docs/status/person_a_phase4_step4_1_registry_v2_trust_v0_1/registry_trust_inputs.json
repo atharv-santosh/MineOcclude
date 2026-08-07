@@ -1,0 +1,90 @@
+{
+  "artifact_bytes": {
+    "person_a_step4_1_preprocessed_frame_inputs_v0_1": "/home/sagemaker-user/MineOcclude/docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/preprocessed_frame_manifest.json"
+  },
+  "trusted_artifact_authorizations": {
+    "person_a_step4_1_preprocessed_frame_inputs_v0_1": {
+      "authorization": {
+        "artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+        "artifact_schema_version": "person-a-step4-1-preprocessed-frame-manifest-v0-1",
+        "artifact_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+        "artifact_size_bytes": 6460547,
+        "artifact_type": "model_input",
+        "authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+        "authorization_id": "person_a_step4_1_frame_input_authorization_v0_1",
+        "authorization_record_id": "person_a_step4_1_frame_input_authorization_record_v0_1",
+        "authorization_record_receipt_authority_revision": null,
+        "authorization_record_receipt_id": null,
+        "authorization_record_receipt_sha256": null,
+        "authorization_record_sha256": "8662902b6d1d9c497ff392b4434d61e988db0896ff7d4c43a4f1f15bef19ac4f",
+        "authorization_record_verification_mode": "local_bytes",
+        "decision": "accepted",
+        "manifest_artifact_identity": "person-a-step4-1-preprocessed-frame-inputs-1695",
+        "manifest_id": "person_a_step4_1_frame_input_manifest_v0_1",
+        "manifest_schema_version": "person-a-step4-1-preprocessed-frame-manifest-v0-1",
+        "manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+        "owner_authority_revision": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+        "owner_id": "person_a",
+        "owner_status": "accepted"
+      },
+      "authorization_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    }
+  },
+  "trusted_authorization_record_bytes": {
+    "person_a_step4_1_frame_input_authorization_record_v0_1": "artifact_authorization_record.json"
+  },
+  "trusted_manifest_records": {
+    "person_a_step4_1_frame_input_manifest_v0_1": {
+      "artifact_identities": [
+        {
+          "artifact_id": "person_a_step4_1_preprocessed_frame_inputs_v0_1",
+          "artifact_schema_version": "person-a-step4-1-preprocessed-frame-manifest-v0-1",
+          "artifact_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+          "artifact_size_bytes": 6460547,
+          "artifact_type": "model_input",
+          "manifest_artifact_identity": "person-a-step4-1-preprocessed-frame-inputs-1695"
+        }
+      ],
+      "decision": "accepted",
+      "manifest_id": "person_a_step4_1_frame_input_manifest_v0_1",
+      "manifest_schema_version": "person-a-step4-1-preprocessed-frame-manifest-v0-1",
+      "manifest_sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+      "owner_authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+      "owner_authority_revision": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+      "owner_id": "person_a",
+      "owner_status": "accepted"
+    }
+  },
+  "trusted_owner_authorities": {
+    "person_a_step4_1_frame_input_authority_v0_1": {
+      "authority": {
+        "authority_id": "person_a_step4_1_frame_input_authority_v0_1",
+        "authority_revision": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+        "authorized_artifact_types": [
+          "model_input"
+        ],
+        "decision": "accepted",
+        "owner_id": "person_a",
+        "owner_status": "accepted",
+        "schema_version": "1.0",
+        "status_record_id": "person_a_step4_1_frame_input_status_v0_1",
+        "status_record_receipt_authority_revision": null,
+        "status_record_receipt_id": null,
+        "status_record_receipt_sha256": null,
+        "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+        "status_record_sha256": "35a7952cbb1aeef82965cb9c29fa0292487c6c3801c9347d99e740b7d14a001c",
+        "status_record_verification_mode": "local_bytes"
+      },
+      "status_record_verification": {
+        "external_receipt": null,
+        "mode": "local_bytes"
+      }
+    }
+  },
+  "trusted_status_record_bytes": {
+    "person_a_step4_1_frame_input_status_v0_1": "owner_status_record.json"
+  }
+}

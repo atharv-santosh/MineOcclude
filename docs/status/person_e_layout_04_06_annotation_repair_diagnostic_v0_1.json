@@ -1,0 +1,227 @@
+{
+  "coordinate_convention_valid": true,
+  "diagnostic_scope": [
+    "layout_04",
+    "layout_06"
+  ],
+  "fit_method": "four_point_projective_gauss_jordan_v0.1",
+  "immutable_inputs": {
+    "annotation": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\data\\handoff_e\\person_e_v0_4_homography_refit_v0_1\\person_e_attempt_02_image_points_v0_1.json",
+      "sha256": "9747e1dc9a497d29df8aaff83fc605465a980a73edfaddee1f43d6e8a92671c0"
+    },
+    "failed_closed_handoff": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\data\\handoff_e\\person_e_v0_4_homography_refit_v0_1\\person_e_to_person_c_refit_handoff.json",
+      "sha256": "f9039150e42808e3477552467794a64c4f05543a9661c4a28f5251f6ea82fe74"
+    },
+    "failed_closed_package": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Person-E-Refit\\data\\handoff_e\\person_e_v0_4_homography_refit_v0_1\\package_manifest.json",
+      "sha256": "bfc1124f98663bd988178ba79ecaf009ac9db7158f4b860682870117462f883b"
+    }
+  },
+  "layouts": {
+    "layout_04": {
+      "classification": "inaccurate_manual_pixel_selection",
+      "coordinate_order_guard_passed": true,
+      "deterministic_marker_diagnostics": {
+        "far_east": {
+          "alpha_weighted_centre_pixels": [
+            586.4890771789063,
+            598.0198200599582
+          ],
+          "confidence": "high",
+          "core_pixels": 233,
+          "manual_image_xy_pixels": [
+            585,
+            597
+          ],
+          "marker_color": "white"
+        },
+        "near_east": {
+          "alpha_weighted_centre_pixels": [
+            585.4125847857892,
+            623.5520405214515
+          ],
+          "confidence": "high",
+          "core_pixels": 497,
+          "manual_image_xy_pixels": [
+            585,
+            624
+          ],
+          "marker_color": "yellow"
+        },
+        "near_west": {
+          "alpha_weighted_centre_pixels": [
+            1333.6734882099872,
+            623.5463851704932
+          ],
+          "confidence": "high",
+          "core_pixels": 497,
+          "manual_image_xy_pixels": [
+            1334,
+            623
+          ],
+          "marker_color": "blue"
+        },
+        "method": "repository person-e-marker-detect-v1.0 HSV gate plus alpha-weighted centroid, restricted to the gameplay ground-plane ROI; diagnostic only"
+      },
+      "fit_matrix": [
+        [
+          0.0033104380161456913,
+          -0.0004033589378997504,
+          -3.1510712338953866
+        ],
+        [
+          0.00037431129706071934,
+          0.012278735008734797,
+          -9.347063725930635
+        ],
+        [
+          5.237649658112564e-05,
+          -0.002013146597620644,
+          1.0
+        ]
+      ],
+      "fit_matrix_rank": 3,
+      "fit_point_reprojection_error_pixels": [
+        1.1425385788607957e-12,
+        1.6077746776921858e-13,
+        3.595093471822542e-13,
+        9.165725883006586e-13
+      ],
+      "heldout_wall_parallel_error_blocks": 0.32009433597681003,
+      "independent_validation_reprojection_error_pixels": 12.774165561363917,
+      "manual_reannotation_required": true,
+      "wall_endpoint_diagnostics": {
+        "method": "single local RGB-gray stone component bound to the visible outer wall edge and ground-contact edge; diagnostic anchor only",
+        "wall_near_face_ground_negative_end": {
+          "confidence": "high_diagnostic_operator_selection_still_required",
+          "diagnostic_visible_corner_anchor_pixels": [
+            1267,
+            664
+          ],
+          "manual_image_xy_pixels": [
+            1268,
+            659
+          ]
+        },
+        "wall_near_face_ground_positive_end": {
+          "confidence": "high_diagnostic_operator_selection_still_required",
+          "diagnostic_visible_corner_anchor_pixels": [
+            652,
+            664
+          ],
+          "manual_image_xy_pixels": [
+            653,
+            658
+          ]
+        }
+      },
+      "world_coordinate_bindings_valid": true
+    },
+    "layout_06": {
+      "classification": "inaccurate_manual_pixel_selection",
+      "coordinate_order_guard_passed": true,
+      "deterministic_marker_diagnostics": {
+        "far_east": {
+          "alpha_weighted_centre_pixels": [
+            1379.0999905456451,
+            598.0316395376301
+          ],
+          "confidence": "high",
+          "core_pixels": 233,
+          "manual_image_xy_pixels": [
+            1380,
+            598
+          ],
+          "marker_color": "white"
+        },
+        "near_east": {
+          "alpha_weighted_centre_pixels": [
+            1396.1567672168821,
+            623.5706780197315
+          ],
+          "confidence": "high",
+          "core_pixels": 501,
+          "manual_image_xy_pixels": [
+            1397,
+            624
+          ],
+          "marker_color": "yellow"
+        },
+        "near_west": {
+          "alpha_weighted_centre_pixels": [
+            522.9690664001697,
+            623.5512161946344
+          ],
+          "confidence": "high",
+          "core_pixels": 501,
+          "manual_image_xy_pixels": [
+            522,
+            623
+          ],
+          "marker_color": "blue"
+        },
+        "method": "repository person-e-marker-detect-v1.0 HSV gate plus alpha-weighted centroid, restricted to the gameplay ground-plane ROI; diagnostic only"
+      },
+      "fit_matrix": [
+        [
+          -0.00020430334782852886,
+          0.015582757751588974,
+          -10.636268585624329
+        ],
+        [
+          -0.0032657503808573227,
+          0.0008286755592090619,
+          2.411469470998586
+        ],
+        [
+          -3.1758896781637288e-05,
+          -0.0018805419703168847,
+          1.0
+        ]
+      ],
+      "fit_matrix_rank": 3,
+      "fit_point_reprojection_error_pixels": [
+        3.4181758515780776e-12,
+        3.6539310440248747e-12,
+        3.1913416131870233e-12,
+        4.1179124028246485e-12
+      ],
+      "heldout_wall_parallel_error_blocks": 0.25166857329982495,
+      "independent_validation_reprojection_error_pixels": 13.340280398319223,
+      "manual_reannotation_required": true,
+      "wall_endpoint_diagnostics": {
+        "method": "single local RGB-gray stone component bound to the visible outer wall edge and ground-contact edge; diagnostic anchor only",
+        "wall_near_face_ground_negative_end": {
+          "confidence": "high_diagnostic_operator_selection_still_required",
+          "diagnostic_visible_corner_anchor_pixels": [
+            685,
+            649
+          ],
+          "manual_image_xy_pixels": [
+            685,
+            646
+          ]
+        },
+        "wall_near_face_ground_positive_end": {
+          "confidence": "high_diagnostic_operator_selection_still_required",
+          "diagnostic_visible_corner_anchor_pixels": [
+            1234,
+            649
+          ],
+          "manual_image_xy_pixels": [
+            1233,
+            646
+          ]
+        }
+      },
+      "world_coordinate_bindings_valid": true
+    }
+  },
+  "manual_reannotation_required": true,
+  "no_refit_or_replacement_package_emitted": true,
+  "reannotation_point_count": 10,
+  "repository_wall_parallel_tolerance_blocks": 0.2,
+  "schema_version": "person-e-layout-04-06-annotation-repair-diagnostic-v0.1"
+}

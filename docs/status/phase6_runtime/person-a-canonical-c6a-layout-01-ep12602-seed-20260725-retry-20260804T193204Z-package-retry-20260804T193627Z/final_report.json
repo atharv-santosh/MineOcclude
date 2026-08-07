@@ -1,0 +1,131 @@
+{
+  "activation_store_format_version": "person-a-activation-store-v2",
+  "b_activation_store_v2_ratification": {
+    "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+    "mode": "canonical_manifest_driven_successor",
+    "status": "BOUND"
+  },
+  "deterministic_seed": 20260725,
+  "device": "cuda:0",
+  "expected_activation_row_count": 1200,
+  "global_model_frame_count": 60,
+  "handoff": {
+    "b_facing_handoff": {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z/person_a_to_person_b_canonical_pilot_handoff.json",
+      "sha256": "da875c21a2875338eb432ba85f0c185ee02f4676178b3a3487fe95b55f4c50da"
+    },
+    "e_facing_handoff": {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z/person_a_to_person_e_canonical_provenance_handoff.json",
+      "sha256": "7414956699d9d37f0b4b486b7c800ff2482b453ffd634cb2bf99d92bcb042cfe"
+    },
+    "schema_version": "person-a-canonical-dual-handoff-summary-v0.1",
+    "status": "HANDOFF_PREPARED_NOT_ACCEPTED"
+  },
+  "runner_version": "person-a-phase6-single-pilot-sagemaker-runner-v0.4",
+  "scientific_execution_environment": "aws_sagemaker_linux_gpu",
+  "selected_pilot": "layout_01_ep12602",
+  "sequence": {
+    "completed_steps": [
+      "6.1",
+      "6.2",
+      "6.3",
+      "6.4",
+      "6.5"
+    ],
+    "failed_step": null,
+    "failure": null,
+    "later_steps_executed_after_failure": false,
+    "status": "PASS"
+  },
+  "status": "PASS",
+  "step_receipts": [
+    {
+      "elapsed_seconds": 4.071433939010603,
+      "result": {
+        "accepted_manifest_path": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z/accepted_pilot_manifest.json",
+        "accepted_manifest_sha256": "e6716f4fbe015ebb098da2a6fb800c636cc9eac1a56dcbe1d7543ab377c7a40d",
+        "capture_package_sha256": "e7ef5026dd170754fc7b2dd22bbb4893e5d47571111bdd3db8d021ffe62c6fa8",
+        "direct_artifact_count": 67,
+        "exact_source_identity_joins": "PASS",
+        "input_root": "/home/sagemaker-user/person-a-phase6-approved-inputs/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z",
+        "pilot": "layout_01_ep12602",
+        "status": "PASS"
+      },
+      "status": "PASS",
+      "step": "6.1"
+    },
+    {
+      "elapsed_seconds": 0.025030578995938413,
+      "result": {
+        "frame_count": 60,
+        "identity_ambiguity_count": 0,
+        "pilot": "layout_01_ep12602",
+        "status": "PASS",
+        "stream_counts": {
+          "frame_map": 60,
+          "normalized_actions": 60,
+          "raw_actions": 60,
+          "server_state": 60,
+          "visibility": 60
+        }
+      },
+      "status": "PASS",
+      "step": "6.2"
+    },
+    {
+      "elapsed_seconds": 56.666076459005126,
+      "result": {
+        "context_count": 4,
+        "context_pair_counts": [
+          16,
+          16,
+          16,
+          12
+        ],
+        "global_frame_count": 60,
+        "rollover": {
+          "global_15_local": 15,
+          "global_16_local": 0
+        },
+        "status": "PASS",
+        "tokens_per_pair": 347
+      },
+      "status": "PASS",
+      "step": "6.3"
+    },
+    {
+      "elapsed_seconds": 31.645619147995603,
+      "result": {
+        "activation_index_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-activation-store-v2/indexes/index-b1453d4193bd61027e31c59eddd0188165aeb1449b03ef5b62798ab5ac0d5a5f.json",
+        "activation_row_count": 1200,
+        "activation_store_format_version": "person-a-activation-store-v2",
+        "bounded_unpooled_artifact": {
+          "artifact_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z/bounded_audit/limited_unpooled_frame_0.npz",
+          "artifact_sha256": "653b4e4d86767bbd730c7131228407bb633d50c0753acf6c6a3b33e9d5db42fa",
+          "manifest_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z/bounded_audit/limited_unpooled_frame_0.manifest.json",
+          "manifest_sha256": "83ede09ee4ea605e8f75b7ad164ca85b450e41738009bb7d975fa3a0d34fec65"
+        },
+        "chunk_count": 20,
+        "repeatability_maximum_absolute_difference": 0.0,
+        "status": "PASS",
+        "store_identity_digest": "7ce4f40138152e3fa0864e6bd474b46456f8018f426c25d60964be52447fa3ce"
+      },
+      "status": "PASS",
+      "step": "6.4"
+    },
+    {
+      "elapsed_seconds": 0.3439001959923189,
+      "result": {
+        "activation_key_collision_count": 0,
+        "activation_row_count": 1200,
+        "direct_pooling_audit": "PASS",
+        "global_model_frame_count": 60,
+        "repeatability_maximum_absolute_difference": 0.0,
+        "source_identity_join_failure_count": 0,
+        "status": "PASS"
+      },
+      "status": "PASS",
+      "step": "6.5"
+    }
+  ]
+}

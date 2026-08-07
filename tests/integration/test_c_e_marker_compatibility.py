@@ -52,8 +52,16 @@ def compatible_fixture() -> dict:
         "world_coordinate_system": "ground_plane_world_xz_blocks",
         "marker_correspondences": markers,
         "expected_probe": {
+            # Image-centre probe reprojects to the marker-quad centroid (image
+            # corners' centroid under the affine marker homography). Computed
+            # from the markers rather than hardcoded, so it follows the layout
+            # geometry (v0.2's coincidental arena-centre value no longer holds
+            # under v0.3's real mod geometry).
             "image_xy": [300.0, 180.0],
-            "world_xz_blocks": [19.5, 9.5],
+            "world_xz_blocks": [
+                sum(m["world_blocks"]["x"] for m in layout["markers"]) / 4.0,
+                sum(m["world_blocks"]["z"] for m in layout["markers"]) / 4.0,
+            ],
             "absolute_tolerance_blocks": 1e-9,
         },
     }

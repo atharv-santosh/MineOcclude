@@ -1,0 +1,101 @@
+{
+  "activation": {
+    "index_key": [
+      "trajectory_id",
+      "model_frame_idx",
+      "layer_idx",
+      "hook_site"
+    ],
+    "layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "pooling": {
+      "analysis_dtype": "float64",
+      "method": "mean",
+      "production_representation": "pooled_only",
+      "region": "visual",
+      "stored_dtype": "float32",
+      "vector_shape": [
+        2048
+      ]
+    },
+    "visual_tokens_per_frame": 336
+  },
+  "checkpoint": {
+    "main_checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "model_config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "vae_checkpoint_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+  },
+  "classification": "ACKNOWLEDGED_FROZEN_FOR_FUTURE_BOUNDED_RUNTIME",
+  "configuration_identity": "eb634c1e81c65a724b7cf32cbfe03f62e80a4428afda605071e1a43c6d0f4c10",
+  "extraction": {
+    "hook": "decoder_layer_output_residual_stream",
+    "source_tensor_dtype": "float16",
+    "source_tensor_shape": [
+      1,
+      2776,
+      2048
+    ]
+  },
+  "input_and_preprocessing": {
+    "input_dimensions_hwc": [
+      360,
+      640,
+      3
+    ],
+    "preprocessed_dimensions_chw": [
+      3,
+      224,
+      384
+    ],
+    "preprocessing_identity": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab"
+  },
+  "no_overwrite": {
+    "activation_contract": true,
+    "chunk_and_index": {
+      "chunk_format": "npy",
+      "index_format": "canonical_json",
+      "no_overwrite": true,
+      "row_order": "trajectory_id,model_frame_idx,layer_idx,hook_site",
+      "run_binding_required": true
+    },
+    "extraction_contract": true,
+    "model_input_contract": true,
+    "rollout_contract": true
+  },
+  "rollout": {
+    "action_tokens_per_frame": 11,
+    "context_pair_limit": 16,
+    "output_dimensions_hw": [
+      224,
+      384
+    ],
+    "precision": "float16",
+    "temperature": 1.0,
+    "top_k": 1,
+    "visual_tokens_per_frame": 336
+  },
+  "schema_id": "person-a-step6-runtime-ack-v0.1-frozen-configuration",
+  "schema_version": "1.0",
+  "source_commit": "0416ce88060277b28512f95dca0af94984a8211d",
+  "source_path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/immutable_runtime_configuration.json"
+}

@@ -1,0 +1,39 @@
+=== PERSON A PHASE 2.7 ARCHITECTURE INSPECTION ===
+[VAE] Loading VQGAN from 
+/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/config.json
+/home/sagemaker-user/.conda/envs/mineworld/lib/python3.10/site-packages/diffusers/configuration_utils.py:245: FutureWarning: It is deprecated to pass a pretrained model name or path to `from_config`.If you were trying to load a model, please use <class 'diffusers.models.autoencoders.vq_model.VQModel'>.load_config(...) followed by <class 'diffusers.models.autoencoders.vq_model.VQModel'>.from_config(...) instead. Otherwise, please make sure to pass a configuration dictionary instead. This functionality will be removed in v1.0.0.
+  deprecate("config-passed-as-path", "1.0.0", deprecation_message, standard_warn=False)
+[VAE] Use ckpt_path: /home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt
+[tvae.models.amused_vqvae][AutoencodingLegacy] Restored from 
+/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt with 0 missing and 
+1250 unexpected keys
+{
+  "action_tokens": 11,
+  "context_pairs": 16,
+  "decoder_layer_path": "transformer.model.layers",
+  "device_distribution": {
+    "cuda:0": 872229955
+  },
+  "dtype_distribution": {
+    "torch.float16": 872229955
+  },
+  "hidden_size": 2048,
+  "intermediate_size": 4096,
+  "layer_count": 20,
+  "max_position_embeddings": 5552,
+  "model_class": "LlamaLVM",
+  "num_attention_heads": 32,
+  "num_key_value_heads": 4,
+  "parameter_counts": {
+    "model": 872229955,
+    "transformer": 725985280,
+    "vae": 146244675
+  },
+  "tokens_per_pair": 347,
+  "transformer_class": "LlamaForCausalLM",
+  "vae_class": "VAE",
+  "visual_tokens": 336,
+  "vocab_size": 8262
+}
+PASS: loaded architecture and state-dictionary evidence validated.
+EVIDENCE: /home/sagemaker-user/mineocclude-phase2-evidence/person-a-phase2-aws-20260725-055616/step2_7/architecture_report.json

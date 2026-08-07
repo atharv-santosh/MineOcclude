@@ -1,0 +1,19 @@
+{
+  "schema_id": "person-a-phase6-ten-pilot-expansion-runner-preparation-v0-1-change-inventory",
+  "schema_version": "1.0",
+  "additive_paths": [
+    "docs/status/person_a_phase6_ten_pilot_expansion_runner_preparation_v0_1/authority_binding.json",
+    "docs/status/person_a_phase6_ten_pilot_expansion_runner_preparation_v0_1/change_inventory.json",
+    "docs/status/person_a_phase6_ten_pilot_expansion_runner_preparation_v0_1/runner_preparation.json",
+    "docs/status/person_a_phase6_ten_pilot_expansion_runner_preparation_v0_1/sha256_inventory.json",
+    "docs/status/person_a_phase6_ten_pilot_expansion_runner_preparation_v0_1/validation_receipt.json",
+    "scripts/run_person_a_phase6_ten_pilot_sagemaker.py",
+    "scripts/run_person_a_phase6_ten_pilot_sagemaker.sh",
+    "tests/models/test_person_a_phase6_ten_pilot_sagemaker_runner_v0_1.py"
+  ],
+  "compatible_engine_path": "scripts/run_person_a_phase6_single_pilot_sagemaker.py",
+  "compatible_engine_change": "Generalize the bounded-context count from the completed 248-frame pilot to the exact ceiling frame_count/16 needed by accepted variable-cardinality pilots.",
+  "frozen_targets_folds_thresholds_or_controls_changed": false,
+  "large_runtime_artifacts_added_to_git": false,
+  "model_execution_performed": false
+}

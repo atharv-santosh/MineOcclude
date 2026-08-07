@@ -1,0 +1,98 @@
+{
+  "artifact_id_rule": "person_a_activation__<extraction_artifact_id>__<activation_store_identity_digest>",
+  "artifact_type": "activation",
+  "byte_verification_required": true,
+  "chunk_and_index_manifest": {
+    "activation_key": [
+      "trajectory_id",
+      "model_frame_idx",
+      "layer_idx",
+      "hook_site"
+    ],
+    "chunk_format": "npy",
+    "index_format": "canonical_json",
+    "run_binding_required": true,
+    "stable_row_order_required": true
+  },
+  "dependency": {
+    "accepted_required": true,
+    "artifact_id": null,
+    "artifact_type": "extraction"
+  },
+  "expected_row_count": 57540,
+  "future_artifact_id": null,
+  "future_byte_size": null,
+  "future_sha256": null,
+  "hook_site": "decoder_layer_output_residual_stream",
+  "instantiated_output_artifact": false,
+  "layers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "no_overwrite": true,
+  "owner": "person_a",
+  "pooled_representation": {
+    "analysis_dtype": "float64",
+    "pooling_method": "mean",
+    "stored_dtype": "float32",
+    "vector_shape": [
+      2048
+    ]
+  },
+  "production_unpooled_representation_allowed": false,
+  "prohibited_promotion_records": [
+    {
+      "path": "docs/status/phase4_runtime/person-a-phase4-wave3-v11-aws-20260727-045300/limited_unpooled_pilot.npz",
+      "promotion_allowed": false,
+      "promotion_id": "limited_activation_pilot",
+      "reason": "limited_one_frame_unpooled_pilot",
+      "registry_v2_accepted": false,
+      "scientific_artifact": false,
+      "sha256": "3032f93b2e47235363af1287dbeddbdbb85853d2e610d4658531d2fa39ae896e"
+    },
+    {
+      "path": "docs/status/fixtures/phase5_activation_store_handoff_v1_2/handoff_manifest.json",
+      "promotion_allowed": false,
+      "promotion_id": "synthetic_activation_fixture",
+      "reason": "synthetic_non_scientific",
+      "registry_v2_accepted": false,
+      "scientific_artifact": false,
+      "sha256": "3fa99342284b540ade254792c2cf125117ac1b925632f3444ccd767c49cb7df5"
+    }
+  ],
+  "prohibited_promotions": [
+    "limited_activation_pilot",
+    "synthetic_activation_fixture"
+  ],
+  "registry_v2_accepted": false,
+  "registry_v2_requirements": [
+    "trusted_owner_authority",
+    "verified_owner_status_record_bytes",
+    "trusted_exact_artifact_authorization",
+    "verified_authorization_record_bytes",
+    "trusted_manifest_exact_artifact_entry",
+    "verified_artifact_bytes_or_trusted_receipt",
+    "exact_direct_input_artifact_identities"
+  ],
+  "schema_id": "person-a-phase4-step4-1-production-handoff-preflight-activation-contract-v0.1",
+  "schema_version": "1.0",
+  "status": "contract_only_not_executed"
+}
