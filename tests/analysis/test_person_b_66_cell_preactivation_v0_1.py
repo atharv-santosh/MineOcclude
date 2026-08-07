@@ -74,6 +74,17 @@ def _load_builder():
     return module
 
 
+def _load_validator():
+    validator_path = REPOSITORY_ROOT / "scripts" / "validate_person_b_66_cell_preactivation_v0_1.py"
+    spec = importlib.util.spec_from_file_location(
+        "person_b_66_cell_preactivation_validator_for_unit_tests", validator_path
+    )
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
 @pytest.fixture(scope="module")
 def builder():
     return _load_builder()
@@ -637,18 +648,48 @@ def test_frozen_step_4_1_decision_remains_fail(builder):
 
 
 def test_published_package_passes_the_fail_closed_validator():
-    spec = importlib.util.spec_from_file_location(
-        "person_b_66_cell_preactivation_validator",
-        REPOSITORY_ROOT / "scripts" / "validate_person_b_66_cell_preactivation_v0_1.py",
-    )
-    module = importlib.util.module_from_spec(spec)
-    assert spec.loader is not None
-    spec.loader.exec_module(module)
+    module = _load_validator()
     result = module.validate()
     assert result["validated"] is True
     assert result["fold_leakage_audit_pass"] is True
     assert result["oracle_stage_status"] == ORACLE_STAGE_BLOCKED
     assert result["model_frame_key_count"] == EXPECTED_MODEL_FRAME_KEY_COUNT
+
+
+def test_oracle_dependent_handoff_accepts_exact_byte_identity():
+    module = _load_validator()
+    published = {"person_b_oracle_target_manifest": {"preflight_artifact_hash": "same"}}
+    rebuilt = copy.deepcopy(published)
+    assert module._matches_oracle_dependent_handoff(published, rebuilt) is True
+
+
+def test_oracle_dependent_handoff_rejects_unauthorized_scientific_drift():
+    module = _load_validator()
+    published = {
+        "person_b_oracle_target_manifest": {
+            "preflight_artifact_hash": "published",
+            "target_schema_version": "person-b-66-cell-oracle-target-v0.1",
+        }
+    }
+    rebuilt = copy.deepcopy(published)
+    rebuilt["person_b_oracle_target_manifest"]["target_schema_version"] = "tampered"
+    rebuilt["person_b_oracle_target_manifest"]["preflight_artifact_hash"] = "rebuilt"
+    assert module._matches_oracle_dependent_handoff(published, rebuilt) is False
+
+
+def test_external_preflight_inventory_rejects_duplicate_identity_keys():
+    module = _load_validator()
+    row = {
+        "trajectory_id": "layout_01_ep12602",
+        "episode_id": "12602",
+        "artifact_role": "server_state.jsonl",
+        "declared_byte_size": 1,
+        "declared_path": "server_state.jsonl",
+        "declared_sha256": "a" * 64,
+    }
+    published = {"state_payload_inventory": [row, copy.deepcopy(row)], "content": "same"}
+    rebuilt = {"state_payload_inventory": [row], "content": "same"}
+    assert module._matches_external_preflight_evidence(published, rebuilt) is False
 
 
 def test_b_to_c_u4_receipt_names_the_remaining_inputs(builder):

@@ -20,11 +20,11 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-from mineocclude.analysis.manifests import (  # noqa: E402
+from mineocclude.analysis.manifests import (
     canonical_json_bytes,
     validate_sealed_artifact,
 )
-from mineocclude.analysis.preactivation_66_cell_v0_1 import (  # noqa: E402
+from mineocclude.analysis.preactivation_66_cell_v0_1 import (
     ORACLE_STAGE_BLOCKED,
     PREACTIVATION_PACKAGE_DIRECTORY,
     PreactivationError,
@@ -68,6 +68,93 @@ def _published(name: str) -> dict:
     path = PACKAGE / name
     require(path.is_file(), f"missing published artifact: {name}")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _matches_external_preflight_evidence(
+    published: dict[str, object], rebuilt: dict[str, object]
+) -> bool:
+    """Accept only the host-dependent availability projection of a sealed preflight.
+
+    The preactivation package was sealed on a machine that had the immutable C
+    runtime payloads under ``C:\\Users\\lollo\\MineOcclude-Runtime``.  Those
+    bytes are external evidence and are intentionally not copied into this
+    repository.  A later validator run may therefore observe the same declared
+    paths and hashes as unavailable.  This exception does not accept changed
+    scientific content: every declared path, byte size, hash, trajectory and
+    artifact role must still match byte-for-byte.  Only the three explicit
+    availability projection fields and the resulting seal hash may differ.
+    """
+
+    if canonical_json_bytes(published) == canonical_json_bytes(rebuilt):
+        return True
+    published_core = dict(published)
+    rebuilt_core = dict(rebuilt)
+    for value in (published_core, rebuilt_core):
+        value.pop("artifact_hash", None)
+        value.pop("state_payload_bytes_present_on_this_host", None)
+        value.pop("state_payload_inventory", None)
+    if canonical_json_bytes(published_core) != canonical_json_bytes(rebuilt_core):
+        return False
+
+    def normalize_inventory(value: dict[str, object]) -> dict[tuple[object, ...], dict[str, object]]:
+        rows = value.get("state_payload_inventory")
+        if not isinstance(rows, list):
+            return {}
+        normalized: dict[tuple[object, ...], dict[str, object]] = {}
+        for row in rows:
+            if not isinstance(row, dict):
+                return {}
+            key = (row.get("trajectory_id"), row.get("episode_id"), row.get("artifact_role"))
+            if key in normalized:
+                return {}
+            normalized[key] = {
+                "declared_byte_size": row.get("declared_byte_size"),
+                "declared_path": row.get("declared_path"),
+                "declared_sha256": row.get("declared_sha256"),
+            }
+        return normalized
+
+    published_inventory = normalize_inventory(published)
+    rebuilt_inventory = normalize_inventory(rebuilt)
+    return bool(published_inventory) and published_inventory == rebuilt_inventory
+
+
+def _matches_oracle_dependent_handoff(
+    published: dict[str, object], rebuilt: dict[str, object]
+) -> bool:
+    """Validate a sealed handoff whose only drift is the preflight seal hash."""
+
+    if canonical_json_bytes(published) == canonical_json_bytes(rebuilt):
+        return True
+
+    published_core = dict(published)
+    rebuilt_core = dict(rebuilt)
+    published_oracle = published_core.get("person_b_oracle_target_manifest")
+    rebuilt_oracle = rebuilt_core.get("person_b_oracle_target_manifest")
+    if not isinstance(published_oracle, dict) or not isinstance(rebuilt_oracle, dict):
+        return False
+    if set(published_oracle) != set(rebuilt_oracle):
+        return False
+    if any(
+        published_oracle[key] != rebuilt_oracle[key]
+        for key in published_oracle
+        if key != "preflight_artifact_hash"
+    ):
+        return False
+    if published_oracle.get("preflight_artifact_hash") == rebuilt_oracle.get(
+        "preflight_artifact_hash"
+    ):
+        return False
+    published_core.pop("artifact_hash", None)
+    rebuilt_core.pop("artifact_hash", None)
+    published_core["person_b_oracle_target_manifest"] = dict(published_oracle)
+    rebuilt_core["person_b_oracle_target_manifest"] = dict(rebuilt_oracle)
+    for value in (
+        published_core["person_b_oracle_target_manifest"],
+        rebuilt_core["person_b_oracle_target_manifest"],
+    ):
+        value.pop("preflight_artifact_hash", None)
+    return canonical_json_bytes(published_core) == canonical_json_bytes(rebuilt_core)
 
 
 def validate() -> dict[str, object]:
@@ -116,10 +203,21 @@ def validate() -> dict[str, object]:
     for name in builder.ORDERED_FILES:
         published = _published(name)
         validate_sealed_artifact(published, expected_type=EXPECTED_ARTIFACT_TYPES[name])
-        require(
-            canonical_json_bytes(published) == canonical_json_bytes(rebuilt[name]),
-            f"published {name} does not match its rebuilt evidence",
-        )
+        if name == builder.ORACLE_PREFLIGHT:
+            require(
+                _matches_external_preflight_evidence(published, rebuilt[name]),
+                f"published {name} does not match its rebuilt evidence",
+            )
+        elif name in {builder.B_TO_A_HANDOFF, builder.B_TO_D_HANDOFF}:
+            require(
+                _matches_oracle_dependent_handoff(published, rebuilt[name]),
+                f"published {name} does not match its rebuilt evidence",
+            )
+        else:
+            require(
+                canonical_json_bytes(published) == canonical_json_bytes(rebuilt[name]),
+                f"published {name} does not match its rebuilt evidence",
+            )
         file_hashes[name] = hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest()
 
     inventory = _published(builder.SHA256_INVENTORY)

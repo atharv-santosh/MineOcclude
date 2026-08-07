@@ -1,0 +1,87 @@
+{
+  "accepted_data_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+  "accepted_trajectory_count": 66,
+  "artifact_type": "person_b_66_cell_step4_1_fold_target_binding",
+  "fold_assignment": {
+    "admitted_row_count": 984,
+    "excluded_row_count": 1484,
+    "fold_count": 5,
+    "fold_manifest_artifact_hash": "43b5662b0991ac6342072bc5410d42bb87bcd9550d1a1f2144a79a04cb1e19d2",
+    "fold_manifest_path": "docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json",
+    "fold_manifest_sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+    "fold_manifest_size_bytes": 557603,
+    "fold_seed": 20260719,
+    "layout_to_fold": [
+      {
+        "fold_idx": 3,
+        "layout_id": "layout_01"
+      },
+      {
+        "fold_idx": 2,
+        "layout_id": "layout_02"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "layout_03"
+      },
+      {
+        "fold_idx": 4,
+        "layout_id": "layout_04"
+      },
+      {
+        "fold_idx": 1,
+        "layout_id": "layout_05"
+      },
+      {
+        "fold_idx": 0,
+        "layout_id": "layout_06"
+      }
+    ],
+    "model_frame_key_count": 2468,
+    "row_identity": [
+      "trajectory_id",
+      "model_frame_idx",
+      "fold_idx"
+    ],
+    "schema_version": "person-b-66-cell-fold-manifest-v0.1"
+  },
+  "oracle_target": {
+    "eligible_trajectory_count": 60,
+    "oracle_target_artifact_hash": "354f3e02e7a9aa346aa0bc4f31d59a6989df5043579bf53ebc239d09545319ec",
+    "oracle_target_manifest_path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+    "oracle_target_manifest_sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9",
+    "oracle_target_manifest_size_bytes": 43262,
+    "oracle_target_records_path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_records.jsonl",
+    "oracle_target_records_sha256": "d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1",
+    "oracle_target_records_size_bytes": 2953366,
+    "oracle_target_row_count": 2108,
+    "row_identity": [
+      "trajectory_id",
+      "model_frame_idx",
+      "target_name"
+    ],
+    "target_fields": [
+      "mu_oracle_blocks",
+      "var_oracle_blocks2",
+      "sigma_oracle_blocks",
+      "log_sigma_oracle",
+      "x_true_blocks",
+      "tau",
+      "last_visible_position_blocks"
+    ],
+    "target_name": "mu_oracle_blocks",
+    "target_schema_version": "person-b-66-cell-oracle-target-v0.1",
+    "target_unit": "blocks"
+  },
+  "production_scope": {
+    "old_ep94xx_scope_accepted": false,
+    "old_ten_pilot_fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+    "old_ten_pilot_oracle_target_sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282",
+    "scope": "66_cell_matrix",
+    "ten_pilot_artifacts_reused": false
+  },
+  "schema_id": "person-b-66-cell-step4-1-fold-target-binding-v0-1",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

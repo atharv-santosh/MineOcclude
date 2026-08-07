@@ -1,0 +1,29 @@
+{
+  "artifact_type": "person_b_66_cell_step4_1_metric_table_dependency",
+  "blocked_reason": "No completed current 66-cell Person B versus Person D metric table exists. Person A 66-cell activation extraction is pending and Person D baseline execution is not complete.",
+  "current_66_cell_metric_table": null,
+  "expected_schema": "person-b-step4-1-final-comparison-output-v0-1",
+  "legacy_metric_table": {
+    "accepted_as_current_66_cell_metric_table": false,
+    "path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/comparison_metric_table.json",
+    "rejection_reasons": [
+      "binds_old_ten_pilot_fold_manifest",
+      "binds_old_ten_pilot_oracle_target",
+      "does_not_bind_66_cell_accepted_data_manifest",
+      "does_not_bind_current_66_cell_person_d_predictions"
+    ],
+    "scientific_execution_performed": true,
+    "scope": "old_ten_pilot_ep94xx",
+    "sha256": "c471fddb9bdc1a87c2f7e11ad8dc55db9e407f0ea45a2e038f668bda178ad0a7"
+  },
+  "required_future_inputs": [
+    "person_a_66_cell_activation_store_v2_output",
+    "person_d_66_cell_eight_family_predictions",
+    "validated_current_66_cell_metric_computation_receipt"
+  ],
+  "schema_id": "person-b-66-cell-step4-1-metric-table-dependency-v0-1",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "status": "BLOCKED",
+  "u4_output_inspected": false
+}
