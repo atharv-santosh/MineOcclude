@@ -1,0 +1,303 @@
+{
+ "CURRENT_V4_LAYOUT_RESOLUTION_AUTHORITY_READY": true,
+ "PREEXISTING_V03_LAYOUT_TEST_REPAIRED": true,
+ "defect": {
+  "affected_layout_ids": [
+   "layout_01",
+   "layout_02",
+   "layout_03",
+   "layout_04",
+   "layout_05",
+   "layout_06"
+  ],
+  "confirmed": true,
+  "description": "the current Person C-owned test resolved marker sets against the superseded person-c-layout-config-v0.3 geometry while accepted production geometry is person-c-layout-config-v0.4, and compared against the block-corner field rather than the declared top-face-centre field",
+  "failing_test_case": "TestPersonEHandoff::test_marker_file_matches_contract_geometry"
+ },
+ "finding_confirmed_independently": true,
+ "historical_evidence_preserved": {
+  "historical_geometry_path": "configs/scenes/layouts.yaml",
+  "historical_geometry_rewritten": false,
+  "historical_geometry_sha256": "5a39d2dcae44d72f07b0e645dcc3e64ea6178ef79f1c9e3f12bff11f857f82cb",
+  "historical_geometry_version": "person-c-layout-config-v0.3",
+  "historical_heterogeneity_note": "four historical marker sets agree with v0.3 under the top-face-centre convention and two came from a later recapture, so the historical sets are treated purely as immutable evidence and are never re-derived against any geometry version",
+  "historical_marker_sets": [
+   "data/handoff_e/markers_layout_01.json",
+   "data/handoff_e/markers_layout_02.json",
+   "data/handoff_e/markers_layout_03.json",
+   "data/handoff_e/markers_layout_04.json",
+   "data/handoff_e/markers_layout_05.json",
+   "data/handoff_e/markers_layout_06.json"
+  ],
+  "historical_marker_sets_rewritten": false,
+  "historical_predecessor_invalidated": false,
+  "historical_sets_are_heterogeneous": true
+ },
+ "owner_role": "person_c",
+ "ownership_determination": {
+  "artifact": "tests/data/test_layout_id_resolves.py",
+  "basis": [
+   "the layout geometry contract it resolves against (configs/scenes/layouts*.yaml) is Person C-owned",
+   "the file is present on role/person-c-data and absent from role/person-e-operations",
+   "Person E published an additive marker/layout successor authority and explicitly deferred the test repair, recording reported_by=person_c in its drift audit"
+  ],
+  "foreign_owned_files_edited": [],
+  "owner_role": "person_c"
+ },
+ "person_c_commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+ "repair": {
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "all_layouts_match_without_transform": true,
+  "current_authority_now_resolved_from": "configs/scenes/layouts_v0_4.yaml",
+  "expected_coordinates_hardcoded_in_test": false,
+  "hidden_offset_or_compatibility_transform_introduced": false,
+  "marker_authority_sha256": "14a12db4092e05e8c41057df210eec11f07a78f593a149595a12eba45fda82d8",
+  "marker_authority_used": "data/handoff_e/person_e_v0_4_marker_layout_authority_v0_1/markers_layout_0N.json at fec27d08b462",
+  "marker_coordinates_changed_to_satisfy_tests": false,
+  "marker_field_used": "top_face_centre_world_xyz",
+  "per_layout_verification": [
+   {
+    "accepted_v0_4_top_face_centre_world_xz": [
+     [
+      -7.5,
+      8.5
+     ],
+     [
+      -5.5,
+      4.5
+     ],
+     [
+      6.5,
+      4.5
+     ],
+     [
+      8.5,
+      8.5
+     ]
+    ],
+    "layout_id": "layout_01",
+    "matches_without_any_transform": true,
+    "person_e_successor_world_xz": [
+     [
+      -7.5,
+      8.5
+     ],
+     [
+      -5.5,
+      4.5
+     ],
+     [
+      6.5,
+      4.5
+     ],
+     [
+      8.5,
+      8.5
+     ]
+    ]
+   },
+   {
+    "accepted_v0_4_top_face_centre_world_xz": [
+     [
+      4.5,
+      -5.5
+     ],
+     [
+      4.5,
+      6.5
+     ],
+     [
+      8.5,
+      -7.5
+     ],
+     [
+      8.5,
+      8.5
+     ]
+    ],
+    "layout_id": "layout_02",
+    "matches_without_any_transform": true,
+    "person_e_successor_world_xz": [
+     [
+      4.5,
+      -5.5
+     ],
+     [
+      4.5,
+      6.5
+     ],
+     [
+      8.5,
+      -7.5
+     ],
+     [
+      8.5,
+      8.5
+     ]
+    ]
+   },
+   {
+    "accepted_v0_4_top_face_centre_world_xz": [
+     [
+      -8.5,
+      8.5
+     ],
+     [
+      -6.5,
+      4.5
+     ],
+     [
+      7.5,
+      4.5
+     ],
+     [
+      9.5,
+      8.5
+     ]
+    ],
+    "layout_id": "layout_03",
+    "matches_without_any_transform": true,
+    "person_e_successor_world_xz": [
+     [
+      -8.5,
+      8.5
+     ],
+     [
+      -6.5,
+      4.5
+     ],
+     [
+      7.5,
+      4.5
+     ],
+     [
+      9.5,
+      8.5
+     ]
+    ]
+   },
+   {
+    "accepted_v0_4_top_face_centre_world_xz": [
+     [
+      -7.5,
+      10.5
+     ],
+     [
+      -5.5,
+      6.5
+     ],
+     [
+      6.5,
+      6.5
+     ],
+     [
+      8.5,
+      10.5
+     ]
+    ],
+    "layout_id": "layout_04",
+    "matches_without_any_transform": true,
+    "person_e_successor_world_xz": [
+     [
+      -7.5,
+      10.5
+     ],
+     [
+      -5.5,
+      6.5
+     ],
+     [
+      6.5,
+      6.5
+     ],
+     [
+      8.5,
+      10.5
+     ]
+    ]
+   },
+   {
+    "accepted_v0_4_top_face_centre_world_xz": [
+     [
+      -6.5,
+      7.5
+     ],
+     [
+      -4.5,
+      3.5
+     ],
+     [
+      5.5,
+      3.5
+     ],
+     [
+      7.5,
+      7.5
+     ]
+    ],
+    "layout_id": "layout_05",
+    "matches_without_any_transform": true,
+    "person_e_successor_world_xz": [
+     [
+      -6.5,
+      7.5
+     ],
+     [
+      -4.5,
+      3.5
+     ],
+     [
+      5.5,
+      3.5
+     ],
+     [
+      7.5,
+      7.5
+     ]
+    ]
+   },
+   {
+    "accepted_v0_4_top_face_centre_world_xz": [
+     [
+      5.5,
+      -6.5
+     ],
+     [
+      5.5,
+      7.5
+     ],
+     [
+      9.5,
+      -8.5
+     ],
+     [
+      9.5,
+      9.5
+     ]
+    ],
+    "layout_id": "layout_06",
+    "matches_without_any_transform": true,
+    "person_e_successor_world_xz": [
+     [
+      5.5,
+      -6.5
+     ],
+     [
+      5.5,
+      7.5
+     ],
+     [
+      9.5,
+      -8.5
+     ],
+     [
+      9.5,
+      9.5
+     ]
+    ]
+   }
+  ]
+ },
+ "schema_id": "mineocclude-person-c-66-cell-strict-visibility-v0.1-v0-4-layout-resolution-repair-receipt",
+ "schema_version": "0.1"
+}
