@@ -1,0 +1,37 @@
+{
+  "blockers": [
+    {
+      "action": "Materialize the external activation index or provide verified access evidence at the recorded URI, retaining the required SHA-256 and byte-size identity.",
+      "category": "resource_access",
+      "owner": "Project owner",
+      "status": "BLOCKED_EXTERNAL_MATERIALIZATION"
+    },
+    {
+      "action": "Provide the missing 56 accepted trajectories (43 core, 1 visible, 6 no-object, and 6 context-sentinel) with authoritative labels and matching activation rows.",
+      "category": "accepted_input_scope",
+      "owner": "Persons C and A",
+      "status": "BLOCKED_EXTERNAL_INPUTS"
+    },
+    {
+      "action": "Provide matched 66-trajectory baseline/control outputs and the corresponding Registry v2 acceptance identifiers before any full-MVP claim.",
+      "category": "controls_and_registry",
+      "owner": "Persons D and E",
+      "status": "BLOCKED_EXTERNAL_INPUTS"
+    },
+    {
+      "action": "After a valid held-out selection gate, supply the authorized U4 injection, persistence, displacement, and SSIM records; no U4 inspection is authorized before that gate.",
+      "category": "u4_authority",
+      "owner": "Persons A and E",
+      "status": "NOT_AUTHORIZED"
+    },
+    {
+      "action": "Provide a clean environment/direct-input reproduction and an independent second-operator receipt, then create the result-bearing tag only after all gates pass.",
+      "category": "reproducibility_and_handoff",
+      "owner": "Project owner and second operator",
+      "status": "BLOCKED_EXTERNAL_REPRODUCTION"
+    }
+  ],
+  "schema_id": "person-b-week1-mvp-closeout-v0-1-external-blockers",
+  "schema_version": "1.0",
+  "status": "BLOCKED_EXTERNAL"
+}
