@@ -1,0 +1,125 @@
+{
+  "acknowledgement_id": "person-a-phase6-66-cell-intake-v0-1",
+  "aggregate_phase6_runtime_authorized": false,
+  "automatic_phase6_transition_allowed": false,
+  "byte_accessibility": {
+    "approved_execution_environment": "aws_sagemaker_linux_gpu",
+    "byte_source": "person_c_windows_runtime_local_filesystem: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1",
+    "durable_uri_assigned": false,
+    "trajectory_count_available_on_local_host": 66,
+    "trajectory_count_hash_verified_on_local_host": 66,
+    "trajectory_count_unavailable_on_local_host": 0
+  },
+  "expected_model_frame_universe": {
+    "expected_activation_row_count_total": 49360,
+    "expected_chunk_count_total": 1320,
+    "expected_model_frame_key_count": 2468,
+    "expected_model_frame_key_universe_enumerated": false,
+    "expected_trajectory_count": 66,
+    "key": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "real_frame_maps_materialized": false
+  },
+  "extraction_blockers": [
+    "66_episode_bytes_not_reachable_from_approved_gpu_environment",
+    "activation_stored_dtype_authorities_disagree",
+    "aggregate_phase6_runtime_authorization_absent",
+    "production_frame_map_artifacts_not_materialized"
+  ],
+  "gpu_extraction_started": false,
+  "immutability": {
+    "no_overwrite": true,
+    "supersession_rule": "A correction is published as a new versioned acknowledgement package; this package is never edited in place."
+  },
+  "model_loaded": false,
+  "owner": "person_a",
+  "person_a_66_activation_index_exists": false,
+  "person_a_66_byte_access_ready": false,
+  "person_a_66_extraction_ready": false,
+  "person_a_66_input_contract_ready": true,
+  "person_a_branch": "role/person-a-model",
+  "person_a_commit": "ef98d184aaed8f03757add4ecac4a48968bb6fcc",
+  "person_a_phase6_acknowledgement_ready": true,
+  "person_a_phase6_authorized": false,
+  "person_c": {
+    "accepted_trajectory_count": 66,
+    "commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+    "episode_id_range": [
+      12601,
+      12666
+    ],
+    "excluded_trajectory_count": 0,
+    "manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+    "manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+    "manifest_valid": true,
+    "person_a_consumer_receipt_sha256": "6eb9394115794d7c233b4a035a2ba8a6faf3db6913be5cab775aecb3c7929133"
+  },
+  "production_activation_bytes_created": false,
+  "production_authorities": {
+    "action_converter_identity": "mineworld_action_compatibility@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746",
+    "action_converter_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "action_converter_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "action_vocab_offset": 8192,
+    "activation_index_format_version": "person-a-activation-index-v2",
+    "activation_index_key": [
+      "trajectory_id",
+      "model_frame_idx",
+      "layer_idx",
+      "hook_site"
+    ],
+    "activation_storage_dtype_reconciliation_required": true,
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "frame_map_schema_path": "src/mineocclude/contracts/trajectory.py",
+    "frame_map_schema_sha256": "4cd00906b2bc55a8e4da26d0cd0a447c5acb53f175e09edd9bf7f77733dc3c67",
+    "frame_map_schema_version": "1.0",
+    "frame_token_map_path": "src/mineocclude/contracts/activation.py",
+    "frame_token_map_sha256": "ce1564ee831b04ea4afbf3437f8f985c8f39ce3ebbb6eba8ee2dd515333b5dba",
+    "frame_token_map_version": "1.0",
+    "hook_sites": [
+      "decoder_layer_output_residual_stream"
+    ],
+    "layer_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "model_config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "model_identity": "mineworld-700m",
+    "preprocessing_config_path": "configs/experiments/mvp.yaml",
+    "preprocessing_config_sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3",
+    "preprocessing_implementation_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "preprocessing_implementation_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "preprocessing_unchanged_from_frozen_authority": true,
+    "vae_checkpoint_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "vae_config_sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb",
+    "vae_identity": "mineworld-vae",
+    "visual_tokens_per_frame": 336
+  },
+  "production_extraction_bytes_created": false,
+  "registry_v2_acceptance_authorized": false,
+  "schema_id": "person-a-phase6-66-cell-intake-v0.1-owner-acknowledgement",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "scientific_settings_changed_by_this_package": false,
+  "self_authorizes_phase6": false,
+  "status": "PERSON_A_66_CELL_INPUT_CONTRACT_ACKNOWLEDGED_AWAITING_BYTE_TRANSPORT_FRAME_MAPS_AND_AGGREGATE_AUTHORIZATION"
+}

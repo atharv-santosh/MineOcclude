@@ -344,11 +344,20 @@ def verify_authority(owner: str) -> dict[str, str]:
 
 def verify_repository_authority() -> None:
     branch = _git_text("branch", "--show-current")
-    head = _git_text("rev-parse", "HEAD")
     if branch != AUTHORITIES["person_a"]["branch"]:
         raise RuntimeError(f"Unexpected Person A branch: {branch}")
-    if head != STARTING_AUTHORITY:
-        raise RuntimeError(f"Unexpected Person A HEAD: {head}")
+    # The starting authority must remain in this branch's history. Pinning HEAD
+    # to it instead would expire this guard the moment Person A commits again.
+    if (
+        _completed(
+            ["git", "merge-base", "--is-ancestor", STARTING_AUTHORITY, "HEAD"]
+        ).returncode
+        != 0
+    ):
+        raise RuntimeError(
+            f"Person A starting authority is not an ancestor of HEAD: "
+            f"{STARTING_AUTHORITY}"
+        )
     for owner in AUTHORITIES:
         verify_authority(owner)
 

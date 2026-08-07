@@ -1,0 +1,127 @@
+{
+  "authorities": {
+    "person_a": {
+      "branch": "role/person-a-model",
+      "starting_commit": "ef98d184aaed8f03757add4ecac4a48968bb6fcc"
+    },
+    "person_c": {
+      "branch": "role/person-c-data",
+      "branch_merged": false,
+      "remote_ref": "origin/role/person-c-data",
+      "source_authority_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    }
+  },
+  "builder_path": "scripts/build_person_a_phase6_66_cell_intake_v0_1.py",
+  "claims": {
+    "aggregate_phase6_runtime_authorized": false,
+    "gpu_extraction_started": false,
+    "model_loaded": false,
+    "person_a_66_activation_index_exists": false,
+    "person_a_phase6_authorized": false,
+    "production_activation_bytes_created": false,
+    "production_extraction_bytes_created": false,
+    "registry_v2_acceptance_authorized": false,
+    "scientific_execution_performed": false,
+    "self_authorizes_phase6": false
+  },
+  "person_a_pinned_source_files": {
+    "action_converter_implementation": {
+      "byte_size": 37264,
+      "path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+      "sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8"
+    },
+    "activation_store_v2": {
+      "byte_size": 50914,
+      "path": "src/mineocclude/activations/store_v2.py",
+      "sha256": "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575"
+    },
+    "frame_map_schema": {
+      "byte_size": 31843,
+      "path": "src/mineocclude/contracts/trajectory.py",
+      "sha256": "4cd00906b2bc55a8e4da26d0cd0a447c5acb53f175e09edd9bf7f77733dc3c67"
+    },
+    "frame_token_map": {
+      "byte_size": 38949,
+      "path": "src/mineocclude/contracts/activation.py",
+      "sha256": "ce1564ee831b04ea4afbf3437f8f985c8f39ce3ebbb6eba8ee2dd515333b5dba"
+    },
+    "hook_implementation": {
+      "byte_size": 23072,
+      "path": "src/mineocclude/activations/hooks.py",
+      "sha256": "6dc708dfc7a68030d5e83e920e7acce3664550bc33466a7f5efa5ff0acbe5088"
+    },
+    "identity_contract": {
+      "byte_size": 10554,
+      "path": "src/mineocclude/contracts/identity.py",
+      "sha256": "dfd88378ddff219a39925a78a1c13e2978562dc64142d373cfb8d607e1f2729e"
+    },
+    "mvp_configuration": {
+      "byte_size": 5958,
+      "path": "configs/experiments/mvp.yaml",
+      "sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3"
+    },
+    "pooling_implementation": {
+      "byte_size": 20297,
+      "path": "src/mineocclude/activations/pool.py",
+      "sha256": "a5fd4c5d7272883432c29401e90880e70b8f90af2c0d0365bf65bc2847b0ead7"
+    },
+    "preprocessing_implementation": {
+      "byte_size": 37264,
+      "path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+      "sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8"
+    },
+    "public_adapter_protocol": {
+      "byte_size": 62055,
+      "path": "src/mineocclude/models/mineworld_adapter.py",
+      "sha256": "0d8f55fbd24a1552bd9242b3a4554f7cdc15240b24865904e2f77446128516a5"
+    }
+  },
+  "person_c_source_records": [
+    {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/accepted_excluded_ledger.json",
+      "sha256": "fa5f8e4251c7d4243b6f62f9992bf68bab2ef5dfcdbdac8dec61954ff952d8a1",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/consumer_handoffs/person_a_handoff_receipt.json",
+      "sha256": "6eb9394115794d7c233b4a035a2ba8a6faf3db6913be5cab775aecb3c7929133",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/handoff_receipt.json",
+      "sha256": "2ea0c6b91c4605c3e8fe393744574cd450c4a3e112f74be0b51a49b7c212b536",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/qa_exclusion_report.json",
+      "sha256": "da1651e62d6f5c91a55cdfab97901d351e8e537426cfc59aceb3d86151640b53",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/sha256_inventory.json",
+      "sha256": "14f8a8f9031e94663c12c3f6ca01cab6c61f97204d8da2e8c5acdf512e5f72ff",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+      "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+      "sha256": "ec62e4b35cb2fc8c1b50447f6f79b5b506570cd786a55bfd0fff255b5b3b4fd3",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    }
+  ],
+  "schema_id": "person-a-phase6-66-cell-intake-v0.1-authority-binding",
+  "schema_version": "1.0",
+  "test_path": "tests/models/test_person_a_phase6_66_cell_intake_v0_1.py"
+}

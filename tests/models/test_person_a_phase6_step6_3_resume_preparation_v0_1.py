@@ -284,6 +284,13 @@ class PersonAPhase6Step63ResumePreparationTests(unittest.TestCase):
                 session_id="resume",
                 precision="float16",
                 device="cuda:0",
+                # RuntimeLoadRequest validates every checkpoint identity as a
+                # 64-hex digest, so these must be supplied rather than left as
+                # auto-generated Mock attributes.
+                expected_model_config_sha256="a" * 64,
+                expected_main_checkpoint_sha256="b" * 64,
+                expected_vae_config_sha256="c" * 64,
+                expected_vae_checkpoint_sha256="d" * 64,
             )
             context = base.RunContext(
                 arguments=arguments,
@@ -536,35 +543,35 @@ class PersonAPhase6Step63ResumePreparationTests(unittest.TestCase):
                 hashlib.sha256(payload).hexdigest(),
                 row["sha256"],
             )
+        # The recorded scope is asserted against itself and the worktree, not
+        # against a live `git status`, which would expire once this package is
+        # committed.
         change_inventory = json.loads(
             (EVIDENCE_ROOT / "change_inventory.json").read_bytes()
         )
-        status = subprocess.run(
-            [
-                "git",
-                "-C",
-                str(ROOT),
-                "status",
-                "--porcelain=v1",
-                "-uall",
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout
-        changed_paths = sorted(
-            line[3:].replace("\\", "/")
-            for line in status.splitlines()
-            if line
-        )
-        self.assertEqual(
-            changed_paths,
-            change_inventory["changed_paths"],
-        )
+        changed_paths = change_inventory["changed_paths"]
+        self.assertEqual(changed_paths, sorted(changed_paths))
+        self.assertEqual(len(changed_paths), len(set(changed_paths)))
         self.assertEqual(
             len(changed_paths),
             change_inventory["changed_path_count"],
         )
+        evidence = []
+        for path in changed_paths:
+            with self.subTest(path=path):
+                self.assertTrue((ROOT / path).exists(), path)
+            if path.startswith("docs/status/"):
+                evidence.append(path)
+        # Accepted evidence bytes are never rewritten; in-flight edits to the
+        # runner or its tests are ordinary maintenance and are not a defect.
+        self.assertTrue(evidence)
+        modified = subprocess.run(
+            ["git", "-C", str(ROOT), "diff", "--name-only", "--", *evidence],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.split()
+        self.assertEqual(modified, [])
 
 
 if __name__ == "__main__":
