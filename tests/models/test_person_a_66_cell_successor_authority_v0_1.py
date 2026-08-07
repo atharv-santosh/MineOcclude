@@ -671,11 +671,30 @@ class PersonA66CellSuccessorAuthorityTests(unittest.TestCase):
         for role, entry in roles.items():
             with self.subTest(role=role):
                 self.assertEqual(len(entry["commit"]), 40)
-                if role != "person_a":
-                    self.assertEqual(
-                        entry["commit"],
-                        builder._git_text("rev-parse", entry["ref"]),
-                    )
+                if role == "person_a":
+                    continue
+                # The recorded commit is the snapshot this package assessed. A
+                # role branch may advance afterwards, so require the commit to
+                # exist and remain reachable from its ref rather than to equal
+                # the moving tip, which would expire this guard on any push.
+                self.assertEqual(
+                    builder._completed(
+                        ["git", "cat-file", "-e", f"{entry['commit']}^{{commit}}"]
+                    ).returncode,
+                    0,
+                )
+                self.assertEqual(
+                    builder._completed(
+                        [
+                            "git",
+                            "merge-base",
+                            "--is-ancestor",
+                            entry["commit"],
+                            entry["ref"],
+                        ]
+                    ).returncode,
+                    0,
+                )
 
     def test_35_unsatisfied_conditions_name_an_owner(self) -> None:
         unsatisfied = [

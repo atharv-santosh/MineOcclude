@@ -1,0 +1,137 @@
+{
+  "applicability": {
+    "all_66_cells_applicable": true,
+    "excluded_trajectory_count": 0,
+    "trajectory_count": 66
+  },
+  "blocking_findings": [],
+  "channel_order_semantics": {
+    "person_a_loader": "cv2.imread returns BGR",
+    "person_a_restores_rgb_with": "cv2.COLOR_BGR2RGB",
+    "person_c_canonical_png_channel_order": "RGB",
+    "pre_swap_applied": false,
+    "proof_path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/rgb_bgr_boundary_proof.json",
+    "restores_true_rgb": true
+  },
+  "consumer_role": "person_d",
+  "decision_date": "2026-08-07",
+  "deterministic_producer_environment": {
+    "cross_library_version_byte_determinism_claimed": false,
+    "determinism_scope": "byte-identical model-facing payloads under this exact pinned interpreter and library set on this host; no claim is made across different OpenCV, NumPy, or Pillow versions",
+    "machine": "AMD64",
+    "numpy_version": "1.26.4",
+    "opencv_version": "4.11.0",
+    "pillow_role": "Person C's canonicalizer uses Pillow; Person A's model-facing step uses OpenCV only. Pillow is read here solely to recompute Person C's declared RGB pixel digest.",
+    "pillow_version": "11.3.0",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python_executable": "C:\\Users\\lollo\\MineOcclude-TestRunner\\Scripts\\python.exe",
+    "python_implementation": "CPython",
+    "python_version": "3.10.20",
+    "system": "Windows"
+  },
+  "entry_point": {
+    "person_a_regeneration_command": "python scripts/build_person_a_66_cell_preprocessed_media_v0_2.py materialize",
+    "person_a_verification_command": "python scripts/build_person_a_66_cell_preprocessed_media_v0_2.py verify",
+    "person_d_production_command": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto"
+  },
+  "person_a_preprocessed_frames": {
+    "artifact_count": 2468,
+    "duplicate_frame_count": 0,
+    "external_payload_root": "C:\\Users\\lollo\\MineOcclude-Person-A-Outputs\\person-a-66-cell-preprocessed-frames-v0-2",
+    "failure_count": 0,
+    "filename_rule": "frames/{trajectory_id}/{model_frame_idx:06d}.f32le",
+    "manifest_path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+    "manifest_schema_id": "person-a-preprocessed-frame-manifest-v0.2",
+    "manifest_sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1",
+    "missing_frame_count": 0,
+    "output_contract": {
+      "byte_order": "little",
+      "channels": 3,
+      "color_order": "RGB",
+      "dtype": "float32",
+      "height": 224,
+      "layout": "CHW",
+      "payload_byte_size": 1032192,
+      "payload_format": "raw-little-endian-float32-c-order",
+      "shape": [
+        3,
+        224,
+        384
+      ],
+      "value_range_inclusive": [
+        -1.0,
+        1.0
+      ],
+      "width": 384
+    },
+    "payload_byte_total": 2547449856,
+    "payload_hashes_are_in_the_manifest_records": true,
+    "unique_frame_count": 2468
+  },
+  "person_a_preprocessing_authority": {
+    "colour_conversion": "cv2.COLOR_BGR2RGB",
+    "implementation_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "implementation_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "interpolation": "cv2.INTER_LINEAR",
+    "normalization": "(x - 0.5) / 0.5 per channel",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "preprocessing_identity": "person-a-bgr2rgb-inter-linear-224x384-v1.0",
+    "scaling": "uint8 / float32(255.0)",
+    "source_shape_hwc": [
+      360,
+      640,
+      3
+    ]
+  },
+  "person_c_canonical_media": {
+    "canonical_dimensions": "640x360",
+    "canonical_frame_count": 2468,
+    "canonicalizer_path": "src/mineocclude/data/preprocess.py",
+    "canonicalizer_sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a",
+    "commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "frame_index_path": "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_frame_index.jsonl",
+    "manifest_path": "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+    "manifest_sha256": "a11762bd9292404b58ddccc062ebcf5115d935d61426fff4cd4474c8def257c9",
+    "mp4_used_as_pixel_source": false,
+    "source_channel_order": "RGB"
+  },
+  "person_c_to_d_media_handoff": {
+    "path": "docs/status/person_c_66_cell_canonical_media_v0_1/c_to_d_media_handoff.json",
+    "sha256": "84b5b927ab41d34d51ebf30f1af9d48cf1b5af9d057518a6ca6338cef7f38a56"
+  },
+  "person_d_consumer_note": {
+    "note": "Every Person A-owned data artifact Person D needs now exists: the 2468-record manifest, the payload hashes, and the payload bytes. Re-pinning Person D's own frozen constants to this manifest is a Person D code change, not a further Person A deliverable, and Person A does not modify Person D's branch.",
+    "person_d_frozen_module": "src/mineocclude/baselines/frame_handoff_v0_2.py",
+    "person_d_must_repin_constants": [
+      "PERSON_A_FRAME_HANDOFF_COMMIT",
+      "PERSON_A_FRAME_MANIFEST_PATH",
+      "PERSON_A_FRAME_MANIFEST_SHA256",
+      "PERSON_A_EXTERNAL_FRAME_ROOT",
+      "REQUIRED_FRAME_ARTIFACT_COUNT",
+      "FROZEN_PILOT_IDS"
+    ],
+    "person_d_owns_this_change": true,
+    "requires_another_person_a_data_artifact": false
+  },
+  "producer_role": "person_a",
+  "ready": true,
+  "schema_id": "person-a-66-cell-preprocessed-media-v0.2-a-to-d-frame-handoff",
+  "schema_version": "0.2",
+  "source_and_output_dimensions": {
+    "model_facing_shape_chw": [
+      3,
+      224,
+      384
+    ],
+    "model_facing_width_by_height": "384x224",
+    "raw_capture_dimensions": "1920x1046",
+    "scientific_source_dimensions": "640x360"
+  },
+  "supersedes": {
+    "path": "docs/status/person_a_66_cell_successor_authority_v0_1/a_to_d_frame_handoff.json",
+    "predecessor_evidence_rewritten": false,
+    "predecessor_ready": false,
+    "predecessor_sha256": "e83910dda26bfacda3288f9ba0a2a340b3cbd852f41024a597edd73025401a38",
+    "reason": "The predecessor handoff was published not-ready on the missing 640x360 media finding. Person C has since materialized that media, so this successor closes the handoff additively."
+  }
+}

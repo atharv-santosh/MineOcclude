@@ -1,0 +1,93 @@
+{
+  "aggregate_authorization_authority_present": false,
+  "aggregate_phase6_runtime_authorized": false,
+  "assessed_roles": {
+    "person_a": "a3bc169d349ca424f6d5af1ecbbb9327b248bfe2",
+    "person_b": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+    "person_c": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "person_d": "8cd2fdfc7759b285a7748ccdb4564e475b3ce1cf",
+    "person_e": "fec27d08b4629afa07c7858598e94778dc6e7bef"
+  },
+  "contract_conditions": [
+    {
+      "condition": "person_c_accepted_66_cell_manifest_bound",
+      "owner": "person_c_data",
+      "satisfied": true
+    },
+    {
+      "condition": "person_c_strict_visibility_authority_bound",
+      "owner": "person_c_data",
+      "satisfied": true
+    },
+    {
+      "condition": "model_input_source_media_at_frozen_source_resolution",
+      "detail": "Resolved: Person C materialized the declared canonical 640x360 lossless RGB PNGs for all 2468 keys and their pixel digests reproduce Person E's recorded canonical frame hashes.",
+      "owner": "person_c_data",
+      "satisfied": true
+    },
+    {
+      "condition": "person_a_2468_model_facing_payloads_materialized",
+      "owner": "person_a_model",
+      "satisfied": true
+    },
+    {
+      "condition": "person_b_fold_and_oracle_target_authorities_bound",
+      "owner": "person_b_analysis",
+      "satisfied": true
+    },
+    {
+      "condition": "person_b_row_universe_bound",
+      "owner": "person_b_analysis",
+      "satisfied": true
+    },
+    {
+      "condition": "storage_dtype_review_complete_float32",
+      "owner": "person_a_model+person_b_analysis",
+      "satisfied": true
+    },
+    {
+      "condition": "successor_run_identity_binds_canonical_source_bytes",
+      "owner": "person_a_model",
+      "satisfied": true
+    },
+    {
+      "condition": "person_d_66_cell_frame_preprocess_handoff_consumable",
+      "owner": "person_a_model",
+      "satisfied": true
+    }
+  ],
+  "infrastructure_conditions": [
+    {
+      "condition": "durable_byte_transport_to_approved_gpu_environment",
+      "owner": "person_c_data+person_e_operations",
+      "satisfied": false
+    },
+    {
+      "condition": "canonical_and_model_facing_bytes_reachable_from_sagemaker",
+      "owner": "person_a_model",
+      "satisfied": false
+    },
+    {
+      "condition": "approved_gpu_runtime_session",
+      "owner": "person_a_model",
+      "satisfied": false
+    },
+    {
+      "condition": "model_and_vae_checkpoint_accessible_on_extraction_host",
+      "owner": "person_a_model",
+      "satisfied": false
+    }
+  ],
+  "phase6_contract_preconditions_ready": true,
+  "phase6_runtime_infrastructure_ready": false,
+  "resolved_since_previous_assessment": [
+    "C-66-CELL-640x360-MEDIA-MISSING"
+  ],
+  "schema_id": "person-a-66-cell-preprocessed-media-v0.2-phase6-precondition-receipt",
+  "schema_version": "0.2",
+  "self_authorizes_phase6": false,
+  "transport_state": {
+    "byte_transport_destination_pending": true,
+    "sagemaker_byte_access_ready": false
+  }
+}

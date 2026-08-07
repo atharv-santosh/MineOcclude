@@ -1,0 +1,65 @@
+{
+  "approved_durable_destination": null,
+  "byte_transport_destination_pending": true,
+  "destination_fabricated": false,
+  "execution_environment": "aws_sagemaker_linux_gpu",
+  "extraction_host_requirement": {
+    "chosen": "person_a_model_facing_payloads",
+    "detail": "The frozen extraction path consumes the model-facing CHW float32 tensor. Person A has already materialized those exact payloads with hashes, so the extraction host needs Person A's payloads rather than re-running preprocessing on the canonical PNGs. The canonical PNGs remain the upstream pixel authority and are listed so the host can re-derive if an owner requires it.",
+    "option_a_canonical_pngs_and_preprocess_on_host": false,
+    "option_b_person_a_model_facing_payloads": true
+  },
+  "local_sources": {
+    "canonical_png_byte_total": 294018874,
+    "canonical_png_file_count": 2468,
+    "canonical_png_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_<episode_id>\\frames_640x360",
+    "canonical_png_sha_inventory": "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_frame_index.jsonl",
+    "model_facing_payload_byte_total": 2547449856,
+    "model_facing_payload_file_count": 2468,
+    "model_facing_payload_root": "C:\\Users\\lollo\\MineOcclude-Person-A-Outputs\\person-a-66-cell-preprocessed-frames-v0-2",
+    "model_facing_sha_inventory": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json"
+  },
+  "reinspection": {
+    "bare_scheme_token_is_not_a_destination": true,
+    "destination_pattern": "s3://[A-Za-z0-9]",
+    "object_store_destination_found": false,
+    "results": [
+      {
+        "hits": [],
+        "ref": "origin/role/person-b-analysis"
+      },
+      {
+        "hits": [],
+        "ref": "origin/role/person-c-data"
+      },
+      {
+        "hits": [],
+        "ref": "origin/role/person-d-baselines"
+      },
+      {
+        "hits": [],
+        "ref": "origin/role/person-e-operations"
+      },
+      {
+        "hits": [],
+        "ref": "HEAD"
+      }
+    ]
+  },
+  "sagemaker_byte_access_ready": false,
+  "schema_id": "person-a-66-cell-preprocessed-media-v0.2-byte-transport-plan",
+  "schema_version": "0.2",
+  "transfer_procedure": {
+    "steps": [
+      "1. an owner assigns <APPROVED_DESTINATION_URI> and records it in docs/status/person_a_phase9_clean_run_v0_1/external_artifact_index.json",
+      "2. python scripts/build_person_a_66_cell_preprocessed_media_v0_2.py verify  # re-derive and re-verify all 2468 model-facing payloads before upload",
+      "3. upload every payload under the external payload root to <APPROVED_DESTINATION_URI>/person-a-66-cell-preprocessed-frames-v0-2/frames/<trajectory_id>/<model_frame_idx>.f32le",
+      "4. recompute SHA-256 for every uploaded object and require an exact match against the manifest payload_sha256 values",
+      "5. materialize on aws_sagemaker_linux_gpu and re-verify every digest and byte size before Step 6.1"
+    ],
+    "unfilled_placeholders": [
+      "<APPROVED_DESTINATION_URI>"
+    ],
+    "verification_command": "python scripts/build_person_a_66_cell_preprocessed_media_v0_2.py verify"
+  }
+}

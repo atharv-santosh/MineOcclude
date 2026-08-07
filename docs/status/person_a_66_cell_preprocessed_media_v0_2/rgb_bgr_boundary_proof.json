@@ -1,0 +1,34 @@
+{
+  "composition": [
+    "Person C writes a lossless PNG whose pixels are true RGB",
+    "Person A loads it with cv2.imread, which returns the channels reversed",
+    "Person A applies cv2.COLOR_BGR2RGB inside _preprocess_bgr_frame",
+    "the two reversals compose to the identity, restoring true RGB"
+  ],
+  "cv2_array_is_channel_reversed_true_rgb": true,
+  "cv2_version": "4.11.0",
+  "implementation_applies_bgr2rgb": true,
+  "implementation_applies_inter_linear": true,
+  "implementation_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+  "implementation_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+  "person_c_declares_rgb_output": true,
+  "pinned_source_shape_hwc": [
+    360,
+    640,
+    3
+  ],
+  "pre_swap_applied": false,
+  "pre_swap_would_double_swap": true,
+  "probe_canonical_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12601\\frames_640x360\\000000.png",
+  "probe_canonical_pixel_sha256": "e53822c266494a2864d160e1df03f8a5307e9b9bf34c4238e8fd34c259cc8093",
+  "probe_canonical_png_sha256": "b0ae3a9d24195e5bf35c4b28277013547cc20b7ca56accce0d1a7922ab9845f2",
+  "probe_key": {
+    "model_frame_idx": 0,
+    "trajectory_id": "layout_03_ep12601"
+  },
+  "restores_true_rgb": true,
+  "schema_id": "person-a-66-cell-preprocessed-media-v0.2-rgb-bgr-boundary-proof",
+  "schema_version": "0.2",
+  "verified_on_real_canonical_pixels": true,
+  "verified_via": "array equality on a decoded canonical frame"
+}

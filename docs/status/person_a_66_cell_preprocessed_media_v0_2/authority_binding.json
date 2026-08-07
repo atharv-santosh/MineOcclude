@@ -1,0 +1,119 @@
+{
+  "authorities": {
+    "person_a": {
+      "branch": "role/person-a-model",
+      "starting_commit": "a3bc169d349ca424f6d5af1ecbbb9327b248bfe2"
+    },
+    "person_b": {
+      "remote_ref": "origin/role/person-b-analysis",
+      "source_authority_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    "person_c": {
+      "remote_ref": "origin/role/person-c-data",
+      "source_authority_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "source_read_policy": "exact_git_commit_object"
+    }
+  },
+  "builder_path": "scripts/build_person_a_66_cell_preprocessed_media_v0_2.py",
+  "claims": {
+    "activations_generated": false,
+    "aggregate_phase6_runtime_authorized": false,
+    "foreign_branch_merged": false,
+    "gpu_extraction_started": false,
+    "historical_evidence_rewritten": false,
+    "model_loaded": false,
+    "mp4_used_as_pixel_source": false,
+    "person_a_phase6_authorized": false,
+    "scientific_execution_performed": false,
+    "self_authorizes_phase6": false
+  },
+  "person_b_source_records": [
+    {
+      "byte_size": 557603,
+      "path": "docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json",
+      "sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+      "source_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 43262,
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+      "sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9",
+      "source_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 4319,
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json",
+      "sha256": "e897c31cda46e2dbe7fab605320cd98eba68a1396a80ccd78b178c8dc5547351",
+      "source_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 4746,
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/b_to_a_successor_handoff.json",
+      "sha256": "6ca406342b700cf35360cc94764ae58bc7cadafcf0ac6d28bad20b2077dd6d0e",
+      "source_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+      "source_read_policy": "exact_git_commit_object"
+    }
+  ],
+  "person_c_source_records": [
+    {
+      "byte_size": 61794,
+      "path": "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+      "sha256": "a11762bd9292404b58ddccc062ebcf5115d935d61426fff4cd4474c8def257c9",
+      "source_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 5572,
+      "path": "docs/status/person_c_66_cell_canonical_media_v0_1/c_to_a_media_handoff.json",
+      "sha256": "94c852466167db01a678d0d7d6a3ae6e3211abaef995f95b20f5d182ed599b3e",
+      "source_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 39565,
+      "path": "docs/status/person_c_66_cell_canonical_media_v0_1/c_to_d_media_handoff.json",
+      "sha256": "84b5b927ab41d34d51ebf30f1af9d48cf1b5af9d057518a6ca6338cef7f38a56",
+      "source_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 3154628,
+      "path": "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_frame_index.jsonl",
+      "sha256": "745e556578587981c5fe7d96ca873d8744e53e9f1e11b23b931af37dd9499dab",
+      "source_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 6668,
+      "path": "src/mineocclude/data/preprocess.py",
+      "sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a",
+      "source_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "source_read_policy": "exact_git_commit_object"
+    },
+    {
+      "byte_size": 34542,
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+      "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+      "source_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+      "source_read_policy": "exact_git_commit_object"
+    }
+  ],
+  "prior_successor_binding_audit": {
+    "binds_c_canonical_media_sha256": false,
+    "binds_c_to_a_media_handoff_sha256": false,
+    "binds_person_a_preprocessed_frame_manifest_sha256": false,
+    "conclusion": "The prior successor predates Person C's canonical-media package and binds none of the three source-byte authorities, so the scientific input-byte authority moved from unbound to bound and a new run identity is required.",
+    "mutated_in_place": false,
+    "new_run_identity_required": true,
+    "prior_path": "docs/status/person_a_66_cell_successor_authority_v0_1/successor_extraction_config.json",
+    "prior_run_id": "mineocclude-run-836009cb74647b413ebc6f40218bc5bf",
+    "prior_sha256": "3f5708e43ebd56a160ec2d8625ee9117a1a7517770516da34f24948e3cbf1e20"
+  },
+  "schema_id": "person-a-66-cell-preprocessed-media-v0.2-authority-binding",
+  "schema_version": "0.2",
+  "test_path": "tests/models/test_person_a_66_cell_preprocessed_media_v0_2.py"
+}
