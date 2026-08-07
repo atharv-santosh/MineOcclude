@@ -1,0 +1,118 @@
+{
+  "aggregate_authorization_authority_present": false,
+  "aggregate_authorization_requirement": {
+    "person_b_conditions_path": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/phase6_authorization_conditions.json",
+    "required_signers": [
+      "person_a_model",
+      "person_b_analysis",
+      "person_c_data",
+      "person_e_operations"
+    ],
+    "rule": "Person B's frozen conditions require a new explicit versioned authorization decision signed by the required owners; silent authorization is forbidden and no automatic transition exists.",
+    "silent_authorization_forbidden": true
+  },
+  "aggregate_phase6_runtime_authorized": false,
+  "assessed_roles": {
+    "person_a": {
+      "commit": "77e43bd1665671b9e23d6d6ef927ee4944611342",
+      "ref": "HEAD"
+    },
+    "person_b": {
+      "commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+      "ref": "origin/role/person-b-analysis"
+    },
+    "person_c": {
+      "commit": "e908ead4a7ff5ab3ae310bb846969a7859fdb26b",
+      "ref": "origin/role/person-c-data"
+    },
+    "person_d": {
+      "commit": "8cd2fdfc7759b285a7748ccdb4564e475b3ce1cf",
+      "ref": "origin/role/person-d-baselines"
+    },
+    "person_e": {
+      "commit": "fec27d08b4629afa07c7858598e94778dc6e7bef",
+      "ref": "origin/role/person-e-operations"
+    }
+  },
+  "contract_conditions": [
+    {
+      "condition": "person_c_accepted_66_cell_manifest_bound",
+      "owner": "person_c_data",
+      "satisfied": true
+    },
+    {
+      "condition": "person_c_strict_visibility_authority_bound",
+      "owner": "person_c_data",
+      "satisfied": true
+    },
+    {
+      "condition": "person_a_2468_key_frame_map_materialized",
+      "owner": "person_a_model",
+      "satisfied": true
+    },
+    {
+      "condition": "person_b_fold_and_oracle_target_authorities_bound",
+      "owner": "person_b_analysis",
+      "satisfied": true
+    },
+    {
+      "condition": "person_b_row_universe_bound",
+      "owner": "person_b_analysis",
+      "satisfied": true
+    },
+    {
+      "condition": "storage_dtype_review_complete_float32",
+      "owner": "person_a_model+person_b_analysis",
+      "satisfied": true
+    },
+    {
+      "condition": "model_preprocess_converter_identities_hash_bound",
+      "owner": "person_a_model",
+      "satisfied": true
+    },
+    {
+      "condition": "successor_run_identity_established",
+      "owner": "person_a_model",
+      "satisfied": true
+    },
+    {
+      "condition": "model_input_source_media_at_frozen_source_resolution",
+      "detail": "C-66-CELL-640x360-MEDIA-MISSING: the frozen preprocessing that produces the model input requires a 640x360 source and only the 1920x1046 raw client framebuffer exists for the 66 cells. This blocks Person A's own activation extraction, not only Person D's raw-pixel baseline, because both consume the same pinned preprocessing.",
+      "owner": "person_c_data",
+      "satisfied": false
+    },
+    {
+      "condition": "person_d_66_cell_frame_preprocess_handoff_consumable",
+      "detail": "C-66-CELL-640x360-MEDIA-MISSING",
+      "owner": "person_c_data",
+      "satisfied": false
+    }
+  ],
+  "infrastructure_conditions": [
+    {
+      "condition": "durable_byte_transport_to_approved_gpu_environment",
+      "owner": "person_c_data",
+      "satisfied": false
+    },
+    {
+      "condition": "approved_gpu_runtime_session",
+      "owner": "person_a_model",
+      "satisfied": false
+    },
+    {
+      "condition": "model_and_vae_checkpoint_accessible_in_that_environment",
+      "owner": "person_a_model",
+      "satisfied": false
+    }
+  ],
+  "phase6_contract_preconditions_ready": false,
+  "phase6_runtime_infrastructure_ready": false,
+  "schema_id": "person-a-66-cell-successor-authority-v0.1-phase6-precondition-receipt",
+  "schema_version": "1.0",
+  "self_authorizes_phase6": false,
+  "successor_run_id": "mineocclude-run-836009cb74647b413ebc6f40218bc5bf",
+  "transport_state": {
+    "byte_transport_destination_pending": true,
+    "sagemaker_byte_access_ready": false
+  }
+}

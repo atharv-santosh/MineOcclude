@@ -1,0 +1,71 @@
+{
+  "approved_durable_destination": null,
+  "byte_transport_destination_pending": true,
+  "destination_fabricated": false,
+  "executable_transfer_procedure": {
+    "credential_rule": "credentials travel only through the approved out-of-band channel and never appear in Git, a log, an object, or a receipt",
+    "steps": [
+      "1. an owner assigns <APPROVED_DESTINATION_URI> and records it in docs/status/person_a_phase9_clean_run_v0_1/external_artifact_index.json",
+      "2. python scripts/build_person_a_66_cell_local_preparation_v0_1.py frame-maps  # re-verify all 2930 source artifacts",
+      "3. upload each artifact from its exact windows_source_path in data/handoff_a/person_a_66_cell_production_input_v0_1/source_byte_inventory.json to <APPROVED_DESTINATION_URI>/person-c-c6a-post-c1-v0.1/episode_<episode_id>/<side>/<artifact_role>",
+      "4. recompute SHA-256 for every uploaded object and require an exact match against source_byte_inventory.json",
+      "5. materialize on aws_sagemaker_linux_gpu and re-verify every digest and byte size before Step 6.1"
+    ],
+    "unfilled_placeholders": [
+      "<APPROVED_DESTINATION_URI>"
+    ]
+  },
+  "execution_environment": "aws_sagemaker_linux_gpu",
+  "prior_plan_path": "docs/status/person_a_66_cell_local_preparation_v0_1/byte_transfer_plan.json",
+  "prior_plan_sha256": "d28bba94920f19a6efb52959a7456ab318640f4cd9f4c85f696ac8f6e18cdb9e",
+  "reinspection": {
+    "bare_scheme_token_is_not_a_destination": true,
+    "destination_pattern": "s3://[A-Za-z0-9]",
+    "object_store_destination_found": false,
+    "refs_searched": [
+      "origin/role/person-b-analysis",
+      "origin/role/person-c-data",
+      "origin/role/person-d-baselines",
+      "origin/role/person-e-operations",
+      "HEAD"
+    ],
+    "results": [
+      {
+        "hits": [],
+        "ref": "origin/role/person-b-analysis"
+      },
+      {
+        "hits": [],
+        "ref": "origin/role/person-c-data"
+      },
+      {
+        "hits": [],
+        "ref": "origin/role/person-d-baselines"
+      },
+      {
+        "hits": [],
+        "ref": "origin/role/person-e-operations"
+      },
+      {
+        "hits": [],
+        "ref": "HEAD"
+      }
+    ],
+    "roles_reinspected": [
+      "person_b",
+      "person_c",
+      "person_d",
+      "person_e"
+    ]
+  },
+  "sagemaker_byte_access_ready": false,
+  "schema_id": "person-a-66-cell-successor-authority-v0.1-byte-transport-preflight",
+  "schema_version": "1.0",
+  "windows_byte_state": {
+    "artifact_count": 2930,
+    "artifact_hash_verified_count": 2930,
+    "byte_size_total": 609099426,
+    "trajectory_count": 66,
+    "trajectory_hash_verified_count": 66
+  }
+}

@@ -1,0 +1,469 @@
+{
+  "applicability": {
+    "all_66_cells_applicable": true,
+    "excluded_trajectory_count": 0,
+    "trajectory_count": 66
+  },
+  "blocking_findings": [
+    {
+      "blocker_id": "C-66-CELL-640x360-MEDIA-MISSING",
+      "blocks_person_a_activation_extraction": true,
+      "blocks_person_d_raw_pixel_baseline": true,
+      "blocks_scope_note": "The same pinned preprocessing produces Person A's model input and Person D's raw-pixel features, so this gap blocks the activation run itself, not only the Person D baseline.",
+      "detail": "Person A's frozen preprocessing requires a 360x640 BGR uint8 source and _preprocess_bgr_frame rejects any other shape. Person C's capture package for the 66 cells declares media width 640 / height 360, but the only materialised pixels are the 1920x1046 raw client framebuffer PNGs, and no 640x360 derivative exists in the repository or on the preparation host for any ep126xx episode. The two aspect ratios differ (1.836 versus 1.778), so any downscale is a scientific choice about cropping or letterboxing. Person A does not invent one.",
+      "owner": "person_c_data",
+      "resolution_options": [
+        "Person C publishes the declared 640x360 media derivative for all 66 episodes, as already exists for the earlier ep94xx and ep100xx pilots (video_640x360.mp4)",
+        "a coordinated result-changing decision redefines Person A's frozen preprocessing source resolution and the exact downscale rule"
+      ]
+    }
+  ],
+  "canonicalization_rules": {
+    "frame_map_row_encoding": "canonical JSON, sorted keys, ASCII, compact separators, one row per line",
+    "key_defines_identity": true,
+    "model_facing_frame_identity": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "row_order_defines_identity": false
+  },
+  "consumer_role": "person_d",
+  "decision_date": "2026-08-07",
+  "deterministic_entry_point": {
+    "frame_manifest_argument": "--frame-manifest <A_66_CELL_FRAME_MANIFEST>  # unavailable until the blocking finding is resolved",
+    "person_a_regeneration_command": "python scripts/build_person_a_66_cell_local_preparation_v0_1.py frame-maps",
+    "person_d_production_command": "python scripts/run_person_d_step4_1_eight_family_production.py --fold-manifest <B_66_CELL_FOLD_MANIFEST> --oracle-targets <B_66_CELL_ORACLE_TARGETS> --frame-manifest <A_66_CELL_FRAME_MANIFEST> --output-root <PERSON_D_PRODUCTION_ROOT> --resume auto"
+  },
+  "frame_map": {
+    "index_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_map_index.json",
+    "index_sha256": "fa276e49e67f2c9490733351add8f35dc491a1deb82c2fe2149b1579b6e80561",
+    "model_frame_key_count": 2468,
+    "package_path": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+    "package_sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+    "per_trajectory": {
+      "layout_01_ep12602": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12602.jsonl",
+        "frame_map_sha256": "c3076dc09232e39ccbd07bfdd8c4aba1e935047cde83e85e3b1f820901aedc70",
+        "model_frame_count": 60
+      },
+      "layout_01_ep12605": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12605.jsonl",
+        "frame_map_sha256": "cb20a73541fda2c47baac594c791e5176bc8d01d8d52f39c3b64ac8eac89ce76",
+        "model_frame_count": 25
+      },
+      "layout_01_ep12620": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12620.jsonl",
+        "frame_map_sha256": "9328cbb9096ad446d17df23b9775016d71cca415b189baa43cb10af3e9b0a042",
+        "model_frame_count": 50
+      },
+      "layout_01_ep12631": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12631.jsonl",
+        "frame_map_sha256": "ca472cade68ff0a68acbbeefd2f52657131c265cbd439782190de246c9105c0a",
+        "model_frame_count": 14
+      },
+      "layout_01_ep12636": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12636.jsonl",
+        "frame_map_sha256": "73456262d86906020f6952f2e80a56414455290cc520f5f111e53cf54ef59bd9",
+        "model_frame_count": 23
+      },
+      "layout_01_ep12650": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12650.jsonl",
+        "frame_map_sha256": "dd3d46fcb924c45508726658b5473efc84902de0fbfc10e30e7973cfdb49c4d9",
+        "model_frame_count": 60
+      },
+      "layout_01_ep12651": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12651.jsonl",
+        "frame_map_sha256": "a47ed5787a35245c6b0754828f5ecd5406032c5378a0ce670d3289140e4ba1a6",
+        "model_frame_count": 40
+      },
+      "layout_01_ep12652": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12652.jsonl",
+        "frame_map_sha256": "e9c544327b325cbfef994d674070adb9fb461f11f86701e647233c350dd26a22",
+        "model_frame_count": 23
+      },
+      "layout_01_ep12655": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12655.jsonl",
+        "frame_map_sha256": "0eceb0494ab75fbec21b96459ca9b1f580f418ae9973942a2eb12c93a641a4b8",
+        "model_frame_count": 27
+      },
+      "layout_01_ep12659": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12659.jsonl",
+        "frame_map_sha256": "e95e4161e71d2786659c175d13a20b8846148d9f20811c6c60dd9914af41bb32",
+        "model_frame_count": 19
+      },
+      "layout_01_ep12665": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_01_ep12665.jsonl",
+        "frame_map_sha256": "666db009b67891e8e86e05a6c52b6eace87b815a6850fc15651c10ccc948b8ce",
+        "model_frame_count": 34
+      },
+      "layout_02_ep12610": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12610.jsonl",
+        "frame_map_sha256": "a6286cdbb8517b2ac91d9b1e6ecf80fd025011d6e61711b66b540a3724bbf113",
+        "model_frame_count": 60
+      },
+      "layout_02_ep12611": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12611.jsonl",
+        "frame_map_sha256": "921d7b3a325a9c8240af54d40a65260c22e44c86bfe3e9466cf3f21f8bfe7f57",
+        "model_frame_count": 36
+      },
+      "layout_02_ep12623": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12623.jsonl",
+        "frame_map_sha256": "f1aa45ead99d6a163196958b2fecfa31228001bbb4d3d9d3bcc99c1de8127018",
+        "model_frame_count": 31
+      },
+      "layout_02_ep12635": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12635.jsonl",
+        "frame_map_sha256": "68b6387a8f532806a6d455a137153c7d685a347a4d6222b4793d6109a874ff85",
+        "model_frame_count": 27
+      },
+      "layout_02_ep12641": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12641.jsonl",
+        "frame_map_sha256": "ae4f7838f36c3d68ff384d4ba8fb4081686b598b08573a9cdfbac5de5301d335",
+        "model_frame_count": 60
+      },
+      "layout_02_ep12643": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12643.jsonl",
+        "frame_map_sha256": "f0a100b7c8944bae111afbaa9b268557f53c9e74791f6d4df787f4a198a6351b",
+        "model_frame_count": 14
+      },
+      "layout_02_ep12648": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12648.jsonl",
+        "frame_map_sha256": "d78b3486b95786ff7d08127586bcf34611fba781a47bcddf7664cd5575dc9b9c",
+        "model_frame_count": 65
+      },
+      "layout_02_ep12649": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12649.jsonl",
+        "frame_map_sha256": "8543a43147ca982097efed1494f241df14f7492c1d15d1e0d39cb7edd9f43884",
+        "model_frame_count": 26
+      },
+      "layout_02_ep12661": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12661.jsonl",
+        "frame_map_sha256": "3fd35b163dbfbca8533b403b476d8761f1282588cca656ce838477f003591552",
+        "model_frame_count": 24
+      },
+      "layout_02_ep12663": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12663.jsonl",
+        "frame_map_sha256": "f760c19058bf7745c919ae22832bd6aebddc14a7b70077892a3deb6487f8d0a7",
+        "model_frame_count": 25
+      },
+      "layout_02_ep12666": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_02_ep12666.jsonl",
+        "frame_map_sha256": "5cd78b539c6c2021393a78b05b84bcf703fa4f1c898936c018b5b170c5418d6d",
+        "model_frame_count": 11
+      },
+      "layout_03_ep12601": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12601.jsonl",
+        "frame_map_sha256": "6198ffd82c6c3749d749bdca385771ed91d6e66a38ef02d55d79036fffeb377f",
+        "model_frame_count": 34
+      },
+      "layout_03_ep12609": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12609.jsonl",
+        "frame_map_sha256": "d08276cdba0d932496226ee68d3aea7aa8fe462128424d492ba4daa5a3c0b99d",
+        "model_frame_count": 8
+      },
+      "layout_03_ep12614": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12614.jsonl",
+        "frame_map_sha256": "55a3b23b454a6689f5a77fb176133087bb97e8f9a45d5cac923075262ec1994c",
+        "model_frame_count": 7
+      },
+      "layout_03_ep12615": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12615.jsonl",
+        "frame_map_sha256": "42e935dc289dd858a1a4e7f4ac3b1db44c6cb36b1087d6f1ec37940da83d257c",
+        "model_frame_count": 8
+      },
+      "layout_03_ep12617": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12617.jsonl",
+        "frame_map_sha256": "4570bd1c63bdddf56d1edfe76e5761b07e9e8e0f40e798ab970f4c81b5cb7fb3",
+        "model_frame_count": 20
+      },
+      "layout_03_ep12621": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12621.jsonl",
+        "frame_map_sha256": "e65fa792f0652dea66782a9f38f9e2a9afb5c518a4bb3866edba7747e97d5c46",
+        "model_frame_count": 21
+      },
+      "layout_03_ep12622": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12622.jsonl",
+        "frame_map_sha256": "b308f238e90196a30127d429ddfd83cec5808808d7195169d94ab6191886633d",
+        "model_frame_count": 5
+      },
+      "layout_03_ep12633": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12633.jsonl",
+        "frame_map_sha256": "6837e867093641dad5e57d02b7bf1ffa155c49551eb7be9b24571634d0f0fb88",
+        "model_frame_count": 19
+      },
+      "layout_03_ep12637": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12637.jsonl",
+        "frame_map_sha256": "b91e10887777b2ef1b365c7f9990d83e4be31de6f324f2b14f54258b1d660faf",
+        "model_frame_count": 26
+      },
+      "layout_03_ep12639": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12639.jsonl",
+        "frame_map_sha256": "c0cbab49acc3fa6689f710d08eff0c6021c7f896db198d9584c4a445a0e95f7a",
+        "model_frame_count": 60
+      },
+      "layout_03_ep12645": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12645.jsonl",
+        "frame_map_sha256": "aff3d1130b0c78b427a73af3d1333286c9818de015cbcd4d037952555a566716",
+        "model_frame_count": 60
+      },
+      "layout_04_ep12603": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12603.jsonl",
+        "frame_map_sha256": "4608b214484e764139b444e5bcef7bdf8f004a9d1362d1446eeaa3025cd6d757",
+        "model_frame_count": 26
+      },
+      "layout_04_ep12604": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12604.jsonl",
+        "frame_map_sha256": "8e6e5b798336c90ed26092eb49359845edab2a3ea4c185216ee50dfa4da97fda",
+        "model_frame_count": 32
+      },
+      "layout_04_ep12607": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12607.jsonl",
+        "frame_map_sha256": "38f7a345dfdb9d2ba65f3b196fbabbd771f9a330d9e63928e0c4fecfa4d9d2a9",
+        "model_frame_count": 60
+      },
+      "layout_04_ep12608": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12608.jsonl",
+        "frame_map_sha256": "bc5b36d0ec7d99a73425f3a2c543786839c1b4773a70cc8c056ff666aba8b029",
+        "model_frame_count": 24
+      },
+      "layout_04_ep12613": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12613.jsonl",
+        "frame_map_sha256": "ac13bfac620c96015f21425caed5bc57f901f509c393d159f37ee84b6b81b8fb",
+        "model_frame_count": 19
+      },
+      "layout_04_ep12626": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12626.jsonl",
+        "frame_map_sha256": "5be89838c89dd27bdc6b3852a8d418c392829ed124066b0025b8d45e589705bf",
+        "model_frame_count": 60
+      },
+      "layout_04_ep12629": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12629.jsonl",
+        "frame_map_sha256": "159d5ae998abe3caec2e072998d2ac28bd0c0a8927f7d1a3f05614834f261f7e",
+        "model_frame_count": 22
+      },
+      "layout_04_ep12638": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12638.jsonl",
+        "frame_map_sha256": "3106b762c0485f01d751eff70d15c61336b2cf86e1a7b4eae900b9c26f6c852c",
+        "model_frame_count": 15
+      },
+      "layout_04_ep12640": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12640.jsonl",
+        "frame_map_sha256": "e50b7448734a058c19cd5b8c9583631c488dac364afed1f79b573fd4a03f1a27",
+        "model_frame_count": 24
+      },
+      "layout_04_ep12644": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12644.jsonl",
+        "frame_map_sha256": "1a517995dff49b3540a62ee4187ed4afcf4f6dd5898ea3375b25dacb73839a15",
+        "model_frame_count": 42
+      },
+      "layout_04_ep12653": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_04_ep12653.jsonl",
+        "frame_map_sha256": "85ec475721f6b42d3ad879c40d20143e5d7d0918a008cfd1c01ba794657ede00",
+        "model_frame_count": 30
+      },
+      "layout_05_ep12612": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12612.jsonl",
+        "frame_map_sha256": "21839601b82b1ca5338ad3c262a295be0c19034a63b00e0a6511660134bbf446",
+        "model_frame_count": 54
+      },
+      "layout_05_ep12624": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12624.jsonl",
+        "frame_map_sha256": "34c2e7d58f366cf86ad589d8bc964d5b2c038af3e91dc0f6e0728ecc4f36cc91",
+        "model_frame_count": 39
+      },
+      "layout_05_ep12627": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12627.jsonl",
+        "frame_map_sha256": "a22405d38ce54e10e8010a2b6e8fcb26ea322613de2be78658cc034f93b222cd",
+        "model_frame_count": 65
+      },
+      "layout_05_ep12630": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12630.jsonl",
+        "frame_map_sha256": "35c4e56584b1532cec50f181b6be9859885fd626ba0e4872c970df3741c20325",
+        "model_frame_count": 60
+      },
+      "layout_05_ep12632": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12632.jsonl",
+        "frame_map_sha256": "9d9d3ef6826b18a48b791d7935cd85343ea3ae73e42d54bebdbe4183d3f4a98b",
+        "model_frame_count": 27
+      },
+      "layout_05_ep12634": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12634.jsonl",
+        "frame_map_sha256": "22005ea0afeddff3b27ff2e734c457c7c739da60b6ee739dfe2be03ffc2aa3e7",
+        "model_frame_count": 60
+      },
+      "layout_05_ep12646": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12646.jsonl",
+        "frame_map_sha256": "b25d8dfefddf0eee37bbe199485d0a825f9c9e312eaecf0dc9ec57885c2b047c",
+        "model_frame_count": 24
+      },
+      "layout_05_ep12647": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12647.jsonl",
+        "frame_map_sha256": "f170944fd1f16bd0ecf7d2006479c6d93fa5f86b5d29701808bc2006935ac0fc",
+        "model_frame_count": 48
+      },
+      "layout_05_ep12654": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12654.jsonl",
+        "frame_map_sha256": "85451bd047700683dc46f23fd003cb45a06bbe16c7eb695a506a47d842a3f4bd",
+        "model_frame_count": 38
+      },
+      "layout_05_ep12656": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12656.jsonl",
+        "frame_map_sha256": "251de2a7d0a73440e0fae941ecb8b4e45cc6de20387d7bfa066b353fd9b1a987",
+        "model_frame_count": 47
+      },
+      "layout_05_ep12664": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_05_ep12664.jsonl",
+        "frame_map_sha256": "798ea6748a533936e21f430f9699068a4a9102083cdf20aa6ff0f0ecc20c721e",
+        "model_frame_count": 56
+      },
+      "layout_06_ep12606": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12606.jsonl",
+        "frame_map_sha256": "d8e3a7e9777318de5869e44e4b2d1bd94ed67778494e35b3f8c4d60a56a42d97",
+        "model_frame_count": 25
+      },
+      "layout_06_ep12616": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12616.jsonl",
+        "frame_map_sha256": "9948969d79c2d56bcd6048f2eba65c909b5c01903803cb07ee83031d4922a116",
+        "model_frame_count": 60
+      },
+      "layout_06_ep12618": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12618.jsonl",
+        "frame_map_sha256": "319f249fc5c00f4c2cd9cd025b285c2977fb3443047eab3580216d79680851d6",
+        "model_frame_count": 42
+      },
+      "layout_06_ep12619": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12619.jsonl",
+        "frame_map_sha256": "27d5586177057f60c7069b98d98a51c0ecea16316ce69cd0d55ea7f08fe223b0",
+        "model_frame_count": 30
+      },
+      "layout_06_ep12625": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12625.jsonl",
+        "frame_map_sha256": "1e8f3d262382042390cee758fb46c2233fbb61198d59eac0487afc733214b924",
+        "model_frame_count": 67
+      },
+      "layout_06_ep12628": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12628.jsonl",
+        "frame_map_sha256": "04be50a848973c4f4c1f999935cf850513ec8a1e016ae1dd5265dd8c4a219de8",
+        "model_frame_count": 56
+      },
+      "layout_06_ep12642": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12642.jsonl",
+        "frame_map_sha256": "abfd59d7e83b23b21076f12b4752a16a7990592ba2436dc055d577926cb78dc1",
+        "model_frame_count": 65
+      },
+      "layout_06_ep12657": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12657.jsonl",
+        "frame_map_sha256": "b005409230803115e5e180df216f2fda5ea7bb7361ccf163feab7b1c50903694",
+        "model_frame_count": 60
+      },
+      "layout_06_ep12658": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12658.jsonl",
+        "frame_map_sha256": "7db4f85fa06c3f16e9400ecf42a8e7237410789005bcd67f40aee2b0bf37b533",
+        "model_frame_count": 67
+      },
+      "layout_06_ep12660": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12660.jsonl",
+        "frame_map_sha256": "c2ecc317b39d7096fd5d440b03e5583d15271bfd30c8f9912f868823c77bcad4",
+        "model_frame_count": 40
+      },
+      "layout_06_ep12662": {
+        "frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_06_ep12662.jsonl",
+        "frame_map_sha256": "e3a705ffa4adf20f6d944e09a1e2411cd8e575a25c5362c83330bbda3eb0d440",
+        "model_frame_count": 62
+      }
+    },
+    "source_frame_hashes_present": true,
+    "source_frame_reference_fields": [
+      "source_frame_role",
+      "source_frame_runtime_path",
+      "source_frame_sha256",
+      "source_frame_byte_size"
+    ],
+    "trajectory_count": 66
+  },
+  "person_c_accepted_manifest": {
+    "commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+    "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+    "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+  },
+  "person_d_consumer_note": {
+    "person_d_frozen_module": "src/mineocclude/baselines/frame_handoff_v0_2.py",
+    "person_d_module_is_pinned_to_ten_pilot_scope": true,
+    "person_d_must_repin_constants": [
+      "PERSON_A_FRAME_HANDOFF_COMMIT",
+      "PERSON_A_FRAME_MANIFEST_PATH",
+      "PERSON_A_FRAME_MANIFEST_SHA256",
+      "PERSON_A_EXTERNAL_FRAME_ROOT",
+      "REQUIRED_FRAME_ARTIFACT_COUNT",
+      "FROZEN_PILOT_IDS"
+    ],
+    "person_d_owns_this_change": true,
+    "reason": "Person D's frozen validator requires exactly 1695 records over ten ep94xx pilots and rejects any other trajectory. Person A does not modify Person D's branch or module."
+  },
+  "preprocessed_frame_artifact": {
+    "artifact_id_rule": "person-a-66-cell-preprocessed-frame-v0-2::{trajectory_id}::{model_frame_idx}",
+    "expected_payload_byte_size": 1032192,
+    "expected_record_count": 2468,
+    "materialization_blocked_by": "C-66-CELL-640x360-MEDIA-MISSING",
+    "materialized": false,
+    "payload_color_order": "RGB",
+    "payload_dtype": "float32",
+    "payload_format": "raw-little-endian-float32-c-order",
+    "payload_layout": "CHW",
+    "payload_shape": [
+      3,
+      224,
+      384
+    ],
+    "required_manifest_schema": "person-a-preprocessed-frame-manifest-v0.2",
+    "required_record_fields": [
+      "artifact_id",
+      "trajectory_id",
+      "model_frame_idx",
+      "payload_sha256",
+      "payload_byte_size",
+      "preprocess_hash",
+      "fold_binding"
+    ]
+  },
+  "preprocessing_authority": {
+    "color_convention": "source BGR decoded, converted to RGB (COLOR_BGR2RGB)",
+    "config_path": "configs/experiments/mvp.yaml",
+    "config_sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3",
+    "frozen_source_resolution_hw": [
+      360,
+      640
+    ],
+    "interpolation": "cv2.INTER_LINEAR",
+    "model_facing_resolution_hw": [
+      224,
+      384
+    ],
+    "model_facing_tensor_layout": "CHW",
+    "normalization": "(x - 0.5) / 0.5 per channel, float32, range [-1.0, 1.0]",
+    "observed_c6a_framebuffer_hw": [
+      1046,
+      1920
+    ],
+    "operations_in_order": [
+      "decode the exact source frame as BGR uint8",
+      "require source shape (360, 640, 3), dtype uint8, C-contiguous",
+      "convert BGR to RGB with cv2.cvtColor(COLOR_BGR2RGB)",
+      "resize to width 384 and height 224 with cv2.INTER_LINEAR",
+      "transpose HWC to CHW",
+      "cast to float32 and divide by float32(255.0)",
+      "normalize with (tensor - float32(0.5)) / float32(0.5)",
+      "serialize as little-endian float32 C-order bytes"
+    ],
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "preprocessing_identity": "person-a-bgr2rgb-inter-linear-224x384-v1.0",
+    "preprocessing_implementation_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "preprocessing_implementation_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "scaling": "uint8 divided by float32(255.0) after HWC to CHW transpose",
+    "source_dtype": "uint8"
+  },
+  "producer_role": "person_a",
+  "ready": false,
+  "schema_id": "person-a-66-cell-successor-authority-v0.1-a-to-d-frame-handoff",
+  "schema_version": "1.0"
+}

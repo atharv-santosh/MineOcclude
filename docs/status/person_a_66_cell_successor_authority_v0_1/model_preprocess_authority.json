@@ -1,0 +1,85 @@
+{
+  "action_converter": {
+    "action_vocab_offset": 8192,
+    "converter_identity": "mineworld_action_compatibility@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746",
+    "path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "same_file_as_preprocessing_implementation": true,
+    "sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "symbol": "_OfficialActionConverter"
+  },
+  "distinct_quantities": {
+    "collapsed_in_this_package": false,
+    "model_hash_is_the_checkpoint_digest": true,
+    "note": "preprocess_hash is the canonical digest of the frozen preprocess: block of configs/experiments/mvp.yaml, computed by MvpConfig.preprocess_hash. It is NOT the digest of the file that implements preprocessing. The three quantities are recorded separately and none is derived from another.",
+    "preprocess_hash_is_the_config_block_digest": true,
+    "preprocessing_implementation_sha256_is_a_file_digest": true
+  },
+  "model": {
+    "checkpoint_reference": "https://www.modelscope.cn/models/MineWorld/0dd5561ab317115831badc50e09a6ebe98693d0e",
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "decoder_layer_count": 20,
+    "model_class": "LlamaLVM",
+    "model_config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "model_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "model_identity": "mineworld-700m",
+    "precision": "float16",
+    "source_revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "transformer_class": "LlamaForCausalLM",
+    "vae_checkpoint_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "vae_class": "VAE",
+    "vae_config_sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb"
+  },
+  "model_hash_equality_contract": {
+    "bound_because": "Person A's own activation store and activation contract require the universal model_hash to equal the explicit checkpoint hash; the equality is defined by A-owned code, not asserted here.",
+    "evidence": [
+      {
+        "path": "src/mineocclude/activations/store_v2.py",
+        "rule": "model_hash must equal the frozen checkpoint hash",
+        "sha256": "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575",
+        "symbol": "ActivationStoreV2Identity.__post_init__"
+      },
+      {
+        "path": "src/mineocclude/contracts/activation.py",
+        "rule": "universal model_hash must agree with the explicit checkpoint hash on every activation index row",
+        "sha256": "ce1564ee831b04ea4afbf3437f8f985c8f39ce3ebbb6eba8ee2dd515333b5dba",
+        "symbol": "activation index row validation"
+      }
+    ]
+  },
+  "model_hash_equals_checkpoint_sha256": true,
+  "preprocessing": {
+    "color_convention": "source BGR decoded, converted to RGB (COLOR_BGR2RGB)",
+    "config_file_sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3",
+    "config_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
+    "config_path": "configs/experiments/mvp.yaml",
+    "frozen_source_resolution_hw": [
+      360,
+      640
+    ],
+    "function": "_preprocess_bgr_frame",
+    "interpolation": "cv2.INTER_LINEAR",
+    "model_facing_resolution_hw": [
+      224,
+      384
+    ],
+    "model_facing_tensor_layout": "CHW",
+    "normalization": "(x - 0.5) / 0.5 per channel, float32, range [-1.0, 1.0]",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "preprocessing_identity": "person-a-bgr2rgb-inter-linear-224x384-v1.0",
+    "preprocessing_implementation_byte_size": 37264,
+    "preprocessing_implementation_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "preprocessing_implementation_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "scaling": "uint8 divided by float32(255.0) after HWC to CHW transpose",
+    "source_dtype": "uint8"
+  },
+  "resolved_implementation_path": {
+    "absent_alias_path": "src/mineocclude/models/mineworld_adapter_wave2.py",
+    "absent_alias_path_exists": false,
+    "leading_underscore": true,
+    "resolved_from": "git ls-tree at the Person A HEAD commit",
+    "resolved_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "value_accepted_from_conversation": false
+  },
+  "schema_id": "person-a-66-cell-successor-authority-v0.1-model-preprocess-authority",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,95 @@
+{
+  "acknowledgement_id": "person-a-66-cell-successor-acknowledgement-v0-1",
+  "aggregate_phase6_runtime_authorized": false,
+  "byte_state": {
+    "gpu_environment": "aws_sagemaker_linux_gpu",
+    "sagemaker_byte_access_ready": false,
+    "windows_artifact_hash_verified_count": 2930,
+    "windows_trajectory_count": 66,
+    "windows_trajectory_hash_verified_count": 66
+  },
+  "decision_date": "2026-08-07",
+  "extraction_authorization_status": {
+    "activations_generated": false,
+    "gpu_extraction_started": false,
+    "model_loaded": false,
+    "person_a_66_extraction_ready": false,
+    "person_a_phase6_authorized": false,
+    "phase6_contract_preconditions_ready": false,
+    "phase6_runtime_infrastructure_ready": false,
+    "self_authorizes_phase6": false
+  },
+  "foreign_branch_merged": false,
+  "frame_maps": {
+    "duplicate_model_frame_key_count": 0,
+    "missing_trajectory_count": 0,
+    "model_facing_key": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "model_frame_key_count": 2468,
+    "package_path": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+    "package_sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+    "real_frame_maps_materialized": true,
+    "trajectory_count": 66
+  },
+  "historical_evidence_rewritten": false,
+  "model_preprocess_authority": {
+    "action_converter_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "action_converter_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "model_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "model_hash_equals_checkpoint_sha256": true,
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "preprocessing_implementation_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "preprocessing_implementation_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "three_fields_are_distinct": true
+  },
+  "owner": "person_a",
+  "person_a_branch": "role/person-a-model",
+  "person_a_commit": "77e43bd1665671b9e23d6d6ef927ee4944611342",
+  "person_a_to_person_d_handoff": {
+    "blocking_finding": "C-66-CELL-640x360-MEDIA-MISSING",
+    "path": "docs/status/person_a_66_cell_successor_authority_v0_1/a_to_d_frame_handoff.json",
+    "ready": false
+  },
+  "person_b_authorities": {
+    "commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+    "fold_manifest_sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+    "oracle_target_manifest_sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9",
+    "row_universe_sha256": "e897c31cda46e2dbe7fab605320cd98eba68a1396a80ccd78b178c8dc5547351",
+    "successor_handoff_sha256": "6ca406342b700cf35360cc94764ae58bc7cadafcf0ac6d28bad20b2077dd6d0e"
+  },
+  "person_c_authorities": {
+    "accepted_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+    "accepted_trajectory_count": 66,
+    "event_table_sha256": "fadc0fc4c2afab2b39b992979317d4576fa2618263c8b09e29ca6c215528bb49",
+    "excluded_trajectory_count": 0,
+    "strict_visibility_commit": "e908ead4a7ff5ab3ae310bb846969a7859fdb26b",
+    "visibility_join_sha256": "6fcfaba99feed706e7106d0f1d9b758700d920ee2001b3ca6f150320f09313b7"
+  },
+  "producer_role": "person_a",
+  "schema_id": "person-a-66-cell-successor-authority-v0.1-successor-owner-acknowledgement",
+  "schema_version": "1.0",
+  "status": "SUCCESSOR_AUTHORITY_PUBLISHED_AWAITING_BYTE_TRANSPORT_GPU_RUNTIME_AND_AGGREGATE_AUTHORIZATION",
+  "storage_contract": {
+    "analysis_arithmetic_dtype": "float64",
+    "person_b_approval_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+    "stored_activation_dtype": "float32"
+  },
+  "successor_queue": {
+    "expected_activation_row_count": 49360,
+    "expected_chunk_count": 1320,
+    "layer_count": 20,
+    "run_id": "mineocclude-run-836009cb74647b413ebc6f40218bc5bf",
+    "trajectory_count": 66
+  },
+  "supersedes": {
+    "path": "docs/status/person_a_phase6_66_cell_intake_v0_1/person_a_owner_acknowledgement.json",
+    "predecessor_evidence_rewritten": false,
+    "predecessor_real_frame_maps_materialized": false,
+    "predecessor_sha256": "82f1faa4892091e541ba00f17cc522c6d284e1336dcf4dcd59d12e98a01fd715",
+    "reason": "The predecessor acknowledgement recorded real_frame_maps_materialized=false, which was true when it was written and is now stale. It is superseded additively and never rewritten.",
+    "supersession_is_additive": true
+  }
+}
