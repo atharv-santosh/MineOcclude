@@ -1,0 +1,127 @@
+{
+ "A_SOURCE_CONTRACT_COMPATIBLE": true,
+ "C_66_CANONICAL_640x360_MEDIA_READY": true,
+ "READY_FOR_A_PREPROCESSED_FRAME_MATERIALIZATION": true,
+ "additive_successor": true,
+ "authority_separation": {
+  "person_a_entry_point": "mineocclude.models._mineworld_adapter_wave2._preprocess_bgr_frame",
+  "person_a_preprocessing_implementation_modified_by_person_c": false,
+  "person_a_stage": "canonical 640x360 source -> MineWorld model-facing derivative",
+  "person_c_executed_person_a_preprocessing": false,
+  "person_c_implementation_sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a",
+  "person_c_rule": "mineocclude.data.preprocess.to_canonical",
+  "person_c_stage": "raw framebuffer -> canonical 640x360 source",
+  "stages_collapsed": false
+ },
+ "canonical_source_media": {
+  "canonical_frames_location": "written next to the raw capture on the Person C Windows runtime; only identities are committed, per the standing metadata-handoff byte policy",
+  "channel_order": "RGB",
+  "container": "PNG 8-bit lossless",
+  "dimensions": "640x360",
+  "dtype": "uint8",
+  "frame_count": 2468,
+  "frame_index_join_key": [
+   "trajectory_id",
+   "model_frame_idx"
+  ],
+  "frame_index_path": "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_frame_index.jsonl",
+  "frame_index_sha256": "745e556578587981c5fe7d96ca873d8744e53e9f1e11b23b931af37dd9499dab",
+  "mp4_convention_path": "data/autonomous/<trajectory_id>/video_640x360.mp4",
+  "mp4_is_lossy_h264_crf18": true,
+  "mp4_is_not_the_pixel_authority": true,
+  "pixel_authority_field": "canonical_pixel_sha256",
+  "png_byte_field": "canonical_png_sha256",
+  "recommended_source_for_preprocessing": "canonical_path PNG",
+  "trajectory_count": 66
+ },
+ "canonicalization": {
+  "implementation_path": "src/mineocclude/data/preprocess.py",
+  "implementation_sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a",
+  "preexisting_authority": true,
+  "rule": "mineocclude.data.preprocess.to_canonical",
+  "transformation": {
+   "additional_resize_applied": false,
+   "colour_conversion_applied": false,
+   "config_authority": "src/mineocclude/data/preprocess.py",
+   "config_version": "person-c-c4-5-canonical-source-normalization",
+   "crop_box_xyxy": [
+    30,
+    0,
+    1890,
+    1046
+   ],
+   "crop_formula": "new_w = round(height * 16/9); x0 = (width - new_w) // 2",
+   "crop_height_pixels": 1046,
+   "crop_rule": "centre-crop the wider axis to exactly 16:9; source is wider than 16:9 so width is cropped and height is preserved",
+   "crop_width_pixels": 1860,
+   "crop_x0": 30,
+   "crop_x1": 1890,
+   "interpolation": "PIL.Image.BILINEAR",
+   "library_identity": "Pillow 12.1.1",
+   "normalization_applied": false,
+   "output_channel_order": "RGB",
+   "output_dtype": "uint8",
+   "output_format": "PNG 8-bit RGB, lossless",
+   "resize_target": "640x360",
+   "source_aspect": 1.8355640535372848,
+   "source_channel_order": "RGB",
+   "source_dimensions": "1920x1046",
+   "source_dtype": "uint8",
+   "source_pixel_format": "PNG 8-bit RGB",
+   "target_aspect": 1.7777777777777777
+  }
+ },
+ "channel_order_guidance": {
+  "opencv_available_in_person_c_environment": false,
+  "opencv_executed_by_person_c": false,
+  "person_a_owns_cv2_resize_and_normalization": true,
+  "question": "Person A's entry point is named _preprocess_bgr_frame and applies cv2.COLOR_BGR2RGB, while Person C's canonical output is RGB",
+  "resolution": "PNG has no channel-order ambiguity. Person A reads the source with cv2.imread, which returns the pixels in BGR order, and its cv2.COLOR_BGR2RGB step restores true RGB. The two reversals compose to the identity, so Person C delivers true RGB and applies no swap of its own; pre-swapping in C would double-swap and corrupt the model input.",
+  "verified_as": "array algebra on a real canonical frame"
+ },
+ "compatibility_receipt_path": "docs/status/person_c_66_cell_canonical_media_v0_1/a_source_contract_compatibility_receipt.json",
+ "compatibility_receipt_sha256": "77f148cdecb2e1f0697e1225325d3e711ca94bd470e8b595624a401611a32bc0",
+ "consumer_role": "person_a",
+ "consumer_step": "preprocessed frame materialization",
+ "person_a_commit": "a3bc169d349ca424f6d5af1ecbbb9327b248bfe2",
+ "person_a_source_contract": {
+  "declared_colour_conversion": "BGR_TO_RGB",
+  "declared_interpolation": "cv2.INTER_LINEAR",
+  "model_output_dtype": "float32",
+  "model_output_shape_chw": [
+   3,
+   224,
+   384
+  ],
+  "pinned_source_dtype": "uint8",
+  "pinned_source_height": 360,
+  "pinned_source_shape_hwc": [
+   360,
+   640,
+   3
+  ],
+  "pinned_source_width": 640
+ },
+ "person_c_accepted_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+ "person_c_capture_package_manifest_sha256": "ca6ef6bd0a6ee144731ff3e6f470f767a2c1a82e8b46aef9fb5e458efb814f56",
+ "person_c_commit": "e908ead4a7ff5ab3ae310bb846969a7859fdb26b",
+ "person_c_did_not": [
+  "execute Person A's preprocessing",
+  "modify Person A's preprocessing implementation",
+  "apply any normalization",
+  "apply any colour conversion",
+  "apply any additional resize",
+  "run MineWorld"
+ ],
+ "producer_role": "person_c",
+ "remaining_inputs_owned_by_person_a": [
+  {
+   "detail": "apply the pinned 640x360 -> 384x224 BGR_TO_RGB / INTER_LINEAR / [0,1] / mean-std 0.5 path to the canonical source frames listed in the frame index",
+   "input_id": "person_a_preprocessed_frame_materialization",
+   "owner_role": "person_a"
+  }
+ ],
+ "rewrites_frozen_c7_5_authority": false,
+ "schema_id": "mineocclude-person-c-66-cell-canonical-media-v0.1-c-to-a-media-handoff",
+ "schema_version": "0.1"
+}

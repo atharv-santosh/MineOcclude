@@ -1,0 +1,69 @@
+{
+ "A_SOURCE_CONTRACT_COMPATIBLE": true,
+ "authority_separation": {
+  "person_a_entry_point": "mineocclude.models._mineworld_adapter_wave2._preprocess_bgr_frame",
+  "person_a_preprocessing_implementation_modified_by_person_c": false,
+  "person_a_stage": "canonical 640x360 source -> MineWorld model-facing derivative",
+  "person_c_executed_person_a_preprocessing": false,
+  "person_c_implementation_sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a",
+  "person_c_rule": "mineocclude.data.preprocess.to_canonical",
+  "person_c_stage": "raw framebuffer -> canonical 640x360 source",
+  "stages_collapsed": false
+ },
+ "channel_order_resolution": {
+  "opencv_available_in_person_c_environment": false,
+  "opencv_executed_by_person_c": false,
+  "person_a_owns_cv2_resize_and_normalization": true,
+  "question": "Person A's entry point is named _preprocess_bgr_frame and applies cv2.COLOR_BGR2RGB, while Person C's canonical output is RGB",
+  "resolution": "PNG has no channel-order ambiguity. Person A reads the source with cv2.imread, which returns the pixels in BGR order, and its cv2.COLOR_BGR2RGB step restores true RGB. The two reversals compose to the identity, so Person C delivers true RGB and applies no swap of its own; pre-swapping in C would double-swap and corrupt the model input.",
+  "verified_as": "array algebra on a real canonical frame"
+ },
+ "checks": {
+  "c_output_dtype_is_uint8": true,
+  "c_output_is_exactly_640x360": true,
+  "c_output_matches_a_pinned_source_shape": true,
+  "channel_order_round_trip_is_identity": true,
+  "no_duplicate_application_of_a_preprocessing": true,
+  "no_extra_resize_inside_c": true,
+  "no_normalization_inside_c": true
+ },
+ "consumer_role": "person_a",
+ "owner_role": "person_c",
+ "person_a_adapter_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+ "person_a_adapter_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+ "person_a_branch_merged": false,
+ "person_a_commit": "a3bc169d349ca424f6d5af1ecbbb9327b248bfe2",
+ "person_a_expected_input": {
+  "declared_colour_conversion": "BGR_TO_RGB",
+  "declared_interpolation": "cv2.INTER_LINEAR",
+  "model_output_dtype": "float32",
+  "model_output_shape_chw": [
+   3,
+   224,
+   384
+  ],
+  "pinned_source_dtype": "uint8",
+  "pinned_source_height": 360,
+  "pinned_source_shape_hwc": [
+   360,
+   640,
+   3
+  ],
+  "pinned_source_width": 640
+ },
+ "person_a_model_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+ "person_a_preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+ "person_c_delivered_output": {
+  "channel_order": "RGB",
+  "channels": 3,
+  "colour_conversion_applied_by_person_c": false,
+  "container": "PNG 8-bit lossless",
+  "dtype": "uint8",
+  "extra_resize_hidden_inside_person_c": false,
+  "height": 360,
+  "normalization_applied_by_person_c": false,
+  "width": 640
+ },
+ "schema_id": "mineocclude-person-c-66-cell-canonical-media-v0.1-a-source-contract-compatibility-receipt",
+ "schema_version": "0.1"
+}

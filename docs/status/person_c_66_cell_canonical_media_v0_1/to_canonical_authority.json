@@ -1,0 +1,57 @@
+{
+ "TO_CANONICAL_PREEXISTING_AUTHORITY": true,
+ "TO_CANONICAL_RESULT_CHANGING_DECISION_REQUIRED": false,
+ "implementation_path": "src/mineocclude/data/preprocess.py",
+ "implementation_sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a",
+ "loader_path": "src/mineocclude/data/fsretry.py",
+ "loader_sha256": "35f8b2b3b0f652e46d3d80260ac29dd102890008de8b934990d692649d27d942",
+ "owner_role": "person_c",
+ "provenance": {
+  "independently_bound_by_person_e": {
+   "person_e_commit": "fec27d08b4629afa07c7858598e94778dc6e7bef",
+   "person_e_declared_rule": "mineocclude.data.preprocess.to_canonical",
+   "person_e_declared_sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a",
+   "person_e_executed_rule_verbatim": true
+  },
+  "last_modified_commit": "61b1a1aef5fb8a721171cbe082fd5e16348f810f",
+  "last_modified_date": "2026-07-23",
+  "last_modified_subject": "Add Person C data pipeline with strict alignment, visibility, and QA (C4-C5)",
+  "predates_66_cell_capture": true,
+  "predates_66_cell_detector_result_inspection": true,
+  "predates_note": "the rule was last modified on 2026-07-23, before the 66-cell capture (2026-08-06) and before any detector or result inspection of this population, so it is an established authority rather than a decision taken after seeing outcomes"
+ },
+ "rule": "mineocclude.data.preprocess.to_canonical",
+ "schema_id": "mineocclude-person-c-66-cell-canonical-media-v0.1-to-canonical-authority",
+ "schema_version": "0.1",
+ "transformation": {
+  "additional_resize_applied": false,
+  "colour_conversion_applied": false,
+  "config_authority": "src/mineocclude/data/preprocess.py",
+  "config_version": "person-c-c4-5-canonical-source-normalization",
+  "crop_box_xyxy": [
+   30,
+   0,
+   1890,
+   1046
+  ],
+  "crop_formula": "new_w = round(height * 16/9); x0 = (width - new_w) // 2",
+  "crop_height_pixels": 1046,
+  "crop_rule": "centre-crop the wider axis to exactly 16:9; source is wider than 16:9 so width is cropped and height is preserved",
+  "crop_width_pixels": 1860,
+  "crop_x0": 30,
+  "crop_x1": 1890,
+  "interpolation": "PIL.Image.BILINEAR",
+  "library_identity": "Pillow 12.1.1",
+  "normalization_applied": false,
+  "output_channel_order": "RGB",
+  "output_dtype": "uint8",
+  "output_format": "PNG 8-bit RGB, lossless",
+  "resize_target": "640x360",
+  "source_aspect": 1.8355640535372848,
+  "source_channel_order": "RGB",
+  "source_dimensions": "1920x1046",
+  "source_dtype": "uint8",
+  "source_pixel_format": "PNG 8-bit RGB",
+  "target_aspect": 1.7777777777777777
+ }
+}
