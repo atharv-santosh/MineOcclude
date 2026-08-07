@@ -1,0 +1,71 @@
+{
+  "canonical_join_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "detector_status_values": [
+    "detected",
+    "not_detected",
+    "not_applicable_no_target_object",
+    "unreadable_source_frame"
+  ],
+  "fields": [
+    "bounding_box_x_max_exclusive_px",
+    "bounding_box_x_min_px",
+    "bounding_box_y_max_exclusive_px",
+    "bounding_box_y_min_px",
+    "c_accepted_manifest_sha256",
+    "c_request_manifest_sha256",
+    "candidate_blob_count",
+    "canonical_camera_pose_id",
+    "canonical_frame_height_px",
+    "canonical_frame_rgb_sha256",
+    "canonical_frame_width_px",
+    "centroid_x_px",
+    "centroid_y_px",
+    "coordinate_convention",
+    "detected_area_pixels",
+    "detector_applicable",
+    "detector_identity_sha256",
+    "detector_status",
+    "detector_status_reason",
+    "detector_version",
+    "empirical_magenta_visible",
+    "episode_id",
+    "layout_id",
+    "marker_layout_authority_id",
+    "marker_layout_authority_sha256",
+    "model_frame_idx",
+    "resolution",
+    "selected_blob_fraction_of_threshold_matches",
+    "source_frame_reference",
+    "source_frame_sha256",
+    "threshold_match_pixels",
+    "trajectory_id"
+  ],
+  "forbidden_fields": [
+    "geometric_visible",
+    "person_c_geometric_visible",
+    "precision",
+    "recall",
+    "visible_flag"
+  ],
+  "join_semantics": "exact immutable frame identity; Person E did not re-order, re-index, resample or re-derive the frame universe",
+  "nullable_when_not_applicable_or_unreadable": [
+    "bounding_box_x_max_exclusive_px",
+    "bounding_box_x_min_px",
+    "bounding_box_y_max_exclusive_px",
+    "bounding_box_y_min_px",
+    "candidate_blob_count",
+    "centroid_x_px",
+    "centroid_y_px",
+    "detected_area_pixels",
+    "empirical_magenta_visible",
+    "selected_blob_fraction_of_threshold_matches",
+    "threshold_match_pixels"
+  ],
+  "record_format": "compact_sorted_key_jsonl",
+  "required_row_count": 2468,
+  "schema_id": "person-e-66-cell-empirical-visibility-v0-1-empirical-records-schema-v1.0",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,175 @@
+{
+  "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "authority_id": "person-e-v0-4-marker-layout-authority-v0.1",
+  "camera": {
+    "feet_xyz": [
+      -5.5,
+      4.0,
+      0.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": -90.0
+  },
+  "canonical_camera_pose_id": "layout_02_canonical_pose_v1",
+  "canonical_role_derivation": "canonical corner roles are derived from the accepted top-face-centre world (x, z) coordinates about their own centroid; no role is chosen to satisfy a test",
+  "historical_predecessor": {
+    "geometry_path": "configs/scenes/layouts.yaml",
+    "historical_world_xz_blocks": [
+      [
+        0.5,
+        -2.5
+      ],
+      [
+        0.5,
+        3.5
+      ],
+      [
+        7.5,
+        -7.5
+      ],
+      [
+        7.5,
+        8.5
+      ]
+    ],
+    "path": "data/handoff_e/markers_layout_02.json",
+    "preserved_unmodified": true,
+    "supersession_reason": "the historical Person E marker set is bound to the superseded layout geometry and its world coordinates do not match the accepted v0.4 geometry"
+  },
+  "image_coordinate_system": "pixel_center_xy_zero_based",
+  "image_height_px": 360,
+  "image_width_px": 640,
+  "image_xy_status": "NULL — this authority binds world geometry only; Person E's v0.4 image-point annotations live in data/handoff_e/person_e_v0_4_homography_refit_v0_2/person_e_attempt_02_image_points_v0_2.json",
+  "layout_id": "layout_02",
+  "marker_correspondences": [
+    {
+      "accepted_geometry_role": "near_west",
+      "block": "minecraft:blue_concrete",
+      "block_pos_xyz": [
+        4,
+        3,
+        -6
+      ],
+      "image_xy": null,
+      "marker_color": "blue",
+      "marker_id": "north_west",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "north_west",
+      "world_point_convention": "block_top_face_centre",
+      "world_xyz_blocks": [
+        4.5,
+        4.0,
+        -5.5
+      ],
+      "world_xz_blocks": [
+        4.5,
+        -5.5
+      ]
+    },
+    {
+      "accepted_geometry_role": "far_west",
+      "block": "minecraft:lime_concrete",
+      "block_pos_xyz": [
+        8,
+        3,
+        -8
+      ],
+      "image_xy": null,
+      "marker_color": "lime",
+      "marker_id": "north_east",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "north_east",
+      "world_point_convention": "block_top_face_centre",
+      "world_xyz_blocks": [
+        8.5,
+        4.0,
+        -7.5
+      ],
+      "world_xz_blocks": [
+        8.5,
+        -7.5
+      ]
+    },
+    {
+      "accepted_geometry_role": "far_east",
+      "block": "minecraft:white_concrete",
+      "block_pos_xyz": [
+        8,
+        3,
+        8
+      ],
+      "image_xy": null,
+      "marker_color": "white",
+      "marker_id": "south_east",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "south_east",
+      "world_point_convention": "block_top_face_centre",
+      "world_xyz_blocks": [
+        8.5,
+        4.0,
+        8.5
+      ],
+      "world_xz_blocks": [
+        8.5,
+        8.5
+      ]
+    },
+    {
+      "accepted_geometry_role": "near_east",
+      "block": "minecraft:yellow_concrete",
+      "block_pos_xyz": [
+        4,
+        3,
+        6
+      ],
+      "image_xy": null,
+      "marker_color": "yellow",
+      "marker_id": "south_west",
+      "marker_kind": "non_magenta_geometry_marker",
+      "marker_role": "south_west",
+      "world_point_convention": "block_top_face_centre",
+      "world_xyz_blocks": [
+        4.5,
+        4.0,
+        6.5
+      ],
+      "world_xz_blocks": [
+        4.5,
+        6.5
+      ]
+    }
+  ],
+  "marker_layout_authority_schema_version": "person-e-v0-4-marker-layout-authority-v1.0",
+  "person_c_commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+  "person_c_request_manifest_sha256": "6934317b6b2723d4dddb5507ba58ef32e6ce39729bd4065751aa76e8ae1fc0ea",
+  "resolution_id": "resolution_640x360_rgb8",
+  "schema_version": "1.0",
+  "scientific_use": "permitted",
+  "successor_world_xz_blocks": [
+    [
+      4.5,
+      -5.5
+    ],
+    [
+      4.5,
+      6.5
+    ],
+    [
+      8.5,
+      -7.5
+    ],
+    [
+      8.5,
+      8.5
+    ]
+  ],
+  "synthetic": false,
+  "world_coordinate_system": "ground_plane_world_xz_blocks_topface_centre",
+  "world_geometry_matched_historical_predecessor": false,
+  "world_geometry_matches_accepted_v0_4": true,
+  "world_point_convention": "block_top_face_centre"
+}

@@ -1,0 +1,311 @@
+{
+  "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "additive_successor": true,
+  "authority_id": "person-e-v0-4-marker-layout-authority-v0.1",
+  "cross_verification": {
+    "accepted_geometry_and_person_c_request_agree": true,
+    "independent_sources": [
+      "configs/scenes/layouts_v0_4.yaml",
+      "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json"
+    ]
+  },
+  "drift_audit": {
+    "confirmed": true,
+    "drifted_layout_ids": [
+      "layout_01",
+      "layout_02",
+      "layout_03",
+      "layout_04",
+      "layout_05",
+      "layout_06"
+    ],
+    "failing_test": "tests/data/test_layout_id_resolves.py",
+    "failing_test_case": "TestPersonEHandoff::test_marker_file_matches_contract_geometry",
+    "finding": "every historical Person E marker set is bound to the superseded layout geometry; none of the six agrees with the accepted v0.4 top-face-centre world coordinates",
+    "historical_artifacts_rewritten": false,
+    "reported_by": "person_c",
+    "superseded_geometry_path": "configs/scenes/layouts.yaml"
+  },
+  "historical_predecessor_invalidated": false,
+  "layout_count": 6,
+  "layout_ids": [
+    "layout_01",
+    "layout_02",
+    "layout_03",
+    "layout_04",
+    "layout_05",
+    "layout_06"
+  ],
+  "marker_layout_authority_schema_version": "person-e-v0-4-marker-layout-authority-v1.0",
+  "marker_world_coordinates_changed_to_satisfy_a_test": false,
+  "owner_role": "person_e",
+  "per_layout": [
+    {
+      "canonical_camera_pose_id": "layout_01_canonical_pose_v1",
+      "historical_world_xz_blocks": [
+        [
+          -6.5,
+          1.5
+        ],
+        [
+          -6.5,
+          5.5
+        ],
+        [
+          7.5,
+          1.5
+        ],
+        [
+          7.5,
+          5.5
+        ]
+      ],
+      "layout_id": "layout_01",
+      "marker_file": "markers_layout_01.json",
+      "successor_world_xz_blocks": [
+        [
+          -7.5,
+          8.5
+        ],
+        [
+          -5.5,
+          4.5
+        ],
+        [
+          6.5,
+          4.5
+        ],
+        [
+          8.5,
+          8.5
+        ]
+      ],
+      "world_geometry_matches_accepted_v0_4": true
+    },
+    {
+      "canonical_camera_pose_id": "layout_02_canonical_pose_v1",
+      "historical_world_xz_blocks": [
+        [
+          0.5,
+          -2.5
+        ],
+        [
+          0.5,
+          3.5
+        ],
+        [
+          7.5,
+          -7.5
+        ],
+        [
+          7.5,
+          8.5
+        ]
+      ],
+      "layout_id": "layout_02",
+      "marker_file": "markers_layout_02.json",
+      "successor_world_xz_blocks": [
+        [
+          4.5,
+          -5.5
+        ],
+        [
+          4.5,
+          6.5
+        ],
+        [
+          8.5,
+          -7.5
+        ],
+        [
+          8.5,
+          8.5
+        ]
+      ],
+      "world_geometry_matches_accepted_v0_4": true
+    },
+    {
+      "canonical_camera_pose_id": "layout_03_canonical_pose_v1",
+      "historical_world_xz_blocks": [
+        [
+          -8.5,
+          7.5
+        ],
+        [
+          -3.5,
+          0.5
+        ],
+        [
+          4.5,
+          0.5
+        ],
+        [
+          9.5,
+          7.5
+        ]
+      ],
+      "layout_id": "layout_03",
+      "marker_file": "markers_layout_03.json",
+      "successor_world_xz_blocks": [
+        [
+          -8.5,
+          8.5
+        ],
+        [
+          -6.5,
+          4.5
+        ],
+        [
+          7.5,
+          4.5
+        ],
+        [
+          9.5,
+          8.5
+        ]
+      ],
+      "world_geometry_matches_accepted_v0_4": true
+    },
+    {
+      "canonical_camera_pose_id": "layout_04_canonical_pose_v1",
+      "historical_world_xz_blocks": [
+        [
+          -6.5,
+          2.5
+        ],
+        [
+          -6.5,
+          6.5
+        ],
+        [
+          7.5,
+          2.5
+        ],
+        [
+          7.5,
+          6.5
+        ]
+      ],
+      "layout_id": "layout_04",
+      "marker_file": "markers_layout_04.json",
+      "successor_world_xz_blocks": [
+        [
+          -7.5,
+          10.5
+        ],
+        [
+          -5.5,
+          6.5
+        ],
+        [
+          6.5,
+          6.5
+        ],
+        [
+          8.5,
+          10.5
+        ]
+      ],
+      "world_geometry_matches_accepted_v0_4": true
+    },
+    {
+      "canonical_camera_pose_id": "layout_05_canonical_pose_v1",
+      "historical_world_xz_blocks": [
+        [
+          -5.5,
+          1.5
+        ],
+        [
+          -5.5,
+          5.5
+        ],
+        [
+          6.5,
+          1.5
+        ],
+        [
+          6.5,
+          5.5
+        ]
+      ],
+      "layout_id": "layout_05",
+      "marker_file": "markers_layout_05.json",
+      "successor_world_xz_blocks": [
+        [
+          -6.5,
+          7.5
+        ],
+        [
+          -4.5,
+          3.5
+        ],
+        [
+          5.5,
+          3.5
+        ],
+        [
+          7.5,
+          7.5
+        ]
+      ],
+      "world_geometry_matches_accepted_v0_4": true
+    },
+    {
+      "canonical_camera_pose_id": "layout_06_canonical_pose_v1",
+      "historical_world_xz_blocks": [
+        [
+          2.5,
+          -7.5
+        ],
+        [
+          2.5,
+          8.5
+        ],
+        [
+          6.5,
+          -7.5
+        ],
+        [
+          6.5,
+          8.5
+        ]
+      ],
+      "layout_id": "layout_06",
+      "marker_file": "markers_layout_06.json",
+      "successor_world_xz_blocks": [
+        [
+          5.5,
+          -6.5
+        ],
+        [
+          5.5,
+          7.5
+        ],
+        [
+          9.5,
+          -8.5
+        ],
+        [
+          9.5,
+          9.5
+        ]
+      ],
+      "world_geometry_matches_accepted_v0_4": true
+    }
+  ],
+  "person_c_commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+  "person_c_request_manifest_sha256": "6934317b6b2723d4dddb5507ba58ef32e6ce39729bd4065751aa76e8ae1fc0ea",
+  "schema_id": "person-e-v0-4-marker-layout-authority-v0.1-manifest",
+  "schema_version": "1.0",
+  "supersedes_for_new_evidence": [
+    "data/handoff_e/markers_layout_01.json",
+    "data/handoff_e/markers_layout_02.json",
+    "data/handoff_e/markers_layout_03.json",
+    "data/handoff_e/markers_layout_04.json",
+    "data/handoff_e/markers_layout_05.json",
+    "data/handoff_e/markers_layout_06.json"
+  ],
+  "world_point_convention": "block_top_face_centre"
+}
