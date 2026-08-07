@@ -1,0 +1,203 @@
+{
+  "aggregate_phase6_runtime_authorized": false,
+  "byte_accessibility": {
+    "byte_transfer_plan_path": "docs/status/person_a_66_cell_local_preparation_v0_1/byte_transfer_plan.json",
+    "byte_transport_destination_pending": true,
+    "sagemaker_byte_access_ready": false,
+    "windows_artifact_count": 2930,
+    "windows_artifact_hash_verified_count": 2930,
+    "windows_byte_size_total": 609099426,
+    "windows_trajectory_count": 66,
+    "windows_trajectory_hash_verified_count": 66
+  },
+  "extraction_readiness": {
+    "blockers": [
+      "aggregate_phase6_runtime_authorization_absent",
+      "sagemaker_cannot_access_the_66_episode_payload_bytes",
+      "storage_dtype_decision_pending_coordinated_a_b_review"
+    ],
+    "gpu_extraction_started": false,
+    "model_loaded": false,
+    "person_a_66_extraction_ready": false,
+    "person_a_66_input_contract_ready": true,
+    "person_a_66_local_preparation_complete": true
+  },
+  "frame_maps": {
+    "accepted_input_manifest": {
+      "byte_size": 31154,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "data/handoff_a/person_a_66_cell_production_input_v0_1/bundle_manifest.json",
+      "sha256": "e80921fde387036f7b11a61c341784601a0b5e8d33462d33194294a344d34c90"
+    },
+    "data_package_root": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+    "data_package_sha256_inventory": {
+      "byte_size": 7736,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "data/handoff_a/person_a_66_cell_production_input_v0_1/sha256_inventory.json",
+      "sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004"
+    },
+    "duplicate_model_frame_key_count": 0,
+    "expected_activation_row_count_total": 49360,
+    "expected_chunk_count_total": 1320,
+    "frame_map_index": {
+      "byte_size": 94643,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_map_index.json",
+      "sha256": "fa276e49e67f2c9490733351add8f35dc491a1deb82c2fe2149b1579b6e80561"
+    },
+    "missing_trajectory_count": 0,
+    "model_facing_key": [
+      "trajectory_id",
+      "model_frame_idx"
+    ],
+    "model_frame_key_count": 2468,
+    "model_frame_key_count_expected": 2468,
+    "per_trajectory_model_frame_counts": {
+      "layout_01_ep12602": 60,
+      "layout_01_ep12605": 25,
+      "layout_01_ep12620": 50,
+      "layout_01_ep12631": 14,
+      "layout_01_ep12636": 23,
+      "layout_01_ep12650": 60,
+      "layout_01_ep12651": 40,
+      "layout_01_ep12652": 23,
+      "layout_01_ep12655": 27,
+      "layout_01_ep12659": 19,
+      "layout_01_ep12665": 34,
+      "layout_02_ep12610": 60,
+      "layout_02_ep12611": 36,
+      "layout_02_ep12623": 31,
+      "layout_02_ep12635": 27,
+      "layout_02_ep12641": 60,
+      "layout_02_ep12643": 14,
+      "layout_02_ep12648": 65,
+      "layout_02_ep12649": 26,
+      "layout_02_ep12661": 24,
+      "layout_02_ep12663": 25,
+      "layout_02_ep12666": 11,
+      "layout_03_ep12601": 34,
+      "layout_03_ep12609": 8,
+      "layout_03_ep12614": 7,
+      "layout_03_ep12615": 8,
+      "layout_03_ep12617": 20,
+      "layout_03_ep12621": 21,
+      "layout_03_ep12622": 5,
+      "layout_03_ep12633": 19,
+      "layout_03_ep12637": 26,
+      "layout_03_ep12639": 60,
+      "layout_03_ep12645": 60,
+      "layout_04_ep12603": 26,
+      "layout_04_ep12604": 32,
+      "layout_04_ep12607": 60,
+      "layout_04_ep12608": 24,
+      "layout_04_ep12613": 19,
+      "layout_04_ep12626": 60,
+      "layout_04_ep12629": 22,
+      "layout_04_ep12638": 15,
+      "layout_04_ep12640": 24,
+      "layout_04_ep12644": 42,
+      "layout_04_ep12653": 30,
+      "layout_05_ep12612": 54,
+      "layout_05_ep12624": 39,
+      "layout_05_ep12627": 65,
+      "layout_05_ep12630": 60,
+      "layout_05_ep12632": 27,
+      "layout_05_ep12634": 60,
+      "layout_05_ep12646": 24,
+      "layout_05_ep12647": 48,
+      "layout_05_ep12654": 38,
+      "layout_05_ep12656": 47,
+      "layout_05_ep12664": 56,
+      "layout_06_ep12606": 25,
+      "layout_06_ep12616": 60,
+      "layout_06_ep12618": 42,
+      "layout_06_ep12619": 30,
+      "layout_06_ep12625": 67,
+      "layout_06_ep12628": 56,
+      "layout_06_ep12642": 65,
+      "layout_06_ep12657": 60,
+      "layout_06_ep12658": 67,
+      "layout_06_ep12660": 40,
+      "layout_06_ep12662": 62
+    },
+    "real_frame_maps_materialized": true,
+    "trajectory_count": 66
+  },
+  "matrix": {
+    "accepted_cell_count": 66,
+    "complete": true,
+    "excluded_or_missing_count": 0,
+    "expected_cell_count": 66,
+    "person_c_accepted_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+    "receipt": {
+      "byte_size": 50387,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase7_mvp_v0_1/step_7_2_matrix_report.json",
+      "sha256": "604d9e31c43e35dde8fe1424c13698ae4eddd4269671afb2b47f626ea461ad42"
+    },
+    "superseded_manifest": "data/handoff_a/person_a_canonical_c6a_multilayout_sagemaker_input_v0_1/bundle_manifest.json"
+  },
+  "owner": "person_a",
+  "person_a_branch": "role/person-a-model",
+  "person_a_commit": "f8c99df5724ac8756d45f224a7d54b1380aed73b",
+  "person_c": {
+    "accepted_manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+    "accepted_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+    "accepted_trajectory_count": 66,
+    "commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+    "excluded_trajectory_count": 0
+  },
+  "production_authorities": {
+    "action_converter_identity": "mineworld_action_compatibility@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746",
+    "frame_map_schema_id": "person-a-66-cell-local-preparation-v0.1-production-frame-map",
+    "frame_map_schema_version": "1.0",
+    "pinned_mineworld_revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "preprocessing_identity": "person-a-bgr2rgb-inter-linear-224x384-v1.0",
+    "preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab"
+  },
+  "queue": {
+    "complete_count": 0,
+    "expected_activation_row_count": 49360,
+    "expected_chunk_count": 1320,
+    "historical_artifact_reused_as_66_cell_output": false,
+    "identity": {
+      "accepted_manifest_sha256": "e80921fde387036f7b11a61c341784601a0b5e8d33462d33194294a344d34c90",
+      "code_sha": "f8c99df5724ac8756d45f224a7d54b1380aed73b",
+      "config_hash": "42ffaca8dd9e80012c89511b2fb7e767fe105a61b06301d8234be425f0eff314",
+      "run_id": "mineocclude-run-5dd4b38689c160bbd03dae863b713c49"
+    },
+    "pending_count": 66,
+    "receipt": {
+      "byte_size": 39984,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase7_mvp_v0_1/step_7_5_queue_status.json",
+      "sha256": "ea485574efb838922872e9e04950fcaf3f91afb8ee4acbef39dda0f75cc4e035"
+    },
+    "run_id": "mineocclude-run-5dd4b38689c160bbd03dae863b713c49",
+    "state_receipt": {
+      "byte_size": 39315,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase7_mvp_v0_1/extraction_queue_state.json",
+      "sha256": "bce8d2c1972b9932d2551ea586421dfab5141aff80c313857da876c4bb00b82e"
+    },
+    "superseded_states": [
+      "extraction_queue_state.superseded.28ad3e15c8bc.json",
+      "extraction_queue_state.superseded.be8ec856b6ea.json",
+      "extraction_queue_state.superseded.f454c7ffe614.json"
+    ],
+    "trajectory_count": 66
+  },
+  "schema_id": "person-a-66-cell-local-preparation-v0.1-preparation-receipt",
+  "schema_version": "1.0",
+  "status": "LOCAL_PREPARATION_COMPLETE_AWAITING_BYTE_TRANSPORT_DTYPE_DECISION_AND_AGGREGATE_AUTHORIZATION",
+  "storage_dtype": {
+    "analysis_arithmetic_dtype": "float64",
+    "decision": "PENDING_COORDINATED_A_B_REVIEW",
+    "decision_receipt": {
+      "path": "docs/status/person_a_66_cell_local_preparation_v0_1/storage_dtype_reconciliation.json"
+    },
+    "mvp_yaml_modified": false,
+    "result_changing_review_required": true,
+    "stored_activation_dtype_executed": "float32"
+  }
+}

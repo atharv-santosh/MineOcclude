@@ -75,7 +75,18 @@ from mineocclude.experiments.stage_graph import (  # noqa: E402
 DEFAULT_CONFIG = ROOT / "configs" / "experiments" / "mvp.yaml"
 DEFAULT_OUTPUT_ROOT = ROOT / "docs" / "status" / "person_a_phase7_mvp_v0_1"
 DEFAULT_QUEUE_STATE = DEFAULT_OUTPUT_ROOT / "extraction_queue_state.json"
-HANDOFF_BUNDLE = (
+# The authoritative Person A accepted-input manifest for the 66-cell MVP. It is
+# hash-bound to Person C's C7.5 accepted manifest and carries one entry per
+# accepted trajectory. The five-cell multilayout manifest below is its
+# superseded predecessor and is read only when the 66-cell manifest is absent.
+HANDOFF_BUNDLE_66 = (
+    ROOT
+    / "data"
+    / "handoff_a"
+    / "person_a_66_cell_production_input_v0_1"
+    / "bundle_manifest.json"
+)
+HANDOFF_BUNDLE_SUPERSEDED = (
     ROOT
     / "data"
     / "handoff_a"
@@ -90,6 +101,14 @@ FOLD_MANIFEST = (
     / "ten_pilot_frame_fold_manifest.json"
 )
 
+
+def accepted_input_manifest_path() -> Path:
+    """Return the current accepted-input manifest, newest authority first."""
+
+    if HANDOFF_BUNDLE_66.is_file():
+        return HANDOFF_BUNDLE_66
+    return HANDOFF_BUNDLE_SUPERSEDED
+
 # Frames per accepted trajectory, taken from Person C's accepted handoff bundles.
 # The queue never guesses a frame count; a cell without one is not queued.
 ACCEPTED_FRAME_COUNTS_KEY = "expected_activation_row_count"
@@ -100,10 +119,12 @@ def sha256_file(path: Path) -> str:
 
 
 def write_json(path: Path, document: Any) -> str:
-    payload = json.dumps(document, indent=2, sort_keys=True) + "\n"
+    # Write bytes, not text: text mode translates "\n" to "\r\n" on Windows, so
+    # the file on disk would not hash to the digest this function returns.
+    payload = (json.dumps(document, indent=2, sort_keys=True) + "\n").encode("utf-8")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(payload, encoding="utf-8")
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    path.write_bytes(payload)
+    return hashlib.sha256(payload).hexdigest()
 
 
 def code_sha() -> str:
@@ -155,16 +176,17 @@ def environment_hash() -> str:
 def load_accepted_bundles() -> list[dict[str, Any]]:
     """Read every per-trajectory accepted handoff bundle Person A has received."""
 
-    if not HANDOFF_BUNDLE.is_file():
+    manifest = accepted_input_manifest_path()
+    if not manifest.is_file():
         return []
-    document = json.loads(HANDOFF_BUNDLE.read_text(encoding="utf-8"))
+    document = json.loads(manifest.read_text(encoding="utf-8"))
     bundles: list[dict[str, Any]] = []
     certified = document.get("current_certified_trajectory")
     if isinstance(certified, dict) and certified.get("trajectory_id"):
         bundles.append(
             {
                 "trajectory_id": certified["trajectory_id"],
-                "bundle_manifest": HANDOFF_BUNDLE.relative_to(ROOT).as_posix(),
+                "bundle_manifest": manifest.relative_to(ROOT).as_posix(),
                 "bundle_manifest_sha256": certified.get(
                     "output_bundle_manifest_sha256"
                 ),
@@ -198,7 +220,34 @@ def build_matrix_report(config: Any) -> dict[str, Any]:
         "matrix.expected_matrix_source.producing_commit"
     )
     report["identity"] = config.identity()
+    report["accepted_input_manifest"] = accepted_input_manifest_identity()
     return report
+
+
+def accepted_input_manifest_identity() -> dict[str, Any]:
+    """Bind the accepted-input manifest and the Person C manifest it consumed."""
+
+    manifest = accepted_input_manifest_path()
+    if not manifest.is_file():
+        return {
+            "path": None,
+            "person_c_accepted_manifest_path": None,
+            "person_c_accepted_manifest_sha256": None,
+            "person_c_source_commit": None,
+            "sha256": None,
+            "superseded_manifest": None,
+        }
+    document = json.loads(manifest.read_text(encoding="utf-8"))
+    return {
+        "path": manifest.relative_to(ROOT).as_posix(),
+        "person_c_accepted_manifest_path": document.get("c_accepted_manifest_path"),
+        "person_c_accepted_manifest_sha256": document.get(
+            "c_accepted_manifest_sha256"
+        ),
+        "person_c_source_commit": document.get("c_source_commit"),
+        "sha256": sha256_file(manifest),
+        "superseded_manifest": document.get("supersedes"),
+    }
 
 
 def frame_counts_from_bundles(
@@ -234,7 +283,9 @@ def build_queue(config: Any, matrix_report: dict[str, Any]) -> ExtractionQueue:
         config_hash=config.config_hash,
         code_sha=code_sha(),
         accepted_manifest_sha256=(
-            sha256_file(HANDOFF_BUNDLE) if HANDOFF_BUNDLE.is_file() else "0" * 64
+            sha256_file(accepted_input_manifest_path())
+            if accepted_input_manifest_path().is_file()
+            else "0" * 64
         ),
         layer_count=layer_count,
         frame_counts=frame_counts,
@@ -567,7 +618,9 @@ def cmd_run(args: argparse.Namespace) -> int:
         config_snapshot_hash=config.config_hash,
         checkpoint_hash=str(config.get("model.checkpoint_sha256")),
         data_identity_hash=(
-            sha256_file(HANDOFF_BUNDLE) if HANDOFF_BUNDLE.is_file() else "0" * 64
+            sha256_file(accepted_input_manifest_path())
+            if accepted_input_manifest_path().is_file()
+            else "0" * 64
         ),
         preprocess_hash=config.preprocess_hash,
         environment_hash=environment_hash(),
@@ -706,7 +759,9 @@ def cmd_u1_u3(args: argparse.Namespace) -> int:
             ),
         ),
         accepted_manifest_sha256=(
-            sha256_file(HANDOFF_BUNDLE) if HANDOFF_BUNDLE.is_file() else "0" * 64
+            sha256_file(accepted_input_manifest_path())
+            if accepted_input_manifest_path().is_file()
+            else "0" * 64
         ),
         activation_index_sha256=None if not executed else "",
         fold_manifest_sha256=fold_sha,

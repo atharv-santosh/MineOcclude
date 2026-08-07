@@ -1,0 +1,788 @@
+{
+  "approved_durable_destination": null,
+  "byte_transport_destination_pending": true,
+  "credential_mechanism": {
+    "access_procedure_documented_for_person_a": false,
+    "accessible_from_this_environment": false,
+    "credential_value_present_in_repository": false,
+    "instruction_gap": "The approved secret channel is named but its access procedure is not documented for Person A or Person B.",
+    "mechanism": "approved_out_of_band_channel",
+    "source_path": "docs/runbooks/person_a_handoff_rehearsals.md"
+  },
+  "destination_audit": {
+    "approved_durable_destination": null,
+    "approved_schemes": [
+      "s3://",
+      "file://",
+      "https://",
+      "mineocclude://"
+    ],
+    "credential_channel": {
+      "access_procedure_documented_for_person_a": false,
+      "accessible_from_this_environment": false,
+      "credential_value_present_in_repository": false,
+      "instruction_gap": "The approved secret channel is named but its access procedure is not documented for Person A or Person B.",
+      "mechanism": "approved_out_of_band_channel",
+      "source_path": "docs/runbooks/person_a_handoff_rehearsals.md"
+    },
+    "external_artifact_index_path": "docs/status/person_a_phase9_clean_run_v0_1/external_artifact_index.json",
+    "external_artifact_index_sha256": "afef74f5cbed367fffab3f8a3274ba88e08acbf12598abcff904662da2ad2f9b",
+    "index_artifact_candidates": [
+      {
+        "approved_scheme": true,
+        "artifact_id": "person-a-ten-pilot-combined-activation-index",
+        "is_object_store": false,
+        "uri": "file:///person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json"
+      },
+      {
+        "approved_scheme": true,
+        "artifact_id": "person-a-ten-pilot-final-report",
+        "is_object_store": false,
+        "uri": "file:///person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/final_report.json"
+      },
+      {
+        "approved_scheme": true,
+        "artifact_id": "person-c-c6a-output-bundle",
+        "is_object_store": false,
+        "uri": "file:///person-c-c6a-outputs/person-c-c6a-post-c1-v0.1"
+      },
+      {
+        "approved_scheme": true,
+        "artifact_id": "mineworld-700m-main-checkpoint",
+        "is_object_store": false,
+        "uri": "https://www.modelscope.cn/models/MineWorld/0dd5561ab317115831badc50e09a6ebe98693d0e"
+      },
+      {
+        "approved_scheme": true,
+        "artifact_id": "mineworld-vae-checkpoint",
+        "is_object_store": false,
+        "uri": "https://www.modelscope.cn/models/MineWorld/0dd5561ab317115831badc50e09a6ebe98693d0e/vae"
+      }
+    ],
+    "local_cache_root": null,
+    "object_store_destination_count": 0,
+    "private_prefixes_rejected": [
+      "/Users/",
+      "C:\\Users\\",
+      "c:\\users\\",
+      "/home/"
+    ],
+    "repository_authorizes_this_operator_to_upload": false,
+    "s3_bucket_or_prefix_found": false,
+    "searched": [
+      "docs/runbooks",
+      "configs",
+      "docs/status/person_a_phase9_clean_run_v0_1/external_artifact_index.json",
+      "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/execution_host_contract.json",
+      "src/mineocclude/experiments/clean_run.py"
+    ]
+  },
+  "destination_authorization_missing": [
+    "an approved durable destination URI (no S3 bucket/prefix and no other durable artifact store is assigned anywhere in this repository)",
+    "a repository policy statement authorizing this operator to upload the Person C episode payloads",
+    "a documented access procedure for the approved secret channel",
+    "a Person C decision assigning the durable URI, which C records as durable_s3_assigned=false"
+  ],
+  "destination_fabricated": false,
+  "destination_layout_when_authorized": {
+    "note": "This layout is a proposal keyed to Person C's own runtime structure. It is not a destination and carries no host, bucket, or prefix until one is authorized.",
+    "relative_layout": "<approved_destination_root>/person-c-c6a-post-c1-v0.1/episode_<episode_id>/<side>/<artifact_role>",
+    "sides": [
+      "client",
+      "server"
+    ]
+  },
+  "executable_transfer_command_available": false,
+  "execution_environment": {
+    "allowed_production_environment": "aws_sagemaker_linux_gpu",
+    "local_windows_host_role": "preparation_only",
+    "source_path": "docs/status/person_a_phase6_sagemaker_runtime_addendum_v0_1/execution_host_contract.json"
+  },
+  "expected_byte_inventory": {
+    "artifact_count": 2930,
+    "artifact_hash_verified_count": 2930,
+    "byte_size_total": 609099426,
+    "source_byte_inventory_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/source_byte_inventory.json",
+    "trajectory_count": 66
+  },
+  "sagemaker_materialization_procedure": [
+    "materialize the approved destination objects under the session's input root, preserving episode_<episode_id>/<side>/<artifact_role>",
+    "recompute SHA-256 for every materialized artifact",
+    "compare each digest and byte size against data/handoff_a/person_a_66_cell_production_input_v0_1/source_byte_inventory.json",
+    "compare each per-trajectory frame map's source_frame_sha256 against the materialized frame bytes",
+    "refuse to start Step 6.1 unless all 66 trajectories and every artifact match exactly"
+  ],
+  "schema_id": "person-a-66-cell-local-preparation-v0.1-byte-transfer-plan",
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "artifact_count": 67,
+      "byte_size_total": 15066942,
+      "episode_id": 12602,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12602",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12602",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12602"
+    },
+    {
+      "artifact_count": 32,
+      "byte_size_total": 6120261,
+      "episode_id": 12605,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12605",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12605",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12605"
+    },
+    {
+      "artifact_count": 57,
+      "byte_size_total": 12238799,
+      "episode_id": 12620,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12620",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12620",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12620"
+    },
+    {
+      "artifact_count": 21,
+      "byte_size_total": 3438318,
+      "episode_id": 12631,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12631",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12631",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12631"
+    },
+    {
+      "artifact_count": 30,
+      "byte_size_total": 5647048,
+      "episode_id": 12636,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12636",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12636",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12636"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 14628180,
+      "episode_id": 12650,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12650",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12650",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12650"
+    },
+    {
+      "artifact_count": 47,
+      "byte_size_total": 9798476,
+      "episode_id": 12651,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12651",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12651",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12651"
+    },
+    {
+      "artifact_count": 30,
+      "byte_size_total": 5643677,
+      "episode_id": 12652,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12652",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12652",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12652"
+    },
+    {
+      "artifact_count": 34,
+      "byte_size_total": 6612676,
+      "episode_id": 12655,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12655",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12655",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12655"
+    },
+    {
+      "artifact_count": 26,
+      "byte_size_total": 4663928,
+      "episode_id": 12659,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12659",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12659",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12659"
+    },
+    {
+      "artifact_count": 41,
+      "byte_size_total": 8328518,
+      "episode_id": 12665,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_01_ep12665",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12665",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12665"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 15083465,
+      "episode_id": 12610,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12610",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12610",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12610"
+    },
+    {
+      "artifact_count": 43,
+      "byte_size_total": 8797981,
+      "episode_id": 12611,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12611",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12611",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12611"
+    },
+    {
+      "artifact_count": 38,
+      "byte_size_total": 7573009,
+      "episode_id": 12623,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12623",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12623",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12623"
+    },
+    {
+      "artifact_count": 34,
+      "byte_size_total": 6603456,
+      "episode_id": 12635,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12635",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12635",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12635"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 14581500,
+      "episode_id": 12641,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12641",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12641",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12641"
+    },
+    {
+      "artifact_count": 21,
+      "byte_size_total": 3429144,
+      "episode_id": 12643,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12643",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12643",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12643"
+    },
+    {
+      "artifact_count": 72,
+      "byte_size_total": 15870752,
+      "episode_id": 12648,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12648",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12648",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12648"
+    },
+    {
+      "artifact_count": 33,
+      "byte_size_total": 6350697,
+      "episode_id": 12649,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12649",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12649",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12649"
+    },
+    {
+      "artifact_count": 31,
+      "byte_size_total": 5872167,
+      "episode_id": 12661,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12661",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12661",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12661"
+    },
+    {
+      "artifact_count": 32,
+      "byte_size_total": 6106475,
+      "episode_id": 12663,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12663",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12663",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12663"
+    },
+    {
+      "artifact_count": 18,
+      "byte_size_total": 2695701,
+      "episode_id": 12666,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_02_ep12666",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12666",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12666"
+    },
+    {
+      "artifact_count": 41,
+      "byte_size_total": 8042328,
+      "episode_id": 12601,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12601",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12601",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12601"
+    },
+    {
+      "artifact_count": 15,
+      "byte_size_total": 1897817,
+      "episode_id": 12609,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12609",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12609",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12609"
+    },
+    {
+      "artifact_count": 14,
+      "byte_size_total": 1660326,
+      "episode_id": 12614,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12614",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12614",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12614"
+    },
+    {
+      "artifact_count": 15,
+      "byte_size_total": 1897952,
+      "episode_id": 12615,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12615",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12615",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615"
+    },
+    {
+      "artifact_count": 27,
+      "byte_size_total": 4590899,
+      "episode_id": 12617,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12617",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12617",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12617"
+    },
+    {
+      "artifact_count": 28,
+      "byte_size_total": 4969225,
+      "episode_id": 12621,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12621",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12621",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12621"
+    },
+    {
+      "artifact_count": 12,
+      "byte_size_total": 1186461,
+      "episode_id": 12622,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12622",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12622",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12622"
+    },
+    {
+      "artifact_count": 26,
+      "byte_size_total": 4496142,
+      "episode_id": 12633,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12633",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12633",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12633"
+    },
+    {
+      "artifact_count": 33,
+      "byte_size_total": 6153708,
+      "episode_id": 12637,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12637",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12637",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12637"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 14173380,
+      "episode_id": 12639,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12639",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12639",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12639"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 15052761,
+      "episode_id": 12645,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_03_ep12645",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12645",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12645"
+    },
+    {
+      "artifact_count": 33,
+      "byte_size_total": 6360749,
+      "episode_id": 12603,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12603",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12603",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12603"
+    },
+    {
+      "artifact_count": 39,
+      "byte_size_total": 7832461,
+      "episode_id": 12604,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12604",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12604",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12604"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 14610844,
+      "episode_id": 12607,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12607",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12607",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12607"
+    },
+    {
+      "artifact_count": 31,
+      "byte_size_total": 5871813,
+      "episode_id": 12608,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12608",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12608",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12608"
+    },
+    {
+      "artifact_count": 26,
+      "byte_size_total": 4660381,
+      "episode_id": 12613,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12613",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12613",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12613"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 15040964,
+      "episode_id": 12626,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12626",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12626",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12626"
+    },
+    {
+      "artifact_count": 29,
+      "byte_size_total": 5396999,
+      "episode_id": 12629,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12629",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12629",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12629"
+    },
+    {
+      "artifact_count": 22,
+      "byte_size_total": 3680672,
+      "episode_id": 12638,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12638",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12638",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12638"
+    },
+    {
+      "artifact_count": 31,
+      "byte_size_total": 5888054,
+      "episode_id": 12640,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12640",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12640",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12640"
+    },
+    {
+      "artifact_count": 49,
+      "byte_size_total": 10270512,
+      "episode_id": 12644,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12644",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12644",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12644"
+    },
+    {
+      "artifact_count": 37,
+      "byte_size_total": 7342662,
+      "episode_id": 12653,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_04_ep12653",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12653",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12653"
+    },
+    {
+      "artifact_count": 61,
+      "byte_size_total": 13717781,
+      "episode_id": 12612,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12612",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12612",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12612"
+    },
+    {
+      "artifact_count": 46,
+      "byte_size_total": 9898415,
+      "episode_id": 12624,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12624",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12624",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12624"
+    },
+    {
+      "artifact_count": 72,
+      "byte_size_total": 16494525,
+      "episode_id": 12627,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12627",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12627",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12627"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 15130500,
+      "episode_id": 12630,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12630",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12630",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12630"
+    },
+    {
+      "artifact_count": 34,
+      "byte_size_total": 6859359,
+      "episode_id": 12632,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12632",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12632",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12632"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 15066440,
+      "episode_id": 12634,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12634",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12634",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12634"
+    },
+    {
+      "artifact_count": 31,
+      "byte_size_total": 6100643,
+      "episode_id": 12646,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12646",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12646",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12646"
+    },
+    {
+      "artifact_count": 55,
+      "byte_size_total": 12208874,
+      "episode_id": 12647,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12647",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12647",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12647"
+    },
+    {
+      "artifact_count": 45,
+      "byte_size_total": 9637332,
+      "episode_id": 12654,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12654",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12654",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12654"
+    },
+    {
+      "artifact_count": 54,
+      "byte_size_total": 11955330,
+      "episode_id": 12656,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12656",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12656",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12656"
+    },
+    {
+      "artifact_count": 63,
+      "byte_size_total": 14214980,
+      "episode_id": 12664,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_05_ep12664",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12664",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12664"
+    },
+    {
+      "artifact_count": 32,
+      "byte_size_total": 6176063,
+      "episode_id": 12606,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12606",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12606",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12606"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 14866956,
+      "episode_id": 12616,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12616",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12616",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12616"
+    },
+    {
+      "artifact_count": 49,
+      "byte_size_total": 10358380,
+      "episode_id": 12618,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12618",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12618",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12618"
+    },
+    {
+      "artifact_count": 37,
+      "byte_size_total": 7416452,
+      "episode_id": 12619,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12619",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12619",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12619"
+    },
+    {
+      "artifact_count": 74,
+      "byte_size_total": 16557142,
+      "episode_id": 12625,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12625",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12625",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12625"
+    },
+    {
+      "artifact_count": 63,
+      "byte_size_total": 13829790,
+      "episode_id": 12628,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12628",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12628",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12628"
+    },
+    {
+      "artifact_count": 72,
+      "byte_size_total": 16036836,
+      "episode_id": 12642,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12642",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12642",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12642"
+    },
+    {
+      "artifact_count": 67,
+      "byte_size_total": 14681160,
+      "episode_id": 12657,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12657",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12657",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12657"
+    },
+    {
+      "artifact_count": 74,
+      "byte_size_total": 16521856,
+      "episode_id": 12658,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12658",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12658",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12658"
+    },
+    {
+      "artifact_count": 47,
+      "byte_size_total": 9860584,
+      "episode_id": 12660,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12660",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12660",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12660"
+    },
+    {
+      "artifact_count": 69,
+      "byte_size_total": 15281748,
+      "episode_id": 12662,
+      "hash_verified": true,
+      "intended_durable_destination": null,
+      "trajectory_id": "layout_06_ep12662",
+      "windows_source_client_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12662",
+      "windows_source_server_root": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12662"
+    }
+  ],
+  "status": "PREPARED_AWAITING_APPROVED_DESTINATION_AND_CREDENTIAL_ACCESS",
+  "transfer_command_template": "<approved_transfer_tool> <windows_source_path> <approved_destination_uri>  # unavailable until a destination and an upload authorization exist",
+  "transfer_launched": false,
+  "verification_procedure": [
+    "python scripts/build_person_a_66_cell_local_preparation_v0_1.py frame-maps  # re-verifies every source byte against Person C's hashes",
+    "compare source_byte_inventory.json artifact digests before transfer",
+    "recompute digests after transfer and require an exact match",
+    "require the 66 frame-map files' SHA-256 values from data/handoff_a/person_a_66_cell_production_input_v0_1/sha256_inventory.json to be unchanged"
+  ]
+}

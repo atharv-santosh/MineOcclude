@@ -552,11 +552,15 @@ class ExtractionQueue:
         }
 
     def save(self, path: Path | str) -> str:
-        payload = json.dumps(self.to_document(), indent=2, sort_keys=True) + "\n"
+        # Write bytes, not text: text mode translates "\n" to "\r\n" on Windows,
+        # so the saved state would not hash to the digest this method returns.
+        payload = (
+            json.dumps(self.to_document(), indent=2, sort_keys=True) + "\n"
+        ).encode("utf-8")
         target = Path(path)
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(payload, encoding="utf-8")
-        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+        target.write_bytes(payload)
+        return hashlib.sha256(payload).hexdigest()
 
     @classmethod
     def load(

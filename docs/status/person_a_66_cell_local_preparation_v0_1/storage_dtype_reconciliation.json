@@ -1,0 +1,247 @@
+{
+  "analysis_arithmetic_dtype": "float64",
+  "conflict": {
+    "declared_stored_dtype": "float16",
+    "declared_stored_dtype_path": "configs/experiments/mvp.yaml#extraction.stored_dtype",
+    "internal_conflict_detail": "The same frozen configuration pins extraction.stored_dtype=float16 and storage.bytes_per_activation_row=8192.68303094984. At the frozen vector width of 2048 only a 4-byte element explains that measured byte rate, so the two frozen values cannot both be correct. Either resolution therefore changes at least one result_changing frozen value.",
+    "internal_to_one_frozen_file": true,
+    "observed_stored_dtype": "float32"
+  },
+  "decision": "PENDING_COORDINATED_A_B_REVIEW",
+  "decision_date": "2026-08-07",
+  "decision_owner": "person_a_model",
+  "evidence": {
+    "activation_store_v2": {
+      "byte_size": 50914,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "src/mineocclude/activations/store_v2.py",
+      "sha256": "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575"
+    },
+    "executed_ten_pilot_certification": {
+      "byte_size": 20235,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase6_closeout_v0_1/step_6_7_certification.json",
+      "sha256": "663eda3638235b168ca10e7cef6ace8f7b385df620f751890326852af8fbb0d8"
+    },
+    "frozen_mvp_configuration": {
+      "byte_size": 5958,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "configs/experiments/mvp.yaml",
+      "sha256": "3c20c014dddd9b2f8b9a9225b97d7d6d11994b08363f5026d8c26fd2f5aaaaa3"
+    },
+    "phase5_storage_decision": {
+      "byte_size": 27684,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase5_storage_decision.md",
+      "sha256": "d02a6be1f9346ad7ae54fea5a809ac4466d409ecbaf74e179c9849193399ae2d"
+    },
+    "pooling_implementation": {
+      "byte_size": 20297,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "src/mineocclude/activations/pool.py",
+      "sha256": "a5fd4c5d7272883432c29401e90880e70b8f90af2c0d0365bf65bc2847b0ead7"
+    },
+    "preflight_activation_contract": {
+      "byte_size": 2727,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/activation_contract.json",
+      "sha256": "3a0195317121b7a07f47bd0eed624635adafa2b2ba3530aa3236ae9b2634f03f"
+    },
+    "preflight_immutable_runtime_configuration": {
+      "byte_size": 4666,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/immutable_runtime_configuration.json",
+      "sha256": "eb634c1e81c65a724b7cf32cbfe03f62e80a4428afda605071e1a43c6d0f4c10"
+    },
+    "queue_cardinality_certification": {
+      "byte_size": 29016,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "src/mineocclude/experiments/extraction_queue.py",
+      "sha256": "08e12f4bb25088bb2fd4c18058fd0ac8ab34be2d57824cd4ac986819115cb159"
+    },
+    "step6_frozen_runtime_configuration": {
+      "byte_size": 2523,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_step6_runtime_acknowledgement_v0_1/frozen_runtime_configuration.json",
+      "sha256": "ecf3e5700da2ade1ca30290966a77bfb558b6afa3d834a0771007a90c06e9cd7"
+    },
+    "step_7_1_identity_freeze": {
+      "byte_size": 5252,
+      "digest_scope": "repository_canonical_lf_bytes",
+      "path": "docs/status/person_a_phase7_mvp_v0_1/step_7_1_identity_freeze.json",
+      "sha256": "b0709a7eaee0384d77ef27c2b42235002bc5dda1c65feb515a8e97ef917b34d0"
+    }
+  },
+  "evidence_for_float16_storage": [
+    {
+      "claim": "extraction.stored_dtype is frozen as float16",
+      "source": "frozen_mvp_configuration",
+      "weight": "declared_design_intent"
+    },
+    {
+      "claim": "Step 7.1 lists extraction.stored_dtype as a result_changing path frozen at float16",
+      "source": "step_7_1_identity_freeze",
+      "weight": "declared_design_intent"
+    },
+    {
+      "claim": "certify_queue_cardinality emits pooled_storage_preserved_16_bit and analysis_arithmetic_promoted_in_person_b_only",
+      "source": "queue_cardinality_certification",
+      "weight": "declared_design_intent"
+    },
+    {
+      "claim": "the Phase 5 read API promotes float16 vectors to float32 for analysis while stored bytes and dtype metadata are unchanged",
+      "source": "phase5_storage_decision",
+      "weight": "declared_design_intent"
+    }
+  ],
+  "evidence_for_float32_storage": [
+    {
+      "claim": "all ten executed production pilots imply a 4-byte stored element at width 2048",
+      "measured": [
+        {
+          "activation_bytes": 40634880,
+          "activation_row_count": 4960,
+          "bytes_per_row": 8192.516129032258,
+          "implied_element_bytes": 4.000252016129032,
+          "trajectory_id": "layout_00_ep9403"
+        },
+        {
+          "activation_bytes": 32770560,
+          "activation_row_count": 4000,
+          "bytes_per_row": 8192.64,
+          "implied_element_bytes": 4.0003125,
+          "trajectory_id": "layout_00_ep9441"
+        },
+        {
+          "activation_bytes": 37685760,
+          "activation_row_count": 4600,
+          "bytes_per_row": 8192.55652173913,
+          "implied_element_bytes": 4.000271739130435,
+          "trajectory_id": "layout_01_ep9405"
+        },
+        {
+          "activation_bytes": 32770560,
+          "activation_row_count": 4000,
+          "bytes_per_row": 8192.64,
+          "implied_element_bytes": 4.0003125,
+          "trajectory_id": "layout_01_ep9442"
+        },
+        {
+          "activation_bytes": 25889280,
+          "activation_row_count": 3160,
+          "bytes_per_row": 8192.810126582279,
+          "implied_element_bytes": 4.000395569620253,
+          "trajectory_id": "layout_02_ep9407"
+        },
+        {
+          "activation_bytes": 32770560,
+          "activation_row_count": 4000,
+          "bytes_per_row": 8192.64,
+          "implied_element_bytes": 4.0003125,
+          "trajectory_id": "layout_02_ep9432"
+        },
+        {
+          "activation_bytes": 20482560,
+          "activation_row_count": 2500,
+          "bytes_per_row": 8193.024,
+          "implied_element_bytes": 4.0005,
+          "trajectory_id": "layout_03_ep9404"
+        },
+        {
+          "activation_bytes": 32770560,
+          "activation_row_count": 4000,
+          "bytes_per_row": 8192.64,
+          "implied_element_bytes": 4.0003125,
+          "trajectory_id": "layout_03_ep9443"
+        },
+        {
+          "activation_bytes": 18516480,
+          "activation_row_count": 2260,
+          "bytes_per_row": 8193.132743362832,
+          "implied_element_bytes": 4.000553097345133,
+          "trajectory_id": "layout_04_ep9406"
+        },
+        {
+          "activation_bytes": 32770560,
+          "activation_row_count": 4000,
+          "bytes_per_row": 8192.64,
+          "implied_element_bytes": 4.0003125,
+          "trajectory_id": "layout_04_ep9444"
+        }
+      ],
+      "source": "executed_ten_pilot_certification",
+      "weight": "executed_production_measurement"
+    },
+    {
+      "claim": "the frozen preflight activation contract pins pooled_representation.stored_dtype=float32 with analysis_dtype=float64",
+      "source": "preflight_activation_contract",
+      "weight": "accepted_contract"
+    },
+    {
+      "claim": "the frozen runtime configuration pins pooling stored_dtype=float32",
+      "source": "preflight_immutable_runtime_configuration",
+      "weight": "accepted_contract"
+    },
+    {
+      "claim": "the Step 6 acknowledgement's frozen runtime configuration carries the same float32 pooling contract",
+      "source": "step6_frozen_runtime_configuration",
+      "weight": "accepted_contract"
+    },
+    {
+      "claim": "select_and_pool upcasts to float32 and rejects any pooled vector whose dtype is not float32, so the current implementation cannot emit a float16 pooled vector",
+      "source": "pooling_implementation",
+      "weight": "implementation"
+    }
+  ],
+  "executed_production_all_imply_float32": true,
+  "hooked_source_tensor_dtype": "float16",
+  "mvp_yaml_modified_by_this_package": false,
+  "person_a_unilateral_change_made": false,
+  "proposal": {
+    "authority_required": [
+      "person_a_model",
+      "person_b_analysis"
+    ],
+    "extraction_authorized_by_this_proposal": false,
+    "new_run_identity_required": true,
+    "options": [
+      {
+        "changes": [
+          "configs/experiments/mvp.yaml#extraction.stored_dtype float16 -> float32"
+        ],
+        "consequence": "Aligns the frozen configuration with the executed production run, the accepted preflight contracts, the frozen bytes_per_activation_row, and the current pooling implementation. No code change is required.",
+        "option_id": "align_config_to_executed_float32_storage",
+        "recommended_by_person_a": true
+      },
+      {
+        "changes": [
+          "configs/experiments/mvp.yaml#storage.bytes_per_activation_row 8192.68303094984 -> a measured float16 rate",
+          "docs/status/person_a_phase4_step4_1_production_handoff_preflight_v0_1/activation_contract.json#pooled_representation.stored_dtype float32 -> float16",
+          "src/mineocclude/activations/pool.py: emit a float16 pooled vector and promote to float32 only on read"
+        ],
+        "consequence": "Preserves the declared 16-bit storage intent and the B-side promotion design, but invalidates the executed ten-pilot activation bytes as a production reference and requires a code change plus a new extraction run.",
+        "option_id": "implement_declared_float16_storage",
+        "recommended_by_person_a": false
+      }
+    ],
+    "result_changing_paths_touched": [
+      "extraction.stored_dtype",
+      "storage.bytes_per_activation_row"
+    ]
+  },
+  "result_changing_review_required": true,
+  "schema_id": "person-a-66-cell-local-preparation-v0.1-storage-dtype-reconciliation",
+  "schema_version": "1.0",
+  "separation": {
+    "analysis_arithmetic_dtype": "float64",
+    "analysis_arithmetic_owner": "person_b_analysis",
+    "hooked_activation_dtype": "float16",
+    "pooled_stored_dtype_declared": "float16",
+    "pooled_stored_dtype_executed": "float32",
+    "rule": "The hooked residual-stream tensor is float16 because the model runs in float16. Pooling is a separate step, and analysis arithmetic is promoted downstream by Person B. The unresolved question is only the pooled storage dtype."
+  },
+  "stale_statement_identified": null,
+  "status": "UNRESOLVED_REQUIRES_COORDINATED_REVIEW_NO_UNILATERAL_CHANGE_MADE",
+  "stored_activation_dtype_executed": "float32",
+  "superseded_additively": false
+}

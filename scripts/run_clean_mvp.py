@@ -51,10 +51,12 @@ DEFAULT_OUTPUT_ROOT = ROOT / "docs" / "status" / "person_a_phase9_clean_run_v0_1
 
 
 def write_json(path: Path, document: Any) -> str:
-    payload = json.dumps(document, indent=2, sort_keys=True) + "\n"
+    # Write bytes, not text: text mode translates "\n" to "\r\n" on Windows, so
+    # the file on disk would not hash to the digest this function returns.
+    payload = (json.dumps(document, indent=2, sort_keys=True) + "\n").encode("utf-8")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(payload, encoding="utf-8")
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    path.write_bytes(payload)
+    return hashlib.sha256(payload).hexdigest()
 
 
 def load_workflow(path: Path) -> dict[str, Any]:
