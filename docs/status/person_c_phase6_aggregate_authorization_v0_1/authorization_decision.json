@@ -1,0 +1,22 @@
+{
+  "aggregate_authorization_complete": false,
+  "aggregate_authorization_note": "This document supplies only the person_c_data signature. Person A's aggregate_phase6_runtime_authorized remains false until person_b_analysis and person_e_operations publish their own affirmative decisions for this exact run_id.",
+  "blocker": null,
+  "decision": "AUTHORIZE_PERSON_A_PHASE6_EXTRACTION_FOR_THIS_EXACT_RUN_ID",
+  "decision_timestamp": "2026-08-07T00:00:00Z",
+  "owner": "person_c_data",
+  "owner_authority_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+  "person_a_phase6_authorized": true,
+  "person_a_request_commit": "ecdf3178154e594b06d1d4326993754068cae039",
+  "person_c_blocker_present": false,
+  "person_c_branch": "role/person-c-data",
+  "person_c_phase6_signoff": true,
+  "reason": "Person C owns the 66-cell capture packages, the canonical 640x360 source media, and the strict visibility join that Person A consumes. Every Person C artifact Person A bound as an input re-verifies byte-exact at Person C authority commit 3846230a4f141a8a55084eeaaa040f9a10cfc408, all three person_c_data-owned contract conditions in Person A's precondition receipt are satisfied, and Person A's input-transfer receipt verifies 2468/2468 payloads with zero missing, zero duplicate, and zero hash mismatches against the pinned preprocessed frame manifest. Person C's remaining false flags are scoped 'not yet granted' states awaiting exactly this coordinated review, not adverse findings. No real Person C blocker to executing this run_id exists.",
+  "reauthorization_required_for_any_other_run_id": true,
+  "role": "person_c_data",
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "run_id_scope": "single_exact_run_id_only",
+  "schema_id": "person-c-phase6-aggregate-authorization-v0-1-decision",
+  "schema_version": "1.0",
+  "signed_for_this_run_id": true
+}

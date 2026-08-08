@@ -1,0 +1,96 @@
+{
+  "foreign_branch_merged": false,
+  "foreign_branch_modified": false,
+  "person_a": {
+    "commit": "ecdf3178154e594b06d1d4326993754068cae039",
+    "records": {
+      "docs/status/person_a_66_cell_preprocessed_media_v0_2/phase6_precondition_receipt.json": {
+        "byte_size": 2981,
+        "sha256": "d4b246e6d20727d528c97becb62c04b9bcb8d0eaabb55d905cd5004d3dc41fc4"
+      },
+      "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json": {
+        "byte_size": 6240221,
+        "sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1"
+      },
+      "docs/status/person_a_phase6_aggregate_authorization_request_v0_1/authorization_request.json": {
+        "byte_size": 3027,
+        "sha256": "345d0e6b109dd6443874dce7f542e35ba9abf24ba1170b1d01ed669ff9b9cca4"
+      },
+      "docs/status/person_a_phase6_input_transfer_verification_v0_1/transfer_verification_receipt.json": {
+        "byte_size": 2616,
+        "sha256": "e423e640c7d43dc21e08b503adf5b4ade595b3f773ee63119f2c11afdb729090"
+      }
+    },
+    "source_read_policy": "exact_git_commit_object"
+  },
+  "person_a_verified_state": {
+    "extraction_not_started_at_decision_time": true,
+    "person_a_commit": "ecdf3178154e594b06d1d4326993754068cae039",
+    "person_a_reported_person_c_head": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "person_a_self_authorization_forbidden": true,
+    "person_c_owned_contract_conditions_all_satisfied": true,
+    "transfer_duplicate_count": 0,
+    "transfer_hash_mismatch_count": 0,
+    "transfer_missing_count": 0,
+    "transferred_payload_count": 2468
+  },
+  "person_c_authority_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+  "person_c_bound_inputs": {
+    "docs/status/person_c_66_cell_canonical_media_v0_1/c_to_a_media_handoff.json": {
+      "byte_size": 5572,
+      "sha256": "94c852466167db01a678d0d7d6a3ae6e3211abaef995f95b20f5d182ed599b3e"
+    },
+    "docs/status/person_c_66_cell_canonical_media_v0_1/c_to_d_media_handoff.json": {
+      "byte_size": 39565,
+      "sha256": "84b5b927ab41d34d51ebf30f1af9d48cf1b5af9d057518a6ca6338cef7f38a56"
+    },
+    "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_frame_index.jsonl": {
+      "byte_size": 3154628,
+      "sha256": "745e556578587981c5fe7d96ca873d8744e53e9f1e11b23b931af37dd9499dab"
+    },
+    "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json": {
+      "byte_size": 61794,
+      "sha256": "a11762bd9292404b58ddccc062ebcf5115d935d61426fff4cd4474c8def257c9"
+    },
+    "docs/status/person_c_66_cell_canonical_media_v0_1/closure_receipt.json": {
+      "byte_size": 1848,
+      "sha256": "cc2201d5c3b6d4655612acfb93ce68ee5a7756668ece89cad734f9661f25e2b1"
+    },
+    "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json": {
+      "byte_size": 80149,
+      "sha256": "ca6ef6bd0a6ee144731ff3e6f470f767a2c1a82e8b46aef9fb5e458efb814f56"
+    },
+    "docs/status/person_c_66_cell_capture_authority_v0_1/closure_receipt.json": {
+      "byte_size": 2693,
+      "sha256": "4169109d4d9fb64462225e2e7731c054f2d7fff1f179e9a2b89e179e9398e09b"
+    },
+    "docs/status/person_c_66_cell_strict_visibility_v0_1/c_to_b_oracle_handoff.json": {
+      "byte_size": 9525,
+      "sha256": "dd5569164d72ba8a25e4efbd74e013819744b7cf10b22ea949e22a13b3a3b33b"
+    },
+    "docs/status/person_c_66_cell_strict_visibility_v0_1/closure_receipt.json": {
+      "byte_size": 2622,
+      "sha256": "2d7ba1bb7dd953c3679fcfef0c69c32588b86775c3fb3af86e14deb58e9b6a8a"
+    },
+    "docs/status/person_c_66_cell_strict_visibility_v0_1/visibility_join_manifest.json": {
+      "byte_size": 3926,
+      "sha256": "8e03d6564c3a5d17e6199af258708bd8526842410c78a7f58330df9e0bf960cc"
+    },
+    "docs/status/person_c_c7_mvp_handoff_v0_1/handoff_receipt.json": {
+      "byte_size": 1631,
+      "sha256": "2ea0c6b91c4605c3e8fe393744574cd450c4a3e112f74be0b51a49b7c212b536"
+    }
+  },
+  "person_c_branch": "role/person-c-data",
+  "person_c_verified_scope": {
+    "accepted_trajectory_count": 66,
+    "canonical_frame_count": 2468,
+    "excluded_trajectory_count": 0,
+    "person_c_phase6_input_ready": true,
+    "prior_status_before_this_decision": "pending_coordinated_owner_review_after_a_b_c_e_reconcile",
+    "visibility_frame_key_count": 2468
+  },
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "schema_id": "person-c-phase6-aggregate-authorization-v0-1-authority-binding",
+  "schema_version": "1.0"
+}

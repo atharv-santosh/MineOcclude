@@ -1,0 +1,43 @@
+{
+  "additive_only": true,
+  "frozen_decision_modified": false,
+  "historical_evidence_rewritten": false,
+  "preserved_records": {
+    "docs/status/person_c_phase4_step4_1_registry_v2_handoff_v0_1/selected_pilot_acceptance.json": {
+      "byte_size": 1995,
+      "sha256": "6e663b1c5a4e4e269a680a0b5c142da6f4f0d22ecf46092cdc8c81c0ce1ad8a9"
+    },
+    "docs/status/person_c_phase4_step4_1_registry_v2_handoff_v0_1/validation_receipt.json": {
+      "byte_size": 1179,
+      "sha256": "0a726fb3c915eb37a5821fed786870c0f79a4b0581c25f85c070b21b67e3cffc"
+    },
+    "docs/status/person_c_phase6_ten_pilot_expansion_acceptance_v0_1/expansion_acceptance_decision.json": {
+      "byte_size": 1420,
+      "sha256": "8862cdfb329767c458f8744d3f1d4bcc479e2b2ed2fb2b30e37101070ece5bfe"
+    },
+    "docs/status/person_c_phase6_ten_pilot_expansion_acceptance_v0_1/validation_receipt.json": {
+      "byte_size": 879,
+      "sha256": "1c78b2c6a50374f92a913b22a8fd3152696976f01a2495c78e765041c0a6edcc"
+    }
+  },
+  "relationship_to_this_decision": "Those two records govern the single-pilot and ten-pilot tracks and remain false for their own scopes. This decision governs a different, disjoint scope: the 66-cell production track at run_id mineocclude-run-ea6169430d693f8adcd16a23a62c4422. It grants no authority inside the pilot or expansion scopes.",
+  "schema_id": "person-c-phase6-aggregate-authorization-v0-1-preserved-frozen-evidence",
+  "schema_version": "1.0",
+  "scoped_false_flags_left_unchanged": [
+    {
+      "field": "person_a_phase6_authorized",
+      "path": "docs/status/person_c_phase4_step4_1_registry_v2_handoff_v0_1/selected_pilot_acceptance.json",
+      "scope": "single_pilot_steps_6_1_through_6_6",
+      "value": false
+    },
+    {
+      "field": "person_a_expansion_execution_authorized",
+      "path": "docs/status/person_c_phase6_ten_pilot_expansion_acceptance_v0_1/expansion_acceptance_decision.json",
+      "scope": "exact_phase6_ten_pilot_expansion_inputs_for_steps_6_1_through_6_5",
+      "value": false
+    }
+  ],
+  "step_4_1_note": "The Step 4.1 verdict remains FAIL and is not reopened, reinterpreted, or superseded by this document. The Step 4.1 registry-v2 handoff records person_a_phase6_authorized=false scoped to the single layout_00_ep9403 pilot for Steps 6.1-6.6; that scoped record stays false and byte-unchanged.",
+  "step_4_1_status": "FAIL",
+  "step_4_1_status_preserved": true
+}
