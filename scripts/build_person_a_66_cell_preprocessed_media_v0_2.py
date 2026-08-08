@@ -41,6 +41,9 @@ TEST_PATH = "tests/models/test_person_a_66_cell_preprocessed_media_v0_2.py"
 DECISION_DATE = "2026-08-07"
 
 A_BRANCH = "role/person-a-model"
+AUTHORIZED_EXECUTION_BRANCHES = frozenset(
+    {A_BRANCH, "integration/mvp-final"}
+)
 A_STARTING_AUTHORITY = "a3bc169d349ca424f6d5af1ecbbb9327b248bfe2"
 
 # --------------------------------------------------------------------------
@@ -270,7 +273,7 @@ def _source_record(commit: str, path: str) -> dict[str, Any]:
 # --------------------------------------------------------------------------
 def verify_authorities() -> str:
     branch = _git_text("branch", "--show-current")
-    if branch != A_BRANCH:
+    if branch not in AUTHORIZED_EXECUTION_BRANCHES:
         _fail("unexpected_branch", f"Person A branch is {branch!r}")
     if _completed(
         ["git", "merge-base", "--is-ancestor", A_STARTING_AUTHORITY, "HEAD"]
