@@ -1,0 +1,31 @@
+{
+  "aggregate_scientific_authorization_status": "see docs/status/person_a_phase6_aggregate_authorization_request_v0_1/authorization_request.json; UNCHANGED by this record",
+  "approval_does_not_authorize_scientific_execution": true,
+  "approval_scope": "durable_byte_transport_and_storage_destination_only",
+  "approval_source": "operator_instruction_relayed_in_interactive_agent_session",
+  "approved_destination_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/phase6/person-a/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/",
+  "approved_prefix": "mineocclude/phase6/person-a/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/",
+  "aws_region": "us-east-1",
+  "bucket": "sagemaker-us-east-1-323206973672",
+  "destination_fabricated": false,
+  "historical_evidence_rewritten": false,
+  "note": "Records an operator instruction, given directly in an interactive Claude Code session, approving an S3 destination for durable byte transport/storage only. This is infrastructure bookkeeping, not the explicit versioned cross-role scientific authorization decision required by docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/phase6_authorization_conditions.json (silent_authorization_forbidden=true). That requirement remains open; see the aggregate-authorization-request document referenced above.",
+  "operator_identity_independently_verified": false,
+  "person_a_commit": "3384cbfed92f069236d68746f2308ec76f1a4124",
+  "prior_bucket_visibility_check": {
+    "bucket": "sagemaker-us-east-1-323206973672",
+    "checked_via": [
+      "aws s3 ls --recursive",
+      "aws s3api list-objects-v2"
+    ],
+    "existing_mineocclude_prefix_found": false,
+    "listed_object_count": 0
+  },
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "schema_id": "person-a-phase6-durable-destination-v0.1-record",
+  "schema_version": "1.0",
+  "supersedes_pending_flag_in": [
+    "docs/status/person_a_66_cell_preprocessed_media_v0_2/byte_transport_plan.json",
+    "docs/status/person_a_66_cell_successor_authority_v0_1/byte_transport_preflight.json"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "aggregate_authorization_authority_present": false,
+  "aggregate_phase6_runtime_authorized": false,
+  "blocking": true,
+  "check_method": "git grep for the exact run_id across origin/role/person-b-analysis, origin/role/person-c-data, origin/role/person-e-operations at their current branch tips, plus search for phase6_authorized:true / aggregate_phase6_runtime_authorized:true anywhere on those branches. Zero matches on all three.",
+  "person_a_commit": "3384cbfed92f069236d68746f2308ec76f1a4124",
+  "required_signers": [
+    "person_a_model",
+    "person_b_analysis",
+    "person_c_data",
+    "person_e_operations"
+  ],
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "schema_id": "person-a-phase6-aggregate-authorization-request-v0.1-request",
+  "schema_version": "1.0",
+  "self_authorization_forbidden": true,
+  "signer_status": {
+    "person_a_model": {
+      "attesting_commit": "3384cbfed92f069236d68746f2308ec76f1a4124",
+      "basis": "docs/status/person_a_66_cell_preprocessed_media_v0_2/phase6_precondition_receipt.json contract_conditions are all satisfied=true for the person_a_model-owned conditions; durable destination now recorded (see person_a_phase6_durable_destination_v0_1).",
+      "signed_for_this_run_id": true
+    },
+    "person_b_analysis": {
+      "branch_head_checked": "91375ad1fdfe6ce1d5a2a024263aa3324c56c667",
+      "found_phase6_authorized_true_anywhere_on_branch": false,
+      "found_reference_to_run_id": false,
+      "governing_document": "docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/phase6_authorization_conditions.json (person_a_phase6_authorized=false, silent_authorization_forbidden=true, automatic_transition_defined_by_existing_documents=false)",
+      "signed_for_this_run_id": false
+    },
+    "person_c_data": {
+      "branch_head_checked": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "found_phase6_authorized_true_anywhere_on_branch": false,
+      "found_reference_to_run_id": false,
+      "no_pending_person_a_owned_blockers_found": true,
+      "signed_for_this_run_id": false
+    },
+    "person_e_operations": {
+      "branch_head_checked": "fec27d08b4629afa07c7858598e94778dc6e7bef",
+      "found_phase6_authorized_true_anywhere_on_branch": false,
+      "found_reference_to_run_id": false,
+      "signed_for_this_run_id": false
+    }
+  },
+  "what_would_close_this": "Each of person_b_analysis, person_c_data, and person_e_operations must publish, on their own branch, an explicit versioned authorization decision document that names run_id=mineocclude-run-ea6169430d693f8adcd16a23a62c4422 and sets an explicit affirmative field (e.g. person_a_phase6_authorized=true), following the shape of docs/status/person_b_phase4_step4_1_registry_v2_handoff_v0_1/phase6_authorization_conditions.json. Until all three exist, aggregate_phase6_runtime_authorized must remain false and extraction must not begin. Operator approval of the S3 storage destination (see person_a_phase6_durable_destination_v0_1) does not satisfy this requirement."
+}
