@@ -1067,7 +1067,9 @@ def compute_scientific_results(
                     "pooled_pearson": _pearson(decoded_sigma, oracle_sigma),
                     "pooled_partial_correlation_controlling_tau": (
                         partial_correlation_controlling_tau(
-                            decoded_sigma, oracle_sigma, tau
+                            decoded_sigma.tolist(),
+                            oracle_sigma.tolist(),
+                            tau.tolist(),
                         )
                     ),
                 },
