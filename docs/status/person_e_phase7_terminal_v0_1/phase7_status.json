@@ -1,0 +1,36 @@
+{
+  "code_commit": "d3cb6f198d563aed6fbc126045ea8b7fa4a3e0bb",
+  "phase7_status_schema_version": "person-e-phase7-terminal-v0.1",
+  "real_measurement_complete": false,
+  "step_7_1": {
+    "blocking_external_inputs": [
+      "person_a_clean_run_bundle",
+      "person_a_u4_rollout_clips",
+      "person_b_event_dose_table",
+      "person_b_ssim_matching_rule",
+      "person_d_control_manifest"
+    ],
+    "evidence_class": "synthetic_fixture",
+    "real_clean_reproduction_complete": false,
+    "status": "IMPLEMENTED_NOT_EXECUTED_ON_REAL_INPUTS",
+    "synthetic_known_answer_recovered": true,
+    "synthetic_rehearsal_stages_passed": 5
+  },
+  "step_7_2": {
+    "empty_slot_count": 7,
+    "figure_source_verified": true,
+    "populated_slots": [
+      "engineering_detector_gate",
+      "engineering_localization_gate"
+    ],
+    "scientific_value_count": 0,
+    "status": "COMPLETE_FOR_AVAILABLE_EVIDENCE"
+  },
+  "step_7_3": {
+    "operable_without_person_e": true,
+    "remaining_external_dependency_count": 9,
+    "status": "COMPLETE",
+    "workflow_count": 5
+  },
+  "u4_output_inspected": false
+}

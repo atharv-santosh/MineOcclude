@@ -1,0 +1,113 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "artifact_extraction",
+      "artifact_schema_version": "synthetic-extraction-v0.1",
+      "artifact_type": "extraction",
+      "byte_verification_id": "verification_artifact_extraction",
+      "creator_run_id": "run_extraction",
+      "direct_input_artifact_ids": [],
+      "manifest_artifact_identity": "person-a-extraction-output-1",
+      "manifest_id": "manifest_person_a_extraction",
+      "manifest_schema_version": "person-a-extraction-manifest-v1.0",
+      "manifest_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "owner_authority_id": "authority_person_a_extraction",
+      "owner_authority_revision": "1111111111111111111111111111111111111111",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_a_extraction_status_v0_1",
+      "owner_status_record_sha256": "06667d0b1fe5bfc88165c4ffbaff20a5298476b4a2557386b2895b649a4ee23b",
+      "schema_version": "1.0",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 12,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "memory://person-e-v2/extraction"
+    }
+  ],
+  "byte_verifications": [
+    {
+      "artifact_id": "artifact_extraction",
+      "external_receipt_authority_revision": "5555555555555555555555555555555555555555",
+      "external_receipt_id": "receipt_person_a_extraction",
+      "external_receipt_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "mode": "external_receipt",
+      "schema_version": "1.0",
+      "verification_id": "verification_artifact_extraction",
+      "verified_at": "2026-01-01T00:00:03Z",
+      "verified_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "verified_size_bytes": 12
+    }
+  ],
+  "immutable_registry_schema_version": "mineocclude-immutable-registry-v2.0",
+  "manifests": [
+    {
+      "artifact_identities": [
+        "person-a-extraction-output-1"
+      ],
+      "decision": "accepted",
+      "manifest_id": "manifest_person_a_extraction",
+      "manifest_schema_version": "person-a-extraction-manifest-v1.0",
+      "manifest_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "owner_authority_id": "authority_person_a_extraction",
+      "schema_version": "1.0"
+    }
+  ],
+  "owner_authorities": [
+    {
+      "authority_id": "authority_person_a_extraction",
+      "authority_revision": "1111111111111111111111111111111111111111",
+      "authorized_artifact_types": [
+        "extraction"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_a",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_a_extraction_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "06667d0b1fe5bfc88165c4ffbaff20a5298476b4a2557386b2895b649a4ee23b",
+      "status_record_verification_mode": "local_bytes"
+    }
+  ],
+  "registry_id": "synthetic_person_e_v2_completed",
+  "runs": [
+    {
+      "checkpoint_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "code_sha": "1111111111111111111111111111111111111111",
+      "command": [
+        "synthetic-extraction"
+      ],
+      "config_snapshot_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2026-01-01T00:00:00Z",
+      "data_identity_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "ended_at": "2026-01-01T00:00:02Z",
+      "environment_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [],
+      "output_artifact_ids": [
+        "artifact_extraction"
+      ],
+      "owner": "person_a",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "run_id": "run_extraction",
+      "schema_version": "1.0",
+      "seeds": {
+        "synthetic": 23
+      },
+      "started_at": "2026-01-01T00:00:01Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    }
+  ],
+  "schema_version": "1.0",
+  "scientific_use": "forbidden",
+  "synthetic": true
+}

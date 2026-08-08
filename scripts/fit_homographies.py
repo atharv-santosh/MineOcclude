@@ -7,25 +7,25 @@ import sys
 from collections.abc import Mapping
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from mineocclude.analysis.manifests import is_hex_digest  # noqa: E402
-from mineocclude.experiments.registry import (  # noqa: E402
+from mineocclude.analysis.manifests import is_hex_digest
+from mineocclude.experiments.registry import (
     hash_json_value,
     load_json_with_sha256,
     write_json_exclusive,
 )
-from mineocclude.vision.config import validate_person_e_config  # noqa: E402
-from mineocclude.vision.homography import (  # noqa: E402
+from mineocclude.vision.config import validate_person_e_config
+from mineocclude.vision.homography import (
     HOMOGRAPHY_ALGORITHM_VERSION,
     fit_marker_homography,
     summarize_localization,
 )
-
+from mineocclude.vision.report_schemas import HOMOGRAPHY_REPORT_SCHEMA_VERSION
 
 HOMOGRAPHY_INPUT_SCHEMA_VERSION = "person-e-homography-input-v0.1"
+BOUND_HOMOGRAPHY_INPUT_SCHEMA_VERSION = "person-e-homography-input-v0.2"
 
 
 def parse_args() -> argparse.Namespace:
@@ -61,7 +61,11 @@ def main() -> None:
     validate_person_e_config(config)
     if not isinstance(document, Mapping):
         raise ValueError("Homography input must be a mapping.")
-    if document.get("homography_input_schema_version") != HOMOGRAPHY_INPUT_SCHEMA_VERSION:
+    input_schema_version = document.get("homography_input_schema_version")
+    if input_schema_version not in {
+        HOMOGRAPHY_INPUT_SCHEMA_VERSION,
+        BOUND_HOMOGRAPHY_INPUT_SCHEMA_VERSION,
+    }:
         raise ValueError("Unknown homography-input schema version.")
     layouts = document.get("layouts")
     if not isinstance(layouts, list) or not layouts:
@@ -103,6 +107,23 @@ def main() -> None:
         validation_source_hash = _sha256(
             raw_layout.get("validation_source_hash"), "validation_source_hash"
         )
+        binding: dict[str, object] = {}
+        if input_schema_version == BOUND_HOMOGRAPHY_INPUT_SCHEMA_VERSION:
+            binding = {
+                "resolution_id": _identifier(
+                    raw_layout.get("resolution_id"), "resolution_id"
+                ),
+                "image_width_px": raw_layout.get("image_width_px"),
+                "image_height_px": raw_layout.get("image_height_px"),
+                "source_correspondence_hash": marker_source_hash,
+                "detector_version": _identifier(
+                    raw_layout.get("detector_version"), "detector_version"
+                ),
+                "software_runtime_hash": _sha256(
+                    raw_layout.get("software_runtime_hash"),
+                    "software_runtime_hash",
+                ),
+            }
         homography = fit_marker_homography(
             raw_layout.get("image_points_by_marker"),
             raw_layout.get("world_points_by_marker"),
@@ -110,6 +131,7 @@ def main() -> None:
             layout_id=layout_id,
             canonical_camera_pose_id=pose_id,
             pivot_tolerance=float(settings["singular_pivot_tolerance"]),
+            **binding,
         )
         pairs = raw_layout.get("validation_pairs")
         if not isinstance(pairs, list) or not pairs:
@@ -138,6 +160,13 @@ def main() -> None:
             {
                 "layout_id": layout_id,
                 "canonical_camera_pose_id": pose_id,
+                "resolution_id": raw_layout.get("resolution_id"),
+                "image_width_px": raw_layout.get("image_width_px"),
+                "image_height_px": raw_layout.get("image_height_px"),
+                "detector_version": raw_layout.get("detector_version"),
+                "software_runtime_hash": raw_layout.get(
+                    "software_runtime_hash"
+                ),
                 "marker_set_source_hash": marker_source_hash,
                 "validation_source_hash": validation_source_hash,
                 "wall_parallel_origin_xz": raw_layout.get(
@@ -153,7 +182,8 @@ def main() -> None:
     write_json_exclusive(
         args.output,
         {
-            "homography_report_schema_version": "person-e-homography-report-v0.2",
+            "homography_report_schema_version": HOMOGRAPHY_REPORT_SCHEMA_VERSION,
+            "homography_input_schema_version": input_schema_version,
             "input_hash": input_hash,
             "producer_run_id": producer_run_id,
             "code_sha": args.code_sha,

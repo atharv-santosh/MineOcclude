@@ -1,0 +1,179 @@
+{
+  "candidate_count": 2,
+  "candidate_order": [
+    "historical_v0_1_min_area_20",
+    "phase3_v1_min_area_19"
+  ],
+  "candidate_selection_schema_version": "person-e-phase3-detector-candidate-selection-v1.0",
+  "candidates": [
+    {
+      "algorithm_id": "hsv-largest-valid-blob-v0.1",
+      "candidate_id": "historical_v0_1_min_area_20",
+      "candidate_order": 0,
+      "false_negatives": [
+        {
+          "area_pixels": null,
+          "candidate_blob_count": 1,
+          "frame_id": "layout_02_visible_005",
+          "historical_phase2_split_role": "heldout",
+          "layout_id": "layout_02",
+          "reason": "no_valid_blob",
+          "source_path": "data/handoff_e/calibration_frames/visible/layout_02/005.png",
+          "source_sha256": "8244dfc0e6337e1061cf0d7ecf3edf9e9b174f3d45b42a46267ec401f6cbd349",
+          "status": "not_detected",
+          "threshold_match_pixels": 19
+        }
+      ],
+      "false_positives": [],
+      "historical_role_diagnostic_metrics": {
+        "calibration": {
+          "false_negative": 0,
+          "false_positive": 0,
+          "negative_count": 18,
+          "positive_count": 18,
+          "precision": 1.0,
+          "recall": 1.0,
+          "sample_count": 36,
+          "true_negative": 18,
+          "true_positive": 18
+        },
+        "heldout": {
+          "false_negative": 1,
+          "false_positive": 0,
+          "negative_count": 18,
+          "positive_count": 18,
+          "precision": 1.0,
+          "recall": 0.9444444444444444,
+          "sample_count": 36,
+          "true_negative": 18,
+          "true_positive": 17
+        }
+      },
+      "metrics": {
+        "false_negative": 1,
+        "false_positive": 0,
+        "negative_count": 36,
+        "positive_count": 36,
+        "precision": 1.0,
+        "recall": 0.9722222222222222,
+        "sample_count": 72,
+        "true_negative": 36,
+        "true_positive": 35
+      },
+      "parameter_changes_from_historical_v0_1": [],
+      "settings": {
+        "bounding_box_convention": "xyxy_half_open",
+        "centroid_convention": "arithmetic_mean_of_selected_pixel_centres",
+        "close_iterations": 0,
+        "component_filter": "inclusive_area_bounds",
+        "connectivity": 8,
+        "expected_channel_order": "RGB",
+        "hsv_ranges": [
+          [
+            280.0,
+            320.0,
+            0.5,
+            1.0,
+            0.35,
+            1.0
+          ]
+        ],
+        "image_coordinate_system": "pixel_center_xy_zero_based",
+        "max_area_pixels": 5000,
+        "min_area_pixels": 20,
+        "morphology_radius_pixels": 1,
+        "open_iterations": 0,
+        "pixel_format": "rgb8",
+        "selection_rule": "largest_valid_area",
+        "tie_breaking_rule": "topmost_then_leftmost"
+      },
+      "settings_sha256": "859726429653211dd27071cef306d486671cd92d618fd9f332244321f779efee"
+    },
+    {
+      "algorithm_id": "hsv-largest-valid-blob-v1.0-candidate",
+      "candidate_id": "phase3_v1_min_area_19",
+      "candidate_order": 1,
+      "false_negatives": [],
+      "false_positives": [],
+      "historical_role_diagnostic_metrics": {
+        "calibration": {
+          "false_negative": 0,
+          "false_positive": 0,
+          "negative_count": 18,
+          "positive_count": 18,
+          "precision": 1.0,
+          "recall": 1.0,
+          "sample_count": 36,
+          "true_negative": 18,
+          "true_positive": 18
+        },
+        "heldout": {
+          "false_negative": 0,
+          "false_positive": 0,
+          "negative_count": 18,
+          "positive_count": 18,
+          "precision": 1.0,
+          "recall": 1.0,
+          "sample_count": 36,
+          "true_negative": 18,
+          "true_positive": 18
+        }
+      },
+      "metrics": {
+        "false_negative": 0,
+        "false_positive": 0,
+        "negative_count": 36,
+        "positive_count": 36,
+        "precision": 1.0,
+        "recall": 1.0,
+        "sample_count": 72,
+        "true_negative": 36,
+        "true_positive": 36
+      },
+      "parameter_changes_from_historical_v0_1": [
+        {
+          "candidate_value": 19,
+          "historical_value": 20,
+          "justification": "The sole documented development false negative contains 19 threshold-matching connected pixels; no other detector parameter or algorithmic operation is changed.",
+          "parameter": "min_area_pixels"
+        }
+      ],
+      "settings": {
+        "bounding_box_convention": "xyxy_half_open",
+        "centroid_convention": "arithmetic_mean_of_selected_pixel_centres",
+        "close_iterations": 0,
+        "component_filter": "inclusive_area_bounds",
+        "connectivity": 8,
+        "expected_channel_order": "RGB",
+        "hsv_ranges": [
+          [
+            280.0,
+            320.0,
+            0.5,
+            1.0,
+            0.35,
+            1.0
+          ]
+        ],
+        "image_coordinate_system": "pixel_center_xy_zero_based",
+        "max_area_pixels": 5000,
+        "min_area_pixels": 19,
+        "morphology_radius_pixels": 1,
+        "open_iterations": 0,
+        "pixel_format": "rgb8",
+        "selection_rule": "largest_valid_area",
+        "tie_breaking_rule": "topmost_then_leftmost"
+      },
+      "settings_sha256": "0dbb426adf99f53455eea04c4aaeb56f3cb22cbc351d87269bb605445eb8f2ea"
+    }
+  ],
+  "evaluation_method": "Exact min-area monotonic reuse: evaluate 19 pixels once per unique source byte hash and rerun the unchanged 20-pixel detector for each selected boundary component of area exactly 19.",
+  "evaluation_role": "development",
+  "formal_test_gate_result": null,
+  "future_test_data_used": false,
+  "schema_version": "1.0",
+  "selected_candidate_id": "phase3_v1_min_area_19",
+  "selected_candidate_is_formal_gate_result": false,
+  "selection_objective": "maximize development true positives, minimize false positives and false negatives, then minimize parameter changes and preserve declared candidate order",
+  "u4_results_used": false
+}

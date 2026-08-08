@@ -1,0 +1,72 @@
+{
+  "accepted_geometry": {
+    "path": "configs/scenes/layouts_v0_4.yaml",
+    "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "version": "person-c-layout-config-v0.4"
+  },
+  "canonical_derivative_rule": {
+    "canonical_height_pixels": 360,
+    "canonical_width_pixels": 640,
+    "fsretry_path": "src/mineocclude/data/fsretry.py",
+    "fsretry_sha256": "35f8b2b3b0f652e46d3d80260ac29dd102890008de8b934990d692649d27d942",
+    "owner_role": "person_c",
+    "rationale": "the frozen Person E detector is applicable only to the contract's 640x360 canonical source frame; Person E executes Person C's published to_canonical rule verbatim instead of inventing a resampling convention",
+    "rule": "mineocclude.data.preprocess.to_canonical",
+    "source_commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+    "source_path": "src/mineocclude/data/preprocess.py",
+    "source_sha256": "cc80f6eb889ee7794786b26a81dea3647439a2cbc3e7f85235e0215bbd2c319a"
+  },
+  "detector": {
+    "algorithm": "hsv-largest-valid-blob-v1.0-candidate",
+    "config_path": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json",
+    "config_sha256": "acfecd659958891eaee0d582c946abdfaaf47d1ab3307a24f7652e634c045bfa",
+    "freeze_commit": "3930669eddc026ecb081e947f71f1855a7415904",
+    "identity_sha256": "0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+    "implementation_path": "src/mineocclude/vision/magenta.py",
+    "implementation_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "settings_sha256": "0dbb426adf99f53455eea04c4aaeb56f3cb22cbc351d87269bb605445eb8f2ea",
+    "version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+    "version_record_path": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_version_record.json"
+  },
+  "person_b": {
+    "commit": "a8648514033f8d58887c3b919f02985704aaa310",
+    "coordinate_frame_cosign_path": "docs/status/person_b_66_cell_coordinate_frame_cosign_v0_1/coordinate_frame_cosign.json",
+    "coordinate_frame_cosign_sha256": "b40d8ba1103e1638af386cc365ec727ab576d842516accc41d675d4fdb3d6b7d",
+    "coordinate_frame_cosign_valid": true,
+    "cosigned_layout_ids": [
+      "layout_01",
+      "layout_02",
+      "layout_03",
+      "layout_04",
+      "layout_05",
+      "layout_06"
+    ],
+    "underlying_coordinate_frame_hash_unchanged": true
+  },
+  "person_c": {
+    "accepted_manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+    "accepted_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+    "capture_package_manifest_path": "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+    "capture_package_manifest_sha256": "ca6ef6bd0a6ee144731ff3e6f470f767a2c1a82e8b46aef9fb5e458efb814f56",
+    "commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+    "coordinate_frame_authority_path": "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json",
+    "coordinate_frame_authority_sha256": "1aed95e444f82ab4caf9935c039e87df3aafbf38830bf763a646aba3d62b509b",
+    "expected_response_schema_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/expected_response_schema.json",
+    "expected_response_schema_sha256": "135f6f742d9fc4c71a6e1aa0636b12faa8306d82f037da5b3e564e553935c579",
+    "frame_universe_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/frame_universe.jsonl",
+    "frame_universe_sha256": "f95d705df50f444bc21541f485b91471ff52c0c0ca8dccf2779c9c4adf1edcfe",
+    "request_id": "person-c-to-person-e-66-cell-empirical-magenta-v0.1",
+    "request_manifest_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json",
+    "request_manifest_sha256": "6934317b6b2723d4dddb5507ba58ef32e6ce39729bd4065751aa76e8ae1fc0ea"
+  },
+  "person_e": {
+    "branch": "role/person-e-operations",
+    "foreign_branches_merged": false,
+    "marker_layout_authority_id": "person-e-v0-4-marker-layout-authority-v0.1",
+    "marker_layout_authority_path": "data/handoff_e/person_e_v0_4_marker_layout_authority_v0_1/marker_layout_authority_manifest.json",
+    "marker_layout_authority_sha256": "14a12db4092e05e8c41057df210eec11f07a78f593a149595a12eba45fda82d8",
+    "starting_commit": "5e2ef61a75fe4900dc7226dec7c1f6dcc1f39171"
+  },
+  "schema_id": "person-e-66-cell-empirical-visibility-v0-1-authority-binding-v1.0",
+  "schema_version": "1.0"
+}

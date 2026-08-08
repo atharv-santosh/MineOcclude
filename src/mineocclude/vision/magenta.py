@@ -19,6 +19,10 @@ class VisionInputError(ValueError):
 
 
 DETECTION_DOCUMENT_SCHEMA_VERSION = "person-e-detection-records-v1.0"
+CALIBRATION_DETECTION_DOCUMENT_SCHEMA_VERSION = (
+    "person-e-detection-records-v1.1"
+)
+DETECTOR_ALGORITHM_VERSION = "hsv-largest-valid-blob-v0.1"
 DETECTION_STATUSES = frozenset({"detected", "not_detected", "rejected"})
 DETECTION_QUALITY_STATUSES = frozenset({"accepted", "low_quality", "rejected"})
 
@@ -415,6 +419,253 @@ def _non_negative_int(value: Any, name: str) -> int:
     return value
 
 
+def _validate_calibration_detection_document(
+    document: Mapping[str, Any],
+) -> None:
+    required_root = {
+        "schema_version",
+        "detection_schema_version",
+        "document_id",
+        "synthetic",
+        "scientific_use",
+        "detector_version",
+        "threshold_version",
+        "split_version",
+        "settings_hash",
+        "source_contexts",
+        "records",
+    }
+    if set(document) != required_root:
+        raise VisionInputError("Calibration detection-document fields changed.")
+    if document["schema_version"] != "1.0":
+        raise VisionInputError("schema_version must remain '1.0'.")
+    for field in (
+        "document_id",
+        "detector_version",
+        "threshold_version",
+        "split_version",
+    ):
+        _explicit_id(document[field], field)
+    settings_hash = document["settings_hash"]
+    if (
+        not isinstance(settings_hash, str)
+        or len(settings_hash) != 64
+        or any(character not in "0123456789abcdef" for character in settings_hash)
+    ):
+        raise VisionInputError("settings_hash must be lowercase SHA-256.")
+    if document["synthetic"] is not False or document["scientific_use"] != "permitted":
+        raise VisionInputError("Real calibration records must permit scientific use.")
+
+    context_fields = {
+        "source_frame_id",
+        "source_artifact_id",
+        "source_frame_idx",
+        "source_frame_hash",
+        "decoded_rgb_hash",
+        "source_git_revision",
+        "source_git_path",
+        "split",
+        "layout_id",
+        "canonical_camera_pose_id",
+        "resolution_id",
+        "image_width_px",
+        "image_height_px",
+        "pixel_format",
+        "image_coordinate_system",
+        "truth_class",
+        "truth_present",
+        "frame_available",
+    }
+    contexts = document["source_contexts"]
+    if not isinstance(contexts, list) or not contexts:
+        raise VisionInputError("source_contexts must be a non-empty list.")
+    context_by_id: dict[str, Mapping[str, Any]] = {}
+    source_keys: set[tuple[str, int]] = set()
+    for index, context in enumerate(contexts):
+        name = f"source_contexts[{index}]"
+        if not isinstance(context, Mapping) or set(context) != context_fields:
+            raise VisionInputError(f"{name} fields changed.")
+        for field in (
+            "source_frame_id",
+            "source_artifact_id",
+            "source_git_path",
+            "split",
+            "layout_id",
+            "canonical_camera_pose_id",
+            "resolution_id",
+            "pixel_format",
+        ):
+            _explicit_id(context[field], f"{name}.{field}")
+        frame_id = context["source_frame_id"]
+        if frame_id in context_by_id:
+            raise VisionInputError("Duplicate source_frame_id.")
+        source_index = _non_negative_int(
+            context["source_frame_idx"], f"{name}.source_frame_idx"
+        )
+        source_key = (context["source_artifact_id"], source_index)
+        if source_key in source_keys:
+            raise VisionInputError("Duplicate source-frame identity.")
+        source_keys.add(source_key)
+        for field in ("source_frame_hash", "decoded_rgb_hash"):
+            value = context[field]
+            if (
+                not isinstance(value, str)
+                or len(value) != 64
+                or any(character not in "0123456789abcdef" for character in value)
+            ):
+                raise VisionInputError(f"{name}.{field} must be SHA-256.")
+        revision = context["source_git_revision"]
+        if (
+            not isinstance(revision, str)
+            or len(revision) != 40
+            or any(character not in "0123456789abcdef" for character in revision)
+        ):
+            raise VisionInputError(f"{name}.source_git_revision must be Git SHA.")
+        if context["split"] != "calibration":
+            raise VisionInputError("Calibration records cannot contain held-out frames.")
+        if context["truth_class"] not in {"visible", "negative"}:
+            raise VisionInputError("Calibration truth_class is invalid.")
+        if context["truth_present"] is not (
+            context["truth_class"] == "visible"
+        ):
+            raise VisionInputError("Calibration truth fields disagree.")
+        for field in ("image_width_px", "image_height_px"):
+            value = context[field]
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or value <= 0
+            ):
+                raise VisionInputError(f"{name}.{field} must be positive.")
+        if (
+            context["pixel_format"] != "rgb8"
+            or context["image_coordinate_system"]
+            != "pixel_center_xy_zero_based"
+            or context["frame_available"] is not True
+        ):
+            raise VisionInputError("Calibration image contract changed.")
+        context_by_id[frame_id] = context
+
+    record_fields = (
+        context_fields
+        - {"frame_available"}
+        | {
+            "detection_id",
+            "detector_version",
+            "threshold_version",
+            "status",
+            "presence",
+            "centroid_xy",
+            "area_pixels",
+            "bounding_box_xyxy",
+            "quality_status",
+            "rejection_reason",
+            "threshold_match_pixels",
+            "candidate_blob_count",
+        }
+    )
+    records = document["records"]
+    if not isinstance(records, list) or len(records) != len(contexts):
+        raise VisionInputError("Calibration records must cover every context.")
+    seen_detections: set[str] = set()
+    seen_frames: set[str] = set()
+    for index, record in enumerate(records):
+        name = f"records[{index}]"
+        if not isinstance(record, Mapping) or set(record) != record_fields:
+            raise VisionInputError(f"{name} fields changed.")
+        detection_id = _explicit_id(
+            record["detection_id"], f"{name}.detection_id"
+        )
+        if detection_id in seen_detections:
+            raise VisionInputError("Duplicate detection_id.")
+        seen_detections.add(detection_id)
+        frame_id = _explicit_id(
+            record["source_frame_id"], f"{name}.source_frame_id"
+        )
+        context = context_by_id.get(frame_id)
+        if context is None or frame_id in seen_frames:
+            raise VisionInputError("Detection source-frame identity is invalid.")
+        seen_frames.add(frame_id)
+        for field in context_fields - {"frame_available"}:
+            if record[field] != context[field]:
+                raise VisionInputError(f"{name}.{field} disagrees with context.")
+        if (
+            record["detector_version"] != document["detector_version"]
+            or record["threshold_version"] != document["threshold_version"]
+        ):
+            raise VisionInputError("Detection version propagation changed.")
+        status = record["status"]
+        quality = record["quality_status"]
+        if status not in DETECTION_STATUSES or quality not in DETECTION_QUALITY_STATUSES:
+            raise VisionInputError("Detection status or quality is invalid.")
+        if record["presence"] is not (status == "detected"):
+            raise VisionInputError("Detection presence disagrees with status.")
+        for field in ("threshold_match_pixels", "candidate_blob_count"):
+            _non_negative_int(record[field], f"{name}.{field}")
+        if status == "not_detected":
+            if (
+                quality == "rejected"
+                or record["centroid_xy"] is not None
+                or record["area_pixels"] is not None
+                or record["bounding_box_xyxy"] is not None
+                or record["rejection_reason"]
+                not in {"no_threshold_match", "no_valid_blob"}
+            ):
+                raise VisionInputError("Not-detected calibration record is malformed.")
+            continue
+        if status == "rejected":
+            if (
+                quality != "rejected"
+                or not isinstance(record["rejection_reason"], str)
+                or any(
+                    record[field] is not None
+                    for field in (
+                        "centroid_xy",
+                        "area_pixels",
+                        "bounding_box_xyxy",
+                    )
+                )
+            ):
+                raise VisionInputError("Rejected calibration record is malformed.")
+            continue
+        if quality == "rejected" or record["rejection_reason"] is not None:
+            raise VisionInputError("Detected calibration record has invalid quality.")
+        centroid = record["centroid_xy"]
+        box = record["bounding_box_xyxy"]
+        area = record["area_pixels"]
+        if (
+            not isinstance(centroid, list)
+            or len(centroid) != 2
+            or any(
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(float(value))
+                for value in centroid
+            )
+            or not isinstance(box, list)
+            or len(box) != 4
+            or any(
+                not isinstance(value, int) or isinstance(value, bool)
+                for value in box
+            )
+            or not isinstance(area, int)
+            or isinstance(area, bool)
+            or area <= 0
+        ):
+            raise VisionInputError("Detected calibration geometry is malformed.")
+        x0, y0, x1, y1 = box
+        if not (
+            0 <= x0 < x1 <= context["image_width_px"]
+            and 0 <= y0 < y1 <= context["image_height_px"]
+            and x0 <= float(centroid[0]) < x1
+            and y0 <= float(centroid[1]) < y1
+            and area <= (x1 - x0) * (y1 - y0)
+        ):
+            raise VisionInputError("Detected calibration geometry is out of bounds.")
+    if seen_frames != set(context_by_id):
+        raise VisionInputError("Calibration records do not cover all contexts.")
+
+
 def validate_detection_document(document: Mapping[str, Any]) -> None:
     """Validate synthetic or real detector records against source contexts.
 
@@ -425,6 +676,12 @@ def validate_detection_document(document: Mapping[str, Any]) -> None:
 
     if not isinstance(document, Mapping):
         raise VisionInputError("Detection document must be a mapping.")
+    if (
+        document.get("detection_schema_version")
+        == CALIBRATION_DETECTION_DOCUMENT_SCHEMA_VERSION
+    ):
+        _validate_calibration_detection_document(document)
+        return
     required_root = {
         "schema_version",
         "detection_schema_version",

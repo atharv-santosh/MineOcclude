@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "a6_6_performed": {
+      "const": false
+    },
+    "a6_6_provenance_consumption_authorized": {
+      "const": true
+    },
+    "a6_6_provenance_consumption_statement": {
+      "const": "A6.6 may consume the activation provenance from this exact canonical Person A bundle. This receipt does not perform A6.6."
+    },
+    "activation_provenance": {
+      "type": "object"
+    },
+    "canonical_c6a_binding": {
+      "type": "object"
+    },
+    "historical_preservation": {
+      "type": "object"
+    },
+    "immutable": {
+      "const": true
+    },
+    "person_a_result": {
+      "type": "object"
+    },
+    "receipt_id": {
+      "const": "person-e-to-person-a-layout-01-ep12602-activation-provenance-v0.1"
+    },
+    "schema_version": {
+      "const": "person-e-to-person-a-canonical-activation-provenance-receipt-v0.1"
+    },
+    "status": {
+      "const": "READY_FOR_A6_6_PROVENANCE_CONSUMPTION"
+    },
+    "unresolved_blockers": {
+      "maxItems": 0,
+      "type": "array"
+    },
+    "validation": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "a6_6_performed",
+    "a6_6_provenance_consumption_authorized",
+    "a6_6_provenance_consumption_statement",
+    "activation_provenance",
+    "canonical_c6a_binding",
+    "historical_preservation",
+    "immutable",
+    "person_a_result",
+    "receipt_id",
+    "schema_version",
+    "status",
+    "unresolved_blockers",
+    "validation"
+  ],
+  "title": "Person E to Person A canonical activation provenance receipt",
+  "type": "object"
+}

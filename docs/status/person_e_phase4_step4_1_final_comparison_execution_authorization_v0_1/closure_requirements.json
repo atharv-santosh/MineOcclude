@@ -1,0 +1,38 @@
+{
+  "authorization_does_not_complete_step4_1": true,
+  "authorized_output_root": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1",
+  "decision_vocabulary": [
+    "PASS",
+    "FAIL",
+    "INCONCLUSIVE"
+  ],
+  "exact_output_files": [
+    "comparison_metric_table.json",
+    "paired_test_results.json",
+    "confidence_intervals.json",
+    "layer_band_decision.json",
+    "registry_v2_import_package.json",
+    "execution_receipt.json",
+    "sha256_inventory.json"
+  ],
+  "output_publication": "single_atomic_directory_rename_after_validation",
+  "registry_generation": "v2",
+  "required_execution_receipt_values": {
+    "additional_person_a_extraction_performed": false,
+    "bounded_reveal_prediction_count": 100,
+    "bounded_reveal_prediction_sha256": "b7716ba00b1e45b20dab130965d03bba8947a87999be51e89404fad4982d288d",
+    "bounded_reveal_rerun_performed": false,
+    "broad_hidden_state_interpretation": false,
+    "exploratory_metrics_computed": false,
+    "manual_u4_inspection": false,
+    "post_hoc_layer_selection_performed": false,
+    "post_hoc_test_selection_performed": false,
+    "probe_refit_performed": false,
+    "u4_output_inspected": false
+  },
+  "resume_behavior": "validate-complete-no-write",
+  "schema_id": "person-e-step4-1-final-comparison-closure-requirements-v0-1",
+  "schema_version": "1.0",
+  "step4_1_complete": false,
+  "u4_output_inspected": false
+}

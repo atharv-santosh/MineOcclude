@@ -1,0 +1,85 @@
+{
+  "aggregate_authorization_complete": false,
+  "authorization_conditions": [
+    {
+      "condition_id": "distinct_scope_from_frozen_ten_pilot_set",
+      "requirement": "This authorization covers the 66-cell scope only (2468 payloads, 20 layers, 49360 expected activation rows). It is not a re-extraction of the frozen ten-pilot Phase 6 artifacts, so person_a_reextraction_authorized remains false for those artifacts and phase6_artifacts_immutable remains true."
+    },
+    {
+      "condition_id": "write_only_to_the_approved_fresh_destination",
+      "requirement": "All run outputs are written under the approved fresh S3 prefix for this run_id. No write, overwrite, relocation, or deletion may touch the retained trees listed in retention_requirements."
+    },
+    {
+      "condition_id": "extraction_only_no_interpretation",
+      "requirement": "Authorizes activation extraction and byte-level provenance only. Hidden-state interpretation remains unauthorized, and U4 output remains uninspected, until the separate frozen gates are satisfied."
+    },
+    {
+      "condition_id": "step4_1_untouched",
+      "requirement": "This decision does not advance, close, or alter Step 4.1. The Step 4.1 decision vocabulary including FAIL and every historical Step 4.1 record remain exactly as frozen."
+    },
+    {
+      "condition_id": "person_e_downstream_blockers_remain_open",
+      "requirement": "Person E's published downstream blockers remain open and are not waived. They are consequences of activations not yet existing, so they do not block this extraction."
+    }
+  ],
+  "authorized_scope": {
+    "expected_activation_rows": 49360,
+    "expected_layer_count": 20,
+    "expected_payload_count": 2468,
+    "stored_activation_dtype": "float32",
+    "work_authorized": "activation_extraction_and_byte_provenance_only"
+  },
+  "basis": [
+    "Person E Phase 6 is already closed on this branch (phase6_complete=true, step6_6_complete=true); no Person E Phase 6 gate is pending on Person A.",
+    "Person E's own upstream contribution for this exact 66-cell scope is published and frozen at commit fec27d08b4629afa07c7858598e94778dc6e7bef, covering all 2468 requested identities with zero duplicate, missing, extra, or failed frames.",
+    "Person A's transferred payload identity set is exactly equal to Person E's measured identity set, and every payload descends from byte-identical raw source frames and byte-identical canonical RGB pixels (0 mismatches on both).",
+    "The approved destination is a fresh S3 prefix scoped to this run_id with zero pre-existing objects, so no frozen Person E or Person A artifact is overwritten, relocated, or deleted.",
+    "Every open Person E blocker is downstream of activations existing; none is a precondition on extraction itself."
+  ],
+  "blocker": null,
+  "does_not_authorize": [
+    "hidden-state interpretation",
+    "U4 output inspection",
+    "re-extraction or mutation of the frozen ten-pilot Phase 6 artifacts",
+    "Step 4.1 advancement, closure, or decision change",
+    "any signoff on behalf of person_b_analysis or person_c_data"
+  ],
+  "historical_evidence_rewritten": false,
+  "non_blocking_open_person_e_items": [
+    "person_b_activation_store_v2_production_consumer_absent",
+    "ten_pilot_frame_fold_manifest_absent",
+    "production_oracle_target_absent",
+    "person_d_readiness_gate_waits_for_person_b",
+    "step4_1_result_trust_packages_absent"
+  ],
+  "person_a_phase6_authorized": true,
+  "person_e_operations_signoff": true,
+  "phase6_authorized": true,
+  "record_date": "2026-08-07",
+  "remaining_required_signers": [
+    "person_b_analysis",
+    "person_c_data"
+  ],
+  "retention_requirements": [
+    {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-inputs",
+      "requirement": "Retain immutable source/input trees used by the accepted extraction until final Step 4.1 closure and durable Registry v2 receipt verification."
+    },
+    {
+      "path": "/home/sagemaker-user/person-a-phase6-approved-outputs",
+      "requirement": "Retain all accepted indexes, all 200 chunks, inventories, bounded audits, logs, and reports without overwrite, relocation, or deletion."
+    },
+    {
+      "path": "/home/sagemaker-user/person-b-phase6-approved-outputs/person-b-phase6-v2-positive-control-step6-6",
+      "requirement": "Retain the exact external positive-control report through final closure; its byte size and SHA-256 remain controlling."
+    }
+  ],
+  "role": "person_e_operations",
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "schema_id": "person-e-phase6-aggregate-authorization-v0-1-decision",
+  "schema_version": "1.0",
+  "self_authorization_forbidden": true,
+  "signed_for_this_run_id": true,
+  "silent_authorization_forbidden": true,
+  "supporting_cross_check_status": "PASS"
+}

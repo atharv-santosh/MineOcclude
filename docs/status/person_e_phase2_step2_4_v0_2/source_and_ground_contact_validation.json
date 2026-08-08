@@ -1,0 +1,3342 @@
+{
+  "correction_schema_version": "person-e-phase2-step2.4-correction-v0.2",
+  "frozen_detector_config_hash": "0333e21002cf94878ae3d945337a34aec280fb1d07f87bac6346a7daf9c0605a",
+  "frozen_detector_config_path": "../person_e_phase2_v0_1/frozen_detector_config.json",
+  "frozen_detector_version": "hsv-largest-valid-blob-v0.1:sha256:1ff40286e68007b06d160a0b8eb91c4adabed00873675cbfd888d4a8d5ad1b37",
+  "frozen_split_hash": "03097dda9c1c68ae120b291845a65aba7166cff20c234f51d30b5cdd2d10811c",
+  "frozen_split_path": "../person_e_phase2_v0_1/frozen_split_manifest.json",
+  "frozen_split_version": "sha256:6d2fb47edc9d89391131c8a1802200a7990d9378ec4041b4ca61607541d12b38",
+  "ground_contact_method_assessment": {
+    "discarded_method": "frozen_magenta_blob_bottom_center",
+    "discarded_reason": "the magenta blob excludes lower non-magenta rendered sheep/foot pixels and terminates above the paired silhouette",
+    "maximum_vertical_gap_px": 10.0,
+    "minimum_vertical_gap_px": 7.0,
+    "probe_targets_used_for_method_selection": false,
+    "selected_method_version": "person-e-paired-background-silhouette-base-v0.1",
+    "selection_basis": "paired visible/background silhouette base preserves the rendered lower sheep/foot pixels and is selected without probe world coordinates"
+  },
+  "ground_contact_pair_count": 36,
+  "ground_contact_pairs": [
+    {
+      "background": {
+        "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+        "frame_id": "layout_00_negative_000",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9762",
+        "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        469.0,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          450,
+          184,
+          482,
+          219
+        ],
+        "changed_pixel_count": 942,
+        "image_xy": [
+          465.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "5d2d71dae7f2f425aad71fc92c2fea333c3e4121c090c3a90f809f10a4a061f8",
+        "frame_id": "layout_00_visible_000",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9761",
+        "source_frame_hash": "d9d6f2b8b8ce036554f43b47e93bcef7a7f563fc8f8546bdceca3b82a4b824bc",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 370,
+        "bounding_box_xyxy": [
+          457,
+          185,
+          482,
+          210
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          471.6972972972973,
+          197.4081081081081
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 403
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+        "frame_id": "layout_00_negative_001",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9762",
+        "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        469.0,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          450,
+          184,
+          482,
+          219
+        ],
+        "changed_pixel_count": 942,
+        "image_xy": [
+          465.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "5d2d71dae7f2f425aad71fc92c2fea333c3e4121c090c3a90f809f10a4a061f8",
+        "frame_id": "layout_00_visible_001",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9761",
+        "source_frame_hash": "d9d6f2b8b8ce036554f43b47e93bcef7a7f563fc8f8546bdceca3b82a4b824bc",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 370,
+        "bounding_box_xyxy": [
+          457,
+          185,
+          482,
+          210
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          471.6972972972973,
+          197.4081081081081
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 403
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+        "frame_id": "layout_00_negative_002",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9762",
+        "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        468.0,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          450,
+          184,
+          482,
+          219
+        ],
+        "changed_pixel_count": 938,
+        "image_xy": [
+          465.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "e1475624a17464280c53fefb88531db6d641249234dccdc4612c989762f8301a",
+        "frame_id": "layout_00_visible_002",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9761",
+        "source_frame_hash": "82b5b6e95b77b130a3f910857318314717717f57c53b33f1cbae791a38bd4e82",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 355,
+        "bounding_box_xyxy": [
+          456,
+          185,
+          481,
+          210
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          471.24225352112677,
+          197.29859154929576
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 381
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+        "frame_id": "layout_00_negative_003",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9762",
+        "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        467.0,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          449,
+          184,
+          481,
+          219
+        ],
+        "changed_pixel_count": 934,
+        "image_xy": [
+          464.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "e2e600f5189f4435ba18c0db8731eed49fe29e68f10ac5832ffec24dbdf0c362",
+        "frame_id": "layout_00_visible_003",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9761",
+        "source_frame_hash": "dca1672526550eeaaf2629efb6095cbc02c5adf3e0e9e8d87e87ff86c751f380",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 347,
+        "bounding_box_xyxy": [
+          455,
+          185,
+          480,
+          210
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          470.149855907781,
+          197.02593659942363
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 371
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+        "frame_id": "layout_00_negative_004",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9762",
+        "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        465.5,
+        208.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          447,
+          184,
+          480,
+          219
+        ],
+        "changed_pixel_count": 921,
+        "image_xy": [
+          463.0,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "73fe168c9596c42558954ae50fd4de880b8f1b3ddf4e1c8e2cba364c88e30093",
+        "frame_id": "layout_00_visible_004",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9761",
+        "source_frame_hash": "259e2215c72f9853efcbee1dab856d008e0a95e6cf0eed457448c80c402a2fc6",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 309,
+        "bounding_box_xyxy": [
+          453,
+          185,
+          479,
+          209
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          468.6504854368932,
+          195.71197411003237
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 333
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+        "frame_id": "layout_00_negative_005",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9762",
+        "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        463.5,
+        208.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          445,
+          184,
+          478,
+          219
+        ],
+        "changed_pixel_count": 905,
+        "image_xy": [
+          461.0,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "058692404fb0d47f70b84ea22971b1fbbd2c09f84217566752d18dbc89b610dd",
+        "frame_id": "layout_00_visible_005",
+        "layout_id": "layout_00",
+        "source_artifact_id": "layout_00_ep9761",
+        "source_frame_hash": "559571c2bbc5c0dd787c235bc3876b7e68d1a95b89ab41fa3ac922ccd54755c9",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 307,
+        "bounding_box_xyxy": [
+          451,
+          185,
+          477,
+          209
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          466.63517915309444,
+          195.64169381107493
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 328
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+        "frame_id": "layout_01_negative_000",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9764",
+        "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        186.0,
+        208.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          156,
+          184,
+          196,
+          218
+        ],
+        "changed_pixel_count": 1074,
+        "image_xy": [
+          175.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "96f2e0fd66306ddd3b3b4737506e3db905e1071db221f00582b103f7e79899f8",
+        "frame_id": "layout_01_visible_000",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9763",
+        "source_frame_hash": "706f8be1a3033c4bd446b6e096c88b32958dc675c3feb6c9f6217a69d4fc75d2",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 100,
+        "bounding_box_xyxy": [
+          181,
+          189,
+          192,
+          209
+        ],
+        "candidate_blob_count": 4,
+        "centroid_xy": [
+          186.1,
+          199.95
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 143
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+        "frame_id": "layout_01_negative_001",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9764",
+        "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        186.0,
+        208.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          156,
+          184,
+          196,
+          218
+        ],
+        "changed_pixel_count": 1074,
+        "image_xy": [
+          175.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "96f2e0fd66306ddd3b3b4737506e3db905e1071db221f00582b103f7e79899f8",
+        "frame_id": "layout_01_visible_001",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9763",
+        "source_frame_hash": "706f8be1a3033c4bd446b6e096c88b32958dc675c3feb6c9f6217a69d4fc75d2",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 100,
+        "bounding_box_xyxy": [
+          181,
+          189,
+          192,
+          209
+        ],
+        "candidate_blob_count": 4,
+        "centroid_xy": [
+          186.1,
+          199.95
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 143
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+        "frame_id": "layout_01_negative_002",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9764",
+        "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        187.0,
+        208.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          156,
+          184,
+          198,
+          218
+        ],
+        "changed_pixel_count": 1070,
+        "image_xy": [
+          176.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "5fa3d0d29cf80dc49ad82564b711d24b3b635e069236005eb01a0555a0f0f7d0",
+        "frame_id": "layout_01_visible_002",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9763",
+        "source_frame_hash": "6ff7e2e20b7f16ba17c1048af24acad9dfb2798a323acd5d65661ba545504dca",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 98,
+        "bounding_box_xyxy": [
+          182,
+          189,
+          193,
+          209
+        ],
+        "candidate_blob_count": 4,
+        "centroid_xy": [
+          187.12244897959184,
+          199.79591836734693
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 134
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+        "frame_id": "layout_01_negative_003",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9764",
+        "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        188.5,
+        207.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          157,
+          184,
+          199,
+          218
+        ],
+        "changed_pixel_count": 1066,
+        "image_xy": [
+          177.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "507f1dc5dc9eadcb33295cbe3af0cd81319cf9f705bd78e64a3cbf68e5c74869",
+        "frame_id": "layout_01_visible_003",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9763",
+        "source_frame_hash": "15a0f6eaae99fc01a45f2103ac8015074fab3d2fd5021a160d263fa00cad1ce0",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 89,
+        "bounding_box_xyxy": [
+          184,
+          189,
+          194,
+          208
+        ],
+        "candidate_blob_count": 4,
+        "centroid_xy": [
+          188.4494382022472,
+          199.47191011235955
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 122
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+        "frame_id": "layout_01_negative_004",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9764",
+        "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        189.5,
+        207.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          157,
+          184,
+          200,
+          218
+        ],
+        "changed_pixel_count": 1066,
+        "image_xy": [
+          178.0,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "1deda485f44852fa427e4348cbcacd03b96adeee6c65668459a38241c2793b71",
+        "frame_id": "layout_01_visible_004",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9763",
+        "source_frame_hash": "b19eece508cc6869bccfc42c8a4040450cf63b3a4466e6280a5ecf6e2427b66f",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 84,
+        "bounding_box_xyxy": [
+          185,
+          189,
+          195,
+          208
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          189.39285714285714,
+          199.29761904761904
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 106
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+        "frame_id": "layout_01_negative_005",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9764",
+        "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        190.0,
+        207.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          159,
+          184,
+          200,
+          218
+        ],
+        "changed_pixel_count": 1061,
+        "image_xy": [
+          179.0,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "fb6f2393c8c04bab1122e102ccf0f6489e66859f6e47ded8d0c005da0442d0ea",
+        "frame_id": "layout_01_visible_005",
+        "layout_id": "layout_01",
+        "source_artifact_id": "layout_01_ep9763",
+        "source_frame_hash": "aa272779905f7f204a799121d5680e23daaa8f5ef780ed9fac46b6d191fa585d",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 92,
+        "bounding_box_xyxy": [
+          185,
+          189,
+          196,
+          208
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          189.91304347826087,
+          199.58695652173913
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 126
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+        "frame_id": "layout_02_negative_000",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9766",
+        "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        486.0,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          474,
+          184,
+          499,
+          218
+        ],
+        "changed_pixel_count": 755,
+        "image_xy": [
+          486.0,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "72908c39d5c70317a56f19298f64a22c0dc641793584129ed9ed6271e7778157",
+        "frame_id": "layout_02_visible_000",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9765",
+        "source_frame_hash": "8df1d76fb329f92482dcc3062bc55a4002964a4bf8c9c5b428edaf8b7e4dd970",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 382,
+        "bounding_box_xyxy": [
+          474,
+          185,
+          499,
+          210
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          488.4554973821989,
+          197.34816753926702
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 399
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+        "frame_id": "layout_02_negative_001",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9766",
+        "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        486.0,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          474,
+          184,
+          499,
+          218
+        ],
+        "changed_pixel_count": 755,
+        "image_xy": [
+          486.0,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "72908c39d5c70317a56f19298f64a22c0dc641793584129ed9ed6271e7778157",
+        "frame_id": "layout_02_visible_001",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9765",
+        "source_frame_hash": "8df1d76fb329f92482dcc3062bc55a4002964a4bf8c9c5b428edaf8b7e4dd970",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 382,
+        "bounding_box_xyxy": [
+          474,
+          185,
+          499,
+          210
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          488.4554973821989,
+          197.34816753926702
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 399
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+        "frame_id": "layout_02_negative_002",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9766",
+        "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        486.5,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 9.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          474,
+          184,
+          500,
+          219
+        ],
+        "changed_pixel_count": 789,
+        "image_xy": [
+          486.5,
+          218.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "eba6cfc88fd4638f6ce6604fdb53ab9e4e8326beef5bf6cf205e490de1989d20",
+        "frame_id": "layout_02_visible_002",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9765",
+        "source_frame_hash": "df5fc66a7b7e2bad097e7d3f728acc6a07c33fdd97aabcf8608e327b6f8814ed",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 366,
+        "bounding_box_xyxy": [
+          474,
+          185,
+          500,
+          210
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          489.6830601092896,
+          197.52732240437157
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 388
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+        "frame_id": "layout_02_negative_003",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9766",
+        "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        486.0,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          474,
+          184,
+          500,
+          218
+        ],
+        "changed_pixel_count": 777,
+        "image_xy": [
+          486.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "ebb21382e221b912f1f916943c9704ceb8ce7e911d4714c79edafc70a79800f3",
+        "frame_id": "layout_02_visible_003",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9765",
+        "source_frame_hash": "c0a63ae5f0c94f32041944f9be48c0b7b8eaa462da17baa971bce2824d99566f",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 352,
+        "bounding_box_xyxy": [
+          474,
+          185,
+          499,
+          210
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          489.27840909090907,
+          197.4119318181818
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 372
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+        "frame_id": "layout_02_negative_004",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9766",
+        "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        485.5,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          474,
+          184,
+          499,
+          218
+        ],
+        "changed_pixel_count": 725,
+        "image_xy": [
+          486.0,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "c1f714dd976f1799c7657e206e393f48034df566d862774bc9cb6cdc47145f9c",
+        "frame_id": "layout_02_visible_004",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9765",
+        "source_frame_hash": "d0e1887045cd2110b7acc549160542702abeaae341652dd65318de315d806b2a",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 342,
+        "bounding_box_xyxy": [
+          474,
+          185,
+          498,
+          210
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          488.14912280701753,
+          197.0204678362573
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 354
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+        "frame_id": "layout_02_negative_005",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9766",
+        "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        485.5,
+        209.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          474,
+          184,
+          498,
+          218
+        ],
+        "changed_pixel_count": 715,
+        "image_xy": [
+          485.5,
+          217.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "f0d6b52111fea9918b4ee5cd2c8689146f43bf73c039dd885241f527a8e407fe",
+        "frame_id": "layout_02_visible_005",
+        "layout_id": "layout_02",
+        "source_artifact_id": "layout_02_ep9765",
+        "source_frame_hash": "402557be623c28f39ef6abce8192da083b71df23c00e481bce7cc175c7e331d9",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 333,
+        "bounding_box_xyxy": [
+          474,
+          185,
+          498,
+          210
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          487.5105105105105,
+          197.22222222222223
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 343
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+        "frame_id": "layout_03_negative_000",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9768",
+        "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        445.5,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          432,
+          183,
+          457,
+          212
+        ],
+        "changed_pixel_count": 622,
+        "image_xy": [
+          444.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "67a43118b963ba28dbf69cb4719d6ea1fe41b544d511a9fff323159a3d78543c",
+        "frame_id": "layout_03_visible_000",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9767",
+        "source_frame_hash": "247ab9202dadb9528708506183acd4d9d57ffa978e0dac9508d4132e1401c81b",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 264,
+        "bounding_box_xyxy": [
+          436,
+          184,
+          456,
+          205
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          447.45454545454544,
+          194.3181818181818
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 279
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+        "frame_id": "layout_03_negative_001",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9768",
+        "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        445.5,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          432,
+          183,
+          457,
+          212
+        ],
+        "changed_pixel_count": 622,
+        "image_xy": [
+          444.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "67a43118b963ba28dbf69cb4719d6ea1fe41b544d511a9fff323159a3d78543c",
+        "frame_id": "layout_03_visible_001",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9767",
+        "source_frame_hash": "247ab9202dadb9528708506183acd4d9d57ffa978e0dac9508d4132e1401c81b",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 264,
+        "bounding_box_xyxy": [
+          436,
+          184,
+          456,
+          205
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          447.45454545454544,
+          194.3181818181818
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 279
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+        "frame_id": "layout_03_negative_002",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9768",
+        "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        445.0,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          432,
+          183,
+          457,
+          212
+        ],
+        "changed_pixel_count": 634,
+        "image_xy": [
+          444.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "48736a8c419dee1eb67d3ac6ff9ef53e7f046bb0057608f2c845e3d9ead3e704",
+        "frame_id": "layout_03_visible_002",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9767",
+        "source_frame_hash": "372519eb1e88cba278642932d5e6453567b898bed8b83b30d00f05e2c0b7a1ee",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 257,
+        "bounding_box_xyxy": [
+          435,
+          184,
+          456,
+          205
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          447.6342412451362,
+          194.23346303501947
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 272
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+        "frame_id": "layout_03_negative_003",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9768",
+        "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        445.0,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          431,
+          183,
+          456,
+          212
+        ],
+        "changed_pixel_count": 621,
+        "image_xy": [
+          443.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "74c5a273660a3319685f2450858668cce5032a0ca04e387a4388592ae7f3c0d4",
+        "frame_id": "layout_03_visible_003",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9767",
+        "source_frame_hash": "96e18f6b7519199fda34eeea9175f76bf1af12715e1c4440c1cea3c220fd1e01",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 261,
+        "bounding_box_xyxy": [
+          435,
+          184,
+          456,
+          205
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          447.30651340996167,
+          194.20689655172413
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 276
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+        "frame_id": "layout_03_negative_004",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9768",
+        "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        444.0,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          430,
+          183,
+          456,
+          212
+        ],
+        "changed_pixel_count": 621,
+        "image_xy": [
+          442.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "a6b8aa8ebb0697c163579cd3bb0467bf544ddbedc275b006a1a21b7990d3117c",
+        "frame_id": "layout_03_visible_004",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9767",
+        "source_frame_hash": "9f3260cb1aa2c98537de2a7f92f0a7e18c318b00554ca6bd1074968f31fc32e5",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 258,
+        "bounding_box_xyxy": [
+          434,
+          184,
+          455,
+          205
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          446.38759689922483,
+          194.0968992248062
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 271
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+        "frame_id": "layout_03_negative_005",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9768",
+        "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        443.0,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          430,
+          183,
+          455,
+          212
+        ],
+        "changed_pixel_count": 621,
+        "image_xy": [
+          442.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "17dbb875b97751ff3707121ab8c0229e393bcb9db961bb100713442d5d28610b",
+        "frame_id": "layout_03_visible_005",
+        "layout_id": "layout_03",
+        "source_artifact_id": "layout_03_ep9767",
+        "source_frame_hash": "1613e7e3ff5b215ea8055faebc48a16b682bad58242c4b4b31c0c533a9bcbd73",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 256,
+        "bounding_box_xyxy": [
+          433,
+          184,
+          454,
+          205
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          445.4140625,
+          193.97265625
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 268
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+        "frame_id": "layout_04_negative_000",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9770",
+        "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        477.5,
+        216.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          456,
+          185,
+          497,
+          227
+        ],
+        "changed_pixel_count": 1455,
+        "image_xy": [
+          476.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "2095fc38d05ca73d715a9709d4b40f590cb74be552058311023b1f67e46987e7",
+        "frame_id": "layout_04_visible_000",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9769",
+        "source_frame_hash": "8cb58e98186c350a751a0528e798f3bca4c4f7f57be63e1cc890b538ec3197a9",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 579,
+        "bounding_box_xyxy": [
+          460,
+          185,
+          496,
+          217
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          483.38687392055266,
+          201.10189982728843
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 627
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+        "frame_id": "layout_04_negative_001",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9770",
+        "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        477.5,
+        216.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          456,
+          185,
+          497,
+          227
+        ],
+        "changed_pixel_count": 1455,
+        "image_xy": [
+          476.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "2095fc38d05ca73d715a9709d4b40f590cb74be552058311023b1f67e46987e7",
+        "frame_id": "layout_04_visible_001",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9769",
+        "source_frame_hash": "8cb58e98186c350a751a0528e798f3bca4c4f7f57be63e1cc890b538ec3197a9",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 579,
+        "bounding_box_xyxy": [
+          460,
+          185,
+          496,
+          217
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          483.38687392055266,
+          201.10189982728843
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 627
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+        "frame_id": "layout_04_negative_002",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9770",
+        "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        477.0,
+        216.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          455,
+          185,
+          496,
+          227
+        ],
+        "changed_pixel_count": 1454,
+        "image_xy": [
+          475.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "4877f443a0e1bc681a691ce57f23280faef3632affa986620b5eb6be3db31983",
+        "frame_id": "layout_04_visible_002",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9769",
+        "source_frame_hash": "d3ace48245a1d5c4aa366eadd8f10c5ce87e58e5fd90c1e09d57f573bb559590",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 577,
+        "bounding_box_xyxy": [
+          459,
+          185,
+          496,
+          217
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          482.64644714038127,
+          200.67764298093587
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 610
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+        "frame_id": "layout_04_negative_003",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9770",
+        "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        475.5,
+        216.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          454,
+          185,
+          495,
+          227
+        ],
+        "changed_pixel_count": 1454,
+        "image_xy": [
+          474.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "280b54a1c90945283b55e16db5e630a0e2b9cf647af74fbfb798ad8926ea60fa",
+        "frame_id": "layout_04_visible_003",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9769",
+        "source_frame_hash": "5663fea28005bfda7d5254d1564db89139d7f485872d012dba9b5ea4bf412823",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 552,
+        "bounding_box_xyxy": [
+          458,
+          185,
+          494,
+          217
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          481.3242753623188,
+          200.51992753623188
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 587
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+        "frame_id": "layout_04_negative_004",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9770",
+        "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        475.5,
+        216.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          453,
+          185,
+          494,
+          227
+        ],
+        "changed_pixel_count": 1451,
+        "image_xy": [
+          473.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "a6de8e58d502727bbaec1ba32c828d3c9f58aad6f5ad7726688e55c61b95316d",
+        "frame_id": "layout_04_visible_004",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9769",
+        "source_frame_hash": "727f09b01585312bdcda508900bcf62f65b2feac92b44ced1e7bb38b274d45e9",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 551,
+        "bounding_box_xyxy": [
+          458,
+          185,
+          494,
+          217
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          480.35753176043556,
+          200.55172413793105
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 585
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+        "frame_id": "layout_04_negative_005",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9770",
+        "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        474.5,
+        216.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 10.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          452,
+          185,
+          493,
+          227
+        ],
+        "changed_pixel_count": 1454,
+        "image_xy": [
+          472.0,
+          226.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "920b1c5e1bea2c2b9e831d608cbe00cc2e4eaf882284e7f17784fa73babf14ae",
+        "frame_id": "layout_04_visible_005",
+        "layout_id": "layout_04",
+        "source_artifact_id": "layout_04_ep9769",
+        "source_frame_hash": "fefd5630f82b1f7fac5587987461e619700a702cf2eb818567e0f32b9e5ec407",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 546,
+        "bounding_box_xyxy": [
+          457,
+          185,
+          493,
+          217
+        ],
+        "candidate_blob_count": 2,
+        "centroid_xy": [
+          479.4908424908425,
+          200.48901098901098
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 580
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+        "frame_id": "layout_05_negative_000",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9772",
+        "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        191.5,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          200,
+          212
+        ],
+        "changed_pixel_count": 758,
+        "image_xy": [
+          182.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "518646dd4aad4616a77b3d2024c4208866e7c8faa4345e5374fd8ac6455bab72",
+        "frame_id": "layout_05_visible_000",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9771",
+        "source_frame_hash": "b82712928d41094ee66a6b4747c17f5dcb9af193989165aba4dcce4ad9f177df",
+        "source_frame_idx": 0,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/000.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 78,
+        "bounding_box_xyxy": [
+          187,
+          188,
+          197,
+          205
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          191.3846153846154,
+          197.24358974358975
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 122
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+        "frame_id": "layout_05_negative_001",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9772",
+        "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        191.5,
+        204.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 7.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          200,
+          212
+        ],
+        "changed_pixel_count": 758,
+        "image_xy": [
+          182.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "518646dd4aad4616a77b3d2024c4208866e7c8faa4345e5374fd8ac6455bab72",
+        "frame_id": "layout_05_visible_001",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9771",
+        "source_frame_hash": "b82712928d41094ee66a6b4747c17f5dcb9af193989165aba4dcce4ad9f177df",
+        "source_frame_idx": 1,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/001.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 78,
+        "bounding_box_xyxy": [
+          187,
+          188,
+          197,
+          205
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          191.3846153846154,
+          197.24358974358975
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 122
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+        "frame_id": "layout_05_negative_002",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9772",
+        "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        192.0,
+        203.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          200,
+          212
+        ],
+        "changed_pixel_count": 742,
+        "image_xy": [
+          182.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "855adca7345fee08cb65c0c144379f6764ecd402a1f0f687c49a292ec107fc53",
+        "frame_id": "layout_05_visible_002",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9771",
+        "source_frame_hash": "cf59ceefca3bae2adfc7de4831bd2362903721b9932aada4d880600fd2326652",
+        "source_frame_idx": 2,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/002.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "calibration",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 73,
+        "bounding_box_xyxy": [
+          188,
+          188,
+          197,
+          204
+        ],
+        "candidate_blob_count": 4,
+        "centroid_xy": [
+          191.73972602739727,
+          196.82191780821918
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 116
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+        "frame_id": "layout_05_negative_003",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9772",
+        "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        192.0,
+        203.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          166,
+          184,
+          201,
+          212
+        ],
+        "changed_pixel_count": 750,
+        "image_xy": [
+          183.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "32f7b406a7f3e9c7b395a9a5d90eb445f92a1ddc7290b9c33e7a5deaf62055e7",
+        "frame_id": "layout_05_visible_003",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9771",
+        "source_frame_hash": "c231951ddb59ff0a5218a45571fbc2fc57c9498af1a6e66e56142b669e35910a",
+        "source_frame_idx": 3,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/003.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 68,
+        "bounding_box_xyxy": [
+          188,
+          188,
+          197,
+          204
+        ],
+        "candidate_blob_count": 4,
+        "centroid_xy": [
+          192.10294117647058,
+          196.91176470588235
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 111
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+        "frame_id": "layout_05_negative_004",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9772",
+        "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        193.5,
+        203.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          167,
+          184,
+          202,
+          212
+        ],
+        "changed_pixel_count": 736,
+        "image_xy": [
+          184.0,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "9ecc95cdcd2cebf9f1a2de47ae2b819884349a309dcb1853ca9065a4e48ab60c",
+        "frame_id": "layout_05_visible_004",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9771",
+        "source_frame_hash": "34de9d6f458f1ca4d9554e2e9be705e567173034f651acb6e702c20102632466",
+        "source_frame_idx": 4,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/004.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 63,
+        "bounding_box_xyxy": [
+          190,
+          188,
+          198,
+          204
+        ],
+        "candidate_blob_count": 4,
+        "centroid_xy": [
+          193.26984126984127,
+          196.61904761904762
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 99
+      }
+    },
+    {
+      "background": {
+        "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+        "frame_id": "layout_05_negative_005",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9772",
+        "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "negative"
+      },
+      "background_magenta_detection": {
+        "area_pixels": null,
+        "bounding_box_xyxy": null,
+        "candidate_blob_count": 0,
+        "centroid_xy": null,
+        "rejection_reason": "no_threshold_match",
+        "status": "not_detected",
+        "threshold_match_pixels": 0
+      },
+      "discarded_magenta_blob_base_xy": [
+        194.5,
+        203.0
+      ],
+      "magenta_base_to_silhouette_base_vertical_gap_px": 8.0,
+      "selected_ground_contact": {
+        "absolute_channel_difference_threshold": 20,
+        "bounding_box_xyxy": [
+          167,
+          184,
+          203,
+          212
+        ],
+        "changed_pixel_count": 740,
+        "image_xy": [
+          184.5,
+          211.0
+        ],
+        "localization_method_version": "person-e-paired-background-silhouette-base-v0.1"
+      },
+      "visible": {
+        "decoded_rgb_hash": "d77730ccd5bbb17353d7f8428393b677aa7eaec311b08bf97c103242dca97dd0",
+        "frame_id": "layout_05_visible_005",
+        "layout_id": "layout_05",
+        "source_artifact_id": "layout_05_ep9771",
+        "source_frame_hash": "0a0fda290cad8a0d2562558966336876653e9a03dee917564433fb54d7efbccd",
+        "source_frame_idx": 5,
+        "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/005.png",
+        "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f",
+        "split": "heldout",
+        "truth_class": "visible"
+      },
+      "visible_magenta_detection": {
+        "area_pixels": 56,
+        "bounding_box_xyxy": [
+          191,
+          188,
+          199,
+          204
+        ],
+        "candidate_blob_count": 3,
+        "centroid_xy": [
+          194.48214285714286,
+          196.03571428571428
+        ],
+        "rejection_reason": null,
+        "status": "detected",
+        "threshold_match_pixels": 82
+      }
+    }
+  ],
+  "png_decoder_version": "person-e-png-decode-v1.0",
+  "schema_version": "1.0",
+  "source_document_hash": "21b51c0273ef2a8eb8e82d52ffa254b5df387f6c494c63e173494e20ac244c0d",
+  "source_document_path": "data/handoff_e/detector_calibration_inputs.json",
+  "source_png_records": [
+    {
+      "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+      "frame_id": "layout_00_negative_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+      "frame_id": "layout_00_negative_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+      "frame_id": "layout_00_negative_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+      "frame_id": "layout_00_negative_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+      "frame_id": "layout_00_negative_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8174137607eae3b341ff3fcf02f6722c59e640f52eb3f0c721e6a8ac81377f9f",
+      "frame_id": "layout_00_negative_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b9a59a6c072625ab4c82388b9620217df47406839dd0317e3cbee181ad66542e",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_00/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "5d2d71dae7f2f425aad71fc92c2fea333c3e4121c090c3a90f809f10a4a061f8",
+      "frame_id": "layout_00_visible_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "d9d6f2b8b8ce036554f43b47e93bcef7a7f563fc8f8546bdceca3b82a4b824bc",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "5d2d71dae7f2f425aad71fc92c2fea333c3e4121c090c3a90f809f10a4a061f8",
+      "frame_id": "layout_00_visible_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "d9d6f2b8b8ce036554f43b47e93bcef7a7f563fc8f8546bdceca3b82a4b824bc",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "e1475624a17464280c53fefb88531db6d641249234dccdc4612c989762f8301a",
+      "frame_id": "layout_00_visible_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "82b5b6e95b77b130a3f910857318314717717f57c53b33f1cbae791a38bd4e82",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "e2e600f5189f4435ba18c0db8731eed49fe29e68f10ac5832ffec24dbdf0c362",
+      "frame_id": "layout_00_visible_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "dca1672526550eeaaf2629efb6095cbc02c5adf3e0e9e8d87e87ff86c751f380",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "73fe168c9596c42558954ae50fd4de880b8f1b3ddf4e1c8e2cba364c88e30093",
+      "frame_id": "layout_00_visible_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "259e2215c72f9853efcbee1dab856d008e0a95e6cf0eed457448c80c402a2fc6",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "058692404fb0d47f70b84ea22971b1fbbd2c09f84217566752d18dbc89b610dd",
+      "frame_id": "layout_00_visible_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "559571c2bbc5c0dd787c235bc3876b7e68d1a95b89ab41fa3ac922ccd54755c9",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_00/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+      "frame_id": "layout_01_negative_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+      "frame_id": "layout_01_negative_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+      "frame_id": "layout_01_negative_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+      "frame_id": "layout_01_negative_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+      "frame_id": "layout_01_negative_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a1d9ee2126573afbd5a7e99f044a7502e4981622b857d1640f938bed56e3e90f",
+      "frame_id": "layout_01_negative_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "951bc1c3c826f0ab151014bfb6da4919c8061d1958ea874d7cd02366153460bd",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_01/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "96f2e0fd66306ddd3b3b4737506e3db905e1071db221f00582b103f7e79899f8",
+      "frame_id": "layout_01_visible_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "706f8be1a3033c4bd446b6e096c88b32958dc675c3feb6c9f6217a69d4fc75d2",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "96f2e0fd66306ddd3b3b4737506e3db905e1071db221f00582b103f7e79899f8",
+      "frame_id": "layout_01_visible_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "706f8be1a3033c4bd446b6e096c88b32958dc675c3feb6c9f6217a69d4fc75d2",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "5fa3d0d29cf80dc49ad82564b711d24b3b635e069236005eb01a0555a0f0f7d0",
+      "frame_id": "layout_01_visible_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "6ff7e2e20b7f16ba17c1048af24acad9dfb2798a323acd5d65661ba545504dca",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "507f1dc5dc9eadcb33295cbe3af0cd81319cf9f705bd78e64a3cbf68e5c74869",
+      "frame_id": "layout_01_visible_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "15a0f6eaae99fc01a45f2103ac8015074fab3d2fd5021a160d263fa00cad1ce0",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "1deda485f44852fa427e4348cbcacd03b96adeee6c65668459a38241c2793b71",
+      "frame_id": "layout_01_visible_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b19eece508cc6869bccfc42c8a4040450cf63b3a4466e6280a5ecf6e2427b66f",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "fb6f2393c8c04bab1122e102ccf0f6489e66859f6e47ded8d0c005da0442d0ea",
+      "frame_id": "layout_01_visible_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "aa272779905f7f204a799121d5680e23daaa8f5ef780ed9fac46b6d191fa585d",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_01/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+      "frame_id": "layout_02_negative_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+      "frame_id": "layout_02_negative_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+      "frame_id": "layout_02_negative_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+      "frame_id": "layout_02_negative_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+      "frame_id": "layout_02_negative_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2f20fd5f7e4ed3f89f369cad5946fda222f3c46c8117160ac1fc1c74106bcae8",
+      "frame_id": "layout_02_negative_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8d4b96edf8155e55ff30b4ea0b67b313599cad299b138cf02778605421dc900c",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_02/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "72908c39d5c70317a56f19298f64a22c0dc641793584129ed9ed6271e7778157",
+      "frame_id": "layout_02_visible_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8df1d76fb329f92482dcc3062bc55a4002964a4bf8c9c5b428edaf8b7e4dd970",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "72908c39d5c70317a56f19298f64a22c0dc641793584129ed9ed6271e7778157",
+      "frame_id": "layout_02_visible_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8df1d76fb329f92482dcc3062bc55a4002964a4bf8c9c5b428edaf8b7e4dd970",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "eba6cfc88fd4638f6ce6604fdb53ab9e4e8326beef5bf6cf205e490de1989d20",
+      "frame_id": "layout_02_visible_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "df5fc66a7b7e2bad097e7d3f728acc6a07c33fdd97aabcf8608e327b6f8814ed",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "ebb21382e221b912f1f916943c9704ceb8ce7e911d4714c79edafc70a79800f3",
+      "frame_id": "layout_02_visible_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c0a63ae5f0c94f32041944f9be48c0b7b8eaa462da17baa971bce2824d99566f",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "c1f714dd976f1799c7657e206e393f48034df566d862774bc9cb6cdc47145f9c",
+      "frame_id": "layout_02_visible_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "d0e1887045cd2110b7acc549160542702abeaae341652dd65318de315d806b2a",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "f0d6b52111fea9918b4ee5cd2c8689146f43bf73c039dd885241f527a8e407fe",
+      "frame_id": "layout_02_visible_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "402557be623c28f39ef6abce8192da083b71df23c00e481bce7cc175c7e331d9",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_02/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+      "frame_id": "layout_03_negative_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+      "frame_id": "layout_03_negative_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+      "frame_id": "layout_03_negative_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+      "frame_id": "layout_03_negative_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+      "frame_id": "layout_03_negative_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2164d1169c9f11b8afef8f5ff655e689e4ff26946e25f9f02cd882ba751f5e4b",
+      "frame_id": "layout_03_negative_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "dc95658167683d585d1bcc13d7b36f90bca4535aa0f7a12888d0134e5fc769e3",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_03/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "67a43118b963ba28dbf69cb4719d6ea1fe41b544d511a9fff323159a3d78543c",
+      "frame_id": "layout_03_visible_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "247ab9202dadb9528708506183acd4d9d57ffa978e0dac9508d4132e1401c81b",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "67a43118b963ba28dbf69cb4719d6ea1fe41b544d511a9fff323159a3d78543c",
+      "frame_id": "layout_03_visible_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "247ab9202dadb9528708506183acd4d9d57ffa978e0dac9508d4132e1401c81b",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "48736a8c419dee1eb67d3ac6ff9ef53e7f046bb0057608f2c845e3d9ead3e704",
+      "frame_id": "layout_03_visible_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "372519eb1e88cba278642932d5e6453567b898bed8b83b30d00f05e2c0b7a1ee",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "74c5a273660a3319685f2450858668cce5032a0ca04e387a4388592ae7f3c0d4",
+      "frame_id": "layout_03_visible_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "96e18f6b7519199fda34eeea9175f76bf1af12715e1c4440c1cea3c220fd1e01",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a6b8aa8ebb0697c163579cd3bb0467bf544ddbedc275b006a1a21b7990d3117c",
+      "frame_id": "layout_03_visible_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "9f3260cb1aa2c98537de2a7f92f0a7e18c318b00554ca6bd1074968f31fc32e5",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "17dbb875b97751ff3707121ab8c0229e393bcb9db961bb100713442d5d28610b",
+      "frame_id": "layout_03_visible_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "1613e7e3ff5b215ea8055faebc48a16b682bad58242c4b4b31c0c533a9bcbd73",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_03/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+      "frame_id": "layout_04_negative_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+      "frame_id": "layout_04_negative_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+      "frame_id": "layout_04_negative_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+      "frame_id": "layout_04_negative_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+      "frame_id": "layout_04_negative_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "8b4fe74cb5a90aebf12eb694b96aa326f928d24f945d7b9102e5d2135d1bfa76",
+      "frame_id": "layout_04_negative_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c24f3e2a28ea73491ff8a6356fbe266f880f9e77a5063e2777ac31a7dd5ba5cb",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_04/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2095fc38d05ca73d715a9709d4b40f590cb74be552058311023b1f67e46987e7",
+      "frame_id": "layout_04_visible_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8cb58e98186c350a751a0528e798f3bca4c4f7f57be63e1cc890b538ec3197a9",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "2095fc38d05ca73d715a9709d4b40f590cb74be552058311023b1f67e46987e7",
+      "frame_id": "layout_04_visible_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "8cb58e98186c350a751a0528e798f3bca4c4f7f57be63e1cc890b538ec3197a9",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "4877f443a0e1bc681a691ce57f23280faef3632affa986620b5eb6be3db31983",
+      "frame_id": "layout_04_visible_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "d3ace48245a1d5c4aa366eadd8f10c5ce87e58e5fd90c1e09d57f573bb559590",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "280b54a1c90945283b55e16db5e630a0e2b9cf647af74fbfb798ad8926ea60fa",
+      "frame_id": "layout_04_visible_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "5663fea28005bfda7d5254d1564db89139d7f485872d012dba9b5ea4bf412823",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "a6de8e58d502727bbaec1ba32c828d3c9f58aad6f5ad7726688e55c61b95316d",
+      "frame_id": "layout_04_visible_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "727f09b01585312bdcda508900bcf62f65b2feac92b44ced1e7bb38b274d45e9",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "920b1c5e1bea2c2b9e831d608cbe00cc2e4eaf882284e7f17784fa73babf14ae",
+      "frame_id": "layout_04_visible_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "fefd5630f82b1f7fac5587987461e619700a702cf2eb818567e0f32b9e5ec407",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_04/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+      "frame_id": "layout_05_negative_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+      "frame_id": "layout_05_negative_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+      "frame_id": "layout_05_negative_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+      "frame_id": "layout_05_negative_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+      "frame_id": "layout_05_negative_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "38f785f251ccc62fe1727cd81b9855de0c89f6befab4e8e9b023f39c81d77234",
+      "frame_id": "layout_05_negative_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "67d670d72e0995f954731c5ee22f59df17edb096504dba54ac6d5328c0999bcf",
+      "source_git_path": "data/handoff_e/calibration_frames/negative/layout_05/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "518646dd4aad4616a77b3d2024c4208866e7c8faa4345e5374fd8ac6455bab72",
+      "frame_id": "layout_05_visible_000",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b82712928d41094ee66a6b4747c17f5dcb9af193989165aba4dcce4ad9f177df",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/000.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "518646dd4aad4616a77b3d2024c4208866e7c8faa4345e5374fd8ac6455bab72",
+      "frame_id": "layout_05_visible_001",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "b82712928d41094ee66a6b4747c17f5dcb9af193989165aba4dcce4ad9f177df",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/001.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "855adca7345fee08cb65c0c144379f6764ecd402a1f0f687c49a292ec107fc53",
+      "frame_id": "layout_05_visible_002",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "cf59ceefca3bae2adfc7de4831bd2362903721b9932aada4d880600fd2326652",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/002.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "32f7b406a7f3e9c7b395a9a5d90eb445f92a1ddc7290b9c33e7a5deaf62055e7",
+      "frame_id": "layout_05_visible_003",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "c231951ddb59ff0a5218a45571fbc2fc57c9498af1a6e66e56142b669e35910a",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/003.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "9ecc95cdcd2cebf9f1a2de47ae2b819884349a309dcb1853ca9065a4e48ab60c",
+      "frame_id": "layout_05_visible_004",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "34de9d6f458f1ca4d9554e2e9be705e567173034f651acb6e702c20102632466",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/004.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    },
+    {
+      "decoded_rgb_hash": "d77730ccd5bbb17353d7f8428393b677aa7eaec311b08bf97c103242dca97dd0",
+      "frame_id": "layout_05_visible_005",
+      "image_height_px": 360,
+      "image_width_px": 640,
+      "pixel_format": "rgb8",
+      "source_frame_hash": "0a0fda290cad8a0d2562558966336876653e9a03dee917564433fb54d7efbccd",
+      "source_git_path": "data/handoff_e/calibration_frames/visible/layout_05/005.png",
+      "source_git_revision": "00784756f21895d19aff44572496c956cc5d932f"
+    }
+  ],
+  "source_revision": "00784756f21895d19aff44572496c956cc5d932f",
+  "source_validation_schema_version": "person-e-step2.4-source-ground-validation-v0.2",
+  "validated_png_count": 72
+}

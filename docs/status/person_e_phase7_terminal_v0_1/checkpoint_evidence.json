@@ -1,0 +1,221 @@
+{
+  "accepted_count": 2,
+  "artifact_index": [
+    {
+      "artifact_id": "person-e-detector-v1-formal-evaluation-v0_1",
+      "owner": "person_e",
+      "repository_path": "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/formal_evaluation_report.json",
+      "sha256": "05b3cea58679e8097bdbf2953c1e933771311690a92794640b09c9a622678d90",
+      "status": "accepted"
+    },
+    {
+      "artifact_id": "person-e-v0_4-homography-refit-v0_2",
+      "owner": "person_e",
+      "repository_path": "data/handoff_e/person_e_v0_4_homography_refit_v0_2/fit_summary.json",
+      "sha256": "d5449cec9d1cc1a527e4f74535019b9188122623f277c8e2bba54791df78855d",
+      "status": "accepted"
+    }
+  ],
+  "checkpoint_content_hash": "1cae4a313a1a283680cfdc3758e0f4f9a10e7dbd9d3269a0d1404ac852cb91a1",
+  "checkpoint_evidence_schema_version": "person-e-checkpoint-evidence-v0.1",
+  "code_commit": "d3cb6f198d563aed6fbc126045ea8b7fa4a3e0bb",
+  "control_failures": [],
+  "excluded_count": 0,
+  "figure_source_verification": {
+    "digest_mismatched_source_ids": [],
+    "excluded_source_ids": [],
+    "resolved_value_count": 7,
+    "unresolved_source_ids": [],
+    "verified": true
+  },
+  "limitations": [
+    "Both populated slots are Person E planning gates, not scientific results.",
+    "Detector precision and recall are measured on the 48-frame declared held-out set only; they are not a publication-scale accuracy claim.",
+    "No U4 rollout clip has been generated, so persistence, displacement, and SSIM slots are empty rather than zero.",
+    "No Person B or Person D preliminary result table exists, so U1-U3 slots are empty.",
+    "No control has been run, so the absence of control failures is not evidence that controls passed."
+  ],
+  "machine_generated_values_only": true,
+  "missing_count": 7,
+  "populated_slots": [
+    "engineering_detector_gate",
+    "engineering_localization_gate"
+  ],
+  "provenance_demonstration_commands": [
+    [
+      "scripts/trace_artifact.py",
+      "<registry.json>",
+      "person-e-detector-v1-formal-evaluation-v0_1"
+    ],
+    [
+      "scripts/build_artifact_index.py",
+      "<registry.json>",
+      "<index.json>"
+    ],
+    [
+      "-m",
+      "pytest",
+      "tests/vision/test_phase3_formal_detector_evaluation.py"
+    ]
+  ],
+  "scientific_value_count": 0,
+  "slots": [
+    {
+      "displayed_values": [
+        {
+          "figure_input_sha256": "05b3cea58679e8097bdbf2953c1e933771311690a92794640b09c9a622678d90",
+          "gate_kind": "planning",
+          "label": "held-out detector precision",
+          "sample_count": 48,
+          "source_artifact_id": "person-e-detector-v1-formal-evaluation-v0_1",
+          "source_run_id": "person-e-phase3-step3-1-v0_3-formal-ordinal-1",
+          "source_status": "accepted",
+          "units": "fraction",
+          "value": 1.0
+        },
+        {
+          "figure_input_sha256": "05b3cea58679e8097bdbf2953c1e933771311690a92794640b09c9a622678d90",
+          "gate_kind": "planning",
+          "label": "held-out detector recall",
+          "sample_count": 48,
+          "source_artifact_id": "person-e-detector-v1-formal-evaluation-v0_1",
+          "source_run_id": "person-e-phase3-step3-1-v0_3-formal-ordinal-1",
+          "source_status": "accepted",
+          "units": "fraction",
+          "value": 1.0
+        },
+        {
+          "figure_input_sha256": "05b3cea58679e8097bdbf2953c1e933771311690a92794640b09c9a622678d90",
+          "gate_kind": "planning",
+          "label": "held-out false positives",
+          "sample_count": 48,
+          "source_artifact_id": "person-e-detector-v1-formal-evaluation-v0_1",
+          "source_run_id": "person-e-phase3-step3-1-v0_3-formal-ordinal-1",
+          "source_status": "accepted",
+          "units": "frames",
+          "value": 0
+        },
+        {
+          "figure_input_sha256": "05b3cea58679e8097bdbf2953c1e933771311690a92794640b09c9a622678d90",
+          "gate_kind": "planning",
+          "label": "held-out false negatives",
+          "sample_count": 48,
+          "source_artifact_id": "person-e-detector-v1-formal-evaluation-v0_1",
+          "source_run_id": "person-e-phase3-step3-1-v0_3-formal-ordinal-1",
+          "source_status": "accepted",
+          "units": "frames",
+          "value": 0
+        }
+      ],
+      "slot": "engineering_detector_gate",
+      "state": "populated"
+    },
+    {
+      "displayed_values": [
+        {
+          "figure_input_sha256": "d5449cec9d1cc1a527e4f74535019b9188122623f277c8e2bba54791df78855d",
+          "gate_kind": "planning",
+          "label": "worst-layout held-out wall-parallel localization error",
+          "sample_count": 6,
+          "source_artifact_id": "person-e-v0_4-homography-refit-v0_2",
+          "source_run_id": "96457cbae22159b2fe1828e0de12d313710dcdf5",
+          "source_status": "accepted",
+          "units": "blocks",
+          "value": 0.1667229155637111
+        },
+        {
+          "figure_input_sha256": "d5449cec9d1cc1a527e4f74535019b9188122623f277c8e2bba54791df78855d",
+          "gate_kind": "planning",
+          "label": "passing layout count",
+          "sample_count": 6,
+          "source_artifact_id": "person-e-v0_4-homography-refit-v0_2",
+          "source_run_id": "96457cbae22159b2fe1828e0de12d313710dcdf5",
+          "source_status": "accepted",
+          "units": "layouts",
+          "value": 6
+        },
+        {
+          "figure_input_sha256": "d5449cec9d1cc1a527e4f74535019b9188122623f277c8e2bba54791df78855d",
+          "gate_kind": "planning",
+          "label": "maximum inverse round-trip error",
+          "sample_count": 6,
+          "source_artifact_id": "person-e-v0_4-homography-refit-v0_2",
+          "source_run_id": "96457cbae22159b2fe1828e0de12d313710dcdf5",
+          "source_status": "accepted",
+          "units": "pixels",
+          "value": 4.687428401686771e-13
+        }
+      ],
+      "slot": "engineering_localization_gate",
+      "state": "populated"
+    },
+    {
+      "blocking_owner": "person_b",
+      "displayed_values": [],
+      "empty_reason": "no accepted Person B preliminary result table has been published",
+      "slot": "u1_layer_emergence",
+      "state": "empty_awaiting_external_input"
+    },
+    {
+      "blocking_owner": "person_b",
+      "displayed_values": [],
+      "empty_reason": "no accepted Person B preliminary result table has been published",
+      "slot": "u2_calibration_coverage",
+      "state": "empty_awaiting_external_input"
+    },
+    {
+      "blocking_owner": "person_b",
+      "displayed_values": [],
+      "empty_reason": "no accepted Person B preliminary result table has been published",
+      "slot": "u3_reveal_dynamics",
+      "state": "empty_awaiting_external_input"
+    },
+    {
+      "blocking_owner": "person_a",
+      "displayed_values": [],
+      "empty_reason": "no U4 rollout clips have been generated, so no measurement rows exist",
+      "slot": "u4_dose_response",
+      "state": "empty_awaiting_external_input"
+    },
+    {
+      "blocking_owner": "person_a",
+      "displayed_values": [],
+      "empty_reason": "no U4 rollout clips have been generated, so no measurement rows exist",
+      "slot": "u4_persistence",
+      "state": "empty_awaiting_external_input"
+    },
+    {
+      "blocking_owner": "person_a",
+      "displayed_values": [],
+      "empty_reason": "no U4 rollout clips have been generated, so no measurement rows exist",
+      "slot": "u4_displacement",
+      "state": "empty_awaiting_external_input"
+    },
+    {
+      "blocking_owner": "person_a",
+      "displayed_values": [],
+      "empty_reason": "no U4 rollout clips have been generated, so no measurement rows exist",
+      "slot": "u4_ssim",
+      "state": "empty_awaiting_external_input"
+    }
+  ],
+  "visual_qa_report": {
+    "all_displayed_values_carry_units": true,
+    "all_displayed_values_resolve_to_source": true,
+    "displayed_value_count": 7,
+    "empty_slot_count": 7,
+    "empty_slots": [
+      "u1_layer_emergence",
+      "u2_calibration_coverage",
+      "u3_reveal_dynamics",
+      "u4_displacement",
+      "u4_dose_response",
+      "u4_persistence",
+      "u4_ssim"
+    ],
+    "invalid_or_superseded_displayed_count": 0,
+    "populated_slot_count": 2,
+    "values_missing_units": [],
+    "visual_qa_report_schema_version": "person-e-checkpoint-visual-qa-v0.1"
+  }
+}

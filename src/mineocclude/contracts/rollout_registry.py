@@ -9,6 +9,7 @@ measurement outputs.
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -18,16 +19,15 @@ from typing import Any
 from urllib.parse import urlparse
 
 from mineocclude.contracts.identity import (
+    SCHEMA_VERSION,
     ArtifactStatus,
     IdentityValidationError,
-    SCHEMA_VERSION,
     validate_identity,
 )
 from mineocclude.contracts.intervention_request import (
     MINEWORLD_LAYER_COUNT,
     MINEWORLD_MODEL_FRAME_COUNT,
 )
-
 
 ROLLOUT_REGISTRY_SCHEMA_VERSION = SCHEMA_VERSION
 
@@ -780,14 +780,16 @@ def validate_rollout_registry_bundle(
                 RolloutRegistryRejectionCode.MISSING_REGISTRY_REFERENCE,
                 f"Artifact {artifact_id!r} references unknown producer run.",
             )
-        elif _is_non_empty_string(producer_run_id):
-            if artifact_id not in run_outputs.get(producer_run_id, []):
-                _add_rejection(
-                    rejections,
-                    RolloutRegistryRejectionCode.LINEAGE_MISMATCH,
-                    f"Producer run {producer_run_id!r} does not list "
-                    f"artifact {artifact_id!r} as output.",
-                )
+        elif (
+            _is_non_empty_string(producer_run_id)
+            and artifact_id not in run_outputs.get(producer_run_id, [])
+        ):
+            _add_rejection(
+                rejections,
+                RolloutRegistryRejectionCode.LINEAGE_MISMATCH,
+                f"Producer run {producer_run_id!r} does not list "
+                f"artifact {artifact_id!r} as output.",
+            )
 
     for run_id, input_ids in run_inputs.items():
         for artifact_id in input_ids:
@@ -1091,20 +1093,26 @@ def validate_rollout_registry_bundle(
                 RolloutRegistryRejectionCode.INVALID_ROLLOUT_ROW,
                 f"Rollout {rollout_id!r} has invalid control_type.",
             )
-        elif control_type == "alpha_zero" and alpha_fields_valid:
-            if any(
-                float(row[field]) != 0.0
-                for field in (
-                    "alpha_requested",
-                    "alpha_applied",
-                    "intended_block_shift",
+        elif (
+            control_type == "alpha_zero"
+            and alpha_fields_valid
+            and (
+                any(
+                    float(row[field]) != 0.0
+                    for field in (
+                        "alpha_requested",
+                        "alpha_applied",
+                        "intended_block_shift",
+                    )
                 )
-            ) or row["cap_reduced"] is not False:
-                _add_rejection(
-                    rejections,
-                    RolloutRegistryRejectionCode.INVALID_ROLLOUT_ROW,
-                    f"Rollout {rollout_id!r} alpha-zero control is inconsistent.",
-                )
+                or row["cap_reduced"] is not False
+            )
+        ):
+            _add_rejection(
+                rejections,
+                RolloutRegistryRejectionCode.INVALID_ROLLOUT_ROW,
+                f"Rollout {rollout_id!r} alpha-zero control is inconsistent.",
+            )
 
         for field in (
             "input_context_hash",
@@ -1413,10 +1421,40 @@ def validate_rollout_registry_bundle(
 # data model while A orchestration may call it without redefining rollout
 # identity.
 IMMUTABLE_REGISTRY_SCHEMA_VERSION = "mineocclude-immutable-registry-v1.0"
+IMMUTABLE_REGISTRY_V2_SCHEMA_VERSION = "mineocclude-immutable-registry-v2.0"
 
 IMMUTABLE_RUN_STATUSES = frozenset({"in_progress", "completed", "failed"})
 IMMUTABLE_ARTIFACT_STATUSES = frozenset(
     {"accepted", "excluded", "superseded"}
+)
+IMMUTABLE_V2_RUN_STATUSES = frozenset(
+    {"pending", "running", "completed", "failed"}
+)
+IMMUTABLE_V2_OWNER_IDS = frozenset(
+    {"person_a", "person_b", "person_c", "person_d", "person_e"}
+)
+IMMUTABLE_V2_AUTHORITY_DECISIONS = frozenset(
+    {"accepted", "excluded", "pending", "failed"}
+)
+IMMUTABLE_V2_OWNER_STATUSES = frozenset(
+    {"pending", "accepted", "rejected", "failed", "superseded"}
+)
+IMMUTABLE_V2_OWNER_STATUS_DECISIONS = {
+    "pending": "pending",
+    "accepted": "accepted",
+    "rejected": "excluded",
+    "failed": "failed",
+    "superseded": "excluded",
+}
+IMMUTABLE_V2_MANIFEST_DECISIONS = frozenset({"accepted", "excluded"})
+IMMUTABLE_V2_BYTE_VERIFICATION_MODES = frozenset(
+    {"local_bytes", "external_receipt"}
+)
+IMMUTABLE_V2_STATUS_RECORD_SCHEMA_VERSION = (
+    "mineocclude-owner-status-record-v1.0"
+)
+IMMUTABLE_V2_STATUS_RECORD_VERIFICATION_MODES = frozenset(
+    {"local_bytes", "external_receipt"}
 )
 
 IMMUTABLE_ARTIFACT_TYPES = frozenset(
@@ -1448,6 +1486,48 @@ IMMUTABLE_ARTIFACT_TYPES = frozenset(
         "figure_input",
     }
 )
+IMMUTABLE_V2_ARTIFACT_TYPES = frozenset(
+    {*IMMUTABLE_ARTIFACT_TYPES, "extraction"}
+)
+IMMUTABLE_V2_STEP4_ARTIFACT_TYPE_MAP = {
+    "data": "raw_trajectory",
+    "model_input": "model_input",
+    "oracle_target": "oracle_target",
+    "extraction": "extraction",
+    "activation": "activation",
+    "fitted_probe": "fitted_probe",
+    "prediction": "prediction",
+    "baseline": "baseline",
+    "rollout": "rollout",
+    "detection": "detection",
+    "metric_table": "metric_table",
+    "figure": "figure",
+}
+IMMUTABLE_V2_ARTIFACT_OWNER_IDS = {
+    "raw_trajectory": frozenset({"person_c"}),
+    "model_input": frozenset({"person_a"}),
+    "oracle_target": frozenset({"person_b"}),
+    "extraction": frozenset({"person_a"}),
+    "activation": frozenset({"person_a"}),
+    "fitted_probe": frozenset({"person_b"}),
+    "prediction": frozenset({"person_b"}),
+    "baseline": frozenset({"person_d"}),
+    "rollout": frozenset({"person_a"}),
+    "detection": frozenset({"person_e"}),
+    "homography": frozenset({"person_e"}),
+    "metric_table": frozenset({"person_b"}),
+    "figure": frozenset({"person_e"}),
+    "figure_input": frozenset({"person_e"}),
+    "input_context": frozenset({"person_a"}),
+    "intervention_request": frozenset({"person_a"}),
+    "rollout_clip": frozenset({"person_a"}),
+    "partial_rollout": frozenset({"person_a"}),
+    "diagnostic_log": frozenset({"person_a"}),
+    "detector_calibration": frozenset({"person_e"}),
+    "localization": frozenset({"person_e"}),
+    "ssim": frozenset({"person_e"}),
+    "measurement": frozenset({"person_e"}),
+}
 
 _IMMUTABLE_REGISTRY_FIELDS = frozenset(
     {
@@ -1527,6 +1607,29 @@ class ImmutableRegistryRejectionCode(str, Enum):
     IMMUTABLE_ARTIFACT_MUTATION = "immutable_artifact_mutation"
     MALFORMED_SUPERSESSION = "malformed_supersession"
     AMBIGUOUS_LINEAGE = "ambiguous_lineage"
+    INVALID_AUTHORITY = "invalid_authority"
+    DUPLICATE_AUTHORITY_ID = "duplicate_authority_id"
+    INVALID_MANIFEST = "invalid_manifest"
+    DUPLICATE_MANIFEST_ID = "duplicate_manifest_id"
+    INVALID_BYTE_VERIFICATION = "invalid_byte_verification"
+    DUPLICATE_BYTE_VERIFICATION_ID = "duplicate_byte_verification_id"
+    OWNER_AUTHORITY_MISMATCH = "owner_authority_mismatch"
+    MANIFEST_MISMATCH = "manifest_mismatch"
+    UNVERIFIED_ARTIFACT = "unverified_artifact"
+    INVALID_TRUSTED_AUTHORITY = "invalid_trusted_authority"
+    MISSING_TRUSTED_AUTHORITY = "missing_trusted_authority"
+    STATUS_RECORD_VERIFICATION_FAILED = "status_record_verification_failed"
+    INVALID_ARTIFACT_AUTHORIZATION = "invalid_artifact_authorization"
+    MISSING_ARTIFACT_AUTHORIZATION = "missing_artifact_authorization"
+    ARTIFACT_AUTHORIZATION_VERIFICATION_FAILED = (
+        "artifact_authorization_verification_failed"
+    )
+    INVALID_TRUSTED_MANIFEST = "invalid_trusted_manifest"
+    MISSING_TRUSTED_MANIFEST = "missing_trusted_manifest"
+    TRUSTED_MANIFEST_MISMATCH = "trusted_manifest_mismatch"
+    INVALID_TRUSTED_ARTIFACT_RECEIPT = "invalid_trusted_artifact_receipt"
+    MISSING_TRUSTED_ARTIFACT_RECEIPT = "missing_trusted_artifact_receipt"
+    TRUSTED_ARTIFACT_RECEIPT_MISMATCH = "trusted_artifact_receipt_mismatch"
 
 
 @dataclass(frozen=True)
@@ -1571,7 +1674,7 @@ def _utc_timestamp(value: Any) -> datetime | None:
     if not isinstance(value, str):
         return None
     try:
-        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")  # noqa: DTZ007
     except ValueError:
         return None
 
@@ -1943,7 +2046,7 @@ def _validate_artifact_record(
     return True
 
 
-def validate_immutable_run_artifact_registry(
+def _validate_immutable_run_artifact_registry_v1(
     document: Any,
     *,
     previous_registry: Any = None,
@@ -2449,3 +2552,2962 @@ def validate_immutable_run_artifact_registry(
                     )
 
     return ImmutableRegistryValidationResult(not rejections, tuple(rejections))
+
+
+_IMMUTABLE_V2_REGISTRY_FIELDS = frozenset(
+    {
+        "schema_version",
+        "immutable_registry_schema_version",
+        "registry_id",
+        "synthetic",
+        "scientific_use",
+        "owner_authorities",
+        "manifests",
+        "byte_verifications",
+        "runs",
+        "artifacts",
+    }
+)
+
+_IMMUTABLE_V2_AUTHORITY_FIELDS = frozenset(
+    {
+        "schema_version",
+        "authority_id",
+        "owner_id",
+        "authority_revision",
+        "status_record_id",
+        "status_record_sha256",
+        "status_record_schema_version",
+        "status_record_verification_mode",
+        "status_record_receipt_id",
+        "status_record_receipt_sha256",
+        "status_record_receipt_authority_revision",
+        "decision",
+        "owner_status",
+        "authorized_artifact_types",
+    }
+)
+
+_IMMUTABLE_V2_TRUSTED_AUTHORITY_FIELDS = frozenset(
+    {"authority", "status_record_verification"}
+)
+
+_IMMUTABLE_V2_STATUS_RECORD_VERIFICATION_FIELDS = frozenset(
+    {"mode", "external_receipt"}
+)
+
+_IMMUTABLE_V2_STATUS_RECORD_RECEIPT_FIELDS = frozenset(
+    {
+        "receipt_id",
+        "receipt_sha256",
+        "receipt_authority_revision",
+        "verified_status_record_id",
+        "verified_status_record_sha256",
+        "verified_status_record_schema_version",
+        "verified_owner_id",
+        "verified_owner_authority_revision",
+        "verified_owner_status",
+        "verified_decision",
+    }
+)
+
+_IMMUTABLE_V2_STATUS_RECORD_FIELDS = frozenset(
+    {
+        "schema_version",
+        "status_record_id",
+        "owner_id",
+        "authority_revision",
+        "owner_status",
+        "decision",
+    }
+)
+
+_IMMUTABLE_V2_TRUSTED_ARTIFACT_AUTHORIZATION_FIELDS = frozenset(
+    {"authorization", "authorization_record_verification"}
+)
+
+_IMMUTABLE_V2_ARTIFACT_AUTHORIZATION_FIELDS = frozenset(
+    {
+        "authorization_id",
+        "authority_id",
+        "owner_id",
+        "owner_authority_revision",
+        "artifact_id",
+        "artifact_type",
+        "artifact_schema_version",
+        "artifact_sha256",
+        "artifact_size_bytes",
+        "manifest_id",
+        "manifest_sha256",
+        "manifest_schema_version",
+        "manifest_artifact_identity",
+        "owner_status",
+        "decision",
+        "authorization_record_id",
+        "authorization_record_sha256",
+        "authorization_record_verification_mode",
+        "authorization_record_receipt_id",
+        "authorization_record_receipt_sha256",
+        "authorization_record_receipt_authority_revision",
+    }
+)
+
+_IMMUTABLE_V2_AUTHORIZATION_RECORD_FIELDS = frozenset(
+    {
+        "authorization_record_id",
+        "authorization_id",
+        "authority_id",
+        "owner_id",
+        "owner_authority_revision",
+        "artifact_id",
+        "artifact_type",
+        "artifact_schema_version",
+        "artifact_sha256",
+        "artifact_size_bytes",
+        "manifest_id",
+        "manifest_sha256",
+        "manifest_schema_version",
+        "manifest_artifact_identity",
+        "owner_status",
+        "decision",
+    }
+)
+
+_IMMUTABLE_V2_AUTHORIZATION_VERIFICATION_FIELDS = frozenset(
+    {"mode", "external_receipt"}
+)
+
+_IMMUTABLE_V2_AUTHORIZATION_RECEIPT_FIELDS = frozenset(
+    {
+        "receipt_id",
+        "receipt_sha256",
+        "receipt_authority_revision",
+        "verified_authorization_record_id",
+        "verified_authorization_record_sha256",
+        "verified_authority_id",
+        "verified_owner_id",
+        "verified_owner_revision",
+        "verified_artifact_id",
+        "verified_artifact_type",
+        "verified_artifact_sha256",
+        "verified_artifact_size",
+        "verified_manifest_id",
+        "verified_manifest_sha256",
+        "verified_manifest_artifact_identity",
+        "verified_owner_status",
+        "verified_decision",
+    }
+)
+
+_IMMUTABLE_V2_TRUSTED_MANIFEST_FIELDS = frozenset(
+    {
+        "manifest_id",
+        "manifest_sha256",
+        "manifest_schema_version",
+        "owner_authority_id",
+        "owner_id",
+        "owner_authority_revision",
+        "owner_status",
+        "decision",
+        "artifact_identities",
+    }
+)
+
+_IMMUTABLE_V2_TRUSTED_MANIFEST_ARTIFACT_FIELDS = frozenset(
+    {
+        "artifact_id",
+        "artifact_type",
+        "artifact_schema_version",
+        "artifact_sha256",
+        "artifact_size_bytes",
+        "manifest_artifact_identity",
+    }
+)
+
+_IMMUTABLE_V2_TRUSTED_ARTIFACT_RECEIPT_FIELDS = frozenset(
+    {
+        "receipt_id",
+        "receipt_sha256",
+        "receipt_authority_revision",
+        "verified_artifact_id",
+        "verified_artifact_type",
+        "verified_artifact_schema_version",
+        "verified_artifact_sha256",
+        "verified_artifact_size",
+        "verified_owner_id",
+        "verified_owner_authority_revision",
+        "verified_manifest_id",
+        "verified_manifest_sha256",
+        "verified_manifest_artifact_identity",
+    }
+)
+
+_IMMUTABLE_V2_MANIFEST_FIELDS = frozenset(
+    {
+        "schema_version",
+        "manifest_id",
+        "manifest_sha256",
+        "manifest_schema_version",
+        "owner_authority_id",
+        "decision",
+        "artifact_identities",
+    }
+)
+
+_IMMUTABLE_V2_BYTE_VERIFICATION_FIELDS = frozenset(
+    {
+        "schema_version",
+        "verification_id",
+        "artifact_id",
+        "mode",
+        "verified_sha256",
+        "verified_size_bytes",
+        "verified_at",
+        "external_receipt_id",
+        "external_receipt_sha256",
+        "external_receipt_authority_revision",
+    }
+)
+
+_IMMUTABLE_V2_RUN_FIELDS = frozenset(
+    {
+        "schema_version",
+        "run_id",
+        "code_sha",
+        "git_dirty",
+        "config_snapshot_hash",
+        "checkpoint_hash",
+        "data_identity_hash",
+        "preprocess_hash",
+        "environment_hash",
+        "seeds",
+        "command",
+        "owner",
+        "created_at",
+        "started_at",
+        "ended_at",
+        "status",
+        "pending_reason",
+        "failure_reason",
+        "parent_run_id",
+        "input_artifact_ids",
+        "output_artifact_ids",
+        "supersedes_run_id",
+        "supersession_reason",
+    }
+)
+
+_IMMUTABLE_V2_ARTIFACT_FIELDS = frozenset(
+    {
+        "schema_version",
+        "artifact_schema_version",
+        "artifact_id",
+        "direct_input_artifact_ids",
+        "creator_run_id",
+        "artifact_type",
+        "uri",
+        "sha256",
+        "size_bytes",
+        "status",
+        "status_reason",
+        "superseded_by",
+        "owner_authority_id",
+        "owner_authority_revision",
+        "owner_status_record_id",
+        "owner_status_record_sha256",
+        "owner_decision",
+        "manifest_id",
+        "manifest_sha256",
+        "manifest_schema_version",
+        "manifest_artifact_identity",
+        "byte_verification_id",
+    }
+)
+
+
+def _v2_require_record_list(
+    document: Mapping[str, Any],
+    field: str,
+    rejections: list[ImmutableRegistryRejection],
+    *,
+    require_nonempty: bool = False,
+) -> list[Any]:
+    value = document[field]
+    if not isinstance(value, list) or (require_nonempty and not value):
+        qualification = "a non-empty list" if require_nonempty else "a list"
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_REQUIRED_FIELD,
+            f"Immutable registry v2 {field} must be {qualification}.",
+        )
+        return []
+    return value
+
+
+def _validate_v2_authority_record(
+    record: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    authority_id = (
+        record.get("authority_id")
+        if isinstance(record.get("authority_id"), str)
+        else None
+    )
+    if not _check_exact_fields(
+        record,
+        _IMMUTABLE_V2_AUTHORITY_FIELDS,
+        "Owner authority record",
+        rejections,
+        authority_id,
+    ):
+        return False
+    valid = True
+    checks = (
+        (
+            record["schema_version"] == SCHEMA_VERSION,
+            "Authority schema_version is unsupported.",
+        ),
+        (
+            _is_non_empty_string(record["authority_id"]),
+            "authority_id must be non-empty.",
+        ),
+        (
+            isinstance(record["owner_id"], str)
+            and record["owner_id"] in IMMUTABLE_V2_OWNER_IDS,
+            "Authority owner_id is outside the closed owner catalog.",
+        ),
+        (
+            _strict_hex(record["authority_revision"], 40),
+            "Authority revision must be an exact full Git commit.",
+        ),
+        (
+            _is_non_empty_string(record["status_record_id"]),
+            "Authority status_record_id must be non-empty.",
+        ),
+        (
+            _strict_hex(record["status_record_sha256"], 64),
+            "Authority status-record hash must be SHA-256.",
+        ),
+        (
+            isinstance(record["decision"], str)
+            and record["decision"] in IMMUTABLE_V2_AUTHORITY_DECISIONS,
+            "Authority decision is unsupported.",
+        ),
+        (
+            isinstance(record["owner_status"], str)
+            and record["owner_status"] in IMMUTABLE_V2_OWNER_STATUSES,
+            "Authority owner_status is outside the normalized closed enum.",
+        ),
+        (
+            isinstance(record["owner_status"], str)
+            and IMMUTABLE_V2_OWNER_STATUS_DECISIONS.get(record["owner_status"])
+            == record["decision"],
+            "Authority owner_status and decision are inconsistent.",
+        ),
+        (
+            record["status_record_schema_version"]
+            == IMMUTABLE_V2_STATUS_RECORD_SCHEMA_VERSION,
+            "Authority status-record schema version is unsupported.",
+        ),
+        (
+            isinstance(record["status_record_verification_mode"], str)
+            and record["status_record_verification_mode"]
+            in IMMUTABLE_V2_STATUS_RECORD_VERIFICATION_MODES,
+            "Authority status-record verification mode is unsupported.",
+        ),
+        (
+            _strict_id_list(record["authorized_artifact_types"])
+            and bool(record["authorized_artifact_types"])
+            and all(
+                artifact_type in IMMUTABLE_V2_ARTIFACT_TYPES
+                for artifact_type in record["authorized_artifact_types"]
+            ),
+            "Authority artifact types must be a non-empty closed-catalog list.",
+        ),
+    )
+    for accepted, message in checks:
+        if accepted:
+            continue
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            message,
+            authority_id,
+        )
+    owner_id = record["owner_id"]
+    artifact_types = record["authorized_artifact_types"]
+    if (
+        isinstance(owner_id, str)
+        and owner_id in IMMUTABLE_V2_OWNER_IDS
+        and _strict_id_list(artifact_types)
+        and all(
+            artifact_type in IMMUTABLE_V2_ARTIFACT_TYPES
+            for artifact_type in artifact_types
+        )
+        and any(
+            owner_id not in IMMUTABLE_V2_ARTIFACT_OWNER_IDS[artifact_type]
+            for artifact_type in artifact_types
+        )
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "Authority artifact types exceed the owner's closed boundary.",
+            authority_id,
+        )
+    verification_mode = record["status_record_verification_mode"]
+    receipt_fields = (
+        record["status_record_receipt_id"],
+        record["status_record_receipt_sha256"],
+        record["status_record_receipt_authority_revision"],
+    )
+    if verification_mode == "local_bytes" and any(
+        value is not None for value in receipt_fields
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "Local status-record verification requires null receipt bindings.",
+            authority_id,
+        )
+    elif verification_mode == "external_receipt" and not (
+        _is_non_empty_string(record["status_record_receipt_id"])
+        and _strict_hex(record["status_record_receipt_sha256"], 64)
+        and _strict_hex(record["status_record_receipt_authority_revision"], 40)
+        and record["status_record_receipt_authority_revision"]
+        == record["authority_revision"]
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "External status-record verification requires exact receipt bindings.",
+            authority_id,
+        )
+    return valid
+
+
+def _v2_status_record_reject(
+    rejections: list[ImmutableRegistryRejection],
+    message: str,
+    authority_id: str | None,
+) -> None:
+    _immutable_reject(
+        rejections,
+        ImmutableRegistryRejectionCode.STATUS_RECORD_VERIFICATION_FAILED,
+        message,
+        authority_id,
+    )
+
+
+def _v2_json_object_without_duplicate_keys(
+    pairs: list[tuple[str, Any]],
+) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"Duplicate JSON key {key!r}.")
+        result[key] = value
+    return result
+
+
+def _validate_v2_local_status_record(
+    authority: Mapping[str, Any],
+    trusted_status_record_bytes: Mapping[str, bytes] | None,
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    authority_id = authority["authority_id"]
+    status_record_id = authority["status_record_id"]
+    payload = (
+        trusted_status_record_bytes.get(status_record_id)
+        if isinstance(trusted_status_record_bytes, Mapping)
+        else None
+    )
+    if not isinstance(payload, bytes):
+        _v2_status_record_reject(
+            rejections,
+            "Local status-record verification requires verifier-supplied bytes.",
+            authority_id,
+        )
+        return False
+    if hashlib.sha256(payload).hexdigest() != authority["status_record_sha256"]:
+        _v2_status_record_reject(
+            rejections,
+            "Verifier-supplied status-record bytes do not match SHA-256.",
+            authority_id,
+        )
+        return False
+    try:
+        decoded = payload.decode("utf-8")
+        status_record = json.loads(
+            decoded,
+            object_pairs_hook=_v2_json_object_without_duplicate_keys,
+        )
+    except (UnicodeDecodeError, json.JSONDecodeError, ValueError):
+        _v2_status_record_reject(
+            rejections,
+            "Verifier-supplied status record is not unambiguous UTF-8 JSON.",
+            authority_id,
+        )
+        return False
+    expected = {
+        "schema_version": authority["status_record_schema_version"],
+        "status_record_id": status_record_id,
+        "owner_id": authority["owner_id"],
+        "authority_revision": authority["authority_revision"],
+        "owner_status": authority["owner_status"],
+        "decision": authority["decision"],
+    }
+    if not isinstance(status_record, Mapping) or status_record != expected:
+        _v2_status_record_reject(
+            rejections,
+            "Status-record JSON does not exactly match the trusted authority.",
+            authority_id,
+        )
+        return False
+    return True
+
+
+def _validate_v2_status_record_receipt(
+    authority: Mapping[str, Any],
+    receipt: Any,
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    authority_id = authority["authority_id"]
+    if not isinstance(receipt, Mapping):
+        _v2_status_record_reject(
+            rejections,
+            "External status-record verification requires a trusted receipt.",
+            authority_id,
+        )
+        return False
+    if not _check_exact_fields(
+        receipt,
+        _IMMUTABLE_V2_STATUS_RECORD_RECEIPT_FIELDS,
+        "Trusted status-record receipt",
+        rejections,
+        authority_id,
+    ):
+        _v2_status_record_reject(
+            rejections,
+            "Trusted status-record receipt fields are incomplete or unknown.",
+            authority_id,
+        )
+        return False
+    checks = (
+        _is_non_empty_string(receipt["receipt_id"]),
+        _strict_hex(receipt["receipt_sha256"], 64),
+        _strict_hex(receipt["receipt_authority_revision"], 40),
+        receipt["receipt_id"] == authority["status_record_receipt_id"],
+        receipt["receipt_sha256"]
+        == authority["status_record_receipt_sha256"],
+        receipt["receipt_authority_revision"]
+        == authority["status_record_receipt_authority_revision"],
+        receipt["receipt_authority_revision"] == authority["authority_revision"],
+        receipt["verified_status_record_id"] == authority["status_record_id"],
+        receipt["verified_status_record_sha256"]
+        == authority["status_record_sha256"],
+        receipt["verified_status_record_schema_version"]
+        == authority["status_record_schema_version"],
+        receipt["verified_owner_id"] == authority["owner_id"],
+        receipt["verified_owner_authority_revision"]
+        == authority["authority_revision"],
+        receipt["verified_owner_status"] == authority["owner_status"],
+        receipt["verified_decision"] == authority["decision"],
+    )
+    if not all(checks):
+        _v2_status_record_reject(
+            rejections,
+            "Trusted external receipt does not exactly bind the owner status record.",
+            authority_id,
+        )
+        return False
+    return True
+
+
+def _validate_v2_trusted_owner_authorities(
+    trusted_owner_authorities: Mapping[str, Mapping[str, Any]] | None,
+    trusted_status_record_bytes: Mapping[str, bytes] | None,
+    rejections: list[ImmutableRegistryRejection],
+) -> dict[str, Mapping[str, Any]]:
+    if trusted_status_record_bytes is not None and not isinstance(
+        trusted_status_record_bytes, Mapping
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.STATUS_RECORD_VERIFICATION_FAILED,
+            "trusted_status_record_bytes must be a mapping when supplied.",
+        )
+        return {}
+    if trusted_owner_authorities is None:
+        if isinstance(trusted_status_record_bytes, Mapping) and (
+            trusted_status_record_bytes
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_AUTHORITY,
+                "Status-record bytes were supplied without trusted authorities.",
+            )
+        return {}
+    if not isinstance(trusted_owner_authorities, Mapping):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_TRUSTED_AUTHORITY,
+            "trusted_owner_authorities must be a verifier-supplied mapping.",
+        )
+        return {}
+
+    trusted_by_id: dict[str, Mapping[str, Any]] = {}
+    local_status_record_ids: set[str] = set()
+    for key, entry in trusted_owner_authorities.items():
+        record_id = key if isinstance(key, str) else None
+        if not _is_non_empty_string(key) or not isinstance(entry, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_AUTHORITY,
+                "Trusted authority keys must identify mapping entries.",
+                record_id,
+            )
+            continue
+        if not _check_exact_fields(
+            entry,
+            _IMMUTABLE_V2_TRUSTED_AUTHORITY_FIELDS,
+            "Trusted owner authority",
+            rejections,
+            key,
+        ):
+            continue
+        authority = entry["authority"]
+        verification = entry["status_record_verification"]
+        if not isinstance(authority, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_AUTHORITY,
+                "Trusted authority must contain an authority mapping.",
+                key,
+            )
+            continue
+        authority_valid = _validate_v2_authority_record(authority, rejections)
+        if authority.get("authority_id") != key:
+            authority_valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_AUTHORITY,
+                "Trusted authority map key and authority_id differ.",
+                key,
+            )
+        if not isinstance(verification, Mapping) or not _check_exact_fields(
+            verification,
+            _IMMUTABLE_V2_STATUS_RECORD_VERIFICATION_FIELDS,
+            "Trusted status-record verification",
+            rejections,
+            key,
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_AUTHORITY,
+                "Trusted authority requires exact status-record verification.",
+                key,
+            )
+            continue
+        mode = verification["mode"]
+        if (
+            not isinstance(mode, str)
+            or mode not in IMMUTABLE_V2_STATUS_RECORD_VERIFICATION_MODES
+            or mode != authority.get("status_record_verification_mode")
+        ):
+            authority_valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_AUTHORITY,
+                "Trusted and embedded status-record verification modes differ.",
+                key,
+            )
+        elif mode == "local_bytes":
+            if verification["external_receipt"] is not None:
+                authority_valid = False
+                _v2_status_record_reject(
+                    rejections,
+                    "Local status-record evidence requires a null receipt.",
+                    key,
+                )
+            elif authority_valid:
+                local_status_record_ids.add(authority["status_record_id"])
+                authority_valid = _validate_v2_local_status_record(
+                    authority,
+                    trusted_status_record_bytes,
+                    rejections,
+                )
+        elif authority_valid:
+            authority_valid = _validate_v2_status_record_receipt(
+                authority,
+                verification["external_receipt"],
+                rejections,
+            )
+        if authority_valid:
+            trusted_by_id[key] = entry
+
+    if isinstance(trusted_status_record_bytes, Mapping):
+        for status_record_id, payload in trusted_status_record_bytes.items():
+            if (
+                not _is_non_empty_string(status_record_id)
+                or not isinstance(payload, bytes)
+                or status_record_id not in local_status_record_ids
+            ):
+                _v2_status_record_reject(
+                    rejections,
+                    "Verifier supplied malformed or unreferenced status-record bytes.",
+                    status_record_id if isinstance(status_record_id, str) else None,
+                )
+    return trusted_by_id
+
+
+def _v2_artifact_authorization_reject(
+    rejections: list[ImmutableRegistryRejection],
+    message: str,
+    record_id: str | None,
+) -> None:
+    _immutable_reject(
+        rejections,
+        ImmutableRegistryRejectionCode.INVALID_ARTIFACT_AUTHORIZATION,
+        message,
+        record_id,
+    )
+
+
+def _v2_authorization_evidence_reject(
+    rejections: list[ImmutableRegistryRejection],
+    message: str,
+    record_id: str | None,
+) -> None:
+    _immutable_reject(
+        rejections,
+        ImmutableRegistryRejectionCode.ARTIFACT_AUTHORIZATION_VERIFICATION_FAILED,
+        message,
+        record_id,
+    )
+
+
+def _v2_authorization_record_document(
+    authorization: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        field: authorization[field]
+        for field in _IMMUTABLE_V2_AUTHORIZATION_RECORD_FIELDS
+    }
+
+
+def _validate_v2_artifact_authorization_record(
+    authorization: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    authorization_id = (
+        authorization.get("authorization_id")
+        if isinstance(authorization.get("authorization_id"), str)
+        else None
+    )
+    if not _check_exact_fields(
+        authorization,
+        _IMMUTABLE_V2_ARTIFACT_AUTHORIZATION_FIELDS,
+        "Trusted exact-artifact authorization",
+        rejections,
+        authorization_id,
+    ):
+        return False
+    valid = True
+    checks = (
+        (
+            _is_non_empty_string(authorization["authorization_id"]),
+            "authorization_id must be non-empty.",
+        ),
+        (
+            _is_non_empty_string(authorization["authority_id"]),
+            "authority_id must be non-empty.",
+        ),
+        (
+            isinstance(authorization["owner_id"], str)
+            and authorization["owner_id"] in IMMUTABLE_V2_OWNER_IDS,
+            "Authorization owner_id is outside the closed catalog.",
+        ),
+        (
+            _strict_hex(authorization["owner_authority_revision"], 40),
+            "Authorization owner revision must be an exact full Git commit.",
+        ),
+        (
+            _is_non_empty_string(authorization["artifact_id"]),
+            "Authorization artifact_id must be non-empty.",
+        ),
+        (
+            isinstance(authorization["artifact_type"], str)
+            and authorization["artifact_type"] in IMMUTABLE_V2_ARTIFACT_TYPES,
+            "Authorization artifact_type is outside the closed catalog.",
+        ),
+        (
+            _is_non_empty_string(authorization["artifact_schema_version"]),
+            "Authorization artifact schema/version must be explicit.",
+        ),
+        (
+            _strict_hex(authorization["artifact_sha256"], 64),
+            "Authorization artifact hash must be SHA-256.",
+        ),
+        (
+            _is_non_negative_integer(authorization["artifact_size_bytes"]),
+            "Authorization artifact size must be a non-negative integer.",
+        ),
+        (
+            _is_non_empty_string(authorization["manifest_id"]),
+            "Authorization manifest_id must be non-empty.",
+        ),
+        (
+            _strict_hex(authorization["manifest_sha256"], 64),
+            "Authorization manifest hash must be SHA-256.",
+        ),
+        (
+            _is_non_empty_string(authorization["manifest_schema_version"]),
+            "Authorization manifest schema/version must be explicit.",
+        ),
+        (
+            _is_non_empty_string(authorization["manifest_artifact_identity"]),
+            "Authorization manifest artifact identity must be non-empty.",
+        ),
+        (
+            isinstance(authorization["owner_status"], str)
+            and authorization["owner_status"] in IMMUTABLE_V2_OWNER_STATUSES,
+            "Authorization owner_status is outside the normalized closed enum.",
+        ),
+        (
+            isinstance(authorization["decision"], str)
+            and authorization["decision"] in IMMUTABLE_V2_AUTHORITY_DECISIONS,
+            "Authorization decision is unsupported.",
+        ),
+        (
+            IMMUTABLE_V2_OWNER_STATUS_DECISIONS.get(
+                authorization["owner_status"]
+            )
+            == authorization["decision"],
+            "Authorization owner_status and decision are inconsistent.",
+        ),
+        (
+            _is_non_empty_string(authorization["authorization_record_id"]),
+            "authorization_record_id must be non-empty.",
+        ),
+        (
+            _strict_hex(authorization["authorization_record_sha256"], 64),
+            "Authorization-record hash must be SHA-256.",
+        ),
+        (
+            authorization["authorization_record_verification_mode"]
+            in IMMUTABLE_V2_STATUS_RECORD_VERIFICATION_MODES,
+            "Authorization-record verification mode is unsupported.",
+        ),
+    )
+    for accepted, message in checks:
+        if accepted:
+            continue
+        valid = False
+        _v2_artifact_authorization_reject(
+            rejections, message, authorization_id
+        )
+    artifact_type = authorization["artifact_type"]
+    owner_id = authorization["owner_id"]
+    if (
+        isinstance(artifact_type, str)
+        and artifact_type in IMMUTABLE_V2_ARTIFACT_OWNER_IDS
+        and isinstance(owner_id, str)
+        and owner_id in IMMUTABLE_V2_OWNER_IDS
+        and owner_id not in IMMUTABLE_V2_ARTIFACT_OWNER_IDS[artifact_type]
+    ):
+        valid = False
+        _v2_artifact_authorization_reject(
+            rejections,
+            "Authorization artifact type exceeds the owner's closed boundary.",
+            authorization_id,
+        )
+    receipt_fields = (
+        authorization["authorization_record_receipt_id"],
+        authorization["authorization_record_receipt_sha256"],
+        authorization["authorization_record_receipt_authority_revision"],
+    )
+    mode = authorization["authorization_record_verification_mode"]
+    if mode == "local_bytes" and any(value is not None for value in receipt_fields):
+        valid = False
+        _v2_artifact_authorization_reject(
+            rejections,
+            "Local authorization-record verification requires null receipt bindings.",
+            authorization_id,
+        )
+    elif mode == "external_receipt" and not (
+        _is_non_empty_string(receipt_fields[0])
+        and _strict_hex(receipt_fields[1], 64)
+        and _strict_hex(receipt_fields[2], 40)
+        and receipt_fields[2] == authorization["owner_authority_revision"]
+    ):
+        valid = False
+        _v2_artifact_authorization_reject(
+            rejections,
+            "External authorization-record verification requires exact receipt bindings.",
+            authorization_id,
+        )
+    return valid
+
+
+def _validate_v2_local_authorization_record(
+    authorization: Mapping[str, Any],
+    trusted_authorization_record_bytes: Mapping[str, bytes] | None,
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    authorization_id = authorization["authorization_id"]
+    record_id = authorization["authorization_record_id"]
+    payload = (
+        trusted_authorization_record_bytes.get(record_id)
+        if isinstance(trusted_authorization_record_bytes, Mapping)
+        else None
+    )
+    if not isinstance(payload, bytes):
+        _v2_authorization_evidence_reject(
+            rejections,
+            "Local authorization verification requires verifier-supplied bytes.",
+            authorization_id,
+        )
+        return False
+    if (
+        hashlib.sha256(payload).hexdigest()
+        != authorization["authorization_record_sha256"]
+    ):
+        _v2_authorization_evidence_reject(
+            rejections,
+            "Verifier-supplied authorization bytes do not match SHA-256.",
+            authorization_id,
+        )
+        return False
+    try:
+        decoded = payload.decode("utf-8")
+        record = json.loads(
+            decoded,
+            object_pairs_hook=_v2_json_object_without_duplicate_keys,
+        )
+    except (UnicodeDecodeError, json.JSONDecodeError, ValueError):
+        _v2_authorization_evidence_reject(
+            rejections,
+            "Authorization record is not unambiguous UTF-8 JSON.",
+            authorization_id,
+        )
+        return False
+    expected = _v2_authorization_record_document(authorization)
+    canonical = json.dumps(expected, indent=2, sort_keys=True) + "\n"
+    if (
+        not isinstance(record, Mapping)
+        or record != expected
+        or decoded != canonical
+    ):
+        _v2_authorization_evidence_reject(
+            rejections,
+            "Authorization JSON is noncanonical or mismatches exact authorization.",
+            authorization_id,
+        )
+        return False
+    return True
+
+
+def _validate_v2_authorization_receipt(
+    authorization: Mapping[str, Any],
+    receipt: Any,
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    authorization_id = authorization["authorization_id"]
+    if not isinstance(receipt, Mapping) or not _check_exact_fields(
+        receipt,
+        _IMMUTABLE_V2_AUTHORIZATION_RECEIPT_FIELDS,
+        "Trusted artifact-authorization receipt",
+        rejections,
+        authorization_id,
+    ):
+        _v2_authorization_evidence_reject(
+            rejections,
+            "External authorization verification requires an exact trusted receipt.",
+            authorization_id,
+        )
+        return False
+    checks = (
+        receipt["receipt_id"]
+        == authorization["authorization_record_receipt_id"],
+        receipt["receipt_sha256"]
+        == authorization["authorization_record_receipt_sha256"],
+        receipt["receipt_authority_revision"]
+        == authorization["authorization_record_receipt_authority_revision"],
+        receipt["receipt_authority_revision"]
+        == authorization["owner_authority_revision"],
+        receipt["verified_authorization_record_id"]
+        == authorization["authorization_record_id"],
+        receipt["verified_authorization_record_sha256"]
+        == authorization["authorization_record_sha256"],
+        receipt["verified_authority_id"] == authorization["authority_id"],
+        receipt["verified_owner_id"] == authorization["owner_id"],
+        receipt["verified_owner_revision"]
+        == authorization["owner_authority_revision"],
+        receipt["verified_artifact_id"] == authorization["artifact_id"],
+        receipt["verified_artifact_type"] == authorization["artifact_type"],
+        receipt["verified_artifact_sha256"]
+        == authorization["artifact_sha256"],
+        receipt["verified_artifact_size"]
+        == authorization["artifact_size_bytes"],
+        receipt["verified_manifest_id"] == authorization["manifest_id"],
+        receipt["verified_manifest_sha256"]
+        == authorization["manifest_sha256"],
+        receipt["verified_manifest_artifact_identity"]
+        == authorization["manifest_artifact_identity"],
+        receipt["verified_owner_status"] == authorization["owner_status"],
+        receipt["verified_decision"] == authorization["decision"],
+        _strict_hex(receipt["receipt_sha256"], 64),
+        _strict_hex(receipt["receipt_authority_revision"], 40),
+    )
+    if not all(checks):
+        _v2_authorization_evidence_reject(
+            rejections,
+            "Trusted authorization receipt does not bind the exact artifact.",
+            authorization_id,
+        )
+        return False
+    return True
+
+
+def _validate_v2_trusted_artifact_authorizations(
+    trusted_artifact_authorizations: Mapping[str, Mapping[str, Any]] | None,
+    trusted_authorization_record_bytes: Mapping[str, bytes] | None,
+    rejections: list[ImmutableRegistryRejection],
+) -> dict[str, Mapping[str, Any]]:
+    if trusted_artifact_authorizations is None:
+        if trusted_authorization_record_bytes:
+            _v2_authorization_evidence_reject(
+                rejections,
+                "Authorization bytes were supplied without trusted authorizations.",
+                None,
+            )
+        return {}
+    if not isinstance(trusted_artifact_authorizations, Mapping):
+        _v2_artifact_authorization_reject(
+            rejections,
+            "trusted_artifact_authorizations must be a verifier-supplied mapping.",
+            None,
+        )
+        return {}
+    if trusted_authorization_record_bytes is not None and not isinstance(
+        trusted_authorization_record_bytes, Mapping
+    ):
+        _v2_authorization_evidence_reject(
+            rejections,
+            "trusted_authorization_record_bytes must be a mapping.",
+            None,
+        )
+        return {}
+    trusted_by_artifact: dict[str, Mapping[str, Any]] = {}
+    local_record_ids: set[str] = set()
+    authorization_ids: set[str] = set()
+    for artifact_key, entry in trusted_artifact_authorizations.items():
+        if not _is_non_empty_string(artifact_key) or not isinstance(
+            entry, Mapping
+        ):
+            _v2_artifact_authorization_reject(
+                rejections,
+                "Trusted authorization keys must identify artifact mappings.",
+                artifact_key if isinstance(artifact_key, str) else None,
+            )
+            continue
+        if not _check_exact_fields(
+            entry,
+            _IMMUTABLE_V2_TRUSTED_ARTIFACT_AUTHORIZATION_FIELDS,
+            "Trusted artifact authorization",
+            rejections,
+            artifact_key,
+        ):
+            continue
+        authorization = entry["authorization"]
+        verification = entry["authorization_record_verification"]
+        if not isinstance(authorization, Mapping):
+            _v2_artifact_authorization_reject(
+                rejections,
+                "Trusted artifact authorization must contain a mapping.",
+                artifact_key,
+            )
+            continue
+        valid = _validate_v2_artifact_authorization_record(
+            authorization, rejections
+        )
+        if authorization.get("artifact_id") != artifact_key:
+            valid = False
+            _v2_artifact_authorization_reject(
+                rejections,
+                "Trusted authorization map key and artifact_id differ.",
+                artifact_key,
+            )
+        authorization_id = authorization.get("authorization_id")
+        if isinstance(authorization_id, str):
+            if authorization_id in authorization_ids:
+                valid = False
+                _v2_artifact_authorization_reject(
+                    rejections,
+                    "Duplicate trusted authorization_id.",
+                    authorization_id,
+                )
+            authorization_ids.add(authorization_id)
+        if not isinstance(verification, Mapping) or not _check_exact_fields(
+            verification,
+            _IMMUTABLE_V2_AUTHORIZATION_VERIFICATION_FIELDS,
+            "Trusted authorization-record verification",
+            rejections,
+            artifact_key,
+        ):
+            _v2_authorization_evidence_reject(
+                rejections,
+                "Trusted authorization requires exact verification evidence.",
+                artifact_key,
+            )
+            continue
+        mode = verification["mode"]
+        if (
+            mode
+            != authorization.get("authorization_record_verification_mode")
+        ):
+            valid = False
+            _v2_authorization_evidence_reject(
+                rejections,
+                "Authorization verification modes differ.",
+                artifact_key,
+            )
+        elif mode == "local_bytes":
+            if verification["external_receipt"] is not None:
+                valid = False
+                _v2_authorization_evidence_reject(
+                    rejections,
+                    "Local authorization evidence requires a null receipt.",
+                    artifact_key,
+                )
+            elif valid:
+                local_record_ids.add(authorization["authorization_record_id"])
+                valid = _validate_v2_local_authorization_record(
+                    authorization,
+                    trusted_authorization_record_bytes,
+                    rejections,
+                )
+        elif mode == "external_receipt" and valid:
+            valid = _validate_v2_authorization_receipt(
+                authorization,
+                verification["external_receipt"],
+                rejections,
+            )
+        else:
+            valid = False
+        if valid:
+            trusted_by_artifact[artifact_key] = entry
+    if isinstance(trusted_authorization_record_bytes, Mapping):
+        for record_id, payload in trusted_authorization_record_bytes.items():
+            if (
+                not _is_non_empty_string(record_id)
+                or not isinstance(payload, bytes)
+                or record_id not in local_record_ids
+            ):
+                _v2_authorization_evidence_reject(
+                    rejections,
+                    "Verifier supplied malformed or unreferenced authorization bytes.",
+                    record_id if isinstance(record_id, str) else None,
+                )
+    return trusted_by_artifact
+
+
+def _validate_v2_trusted_manifests(
+    trusted_manifest_records: Mapping[str, Mapping[str, Any]] | None,
+    rejections: list[ImmutableRegistryRejection],
+) -> dict[str, Mapping[str, Any]]:
+    if trusted_manifest_records is None:
+        return {}
+    if not isinstance(trusted_manifest_records, Mapping):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_TRUSTED_MANIFEST,
+            "trusted_manifest_records must be a verifier-supplied mapping.",
+        )
+        return {}
+    trusted_by_id: dict[str, Mapping[str, Any]] = {}
+    for manifest_key, manifest in trusted_manifest_records.items():
+        if (
+            not _is_non_empty_string(manifest_key)
+            or not isinstance(manifest, Mapping)
+            or not _check_exact_fields(
+                manifest,
+                _IMMUTABLE_V2_TRUSTED_MANIFEST_FIELDS,
+                "Trusted manifest",
+                rejections,
+                manifest_key if isinstance(manifest_key, str) else None,
+            )
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_MANIFEST,
+                "Trusted manifest key or record is malformed.",
+                manifest_key if isinstance(manifest_key, str) else None,
+            )
+            continue
+        valid = True
+        checks = (
+            manifest["manifest_id"] == manifest_key,
+            _strict_hex(manifest["manifest_sha256"], 64),
+            _is_non_empty_string(manifest["manifest_schema_version"]),
+            _is_non_empty_string(manifest["owner_authority_id"]),
+            isinstance(manifest["owner_id"], str)
+            and manifest["owner_id"] in IMMUTABLE_V2_OWNER_IDS,
+            _strict_hex(manifest["owner_authority_revision"], 40),
+            isinstance(manifest["owner_status"], str)
+            and manifest["owner_status"] in IMMUTABLE_V2_OWNER_STATUSES,
+            isinstance(manifest["decision"], str)
+            and manifest["decision"] in IMMUTABLE_V2_AUTHORITY_DECISIONS,
+            IMMUTABLE_V2_OWNER_STATUS_DECISIONS.get(manifest["owner_status"])
+            == manifest["decision"],
+            isinstance(manifest["artifact_identities"], list),
+            bool(manifest["artifact_identities"]),
+        )
+        if not all(checks):
+            valid = False
+        artifact_ids: set[str] = set()
+        manifest_identities: set[str] = set()
+        for entry in (
+            manifest["artifact_identities"]
+            if isinstance(manifest["artifact_identities"], list)
+            else []
+        ):
+            if not isinstance(entry, Mapping) or not _check_exact_fields(
+                entry,
+                _IMMUTABLE_V2_TRUSTED_MANIFEST_ARTIFACT_FIELDS,
+                "Trusted manifest artifact identity",
+                rejections,
+                manifest_key,
+            ):
+                valid = False
+                continue
+            entry_checks = (
+                _is_non_empty_string(entry["artifact_id"]),
+                isinstance(entry["artifact_type"], str)
+                and entry["artifact_type"] in IMMUTABLE_V2_ARTIFACT_TYPES,
+                _is_non_empty_string(entry["artifact_schema_version"]),
+                _strict_hex(entry["artifact_sha256"], 64),
+                _is_non_negative_integer(entry["artifact_size_bytes"]),
+                _is_non_empty_string(entry["manifest_artifact_identity"]),
+                isinstance(entry["artifact_type"], str)
+                and isinstance(manifest["owner_id"], str)
+                and manifest["owner_id"]
+                in IMMUTABLE_V2_ARTIFACT_OWNER_IDS.get(
+                    entry["artifact_type"], frozenset()
+                ),
+            )
+            if not all(entry_checks):
+                valid = False
+            if (
+                entry["artifact_id"] in artifact_ids
+                or entry["manifest_artifact_identity"] in manifest_identities
+            ):
+                valid = False
+            artifact_ids.add(entry["artifact_id"])
+            manifest_identities.add(entry["manifest_artifact_identity"])
+        if not valid:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_MANIFEST,
+                "Trusted manifest does not bind unique exact artifact identities.",
+                manifest_key,
+            )
+            continue
+        trusted_by_id[manifest_key] = manifest
+    return trusted_by_id
+
+
+def _validate_v2_trusted_artifact_receipts(
+    trusted_artifact_receipts: Mapping[str, Mapping[str, Any]] | None,
+    rejections: list[ImmutableRegistryRejection],
+) -> dict[str, Mapping[str, Any]]:
+    if trusted_artifact_receipts is None:
+        return {}
+    if not isinstance(trusted_artifact_receipts, Mapping):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_TRUSTED_ARTIFACT_RECEIPT,
+            "trusted_artifact_receipts must be a verifier-supplied mapping.",
+        )
+        return {}
+    trusted_by_id: dict[str, Mapping[str, Any]] = {}
+    for receipt_key, receipt in trusted_artifact_receipts.items():
+        if (
+            not _is_non_empty_string(receipt_key)
+            or not isinstance(receipt, Mapping)
+            or not _check_exact_fields(
+                receipt,
+                _IMMUTABLE_V2_TRUSTED_ARTIFACT_RECEIPT_FIELDS,
+                "Trusted artifact receipt",
+                rejections,
+                receipt_key if isinstance(receipt_key, str) else None,
+            )
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_ARTIFACT_RECEIPT,
+                "Trusted artifact receipt key or record is malformed.",
+                receipt_key if isinstance(receipt_key, str) else None,
+            )
+            continue
+        checks = (
+            receipt["receipt_id"] == receipt_key,
+            _strict_hex(receipt["receipt_sha256"], 64),
+            _strict_hex(receipt["receipt_authority_revision"], 40),
+            _is_non_empty_string(receipt["verified_artifact_id"]),
+            isinstance(receipt["verified_artifact_type"], str)
+            and receipt["verified_artifact_type"]
+            in IMMUTABLE_V2_ARTIFACT_TYPES,
+            _is_non_empty_string(receipt["verified_artifact_schema_version"]),
+            _strict_hex(receipt["verified_artifact_sha256"], 64),
+            _is_non_negative_integer(receipt["verified_artifact_size"]),
+            isinstance(receipt["verified_owner_id"], str)
+            and receipt["verified_owner_id"] in IMMUTABLE_V2_OWNER_IDS,
+            _strict_hex(receipt["verified_owner_authority_revision"], 40),
+            _is_non_empty_string(receipt["verified_manifest_id"]),
+            _strict_hex(receipt["verified_manifest_sha256"], 64),
+            _is_non_empty_string(
+                receipt["verified_manifest_artifact_identity"]
+            ),
+        )
+        if not all(checks):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_TRUSTED_ARTIFACT_RECEIPT,
+                "Trusted artifact receipt fields are malformed.",
+                receipt_key,
+            )
+            continue
+        trusted_by_id[receipt_key] = receipt
+    return trusted_by_id
+
+
+def _validate_v2_manifest_record(
+    record: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    manifest_id = (
+        record.get("manifest_id")
+        if isinstance(record.get("manifest_id"), str)
+        else None
+    )
+    if not _check_exact_fields(
+        record,
+        _IMMUTABLE_V2_MANIFEST_FIELDS,
+        "Manifest record",
+        rejections,
+        manifest_id,
+    ):
+        return False
+    valid = True
+    checks = (
+        (
+            record["schema_version"] == SCHEMA_VERSION,
+            "Manifest schema_version is unsupported.",
+        ),
+        (
+            _is_non_empty_string(record["manifest_id"]),
+            "manifest_id must be non-empty.",
+        ),
+        (
+            _strict_hex(record["manifest_sha256"], 64),
+            "Manifest hash must be SHA-256.",
+        ),
+        (
+            _is_non_empty_string(record["manifest_schema_version"]),
+            "Manifest schema/version must be explicit.",
+        ),
+        (
+            _is_non_empty_string(record["owner_authority_id"]),
+            "Manifest owner_authority_id must be non-empty.",
+        ),
+        (
+            isinstance(record["decision"], str)
+            and record["decision"] in IMMUTABLE_V2_MANIFEST_DECISIONS,
+            "Manifest decision is unsupported.",
+        ),
+        (
+            _strict_id_list(record["artifact_identities"])
+            and bool(record["artifact_identities"]),
+            "Manifest artifact identities must be a non-empty duplicate-free list.",
+        ),
+    )
+    for accepted, message in checks:
+        if accepted:
+            continue
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_MANIFEST,
+            message,
+            manifest_id,
+        )
+    return valid
+
+
+def _validate_v2_byte_verification_record(
+    record: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    verification_id = (
+        record.get("verification_id")
+        if isinstance(record.get("verification_id"), str)
+        else None
+    )
+    if not _check_exact_fields(
+        record,
+        _IMMUTABLE_V2_BYTE_VERIFICATION_FIELDS,
+        "Byte-verification record",
+        rejections,
+        verification_id,
+    ):
+        return False
+    valid = True
+    checks = (
+        (
+            record["schema_version"] == SCHEMA_VERSION,
+            "Byte-verification schema_version is unsupported.",
+        ),
+        (
+            _is_non_empty_string(record["verification_id"]),
+            "verification_id must be non-empty.",
+        ),
+        (
+            _is_non_empty_string(record["artifact_id"]),
+            "Byte verification requires an artifact_id.",
+        ),
+        (
+            isinstance(record["mode"], str)
+            and record["mode"] in IMMUTABLE_V2_BYTE_VERIFICATION_MODES,
+            "Byte-verification mode is unsupported.",
+        ),
+        (
+            _strict_hex(record["verified_sha256"], 64),
+            "Verified artifact hash must be SHA-256.",
+        ),
+        (
+            _is_non_negative_integer(record["verified_size_bytes"]),
+            "Verified artifact size must be a non-negative integer.",
+        ),
+        (
+            _utc_timestamp(record["verified_at"]) is not None,
+            "Byte verification requires an explicit UTC timestamp.",
+        ),
+    )
+    for accepted, message in checks:
+        if accepted:
+            continue
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+            message,
+            verification_id,
+        )
+    if record["mode"] == "local_bytes":
+        if any(
+            record[field] is not None
+            for field in (
+                "external_receipt_id",
+                "external_receipt_sha256",
+                "external_receipt_authority_revision",
+            )
+        ):
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+                "Local-byte verification requires null external receipt fields.",
+                verification_id,
+            )
+    elif record["mode"] == "external_receipt":
+        external_checks = (
+            _is_non_empty_string(record["external_receipt_id"]),
+            _strict_hex(record["external_receipt_sha256"], 64),
+            _strict_hex(record["external_receipt_authority_revision"], 40),
+        )
+        if not all(external_checks):
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+                "External verification requires exact receipt identity, hash, and revision.",
+                verification_id,
+            )
+    return valid
+
+
+def _validate_v2_run_record(
+    run: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    run_id = run.get("run_id") if isinstance(run.get("run_id"), str) else None
+    if not _check_exact_fields(
+        run,
+        _IMMUTABLE_V2_RUN_FIELDS,
+        "Immutable registry v2 run",
+        rejections,
+        run_id,
+    ):
+        return False
+    valid = True
+    if not _is_non_empty_string(run["run_id"]):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MISSING_RUN_ID,
+            "run_id must be a non-empty immutable identifier.",
+            run_id,
+        )
+    if run["schema_version"] != SCHEMA_VERSION:
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.UNSUPPORTED_SCHEMA_VERSION,
+            "Run schema_version is unsupported.",
+            run_id,
+        )
+    if not _strict_hex(run["code_sha"], 40):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run code_sha must be an exact full Git commit.",
+            run_id,
+        )
+    if not isinstance(run["git_dirty"], bool):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run git_dirty must be boolean.",
+            run_id,
+        )
+    for field in (
+        "config_snapshot_hash",
+        "checkpoint_hash",
+        "data_identity_hash",
+        "preprocess_hash",
+        "environment_hash",
+    ):
+        if _strict_hex(run[field], 64):
+            continue
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            f"Run {field} must be SHA-256.",
+            run_id,
+        )
+    seeds = run["seeds"]
+    if (
+        not isinstance(seeds, Mapping)
+        or not seeds
+        or any(not _is_non_empty_string(key) for key in seeds)
+        or any(
+            not isinstance(seed, int) or isinstance(seed, bool)
+            for seed in seeds.values()
+        )
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run seeds must be a non-empty mapping of names to integers.",
+            run_id,
+        )
+    command = run["command"]
+    if (
+        not isinstance(command, list)
+        or not command
+        or any(not _is_non_empty_string(part) for part in command)
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run command must be a non-empty list of strings.",
+            run_id,
+        )
+    if (
+        not isinstance(run["owner"], str)
+        or run["owner"] not in IMMUTABLE_V2_OWNER_IDS
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run owner is outside the closed owner catalog.",
+            run_id,
+        )
+    for field in ("input_artifact_ids", "output_artifact_ids"):
+        if _strict_id_list(run[field]):
+            continue
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+            f"Run {field} must be a duplicate-free ID list.",
+            run_id,
+        )
+    for field in ("parent_run_id", "supersedes_run_id"):
+        if run[field] is None or _is_non_empty_string(run[field]):
+            continue
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            f"Run {field} must be null or a non-empty ID.",
+            run_id,
+        )
+    if run["supersedes_run_id"] is None:
+        if run["supersession_reason"] is not None:
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                "A run without supersedes_run_id requires null supersession_reason.",
+                run_id,
+            )
+    elif not _is_non_empty_string(run["supersession_reason"]):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+            "A superseding run requires a non-empty supersession_reason.",
+            run_id,
+        )
+
+    created_at = _utc_timestamp(run["created_at"])
+    started_at = (
+        None if run["started_at"] is None else _utc_timestamp(run["started_at"])
+    )
+    ended_at = None if run["ended_at"] is None else _utc_timestamp(run["ended_at"])
+    status = run["status"]
+    if created_at is None:
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run created_at must be an explicit UTC timestamp.",
+            run_id,
+        )
+    if (
+        not isinstance(status, str)
+        or status not in IMMUTABLE_V2_RUN_STATUSES
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_RUN,
+            "Run status is unsupported.",
+            run_id,
+        )
+    elif status == "pending":
+        if (
+            run["started_at"] is not None
+            or run["ended_at"] is not None
+            or not _is_non_empty_string(run["pending_reason"])
+            or run["failure_reason"] is not None
+            or run["output_artifact_ids"]
+        ):
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Pending runs require a pending reason and no start, end, failure, or outputs.",
+                run_id,
+            )
+    elif status == "running":
+        if (
+            started_at is None
+            or (
+                created_at is not None
+                and started_at is not None
+                and started_at < created_at
+            )
+            or run["ended_at"] is not None
+            or run["pending_reason"] is not None
+            or run["failure_reason"] is not None
+            or run["output_artifact_ids"]
+        ):
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Running runs require a start and no end, reasons, or published outputs.",
+                run_id,
+            )
+    else:
+        if (
+            started_at is None
+            or ended_at is None
+            or (
+                created_at is not None
+                and started_at is not None
+                and started_at < created_at
+            )
+            or (
+                started_at is not None
+                and ended_at is not None
+                and ended_at < started_at
+            )
+            or run["pending_reason"] is not None
+        ):
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Terminal runs require ordered timestamps and null pending_reason.",
+                run_id,
+            )
+        if status == "failed" and not _is_non_empty_string(
+            run["failure_reason"]
+        ):
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Failed runs require a failure_reason.",
+                run_id,
+            )
+        if status == "completed" and run["failure_reason"] is not None:
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                "Completed runs require null failure_reason.",
+                run_id,
+            )
+    return valid
+
+
+def _validate_v2_artifact_record(
+    artifact: Mapping[str, Any],
+    rejections: list[ImmutableRegistryRejection],
+) -> bool:
+    artifact_id = (
+        artifact.get("artifact_id")
+        if isinstance(artifact.get("artifact_id"), str)
+        else None
+    )
+    if not _check_exact_fields(
+        artifact,
+        _IMMUTABLE_V2_ARTIFACT_FIELDS,
+        "Immutable registry v2 artifact",
+        rejections,
+        artifact_id,
+    ):
+        return False
+    valid = True
+    checks = (
+        (
+            _is_non_empty_string(artifact["artifact_id"]),
+            ImmutableRegistryRejectionCode.MISSING_ARTIFACT_ID,
+            "artifact_id must be a non-empty immutable identifier.",
+        ),
+        (
+            artifact["schema_version"] == SCHEMA_VERSION,
+            ImmutableRegistryRejectionCode.UNSUPPORTED_SCHEMA_VERSION,
+            "Artifact schema_version is unsupported.",
+        ),
+        (
+            _is_non_empty_string(artifact["artifact_schema_version"]),
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "artifact_schema_version must be explicit.",
+        ),
+        (
+            isinstance(artifact["artifact_type"], str)
+            and artifact["artifact_type"] in IMMUTABLE_V2_ARTIFACT_TYPES,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact type is outside the v2 closed catalog.",
+        ),
+        (
+            _is_uri(artifact["uri"]),
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact uri must be explicit and cannot be a bare filename.",
+        ),
+        (
+            _strict_hex(artifact["sha256"], 64),
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact sha256 must be exact hexadecimal SHA-256.",
+        ),
+        (
+            _is_non_negative_integer(artifact["size_bytes"]),
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact size_bytes must be a non-negative integer.",
+        ),
+        (
+            _is_non_empty_string(artifact["creator_run_id"]),
+            ImmutableRegistryRejectionCode.MISSING_CREATOR_RUN,
+            "Artifact creator_run_id must be non-empty.",
+        ),
+        (
+            _strict_id_list(artifact["direct_input_artifact_ids"]),
+            ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+            "Artifact direct inputs must be a duplicate-free ID list.",
+        ),
+        (
+            isinstance(artifact["status"], str)
+            and artifact["status"] in IMMUTABLE_ARTIFACT_STATUSES,
+            ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+            "Artifact status is unsupported.",
+        ),
+        (
+            _is_non_empty_string(artifact["owner_authority_id"]),
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "Artifact owner_authority_id must be explicit.",
+        ),
+        (
+            _strict_hex(artifact["owner_authority_revision"], 40),
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "Artifact owner authority revision must be a full Git commit.",
+        ),
+        (
+            _is_non_empty_string(artifact["owner_status_record_id"]),
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "Artifact owner status-record identity must be explicit.",
+        ),
+        (
+            _strict_hex(artifact["owner_status_record_sha256"], 64),
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "Artifact owner status-record hash must be SHA-256.",
+        ),
+        (
+            isinstance(artifact["owner_decision"], str)
+            and artifact["owner_decision"]
+            in IMMUTABLE_V2_AUTHORITY_DECISIONS,
+            ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+            "Artifact owner decision is unsupported.",
+        ),
+        (
+            _is_non_empty_string(artifact["manifest_id"]),
+            ImmutableRegistryRejectionCode.INVALID_MANIFEST,
+            "Artifact manifest_id must be explicit.",
+        ),
+        (
+            _strict_hex(artifact["manifest_sha256"], 64),
+            ImmutableRegistryRejectionCode.INVALID_MANIFEST,
+            "Artifact manifest hash must be SHA-256.",
+        ),
+        (
+            _is_non_empty_string(artifact["manifest_schema_version"]),
+            ImmutableRegistryRejectionCode.INVALID_MANIFEST,
+            "Artifact manifest schema/version must be explicit.",
+        ),
+        (
+            _is_non_empty_string(artifact["manifest_artifact_identity"]),
+            ImmutableRegistryRejectionCode.INVALID_MANIFEST,
+            "Artifact identity within its manifest must be explicit.",
+        ),
+    )
+    for accepted, code, message in checks:
+        if accepted:
+            continue
+        valid = False
+        _immutable_reject(rejections, code, message, artifact_id)
+
+    status = artifact["status"]
+    if status == "accepted":
+        lifecycle_valid = (
+            artifact["status_reason"] is None
+            and artifact["superseded_by"] is None
+        )
+    elif status == "excluded":
+        lifecycle_valid = (
+            _is_non_empty_string(artifact["status_reason"])
+            and artifact["superseded_by"] is None
+        )
+    else:
+        lifecycle_valid = (
+            _is_non_empty_string(artifact["status_reason"])
+            and _is_non_empty_string(artifact["superseded_by"])
+        )
+    if not lifecycle_valid:
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+            "Artifact lifecycle fields disagree with status.",
+            artifact_id,
+        )
+    if isinstance(status, str) and status in {"accepted", "superseded"}:
+        if not _is_non_empty_string(artifact["byte_verification_id"]):
+            valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.UNVERIFIED_ARTIFACT,
+                "Accepted or superseded artifacts require byte-verification evidence.",
+                artifact_id,
+            )
+    elif artifact["byte_verification_id"] is not None and not _is_non_empty_string(
+        artifact["byte_verification_id"]
+    ):
+        valid = False
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+            "Excluded artifact byte_verification_id must be null or non-empty.",
+            artifact_id,
+        )
+    return valid
+
+
+def _validate_v2_transition(
+    document: Mapping[str, Any],
+    previous_registry: Any,
+    rejections: list[ImmutableRegistryRejection],
+    artifact_bytes_by_id: Mapping[str, bytes] | None,
+    trusted_owner_authorities: Mapping[str, Mapping[str, Any]] | None,
+    trusted_status_record_bytes: Mapping[str, bytes] | None,
+    trusted_artifact_authorizations: Mapping[str, Mapping[str, Any]] | None,
+    trusted_authorization_record_bytes: Mapping[str, bytes] | None,
+    trusted_manifest_records: Mapping[str, Mapping[str, Any]] | None,
+    trusted_artifact_receipts: Mapping[str, Mapping[str, Any]] | None,
+) -> None:
+    previous_result = validate_immutable_run_artifact_registry(
+        previous_registry,
+        artifact_bytes_by_id=artifact_bytes_by_id,
+        trusted_owner_authorities=trusted_owner_authorities,
+        trusted_status_record_bytes=trusted_status_record_bytes,
+        trusted_artifact_authorizations=trusted_artifact_authorizations,
+        trusted_authorization_record_bytes=trusted_authorization_record_bytes,
+        trusted_manifest_records=trusted_manifest_records,
+        trusted_artifact_receipts=trusted_artifact_receipts,
+    )
+    if (
+        not previous_result.accepted
+        or not isinstance(previous_registry, Mapping)
+        or previous_registry.get("immutable_registry_schema_version")
+        != IMMUTABLE_REGISTRY_V2_SCHEMA_VERSION
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "previous_registry must be a valid immutable registry v2 document.",
+        )
+        return
+    for field in (
+        "schema_version",
+        "immutable_registry_schema_version",
+        "registry_id",
+        "synthetic",
+        "scientific_use",
+    ):
+        if previous_registry[field] != document[field]:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.UNVERSIONED_SCHEMA_CHANGE,
+                f"Registry v2 field {field!r} changed in place.",
+            )
+
+    for field, identity in (
+        ("owner_authorities", "authority_id"),
+        ("manifests", "manifest_id"),
+        ("byte_verifications", "verification_id"),
+    ):
+        current = {record[identity]: record for record in document[field]}
+        for prior in previous_registry[field]:
+            if current.get(prior[identity]) != prior:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.IMMUTABLE_ARTIFACT_MUTATION,
+                    f"Existing v2 {field} record {prior[identity]!r} changed or disappeared.",
+                    prior[identity],
+                )
+
+    current_runs = {run["run_id"]: run for run in document["runs"]}
+    mutable_by_transition = {
+        "pending": {
+            "status",
+            "started_at",
+            "ended_at",
+            "pending_reason",
+            "failure_reason",
+            "output_artifact_ids",
+        },
+        "running": {
+            "status",
+            "ended_at",
+            "failure_reason",
+            "output_artifact_ids",
+        },
+    }
+    allowed_next = {
+        "pending": {"pending", "running", "completed", "failed"},
+        "running": {"running", "completed", "failed"},
+    }
+    for prior in previous_registry["runs"]:
+        current = current_runs.get(prior["run_id"])
+        if current is None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.COMPLETED_RUN_MUTATION,
+                f"Existing v2 run {prior['run_id']!r} was removed.",
+                prior["run_id"],
+            )
+            continue
+        prior_status = prior["status"]
+        if prior_status in {"completed", "failed"}:
+            if current != prior:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.COMPLETED_RUN_MUTATION,
+                    f"Terminal v2 run {prior['run_id']!r} changed.",
+                    prior["run_id"],
+                )
+            continue
+        if current["status"] not in allowed_next[prior_status]:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.ILLEGAL_RUN_STATUS_TRANSITION,
+                f"Run {prior['run_id']!r} has an illegal v2 status transition.",
+                prior["run_id"],
+            )
+            continue
+        mutable = mutable_by_transition[prior_status]
+        for field in _IMMUTABLE_V2_RUN_FIELDS - mutable:
+            if current[field] != prior[field]:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.ILLEGAL_RUN_STATUS_TRANSITION,
+                    f"Run {prior['run_id']!r} changed immutable field {field!r}.",
+                    prior["run_id"],
+                )
+
+    current_artifacts = {
+        artifact["artifact_id"]: artifact for artifact in document["artifacts"]
+    }
+    for prior in previous_registry["artifacts"]:
+        current = current_artifacts.get(prior["artifact_id"])
+        if current is None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.IMMUTABLE_ARTIFACT_MUTATION,
+                f"Existing v2 artifact {prior['artifact_id']!r} was removed.",
+                prior["artifact_id"],
+            )
+            continue
+        if current == prior:
+            continue
+        lifecycle_fields = {"status", "status_reason", "superseded_by"}
+        unchanged = all(
+            current[field] == prior[field]
+            for field in _IMMUTABLE_V2_ARTIFACT_FIELDS - lifecycle_fields
+        )
+        if not (
+            prior["status"] == "accepted"
+            and current["status"] == "superseded"
+            and unchanged
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.IMMUTABLE_ARTIFACT_MUTATION,
+                f"Artifact {prior['artifact_id']!r} changed outside supersession.",
+                prior["artifact_id"],
+            )
+
+
+def _validate_immutable_run_artifact_registry_v2(
+    document: Any,
+    *,
+    previous_registry: Any = None,
+    artifact_bytes_by_id: Mapping[str, bytes] | None = None,
+    trusted_owner_authorities: Mapping[str, Mapping[str, Any]] | None = None,
+    trusted_status_record_bytes: Mapping[str, bytes] | None = None,
+    trusted_artifact_authorizations: Mapping[str, Mapping[str, Any]]
+    | None = None,
+    trusted_authorization_record_bytes: Mapping[str, bytes] | None = None,
+    trusted_manifest_records: Mapping[str, Mapping[str, Any]] | None = None,
+    trusted_artifact_receipts: Mapping[str, Mapping[str, Any]] | None = None,
+) -> ImmutableRegistryValidationResult:
+    """Validate immutable registry v2 authority, manifest, bytes, and lineage."""
+
+    rejections: list[ImmutableRegistryRejection] = []
+    if not isinstance(document, Mapping):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "Immutable registry v2 must be a mapping.",
+        )
+        return ImmutableRegistryValidationResult(False, tuple(rejections))
+    if not _check_exact_fields(
+        document,
+        _IMMUTABLE_V2_REGISTRY_FIELDS,
+        "Immutable registry v2",
+        rejections,
+    ):
+        return ImmutableRegistryValidationResult(False, tuple(rejections))
+    if (
+        document["schema_version"] != SCHEMA_VERSION
+        or document["immutable_registry_schema_version"]
+        != IMMUTABLE_REGISTRY_V2_SCHEMA_VERSION
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.UNSUPPORTED_SCHEMA_VERSION,
+            "Immutable registry v2 schema version is unsupported.",
+        )
+    if not _is_non_empty_string(document["registry_id"]):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "registry_id must be non-empty.",
+        )
+    if not isinstance(document["synthetic"], bool):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "synthetic must be boolean.",
+        )
+    if (
+        not isinstance(document["scientific_use"], str)
+        or document["scientific_use"] not in {"forbidden", "permitted"}
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "scientific_use must be forbidden or permitted.",
+        )
+    if document["synthetic"] is True and document["scientific_use"] != "forbidden":
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_DOCUMENT,
+            "Synthetic registry v2 evidence must forbid scientific use.",
+        )
+
+    authorities = _v2_require_record_list(
+        document, "owner_authorities", rejections
+    )
+    manifests = _v2_require_record_list(document, "manifests", rejections)
+    verifications = _v2_require_record_list(
+        document, "byte_verifications", rejections
+    )
+    runs = _v2_require_record_list(
+        document, "runs", rejections, require_nonempty=True
+    )
+    artifacts = _v2_require_record_list(document, "artifacts", rejections)
+    trusted_authority_by_id = _validate_v2_trusted_owner_authorities(
+        trusted_owner_authorities,
+        trusted_status_record_bytes,
+        rejections,
+    )
+    trusted_authorization_by_artifact = (
+        _validate_v2_trusted_artifact_authorizations(
+            trusted_artifact_authorizations,
+            trusted_authorization_record_bytes,
+            rejections,
+        )
+    )
+    trusted_manifest_by_id = _validate_v2_trusted_manifests(
+        trusted_manifest_records,
+        rejections,
+    )
+    trusted_artifact_receipt_by_id = (
+        _validate_v2_trusted_artifact_receipts(
+            trusted_artifact_receipts,
+            rejections,
+        )
+    )
+
+    authority_by_id: dict[str, Mapping[str, Any]] = {}
+    authority_identity_seen: set[tuple[str, str, str]] = set()
+    for index, authority in enumerate(authorities):
+        if not isinstance(authority, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_AUTHORITY,
+                f"Owner authority record {index} must be a mapping.",
+            )
+            continue
+        shape_valid = _validate_v2_authority_record(authority, rejections)
+        authority_id = authority.get("authority_id")
+        if not _is_non_empty_string(authority_id):
+            continue
+        if authority_id in authority_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.DUPLICATE_AUTHORITY_ID,
+                f"Duplicate authority_id {authority_id!r}.",
+                authority_id,
+            )
+            continue
+        if shape_valid:
+            identity = (
+                authority["owner_id"],
+                authority["authority_revision"],
+                authority["status_record_id"],
+            )
+            if identity in authority_identity_seen:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.DUPLICATE_AUTHORITY_ID,
+                    f"Duplicate owner authority identity for {authority_id!r}.",
+                    authority_id,
+                )
+            else:
+                authority_identity_seen.add(identity)
+            authority_by_id[authority_id] = authority
+
+    manifest_by_id: dict[str, Mapping[str, Any]] = {}
+    manifest_artifact_owners: dict[str, str] = {}
+    for index, manifest in enumerate(manifests):
+        if not isinstance(manifest, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_MANIFEST,
+                f"Manifest record {index} must be a mapping.",
+            )
+            continue
+        shape_valid = _validate_v2_manifest_record(manifest, rejections)
+        manifest_id = manifest.get("manifest_id")
+        if not _is_non_empty_string(manifest_id):
+            continue
+        if manifest_id in manifest_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.DUPLICATE_MANIFEST_ID,
+                f"Duplicate manifest_id {manifest_id!r}.",
+                manifest_id,
+            )
+            continue
+        for identity in (
+            manifest.get("artifact_identities")
+            if _strict_id_list(manifest.get("artifact_identities"))
+            else []
+        ):
+            prior_manifest = manifest_artifact_owners.get(identity)
+            if prior_manifest is not None:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.DUPLICATE_MANIFEST_ID,
+                    f"Manifest artifact identity {identity!r} appears in multiple manifests.",
+                    manifest_id,
+                )
+            else:
+                manifest_artifact_owners[identity] = manifest_id
+        manifest_authority_id = manifest.get("owner_authority_id")
+        if (
+            not isinstance(manifest_authority_id, str)
+            or manifest_authority_id not in authority_by_id
+        ):
+            shape_valid = False
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_MANIFEST,
+                f"Manifest {manifest_id!r} references an unknown owner authority.",
+                manifest_id,
+            )
+        if shape_valid:
+            manifest_by_id[manifest_id] = manifest
+
+    verification_by_id: dict[str, Mapping[str, Any]] = {}
+    verification_by_artifact: dict[str, str] = {}
+    for index, verification in enumerate(verifications):
+        if not isinstance(verification, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+                f"Byte-verification record {index} must be a mapping.",
+            )
+            continue
+        shape_valid = _validate_v2_byte_verification_record(
+            verification, rejections
+        )
+        verification_id = verification.get("verification_id")
+        artifact_id = verification.get("artifact_id")
+        if not _is_non_empty_string(verification_id):
+            continue
+        if verification_id in verification_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.DUPLICATE_BYTE_VERIFICATION_ID,
+                f"Duplicate verification_id {verification_id!r}.",
+                verification_id,
+            )
+            continue
+        if _is_non_empty_string(artifact_id):
+            prior_verification = verification_by_artifact.get(artifact_id)
+            if prior_verification is not None:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.DUPLICATE_BYTE_VERIFICATION_ID,
+                    f"Artifact {artifact_id!r} has multiple byte verifications.",
+                    verification_id,
+                )
+            else:
+                verification_by_artifact[artifact_id] = verification_id
+        if shape_valid:
+            verification_by_id[verification_id] = verification
+
+    run_by_id: dict[str, Mapping[str, Any]] = {}
+    for index, run in enumerate(runs):
+        if not isinstance(run, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_RUN,
+                f"Run record {index} must be a mapping.",
+            )
+            continue
+        shape_valid = _validate_v2_run_record(run, rejections)
+        run_id = run.get("run_id")
+        if not _is_non_empty_string(run_id):
+            continue
+        if run_id in run_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.DUPLICATE_RUN_ID,
+                f"Duplicate run_id {run_id!r}.",
+                run_id,
+            )
+        elif shape_valid:
+            run_by_id[run_id] = run
+
+    artifact_by_id: dict[str, Mapping[str, Any]] = {}
+    for index, artifact in enumerate(artifacts):
+        if not isinstance(artifact, Mapping):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_ARTIFACT,
+                f"Artifact record {index} must be a mapping.",
+            )
+            continue
+        shape_valid = _validate_v2_artifact_record(artifact, rejections)
+        artifact_id = artifact.get("artifact_id")
+        if not _is_non_empty_string(artifact_id):
+            continue
+        if artifact_id in artifact_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.DUPLICATE_ARTIFACT_ID,
+                f"Duplicate artifact_id {artifact_id!r}.",
+                artifact_id,
+            )
+        elif shape_valid:
+            artifact_by_id[artifact_id] = artifact
+
+    parent_by_id: dict[str, str | None] = {}
+    superseded_run_by_id: dict[str, str | None] = {}
+    superseders_by_target: dict[str, list[str]] = {}
+    for run_id, run in run_by_id.items():
+        parent_id = run.get("parent_run_id")
+        supersedes_id = run.get("supersedes_run_id")
+        parent_ref = parent_id if isinstance(parent_id, str) else None
+        supersedes_ref = supersedes_id if isinstance(supersedes_id, str) else None
+        parent_by_id[run_id] = parent_ref
+        superseded_run_by_id[run_id] = supersedes_ref
+        if parent_ref is not None and parent_ref not in run_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Run {run_id!r} references an unknown parent.",
+                run_id,
+            )
+        if supersedes_ref is not None:
+            superseders_by_target.setdefault(supersedes_ref, []).append(run_id)
+            target = run_by_id.get(supersedes_ref)
+            if (
+                supersedes_ref == run_id
+                or target is None
+                or target.get("status") != "completed"
+                or target.get("owner") != run.get("owner")
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                    f"Run {run_id!r} has an invalid supersedes_run_id.",
+                    run_id,
+                )
+        if _has_reference_cycle(run_id, parent_by_id):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Run parent lineage containing {run_id!r} has a cycle.",
+                run_id,
+            )
+    for run_id in superseded_run_by_id:
+        if _has_reference_cycle(run_id, superseded_run_by_id):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                f"Run supersession containing {run_id!r} has a cycle.",
+                run_id,
+            )
+    for target_id, superseder_ids in superseders_by_target.items():
+        if len(superseder_ids) > 1:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Run {target_id!r} has multiple superseding runs.",
+                target_id,
+            )
+
+    direct_inputs_by_artifact: dict[str, tuple[str, ...]] = {}
+    superseded_artifact_by_id: dict[str, str | None] = {}
+    for artifact_id, artifact in artifact_by_id.items():
+        creator_id = artifact["creator_run_id"]
+        creator = run_by_id.get(creator_id)
+        if creator is None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MISSING_CREATOR_RUN,
+                f"Artifact {artifact_id!r} references a nonexistent creator run.",
+                artifact_id,
+            )
+        elif artifact_id not in creator["output_artifact_ids"]:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Creator run does not list artifact {artifact_id!r} as output.",
+                artifact_id,
+            )
+        elif creator["status"] in {"pending", "running"}:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Pending or running run cannot publish artifact {artifact_id!r}.",
+                artifact_id,
+            )
+        elif (
+            artifact["status"] in {"accepted", "superseded"}
+            and creator["status"] != "completed"
+        ):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Accepted or superseded artifact {artifact_id!r} "
+                "requires a completed run.",
+                artifact_id,
+            )
+
+        authority = authority_by_id.get(artifact["owner_authority_id"])
+        authority_matches = (
+            authority is not None
+            and creator is not None
+            and authority["owner_id"] == creator["owner"]
+            and authority["owner_id"]
+            in IMMUTABLE_V2_ARTIFACT_OWNER_IDS[artifact["artifact_type"]]
+            and authority["authority_revision"]
+            == artifact["owner_authority_revision"]
+            and authority["status_record_id"]
+            == artifact["owner_status_record_id"]
+            and authority["status_record_sha256"]
+            == artifact["owner_status_record_sha256"]
+            and authority["decision"] == artifact["owner_decision"]
+        )
+        if not authority_matches:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.OWNER_AUTHORITY_MISMATCH,
+                f"Artifact {artifact_id!r} owner authority binding mismatches.",
+                artifact_id,
+            )
+        elif artifact["status"] in {"accepted", "superseded"}:
+            trusted_entry = trusted_authority_by_id.get(
+                artifact["owner_authority_id"]
+            )
+            if trusted_entry is None:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MISSING_TRUSTED_AUTHORITY,
+                    f"Artifact {artifact_id!r} lacks an external owner trust anchor.",
+                    artifact_id,
+                )
+            elif (
+                trusted_entry["authority"] != authority
+                or authority["owner_status"] != "accepted"
+                or authority["decision"] != "accepted"
+                or artifact["artifact_type"]
+                not in authority["authorized_artifact_types"]
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.OWNER_AUTHORITY_MISMATCH,
+                    f"Artifact {artifact_id!r} mismatches its external owner trust anchor.",
+                    artifact_id,
+                )
+        elif artifact["status"] == "excluded" and authority["decision"] not in {
+            "excluded",
+            "failed",
+        }:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.OWNER_AUTHORITY_MISMATCH,
+                f"Excluded artifact {artifact_id!r} has incompatible owner decision.",
+                artifact_id,
+            )
+
+        manifest = manifest_by_id.get(artifact["manifest_id"])
+        manifest_matches = (
+            manifest is not None
+            and manifest["manifest_sha256"] == artifact["manifest_sha256"]
+            and manifest["manifest_schema_version"]
+            == artifact["manifest_schema_version"]
+            and manifest["owner_authority_id"]
+            == artifact["owner_authority_id"]
+            and artifact["manifest_artifact_identity"]
+            in manifest["artifact_identities"]
+        )
+        if not manifest_matches:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MANIFEST_MISMATCH,
+                f"Artifact {artifact_id!r} manifest binding mismatches.",
+                artifact_id,
+            )
+        elif artifact["status"] in {"accepted", "superseded"} and manifest[
+            "decision"
+        ] != "accepted":
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MANIFEST_MISMATCH,
+                f"Artifact {artifact_id!r} lacks an accepted manifest decision.",
+                artifact_id,
+            )
+        elif artifact["status"] == "excluded" and manifest["decision"] != "excluded":
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MANIFEST_MISMATCH,
+                f"Excluded artifact {artifact_id!r} requires an excluded manifest.",
+                artifact_id,
+            )
+
+        trusted_authorization: Mapping[str, Any] | None = None
+        trusted_manifest: Mapping[str, Any] | None = None
+        if artifact["status"] in {"accepted", "superseded"}:
+            authorization_entry = trusted_authorization_by_artifact.get(
+                artifact_id
+            )
+            if authorization_entry is None:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MISSING_ARTIFACT_AUTHORIZATION,
+                    f"Artifact {artifact_id!r} lacks exact external authorization.",
+                    artifact_id,
+                )
+            else:
+                trusted_authorization = authorization_entry["authorization"]
+                authorization_matches = (
+                    authority is not None
+                    and trusted_authorization["authority_id"]
+                    == artifact["owner_authority_id"]
+                    and trusted_authorization["owner_id"]
+                    == authority["owner_id"]
+                    and trusted_authorization["owner_authority_revision"]
+                    == authority["authority_revision"]
+                    and trusted_authorization["artifact_id"] == artifact_id
+                    and trusted_authorization["artifact_type"]
+                    == artifact["artifact_type"]
+                    and trusted_authorization["artifact_schema_version"]
+                    == artifact["artifact_schema_version"]
+                    and trusted_authorization["artifact_sha256"]
+                    == artifact["sha256"]
+                    and trusted_authorization["artifact_size_bytes"]
+                    == artifact["size_bytes"]
+                    and trusted_authorization["manifest_id"]
+                    == artifact["manifest_id"]
+                    and trusted_authorization["manifest_sha256"]
+                    == artifact["manifest_sha256"]
+                    and trusted_authorization["manifest_schema_version"]
+                    == artifact["manifest_schema_version"]
+                    and trusted_authorization["manifest_artifact_identity"]
+                    == artifact["manifest_artifact_identity"]
+                    and trusted_authorization["owner_status"] == "accepted"
+                    and trusted_authorization["decision"] == "accepted"
+                )
+                if not authorization_matches:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.INVALID_ARTIFACT_AUTHORIZATION,
+                        f"Artifact {artifact_id!r} mismatches exact external authorization.",
+                        artifact_id,
+                    )
+
+            trusted_manifest = trusted_manifest_by_id.get(
+                artifact["manifest_id"]
+            )
+            if trusted_manifest is None:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MISSING_TRUSTED_MANIFEST,
+                    f"Artifact {artifact_id!r} lacks an external trusted manifest.",
+                    artifact_id,
+                )
+            else:
+                trusted_entries = trusted_manifest["artifact_identities"]
+                matching_entries = [
+                    entry
+                    for entry in trusted_entries
+                    if entry["artifact_id"] == artifact_id
+                ]
+                trusted_identity_names = [
+                    entry["manifest_artifact_identity"]
+                    for entry in trusted_entries
+                ]
+                manifest_header_matches = (
+                    authority is not None
+                    and manifest is not None
+                    and trusted_manifest["manifest_id"]
+                    == manifest["manifest_id"]
+                    and trusted_manifest["manifest_sha256"]
+                    == manifest["manifest_sha256"]
+                    and trusted_manifest["manifest_schema_version"]
+                    == manifest["manifest_schema_version"]
+                    and trusted_manifest["owner_authority_id"]
+                    == manifest["owner_authority_id"]
+                    and trusted_manifest["owner_id"] == authority["owner_id"]
+                    and trusted_manifest["owner_authority_revision"]
+                    == authority["authority_revision"]
+                    and trusted_manifest["owner_status"] == "accepted"
+                    and trusted_manifest["decision"] == "accepted"
+                    and manifest["artifact_identities"]
+                    == trusted_identity_names
+                )
+                exact_entry_matches = (
+                    len(matching_entries) == 1
+                    and matching_entries[0]
+                    == {
+                        "artifact_id": artifact_id,
+                        "artifact_type": artifact["artifact_type"],
+                        "artifact_schema_version": artifact[
+                            "artifact_schema_version"
+                        ],
+                        "artifact_sha256": artifact["sha256"],
+                        "artifact_size_bytes": artifact["size_bytes"],
+                        "manifest_artifact_identity": artifact[
+                            "manifest_artifact_identity"
+                        ],
+                    }
+                )
+                authorization_manifest_matches = (
+                    trusted_authorization is not None
+                    and trusted_authorization["manifest_id"]
+                    == trusted_manifest["manifest_id"]
+                    and trusted_authorization["manifest_sha256"]
+                    == trusted_manifest["manifest_sha256"]
+                    and trusted_authorization["manifest_schema_version"]
+                    == trusted_manifest["manifest_schema_version"]
+                    and trusted_authorization["manifest_artifact_identity"]
+                    == artifact["manifest_artifact_identity"]
+                )
+                if not (
+                    manifest_header_matches
+                    and exact_entry_matches
+                    and authorization_manifest_matches
+                ):
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.TRUSTED_MANIFEST_MISMATCH,
+                        f"Artifact {artifact_id!r} mismatches its trusted manifest entry.",
+                        artifact_id,
+                    )
+
+        verification_id = artifact["byte_verification_id"]
+        verification = (
+            verification_by_id.get(verification_id)
+            if isinstance(verification_id, str)
+            else None
+        )
+        if artifact["status"] in {"accepted", "superseded"} and verification is None:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.UNVERIFIED_ARTIFACT,
+                f"Artifact {artifact_id!r} lacks byte-verification evidence.",
+                artifact_id,
+            )
+        if verification is not None:
+            if (
+                verification["artifact_id"] != artifact_id
+                or verification["verified_sha256"] != artifact["sha256"]
+                or verification["verified_size_bytes"] != artifact["size_bytes"]
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.UNVERIFIED_ARTIFACT,
+                    f"Artifact {artifact_id!r} byte-verification binding mismatches.",
+                    artifact_id,
+                )
+            if verification["mode"] == "local_bytes":
+                payload = (
+                    artifact_bytes_by_id.get(artifact_id)
+                    if isinstance(artifact_bytes_by_id, Mapping)
+                    else None
+                )
+                if (
+                    not isinstance(payload, bytes)
+                    or hashlib.sha256(payload).hexdigest() != artifact["sha256"]
+                    or len(payload) != artifact["size_bytes"]
+                ):
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.UNVERIFIED_ARTIFACT,
+                        f"Artifact {artifact_id!r} local bytes were not supplied or verified.",
+                        artifact_id,
+                    )
+            elif (
+                verification["mode"] == "external_receipt"
+                and artifact["status"] in {"accepted", "superseded"}
+            ):
+                receipt_id = verification["external_receipt_id"]
+                trusted_receipt = (
+                    trusted_artifact_receipt_by_id.get(receipt_id)
+                    if isinstance(receipt_id, str)
+                    else None
+                )
+                if trusted_receipt is None:
+                    _immutable_reject(
+                        rejections,
+                        ImmutableRegistryRejectionCode.MISSING_TRUSTED_ARTIFACT_RECEIPT,
+                        f"Artifact {artifact_id!r} lacks an external trusted receipt.",
+                        artifact_id,
+                    )
+                else:
+                    receipt_matches = (
+                        authority is not None
+                        and trusted_receipt["receipt_id"]
+                        == verification["external_receipt_id"]
+                        and trusted_receipt["receipt_sha256"]
+                        == verification["external_receipt_sha256"]
+                        and trusted_receipt["receipt_authority_revision"]
+                        == verification["external_receipt_authority_revision"]
+                        and trusted_receipt["verified_artifact_id"]
+                        == artifact_id
+                        and trusted_receipt["verified_artifact_type"]
+                        == artifact["artifact_type"]
+                        and trusted_receipt[
+                            "verified_artifact_schema_version"
+                        ]
+                        == artifact["artifact_schema_version"]
+                        and trusted_receipt["verified_artifact_sha256"]
+                        == artifact["sha256"]
+                        and trusted_receipt["verified_artifact_size"]
+                        == artifact["size_bytes"]
+                        and trusted_receipt["verified_owner_id"]
+                        == authority["owner_id"]
+                        and trusted_receipt[
+                            "verified_owner_authority_revision"
+                        ]
+                        == authority["authority_revision"]
+                        and trusted_receipt["verified_manifest_id"]
+                        == artifact["manifest_id"]
+                        and trusted_receipt["verified_manifest_sha256"]
+                        == artifact["manifest_sha256"]
+                        and trusted_receipt[
+                            "verified_manifest_artifact_identity"
+                        ]
+                        == artifact["manifest_artifact_identity"]
+                    )
+                    if not receipt_matches:
+                        _immutable_reject(
+                            rejections,
+                            ImmutableRegistryRejectionCode.TRUSTED_ARTIFACT_RECEIPT_MISMATCH,
+                            f"Artifact {artifact_id!r} external receipt mismatches.",
+                            artifact_id,
+                        )
+
+        direct_inputs = artifact["direct_input_artifact_ids"]
+        direct_inputs_by_artifact[artifact_id] = tuple(direct_inputs)
+        for input_id in direct_inputs:
+            source = artifact_by_id.get(input_id)
+            if input_id == artifact_id or source is None:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.BROKEN_DIRECT_INPUT,
+                    f"Artifact {artifact_id!r} has a missing or self direct input.",
+                    artifact_id,
+                )
+                continue
+            if creator is not None and input_id not in creator["input_artifact_ids"]:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                    f"Artifact {artifact_id!r} direct input is absent from its creator run.",
+                    artifact_id,
+                )
+            source_creator = run_by_id.get(source["creator_run_id"])
+            if artifact["status"] == "accepted" and (
+                source["status"] != "accepted"
+                or source_creator is None
+                or source_creator["status"] != "completed"
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                    f"Accepted artifact {artifact_id!r} depends on an unusable input.",
+                    artifact_id,
+                )
+
+        replacement_id = artifact["superseded_by"]
+        superseded_artifact_by_id[artifact_id] = (
+            replacement_id if isinstance(replacement_id, str) else None
+        )
+        if isinstance(replacement_id, str):
+            replacement = artifact_by_id.get(replacement_id)
+            replacement_creator = (
+                run_by_id.get(replacement["creator_run_id"])
+                if replacement is not None
+                else None
+            )
+            replacement_authority = (
+                authority_by_id.get(replacement["owner_authority_id"])
+                if replacement is not None
+                else None
+            )
+            if (
+                replacement_id == artifact_id
+                or replacement is None
+                or replacement["artifact_type"] != artifact["artifact_type"]
+                or replacement["status"] != "accepted"
+                or replacement_creator is None
+                or replacement_creator["supersedes_run_id"] != creator_id
+                or authority is None
+                or replacement_authority is None
+                or replacement_authority["owner_id"] != authority["owner_id"]
+            ):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                    f"Artifact {artifact_id!r} has an invalid replacement.",
+                    artifact_id,
+                )
+
+    for artifact_id in direct_inputs_by_artifact:
+        if _artifact_lineage_has_cycle(artifact_id, direct_inputs_by_artifact):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                f"Artifact direct-input lineage containing {artifact_id!r} has a cycle.",
+                artifact_id,
+            )
+    for artifact_id in superseded_artifact_by_id:
+        if _has_reference_cycle(artifact_id, superseded_artifact_by_id):
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.MALFORMED_SUPERSESSION,
+                f"Artifact supersession containing {artifact_id!r} has a cycle.",
+                artifact_id,
+            )
+
+    for run_id, run in run_by_id.items():
+        for input_id in run["input_artifact_ids"]:
+            if input_id not in artifact_by_id:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.BROKEN_DIRECT_INPUT,
+                    f"Run {run_id!r} references missing input {input_id!r}.",
+                    run_id,
+                )
+        for output_id in run["output_artifact_ids"]:
+            output = artifact_by_id.get(output_id)
+            if output is None or output["creator_run_id"] != run_id:
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.AMBIGUOUS_LINEAGE,
+                    f"Run {run_id!r} has an unresolved or foreign output {output_id!r}.",
+                    run_id,
+                )
+
+    for verification_id, verification in verification_by_id.items():
+        if verification["artifact_id"] not in artifact_by_id:
+            _immutable_reject(
+                rejections,
+                ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+                f"Verification {verification_id!r} references an unknown artifact.",
+                verification_id,
+            )
+
+    if artifact_bytes_by_id is not None and not isinstance(
+        artifact_bytes_by_id, Mapping
+    ):
+        _immutable_reject(
+            rejections,
+            ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+            "artifact_bytes_by_id must be a mapping when supplied.",
+        )
+    elif isinstance(artifact_bytes_by_id, Mapping):
+        for artifact_id, payload in artifact_bytes_by_id.items():
+            artifact = artifact_by_id.get(artifact_id)
+            if artifact is None or not isinstance(payload, bytes):
+                _immutable_reject(
+                    rejections,
+                    ImmutableRegistryRejectionCode.INVALID_BYTE_VERIFICATION,
+                    f"Supplied bytes for {artifact_id!r} are malformed or unregistered.",
+                    artifact_id if isinstance(artifact_id, str) else None,
+                )
+
+    if previous_registry is not None and not rejections:
+        _validate_v2_transition(
+            document,
+            previous_registry,
+            rejections,
+            artifact_bytes_by_id,
+            trusted_owner_authorities,
+            trusted_status_record_bytes,
+            trusted_artifact_authorizations,
+            trusted_authorization_record_bytes,
+            trusted_manifest_records,
+            trusted_artifact_receipts,
+        )
+
+    return ImmutableRegistryValidationResult(not rejections, tuple(rejections))
+
+
+def validate_immutable_run_artifact_registry(
+    document: Any,
+    *,
+    previous_registry: Any = None,
+    artifact_bytes_by_id: Mapping[str, bytes] | None = None,
+    trusted_owner_authorities: Mapping[str, Mapping[str, Any]] | None = None,
+    trusted_status_record_bytes: Mapping[str, bytes] | None = None,
+    trusted_artifact_authorizations: Mapping[str, Mapping[str, Any]]
+    | None = None,
+    trusted_authorization_record_bytes: Mapping[str, bytes] | None = None,
+    trusted_manifest_records: Mapping[str, Mapping[str, Any]] | None = None,
+    trusted_artifact_receipts: Mapping[str, Mapping[str, Any]] | None = None,
+) -> ImmutableRegistryValidationResult:
+    """Dispatch immutable-registry validation by exact frozen schema identifier.
+
+    V1 remains frozen and is evaluated by its original implementation. V2 adds
+    externally trusted owner/status evidence, exact-artifact authorization,
+    trusted manifests, externally verified artifact bytes or receipts,
+    explicit pending/running jobs, and the extraction artifact type. Unknown
+    versions fail closed without being interpreted as either contract.
+    """
+
+    if not isinstance(document, Mapping):
+        return _validate_immutable_run_artifact_registry_v1(
+            document,
+            previous_registry=previous_registry,
+            artifact_bytes_by_id=artifact_bytes_by_id,
+        )
+    version = document.get("immutable_registry_schema_version")
+    if version == IMMUTABLE_REGISTRY_SCHEMA_VERSION or version is None:
+        return _validate_immutable_run_artifact_registry_v1(
+            document,
+            previous_registry=previous_registry,
+            artifact_bytes_by_id=artifact_bytes_by_id,
+        )
+    if version == IMMUTABLE_REGISTRY_V2_SCHEMA_VERSION:
+        return _validate_immutable_run_artifact_registry_v2(
+            document,
+            previous_registry=previous_registry,
+            artifact_bytes_by_id=artifact_bytes_by_id,
+            trusted_owner_authorities=trusted_owner_authorities,
+            trusted_status_record_bytes=trusted_status_record_bytes,
+            trusted_artifact_authorizations=trusted_artifact_authorizations,
+            trusted_authorization_record_bytes=trusted_authorization_record_bytes,
+            trusted_manifest_records=trusted_manifest_records,
+            trusted_artifact_receipts=trusted_artifact_receipts,
+        )
+    rejections: list[ImmutableRegistryRejection] = []
+    _immutable_reject(
+        rejections,
+        ImmutableRegistryRejectionCode.UNSUPPORTED_SCHEMA_VERSION,
+        f"Unsupported immutable registry schema version {version!r}.",
+    )
+    return ImmutableRegistryValidationResult(False, tuple(rejections))

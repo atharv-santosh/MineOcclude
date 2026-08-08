@@ -24,6 +24,12 @@ PERCENTILE_METHOD = "linear_interpolation_rank_n_minus_1"
 CANONICAL_MARKER_ROLES = frozenset(
     {"north_west", "north_east", "south_east", "south_west"}
 )
+MARKER_LOCALIZATION_METHOD_VERSION = (
+    "person-e-marker-color-top-face-diagonals-v0.1"
+)
+GROUND_CONTACT_LOCALIZATION_METHOD_VERSION = (
+    "person-e-paired-background-silhouette-base-v0.1"
+)
 
 
 def _finite_pair(value: Any, name: str) -> tuple[float, float]:
@@ -90,6 +96,260 @@ def _solve_square_system(
     return solution
 
 
+def _normalized_rgb_image(
+    image: Sequence[Sequence[Sequence[float]]],
+    name: str,
+) -> tuple[int, int, list[list[tuple[int, int, int]]]]:
+    if (
+        not isinstance(image, Sequence)
+        or isinstance(image, (str, bytes))
+        or not image
+    ):
+        raise HomographyError(f"{name} must contain image rows.")
+    width: int | None = None
+    normalized: list[list[tuple[int, int, int]]] = []
+    for row_index, row in enumerate(image):
+        if (
+            not isinstance(row, Sequence)
+            or isinstance(row, (str, bytes))
+            or not row
+        ):
+            raise HomographyError(f"{name} row {row_index} is invalid.")
+        if width is None:
+            width = len(row)
+        elif len(row) != width:
+            raise HomographyError(f"{name} rows have inconsistent widths.")
+        normalized_row: list[tuple[int, int, int]] = []
+        for pixel in row:
+            if (
+                not isinstance(pixel, Sequence)
+                or isinstance(pixel, (str, bytes))
+                or len(pixel) != 3
+                or any(
+                    not isinstance(channel, int)
+                    or isinstance(channel, bool)
+                    or not 0 <= channel <= 255
+                    for channel in pixel
+                )
+            ):
+                raise HomographyError(f"{name} requires RGB8 pixels.")
+            normalized_row.append((pixel[0], pixel[1], pixel[2]))
+        normalized.append(normalized_row)
+    if width is None:
+        raise HomographyError(f"{name} has no pixels.")
+    return width, len(normalized), normalized
+
+
+def _pixel_components(
+    pixels: set[tuple[int, int]],
+) -> list[list[tuple[int, int]]]:
+    unvisited = set(pixels)
+    components: list[list[tuple[int, int]]] = []
+    offsets = (
+        (-1, -1),
+        (0, -1),
+        (1, -1),
+        (-1, 0),
+        (1, 0),
+        (-1, 1),
+        (0, 1),
+        (1, 1),
+    )
+    while unvisited:
+        start = min(unvisited, key=lambda point: (point[1], point[0]))
+        unvisited.remove(start)
+        stack = [start]
+        component: list[tuple[int, int]] = []
+        while stack:
+            x, y = stack.pop()
+            component.append((x, y))
+            for dx, dy in offsets:
+                neighbor = (x + dx, y + dy)
+                if neighbor in unvisited:
+                    unvisited.remove(neighbor)
+                    stack.append(neighbor)
+        components.append(component)
+    components.sort(
+        key=lambda component: (
+            -len(component),
+            min(y for _, y in component),
+            min(x for x, _ in component),
+        )
+    )
+    return components
+
+
+def _line_intersection(
+    first_start: tuple[float, float],
+    first_end: tuple[float, float],
+    second_start: tuple[float, float],
+    second_end: tuple[float, float],
+) -> tuple[float, float]:
+    x1, y1 = first_start
+    x2, y2 = first_end
+    x3, y3 = second_start
+    x4, y4 = second_end
+    denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    if abs(denominator) <= 1e-12:
+        raise HomographyError("Segmented marker diagonals do not intersect.")
+    first_cross = x1 * y2 - y1 * x2
+    second_cross = x3 * y4 - y3 * x4
+    return (
+        (first_cross * (x3 - x4) - (x1 - x2) * second_cross)
+        / denominator,
+        (first_cross * (y3 - y4) - (y1 - y2) * second_cross)
+        / denominator,
+    )
+
+
+def localize_marker_top_face(
+    image: Sequence[Sequence[Sequence[float]]],
+    *,
+    marker_color: str,
+) -> dict[str, Any]:
+    """Locate a C color-labelled marker with a fixed, world-blind rule."""
+
+    width, height, rgb = _normalized_rgb_image(image, "marker image")
+    if marker_color not in {"blue", "yellow", "lime", "white"}:
+        raise HomographyError("marker_color is unsupported.")
+
+    def matches(pixel: tuple[int, int, int]) -> bool:
+        red, green, blue = pixel
+        if marker_color == "blue":
+            return (
+                blue > 70
+                and blue > red * 1.35
+                and blue > green * 1.15
+            )
+        if marker_color == "yellow":
+            return (
+                red > 100
+                and green > 80
+                and red > blue * 2.2
+                and green > blue * 1.8
+                and 0.65 < green / red < 1.25
+            )
+        if marker_color == "lime":
+            return green > 80 and green > red * 1.5 and green > blue * 1.35
+        return min(pixel) > 105 and max(pixel) - min(pixel) < 30
+
+    lower_y = int(height * 0.55)
+    mask = {
+        (x, y)
+        for y in range(lower_y, height)
+        for x in range(width)
+        if matches(rgb[y][x])
+    }
+    candidates = [
+        component
+        for component in _pixel_components(mask)
+        if 20 <= len(component) <= 2000
+    ]
+    if not candidates:
+        raise HomographyError(f"No valid {marker_color} marker component.")
+    selected = candidates[0]
+    minimum_y = min(y for _, y in selected)
+    maximum_y = max(y for _, y in selected)
+    if minimum_y == maximum_y:
+        raise HomographyError("Marker top face has no vertical extent.")
+    top_x = sorted(x for x, y in selected if y == minimum_y)
+    bottom_x = sorted(x for x, y in selected if y == maximum_y)
+    top_left = (float(top_x[0]), float(minimum_y))
+    top_right = (float(top_x[-1]), float(minimum_y))
+    bottom_left = (float(bottom_x[0]), float(maximum_y))
+    bottom_right = (float(bottom_x[-1]), float(maximum_y))
+    image_xy = _line_intersection(
+        top_left,
+        bottom_right,
+        top_right,
+        bottom_left,
+    )
+    minimum_x = min(x for x, _ in selected)
+    maximum_x = max(x for x, _ in selected)
+    return {
+        "localization_method_version": MARKER_LOCALIZATION_METHOD_VERSION,
+        "marker_color": marker_color,
+        "image_xy": list(image_xy),
+        "segmentation_pixel_count": len(selected),
+        "bounding_box_xyxy": [
+            minimum_x,
+            minimum_y,
+            maximum_x + 1,
+            maximum_y + 1,
+        ],
+        "top_face_corner_pixels": [
+            list(top_left),
+            list(top_right),
+            list(bottom_right),
+            list(bottom_left),
+        ],
+    }
+
+
+def localize_ground_contact_from_background_pair(
+    visible_image: Sequence[Sequence[Sequence[float]]],
+    background_image: Sequence[Sequence[Sequence[float]]],
+    *,
+    absolute_channel_difference_threshold: int = 20,
+) -> dict[str, Any]:
+    """Locate silhouette base from a registered visible/no-sheep image pair."""
+
+    width, height, visible = _normalized_rgb_image(
+        visible_image, "visible image"
+    )
+    other_width, other_height, background = _normalized_rgb_image(
+        background_image, "background image"
+    )
+    if (width, height) != (other_width, other_height):
+        raise HomographyError("Paired images must have equal dimensions.")
+    if (
+        not isinstance(absolute_channel_difference_threshold, int)
+        or isinstance(absolute_channel_difference_threshold, bool)
+        or not 1 <= absolute_channel_difference_threshold <= 255
+    ):
+        raise HomographyError("Difference threshold must be an RGB8 integer.")
+    mask = {
+        (x, y)
+        for y in range(height)
+        for x in range(width)
+        if max(
+            abs(visible[y][x][channel] - background[y][x][channel])
+            for channel in range(3)
+        )
+        >= absolute_channel_difference_threshold
+    }
+    candidates = [
+        component
+        for component in _pixel_components(mask)
+        if len(component) >= 20
+    ]
+    if len(candidates) != 1:
+        raise HomographyError(
+            "Paired images require exactly one valid changed component."
+        )
+    selected = candidates[0]
+    minimum_x = min(x for x, _ in selected)
+    maximum_x = max(x for x, _ in selected)
+    minimum_y = min(y for _, y in selected)
+    maximum_y = max(y for _, y in selected)
+    return {
+        "localization_method_version": (
+            GROUND_CONTACT_LOCALIZATION_METHOD_VERSION
+        ),
+        "absolute_channel_difference_threshold": (
+            absolute_channel_difference_threshold
+        ),
+        "image_xy": [(minimum_x + maximum_x) / 2.0, float(maximum_y)],
+        "changed_pixel_count": len(selected),
+        "bounding_box_xyxy": [
+            minimum_x,
+            minimum_y,
+            maximum_x + 1,
+            maximum_y + 1,
+        ],
+    }
+
+
 @dataclass(frozen=True)
 class Homography:
     """A validated 3x3 image-XY to world-XZ projective mapping."""
@@ -105,6 +365,12 @@ class Homography:
     fit_hash: str
     pivot_tolerance: float
     denominator_tolerance: float = 1e-12
+    resolution_id: str | None = None
+    image_width_px: int | None = None
+    image_height_px: int | None = None
+    source_correspondence_hash: str | None = None
+    detector_version: str | None = None
+    software_runtime_hash: str | None = None
 
     def transform(self, image_xy: Sequence[float]) -> tuple[float, float]:
         x, y = _finite_pair(image_xy, "image_xy")
@@ -135,6 +401,12 @@ class Homography:
             "denominator_tolerance": self.denominator_tolerance,
             "image_coordinate_convention": "pixel_center_xy_zero_based",
             "world_coordinate_convention": "ground_plane_world_xz_blocks",
+            "resolution_id": self.resolution_id,
+            "image_width_px": self.image_width_px,
+            "image_height_px": self.image_height_px,
+            "source_correspondence_hash": self.source_correspondence_hash,
+            "detector_version": self.detector_version,
+            "software_runtime_hash": self.software_runtime_hash,
         }
 
 
@@ -143,7 +415,7 @@ def homography_from_record(record: Mapping[str, Any]) -> Homography:
 
     if not isinstance(record, Mapping):
         raise HomographyError("Homography record must be a mapping.")
-    required = {
+    legacy_required = {
         "matrix",
         "marker_ids",
         "layout_id",
@@ -156,7 +428,19 @@ def homography_from_record(record: Mapping[str, Any]) -> Homography:
         "image_coordinate_convention",
         "world_coordinate_convention",
     }
-    if set(record) != required:
+    binding_fields = {
+        "resolution_id",
+        "image_width_px",
+        "image_height_px",
+        "source_correspondence_hash",
+        "detector_version",
+        "software_runtime_hash",
+    }
+    record_fields = frozenset(record)
+    if record_fields not in {
+        frozenset(legacy_required),
+        frozenset(legacy_required | binding_fields),
+    }:
         raise HomographyError("Homography record fields have changed.")
     if record["algorithm_version"] != HOMOGRAPHY_ALGORITHM_VERSION:
         raise HomographyError("Unknown homography algorithm version.")
@@ -214,6 +498,37 @@ def homography_from_record(record: Mapping[str, Any]) -> Homography:
         != "ground_plane_world_xz_blocks"
     ):
         raise HomographyError("Homography coordinate conventions changed.")
+    bound = binding_fields <= set(record)
+    binding_values = (
+        [record[field] for field in binding_fields] if bound else [None]
+    )
+    if any(value is None for value in binding_values) and any(
+        value is not None for value in binding_values
+    ):
+        raise HomographyError("Homography identity binding must be all-or-none.")
+    if bound and all(value is not None for value in binding_values):
+        for field in ("resolution_id", "detector_version"):
+            if (
+                not isinstance(record[field], str)
+                or not record[field].strip()
+                or record[field] != record[field].strip()
+            ):
+                raise HomographyError(f"{field} must be a non-empty identity.")
+        for field in ("image_width_px", "image_height_px"):
+            if (
+                not isinstance(record[field], int)
+                or isinstance(record[field], bool)
+                or record[field] <= 0
+            ):
+                raise HomographyError(f"{field} must be positive.")
+        for field in ("source_correspondence_hash", "software_runtime_hash"):
+            value = record[field]
+            if (
+                not isinstance(value, str)
+                or len(value) != 64
+                or any(character not in "0123456789abcdef" for character in value)
+            ):
+                raise HomographyError(f"{field} must be lowercase SHA-256.")
     return Homography(
         matrix=normalized_matrix,  # type: ignore[arg-type]
         marker_ids=tuple(marker_ids),  # type: ignore[arg-type]
@@ -222,6 +537,12 @@ def homography_from_record(record: Mapping[str, Any]) -> Homography:
         fit_hash=fit_hash,
         pivot_tolerance=float(record["pivot_tolerance"]),
         denominator_tolerance=float(record["denominator_tolerance"]),
+        resolution_id=record.get("resolution_id"),
+        image_width_px=record.get("image_width_px"),
+        image_height_px=record.get("image_height_px"),
+        source_correspondence_hash=record.get("source_correspondence_hash"),
+        detector_version=record.get("detector_version"),
+        software_runtime_hash=record.get("software_runtime_hash"),
     )
 
 
@@ -233,6 +554,12 @@ def fit_marker_homography(
     layout_id: str,
     canonical_camera_pose_id: str,
     pivot_tolerance: float = 1e-12,
+    resolution_id: str | None = None,
+    image_width_px: int | None = None,
+    image_height_px: int | None = None,
+    source_correspondence_hash: str | None = None,
+    detector_version: str | None = None,
+    software_runtime_hash: str | None = None,
 ) -> Homography:
     """Fit an exact homography from four explicitly ordered marker IDs."""
 
@@ -265,6 +592,46 @@ def fit_marker_homography(
         or pivot_tolerance <= 0
     ):
         raise HomographyError("pivot_tolerance must be finite and positive.")
+    binding = {
+        "resolution_id": resolution_id,
+        "image_width_px": image_width_px,
+        "image_height_px": image_height_px,
+        "source_correspondence_hash": source_correspondence_hash,
+        "detector_version": detector_version,
+        "software_runtime_hash": software_runtime_hash,
+    }
+    if any(value is None for value in binding.values()) and any(
+        value is not None for value in binding.values()
+    ):
+        raise HomographyError("Production homography identity must be all-or-none.")
+    if all(value is not None for value in binding.values()):
+        if (
+            not isinstance(resolution_id, str)
+            or not resolution_id.strip()
+            or not isinstance(detector_version, str)
+            or not detector_version.strip()
+        ):
+            raise HomographyError("Resolution and detector IDs must be non-empty.")
+        for name, value in (
+            ("image_width_px", image_width_px),
+            ("image_height_px", image_height_px),
+        ):
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or value <= 0
+            ):
+                raise HomographyError(f"{name} must be a positive integer.")
+        for name, value in (
+            ("source_correspondence_hash", source_correspondence_hash),
+            ("software_runtime_hash", software_runtime_hash),
+        ):
+            if (
+                not isinstance(value, str)
+                or len(value) != 64
+                or any(character not in "0123456789abcdef" for character in value)
+            ):
+                raise HomographyError(f"{name} must be lowercase SHA-256.")
 
     image_points = [
         _finite_pair(image_points_by_marker[marker_id], f"image point {marker_id}")
@@ -307,6 +674,7 @@ def fit_marker_homography(
         "image_points": [list(point) for point in image_points],
         "world_points": [list(point) for point in world_points],
         "matrix": [list(row) for row in fitted_matrix],
+        **binding,
     }
     fit_hash = hashlib.sha256(
         json.dumps(
@@ -325,6 +693,12 @@ def fit_marker_homography(
         fit_hash=fit_hash,
         pivot_tolerance=float(pivot_tolerance),
         denominator_tolerance=float(pivot_tolerance),
+        resolution_id=resolution_id,
+        image_width_px=image_width_px,
+        image_height_px=image_height_px,
+        source_correspondence_hash=source_correspondence_hash,
+        detector_version=detector_version,
+        software_runtime_hash=software_runtime_hash,
     )
     for image_point, expected_world in zip(image_points, world_points, strict=True):
         predicted = homography.transform(image_point)

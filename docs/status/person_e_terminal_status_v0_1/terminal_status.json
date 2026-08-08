@@ -1,0 +1,189 @@
+{
+  "all_person_e_local_implementation_complete": true,
+  "branch": "role/person-e-operations",
+  "checkpoint_evidence_schema_version": "person-e-checkpoint-evidence-v0.1",
+  "detector_version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+  "external_blocker_count": 9,
+  "frozen_hash_verification": {
+    "all_valid": true,
+    "checks": [
+      {
+        "kind": "commit",
+        "name": "person_e_homography_provenance_completion_authority",
+        "valid": true,
+        "value": "340ecb7339fab41bd11280f52cd5a1e7be07cdf5"
+      },
+      {
+        "kind": "commit",
+        "name": "person_e_portability_repair_authority",
+        "valid": true,
+        "value": "f7f9a83ed2a8fa8a5030d000eb725be295210924"
+      },
+      {
+        "branch": "origin/role/person-c-data",
+        "kind": "upstream_commit",
+        "name": "person_c_untouched_test_package_revision",
+        "valid": true,
+        "value": "3ba6c091426a537d60c950dd1bb38f5fc02826d5"
+      },
+      {
+        "branch": "origin/role/person-a-model",
+        "kind": "upstream_commit",
+        "name": "person_a_parquet_authority_revision",
+        "valid": true,
+        "value": "06b87fe1f43d2133c25db498fcc1fd234f958aad"
+      },
+      {
+        "kind": "artifact_sha256",
+        "name": "accepted_geometry_sha256",
+        "observed": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+        "valid": true,
+        "value": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+      },
+      {
+        "kind": "artifact_sha256",
+        "name": "homography_refit_v0_2_bundle_sha256",
+        "observed": "d26b43f202489c000b4af686c7b21bf5993459714f91676d368308e3c055b588",
+        "valid": true,
+        "value": "d26b43f202489c000b4af686c7b21bf5993459714f91676d368308e3c055b588"
+      },
+      {
+        "kind": "artifact_sha256",
+        "name": "person_e_successor_provenance_receipt_sha256",
+        "observed": "946a856bf704b43c13ba08ba692bda49cc2ecea4c1cc15096a35c53b31c522b3",
+        "valid": true,
+        "value": "946a856bf704b43c13ba08ba692bda49cc2ecea4c1cc15096a35c53b31c522b3"
+      }
+    ],
+    "invalid": []
+  },
+  "head_commit": "95051d6d1b21c4df3fb184f12f23ff33b2cd2d4c",
+  "homography_version": "person-e-v0.4-homography-refit-package-v0.2",
+  "integration_readiness": {
+    "decision": "READY_FOR_COORDINATED_INTEGRATION_REVIEW",
+    "final_tag_owner": "coordinated integration review, not Person E",
+    "rationale": "every Person E local implementation, validator, schema, runbook, and receipt through Step 7.3 exists and passes; the remaining work is real A/B/C/D inputs, real rollouts, the clean-run bundle, interpretation locks, and coordinated final tagging"
+  },
+  "manual": {
+    "scope": "Week 1 only, Phase 0 through Phase 7",
+    "source_document": "MineOcclude_Person_E_MVP_Week_1_Only (3).docx",
+    "source_document_sha256": "08804f049510df03c258c63df615bd4495e9e002c85305d1360f293fb72173f0",
+    "terminal_step": "7.3",
+    "title": "MineOcclude — Person E MVP Execution Manual"
+  },
+  "measurement_row_count": null,
+  "measurement_schema_version": "person-e-measurement-evidence-v0.2",
+  "mvp_tag_created_from_this_branch": false,
+  "real_clean_reproduction_complete": false,
+  "real_evidence_inventory": [
+    {
+      "evidence_id": "person_e_detector_v1_formal_heldout_evaluation",
+      "gate_kind": "planning",
+      "measured": {
+        "false_negative": 0,
+        "false_positive": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "total_frames": 48
+      },
+      "path": "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/formal_evaluation_report.json",
+      "upstream_package": "person-c-phase3-detector-v1-untouched-test-v0_3"
+    },
+    {
+      "evidence_id": "person_e_v0_4_homography_refit_v0_2",
+      "gate_kind": "planning",
+      "measured": {
+        "maximum_roundtrip_error_pixels": 4.687428401686771e-13,
+        "passing_layout_count": 6,
+        "worst_heldout_wall_parallel_error_blocks": 0.1667229155637111
+      },
+      "path": "data/handoff_e/person_e_v0_4_homography_refit_v0_2/",
+      "upstream_package": "person-c-layout-config-v0.4"
+    },
+    {
+      "evidence_id": "person_e_phase2_registry_and_split",
+      "gate_kind": "planning",
+      "measured": {
+        "steps_passing": [
+          "2.1",
+          "2.2",
+          "2.3"
+        ]
+      },
+      "path": "docs/status/person_e_phase2_v0_1/",
+      "upstream_package": "person_a_smoke_run_and_person_c_pilot"
+    }
+  ],
+  "real_measurement_complete": false,
+  "real_rollout_count": 0,
+  "registry_version": "mineocclude-immutable-registry-v2.0",
+  "rollout_intake_schema_version": "mineocclude-rollout-registry-v1.0",
+  "ssim": {
+    "algorithm": "global_ssim_per_channel_mean_v0.1",
+    "alignment": "exact_frame_identity_and_equal_dimensions",
+    "background_mask": "exclude_union_of_pushed_and_baseline_boxes_plus_margin",
+    "background_mask_margin_pixels": null,
+    "channel_handling": "rgb_per_channel_mean",
+    "data_range": 255.0,
+    "k1": 0.01,
+    "k2": 0.03,
+    "mask_status": "pending_person_b_person_e_signoff",
+    "sample_covariance": true,
+    "ssim_version": null
+  },
+  "synthetic_evidence_inventory": [
+    {
+      "evidence_id": "person_e_step7_1_rehearsal",
+      "labelled_synthetic": true,
+      "path": "docs/status/person_e_phase7_terminal_v0_1/clean_reproduction_receipt.json",
+      "proves": "the five measurement entry points run in order and recover the known-answer geometry"
+    },
+    {
+      "evidence_id": "person_e_phase1_synthetic_fixtures",
+      "labelled_synthetic": true,
+      "path": "tests/fixtures/person_e/",
+      "proves": "registry, detection, homography, rollout, and figure interfaces accept valid records and reject corrupted ones"
+    },
+    {
+      "evidence_id": "person_e_u4_pipeline_composition",
+      "labelled_synthetic": true,
+      "path": "tests/vision/test_u4_pipeline.py",
+      "proves": "detector, homography, SSIM, and measurement compose end to end through their frozen schemas"
+    }
+  ],
+  "terminal_status_schema_version": "person-e-terminal-status-v0.1",
+  "test_results": {
+    "duration_seconds": 265.21,
+    "failed": 0,
+    "passed": 623,
+    "skipped": 5,
+    "subtests_passed": 637
+  },
+  "u4_output_inspected": false,
+  "upstream_role_commits": {
+    "main": {
+      "branch": "origin/main",
+      "commit": "15adc43674420ae35921847a953ebbee2135f142"
+    },
+    "person_a": {
+      "branch": "origin/role/person-a-model",
+      "commit": "ef98d184aaed8f03757add4ecac4a48968bb6fcc"
+    },
+    "person_b": {
+      "branch": "origin/role/person-b-analysis",
+      "commit": "98f50761ecb99bc14ed5d1ebb67aedc8dcfd3327"
+    },
+    "person_c": {
+      "branch": "origin/role/person-c-data",
+      "commit": "365e748addcb1e1926d7e2c5a382a92fa39ebc40"
+    },
+    "person_d": {
+      "branch": "origin/role/person-d-baselines",
+      "commit": "35305576f67ba931cc464b8c3bae002b7d14d5dd"
+    },
+    "person_e": {
+      "branch": "origin/role/person-e-operations",
+      "commit": "f7f9a83ed2a8fa8a5030d000eb725be295210924"
+    }
+  }
+}

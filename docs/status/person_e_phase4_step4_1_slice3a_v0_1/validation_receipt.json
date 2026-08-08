@@ -1,0 +1,139 @@
+{
+  "accepted_artifact_count": 0,
+  "accepted_placeholder_count": 0,
+  "actual_owner_output_imported_count": 0,
+  "ast_or_pycompile_result": {
+    "command": "python -c ast.parse(...) for scripts/build_person_e_phase4_step4_1_slice3a_v0_1.py and tests/experiments/test_person_e_phase4_step4_1_slice3a_v0_1.py",
+    "passed": true
+  },
+  "deterministic_rebuild_result": {
+    "byte_identical": true,
+    "independent_build_count": 2
+  },
+  "failed_independent_audit_runs_claimed_successful": false,
+  "failed_run_count": 0,
+  "focused_test_result": {
+    "command": "python -m pytest -q tests/experiments/test_person_e_phase4_step4_1_slice3a_v0_1.py",
+    "expected_passed": 41,
+    "passed": true
+  },
+  "git_diff_check_result": {
+    "command": "git diff --check",
+    "passed": true
+  },
+  "package_file_count": 12,
+  "package_file_inventory": [
+    {
+      "hash_state": "exact",
+      "path": "authority_binding.json",
+      "sha256": "cebf83896dee0906abe2602d92041f96e9cadb132e55051f9cf76f9c5495daee"
+    },
+    {
+      "hash_state": "exact",
+      "path": "blocked_registry.json",
+      "sha256": "ec8fec28a71e5b83153f9005cc43bf4cdc9e4ab381a67114f66bfc58b867371c"
+    },
+    {
+      "hash_state": "exact",
+      "path": "blocker_matrix.json",
+      "sha256": "87e41178dad648fc54adc44563f052e86762dfb29cfcf71c91a7e7f383bf4dc2"
+    },
+    {
+      "hash_state": "exact",
+      "path": "owner_handoffs/person_a_requirements.json",
+      "sha256": "26e56ecb95b8aa678eff320540eb1dd982dc51d51b12b71ac3653f7114b39879"
+    },
+    {
+      "hash_state": "exact",
+      "path": "owner_handoffs/person_b_requirements.json",
+      "sha256": "e305a789ca7c67352bd4f7fff92533f1f0573d8874d28f5dcc502a2ac8313e83"
+    },
+    {
+      "hash_state": "exact",
+      "path": "owner_handoffs/person_c_requirements.json",
+      "sha256": "7f42a6b8590bfd8229f815652e838540a987bd5da945f810464e105a20a50c53"
+    },
+    {
+      "hash_state": "exact",
+      "path": "owner_handoffs/person_d_requirements.json",
+      "sha256": "d6ff3df2f86913488b009c66b5ee603368ec4f728c0509d9176b732c5293482b"
+    },
+    {
+      "hash_state": "exact",
+      "path": "person_e_trust_preparation.json",
+      "sha256": "3a018dc9db26b866f01228f5eaee8a66699683a85e3e0ac3459699e8ecc5b93a"
+    },
+    {
+      "hash_state": "recursive_inventory_excluded",
+      "path": "sha256_inventory.json",
+      "sha256": null
+    },
+    {
+      "hash_state": "exact",
+      "path": "source_inventory.json",
+      "sha256": "131195237bdca20a340fdad12f13164e36d58230d7d02c42c99488e76d64fcce"
+    },
+    {
+      "hash_state": "exact",
+      "path": "unsupported_mapping_decisions.json",
+      "sha256": "c3c50dbd7767f7d69467e29e273c51a944bea7338ff1cf13619ecd9a0689bf2e"
+    },
+    {
+      "hash_state": "self_reference_excluded",
+      "path": "validation_receipt.json",
+      "sha256": null
+    }
+  ],
+  "pending_run_count": 14,
+  "placeholder_count": 0,
+  "recursive_policy_validation": {
+    "protected_claim_fields": [
+      "integration_claimed",
+      "person_a_phase6_authorized",
+      "project_integration_claimed",
+      "project_wide_integration_claimed",
+      "scientific_acceptance_claimed",
+      "step4_1_complete"
+    ],
+    "structured_json_paths_reported": true,
+    "validated_all_generated_json_documents": true
+  },
+  "registry_regression_result": {
+    "command_paths": [
+      "tests/contracts/test_rollout_registry_contract.py",
+      "tests/experiments/test_registry.py",
+      "tests/experiments/test_immutable_registry_contract.py",
+      "tests/experiments/test_phase1_lineage.py",
+      "tests/experiments/test_phase2_registry_queries.py",
+      "tests/experiments/test_immutable_registry_v2_contract.py",
+      "tests/experiments/test_immutable_registry_v2_queries.py"
+    ],
+    "expected_passed": 143,
+    "expected_subtests_passed": 139,
+    "passed": true,
+    "u4_test_path_included": false
+  },
+  "registry_v2_validation_result": {
+    "accepted": true,
+    "validator": "require_valid_immutable_registry"
+  },
+  "remote_descendant_authority_validation": {
+    "current_remote_tips_recorded_in_package": false,
+    "person_b_pinned_commit_ancestor": true,
+    "person_d_pinned_commit_ancestor": true,
+    "source_reads_use_pinned_commits": true
+  },
+  "ruff_result": {
+    "command": "python -m ruff check scripts/build_person_e_phase4_step4_1_slice3a_v0_1.py tests/experiments/test_person_e_phase4_step4_1_slice3a_v0_1.py",
+    "passed": true
+  },
+  "schema_id": "person-e-phase4-step4-1-slice3a-validation-receipt-v0.1",
+  "schema_version": "1.0",
+  "scientific_use_pending_contract_probe": {
+    "accepted": false,
+    "expected_rejection": "scientific_use must be forbidden or permitted."
+  },
+  "superseded_artifact_count": 0,
+  "u4_output_inspected": false,
+  "u4_test_executed_by_slice3a_validation": false
+}

@@ -1,0 +1,461 @@
+{
+  "code_commit": "d3cb6f198d563aed6fbc126045ea8b7fa4a3e0bb",
+  "external_artifact_index": [
+    {
+      "artifact_id": "person_a_activation_store_phase6",
+      "availability": "external_unmounted",
+      "note": "byte identity is recorded in Person A's committed per-pilot inventories; regeneration of the Step 6.6 acceptance package requires this store to be mounted",
+      "owner": "person_a",
+      "recorded_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-step6-3-continuation-a102aa4d1ca5d4760e9c9997-activation-store-v2",
+      "sha256": null
+    },
+    {
+      "artifact_id": "person_b_step6_6_positive_control_report",
+      "availability": "external_unmounted",
+      "note": "50,568,852 bytes; verified when the store is mounted",
+      "owner": "person_b",
+      "recorded_path": "/home/sagemaker-user/person-b-phase6-approved-outputs/person-b-phase6-v2-positive-control-step6-6/person_b_step6_6_positive_control.json",
+      "sha256": "91254b04549745e2f4c8084aa6290dfa5b653c2f407ece8d62589b48d9832bb8"
+    },
+    {
+      "artifact_id": "person_a_u4_rollout_clips",
+      "availability": "pending_generation",
+      "note": "required before any U4 measurement row can exist",
+      "owner": "person_a",
+      "recorded_path": "not yet generated",
+      "sha256": null
+    }
+  ],
+  "frozen_version_table": [
+    {
+      "component": "magenta_detector",
+      "owner": "person_e",
+      "sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+      "version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125"
+    },
+    {
+      "component": "homography_package",
+      "owner": "person_e",
+      "sha256": "d26b43f202489c000b4af686c7b21bf5993459714f91676d368308e3c055b588",
+      "version": "person-e-v0.4-homography-refit-package-v0.2"
+    },
+    {
+      "component": "homography_algorithm",
+      "owner": "person_e",
+      "sha256": "08e462d2c36ee0c7905eafe819f39f27fee1780e63f1cf381fe4ebe098730fc3",
+      "version": "four_point_projective_gauss_jordan_v0.1"
+    },
+    {
+      "component": "homography_report_schema",
+      "owner": "person_e",
+      "sha256": null,
+      "version": "person-e-homography-report-v0.3"
+    },
+    {
+      "component": "ssim",
+      "owner": "person_e",
+      "sha256": "b40d9ccddd3316437a92021090e7c9c6d014a2c5526ebfa24a3033c7537d4b7b",
+      "version": "global_ssim_per_channel_mean_v0.1"
+    },
+    {
+      "component": "measurement_evidence_schema",
+      "owner": "person_e",
+      "sha256": "169fe0ad0c5d8e5aba72bece232bec89f63956d6b5483a9fa8536714e24ced1b",
+      "version": "person-e-measurement-evidence-v0.2"
+    },
+    {
+      "component": "immutable_registry",
+      "owner": "person_e",
+      "sha256": "f25637f3c3347a3548297b7a3b491ee07f6795915bd09d7ff40915f50d9a4541",
+      "version": "mineocclude-immutable-registry-v2.0"
+    },
+    {
+      "component": "figure_input_schema",
+      "owner": "person_e",
+      "sha256": "ff99a02c4f42a154b12a9f647d0e3cfe3a5ae89707cc8b64aca305964055b0ab",
+      "version": "person-e-figure-input-v0.2"
+    },
+    {
+      "component": "accepted_geometry",
+      "owner": "person_c",
+      "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+      "version": "person-c-layout-config-v0.4"
+    }
+  ],
+  "handoff_content_hash": "4704af942a51611c1eff5a30626a8a4fe8fc858bcfac534ff5949509c3caf400",
+  "operating_handoff_schema_version": "person-e-operating-handoff-v0.1",
+  "paper_workspace_plan_path": "docs/operations/person_e_paper_workspace_plan.md",
+  "remaining_external_dependencies": [
+    {
+      "blocks_step": "6.1",
+      "dependency_id": "person_a_u4_rollout_clips",
+      "description": "immutable alpha=0, signed-dose, and control clips with complete identity, hashes, and frame contract",
+      "next_command": [
+        "scripts/localize_u4_frames.py",
+        "<frames.json>",
+        "<homography_report.json>",
+        "<rollout_manifest.json>",
+        "<registry.json>",
+        "<localization.json>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--run-id",
+        "<run-id>"
+      ],
+      "owner": "person_a"
+    },
+    {
+      "blocks_step": "6.2",
+      "dependency_id": "person_b_event_dose_table",
+      "description": "frozen layer, timestep, direction version, alpha table, held-out event list, and the primary/sensitivity event rules",
+      "next_command": [
+        "scripts/measure_u4.py",
+        "<rollout_manifest.json>",
+        "<registry.json>",
+        "<composed.json>",
+        "<measurements.json>",
+        "--evidence-output-dir",
+        "<evidence-dir>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--run-id",
+        "<run-id>"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "6.3",
+      "dependency_id": "person_c_heldout_geometry_for_rollout_pose",
+      "description": "held-out layout, wall-axis sign, and marker/camera/homography applicability metadata for the exact rollout image contract",
+      "next_command": [
+        "scripts/fit_homographies.py",
+        "<homography_input.json>",
+        "<homography_report.json>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--producer-run-id",
+        "<run-id>",
+        "--code-sha",
+        "<40-hex>"
+      ],
+      "owner": "person_c"
+    },
+    {
+      "blocks_step": "6.5",
+      "dependency_id": "person_b_measurement_version_freeze",
+      "description": "confirmation of the measurement table version Person B's analysis will consume, so Person E can freeze it and register direct inputs",
+      "next_command": [
+        "scripts/compose_u4_evidence.py",
+        "<localization.json>",
+        "<ssim_report.json>",
+        "<composed.json>"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "6.4",
+      "dependency_id": "person_b_ssim_matching_rule",
+      "description": "approved frame-alignment rule, seed-pairing rule for natural variation, and the background-mask margin",
+      "next_command": [
+        "scripts/measure_ssim.py",
+        "--help"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "6.1",
+      "dependency_id": "person_d_control_manifest",
+      "description": "alpha=0, random, orthogonal, wrong-layer, and wrong-timestep control IDs with a completeness report",
+      "next_command": [
+        "scripts/measure_u4.py",
+        "<rollout_manifest.json>",
+        "<registry.json>",
+        "<composed.json>",
+        "<measurements.json>",
+        "--evidence-output-dir",
+        "<evidence-dir>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--run-id",
+        "<run-id>"
+      ],
+      "owner": "person_d"
+    },
+    {
+      "blocks_step": "5.1",
+      "dependency_id": "person_b_person_d_preliminary_results",
+      "description": "machine-readable preliminary U1-U3 and baseline/control outputs with valid-versus-superseded status",
+      "next_command": [
+        "scripts/build_figure_input.py",
+        "<source.json>",
+        "<figure_input.json>"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "7.1",
+      "dependency_id": "person_a_clean_run_bundle",
+      "description": "clean-checkout run bundle with immutable MVP config, locked E versions, and B/C/D identities",
+      "next_command": [
+        "scripts/build_person_e_phase7_terminal_v0_1.py",
+        "build"
+      ],
+      "owner": "person_a"
+    },
+    {
+      "blocks_step": "regeneration of the Step 6.6 acceptance package",
+      "dependency_id": "person_a_external_artifact_store_mount",
+      "description": "mount of the SageMaker activation store so the committed package can be byte-regenerated on this host",
+      "next_command": [
+        "-m",
+        "pytest",
+        "tests/experiments/test_person_e_phase6_step6_6_provenance_acceptance_v0_1.py"
+      ],
+      "owner": "person_a"
+    }
+  ],
+  "workflow_count": 5,
+  "workflows": [
+    {
+      "commands": [
+        [
+          "scripts/evaluate_magenta_detector.py",
+          "--help"
+        ],
+        [
+          "scripts/run_person_e_phase3_formal_detector_evaluation.py",
+          "--help"
+        ]
+      ],
+      "escalation_owner": "person_c",
+      "failure_behavior": "zero, multiple, edge, malformed, or corrupted inputs produce no detection and an explicit rejection reason",
+      "outputs": [
+        "per-frame detection records with detector version and rejection reason",
+        "held-out precision/recall report with per-layout breakdown"
+      ],
+      "permitted_operational_reruns": [
+        "re-run the frozen detector over the same frames at the same version",
+        "reproduce the recorded formal evaluation"
+      ],
+      "required_inputs": [
+        "Person C frame package with stable identities and source hashes",
+        "frozen calibration/held-out split manifest",
+        "frozen detector config and version record"
+      ],
+      "requires_ab_review": [
+        "HSV, morphology, or valid-blob rule change",
+        "precision/recall gate change",
+        "opening a held-out set a second time"
+      ],
+      "runbook_path": "docs/runbooks/person_e_detector_runbook.md",
+      "validators": [
+        "tests/vision/test_config_and_magenta.py",
+        "tests/vision/test_calibration.py",
+        "tests/vision/test_phase3_detector_candidate.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py"
+      ],
+      "version_and_supersession_rules": "parameters freeze before the held-out set opens; any change creates a new detector version and invalidates dependent outputs",
+      "workflow": "detector"
+    },
+    {
+      "commands": [
+        [
+          "scripts/fit_homographies.py",
+          "<homography_input.json>",
+          "<report.json>",
+          "--config",
+          "configs/vision/person_e_phase1.yaml",
+          "--producer-run-id",
+          "<run-id>",
+          "--code-sha",
+          "<40-hex>"
+        ]
+      ],
+      "escalation_owner": "person_c",
+      "failure_behavior": "degenerate geometry, marker-order swap, resolution or pose mismatch, and out-of-region queries reject rather than extrapolate",
+      "outputs": [
+        "per-layout matrix with condition number, determinant, and rank",
+        "held-out wall-parallel error in blocks with image-region breakdown",
+        "coordinate convention record and applicability domain"
+      ],
+      "permitted_operational_reruns": [
+        "re-run the fit over identical correspondences",
+        "re-run validation over the recorded held-out set"
+      ],
+      "required_inputs": [
+        "four marker image/world correspondences per layout",
+        "canonical camera pose and image resolution",
+        "wall-axis origin and positive unit vector",
+        "held-out visible sheep world positions"
+      ],
+      "requires_ab_review": [
+        "camera pose, resolution, or wall-axis sign change",
+        "localization tolerance change",
+        "applying a matrix outside its validated domain"
+      ],
+      "runbook_path": "docs/runbooks/person_e_homography_runbook.md",
+      "validators": [
+        "tests/vision/test_homography_and_ssim.py",
+        "tests/vision/test_markers.py",
+        "tests/vision/test_phase2_step2_4_v0_4.py",
+        "tests/vision/test_attempt_02_refit_finalize_v0_2.py"
+      ],
+      "version_and_supersession_rules": "each matrix carries a content-derived version id; corrections create a versioned successor and preserve the superseded package",
+      "workflow": "homography"
+    },
+    {
+      "commands": [
+        [
+          "scripts/build_figure_input.py",
+          "<source.json>",
+          "<figure_input.json>"
+        ],
+        [
+          "scripts/render_figure_svg.py",
+          "<figure_input.json>",
+          "<figure.svg>"
+        ]
+      ],
+      "escalation_owner": "person_b",
+      "failure_behavior": "a failed, exploratory, or superseded source rejects; rendering never substitutes a default for a missing unit, count, or uncertainty type",
+      "outputs": [
+        "figure input documents carrying source run, version, units, counts",
+        "rendered figures whose values all came from their input document",
+        "figure index answering what produced any table or plot"
+      ],
+      "permitted_operational_reruns": [
+        "re-render an unchanged figure input",
+        "rebuild the artifact index after new registrations"
+      ],
+      "required_inputs": [
+        "Person B or Person D machine-readable result table with version",
+        "Person C accepted/excluded manifest and counts",
+        "registry records for every source artifact"
+      ],
+      "requires_ab_review": [
+        "displayed quantity, unit, sample unit, or uncertainty type change",
+        "change to which rows a figure includes",
+        "presenting a planning threshold as a scientific result"
+      ],
+      "runbook_path": "docs/runbooks/person_e_preliminary_figures_runbook.md",
+      "validators": [
+        "tests/experiments/test_figure_inputs.py",
+        "tests/experiments/test_figure_renderer.py",
+        "tests/experiments/test_phase1_lineage.py",
+        "tests/experiments/test_phase2_registry_queries.py"
+      ],
+      "version_and_supersession_rules": "an upstream supersession marks every dependent visual stale; visuals are regenerated from the new source, never patched by hand",
+      "workflow": "preliminary_figures"
+    },
+    {
+      "commands": [
+        [
+          "scripts/build_artifact_index.py",
+          "<registry.json>",
+          "<index.json>"
+        ],
+        [
+          "scripts/trace_artifact.py",
+          "<registry.json>",
+          "<artifact-id>"
+        ]
+      ],
+      "escalation_owner": "person_a",
+      "failure_behavior": "reject the record and name the exact record, field, and owner; never partially write",
+      "outputs": [
+        "registry records with direct inputs, checksums, seeds, and status",
+        "artifact index report"
+      ],
+      "permitted_operational_reruns": [
+        "re-run a query or index build against an unchanged registry",
+        "register a new artifact whose owner has published its status"
+      ],
+      "required_inputs": [
+        "upstream artifact manifest with authoritative IDs and status",
+        "direct-input artifact IDs for the record being registered"
+      ],
+      "requires_ab_review": [
+        "schema field addition, removal, or semantic change",
+        "status transition or accepted-selection rule change"
+      ],
+      "runbook_path": "docs/runbooks/person_e_registry_runbook.md",
+      "validators": [
+        "tests/experiments/test_registry.py",
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/experiments/test_immutable_registry_v2_queries.py",
+        "tests/contracts/test_rollout_registry_contract.py"
+      ],
+      "version_and_supersession_rules": "completed runs are immutable; corrections create a new run with supersedes_run_id and remain queryable",
+      "workflow": "registry"
+    },
+    {
+      "commands": [
+        [
+          "scripts/localize_u4_frames.py",
+          "<frames.json>",
+          "<homography_report.json>",
+          "<rollout_manifest.json>",
+          "<registry.json>",
+          "<localization.json>",
+          "--config",
+          "configs/vision/person_e_phase1.yaml",
+          "--run-id",
+          "<run-id>"
+        ],
+        [
+          "scripts/compose_u4_evidence.py",
+          "<localization.json>",
+          "<ssim_report.json>",
+          "<composed.json>"
+        ],
+        [
+          "scripts/measure_u4.py",
+          "<rollout_manifest.json>",
+          "<registry.json>",
+          "<composed.json>",
+          "<measurements.json>",
+          "--evidence-output-dir",
+          "<evidence-dir>",
+          "--config",
+          "configs/vision/person_e_phase1.yaml",
+          "--run-id",
+          "<run-id>"
+        ]
+      ],
+      "escalation_owner": "person_b",
+      "failure_behavior": "a missing sheep is never imputed as zero; a pushed clip with no alpha=0 match at the same event and seed is a missing pair, never a substituted seed; misaligned SSIM pairs reject",
+      "outputs": [
+        "one versioned U4 measurement table with full identity and versions",
+        "persistence and non-persistence distinct from generation failure",
+        "signed wall-parallel displacement against the exact alpha=0 pair",
+        "global SSIM, background-masked SSIM, and natural variation",
+        "planned-versus-measured counts and status summaries"
+      ],
+      "permitted_operational_reruns": [
+        "re-run the ordered pipeline over identical inputs",
+        "re-run intake validation to regenerate the completeness report"
+      ],
+      "required_inputs": [
+        "Person A rollout generation manifest, clips, hashes, frame contract",
+        "Person B frozen event/dose table and event rules",
+        "Person B approved SSIM matching rule and mask margin",
+        "Person C held-out layout, wall-axis sign, pose applicability",
+        "Person D control IDs and completeness report"
+      ],
+      "requires_ab_review": [
+        "primary or sensitivity event rule change",
+        "SSIM parameter, mask margin, or seed-pairing change",
+        "any conditioning or exclusion of clips before Person B's analysis"
+      ],
+      "runbook_path": "docs/runbooks/person_e_u4_measurement_runbook.md",
+      "validators": [
+        "tests/vision/test_u4_pipeline.py",
+        "tests/vision/test_measurement.py",
+        "tests/vision/test_homography_and_ssim.py",
+        "tests/vision/test_person_e_scripts.py"
+      ],
+      "version_and_supersession_rules": "the table freezes at the version Person B consumes; a detector, homography, or SSIM version change requires a new measurement run",
+      "workflow": "u4_measurement"
+    }
+  ]
+}

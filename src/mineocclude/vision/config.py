@@ -12,7 +12,6 @@ from mineocclude.analysis.manifests import is_hex_digest
 from mineocclude.contracts.analysis_inputs import MEASUREMENT_INPUT_SCHEMA_VERSION
 from mineocclude.contracts.identity import SCHEMA_VERSION
 
-
 DEFAULT_PERSON_E_CONFIG_PATH = (
     Path(__file__).resolve().parents[3]
     / "configs"
@@ -20,10 +19,12 @@ DEFAULT_PERSON_E_CONFIG_PATH = (
     / "person_e_phase1.yaml"
 )
 
-PERSON_E_CONFIG_SCHEMA_VERSION = "person-e-phase1-config-schema-v0.1"
+LEGACY_PERSON_E_CONFIG_SCHEMA_VERSION = "person-e-phase1-config-schema-v0.1"
+PERSON_E_CONFIG_SCHEMA_VERSION = "person-e-phase2-config-schema-v0.1"
 FOUNDATION_PERSON_E_CONFIG_VERSION = "person-e-phase1-foundation-v0.1"
 LIVE_READY_STATUS = "calibrated_live_ready"
 PENDING_STATUS = "foundation_pending_upstream_calibration"
+PHASE2_CALIBRATED_STATUS = "phase2_calibrated"
 
 
 class PersonEConfigError(ValueError):
@@ -68,16 +69,34 @@ def validate_person_e_config(config: Mapping[str, Any]) -> None:
     _require_exact_keys(config, top_level, "Person E config")
     if config["schema_version"] != SCHEMA_VERSION:
         raise PersonEConfigError("Frozen schema_version must remain '1.0'.")
-    if config["config_schema_version"] != PERSON_E_CONFIG_SCHEMA_VERSION:
+    config_schema_version = config["config_schema_version"]
+    if config_schema_version not in {
+        LEGACY_PERSON_E_CONFIG_SCHEMA_VERSION,
+        PERSON_E_CONFIG_SCHEMA_VERSION,
+    }:
         raise PersonEConfigError("Person E config-schema version has changed.")
     instance_version = config["config_instance_version"]
     if not isinstance(instance_version, str) or not instance_version.strip():
         raise PersonEConfigError("config_instance_version must be non-empty.")
     status = config["status"]
-    if status not in {PENDING_STATUS, LIVE_READY_STATUS}:
+    if status not in {
+        PENDING_STATUS,
+        PHASE2_CALIBRATED_STATUS,
+        LIVE_READY_STATUS,
+    }:
         raise PersonEConfigError("Unknown Person E configuration lifecycle status.")
     if status == PENDING_STATUS and instance_version != FOUNDATION_PERSON_E_CONFIG_VERSION:
         raise PersonEConfigError("The pending foundation config has a fixed identity.")
+    if (
+        status == PENDING_STATUS
+        and config_schema_version != LEGACY_PERSON_E_CONFIG_SCHEMA_VERSION
+    ):
+        raise PersonEConfigError("The Phase 1 foundation uses its legacy config schema.")
+    if (
+        status == PHASE2_CALIBRATED_STATUS
+        and config_schema_version != PERSON_E_CONFIG_SCHEMA_VERSION
+    ):
+        raise PersonEConfigError("Phase 2 calibration requires its versioned config schema.")
 
     coordinate = _require_mapping(config["coordinate_contract"], "coordinate_contract")
     _require_exact_keys(
@@ -128,21 +147,25 @@ def validate_person_e_config(config: Mapping[str, Any]) -> None:
         raise PersonEConfigError("Registry provenance policy has changed.")
 
     detector = _require_mapping(config["detector"], "detector")
-    _require_exact_keys(
-        detector,
-        {
-            "color_space",
-            "threshold_status",
-            "threshold_version",
-            "calibration_dataset_hash",
-            "heldout_report_hash",
-            "hsv_ranges",
-            "morphology",
-            "blob",
-            "heldout_gates",
-        },
-        "detector",
-    )
+    detector_fields = {
+        "color_space",
+        "threshold_status",
+        "threshold_version",
+        "calibration_dataset_hash",
+        "heldout_report_hash",
+        "hsv_ranges",
+        "morphology",
+        "blob",
+        "heldout_gates",
+    }
+    if config_schema_version == PERSON_E_CONFIG_SCHEMA_VERSION:
+        detector_fields |= {
+            "detector_algorithm_version",
+            "split_version",
+            "settings_hash",
+            "software_runtime_hash",
+        }
+    _require_exact_keys(detector, detector_fields, "detector")
     if detector.get("color_space") != "hsv_h_degrees_sv_unit_interval":
         raise PersonEConfigError("Detector color-space convention has changed.")
     morphology = _require_mapping(detector.get("morphology"), "detector.morphology")
@@ -208,9 +231,33 @@ def validate_person_e_config(config: Mapping[str, Any]) -> None:
         for field in ("threshold_version",):
             if not isinstance(detector.get(field), str) or not detector[field].strip():
                 raise PersonEConfigError(f"detector.{field} must be non-empty.")
-        for field in ("calibration_dataset_hash", "heldout_report_hash"):
+        for field in ("calibration_dataset_hash",):
             if not is_hex_digest(detector.get(field), 64):
                 raise PersonEConfigError(f"detector.{field} must be SHA-256.")
+        if status == LIVE_READY_STATUS:
+            if not is_hex_digest(detector.get("heldout_report_hash"), 64):
+                raise PersonEConfigError(
+                    "Live detector heldout_report_hash must be SHA-256."
+                )
+        elif detector.get("heldout_report_hash") is not None:
+            raise PersonEConfigError(
+                "Phase 2 calibration cannot claim a held-out detector report."
+            )
+        if config_schema_version == PERSON_E_CONFIG_SCHEMA_VERSION:
+            if detector.get("detector_algorithm_version") != (
+                "hsv-largest-valid-blob-v0.1"
+            ):
+                raise PersonEConfigError("Detector algorithm version changed.")
+            split_version = detector.get("split_version")
+            if (
+                not isinstance(split_version, str)
+                or not split_version.startswith("sha256:")
+                or not is_hex_digest(split_version.removeprefix("sha256:"), 64)
+            ):
+                raise PersonEConfigError("detector.split_version is invalid.")
+            for field in ("settings_hash", "software_runtime_hash"):
+                if not is_hex_digest(detector.get(field), 64):
+                    raise PersonEConfigError(f"detector.{field} must be SHA-256.")
         if not hsv_ranges:
             raise PersonEConfigError("Live detector requires at least one HSV range.")
         expected_range_fields = {"h_min", "h_max", "s_min", "s_max", "v_min", "v_max"}
@@ -333,7 +380,7 @@ def validate_person_e_config(config: Mapping[str, Any]) -> None:
         != "exclude_union_of_pushed_and_baseline_boxes_plus_margin"
     ):
         raise PersonEConfigError("SSIM algorithm settings changed.")
-    if status == PENDING_STATUS:
+    if status in {PENDING_STATUS, PHASE2_CALIBRATED_STATUS}:
         if (
             ssim.get("ssim_version") is not None
             or ssim.get("background_mask_margin_pixels") is not None

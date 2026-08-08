@@ -1,0 +1,159 @@
+{
+  "blocker_count": 9,
+  "blockers": [
+    {
+      "blocks_step": "6.1",
+      "dependency_id": "person_a_u4_rollout_clips",
+      "description": "immutable alpha=0, signed-dose, and control clips with complete identity, hashes, and frame contract",
+      "next_command": [
+        "scripts/localize_u4_frames.py",
+        "<frames.json>",
+        "<homography_report.json>",
+        "<rollout_manifest.json>",
+        "<registry.json>",
+        "<localization.json>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--run-id",
+        "<run-id>"
+      ],
+      "owner": "person_a"
+    },
+    {
+      "blocks_step": "6.2",
+      "dependency_id": "person_b_event_dose_table",
+      "description": "frozen layer, timestep, direction version, alpha table, held-out event list, and the primary/sensitivity event rules",
+      "next_command": [
+        "scripts/measure_u4.py",
+        "<rollout_manifest.json>",
+        "<registry.json>",
+        "<composed.json>",
+        "<measurements.json>",
+        "--evidence-output-dir",
+        "<evidence-dir>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--run-id",
+        "<run-id>"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "6.3",
+      "dependency_id": "person_c_heldout_geometry_for_rollout_pose",
+      "description": "held-out layout, wall-axis sign, and marker/camera/homography applicability metadata for the exact rollout image contract",
+      "next_command": [
+        "scripts/fit_homographies.py",
+        "<homography_input.json>",
+        "<homography_report.json>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--producer-run-id",
+        "<run-id>",
+        "--code-sha",
+        "<40-hex>"
+      ],
+      "owner": "person_c"
+    },
+    {
+      "blocks_step": "6.5",
+      "dependency_id": "person_b_measurement_version_freeze",
+      "description": "confirmation of the measurement table version Person B's analysis will consume, so Person E can freeze it and register direct inputs",
+      "next_command": [
+        "scripts/compose_u4_evidence.py",
+        "<localization.json>",
+        "<ssim_report.json>",
+        "<composed.json>"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "6.4",
+      "dependency_id": "person_b_ssim_matching_rule",
+      "description": "approved frame-alignment rule, seed-pairing rule for natural variation, and the background-mask margin",
+      "next_command": [
+        "scripts/measure_ssim.py",
+        "--help"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "6.1",
+      "dependency_id": "person_d_control_manifest",
+      "description": "alpha=0, random, orthogonal, wrong-layer, and wrong-timestep control IDs with a completeness report",
+      "next_command": [
+        "scripts/measure_u4.py",
+        "<rollout_manifest.json>",
+        "<registry.json>",
+        "<composed.json>",
+        "<measurements.json>",
+        "--evidence-output-dir",
+        "<evidence-dir>",
+        "--config",
+        "configs/vision/person_e_phase1.yaml",
+        "--run-id",
+        "<run-id>"
+      ],
+      "owner": "person_d"
+    },
+    {
+      "blocks_step": "5.1",
+      "dependency_id": "person_b_person_d_preliminary_results",
+      "description": "machine-readable preliminary U1-U3 and baseline/control outputs with valid-versus-superseded status",
+      "next_command": [
+        "scripts/build_figure_input.py",
+        "<source.json>",
+        "<figure_input.json>"
+      ],
+      "owner": "person_b"
+    },
+    {
+      "blocks_step": "7.1",
+      "dependency_id": "person_a_clean_run_bundle",
+      "description": "clean-checkout run bundle with immutable MVP config, locked E versions, and B/C/D identities",
+      "next_command": [
+        "scripts/build_person_e_phase7_terminal_v0_1.py",
+        "build"
+      ],
+      "owner": "person_a"
+    },
+    {
+      "blocks_step": "regeneration of the Step 6.6 acceptance package",
+      "dependency_id": "person_a_external_artifact_store_mount",
+      "description": "mount of the SageMaker activation store so the committed package can be byte-regenerated on this host",
+      "next_command": [
+        "-m",
+        "pytest",
+        "tests/experiments/test_person_e_phase6_step6_6_provenance_acceptance_v0_1.py"
+      ],
+      "owner": "person_a"
+    }
+  ],
+  "external_artifact_index": [
+    {
+      "artifact_id": "person_a_activation_store_phase6",
+      "availability": "external_unmounted",
+      "note": "byte identity is recorded in Person A's committed per-pilot inventories; regeneration of the Step 6.6 acceptance package requires this store to be mounted",
+      "owner": "person_a",
+      "recorded_path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-step6-3-continuation-a102aa4d1ca5d4760e9c9997-activation-store-v2",
+      "sha256": null
+    },
+    {
+      "artifact_id": "person_b_step6_6_positive_control_report",
+      "availability": "external_unmounted",
+      "note": "50,568,852 bytes; verified when the store is mounted",
+      "owner": "person_b",
+      "recorded_path": "/home/sagemaker-user/person-b-phase6-approved-outputs/person-b-phase6-v2-positive-control-step6-6/person_b_step6_6_positive_control.json",
+      "sha256": "91254b04549745e2f4c8084aa6290dfa5b653c2f407ece8d62589b48d9832bb8"
+    },
+    {
+      "artifact_id": "person_a_u4_rollout_clips",
+      "availability": "pending_generation",
+      "note": "required before any U4 measurement row can exist",
+      "owner": "person_a",
+      "recorded_path": "not yet generated",
+      "sha256": null
+    }
+  ],
+  "external_blockers_schema_version": "person-e-terminal-blockers-v0.1"
+}

@@ -29,6 +29,9 @@ from mineocclude.vision.homography import (  # noqa: E402
     homography_from_record,
     summarize_localization,
 )
+from mineocclude.vision.report_schemas import (  # noqa: E402
+    HOMOGRAPHY_REPORT_SCHEMA_VERSION,
+)
 from mineocclude.vision.magenta import HsvRange, detect_magenta  # noqa: E402
 from mineocclude.vision.measurement import (  # noqa: E402
     EVIDENCE_INPUT_SCHEMA_VERSION,
@@ -119,7 +122,7 @@ def main() -> None:
         raise ValueError("Unknown U4 frame-input schema version.")
     if (
         homography_report.get("homography_report_schema_version")
-        != "person-e-homography-report-v0.2"
+        != HOMOGRAPHY_REPORT_SCHEMA_VERSION
     ):
         raise ValueError("Unknown homography-report schema version.")
     if homography_report.get("config_hash") != config_hash:

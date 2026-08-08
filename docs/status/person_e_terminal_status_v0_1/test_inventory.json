@@ -1,0 +1,42 @@
+{
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "interpreter": "C:/Users/lollo/MineOcclude-TestRunner/Scripts/python.exe",
+  "results": {
+    "duration_seconds": 265.21,
+    "failed": 0,
+    "passed": 623,
+    "skipped": 5,
+    "subtests_passed": 637
+  },
+  "selection_command": [
+    "-m",
+    "pytest",
+    "tests/vision",
+    "tests/experiments",
+    "tests/operations",
+    "tests/contracts/test_rollout_registry_contract.py",
+    "tests/contracts/test_identity.py",
+    "tests/integration/test_c_e_marker_compatibility.py",
+    "tests/data/test_environment_lock.py",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "skips_are_external_input_conditions": [
+    {
+      "count": 4,
+      "owner": "person_c",
+      "reason": "MINEOCCLUDE_PERSON_C_STEP3_3_ROOT is not configured",
+      "test": "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+    },
+    {
+      "count": 1,
+      "owner": "person_a",
+      "reason": "Person A activation store and Person B positive-control report are on an unmounted external host",
+      "test": "tests/experiments/test_person_e_phase6_step6_6_provenance_acceptance_v0_1.py"
+    }
+  ],
+  "test_inventory_schema_version": "person-e-terminal-test-inventory-v0.1",
+  "zero_failures": true
+}

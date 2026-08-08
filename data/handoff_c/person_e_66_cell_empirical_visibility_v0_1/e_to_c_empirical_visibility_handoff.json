@@ -1,0 +1,143 @@
+{
+  "E_TO_C_EMPIRICAL_VISIBILITY_READY": true,
+  "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "accounting_summary": {
+    "duplicate_output_key_count": 0,
+    "empirical_hidden_count": 382,
+    "empirical_visible_count": 1726,
+    "extra_output_key_count": 0,
+    "failed_frame_count": 0,
+    "missing_output_key_count": 0,
+    "not_applicable_count": 360,
+    "processed_frame_count": 2468,
+    "requested_frame_count": 2468,
+    "status_accounted_frame_count": 2468
+  },
+  "calibration_provenance": {
+    "candidate_freeze_package": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/",
+    "development_population_role": "development",
+    "development_source_revision": "fa70424530f422a2e6140e0e90d0ff18f583141e",
+    "formal_evaluation_package": "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/",
+    "formal_evaluation_report": "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/formal_evaluation_report.json"
+  },
+  "canonical_join_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "consumer_role": "person_c",
+  "detector": {
+    "algorithm_id": "hsv-largest-valid-blob-v1.0-candidate",
+    "config_path": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json",
+    "config_sha256": "acfecd659958891eaee0d582c946abdfaaf47d1ab3307a24f7652e634c045bfa",
+    "identity_sha256": "0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+    "implementation_path": "src/mineocclude/vision/magenta.py",
+    "implementation_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "settings": {
+      "bounding_box_convention": "xyxy_half_open",
+      "centroid_convention": "arithmetic_mean_of_selected_pixel_centres",
+      "close_iterations": 0,
+      "component_filter": "inclusive_area_bounds",
+      "connectivity": 8,
+      "expected_channel_order": "RGB",
+      "hsv_ranges": [
+        [
+          280.0,
+          320.0,
+          0.5,
+          1.0,
+          0.35,
+          1.0
+        ]
+      ],
+      "image_coordinate_system": "pixel_center_xy_zero_based",
+      "max_area_pixels": 5000,
+      "min_area_pixels": 19,
+      "morphology_radius_pixels": 1,
+      "open_iterations": 0,
+      "pixel_format": "rgb8",
+      "selection_rule": "largest_valid_area",
+      "tie_breaking_rule": "topmost_then_leftmost"
+    },
+    "settings_sha256": "0dbb426adf99f53455eea04c4aaeb56f3cb22cbc351d87269bb605445eb8f2ea",
+    "version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125"
+  },
+  "empirical_visibility_records_path": "data/handoff_c/person_e_66_cell_empirical_visibility_v0_1/empirical_visibility_records.jsonl",
+  "empirical_visibility_records_sha256": "fd0ad70ce880645fcda668d23dacc07784c2f8e418a3eceabd9f88ac391e07f9",
+  "failures_and_missingness": {
+    "duplicate_output_key_count": 0,
+    "failed_frame_count": 0,
+    "missing_output_key_count": 0,
+    "source_frame_hash_mismatch_count": 0,
+    "unexplained_identity_count": 0,
+    "unreadable_source_frame_count": 0
+  },
+  "frame_universe": {
+    "model_frame_identity_count": 2468,
+    "path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/frame_universe.jsonl",
+    "sha256": "f95d705df50f444bc21541f485b91471ff52c0c0ca8dccf2779c9c4adf1edcfe",
+    "trajectory_count": 66
+  },
+  "geometric_visible_computed_by_person_e": false,
+  "marker_layout_authority": {
+    "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "authority_id": "person-e-v0-4-marker-layout-authority-v0.1",
+    "layout_ids": [
+      "layout_01",
+      "layout_02",
+      "layout_03",
+      "layout_04",
+      "layout_05",
+      "layout_06"
+    ],
+    "path": "data/handoff_e/person_e_v0_4_marker_layout_authority_v0_1/marker_layout_authority_manifest.json",
+    "sha256": "14a12db4092e05e8c41057df210eec11f07a78f593a149595a12eba45fda82d8"
+  },
+  "no_retuning_statement": "Person E ran the detector frozen at 3930669eddc026ecb081e947f71f1855a7415904 (identity 0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125) unchanged over all 2468 requested identities. No threshold, morphology rule, area bound, configuration value or detector version was read from, derived from, or adjusted by this population, before or after outcome inspection.",
+  "output_schema_path": "data/handoff_c/person_e_66_cell_empirical_visibility_v0_1/empirical_visibility_schema.json",
+  "output_schema_version": "person-e-66-cell-empirical-visibility-v0-1-empirical-records-schema-v1.0",
+  "person_b": {
+    "commit": "a8648514033f8d58887c3b919f02985704aaa310",
+    "coordinate_frame_cosign_path": "docs/status/person_b_66_cell_coordinate_frame_cosign_v0_1/coordinate_frame_cosign.json",
+    "coordinate_frame_cosign_sha256": "b40d8ba1103e1638af386cc365ec727ab576d842516accc41d675d4fdb3d6b7d",
+    "coordinate_frame_cosign_valid": true
+  },
+  "person_c": {
+    "accepted_manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+    "accepted_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+    "capture_package_manifest_path": "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+    "capture_package_manifest_sha256": "ca6ef6bd0a6ee144731ff3e6f470f767a2c1a82e8b46aef9fb5e458efb814f56",
+    "commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+    "request_manifest_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json",
+    "request_manifest_sha256": "6934317b6b2723d4dddb5507ba58ef32e6ce39729bd4065751aa76e8ae1fc0ea"
+  },
+  "person_e": {
+    "branch": "role/person-e-operations",
+    "starting_commit": "5e2ef61a75fe4900dc7226dec7c1f6dcc1f39171"
+  },
+  "producer_role": "person_e",
+  "schema_id": "person-e-66-cell-empirical-visibility-v0-1-e-to-c-handoff-v1.0",
+  "schema_version": "1.0",
+  "strict_join_owner_after_response": "person_c",
+  "test_provenance": {
+    "focused_test_paths": [
+      "tests/vision/test_person_e_66_cell_empirical_visibility_v0_1.py",
+      "tests/vision/test_person_e_v0_4_marker_layout_authority_v0_1.py"
+    ],
+    "frozen_detector_tests": [
+      "tests/vision/test_config_and_magenta.py",
+      "tests/vision/test_phase3_detector_candidate.py",
+      "tests/vision/test_phase3_formal_detector_evaluation.py"
+    ]
+  },
+  "u4_structural_summary": {
+    "empirical_occluded_to_visible_candidate_count": 7,
+    "empirical_occluded_to_visible_candidate_count_heldout_layouts": 0,
+    "u4_existing_66_still_ineligible": true,
+    "u4_valid_terminal_reveal_count": 0,
+    "u4_valid_terminal_reveal_count_heldout_layouts": 0
+  },
+  "visible_flag_computed_by_person_e": false,
+  "visible_flag_rule_after_response": "geometric_visible AND empirical_magenta_visible"
+}
