@@ -1,0 +1,441 @@
+{
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "branch": "integration/mvp-final",
+  "requirements": [
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_terminal_status_v0_1/terminal_status.json"
+      ],
+      "explanation": "Ownership and writer-of-record boundaries across A-E are explicit.",
+      "implementation_path": [
+        "src/mineocclude/experiments/mvp_matrix.py",
+        "src/mineocclude/experiments/stage_graph.py"
+      ],
+      "manual_phase_or_step": "E1 / Phase 0",
+      "requirement": "Shared ownership/interface map",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Registry records use immutable run/artifact IDs and content hashes.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py",
+        "src/mineocclude/experiments/mvp_lineage.py"
+      ],
+      "manual_phase_or_step": "E2 / Phases 1-2",
+      "requirement": "Immutable run/artifact identity",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Direct input IDs/hashes are required and queryable in registered records.",
+      "implementation_path": [
+        "src/mineocclude/experiments/mvp_lineage.py",
+        "src/mineocclude/experiments/registry.py"
+      ],
+      "manual_phase_or_step": "E3 / Phases 1-2",
+      "requirement": "Direct-input lineage",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Duplicate/conflicting IDs, missing inputs, and hash mismatches fail closed.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py"
+      ],
+      "manual_phase_or_step": "E4 / Phases 1-2",
+      "requirement": "Fail-closed registry behavior",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/formal_evaluation_report.json"
+      ],
+      "explanation": "The frozen detector and config schema validate channel/threshold/morphology inputs.",
+      "implementation_path": [
+        "src/mineocclude/vision/magenta.py",
+        "src/mineocclude/vision/config.py"
+      ],
+      "manual_phase_or_step": "E5 / Phase 3",
+      "requirement": "Detector implementation/config validation",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/formal_evaluation_report.json"
+      ],
+      "explanation": "Calibration frames and held-out evaluation frames are distinct and the report records no post-test tuning.",
+      "implementation_path": [
+        "src/mineocclude/vision/calibration.py",
+        "src/mineocclude/vision/phase3_detector_candidate.py"
+      ],
+      "manual_phase_or_step": "E6 / Phase 3",
+      "requirement": "Detector calibration/test separation",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase3_step3_1_formal_evaluation_v0_1/formal_evaluation_report.json"
+      ],
+      "explanation": "Formal held-out evidence covers 48 frames (24 positive/24 negative) with precision=1.0 and recall=1.0 under the frozen detector.",
+      "implementation_path": [
+        "src/mineocclude/vision/phase3_detector_candidate.py",
+        "src/mineocclude/vision/detection_records.py"
+      ],
+      "manual_phase_or_step": "E7 / Phase 3",
+      "requirement": "Detector held-out performance evidence",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase3_step3_2_homography_closure_v0_1/step3_2_closure_report.json"
+      ],
+      "explanation": "Homography estimation/application and failure validation are implemented.",
+      "implementation_path": [
+        "src/mineocclude/vision/homography.py"
+      ],
+      "manual_phase_or_step": "E8 / Phase 3",
+      "requirement": "Homography implementation",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase3_step3_2_homography_closure_v0_1/step3_2_closure_report.json"
+      ],
+      "explanation": "Real closure evidence covers all six layouts with median wall-axis error 0.093418 and p95 0.287204 in the declared units.",
+      "implementation_path": [
+        "src/mineocclude/vision/homography.py",
+        "src/mineocclude/vision/measurement.py"
+      ],
+      "manual_phase_or_step": "E9 / Phase 3",
+      "requirement": "Multi-layout homography/localization evidence",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase3_step3_2_homography_closure_v0_1/step3_2_closure_report.json"
+      ],
+      "explanation": "Pose, layout, resolution, and coordinate convention are bound and mismatches fail closed.",
+      "implementation_path": [
+        "src/mineocclude/vision/homography.py",
+        "src/mineocclude/vision/config.py"
+      ],
+      "manual_phase_or_step": "E10 / Phase 3",
+      "requirement": "Coordinate-resolution/pose applicability",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_strict_visibility_v0_1/e_handoff_intake_receipt.json",
+        "docs/status/person_c_66_cell_strict_visibility_v0_1/visibility_join_manifest.json"
+      ],
+      "explanation": "E supplies an empirical channel keyed to C identities; C remains the final visibility writer and raw components remain preserved.",
+      "implementation_path": [
+        "src/mineocclude/operations/person_e_66_cell_empirical_visibility.py",
+        "src/mineocclude/vision/measurement.py"
+      ],
+      "manual_phase_or_step": "E11 / Phases 3-4",
+      "requirement": "Empirical visibility output preserves C authority",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Registry-v2 proves earlier result-bearing integration, but no current registry import/closure objectively includes the final 66-cell A activation run and the current B/D U1/U2 result packages.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py",
+        "src/mineocclude/experiments/mvp_lineage.py"
+      ],
+      "manual_phase_or_step": "E12 / Phases 2-6",
+      "requirement": "Registry integration across real result-bearing workstreams",
+      "role": "E",
+      "status": "UNVERIFIED",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_terminal_status_v0_1/terminal_status.json",
+        "docs/status/person_e_phase7_terminal_v0_1/operating_handoff.json",
+        "docs/status/person_e_phase7_terminal_v0_1/second_operator_receipt.json",
+        "docs/status/person_e_phase7_terminal_v0_1/validation_receipt.json"
+      ],
+      "explanation": "CPU validators check hashes, schemas, identities, cardinalities, and forbidden synthetic/superseded status without executing costly production work.",
+      "implementation_path": [
+        "src/mineocclude/experiments/mvp_lineage.py",
+        "src/mineocclude/operations/checkpoint_evidence.py"
+      ],
+      "manual_phase_or_step": "E13 / Phases 2-7",
+      "requirement": "Fast fail-closed CPU checks",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_terminal_status_v0_1/terminal_status.json"
+      ],
+      "explanation": "Typed checkpoint and figure-input builders/templates exist with lineage fields.",
+      "implementation_path": [
+        "src/mineocclude/experiments/figure_inputs.py",
+        "src/mineocclude/experiments/checkpoint.py"
+      ],
+      "manual_phase_or_step": "E14 / Phases 4-6",
+      "requirement": "Artifact/result input templates",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_handoff.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/sha256_inventory.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json"
+      ],
+      "explanation": "A's final activation package is self-sealed and exactly traceable, but E's current central registry does not contain an objective import/acceptance record for that final production run.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py",
+        "src/mineocclude/experiments/mvp_lineage.py"
+      ],
+      "manual_phase_or_step": "E15 / Phase 6",
+      "requirement": "Production activation/result provenance traceability",
+      "role": "E",
+      "status": "UNVERIFIED",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/sha256_inventory.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json"
+      ],
+      "explanation": "The U1/U2 package is internally hash-sealed and traces its fits/inputs, but no E registry import/query receipt binds this final package as a current result-bearing record.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py",
+        "src/mineocclude/experiments/figure_inputs.py"
+      ],
+      "manual_phase_or_step": "E16 / Phase 6",
+      "requirement": "U1/U2 result-package traceability",
+      "role": "E",
+      "status": "UNVERIFIED",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/validation_receipt.json",
+        "docs/status/person_e_terminal_status_v0_1/terminal_status.json"
+      ],
+      "explanation": "Evidence classes and supersession fields keep synthetic/rehearsal artifacts from satisfying production gates.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py",
+        "src/mineocclude/experiments/mvp_lineage.py"
+      ],
+      "manual_phase_or_step": "E17 / Phases 2-7",
+      "requirement": "Superseded/synthetic evidence cannot masquerade as production",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": "No U4 intervention was executed in the current MVP.",
+      "evidence_path": [
+        "docs/status/person_e_terminal_status_v0_1/terminal_status.json"
+      ],
+      "explanation": "U4 measurement/composition code exists and terminal status truthfully reports zero real U4 rollouts. No causal U4 result is claimed.",
+      "implementation_path": [
+        "src/mineocclude/vision/measurement.py",
+        "scripts/measure_u4.py",
+        "scripts/compose_u4_evidence.py"
+      ],
+      "manual_phase_or_step": "E18 / Phases 4-6",
+      "requirement": "U4 measurement implementation versus U4 execution",
+      "role": "E",
+      "status": "NOT_APPLICABLE_MVP_SCOPE",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_terminal_status_v0_1/terminal_status.json",
+        "docs/status/person_e_phase7_terminal_v0_1/operating_handoff.json",
+        "docs/status/person_e_phase7_terminal_v0_1/second_operator_receipt.json",
+        "docs/status/person_e_phase7_terminal_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Figure/checkpoint implementations and historical/synthetic validations exist, but no current result-bearing checkpoint/figure package was issued after the final 66-cell U1/U2 publication.",
+      "implementation_path": [
+        "src/mineocclude/experiments/figure_inputs.py",
+        "scripts/render_figure_svg.py",
+        "src/mineocclude/experiments/checkpoint.py"
+      ],
+      "manual_phase_or_step": "E19 / Phases 5-6",
+      "requirement": "Figure/checkpoint implementation status",
+      "role": "E",
+      "status": "UNVERIFIED",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_e_phase7_terminal_v0_1/operating_handoff.json",
+        "docs/status/person_e_phase7_terminal_v0_1/second_operator_receipt.json",
+        "docs/status/person_e_phase7_terminal_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Runbooks, exact inputs, second-operator validation, and a clean-reproduction plan are sealed. The evidence correctly does not claim a new real U4 reproduction.",
+      "implementation_path": [
+        "src/mineocclude/operations/handoff.py",
+        "src/mineocclude/operations/clean_reproduction.py"
+      ],
+      "manual_phase_or_step": "E20 / Phase 7",
+      "requirement": "Operational handoff/reproduction status",
+      "role": "E",
+      "status": "PASS",
+      "tests": [
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    }
+  ],
+  "role": "E",
+  "schema_version": "mvp-role-implementation-audit-v0.1",
+  "status_counts": {
+    "blocked_external_data": 0,
+    "blocked_or_na": 1,
+    "fail": 0,
+    "not_applicable_mvp_scope": 1,
+    "pass": 15,
+    "pass_direct": 15,
+    "pass_superseded_implementation": 0,
+    "total": 20,
+    "unverified": 4
+  },
+  "verdict": "ROLE_INCOMPLETE"
+}

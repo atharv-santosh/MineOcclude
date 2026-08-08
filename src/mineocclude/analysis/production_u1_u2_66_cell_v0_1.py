@@ -95,6 +95,9 @@ RESULT_FILENAMES = (
 READINESS_RECEIPT_SHA256 = (
     "19ddd379925b0c9cd226f284933db26cac7cc6febff02e2ebd35a840927654d7"
 )
+INTERPRETATION_READINESS_RECEIPT_SHA256 = (
+    "154d4fac254580abecd9172d89983fefb3828d8a4effffa06e1c0e0006364557"
+)
 ANALYSIS_READY_MANIFEST_SHA256 = (
     "6e56bb6577312efe5efa7d9ffb1e065b04fd592bf0a44620940003d46a8982a7"
 )
@@ -468,6 +471,34 @@ def _load_d_rows(
 def load_production_inputs(paths: ProductionPaths) -> LoadedInputs:
     repository = paths.repository_root.resolve()
     source_commit = _validate_repository(repository)
+    interpretation_readiness = _load_json(
+        repository
+        / "docs/status/integration/bd_production_input_readiness_v0_2/"
+        "readiness_receipt.json",
+        expected_sha256=INTERPRETATION_READINESS_RECEIPT_SHA256,
+        label="superseding interpretation-readiness receipt",
+    )
+    if (
+        interpretation_readiness.get("run_id") != RUN_ID
+        or interpretation_readiness.get("historical_positive_control_fallback_allowed")
+        is not False
+        or interpretation_readiness.get("positive_control", {}).get(
+            "positive_control_artifact_present"
+        )
+        is not True
+        or interpretation_readiness.get("positive_control", {}).get(
+            "positive_control_statistical_gate_pass"
+        )
+        is not True
+        or interpretation_readiness.get("readiness_decision", {}).get(
+            "u1_u2_interpretation_permitted"
+        )
+        is not True
+    ):
+        raise ProductionAnalysisError(
+            "Current no-wall positive-control statistical gate did not pass; "
+            "historical or prediction-coverage fallback is forbidden"
+        )
     readiness_path = (
         repository
         / "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json"

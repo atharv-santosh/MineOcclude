@@ -40,6 +40,10 @@ from mineocclude.contracts.activation_v2 import (  # noqa: E402
     PERSON_A_ACTIVATION_INDEX_V2_CANONICALIZATION_CONTRACT,
     load_activation_index_v2,
 )
+from mineocclude.analysis.no_wall_positive_control_66_cell_v0_1 import (  # noqa: E402
+    CONTROL_PACKAGE_RELATIVE,
+    load_current_positive_control_readiness,
+)
 
 SCHEMA_ID = "integration-bd-production-input-readiness-v0.1"
 RUN_ID = "mineocclude-run-ea6169430d693f8adcd16a23a62c4422"
@@ -712,13 +716,24 @@ def validate_d_baselines(
     }
     if len(no_wall_keys) != b_join["eligible_by_scope"]["visible_no_wall_control"]:
         _fail("Person D no-wall control coverage differs from B")
+    positive_control = load_current_positive_control_readiness(
+        ROOT / CONTROL_PACKAGE_RELATIVE / "positive_control_receipt.json"
+    )
     statuses = {
         "constant_velocity": "READY_EXISTING",
         "explicit_features": "READY_EXISTING",
         "grouped_shuffled": "READY_EXISTING",
         "known_q": "READY_EXISTING",
         "last_seen": "READY_EXISTING",
-        "no_wall_positive_control": "READY_EXISTING",
+        "no_wall_positive_control": (
+            "STATISTICAL_GATE_PASS"
+            if positive_control.statistical_gate_pass
+            else (
+                "STATISTICAL_GATE_FAIL"
+                if positive_control.artifact_present
+                else "MISSING_CURRENT_RECEIPT"
+            )
+        ),
         "occluder_only_negative_control": "NOT_APPLICABLE",
         "raw_pixel": "READY_EXISTING",
         "time_only": "READY_EXISTING",
@@ -730,17 +745,25 @@ def validate_d_baselines(
         "fold_mismatch_count": fold_mismatch,
         "inventory": inventory,
         "no_wall_control_frame_count": len(no_wall_keys),
-        "no_wall_control_status_basis": (
-            "all admitted no-wall frame/family/target slots are present in the "
-            "real prediction manifest"
+        "no_wall_positive_control_artifact_present": (
+            positive_control.artifact_present
         ),
+        "no_wall_positive_control_statistical_gate_pass": (
+            positive_control.statistical_gate_pass
+        ),
+        "no_wall_control_status_basis": positive_control.reason,
         "occluder_only_status_basis": (
             "B's frozen authority excludes 360 no-object frames as not oracle "
             "eligible; D must not reinstate them"
         ),
         "prediction_row_count": len(records),
-        "required_comparators_ready": all(
-            value in {"READY_EXISTING", "NOT_APPLICABLE"} for value in statuses.values()
+        "required_comparators_ready": (
+            positive_control.statistical_gate_pass
+            and all(
+                value in {"READY_EXISTING", "NOT_APPLICABLE"}
+                for name, value in statuses.items()
+                if name != "no_wall_positive_control"
+            )
         ),
     }
 

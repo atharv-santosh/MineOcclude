@@ -1,0 +1,145 @@
+{
+  "audit_kind": "AUDIT_1_OF_2_ROLE_IMPLEMENTATION_ONLY",
+  "audit_package_digest_definition": "SHA-256 over UTF-8 lines sorted by relative path: relative_path + NUL + file_sha256 + NUL + decimal_size + LF, for the eight required audit JSON files; sha256_inventory.json is excluded to avoid recursive self-hashing.",
+  "audit_scope_guardrails": {
+    "final_scientific_conclusion_audited": false,
+    "production_extraction_rerun": false,
+    "scientific_result_files_modified": false,
+    "u1_u2_refit": false,
+    "u3_capture": false,
+    "u4_executed": false
+  },
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "blocker": "RESULT_INVALIDATING: D17 no-wall positive-control gate was not executed on the current 66-cell authority; readiness equates prediction-slot coverage with a passed control, and inherited evidence has R2<0.50.",
+  "branch": "integration/mvp-final",
+  "cross_role_contracts_pass": false,
+  "current_u1_u2_result_invalidating_defect_found": true,
+  "focused_repair_required": true,
+  "manual_sources": {
+    "controlling_audit": {
+      "path": "/home/sagemaker-user/.codex/attachments/364a3a60-61ce-44ed-bb8d-c396977bc259/pasted-text.txt",
+      "sha256": "fe3488826dbff8d410f17ef3cd8e683d089609de6b6af3e2f6bb902ffd23972b",
+      "size_bytes": 13705
+    },
+    "person_a": {
+      "path": "/home/sagemaker-user/.codex/attachments/0aab7542-8b8b-4324-a339-18bb35166931/pasted-text.txt",
+      "sha256": "1c303fab3f63fd0437569c4bd06a04c797754891581db72e5b386f121e1ab8e5",
+      "size_bytes": 70638
+    },
+    "person_b": {
+      "path": "/home/sagemaker-user/.codex/attachments/358c3eba-7c43-4629-ba01-d25cfe3577de/pasted-text.txt",
+      "sha256": "42c27bfb0e06732ed5c806d901ccaad158364c681b6fed651e8a61385dcf52c3",
+      "size_bytes": 82024
+    },
+    "person_c": {
+      "path": "/home/sagemaker-user/.codex/attachments/4efe5be0-b81c-425b-9df7-7b613ca0cec6/pasted-text.txt",
+      "sha256": "3ba017f9110e315a98abedf28e051afdd8f00a5d7dd6c0ae3948596aa2fe286c",
+      "size_bytes": 71336
+    },
+    "person_d": {
+      "path": "/home/sagemaker-user/.codex/attachments/7e56de97-c6b2-493d-8ed3-2221f95a3fee/pasted-text.txt",
+      "sha256": "ce7601f858cd0f0c7f55412014b77c9880e2e2d16f05a1d8956e3e25c39e5d7c",
+      "size_bytes": 21480
+    },
+    "person_e": {
+      "path": "/home/sagemaker-user/.codex/attachments/0a632b36-e896-4112-acc8-28df8034c56f/pasted-text.txt",
+      "sha256": "fcb86107a27dcc415b83bf3504e726512cd35bd30f2825de580ae2c2a0e3080e",
+      "size_bytes": 67223
+    }
+  },
+  "next_action": "STOP scientific interpretation; B/D must adjudicate the manual positive-control contract, execute it on current 66-cell no-wall activations, and then supersede/reissue readiness and U1/U2 result-status artifacts under a reviewed authority.",
+  "result_invalidating_defect": {
+    "affected_requirements": [
+      "B23",
+      "D17",
+      "D21",
+      "B<->D"
+    ],
+    "classification": "RESULT_INVALIDATING",
+    "current_behavior": "scripts/build_bd_production_input_readiness_v0_1.py assigns no_wall_positive_control=READY_EXISTING from prediction-slot coverage; production_u1_u2_66_cell_v0_1.py only consumes that label.",
+    "impact": "Existing U1/U2 numerical fits are not recomputed or judged here, but the current scientific result status cannot distinguish an absent hidden-state signal from a pipeline that has not demonstrated decodability on the required positive control.",
+    "inherited_evidence": {
+      "manual_threshold": 0.5,
+      "person_b_canonical_multilayout_strongest_global_r2": 0.390514057,
+      "person_b_phase6_step6_6_strongest_global_r2": 0.338170676
+    },
+    "repair_policy_applied": "No scientific code/result repair was made because the gate adjudication can affect interpretation and result authority.",
+    "required_behavior": "Execute and bind the frozen no-wall visible-position ridge positive-control decision on the current 66-cell authority, requiring held-out R^2 >= 0.50 and bootstrap CI strictly above zero, then fail closed if it does not pass."
+  },
+  "role_status_counts": {
+    "A": {
+      "blocked_external_data": 0,
+      "blocked_or_na": 0,
+      "fail": 0,
+      "not_applicable_mvp_scope": 0,
+      "pass": 20,
+      "pass_direct": 19,
+      "pass_superseded_implementation": 1,
+      "total": 20,
+      "unverified": 0
+    },
+    "B": {
+      "blocked_external_data": 1,
+      "blocked_or_na": 2,
+      "fail": 1,
+      "not_applicable_mvp_scope": 1,
+      "pass": 22,
+      "pass_direct": 21,
+      "pass_superseded_implementation": 1,
+      "total": 25,
+      "unverified": 0
+    },
+    "C": {
+      "blocked_external_data": 0,
+      "blocked_or_na": 0,
+      "fail": 0,
+      "not_applicable_mvp_scope": 0,
+      "pass": 20,
+      "pass_direct": 19,
+      "pass_superseded_implementation": 1,
+      "total": 20,
+      "unverified": 0
+    },
+    "D": {
+      "blocked_external_data": 0,
+      "blocked_or_na": 0,
+      "fail": 2,
+      "not_applicable_mvp_scope": 0,
+      "pass": 19,
+      "pass_direct": 19,
+      "pass_superseded_implementation": 0,
+      "total": 21,
+      "unverified": 0
+    },
+    "E": {
+      "blocked_external_data": 0,
+      "blocked_or_na": 1,
+      "fail": 0,
+      "not_applicable_mvp_scope": 1,
+      "pass": 15,
+      "pass_direct": 15,
+      "pass_superseded_implementation": 0,
+      "total": 20,
+      "unverified": 4
+    }
+  },
+  "role_verdicts": {
+    "A": "ROLE_COMPLETE",
+    "B": "ROLE_INVALID",
+    "C": "ROLE_COMPLETE",
+    "D": "ROLE_INVALID",
+    "E": "ROLE_INCOMPLETE"
+  },
+  "schema_version": "mvp-role-implementation-audit-summary-v0.1",
+  "test_failure_classification_counts": {
+    "ENVIRONMENT_ONLY": 198,
+    "EXPECTED_NEGATIVE_FIXTURE": 0,
+    "GENUINE_IMPLEMENTATION_FAILURE": 0,
+    "OUT_OF_SCOPE": 0,
+    "STALE_HISTORICAL_ASSUMPTION": 33
+  },
+  "u3_implementation_status": "PASS",
+  "u3_production_execution_status": "BLOCKED_EXTERNAL_DATA",
+  "u4_implementation_status": "PASS",
+  "u4_production_execution_status": "NOT_APPLICABLE_MVP_SCOPE"
+}

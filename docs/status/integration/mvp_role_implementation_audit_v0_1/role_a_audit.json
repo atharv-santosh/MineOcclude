@@ -1,0 +1,402 @@
+{
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "branch": "integration/mvp-final",
+  "requirements": [
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_phase2_runtime_record.md"
+      ],
+      "explanation": "The runtime record pins source, checkpoint, VAE, package, CUDA, PyTorch, and hardware identities with hashes.",
+      "implementation_path": [
+        "src/mineocclude/models/mineworld_adapter.py",
+        "src/mineocclude/models/phase2_evidence.py"
+      ],
+      "manual_phase_or_step": "A1 / Phases 0-2",
+      "requirement": "Model/source/checkpoint/VAE/environment identity",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_phase2_runtime_record.md",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "The recorded production run used the real MineWorld runtime on an NVIDIA L4 with CUDA; this is not a synthetic CPU claim.",
+      "implementation_path": [
+        "src/mineocclude/models/phase2_aws.py"
+      ],
+      "manual_phase_or_step": "A2 / Phase 2",
+      "requirement": "Real MineWorld runtime and CUDA execution",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Trajectory, frame, action, model, checkpoint, preprocessing, layer, and run identities are validated and fail closed.",
+      "implementation_path": [
+        "src/mineocclude/contracts/activation_v2.py",
+        "src/mineocclude/models/_mineworld_adapter_wave4.py"
+      ],
+      "manual_phase_or_step": "A3 / Phases 1-3",
+      "requirement": "Strict input identity validation",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "The historical preprocessing description was superseded by a hashed source-to-model-frame derivation and current wave-5 identity checks that describe the bytes actually consumed.",
+      "implementation_path": [
+        "src/mineocclude/models/_mineworld_adapter_wave5.py",
+        "scripts/build_person_a_66_cell_preprocessed_media_v0_2.py"
+      ],
+      "manual_phase_or_step": "A4 / Phases 1-3",
+      "requirement": "Current truthful preprocessing identity",
+      "role": "A",
+      "status": "PASS_SUPERSEDED_IMPLEMENTATION",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Teacher inputs are taken from the authoritative action stream and are not reconstructed from filenames or frame order.",
+      "implementation_path": [
+        "src/mineocclude/models/mineworld_adapter.py",
+        "src/mineocclude/models/_mineworld_adapter_wave3.py"
+      ],
+      "manual_phase_or_step": "A5 / Phases 2-3",
+      "requirement": "Official/action-authority behavior",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "The current map explicitly binds model frame, teacher-forced action position, token slice, and causal orientation.",
+      "implementation_path": [
+        "src/mineocclude/contracts/activation_v2.py",
+        "src/mineocclude/models/_mineworld_adapter_wave5.py"
+      ],
+      "manual_phase_or_step": "A6 / Phase 3",
+      "requirement": "FrameTokenMap / frame-action causal mapping",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_phase2_runtime_record.md",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Production evidence records teacher-forced forward execution over authoritative actions.",
+      "implementation_path": [
+        "src/mineocclude/models/mineworld_adapter.py",
+        "src/mineocclude/models/_mineworld_adapter_wave4.py"
+      ],
+      "manual_phase_or_step": "A7 / Phase 3",
+      "requirement": "Teacher-forced execution",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_index_manifest.json"
+      ],
+      "explanation": "Runtime discovery selected and published exactly 20 intended layer sites.",
+      "implementation_path": [
+        "src/mineocclude/activations/hooks.py",
+        "src/mineocclude/models/mineworld_adapter.py"
+      ],
+      "manual_phase_or_step": "A8 / Phase 3",
+      "requirement": "Runtime hook-site discovery / intended 20 layers",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Hooks are scoped to an extraction context and removed after forward execution, including failure paths.",
+      "implementation_path": [
+        "src/mineocclude/activations/hooks.py"
+      ],
+      "manual_phase_or_step": "A9 / Phase 3",
+      "requirement": "Scoped hook cleanup",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Pooling uses the explicit visual slice supplied by the frame-token map.",
+      "implementation_path": [
+        "src/mineocclude/activations/pool.py",
+        "src/mineocclude/contracts/activation_v2.py"
+      ],
+      "manual_phase_or_step": "A10 / Phase 3",
+      "requirement": "Exact visual-token selection",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "The selected visual token vectors are mean pooled without adding other token classes.",
+      "implementation_path": [
+        "src/mineocclude/activations/pool.py"
+      ],
+      "manual_phase_or_step": "A11 / Phase 3",
+      "requirement": "Visual-token mean pooling",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Explicit token boundaries exclude action tokens and tokens belonging to adjacent frames.",
+      "implementation_path": [
+        "src/mineocclude/activations/pool.py",
+        "src/mineocclude/models/_mineworld_adapter_wave5.py"
+      ],
+      "manual_phase_or_step": "A12 / Phase 3",
+      "requirement": "Action-token / neighboring-frame exclusion",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Activations are detached and copied from GPU for immutable float32 storage; the runtime computation identity remains recorded.",
+      "implementation_path": [
+        "src/mineocclude/activations/store_v2.py",
+        "src/mineocclude/activations/pool.py"
+      ],
+      "manual_phase_or_step": "A13 / Phases 3-4",
+      "requirement": "Storage dtype/device behavior",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_index_manifest.json"
+      ],
+      "explanation": "Store-v2 publishes content-addressed chunks and a sealed index rather than overwriting accepted chunks.",
+      "implementation_path": [
+        "src/mineocclude/activations/store_v2.py",
+        "src/mineocclude/contracts/activation_v2.py"
+      ],
+      "manual_phase_or_step": "A14 / Phase 4",
+      "requirement": "Store-v2 immutable publication",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "Duplicate scientific keys fail closed while identical completed work can be resumed through the validated queue/store chain.",
+      "implementation_path": [
+        "src/mineocclude/activations/store_v2.py",
+        "src/mineocclude/experiments/extraction_queue.py"
+      ],
+      "manual_phase_or_step": "A15 / Phase 4",
+      "requirement": "Duplicate rejection and resumability",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_index_manifest.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "The index reconciles 2,468 unique frame keys x 20 layers = 49,360 activation rows across 66 trajectories.",
+      "implementation_path": [
+        "src/mineocclude/contracts/activation_v2.py",
+        "scripts/build_person_a_66_cell_production_activation_index_v0_1.py"
+      ],
+      "manual_phase_or_step": "A16 / Phase 4",
+      "requirement": "Activation-index identity/cardinality",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json"
+      ],
+      "explanation": "The receipt includes a passing rollover-boundary audit for trajectories exceeding the model window.",
+      "implementation_path": [
+        "src/mineocclude/models/_mineworld_adapter_wave5.py",
+        "scripts/run_person_a_66_cell_production_extraction.py"
+      ],
+      "manual_phase_or_step": "A17 / Phases 3-4",
+      "requirement": ">16-frame window rollover correctness",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_validation_receipt.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_run_evidence.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_index_manifest.json"
+      ],
+      "explanation": "Existing production evidence validates all 66 trajectories, 2,468 frames, 20 layers, 1,320 chunks, and no missing or duplicate keys; extraction was not rerun for this audit.",
+      "implementation_path": [
+        "scripts/run_person_a_66_cell_production_extraction.py"
+      ],
+      "manual_phase_or_step": "A18 / Phase 6",
+      "requirement": "66-trajectory production extraction",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_handoff.json",
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json"
+      ],
+      "explanation": "B's readiness authority resolves the exact A run and activation-index hashes.",
+      "implementation_path": [
+        "scripts/build_person_a_66_cell_production_activation_index_v0_1.py"
+      ],
+      "manual_phase_or_step": "A19 / Phases 6-7",
+      "requirement": "A-to-B downstream activation handoff",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py",
+        "tests/integration/test_bd_production_input_readiness_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_phase2_runtime_record.md",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_handoff.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/sha256_inventory.json"
+      ],
+      "explanation": "Run, code, source, model, VAE, preprocessing, trajectory, chunk, index, and handoff identities are sufficient to identify the exact existing production artifacts.",
+      "implementation_path": [
+        "src/mineocclude/contracts/activation_v2.py",
+        "src/mineocclude/activations/store_v2.py"
+      ],
+      "manual_phase_or_step": "A20 / Phases 0-7",
+      "requirement": "Exact production artifact reproducibility/provenance",
+      "role": "A",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    }
+  ],
+  "role": "A",
+  "schema_version": "mvp-role-implementation-audit-v0.1",
+  "status_counts": {
+    "blocked_external_data": 0,
+    "blocked_or_na": 0,
+    "fail": 0,
+    "not_applicable_mvp_scope": 0,
+    "pass": 20,
+    "pass_direct": 19,
+    "pass_superseded_implementation": 1,
+    "total": 20,
+    "unverified": 0
+  },
+  "verdict": "ROLE_COMPLETE"
+}

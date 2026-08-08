@@ -1,0 +1,594 @@
+{
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "branch": "integration/mvp-final",
+  "requirements": [
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json"
+      ],
+      "explanation": "The oracle and analysis schemas declare target meanings, units, legal fields, validity, and provenance.",
+      "implementation_path": [
+        "src/mineocclude/oracle/schema.py",
+        "src/mineocclude/contracts/analysis_inputs.py"
+      ],
+      "manual_phase_or_step": "B1 / Phases 0-1",
+      "requirement": "Target/unit/legal-information contract",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json"
+      ],
+      "explanation": "The primary oracle accepts the visible-history contract and rejects hidden-truth leakage.",
+      "implementation_path": [
+        "src/mineocclude/oracle/audit.py",
+        "src/mineocclude/oracle/schema.py"
+      ],
+      "manual_phase_or_step": "B2 / Phase 1",
+      "requirement": "Hidden truth cannot enter primary oracle inputs",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json"
+      ],
+      "explanation": "The seeded scalar recursive estimator is implemented with explicit validity handling.",
+      "implementation_path": [
+        "src/mineocclude/oracle/primary_scalar_kalman.py"
+      ],
+      "manual_phase_or_step": "B3 / Phase 1",
+      "requirement": "Recursive oracle",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json"
+      ],
+      "explanation": "An independently implemented closed-form reference is available for equivalence checks.",
+      "implementation_path": [
+        "src/mineocclude/oracle/closed_form.py"
+      ],
+      "manual_phase_or_step": "B4 / Phase 1",
+      "requirement": "Independent closed-form oracle",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json"
+      ],
+      "explanation": "Known-answer and seeded invariants compare recursive and closed-form outputs and fail closed on disagreement.",
+      "implementation_path": [
+        "src/mineocclude/oracle/audit.py",
+        "src/mineocclude/oracle/closed_form.py"
+      ],
+      "manual_phase_or_step": "B5 / Phase 1",
+      "requirement": "Seeded oracle equivalence/invariants",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json"
+      ],
+      "explanation": "Invalid, nonpositive, or nonfinite spread values are represented as exclusions rather than silently logged.",
+      "implementation_path": [
+        "src/mineocclude/oracle/targets.py",
+        "src/mineocclude/oracle/schema.py"
+      ],
+      "manual_phase_or_step": "B6 / Phase 1",
+      "requirement": "Spread/log-spread validity handling",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "The production join uses explicit trajectory/frame/layer identities and reports exact cardinalities.",
+      "implementation_path": [
+        "src/mineocclude/probes/join.py",
+        "src/mineocclude/probes/bridge.py"
+      ],
+      "manual_phase_or_step": "B7 / Phase 2",
+      "requirement": "Exact activation-target joins",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_receipt_v0_2.json",
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json"
+      ],
+      "explanation": "The 662 admitted and 1,806 excluded frame rows are assigned named deterministic reasons.",
+      "implementation_path": [
+        "src/mineocclude/analysis/filters.py",
+        "src/mineocclude/analysis/oracle_target_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B8 / Phase 2",
+      "requirement": "Named deterministic inclusion/exclusion filters",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json",
+        "docs/status/person_b_66_cell_preactivation_v0_1/fold_leakage_audit.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "The current authority contains five frozen grouped outer folds.",
+      "implementation_path": [
+        "src/mineocclude/probes/splits.py",
+        "src/mineocclude/probes/production_fold_contract_v0_1.py"
+      ],
+      "manual_phase_or_step": "B9 / Phase 2",
+      "requirement": "Five grouped outer folds",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json",
+        "docs/status/person_b_66_cell_preactivation_v0_1/fold_leakage_audit.json"
+      ],
+      "explanation": "The leakage audit verifies that held-out layouts do not appear in training for the corresponding fold.",
+      "implementation_path": [
+        "src/mineocclude/probes/splits.py",
+        "src/mineocclude/analysis/layout_fold_plan.py"
+      ],
+      "manual_phase_or_step": "B10 / Phase 2",
+      "requirement": "No layout leakage",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "Activation centering/scaling parameters are fit inside each outer training fold.",
+      "implementation_path": [
+        "src/mineocclude/probes/ridge.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B11 / Phase 3",
+      "requirement": "Train-only activation scaling",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "Nested alpha selection is confined to outer-training data and is recorded for all 40 target/layer fits.",
+      "implementation_path": [
+        "src/mineocclude/probes/ridge.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B12 / Phase 3",
+      "requirement": "Training-only ridge alpha selection",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "The manifest binds every prediction to target, layer, trajectory, frame, fold, fit, and source identities; 12,440 OOF rows reconcile exactly.",
+      "implementation_path": [
+        "src/mineocclude/probes/ridge.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B13 / Phase 3",
+      "requirement": "Out-of-fold prediction identity",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "Twenty per-layer nested OOF posterior-mean ridge probes were fit and provenance-sealed.",
+      "implementation_path": [
+        "src/mineocclude/probes/ridge.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B14 / Phase 3",
+      "requirement": "Per-layer posterior-mean ridge",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "Twenty per-layer nested OOF log-spread probes were fit with valid-target filtering.",
+      "implementation_path": [
+        "src/mineocclude/probes/ridge.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B15 / Phase 3",
+      "requirement": "Per-layer spread/log-spread ridge",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "Grouped null construction preserves group structure and uses the frozen row/fold authority.",
+      "implementation_path": [
+        "src/mineocclude/analysis/production_v2.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B16 / Phase 4",
+      "requirement": "Grouped shuffled-label implementation",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "U1 metrics operate on exact held-out predictions and include both R-squared and MAE.",
+      "implementation_path": [
+        "src/mineocclude/metrics/u1_mean.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B17 / Phase 4",
+      "requirement": "U1 R-squared/MAE implementation",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_b_phase4_step4_1_final_comparison_contract_v0_1/final_comparison_contract.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "The earlier grouped refit-permutation proposal was legitimately replaced by the reviewed shared-layout paired sign-flip/maxT contract, preserving group-level inference and multiplicity control.",
+      "implementation_path": [
+        "src/mineocclude/analysis/step4_1_final_comparison_v0_1.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B18 / Phase 4",
+      "requirement": "U1 grouped permutation",
+      "role": "B",
+      "status": "PASS_SUPERSEDED_IMPLEMENTATION",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "U2 association controls for the frozen time covariate on held-out rows.",
+      "implementation_path": [
+        "src/mineocclude/metrics/u2_calibration.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B19 / Phase 4",
+      "requirement": "U2 time-controlled association",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "Bootstrap resampling is hierarchical at layout then trajectory level rather than treating frames as IID.",
+      "implementation_path": [
+        "src/mineocclude/metrics/resampling.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B20 / Phase 4",
+      "requirement": "Hierarchical layout-to-trajectory bootstrap",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json"
+      ],
+      "explanation": "The implementation emits the requested 50%, 80%, and 95% interval coverage/calibration quantities.",
+      "implementation_path": [
+        "src/mineocclude/metrics/u2_calibration.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B21 / Phase 4",
+      "requirement": "U2 50/80/95 coverage/calibration",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/d_to_b_production_baseline_handoff.json"
+      ],
+      "explanation": "The numerical comparator predictions consumed by B use D's current sealed production manifest and B's exact frozen rows/folds. This does not cure the separate positive-control gate defect in B23/D17.",
+      "implementation_path": [
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py",
+        "src/mineocclude/baselines/production_input_ingest.py"
+      ],
+      "manual_phase_or_step": "B22 / Phases 4-5",
+      "requirement": "Baseline-comparison consumption",
+      "role": "B",
+      "status": "PASS",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py",
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": "RESULT_INVALIDATING: current U1/U2 result status depends on an unexecuted/unsatisfied no-wall positive-control gate.",
+      "evidence_path": [
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/fit_provenance.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/oof_prediction_manifest.json",
+        "docs/status/person_b_phase6_step6_6_positive_control_v0_1/positive_control_decision.json",
+        "docs/status/person_b_canonical_multilayout_positive_control_v0_1/completed_control_results.json"
+      ],
+      "explanation": "The generator publishes READY_EXISTING/READY_EXISTING_CONSUMED from prediction-slot coverage without executing the manual's current-authority no-wall decoding gate. Inherited strongest R-squared values (0.338170676 and 0.390514057) are below 0.50. Therefore the package did not fail closed before scientific interpretation.",
+      "implementation_path": [
+        "scripts/build_bd_production_input_readiness_v0_1.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "B23 / Phase 5",
+      "requirement": "Production U1/U2 result generation",
+      "role": "B",
+      "status": "FAIL",
+      "tests": [
+        "tests/integration/test_bd_production_input_readiness_v0_1.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py",
+        "tests/baselines/test_positive_control_gate.py"
+      ]
+    },
+    {
+      "blocker_if_any": "NO_VALID_TERMINAL_REVEAL_EVENTS in the current production data authority.",
+      "evidence_path": [
+        "docs/status/person_c_66_cell_capture_authority_v0_1/u4_reveal_eligibility_finding.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/final_verdict.json"
+      ],
+      "explanation": "U3 implementation is present, but the accepted production authority contains no valid terminal reveal events. The code is not marked failed for absent events.",
+      "implementation_path": [
+        "src/mineocclude/metrics/u3_dynamics.py",
+        "src/mineocclude/analysis/step4_1_bounded_reveal_v0_1.py"
+      ],
+      "manual_phase_or_step": "B24 / Phase 5",
+      "requirement": "U3 implementation and production-data availability",
+      "role": "B",
+      "status": "BLOCKED_EXTERNAL_DATA",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": "No U4 intervention execution is in the current MVP scope.",
+      "evidence_path": [
+        "docs/status/person_b_66_cell_oracle_target_v0_1/u4_status.json"
+      ],
+      "explanation": "U4 contracts and analysis interfaces exist, but no causal intervention was performed in this MVP; no U4 scientific result is claimed.",
+      "implementation_path": [
+        "src/mineocclude/analysis/u4_event_selection_intervention_request_v1_0.py",
+        "src/mineocclude/intervention/inject.py"
+      ],
+      "manual_phase_or_step": "B25 / Phase 6",
+      "requirement": "U4 implementation/scope status",
+      "role": "B",
+      "status": "NOT_APPLICABLE_MVP_SCOPE",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    }
+  ],
+  "role": "B",
+  "schema_version": "mvp-role-implementation-audit-v0.1",
+  "status_counts": {
+    "blocked_external_data": 1,
+    "blocked_or_na": 2,
+    "fail": 1,
+    "not_applicable_mvp_scope": 1,
+    "pass": 22,
+    "pass_direct": 21,
+    "pass_superseded_implementation": 1,
+    "total": 25,
+    "unverified": 0
+  },
+  "verdict": "ROLE_INVALID"
+}

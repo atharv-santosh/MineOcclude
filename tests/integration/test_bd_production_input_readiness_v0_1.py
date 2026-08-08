@@ -82,7 +82,10 @@ def test_current_d_package_matches_b_successor_universe() -> None:
     )
     assert d["authority_commit"] == builder.PERSON_D_AUTHORITY_COMMIT
     assert d["prediction_row_count"] == 10592
-    assert d["required_comparators_ready"] is True
+    assert d["no_wall_positive_control_artifact_present"] is True
+    assert d["no_wall_positive_control_statistical_gate_pass"] is False
+    assert d["required_comparators_ready"] is False
+    assert d["comparator_status"]["no_wall_positive_control"] == "STATISTICAL_GATE_FAIL"
     assert d["comparator_status"]["raw_pixel"] == "READY_EXISTING"
     assert d["comparator_status"]["occluder_only_negative_control"] == "NOT_APPLICABLE"
 

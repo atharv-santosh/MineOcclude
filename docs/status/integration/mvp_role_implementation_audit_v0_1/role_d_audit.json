@@ -1,0 +1,482 @@
+{
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "branch": "integration/mvp-final",
+  "requirements": [
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Typed specs and prediction rows carry family, target, row, fold, fit, and provenance identities.",
+      "implementation_path": [
+        "src/mineocclude/baselines/spec.py",
+        "src/mineocclude/baselines/interface.py"
+      ],
+      "manual_phase_or_step": "D1 / Phases 0-1",
+      "requirement": "BaselineSpec/prediction schema",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "The firewall admits only declared legal features per family and rejects oracle/hidden channels.",
+      "implementation_path": [
+        "src/mineocclude/baselines/firewall.py"
+      ],
+      "manual_phase_or_step": "D2 / Phase 1",
+      "requirement": "Legal-input firewall",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Production baseline execution consumes B's grouped fold authority and rejects unknown rows/folds.",
+      "implementation_path": [
+        "src/mineocclude/baselines/production_fold_contract_v0_1.py"
+      ],
+      "manual_phase_or_step": "D3 / Phases 1-2",
+      "requirement": "Grouped-fold enforcement",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "All current baseline families use the common fit/predict/export harness.",
+      "implementation_path": [
+        "src/mineocclude/baselines/harness.py",
+        "src/mineocclude/baselines/eight_family_runner.py"
+      ],
+      "manual_phase_or_step": "D4 / Phases 1-3",
+      "requirement": "Common fit/predict/evaluate harness",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "The null permutes at the declared group level and is labeled as a floor/null.",
+      "implementation_path": [
+        "src/mineocclude/baselines/shuffled.py",
+        "src/mineocclude/baselines/grouped_nulls_v0_1.py"
+      ],
+      "manual_phase_or_step": "D5 / Phase 2",
+      "requirement": "Grouped shuffled-label floor",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "The repaired implementation records donor group/frame identity rather than obscuring provenance.",
+      "implementation_path": [
+        "src/mineocclude/baselines/shuffled.py",
+        "src/mineocclude/baselines/grouped_nulls_v0_1.py"
+      ],
+      "manual_phase_or_step": "D6 / Phase 2",
+      "requirement": "Explicit donor/frame identity in current grouped shuffle",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Last-seen uses only legal visible history and emits explicit missingness.",
+      "implementation_path": [
+        "src/mineocclude/baselines/last_seen.py"
+      ],
+      "manual_phase_or_step": "D7 / Phase 2",
+      "requirement": "Last-seen baseline",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Constant velocity is fit/evaluated within the common legal-input/fold harness.",
+      "implementation_path": [
+        "src/mineocclude/baselines/constant_velocity.py"
+      ],
+      "manual_phase_or_step": "D8 / Phase 2",
+      "requirement": "Constant-velocity baseline",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Time-only consumes the frozen legal time feature and training folds only.",
+      "implementation_path": [
+        "src/mineocclude/baselines/time_only.py"
+      ],
+      "manual_phase_or_step": "D9 / Phase 2",
+      "requirement": "Time-only baseline",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "The explicit feature family uses its declared legal inputs under the common harness.",
+      "implementation_path": [
+        "src/mineocclude/baselines/explicit_feature.py"
+      ],
+      "manual_phase_or_step": "D10 / Phase 2",
+      "requirement": "Explicit-feature baseline",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Raw-pixel preprocessing is learned on outer-training data and applied to held-out rows.",
+      "implementation_path": [
+        "src/mineocclude/baselines/raw_pixel.py"
+      ],
+      "manual_phase_or_step": "D11 / Phase 2",
+      "requirement": "Raw-pixel baseline with train-only preprocessing",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "The spread predictor uses only visible-history information and preserves invalid/missing rows.",
+      "implementation_path": [
+        "src/mineocclude/baselines/visible_history_q.py"
+      ],
+      "manual_phase_or_step": "D12 / Phase 2",
+      "requirement": "Visible-history spread baseline",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Conflicting row-to-fold assignments are rejected; historical permissive behavior is repaired and covered by current tests.",
+      "implementation_path": [
+        "src/mineocclude/baselines/production_input_ingest.py",
+        "src/mineocclude/baselines/production_fold_contract_v0_1.py"
+      ],
+      "manual_phase_or_step": "D13 / Phases 1-3",
+      "requirement": "Conflicting fold assignments fail closed",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Known-q is explicitly labeled a privileged analytic reference/ceiling, not a legal deployable baseline.",
+      "implementation_path": [
+        "src/mineocclude/baselines/known_q_analytic.py"
+      ],
+      "manual_phase_or_step": "D14 / Phase 2",
+      "requirement": "Known-q analytic reference labeled as ceiling/reference",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "The authority receipt verifies row/fold/layout integrity before fit.",
+      "implementation_path": [
+        "src/mineocclude/baselines/leakage.py",
+        "src/mineocclude/baselines/production_fold_contract_v0_1.py"
+      ],
+      "manual_phase_or_step": "D15 / Phase 3",
+      "requirement": "Split-integrity audit",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Declared metadata are screened against forbidden target/oracle/hidden inputs.",
+      "implementation_path": [
+        "src/mineocclude/baselines/leakage.py",
+        "src/mineocclude/baselines/firewall.py"
+      ],
+      "manual_phase_or_step": "D16 / Phase 3",
+      "requirement": "Metadata leakage audit",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": "RESULT_INVALIDATING: no current-authority passed no-wall positive-control decision exists.",
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json",
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json",
+        "docs/status/person_b_phase6_step6_6_positive_control_v0_1/positive_control_decision.json",
+        "docs/status/person_b_canonical_multilayout_positive_control_v0_1/completed_control_results.json"
+      ],
+      "explanation": "The correct R-squared >= 0.50 and bootstrap-CI-above-zero gate exists in positive_control_gate.py, but it was not run on current 66-cell no-wall activations. Readiness instead treats complete prediction slots as READY_EXISTING. The two inherited strongest global R-squared values are 0.338170676 and 0.390514057, both below the manual threshold.",
+      "implementation_path": [
+        "src/mineocclude/baselines/positive_control_gate.py",
+        "scripts/build_bd_production_input_readiness_v0_1.py"
+      ],
+      "manual_phase_or_step": "D17 / Step 4.3",
+      "requirement": "No-wall positive control",
+      "role": "D",
+      "status": "FAIL",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py",
+        "tests/baselines/test_positive_control_gate.py",
+        "tests/integration/test_bd_production_input_readiness_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json",
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json"
+      ],
+      "explanation": "The no-object control remains in the 66-cell capture authority but its 360 frames are explicitly excluded from B/D target-bearing execution because no oracle target is applicable; D does not silently reinstate them.",
+      "implementation_path": [
+        "src/mineocclude/baselines/production_universe_66_cell_v0_1.py",
+        "src/mineocclude/baselines/missingness.py"
+      ],
+      "manual_phase_or_step": "D18 / Step 4.4",
+      "requirement": "Occluder-only/no-object control applicability/current status",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json"
+      ],
+      "explanation": "Admitted/excluded/not-applicable rows reconcile exactly and missing values are not imputed across scientific identities.",
+      "implementation_path": [
+        "src/mineocclude/baselines/missingness.py",
+        "src/mineocclude/baselines/missingness_audit_v0_1.py"
+      ],
+      "manual_phase_or_step": "D19 / Phases 2-4",
+      "requirement": "Missingness/exclusion handling",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/authority_verification_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/execution_receipt.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json",
+        "docs/status/person_d_66_cell_production_baselines_v0_1/d_to_b_production_baseline_handoff.json"
+      ],
+      "explanation": "Eight families produce 10,592 prediction rows over exactly B's 662 admitted rows, targets, and five frozen folds.",
+      "implementation_path": [
+        "src/mineocclude/baselines/production_input_ingest.py",
+        "scripts/run_person_d_66_cell_production_baselines.py"
+      ],
+      "manual_phase_or_step": "D20 / Production",
+      "requirement": "Production baselines use exactly B's frozen rows/folds",
+      "role": "D",
+      "status": "PASS",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": "RESULT_INVALIDATING: B consumed a coverage surrogate in place of D's required positive-control gate.",
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/d_to_b_production_baseline_handoff.json",
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json",
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/execution_receipt.json"
+      ],
+      "explanation": "The ordinary comparator prediction rows are current and row/fold exact, but the comparator-control bundle consumed by U1/U2 claims the no-wall control is ready without a valid current-authority gate decision. Therefore the complete comparator authority used for interpretation is not valid.",
+      "implementation_path": [
+        "scripts/build_bd_production_input_readiness_v0_1.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "D21 / Production handoff",
+      "requirement": "Production comparator artifacts used by U1/U2 are current and valid",
+      "role": "D",
+      "status": "FAIL",
+      "tests": [
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py",
+        "tests/integration/test_bd_production_input_readiness_v0_1.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    }
+  ],
+  "role": "D",
+  "schema_version": "mvp-role-implementation-audit-v0.1",
+  "status_counts": {
+    "blocked_external_data": 0,
+    "blocked_or_na": 0,
+    "fail": 2,
+    "not_applicable_mvp_scope": 0,
+    "pass": 19,
+    "pass_direct": 19,
+    "pass_superseded_implementation": 0,
+    "total": 21,
+    "unverified": 0
+  },
+  "verdict": "ROLE_INVALID"
+}

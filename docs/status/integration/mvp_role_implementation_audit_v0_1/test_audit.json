@@ -1,0 +1,1268 @@
+{
+  "accounting": {
+    "environment_only_total": 198,
+    "full_suite_errors": 50,
+    "full_suite_failure_or_error_total": 231,
+    "full_suite_failures": 181,
+    "junit_environment_only": 139,
+    "junit_serialized_failure_or_error_cases": 172,
+    "stale_historical_total": 33,
+    "subtest_delta_environment_only": 59,
+    "sum_of_classifications": 231,
+    "unittest_subtest_delta": 59
+  },
+  "audit_interpretation": {
+    "coverage_gap": "The green positive-control unit test validates gate logic in isolation, while readiness tests validate the READY_EXISTING label. No test requires readiness to execute/bind the gate decision, which permits the audited result-invalidating substitution.",
+    "current_authority_focused_suite": "PASS",
+    "positive_control_defect_detected_by_failing_test": false,
+    "tests_weakened_or_modified": false
+  },
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "branch": "integration/mvp-final",
+  "classification_counts": {
+    "ENVIRONMENT_ONLY": 198,
+    "EXPECTED_NEGATIVE_FIXTURE": 0,
+    "GENUINE_IMPLEMENTATION_FAILURE": 0,
+    "OUT_OF_SCOPE": 0,
+    "STALE_HISTORICAL_ASSUMPTION": 33
+  },
+  "commands": [
+    {
+      "command": "python -m pytest -q",
+      "elapsed_seconds": 275.53,
+      "failing_or_error_count": 231,
+      "result": "181 failed, 3330 passed, 29 skipped, 50 errors, 7415 subtests passed"
+    },
+    {
+      "command": "python -m pytest --lf -q --tb=no --junitxml=/tmp/mvp-role-audit-pytest-failures.xml",
+      "elapsed_seconds": 18.2,
+      "junit_case_count": 172,
+      "result": "122 failed, 528 deselected, 50 errors"
+    },
+    {
+      "command": "python -m pytest -q tests/models/test_person_a_66_cell_production_finalization_v0_1.py tests/integration/test_bd_production_input_readiness_v0_1.py tests/analysis/test_production_u1_u2_66_cell_v0_1.py tests/baselines/test_66_cell_production_universe_v0_1.py tests/baselines/test_production_input_ingest.py tests/baselines/test_production_fold_contract_v0_1.py tests/baselines/test_positive_control_gate.py tests/vision/test_phase3_formal_detector_evaluation.py tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py",
+      "elapsed_seconds": 3.04,
+      "failing_or_error_count": 0,
+      "result": "157 passed, 1 skipped, 48 subtests passed"
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "command": "./gradlew test --offline",
+      "failing_or_error_count": 0,
+      "result": "NOT_EXECUTED_ENVIRONMENT_ONLY: JAVA_HOME/java unavailable"
+    }
+  ],
+  "junit_failure_records": [
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "ValueError: join, matrix, fold, or probe evidence is inconsistent",
+      "node_id": "tests.activations.test_phase5_store.TestPhase5CoordinatedHandoffV12::test_checked_package_has_exact_inventory_checksums_and_text_bytes",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "mineocclude.analysis.layout_fold_plan.LayoutFoldPlanError: Fold plan does not match its checked-in Person C sources.",
+      "node_id": "tests.analysis.test_layout_fold_plan::test_real_plan_rebuilds_exactly_from_checked_c_sources",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "mineocclude.analysis.oracle_target_66_cell_v0_1.OracleTargetError: oracle package must be published on role/person-b-analysis, not 'integration/mvp-final'",
+      "node_id": "tests.analysis.test_person_b_66_cell_oracle_target_v0_1::test_package_passes_the_deterministic_validator",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "assert 'stored_dtype' not in '# Frozen co...zed: false\\n'\n  \n  'stored_dtype' is contained here:\n    ore-v2\"\n      stored_dtype: \"float16\"\n      vector_width: 2048\n      rows_per_frame: 20\n      chunks_per_trajectory: 20...\n  \n  ...Full output truncated (78 lines hidden), use '-vv' to show",
+      "node_id": "tests.analysis.test_person_b_66_cell_preactivation_v0_1::test_person_b_did_not_edit_person_a_mvp_yaml",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "Failed: DID NOT RAISE ValidationError",
+      "node_id": "tests.analysis.test_person_b_66_cell_step4_1_dependency_handoff_v0_1::test_changed_c_manifest_identity_fails_closed",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "mineocclude.analysis.coordinate_frame_cosign_v0_1.CoordinateCosignError: co-sign must be published on role/person-b-analysis, not 'integration/mvp-final'",
+      "node_id": "tests.analysis.test_person_b_coordinate_frame_cosign_v0_1::test_builder_is_byte_reproducible",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "mineocclude.analysis.final_integration_readiness_v0_1.FinalIntegrationReadinessValidationError: branch: expected 'role/person-b-analysis', got 'integration/mvp-final'",
+      "node_id": "tests.analysis.test_person_b_final_integration_readiness_v0_1::test_actual_package_passes_with_distinct_scientific_decision",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "assert False is True",
+      "node_id": "tests.analysis.test_person_b_final_integration_readiness_v0_1::test_git_object_verification_is_performed",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "mineocclude.analysis.final_integration_readiness_v0_1.FinalIntegrationReadinessValidationError: branch: expected 'role/person-b-analysis', got 'integration/mvp-final'",
+      "node_id": "tests.analysis.test_person_b_final_integration_readiness_v0_1::test_validation_is_read_only",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: Missing JSON document: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/authority_binding.json\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_wrong_coordinate_sha_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: Missing JSON document: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/authority_binding.json\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_missing_b_coordinate_signoff_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: Missing JSON document: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/authority_binding.json\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_missing_c_coordinate_signoff_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: Missing JSON document: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/authority_binding.json\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_person_a_coordinate_ownership_claim_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: C package root missing: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_joined_row_count",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: C package root missing: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_joined_key_uniqueness",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: C package root missing: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_raw_channel_preservation_passes_authority",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: C package root missing: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_quarantine_categories_and_totals",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/joined_visibility_records.jsonl'\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_missing_detector_nonzero_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: C package root missing: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_per_layout_accounting",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: Missing JSON document: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/authority_binding.json\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_e_visible_flag_ownership_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: Missing JSON document: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/authority_binding.json\"",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_b_visible_flag_computation_claim_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: Unauthorized path changed",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_no_pre_existing_path_modifications",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "scripts.validate_person_b_phase3_step3_3_final_signoff_v0_1.SignoffValidationError: C package root missing: /home/sagemaker-user/MineOcclude-person-c-step3-3-authority/data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1",
+      "node_id": "tests.analysis.test_person_b_phase3_step3_3_final_signoff_v0_1::test_full_validation_only_signoff_passes",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "scripts.validate_person_b_phase4_step4_1_registry_v2_handoff_v0_1.HandoffValidationError: authority_hash_mismatch: src/mineocclude/contracts/analysis_inputs.py expected 562710ad0b8da78ee517ef254b415220fb46a3acf15374232433a2af9efc80fc, received 9ff9b6b83d1844027a2a50af0f3720d25143735c2de7e90364e27c5d2e9541cd",
+      "node_id": "tests.analysis.test_person_b_phase4_step4_1_registry_v2_handoff_v0_1::test_real_package_passes_complete_validation",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "validate_person_b_phase4_step4_1_step6_final_runtime_authorization_v0_1.FinalRuntimeAuthorizationError: wrong_remote_authority: Person A remote ref is not the exact acknowledgement commit",
+      "node_id": "tests.analysis.test_person_b_phase4_step4_1_step6_final_runtime_authorization_v0_1::test_full_exact_remote_authorization_and_c_registry_trust_chain_pass",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "scripts.validate_person_b_step4_1_final_person_d_authorization_v0_1.FinalPersonDAuthorizationError: remote_head_mismatch: origin/role/person-d-baselines",
+      "node_id": "tests.analysis.test_person_b_step4_1_final_person_d_authorization_v0_1::test_final_authorization_package_validates_without_payload_bytes",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: Regex pattern did not match.\n  Expected regex: 'git_ancestry_mismatch'\n  Actual message: 'remote_head_mismatch: origin/role/person-d-baselines'",
+      "node_id": "tests.analysis.test_person_b_step4_1_final_person_d_authorization_v0_1::test_d_source_ancestry_fails_closed[4915252ce5a9f346fc39f1f2583478949c3787f5]",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: Regex pattern did not match.\n  Expected regex: 'git_ancestry_mismatch'\n  Actual message: 'remote_head_mismatch: origin/role/person-d-baselines'",
+      "node_id": "tests.analysis.test_person_b_step4_1_final_person_d_authorization_v0_1::test_d_source_ancestry_fails_closed[fd9302e5d218193211f2f96986ca32dc1a365e66]",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: Regex pattern did not match.\n  Expected regex: 'git_ancestry_mismatch'\n  Actual message: 'remote_head_mismatch: origin/role/person-d-baselines'",
+      "node_id": "tests.analysis.test_person_b_step4_1_final_person_d_authorization_v0_1::test_d_source_ancestry_fails_closed[bb2ebf7947c92c814dae85fc9cef29fef04e4c6f]",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "mineocclude.analysis.week1_closeout_v0_1.CloseoutValidationError: git cat-file -t 1905f4bec7c917baafa084d7bf3a473fb8e40460 failed: fatal: git cat-file: could not get object info",
+      "node_id": "tests.analysis.test_person_b_week1_closeout_v0_1::test_valid_package",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: assert {'schema_vers...rbidden', ...} == {'authenticat...ue, ...}, ...}\n  \n  Omitting 16 identical items, use -vv to show\n  Differing items:\n  {'authenticated_activation_probe': {'matrix_hash': '94a6e42ccf27a88b61350c2ce3dd328d23e035ff64a1a3f9292856af3e2d28cb',...7ca6796274e0d822b8b6a12313cd', 'u1_artifact_hash': 'c559651330b936198f62725cb5bc686cf3f38c92cf0f8f2560e739d4a3a92a2d'}} != {'authenticated_activation_probe': {'matrix_hash': '94a6e42ccf27a88b61350c2ce3dd328d23e035ff64a1a",
+      "node_id": "tests.analysis.test_synthetic_analysis_chain::test_full_chain_is_sealed_non_scientific_and_matches_saved_evidence",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: assert 'integration/mvp-final' == 'role/person-d-baselines'\n  \n  - role/person-d-baselines\n  + integration/mvp-final",
+      "node_id": "tests.baselines.test_baseline_family_production_cli::test_resolve_git_facts_against_the_real_repository_reports_the_real_branch",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: published artifacts differ from a fresh generation: ['sha256_inventory.json', 'step8_1_clean_workflow_run.json']; the committed evidence must be exactly what the generator produces\nassert not ['sha256_inventory.json', 'step8_1_clean_workflow_run.json']",
+      "node_id": "tests.baselines.test_phase6to8_completion_package::test_regeneration_is_byte_identical_to_the_published_package",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: [\"mp4 encode failed: [Errno 2] No such file or directory: 'ffmpeg'\"]\nassert False",
+      "node_id": "tests.data.test_build_dataset::test_valid_episode_end_to_end",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "assert 0 == 1",
+      "node_id": "tests.data.test_build_dataset::test_manifest_aggregates_accepted_only",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: [\"mp4 encode failed: [Errno 2] No such file or directory: 'ffmpeg'\"]\nassert False",
+      "node_id": "tests.data.test_package_episode::test_assembled_package_passes_frozen_validator_chain",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: [\"mp4 encode failed: [Errno 2] No such file or directory: 'ffmpeg'\"]\nassert False",
+      "node_id": "tests.data.test_package_episode::test_wrong_schedule_seed_is_rejected",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: assert False\n +  where False = <function exists at 0x7ff79d3176a0>('C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\mineocclude_client_out\\\\episode_12601\\\\frames\\\\000000.png')\n +    where <function exists at 0x7ff79d3176a0> = <module 'posixpath' (frozen)>.exists\n +      where <module 'posixpath' (frozen)> = os.path",
+      "node_id": "tests.data.test_person_c_66_cell_canonical_media_v0_1::test_every_raw_frame_hash_verifies",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\mineocclude_client_out\\\\episode_12601\\\\frames\\\\000000.png'",
+      "node_id": "tests.data.test_person_c_66_cell_canonical_media_v0_1::test_frozen_rule_reproduces_a_published_canonical_frame",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: assert not True\n +  where True = <function exists at 0x7ff79d3176a0>('/home/sagemaker-user/MineOcclude/src/mineocclude/models/_mineworld_adapter_wave2.py')\n +    where <function exists at 0x7ff79d3176a0> = <module 'posixpath' (frozen)>.exists\n +      where <module 'posixpath' (frozen)> = os.path\n +    and   '/home/sagemaker-user/MineOcclude/src/mineocclude/models/_mineworld_adapter_wave2.py' = <function join at 0x7ff79d0d0d60>('/home/sagemaker-user/MineOcclude', 'src/mineocclude/",
+      "node_id": "tests.data.test_person_c_66_cell_canonical_media_v0_1::test_the_two_authorities_are_not_collapsed",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\mineocclude_client_out\\\\episode_12601\\\\frames_640x360\\\\000000.png'",
+      "node_id": "tests.data.test_person_c_66_cell_canonical_media_v0_1::test_channel_order_resolution_is_the_identity_composition",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\mineocclude_client_out\\\\episode_12601\\\\frames_640x360\\\\000000.png'",
+      "node_id": "tests.data.test_person_c_66_cell_canonical_media_v0_1::test_every_canonical_frame_is_exactly_640x360",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: assert False\n +  where False = <function exists at 0x7ff79d3176a0>('C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\mineocclude_client_out\\\\episode_12601\\\\frames_640x360\\\\000000.png')\n +    where <function exists at 0x7ff79d3176a0> = <module 'posixpath' (frozen)>.exists\n +      where <module 'posixpath' (frozen)> = os.path",
+      "node_id": "tests.data.test_person_c_66_cell_canonical_media_v0_1::test_canonical_media_files_exist_and_hash_match",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12601\\server_state.jsonl\nassert False\n +  where False = <function exists at 0x7ff79d3176a0>('C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\mineocclude_out\\\\episode_12601\\\\server_state.jsonl')\n +    where <function exists at 0x7ff79d3176a0> = <module 'posixpath' (frozen)>.exists\n +      where <module 'posixpath' (frozen)> = os.path",
+      "node_id": "tests.data.test_person_c_66_cell_capture_authority_v0_1::test_declared_server_state_and_layout_meta_hashes_still_match",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "assert True is False",
+      "node_id": "tests.data.test_person_c_66_cell_capture_authority_v0_1::test_person_c_signed_and_person_b_left_unsigned",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: data/person_b/c6a_c_intake/coordinate_frames/layout_01.json\nassert '6bc257b134ef...ca7b13a19afff' == 'f4d1b1d327bc...c50beb69a6518'\n  \n  - f4d1b1d327bcbacec0ef88f99cb7dd475ffec4c67d95b2c0cefc50beb69a6518\n  + 6bc257b134efff03d7765432dc13ac564d8c8229a6d31453a9fca7b13a19afff",
+      "node_id": "tests.data.test_person_c_66_cell_capture_authority_v0_1::test_sha256_inventory_matches_every_published_artifact",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: Traceback (most recent call last):\n    File \"/home/sagemaker-user/MineOcclude/scripts/build_person_c_66_cell_capture_authority_v0_1.py\", line 2655, in <module>\n      raise SystemExit(main())\n                       ^^^^^^\n    File \"/home/sagemaker-user/MineOcclude/scripts/build_person_c_66_cell_capture_authority_v0_1.py\", line 1376, in main\n      per_episode[episode_id] = build_streams(\n                                ^^^^^^^^^^^^^^\n    File \"/home/sagemaker-user/MineOcclude/scrip",
+      "node_id": "tests.data.test_person_c_66_cell_capture_authority_v0_1::test_deterministic_regeneration",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: Traceback (most recent call last):\n    File \"/home/sagemaker-user/MineOcclude/scripts/build_person_c_66_cell_strict_visibility_v0_1.py\", line 2122, in <module>\n      raise SystemExit(main())\n                       ^^^^^^\n    File \"/home/sagemaker-user/MineOcclude/scripts/build_person_c_66_cell_strict_visibility_v0_1.py\", line 1793, in main\n      intake, e_rows, handoff, marker_manifest = intake_person_e(records, packages)\n                                                 ^^^^^^^^^",
+      "node_id": "tests.data.test_person_c_66_cell_strict_visibility_v0_1::test_deterministic_regeneration",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: sha256_inventory.json\nassert b'{\\n  \"file_...\": \"1.0\"\\n}\\n' == b'{\\n  \"file_...\": \"1.0\"\\n}\\n'\n  \n  At index 7855 diff: b'2' != b'3'\n  Use -v to get more diff",
+      "node_id": "tests.data.test_person_c_c7_5_mvp_handoff_v0_1::test_deterministic_regeneration_json_byte_identical",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "build_person_e_a_activation_provenance_acceptance_v0_1.AcceptanceError: missing canonical Person A bundle: C:/Users/lollo/MineOcclude/docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z",
+      "node_id": "tests.experiments.test_person_e_a_activation_provenance_acceptance_v0_1::test_schema_inventory_and_generated_receipt_are_exact",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: fatal: cannot change to 'C:/Users/lollo/MineOcclude': No such file or directory\n  \nassert 2 == 0\n +  where 2 = CompletedProcess(args=['/opt/conda/bin/python', '/home/sagemaker-user/MineOcclude/scripts/build_person_e_a_multilayout...s not in local ancestry\\n', stderr=\"fatal: cannot change to 'C:/Users/lollo/MineOcclude': No such file or directory\\n\").returncode",
+      "node_id": "tests.experiments.test_person_e_a_multilayout_activation_provenance_acceptance_v0_1::test_schema_fails_closed_and_generated_package_is_byte_exact",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: RuntimeError not raised",
+      "node_id": "tests.experiments.test_person_e_phase4_step4_1_slice3a_v0_1.TestPersonEPhase4Step41Slice3A::test_32_non_ancestor_source_authority_fails",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: untouched_test_capture_requirements.json\nassert b'{\\n  \"captu...n.\"\\n  ]\\n}\\n' == b'{\\n  \"captu...n.\"\\n  ]\\n}\\n'\n  \n  At index 4626 diff: b'3' != b'1'\n  Use -v to get more diff",
+      "node_id": "tests.handoff.test_phase3_untouched_predeclaration::test_deterministic_byte_identical_generation",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: {'authenticated_a_b_probe_bridge': {'bridge[443316 chars]: 0}} != {'schema_version': '1.0', 'integration_id':[443314 chars]: 0}}\nDiff is 6800019 characters long. Set self.maxDiff to None to see it.",
+      "node_id": "tests.integration.test_synthetic_pipeline.TestSyntheticCrossRolePipeline::test_checked_machine_readable_report_matches_fresh_execution",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "ModuleNotFoundError: No module named 'cv2'",
+      "node_id": "tests.models.test_mineworld_adapter_wave2.Wave2TrajectoryAndPreprocessingTests::test_bgr_rgb_layout_range_and_interpolation",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "mineocclude.models.mineworld_adapter.MineWorldAdapterError: invalid_request: preprocess_frame: frame: NumPy and OpenCV are required for frame preprocessing: No module named 'cv2'",
+      "node_id": "tests.models.test_mineworld_adapter_wave2.Wave2TrajectoryAndPreprocessingTests::test_fake_vae_boundary_observes_expected_input_and_code_count",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "mineocclude.models.mineworld_adapter.MineWorldAdapterError: invalid_request: preprocess_frame: frame: NumPy and OpenCV are required for frame preprocessing: No module named 'cv2'",
+      "node_id": "tests.models.test_mineworld_adapter_wave2.Wave2TrajectoryAndPreprocessingTests::test_golden_preprocessing_matches_pinned_fixture",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "mineocclude.models.mineworld_adapter.MineWorldAdapterError: invalid_request: preprocess_frame: frame: NumPy and OpenCV are required for frame preprocessing: No module named 'cv2'",
+      "node_id": "tests.models.test_mineworld_adapter_wave3.Wave3IntegratedBoundaryTests::test_accepted_to_teacher_path_preserves_identity_and_failure_order",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "mineocclude.models.mineworld_adapter.MineWorldAdapterError: invalid_request: preprocess_frame: frame: NumPy and OpenCV are required for frame preprocessing: No module named 'cv2'",
+      "node_id": "tests.models.test_mineworld_adapter_wave4.Wave4IdentityAndFailureTests::test_every_intermediate_output_carries_observed_code_identity",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "person_a_66_cell_local_preparation_builder.PreparationError: unexpected_branch: Person A branch is 'integration/mvp-final'",
+      "node_id": "tests.models.test_person_a_66_cell_local_preparation_v0_1.PersonA66CellLocalPreparationTests::test_01_authorities_verify_against_exact_git_objects",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: 'missing_runtime_payload' != 'declared_frame_count_mismatch'\n- missing_runtime_payload\n+ declared_frame_count_mismatch",
+      "node_id": "tests.models.test_person_a_66_cell_local_preparation_v0_1.PersonA66CellLocalPreparationTests::test_19_a_frame_count_disagreement_fails_closed",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "RuntimeError: fatal: cannot change to 'C:\\Users\\lollo\\MineWorld-Upstream': No such file or directory",
+      "node_id": "tests.models.test_person_a_66_cell_local_preparation_v0_1.PersonA66CellLocalPreparationTests::test_22_frame_map_regeneration_is_deterministic",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "person_a_66_cell_successor_authority_builder.SuccessorAuthorityError: unexpected_branch: Person A branch is 'integration/mvp-final'",
+      "node_id": "tests.models.test_person_a_66_cell_successor_authority_v0_1.PersonA66CellSuccessorAuthorityTests::test_01_authorities_verify_as_exact_git_objects",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "person_a_66_cell_successor_authority_builder.SuccessorAuthorityError: unexpected_branch: Person A branch is 'integration/mvp-final'",
+      "node_id": "tests.models.test_person_a_66_cell_successor_authority_v0_1.PersonA66CellSuccessorAuthorityTests::test_38_builder_output_is_deterministic",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "RuntimeError: Unexpected Person A branch: 'integration/mvp-final'",
+      "node_id": "tests.models.test_person_a_phase6_66_cell_intake_v0_1.PersonA66CellIntakeTests::test_01_person_a_and_person_c_authorities_verify",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "RuntimeError: Person A production authority drifted: src/mineocclude/models/mineworld_adapter.py expected 0d8f55fbd24a1552bd9242b3a4554f7cdc15240b24865904e2f77446128516a5, observed 5555e33fceaeb33c96a6948b971951b9945a1ba75649c6bedab914f2ef9609ea",
+      "node_id": "tests.models.test_person_a_phase6_66_cell_intake_v0_1.PersonA66CellIntakeTests::test_03_pinned_person_a_production_files_are_unchanged",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "RuntimeError: Unexpected Person A branch: 'integration/mvp-final'",
+      "node_id": "tests.models.test_person_a_phase6_66_cell_intake_v0_1.PersonA66CellIntakeTests::test_32_builder_output_is_deterministic_and_matches_the_committed_package",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "RuntimeError: fatal: cannot change to 'C:\\Users\\lollo\\MineWorld-Upstream': No such file or directory",
+      "node_id": "tests.models.test_phase3_certification_inputs.WindowAndDerivativeTests::test_action_provenance_detects_raw_mutation_without_torch",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: False is not true : ['scripts/localize_u4_frames.py']",
+      "node_id": "tests.operations.test_phase7_terminal_package.TestStep71CleanReproduction::test_component_hashes_still_match_the_working_tree",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "AssertionError: 'e8dafbf4208267b77fcae582c5c7d2dd381d3384d629f1280c96757765860a0a' != '4c0ef779a8b8973985f625c1a2e92321a0910e1e0f22967c1e11258b0a402b86'\n- e8dafbf4208267b77fcae582c5c7d2dd381d3384d629f1280c96757765860a0a\n+ 4c0ef779a8b8973985f625c1a2e92321a0910e1e0f22967c1e11258b0a402b86\n : scripts/localize_u4_frames.py",
+      "node_id": "tests.operations.test_terminal_status_package.TestVersionsAndInventory::test_implementation_inventory_digests_still_match",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "build_person_e_terminal_status_v0_1.TerminalStatusError: terminal status must be built on E's branch: integration/mvp-final",
+      "node_id": "tests.operations.test_terminal_status_package.TestBuilderStillRuns::test_builder_regenerates_a_valid_package",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: assert 'b50aed7fb36f...4a9e2c39081d6' == 'b58d7e3514e7...c8e4c210af38c'\n  \n  - b58d7e3514e7f9787ddd428fdc755e08cb48a75dd3cd09a4e1fc8e4c210af38c\n  + b50aed7fb36fa8c4ffba2e3f9c1fcb16ba94a0e70a2c9c268134a9e2c39081d6",
+      "node_id": "tests.test_parquet_dependency_authority::test_external_mineworld_dependency_file_is_untouched",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server/mineocclude_schedules/episode_11502.jsonl'",
+      "node_id": "tests.test_person_c_c1_5_first_success_second_operator::test_reserved_schedule_is_hash_bound_and_loadable",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server/c1_5_evidence/first_operator_attempt_04_attestation.json'",
+      "node_id": "tests.test_person_c_c1_5_first_success_second_operator::test_independent_attestation_contract_is_complete",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server/c1_5_evidence/first_operator_attempt_04_attestation.json'",
+      "node_id": "tests.test_person_c_c1_5_first_success_second_operator::test_independence_rejects_lollo_and_first_operator_identity",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server/c1_5_evidence/first_operator_attempt_04_attestation.json'",
+      "node_id": "tests.test_person_c_c1_5_first_success_second_operator::test_independence_rejects_first_account_or_prior_result_reuse",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "ValueError: attempt-01 evidence absent or drifted: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server/mineocclude_observations/c1_5_second_operator_attempt_01_layout_01.json",
+      "node_id": "tests.test_person_c_c1_5_second_operator_attempt_02::test_attempt_01_is_hash_bound_and_classified_without_certification",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server/c1_5_evidence/first_operator_attempt_04_attestation.json'",
+      "node_id": "tests.test_person_c_c1_5_second_operator_attempt_02::test_attestation_requires_same_second_human_and_independence",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "ValueError: installed server JAR identity mismatch",
+      "node_id": "tests.test_person_c_c6a_completion::test_manifest_runtime_and_episode_completion_are_valid",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "ValueError: installed server JAR identity mismatch",
+      "node_id": "tests.test_person_c_c6a_completion::test_schedule_inventory_binds_all_immutable_schedules",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "ValueError: installed server JAR identity mismatch",
+      "node_id": "tests.test_person_c_c6a_completion::test_output_schema_counts_and_inventory_are_valid",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "ValueError: installed server JAR identity mismatch",
+      "node_id": "tests.test_person_c_c6a_completion::test_candidate_chronology_prior_abort_and_shutdown_are_bound",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_c6a_live_log::test_existing_episode_12601_schedule_line_is_recognized_semantically",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_c6a_live_log::test_wrong_schedule_identity_fails_semantic_match[12602-300-episode_12601.jsonl]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_c6a_live_log::test_wrong_schedule_identity_fails_semantic_match[12601-60-episode_12601.jsonl]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_c6a_live_log::test_wrong_schedule_identity_fails_semantic_match[12601-300-episode_12602.jsonl]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_c6a_live_log::test_delayed_live_log_flush_is_detected_by_bounded_poll",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_c6a_live_log::test_timeout_fails_closed_when_event_never_appears",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_c6a_live_log::test_live_log_can_be_read_while_writer_handle_remains_open",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: assert False\n +  where False = is_absolute()\n +    where is_absolute = PosixPath('C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\mineocclude_observations\\\\e_refit_calibration_v0_4_layout_01.json').is_absolute",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02::test_attempt_01_is_preserved_with_exact_required_classification",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: assert False\n +  where False = is_absolute()\n +    where is_absolute = PosixPath('C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\mineocclude_observations\\\\e_refit_calibration_v0_4_attempt_02_layout_01.json').is_absolute\n +      where PosixPath('C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\mineocclude_observations\\\\e_refit_calibration_v0_4_attempt_02_layout_01.json') = Path('C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\mine",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02::test_attempt_02_requires_all_six_fresh_create_only_layouts_and_schedules",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02::test_1920x1046_preflight_passes_and_records_distinct_evidence",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02::test_640x360_preflight_fails_closed_without_creating_evidence",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02::test_preflight_cannot_count_and_all_six_correct_layout_screenshots_pass",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02::test_missing_layout_or_one_wrong_sized_layout_fails_entire_package",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02::test_server_properties_auto_expansion_passes_and_other_drift_fails_closed",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_informational_and_console_duplicates_pass_as_one_semantic_event",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_genuinely_separate_duplicate_events_fail[command]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_genuinely_separate_duplicate_events_fail[receipt]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_invalid_chronologies_fail_closed[missing_target-layout_01 targetstatus is absent]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_invalid_chronologies_fail_closed[wrong_order-layout_01 server chronology failed]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_invalid_chronologies_fail_closed[short_target_delay-layout_01 targetstatus occurred less than ten seconds after arming]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_invalid_chronologies_fail_closed[failed_target-layout_01 targetstatus did not pass]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_invalid_chronologies_fail_closed[wrong_receipt-layout_01 receipt belongs to another layout or episode]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_invalid_chronologies_fail_closed[missing_abort-layout_01 warmup abort is absent]",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_chronology_parser::test_recording_start_fails_closed",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_finalizer_hashtable::test_exact_matches_automatic_variable_collision_is_fixed_with_typed_list",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_finalizer_hashtable::test_malformed_duplicate_log_event_still_fails_closed",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_finalizer_hashtable::test_all_six_layouts_and_original_validation_contracts_remain_required",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_finalizer_hashtable::test_partial_create_only_output_is_rejected_before_any_write",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_live_hash::test_unlocked_file_hashing_matches_ordinary_sha256",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_live_hash::test_file_held_open_for_writing_with_shared_read_can_be_hashed",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_live_hash::test_incorrect_expected_hash_still_fails_closed",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_live_hash::test_missing_file_hashing_fails_closed",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_mutable_log_finalizer::test_existing_immutable_attempt_01_archive_is_validated_and_alteration_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\e_refit_calibration_v0_4_attempt_02_preflight_v0_1\\\\e_refit_calibration_v0_4_attempt_02_framebuffer_preflight_1920x1046.png'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_preflight_receipt_recovery::test_valid_recovery_from_exact_existing_image_is_create_only",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\e_refit_calibration_v0_4_attempt_02_preflight_v0_1\\\\e_refit_calibration_v0_4_attempt_02_framebuffer_preflight_1920x1046.png'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_preflight_receipt_recovery::test_wrong_image_hash_fails_without_receipt",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\e_refit_calibration_v0_4_attempt_02_preflight_v0_1\\\\e_refit_calibration_v0_4_attempt_02_framebuffer_preflight_1920x1046.png'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_preflight_receipt_recovery::test_wrong_dimensions_fail_without_receipt",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\e_refit_calibration_v0_4_attempt_02_preflight_v0_1\\\\e_refit_calibration_v0_4_attempt_02_framebuffer_preflight_1920x1046.png'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_preflight_receipt_recovery::test_existing_receipt_fails_create_only",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\e_refit_calibration_v0_4_attempt_02_preflight_v0_1\\\\e_refit_calibration_v0_4_attempt_02_framebuffer_preflight_1920x1046.png'",
+      "node_id": "tests.test_person_c_e_refit_calibration_attempt_02_preflight_receipt_recovery::test_unprovable_partial_execution_fails_without_receipt",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_exact_preparation_authority_file_passes",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_preparation_plus_only_two_minecraft_expansion_keys_passes",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_changed_authoritative_value_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_whitespace_padded_authoritative_value_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_missing_authoritative_property_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_unknown_additional_property_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_duplicate_property_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_malformed_non_comment_line_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_query_port_different_from_server_port_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_nonempty_text_filtering_config_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_spawn_animals_true_fails",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: 'powershell.exe'",
+      "node_id": "tests.test_server_properties_semantic_authority::test_current_runtime_and_additive_repair_receipt_are_exact",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\e_refit_calibration_v0_4_attempt_02_v0_1\\\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json'\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize.TestAttempt02RefitFinalize::test_completed_annotation_is_exact_and_complete",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\e_refit_calibration_v0_4_attempt_02_v0_1\\\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json'\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize.TestAttempt02RefitFinalize::test_emitted_package_inventory_and_handoff_are_immutable",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\e_refit_calibration_v0_4_attempt_02_v0_1\\\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json'\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize.TestAttempt02RefitFinalize::test_hidden_marker_annotation_fails_closed",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\e_refit_calibration_v0_4_attempt_02_v0_1\\\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json'\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize.TestAttempt02RefitFinalize::test_out_of_frame_annotation_fails_closed",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\e_refit_calibration_v0_4_attempt_02_v0_1\\\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json'\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize.TestAttempt02RefitFinalize::test_package_documents_do_not_authorize_failed_candidates",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\e_refit_calibration_v0_4_attempt_02_v0_1\\\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json'\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize.TestAttempt02RefitFinalize::test_package_manifest_and_handoff_fail_closed",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\server\\\\e_refit_calibration_v0_4_attempt_02_v0_1\\\\e_refit_calibration_v0_4_attempt_02_person_c_to_e_calibration_handoff.json'\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize.TestAttempt02RefitFinalize::test_six_fits_fail_closed_on_repository_tolerances",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_all_six_layouts_record_full_precision_validation_and_pass",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_corrected_annotation_hash_schema_and_bindings_are_valid",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_corrected_layout_errors_pass_unchanged_tolerance",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_emitted_package_inventory_schema_and_handoff_validate",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_four_prior_passes_are_verified_and_reused",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_package_and_handoff_documents_authorize_but_do_not_execute_c6a",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_package_emission_fails_closed_when_any_tolerance_fails",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"repair_person_e_layout_04_06_annotations.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_attempt_02_refit_finalize_v0_2.TestAttempt02RefitFinalizeV02::test_v0_1_failed_closed_artifacts_remain_unchanged",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_feature_regions_reject_clicks_outside_visible_features",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_incomplete_output_fails_closed",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_nearest_neighbour_mapping_is_integer_and_unscaled",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_old_wall_clicks_are_not_ground_contact_corners",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_original_annotation_package_and_handoff_still_match",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_output_reuses_four_layouts_and_replaces_all_ten_points",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_tasks_cover_only_all_five_points_in_each_failed_layout",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"layout_04_06_repair.RepairInputError: Missing layout_04 screenshot: C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_attempt_02_v0_1\\e_refit_calibration_v0_4_attempt_02_layout_04.png\"",
+      "node_id": "tests.vision.test_layout_04_06_annotation_repair.TestLayout0406AnnotationRepair::test_writer_is_additive_and_create_only",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "AssertionError: Lists differ: ['C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\p[310921 chars]png'] != []\n\nFirst list contains 2468 additional elements.\nFirst extra element 0:\n'C:\\\\Users\\\\lollo\\\\MineOcclude-Runtime\\\\person-c-c1-v0_1\\\\client\\\\mineocclude_client_out\\\\episode_12601\\\\frames\\\\000000.png'\n\nDiff is 318377 characters long. Set self.maxDiff to None to see it.",
+      "node_id": "tests.vision.test_person_e_66_cell_empirical_visibility_v0_1.TestFrameUniverseReconciliation::test_declared_source_paths_exist",
+      "outcome": "failure",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "STALE_HISTORICAL_ASSUMPTION",
+      "message_excerpt": "ValueError: Homography implementation binding changed.",
+      "node_id": "tests.vision.test_phase2_step2_4_correction.TestPhase2Step24Correction::test_document_set_is_canonical_and_fail_closed",
+      "outcome": "failure",
+      "reason": "Asserts an older branch name, object/hash, byte receipt, or superseded authority rather than the current integration authority."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_all_non_detections_and_rejections_have_reasons",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_arbitrary_objects_nan_and_infinity_reject",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_candidate_list_and_development_result_are_explicit",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_complete_detector_version_hashing",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_dependency_file_is_unmodified",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_exact_authorities_runtime_and_development_binding",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_historical_heldout_is_retired_without_rewriting_history",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_missing_duplicate_and_extra_identities_fail_closed",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_parquet_bytes_are_deterministic_without_pickle",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_phase1_and_phase2_evidence_is_byte_immutable",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_phase3_cannot_pass_before_one_shot_test",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_schema_column_order_metadata_and_semantic_readback",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_test_mode_prevents_tuning_and_overwrite",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_test_source_must_differ_and_postdate_freeze",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    },
+    {
+      "classification": "ENVIRONMENT_ONLY",
+      "message_excerpt": "failed on setup with \"mineocclude.vision.detection_records.DetectionRecordError: pyarrow must be exactly 25.0.0; found 21.0.0.\"",
+      "node_id": "tests.vision.test_phase3_detector_candidate.TestPhase3DetectorCandidate::test_unavailable_background_strata_are_not_invented",
+      "outcome": "error",
+      "reason": "Requires an unavailable external/Windows/runtime input or an exact host dependency; current sealed evidence is audited separately."
+    }
+  ],
+  "schema_version": "mvp-role-implementation-test-audit-v0.1",
+  "subtest_delta_classification": {
+    "classification": "ENVIRONMENT_ONLY",
+    "count": 59,
+    "reason": "The full output attributes these subtest instances to the same missing external Windows capture/media/detector-replay prerequisites; they do not contradict sealed current production receipts.",
+    "selector": "The 59 full-run failure instances not serialized as independent JUnit testcase nodes by unittest subtest reporting."
+  }
+}

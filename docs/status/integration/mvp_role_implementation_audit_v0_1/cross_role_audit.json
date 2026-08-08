@@ -1,0 +1,176 @@
+{
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "branch": "integration/mvp-final",
+  "cross_role_contracts_pass": false,
+  "requirements": [
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_canonical_media_v0_1/c_to_a_media_handoff.json",
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_handoff.json"
+      ],
+      "explanation": "A's production index resolves C's exact 66-trajectory/2,468-frame authority and preprocessing lineage.",
+      "implementation_path": [
+        "src/mineocclude/contracts/trajectory.py",
+        "src/mineocclude/contracts/activation_v2.py"
+      ],
+      "manual_phase_or_step": "Cross-role C-to-A",
+      "requirement": "Same authoritative trajectory/frame/model-media identity and no duplicate writer",
+      "role": "C->A",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py",
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/production_activation_handoff.json",
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json"
+      ],
+      "explanation": "B resolves A's exact run/index hashes and joins 49,360 activation rows by scientific identity.",
+      "implementation_path": [
+        "src/mineocclude/probes/join.py",
+        "src/mineocclude/contracts/activation_v2.py"
+      ],
+      "manual_phase_or_step": "Cross-role A-to-B",
+      "requirement": "Exact activation identity/cardinality/schema handoff",
+      "role": "A->B",
+      "status": "PASS",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py",
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": "RESULT_INVALIDATING: no passed current-authority no-wall positive-control gate was handed from D to B.",
+      "evidence_path": [
+        "docs/status/person_d_66_cell_production_baselines_v0_1/d_to_b_production_baseline_handoff.json",
+        "docs/status/integration/bd_production_input_readiness_v0_1/readiness_receipt.json"
+      ],
+      "explanation": "Rows, folds, and ordinary comparator predictions match, but the integration substitutes no-wall prediction-slot coverage for D's required decoded-state positive-control decision.",
+      "implementation_path": [
+        "src/mineocclude/baselines/production_input_ingest.py",
+        "scripts/build_bd_production_input_readiness_v0_1.py",
+        "src/mineocclude/analysis/production_u1_u2_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "Cross-role B-and-D",
+      "requirement": "Shared rows/folds/comparator authority including required controls",
+      "role": "B<->D",
+      "status": "FAIL",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py",
+        "tests/baselines/test_66_cell_production_universe_v0_1.py",
+        "tests/baselines/test_production_input_ingest.py",
+        "tests/baselines/test_production_fold_contract_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_capture_authority_v0_1/c_to_b_successor_handoff.json",
+        "docs/status/person_c_66_cell_strict_visibility_v0_1/c_to_b_oracle_handoff.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json"
+      ],
+      "explanation": "B's oracle target authority binds C's exact state, geometry, coordinate, frame, and final visibility hashes.",
+      "implementation_path": [
+        "src/mineocclude/analysis/capture_intake.py",
+        "src/mineocclude/analysis/oracle_target_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "Cross-role C-to-B",
+      "requirement": "Exact geometry/state/visibility/oracle identity handoff",
+      "role": "C->B",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py",
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_strict_visibility_v0_1/e_handoff_intake_receipt.json",
+        "docs/status/person_c_66_cell_strict_visibility_v0_1/visibility_join_manifest.json"
+      ],
+      "explanation": "E's empirical channel is keyed to C's universe, and C retains the final writer-of-record role with raw channels preserved.",
+      "implementation_path": [
+        "src/mineocclude/operations/person_e_66_cell_empirical_visibility.py",
+        "src/mineocclude/data/visibility_join.py"
+      ],
+      "manual_phase_or_step": "Cross-role C-and-E",
+      "requirement": "C visibility authority preserved around E empirical measurement",
+      "role": "C<->E",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py",
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_a_66_cell_production_activation_index_v0_1/sha256_inventory.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json"
+      ],
+      "explanation": "A's package is self-sealed, but E has not issued a registry-v2 import/acceptance receipt for this final 66-cell activation run.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py",
+        "src/mineocclude/contracts/activation_v2.py"
+      ],
+      "manual_phase_or_step": "Cross-role A-and-E",
+      "requirement": "Final production activation registered/accepted in current provenance authority",
+      "role": "A<->E",
+      "status": "UNVERIFIED",
+      "tests": [
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py",
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/integration/bd_u1_u2_production_results_v0_1/sha256_inventory.json",
+        "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/immutable_registry_v2.json"
+      ],
+      "explanation": "The current U1/U2 output self-traces, but no current E registry/figure-input closure imports it; moreover its positive-control status must be invalidated before result-bearing registration.",
+      "implementation_path": [
+        "src/mineocclude/experiments/registry.py",
+        "src/mineocclude/experiments/figure_inputs.py"
+      ],
+      "manual_phase_or_step": "Cross-role B-to-E",
+      "requirement": "Current U1/U2 result/figure provenance registration",
+      "role": "B->E",
+      "status": "UNVERIFIED",
+      "tests": [
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py",
+        "tests/experiments/test_immutable_registry_v2_contract.py",
+        "tests/vision/test_phase3_formal_detector_evaluation.py",
+        "tests/vision/test_person_e_phase3_step3_3_empirical_visibility_v0_1.py"
+      ]
+    }
+  ],
+  "schema_version": "mvp-cross-role-implementation-audit-v0.1"
+}

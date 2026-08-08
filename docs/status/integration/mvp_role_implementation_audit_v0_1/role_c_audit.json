@@ -1,0 +1,471 @@
+{
+  "audited_head": "3a45957d3b06e43ec80b2032fcb1cd50a2aea204",
+  "branch": "integration/mvp-final",
+  "requirements": [
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json"
+      ],
+      "explanation": "The accepted authority pins the environment and per-trajectory layout identity.",
+      "implementation_path": [
+        "src/mineocclude/data/environment_lock.py",
+        "src/mineocclude/data/layout_contract.py"
+      ],
+      "manual_phase_or_step": "C1 / Phases C0-C1",
+      "requirement": "Environment/layout identity",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_geometry_authority_v0_2/accepted_geometry_authority.json"
+      ],
+      "explanation": "All and only layouts 01-06 are represented and validated.",
+      "implementation_path": [
+        "src/mineocclude/data/layout_contract.py",
+        "src/mineocclude/data/collection_matrix.py"
+      ],
+      "manual_phase_or_step": "C2 / Phases C0-C2",
+      "requirement": "Six-layout authority",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/condition_count_table.json"
+      ],
+      "explanation": "Condition labels and core/no-wall/no-object/sentinel control cells are explicit immutable fields.",
+      "implementation_path": [
+        "src/mineocclude/contracts/trajectory.py",
+        "src/mineocclude/data/collection_matrix.py"
+      ],
+      "manual_phase_or_step": "C3 / Phases C1-C2",
+      "requirement": "Condition/control identity",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/media_validation_receipt.json"
+      ],
+      "explanation": "Stable IDs are carried as data fields throughout the accepted handoff.",
+      "implementation_path": [
+        "src/mineocclude/contracts/trajectory.py",
+        "src/mineocclude/contracts/identity.py"
+      ],
+      "manual_phase_or_step": "C4 / Phases C1-C4",
+      "requirement": "Stable trajectory/frame/tick/action IDs",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/media_validation_receipt.json"
+      ],
+      "explanation": "Per-trajectory and global cardinalities reconcile in sealed validation receipts.",
+      "implementation_path": [
+        "src/mineocclude/data/package_episode.py",
+        "src/mineocclude/data/qa_report.py"
+      ],
+      "manual_phase_or_step": "C5 / Phases C2-C4",
+      "requirement": "State/action/frame cardinality",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Joins use explicit composite identities; shuffled ordering is not a scientific key.",
+      "implementation_path": [
+        "src/mineocclude/data/align.py",
+        "src/mineocclude/contracts/identity.py"
+      ],
+      "manual_phase_or_step": "C6 / Phases C3-C4",
+      "requirement": "No row-order identity assumptions",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json"
+      ],
+      "explanation": "Alignment is exact and rejects missing/ambiguous identities; there is no nearest-time repair path.",
+      "implementation_path": [
+        "src/mineocclude/data/align.py"
+      ],
+      "manual_phase_or_step": "C7 / Phase C3",
+      "requirement": "No nearest-time alignment repair",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json"
+      ],
+      "explanation": "The authority explicitly declares which action precedes/causes each captured model frame.",
+      "implementation_path": [
+        "src/mineocclude/data/align.py",
+        "src/mineocclude/contracts/trajectory.py"
+      ],
+      "manual_phase_or_step": "C8 / Phase C3",
+      "requirement": "Action/frame causal orientation",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/media_validation_receipt.json"
+      ],
+      "explanation": "The canonical frame index is an explicit authority with hashes and exact keys.",
+      "implementation_path": [
+        "src/mineocclude/data/package_episode.py",
+        "src/mineocclude/contracts/trajectory.py"
+      ],
+      "manual_phase_or_step": "C9 / Phases C3-C4",
+      "requirement": "Frame-map authority",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/media_validation_receipt.json"
+      ],
+      "explanation": "The model-frame identity is distinct from and linked to the source capture identity.",
+      "implementation_path": [
+        "src/mineocclude/data/preprocess.py",
+        "src/mineocclude/contracts/trajectory.py"
+      ],
+      "manual_phase_or_step": "C10 / Phases C4-C7",
+      "requirement": "Model-frame identity",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/media_validation_receipt.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/scientific_identity_unchanged_receipt.json"
+      ],
+      "explanation": "Every model frame is bound to source bytes and a deterministic preprocessing derivation.",
+      "implementation_path": [
+        "src/mineocclude/data/preprocess.py",
+        "scripts/build_person_c_66_cell_canonical_media_v0_1.py"
+      ],
+      "manual_phase_or_step": "C11 / Phases C4-C7",
+      "requirement": "Source-to-preprocessed frame provenance",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/accepted_excluded_ledger.json"
+      ],
+      "explanation": "The writer-of-record ledger declares 66 accepted and zero excluded trajectories for the production authority.",
+      "implementation_path": [
+        "src/mineocclude/data/qa_report.py",
+        "scripts/build_person_c_66_cell_capture_authority_v0_1.py"
+      ],
+      "manual_phase_or_step": "C12 / Phase C7",
+      "requirement": "Accepted/excluded trajectory authority",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_geometry_authority_v0_2/accepted_geometry_authority.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json"
+      ],
+      "explanation": "The accepted geometry package pins per-layout world geometry and the homography-facing coordinate contract.",
+      "implementation_path": [
+        "src/mineocclude/data/layout_contract.py",
+        "src/mineocclude/data/visibility.py"
+      ],
+      "manual_phase_or_step": "C13 / Phases C5-C7",
+      "requirement": "Geometry/homography input authority",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_strict_visibility_v0_1/visibility_join_manifest.json",
+        "docs/status/person_c_66_cell_strict_visibility_v0_1/closure_receipt.json"
+      ],
+      "explanation": "C owns geometric visibility and the final join while preserving raw geometric and E empirical components without allowing E to overwrite C.",
+      "implementation_path": [
+        "src/mineocclude/data/visibility.py",
+        "src/mineocclude/data/visibility_join.py"
+      ],
+      "manual_phase_or_step": "C14 / Phases C5-C7",
+      "requirement": "Visibility ownership and preserved raw components",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json",
+        "docs/status/person_c_geometry_authority_v0_2/accepted_geometry_authority.json"
+      ],
+      "explanation": "World axes, wall axis, origin, pose, units, and coordinate transforms are explicit and hashed.",
+      "implementation_path": [
+        "src/mineocclude/data/layout_contract.py",
+        "src/mineocclude/analysis/coordinates_v2.py"
+      ],
+      "manual_phase_or_step": "C15 / Phases C0-C7",
+      "requirement": "Coordinate-frame/world-axis convention",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json"
+      ],
+      "explanation": "The state handoff names fields/units consumed by B and B binds the exact C authority hashes.",
+      "implementation_path": [
+        "src/mineocclude/contracts/trajectory.py",
+        "src/mineocclude/analysis/oracle_target_66_cell_v0_1.py"
+      ],
+      "manual_phase_or_step": "C16 / Phases C4-C7",
+      "requirement": "Oracle-facing state fields/units",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py",
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json"
+      ],
+      "explanation": "The final accepted manifest contains exactly the planned 48 core plus 18 control trajectories.",
+      "implementation_path": [
+        "scripts/build_person_c_66_cell_capture_authority_v0_1.py"
+      ],
+      "manual_phase_or_step": "C17 / Phase C7",
+      "requirement": "66-cell accepted production manifest",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/media_validation_receipt.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json"
+      ],
+      "explanation": "The sealed canonical frame universe contains 2,468 unique production model-frame keys.",
+      "implementation_path": [
+        "scripts/build_person_c_66_cell_canonical_media_v0_1.py"
+      ],
+      "manual_phase_or_step": "C18 / Phase C7",
+      "requirement": "2,468 production model-frame universe",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/consumer_handoffs/person_a_handoff_receipt.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/consumer_handoffs/person_b_handoff_receipt.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/c_to_b_successor_handoff.json"
+      ],
+      "explanation": "A and B resolve the same accepted trajectory/frame identities and authority hashes.",
+      "implementation_path": [
+        "src/mineocclude/data/package_episode.py",
+        "src/mineocclude/analysis/capture_intake.py"
+      ],
+      "manual_phase_or_step": "C19 / Phase C7",
+      "requirement": "C-to-A and C-to-B handoff integrity",
+      "role": "C",
+      "status": "PASS",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py",
+        "tests/models/test_person_a_66_cell_production_finalization_v0_1.py",
+        "tests/oracle/test_oracle_audit.py",
+        "tests/probes/test_probe_harness.py",
+        "tests/metrics/test_person_b_metrics.py",
+        "tests/analysis/test_production_u1_u2_66_cell_v0_1.py"
+      ]
+    },
+    {
+      "blocker_if_any": null,
+      "evidence_path": [
+        "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+        "docs/status/person_c_c7_mvp_handoff_v0_1/validation_receipt.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+        "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/canonical_media_manifest.json",
+        "docs/status/person_c_66_cell_canonical_media_v0_1/media_validation_receipt.json"
+      ],
+      "explanation": "The manual's historical Java/Fabric capture architecture and proposed filenames were superseded by the accepted capture-authority, canonical-media, and typed handoff path. The replacement preserves the same identity, causality, geometry, and fail-closed scientific interfaces.",
+      "implementation_path": [
+        "src/mineocclude/data/capture_contract.py",
+        "src/mineocclude/data/package_episode.py",
+        "src/mineocclude/contracts/trajectory.py"
+      ],
+      "manual_phase_or_step": "C20 / Historical architecture",
+      "requirement": "Superseded historical C implementation requirements",
+      "role": "C",
+      "status": "PASS_SUPERSEDED_IMPLEMENTATION",
+      "tests": [
+        "tests/data/test_align.py",
+        "tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py",
+        "tests/data/test_person_c_66_cell_strict_visibility_v0_1.py"
+      ]
+    }
+  ],
+  "role": "C",
+  "schema_version": "mvp-role-implementation-audit-v0.1",
+  "status_counts": {
+    "blocked_external_data": 0,
+    "blocked_or_na": 0,
+    "fail": 0,
+    "not_applicable_mvp_scope": 0,
+    "pass": 20,
+    "pass_direct": 19,
+    "pass_superseded_implementation": 1,
+    "total": 20,
+    "unverified": 0
+  },
+  "verdict": "ROLE_COMPLETE"
+}
