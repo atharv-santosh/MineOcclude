@@ -1,0 +1,109 @@
+{
+  "baseline_implementations": {
+    "constant_velocity": "reference",
+    "explicit_feature": "fair_fitted_ceiling",
+    "grouped_shuffled": "chance_floor",
+    "known_q_analytic": "privileged_oracle_ceiling",
+    "last_seen": "memory_heuristic",
+    "raw_pixel": "fair_fitted_ceiling",
+    "time_only": "clock_floor",
+    "visible_history_q": "fair_baseline"
+  },
+  "consumable_without_further_person_d_implementation": true,
+  "consumer_role": "person_b",
+  "dtype_and_seed_authority": {
+    "analysis_arithmetic_dtype": "float64",
+    "bootstrap_seed": 20260721,
+    "owner_role": "person_b",
+    "permutation_seed": 20260720
+  },
+  "evidence_kind": "real",
+  "families_executed": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "families_not_executed": {},
+  "frame_handoff_successor": {
+    "frozen_pilot_ids_in_production_path": false,
+    "module": "src/mineocclude/baselines/frame_handoff_v0_3.py",
+    "predecessor_retained_unmodified": true,
+    "supersedes": "src/mineocclude/baselines/frame_handoff_v0_2.py"
+  },
+  "input_authorities": {
+    "person_a_commit": "3384cbfed92f069236d68746f2308ec76f1a4124",
+    "person_a_frame_manifest_path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+    "person_a_frame_manifest_sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1",
+    "person_a_preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "person_a_to_d_handoff_sha256": "a0575a63755b865ae6e59ce0de2385bd4f8a37558eafd0dfff3c2a1504a07868",
+    "person_b_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+    "person_b_fold_manifest_sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+    "person_b_oracle_target_manifest_sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9",
+    "person_b_oracle_target_records_sha256": "d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1",
+    "person_b_row_universe_receipt_sha256": "e897c31cda46e2dbe7fab605320cd98eba68a1396a80ccd78b178c8dc5547351",
+    "person_b_row_universe_records_sha256": "29b4cf003f3d9479b3606f17947879078801b400b09d942bd6827544b95227b2",
+    "person_b_to_d_handoff_sha256": "4b945f79ac1e64bf3253cafa05ca42ac44eccbc5eb4f1db70203871f018bed01",
+    "person_c_canonical_media_manifest_sha256": "a11762bd9292404b58ddccc062ebcf5115d935d61426fff4cd4474c8def257c9",
+    "person_c_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "person_c_to_d_media_handoff_sha256": "84b5b927ab41d34d51ebf30f1af9d48cf1b5af9d057518a6ca6338cef7f38a56"
+  },
+  "metric_package": {
+    "aggregate_result_count": 9,
+    "floor_comparison_count": 7,
+    "fold_result_count": 44,
+    "path": "docs/status/person_d_66_cell_production_baselines_v0_1/baseline_metrics.json",
+    "sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5"
+  },
+  "person_b_obligations": {
+    "oracle_targets_used_only_for_evaluation": true,
+    "person_d_applied_no_threshold": true,
+    "person_d_created_no_metric": true,
+    "probe_versus_baseline_comparison_is_person_b_owned": true
+  },
+  "person_d_branch": "role/person-d-baselines",
+  "person_d_commit_authority": "the Git commit on role/person-d-baselines containing this package; see sha256_inventory.json for content digests",
+  "person_d_starting_commit": "8cd2fdfc7759b285a7748ccdb4564e475b3ce1cf",
+  "prediction_manifest": {
+    "applicable_prediction_count": 3786,
+    "path": "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json",
+    "prediction_row_count": 10592,
+    "sha256": "ffd8f8316f8d3fd74e8ca441dda6f9f45d4d05c7834496abc461a76b97337ea7"
+  },
+  "producer_role": "person_d",
+  "row_universe": {
+    "admission_owner": "person_b",
+    "admission_selector": "status == 'accepted'",
+    "admitted_analysis_row_count": 662,
+    "excluded_analysis_row_count": 1806,
+    "excluded_counts_by_reason": {
+      "ambiguous_geometry_edge_convention": 42,
+      "no_object_control_not_oracle_eligible": 360,
+      "outside_frozen_condition_selection": 1034,
+      "visibility_channel_disagreement": 370
+    },
+    "reconciliation_mismatch_count": 0,
+    "superseded_admission_difference": {
+      "authority_used_for_admission": "person_b_row_universe_records",
+      "disagreeing_key_count": 322,
+      "explanation": "Person B's b_to_d_successor_handoff supersedes the preactivation handoff and narrows admission from 984 to 662 rows. Person D follows the successor. Fold assignments are unchanged between the two.",
+      "narrowed_by": 322,
+      "person_a_frame_manifest_accepted_count": 984,
+      "person_b_row_universe_accepted_count": 662,
+      "superseded_source": "person_a frame manifest fold_binding.status, which copies person_b_66_cell_preactivation_v0_1/fold_manifest.json's 984-row predecessor admission"
+    },
+    "total_model_frame_key_count": 2468
+  },
+  "run_id": "person-d-66-cell-production-baselines-v0-1",
+  "schema_id": "person-d-to-person-b-66-cell-baseline-handoff-v0-1",
+  "schema_version": "1.0",
+  "u4_status": {
+    "control_manifest_frozen": false,
+    "reason": "VALID_TERMINAL_REVEAL_COUNT = 0 on the 66-cell dataset; the real U4 control manifest still awaits Person B's direction/dose/held-out authority and supplemental captures.",
+    "supplemental_capture_required": true
+  }
+}

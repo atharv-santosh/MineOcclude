@@ -1,0 +1,23 @@
+{
+  "authorization_pattern": "option 1 from the CLI-finalization task: the expected authorized Person D HEAD is read from a committed JSON object at runtime, never embedded self-referentially in the commit that would need to cite its own hash.",
+  "authorization_record_path": "docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json",
+  "authorization_record_path_cli_override": "--authorization-record-path (defaults to the path above; exposed explicitly so a real deployment can point at a different, later-refreshed record without editing this script)",
+  "checked_fields": {
+    "authorized_runner_commit": "must equal git rev-parse HEAD exactly",
+    "branch": "must equal role/person-d-baselines exactly (never detached HEAD, never another branch)",
+    "exporter_commit_is_ancestor": "fd9302e5d218193211f2f96986ca32dc1a365e66 must be an ancestor of HEAD",
+    "worktree_dirty": "must be false (git status --porcelain empty)"
+  },
+  "current_authorized_runner_commit": "bb2ebf7947c92c814dae85fc9cef29fef04e4c6f",
+  "how_person_b_issues_final_execution_authorization": "Person B (or whoever holds execution authority) confirms the exact Person D commit to deploy, verifies docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json already cites that exact commit (refreshing it via a new commit if the branch has advanced since), and only then invokes the CLI's run mode on that exact checked-out commit in the approved SageMaker environment. verify_branch_and_authorization (scripts/run_person_d_step4_1_eight_family_production.py) enforces all four checked fields simultaneously and fails closed (nonzero exit, no baseline fit) if any one of them does not hold -- this applies identically to materialize and run mode.",
+  "record_date": "2026-08-01",
+  "rejection_behavior": [
+    "missing authorization file -> no_authorized_runner_commit_recorded",
+    "authorization for a different Person D commit -> head_not_authorized:head=...:authorized=...",
+    "detached HEAD or another branch -> wrong_branch:'<branch>'",
+    "dirty worktree -> dirty_worktree",
+    "exporter commit not an ancestor of HEAD -> exporter_commit_not_ancestor"
+  ],
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-authorization-interface",
+  "schema_version": "1.0"
+}

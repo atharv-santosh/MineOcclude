@@ -1,0 +1,57 @@
+{
+  "authoritative_validation_mode": "signed_explicit_mapping",
+  "dispatch_rule": {
+    "anything_else": "fails closed with an explicit unknown-format-version error",
+    "fold_manifest_format_version_absent": "routes to the historical mineocclude.probes.splits.validate_fold_manifest deterministic-reproduction check, completely unchanged",
+    "fold_manifest_format_version_equals_person_b_ten_pilot_frame_fold_v0_1": "routes to production_fold_contract_v0_1.validate_production_fold_document with contract_version=person-b-step4-1-production-fold-contract-v0.1"
+  },
+  "fold_contract_version": "person-b-step4-1-production-fold-contract-v0.1",
+  "fold_manifest_format_version": "person-b-ten-pilot-frame-fold-v0.1",
+  "historical_seed_invariant_reproduction_not_authoritative": {
+    "explanation": "The naive per-layout greedy reproduction, run on the real admitted row counts and real seed, is provably seed-invariant here (all five counts are strictly distinct) and always yields the trivial rank order -- it is not, and never was, capable of reproducing an assignment inherited from a different (six-layout, pre-join) computation.",
+    "naive_reproduction_by_ordered_layout": {
+      "layout_00": 0,
+      "layout_01": 1,
+      "layout_02": 2,
+      "layout_03": 3,
+      "layout_04": 4
+    },
+    "not_used_as_production_authority": true
+  },
+  "layout_row_counts": {
+    "layout_00": 409,
+    "layout_01": 387,
+    "layout_02": 335,
+    "layout_03": 292,
+    "layout_04": 272
+  },
+  "person_b_fold_contract_implementation_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+  "person_b_fold_ratification_commit": "a612ec29108c8f69f19cdc283e40873e75796ea7",
+  "person_d_reference_module": "src/mineocclude/baselines/production_fold_contract_v0_1.py",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-signed-fold-validation-v0-1-fold-contract-summary",
+  "schema_version": "1.0",
+  "signed_explicit_layout_to_fold_mapping": [
+    {
+      "fold_idx": 1,
+      "layout_id": "layout_00"
+    },
+    {
+      "fold_idx": 2,
+      "layout_id": "layout_01"
+    },
+    {
+      "fold_idx": 4,
+      "layout_id": "layout_02"
+    },
+    {
+      "fold_idx": 0,
+      "layout_id": "layout_03"
+    },
+    {
+      "fold_idx": 3,
+      "layout_id": "layout_04"
+    }
+  ],
+  "u4_output_inspected": false
+}

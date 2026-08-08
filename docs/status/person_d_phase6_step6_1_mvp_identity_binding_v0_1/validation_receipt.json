@@ -1,0 +1,40 @@
+{
+  "checks": {
+    "cli_end_to_end": {
+      "command": "python3 scripts/run_person_d_step6_1_mvp_identity_binding.py --mvp-matrix-path <real mvp_matrix.csv> --pilot-ledger-path <real pilot_production_ledger.json> --output-path docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_1/mvp_input_manifest.json",
+      "result": "reconciliation_complete=True total=66 set_counts={'core': 48, 'sentinel': 6, 'nosheep': 6, 'nowall': 6}"
+    },
+    "focused_mvp_identity_tests": {
+      "command": "python3 -m pytest tests/baselines/test_mvp_identity_v0_1.py -q",
+      "failed": 0,
+      "passed": 15,
+      "result": "15 passed"
+    },
+    "full_baselines_regression": {
+      "command": "python3 -m pytest tests/baselines -q",
+      "failed": 0,
+      "note": "271 tests existed before this task; 15 new in test_mvp_identity_v0_1.py; all prior tests still pass unchanged.",
+      "passed": 286,
+      "result": "286 passed"
+    },
+    "py_compile": {
+      "command": "python3 -m py_compile src/mineocclude/baselines/mvp_identity_v0_1.py tests/baselines/test_mvp_identity_v0_1.py scripts/run_person_d_step6_1_mvp_identity_binding.py",
+      "result": "OK, no syntax errors"
+    },
+    "ruff": {
+      "command": "python3 -m ruff check src/mineocclude/baselines/mvp_identity_v0_1.py tests/baselines/test_mvp_identity_v0_1.py scripts/run_person_d_step6_1_mvp_identity_binding.py",
+      "result": "All checks passed (0 errors)"
+    }
+  },
+  "not_run": [
+    "any baseline fit",
+    "any metric computation",
+    "any U4 inspection",
+    "Phase 6 Steps 6.2-6.5 (real B/A artifacts at 66-trajectory scale do not exist -- see phase6_and_7_remaining_status.json)",
+    "Phase 7 Steps 7.1-7.5 real-data completion (real B/E artifacts do not exist -- see phase6_and_7_remaining_status.json)"
+  ],
+  "person_d_mvp_identity_implementation_commit": "6e9539dcb9120008d17378618943b038f38718a6",
+  "record_date": "2026-08-03",
+  "schema_id": "person-d-phase6-step6-1-mvp-identity-binding-v0-1-validation-receipt",
+  "schema_version": "1.0"
+}

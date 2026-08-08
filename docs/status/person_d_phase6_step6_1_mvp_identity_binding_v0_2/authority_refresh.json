@@ -1,0 +1,83 @@
+{
+  "schema_id": "person-d-phase6-step6-1-authority-refresh-v0-2",
+  "schema_version": "1.0",
+  "producer_role": "person_d",
+  "record_date": "2026-08-06",
+  "supersedes": "docs/status/person_d_phase6_step6_1_mvp_identity_binding_v0_1/authority_binding.json",
+  "supersession_reason": "The v0.1 authority binding cited c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960 as role/person-c-data's current tip. That branch has since advanced to 365e748addcb1e1926d7e2c5a382a92fa39ebc40, so the citation was stale even though the bound bytes were not. This successor re-cites the current tip and proves the bound artifacts are byte-identical across both commits. The v0.1 record is retained verbatim and remains valid evidence of what was verified on 2026-08-03.",
+  "binding_outcome": "UNCHANGED_ACCEPTED_66_CELL_IDENTITY",
+  "person_c_authority": {
+    "previously_cited_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+    "current_branch": "role/person-c-data",
+    "current_tip_commit": "365e748addcb1e1926d7e2c5a382a92fa39ebc40",
+    "commits_between": 28,
+    "bound_artifacts_changed": false
+  },
+  "byte_identity_proof": {
+    "method": "git rev-parse <commit>:<path> at both commits; identical blob object IDs prove identical content without re-reading or re-hashing the file bytes.",
+    "artifacts": [
+      {
+        "path": "configs/collection/mvp_matrix.csv",
+        "blob_oid_at_c6bff25": "f840686535471de2005dcb0db4142f43e4b3762a",
+        "blob_oid_at_365e748": "f840686535471de2005dcb0db4142f43e4b3762a",
+        "identical": true,
+        "recorded_sha256_v0_1": "5eebbbd9f5950184b6c11a17722295c970e37a460e3963bed3b9390b99c1ac17"
+      },
+      {
+        "path": "data/autonomous/pilot_production_ledger.json",
+        "blob_oid_at_c6bff25": "1b0a3196321e14a6df696ae3e771302a3c0666f5",
+        "blob_oid_at_365e748": "1b0a3196321e14a6df696ae3e771302a3c0666f5",
+        "identical": true,
+        "recorded_sha256_v0_1": "8045a0e2eeb823a3f20da996eef546a4621a3fc578202947f1618480554472f9"
+      }
+    ]
+  },
+  "consequence": {
+    "accepted_mvp_cell_count": 66,
+    "expected_mvp_cell_count": 66,
+    "shortfall": 0,
+    "mvp_input_manifest_sha256": "81d3ec35559e470744850310748a476543247c4626aec626d2e6520267122ee0",
+    "re_derivation_required": false,
+    "explanation": "Because both bound Person C artifacts are byte-identical between the previously cited commit and the current branch tip, the 66-cell accepted identity binding published in v0.1 is still exactly correct. No trajectory identity, count, or classification changes."
+  },
+  "empirical_re_derivation": {
+    "performed": true,
+    "method": "git cat-file blob 365e748:<path> to raw bytes, then scripts/run_person_d_step6_1_mvp_identity_binding.py against those exact bytes, writing outside the repository.",
+    "extracted_bytes_verified": [
+      {
+        "path": "configs/collection/mvp_matrix.csv",
+        "byte_size": 3753,
+        "sha256": "5eebbbd9f5950184b6c11a17722295c970e37a460e3963bed3b9390b99c1ac17",
+        "matches_v0_1_record": true
+      },
+      {
+        "path": "data/autonomous/pilot_production_ledger.json",
+        "byte_size": 99797,
+        "sha256": "8045a0e2eeb823a3f20da996eef546a4621a3fc578202947f1618480554472f9",
+        "matches_v0_1_record": true
+      }
+    ],
+    "runner_output": "reconciliation_complete=True total=66 set_counts={'core': 48, 'sentinel': 6, 'nosheep': 6, 'nowall': 6}",
+    "re_derived_manifest_sha256": "81d3ec35559e470744850310748a476543247c4626aec626d2e6520267122ee0",
+    "byte_identical_to_published_v0_1_manifest": true,
+    "conclusion": "The published 66-cell accepted-MVP identity manifest reproduces byte-for-byte from Person C's CURRENT branch tip, not merely from the previously cited commit."
+  },
+  "other_upstream_authorities_at_this_record_date": {
+    "origin_main": "15adc43674420ae35921847a953ebbee2135f142",
+    "person_a_model": "ef98d184aaed8f03757add4ecac4a48968bb6fcc",
+    "person_b_analysis": "98f50761ecb99bc14ed5d1ebb67aedc8dcfd3327",
+    "person_b_methods": "eec9396e6a93feaab3d5d298ac7cdc4cb54fdbd4",
+    "person_c_data": "365e748addcb1e1926d7e2c5a382a92fa39ebc40",
+    "person_e_operations": "5e2ef61a75fe4900dc7226dec7c1f6dcc1f39171"
+  },
+  "person_b_official_branch_note": "role/person-b-analysis is read as Person B's official tip. role/person-b-methods (eec9396e6a93feaab3d5d298ac7cdc4cb54fdbd4) was also inspected; it carries Phase 0-3 policy work and no 66-cell fold or oracle-target artifact. Person B is therefore not terminally complete with respect to Person D's Step 6.2 inputs.",
+  "claims": {
+    "no_branch_was_merged": true,
+    "no_role_branch_history_was_imported": true,
+    "no_person_c_bytes_were_copied_into_this_branch": true,
+    "all_reads_were_git_show_or_git_rev_parse_against_remote_refs": true,
+    "no_baseline_was_fit": true,
+    "no_metric_was_computed": true,
+    "no_u4_output_was_inspected": true
+  }
+}

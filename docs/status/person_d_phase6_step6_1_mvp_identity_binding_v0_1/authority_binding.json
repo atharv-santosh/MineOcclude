@@ -1,0 +1,31 @@
+{
+  "claims": {
+    "no_baseline_was_fit": true,
+    "no_metric_was_computed": true,
+    "no_person_c_raw_data_was_copied_or_merged_into_this_branch": true,
+    "no_regime_label_was_invented_or_guessed": true,
+    "no_u4_output_was_inspected": true,
+    "reconciliation_used_only_real_committed_person_c_bytes": true
+  },
+  "person_c_mvp_collection_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+  "person_c_mvp_collection_source_branch": "role/person-c-data",
+  "person_c_mvp_matrix_path": "configs/collection/mvp_matrix.csv",
+  "person_c_mvp_matrix_sha256": "5eebbbd9f5950184b6c11a17722295c970e37a460e3963bed3b9390b99c1ac17",
+  "person_c_pilot_ledger_path": "data/autonomous/pilot_production_ledger.json",
+  "person_c_pilot_ledger_sha256": "8045a0e2eeb823a3f20da996eef546a4621a3fc578202947f1618480554472f9",
+  "person_d": {
+    "branch": "role/person-d-baselines",
+    "mvp_identity_implementation_commit": "6e9539dcb9120008d17378618943b038f38718a6",
+    "mvp_identity_module": "src/mineocclude/baselines/mvp_identity_v0_1.py",
+    "prior_authority_commit": "5ea6ce92890da7faa46f6aa837135081633d5f3d"
+  },
+  "record_date": "2026-08-03",
+  "record_scope": "Progress-tracker Phase 6 Step 6.1 (\"Bind to schema v1.0 and accepted MVP identity\") only.",
+  "regime_definitions_source": {
+    "note": "The core/sentinel/nowall/nosheep classification is not an inference: mvp_matrix.csv's own 'set' column and the doc comment at the top of Person C's src/mineocclude/data/collection_matrix.py (commit c6bff25, same file) both state it explicitly: Core Regime A (48) = 6 layouts x v{1,2} x q{0.02,0.2} x hidden{4,16}; No-wall visible (6) = 1/layout; Occluder only (6) = 1/layout; Context sentinel (6) = 1/layout, hidden=24.",
+    "path": "src/mineocclude/data/collection_matrix.py"
+  },
+  "schema_id": "person-d-phase6-step6-1-mvp-identity-binding-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "verification_method": "git show c6bff25:configs/collection/mvp_matrix.csv | sha256sum / wc -c; git show c6bff25:data/autonomous/pilot_production_ledger.json | sha256sum / wc -c; direct parse + full bijective join between the 66-row planned matrix and the 66-cell real acceptance ledger on (layout, scene, v, q, hidden_frames, max_ticks); cross-checked person_c_mvp_collection_commit against role/person-c-data's actual current tip (git rev-parse origin/role/person-c-data) and against production_fold_contract_v0_1.py's already-trusted source_identities.person_c_commit citation of the same hash. Performed 2026-08-03."
+}

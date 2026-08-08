@@ -1,0 +1,77 @@
+{
+  "acceptance_precondition": "readiness_gate_contract.json's gate call must return status=READY before any field above may be populated with a real, non-null value.",
+  "accepted": false,
+  "artifact_status": "contract_only",
+  "note": "This defines what a future ACCEPTED scientific baseline prediction artifact must contain. It is not itself an accepted artifact, and building this contract does not create one.",
+  "record_date": "2026-07-30",
+  "required_fields": {
+    "baseline_implementation_and_version": {
+      "current_value": null,
+      "example": "last_seen_v1",
+      "field": "baseline_id"
+    },
+    "byte_verification_or_trusted_receipt": {
+      "acceptable_modes": [
+        "local_bytes",
+        "external_receipt"
+      ],
+      "current_value": null,
+      "template_reference": "registry_v2_handoff_templates.json#artifact_verification_receipt_template"
+    },
+    "configuration_hash": {
+      "current_value": null,
+      "field": "config_hash",
+      "note": "Computable today from the literal configs/analysis/core.yaml bytes, but withheld here since it is only meaningful bound together with the two hashes above.",
+      "source": "mineocclude.analysis.config.hash_core_analysis_config()"
+    },
+    "deterministic_artifact_id": {
+      "builder": "mineocclude.baselines.scientific_readiness.build_baseline_prediction_artifact_id",
+      "current_value": null,
+      "note": "Deterministic over baseline_id, target_name, and the three direct inputs below. Cannot be minted for real until fold_manifest_hash and oracle_target_hash are real."
+    },
+    "exact_artifact_authorization": {
+      "current_value": null,
+      "note": "Scoped to exactly one target_artifact_id, never a wildcard by baseline type or owner -- cannot exist until deterministic_artifact_id above is real.",
+      "template_reference": "registry_v2_handoff_templates.json#exact_artifact_authorization_template"
+    },
+    "fold_manifest_hash": {
+      "current_value": null,
+      "source": "person_b sealed fold manifest, see scientific_baseline_input_contract.json"
+    },
+    "oracle_target_hash": {
+      "current_value": null,
+      "source": "person_b oracle_target document, see scientific_baseline_input_contract.json"
+    },
+    "owner_status": {
+      "current_owner_status": "pending",
+      "template_reference": "registry_v2_handoff_templates.json#owner_status_record_template"
+    },
+    "prediction_rows": {
+      "builder": "mineocclude.baselines.export.build_baseline_document",
+      "current_value": [],
+      "note": "Empty: no prediction rows exist because no real baseline has been fit.",
+      "schema": "person-b-baseline-input-v0.1"
+    },
+    "schema": {
+      "baseline_input_schema_version": "person-b-baseline-input-v0.1",
+      "scientific_baseline_input_contract_schema_version": "person-d-scientific-baseline-input-v0.1"
+    },
+    "scientific_use": {
+      "current_value": "not_applicable_no_artifact_exists",
+      "required_value": "accepted"
+    },
+    "target_name": {
+      "allowed_values": [
+        "mu_oracle_blocks",
+        "log_sigma_oracle"
+      ],
+      "current_value": null
+    },
+    "trusted_manifest": {
+      "current_value": null,
+      "template_reference": "registry_v2_handoff_templates.json#trusted_manifest_entry_template"
+    }
+  },
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-baseline-artifact-contract",
+  "schema_version": "1.0"
+}

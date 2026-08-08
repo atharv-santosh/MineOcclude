@@ -1,0 +1,69 @@
+{
+  "chronology_enforced": true,
+  "never_permitted": [
+    "treating docs/status/person_d_real_pilot_baseline_preview.json as the real oracle_target document",
+    "omitting scientific_use/synthetic markers on non-real data purely to force a READY result",
+    "skipping step 2 because the data looks plausible",
+    "assuming role/person-b-analysis's current branch head is automatically a production handoff without re-verifying its construction_status at that exact commit"
+  ],
+  "record_date": "2026-07-30",
+  "schema_id": "person-d-phase4-step4-1-registry-v2-handoff-v0-1-execution-runbook",
+  "schema_version": "1.0",
+  "steps": [
+    {
+      "command": "git fetch origin role/person-b-analysis && git log -1 --format='%H %s' origin/role/person-b-analysis",
+      "corrected_fetch_target": "origin/role/person-b-analysis",
+      "name": "verify_b_handoff_commit",
+      "previously_incorrect_fetch_target": "origin/role/person-b-methods",
+      "requirement": "Do not assume the current branch head already contains the production handoff. A specific committed Person B handoff commit, containing a real sealed fold manifest and a real oracle_target document (not merely a Step 4.1 preparation/contract package like 836c933), must be identified and its exact commit hash recorded before proceeding to step 1.",
+      "step": 0
+    },
+    {
+      "action": "At the exact commit identified in step 0, confirm a sealed fold manifest passes mineocclude.probes.splits.validate_fold_manifest and an oracle_target document passes mineocclude.oracle.schema.validate_oracle_target_document with no fixture_metadata.scientific_use=='forbidden' marker.",
+      "name": "verify_exact_fold_and_oracle_artifacts",
+      "step": 1,
+      "stop_condition": "If either artifact is absent, still contract-only (construction_status != a real sealed/produced state), or still carries a forbidden marker, stop here. Do not proceed to step 2."
+    },
+    {
+      "name": "run_readiness_gate",
+      "reference": "readiness_gate_contract.json",
+      "step": 2,
+      "stop_condition": "If finding.status != 'READY' or finding.blocked_reasons != (), stop. Read every reason before resuming; do not proceed to step 3 until all are resolved."
+    },
+    {
+      "action": "Only after step 2 reports READY. Use the existing D baseline modules (last_seen, constant_velocity, etc.) fed real mu_oracle_by_key / log_sigma_by_key extracted from the verified oracle_target_document's rows.",
+      "name": "fit_baseline",
+      "step": 3
+    },
+    {
+      "name": "mint_deterministic_artifact_id",
+      "reference": "mineocclude.baselines.scientific_readiness.build_baseline_prediction_artifact_id",
+      "requires": [
+        "fold_manifest_hash",
+        "oracle_target_hash",
+        "config_hash",
+        "baseline_id",
+        "target_name"
+      ],
+      "step": 4
+    },
+    {
+      "action": "build_baseline_document(...) then validate_document(document).",
+      "name": "validate_b_facing_export",
+      "step": 5,
+      "stop_condition": "result.accepted must be True and result.rejections must be empty."
+    },
+    {
+      "action": "build_owner_status_record(owner_status='accepted') -> build_exact_artifact_authorization (real hashes) -> build_handoff_manifest -> build_verification_receipt -> validate_registry_v2_handoff_package(...).",
+      "name": "construct_registry_v2_trust_records",
+      "step": 6,
+      "stop_condition": "validate_registry_v2_handoff_package must raise nothing."
+    },
+    {
+      "action": "Only after every gate in steps 0-6 passes. Append a new, separately dated production_job_status.json-style record with status='accepted'. Never edit the BLOCKED record from this preparation package in place -- append-only, matching this project's decision-log convention.",
+      "name": "append_accepted_production_status_record",
+      "step": 7
+    }
+  ],
+  "supersedes_note": "Corrects docs/status/person_d_phase4_step4_1_registry_v2_handoff_v0_1/runbook.md's Step 0 fetch target from origin/role/person-b-methods to origin/role/person-b-analysis. runbook.md is left unmodified as earlier frozen evidence in this preparation slice; this JSON is the corrected, authoritative execution record going forward."
+}

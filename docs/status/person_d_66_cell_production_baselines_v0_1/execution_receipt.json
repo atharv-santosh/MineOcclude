@@ -1,0 +1,38 @@
+{
+  "environment": {
+    "numpy_version": "1.26.4",
+    "platform": "win32",
+    "python_version": "3.10.20"
+  },
+  "excluded_from_sha256_inventory": true,
+  "exclusion_reason": "Carries wall-clock runtime and a live host memory reading, both of which vary between runs on the same inputs.",
+  "per_family_runtime_seconds": {
+    "constant_velocity": 0.00516,
+    "explicit_feature": 0.031434,
+    "grouped_shuffled": 0.008145,
+    "known_q_analytic": 0.007004,
+    "last_seen": 0.006002,
+    "raw_pixel": 168.515805,
+    "time_only": 0.008358,
+    "visible_history_q": 0.010013
+  },
+  "producer_role": "person_d",
+  "raw_pixel_memory_plan": {
+    "admitted": true,
+    "compact_payload_gib": 0.636383056640625,
+    "detected_host_available_bytes": 7356862464,
+    "detected_host_physical_bytes": 16516444160,
+    "estimated_peak_bytes": 6763053056,
+    "estimated_peak_gib": 6.298583984375,
+    "family": "raw_pixel",
+    "feature_dim": 258048,
+    "inner_fold_count": 4,
+    "reasons": [],
+    "row_count": 662
+  },
+  "run_id": "person-d-66-cell-production-baselines-v0-1",
+  "schema_id": "person-d-66-cell-production-execution-receipt-v0-1",
+  "schema_version": "1.0",
+  "sha256_inventory_sha256": "bb2896f9ac6817e8d6016860f6277519514ea78c9ee45c11a677af67c7192d01",
+  "total_runtime_seconds": 173.383
+}

@@ -1,0 +1,20 @@
+{
+  "authorization_prerequisite": "docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json must be refreshed to cite the exact commit being deployed, on a clean role/person-d-baselines checkout, before any real execution -- see that file's own note.",
+  "callable_now": "from run_person_d_step4_1_eight_family_production import run_production; run_production(contexts=..., mu_oracle_by_key=..., log_sigma_oracle_by_key=..., visible_positions_by_trajectory=..., pixel_features_by_key=..., config_hash=..., input_manifest_hash=..., fit_manifest_hash=..., preprocessed_frame_manifest_reference=..., output_root=...)",
+  "cli_not_executed_locally": true,
+  "cli_path": "scripts/run_person_d_step4_1_eight_family_production.py",
+  "environment": {
+    "device": "cpu",
+    "no_u4_access": true,
+    "python_requires": ">=3.10",
+    "seed_source": "configs/analysis/core.yaml"
+  },
+  "preflight_command": "python scripts/run_person_d_step4_1_eight_family_production.py preflight --frame-manifest-path <local path to Person A's committed preprocessed_frame_manifest.json> --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --verify-payloads --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+  "record_date": "2026-08-01",
+  "run_command_note": "main()'s 'run' mode still fails closed today (by design): the CLI has no argument surface yet for real oracle-target-document/fold-manifest/Person-C-capture-data paths, since wiring full real-data ingestion (capture_ingest.build_contexts_from_capture + export.attach_b_fold_assignments + deriving mu_oracle_by_key/log_sigma_oracle_by_key/pixel_features_by_key from the real oracle target document) was beyond the five confirmed defects this repair targeted. The real fit/export/persist/resume logic exists and is tested (run_production() in the CLI, fit_and_export_family() in eight_family_runner.py) and is ready to be called directly, or wired to CLI flags, once that data-ingestion work is scoped as a follow-up.",
+  "run_command_status": "not_cli_wired_in_this_pass",
+  "schema_id": "person-d-phase4-step4-1-eight-family-production-v0-2-production-command",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

@@ -1,0 +1,27 @@
+{
+  "audit_id": "person-d-step7-2-direction-control-audit-v0-1",
+  "auditor_scope": "Person D verifies Person B/A direction-construction evidence against the frozen B-to-A intervention request contract. Person D never fits, normalizes, retunes, or repairs the direction.",
+  "decision": "BLOCKED",
+  "evidence_kind": "synthetic",
+  "evidence_source": {
+    "finding": "Only contract text and synthetic fixtures exist on either branch; no real fitted direction-construction record was found.",
+    "person_a_commit": "ef98d184aaed8f03757add4ecac4a48968bb6fcc",
+    "person_b_commit": "98f50761ecb99bc14ed5d1ebb67aedc8dcfd3327",
+    "searched_paths": "src/mineocclude/intervention/directions.py, tests/fixtures/intervention/*, docs/status/person_b_*"
+  },
+  "findings": [
+    {
+      "check_name": "direction_evidence_present",
+      "detail": "no Person B direction-construction record was supplied; the audit cannot decide either way until B publishes one",
+      "result": "blocked"
+    }
+  ],
+  "producer_role": "person_d",
+  "result_counts": {
+    "blocked": 1,
+    "fail": 0,
+    "pass": 0
+  },
+  "schema_id": "person-d-direction-control-audit-v0-1",
+  "schema_version": "1.0"
+}

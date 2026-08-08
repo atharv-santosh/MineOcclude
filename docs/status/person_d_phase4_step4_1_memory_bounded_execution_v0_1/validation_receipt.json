@@ -1,0 +1,47 @@
+{
+  "checks": {
+    "changed_path_review": {
+      "result": "7 files in the memory-repair commit (f6fb6e5): 4 modified (the CLI script, production_input_ingest.py, and two test files), 3 new (memory_planning.py and two test files). All within Person D's owned directories (src/mineocclude/baselines/, scripts/, tests/baselines/). No historical Phase 1 file, PERSON_D_ISSUE.md, or any A/B/C/E-owned file was touched. No U4 path referenced."
+    },
+    "focused_memory_and_runner_tests": {
+      "command": "python3 -m pytest tests/baselines/test_memory_planning.py tests/baselines/test_memory_repair_semantic_equivalence.py tests/baselines/test_production_input_ingest.py tests/baselines/test_baseline_family_production_cli.py -q",
+      "failed": 0,
+      "passed": 96,
+      "result": "96 passed"
+    },
+    "full_baselines_regression": {
+      "command": "python3 -m pytest tests/baselines -q",
+      "failed": 0,
+      "note": "238 tests existed before this pass; 15 new in test_memory_planning.py, 2 new in test_production_input_ingest.py, 8 new in test_memory_repair_semantic_equivalence.py, 8 new in test_baseline_family_production_cli.py; all prior tests still pass unchanged.",
+      "passed": 271,
+      "result": "271 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "result": "clean, exit code 0"
+    },
+    "py_compile": {
+      "command": "python3 -m py_compile <every new/modified .py file in this task>",
+      "result": "OK, no syntax errors"
+    },
+    "ruff": {
+      "command": "python3 -m ruff check <every new/modified .py file in this task>",
+      "result": "All checks passed (0 errors) after --fix for mechanical import-sort/style issues surfaced by touching the CLI script and production_input_ingest.py."
+    },
+    "semantic_equivalence": {
+      "result": "All 8 families produce bit-for-bit identical predictions, fold assignments, admitted row identities, feature_access/legal_information, and export schema/lineage whether raw_pixel's feature values are supplied as pre-repair Python lists or repaired float32 NumPy arrays -- see test_memory_repair_semantic_equivalence.py."
+    }
+  },
+  "not_run": [
+    "actual baseline fitting against real Person C capture data",
+    "the production CLI's run mode against real inputs (requires the real SageMaker frame-payload environment, absent on this development machine)",
+    "metric computation",
+    "U4 inspection"
+  ],
+  "person_d_memory_repair_implementation_commit": "f6fb6e542f87462c366ea657ded2dc8a47c3428f",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-memory-bounded-execution-v0-1-validation-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

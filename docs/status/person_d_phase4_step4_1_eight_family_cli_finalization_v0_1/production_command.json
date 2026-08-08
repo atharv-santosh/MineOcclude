@@ -1,0 +1,20 @@
+{
+  "cli_not_executed_locally": true,
+  "cli_path": "scripts/run_person_d_step4_1_eight_family_production.py",
+  "environment": {
+    "device": "cpu",
+    "no_u4_access": true,
+    "python_requires": ">=3.10",
+    "seed_source": "configs/analysis/core.yaml"
+  },
+  "materialize_command": "python scripts/run_person_d_step4_1_eight_family_production.py materialize --materialize-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1",
+  "materialize_command_note": "Byte-verifies and writes local copies of the fold manifest, oracle target manifest, source-context manifest, Person A's frame manifest, and all 10 real capture packages from their exact authoritative commits. Never fits a baseline; safe to run in any environment with this repository's full commit history fetched (verified directly in this pass -- see authority_binding.json's materialize_dry_run_performed_outside_the_repository).",
+  "preflight_command": "python scripts/run_person_d_step4_1_eight_family_production.py preflight --frame-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/preprocessed_frame_manifest.json --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --verify-payloads --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+  "record_date": "2026-08-01",
+  "run_command": "python scripts/run_person_d_step4_1_eight_family_production.py run --frame-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/preprocessed_frame_manifest.json --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --fold-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/ten_pilot_frame_fold_manifest.json --target-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/production_oracle_target_manifest.json --source-context-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/source_context_manifest.json --source-context-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1 --analysis-config-path configs/analysis/core.yaml --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1 --resume resume",
+  "run_command_status": "not_yet_executable_against_real_data -- see fold_manifest_reproduction_blocker.json. Every argument above is real and non-placeholder; run mode is fully CLI-wired and will fail closed at the fold-manifest validation step until that blocker is resolved, exactly as intended (fail closed, not silently proceed on unverified fold membership).",
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-production-command",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

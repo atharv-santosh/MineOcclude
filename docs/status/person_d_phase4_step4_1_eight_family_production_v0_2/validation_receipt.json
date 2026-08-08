@@ -1,0 +1,48 @@
+{
+  "checks": {
+    "changed_path_review": {
+      "result": "5 files in the repair commit (5cef66e): 3 modified (the CLI script, frame_handoff_v0_2.py, and the CLI's own test file), 2 new (eight_family_runner.py and its test file). All within Person D's owned directories. No historical Phase 1 file, PERSON_D_ISSUE.md, or any A/B/C/E-owned file was touched. No U4 path referenced."
+    },
+    "focused_runner_and_exporter_tests": {
+      "command": "python3 -m pytest tests/baselines/test_eight_family_runner.py tests/baselines/test_baseline_family_production_cli.py tests/baselines/test_baseline_family_input_v0_2.py -q",
+      "failed": 0,
+      "passed": 63,
+      "result": "63 passed"
+    },
+    "full_baselines_regression": {
+      "command": "python3 -m pytest tests/baselines -q",
+      "failed": 0,
+      "note": "159 tests existed before this repair; 31 new tests added (10 in test_eight_family_runner.py, net +21 in test_baseline_family_production_cli.py); all prior tests still pass unchanged.",
+      "passed": 190,
+      "result": "190 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "result": "clean, exit code 0"
+    },
+    "inventory_validation_1695_entries": {
+      "result": "test_all_1695_manifest_rows_are_covered_by_payload_verification builds a full 1,695-entry synthetic manifest matching the real frozen family/pilot distribution and confirms verify_frame_payloads_on_disk reports expected_frame_count=actual_frame_count=1695 with every other counter at zero (all_clear=True), using metadata/synthetic payload files only -- no baseline execution."
+    },
+    "py_compile": {
+      "command": "python3 -m py_compile <every new/modified .py file in this task>",
+      "result": "OK, no syntax errors"
+    },
+    "ruff": {
+      "command": "python3 -m ruff check <every new/modified .py file in this task>",
+      "result": "All checks passed (0 errors) after --fix plus 3 manual fixes (explicit subprocess check=False for an intentionally-nonzero-tolerant git call, min() over sorted()[0], a dict-literal rewrite)."
+    }
+  },
+  "not_run": [
+    "actual baseline fitting against real Person C capture data",
+    "oracle target generation",
+    "metric computation",
+    "the production CLI's run mode against real inputs",
+    "U4 inspection"
+  ],
+  "person_d_runner_implementation_commit": "5cef66e92dc8ea5fab68bbf16b51608c0173ebeb",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-eight-family-production-v0-2-validation-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

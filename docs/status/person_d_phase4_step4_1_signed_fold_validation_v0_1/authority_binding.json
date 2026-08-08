@@ -1,0 +1,46 @@
+{
+  "claims": {
+    "accepted_fold_manifest_row_assignments_unchanged": true,
+    "no_baseline_definition_target_fold_family_order_seed_configuration_pilot_membership_or_source_identity_was_altered": true,
+    "no_metric_was_computed": true,
+    "no_new_fold_assignment_was_created": true,
+    "no_person_a_frame_artifact_was_modified": true,
+    "no_person_b_prediction_was_modified": true,
+    "no_scientific_baseline_was_executed": true,
+    "no_u4_output_was_inspected": true,
+    "production_run_mode_was_not_executed": true
+  },
+  "person_a_frame_handoff_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+  "person_b_fold_contract_implementation_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+  "person_b_fold_ratification_commit": "a612ec29108c8f69f19cdc283e40873e75796ea7",
+  "person_b_v0_2_contract_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+  "person_b_v0_2_production_ratification_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+  "person_b_v0_2_schema_correction_commit": "4e0e0f49d4642cf069de8c66c3a8fee47806c4b0",
+  "person_c_expansion_acceptance_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+  "person_d": {
+    "branch": "role/person-d-baselines",
+    "cli_implementation_commit": "bb2ebf7947c92c814dae85fc9cef29fef04e4c6f",
+    "fold_validator_implementation_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5",
+    "prior_runner_preparation_commit": "b260561143d72d69428f45c1f210bdf117f9803d"
+  },
+  "record_date": "2026-08-01",
+  "required_baseline_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "resolution_of_prior_blocker": {
+    "prior_blocker_record": "docs/status/person_d_phase4_step4_1_eight_family_cli_finalization_v0_1/fold_manifest_reproduction_blocker.json",
+    "resolution": "export.validate_b_fold_manifest now dispatches on the manifest's own fold_manifest_format_version field: the production format routes to production_fold_contract_v0_1.validate_production_fold_document (verifies the exact signed mapping directly, never attempts to regenerate it); the historical (absent-field) format is untouched.",
+    "root_cause": "The real production fold manifest inherits its fold assignment from an original, pre-join, six-layout greedy computation (row counts 507/502/335/524/418/170) it never rebalances after only five of those six layouts were admitted with reduced, post-join per-frame counts (409/387/335/292/272). D's historical mineocclude.probes.splits.validate_fold_manifest recomputes a fresh assignment from the reduced counts alone, which is structurally incapable of reproducing an inherited, pre-join assignment.",
+    "verified": "build_all_trajectory_contexts now builds all 1,695 real contexts across all 10 pilots and all 5 folds against the real, hash-verified production fold and oracle-target manifests, where it previously failed closed with GroupedSplitError."
+  },
+  "schema_id": "person-d-phase4-step4-1-signed-fold-validation-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "verification_method": "git fetch origin --prune; git show <commit>:<path> | sha256sum / wc -c; direct field/code-level inspection of both Person B fold-contract commits before writing any code; a real (repo-external, read-only-against-git) build_all_trajectory_contexts dry run against the actual materialized fold/oracle-target/capture-package artifacts, exercised twice (once before the fix, confirming the failure; once after, confirming all 1,695 contexts build). All performed 2026-08-01."
+}

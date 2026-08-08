@@ -1,0 +1,19 @@
+{
+  "cli_not_executed_locally": true,
+  "cli_path": "scripts/run_person_d_step4_1_eight_family_production.py",
+  "environment": {
+    "device": "cpu",
+    "no_u4_access": true,
+    "python_requires": ">=3.10",
+    "recommended_minimum_host_memory_gib": 20,
+    "seed_source": "configs/analysis/core.yaml"
+  },
+  "materialize_command": "python scripts/run_person_d_step4_1_eight_family_production.py materialize --materialize-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1",
+  "record_date": "2026-08-01",
+  "run_command": "python scripts/run_person_d_step4_1_eight_family_production.py run --frame-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/preprocessed_frame_manifest.json --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --fold-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/ten_pilot_frame_fold_manifest.json --target-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/production_oracle_target_manifest.json --source-context-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/source_context_manifest.json --source-context-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1 --analysis-config-path configs/analysis/core.yaml --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1 --resume resume",
+  "run_command_status": "memory_repaired_pending_host_verification -- the boxing root cause is fixed and the memory-plan gate will now fail closed before raw_pixel fits if the deployed host's detected memory is insufficient; see memory_plan_summary.json's honest ~14.96 GiB estimate against the previously-authorized 15 GiB host (effectively no margin). A host with verified available memory of at least ~20 GiB is recommended before this command is re-run.",
+  "schema_id": "person-d-phase4-step4-1-memory-bounded-execution-v0-1-production-command",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

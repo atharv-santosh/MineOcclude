@@ -1,0 +1,67 @@
+{
+  "cross_validation_config": {
+    "fold_count": 5,
+    "inner_fold_count": 4,
+    "split_seed": 20260719,
+    "strategy": "layout_grouped"
+  },
+  "environment": {
+    "device": "cpu",
+    "no_u4_access": true,
+    "python_requires": ">=3.10",
+    "seed_source": "configs/analysis/core.yaml"
+  },
+  "frozen_per_family_seeds_and_configuration": {
+    "constant_velocity": {
+      "fit_required": false,
+      "randomness": "none"
+    },
+    "explicit_feature": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "inner_fold_count": 4,
+      "seed": 20260719
+    },
+    "grouped_shuffled": {
+      "alignment_key": "model_frame_idx",
+      "grouping_unit": "trajectory_id",
+      "permutation_seed": 20260720,
+      "requires_derangement": true
+    },
+    "known_q_analytic": {
+      "fair_baseline": false,
+      "randomness": "none"
+    },
+    "last_seen": {
+      "fit_required": false,
+      "randomness": "none"
+    },
+    "raw_pixel": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "inner_fold_count": 4,
+      "seed": 20260719
+    },
+    "time_only": {
+      "fit_scope": "outer_training_folds_only",
+      "primary_polynomial_degree": 1,
+      "sensitivity_polynomial_degree": 2
+    },
+    "visible_history_q": {
+      "dt_seconds": 0.05,
+      "fit_scope": "outer_training_folds_only"
+    }
+  },
+  "note": "Every value above is read verbatim from mineocclude.baselines.baseline_family_input_v0_2.BASELINE_FAMILY_CONTRACTS_V0_2 and configs/analysis/core.yaml -- none is overridden, re-derived, or invented by this pass. No seed, configuration, or fold-count value was changed to produce this record.",
+  "record_date": "2026-08-01",
+  "schema_id": "person-d-phase4-step4-1-eight-family-cli-finalization-v0-1-environment-and-seed-requirements",
+  "schema_version": "1.0"
+}

@@ -18,10 +18,15 @@ the current A/B/C authorities and does not vendor copies of them.
 
 ## Current blockers
 
-- [ ] Obtain formal human Person A and Person B approval of the technically
+- [x] Obtain formal human Person A and Person B approval of the technically
       verified schema-v1.0 D handshake recorded in
-      `docs/baselines/person_d_schema_v1_review.md`. Passing repository tests
-      is not human signoff.
+      `docs/baselines/person_d_schema_v1_review.md`. **COMPLETE** as of the
+      `80d41c5ca0e341263a7b0c683fae4b51be376c55` checkpoint -- recorded in
+      `docs/contracts/schema_v1_0_signed_record.md`
+      (`APPROVED_FOR_PHASE_1_FREEZE`). This covers Phase 0/1 interface
+      compatibility only; it does not approve real-data baselines, final
+      scientific comparisons, or the Step 4.3 positive-control gate (still
+      BLOCKED pending real no-wall data -- see below).
 
 - [ ] Receive Person B's real persisted `fold_manifest` artifact. D's Phase 1
       tests consume the sealed synthetic B-style artifact at
@@ -86,9 +91,60 @@ the current A/B/C authorities and does not vendor copies of them.
       timestep; completeness (no omitted/duplicated control), norm-matching,
       and orthogonality-to-the-real-direction checks. D verifies this matrix;
       it does not fit the real direction (B) or inject it (A).
+- [x] Consolidated missingness/exclusion audit
+      (`mineocclude.baselines.missingness`): tabulates accepted/missing counts
+      by baseline, target, layout, regime, and duration bin, and flags any
+      non-applicable row lacking an explicit reason code as a silent
+      exclusion. Also fixed: `shuffled.py` now aligns donor/recipient frames
+      by explicit `model_frame_idx` (not list position, which could
+      misalign when donor/recipient have different excluded-frame
+      patterns) and always records a reason for non-applicable rows;
+      `visible_history_q.py` now raises rather than silently resolving a
+      trajectory with conflicting fold assignments.
+- [x] Real-capture ingest adapter (`mineocclude.baselines.capture_ingest`):
+      joins Person C's real `server_state`/`visibility`/`frame_map` row
+      streams into `TrajectoryContext`s, fold left `UNASSIGNED_FOLD` until a
+      real B fold manifest exists. Run over all 17 of Person C's real
+      accepted pilot episodes as a non-scientific preview
+      (`docs/status/person_d_real_pilot_baseline_preview.json`); the one
+      episode with 0/200 applicable rows (`layout_05_ep9422`) was confirmed
+      to be a genuine occluder-only/no-sheep negative control, not an
+      ingest defect, and now carries an explicit reason code rather than a
+      bare zero.
+- [x] Step 4.3 no-wall positive-control statistical gate
+      (`mineocclude.baselines.positive_control_gate`): fits the frozen
+      visible-position ridge via Person B's real ridge/metric/resampling
+      authorities and requires held-out R^2 >= 0.50 with a bootstrap CI
+      strictly above zero. Fails closed to `BLOCKED` (not PASSED, not
+      FAILED) unless the caller explicitly declares real no-wall data
+      provenance; currently `BLOCKED`, since real no-wall rows, a real B
+      fold manifest, and real oracle targets do not exist yet.
+- [x] Phase 6-8 machinery (Steps 6.1-8.4). Step 6.1 binds the **real**
+      accepted 66-cell MVP identity (48 core + 6 no-wall + 6 no-sheep +
+      6 sentinel, zero shortfall), re-derived byte-identically from
+      Person C's current tip `365e748`. Steps 6.3-8.3 add grouped nulls
+      and paired comparisons (`grouped_nulls_v0_1`), the preliminary
+      comparison report pipeline (`preliminary_report_v0_1`), the
+      versioned result lock (`result_lock_v0_1`), the pre-outcome U4
+      control manifest and D-to-A/E handoff (`u4_control_manifest_v0_1`),
+      the direction-control audit (`direction_control_audit_v0_1`), the
+      fail-closed E measurement join (`u4_measurement_join_v0_1`), the
+      specificity/damage report (`specificity_damage_report_v0_1`), the
+      control-failure claim-impact record
+      (`control_failure_record_v0_1`), and the clean workflow,
+      checkpoint demonstration, and GREEN/YELLOW/RED classifier
+      (`clean_workflow_v0_1`). Every package regenerates
+      byte-identically from
+      `scripts/run_person_d_phase6to8_completion.py`. Step 8.4's frozen
+      operating handoff is at
+      `docs/status/person_d_terminal_handoff_v0_1/`.
 - [ ] Run all of the above against real accepted rows/folds/targets once
-      C/B/A hand off real data -- everything above is currently exercised
-      only against synthetic fixtures (`tests/baselines/`).
+      C/B/A hand off real data. Every Phase 6-8 document is currently
+      labeled `evidence_kind = "synthetic"`; blocked sections are
+      structurally empty and name the missing artifact, its owner, its
+      schema, and the exact command to run on receipt. The five exact
+      remaining external dependencies are listed in
+      `docs/status/person_d_terminal_handoff_v0_1/person_d_terminal_status_package.json`.
 
 ## Post-MVP work
 

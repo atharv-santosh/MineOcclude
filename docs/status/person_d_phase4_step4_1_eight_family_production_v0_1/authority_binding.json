@@ -1,0 +1,57 @@
+{
+  "claims": {
+    "no_metric_was_computed": true,
+    "no_person_a_frame_artifact_was_modified": true,
+    "no_person_b_prediction_was_modified": true,
+    "no_scientific_baseline_was_executed": true,
+    "no_target_fold_pilot_source_baseline_seed_or_acceptance_criterion_was_altered": true,
+    "no_u4_output_was_inspected": true,
+    "production_cli_was_not_executed_locally": true
+  },
+  "fold_manifest": {
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+    "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71"
+  },
+  "frame_manifest": {
+    "external_root": "/home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1",
+    "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/preprocessed_frame_manifest.json",
+    "sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5"
+  },
+  "no_merge_performed": true,
+  "no_role_branch_merged": [
+    "role/person-b-analysis",
+    "role/person-a-model",
+    "role/person-e-operations"
+  ],
+  "oracle_target_manifest": {
+    "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+    "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "person_a_activation_store_v2_completion_commit": "55776dc88302b89b52eef483a710fbf6811cf536",
+  "person_a_branch": "role/person-a-model",
+  "person_a_frame_handoff_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+  "person_b_branch": "role/person-b-analysis",
+  "person_b_predictions_are_person_d_direct_input": false,
+  "person_b_v0_2_contract_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+  "person_b_v0_2_production_ratification_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+  "person_d_branch": "role/person-d-baselines",
+  "person_d_implementation_commit": "fd9302e5d218193211f2f96986ca32dc1a365e66",
+  "person_d_starting_authority": "853e0acadf050a0b1f318b399b524e57379d03bf",
+  "person_e_branch": "role/person-e-operations",
+  "person_e_step4_1_handoff_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7",
+  "record_date": "2026-08-01",
+  "required_baseline_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "required_baseline_family_count": 8,
+  "schema_id": "person-d-phase4-step4-1-eight-family-production-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "verification_method": "git fetch origin --prune; git cat-file -t <hash>; git log -1 --format='%H %s' <hash>; git merge-base --is-ancestor <hash> <branch>; git show <commit>:<path> | sha256sum; direct field-level inspection of every cited JSON document at its exact cited commit. All performed 2026-08-01 before any code was written against these facts."
+}

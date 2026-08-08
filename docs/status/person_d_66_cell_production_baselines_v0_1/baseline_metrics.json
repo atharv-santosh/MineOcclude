@@ -1,0 +1,1242 @@
+{
+  "aggregate_result_count": 9,
+  "evidence_kind": "real",
+  "family_metric_count": 9,
+  "family_metrics": [
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": 0.8256365131360146,
+          "r2_ci_low": -0.030098125819480348,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": 0.6432063924777439,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "regression": {
+          "available": true,
+          "mae": 0.3577794561933535,
+          "mse": 0.3588104229607252,
+          "r2": 0.6432063924777439,
+          "sample_count": 662
+        },
+        "scored_row_count": 662,
+        "trajectory_count": 42
+      },
+      "comparison_class": "memory_heuristic",
+      "family_id": "last_seen",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.3793548387096775,
+            "mse": 0.32516129032258084,
+            "r2": 0.627432755861938,
+            "sample_count": 155
+          },
+          "scored_row_count": 155,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.3041666666666667,
+            "mse": 0.3480654761904762,
+            "r2": 0.6998851616799748,
+            "sample_count": 84
+          },
+          "scored_row_count": 84,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.3755102040816328,
+            "mse": 0.3321088435374151,
+            "r2": 0.1442171108581336,
+            "sample_count": 147
+          },
+          "scored_row_count": 147,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.36043956043956044,
+            "mse": 0.4107692307692309,
+            "r2": 0.3639664363057161,
+            "sample_count": 91
+          },
+          "scored_row_count": 91,
+          "trajectory_count": 6
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 0.3486486486486486,
+            "mse": 0.3875405405405406,
+            "r2": 0.5111083936150481,
+            "sample_count": 185
+          },
+          "scored_row_count": 185,
+          "trajectory_count": 11
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 662,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 0,
+        "scored_rows": 662
+      },
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": 0.9290398238193623,
+          "r2_ci_low": 0.062147342762174616,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": 0.7285597384464821,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "regression": {
+          "available": true,
+          "mae": 0.2508459744979189,
+          "mse": 0.2674636650347235,
+          "r2": 0.7285597384464821,
+          "sample_count": 656
+        },
+        "scored_row_count": 656,
+        "trajectory_count": 42
+      },
+      "comparison_class": "reference",
+      "family_id": "constant_velocity",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.3415206216298976,
+            "mse": 0.34325418933464996,
+            "r2": 0.5932483237939205,
+            "sample_count": 154
+          },
+          "scored_row_count": 154,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.10183318166802356,
+            "mse": 0.05721551513148009,
+            "r2": 0.9490239739520455,
+            "sample_count": 83
+          },
+          "scored_row_count": 83,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.329447016417924,
+            "mse": 0.49313361143370726,
+            "r2": -0.31948458588684514,
+            "sample_count": 146
+          },
+          "scored_row_count": 146,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.15822405366243322,
+            "mse": 0.12518488335289252,
+            "r2": 0.7998206483194472,
+            "sample_count": 90
+          },
+          "scored_row_count": 90,
+          "trajectory_count": 6
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 0.2249683072926159,
+            "mse": 0.1889725933237601,
+            "r2": 0.7565430536548345,
+            "sample_count": 183
+          },
+          "scored_row_count": 183,
+          "trajectory_count": 11
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 656,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 6,
+        "scored_rows": 656
+      },
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": -0.6946766139235149,
+          "r2_ci_low": -4.4179791589462525,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": -1.2012393415981757,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "regression": {
+          "available": true,
+          "mae": 1.2618659711910736,
+          "mse": 1.842428492987998,
+          "r2": -1.2012393415981757,
+          "sample_count": 151
+        },
+        "scored_row_count": 151,
+        "trajectory_count": 19
+      },
+      "comparison_class": "chance_floor",
+      "family_id": "grouped_shuffled",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.0400445713034283,
+            "mse": 1.7257189363331222,
+            "r2": -322.9502660530215,
+            "sample_count": 7
+          },
+          "scored_row_count": 7,
+          "trajectory_count": 2
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.9157022440647273,
+            "mse": 3.7342370261287368,
+            "r2": -4.958877804565331,
+            "sample_count": 11
+          },
+          "scored_row_count": 11,
+          "trajectory_count": 2
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.8621044110390511,
+            "mse": 0.8563624779797345,
+            "r2": -2.6066464521172046,
+            "sample_count": 39
+          },
+          "scored_row_count": 39,
+          "trajectory_count": 6
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.267762636859208,
+            "mse": 1.7169973211939498,
+            "r2": -2.0579077545834386,
+            "sample_count": 24
+          },
+          "scored_row_count": 24,
+          "trajectory_count": 3
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 1.4020049950124571,
+            "mse": 2.1491998607082183,
+            "r2": -1.27174612218371,
+            "sample_count": 70
+          },
+          "scored_row_count": 70,
+          "trajectory_count": 6
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 151,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 511,
+        "scored_rows": 151
+      },
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": -0.800383729101376,
+          "r2_ci_low": -12.409883846048166,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "coverage_and_ece": {
+          "available": false,
+          "reason": "this family defines no mean prediction; central-Gaussian coverage, ECE, and z-diagnostics require a paired mean and spread on the same rows, and no frozen Person D baseline pairs a spread family with a mean family"
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": -3.101840539160479,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 5,
+        "partial_correlation_controlling_tau": {
+          "available": true,
+          "control": "tau",
+          "partial_correlation": -0.6706609761413403,
+          "sample_count": 28
+        },
+        "regression": {
+          "available": true,
+          "mae": 1.0156074844575358,
+          "mse": 1.3447757001183225,
+          "r2": -3.101840539160479,
+          "sample_count": 28
+        },
+        "scored_row_count": 28,
+        "trajectory_count": 10
+      },
+      "comparison_class": "chance_floor",
+      "family_id": "grouped_shuffled",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.751701576822,
+            "mse": 0.8203368564933806,
+            "r2": -4.568163521186726,
+            "sample_count": 7
+          },
+          "scored_row_count": 7,
+          "trajectory_count": 2
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.184675394653,
+            "mse": 1.4034570307735552,
+            "r2": -5390.145884490346,
+            "sample_count": 2
+          },
+          "scored_row_count": 2,
+          "trajectory_count": 1
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.2816515874990002,
+            "mse": 1.9656729502432126,
+            "r2": -3.982459986500447,
+            "sample_count": 11
+          },
+          "scored_row_count": 11,
+          "trajectory_count": 3
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 0.8384475344077501,
+            "mse": 0.9352556367046125,
+            "r2": -14.750346921068763,
+            "sample_count": 8
+          },
+          "scored_row_count": 8,
+          "trajectory_count": 4
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 66,
+        "applicable_without_truth": 38,
+        "emitted_rows": 662,
+        "non_applicable_rows": 596,
+        "scored_rows": 28
+      },
+      "target_name": "log_sigma_oracle"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": 0.30376166338167765,
+          "r2_ci_low": -0.1717085856419592,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "coverage_and_ece": {
+          "available": false,
+          "reason": "this family defines no mean prediction; central-Gaussian coverage, ECE, and z-diagnostics require a paired mean and spread on the same rows, and no frozen Person D baseline pairs a spread family with a mean family"
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": 0.21856799840032182,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "partial_correlation_controlling_tau": {
+          "available": true,
+          "control": "tau",
+          "partial_correlation": -0.17839991823380613,
+          "sample_count": 311
+        },
+        "regression": {
+          "available": true,
+          "mae": 0.4333946761129115,
+          "mse": 0.2619966185493899,
+          "r2": 0.21856799840032182,
+          "sample_count": 311
+        },
+        "scored_row_count": 311,
+        "trajectory_count": 36
+      },
+      "comparison_class": "clock_floor",
+      "family_id": "time_only",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.4788659457826082,
+            "mse": 0.3264920720260466,
+            "r2": 0.25398106164563405,
+            "sample_count": 104
+          },
+          "scored_row_count": 104,
+          "trajectory_count": 9
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.30310339384279633,
+            "mse": 0.13599892540367453,
+            "r2": 0.10332329853261468,
+            "sample_count": 24
+          },
+          "scored_row_count": 24,
+          "trajectory_count": 4
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.42771220520504843,
+            "mse": 0.2453088077045865,
+            "r2": 0.22165209935143793,
+            "sample_count": 87
+          },
+          "scored_row_count": 87,
+          "trajectory_count": 9
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.46866110114802995,
+            "mse": 0.27714260460385715,
+            "r2": -0.22168030145207362,
+            "sample_count": 31
+          },
+          "scored_row_count": 31,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 0.39953459183183193,
+            "mse": 0.22043864085299375,
+            "r2": -0.0697010109908176,
+            "sample_count": 65
+          },
+          "scored_row_count": 65,
+          "trajectory_count": 9
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 311,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 351,
+        "scored_rows": 311
+      },
+      "target_name": "log_sigma_oracle"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": 0.9884201200004876,
+          "r2_ci_low": 0.8964027605059077,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": 0.9686916342223839,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "regression": {
+          "available": true,
+          "mae": 0.10197467636796767,
+          "mse": 0.03084969860109681,
+          "r2": 0.9686916342223839,
+          "sample_count": 656
+        },
+        "scored_row_count": 656,
+        "trajectory_count": 42
+      },
+      "comparison_class": "fair_fitted_ceiling",
+      "family_id": "explicit_feature",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.11302443956331072,
+            "mse": 0.035100116802256616,
+            "r2": 0.9584068256471361,
+            "sample_count": 154
+          },
+          "scored_row_count": 154,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.06708336000111688,
+            "mse": 0.01928308095549912,
+            "r2": 0.9828197852485732,
+            "sample_count": 83
+          },
+          "scored_row_count": 83,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.14428107171684365,
+            "mse": 0.055022258604795905,
+            "r2": 0.8527761636473488,
+            "sample_count": 146
+          },
+          "scored_row_count": 146,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.09795628544489038,
+            "mse": 0.023817660913004676,
+            "r2": 0.9619139005252557,
+            "sample_count": 90
+          },
+          "scored_row_count": 90,
+          "trajectory_count": 6
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 0.07672460635980807,
+            "mse": 0.01669207287975384,
+            "r2": 0.9784952885495228,
+            "sample_count": 183
+          },
+          "scored_row_count": 183,
+          "trajectory_count": 11
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 656,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 6,
+        "scored_rows": 656
+      },
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": 0.021827141613855648,
+          "r2_ci_low": -7.818057483895885,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": -1.8961121560121192,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "regression": {
+          "available": true,
+          "mae": 1.129436602734256,
+          "mse": 2.912482751181537,
+          "r2": -1.8961121560121192,
+          "sample_count": 662
+        },
+        "scored_row_count": 662,
+        "trajectory_count": 42
+      },
+      "comparison_class": "fair_fitted_ceiling",
+      "family_id": "raw_pixel",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.8878373842283912,
+            "mse": 0.974722135211476,
+            "r2": -0.11682894158723323,
+            "sample_count": 155
+          },
+          "scored_row_count": 155,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.9075570972866,
+            "mse": 4.121282941353432,
+            "r2": -2.5535215303528185,
+            "sample_count": 84
+          },
+          "scored_row_count": 84,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.1294138707524637,
+            "mse": 1.4018717949870187,
+            "r2": -2.6123635918334953,
+            "sample_count": 147
+          },
+          "scored_row_count": 147,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.23099507388954404,
+            "mse": 0.07099324190573349,
+            "r2": 0.890074325764479,
+            "sample_count": 91
+          },
+          "scored_row_count": 91,
+          "trajectory_count": 6
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 1.4205029705840106,
+            "mse": 6.585180239860521,
+            "r2": -7.307361447422732,
+            "sample_count": 185
+          },
+          "scored_row_count": 185,
+          "trajectory_count": 11
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 662,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 0,
+        "scored_rows": 662
+      },
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": 0.42124384617684424,
+          "r2_ci_low": -0.24951716517026665,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "coverage_and_ece": {
+          "available": false,
+          "reason": "this family defines no mean prediction; central-Gaussian coverage, ECE, and z-diagnostics require a paired mean and spread on the same rows, and no frozen Person D baseline pairs a spread family with a mean family"
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": 0.2516116669664651,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "partial_correlation_controlling_tau": {
+          "available": true,
+          "control": "tau",
+          "partial_correlation": 0.24790079797384365,
+          "sample_count": 311
+        },
+        "regression": {
+          "available": true,
+          "mae": 0.4634683521054723,
+          "mse": 0.2509178178206332,
+          "r2": 0.2516116669664651,
+          "sample_count": 311
+        },
+        "scored_row_count": 311,
+        "trajectory_count": 36
+      },
+      "comparison_class": "fair_baseline",
+      "family_id": "visible_history_q",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.4711951140343918,
+            "mse": 0.2584151210245466,
+            "r2": 0.4095336739874418,
+            "sample_count": 104
+          },
+          "scored_row_count": 104,
+          "trajectory_count": 9
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.414286428105295,
+            "mse": 0.2199204865206026,
+            "r2": -0.449993636736989,
+            "sample_count": 24
+          },
+          "scored_row_count": 24,
+          "trajectory_count": 4
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.4708979226952624,
+            "mse": 0.25509702190270794,
+            "r2": 0.19059477188123541,
+            "sample_count": 87
+          },
+          "scored_row_count": 87,
+          "trajectory_count": 9
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.46924576618066716,
+            "mse": 0.25339367211193514,
+            "r2": -0.11699194778891964,
+            "sample_count": 31
+          },
+          "scored_row_count": 31,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 0.4565654360709172,
+            "mse": 0.24359280520252266,
+            "r2": -0.18205895748104273,
+            "sample_count": 65
+          },
+          "scored_row_count": 65,
+          "trajectory_count": 9
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 311,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 351,
+        "scored_rows": 311
+      },
+      "target_name": "log_sigma_oracle"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
+          "r2_ci_high": 1.0,
+          "r2_ci_low": 1.0,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "coverage_and_ece": {
+          "available": false,
+          "reason": "this family defines no mean prediction; central-Gaussian coverage, ECE, and z-diagnostics require a paired mean and spread on the same rows, and no frozen Person D baseline pairs a spread family with a mean family"
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": 1.0,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "partial_correlation_controlling_tau": {
+          "available": true,
+          "control": "tau",
+          "partial_correlation": 0.9999999999999988,
+          "sample_count": 311
+        },
+        "regression": {
+          "available": true,
+          "mae": 1.399869859187894e-13,
+          "mse": 3.6053411848491715e-26,
+          "r2": 1.0,
+          "sample_count": 311
+        },
+        "scored_row_count": 311,
+        "trajectory_count": 36
+      },
+      "comparison_class": "privileged_oracle_ceiling",
+      "family_id": "known_q_analytic",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.1890275089307615e-13,
+            "mse": 2.8209630889148705e-26,
+            "r2": 1.0,
+            "sample_count": 104
+          },
+          "scored_row_count": 104,
+          "trajectory_count": 9
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.7390255901972296e-13,
+            "mse": 4.777958607256365e-26,
+            "r2": 1.0,
+            "sample_count": 24
+          },
+          "scored_row_count": 24,
+          "trajectory_count": 4
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.2908065421133242e-13,
+            "mse": 3.259500820613731e-26,
+            "r2": 1.0,
+            "sample_count": 87
+          },
+          "scored_row_count": 87,
+          "trajectory_count": 9
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.6872524882625927e-13,
+            "mse": 4.5952131419587406e-26,
+            "r2": 1.0,
+            "sample_count": 31
+          },
+          "scored_row_count": 31,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 1.6209085355985035e-13,
+            "mse": 4.4181809518873455e-26,
+            "r2": 1.0,
+            "sample_count": 65
+          },
+          "scored_row_count": 65,
+          "trajectory_count": 9
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 311,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 351,
+        "scored_rows": 311
+      },
+      "target_name": "log_sigma_oracle"
+    }
+  ],
+  "floor_comparison_count": 7,
+  "floor_comparisons": [
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
+        "delta_r2": 1.7012829975206363,
+        "family_r2": 0.4466723581945041,
+        "floor_r2": -1.254610639326132,
+        "sample_count": 150
+      },
+      "family_id": "constant_velocity",
+      "family_rows_not_in_floor": 506,
+      "family_scored_row_count": 656,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 1,
+      "floor_scored_row_count": 151,
+      "intersection_row_count": 150,
+      "is_probe_comparison": false,
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
+        "delta_r2": 2.207305246257541,
+        "family_r2": 0.9526946069314088,
+        "floor_r2": -1.254610639326132,
+        "sample_count": 150
+      },
+      "family_id": "explicit_feature",
+      "family_rows_not_in_floor": 506,
+      "family_scored_row_count": 656,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 1,
+      "floor_scored_row_count": 151,
+      "intersection_row_count": 150,
+      "is_probe_comparison": false,
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
+        "delta_r2": 4.101840539160479,
+        "family_r2": 1.0,
+        "floor_r2": -3.101840539160479,
+        "sample_count": 28
+      },
+      "family_id": "known_q_analytic",
+      "family_rows_not_in_floor": 283,
+      "family_scored_row_count": 311,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 0,
+      "floor_scored_row_count": 28,
+      "intersection_row_count": 28,
+      "is_probe_comparison": false,
+      "target_name": "log_sigma_oracle"
+    },
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
+        "delta_r2": 1.8369991841853834,
+        "family_r2": 0.6357598425872079,
+        "floor_r2": -1.2012393415981757,
+        "sample_count": 151
+      },
+      "family_id": "last_seen",
+      "family_rows_not_in_floor": 511,
+      "family_scored_row_count": 662,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 0,
+      "floor_scored_row_count": 151,
+      "intersection_row_count": 151,
+      "is_probe_comparison": false,
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
+        "delta_r2": -0.18290847218078587,
+        "family_r2": -1.3841478137789616,
+        "floor_r2": -1.2012393415981757,
+        "sample_count": 151
+      },
+      "family_id": "raw_pixel",
+      "family_rows_not_in_floor": 511,
+      "family_scored_row_count": 662,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 0,
+      "floor_scored_row_count": 151,
+      "intersection_row_count": 151,
+      "is_probe_comparison": false,
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
+        "delta_r2": 3.397238402761415,
+        "family_r2": 0.2953978636009361,
+        "floor_r2": -3.101840539160479,
+        "sample_count": 28
+      },
+      "family_id": "time_only",
+      "family_rows_not_in_floor": 283,
+      "family_scored_row_count": 311,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 0,
+      "floor_scored_row_count": 28,
+      "intersection_row_count": 28,
+      "is_probe_comparison": false,
+      "target_name": "log_sigma_oracle"
+    },
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
+        "delta_r2": 3.2402306073614167,
+        "family_r2": 0.13839006820093736,
+        "floor_r2": -3.101840539160479,
+        "sample_count": 28
+      },
+      "family_id": "visible_history_q",
+      "family_rows_not_in_floor": 283,
+      "family_scored_row_count": 311,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 0,
+      "floor_scored_row_count": 28,
+      "intersection_row_count": 28,
+      "is_probe_comparison": false,
+      "target_name": "log_sigma_oracle"
+    }
+  ],
+  "fold_result_count": 44,
+  "metric_authority": {
+    "analysis_arithmetic_dtype": "float64",
+    "analysis_config_version": "person-b-phase1-v0.2",
+    "bootstrap_count": 1000,
+    "bootstrap_seed": 20260721,
+    "coverage_levels": [
+      0.5,
+      0.8,
+      0.95
+    ],
+    "grouping_hierarchy": [
+      "layout_id",
+      "trajectory_id"
+    ],
+    "near_zero_sigma_threshold_blocks": 1e-12,
+    "nonfinite_policy": "count_and_fail_result_no_clipping",
+    "owner_role": "person_b",
+    "permutation_count": 999,
+    "permutation_p_value_rule": "add_one_greater_or_equal",
+    "permutation_seed": 20260720,
+    "permutation_unit": "whole_trajectory_block",
+    "person_d_applied_no_threshold": true,
+    "person_d_created_no_threshold": true,
+    "resampling_implementation": "mineocclude.metrics.resampling",
+    "u1_implementation": "mineocclude.metrics.u1_mean.regression_metrics",
+    "u2_implementation": "mineocclude.metrics.u2_calibration.partial_correlation_controlling_tau"
+  },
+  "not_computed": [
+    {
+      "metric": "baseline_comparison (probe versus baseline)",
+      "owner": "person_b",
+      "reason": "No probe exists until Person A publishes the 66-cell activation index and Person B fits the probe against it."
+    },
+    {
+      "metric": "coverage / expected_calibration_error / z_diagnostics",
+      "owner": "person_b",
+      "reason": "calibration_metrics requires a paired mean and spread on the same rows. Every Person D spread family defines no mean prediction, and pairing one with a mean family would create a method Person D has not frozen."
+    },
+    {
+      "metric": "u3 reveal_snapback",
+      "owner": "person_b",
+      "reason": "Requires terminal reveal events; the 66-cell dataset has VALID_TERMINAL_REVEAL_COUNT = 0 and supplemental capture is required."
+    }
+  ],
+  "producer_role": "person_d",
+  "run_id": "person-d-66-cell-production-baselines-v0-1",
+  "schema_id": "person-d-66-cell-baseline-metrics-v0-1",
+  "schema_version": "1.0",
+  "source_identities": {
+    "person_a_commit": "3384cbfed92f069236d68746f2308ec76f1a4124",
+    "person_a_frame_manifest_sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1",
+    "person_b_commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+    "person_b_fold_manifest_sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+    "person_b_oracle_target_manifest_sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9",
+    "person_b_row_universe_receipt_sha256": "e897c31cda46e2dbe7fab605320cd98eba68a1396a80ccd78b178c8dc5547351",
+    "person_b_to_d_handoff_sha256": "4b945f79ac1e64bf3253cafa05ca42ac44eccbc5eb4f1db70203871f018bed01",
+    "person_c_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "person_c_to_d_media_handoff_sha256": "84b5b927ab41d34d51ebf30f1af9d48cf1b5af9d057518a6ca6338cef7f38a56"
+  },
+  "targets": {
+    "u1": "mu_oracle_blocks",
+    "u2": "log_sigma_oracle"
+  }
+}
