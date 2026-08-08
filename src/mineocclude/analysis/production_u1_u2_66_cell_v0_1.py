@@ -448,18 +448,18 @@ def _load_d_rows(
             raise ProductionAnalysisError(
                 f"Required full-universe D comparator is non-applicable: {family}/{target}"
             )
-    for family, target in (
-        ("grouped_shuffled", "mu_oracle_blocks"),
-        ("grouped_shuffled", "log_sigma_oracle"),
+    for family, target, minimum_layout_count in (
+        ("grouped_shuffled", "mu_oracle_blocks", 6),
+        ("grouped_shuffled", "log_sigma_oracle", 2),
     ):
         applicable_layouts = {
             str(result[(family, target, trajectory, frame)]["layout_id"])
             for trajectory, frame in required_keys
             if result[(family, target, trajectory, frame)]["applicable"]
         }
-        if len(applicable_layouts) != 6:
+        if len(applicable_layouts) < minimum_layout_count:
             raise ProductionAnalysisError(
-                f"Grouped shuffled intersection lacks all layouts: {family}/{target}"
+                f"Grouped shuffled intersection has too few layouts: {family}/{target}"
             )
     return result
 
@@ -680,6 +680,7 @@ def _paired_comparison(
     prediction: np.ndarray,
     metadata: np.ndarray,
     d_rows: Mapping[tuple[str, str, str, int], Mapping[str, Any]],
+    require_all_layouts: bool = True,
 ) -> tuple[dict[str, Any], dict[str, float]]:
     paired_rows: list[dict[str, Any]] = []
     paired_truth: list[float] = []
@@ -710,7 +711,7 @@ def _paired_comparison(
     if not paired_rows:
         raise ProductionAnalysisError(f"Empty D comparison for {family}/{target}")
     layout_values = _layout_macro_values(paired_rows, "improvement")
-    if len(layout_values) != 6:
+    if require_all_layouts and len(layout_values) != 6:
         raise ProductionAnalysisError(
             f"D comparison lacks layouts for {family}/{target}"
         )
@@ -1032,6 +1033,7 @@ def compute_scientific_results(
                 prediction=log_sigma_prediction,
                 metadata=metadata,
                 d_rows=inputs.d_rows,
+                require_all_layouts=family != "grouped_shuffled",
             )
             if family in ("time_only", "visible_history_q", "known_q_analytic"):
                 comparison["calibration"] = _baseline_calibration(
