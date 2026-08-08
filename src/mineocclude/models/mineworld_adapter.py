@@ -1551,14 +1551,29 @@ class UnavailableMineWorldAdapter:
         )
 
 
-def create_mineworld_adapter() -> MineWorldAdapter:
-    """Construct the private Wave 4 implementation behind the frozen protocol."""
+def create_mineworld_adapter(
+    *, preprocessing_identity: str | None = None
+) -> MineWorldAdapter:
+    """Construct the private Wave 5 implementation behind the frozen protocol.
 
-    from mineocclude.models._mineworld_adapter_wave4 import (
-        _Wave4MineWorldAdapter,
+    ``preprocessing_identity`` binds the loaded runtime to one of Person A's
+    reviewed preprocessing identities (see
+    :mod:`mineocclude.models._mineworld_adapter_wave5`). Omitting it preserves
+    the historical Phase 3 behavior unchanged.
+    """
+
+    from mineocclude.models._mineworld_adapter_wave5 import (
+        LEGACY_PREPROCESSING_PROFILE,
+        _Wave5MineWorldAdapter,
     )
 
-    return _Wave4MineWorldAdapter()
+    return _Wave5MineWorldAdapter(
+        preprocessing_identity=(
+            preprocessing_identity
+            if preprocessing_identity is not None
+            else LEGACY_PREPROCESSING_PROFILE
+        )
+    )
 
 
 def _unavailable(

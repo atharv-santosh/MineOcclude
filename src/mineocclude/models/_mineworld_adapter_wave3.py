@@ -35,7 +35,6 @@ from mineocclude.models._mineworld_adapter_wave2 import (
     PINNED_TOKENS_PER_PAIR,
     PINNED_VISUAL_TOKENS,
     PINNED_VOCAB_SIZE,
-    PREPROCESSING_PROFILE,
     _adapter_error,
     _LoadedRuntime,
     _Wave2MineWorldAdapter,
@@ -182,16 +181,12 @@ def _validate_preprocessed_frame(
         PINNED_PROCESSED_VIDEO_HEIGHT,
         PINNED_PROCESSED_VIDEO_WIDTH,
     )
-    if (
-        frame.preprocessing_profile != PREPROCESSING_PROFILE
-        or frame.preprocessing_profile
-        != runtime_identity.preprocessing_identity
-    ):
+    if frame.preprocessing_profile != runtime_identity.preprocessing_identity:
         raise _adapter_error(
             AdapterFailureCode.INVALID_PROVENANCE,
             operation,
             "frames.preprocessing_profile",
-            "does not match the loaded pinned preprocessing profile",
+            "does not match the loaded runtime's bound preprocessing identity",
         )
     payload = frame.frame
     if (

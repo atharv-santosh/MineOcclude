@@ -1,0 +1,71 @@
+{
+  "aggregate_phase6_runtime_authorized": false,
+  "checkpoint_state": {
+    "main_checkpoint_path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+    "main_checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "main_checkpoint_sha256_matches_frozen": true,
+    "vae_checkpoint_path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt",
+    "vae_checkpoint_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "vae_checkpoint_sha256_matches_frozen": true
+  },
+  "destination_state": {
+    "approved_destination_present": true,
+    "approved_destination_record": "docs/status/person_a_phase6_durable_destination_v0_1/durable_destination_record.json",
+    "approved_destination_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/phase6/person-a/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/"
+  },
+  "gpu_state": {
+    "cuda_device": "cuda:0",
+    "driver_version": "595.71.05",
+    "gpu_memory_mib": 23034,
+    "gpu_model": "NVIDIA L4",
+    "torch_cuda_is_available": true
+  },
+  "historical_evidence_rewritten": false,
+  "input_payload_state": {
+    "expected_file_count": 2468,
+    "expected_total_bytes": 2547449856,
+    "present_on_host": false,
+    "windows_source_root": "C:\\Users\\lollo\\MineOcclude-Person-A-Outputs\\person-a-66-cell-preprocessed-frames-v0-2"
+  },
+  "person_a_commit": "3384cbfed92f069236d68746f2308ec76f1a4124",
+  "predecessor": {
+    "note": "Additive successor; does not edit or invalidate the frozen receipt below.",
+    "path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/phase6_precondition_receipt.json"
+  },
+  "python_state": {
+    "conda_env": "mineworld",
+    "conda_env_matches_configs_environments_mineworld_aws_l4_yml": true,
+    "conda_env_path": "/home/sagemaker-user/.conda/envs/mineworld",
+    "python_executable": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+    "python_version": "3.10.20",
+    "shell_default_python_is_wrong_for_extraction": true,
+    "shell_default_python_version": "3.12.13",
+    "torch_version": "2.6.0+cu126"
+  },
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "runtime_entrypoint_state": {
+    "bound_to_this_run_id": false,
+    "note": "No committed script directly consumes successor_extraction_queue_state.json for this run_id. The closest committed analog (scripts/run_person_a_phase6_single_pilot_sagemaker.py, 3487 lines) is hardcoded to a single prior pilot's identity chain (SELECTED_PILOT=layout_00_ep9403, EXPECTED_ACTIVATION_ROW_COUNT=4960) and is not a drop-in fit for the 66-cell/49360-row successor queue. Binding a correct, fail-closed 66-cell entrypoint is scoped as a separate follow-up engineering task so it receives proper review rather than being authored under time pressure against locked scientific machinery."
+  },
+  "s3_state": {
+    "aws_account": "323206973672",
+    "aws_region": "us-east-1",
+    "bucket_object_count_at_check_time": 0,
+    "sts_identity_confirmed": true,
+    "visible_bucket": "sagemaker-us-east-1-323206973672"
+  },
+  "schema_id": "person-a-phase6-live-runtime-infrastructure-v0.1-receipt",
+  "schema_version": "1.0",
+  "storage_state": {
+    "available_bytes_approx": 249108103168,
+    "filesystem": "/dev/nvme1n1",
+    "mount": "/mnt/sagemaker-nvme",
+    "sufficient_for_input_plus_output": true
+  },
+  "worktree_state": {
+    "branch": "role/person-a-model",
+    "clean": true,
+    "commit": "3384cbfed92f069236d68746f2308ec76f1a4124",
+    "matches_origin": true
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "aggregate_phase6_runtime_authorized": true,
+  "authorized_scope": {
+    "expected_activation_row_count": 49360,
+    "expected_chunk_count": 1320,
+    "expected_model_frame_key_count": 2468,
+    "layer_count": 20,
+    "stored_dtype": "float32",
+    "trajectory_count": 66,
+    "work_authorized": "activation_extraction_and_byte_provenance_only"
+  },
+  "frozen_step_4_1_decision_unchanged": true,
+  "historical_evidence_rewritten": false,
+  "person_a_commit": "ecdf3178154e594b06d1d4326993754068cae039",
+  "predecessor": {
+    "note": "Supersedes the open state recorded there, without editing it, now that all three previously-missing signatures exist and have been independently verified against their exact committed bytes.",
+    "path": "docs/status/person_a_phase6_aggregate_authorization_request_v0_1/authorization_request.json"
+  },
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "schema_id": "person-a-phase6-aggregate-authorization-granted-v0.1-decision",
+  "schema_version": "1.0",
+  "self_authorization_forbidden_acknowledged": true,
+  "signers": {
+    "person_a_model": {
+      "basis": "docs/status/person_a_66_cell_preprocessed_media_v0_2/phase6_precondition_receipt.json contract_conditions (all person_a_model-owned conditions satisfied=true) plus docs/status/person_a_phase6_input_transfer_verification_v0_1/transfer_verification_receipt.json (2468/2468 valid).",
+      "signed_for_this_run_id": true
+    },
+    "person_b_analysis": {
+      "commit": "ec5738098ecf524c9aa4789276d7dc0657d90888",
+      "commit_verified_as_current_branch_tip": true,
+      "path": "docs/status/person_b_phase6_production_run_authorization_v0_1/authorization_decision.json",
+      "sha256": "596c3d89e192c01f896d2375fc8314fc0ee1063d12423cb8797c15ae5ff8122f",
+      "sha256_independently_recomputed_and_matched": true,
+      "signed_for_this_run_id": true
+    },
+    "person_c_data": {
+      "commit": "ed86341f50089eb2fe974803a22306cb332aea0b",
+      "commit_verified_as_current_branch_tip": true,
+      "path": "docs/status/person_c_phase6_aggregate_authorization_v0_1/authorization_decision.json",
+      "sha256": "90fb42934478d1c9356e4748d186e4780dd1e5413421bf387c3c5784d0821cd4",
+      "sha256_independently_recomputed_and_matched": true,
+      "signed_for_this_run_id": true
+    },
+    "person_e_operations": {
+      "commit": "b4ac0d8069894f05990d652145a8607c288cb8a1",
+      "commit_verified_as_current_branch_tip": true,
+      "path": "docs/status/person_e_phase6_aggregate_authorization_v0_1/phase6_authorization_decision.json",
+      "sha256": "d54742b24556517087f5cc782e97958b17b1b4086a9948aa1fbeafd7128542aa",
+      "sha256_independently_recomputed_and_matched": true,
+      "signed_for_this_run_id": true
+    }
+  },
+  "verification_method": "git fetch origin; git rev-parse each origin/role/* branch to confirm the claimed commit is the actual current tip (not a dangling/local claim); git show <commit>:<path> | sha256sum to independently recompute each document's hash and compare to the claimed value; read each document's content to confirm it names this exact run_id and does not silently rewrite the frozen phase6_authorization_conditions.json (byte-identical, reconfirmed) or the frozen Step 4.1 FAIL decision."
+}
