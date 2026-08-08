@@ -120,6 +120,7 @@ def test_hierarchical_partial_bootstrap_is_layout_then_trajectory() -> None:
     assert BOOTSTRAP_COUNT == 2000
     assert first[0] > 0.99
     assert first[1] <= 1.0
+    assert first[2] + first[3] == BOOTSTRAP_COUNT
 
 
 def test_u2_calibration_uses_frozen_50_80_95_intervals() -> None:

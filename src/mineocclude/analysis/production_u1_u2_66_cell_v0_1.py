@@ -35,6 +35,7 @@ from mineocclude.analysis.step4_1_final_contract_v0_1 import (
 from mineocclude.metrics.resampling import bootstrap_confidence_interval
 from mineocclude.metrics.u1_mean import regression_metrics
 from mineocclude.metrics.u2_calibration import (
+    U2MetricError,
     calibration_metrics,
     partial_correlation_controlling_tau,
     reconstruct_sigma,
@@ -778,7 +779,7 @@ def _hierarchical_partial_bootstrap(
     oracle: Sequence[float],
     tau: Sequence[float],
     metadata: np.ndarray,
-) -> tuple[float, float]:
+) -> tuple[float, float, int, int]:
     hierarchy: dict[str, dict[str, list[int]]] = defaultdict(lambda: defaultdict(list))
     for index, row in enumerate(metadata):
         hierarchy[str(row["layout_id"])][str(row["trajectory_id"])].append(index)
@@ -787,22 +788,34 @@ def _hierarchical_partial_bootstrap(
         raise ProductionAnalysisError("Bootstrap requires six layouts")
     rng = random.Random(BOOTSTRAP_SEED)
     replicates: list[float] = []
+    refused_replicates = 0
     for _ in range(BOOTSTRAP_COUNT):
         layout_statistics: list[float] = []
-        for layout in rng.choices(layouts, k=len(layouts)):
-            trajectories = sorted(hierarchy[layout])
-            indices: list[int] = []
-            for trajectory in rng.choices(trajectories, k=len(trajectories)):
-                indices.extend(hierarchy[layout][trajectory])
-            layout_statistics.append(
-                partial_correlation_controlling_tau(
-                    [float(decoded[index]) for index in indices],
-                    [float(oracle[index]) for index in indices],
-                    [float(tau[index]) for index in indices],
+        try:
+            for layout in rng.choices(layouts, k=len(layouts)):
+                trajectories = sorted(hierarchy[layout])
+                indices: list[int] = []
+                for trajectory in rng.choices(trajectories, k=len(trajectories)):
+                    indices.extend(hierarchy[layout][trajectory])
+                layout_statistics.append(
+                    partial_correlation_controlling_tau(
+                        [float(decoded[index]) for index in indices],
+                        [float(oracle[index]) for index in indices],
+                        [float(tau[index]) for index in indices],
+                    )
                 )
-            )
+        except U2MetricError:
+            # This is the same explicit refusal policy used by the frozen
+            # 66-cell bootstrap metric implementation.  A resample with an
+            # exactly constant post-control residual has no defined Pearson
+            # statistic; it is counted, never imputed or silently dropped.
+            refused_replicates += 1
+            continue
         replicates.append(sum(layout_statistics) / len(layout_statistics))
-    return bootstrap_confidence_interval(replicates, coverage=BOOTSTRAP_COVERAGE)
+    if not replicates:
+        raise ProductionAnalysisError("Every U2 bootstrap replicate was refused")
+    low, high = bootstrap_confidence_interval(replicates, coverage=BOOTSTRAP_COVERAGE)
+    return low, high, len(replicates), refused_replicates
 
 
 def _calibration_summary(
@@ -1018,8 +1031,8 @@ def compute_scientific_results(
         partial, partial_by_layout = _macro_partial(
             decoded_sigma, oracle_sigma, tau, metadata
         )
-        ci_low, ci_high = _hierarchical_partial_bootstrap(
-            decoded_sigma, oracle_sigma, tau, metadata
+        ci_low, ci_high, usable_replicates, refused_replicates = (
+            _hierarchical_partial_bootstrap(decoded_sigma, oracle_sigma, tau, metadata)
         )
         calibration = _calibration_summary(
             truth_position, mu_prediction, decoded_sigma, metadata
@@ -1069,8 +1082,10 @@ def compute_scientific_results(
                         set(map(str, metadata["trajectory_id"]))
                     ),
                     "hierarchy": ["layout_id", "trajectory_id", "all_rows"],
+                    "refused_replicate_count": refused_replicates,
                     "resample_count": BOOTSTRAP_COUNT,
                     "seed": BOOTSTRAP_SEED,
+                    "usable_replicate_count": usable_replicates,
                 },
                 "calibration": calibration,
                 "fold_metrics": _fold_u2(
