@@ -1,0 +1,49 @@
+{
+  "aggregate_phase6_runtime_authorized": false,
+  "archive": {
+    "downloaded_bytes": 2548749312,
+    "downloaded_sha256": "748911771430a764861a6e4829eaa3957f5333860f73a072bbb423596d96e0fc",
+    "extracted_entry_count": 2536,
+    "local_download_path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/tmp/person-a-66-cell-preprocessed-frames-v0-2.tar",
+    "s3_content_length": 2548749312,
+    "s3_etag": "f8d4c6b2e516730a43e214148ec779fd",
+    "s3_object_confirmed_via_head_object": true,
+    "s3_object_size_matches_download": true,
+    "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/phase6/person-a/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/input/person-a-66-cell-preprocessed-frames-v0-2.tar"
+  },
+  "extraction_input_root": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/input/person-a-66-cell-preprocessed-frames-v0-2",
+  "gpu_extraction_started": false,
+  "historical_evidence_rewritten": false,
+  "note": "Archive bytes are transport packaging only; the scientific authority is the per-file payload_sha256 in preprocessed_frame_manifest.json (dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1), which this receipt verifies directly against every extracted payload, not against the archive as a whole.",
+  "person_a_commit": "88c9f1f43db7121f982aef980ad8ef5bb80205f3",
+  "reverified_signoff_state_at_this_step": {
+    "checked_via": "git fetch + git grep for the exact run_id across current branch tips",
+    "person_b_analysis_head": "91375ad1fdfe6ce1d5a2a024263aa3324c56c667",
+    "person_c_data_head": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "person_e_operations_head": "fec27d08b4629afa07c7858598e94778dc6e7bef",
+    "run_id_referenced_on_any_of_b_c_e": false
+  },
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "schema_id": "person-a-phase6-input-transfer-verification-v0.1-receipt",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "source_manifest": {
+    "path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+    "sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1"
+  },
+  "verification": {
+    "duplicate_output_paths_in_manifest": 0,
+    "expected_payload_count": 2468,
+    "extra_files_on_disk_not_in_manifest": 0,
+    "hash_mismatch_count": 0,
+    "missing_count": 0,
+    "pass": true,
+    "size_mismatch_count": 0,
+    "valid_count": 2468,
+    "verified_fields": [
+      "output_path_presence",
+      "payload_byte_size",
+      "payload_sha256"
+    ]
+  }
+}
