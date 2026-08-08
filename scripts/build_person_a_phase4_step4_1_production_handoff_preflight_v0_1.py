@@ -343,11 +343,12 @@ def verify_authority(owner: str) -> dict[str, str]:
 
 
 def verify_repository_authority() -> None:
-    branch = _git_text("branch", "--show-current")
-    if branch != AUTHORITIES["person_a"]["branch"]:
-        raise RuntimeError(f"Unexpected Person A branch: {branch}")
     # The starting authority must remain in this branch's history. Pinning HEAD
     # to it instead would expire this guard the moment Person A commits again.
+    # The package is sourced from immutable commit objects, so the verifier also
+    # stays usable after promotion, when the checked-out branch has legitimately
+    # advanced beyond the historical Person A preparation tip onto an
+    # integration branch; the per-owner authority commits below are unchanged.
     if (
         _completed(
             ["git", "merge-base", "--is-ancestor", STARTING_AUTHORITY, "HEAD"]

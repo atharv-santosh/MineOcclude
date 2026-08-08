@@ -1,0 +1,143 @@
+{
+  "accepted_production_values": {
+    "accepted_manifest_artifact_id": null,
+    "accepted_manifest_sha256": null,
+    "activation_artifact_id": null,
+    "activation_artifact_sha256": null,
+    "activation_handoff_id": null,
+    "activation_handoff_sha256": null,
+    "activation_index_artifact_id": null,
+    "activation_index_sha256": null,
+    "activation_schema_id": null,
+    "activation_store_schema_id": null,
+    "checkpoint_artifact_id": null,
+    "checkpoint_hash": null,
+    "chunk_artifact_ids_and_sha256s": null,
+    "exact_hook_sites": null,
+    "exact_layer_indices": null,
+    "model_hash": null,
+    "model_input_artifact_id": null,
+    "model_input_artifact_sha256": null,
+    "model_input_schema_id": null,
+    "preprocess_artifact_id": null,
+    "preprocess_hash": null,
+    "producing_commit": null,
+    "producing_run_id": null,
+    "run_binding_artifact_id": null,
+    "run_binding_sha256": null,
+    "store_identity_digest": null
+  },
+  "accepted_production_values_status": "PENDING_EXACT_PERSON_A_HANDOFF",
+  "activation_contract": {
+    "accepted_run_status": "completed",
+    "activation_identity": [
+      "trajectory_id",
+      "model_frame_idx",
+      "layer_idx",
+      "hook_site"
+    ],
+    "allowed_stored_dtypes": [
+      "bfloat16",
+      "float16",
+      "float32",
+      "float64"
+    ],
+    "analysis_dtype": "float64",
+    "contract_path": "src/mineocclude/contracts/activation.py",
+    "contract_sha256": "ce1564ee831b04ea4afbf3437f8f985c8f39ce3ebbb6eba8ee2dd515333b5dba",
+    "maximum_model_frames": 16,
+    "package_schema_version": "1.0",
+    "pooling_method": "mean",
+    "token_region": "visual",
+    "tokens_per_frame_action_pair": 347,
+    "vector_shape": [
+      2048
+    ],
+    "visual_tokens_per_frame": 336
+  },
+  "cardinality_requirements": [
+    "accepted_manifest_rows equals unique trajectory_id plus model_frame_idx identities",
+    "expected_activation_rows equals actual_activation_rows",
+    "expected_rows_by_layer equals actual_rows_by_layer",
+    "every chunk row has exactly one activation-index row",
+    "every activation-index row resolves to one in-range chunk row",
+    "the activation key set exactly covers the accepted extraction plan"
+  ],
+  "checkpoint_and_preprocessing_requirements": {
+    "checkpoint_hash_format": "64_lowercase_hex_sha256",
+    "model_hash_must_equal_checkpoint_hash": true,
+    "preprocess_hash_format": "64_lowercase_hex_sha256",
+    "row_values_must_equal_package_values": true,
+    "values_may_not_be_inferred_from_branch_or_filename": true
+  },
+  "direct_input_records_required": [
+    {
+      "artifact_type": "model_input",
+      "direct_input_artifact_types": [
+        "raw_trajectory"
+      ],
+      "owner": "person_a",
+      "required_exact_fields": [
+        "artifact_id",
+        "artifact_schema_version",
+        "sha256",
+        "creator_run_id",
+        "direct_input_artifact_ids",
+        "status",
+        "status_authority"
+      ]
+    },
+    {
+      "artifact_type": "activation",
+      "direct_input_artifact_types": [
+        "model_input"
+      ],
+      "owner": "person_a",
+      "required_exact_fields": [
+        "artifact_id",
+        "artifact_schema_version",
+        "sha256",
+        "creator_run_id",
+        "direct_input_artifact_ids",
+        "status",
+        "status_authority"
+      ]
+    },
+    {
+      "artifact_type": "activation_handoff",
+      "direct_input_record_types": [
+        "accepted_manifest",
+        "activation_index",
+        "activation_chunk",
+        "run_binding",
+        "checkpoint",
+        "preprocessing"
+      ],
+      "owner": "person_a",
+      "required_exact_fields": [
+        "handoff_id",
+        "accepted_manifest_hash",
+        "checkpoint_hash",
+        "preprocess_hash",
+        "run_id",
+        "run_status",
+        "selection_policy",
+        "chunks",
+        "index_rows",
+        "cardinality_report"
+      ]
+    }
+  ],
+  "observed_nonproduction_evidence": {
+    "disposition": "NOT_ACCEPTED_AS_PRODUCTION_INPUT",
+    "person_a_branch_tip_observed_after_fetch": "06b87fe1f43d2133c25db498fcc1fd234f958aad",
+    "reason": "Available activation-store acceptance is bounded or synthetic and does not cover the accepted Person C trajectory set."
+  },
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-person-a-required-handoff",
+  "schema_version": "1.0",
+  "selection_policy_requirements": {
+    "description_required": true,
+    "uses_heldout_labels": false,
+    "uses_target_labels": false
+  }
+}

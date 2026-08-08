@@ -1,0 +1,361 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+      "artifact_schema_version": "person-b-step4-1-production-ridge-oof-v0-1",
+      "artifact_type": "fitted_probe",
+      "byte_verification_id": "person_b_step4_1_fitted_probe_local_bytes_v0_1",
+      "creator_run_id": "person_b_step4_1_fitted_probe_production_ca3bf19",
+      "direct_input_artifact_ids": [
+        "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+      ],
+      "manifest_artifact_identity": "person-b-step4-1::fitted_probe",
+      "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+      "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+      "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+      "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+      "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_b_step4_1_prediction_metric_status_v0_1",
+      "owner_status_record_sha256": "a1ef6fe69bd53efb0325aef4a17510111f4418bd862ac06a6ce59b1336810b6e",
+      "schema_version": "1.0",
+      "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+      "size_bytes": 84257218,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "file:///home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json"
+    },
+    {
+      "artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+      "artifact_schema_version": "person-b-step4-1-production-ridge-oof-v0-1",
+      "artifact_type": "prediction",
+      "byte_verification_id": "person_b_step4_1_preserved_prediction_local_bytes_v0_1",
+      "creator_run_id": "person_b_step4_1_oof_prediction_production_ca3bf19",
+      "direct_input_artifact_ids": [
+        "person_b_step4_1_fitted_probes_v0_1",
+        "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+      ],
+      "manifest_artifact_identity": "person-b-step4-1::preserved_prediction",
+      "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+      "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+      "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+      "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+      "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_b_step4_1_prediction_metric_status_v0_1",
+      "owner_status_record_sha256": "a1ef6fe69bd53efb0325aef4a17510111f4418bd862ac06a6ce59b1336810b6e",
+      "schema_version": "1.0",
+      "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+      "size_bytes": 84257218,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "file:///home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json"
+    },
+    {
+      "artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+      "artifact_schema_version": "person-b-step4-1-bounded-reveal-predictions-v0-1",
+      "artifact_type": "prediction",
+      "byte_verification_id": "person_b_step4_1_bounded_prediction_local_bytes_v0_1",
+      "creator_run_id": "person_b_step4_1_bounded_reveal_53c2cd2",
+      "direct_input_artifact_ids": [
+        "person_b_step4_1_fitted_probes_v0_1",
+        "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+      ],
+      "manifest_artifact_identity": "person-b-step4-1::bounded_prediction",
+      "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+      "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+      "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+      "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+      "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_b_step4_1_prediction_metric_status_v0_1",
+      "owner_status_record_sha256": "a1ef6fe69bd53efb0325aef4a17510111f4418bd862ac06a6ce59b1336810b6e",
+      "schema_version": "1.0",
+      "sha256": "b7716ba00b1e45b20dab130965d03bba8947a87999be51e89404fad4982d288d",
+      "size_bytes": 101230,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "file:///home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1/post_reveal_predictions.json"
+    },
+    {
+      "artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+      "artifact_schema_version": "person-b-step4-1-final-comparison-output-v0-1",
+      "artifact_type": "metric_table",
+      "byte_verification_id": "person_b_step4_1_metric_table_local_bytes_v0_1",
+      "creator_run_id": "person_b_step4_1_final_comparison_1b9ac2e",
+      "direct_input_artifact_ids": [
+        "person_b_step4_1_preserved_oof_predictions_v0_1",
+        "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+        "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+        "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+        "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1"
+      ],
+      "manifest_artifact_identity": "person-b-step4-1::metric_table",
+      "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+      "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+      "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+      "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+      "owner_authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+      "owner_decision": "accepted",
+      "owner_status_record_id": "person_b_step4_1_prediction_metric_status_v0_1",
+      "owner_status_record_sha256": "a1ef6fe69bd53efb0325aef4a17510111f4418bd862ac06a6ce59b1336810b6e",
+      "schema_version": "1.0",
+      "sha256": "c471fddb9bdc1a87c2f7e11ad8dc55db9e407f0ea45a2e038f668bda178ad0a7",
+      "size_bytes": 1601171,
+      "status": "accepted",
+      "status_reason": null,
+      "superseded_by": null,
+      "uri": "file:///home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1/comparison_metric_table.json"
+    }
+  ],
+  "byte_verifications": [
+    {
+      "artifact_id": "person_b_step4_1_fitted_probes_v0_1",
+      "external_receipt_authority_revision": null,
+      "external_receipt_id": null,
+      "external_receipt_sha256": null,
+      "mode": "local_bytes",
+      "schema_version": "1.0",
+      "verification_id": "person_b_step4_1_fitted_probe_local_bytes_v0_1",
+      "verified_at": "2026-08-03T06:46:57Z",
+      "verified_sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+      "verified_size_bytes": 84257218
+    },
+    {
+      "artifact_id": "person_b_step4_1_preserved_oof_predictions_v0_1",
+      "external_receipt_authority_revision": null,
+      "external_receipt_id": null,
+      "external_receipt_sha256": null,
+      "mode": "local_bytes",
+      "schema_version": "1.0",
+      "verification_id": "person_b_step4_1_preserved_prediction_local_bytes_v0_1",
+      "verified_at": "2026-08-03T06:46:57Z",
+      "verified_sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+      "verified_size_bytes": 84257218
+    },
+    {
+      "artifact_id": "person_b_step4_1_bounded_reveal_predictions_v0_1",
+      "external_receipt_authority_revision": null,
+      "external_receipt_id": null,
+      "external_receipt_sha256": null,
+      "mode": "local_bytes",
+      "schema_version": "1.0",
+      "verification_id": "person_b_step4_1_bounded_prediction_local_bytes_v0_1",
+      "verified_at": "2026-08-03T06:46:57Z",
+      "verified_sha256": "b7716ba00b1e45b20dab130965d03bba8947a87999be51e89404fad4982d288d",
+      "verified_size_bytes": 101230
+    },
+    {
+      "artifact_id": "person_b_step4_1_final_comparison_metric_table_v0_1",
+      "external_receipt_authority_revision": null,
+      "external_receipt_id": null,
+      "external_receipt_sha256": null,
+      "mode": "local_bytes",
+      "schema_version": "1.0",
+      "verification_id": "person_b_step4_1_metric_table_local_bytes_v0_1",
+      "verified_at": "2026-08-03T06:46:57Z",
+      "verified_sha256": "c471fddb9bdc1a87c2f7e11ad8dc55db9e407f0ea45a2e038f668bda178ad0a7",
+      "verified_size_bytes": 1601171
+    }
+  ],
+  "manifests": [
+    {
+      "artifact_identities": [
+        "person-b-step4-1::fitted_probe",
+        "person-b-step4-1::preserved_prediction",
+        "person-b-step4-1::bounded_prediction",
+        "person-b-step4-1::metric_table"
+      ],
+      "decision": "accepted",
+      "manifest_id": "person_b_step4_1_prediction_metric_manifest_v0_1",
+      "manifest_schema_version": "person-b-step4-1-registry-v2-artifact-manifest-v0-1",
+      "manifest_sha256": "799786e6289197256da056fb12ca03fb4dd9b524afe27a25f9cf24be6336d393",
+      "owner_authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+      "schema_version": "1.0"
+    }
+  ],
+  "owner_authorities": [
+    {
+      "authority_id": "person_b_step4_1_prediction_metric_authority_v0_1",
+      "authority_revision": "1b9ac2e37d245896af95a5a929774829720387db",
+      "authorized_artifact_types": [
+        "fitted_probe",
+        "prediction",
+        "metric_table"
+      ],
+      "decision": "accepted",
+      "owner_id": "person_b",
+      "owner_status": "accepted",
+      "schema_version": "1.0",
+      "status_record_id": "person_b_step4_1_prediction_metric_status_v0_1",
+      "status_record_receipt_authority_revision": null,
+      "status_record_receipt_id": null,
+      "status_record_receipt_sha256": null,
+      "status_record_schema_version": "mineocclude-owner-status-record-v1.0",
+      "status_record_sha256": "a1ef6fe69bd53efb0325aef4a17510111f4418bd862ac06a6ce59b1336810b6e",
+      "status_record_verification_mode": "local_bytes"
+    }
+  ],
+  "runs": [
+    {
+      "checkpoint_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "code_sha": "ca3bf19120d5553a34a5edc1bda6bfed54859127",
+      "command": [
+        "authorized-existing-person-b-output",
+        "fitted_probe"
+      ],
+      "config_snapshot_hash": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "created_at": "2026-08-03T06:46:45Z",
+      "data_identity_hash": "31027f90ec8c9070d93c982e056a7b8071a649d91a306e7804cddf6e4ddf27a1",
+      "ended_at": "2026-08-03T06:46:47Z",
+      "environment_hash": "5ea76c674785728b64693a260ca7422b545b7f02baf3d5dae1cfc7e477827b3f",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+      ],
+      "output_artifact_ids": [
+        "person_b_step4_1_fitted_probes_v0_1"
+      ],
+      "owner": "person_b",
+      "parent_run_id": null,
+      "pending_reason": null,
+      "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+      "run_id": "person_b_step4_1_fitted_probe_production_ca3bf19",
+      "schema_version": "1.0",
+      "seeds": {
+        "split": 20260719
+      },
+      "started_at": "2026-08-03T06:46:46Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "code_sha": "ca3bf19120d5553a34a5edc1bda6bfed54859127",
+      "command": [
+        "authorized-existing-person-b-output",
+        "preserved_prediction"
+      ],
+      "config_snapshot_hash": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "created_at": "2026-08-03T06:46:48Z",
+      "data_identity_hash": "6308fb7d78707a19d04bcc07c94da5a500be8217a9263588a41a1989360f6a7d",
+      "ended_at": "2026-08-03T06:46:50Z",
+      "environment_hash": "5ea76c674785728b64693a260ca7422b545b7f02baf3d5dae1cfc7e477827b3f",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "person_b_step4_1_fitted_probes_v0_1",
+        "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+      ],
+      "output_artifact_ids": [
+        "person_b_step4_1_preserved_oof_predictions_v0_1"
+      ],
+      "owner": "person_b",
+      "parent_run_id": "person_b_step4_1_fitted_probe_production_ca3bf19",
+      "pending_reason": null,
+      "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+      "run_id": "person_b_step4_1_oof_prediction_production_ca3bf19",
+      "schema_version": "1.0",
+      "seeds": {
+        "split": 20260719
+      },
+      "started_at": "2026-08-03T06:46:49Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "code_sha": "53c2cd287a63e18e9b1fa5565b77f5c476baf9c4",
+      "command": [
+        "authorized-existing-person-b-output",
+        "bounded_prediction"
+      ],
+      "config_snapshot_hash": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "created_at": "2026-08-03T06:46:51Z",
+      "data_identity_hash": "5a853e30c583c9dbf420b29b28cf3400893f1d28d9210d6f347549897a78569c",
+      "ended_at": "2026-08-03T06:46:53Z",
+      "environment_hash": "0195333875b13da6f68b83b09662278ca991a74f76095db25106b9c4aa8643df",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "person_b_step4_1_fitted_probes_v0_1",
+        "person_a_step4_1_activation_store_v2_combined_index_v0_1"
+      ],
+      "output_artifact_ids": [
+        "person_b_step4_1_bounded_reveal_predictions_v0_1"
+      ],
+      "owner": "person_b",
+      "parent_run_id": "person_b_step4_1_oof_prediction_production_ca3bf19",
+      "pending_reason": null,
+      "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+      "run_id": "person_b_step4_1_bounded_reveal_53c2cd2",
+      "schema_version": "1.0",
+      "seeds": {
+        "deterministic_no_rng": 0
+      },
+      "started_at": "2026-08-03T06:46:52Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    },
+    {
+      "checkpoint_hash": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "code_sha": "0a73caf2b74221c5f934b95ae39ac825748e2942",
+      "command": [
+        "authorized-existing-person-b-output",
+        "metric_table"
+      ],
+      "config_snapshot_hash": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "created_at": "2026-08-03T06:46:54Z",
+      "data_identity_hash": "1f5233d6c30ec2adf6c01d2736dc34ec4b90e077b827caf01681ea27855a7ca3",
+      "ended_at": "2026-08-03T06:46:57Z",
+      "environment_hash": "d14992316f7fac7d09313ccc938dd1a82d8655f6de8764db9f99f6f03719fcb7",
+      "failure_reason": null,
+      "git_dirty": false,
+      "input_artifact_ids": [
+        "person_b_step4_1_preserved_oof_predictions_v0_1",
+        "person_b_step4_1_bounded_reveal_predictions_v0_1",
+        "person_d_step4_1_baseline_last_seen_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_constant_velocity_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_grouped_shuffled_log_sigma_oracle_v0_1",
+        "person_d_step4_1_baseline_grouped_shuffled_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_time_only_log_sigma_oracle_v0_1",
+        "person_d_step4_1_baseline_explicit_feature_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_raw_pixel_mu_oracle_blocks_v0_1",
+        "person_d_step4_1_baseline_visible_history_q_log_sigma_oracle_v0_1",
+        "person_d_step4_1_baseline_known_q_analytic_log_sigma_oracle_v0_1"
+      ],
+      "output_artifact_ids": [
+        "person_b_step4_1_final_comparison_metric_table_v0_1"
+      ],
+      "owner": "person_b",
+      "parent_run_id": "person_b_step4_1_bounded_reveal_53c2cd2",
+      "pending_reason": null,
+      "preprocess_hash": "036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+      "run_id": "person_b_step4_1_final_comparison_1b9ac2e",
+      "schema_version": "1.0",
+      "seeds": {
+        "bootstrap": 20260721,
+        "permutation": 20260720
+      },
+      "started_at": "2026-08-03T06:46:55Z",
+      "status": "completed",
+      "supersedes_run_id": null,
+      "supersession_reason": null
+    }
+  ],
+  "schema_id": "person-b-step4-1-registry-v2-final-records-v0-1",
+  "schema_version": "1.0"
+}

@@ -356,6 +356,10 @@ class PersonAPhase6SageMakerRunnerPreparationTests(unittest.TestCase):
         self.assertEqual(len(paths), len(set(paths)))
         self.assertEqual(inventory["changed_path_count"], len(paths))
         self.assertEqual(inventory["changed_path_count"], 14)
+        self.assertEqual(
+            inventory["changed_path_count"], len(inventory["changed_paths"])
+        )
+        self.assertEqual(inventory["changed_paths"], sorted(inventory["changed_paths"]))
         self.assertEqual(inventory["historical_v1_files_modified"], [])
         self.assertEqual(inventory["person_e_files_modified"], [])
         evidence = []

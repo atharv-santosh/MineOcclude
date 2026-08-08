@@ -1,0 +1,23 @@
+{
+  "available_memory_source": "linux_/proc/meminfo_MemAvailable",
+  "cgroup_capacity_accounting": "when finite cgroup v1/v2 limit and usage are detectable, effective physical and available memory are min(host, cgroup capacity/remaining); missing finite usage fails closed",
+  "compact_primary_matrix_gib": 1.629,
+  "estimated_peak_memory_gib": 14.96,
+  "feature_dtype": "float32",
+  "feature_value_count": 437391360,
+  "memory_detection_is_immediate_before_d_run": true,
+  "minimum_available_memory_bytes": 21474836480,
+  "minimum_available_memory_gib": 20.0,
+  "minimum_detected_physical_memory_bytes": 21474836480,
+  "minimum_detected_physical_memory_gib": 20.0,
+  "missing_detection_fails_closed": true,
+  "physical_memory_source": "linux_sysconf_SC_PHYS_PAGES",
+  "previous_15_gib_host_supported": false,
+  "runtime_preflight_required": true,
+  "schema_id": "person-b-phase4-step4-1-memory-reauthorization-v0-1-memory-contract",
+  "schema_version": "1.0",
+  "swap_counts_as_capacity": false,
+  "swap_required": false,
+  "threshold_comparison": "both physical and MemAvailable must be >= exact thresholds",
+  "u4_output_inspected": false
+}

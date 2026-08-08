@@ -1,0 +1,180 @@
+{
+  "activation_chunk_count": 200,
+  "activation_row_count": 37480,
+  "admitted_sample_count": 1695,
+  "all_assigned_steps_complete": false,
+  "branch": "role/person-b-analysis",
+  "candidate_authority_commit": "1905f4bec7c917baafa084d7bf3a473fb8e40460",
+  "candidate_manifest": {
+    "blob_oid_sha1": "040c85ce2a2b9e1df161a2c613f42ffc2203a01d",
+    "path": "docs/status/integration/mvp_step4_1_candidate_v0_1/handoffs/person_b_next_phase_input_manifest.json",
+    "sha256": "60b98bf60fb696a052a3ebe9f5ba8af846977da5871bd760f5c71a42f191d6c6",
+    "size_bytes": 25849,
+    "source_commit_reachable_from_current_head": false
+  },
+  "evidence_snapshot_commit": "7f9faa4ab1434099e03dd9c266d5617dd17b262b",
+  "exclusion_count": 179,
+  "external_activation_index": {
+    "authority_binding_verified": true,
+    "blocking_missing_input": false,
+    "bound_by_current_authority_record": true,
+    "byte_size": 245491346,
+    "independently_byte_verified_in_windows_worktree": false,
+    "local_materialized": false,
+    "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json",
+    "repository_payload_present": false,
+    "required_for_computation": true,
+    "sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+    "uri": "file:///home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json"
+  },
+  "fold_count": 5,
+  "frozen_step4_1_decision": "FAIL",
+  "input_hash_count": 12,
+  "input_hash_mismatch_count": 0,
+  "integration_decision": "NOT_INTEGRATION_READY",
+  "main_ancestor_of_branch": true,
+  "package_hash_chain": {
+    "authority_binding.json": "6889e75d2cf5c4975f604ff6b6000897d2e4eae0a0ffea7a2d5fb2d1dab7629f",
+    "dependency_status.json": "6cf42badd44bd49cab8210e1ab35680eacada72d62ebfa0dc43d5049ec2a1d0f",
+    "evidence_validation.json": "1b9b39d687763fe6e7234ef8f9cedc6b773c6cfc873811a5f5c39c048099be36",
+    "roadmap_status.json": "182a1878e306f958d637b9e7be92133be1f672fe572ac3e3f1178feef05e940b"
+  },
+  "repository_inputs": [
+    {
+      "byte_size": 933,
+      "current_tree_path_present": true,
+      "logical_input_name": "accepted_production_activation_store_manifest",
+      "owning_authority_commit": "397ba849adc63df80912c21dd1efacb1e29b8977",
+      "owning_role": "person_a",
+      "repository_relative_path": "docs/status/person_a_phase4_step4_1_registry_v2_activation_trust_v0_1/trusted_manifest_record.json",
+      "sha256": "3a246e605437b24957951eb07b8eba048a0e58be99fa3723e99801943ba26635",
+      "source_commit": "397ba849adc63df80912c21dd1efacb1e29b8977",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 117664,
+      "current_tree_path_present": true,
+      "logical_input_name": "activation_store_hash_inventory",
+      "owning_authority_commit": "397ba849adc63df80912c21dd1efacb1e29b8977",
+      "owning_role": "person_a",
+      "repository_relative_path": "docs/status/person_a_phase4_step4_1_registry_v2_activation_trust_v0_1/source_evidence.json",
+      "sha256": "2df44ed46edbfa3c3ea2067408accceb4116718b51147e33ee901a48da05d4e1",
+      "source_commit": "397ba849adc63df80912c21dd1efacb1e29b8977",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 84058,
+      "current_tree_path_present": true,
+      "logical_input_name": "accepted_rollout_and_trajectory_identities",
+      "owning_authority_commit": "397ba849adc63df80912c21dd1efacb1e29b8977",
+      "owning_role": "person_a",
+      "repository_relative_path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/source_context_manifest.json",
+      "sha256": "5200925c66d348cc95d132b30ae69e9662f47a2d7245a06d41b9f2c75e5788fd",
+      "source_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 64556,
+      "current_tree_path_present": false,
+      "logical_input_name": "person_c_dataset_authority",
+      "owning_authority_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+      "owning_role": "person_c",
+      "repository_relative_path": "docs/status/person_c_phase6_ten_pilot_expansion_acceptance_v0_1/accepted_pilot_manifest.json",
+      "sha256": "7a12b8a5c5ce8b81b32bcdb044f72d5c4d9ada41af9a9402d3ac52904e494be2",
+      "source_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 1018,
+      "current_tree_path_present": true,
+      "logical_input_name": "person_a_activation_authority",
+      "owning_authority_commit": "397ba849adc63df80912c21dd1efacb1e29b8977",
+      "owning_role": "person_a",
+      "repository_relative_path": "docs/status/person_a_phase4_step4_1_registry_v2_activation_trust_v0_1/artifact_authorization_record.json",
+      "sha256": "e69c37042dd2fa96ac707f0238f9d069a4a169ca9c9fd08bca2bba351c8e90e1",
+      "source_commit": "397ba849adc63df80912c21dd1efacb1e29b8977",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 4934874,
+      "current_tree_path_present": true,
+      "logical_input_name": "oracle_target_manifest",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "owning_role": "person_b",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+      "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 742601,
+      "current_tree_path_present": true,
+      "logical_input_name": "frozen_fold_manifest",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "owning_role": "person_b",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 6736,
+      "current_tree_path_present": true,
+      "logical_input_name": "activation_to_oracle_row_join_contract",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "owning_role": "person_b",
+      "repository_relative_path": "src/mineocclude/probes/join.py",
+      "sha256": "431053b3166866dd4104ee27aafd2fb0333f8c94b64c321f2ca778dac6e96421",
+      "source_commit": "08a6b1ee9e6bf035b127cedf3845486d99a304c0",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 2134,
+      "current_tree_path_present": true,
+      "logical_input_name": "person_b_final_evidence_registry_authority",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "owning_role": "person_b",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_registry_v2_final_evidence_v0_1/trusted_manifest_record.json",
+      "sha256": "42a53809cd2146edc567d9cf37417a55a723022a1c0be8a275669842db731ed7",
+      "source_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 2819,
+      "current_tree_path_present": true,
+      "logical_input_name": "registry_v2_final_closure_receipt",
+      "owning_authority_commit": "ab41a76ce0c855c0ac54c59c736bac7599f7e69d",
+      "owning_role": "person_e",
+      "repository_relative_path": "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/registry_import_receipt.json",
+      "sha256": "a68584586dc7a8fef2cbc6e1bd8fd2f0b8ce4927e78a6632446911659aca8233",
+      "source_commit": "ab41a76ce0c855c0ac54c59c736bac7599f7e69d",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 3258,
+      "current_tree_path_present": true,
+      "logical_input_name": "step4_1_final_comparison_authority",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "owning_role": "person_b",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/execution_receipt.json",
+      "sha256": "d14992316f7fac7d09313ccc938dd1a82d8655f6de8764db9f99f6f03719fcb7",
+      "source_commit": "1b9ac2e37d245896af95a5a929774829720387db",
+      "source_git_object_verified": true
+    },
+    {
+      "byte_size": 3117,
+      "current_tree_path_present": true,
+      "logical_input_name": "frozen_step4_1_decision_fail",
+      "owning_authority_commit": "8c5374d00983e6fec22f560a9fd5849e92060f3e",
+      "owning_role": "person_b",
+      "repository_relative_path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/layer_band_decision.json",
+      "sha256": "7737b43ed13b1a7c7f3af1ebb07dbd050224e50064873b4bdbce47273e72d36c",
+      "source_commit": "1b9ac2e37d245896af95a5a929774829720387db",
+      "source_git_object_verified": true
+    }
+  ],
+  "schema_id": "person-b-final-integration-readiness-v0-1-final-integration-handoff",
+  "schema_version": "1.0",
+  "trajectory_count": 10,
+  "verified_main_commit": "15adc43674420ae35921847a953ebbee2135f142"
+}

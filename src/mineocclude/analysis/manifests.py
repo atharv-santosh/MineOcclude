@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Mapping
+import math
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +13,7 @@ from mineocclude.contracts.identity import CODE_SHA_LENGTH, SHA256_LENGTH
 
 
 ANALYSIS_ARTIFACT_SCHEMA_VERSION = "person-b-analysis-artifact-v0.1"
+CANONICAL_FLOAT_DECIMAL_PLACES = 12
 
 
 class AnalysisArtifactError(ValueError):
@@ -19,13 +21,48 @@ class AnalysisArtifactError(ValueError):
 
 
 def is_hex_digest(value: Any, length: int) -> bool:
-    if not isinstance(value, str) or len(value) != length:
-        return False
-    try:
-        int(value, 16)
-    except ValueError:
-        return False
-    return True
+    """Return whether *value* is exactly an ASCII hexadecimal digest."""
+
+    return (
+        isinstance(value, str)
+        and len(value) == length
+        and all(character in "0123456789abcdefABCDEF" for character in value)
+    )
+
+
+def canonicalize_evidence_numbers(value: Any) -> Any:
+    """Return a copy with finite floats normalized for portable evidence.
+
+    Probe fits can differ in the final machine bit across Python, NumPy, and
+    BLAS builds. Twelve decimal places are far tighter than any frozen
+    scientific tolerance while preventing those non-scientific differences
+    from changing JSON evidence and every downstream SHA-256 reference.
+    """
+
+    if isinstance(value, bool) or value is None or isinstance(value, (str, int)):
+        return value
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise AnalysisArtifactError(
+                "Artifact floats must be finite before canonicalization."
+            )
+        normalized = round(value, CANONICAL_FLOAT_DECIMAL_PLACES)
+        return 0.0 if normalized == 0.0 else normalized
+    if isinstance(value, Mapping):
+        return {
+            key: canonicalize_evidence_numbers(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, Sequence) and not isinstance(
+        value, (str, bytes, bytearray)
+    ):
+        normalized_items = [canonicalize_evidence_numbers(item) for item in value]
+        return (
+            tuple(normalized_items)
+            if isinstance(value, tuple)
+            else normalized_items
+        )
+    return value
 
 
 def canonical_json_bytes(value: Any) -> bytes:
@@ -33,7 +70,7 @@ def canonical_json_bytes(value: Any) -> bytes:
 
     try:
         return json.dumps(
-            value,
+            canonicalize_evidence_numbers(value),
             allow_nan=False,
             ensure_ascii=False,
             separators=(",", ":"),
@@ -64,7 +101,7 @@ def seal_artifact(payload: Mapping[str, Any]) -> dict[str, Any]:
 
     if not isinstance(payload, Mapping):
         raise AnalysisArtifactError("Artifact payload must be a mapping.")
-    sealed = dict(payload)
+    sealed = canonicalize_evidence_numbers(dict(payload))
     if "artifact_hash" in sealed:
         raise AnalysisArtifactError(
             "artifact_hash is computed by seal_artifact and cannot be supplied."

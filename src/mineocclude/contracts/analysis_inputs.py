@@ -21,6 +21,14 @@ from mineocclude.analysis.manifests import (
     is_hex_digest,
     sha256_value,
 )
+from mineocclude.contracts.baseline_family_inputs import (
+    BASELINE_FAMILY_CONTRACTS_V0_2,
+    BASELINE_INPUT_SCHEMA_VERSION_V0_2,
+    FROZEN_DIRECT_INPUTS,
+    FROZEN_PILOT_IDS,
+    PERSON_B_PREDICTION_RESERVATION,
+    is_valid_artifact_reference,
+)
 from mineocclude.contracts.identity import (
     FRAME_KEY,
     SCHEMA_VERSION,
@@ -28,7 +36,6 @@ from mineocclude.contracts.identity import (
     get_key,
     validate_identity,
 )
-
 
 STATE_INPUT_SCHEMA_VERSION = "person-b-state-input-v0.1"
 BASELINE_INPUT_SCHEMA_VERSION = "person-b-baseline-input-v0.1"
@@ -311,7 +318,7 @@ def validate_state_input(document: Any) -> AnalysisInputValidationResult:
     return AnalysisInputValidationResult(not rejections, tuple(rejections))
 
 
-def validate_baseline_input(
+def _validate_baseline_input_v0_1(
     document: Any,
     *,
     expected_fold_by_frame: Mapping[tuple[str, int], int] | None = None,
@@ -526,6 +533,302 @@ def validate_baseline_input(
             "Baseline rows do not exactly cover B's accepted frame keys.",
         )
     return AnalysisInputValidationResult(not rejections, tuple(rejections))
+
+
+def _validate_baseline_input_v0_2(
+    document: Any,
+    *,
+    expected_fold_by_frame: Mapping[tuple[str, int], int] | None = None,
+) -> AnalysisInputValidationResult:
+    """Validate an eight-family D-to-B prediction under the v0.2 contract."""
+
+    required = (
+        "schema_version",
+        "baseline_input_schema_version",
+        "producer_role",
+        "baseline_id",
+        "baseline_family",
+        "target_name",
+        "feature_access",
+        "legal_information",
+        "config_hash",
+        "input_manifest_hash",
+        "fold_manifest_hash",
+        "fit_manifest_hash",
+        "direct_inputs",
+        "accepted_pilot_ids",
+        "person_b_prediction_reservation",
+        "random_split_used",
+        "u4_output_inspected",
+        "rows",
+    )
+    rejections, rows = _require_envelope(
+        document,
+        version_field="baseline_input_schema_version",
+        version=BASELINE_INPUT_SCHEMA_VERSION_V0_2,
+        producer_role="person_d",
+        required=required,
+    )
+    if rows is None or not isinstance(document, Mapping):
+        return AnalysisInputValidationResult(False, tuple(rejections))
+
+    family = document.get("baseline_family")
+    contract = (
+        BASELINE_FAMILY_CONTRACTS_V0_2.get(family)
+        if isinstance(family, str)
+        else None
+    )
+    if contract is None:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.UNSUPPORTED_BASELINE_FAMILY,
+            f"Unsupported v0.2 baseline_family={family!r}.",
+        )
+    target_name = document.get("target_name")
+    if contract is not None and target_name not in contract["target_names"]:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            f"target_name={target_name!r} is not allowed for {family!r}.",
+        )
+    feature_access = document.get("feature_access")
+    valid_feature_list = (
+        isinstance(feature_access, list)
+        and bool(feature_access)
+        and all(isinstance(item, str) and item for item in feature_access)
+    )
+    if not valid_feature_list or contract is None:
+        if not isinstance(feature_access, list):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_VALUE,
+                "feature_access must be a list.",
+            )
+        elif not valid_feature_list:
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_VALUE,
+                "feature_access must contain non-empty field names.",
+            )
+    elif frozenset(feature_access) != contract["feature_access"] or (
+        len(feature_access) != len(set(feature_access))
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            "feature_access does not exactly match the v0.2 family contract.",
+        )
+    legal_information = document.get("legal_information")
+    if contract is not None and legal_information != contract["legal_information"]:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            "legal_information does not exactly match the v0.2 family contract.",
+        )
+
+    for field in (
+        "config_hash",
+        "input_manifest_hash",
+        "fold_manifest_hash",
+        "fit_manifest_hash",
+    ):
+        if not is_hex_digest(document.get(field), 64):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_HASH,
+                f"{field} must be SHA-256.",
+            )
+    if document.get("config_hash") != FROZEN_DIRECT_INPUTS["analysis_config"][
+        "sha256"
+    ]:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            "config_hash does not match the frozen analysis config bytes.",
+        )
+    if document.get("fold_manifest_hash") != FROZEN_DIRECT_INPUTS[
+        "fold_manifest"
+    ]["sha256"]:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            "fold_manifest_hash does not match the frozen production manifest.",
+        )
+
+    direct_inputs = document.get("direct_inputs")
+    if not isinstance(direct_inputs, Mapping):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MISSING_REQUIRED_FIELD,
+            "direct_inputs must be a mapping.",
+        )
+    else:
+        required_direct_input_types = {
+            *FROZEN_DIRECT_INPUTS,
+        }
+        if family == "raw_pixel":
+            required_direct_input_types.add("preprocessed_frame_manifest")
+        if set(direct_inputs) != required_direct_input_types:
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+                "direct_inputs contains a missing or unauthorized artifact type.",
+            )
+        for artifact_type, expected in FROZEN_DIRECT_INPUTS.items():
+            if direct_inputs.get(artifact_type) != expected:
+                _reject(
+                    rejections,
+                    AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+                    f"{artifact_type} does not match its frozen byte identity.",
+                )
+        if family == "raw_pixel" and not is_valid_artifact_reference(
+            direct_inputs.get("preprocessed_frame_manifest")
+        ):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.MISSING_REQUIRED_FIELD,
+                "raw_pixel requires an exact preprocessed_frame_manifest.",
+            )
+        if any(key.startswith("person_b_prediction") for key in direct_inputs):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+                "Person B predictions are reserved for later comparison.",
+            )
+    accepted_pilot_ids = document.get("accepted_pilot_ids")
+    if not isinstance(accepted_pilot_ids, list) or (
+        tuple(accepted_pilot_ids) != FROZEN_PILOT_IDS
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            "accepted_pilot_ids must equal the frozen ordered ten-pilot set.",
+        )
+    if document.get("person_b_prediction_reservation") != (
+        PERSON_B_PREDICTION_RESERVATION
+    ):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            "Person B prediction reservation is missing or altered.",
+        )
+    if document.get("random_split_used") is not False:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.FOLD_MISMATCH,
+            "Random splits are forbidden.",
+        )
+    if document.get("u4_output_inspected") is not False:
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.LEGAL_INFORMATION_VIOLATION,
+            "U4 output access is forbidden.",
+        )
+
+    seen: set[tuple[str, int]] = set()
+    for index, row in enumerate(rows):
+        if not isinstance(row, Mapping):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_VALUE,
+                "Baseline row must be a mapping.",
+                index,
+            )
+            continue
+        required_row = (
+            "trajectory_id",
+            "model_frame_idx",
+            "fold_idx",
+            "prediction",
+            "prediction_scope",
+            "fit_id",
+        )
+        missing = [field for field in required_row if field not in row]
+        if missing:
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.MISSING_REQUIRED_FIELD,
+                "Baseline row is missing: " + ", ".join(missing),
+                index,
+            )
+            continue
+        key = (row["trajectory_id"], row["model_frame_idx"])
+        if (
+            row["trajectory_id"] not in FROZEN_PILOT_IDS
+            or not isinstance(row["model_frame_idx"], int)
+            or isinstance(row["model_frame_idx"], bool)
+            or row["model_frame_idx"] < 0
+            or not isinstance(row["fold_idx"], int)
+            or isinstance(row["fold_idx"], bool)
+            or row["fold_idx"] < 0
+            or not isinstance(row["fit_id"], str)
+            or not row["fit_id"]
+        ):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_IDENTITY,
+                "Baseline frame/fold/fit identity is invalid.",
+                index,
+            )
+            continue
+        if key in seen:
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.DUPLICATE_IDENTITY,
+                f"Duplicate baseline prediction {key}.",
+                index,
+            )
+        seen.add(key)
+        if not _finite(row["prediction"]):
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.INVALID_VALUE,
+                "Baseline prediction must be finite.",
+                index,
+            )
+        if row["prediction_scope"] != "out_of_fold":
+            _reject(
+                rejections,
+                AnalysisInputRejectionCode.NON_OOF_PREDICTION,
+                "Scientific baseline rows must be out-of-fold.",
+                index,
+            )
+        if expected_fold_by_frame is not None:
+            expected = expected_fold_by_frame.get(key)
+            if expected is None or row["fold_idx"] != expected:
+                _reject(
+                    rejections,
+                    AnalysisInputRejectionCode.FOLD_MISMATCH,
+                    "Baseline fold does not match B's frozen fold manifest.",
+                    index,
+                )
+    if expected_fold_by_frame is not None and seen != set(expected_fold_by_frame):
+        _reject(
+            rejections,
+            AnalysisInputRejectionCode.MANIFEST_MISMATCH,
+            "Baseline rows do not exactly cover B's accepted frame keys.",
+        )
+    return AnalysisInputValidationResult(not rejections, tuple(rejections))
+
+
+def validate_baseline_input(
+    document: Any,
+    *,
+    expected_fold_by_frame: Mapping[tuple[str, int], int] | None = None,
+) -> AnalysisInputValidationResult:
+    """Dispatch D-to-B prediction validation by explicit contract version."""
+
+    if isinstance(document, Mapping) and document.get(
+        "baseline_input_schema_version"
+    ) == BASELINE_INPUT_SCHEMA_VERSION_V0_2:
+        return _validate_baseline_input_v0_2(
+            document,
+            expected_fold_by_frame=expected_fold_by_frame,
+        )
+    return _validate_baseline_input_v0_1(
+        document,
+        expected_fold_by_frame=expected_fold_by_frame,
+    )
 
 
 def validate_measurement_input(

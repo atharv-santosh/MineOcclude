@@ -1,0 +1,152 @@
+{
+  "artifacts": {
+    "analysis_config": {
+      "byte_size": 4881,
+      "path": "configs/analysis/core.yaml",
+      "sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c"
+    },
+    "fold_manifest": {
+      "byte_size": 742601,
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/ten_pilot_frame_fold_manifest.json",
+      "sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c"
+    },
+    "frame_manifest": {
+      "byte_size": 6460547,
+      "path": "docs/status/person_a_phase4_step4_1_frame_handoff_v0_2/preprocessed_frame_manifest.json",
+      "sha256": "f52a2ece32b00faf04b68b92b56c6f6a049b8a7bcb9c7f0af0f52de7fc4759c5",
+      "source_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206"
+    },
+    "source_context_manifest": {
+      "byte_size": 4654,
+      "path": "docs/status/person_b_phase4_step4_1_baseline_family_contract_v0_2/source_context_manifest.json",
+      "sha256": "ce4ba48c53ce57c6321a657e97c166772475a77d459e59ad8d20cc37b33aa74c",
+      "source_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd"
+    },
+    "target_manifest": {
+      "byte_size": 4934874,
+      "path": "docs/status/person_b_phase4_step4_1_production_handoff_v0_1/production_oracle_target_manifest.json",
+      "sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282",
+      "source_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c"
+    }
+  },
+  "authorities": {
+    "person_a_frame_handoff_commit": "380b9a392c7ad3a941dbdadcc777c61ed03e1206",
+    "person_b_baseline_v0_2_commit": "265cbbb394ee481439397879ad9a99c9038bf4cd",
+    "person_b_fold_contract_commit": "06bd2a17b90d95de37c0739d17d3a624964cc4fa",
+    "person_b_fold_interface_ratification_commit": "a612ec29108c8f69f19cdc283e40873e75796ea7",
+    "person_b_production_ratification_commit": "c9a519b42cf651e05f5b4f640fda6e1a0aed3e7c",
+    "person_b_schema_correction_commit": "4e0e0f49d4642cf069de8c66c3a8fee47806c4b0",
+    "person_c_expansion_acceptance_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+    "person_d_cli_commit": "bb2ebf7947c92c814dae85fc9cef29fef04e4c6f",
+    "person_d_exporter_commit": "fd9302e5d218193211f2f96986ca32dc1a365e66",
+    "person_d_memory_implementation_commit": "f6fb6e542f87462c366ea657ded2dc8a47c3428f",
+    "person_d_prior_runner_commit": "5b90e5bf6c6975119f509d766a82a9786d64300c",
+    "person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+    "person_d_signed_validator_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5",
+    "person_e_handoff_commit": "21d83c19c9d8f36c4dbeeaf45d4626eaf082e7a7"
+  },
+  "authorized_person_d_head": "683077b58fdb73176936fcb131e9297eb102ea10",
+  "baseline_families": [
+    "last_seen",
+    "constant_velocity",
+    "grouped_shuffled",
+    "time_only",
+    "explicit_feature",
+    "raw_pixel",
+    "visible_history_q",
+    "known_q_analytic"
+  ],
+  "baseline_family_count": 8,
+  "configuration": {
+    "constant_velocity": {
+      "fit_required": false,
+      "randomness": "none"
+    },
+    "explicit_feature": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "inner_fold_count": 4,
+      "scaler_fit_scope": "outer_training_rows_only",
+      "seed": 20260719
+    },
+    "grouped_shuffled": {
+      "alignment_key": "model_frame_idx",
+      "grouping_unit": "trajectory_id",
+      "permutation_seed": 20260720,
+      "requires_derangement": true
+    },
+    "known_q_analytic": {
+      "fair_baseline": false,
+      "formula": "ln(sqrt(q_scripted_blocks2_per_s * tau))",
+      "randomness": "none"
+    },
+    "last_seen": {
+      "fit_required": false,
+      "randomness": "none"
+    },
+    "raw_pixel": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "frame_scope": "exact_current_preprocessed_frame_only",
+      "inner_fold_count": 4,
+      "scaler_fit_scope": "outer_training_rows_only",
+      "seed": 20260719
+    },
+    "time_only": {
+      "fit_scope": "outer_training_folds_only",
+      "primary_polynomial_degree": 1,
+      "sensitivity_polynomial_degree": 2
+    },
+    "visible_history_q": {
+      "dt_seconds": 0.05,
+      "fit_scope": "outer_training_folds_only",
+      "q_estimator": "visible_increment_residual_variance_over_dt"
+    }
+  },
+  "contract": {
+    "assignment_by_ordered_layout": [
+      1,
+      2,
+      4,
+      0,
+      3
+    ],
+    "contract_version": "person-b-step4-1-production-fold-contract-v0.1",
+    "layout_row_counts": [
+      409,
+      387,
+      335,
+      292,
+      272
+    ],
+    "seed": 20260719,
+    "validation_mode": "signed_explicit_mapping"
+  },
+  "person_b_predictions": {
+    "byte_size": 84257218,
+    "direct_input_to_person_d": false,
+    "metrics_pending_person_d": true,
+    "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+    "reserved_for_later_comparison": true,
+    "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba"
+  },
+  "person_d_branch": "role/person-d-baselines",
+  "person_d_memory_implementation_commit": "f6fb6e542f87462c366ea657ded2dc8a47c3428f",
+  "person_d_runner_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+  "person_d_runner_preparation_commit": "683077b58fdb73176936fcb131e9297eb102ea10",
+  "preprocessed_frame_count": 1695,
+  "schema_id": "person-b-phase4-step4-1-memory-reauthorization-v0-1-authority-binding",
+  "schema_version": "1.0",
+  "supersedes_authorization_commit": "76e1d33788bcf1482b310d2b41a5db3d734d98a7",
+  "u4_output_inspected": false
+}

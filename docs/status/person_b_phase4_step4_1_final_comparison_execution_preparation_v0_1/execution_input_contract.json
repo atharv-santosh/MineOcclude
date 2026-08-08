@@ -1,0 +1,52 @@
+{
+  "authorities": {
+    "comparison_contract_commit": "4da02023a376df77eacb48084b1406ec1accfcb1",
+    "comparison_ratification_commit": "d2a82a09b2f0acf73c9c7d95c1ea2e382a6cc4f7",
+    "implementation_commit": "0a73caf2b74221c5f934b95ae39ac825748e2942",
+    "person_b_bounded_reveal_contract_commit": "53c2cd287a63e18e9b1fa5565b77f5c476baf9c4",
+    "person_d_completion_commit": "f89b142a6fdb52c2d238669af8df14061cee5896"
+  },
+  "bounded_reveal": {
+    "additional_person_a_extraction_authorized": false,
+    "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-bounded-reveal-v0-1/post_reveal_predictions.json",
+    "prediction_count": 100,
+    "probe_refitting_authorized": false,
+    "rerun_authorized": false,
+    "reuse_required": true,
+    "schema_id": "person-b-step4-1-bounded-reveal-predictions-v0-1",
+    "sha256": "b7716ba00b1e45b20dab130965d03bba8947a87999be51e89404fad4982d288d"
+  },
+  "local_frozen_inputs": {
+    "analysis_config_sha256": "b2e12e7049e0494c756be442a4f300cbc7dc0a6e262deecf682f1354e887f0ab",
+    "applicability_contract_sha256": "3ee4991589b828007091811823cb6e26fbfecc14a2c0331629cf6a014b131103",
+    "fold_manifest_sha256": "53ca938c6ae936c3ecb6e6e8d95a3fda152f5fa130b52e7a000d297810738d71",
+    "oracle_target_sha256": "afcf3afae00db6330665afc5964608c6db89eeac3767c9486d8ba0a218858282"
+  },
+  "person_b_predictions": {
+    "byte_size": 84257218,
+    "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+    "prediction_count": 27800,
+    "probe_matrix_count": 40,
+    "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba"
+  },
+  "person_d": {
+    "completion_manifest_sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5",
+    "prediction_count": 10776,
+    "prediction_document_count": 9,
+    "root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1"
+  },
+  "prohibited_actions": [
+    "bounded reveal rerun",
+    "probe refit",
+    "additional Person A extraction",
+    "manual U4 inspection",
+    "broad hidden-state interpretation",
+    "exploratory metric request",
+    "post-hoc layer selection",
+    "post-hoc test selection",
+    "changed method, threshold, seed, schema, or hash"
+  ],
+  "schema_id": "person-b-step4-1-final-comparison-execution-input-v0-1",
+  "schema_version": "1.0",
+  "u4_output_inspected": false
+}

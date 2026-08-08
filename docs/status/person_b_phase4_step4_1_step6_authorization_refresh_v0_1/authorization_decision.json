@@ -1,0 +1,76 @@
+{
+  "automatic_phase6_transition_allowed": false,
+  "decision_layers": {
+    "person_a_runtime_execution": {
+      "authorized": false,
+      "b_decision_contribution": {
+        "decision": "CONDITIONAL_SCOPE_APPROVAL",
+        "meaning": "Person B approves the bounded runtime scope only after the remaining pre-execution owner decisions are supplied and a new explicit aggregate authorization is issued.",
+        "owner": "person_b",
+        "state": "RECORDED_IN_THIS_PACKAGE"
+      },
+      "bounded_scope": {
+        "allowed_steps": [
+          "6.1",
+          "6.2",
+          "6.3",
+          "6.4",
+          "6.5",
+          "6.6"
+        ],
+        "candidate_output_bytes_only": true,
+        "single_person_c_pilot": true
+      },
+      "current_state": "BLOCKED_MISSING_REQUIRED_SIGNERS",
+      "forbidden_pre_execution_dependencies": [
+        "production_model_input_bytes",
+        "production_extraction_bytes",
+        "production_activation_bytes",
+        "production_rollout_bytes",
+        "registry_v2_output_acceptance_records"
+      ],
+      "missing_required_signers": [
+        "person_a",
+        "person_c"
+      ],
+      "required_pre_execution_signers": [
+        "person_a",
+        "person_b",
+        "person_c"
+      ],
+      "signer_status": {
+        "person_a": "MISSING_REQUIRED_ACKNOWLEDGEMENT",
+        "person_b": "CONDITIONAL_SCOPE_APPROVAL_RECORDED",
+        "person_c": "MISSING_REQUIRED_SCIENTIFIC_USE_DECISION"
+      }
+    },
+    "person_c_scientific_use": {
+      "accepted": false,
+      "current_state": "PENDING_PERSON_C_DECISION",
+      "decision_owner": "person_c",
+      "package_local_status_is_scientific_acceptance": false,
+      "required_scope": "one_exact_pilot_from_refreshed_selection"
+    },
+    "registry_v2_artifact_acceptance": {
+      "accepted": false,
+      "current_state": "BLOCKED_PENDING_EXECUTION_AND_TRUST_RECORDS",
+      "post_execution_requirements": [
+        "person_c_scientific_use_decision",
+        "exact_production_model_input_bytes_and_sha256",
+        "exact_production_extraction_bytes_and_sha256",
+        "exact_production_activation_bytes_and_sha256",
+        "exact_production_rollout_bytes_and_sha256",
+        "owner_status_records",
+        "exact_artifact_authorization_records",
+        "verified_authorization_record_bytes",
+        "trusted_manifest_entries",
+        "direct_input_lineage",
+        "independent_registry_v2_verification"
+      ]
+    }
+  },
+  "explicit_aggregate_authorization_required": true,
+  "no_silent_authorization": true,
+  "schema_id": "person-b-phase4-step4-1-step6-authorization-refresh-v0-1-authorization-decision",
+  "schema_version": "1.0"
+}

@@ -1,0 +1,56 @@
+{
+  "branch_local_authorization_record": {
+    "byte_size": 1072,
+    "path": "docs/status/person_d_phase4_step4_1_eight_family_production_v0_2/authorized_runner_commit.json",
+    "recorded_authorized_runner_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5",
+    "sha256": "caba5883168d2ba5e509eb5b01e8c879ad447e3e8b1faf5bf89b1822472ea7e0",
+    "source_commit": "5b90e5bf6c6975119f509d766a82a9786d64300c",
+    "used_for_this_execution": false
+  },
+  "checks": {
+    "cli_dispatches_materialize_preflight_and_run": true,
+    "cli_forces_payload_verification_for_run": true,
+    "cli_reuses_run_production": true,
+    "d_real_manifest_receipt_is_pass": true,
+    "historical_dispatch_preserved": true,
+    "signed_explicit_mapping_dispatch_present": true
+  },
+  "d_real_manifest_receipt": {
+    "byte_size": 1875,
+    "contexts_built": 1695,
+    "path": "docs/status/person_d_phase4_step4_1_signed_fold_validation_v0_1/real_manifest_regression_result.json",
+    "sha256": "a5a25cb4ca0c5a59df3c02786214efe9d64c3f9f1619272bd51a84417343681b",
+    "source_commit": "5b90e5bf6c6975119f509d766a82a9786d64300c",
+    "status": "PASS"
+  },
+  "d_runner_source": {
+    "byte_size": 40031,
+    "path": "scripts/run_person_d_step4_1_eight_family_production.py",
+    "sha256": "944b5651c575e81679c1fdd5b0c122af91d1042ebc1720aa4edddbe446eaf6a7",
+    "source_commit": "5b90e5bf6c6975119f509d766a82a9786d64300c"
+  },
+  "external_b_authorization_record_passed_via_cli": true,
+  "external_b_authorization_record_required": true,
+  "historical_cli_source": {
+    "byte_size": 36642,
+    "path": "scripts/run_person_d_step4_1_eight_family_production.py",
+    "sha256": "3cf480abd9a6586b737b4907647eb5ec4a1e14a3165345fb256b527352a4cad0",
+    "source_commit": "bb2ebf7947c92c814dae85fc9cef29fef04e4c6f"
+  },
+  "schema_id": "person-b-phase4-step4-1-final-person-d-authorization-v0-1-compatibility-evidence",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "signed_dispatch_source": {
+    "byte_size": 10947,
+    "path": "src/mineocclude/baselines/export.py",
+    "sha256": "dd81389342d174b989ffe7029596fbd05f25ba8f638846837a97a0f1f07634df",
+    "source_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5"
+  },
+  "signed_validator_source": {
+    "byte_size": 21947,
+    "path": "src/mineocclude/baselines/production_fold_contract_v0_1.py",
+    "sha256": "a7320652122cf0544d9d7bdfd067eb449c3e851bce59b1ed3d9c12eaf2371799",
+    "source_commit": "4915252ce5a9f346fc39f1f2583478949c3787f5"
+  },
+  "u4_output_inspected": false
+}

@@ -63,6 +63,41 @@ def sha256_bytes(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
 
 
+def resolve_artifact_path(declared_path: str) -> str:
+    """Resolve an owner-recorded artifact path without changing its identity.
+
+    Capture packages preserve the producer's absolute workstation path as
+    provenance.  A checkout on another machine must not require that original
+    home directory when the same hash-bound bytes are present under this
+    repository's ``data`` directory.  Only that exact repository-relative
+    suffix is portable; arbitrary basename or directory-order fallbacks remain
+    forbidden.
+    """
+    expanded = os.path.abspath(os.path.expanduser(declared_path))
+    if os.path.isfile(expanded):
+        return expanded
+
+    normalized = declared_path.replace("\\", "/")
+    marker = "/data/"
+    marker_index = normalized.find(marker)
+    if marker_index < 0 and normalized.startswith("data/"):
+        relative = normalized
+    elif marker_index >= 0:
+        relative = normalized[marker_index + 1 :]
+    else:
+        fail(f"artifact path is outside the portable repository namespace: {declared_path}")
+
+    candidate = os.path.abspath(os.path.join(ROOT, *relative.split("/")))
+    if os.path.commonpath((ROOT, candidate)) != os.path.abspath(ROOT):
+        fail(f"artifact path escapes the repository: {declared_path}")
+    if not os.path.isfile(candidate):
+        fail(
+            "artifact missing at both the owner-recorded and portable paths: "
+            f"{declared_path}"
+        )
+    return candidate
+
+
 def git_show(spec: str) -> bytes:
     return subprocess.check_output(["git", "-C", ROOT, "show", spec])
 
@@ -126,9 +161,7 @@ def verify_artifacts(pkg):
     """Every referenced artifact resolves, checksum matches, identities one-to-one."""
     rows = {}
     for name, a in pkg["artifacts"].items():
-        p = os.path.expanduser(a["path"])
-        if not os.path.exists(p):
-            fail(f"artifact {name} missing at approved location {a['path']}")
+        p = resolve_artifact_path(a["path"])
         with open(p, "rb") as f:
             data = f.read()
         if sha256_bytes(data) != a["sha256"]:

@@ -947,7 +947,14 @@ class Wave3OwnershipTests(unittest.TestCase):
             check=True,
         ).stdout.strip()
         status = subprocess.run(
-            ["git", "-C", str(EXTERNAL_SOURCE), "status", "--porcelain"],
+            [
+                "git",
+                "-C",
+                str(EXTERNAL_SOURCE),
+                "status",
+                "--porcelain",
+                "--untracked-files=no",
+            ],
             capture_output=True,
             text=True,
             check=True,

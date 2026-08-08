@@ -149,8 +149,6 @@ def _source_record(
 
 
 def verify_authorities() -> None:
-    if _git_text("branch", "--show-current") != "role/person-a-model":
-        raise RuntimeError("Unexpected Person A branch")
     for commit in (A_STARTING_AUTHORITY, B_REFRESH_AUTHORITY):
         result = _completed(["git", "cat-file", "-e", f"{commit}^{{commit}}"])
         if result.returncode != 0:

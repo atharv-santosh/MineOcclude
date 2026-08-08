@@ -120,10 +120,13 @@ def main() -> None:
         != U4_FRAME_INPUT_SCHEMA_VERSION
     ):
         raise ValueError("Unknown U4 frame-input schema version.")
-    if (
-        homography_report.get("homography_report_schema_version")
-        != HOMOGRAPHY_REPORT_SCHEMA_VERSION
-    ):
+    # The current Person E authority is the report_schemas constant. The v0.2
+    # literal is retained because the Person C C1-closure refit still emits
+    # that historical report version, and those reports remain readable here.
+    if homography_report.get("homography_report_schema_version") not in {
+        "person-e-homography-report-v0.2",
+        HOMOGRAPHY_REPORT_SCHEMA_VERSION,
+    }:
         raise ValueError("Unknown homography-report schema version.")
     if homography_report.get("config_hash") != config_hash:
         raise ValueError("Homography report was produced under a different config.")

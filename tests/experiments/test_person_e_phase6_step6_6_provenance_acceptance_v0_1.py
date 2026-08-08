@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import sys
 from pathlib import Path
@@ -68,10 +69,32 @@ def test_phase6_closure_is_bounded_and_does_not_claim_step4_1_or_integration():
 
 
 def test_generated_package_is_byte_deterministic():
-    # Regeneration re-hashes Person A's activation store and Person B's
-    # positive-control report, which live outside the repository. Where that
-    # store is not mounted the check is externally blocked, not failing: the
-    # committed package and every other assertion in this module still hold.
+    # Reproducibility of the committed package is established from its
+    # canonical bytes and immutable inventory. This needs no external mount,
+    # so it is asserted unconditionally.
+    inventory = load("sha256_inventory.json")
+    assert inventory["inventory_excludes_self"] is True
+    assert inventory["file_count"] == len(inventory["files"]) + 1
+    for name, digest in inventory["files"].items():
+        payload = (PKG / name).read_bytes()
+        document = json.loads(payload)
+        canonical = (
+            json.dumps(
+                document,
+                allow_nan=False,
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n"
+        ).encode("utf-8")
+        assert payload == canonical
+        assert hashlib.sha256(payload).hexdigest() == digest
+    # Full regeneration additionally re-hashes Person A's activation store and
+    # Person B's positive-control report, which live outside the repository.
+    # Where that store is not mounted the check is externally blocked, not
+    # failing: the canonical-bytes check above and every other assertion in
+    # this module still hold.
     missing = mod.missing_external_artifacts()
     if missing:
         pytest.skip(

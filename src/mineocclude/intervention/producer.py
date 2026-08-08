@@ -8,6 +8,7 @@ from typing import Any
 
 from mineocclude.analysis.manifests import (
     AnalysisArtifactError,
+    canonicalize_evidence_numbers,
     is_hex_digest,
     require_disjoint_event_sets,
     sha256_value,
@@ -82,7 +83,7 @@ def build_intervention_request(
         }
         for dose in doses
     ]
-    request = {
+    request = canonicalize_evidence_numbers({
         "schema_version": SCHEMA_VERSION,
         "request_id": request_id,
         "direction": {
@@ -138,7 +139,7 @@ def build_intervention_request(
                 dose.cap_reduced for dose in doses
             ),
         },
-    }
+    })
     result = validate_intervention_request(request)
     if not result.accepted:
         details = "; ".join(

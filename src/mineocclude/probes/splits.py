@@ -15,12 +15,13 @@ from mineocclude.analysis.config import (
 )
 from mineocclude.analysis.manifests import (
     AnalysisArtifactError,
+    is_hex_digest,
     seal_artifact,
     validate_sealed_artifact,
 )
 
-
 FOLD_SCHEMA_VERSION = "person-b-fold-v0.1"
+TEN_PILOT_FRAME_FOLD_FORMAT_VERSION = "person-b-ten-pilot-frame-fold-v0.1"
 U4_PARTITION_SCHEMA_VERSION = "person-b-u4-partition-v0.1"
 
 
@@ -29,7 +30,7 @@ class GroupedSplitError(ValueError):
 
 
 def _tie_breaker(seed: int, layout_id: str) -> str:
-    return hashlib.sha256(f"{seed}:{layout_id}".encode("utf-8")).hexdigest()
+    return hashlib.sha256(f"{seed}:{layout_id}".encode()).hexdigest()
 
 
 def _validate_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
@@ -280,6 +281,13 @@ def build_fold_manifest(
 def validate_fold_manifest(document: Mapping[str, Any]) -> None:
     """Reject altered, incomplete, or layout-leaking fold manifests."""
 
+    production_format = document.get("fold_manifest_format_version")
+    if production_format is not None:
+        if production_format != TEN_PILOT_FRAME_FOLD_FORMAT_VERSION:
+            raise GroupedSplitError("Unknown production fold manifest format.")
+        _validate_ten_pilot_frame_fold_manifest(document)
+        return
+
     try:
         validate_sealed_artifact(document, expected_type="fold_manifest")
     except AnalysisArtifactError as error:
@@ -353,6 +361,252 @@ def validate_fold_manifest(document: Mapping[str, Any]) -> None:
         raise GroupedSplitError("Fold manifest strategy is not layout_grouped.")
     if document.get("strategy") != frozen_cv["strategy"]:
         raise GroupedSplitError("Fold strategy disagrees with the frozen config.")
+
+
+def _validate_ten_pilot_frame_fold_manifest(document: Mapping[str, Any]) -> None:
+    """Validate the sealed ten-pilot subset without rebalancing frozen folds."""
+
+    try:
+        validate_sealed_artifact(document, expected_type="fold_manifest")
+    except AnalysisArtifactError as error:
+        raise GroupedSplitError(f"Invalid production fold artifact: {error}") from error
+    if document.get("fold_schema_version") != FOLD_SCHEMA_VERSION:
+        raise GroupedSplitError("Production fold schema version mismatch.")
+    if document.get("config_hash") != hash_core_analysis_config():
+        raise GroupedSplitError("Production folds are not bound to frozen config bytes.")
+    if document.get("analysis_config_version") != ANALYSIS_CONFIG_VERSION:
+        raise GroupedSplitError("Production fold analysis version mismatch.")
+    if (
+        document.get("strategy") != "layout_grouped"
+        or document.get("assignment_source")
+        != "frozen_layout_plan_subset_without_reassignment"
+        or document.get("random_split_used") is not False
+        or document.get("row_order_has_scientific_meaning") is not False
+        or document.get("u4_output_inspected") is not False
+        or document.get("n_splits") != 5
+        or document.get("seed") != 20260719
+    ):
+        raise GroupedSplitError("Production split policy differs from frozen authority.")
+    expected_layout_folds = {
+        "layout_00": 1,
+        "layout_01": 2,
+        "layout_02": 4,
+        "layout_03": 0,
+        "layout_04": 3,
+    }
+    declared = document.get("layout_assignments")
+    if declared != [
+        {"fold_idx": expected_layout_folds[layout], "layout_id": layout}
+        for layout in sorted(expected_layout_folds)
+    ]:
+        raise GroupedSplitError("Production layout folds are not the frozen subset.")
+    expected_pilot_ids = [
+        "layout_00_ep9403",
+        "layout_00_ep9441",
+        "layout_01_ep9405",
+        "layout_01_ep9442",
+        "layout_02_ep9407",
+        "layout_02_ep9432",
+        "layout_03_ep9404",
+        "layout_03_ep9443",
+        "layout_04_ep9406",
+        "layout_04_ep9444",
+    ]
+    pilot_ids = document.get("accepted_pilot_ids")
+    source_counts = document.get("source_frame_counts")
+    source_manifests = document.get("source_manifests")
+    memberships = document.get("memberships")
+    exclusions = document.get("excluded_memberships")
+    if (
+        not isinstance(pilot_ids, list)
+        or pilot_ids != expected_pilot_ids
+        or not isinstance(source_counts, list)
+        or len(source_counts) != len(expected_pilot_ids)
+        or not isinstance(source_manifests, list)
+        or len(source_manifests) != len(expected_pilot_ids)
+        or not isinstance(memberships, list)
+        or not memberships
+        or not isinstance(exclusions, list)
+    ):
+        raise GroupedSplitError("Production fold membership envelope is malformed.")
+    count_by_pilot = {
+        row.get("trajectory_id"): row.get("source_frame_count")
+        for row in source_counts
+        if isinstance(row, Mapping)
+    }
+    if (
+        [row.get("trajectory_id") for row in source_counts] != expected_pilot_ids
+        or set(count_by_pilot) != set(pilot_ids)
+        or any(
+        not isinstance(count, int) or isinstance(count, bool) or count < 1
+        for count in count_by_pilot.values()
+        )
+    ):
+        raise GroupedSplitError("Production source-frame counts are invalid.")
+    if (
+        document.get("source_frame_count") != sum(count_by_pilot.values())
+        or document.get("source_frame_count") != 1_874
+        or document.get("admitted_frame_count") != 1_695
+        or document.get("excluded_frame_count") != 179
+        or document.get("activation_row_count") != 37_480
+        or document.get("activation_chunk_count") != 200
+    ):
+        raise GroupedSplitError("Production source-frame total does not reconcile.")
+    if document.get("admitted_frame_count") != len(memberships):
+        raise GroupedSplitError("Production admitted-frame total does not reconcile.")
+    if document.get("excluded_frame_count") != len(exclusions):
+        raise GroupedSplitError("Production excluded-frame total does not reconcile.")
+
+    included_keys: set[tuple[str, int]] = set()
+    excluded_keys: set[tuple[str, int]] = set()
+    for row in memberships:
+        if not isinstance(row, Mapping):
+            raise GroupedSplitError("Production fold membership must be an object.")
+        key = (row.get("trajectory_id"), row.get("model_frame_idx"))
+        layout_id = row.get("layout_id")
+        if (
+            key[0] not in count_by_pilot
+            or not isinstance(key[1], int)
+            or isinstance(key[1], bool)
+            or not 0 <= key[1] < count_by_pilot[key[0]]
+            or key in included_keys
+            or layout_id not in expected_layout_folds
+            or row.get("fold_idx") != expected_layout_folds[layout_id]
+            or row.get("target_availability_status") != "available"
+            or row.get("status") != "accepted"
+            or row.get("source_frame_id")
+            != f"{key[0]}:render_frame:{key[1]}"
+        ):
+            raise GroupedSplitError("Production admitted membership is invalid.")
+        scopes = row.get("analysis_scopes")
+        if scopes not in (["hidden_mean", "hidden_spread"], ["visible_no_wall_control"]):
+            raise GroupedSplitError("Production analysis scope is not frozen.")
+        included_keys.add(key)
+    for row in exclusions:
+        if not isinstance(row, Mapping):
+            raise GroupedSplitError("Production exclusion must be an object.")
+        key = (row.get("trajectory_id"), row.get("model_frame_idx"))
+        if (
+            key[0] not in count_by_pilot
+            or not isinstance(key[1], int)
+            or isinstance(key[1], bool)
+            or not 0 <= key[1] < count_by_pilot[key[0]]
+            or key in excluded_keys
+            or key in included_keys
+            or row.get("exclusion_reason")
+            != "outside_frozen_condition_selection"
+            or row.get("target_availability_status") != "not_admitted"
+            or row.get("source_frame_id")
+            != f"{key[0]}:render_frame:{key[1]}"
+        ):
+            raise GroupedSplitError("Production excluded membership is invalid.")
+        excluded_keys.add(key)
+    expected_keys = {
+        (trajectory_id, frame_idx)
+        for trajectory_id, count in count_by_pilot.items()
+        for frame_idx in range(count)
+    }
+    if included_keys | excluded_keys != expected_keys:
+        raise GroupedSplitError("Production frame coverage is incomplete.")
+    sort_key = lambda row: (row["trajectory_id"], row["model_frame_idx"])
+    if memberships != sorted(memberships, key=sort_key) or exclusions != sorted(
+        exclusions, key=sort_key
+    ):
+        raise GroupedSplitError("Production frame membership order is not stable.")
+    if {row["fold_idx"] for row in memberships} != set(range(5)):
+        raise GroupedSplitError("Production folds do not populate all five indices.")
+    source_manifest_by_id = {
+        row.get("trajectory_id"): row
+        for row in source_manifests
+        if isinstance(row, Mapping)
+    }
+    if (
+        [row.get("trajectory_id") for row in source_manifests]
+        != expected_pilot_ids
+        or set(source_manifest_by_id) != set(expected_pilot_ids)
+    ):
+        raise GroupedSplitError("Production source manifests are incomplete.")
+    for trajectory_id in expected_pilot_ids:
+        source = source_manifest_by_id[trajectory_id]
+        activation_index = source.get("activation_index")
+        expected_layout = trajectory_id.split("_ep", 1)[0]
+        expected_condition = (
+            "no_wall_visible_control"
+            if trajectory_id.endswith(("9441", "9442", "9432", "9443", "9444"))
+            else "core_occluded"
+        )
+        if (
+            not isinstance(activation_index, Mapping)
+            or not isinstance(activation_index.get("path"), str)
+            or not is_hex_digest(activation_index.get("sha256"), 64)
+            or not isinstance(activation_index.get("byte_size"), int)
+            or isinstance(activation_index.get("byte_size"), bool)
+            or activation_index["byte_size"] < 1
+            or not is_hex_digest(source.get("capture_package_sha256"), 64)
+            or not isinstance(source.get("capture_package_byte_size"), int)
+            or isinstance(source.get("capture_package_byte_size"), bool)
+            or source["capture_package_byte_size"] < 1
+            or source.get("layout_id") != expected_layout
+            or source.get("condition_role") != expected_condition
+            or source.get("fold_idx") != expected_layout_folds[expected_layout]
+            or source.get("chunk_count") != 20
+            or not isinstance(source.get("activation_row_count"), int)
+            or isinstance(source.get("activation_row_count"), bool)
+            or source["activation_row_count"] != count_by_pilot[trajectory_id] * 20
+        ):
+            raise GroupedSplitError("Production source manifest identity is malformed.")
+        if any(
+            row["layout_id"] != expected_layout
+            or row["condition_role"] != expected_condition
+            for row in memberships
+            if row["trajectory_id"] == trajectory_id
+        ):
+            raise GroupedSplitError("Production row crosses its pilot source manifest.")
+    expected_admitted_by_fold = Counter(row["fold_idx"] for row in memberships)
+    expected_admitted_by_pilot = Counter(
+        row["trajectory_id"] for row in memberships
+    )
+    expected_admitted_by_layout = Counter(row["layout_id"] for row in memberships)
+    expected_excluded_by_pilot = Counter(
+        row["trajectory_id"] for row in exclusions
+    )
+    declared_counts = document.get("row_counts")
+    expected_counts = {
+        "admitted_by_fold": [
+            {"fold_idx": key, "row_count": expected_admitted_by_fold[key]}
+            for key in sorted(expected_admitted_by_fold)
+        ],
+        "admitted_by_layout": [
+            {"layout_id": key, "row_count": expected_admitted_by_layout[key]}
+            for key in sorted(expected_admitted_by_layout)
+        ],
+        "admitted_by_pilot": [
+            {"row_count": expected_admitted_by_pilot[key], "trajectory_id": key}
+            for key in sorted(expected_admitted_by_pilot)
+        ],
+        "excluded_by_pilot": [
+            {"row_count": expected_excluded_by_pilot[key], "trajectory_id": key}
+            for key in sorted(count_by_pilot)
+        ],
+    }
+    if declared_counts != expected_counts:
+        raise GroupedSplitError("Production fold row-count audit is incomplete.")
+    input_byte_inventory = document.get("input_byte_inventory")
+    if not isinstance(input_byte_inventory, list) or len(input_byte_inventory) != 4:
+        raise GroupedSplitError("Production fold byte inventory is incomplete.")
+    for item in input_byte_inventory:
+        if (
+            not isinstance(item, Mapping)
+            or not isinstance(item.get("path"), str)
+            or not item["path"]
+            or not is_hex_digest(item.get("sha256"), 64)
+            or not isinstance(item.get("byte_size"), int)
+            or isinstance(item.get("byte_size"), bool)
+            or item["byte_size"] < 1
+        ):
+            raise GroupedSplitError("Production fold byte inventory is malformed.")
+    if len({item["path"] for item in input_byte_inventory}) != 4:
+        raise GroupedSplitError("Production fold byte inventory repeats a path.")
 
 
 def assign_u4_development_partition(

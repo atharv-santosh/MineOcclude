@@ -1,0 +1,99 @@
+{
+  "artifact_contract": {
+    "artifact_schema_version": "person-b-analysis-artifact-v0.1",
+    "artifact_type": "metric_table",
+    "payload_artifact_type": "result_manifest",
+    "status_authority": "person_b"
+  },
+  "blocked_reason": "Production prediction artifacts are pending Person A, and required baseline artifacts are pending Person D.",
+  "direct_input_artifact_types": [
+    "prediction",
+    "oracle_target",
+    "baseline",
+    "fold_manifest",
+    "analysis_config"
+  ],
+  "execution_status": "BLOCKED_PENDING_PERSON_A_PERSON_D_AND_PREDICTIONS",
+  "metric_families": {
+    "U1": [
+      "r2",
+      "mae",
+      "grouped_permutation",
+      "baseline_comparison"
+    ],
+    "U2": [
+      "partial_correlation_controlling_tau",
+      "coverage",
+      "ece",
+      "z_diagnostics"
+    ],
+    "U3": [
+      "hidden_growth",
+      "oracle_slope_ratio",
+      "reveal_snapback"
+    ]
+  },
+  "metric_rules": {
+    "coverage_interval": "central_gaussian_inclusive",
+    "coverage_levels": [
+      0.5,
+      0.8,
+      0.95
+    ],
+    "duration_binning": "exact_duration_seconds",
+    "ece_aggregation": "mean_absolute_nominal_empirical_gap",
+    "near_zero_sigma_threshold_blocks": 1e-12,
+    "nonfinite_policy": "count_and_fail_result_no_clipping",
+    "partial_correlation_controls": [
+      "tau"
+    ],
+    "reveal_window_seconds": [
+      -1.0,
+      1.0
+    ]
+  },
+  "required_baseline_contract": {
+    "artifact_type": "baseline",
+    "baseline_input_schema_version": "person-b-baseline-input-v0.1",
+    "exact_frame_coverage_required": true,
+    "prediction_scope": "out_of_fold",
+    "producer_role": "person_d",
+    "required_document_hashes": [
+      "config_hash",
+      "input_manifest_hash",
+      "fold_manifest_hash",
+      "fit_manifest_hash"
+    ]
+  },
+  "required_input_bindings": [
+    "prediction_artifact_ids_and_sha256s",
+    "oracle_target_artifact_id_and_sha256",
+    "person_d_baseline_artifact_ids_and_sha256s",
+    "final_frame_fold_manifest_id_and_sha256",
+    "analysis_config_literal_sha256"
+  ],
+  "required_metric_record_fields": [
+    "metric_id",
+    "metric_name",
+    "value",
+    "unit",
+    "sample_count",
+    "sample_unit",
+    "status",
+    "diagnostic"
+  ],
+  "resampling_rules": {
+    "bootstrap_count_mvp": 1000,
+    "bootstrap_hierarchy": [
+      "layout_id",
+      "trajectory_id"
+    ],
+    "bootstrap_seed": 20260721,
+    "permutation_count_mvp": 999,
+    "permutation_seed": 20260720,
+    "permutation_unit": "whole_trajectory_block"
+  },
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-metric-table-input-contract",
+  "schema_version": "1.0",
+  "scientific_output_present": false
+}

@@ -14,6 +14,7 @@ from mineocclude.metrics.u2_calibration import (
     U2MetricError,
     calibration_metrics,
     partial_correlation_controlling_tau,
+    partial_correlation_controlling_tau_and_tau_squared,
 )
 from mineocclude.metrics.u3_dynamics import (
     U3MetricError,
@@ -65,6 +66,49 @@ class TestU2KnownAnswers(unittest.TestCase):
             1.0,
             places=12,
         )
+
+    def test_partial_correlation_removes_quadratic_tau(self) -> None:
+        tau = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+        latent = [-1.0, 1.0, -2.0, 2.0, -3.0, 3.0, -4.0, 4.0]
+        decoded = [
+            value + 2.0 * time + 0.5 * time * time
+            for value, time in zip(latent, tau)
+        ]
+        oracle = [
+            3.0 * value - time + 1.25 * time * time
+            for value, time in zip(latent, tau)
+        ]
+        self.assertAlmostEqual(
+            partial_correlation_controlling_tau_and_tau_squared(
+                decoded, oracle, tau
+            ),
+            1.0,
+            places=12,
+        )
+
+    def test_quadratic_partial_correlation_requires_full_rank_controls(self) -> None:
+        with self.assertRaises(U2MetricError):
+            partial_correlation_controlling_tau_and_tau_squared(
+                [1.0, 2.0], [2.0, 4.0], [0.0, 1.0]
+            )
+        with self.assertRaises(U2MetricError):
+            partial_correlation_controlling_tau_and_tau_squared(
+                [1.0, 2.0, 3.0, 4.0],
+                [2.0, 4.0, 6.0, 8.0],
+                [0.0, 1.0, 0.0, 1.0],
+            )
+
+    def test_quadratic_partial_correlation_rejects_nonfinite_and_bool_values(
+        self,
+    ) -> None:
+        with self.assertRaises(U2MetricError):
+            partial_correlation_controlling_tau_and_tau_squared(
+                [1.0, math.nan, 3.0], [2.0, 4.0, 6.0], [0.0, 1.0, 2.0]
+            )
+        with self.assertRaises(U2MetricError):
+            partial_correlation_controlling_tau_and_tau_squared(
+                [1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [0.0, True, 2.0]
+            )
 
 
 class TestU3KnownAnswers(unittest.TestCase):

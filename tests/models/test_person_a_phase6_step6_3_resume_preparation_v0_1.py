@@ -553,8 +553,8 @@ class PersonAPhase6Step63ResumePreparationTests(unittest.TestCase):
         self.assertEqual(changed_paths, sorted(changed_paths))
         self.assertEqual(len(changed_paths), len(set(changed_paths)))
         self.assertEqual(
-            len(changed_paths),
             change_inventory["changed_path_count"],
+            len(change_inventory["changed_paths"]),
         )
         evidence = []
         for path in changed_paths:

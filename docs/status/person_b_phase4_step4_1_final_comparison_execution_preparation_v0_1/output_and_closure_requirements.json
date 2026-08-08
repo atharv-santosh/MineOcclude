@@ -1,0 +1,29 @@
+{
+  "atomic_publication": "Build a complete sibling staging directory and atomically rename it to the absent exact output root; overwrite and partial resume are forbidden.",
+  "final_decision_vocabulary": [
+    "PASS",
+    "FAIL",
+    "INCONCLUSIVE"
+  ],
+  "output_files": [
+    "comparison_metric_table.json",
+    "paired_test_results.json",
+    "confidence_intervals.json",
+    "layer_band_decision.json",
+    "registry_v2_import_package.json",
+    "execution_receipt.json",
+    "sha256_inventory.json"
+  ],
+  "output_root": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-final-comparison-v0-1",
+  "output_schema_id": "person-b-step4-1-final-comparison-output-v0-1",
+  "person_e_closure_required": true,
+  "person_e_implementation_ratification_required": true,
+  "person_e_superseding_execution_authorization_required": true,
+  "registry_generation": "v2",
+  "resume_behavior": "Return ALREADY_COMPLETE_NO_WRITE only after exact file-set, inventory, schema, and cross-document validation; otherwise fail closed.",
+  "schema_id": "person-b-step4-1-final-comparison-output-requirements-v0-1",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "step4_1_complete": false,
+  "u4_output_inspected": false
+}

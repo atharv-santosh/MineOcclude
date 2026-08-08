@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from enum import Enum
@@ -16,8 +16,10 @@ from mineocclude.contracts.identity import (
     validate_identity,
 )
 
-
 ORACLE_TARGET_SCHEMA_VERSION = "person-b-oracle-target-v0.1"
+PRODUCTION_ORACLE_DOCUMENT_FORMAT_VERSION = (
+    "person-b-production-oracle-target-document-v0.1"
+)
 REGIME_A_DT_SECONDS = 0.05
 TARGET_ID_SUFFIX = "regime_a_primary_v1"
 TARGET_SOURCE = "authoritative_visible_state_known_v_q"
@@ -453,6 +455,17 @@ def validate_oracle_target_document(
 
     if not isinstance(document, Mapping):
         raise OracleValidationError("Oracle target document must be a mapping.")
+    production_format = document.get("oracle_document_format_version")
+    if production_format is not None:
+        if production_format != PRODUCTION_ORACLE_DOCUMENT_FORMAT_VERSION:
+            raise OracleValidationError(
+                "Unknown production oracle document format version."
+            )
+        _validate_production_oracle_target_document(
+            document,
+            analysis_config_path=analysis_config_path,
+        )
+        return
     if document.get("schema_version") != SCHEMA_VERSION:
         raise OracleValidationError("Oracle target document schema mismatch.")
     if document.get("target_schema_version") != ORACLE_TARGET_SCHEMA_VERSION:
@@ -469,13 +482,13 @@ def validate_oracle_target_document(
         and metadata.get("scientific_use") == "forbidden"
     )
     if not is_non_scientific_fixture:
-        from mineocclude.analysis.coordinates import (
-            CoordinateContractError,
-            validate_coordinate_frame,
-        )
         from mineocclude.analysis.config import (
             DEFAULT_CONFIG_PATH,
             hash_core_analysis_config,
+        )
+        from mineocclude.analysis.coordinates import (
+            CoordinateContractError,
+            validate_coordinate_frame,
         )
 
         try:
@@ -493,3 +506,328 @@ def validate_oracle_target_document(
                 "config bytes."
             )
     validate_oracle_target_rows(rows)
+
+
+def _validate_production_oracle_target_document(
+    document: Mapping[str, Any],
+    *,
+    analysis_config_path: Path | str | None,
+) -> None:
+    """Validate the explicit multi-trajectory production target dispatch.
+
+    Historical target documents retain their single-manifest and single-frame
+    semantics.  This format permits one exact accepted C manifest and one
+    coordinate frame per trajectory without collapsing those identities.
+    """
+
+    from mineocclude.analysis.config import (
+        DEFAULT_CONFIG_PATH,
+        hash_core_analysis_config,
+    )
+    from mineocclude.analysis.coordinates import (
+        CoordinateContractError,
+        validate_coordinate_frame,
+    )
+    from mineocclude.analysis.manifests import (
+        AnalysisArtifactError,
+        validate_sealed_artifact,
+    )
+
+    try:
+        validate_sealed_artifact(document, expected_type="oracle_target")
+    except AnalysisArtifactError as error:
+        raise OracleValidationError(
+            f"Production oracle artifact is invalid: {error}"
+        ) from error
+    if document.get("schema_version") != SCHEMA_VERSION:
+        raise OracleValidationError("Production oracle document schema mismatch.")
+    if document.get("target_schema_version") != ORACLE_TARGET_SCHEMA_VERSION:
+        raise OracleValidationError("Production oracle target version mismatch.")
+    if document.get("join_key") != ["trajectory_id", "model_frame_idx"]:
+        raise OracleValidationError("Production oracle join key is invalid.")
+    if document.get("synthetic") is not False:
+        raise OracleValidationError("Production oracle targets cannot be synthetic.")
+    if document.get("scientific_use") != "permitted":
+        raise OracleValidationError("Production oracle scientific use is not sealed.")
+    if document.get("u4_output_inspected") is not False:
+        raise OracleValidationError("Production oracle must not inspect U4 output.")
+
+    rows = document.get("rows")
+    if not isinstance(rows, list) or not rows:
+        raise OracleValidationError("Production oracle requires target rows.")
+    if rows != sorted(
+        rows,
+        key=lambda row: (row["trajectory_id"], row["model_frame_idx"]),
+    ):
+        raise OracleValidationError("Production oracle rows are not deterministic.")
+    seen: set[tuple[str, int]] = set()
+    for row in rows:
+        validate_oracle_target(row)
+        key = (row["trajectory_id"], row["model_frame_idx"])
+        if key in seen:
+            raise OracleValidationError(f"Duplicate production target key: {key}.")
+        seen.add(key)
+        required_lineage = (
+            "accepted_c_manifest_sha256",
+            "canonical_episode_manifest_sha256",
+            "canonical_state_object_sha256",
+            "c_frame_map_row_sha256",
+            "c_frame_map_sha256",
+            "c_state_row_sha256",
+            "c_state_sha256",
+            "condition_role",
+            "fold_idx",
+            "global_model_frame_idx",
+            "source_frame_id",
+            "source_frame_idx",
+            "source_tick",
+        )
+        if any(field not in row for field in required_lineage):
+            raise OracleValidationError(
+                "Production target row is missing exact source lineage."
+            )
+        if (
+            row["global_model_frame_idx"] != row["model_frame_idx"]
+            or row["source_frame_idx"] != row["model_frame_idx"]
+            or row["source_tick"] != row["server_tick"]
+            or row["source_frame_id"]
+            != f"{row['trajectory_id']}:render_frame:{row['model_frame_idx']}"
+        ):
+            raise OracleValidationError("Production target frame identity is not exact.")
+        for field in required_lineage:
+            if field.endswith("sha256") and not is_sha256(row[field]):
+                raise OracleValidationError(
+                    f"Production target lineage field {field} must be SHA-256."
+                )
+    for field in ("run_id", "code_sha", "config_hash", "model_hash", "preprocess_hash"):
+        if len({row[field] for row in rows}) != 1:
+            raise OracleValidationError(
+                f"Production target table mixes {field} values."
+            )
+    bound_config_hash = hash_core_analysis_config(
+        analysis_config_path or DEFAULT_CONFIG_PATH
+    )
+    if document.get("config_hash") != bound_config_hash or any(
+        row["config_hash"] != bound_config_hash for row in rows
+    ):
+        raise OracleValidationError(
+            "Production oracle is not bound to literal frozen config bytes."
+        )
+
+    pilot_ids = document.get("accepted_pilot_ids")
+    lineage_rows = document.get("trajectory_lineage")
+    coordinate_rows = document.get("coordinate_frames_by_trajectory")
+    if (
+        not isinstance(pilot_ids, list)
+        or not pilot_ids
+        or len(set(pilot_ids)) != len(pilot_ids)
+        or not isinstance(lineage_rows, list)
+        or not isinstance(coordinate_rows, list)
+    ):
+        raise OracleValidationError("Production trajectory authority is malformed.")
+    expected_pilot_ids = [
+        "layout_00_ep9403",
+        "layout_00_ep9441",
+        "layout_01_ep9405",
+        "layout_01_ep9442",
+        "layout_02_ep9407",
+        "layout_02_ep9432",
+        "layout_03_ep9404",
+        "layout_03_ep9443",
+        "layout_04_ep9406",
+        "layout_04_ep9444",
+    ]
+    if pilot_ids != expected_pilot_ids:
+        raise OracleValidationError("Production pilot order must be deterministic.")
+    lineage_by_id = {
+        row.get("trajectory_id"): row
+        for row in lineage_rows
+        if isinstance(row, Mapping)
+    }
+    coordinate_by_id = {
+        row.get("trajectory_id"): row.get("coordinate_frame")
+        for row in coordinate_rows
+        if isinstance(row, Mapping)
+    }
+    if (
+        len(lineage_rows) != len(pilot_ids)
+        or len(coordinate_rows) != len(pilot_ids)
+        or [row.get("trajectory_id") for row in lineage_rows] != pilot_ids
+        or [row.get("trajectory_id") for row in coordinate_rows] != pilot_ids
+        or set(lineage_by_id) != set(pilot_ids)
+        or set(coordinate_by_id) != set(pilot_ids)
+    ):
+        raise OracleValidationError("Production trajectory authority is incomplete.")
+    for coordinate in coordinate_by_id.values():
+        try:
+            validate_coordinate_frame(coordinate)
+        except CoordinateContractError as error:
+            raise OracleValidationError(
+                f"Production coordinate frame is invalid: {error}"
+            ) from error
+
+    grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[row["trajectory_id"]].append(row)
+    if set(grouped) != set(pilot_ids):
+        raise OracleValidationError("Production target pilot coverage is incomplete.")
+    eligibility = document.get("eligibility_counts")
+    if (
+        document.get("row_count") != len(rows)
+        or len(rows) != 1_695
+        or eligibility
+        != {
+            "accepted_hidden_positive_spread_rows": 695,
+            "accepted_post_first_seen_rows": 1_695,
+            "visible_no_wall_control_rows": 1_000,
+        }
+    ):
+        raise OracleValidationError("Production target row count does not reconcile.")
+
+    expected_counts = {
+        "by_fold": [
+            {"fold_idx": key, "row_count": value}
+            for key, value in sorted(Counter(row["fold_idx"] for row in rows).items())
+        ],
+        "by_layout": [
+            {"layout_id": key, "row_count": value}
+            for key, value in sorted(Counter(row["layout_id"] for row in rows).items())
+        ],
+        "by_pilot": [
+            {"row_count": value, "trajectory_id": key}
+            for key, value in sorted(
+                Counter(row["trajectory_id"] for row in rows).items()
+            )
+        ],
+        "by_visibility": [
+            {"row_count": value, "visibility": key}
+            for key, value in sorted(Counter(row["visibility"] for row in rows).items())
+        ],
+    }
+    if document.get("target_counts") != expected_counts:
+        raise OracleValidationError("Production target count audit is incomplete.")
+
+    for trajectory_id in pilot_ids:
+        trajectory_rows = grouped[trajectory_id]
+        lineage = lineage_by_id[trajectory_id]
+        ordered = sorted(trajectory_rows, key=lambda row: row["model_frame_idx"])
+        if lineage.get("admitted_target_row_count") != len(ordered):
+            raise OracleValidationError("Per-trajectory target count does not reconcile.")
+        if len({row["accepted_manifest_hash"] for row in ordered}) != 1:
+            raise OracleValidationError("Trajectory mixes canonical manifest identities.")
+        expected_identity = {
+            "accepted_manifest_hash": lineage.get(
+                "canonical_episode_manifest_sha256"
+            ),
+            "accepted_c_manifest_sha256": lineage.get(
+                "literal_capture_package_sha256"
+            ),
+            "canonical_episode_manifest_sha256": lineage.get(
+                "canonical_episode_manifest_sha256"
+            ),
+            "canonical_state_object_sha256": lineage.get(
+                "canonical_state_object_sha256"
+            ),
+            "layout_id": lineage.get("layout_id"),
+            "fold_idx": lineage.get("fold_idx"),
+            "condition_role": lineage.get("condition_role"),
+        }
+        if any(
+            any(row.get(field) != value for field, value in expected_identity.items())
+            for row in ordered
+        ):
+            raise OracleValidationError(
+                "Production row identity crosses its trajectory authority."
+            )
+        if [row["model_frame_idx"] for row in ordered] != list(
+            range(ordered[0]["model_frame_idx"], ordered[-1]["model_frame_idx"] + 1)
+        ):
+            raise OracleValidationError(
+                "Production target membership must be frame-consecutive per pilot."
+            )
+        if lineage.get("condition_role") == "core_occluded":
+            anchor = lineage.get("last_visible_anchor")
+            if not isinstance(anchor, Mapping):
+                raise OracleValidationError("Hidden production target lacks its anchor.")
+            if (
+                ordered[0]["model_frame_idx"] != anchor.get("model_frame_idx", -2) + 1
+                or ordered[0]["server_tick"] != anchor.get("server_tick", -2) + 1
+                or any(row["visibility"] != OCCLUDED for row in ordered)
+            ):
+                raise OracleValidationError("Hidden production anchor is not adjacent.")
+            anchor_position = require_finite_number(
+                "last_visible_anchor.position_blocks",
+                anchor.get("position_blocks"),
+            )
+            interval_v = float(ordered[0]["v"])
+            interval_q = float(ordered[0]["q"])
+            for row in ordered:
+                expected_tau = (
+                    row["server_tick"] - anchor["server_tick"]
+                ) * REGIME_A_DT_SECONDS
+                if (
+                    not math.isclose(
+                        float(row["last_visible_position_blocks"]),
+                        anchor_position,
+                        rel_tol=0.0,
+                        abs_tol=1e-10,
+                    )
+                    or float(row["v"]) != interval_v
+                    or float(row["q"]) != interval_q
+                    or not math.isclose(
+                        float(row["tau"]),
+                        expected_tau,
+                        rel_tol=0.0,
+                        abs_tol=1e-12,
+                    )
+                ):
+                    raise OracleValidationError(
+                        "Hidden production target changes its frozen interval."
+                    )
+        elif lineage.get("condition_role") == "no_wall_visible_control":
+            if any(
+                row["visibility"] != VISIBLE
+                or float(row["tau"]) != 0.0
+                or row["log_sigma_oracle"] is not None
+                for row in ordered
+            ):
+                raise OracleValidationError("Visible-control target is not visible-only.")
+            if lineage.get("last_visible_anchor") is not None:
+                raise OracleValidationError("Visible controls cannot declare a hidden anchor.")
+        else:
+            raise OracleValidationError("Unknown production condition role.")
+
+    distributions = document.get("target_distributions")
+    if not isinstance(distributions, Mapping):
+        raise OracleValidationError("Production target distributions are missing.")
+    distribution_inputs = {
+        "log_sigma_oracle": [
+            float(row["log_sigma_oracle"])
+            for row in rows
+            if row["visibility"] == OCCLUDED
+        ],
+        "mu_oracle_blocks": [float(row["mu_oracle_blocks"]) for row in rows],
+        "sigma_oracle_blocks": [float(row["sigma_oracle_blocks"]) for row in rows],
+        "x_true_blocks": [float(row["x_true_blocks"]) for row in rows],
+    }
+    for target_name, values in distribution_inputs.items():
+        declared = distributions.get(target_name)
+        if not isinstance(declared, Mapping) or declared.get("count") != len(values):
+            raise OracleValidationError("Production target distribution is malformed.")
+        expected_values = {
+            "maximum": max(values),
+            "mean": sum(values) / len(values),
+            "minimum": min(values),
+        }
+        if any(
+            not isinstance(declared.get(name), (int, float))
+            or isinstance(declared.get(name), bool)
+            or not math.isclose(
+                float(declared[name]),
+                value,
+                rel_tol=0.0,
+                abs_tol=1e-9,
+            )
+            for name, value in expected_values.items()
+        ):
+            raise OracleValidationError("Production target distribution is stale.")

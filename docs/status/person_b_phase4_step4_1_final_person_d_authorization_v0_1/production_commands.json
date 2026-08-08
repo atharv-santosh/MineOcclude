@@ -1,0 +1,17 @@
+{
+  "analysis_config_path": "configs/analysis/core.yaml",
+  "authorization_record_path": "/home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_final_person_d_authorization_v0_1/person_d_runtime_authorization.json",
+  "environment": {
+    "device": "cpu",
+    "python_requires": ">=3.10",
+    "seed_source": "configs/analysis/core.yaml"
+  },
+  "materialize_command": "cd /home/sagemaker-user/MineOcclude-person-d-baselines && python scripts/run_person_d_step4_1_eight_family_production.py materialize --authorization-record-path /home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_final_person_d_authorization_v0_1/person_d_runtime_authorization.json --materialize-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1",
+  "preflight_command": "cd /home/sagemaker-user/MineOcclude-person-d-baselines && python scripts/run_person_d_step4_1_eight_family_production.py preflight --authorization-record-path /home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_final_person_d_authorization_v0_1/person_d_runtime_authorization.json --frame-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/preprocessed_frame_manifest.json --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --fold-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/ten_pilot_frame_fold_manifest.json --verify-payloads --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+  "resume": "resume",
+  "run_command": "cd /home/sagemaker-user/MineOcclude-person-d-baselines && python scripts/run_person_d_step4_1_eight_family_production.py run --authorization-record-path /home/sagemaker-user/MineOcclude-person-b-analysis/docs/status/person_b_phase4_step4_1_final_person_d_authorization_v0_1/person_d_runtime_authorization.json --frame-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/preprocessed_frame_manifest.json --frame-root /home/sagemaker-user/person-a-step4-1-approved-outputs/person-a-step4-1-preprocessed-frames-v0-1 --fold-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/ten_pilot_frame_fold_manifest.json --target-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/production_oracle_target_manifest.json --source-context-manifest-path /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1/source_context_manifest.json --source-context-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-materialized-inputs-v0-1 --analysis-config-path configs/analysis/core.yaml --verify-payloads --output-root /home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1 --resume resume",
+  "schema_id": "person-b-phase4-step4-1-final-person-d-authorization-v0-1-production-commands",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

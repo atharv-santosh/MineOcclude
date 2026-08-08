@@ -8,8 +8,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from statistics import NormalDist
 
-
 NEAR_ZERO_SIGMA_BLOCKS = 1e-12
+_CONTROL_RANK_TOLERANCE = 1e-12
 
 
 class U2MetricError(ValueError):
@@ -236,6 +236,110 @@ def partial_correlation_controlling_tau(
         decoded_spread, oracle_spread, tau_seconds
     )
     return _pearson(_residualize(decoded, tau), _residualize(oracle, tau))
+
+
+def _quadratic_control_basis(
+    tau_seconds: Sequence[float],
+) -> tuple[tuple[float, ...], tuple[float, ...], tuple[float, ...]]:
+    """Build an orthonormal basis for ``(1, tau, tau**2)``.
+
+    Scaling and centering ``tau`` does not change the span of the control
+    columns, but avoids overflow and makes the rank check deterministic for
+    large finite clock values.  The quadratic column is residualized against
+    the intercept and linear column using modified Gram--Schmidt.
+    """
+
+    sample_count = len(tau_seconds)
+    if sample_count < 3:
+        raise U2MetricError(
+            "Quadratic tau control requires at least three aligned samples."
+        )
+
+    scale = max(abs(value) for value in tau_seconds)
+    if not math.isfinite(scale) or scale == 0.0:
+        raise U2MetricError("Quadratic tau controls require a varying tau.")
+    normalized = tuple(value / scale for value in tau_seconds)
+    mean = math.fsum(normalized) / sample_count
+    centered = tuple(value - mean for value in normalized)
+    # Re-center once more so q1 is orthogonal to the intercept despite
+    # floating-point summation error.
+    centered_mean = math.fsum(centered) / sample_count
+    centered = tuple(value - centered_mean for value in centered)
+
+    intercept_value = 1.0 / math.sqrt(sample_count)
+    q0 = tuple(intercept_value for _ in range(sample_count))
+    linear_norm = math.sqrt(math.fsum(value * value for value in centered))
+    if (
+        not math.isfinite(linear_norm)
+        or linear_norm <= _CONTROL_RANK_TOLERANCE * math.sqrt(sample_count)
+    ):
+        raise U2MetricError("Quadratic tau control design is rank deficient.")
+    q1 = tuple(value / linear_norm for value in centered)
+
+    quadratic = tuple(value * value for value in centered)
+    projection_intercept = math.fsum(quadratic) * intercept_value
+    after_intercept = tuple(
+        value - projection_intercept * intercept_value for value in quadratic
+    )
+    projection_linear = math.fsum(
+        linear * value for linear, value in zip(q1, after_intercept)
+    )
+    after_linear = tuple(
+        value - projection_linear * linear for value, linear in zip(after_intercept, q1)
+    )
+    quadratic_norm = math.sqrt(math.fsum(value * value for value in after_linear))
+    quadratic_scale = math.sqrt(math.fsum(value * value for value in quadratic))
+    if (
+        not math.isfinite(quadratic_norm)
+        or not math.isfinite(quadratic_scale)
+        or quadratic_norm
+        <= _CONTROL_RANK_TOLERANCE * max(1.0, quadratic_scale)
+    ):
+        raise U2MetricError("Quadratic tau control design is rank deficient.")
+    q2 = tuple(value / quadratic_norm for value in after_linear)
+    return q0, q1, q2
+
+
+def _residualize_with_basis(
+    values: Sequence[float],
+    basis: tuple[tuple[float, ...], tuple[float, ...], tuple[float, ...]],
+) -> tuple[float, ...]:
+    coefficients = tuple(
+        math.fsum(control * item for control, item in zip(vector, values))
+        for vector in basis
+    )
+    residuals: list[float] = []
+    for index, value in enumerate(values):
+        fitted = sum(
+            coefficient * vector[index]
+            for coefficient, vector in zip(coefficients, basis)
+        )
+        residual = value - fitted
+        if not math.isfinite(fitted) or not math.isfinite(residual):
+            raise U2MetricError(
+                "Quadratic tau residualization produced non-finite values."
+            )
+        residuals.append(residual)
+    return tuple(residuals)
+
+
+def partial_correlation_controlling_tau_and_tau_squared(
+    decoded_spread: Sequence[float],
+    oracle_spread: Sequence[float],
+    tau_seconds: Sequence[float],
+) -> float:
+    """Return spread partial correlation controlling linear and quadratic tau."""
+
+    decoded, oracle, tau = _finite_aligned(
+        decoded_spread, oracle_spread, tau_seconds
+    )
+    basis = _quadratic_control_basis(tau)
+    decoded_residuals = _residualize_with_basis(decoded, basis)
+    oracle_residuals = _residualize_with_basis(oracle, basis)
+    result = _pearson(decoded_residuals, oracle_residuals)
+    if not math.isfinite(result):
+        raise U2MetricError("Quadratic tau partial correlation is non-finite.")
+    return result
 
 
 def fixed_tau_q_summary(

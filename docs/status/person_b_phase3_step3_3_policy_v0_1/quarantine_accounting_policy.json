@@ -1,0 +1,44 @@
+{
+  "accounting_invariants": {
+    "category_counts_sum_exactly_to_quarantined_count": true,
+    "counts_reported_by": [
+      "category",
+      "layout",
+      "total"
+    ],
+    "mismatch_invalidates_downstream_analysis_package": true,
+    "total_joined_count_equals_non_quarantined_count_plus_quarantined_count": true
+  },
+  "authoritative_categories": [
+    "geometry_hidden_detector_visible",
+    "geometry_visible_detector_hidden",
+    "invalid_geometry",
+    "missing_detector",
+    "none"
+  ],
+  "exclusions": [
+    "claim_bearing_analysis_rows",
+    "visible_anchor_construction",
+    "oracle_target_construction",
+    "model_accuracy_denominators"
+  ],
+  "normative_rules": [
+    "every_non_none_category_has_quarantined_true",
+    "every_quarantined_record_has_visible_flag_false",
+    "raw_geometric_and_empirical_channel_values_remain_unchanged",
+    "quarantined_records_are_retained_in_package_and_audit_ledger",
+    "quarantined_records_are_not_detector_false_positives_or_false_negatives_without_separately_authorized_detector_truth",
+    "step_3_1_untouched_test_confusion_matrix_is_sole_accepted_detector_precision_recall_gate",
+    "no_disagreement_may_silently_become_visible",
+    "no_category_may_be_silently_dropped_renamed_merged_or_converted_to_zero"
+  ],
+  "package_level_fail_closed_rejections": [
+    "duplicate_rows",
+    "missing_rows",
+    "extra_rows",
+    "wrong_detector_version",
+    "context_mismatch"
+  ],
+  "quarantine_accounting_policy_schema_id": "person-b-phase3-step3-3-quarantine-accounting-policy-v1.0",
+  "schema_version": "1.0"
+}

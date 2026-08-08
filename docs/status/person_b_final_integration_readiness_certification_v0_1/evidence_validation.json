@@ -1,0 +1,199 @@
+{
+  "artifact_evidence": [
+    {
+      "decision": "PASS_FROZEN_VISIBLE_POSITION_POSITIVE_CONTROL",
+      "path": "docs/status/person_b_phase6_step6_6_positive_control_v0_1/positive_control_decision.json",
+      "sha256": "742557b32326180003b1cd83ed5db6f1a1ebfebd692d969809698d323f239056",
+      "size_bytes": 1521,
+      "source_commit": "7f9faa4ab1434099e03dd9c266d5617dd17b262b",
+      "u4_output_inspected": false
+    },
+    {
+      "decision": "FAIL",
+      "layer_count": 20,
+      "path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/layer_band_decision.json",
+      "qualifying_layer_bands": [],
+      "sha256": "7737b43ed13b1a7c7f3af1ebb07dbd050224e50064873b4bdbce47273e72d36c",
+      "size_bytes": 3117,
+      "source_commit": "7f9faa4ab1434099e03dd9c266d5617dd17b262b",
+      "u4_output_inspected": false
+    },
+    {
+      "acceptance_decision": "FAIL",
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_final_evidence_v0_1/validation_receipt.json",
+      "sha256": "0f8ea56206b45a0a1570667200bb3945875cad188c88bcd94521dd3d6cc68fae",
+      "size_bytes": 750,
+      "source_commit": "7f9faa4ab1434099e03dd9c266d5617dd17b262b",
+      "status": "PASS",
+      "u4_output_inspected": false
+    },
+    {
+      "acceptance_decision": "FAIL",
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_final_evidence_v0_1/registration_decision.json",
+      "sha256": "fa5fd3ca3e7dd88d7efe2280400e058327d9e8e35965fe8623278292d7f26e75",
+      "size_bytes": 467,
+      "source_commit": "7f9faa4ab1434099e03dd9c266d5617dd17b262b"
+    },
+    {
+      "decision": "accepted",
+      "path": "docs/status/person_b_phase4_step4_1_registry_v2_final_evidence_v0_1/trusted_manifest_record.json",
+      "sha256": "42a53809cd2146edc567d9cf37417a55a723022a1c0be8a275669842db731ed7",
+      "size_bytes": 2134,
+      "source_commit": "7f9faa4ab1434099e03dd9c266d5617dd17b262b"
+    }
+  ],
+  "completed_post_step4_1_outputs": {
+    "evidence_scope": "completed ten-pilot evidence only; not full-66 completion",
+    "final_comparison": {
+      "decision": "FAIL",
+      "inventory": {
+        "files": {
+          "comparison_metric_table.json": "c471fddb9bdc1a87c2f7e11ad8dc55db9e407f0ea45a2e038f668bda178ad0a7",
+          "confidence_intervals.json": "1bfc5c47a6d22518becc9761b75277afde4f007b0cb5c6a7a20858a45a1003a8",
+          "execution_receipt.json": "d14992316f7fac7d09313ccc938dd1a82d8655f6de8764db9f99f6f03719fcb7",
+          "layer_band_decision.json": "7737b43ed13b1a7c7f3af1ebb07dbd050224e50064873b4bdbce47273e72d36c",
+          "paired_test_results.json": "e9a2f318c07ed973d6e619c30edf3e60b75686b44f0ab602dfae16d6ba41e066",
+          "registry_v2_import_package.json": "4374878ed1a84cf1f127eb723dade5ccc7950c9abcf6b0089492d42cebffb72c"
+        },
+        "path": "docs/status/person_b_phase4_step4_1_final_comparison_completion_v0_1/sha256_inventory.json",
+        "sha256": "2ebbd6e456f9930b79999ae0488c5546de2aa0b30f002513cdfbfa7c67fb33e3",
+        "size_bytes": 798
+      }
+    },
+    "fitted_probes_oof_predictions": {
+      "immutable": true,
+      "later_evidence_only": true,
+      "path": "/home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json",
+      "sha256": "01e792c4d7b58bbe4ae478195b1d9523802db5674ee06ebbf5364482f42061ba",
+      "size_bytes": 84257218,
+      "uri": "file:///home/sagemaker-user/person-b-step4-1-approved-outputs/person-b-step4-1-production-v0-1/fitted_probes_and_predictions.json"
+    },
+    "person_d_baselines": {
+      "artifacts": [
+        {
+          "filename": "last_seen__mu_oracle_blocks.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/last_seen__mu_oracle_blocks.json",
+          "sha256": "48481740b50d41f87ac78ef7e2a4a1be930c400f197613c13212f7bfdb4bf4ae"
+        },
+        {
+          "filename": "constant_velocity__mu_oracle_blocks.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/constant_velocity__mu_oracle_blocks.json",
+          "sha256": "1156b6ca9bdc72355c23f8bcd2cbe9ba0324ad9e861fee47a246e5ef0a09fc7a"
+        },
+        {
+          "filename": "grouped_shuffled__log_sigma_oracle.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/grouped_shuffled__log_sigma_oracle.json",
+          "sha256": "cc182dfa1795eba5eb59c98dfb54d1d7eda9a39e6f3188846c863d9b12142fcc"
+        },
+        {
+          "filename": "grouped_shuffled__mu_oracle_blocks.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/grouped_shuffled__mu_oracle_blocks.json",
+          "sha256": "db190c7fdd99e0eb075cdf603b9e7bb516caa857d2f1167e5ecf8da84c315ba5"
+        },
+        {
+          "filename": "time_only__log_sigma_oracle.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/time_only__log_sigma_oracle.json",
+          "sha256": "aa8a60d9ee36a27655abd0a13b5aba2665aa5d865a9332c3f2a840cfbae5d273"
+        },
+        {
+          "filename": "explicit_feature__mu_oracle_blocks.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/explicit_feature__mu_oracle_blocks.json",
+          "sha256": "c724dc1b8918556508e4b4260315b16cf294977d51231f7c05963bc27ea973e7"
+        },
+        {
+          "filename": "raw_pixel__mu_oracle_blocks.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/raw_pixel__mu_oracle_blocks.json",
+          "sha256": "bb0a15f9d2d54f53e46c6a201d464958f2f8db90decba5784e81a99ff2298420"
+        },
+        {
+          "filename": "visible_history_q__log_sigma_oracle.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/visible_history_q__log_sigma_oracle.json",
+          "sha256": "5ef20829a26a09d4c1407c8d398cc1429266b2b45ae233fe4679d35f57c24bbc"
+        },
+        {
+          "filename": "known_q_analytic__log_sigma_oracle.json",
+          "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/known_q_analytic__log_sigma_oracle.json",
+          "sha256": "f589af2acc429460b8e9fc2725401e2adb5c0ce6424f73f3867fa43bda8ff2cd"
+        }
+      ],
+      "completion_manifest": {
+        "filename": "completion_manifest.json",
+        "path": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1/completion_manifest.json",
+        "sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5"
+      },
+      "completion_manifest_sha256": "79c49e7c794f37c4a574dfef365b8183ddb443b246adbe94743dfdf1ff1f4cf5",
+      "root": "/home/sagemaker-user/person-d-step4-1-approved-outputs/person-d-step4-1-production-v0-1",
+      "sha256": {
+        "constant_velocity_mu_oracle_blocks": "1156b6ca9bdc72355c23f8bcd2cbe9ba0324ad9e861fee47a246e5ef0a09fc7a",
+        "explicit_feature_mu_oracle_blocks": "c724dc1b8918556508e4b4260315b16cf294977d51231f7c05963bc27ea973e7",
+        "grouped_shuffled_log_sigma_oracle": "cc182dfa1795eba5eb59c98dfb54d1d7eda9a39e6f3188846c863d9b12142fcc",
+        "grouped_shuffled_mu_oracle_blocks": "db190c7fdd99e0eb075cdf603b9e7bb516caa857d2f1167e5ecf8da84c315ba5",
+        "known_q_analytic_log_sigma_oracle": "f589af2acc429460b8e9fc2725401e2adb5c0ce6424f73f3867fa43bda8ff2cd",
+        "last_seen_mu_oracle_blocks": "48481740b50d41f87ac78ef7e2a4a1be930c400f197613c13212f7bfdb4bf4ae",
+        "raw_pixel_mu_oracle_blocks": "bb0a15f9d2d54f53e46c6a201d464958f2f8db90decba5784e81a99ff2298420",
+        "time_only_log_sigma_oracle": "aa8a60d9ee36a27655abd0a13b5aba2665aa5d865a9332c3f2a840cfbae5d273",
+        "visible_history_q_log_sigma_oracle": "5ef20829a26a09d4c1407c8d398cc1429266b2b45ae233fe4679d35f57c24bbc"
+      }
+    },
+    "person_e_registry_closure": {
+      "inventory": {
+        "files": {
+          "authority_chain.json": "664ee9081f1169833b243bec5856eda023048bfedbcbd1719376f842811f464e",
+          "closure_report.json": "d40c7e380319c1b325b07e67465c3564ec322cd596721ff5424ceeaba959dc88",
+          "immutable_registry_v2.json": "4198fc8695dd3703569eeb64c0776188135c1de825b89d79af0c2bc5dac86d9f",
+          "owner_record_bindings.json": "b2efba722da60e95096f3c91b0a2e47813f327a45ef16ae7f7a751d9c7ac9163",
+          "registry_import_receipt.json": "a68584586dc7a8fef2cbc6e1bd8fd2f0b8ce4927e78a6632446911659aca8233",
+          "registry_query_receipt.json": "bbde1663386dba1d1e7378652db613350646a59cd9bda0bd8a2574fb31916076",
+          "registry_trust_records.json": "2610e0a72e907c8b51d6f0eed53df414ca77942e193ea9740594003d3359a4db",
+          "validation_receipt.json": "8d06b5ad672a8e7fb1a054ed71d62e1e5cd70e48140215f4602bed84e1ff23cd"
+        },
+        "path": "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/sha256_inventory.json",
+        "sha256": "c65de3425a98a7dc2e9621174113508f9c0a3f4b29bc424aeb441ac7bc888d38",
+        "size_bytes": 1507
+      },
+      "receipt": {
+        "artifact_count": 15,
+        "path": "docs/status/person_e_phase4_step4_1_registry_v2_closure_v0_1/registry_import_receipt.json",
+        "rejection_count": 0,
+        "sha256": "a68584586dc7a8fef2cbc6e1bd8fd2f0b8ce4927e78a6632446911659aca8233",
+        "size_bytes": 2819,
+        "status": "PASS",
+        "strict_validator_accepted": true
+      }
+    },
+    "positive_control": {
+      "inventory": {
+        "files": {
+          "execution_receipt.json": "72ce67cf49e5e73ec1b8f1c42c04b361ed6758ed50ad9de04af12e06572665ef",
+          "lineage_receipt.json": "29fd15d6773f16843d3de6b8db58c2d100bcf47779b41bbd44a3c81a062f74f4",
+          "positive_control_decision.json": "742557b32326180003b1cd83ed5db6f1a1ebfebd692d969809698d323f239056",
+          "positive_control_metrics.json": "e7bfebfa476c7815cf94c714965ab9249ea71588066621cd9201a650907d9bac",
+          "positive_control_predictions.json": "e2891b866adc58114439e636e21936e4ca281d2073cbbbc4d44d56627ded26d2",
+          "validation_receipt.json": "02912ecc7c0f2a86971d0520517a3ace6b0f17d8781ed2b03d151dec36e47ed7"
+        },
+        "path": "docs/status/person_b_phase6_step6_6_positive_control_v0_1/sha256_inventory.json",
+        "sha256": "e0262d989f83c78019bbeb108e5e0439efd4d8929198e11f921834a955e7a509",
+        "size_bytes": 776
+      }
+    },
+    "registry_v2_final_evidence": {
+      "acceptance_decision": "FAIL",
+      "inventory_path": "docs/status/person_b_phase4_step4_1_registry_v2_final_evidence_v0_1/sha256_inventory.json",
+      "inventory_sha256": "39d94b603eb6d5a254c25cd9c8c7f58130a53efc6f041c26a9164ada34f21738",
+      "inventory_size_bytes": 2735,
+      "status": "PASS"
+    }
+  },
+  "final_registry_v2_evidence_valid": true,
+  "frozen_step4_1_decision": "FAIL",
+  "layer_count": 20,
+  "positive_control_pass": true,
+  "qualifying_layer_bands": [],
+  "schema_id": "person-b-final-integration-readiness-v0-1-evidence-validation",
+  "schema_version": "1.0",
+  "scientific_scope": "accepted ten-pilot Step 4.1 evidence only; no full-66 promotion",
+  "step4_1_decision": "FAIL",
+  "synthetic_fixtures_accepted_as_science": false,
+  "u4_authorized": false,
+  "u4_output_inspected": false
+}

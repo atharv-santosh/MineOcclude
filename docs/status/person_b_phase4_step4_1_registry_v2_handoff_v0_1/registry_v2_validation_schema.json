@@ -1,0 +1,67 @@
+{
+  "artifact_validation_rules": {
+    "accepted_artifact_requires_completed_creator_run": true,
+    "accepted_artifact_requires_null_status_reason": true,
+    "accepted_artifact_requires_null_superseded_by": true,
+    "allowed_b_owned_artifact_types": [
+      "oracle_target",
+      "fitted_probe",
+      "prediction",
+      "metric_table"
+    ],
+    "direct_input_ids_are_explicit_and_duplicate_free": true,
+    "exact_artifact_fields": [
+      "schema_version",
+      "artifact_schema_version",
+      "artifact_id",
+      "direct_input_artifact_ids",
+      "creator_run_id",
+      "artifact_type",
+      "uri",
+      "sha256",
+      "size_bytes",
+      "status",
+      "status_authority",
+      "status_reason",
+      "superseded_by"
+    ],
+    "literal_bytes_must_match_sha256": true,
+    "status_authority_must_match_owner_policy": true
+  },
+  "blocked_job_rules": {
+    "blocked_jobs_may_not_have_output_artifact_ids_or_hashes": true,
+    "fitted_probe_requires_accepted_person_a_activation": true,
+    "metric_table_requires_accepted_person_d_baseline": true,
+    "prediction_requires_accepted_fitted_probe": true
+  },
+  "fail_closed_rejection_codes": [
+    "authority_hash_mismatch",
+    "wrong_starting_authority",
+    "noncanonical_json",
+    "missing_required_document",
+    "invalid_owner",
+    "invalid_direct_input",
+    "unaccepted_direct_input",
+    "missing_artifact_identity",
+    "invented_pending_person_a_value",
+    "invented_pending_person_d_value",
+    "phase3_readiness_substitution",
+    "synthetic_production_promotion",
+    "fold_plan_mismatch",
+    "final_fold_manifest_without_person_a",
+    "scientific_job_unblocked",
+    "scientific_output_present",
+    "person_a_phase6_silently_authorized",
+    "sha256_inventory_mismatch"
+  ],
+  "phase_restrictions": {
+    "person_a_phase6_authorized": false,
+    "probe_fitting_executed": false,
+    "production_metrics_executed": false,
+    "production_predictions_executed": false,
+    "u4_output_inspected": false
+  },
+  "registry_generation": "v2",
+  "schema_id": "person-b-phase4-step4-1-registry-v2-handoff-v0-1-validation-schema",
+  "schema_version": "1.0"
+}

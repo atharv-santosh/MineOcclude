@@ -57,6 +57,9 @@ from mineocclude.vision.measurement import (
     validate_measurement_evidence,
 )
 from mineocclude.vision.ssim import SsimResult
+from mineocclude.analysis.synthetic_numbers import (
+    canonicalize_synthetic_artifact_payload,
+)
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -67,6 +70,10 @@ DEFAULT_BUNDLE_PATH = (
 
 DEFAULT_REPORT_PATH = (
     ROOT / "tests" / "fixtures" / "integration" / "synthetic_join_report.json"
+)
+
+DEFAULT_ANALYSIS_REPORT_PATH = (
+    ROOT / "tests" / "fixtures" / "person_b" / "synthetic_analysis_chain_v1.json"
 )
 
 FIXTURE_MARKER = {
@@ -469,17 +476,27 @@ def compact_sealed_artifact(
     artifact: Mapping[str, Any],
     *,
     prediction_manifest_hashes: Sequence[str] | None = None,
+    uncompacted_prediction_manifest_hashes: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     """Compact one valid artifact and seal the exact saved representation."""
 
     validate_sealed_artifact(artifact)
-    original_artifact_hash = artifact["artifact_hash"]
+    canonical_original_payload = canonicalize_synthetic_artifact_payload(
+        deepcopy(artifact),
+        prediction_manifest_hashes=(
+            list(uncompacted_prediction_manifest_hashes)
+            if uncompacted_prediction_manifest_hashes is not None
+            else None
+        ),
+    )
+    canonical_original = seal_artifact(canonical_original_payload)
+    original_artifact_hash = canonical_original["artifact_hash"]
     compact = {
         key: deepcopy(value)
-        for key, value in artifact.items()
+        for key, value in canonical_original.items()
         if key not in {"artifact_hash", "fold_fit_records"}
     }
-    fold_fit_records = artifact.get("fold_fit_records")
+    fold_fit_records = canonical_original.get("fold_fit_records")
     if isinstance(fold_fit_records, list):
         fold_summaries: list[dict[str, Any]] = []
         for record in fold_fit_records:
@@ -577,6 +594,9 @@ def run_authenticated_a_b_probe_bridge(
             u1_result_artifact = compact_sealed_artifact(
                 execution.u1_result_artifact,
                 prediction_manifest_hashes=[prediction_artifact["artifact_hash"]],
+                uncompacted_prediction_manifest_hashes=[
+                    prediction_artifact["uncompacted_artifact_hash"]
+                ],
             )
             probe_runs.append(
                 {
@@ -2413,6 +2433,10 @@ def main() -> None:
     report = run_synthetic_pipeline()
 
     write_json(DEFAULT_REPORT_PATH, report)
+    write_json(
+        DEFAULT_ANALYSIS_REPORT_PATH,
+        report["person_b_synthetic_analysis_chain"],
+    )
 
     print("Step 1.7 synthetic integration status:", report["overall_status"])
     print(
@@ -2432,6 +2456,7 @@ def main() -> None:
     )
     print("Orphaned rows:", report["summary"]["orphaned_claim_bearing_rows"])
     print("Join report:", DEFAULT_REPORT_PATH)
+    print("Analysis report:", DEFAULT_ANALYSIS_REPORT_PATH)
 
     if report["overall_status"] != "passed":
         raise SystemExit(1)

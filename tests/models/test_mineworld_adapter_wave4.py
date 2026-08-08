@@ -228,7 +228,10 @@ def _controlled_preflight_boundaries(case: dict, *, probe=None):
                 if root == case["source_root"].resolve()
                 else PREFLIGHT_GIT_SHA
             )
-        if arguments == ("status", "--porcelain"):
+        if arguments in (
+            ("status", "--porcelain"),
+            ("status", "--porcelain", "--untracked-files=no"),
+        ):
             return ""
         raise AssertionError((arguments, root))
 
@@ -1521,7 +1524,14 @@ class Wave4CertificationHarnessTests(unittest.TestCase):
             check=True,
         ).stdout.strip()
         status = subprocess.run(
-            ["git", "-C", str(EXTERNAL_SOURCE), "status", "--porcelain"],
+            [
+                "git",
+                "-C",
+                str(EXTERNAL_SOURCE),
+                "status",
+                "--porcelain",
+                "--untracked-files=no",
+            ],
             capture_output=True,
             text=True,
             check=True,

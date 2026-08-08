@@ -1,0 +1,49 @@
+{
+  "authorization_boundary": {
+    "additional_pilots_authorized": false,
+    "authorized_pilot_count": 1,
+    "authorized_step_range": "6.1-6.6",
+    "future_person_a_registry_v2_output_acceptance_authorized": false,
+    "hidden_state_interpretation_authorized": false,
+    "hidden_state_interpretation_unlock_condition": "positive_control_passes_and_separate_authorization_is_issued",
+    "positive_control_passed": false,
+    "selected_trajectory_id": "layout_00_ep9403"
+  },
+  "checkout_requirements": {
+    "exact_committed_git_objects_required": true,
+    "mineocclude_worktree_clean_required": true,
+    "mineworld_worktree_clean_required": true,
+    "role_branch_merge_permitted": false
+  },
+  "required_before_step_6_1": [
+    "aws_sagemaker_linux_gpu_host_verified",
+    "torch_cuda_is_available_true",
+    "cuda_device_equals_cuda_0",
+    "sagemaker_runtime_receipt_complete",
+    "mineocclude_and_mineworld_worktrees_clean",
+    "mineworld_model_config_matches_exact_git_blob_sha256",
+    "checkpoint_and_vae_match_frozen_sha256",
+    "frozen_preprocessing_hook_layer_precision_context_pooling_storage_and_no_overwrite_identities_match",
+    "deterministic_seed_20260725_applied_to_every_ratified_scope",
+    "selected_pilot_git_object_identity_matches"
+  ],
+  "runtime_receipt": {
+    "capture_before_step_6_1": true,
+    "required_fields": [
+      "aws_sagemaker_environment_identity",
+      "cuda_device_identity",
+      "cuda_runtime_and_toolkit_identity",
+      "dependency_lock_and_installed_package_identity",
+      "gpu_driver_identity",
+      "gpu_model_and_memory_identity",
+      "mineocclude_commit_and_clean_state",
+      "mineworld_commit_and_clean_state",
+      "python_identity",
+      "pytorch_build_and_cuda_identity"
+    ]
+  },
+  "schema_id": "person-b-phase6-sagemaker-runtime-ratification-v0-1-execution-preconditions",
+  "schema_version": "1.0",
+  "scientific_execution_performed": false,
+  "u4_output_inspected": false
+}

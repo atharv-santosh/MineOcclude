@@ -72,7 +72,7 @@ def test_all_referenced_artifact_bytes_and_checksums_match():
     with open(os.path.join(ROOT, intake["capture_package_path"]), "rb") as f:
         assert mod.sha256_bytes(f.read()) == intake["capture_package_sha256"]
     for role in ("media", "raw_actions", "normalized_actions", "state", "frame_map", "visibility"):
-        p = os.path.expanduser(intake[f"{role}_path"])
+        p = mod.resolve_artifact_path(intake[f"{role}_path"])
         with open(p, "rb") as f:
             data = f.read()
         assert mod.sha256_bytes(data) == intake[f"{role}_sha256"]

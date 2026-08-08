@@ -384,6 +384,29 @@ class TestPersonEPhase4Step41Slice3A(unittest.TestCase):
         for relative_path, expected in FROZEN_HASHES.items():
             actual = hashlib.sha256((ROOT / relative_path).read_bytes()).hexdigest()
             self.assertEqual(actual, expected)
+        # Historical creation scope: the slice was published as exactly these
+        # added files. Asserted against the immutable creation commit, so it
+        # stays valid however the working tree advances afterwards.
+        completed = subprocess.run(
+            ["git", "show", "--pretty=format:", "--name-status", "b27d404c6aa913bac559754fa8b7accdff46e886"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        rows = completed.stdout.splitlines()
+        self.assertTrue(rows)
+        self.assertEqual({row.split("\t", 1)[0] for row in rows}, {"A"})
+        paths = {row.split("\t", 1)[1] for row in rows}
+        self.assertIn(BUILDER_PATH, paths)
+        self.assertIn(TEST_PATH, paths)
+        self.assertTrue(
+            all(
+                path in {BUILDER_PATH, TEST_PATH}
+                or path.startswith("docs/status/person_e_phase4_step4_1_slice3a_v0_1/")
+                for path in paths
+            )
+        )
         completed = subprocess.run(
             ["git", "status", "--porcelain"],
             cwd=ROOT,

@@ -58,7 +58,7 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Metrics, calibration, bootstrap, permutation | `analysis/metrics.py`, `analysis/calibration.py`, `analysis/resampling.py` | TECHNICALLY VERIFIED |
 | A/B/C/D/E intake expectations | `docs/contracts/person_b_analysis_inputs_v0_1.md` and current validators | TECHNICALLY VERIFIED |
 | Synthetic state-to-result/request proof | `analysis/synthetic_chain.py` and saved fixture/tests | TECHNICALLY VERIFIED, NON-SCIENTIFIC |
-| Historical roadmap reading | No reliable repository evidence | UNVERIFIED |
+| Current proposal/roadmap reading | `docs/analysis/person_b_scientific_reading_signoff.md` | COMPLETED for the 2026-07-23 implementation review; no claim about undocumented earlier reading |
 | B1.9 Phase 0/1 human approval | `docs/contracts/schema_v1_0_signed_record.md` at `80d41c5ca0e341263a7b0c683fae4b51be376c55` | COMPLETE FOR THAT CHECKPOINT |
 
 ### Dependency and decision register
@@ -77,21 +77,47 @@ of activation extraction, capture truth, baseline logic, or measurement.
 | Work | State | Output/pass condition |
 |---|---|---|
 | Repository and ownership inventory | CURRENT/RECORDED | This file names one authoritative location per B responsibility |
+| B0.4 controlling scientific evidence review | COMPLETED | Current requirement-to-code/test trace is recorded in `docs/analysis/person_b_scientific_reading_signoff.md` |
 | Phase 1 contracts and synthetic chain | COMPLETED TECHNICALLY | Deterministic synthetic validators, folds, OOF fits, U1/U2/U3, direction/request, result bundle pass |
 | Cross-role synthetic validation | CURRENT | Shared runner validates C/A/B/D/E boundaries |
 | B1.9 schema/config/interface signoff | COMPLETE for `80d41c5ca0e341263a7b0c683fae4b51be376c55` | Central signoff record; runtime and result approvals remain pending |
-| Real scientific execution | NEXT LATER PHASE | Accepted real upstream artifacts and runtime/access gates exist |
+| Real scientific execution | PARTIALLY UNBLOCKED | C's real capture/coordinate side is authenticated; A activations and provenance still block A-bound targets, joins, controls, and probes |
+| Phase 6.1-6.6 pilot tooling | C-ONLY INTAKE + FOLDS EXECUTED | C intake records 16 packages and 15 signed frames; the real six-layout/five-fold plan is frozen before A |
 
 ## Current blockers
 
 - [ ] Receive a completed real activation handoff from Person A; the frozen
   contract and compatibility evidence are already merged.
-- [ ] Receive accepted real state/capture artifacts from Person C; the current
-  C schema and synthetic C-to-B adapter already exist.
+- [x] Receive and authenticate Person C's 16 real pilot capture packages.
+  B re-ran C's validator, verified every checksum, co-signed 15 unambiguous
+  coordinate frames, quarantined the no-sheep control from oracle targets, and
+  froze 2,456 source-selection rows. The sealed intake artifact is
+  `1d976a5543ede07b43b0be3c6eb053afbb8cbcc823dc63d6fd5fd931988ce636`.
+- [x] Receive five no-wall visible-control layouts for grouped OOF evaluation.
+  Layouts 00, 01, 02, 03, and 04 each contribute 200 accepted visible rows.
+- [x] Freeze real layout-to-fold assignments from accepted Person C rows.
+  The sealed pre-A plan assigns all 15 eligible trajectories across six
+  layouts and proves every declared scope covers folds 0-4. Its artifact hash
+  is `ca265b64935880aede8c3bb8b6060cdda17c23932e5e98878a3fcf8ee5341f01`.
+- [ ] Bind exact frame memberships to the frozen layout plan after A supplies
+  complete matching activations. A may remove neither layouts nor
+  trajectories; exact frame completeness remains enforced by the join.
 - [ ] Receive real Person D baseline artifacts; D's current contract and
   synthetic handoff already validate against B.
-- [ ] Receive real Person E measurements; E's registry/evidence contract and
-  synthetic E-to-B handoff already validate against B.
+- [ ] Receive Person E's validation/append receipt for the real B pilot
+  artifacts. Real E measurements are later U4 work, not Step 6.6.
+
+The C-dependent preparation is now also complete: authoritative packages and
+sidecars are imported, coordinate projections are signed, the no-object
+control is rejected from oracle use, the condition source is frozen, and the
+real C-only recursive/closed-form audit passes with zero disagreement and no
+invariant failures. The real C-to-B state writer, literal activation-chunk
+checks, ordered filter receipt, A-independent layout folds, real
+ridge/permutation path,
+explicit positive-control gate, D request packet, and E registration request
+remain ready for A-bound execution. See
+`docs/analysis/person_b_pilot_runbook.md`. None of these preparation artifacts
+is a substitute for an upstream producer artifact or handoff receipt.
 
 ## MVP work
 

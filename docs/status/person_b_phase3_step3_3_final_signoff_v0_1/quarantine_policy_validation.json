@@ -1,0 +1,110 @@
+{
+  "allowed_categories": [
+    "geometry_hidden_detector_visible",
+    "geometry_visible_detector_hidden",
+    "invalid_geometry",
+    "missing_detector",
+    "none"
+  ],
+  "global_accounting": {
+    "geometry_hidden_detector_visible": 364,
+    "geometry_visible_detector_hidden": 53,
+    "input_rows": 1850,
+    "invalid_geometry": 0,
+    "missing_detector": 0,
+    "non_quarantined": 1433,
+    "none": 1433,
+    "quarantined": 417,
+    "visible_flag_false": 749,
+    "visible_flag_true": 1101
+  },
+  "invariants": {
+    "all_non_none_categories_are_quarantined": true,
+    "all_quarantined_rows_are_not_visible": true,
+    "all_visible_rows_have_none_category": true,
+    "category_totals_reconcile": true,
+    "invalid_geometry_is_zero": true,
+    "missing_detector_is_zero": true,
+    "none_equals_non_quarantined": true,
+    "per_layout_totals_reconcile": true
+  },
+  "per_layout": {
+    "layout_01": {
+      "geometry_hidden_detector_visible": 108,
+      "geometry_visible_detector_hidden": 0,
+      "input_rows": 375,
+      "invalid_geometry": 0,
+      "missing_detector": 0,
+      "non_quarantined": 267,
+      "none": 267,
+      "quarantined": 108,
+      "visible_flag_false": 176,
+      "visible_flag_true": 199
+    },
+    "layout_02": {
+      "geometry_hidden_detector_visible": 25,
+      "geometry_visible_detector_hidden": 2,
+      "input_rows": 248,
+      "invalid_geometry": 0,
+      "missing_detector": 0,
+      "non_quarantined": 221,
+      "none": 221,
+      "quarantined": 27,
+      "visible_flag_false": 106,
+      "visible_flag_true": 142
+    },
+    "layout_03": {
+      "geometry_hidden_detector_visible": 82,
+      "geometry_visible_detector_hidden": 0,
+      "input_rows": 154,
+      "invalid_geometry": 0,
+      "missing_detector": 0,
+      "non_quarantined": 72,
+      "none": 72,
+      "quarantined": 82,
+      "visible_flag_false": 104,
+      "visible_flag_true": 50
+    },
+    "layout_04": {
+      "geometry_hidden_detector_visible": 67,
+      "geometry_visible_detector_hidden": 0,
+      "input_rows": 261,
+      "invalid_geometry": 0,
+      "missing_detector": 0,
+      "non_quarantined": 194,
+      "none": 194,
+      "quarantined": 67,
+      "visible_flag_false": 104,
+      "visible_flag_true": 157
+    },
+    "layout_05": {
+      "geometry_hidden_detector_visible": 79,
+      "geometry_visible_detector_hidden": 0,
+      "input_rows": 381,
+      "invalid_geometry": 0,
+      "missing_detector": 0,
+      "non_quarantined": 302,
+      "none": 302,
+      "quarantined": 79,
+      "visible_flag_false": 104,
+      "visible_flag_true": 277
+    },
+    "layout_06": {
+      "geometry_hidden_detector_visible": 3,
+      "geometry_visible_detector_hidden": 51,
+      "input_rows": 431,
+      "invalid_geometry": 0,
+      "missing_detector": 0,
+      "non_quarantined": 377,
+      "none": 377,
+      "quarantined": 54,
+      "visible_flag_false": 155,
+      "visible_flag_true": 276
+    }
+  },
+  "schema_id": "person-b-phase3-step3-3-final-signoff-v0-1-quarantine-policy-validation-v1.0",
+  "schema_version": "1.0",
+  "status": "PASS",
+  "structural_failure_count": 0,
+  "u4_output_inspected": false
+}

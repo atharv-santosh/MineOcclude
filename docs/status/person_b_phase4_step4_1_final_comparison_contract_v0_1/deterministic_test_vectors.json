@@ -1,0 +1,80 @@
+{
+  "layout_macro": {
+    "expected": 5.5,
+    "observed": 5.5,
+    "rows": [
+      {
+        "layout_id": "a",
+        "trajectory_id": "a1",
+        "value": 1.0
+      },
+      {
+        "layout_id": "a",
+        "trajectory_id": "a1",
+        "value": 3.0
+      },
+      {
+        "layout_id": "b",
+        "trajectory_id": "b1",
+        "value": 9.0
+      }
+    ]
+  },
+  "max_t": {
+    "hypotheses": {
+      "layer_00_last_seen": {
+        "layout_00": 0.5,
+        "layout_01": 0.2,
+        "layout_02": 0.4,
+        "layout_03": -0.1,
+        "layout_04": 0.3
+      },
+      "layer_01_last_seen": {
+        "layout_00": 0.6,
+        "layout_01": 0.3,
+        "layout_02": 0.5,
+        "layout_03": 0.1,
+        "layout_04": 0.4
+      }
+    },
+    "observed_adjusted_p_values": {
+      "layer_00_last_seen": 0.078,
+      "layer_01_last_seen": 0.037
+    },
+    "permutation_count": 999,
+    "seed": 20260720
+  },
+  "qualifying_bands": {
+    "layer_gates": {
+      "0": false,
+      "1": false,
+      "10": false,
+      "11": false,
+      "12": false,
+      "13": false,
+      "14": false,
+      "15": false,
+      "16": false,
+      "17": false,
+      "18": false,
+      "19": false,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": false,
+      "6": false,
+      "7": false,
+      "8": true,
+      "9": false
+    },
+    "observed": [
+      [
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "schema_id": "person-b-step4-1-final-comparison-test-vectors-v0-1",
+  "schema_version": "1.0"
+}

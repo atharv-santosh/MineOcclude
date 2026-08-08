@@ -45,6 +45,9 @@ IGNORED_EXTERNAL_STATUS_PATHS = ("__pycache__/",)
 MINEWORLD_REQUIREMENTS_SHA256 = (
     "b58d7e3514e7f9787ddd428fdc755e08cb48a75dd3cd09a4e1fc8e4c210af38c"
 )
+PRE_PYARROW_ENVIRONMENT_REVISION = (
+    "f0a4fed546eb1cf19a7094e6b99399a58294726a"
+)
 
 
 def _sha256(path: Path) -> str:
@@ -156,7 +159,14 @@ def test_external_mineworld_dependency_file_is_untouched() -> None:
         text=True,
     ).stdout.strip()
     status = subprocess.run(
-        ["git", "-C", str(mineworld), "status", "--short"],
+        [
+            "git",
+            "-C",
+            str(mineworld),
+            "status",
+            "--short",
+            "--untracked-files=no",
+        ],
         check=True,
         capture_output=True,
         text=True,

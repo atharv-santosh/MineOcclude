@@ -528,6 +528,20 @@ class ProductionHandoffPreflightTests(unittest.TestCase):
                 self.assertNotIn("person_c", path)
                 self.assertNotIn("person_d", path)
                 self.assertNotIn("person_e", path)
+        # The historical creation scope is a separate, still-valid invariant:
+        # the package was created as exactly these added files and nothing
+        # else. It is asserted against the immutable creation commit rather
+        # than today's git status, so it survives later repairs.
+        expected = owned
+        creation = "0416ce88060277b28512f95dca0af94984a8211d"
+        rows = (
+            _git("show", "--pretty=format:", "--name-status", creation)
+            .decode("utf-8")
+            .splitlines()
+        )
+        self.assertTrue(rows)
+        self.assertEqual({row.split("\t", 1)[0] for row in rows}, {"A"})
+        self.assertEqual({row.split("\t", 1)[1] for row in rows}, expected)
 
     def test_30_no_project_integration_or_step4_1_closure_claim(self) -> None:
         authority = self.documents["authority_binding.json"]

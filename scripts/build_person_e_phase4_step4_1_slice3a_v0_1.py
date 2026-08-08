@@ -186,11 +186,12 @@ def _source_entry(
 
 
 def _verify_authorities() -> None:
-    if _git_text("branch", "--show-current") != "role/person-e-operations":
-        raise RuntimeError("Builder must run on role/person-e-operations")
     # Package bytes stay bound to STARTING_COMMIT. Person E keeps committing
     # after the freeze, so the live HEAD and remote tip must contain that
     # commit rather than equal it; a detached or rewritten history still fails.
+    # The checked-out branch is deliberately not pinned to role/person-e-operations:
+    # after promotion the builder runs from an integration branch, which does not
+    # change what is verified about the Person E authority commit itself.
     if not _contains_commit("HEAD", STARTING_COMMIT):
         raise RuntimeError("Person E HEAD authority mismatch")
     if not _contains_commit("origin/role/person-e-operations", STARTING_COMMIT):

@@ -1,0 +1,83 @@
+{
+  "current_main_ace_closure": {
+    "covers_full_person_b_roadmap": false,
+    "covers_only": "five no-wall control trajectories",
+    "integration_manifest_path": "docs/status/integration/ace_canonical_multilayout_closure_v0_1/integration_manifest.json",
+    "integration_manifest_sha256": "be662a2a11891d3f47b4e5c142a048bcb7cd58827b2fb5e7ad591c21a1f869e2",
+    "status": "PARTIAL",
+    "validation_receipt_path": "docs/status/integration/ace_canonical_multilayout_closure_v0_1/validation_receipt.json",
+    "validation_receipt_sha256": "7b3eeb0c5b9ef44fad3e0d40464b46867356fd77cc6978bee0c9909f45c3bd18"
+  },
+  "person_a": {
+    "full_66_activation_and_model_input_handoff": "ABSENT_OR_UNAUTHORIZED",
+    "status": "BLOCKED",
+    "ten_pilot_external_activation_index": {
+      "blocking_missing_input": false,
+      "bound_by_current_authority_record": true,
+      "byte_size": 245491346,
+      "independently_byte_verified_in_windows_worktree": false,
+      "local_byte_verified": false,
+      "local_materialized": false,
+      "path": "/home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json",
+      "repository_payload_present": false,
+      "required_for_computation": true,
+      "sha256": "1a25d2186912ba72fdbf123ea9f07b2255bd0e55c6a48a1a50e3b7c0f23eb1e9",
+      "source_authority_verified": true,
+      "uri": "file:///home/sagemaker-user/person-a-phase6-approved-outputs/person-a-phase6-ten-pilot-expansion-seed-20260725/combined_activation_index.json"
+    }
+  },
+  "person_b": {
+    "accepted_ten_pilot_handoff": "AUTHORITY_BOUND",
+    "full_66_targets_folds_probes_u1_u3": "ABSENT",
+    "post_step4_1_work": "ABSENT",
+    "status": "INCOMPLETE"
+  },
+  "person_c": {
+    "c6a_collection": {
+      "breakdown": {
+        "core": 48,
+        "nosheep": 6,
+        "nowall": 6,
+        "sentinel": 6
+      },
+      "canonical_identity_path": "docs/status/person_c_c6a_completion_v0_1/canonical_c6a_identity.json",
+      "canonical_identity_sha256": "736d416d05cdee57653eae536c5236b6edf1047536b2ccebff897e1240341b0e",
+      "completed_episode_count": 66,
+      "completion_receipt_path": "docs/status/person_c_c6a_completion_v0_1/c6a_completion_receipt.json",
+      "completion_receipt_sha256": "5cc653f01db1363179253aeb8bdb0ad509f20e03b419f9945aa023e0ac7fbe46",
+      "episode_inventory_path": "docs/status/person_c_c6a_completion_v0_1/episode_inventory.json",
+      "episode_inventory_sha256": "9846b705b747aa19e3abab1d08d4cbaf37546f7cfb0b163ede7ce0143875a82a",
+      "immutable": true,
+      "package_manifest_path": "docs/status/person_c_c6a_completion_v0_1/package_manifest.json",
+      "package_manifest_sha256": "612b03fea372d10c5f5b87cb581dd5f993035112e16aa1de7341801bdc35a9ef",
+      "status": "COMPLETE"
+    },
+    "current_tree_accepted_pilot_manifest": {
+      "path": "docs/status/person_c_phase6_ten_pilot_expansion_acceptance_v0_1/accepted_pilot_manifest.json",
+      "present": false,
+      "source_commit": "c6bff25b5ef4f5fdb0e1ef0ce0d22e3f8b5e4960",
+      "source_git_object_verified": true
+    },
+    "status": "C6A_COMPLETE_DOWNSTREAM_UNAVAILABLE"
+  },
+  "person_d": {
+    "matched_full_mvp_baselines": "ABSENT",
+    "status": "INCOMPLETE",
+    "step4_1_authorization": "FAIL_CLOSED_AUTHORITY_ONLY"
+  },
+  "person_e": {
+    "full_registry_measurement_u4_closure": "ABSENT",
+    "status": "INCOMPLETE"
+  },
+  "schema_id": "person-b-final-integration-readiness-v0-1-dependency-status",
+  "schema_version": "1.0",
+  "unresolved_blockers": [
+    "Authoritative Week-1 roadmap is not terminally complete.",
+    "Candidate authority commit and manifest are not reachable from the current branch.",
+    "One candidate input is source-object verified but absent from the current tree.",
+    "External activation bytes are authority-bound but not locally materialized or independently byte-verified in this Windows worktree.",
+    "Full-66 A activations/model-input handoff, B analysis, matched D baselines, and E registry/measurement/U4 closure are absent or unauthorized.",
+    "U4 remains unauthorized and uninspected; synthetic fixtures are not scientific evidence.",
+    "No clean reproduction/result tag is authorized."
+  ]
+}

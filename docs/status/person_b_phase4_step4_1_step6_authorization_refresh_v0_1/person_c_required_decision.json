@@ -1,0 +1,34 @@
+{
+  "c_scientific_use_currently_accepted": false,
+  "candidate_constraints": {
+    "candidate_must_be_one_of_refreshed_selection": true,
+    "current_scientific_use": "pending_cross_role_signoff",
+    "maximum_selected_pilots": 1,
+    "package_local_status_is_scientific_acceptance": false,
+    "source_commit": "bf09c23bb12f59acae724811eed6b82bab17c0ed"
+  },
+  "current_decision": null,
+  "current_state": "MISSING_REQUIRED_OWNER_DECISION",
+  "decision_owner": "person_c",
+  "person_b_may_supply_this_decision": false,
+  "required_decision_fields": [
+    "decision_id",
+    "owner",
+    "owner_authority_commit",
+    "decision",
+    "trajectory_id",
+    "source_path",
+    "git_object_sha256",
+    "scientific_use",
+    "scope",
+    "reason"
+  ],
+  "required_positive_decision": {
+    "decision": "ACCEPT_SINGLE_PILOT_FOR_SCIENTIFIC_USE",
+    "owner": "person_c",
+    "scientific_use": "accepted_for_single_pilot_step_6_1",
+    "scope": "single_pilot_steps_6_1_through_6_6"
+  },
+  "schema_id": "person-b-phase4-step4-1-step6-authorization-refresh-v0-1-person-c-required-decision",
+  "schema_version": "1.0"
+}
