@@ -1,0 +1,484 @@
+{
+  "activation_store_format_version": "person-a-activation-store-v2",
+  "cardinality": {
+    "activation_chunk_count": 1320,
+    "activation_row_count": 49360,
+    "layer_count": 20,
+    "model_frame_key_count": 2468,
+    "stored_dtype": "float32",
+    "trajectory_count": 66
+  },
+  "code_identity": {
+    "activation_index_builder": {
+      "git_commit": "3996725c3ff89b71e5a387fdc09dfae7f0f6665f",
+      "path": "scripts/build_person_a_66_cell_production_activation_index_v0_1.py",
+      "sha256": "7e1a01caead87b651c163c771c17ad310cc6d067790e5153e91ae0d50790501e"
+    },
+    "executed_extraction_runner": {
+      "byte_size": 32662,
+      "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_runtime_v0_1/executed_extraction_runner.py",
+      "repository_head_recorded_in_store": "6d3f23b0504817fe012320c285a5ed9025e5fd91",
+      "sha256": "df2a90a92df10725e6c19c2e3119794878927a6a7ab58f9f86b07205288876b9"
+    },
+    "finalized_extraction_runner": {
+      "git_commit": "3996725c3ff89b71e5a387fdc09dfae7f0f6665f",
+      "path": "scripts/run_person_a_66_cell_production_extraction.py",
+      "sha256": "06f0a9d55352688fa789f18ab0072dcbed612f32a3d81d11dba1aa26f80977f0"
+    }
+  },
+  "combined_activation_index": {
+    "byte_size": 321940278,
+    "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/combined_activation_index.json",
+    "sha256": "b5f97728bf4bcf957805f2664afbb53481d61db16318159cb0df6d8654c2f571"
+  },
+  "downstream_authorities": {
+    "person_b_fold_manifest": {
+      "artifact_hash": "43b5662b0991ac6342072bc5410d42bb87bcd9550d1a1f2144a79a04cb1e19d2",
+      "byte_size": 557603,
+      "model_frame_key_count": 2468,
+      "path": "docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json",
+      "sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d"
+    },
+    "person_b_oracle_target_manifest": {
+      "byte_size": 43262,
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+      "sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9",
+      "target_records": {
+        "byte_size": 2953366,
+        "path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_records.jsonl",
+        "sha256": "d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1"
+      }
+    },
+    "person_c_accepted_manifest": {
+      "git_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+      "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+    }
+  },
+  "external_payload_policy": {
+    "activation_chunks_committed_to_git": false,
+    "combined_index_committed_to_git": false,
+    "per_trajectory_inventories": [
+      {
+        "byte_size": 10722,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12602.json",
+        "sha256": "e125d410770b579d22e4a83740056bc1240d94a177270ba50b91015fc93cb99b",
+        "trajectory_id": "layout_01_ep12602"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12605.json",
+        "sha256": "d0fb1c5d365bd9e65724361cf9ebbdd2c6cb4ee72eff9961da1abcc37afb8051",
+        "trajectory_id": "layout_01_ep12605"
+      },
+      {
+        "byte_size": 10715,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12620.json",
+        "sha256": "038e890eb6eb6d7282e68a4773ee8ecef4d20b3cb94483ff16ebe8ca9fd52f13",
+        "trajectory_id": "layout_01_ep12620"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12631.json",
+        "sha256": "1ff6c4323ebe8e0a2437c9f5b81835036f5f060b61a6521f8063d56be0449e8e",
+        "trajectory_id": "layout_01_ep12631"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12636.json",
+        "sha256": "bf4db934418aae04ebcaf98b3d11d64942eddb0bf069bf0a685d036785164694",
+        "trajectory_id": "layout_01_ep12636"
+      },
+      {
+        "byte_size": 10729,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12650.json",
+        "sha256": "713273333ce2bf96aa7be8c3cdc56505fd53b1cf6aba97f5c096db7e05607a6b",
+        "trajectory_id": "layout_01_ep12650"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12651.json",
+        "sha256": "3256b8bea3155a9dc6e3123a3bb8784a6102978864c6d418ac154a031149b051",
+        "trajectory_id": "layout_01_ep12651"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12652.json",
+        "sha256": "ab9e8cee969d0a5bb65de4e17839d045b7ee8d376e63bf919b58bf0a251b711c",
+        "trajectory_id": "layout_01_ep12652"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12655.json",
+        "sha256": "5d285c080d77274953759d13471078379f9e803f2e24327f327b461a4f0a67f1",
+        "trajectory_id": "layout_01_ep12655"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12659.json",
+        "sha256": "2df72a15e3393b2358a333214d8c042656e68f982cd615be0222ae05def4591d",
+        "trajectory_id": "layout_01_ep12659"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_01_ep12665.json",
+        "sha256": "fd5b0a28bc8c54cc2758b1bab5179bb05687c46538219e570e5fc14af55e16b1",
+        "trajectory_id": "layout_01_ep12665"
+      },
+      {
+        "byte_size": 10722,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12610.json",
+        "sha256": "5da21474a9bd20ec819c032514a34cedd395c3acf85aa6303719699737ed0770",
+        "trajectory_id": "layout_02_ep12610"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12611.json",
+        "sha256": "f2994ff465072ec1ac153aa46d72bb0c74230b39ec9e36737572fe2d5bef762f",
+        "trajectory_id": "layout_02_ep12611"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12623.json",
+        "sha256": "2e671f9c0685335b1c0078050d369424bbd4f646cb6369617b7d2dcaf2f72a1b",
+        "trajectory_id": "layout_02_ep12623"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12635.json",
+        "sha256": "ce06acb57d4206ec3b33a70e1459f1f655755d97712e57a2da3a404fa46b3942",
+        "trajectory_id": "layout_02_ep12635"
+      },
+      {
+        "byte_size": 10729,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12641.json",
+        "sha256": "b34d6bc16471e44cc470a5a5bd80fd2817c046d087169c4458a15b78a26a027b",
+        "trajectory_id": "layout_02_ep12641"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12643.json",
+        "sha256": "48c6e3a0ced48584cdac80a8da7d7c182920da18434f9a38ddaf79cdbac27522",
+        "trajectory_id": "layout_02_ep12643"
+      },
+      {
+        "byte_size": 10715,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12648.json",
+        "sha256": "44d3fbf963f0ea7344eea008327aa72d98cd6afddfb63745441cf6c6d5cea457",
+        "trajectory_id": "layout_02_ep12648"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12649.json",
+        "sha256": "aa8c4a435727e1d28635d5dd457fdf0531056ecdeffefcd7acc0b5f16b6ff54f",
+        "trajectory_id": "layout_02_ep12649"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12661.json",
+        "sha256": "0a191f812104966859e6b4478c48c52a022a4e5d35e81c5a5455ae8fdb778644",
+        "trajectory_id": "layout_02_ep12661"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12663.json",
+        "sha256": "08ff69a8f57a525494b2c657198f0a0b0612f79fb116c8d9feefcfa7bd82da97",
+        "trajectory_id": "layout_02_ep12663"
+      },
+      {
+        "byte_size": 10691,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_02_ep12666.json",
+        "sha256": "e24bbf13dcf3bfd97edfb124fcb79af416120fd49cd851c9c321540f18e093f6",
+        "trajectory_id": "layout_02_ep12666"
+      },
+      {
+        "byte_size": 10714,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12601.json",
+        "sha256": "aaf9b15dfe7725d437da0cfda64ed4495bd5fd5fea40bf4be6477e3090b8b091",
+        "trajectory_id": "layout_03_ep12601"
+      },
+      {
+        "byte_size": 10670,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12609.json",
+        "sha256": "cff6bb39c1a4ad6fb2207221ab43a0b31ba9b233512de55f7b61c71ffaa759e2",
+        "trajectory_id": "layout_03_ep12609"
+      },
+      {
+        "byte_size": 10669,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12614.json",
+        "sha256": "15e6f8f9b24e7ce1d73de7d28ac35d82cd1135af306ac5793c45b2f7b29f82a0",
+        "trajectory_id": "layout_03_ep12614"
+      },
+      {
+        "byte_size": 10670,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12615.json",
+        "sha256": "814085dbdc12ee036d3152680848712a45522e32702812f632f72b6f5a42c3d1",
+        "trajectory_id": "layout_03_ep12615"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12617.json",
+        "sha256": "5c5d9eef7756bb67e8d999ae56b5912612d9ae661046493a4f57041cecf4b0cb",
+        "trajectory_id": "layout_03_ep12617"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12621.json",
+        "sha256": "6eefa282fbdffe60070a2ddcbd7ed3f9fc466fd948a233d327f05642a38d0666",
+        "trajectory_id": "layout_03_ep12621"
+      },
+      {
+        "byte_size": 10669,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12622.json",
+        "sha256": "b962af2aec31bd375fa3c0a42e4f1091482b1652be2a8bcb7534a66c2b9ca4b7",
+        "trajectory_id": "layout_03_ep12622"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12633.json",
+        "sha256": "aa306229390a062db25156bcb0a05bb1952aee32bb35a95bd3a5f1c999558614",
+        "trajectory_id": "layout_03_ep12633"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12637.json",
+        "sha256": "4527a49c3b078805b0a642594a111a3630c81cdf150d4fa155264e87a309b6c3",
+        "trajectory_id": "layout_03_ep12637"
+      },
+      {
+        "byte_size": 10729,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12639.json",
+        "sha256": "1363179a3c8bbd1bc2c9346a45521ef154ccd438960d3a4eac41651c1ed4e2fb",
+        "trajectory_id": "layout_03_ep12639"
+      },
+      {
+        "byte_size": 10722,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_03_ep12645.json",
+        "sha256": "c48c2313baaf4d335a1e89ece65397992b7f8eb07955cc61481cf52c229ffff1",
+        "trajectory_id": "layout_03_ep12645"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12603.json",
+        "sha256": "32e9d11ed6db09b53de15bb63a46a510752cb9246b61ca049b321c362f49295a",
+        "trajectory_id": "layout_04_ep12603"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12604.json",
+        "sha256": "95a8110bf0555851a533f8491503ba0e857617a2cfac627147490da50b6e6713",
+        "trajectory_id": "layout_04_ep12604"
+      },
+      {
+        "byte_size": 10729,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12607.json",
+        "sha256": "f2e88a9c64d7c5dd844130cca73d1f351ad0aa6f012844a861e67b054d71539c",
+        "trajectory_id": "layout_04_ep12607"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12608.json",
+        "sha256": "165888caf754d638dd5dad2398e7f1a8f3e3b7905e271fa10e05ea552c891e43",
+        "trajectory_id": "layout_04_ep12608"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12613.json",
+        "sha256": "d4fb8a358dce06da10eebdcd83bb04ba805544d25e4d2eaf5fbd8e72d05cf2ad",
+        "trajectory_id": "layout_04_ep12613"
+      },
+      {
+        "byte_size": 10722,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12626.json",
+        "sha256": "23c358fee2a1366beb539ddd67e55450707c2debe0e547d54fc02ea943bf01d0",
+        "trajectory_id": "layout_04_ep12626"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12629.json",
+        "sha256": "9144a9ccfa226c30e3b8a222d6275cdc4d8a5116b2ac5c9657a6e6bd3582dfeb",
+        "trajectory_id": "layout_04_ep12629"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12638.json",
+        "sha256": "d91dda46770f1e183e69330664c0200cc46548bcd6bd37bd10ee88e3dba785ec",
+        "trajectory_id": "layout_04_ep12638"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12640.json",
+        "sha256": "95e5ac5639ecaf6e5225c96aecce0773cdeb46daf8a2115df1ee32677297bf97",
+        "trajectory_id": "layout_04_ep12640"
+      },
+      {
+        "byte_size": 10714,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12644.json",
+        "sha256": "7b0661a2bff8424d3e7166febed917a88af524b9a5cfbbfda312afcd8fe6ec78",
+        "trajectory_id": "layout_04_ep12644"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_04_ep12653.json",
+        "sha256": "fe868beab246d029e23c80800476da867c058dd9a1c379b52f472b05ddfbfaec",
+        "trajectory_id": "layout_04_ep12653"
+      },
+      {
+        "byte_size": 10712,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12612.json",
+        "sha256": "68bdb080a2faa0f8d0ea59e381ee5a59059cdd8c0626d421db51287982791369",
+        "trajectory_id": "layout_05_ep12612"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12624.json",
+        "sha256": "6c6ea0d05824a981fc73ecabce0c35a26e35e1ca2319b4969b61271a3689796c",
+        "trajectory_id": "layout_05_ep12624"
+      },
+      {
+        "byte_size": 10715,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12627.json",
+        "sha256": "ee5f211b2cd2fa8f002f8e60e6a466aa901b804775e1304a794030e9a3cf1c07",
+        "trajectory_id": "layout_05_ep12627"
+      },
+      {
+        "byte_size": 10729,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12630.json",
+        "sha256": "9cd43e92b60a67641dc2d73e1c7590a269d10e439f29c98ea00aa95ae208d344",
+        "trajectory_id": "layout_05_ep12630"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12632.json",
+        "sha256": "cd31a9277d834f17eb3736693bbec3c9b7b9c003bd1912784f9e2ea0f1e46d99",
+        "trajectory_id": "layout_05_ep12632"
+      },
+      {
+        "byte_size": 10722,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12634.json",
+        "sha256": "3af612cdc7b593664fa669620d3ac5cad01b7d8e226b74dcb5d39e79afd063f1",
+        "trajectory_id": "layout_05_ep12634"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12646.json",
+        "sha256": "f56f6efafa9c495a9ac72a0fadd4149356c8deb96544f2376a34ae89470de148",
+        "trajectory_id": "layout_05_ep12646"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12647.json",
+        "sha256": "fda2f8040ab80d527f53f597dceadc4aef4868cf371a2b2adcca1b13bda59202",
+        "trajectory_id": "layout_05_ep12647"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12654.json",
+        "sha256": "97d3081348e705eef3821996d7b011a241808c748a0e20c513f90550665409dc",
+        "trajectory_id": "layout_05_ep12654"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12656.json",
+        "sha256": "49fd798a06fd06dd98286ffae018671c81390307f3e61bf51657db173bf94643",
+        "trajectory_id": "layout_05_ep12656"
+      },
+      {
+        "byte_size": 10712,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_05_ep12664.json",
+        "sha256": "dad3819e68b64517f84e849fcacadfbb61d37d178a9e2cb3b0455de181c49071",
+        "trajectory_id": "layout_05_ep12664"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12606.json",
+        "sha256": "97e3d8eafd86eb7db1472825a294b65f5c2f0938d8472a67a55830c9c12600bd",
+        "trajectory_id": "layout_06_ep12606"
+      },
+      {
+        "byte_size": 10722,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12616.json",
+        "sha256": "14701327174db38872e8ddf18c778cba1c0fb0a19815dcb7e07443495d03f116",
+        "trajectory_id": "layout_06_ep12616"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12618.json",
+        "sha256": "2f2d86e7c38b5a452a05210df9c8f97e180fd6c208c1ea19908f5506032057b4",
+        "trajectory_id": "layout_06_ep12618"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12619.json",
+        "sha256": "8d89c2be23cbcda159c9128782472b8ba8d8c0991bba4ebc1c483a6bcc97ef3e",
+        "trajectory_id": "layout_06_ep12619"
+      },
+      {
+        "byte_size": 10712,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12625.json",
+        "sha256": "d7c457d7e8eae924be1e1893455e74fa957442f1a01dbe4783b7e03958d44eee",
+        "trajectory_id": "layout_06_ep12625"
+      },
+      {
+        "byte_size": 10712,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12628.json",
+        "sha256": "6da82cbadcf4424cddbcf92f24907ee18d4b1758220dbdc9bf918cff63f759a6",
+        "trajectory_id": "layout_06_ep12628"
+      },
+      {
+        "byte_size": 10712,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12642.json",
+        "sha256": "68886590c0d3f7485d78cccfb9792e7b25a07535f636b3a6aa23ee41cd2505c9",
+        "trajectory_id": "layout_06_ep12642"
+      },
+      {
+        "byte_size": 10729,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12657.json",
+        "sha256": "0b00c239fbf162ae8ac45ad0eadf3bfdc45aad592fb12da096455d6b5ab77b43",
+        "trajectory_id": "layout_06_ep12657"
+      },
+      {
+        "byte_size": 10712,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12658.json",
+        "sha256": "fd3d40e4de3ac2b86be04f00edda71f301947f6a7cd158517347f95c8f077cf2",
+        "trajectory_id": "layout_06_ep12658"
+      },
+      {
+        "byte_size": 10711,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12660.json",
+        "sha256": "e5a64aeef192f65206a8b9470dd2b5ea4823c080605c72512e8d53fb9179e9df",
+        "trajectory_id": "layout_06_ep12660"
+      },
+      {
+        "byte_size": 10715,
+        "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_activation_index_v0_1/per_trajectory_inventories/layout_06_ep12662.json",
+        "sha256": "e900916862b46f776b722e8dc7f0a16002653bfe08ee0e5f77ece90a125beb67",
+        "trajectory_id": "layout_06_ep12662"
+      }
+    ]
+  },
+  "queue_authority": {
+    "runtime_queue": {
+      "byte_size": 176026,
+      "path": "/mnt/sagemaker-nvme/mineocclude/phase6/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/output/status/person_a_66_cell_production_runtime_v0_1/extraction_queue_state.json",
+      "sha256": "d92474958979669c1af45dce7423c354fbd23801a69324ff2d0308e11f076fce",
+      "state_counts": {
+        "completed": 66
+      }
+    },
+    "seed_authority_preserved": true,
+    "seed_queue": {
+      "byte_size": 39339,
+      "path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/successor_extraction_queue_state.json",
+      "sha256": "3422655c6a627c6b55028f74c9aa3896aa624c32927e88d923dac05a63973309",
+      "state_counts": {
+        "pending": 66
+      }
+    },
+    "static_work_identity_matches": true
+  },
+  "run_id": "mineocclude-run-ea6169430d693f8adcd16a23a62c4422",
+  "schema_id": "person-a-66-cell-production-finalization-v0.1-activation-index-manifest",
+  "schema_version": "1.0",
+  "status": "READY"
+}
