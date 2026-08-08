@@ -1,7 +1,7 @@
 {
-  "aggregate_result_count": 8,
+  "aggregate_result_count": 9,
   "evidence_kind": "real",
-  "family_metric_count": 8,
+  "family_metric_count": 9,
   "family_metrics": [
     {
       "aggregate": {
@@ -691,6 +691,118 @@
             "layout_id",
             "trajectory_id"
           ],
+          "r2_ci_high": 0.021827141613855648,
+          "r2_ci_low": -7.818057483895885,
+          "refused_replicate_count": 0,
+          "resample_count": 1000,
+          "seed": 20260721,
+          "usable_replicate_count": 1000
+        },
+        "grouped_permutation": {
+          "available": false,
+          "observed_r2": -1.8961121560121192,
+          "permutation_unit": "whole_trajectory_block",
+          "reason": "resampling_error:Every trajectory-length stratum needs at least two blocks to permute.",
+          "requested_permutation_count": 999
+        },
+        "layout_count": 6,
+        "regression": {
+          "available": true,
+          "mae": 1.129436602734256,
+          "mse": 2.912482751181537,
+          "r2": -1.8961121560121192,
+          "sample_count": 662
+        },
+        "scored_row_count": 662,
+        "trajectory_count": 42
+      },
+      "comparison_class": "fair_fitted_ceiling",
+      "family_id": "raw_pixel",
+      "per_fold": [
+        {
+          "fold_idx": 0,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.8878373842283912,
+            "mse": 0.974722135211476,
+            "r2": -0.11682894158723323,
+            "sample_count": 155
+          },
+          "scored_row_count": 155,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 1,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.9075570972866,
+            "mse": 4.121282941353432,
+            "r2": -2.5535215303528185,
+            "sample_count": 84
+          },
+          "scored_row_count": 84,
+          "trajectory_count": 5
+        },
+        {
+          "fold_idx": 2,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 1.1294138707524637,
+            "mse": 1.4018717949870187,
+            "r2": -2.6123635918334953,
+            "sample_count": 147
+          },
+          "scored_row_count": 147,
+          "trajectory_count": 10
+        },
+        {
+          "fold_idx": 3,
+          "layout_count": 1,
+          "regression": {
+            "available": true,
+            "mae": 0.23099507388954404,
+            "mse": 0.07099324190573349,
+            "r2": 0.890074325764479,
+            "sample_count": 91
+          },
+          "scored_row_count": 91,
+          "trajectory_count": 6
+        },
+        {
+          "fold_idx": 4,
+          "layout_count": 2,
+          "regression": {
+            "available": true,
+            "mae": 1.4205029705840106,
+            "mse": 6.585180239860521,
+            "r2": -7.307361447422732,
+            "sample_count": 185
+          },
+          "scored_row_count": 185,
+          "trajectory_count": 11
+        }
+      ],
+      "row_accounting": {
+        "applicable_rows": 662,
+        "applicable_without_truth": 0,
+        "emitted_rows": 662,
+        "non_applicable_rows": 0,
+        "scored_rows": 662
+      },
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "aggregate": {
+        "bootstrap_r2": {
+          "available": true,
+          "coverage": 0.95,
+          "hierarchy": [
+            "layout_id",
+            "trajectory_id"
+          ],
           "r2_ci_high": 0.42124384617684424,
           "r2_ci_low": -0.24951716517026665,
           "refused_replicate_count": 0,
@@ -927,7 +1039,7 @@
       "target_name": "log_sigma_oracle"
     }
   ],
-  "floor_comparison_count": 6,
+  "floor_comparison_count": 7,
   "floor_comparisons": [
     {
       "comparison_kind": "person_d_baseline_versus_chance_floor",
@@ -1009,6 +1121,25 @@
       "comparison_kind": "person_d_baseline_versus_chance_floor",
       "delta_r2": {
         "available": true,
+        "delta_r2": -0.18290847218078587,
+        "family_r2": -1.3841478137789616,
+        "floor_r2": -1.2012393415981757,
+        "sample_count": 151
+      },
+      "family_id": "raw_pixel",
+      "family_rows_not_in_floor": 511,
+      "family_scored_row_count": 662,
+      "floor_family_id": "grouped_shuffled",
+      "floor_rows_not_in_family": 0,
+      "floor_scored_row_count": 151,
+      "intersection_row_count": 151,
+      "is_probe_comparison": false,
+      "target_name": "mu_oracle_blocks"
+    },
+    {
+      "comparison_kind": "person_d_baseline_versus_chance_floor",
+      "delta_r2": {
+        "available": true,
         "delta_r2": 3.397238402761415,
         "family_r2": 0.2953978636009361,
         "floor_r2": -3.101840539160479,
@@ -1044,7 +1175,7 @@
       "target_name": "log_sigma_oracle"
     }
   ],
-  "fold_result_count": 39,
+  "fold_result_count": 44,
   "metric_authority": {
     "analysis_arithmetic_dtype": "float64",
     "analysis_config_version": "person-b-phase1-v0.2",

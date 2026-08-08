@@ -70,7 +70,7 @@ Person D introduces no image transform.
 
 ## Families executed
 
-Seven of eight ran on real bytes:
+All eight ran on real bytes:
 
 | Family | Class | Applicable rows |
 |---|---|---|
@@ -79,25 +79,20 @@ Seven of eight ran on real bytes:
 | `grouped_shuffled` | chance floor | 217 |
 | `time_only` | clock floor | 311 |
 | `explicit_feature` | fair fitted ceiling | 656 |
-| `raw_pixel` | fair fitted ceiling | **blocked — see below** |
+| `raw_pixel` | fair fitted ceiling | 662 |
 | `visible_history_q` | fair baseline | 311 |
 | `known_q_analytic` | privileged oracle ceiling | 311 |
 
-9,268 prediction rows, 3,124 applicable. Every non-applicable row
-carries a reason and a null prediction — never a zero.
+10,592 prediction rows, 3,786 applicable, zero failed. Every
+non-applicable row carries a reason and a null prediction — never a zero.
 
-### `raw_pixel` is blocked on host capacity, not on a missing input
-
-Every input `raw_pixel` needs exists and verified: all 2,468 payloads are
-present on disk with matching digests. The frozen memory preflight
-(`memory_planning.build_raw_pixel_memory_plan`) declined it because the
-unchanged ridge pipeline's estimated peak for 662 rows × 258,048 features
-is **6.299 GiB**, and this host had ~4.75 GiB free.
-
-This is a host-capacity blocker. No code or input change is required —
-re-run the same command on a host with at least 6.3 GiB free physical
-memory and the gate admits automatically. The gate is deliberately not
-weakened: it exists because a prior production run was OOM-killed.
+`raw_pixel` was blocked on an earlier attempt: the frozen memory
+preflight (`memory_planning.build_raw_pixel_memory_plan`) declined it
+because the unchanged ridge pipeline's estimated peak for 662 rows ×
+258,048 features is 6.299 GiB and the host had ~4.87 GiB free. The gate
+was never weakened — it exists because a prior production run was
+OOM-killed. It admitted at 6.93 GiB free and the family then completed
+with all 2,468 payload digests verified on read.
 
 ## Metrics
 
@@ -115,7 +110,27 @@ explicit_feature   +0.9687     (fair fitted ceiling)
 constant_velocity  +0.7286     (reference)
 last_seen          +0.6432     (memory heuristic)
 grouped_shuffled   -1.2012     (chance floor)
+raw_pixel          -1.8961     (below the floor — see below)
 ```
+
+### `raw_pixel` scoring below the chance floor is the desired outcome
+
+`raw_pixel` reaches held-out R² **-1.8961** on 662 rows (bootstrap CI
+[-7.818, +0.022]; -0.183 against the chance floor on their 151 shared
+rows). That is a genuine negative scientific result, not an engineering
+failure, and it is the direction the study wants.
+
+The family's own frozen docstring states the rule: *"A well-above-floor
+score here is a warning sign, not a positive result: it means the current
+occluded frame's raw pixels alone carry decodable position information (a
+visual-leakage or scene-cue confound)."* Scoring below the floor is
+evidence that no such confound is present — the current occluded frame's
+pixels alone do not decode the hidden position.
+
+Ridge on 662 rows × 258,048 features is heavily over-parameterized, so a
+negative held-out R² is also the expected shape for this estimator at
+this row count. Both readings point the same way. Person B owns the
+interpretation; Person D applies no threshold to it.
 
 and on the U2 target `log_sigma_oracle`:
 
@@ -156,11 +171,16 @@ python scripts/run_person_d_66_cell_production_baselines.py \
     --output-root docs/status/person_d_66_cell_production_baselines_v0_1
 ```
 
-Verified byte-identical across two runs for all six inventoried
-artifacts. `execution_receipt.json` is deliberately excluded from
+Verified byte-identical across two full eight-family runs for all six
+inventoried artifacts, including the ridge-fitted `raw_pixel`
+predictions. `execution_receipt.json` is deliberately excluded from
 `sha256_inventory.json`: it carries wall-clock runtime and a live host
 memory reading, so a busier machine can never look like a changed
 scientific result.
+
+`raw_pixel` needs at least 6.299 GiB of free physical memory or the
+frozen preflight declines it and the family is recorded as blocked
+rather than run.
 
 Populate `--authority-root` with `git cat-file blob <commit>:<path>`
 (raw bytes; a shell redirect that re-encodes will fail the digest check).

@@ -9,7 +9,7 @@
     "time_only": "clock_floor",
     "visible_history_q": "fair_baseline"
   },
-  "consumable_without_further_person_d_implementation": false,
+  "consumable_without_further_person_d_implementation": true,
   "consumer_role": "person_b",
   "dtype_and_seed_authority": {
     "analysis_arithmetic_dtype": "float64",
@@ -24,20 +24,11 @@
     "grouped_shuffled",
     "time_only",
     "explicit_feature",
+    "raw_pixel",
     "visible_history_q",
     "known_q_analytic"
   ],
-  "families_not_executed": {
-    "raw_pixel": {
-      "all_inputs_present": true,
-      "blocker_kind": "host_capacity_not_missing_input",
-      "reason": "memory_plan_declined",
-      "remediation": "Re-run on a host with at least the required free physical memory; no code or input change is needed.",
-      "required_free_bytes": 6763053056,
-      "required_free_gib": 6.299,
-      "status": "blocked"
-    }
-  },
+  "families_not_executed": {},
   "frame_handoff_successor": {
     "frozen_pilot_ids_in_production_path": false,
     "module": "src/mineocclude/baselines/frame_handoff_v0_3.py",
@@ -62,11 +53,11 @@
     "person_c_to_d_media_handoff_sha256": "84b5b927ab41d34d51ebf30f1af9d48cf1b5af9d057518a6ca6338cef7f38a56"
   },
   "metric_package": {
-    "aggregate_result_count": 8,
-    "floor_comparison_count": 6,
-    "fold_result_count": 39,
+    "aggregate_result_count": 9,
+    "floor_comparison_count": 7,
+    "fold_result_count": 44,
     "path": "docs/status/person_d_66_cell_production_baselines_v0_1/baseline_metrics.json",
-    "sha256": "5c7b0754a961a530a09e9d44d95ffdb0bf5286e5308e316fc3475ac11826f0aa"
+    "sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5"
   },
   "person_b_obligations": {
     "oracle_targets_used_only_for_evaluation": true,
@@ -78,10 +69,10 @@
   "person_d_commit_authority": "the Git commit on role/person-d-baselines containing this package; see sha256_inventory.json for content digests",
   "person_d_starting_commit": "8cd2fdfc7759b285a7748ccdb4564e475b3ce1cf",
   "prediction_manifest": {
-    "applicable_prediction_count": 3124,
+    "applicable_prediction_count": 3786,
     "path": "docs/status/person_d_66_cell_production_baselines_v0_1/prediction_manifest.json",
-    "prediction_row_count": 9268,
-    "sha256": "f4017ea1954ab2d1636a51d7b627db8032f9ec753eb52c82b8be81bf70e4bd58"
+    "prediction_row_count": 10592,
+    "sha256": "ffd8f8316f8d3fd74e8ca441dda6f9f45d4d05c7834496abc461a76b97337ea7"
   },
   "producer_role": "person_d",
   "row_universe": {
