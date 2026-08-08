@@ -1,0 +1,59 @@
+{
+  "admission_authority": {
+    "commit": "25e09cb605699cdcb00dec1fbb1726977bec55e0",
+    "owner_role": "person_b",
+    "person_d_infers_no_admission": true,
+    "records_path": "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_records.jsonl",
+    "records_sha256": "29b4cf003f3d9479b3606f17947879078801b400b09d942bd6827544b95227b2",
+    "selector": "status == 'accepted'"
+  },
+  "admitted_row_count": 662,
+  "admitted_trajectory_count": 42,
+  "counts_by_admission_stratum": {
+    "context_sentinel_hidden": 88,
+    "core_regime_a_hidden": 223,
+    "no_wall_visible_control": 351
+  },
+  "counts_by_analysis_scope": {
+    "hidden_mean": 311,
+    "hidden_spread": 311,
+    "visible_no_wall_control": 351
+  },
+  "counts_by_control_type": {
+    "context_sentinel": 88,
+    "core_regime_a": 223,
+    "no_wall_visible_control": 351
+  },
+  "counts_by_fold": {
+    "0": 155,
+    "1": 84,
+    "2": 147,
+    "3": 91,
+    "4": 185
+  },
+  "counts_by_layout": {
+    "layout_01": 91,
+    "layout_02": 147,
+    "layout_03": 96,
+    "layout_04": 89,
+    "layout_05": 84,
+    "layout_06": 155
+  },
+  "excluded_counts_by_reason": {
+    "ambiguous_geometry_edge_convention": 42,
+    "no_object_control_not_oracle_eligible": 360,
+    "outside_frozen_condition_selection": 1034,
+    "visibility_channel_disagreement": 370
+  },
+  "excluded_row_count": 1806,
+  "log_sigma_target_available_row_count": 311,
+  "mu_target_available_row_count": 662,
+  "producer_role": "person_d",
+  "reconciles_to_person_b": true,
+  "reconciliation_mismatch_count": 0,
+  "run_id": "person-d-66-cell-production-baselines-v0-1",
+  "schema_id": "person-d-66-cell-execution-universe-v0-1",
+  "schema_version": "1.0",
+  "total_model_frame_key_count": 2468,
+  "trajectory_count": 66
+}
