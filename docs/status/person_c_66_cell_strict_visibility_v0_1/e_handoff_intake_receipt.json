@@ -1,0 +1,145 @@
+{
+ "E_HANDOFF_ACCEPTED": true,
+ "accounting": {
+  "applicability_mismatch_count": 0,
+  "detector_status_counts": {
+   "detected": 1726,
+   "not_applicable_no_target_object": 360,
+   "not_detected": 382
+  },
+  "duplicate_key_count": 0,
+  "empirical_hidden_count": 382,
+  "empirical_not_applicable_count": 360,
+  "empirical_visible_count": 1726,
+  "extra_key_count": 0,
+  "missing_key_count": 0,
+  "row_count": 2468,
+  "source_frame_identity_mismatch_count": 0,
+  "unique_key_count": 2468,
+  "unreadable_source_frame_count": 0
+ },
+ "c_frame_universe_sha256": "f95d705df50f444bc21541f485b91471ff52c0c0ca8dccf2779c9c4adf1edcfe",
+ "c_request_manifest_sha256": "6934317b6b2723d4dddb5507ba58ef32e6ce39729bd4065751aa76e8ae1fc0ea",
+ "detector": {
+  "algorithm_id": "hsv-largest-valid-blob-v1.0-candidate",
+  "config_sha256": "acfecd659958891eaee0d582c946abdfaaf47d1ab3307a24f7652e634c045bfa",
+  "distinct_identities_observed_in_table": [
+   "0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125"
+  ],
+  "identity_sha256": "0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125",
+  "implementation_path": "src/mineocclude/vision/magenta.py",
+  "implementation_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+  "person_c_executed_detector": false,
+  "person_c_tuned_detector": false,
+  "retuned_on_66_cell_population": false,
+  "settings_sha256": "0dbb426adf99f53455eea04c4aaeb56f3cb22cbc351d87269bb605445eb8f2ea",
+  "version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cadf618fca1578196bde4982021c38627ccb9c39e46353812e7da3fce6aa125"
+ },
+ "e_empirical_records_declared_sha256": "fd0ad70ce880645fcda668d23dacc07784c2f8e418a3eceabd9f88ac391e07f9",
+ "e_empirical_records_observed_sha256": "fd0ad70ce880645fcda668d23dacc07784c2f8e418a3eceabd9f88ac391e07f9",
+ "e_empirical_records_path": "data/handoff_c/person_e_66_cell_empirical_visibility_v0_1/empirical_visibility_records.jsonl",
+ "e_handoff_declared_sha256": "91a5c6996cdd176a62f5f0dd752b25acda1d73163894b9c9b2f34317a38e9652",
+ "e_handoff_observed_sha256": "91a5c6996cdd176a62f5f0dd752b25acda1d73163894b9c9b2f34317a38e9652",
+ "e_handoff_path": "data/handoff_c/person_e_66_cell_empirical_visibility_v0_1/e_to_c_empirical_visibility_handoff.json",
+ "forbidden_person_c_fields_present": [],
+ "identity_checks": {
+  "e_declared_accepted_geometry": true,
+  "e_declared_b_commit": true,
+  "e_declared_b_cosign": true,
+  "e_declared_c_accepted_manifest": true,
+  "e_declared_c_capture_package_manifest": true,
+  "e_declared_c_commit": true,
+  "e_declared_c_request_manifest": true,
+  "e_declared_detector_identity": true,
+  "e_declared_marker_authority": true,
+  "e_declared_ready": true,
+  "e_declared_records_sha256": true,
+  "e_did_not_compute_geometric_visible": true,
+  "e_did_not_compute_visible_flag": true,
+  "e_join_key_is_canonical": true,
+  "e_strict_join_owner_is_person_c": true
+ },
+ "marker_layout_successor_authority": {
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "additive_successor": true,
+  "authority_id": "person-e-v0-4-marker-layout-authority-v0.1",
+  "declared_sha256": "14a12db4092e05e8c41057df210eec11f07a78f593a149595a12eba45fda82d8",
+  "historical_predecessor_invalidated": false,
+  "marker_world_coordinates_changed_to_satisfy_a_test": false,
+  "observed_sha256": "14a12db4092e05e8c41057df210eec11f07a78f593a149595a12eba45fda82d8",
+  "owner_role": "person_e",
+  "path": "data/handoff_e/person_e_v0_4_marker_layout_authority_v0_1/marker_layout_authority_manifest.json",
+  "world_point_convention": "block_top_face_centre"
+ },
+ "owner_role": "person_c",
+ "person_b_cosign": {
+  "checks": {
+   "b_all_layouts_compatible": true,
+   "b_cosign_binds_c_commit": true,
+   "b_cosign_binds_c_coordinate_authority": true,
+   "b_cosign_did_not_merge_c_branch": true,
+   "b_cosign_did_not_modify_c_bytes": true,
+   "b_cosign_input_manifest_is_c_authority": true,
+   "b_did_not_build_oracle_target_manifest": true,
+   "b_preserved_person_c_signature": true,
+   "b_projection_matches_person_c_exactly": true,
+   "b_signed_its_own_side": true
+  },
+  "commit": "a8648514033f8d58887c3b919f02985704aaa310",
+  "cosigned_frames": [
+   {
+    "coordinate_frame_hash": "3d75d33ccfae95b55d4c2a6cf6cc2e0f8b08bb8a5bf8235d643bceae025fa0dc",
+    "coordinate_frame_hash_preserved": true,
+    "layout_id": "layout_01",
+    "person_c_source_file_sha256": "f4d1b1d327bcbacec0ef88f99cb7dd475ffec4c67d95b2c0cefc50beb69a6518",
+    "person_c_source_file_sha256_reverified": "f4d1b1d327bcbacec0ef88f99cb7dd475ffec4c67d95b2c0cefc50beb69a6518"
+   },
+   {
+    "coordinate_frame_hash": "f309e51adfb941d963084afc7b5cdf7c7480e923fd01cfb8203f4e24e6eb5061",
+    "coordinate_frame_hash_preserved": true,
+    "layout_id": "layout_02",
+    "person_c_source_file_sha256": "297b4dc85ac9c9c2a21305e04811d0c25853fcbc87e17d61e16bf050340b4dbb",
+    "person_c_source_file_sha256_reverified": "297b4dc85ac9c9c2a21305e04811d0c25853fcbc87e17d61e16bf050340b4dbb"
+   },
+   {
+    "coordinate_frame_hash": "b640ba429b7e0e1494b844385b3d5a1b3f5619ad100e9f3519f9365e294f9acc",
+    "coordinate_frame_hash_preserved": true,
+    "layout_id": "layout_03",
+    "person_c_source_file_sha256": "b4d3a17edb9ebbe3afddb851ff20180ac0b85d5917b18b25c65f94ec3fb615db",
+    "person_c_source_file_sha256_reverified": "b4d3a17edb9ebbe3afddb851ff20180ac0b85d5917b18b25c65f94ec3fb615db"
+   },
+   {
+    "coordinate_frame_hash": "3510cdd23ad9577398b34edf031779a69176d735e776c4736d08859847cb76a7",
+    "coordinate_frame_hash_preserved": true,
+    "layout_id": "layout_04",
+    "person_c_source_file_sha256": "8fa448ff4a991283ff30d3d83280403f2d202fb5510ae63a90a77f5894c1551f",
+    "person_c_source_file_sha256_reverified": "8fa448ff4a991283ff30d3d83280403f2d202fb5510ae63a90a77f5894c1551f"
+   },
+   {
+    "coordinate_frame_hash": "f6f9be4aef99a6e773a7e1cdb1a995e738a4bd867b14f36e3744bfcbd50d5679",
+    "coordinate_frame_hash_preserved": true,
+    "layout_id": "layout_05",
+    "person_c_source_file_sha256": "cf76bee1a1a9c4d6e768664db960f40e37fef6417c67029457c5fd6f6d5073da",
+    "person_c_source_file_sha256_reverified": "cf76bee1a1a9c4d6e768664db960f40e37fef6417c67029457c5fd6f6d5073da"
+   },
+   {
+    "coordinate_frame_hash": "b57a4448516c469435a08d24cfd587da1b8fc154188ee0fed97d62fc034a59de",
+    "coordinate_frame_hash_preserved": true,
+    "layout_id": "layout_06",
+    "person_c_source_file_sha256": "e84a894f28cbcee0cffe4f96c492f41e8263e12a33e50bdb900b9dfe79dbeaeb",
+    "person_c_source_file_sha256_reverified": "e84a894f28cbcee0cffe4f96c492f41e8263e12a33e50bdb900b9dfe79dbeaeb"
+   }
+  ],
+  "declared_sha256": "b40d8ba1103e1638af386cc365ec727ab576d842516accc41d675d4fdb3d6b7d",
+  "observed_sha256": "b40d8ba1103e1638af386cc365ec727ab576d842516accc41d675d4fdb3d6b7d",
+  "path": "docs/status/person_b_66_cell_coordinate_frame_cosign_v0_1/coordinate_frame_cosign.json"
+ },
+ "person_c_commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+ "person_e_branch_merged": false,
+ "person_e_commit": "fec27d08b4629afa07c7858598e94778dc6e7bef",
+ "problem_count": 0,
+ "problems": [],
+ "read_method": "git show at the pinned Person E commit",
+ "schema_id": "mineocclude-person-c-66-cell-strict-visibility-v0.1-e-handoff-intake-receipt",
+ "schema_version": "0.1"
+}

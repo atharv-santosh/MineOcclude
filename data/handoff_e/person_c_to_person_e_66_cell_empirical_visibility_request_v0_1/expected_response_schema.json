@@ -1,0 +1,54 @@
+{
+ "join_key": [
+  "trajectory_id",
+  "model_frame_idx"
+ ],
+ "join_semantics": "exact immutable frame identity; Person E must not re-order, re-index, resample or re-derive the frame universe",
+ "owner_role": "person_e",
+ "person_c_must_not_tune_detector": true,
+ "person_c_supplied_detector_version": false,
+ "person_c_supplied_thresholds": false,
+ "required_fields": [
+  {
+   "field": "trajectory_id",
+   "role": "join_key",
+   "type": "string"
+  },
+  {
+   "field": "model_frame_idx",
+   "role": "join_key",
+   "type": "integer"
+  },
+  {
+   "field": "source_frame_sha256",
+   "note": "must equal the value Person C supplied for this key",
+   "role": "immutable_frame_identity_echo",
+   "type": "string"
+  },
+  {
+   "field": "empirical_magenta_visible",
+   "note": "null only where the detector is not applicable; the reason must then be given in detector_status",
+   "role": "measurement",
+   "type": "boolean_or_null"
+  },
+  {
+   "field": "detector_status",
+   "role": "measurement_status",
+   "type": "string"
+  },
+  {
+   "field": "detector_version",
+   "role": "person_e_frozen_detector_identity",
+   "type": "string"
+  },
+  {
+   "field": "detector_identity_sha256",
+   "role": "person_e_frozen_detector_identity",
+   "type": "string"
+  }
+ ],
+ "required_row_count": 2468,
+ "schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1-expected-person-e-response",
+ "schema_version": "0.1",
+ "threshold_ownership": "person_e"
+}

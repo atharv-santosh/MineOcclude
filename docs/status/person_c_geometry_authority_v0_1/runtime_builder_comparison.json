@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0",
+  "audit_starting_commit": "f0d4e895b56fc4ca3f4805aa13b73545744af1b0",
+  "runtime_classification": "MIXED_OR_VERSIONED_GEOMETRY",
+  "head_builder": {
+    "layouts_source": {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/Layouts.java",
+      "source_commit": "1f1937ad850b2476aca528032410a1938d0abe7f",
+      "git_blob": "48c94b559253a378d8e938cc3375fbfc8ab7f1c3"
+    },
+    "construction_source": {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ArenaBuilder.java",
+      "source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356",
+      "git_blob": "3c157928d2e001cb4cc7fc0c3de12f66e2562727",
+      "sha256": "f66fbc4f16b4d50ad9dd71446468866eda286ca627f8a82140373cfa4c51e5fb"
+    },
+    "reset_and_receipt_source": {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java",
+      "source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356",
+      "git_blob": "b9c5568d85c0107ad37b71d3bdde5ff16ec1806c",
+      "sha256": "ff53c0c45771d7a23c55783c35f3c9767f5fada33d59f3149c292edf4b401dfa"
+    },
+    "default_marker_rule": {
+      "name": "builder_v2",
+      "sheep_lateral_offset_blocks": 2,
+      "near_marker_lane_inset_blocks": 2,
+      "far_marker_lane_inset_blocks": 0,
+      "override": "process-global mutable markergeom values",
+      "override_receipted_in_reset_result": false,
+      "override_receipted_in_capture_provenance": false
+    },
+    "arena_difference_from_c_v0_3": {
+      "c_floor": "40x20 smooth_stone",
+      "builder_floor": "dynamic per-layout footprint of grass_block",
+      "full_c_geometry_constructed": false,
+      "wall_lane_camera_constructed_from_layouts_java": true
+    }
+  },
+  "head_default_by_layout": [
+    {
+      "layout_id": "layout_01",
+      "wall_axis": "x",
+      "floor_bounds_inclusive": {"x": [-10, 10], "z": [-9, 9]},
+      "c_floor_bounds_inclusive": {"x": [-19, 20], "z": [-9, 10]},
+      "marker_block_positions": {"blue": [-6, 3, 4], "yellow": [6, 3, 4], "lime": [-8, 3, 8], "white": [8, 3, 8]},
+      "marker_top_face_centres": {"blue": [-5.5, 4.0, 4.5], "yellow": [6.5, 4.0, 4.5], "lime": [-7.5, 4.0, 8.5], "white": [8.5, 4.0, 8.5]},
+      "matches_c_declared_marker_coordinates": false,
+      "matches_e_declared_marker_coordinates": false
+    },
+    {
+      "layout_id": "layout_02",
+      "wall_axis": "z",
+      "floor_bounds_inclusive": {"x": [-9, 9], "z": [-10, 10]},
+      "c_floor_bounds_inclusive": {"x": [-19, 20], "z": [-9, 10]},
+      "marker_block_positions": {"blue": [4, 3, -6], "yellow": [4, 3, 6], "lime": [8, 3, -8], "white": [8, 3, 8]},
+      "marker_top_face_centres": {"blue": [4.5, 4.0, -5.5], "yellow": [4.5, 4.0, 6.5], "lime": [8.5, 4.0, -7.5], "white": [8.5, 4.0, 8.5]},
+      "matches_c_declared_marker_coordinates": false,
+      "matches_e_declared_marker_coordinates": false
+    },
+    {
+      "layout_id": "layout_03",
+      "wall_axis": "x",
+      "floor_bounds_inclusive": {"x": [-11, 11], "z": [-9, 9]},
+      "c_floor_bounds_inclusive": {"x": [-19, 20], "z": [-9, 10]},
+      "marker_block_positions": {"blue": [-7, 3, 4], "yellow": [7, 3, 4], "lime": [-9, 3, 8], "white": [9, 3, 8]},
+      "marker_top_face_centres": {"blue": [-6.5, 4.0, 4.5], "yellow": [7.5, 4.0, 4.5], "lime": [-8.5, 4.0, 8.5], "white": [9.5, 4.0, 8.5]},
+      "matches_c_declared_marker_coordinates": false,
+      "matches_e_declared_marker_coordinates": false
+    },
+    {
+      "layout_id": "layout_04",
+      "wall_axis": "x",
+      "floor_bounds_inclusive": {"x": [-10, 10], "z": [-9, 11]},
+      "c_floor_bounds_inclusive": {"x": [-19, 20], "z": [-8, 11]},
+      "marker_block_positions": {"blue": [-6, 3, 6], "yellow": [6, 3, 6], "lime": [-8, 3, 10], "white": [8, 3, 10]},
+      "marker_top_face_centres": {"blue": [-5.5, 4.0, 6.5], "yellow": [6.5, 4.0, 6.5], "lime": [-7.5, 4.0, 10.5], "white": [8.5, 4.0, 10.5]},
+      "matches_c_declared_marker_coordinates": false,
+      "matches_e_declared_marker_coordinates": false
+    },
+    {
+      "layout_id": "layout_05",
+      "wall_axis": "x",
+      "floor_bounds_inclusive": {"x": [-9, 9], "z": [-8, 8]},
+      "c_floor_bounds_inclusive": {"x": [-19, 20], "z": [-9, 10]},
+      "marker_block_positions": {"blue": [-5, 3, 3], "yellow": [5, 3, 3], "lime": [-7, 3, 7], "white": [7, 3, 7]},
+      "marker_top_face_centres": {"blue": [-4.5, 4.0, 3.5], "yellow": [5.5, 4.0, 3.5], "lime": [-6.5, 4.0, 7.5], "white": [7.5, 4.0, 7.5]},
+      "matches_c_declared_marker_coordinates": false,
+      "matches_e_declared_marker_coordinates": false
+    },
+    {
+      "layout_id": "layout_06",
+      "wall_axis": "z",
+      "floor_bounds_inclusive": {"x": [-10, 10], "z": [-11, 11]},
+      "c_floor_bounds_inclusive": {"x": [-19, 20], "z": [-9, 10]},
+      "marker_block_positions": {"blue": [5, 3, -7], "yellow": [5, 3, 7], "lime": [9, 3, -9], "white": [9, 3, 9]},
+      "marker_top_face_centres": {"blue": [5.5, 4.0, -6.5], "yellow": [5.5, 4.0, 7.5], "lime": [9.5, 4.0, -8.5], "white": [9.5, 4.0, 9.5]},
+      "matches_c_declared_marker_coordinates": false,
+      "matches_e_declared_marker_coordinates": false
+    }
+  ],
+  "historical_generations": [
+    {
+      "name": "pre_builder_v1_observed",
+      "arena_builder_git_blob": "e19888e46da20e622235ab493f9c9f6907dfb635",
+      "runtime_receipts": [
+        {"current_layout": "layout_01", "legacy_layout": "layout_00", "episode": 9410, "layout_meta_git_blob": "a57fdaa3dc185722fb9c75fdef7cf5132a52d294", "observed_far_row": "z=-7"},
+        {"current_layout": "layout_02", "legacy_layout": "layout_01", "episode": 9412, "layout_meta_git_blob": "e1715a84afb2e3c8cf64af46f6d4f097c7df0f65", "observed_far_row": "x=-7"},
+        {"current_layout": "layout_03", "legacy_layout": "layout_02", "episode": 9407, "layout_meta_git_blob": "b1004dc555132e8a9f41843fd136ed040063e563", "observed_far_row": "z=-7"},
+        {"current_layout": "layout_04", "legacy_layout": "layout_03", "episode": 9404, "layout_meta_git_blob": "40b6b8089912c36b0728ec783911fdd7f43114b1", "observed_far_row": "z=-7"},
+        {"current_layout": "layout_05", "legacy_layout": "layout_04", "episode": 9411, "layout_meta_git_blob": "738182a607639cd7f8ad0fc46985ce2bd2f071df", "observed_far_row": "z=-6"},
+        {"current_layout": "layout_06", "legacy_layout": "layout_05", "episode": 9422, "layout_meta_git_blob": "a223f03cb774470c7e8e381fa38c4fc9fff89836", "observed_far_row": "x=-8"}
+      ],
+      "source_commit": "18c9c774de4bd7f4d4cc9fd1e9cd3ead4fa8af47",
+      "matches_c": false,
+      "matches_e": false
+    },
+    {
+      "name": "builder_v1",
+      "source_commit": "1dc322af7e461b9a4744c177e9e40b02f10b2e58",
+      "arena_builder_git_blob": "0a319c947d00368d2bd1701e38b3c32929d22066",
+      "rule": "wallOrtho-1/+3 and lane inset 1",
+      "constructs_c_marker_block_xz_all_layouts": true,
+      "e_top_face_centres_identify_same_physical_blocks_for": ["layout_01", "layout_04", "layout_05", "layout_06"],
+      "e_capture_associations": ["layout_00_ep9762", "layout_03_ep9768", "layout_04_ep9770", "layout_05_ep9772"]
+    },
+    {
+      "name": "builder_v2_head",
+      "source_commit": "3cc5f619689da42e4d6a01c319d2ce1d3636d356",
+      "arena_builder_git_blob": "3c157928d2e001cb4cc7fc0c3de12f66e2562727",
+      "constructs_c_marker_geometry": false,
+      "constructs_e_marker_geometry_by_default": false,
+      "e_override_claims_without_runtime_marker_receipt": ["layout_02", "layout_03"]
+    }
+  ],
+  "conclusion": {
+    "head_matches_c": false,
+    "head_matches_e": false,
+    "historical_runtime_is_versioned": true,
+    "fresh_c1_1_observation_required": true,
+    "reason": "Observed pre-v1 receipts, builder-v1 capture lineage, unreceipted builder-v2 override claims, and HEAD defaults describe distinct geometries."
+  }
+}

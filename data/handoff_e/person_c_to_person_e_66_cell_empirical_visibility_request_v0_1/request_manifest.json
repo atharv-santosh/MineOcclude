@@ -1,0 +1,907 @@
+{
+ "C_TO_E_EMPIRICAL_VISIBILITY_HANDOFF_READY": true,
+ "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+ "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+ "accepted_geometry_version": "person-c-layout-config-v0.4",
+ "consumer_role": "person_e",
+ "detector_applicability": {
+  "applicable_row_count": 2108,
+  "not_applicable_reason": "occluder_only_no_sheep controls contain no magenta target, so the detector has nothing to measure; Person E should return empirical_magenta_visible=null with an explicit detector_status",
+  "not_applicable_row_count": 360,
+  "target_bearing_trajectory_count": 60
+ },
+ "detector_frozen_by": "person_e",
+ "detector_version_owner": "person_e",
+ "expected_model_frame_identity_count": 2468,
+ "expected_response_key": [
+  "trajectory_id",
+  "model_frame_idx"
+ ],
+ "expected_response_schema_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/expected_response_schema.json",
+ "expected_response_schema_sha256": "135f6f742d9fc4c71a6e1aa0636b12faa8306d82f037da5b3e564e553935c579",
+ "frame_dimensions": {
+  "canonical_derivative_height_pixels": 360,
+  "canonical_derivative_width_pixels": 640,
+  "fov_degrees": 70.0,
+  "raw_framebuffer_height_pixels": 1046,
+  "raw_framebuffer_width_pixels": 1920,
+  "source_of_truth": "configs/scenes/layouts_v0_4.yaml shared_capture_projection, cross-checked against the PNG IHDR of the delivered frames"
+ },
+ "frame_universe_join_key": [
+  "trajectory_id",
+  "model_frame_idx"
+ ],
+ "frame_universe_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/frame_universe.jsonl",
+ "frame_universe_sha256": "f95d705df50f444bc21541f485b91471ff52c0c0ca8dccf2779c9c4adf1edcfe",
+ "layout_marker_authority": [
+  {
+   "any_magenta_marker": false,
+   "camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "lane": {
+    "axis": "X",
+    "axis_max": 8.0,
+    "axis_min": -8.0,
+    "feet_y": 4.0,
+    "ortho": 6.0,
+    "start_axis": -6.0,
+    "world_end_xyz": [
+     8.0,
+     4.0,
+     6.0
+    ],
+    "world_start_xyz": [
+     -8.0,
+     4.0,
+     6.0
+    ]
+   },
+   "layout_id": "layout_01",
+   "marker_colors": [
+    "blue",
+    "lime",
+    "white",
+    "yellow"
+   ],
+   "marker_count": 4,
+   "marker_roles": [
+    "far_east",
+    "far_west",
+    "near_east",
+    "near_west"
+   ],
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      -6,
+      3,
+      4
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      -5.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      6,
+      3,
+      4
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      6.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      -8,
+      3,
+      8
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      -7.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      8,
+      3,
+      8
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      8.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "target_color_id": 2,
+   "target_color_name": "magenta",
+   "target_entity_type": "minecraft:sheep",
+   "wall": {
+    "axis": "x",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 3,
+     "max_y": 6,
+     "max_z": 2,
+     "min_x": -3,
+     "min_y": 4,
+     "min_z": 2
+    },
+    "observed_position_count": 63
+   }
+  },
+  {
+   "any_magenta_marker": false,
+   "camera": {
+    "feet_xyz": [
+     -5.5,
+     4.0,
+     0.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": -90.0
+   },
+   "lane": {
+    "axis": "Z",
+    "axis_max": 8.0,
+    "axis_min": -8.0,
+    "feet_y": 4.0,
+    "ortho": 6.0,
+    "start_axis": -6.0,
+    "world_end_xyz": [
+     6.0,
+     4.0,
+     8.0
+    ],
+    "world_start_xyz": [
+     6.0,
+     4.0,
+     -8.0
+    ]
+   },
+   "layout_id": "layout_02",
+   "marker_colors": [
+    "blue",
+    "lime",
+    "white",
+    "yellow"
+   ],
+   "marker_count": 4,
+   "marker_roles": [
+    "far_east",
+    "far_west",
+    "near_east",
+    "near_west"
+   ],
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      4,
+      3,
+      -6
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      4.5,
+      4.0,
+      -5.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      4,
+      3,
+      6
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      4.5,
+      4.0,
+      6.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      8,
+      3,
+      -8
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      8.5,
+      4.0,
+      -7.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      8,
+      3,
+      8
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      8.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "target_color_id": 2,
+   "target_color_name": "magenta",
+   "target_entity_type": "minecraft:sheep",
+   "wall": {
+    "axis": "z",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 2,
+     "max_y": 6,
+     "max_z": 3,
+     "min_x": 2,
+     "min_y": 4,
+     "min_z": -3
+    },
+    "observed_position_count": 63
+   }
+  },
+  {
+   "any_magenta_marker": false,
+   "camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "lane": {
+    "axis": "X",
+    "axis_max": 9.0,
+    "axis_min": -9.0,
+    "feet_y": 4.0,
+    "ortho": 6.0,
+    "start_axis": -6.75,
+    "world_end_xyz": [
+     9.0,
+     4.0,
+     6.0
+    ],
+    "world_start_xyz": [
+     -9.0,
+     4.0,
+     6.0
+    ]
+   },
+   "layout_id": "layout_03",
+   "marker_colors": [
+    "blue",
+    "lime",
+    "white",
+    "yellow"
+   ],
+   "marker_count": 4,
+   "marker_roles": [
+    "far_east",
+    "far_west",
+    "near_east",
+    "near_west"
+   ],
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      -7,
+      3,
+      4
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      -6.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      7,
+      3,
+      4
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      7.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      -9,
+      3,
+      8
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      -8.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      9,
+      3,
+      8
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      9.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "target_color_id": 2,
+   "target_color_name": "magenta",
+   "target_entity_type": "minecraft:sheep",
+   "wall": {
+    "axis": "x",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 4,
+     "max_y": 6,
+     "max_z": 2,
+     "min_x": -4,
+     "min_y": 4,
+     "min_z": 2
+    },
+    "observed_position_count": 69
+   }
+  },
+  {
+   "any_magenta_marker": false,
+   "camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "lane": {
+    "axis": "X",
+    "axis_max": 8.0,
+    "axis_min": -8.0,
+    "feet_y": 4.0,
+    "ortho": 8.0,
+    "start_axis": -6.0,
+    "world_end_xyz": [
+     8.0,
+     4.0,
+     8.0
+    ],
+    "world_start_xyz": [
+     -8.0,
+     4.0,
+     8.0
+    ]
+   },
+   "layout_id": "layout_04",
+   "marker_colors": [
+    "blue",
+    "lime",
+    "white",
+    "yellow"
+   ],
+   "marker_count": 4,
+   "marker_roles": [
+    "far_east",
+    "far_west",
+    "near_east",
+    "near_west"
+   ],
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      -6,
+      3,
+      6
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      -5.5,
+      4.0,
+      6.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      6,
+      3,
+      6
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      6.5,
+      4.0,
+      6.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      -8,
+      3,
+      10
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      -7.5,
+      4.0,
+      10.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      8,
+      3,
+      10
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      8.5,
+      4.0,
+      10.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "target_color_id": 2,
+   "target_color_name": "magenta",
+   "target_entity_type": "minecraft:sheep",
+   "wall": {
+    "axis": "x",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 3,
+     "max_y": 6,
+     "max_z": 3,
+     "min_x": -3,
+     "min_y": 4,
+     "min_z": 3
+    },
+    "observed_position_count": 63
+   }
+  },
+  {
+   "any_magenta_marker": false,
+   "camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -4.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "lane": {
+    "axis": "X",
+    "axis_max": 7.0,
+    "axis_min": -7.0,
+    "feet_y": 4.0,
+    "ortho": 5.0,
+    "start_axis": -5.25,
+    "world_end_xyz": [
+     7.0,
+     4.0,
+     5.0
+    ],
+    "world_start_xyz": [
+     -7.0,
+     4.0,
+     5.0
+    ]
+   },
+   "layout_id": "layout_05",
+   "marker_colors": [
+    "blue",
+    "lime",
+    "white",
+    "yellow"
+   ],
+   "marker_count": 4,
+   "marker_roles": [
+    "far_east",
+    "far_west",
+    "near_east",
+    "near_west"
+   ],
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      -5,
+      3,
+      3
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      -4.5,
+      4.0,
+      3.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      5,
+      3,
+      3
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      5.5,
+      4.0,
+      3.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      -7,
+      3,
+      7
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      -6.5,
+      4.0,
+      7.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      7,
+      3,
+      7
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      7.5,
+      4.0,
+      7.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "target_color_id": 2,
+   "target_color_name": "magenta",
+   "target_entity_type": "minecraft:sheep",
+   "wall": {
+    "axis": "x",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 2,
+     "max_y": 6,
+     "max_z": 2,
+     "min_x": -2,
+     "min_y": 4,
+     "min_z": 2
+    },
+    "observed_position_count": 57
+   }
+  },
+  {
+   "any_magenta_marker": false,
+   "camera": {
+    "feet_xyz": [
+     -6.5,
+     4.0,
+     0.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": -90.0
+   },
+   "lane": {
+    "axis": "Z",
+    "axis_max": 9.0,
+    "axis_min": -9.0,
+    "feet_y": 4.0,
+    "ortho": 7.0,
+    "start_axis": -6.75,
+    "world_end_xyz": [
+     7.0,
+     4.0,
+     9.0
+    ],
+    "world_start_xyz": [
+     7.0,
+     4.0,
+     -9.0
+    ]
+   },
+   "layout_id": "layout_06",
+   "marker_colors": [
+    "blue",
+    "lime",
+    "white",
+    "yellow"
+   ],
+   "marker_count": 4,
+   "marker_roles": [
+    "far_east",
+    "far_west",
+    "near_east",
+    "near_west"
+   ],
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      5,
+      3,
+      -7
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      5.5,
+      4.0,
+      -6.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      5,
+      3,
+      7
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      5.5,
+      4.0,
+      7.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      9,
+      3,
+      -9
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      9.5,
+      4.0,
+      -8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      9,
+      3,
+      9
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      9.5,
+      4.0,
+      9.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "target_color_id": 2,
+   "target_color_name": "magenta",
+   "target_entity_type": "minecraft:sheep",
+   "wall": {
+    "axis": "z",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 3,
+     "max_y": 6,
+     "max_z": 3,
+     "min_x": 3,
+     "min_y": 4,
+     "min_z": -3
+    },
+    "observed_position_count": 69
+   }
+  }
+ ],
+ "magenta_reserved_for_target_only": true,
+ "marker_restriction": "non_magenta_ground_markers",
+ "model_frame_identity_count": 2468,
+ "person_a_commit": "77e43bd1665671b9e23d6d6ef927ee4944611342",
+ "person_a_frame_map_package_root": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+ "person_a_frame_map_package_sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+ "person_c_accepted_manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+ "person_c_accepted_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+ "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+ "person_c_empirical_channel_supplied": false,
+ "person_c_geometric_channel_supplied": true,
+ "person_c_ran_detector": false,
+ "person_c_supplied_detector_thresholds": false,
+ "person_c_supplied_detector_version": false,
+ "person_c_tuned_detector": false,
+ "producer_role": "person_c",
+ "readiness_basis": [
+  "every one of the 66 accepted trajectory identities is bound",
+  "all 2468 model-frame identities are enumerated",
+  "every row carries the exact source frame path, byte size and SHA-256",
+  "raw and canonical frame dimensions are declared",
+  "layout and marker authority is bound, with magenta reserved for the target only",
+  "detector applicability is declared per row",
+  "the expected response schema and join key are declared",
+  "no Person C-invented detector threshold or version is present"
+ ],
+ "request_id": "person-c-to-person-e-66-cell-empirical-magenta-v0.1",
+ "schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1-c-to-e-empirical-visibility-request",
+ "schema_version": "0.1",
+ "source_frame_bytes_location": "Person C Windows runtime machine; every row carries the absolute runtime path, byte size and SHA-256 of the exact PNG to measure",
+ "strict_join_owner_after_response": "person_c",
+ "trajectory_count": 66,
+ "trajectory_ids": [
+  "layout_03_ep12601",
+  "layout_01_ep12602",
+  "layout_04_ep12603",
+  "layout_04_ep12604",
+  "layout_01_ep12605",
+  "layout_06_ep12606",
+  "layout_04_ep12607",
+  "layout_04_ep12608",
+  "layout_03_ep12609",
+  "layout_02_ep12610",
+  "layout_02_ep12611",
+  "layout_05_ep12612",
+  "layout_04_ep12613",
+  "layout_03_ep12614",
+  "layout_03_ep12615",
+  "layout_06_ep12616",
+  "layout_03_ep12617",
+  "layout_06_ep12618",
+  "layout_06_ep12619",
+  "layout_01_ep12620",
+  "layout_03_ep12621",
+  "layout_03_ep12622",
+  "layout_02_ep12623",
+  "layout_05_ep12624",
+  "layout_06_ep12625",
+  "layout_04_ep12626",
+  "layout_05_ep12627",
+  "layout_06_ep12628",
+  "layout_04_ep12629",
+  "layout_05_ep12630",
+  "layout_01_ep12631",
+  "layout_05_ep12632",
+  "layout_03_ep12633",
+  "layout_05_ep12634",
+  "layout_02_ep12635",
+  "layout_01_ep12636",
+  "layout_03_ep12637",
+  "layout_04_ep12638",
+  "layout_03_ep12639",
+  "layout_04_ep12640",
+  "layout_02_ep12641",
+  "layout_06_ep12642",
+  "layout_02_ep12643",
+  "layout_04_ep12644",
+  "layout_03_ep12645",
+  "layout_05_ep12646",
+  "layout_05_ep12647",
+  "layout_02_ep12648",
+  "layout_02_ep12649",
+  "layout_01_ep12650",
+  "layout_01_ep12651",
+  "layout_01_ep12652",
+  "layout_04_ep12653",
+  "layout_05_ep12654",
+  "layout_01_ep12655",
+  "layout_05_ep12656",
+  "layout_06_ep12657",
+  "layout_06_ep12658",
+  "layout_01_ep12659",
+  "layout_06_ep12660",
+  "layout_02_ep12661",
+  "layout_06_ep12662",
+  "layout_02_ep12663",
+  "layout_05_ep12664",
+  "layout_01_ep12665",
+  "layout_02_ep12666"
+ ],
+ "visible_flag_rule_after_response": "geometric_visible AND empirical_magenta_visible"
+}

@@ -1,0 +1,165 @@
+{
+  "schema_version": "person-c-to-person-e-v0.4-refit-output-contract-v0.1",
+  "owner_of_outputs": "Person E",
+  "required_root": "data/handoff_e/person_e_v0_4_homography_refit_v0_1",
+  "required_paths": {
+    "homography_input": "data/handoff_e/person_e_v0_4_homography_refit_v0_1/homography_input.json",
+    "homography_report": "data/handoff_e/person_e_v0_4_homography_refit_v0_1/homography_report.json",
+    "validation_receipt": "data/handoff_e/person_e_v0_4_homography_refit_v0_1/validation_receipt.json",
+    "sha256_inventory": "data/handoff_e/person_e_v0_4_homography_refit_v0_1/sha256_inventory.json"
+  },
+  "input_schema": {
+    "homography_input_schema_version": "person-e-homography-input-v0.1",
+    "root_required_exact": [
+      "homography_input_schema_version",
+      "layouts"
+    ],
+    "layout_required": [
+      "layout_id",
+      "canonical_camera_pose_id",
+      "marker_set_source_hash",
+      "validation_source_hash",
+      "marker_ids",
+      "image_points_by_marker",
+      "world_points_by_marker",
+      "validation_pairs",
+      "wall_parallel_origin_xz",
+      "wall_parallel_positive_unit_xz"
+    ],
+    "layout_count": 6
+  },
+  "homography_report_schema": {
+    "homography_report_schema_version": "person-e-homography-report-v0.2",
+    "root_required": [
+      "homography_report_schema_version",
+      "input_hash",
+      "producer_run_id",
+      "code_sha",
+      "config_hash",
+      "config_instance_version",
+      "settings_hash",
+      "algorithm_version",
+      "singular_pivot_tolerance",
+      "maximum_median_wall_parallel_error_blocks",
+      "maximum_p95_wall_parallel_error_blocks",
+      "minimum_shift_error_multiplier_on_gate_failure",
+      "layouts"
+    ],
+    "layout_required": [
+      "layout_id",
+      "canonical_camera_pose_id",
+      "marker_set_source_hash",
+      "validation_source_hash",
+      "wall_parallel_origin_xz",
+      "wall_parallel_positive_unit_xz",
+      "homography",
+      "heldout_localization"
+    ],
+    "homography_required_exact": [
+      "matrix",
+      "marker_ids",
+      "layout_id",
+      "canonical_camera_pose_id",
+      "fit_hash",
+      "homography_version_id",
+      "algorithm_version",
+      "pivot_tolerance",
+      "denominator_tolerance",
+      "image_coordinate_convention",
+      "world_coordinate_convention"
+    ],
+    "matrix_shape": [
+      3,
+      3
+    ],
+    "algorithm_version": "four_point_projective_gauss_jordan_v0.1",
+    "image_coordinate_convention": "pixel_center_xy_zero_based",
+    "world_coordinate_convention": "ground_plane_world_xz_blocks",
+    "layout_count": 6
+  },
+  "validation_receipt_schema": {
+    "schema_version": "person-e-person-c-v0.4-homography-refit-validation-v0.1",
+    "required_exact": [
+      "schema_version",
+      "status",
+      "owner",
+      "source_commit",
+      "accepted_geometry_version",
+      "accepted_geometry_sha256",
+      "person_c_handoff_bundle_sha256",
+      "homography_input_sha256",
+      "homography_report_sha256",
+      "layout_ids",
+      "layout_count",
+      "all_layouts_planning_gate_passed",
+      "validation_tolerances",
+      "no_hidden_offsets_or_compatibility_adapters",
+      "per_layout"
+    ],
+    "required_values": {
+      "status": "PASS",
+      "owner": "Person E",
+      "accepted_geometry_version": "person-c-layout-config-v0.4",
+      "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+      "layout_ids": [
+        "layout_01",
+        "layout_02",
+        "layout_03",
+        "layout_04",
+        "layout_05",
+        "layout_06"
+      ],
+      "layout_count": 6,
+      "all_layouts_planning_gate_passed": true,
+      "no_hidden_offsets_or_compatibility_adapters": true
+    }
+  },
+  "sha256_inventory_schema": {
+    "schema_version": "person-e-v0.4-homography-refit-sha256-inventory-v0.1",
+    "root_required_exact": [
+      "schema_version",
+      "files"
+    ],
+    "file_required_exact": [
+      "path",
+      "size_bytes",
+      "sha256"
+    ],
+    "required_listed_paths": [
+      "data/handoff_e/person_e_v0_4_homography_refit_v0_1/homography_input.json",
+      "data/handoff_e/person_e_v0_4_homography_refit_v0_1/homography_report.json",
+      "data/handoff_e/person_e_v0_4_homography_refit_v0_1/validation_receipt.json"
+    ],
+    "self_excluded": "sha256_inventory.json"
+  },
+  "validation_tolerances": {
+    "authority": {
+      "path": "configs/vision/person_e_phase1.yaml",
+      "size_bytes": 3122,
+      "sha256": "da05329029cb7119f0c48cfed12657d1a2e4ae6b7d0cb6dcd3b8353292b95a56",
+      "git_blob": "673582edd852cd3ced4e03e9d48c844d85ce9786"
+    },
+    "singular_pivot_tolerance": 1e-12,
+    "maximum_median_wall_parallel_error_blocks": 0.2,
+    "median_comparison": "<=",
+    "maximum_p95_wall_parallel_error_blocks": 0.5,
+    "p95_comparison": "<",
+    "minimum_shift_error_multiplier_on_gate_failure": 2.0,
+    "percentile_method": "linear_interpolation_rank_n_minus_1"
+  },
+  "implementation_authorities": {
+    "fitter": {
+      "path": "scripts/fit_homographies.py",
+      "size_bytes": 6750,
+      "sha256": "d7f838af200c55675465d034211b7a804df48ec73d9392ec09b1dd48d8af7d1e",
+      "git_blob": "4e87763e560aae48392a3dea76c01d887c85880d"
+    },
+    "homography_code": {
+      "path": "src/mineocclude/vision/homography.py",
+      "size_bytes": 28752,
+      "sha256": "70ef0e4c9c84157642b63e6b5f50bc24091b486ef3a8e89f2cef89372b6a437b",
+      "git_blob": "5e66cfcfda8eb9774acd0e1814b0148779aaa3e9"
+    }
+  },
+  "person_c_does_not_create_these_outputs": true
+}

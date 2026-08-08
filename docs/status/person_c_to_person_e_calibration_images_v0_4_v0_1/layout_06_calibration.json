@@ -1,0 +1,222 @@
+{
+  "schema_version": "person-c-e-refit-layout-calibration-preparation-v0.1",
+  "status": "READY_FOR_RUNTIME_CALIBRATION",
+  "scientific_capture": false,
+  "layout_id": "layout_06",
+  "episode_id": 12706,
+  "seed": 202608031706,
+  "geometry_version": "person-c-layout-config-v0.4",
+  "geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "mode": "normal",
+  "duration": 0,
+  "reveal": 0,
+  "impulse": [
+    -1,
+    0
+  ],
+  "lockcam": "on",
+  "warmup_ticks": 12000,
+  "record_ticks": 20,
+  "spawn_animals": false,
+  "layout_geometry": {
+    "floor": {
+      "axis": "z",
+      "bounds": {
+        "min_x": -10,
+        "max_x": 10,
+        "min_z": -11,
+        "max_z": 11,
+        "y": 3
+      },
+      "block": "minecraft:grass_block",
+      "observed_position_count": 483
+    },
+    "wall": {
+      "axis": "z",
+      "bounds": {
+        "min_z": -3,
+        "max_z": 3,
+        "min_x": 3,
+        "max_x": 3,
+        "min_y": 4,
+        "max_y": 6
+      },
+      "block": "minecraft:stone",
+      "observed_position_count": 69
+    },
+    "lane": {
+      "axis": "Z",
+      "axis_min": -9.0,
+      "axis_max": 9.0,
+      "ortho": 7.0,
+      "feet_y": 4.0,
+      "start_axis": -6.75,
+      "world_start_xyz": [
+        7.0,
+        4.0,
+        -9.0
+      ],
+      "world_end_xyz": [
+        7.0,
+        4.0,
+        9.0
+      ]
+    },
+    "target_start": {
+      "axis_position": -6.75,
+      "world_xyz": [
+        7.0,
+        4.0,
+        -6.75
+      ],
+      "source": "runtime receipt lane declaration and server spawn log"
+    },
+    "camera": {
+      "feet_xyz": [
+        -6.5,
+        4.0,
+        0.5
+      ],
+      "yaw_degrees": -90.0,
+      "pitch_degrees": 0.0,
+      "roll_degrees": 0.0,
+      "fov_degrees": 70.0
+    },
+    "markers": [
+      {
+        "marker_id": "near_west",
+        "color": "blue",
+        "block_pos_xyz": [
+          5,
+          3,
+          -7
+        ],
+        "top_face_centre_world_xyz": [
+          5.5,
+          4.0,
+          -6.5
+        ],
+        "world_xz_blocks": [
+          5.5,
+          -6.5
+        ],
+        "image_xy_pixels": null
+      },
+      {
+        "marker_id": "near_east",
+        "color": "yellow",
+        "block_pos_xyz": [
+          5,
+          3,
+          7
+        ],
+        "top_face_centre_world_xyz": [
+          5.5,
+          4.0,
+          7.5
+        ],
+        "world_xz_blocks": [
+          5.5,
+          7.5
+        ],
+        "image_xy_pixels": null
+      },
+      {
+        "marker_id": "far_east",
+        "color": "white",
+        "block_pos_xyz": [
+          9,
+          3,
+          9
+        ],
+        "top_face_centre_world_xyz": [
+          9.5,
+          4.0,
+          9.5
+        ],
+        "world_xz_blocks": [
+          9.5,
+          9.5
+        ],
+        "image_xy_pixels": null
+      },
+      {
+        "marker_id": "far_west",
+        "color": "lime",
+        "block_pos_xyz": [
+          9,
+          3,
+          -9
+        ],
+        "top_face_centre_world_xyz": [
+          9.5,
+          4.0,
+          -8.5
+        ],
+        "world_xz_blocks": [
+          9.5,
+          -8.5
+        ],
+        "image_xy_pixels": null
+      }
+    ],
+    "expected_receipt_geometry": {
+      "floor": {
+        "axis": "Z",
+        "axis_min_block_inclusive": -11,
+        "axis_max_block_inclusive": 11,
+        "ortho_min_block_inclusive": -10,
+        "ortho_max_block_inclusive": 10,
+        "y_block": 3,
+        "default_block_id": "minecraft:grass_block",
+        "expected_position_count": 483
+      },
+      "wall": {
+        "axis": "Z",
+        "declared_axis_min_block_inclusive": -3,
+        "declared_axis_max_block_inclusive": 3,
+        "ortho_block": 3,
+        "y_min_block_inclusive": 4,
+        "y_max_block_inclusive": 6,
+        "declared_block_id": "minecraft:stone",
+        "expected_position_count": 69
+      }
+    }
+  },
+  "projection": {
+    "width_pixels": 1920,
+    "height_pixels": 1046,
+    "fov_degrees": 70.0
+  },
+  "schedule": {
+    "layout_id": "layout_06",
+    "episode_id": 12706,
+    "seed": 202608031706,
+    "q": 0.0,
+    "record_ticks": 20,
+    "repository_schedule": {
+      "path": "configs/collection/person_c_e_refit_calibration_v0_4_v0_1/schedules/episode_12706.jsonl",
+      "size_bytes": 3360,
+      "sha256": "a0e4e09a62bf34c1c22b7c6d279c29b9a8eacd91c40aeb0ce0294d9a0b138f4d"
+    },
+    "runtime_schedule": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_schedules\\episode_12706.jsonl",
+      "size_bytes": 3360,
+      "sha256": "a0e4e09a62bf34c1c22b7c6d279c29b9a8eacd91c40aeb0ce0294d9a0b138f4d",
+      "installation_status": "INSTALLED_HASH_MATCH"
+    }
+  },
+  "commands": {
+    "start": "mineocclude start layout_06 12706 202608031706 0.0 0.0 20",
+    "targetstatus": "mineocclude targetstatus",
+    "observegeometry": "mineocclude observegeometry e_refit_calibration_v0_4_layout_06",
+    "stop": "mineocclude stop"
+  },
+  "runtime_paths": {
+    "geometry_receipt": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\e_refit_calibration_v0_4_layout_06.json",
+    "canonical_screenshot": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\e_refit_calibration_v0_4_v0_1\\layout_06.png",
+    "server_log": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\logs\\latest.log",
+    "client_log": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\logs\\latest.log"
+  },
+  "source_commit": "8ed87e80cd809a7b8b97861dda6bbc79d29e2aac"
+}

@@ -1,0 +1,45 @@
+{
+ "determinism_policy": {
+  "accepted_canonical_artifact_rewrite_policy": "an accepted canonical artifact is never rewritten because a different Pillow or ffmpeg build produces different bytes; the recorded pixel hash plus producer provenance is the authority",
+  "canonical_pixel_identity_field": "canonical_pixel_sha256",
+  "canonical_pixel_identity_is_encoder_independent": true,
+  "canonical_png_byte_field": "canonical_png_sha256",
+  "canonical_png_bytes_are_encoder_dependent": true,
+  "cross_pillow_version_byte_equality_claimed": false,
+  "cross_pillow_version_byte_equality_tested": false,
+  "logical_equivalence_evidence": "all 2468 canonical pixel hashes reproduce Person E's independently recorded canonical_frame_rgb_sha256 under the pinned Pillow 12.1.1 producer environment",
+  "mode": "A_and_B_both_satisfied",
+  "mp4_bytes_are_encoder_build_dependent": true,
+  "option_a_deterministic_regeneration_under_pinned_environment": {
+   "satisfied": true,
+   "scope": "2468 canonical PNGs and 66 MP4s regenerate byte-identically under this exact pinned producer environment",
+   "tested": true
+  },
+  "option_b_immutable_bytes_plus_provenance": {
+   "canonical_pixel_hash_recorded": true,
+   "canonical_png_byte_hash_recorded": true,
+   "mp4_byte_hash_recorded": true,
+   "producer_environment_recorded": true,
+   "satisfied": true
+  }
+ },
+ "matches_person_e_environment": true,
+ "owner_role": "person_c",
+ "person_e_producer_environment": {
+  "numpy": "2.4.3",
+  "pillow": "12.1.1",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.14.6"
+ },
+ "producer_environment": {
+  "ffmpeg": "ffmpeg version 2025-11-17-git-e94439e49b-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+  "ffprobe": "ffprobe version 2025-11-17-git-e94439e49b-full_build-www.gyan.dev Copyright (c) 2007-2025 the FFmpeg developers",
+  "numpy": "2.4.3",
+  "pandas": "3.0.1",
+  "pillow": "12.1.1",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.14.6"
+ },
+ "schema_id": "mineocclude-person-c-66-cell-canonical-media-v0.1-environment-provenance",
+ "schema_version": "0.1"
+}

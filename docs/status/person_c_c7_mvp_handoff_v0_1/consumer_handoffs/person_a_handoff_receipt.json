@@ -1,0 +1,84 @@
+{
+  "accepted_count": 66,
+  "accepted_excluded_ledger": {
+    "path": "docs/status/person_c_c7_mvp_handoff_v0_1/accepted_excluded_ledger.json",
+    "sha256": "fa5f8e4251c7d4243b6f62f9992bf68bab2ef5dfcdbdac8dec61954ff952d8a1"
+  },
+  "authoritative_c_inputs": {
+    "accepted_manifest_hash": "trajectories_mvp_manifest.json sha256",
+    "accepted_trajectory_identities": "66 per_trajectory bundles + trajectories_mvp_manifest.json",
+    "model_facing_references": "locations.runtime_path + artifacts[].path_or_uri (metadata references only)",
+    "source_hashes": "artifacts[].sha256 (from output_inventory.json)"
+  },
+  "authorization_commit": "28cac05a8c804372c71814fcf15c8f1a3b8fbe03",
+  "bundle_schema": {
+    "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0",
+    "schema_version": "1.0"
+  },
+  "consumer_role": "person_a",
+  "consumer_validation_command": "python scripts/build_person_c_c7_5_mvp_handoff_v0_1.py validate && PYTHONDONTWRITEBYTECODE=1 python -m pytest tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py -q",
+  "downstream_acceptance_claimed": false,
+  "excluded_count": 0,
+  "expected_count_by_consumer": 66,
+  "fields_unavailable": [
+    {
+      "field": "actual episode payload bytes",
+      "owner": "person_c_runtime",
+      "reason": "external on Windows runtime; not in Git"
+    },
+    {
+      "field": "durable/S3 URI",
+      "owner": "person_c",
+      "reason": "no authoritative durable URI assigned"
+    },
+    {
+      "field": "frozen preprocessing / frame_map authority",
+      "owner": "person_a",
+      "reason": "Person A owns the pinned production identity; pending A owner acknowledgement"
+    }
+  ],
+  "manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+  "manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+  "owner": "person_c",
+  "package_path": "docs/status/person_c_c7_mvp_handoff_v0_1",
+  "person_c_states_ready_for_consumer_validation": true,
+  "ready_for_consumer_validation": true,
+  "required_fields_available": [
+    "episode/trajectory/planned_cell identity",
+    "condition + seed + noise schedule",
+    "accepted status + QA summary",
+    "per-artifact path/byte_size/sha256 (metadata)",
+    "server/client build + environment authorities",
+    "source commit"
+  ],
+  "role_specific": {
+    "downstream_a_production_handoff_note": "The exact 66-trajectory production A model-input/activation handoff does not exist yet. After C's C7.5 package is committed/pushed, Person A consumes C's exact accepted-manifest identity and produces it, hash-bound to C's 66 accepted trajectory universe. Person C does not populate these from historical five-pilot/ten-pilot evidence.",
+    "downstream_a_production_handoff_required_fields": [
+      "person_c_accepted_manifest_path/version/sha256",
+      "person_c_source_commit",
+      "exact_accepted_trajectory_ids",
+      "exact_(trajectory_id,model_frame_idx)_model_input_key_set",
+      "checkpoint/model_identity_and_sha256",
+      "preprocessing_implementation/config_identity_and_sha256",
+      "action_converter_identity_and_sha256",
+      "frame_map_schema/version_and_source_identity",
+      "frame_token_map_identity",
+      "hook_site_identity",
+      "exact_layer_indices",
+      "run_id_and_execution/code/config_binding",
+      "activation_storage_schema",
+      "activation_chunk_inventory",
+      "chunk_sha256_values",
+      "activation_index",
+      "one_index_row_per_legal_trajectory/frame/layer_key",
+      "cardinality_and_duplicate/missing_audit",
+      "source_frame/action/state/frame_map_traceability",
+      "status/supersession_information",
+      "person_a_owner_acknowledgement"
+    ],
+    "downstream_a_production_handoff_status": "pending_person_a_owner_acknowledgement"
+  },
+  "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0-consumer-handoff-a",
+  "schema_version": "1.0",
+  "source_commit": "c836641c894c88e3add207ef2190a2db88726024"
+}

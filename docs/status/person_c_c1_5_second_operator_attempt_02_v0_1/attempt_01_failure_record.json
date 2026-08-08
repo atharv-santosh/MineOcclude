@@ -1,0 +1,68 @@
+{
+  "schema_version": "person-c-c1.5-independent-second-operator-attempt-01-failure-v0.1",
+  "operator_role": "second",
+  "attempt": 1,
+  "episode_id": 11502,
+  "seed": 202608031502,
+  "classification": "SCREENSHOT_CAPTURED_BEFORE_GEOMETRY_RECEIPT_CONFIRMATION",
+  "status": "INVALID_FOR_C1_5_INGESTION",
+  "targetstatus_passed": true,
+  "target_retention_implementation_passed": true,
+  "geometry_receipt_created": true,
+  "episode_aborted_during_warmup": true,
+  "recording_started": false,
+  "reason": "The only F2 screenshot occurred approximately 12 seconds before the geometry receipt-written confirmation. The attempt is timing-invalid, not a target-retention failure.",
+  "chronology": {
+    "armed_line_index": 104,
+    "target_status_line_index": 112,
+    "screenshot_line_index": 85,
+    "observegeometry_completion_line_index": 114,
+    "receipt_confirmation_line_index": 115,
+    "warmup_abort_line_index": 116,
+    "armed_to_targetstatus_seconds": 12,
+    "armed_to_screenshot_seconds": 24,
+    "armed_to_receipt_confirmation_seconds": 36,
+    "armed_to_warmup_abort_seconds": 54,
+    "screenshot_preceded_receipt_confirmation_seconds": 12,
+    "screenshot_file_name": "2026-08-03_22.25.53.png",
+    "recording_started": false
+  },
+  "observed_authenticated_account": "Santa313",
+  "preservation": {
+    "status": "PRESERVED_HASH_BOUND_NOT_CERTIFIED",
+    "delete_rename_overwrite_edit_or_certify_forbidden": true,
+    "canonical_screenshot_created": false,
+    "attestation_created": false,
+    "ingestion_output_created": false
+  },
+  "files": {
+    "geometry_receipt": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_observations\\c1_5_second_operator_attempt_01_layout_01.json",
+      "size_bytes": 12260,
+      "sha256": "7625fd454b71acedcd42524cab64bb799147020e21e7e78e888f3d31e092b630"
+    },
+    "raw_f2_screenshot": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\screenshots\\2026-08-03_22.25.53.png",
+      "size_bytes": 71532,
+      "sha256": "ebcde38bf4b2e8edd313d26de5bf95efabda0a183354ad09d03593565c063c21"
+    },
+    "immutable_schedule": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_schedules\\episode_11502.jsonl",
+      "size_bytes": 3380,
+      "sha256": "b399dd08b7e2dcdecc136400cb47afa680995edf04239f3a79e36bcc688655c7"
+    },
+    "preserved_server_log": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\second_operator_attempt_01_preserved\\server_latest.log",
+      "size_bytes": 11360,
+      "sha256": "2dd9c8aa26c1e15f1b9331991d13d24b73bbaa13ce98ff18348283af4248b513"
+    },
+    "preserved_client_log": {
+      "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\second_operator_attempt_01_preserved\\client_latest.log",
+      "size_bytes": 6706,
+      "sha256": "155ad971f724ac5f5db81a13d7eae42e032011eb8c70ea4c8e2cb3c0a2249812"
+    },
+    "canonical_screenshot_path_not_created": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\c1_5_evidence\\second_operator_attempt_01_layout_01.png",
+    "attestation_path_not_created": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\second_operator_attempt_01_attestation.json",
+    "ingested_path_not_created": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\c1_5_evidence\\second_operator_attempt_01_ingested.json"
+  }
+}

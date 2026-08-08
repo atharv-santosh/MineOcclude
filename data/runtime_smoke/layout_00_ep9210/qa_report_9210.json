@@ -1,0 +1,97 @@
+{
+  "accepted": false,
+  "checks": [
+    {
+      "detail": "",
+      "expected": "strict one-to-one join",
+      "measured": [],
+      "name": "alignment",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "all channel counts equal",
+      "measured": {
+        "action": 200,
+        "frame": 200,
+        "state": 200,
+        "tick": 200
+      },
+      "name": "cardinality",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "consecutive from 0",
+      "measured": "200 ticks",
+      "name": "consecutive_ticks",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_render_frame_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_action_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": "complete zero-based sequence ordered by server_tick",
+      "measured": null,
+      "name": "monotonic_model_frame_idx",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": null,
+      "measured": {
+        "hidden": 161,
+        "quarantined": 23,
+        "visible": 39
+      },
+      "name": "visibility_labels_present",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "expected": null,
+      "measured": {
+        "missing_reveal": true,
+        "multiple_events": false,
+        "n_events": 1,
+        "rule_version": "person-c-event-stability-v0.1"
+      },
+      "name": "events_derived",
+      "status": "pass"
+    },
+    {
+      "detail": "best lag is -1, not 0 (frame shift)",
+      "expected": "best_lag == 0, adjacent lags decisively worse",
+      "measured": {
+        "best_lag": -1,
+        "n_used": 12,
+        "residual_deg": 1.2000000352350435
+      },
+      "name": "impulse_orientation",
+      "status": "fail"
+    },
+    {
+      "detail": "no encoded media for this episode",
+      "expected": null,
+      "measured": null,
+      "name": "media_ffprobe",
+      "status": "not_applicable"
+    }
+  ],
+  "episode_id": "9210",
+  "status": "excluded",
+  "trajectory_id": "layout_00_ep9210",
+  "validator_version": "person-c-qa-v0.1"
+}

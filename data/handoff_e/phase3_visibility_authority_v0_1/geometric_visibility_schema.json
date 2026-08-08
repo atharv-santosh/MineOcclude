@@ -1,0 +1,37 @@
+{
+  "dataset_id": "person-c-phase3-geometric-visibility-authority-v0_1",
+  "fields": {
+    "canonical_camera_pose_id": "str",
+    "empirical_decision_present": "bool (always false; C geometry only)",
+    "event_id": "str|null",
+    "frame_640_sha256": "str|null",
+    "geometric_status": "enum[visible,occluded,boundary,invalid]",
+    "geometric_validity": "enum[valid,invalid]",
+    "geometric_visible": "bool|null",
+    "geometry_rejection_reason": "str|null",
+    "geometry_rule_version": "str",
+    "layout_id": "str",
+    "model_frame_idx": "int",
+    "render_frame_idx": "int",
+    "rollout_id": "str|null",
+    "scientific_use": "str",
+    "source_frame_map": "str",
+    "source_frame_map_sha256": "str",
+    "source_revision": "str",
+    "source_world_state": "object(player_xyz, sheep_xyz)",
+    "synthetic": "bool",
+    "test_only": "bool",
+    "trajectory_id": "str"
+  },
+  "geometric_status_derivation": "invalid when sheep world state is missing/nonfinite; otherwise visible/occluded from the authoritative geometric_visible boolean",
+  "geometric_visible_source": "server as-built geometric visibility stored at capture (ground truth of the placed blocks), produced by C's geometric rule; NOT a config-based recompute",
+  "geometry_rule_version": "person-c-geometric-visibility-v0.1",
+  "identity_primary_key": [
+    "trajectory_id",
+    "model_frame_idx"
+  ],
+  "note": "Geometric visibility only. No E-authored empirical decision is present; empirical records arrive later through the formal integration interface (final_visibility_interface).",
+  "owner": "Person C",
+  "record_format": "jsonl (one record per line, sorted by identity key)",
+  "schema_version": "1.0"
+}

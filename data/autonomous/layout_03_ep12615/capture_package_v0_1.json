@@ -1,0 +1,1759 @@
+{
+ "artifacts": {
+  "client_tick_log": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12615/package_v0_1/client_tick_log.jsonl",
+   "sha256": "399f6884153cc53a41680ad217839c173719bdffe80a6b1ae7693c48039435dc"
+  },
+  "config": {
+   "format": "json",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\reset_result.json",
+   "sha256": "262fad9ad8d26220d36f5775f659999445d0e2724818badc4a98e837d65c9e30"
+  },
+  "diagnostics": {
+   "format": "json",
+   "path": "docs/status/person_c_c7_mvp_handoff_v0_1/per_trajectory/ep12615.json",
+   "sha256": "4c6ede02e6ea4135105bbe98f4d04a8026d71198951f0bb8200714b74f773e02"
+  },
+  "frame_map": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12615/package_v0_1/frame_map.jsonl",
+   "sha256": "fb2adb0597f35f4eb00da0a9181c3db153305b8867ddc501b3ac4c35801f55cc"
+  },
+  "layout_meta": {
+   "format": "json",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\layout_meta.json",
+   "sha256": "bd70b4eca63eb7ec4423107bcaee960749a3675e1845b6d33f91e6b1c9f48914"
+  },
+  "normalized_actions": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12615/package_v0_1/normalized_actions.jsonl",
+   "sha256": "e6c1ddfd46f21f4df481d6a0196c4701adde8b10d662fcf95de2d79c6b91e5a3"
+  },
+  "raw_actions": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12615/package_v0_1/raw_actions.jsonl",
+   "sha256": "7eef1ff5e23a53a56813f80add7775e58a5a083cf7a89c3d023f118e089a0389"
+  },
+  "raw_client_actions": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12615\\raw_actions.jsonl",
+   "sha256": "ec6be853a336666cd96b2a78b73b3d9b30fd52bb11fc0e9f62931b58111711e9"
+  },
+  "raw_client_tick_log": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12615\\client_tick.jsonl",
+   "sha256": "852dd15f313be516767a2b66eea557d3ee2e5b54731148a304b7d18c1e5bdb7b"
+  },
+  "raw_server_state": {
+   "format": "jsonl",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\server_state.jsonl",
+   "sha256": "fa9bd4fd7f4e7cdee3ca5c53af5eb15e7c839464f848a44d29166fde2a4bbbca"
+  },
+  "seed_noise": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12615/package_v0_1/seed_noise.jsonl",
+   "sha256": "10dd1e81dfe9aaca4e9dcdd6ce71c027251d3b24480cd854db4cdad098edc3fa"
+  },
+  "seed_noise_source": {
+   "format": "jsonl",
+   "path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12615.jsonl",
+   "sha256": "fc0777eb4dcbfcc26f55ccc59043aa6255cddde2f3784cb8eaab1ab9a584997c"
+  },
+  "server_state": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12615/package_v0_1/server_state.jsonl",
+   "sha256": "05641f28c080399fbe99bc79167e45e81b87133c83643c4a946ee411b2f1a686"
+  },
+  "visibility": {
+   "format": "jsonl",
+   "path": "data/autonomous/layout_03_ep12615/package_v0_1/visibility.jsonl",
+   "sha256": "a04e59b85b427171e350d12ef4932cf4f2141ee092a3ac8f832c6031fcc6c0a1"
+  }
+ },
+ "condition": "core",
+ "episode_id": "12615",
+ "episode_manifest": {
+  "code_sha": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+  "condition": "core",
+  "config_hash": "262fad9ad8d26220d36f5775f659999445d0e2724818badc4a98e837d65c9e30",
+  "dt_seconds": 0.05,
+  "duration": 0.4,
+  "environment_lock_hash": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+  "episode_id": "12615",
+  "layout_config_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "layout_id": "layout_03",
+  "lifecycle_version": "person-c-tick-lifecycle-v0.1",
+  "noise_schedule_hash": "10dd1e81dfe9aaca4e9dcdd6ce71c027251d3b24480cd854db4cdad098edc3fa",
+  "person_c_contract_version": "0.1",
+  "q": 0.2,
+  "regime": "regime_a",
+  "rng": {
+   "bit_generator": "PCG64",
+   "immutable_schedule": true,
+   "java_consumption": "stored_draws_in_draw_idx_order",
+   "numpy_version": "2.4.3",
+   "producer": "numpy.random.Generator"
+  },
+  "run_id": "person-c-c6a-post-c1-v0.1",
+  "schema_version": "1.0",
+  "seed": 202608158785,
+  "status": "accepted",
+  "tick_rate_hz": 20.0,
+  "trajectory_id": "layout_03_ep12615",
+  "v": 1.0
+ },
+ "exclusion_ledger": [],
+ "impulse_orientation": {
+  "camera_component_0_observed_effect": "runtime_no_component_0_effect",
+  "camera_component_1_observed_effect": "runtime_positive_component_1_step_in_visual_i_to_i_plus_1",
+  "evidence_hash": "d0261e6179d65727d9788fb7a37d28c2f950aee1f8022c617d9de604757375a0",
+  "evidence_path": "data/handoff_a/impulse_fixture_9440/qa_report.json",
+  "evidence_scope": "synthetic_contract_only",
+  "evidence_scope_note": "the underlying evidence is a real runtime pixel-level check; the v0.1 contract fixes evidence_scope to the literal 'synthetic_contract_only', so the literal is preserved rather than widening a frozen vocabulary",
+  "fixture_id": "runtime_scripted_impulse_9440",
+  "pixel_evidence_path": "data/handoff_a/impulse_fixture_9440/IMPULSE_EVIDENCE.txt",
+  "pixel_evidence_sha256": "0f4756efb3e57c59b6badc8618ed9427a4fb99ece02c3982b3003b38473de85a",
+  "status": "verified"
+ },
+ "layout_id": "layout_03",
+ "media": {
+  "fps": 20.0,
+  "frame_count": 8,
+  "height": 360,
+  "mode": "numbered_frames",
+  "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12615\\frames",
+  "sha256": "d501b886b301fdb27757f774755437714d1f2fe714fae69541f21fdacec75365",
+  "width": 640
+ },
+ "person_c_authority": {
+  "accepted_manifest_identity": {
+   "accepted": true,
+   "accepted_count": 66,
+   "excluded_count": 0,
+   "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+   "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+   "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+  },
+  "authority_schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1",
+  "authority_schema_version": "0.1",
+  "camera_pose_authority": {
+   "accepted_geometry_camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "camera": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "camera_pose_recorded": true,
+   "canonical_pose_matches_accepted_geometry": true,
+   "geometry_version": "person-c-layout-config-v0.4",
+   "status": "PASS"
+  },
+  "condition_identity": {
+   "condition": "core",
+   "context_fraction": 0.25,
+   "hidden_frames": 4,
+   "hidden_frames_realized": 4,
+   "hidden_seconds": 0.2,
+   "noise_schedule_identity": {
+    "schedule_path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12615.jsonl",
+    "schedule_set_sha256": "79a81668362421fa91cb591d355b655e9b1a60aae088057de7bda977df663806",
+    "schedule_sha256": "fc0777eb4dcbfcc26f55ccc59043aa6255cddde2f3784cb8eaab1ab9a584997c",
+    "schedule_version": "person-c-c6a-noise-schedules-v0.1"
+   },
+   "planned_seed": 20411187,
+   "q_blocks_squared_per_second": 0.2,
+   "scene": "NORMAL",
+   "seed": 202608158785,
+   "speed_blocks_per_second": 1.0,
+   "target_variant": "magenta_sheep_occluded_oracle"
+  },
+  "coordinate_frame_binding": {
+   "coordinate_frame_hash": "b640ba429b7e0e1494b844385b3d5a1b3f5619ad100e9f3519f9365e294f9acc",
+   "coordinate_frame_id": "person-c-wall-parallel-layout_03-v0.1",
+   "coordinate_frame_path": "data/person_b/c6a_c_intake/coordinate_frames/layout_03.json",
+   "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+   "person_b_cosigned": false,
+   "person_c_signed": true,
+   "projection_agreement_with_runtime_axis_pos": "exact",
+   "source_layout_manifest_hash": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "wall_parallel_origin_world_xyz": [
+    0.0,
+    4.0,
+    6.0
+   ],
+   "wall_parallel_positive_unit_vector_world_xyz": [
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  "environment_config_build_identity": {
+   "client_build": {
+    "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "runtime_identities": {
+     "fabric_api": "0.42.0+1.16",
+     "fabric_loader": "0.15.11",
+     "java": "17.0.19",
+     "minecraft": "1.16.5",
+     "yarn": "1.16.5+build.10"
+    }
+   },
+   "config_path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\reset_result.json",
+   "config_sha256": "262fad9ad8d26220d36f5775f659999445d0e2724818badc4a98e837d65c9e30",
+   "configuration": {
+    "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "accepted_geometry_version": "person-c-layout-config-v0.4",
+    "layout_definition_sha256": "4f0b503bb971f64b6397a1d8a94c513d6e410af34f012d2557a5f173eb26ef82",
+    "layout_version": "person-c-layout-config-v0.4",
+    "reset_build_version": "person-c-target-retention-v0.1"
+   },
+   "environment_lock_path": "docs/status/person_c_c1_runtime_ingestion_v0_1/final_environment_lock_receipt.json",
+   "environment_lock_sha256": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+   "episode_schema": {
+    "capture_manifest_schema": "person-c-c6a-capture-manifest-v0.2",
+    "version": "person-c-c6a-episode-inventory-v0.1"
+   },
+   "server_build": {
+    "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "repaired_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "runtime_identities": {
+     "fabric_api": "0.42.0+1.16",
+     "fabric_loader": "0.15.11",
+     "java": "17.0.19",
+     "minecraft": "1.16.5",
+     "yarn": "1.16.5+build.10"
+    },
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+   }
+  },
+  "frame_map_authority": {
+   "model_frame_key_count": 8,
+   "owner_role": "person_a",
+   "package_root": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+   "package_sha256_inventory_sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+   "per_trajectory_frame_map_path": "data/handoff_a/person_a_66_cell_production_input_v0_1/frame_maps/layout_03_ep12615.jsonl",
+   "per_trajectory_frame_map_sha256": "42e935dc289dd858a1a4e7f4ac3b1db44c6cb36b1087d6f1ec37940da83d257c",
+   "person_a_commit": "77e43bd1665671b9e23d6d6ef927ee4944611342",
+   "person_c_agreement_with_person_a": "exact",
+   "person_c_independently_rederived": true
+  },
+  "identity": {
+   "collection_order": 14,
+   "control_type": "core_regime_a",
+   "episode_id": 12615,
+   "layout_id": "layout_03",
+   "planned_cell_id": "person-c-mvp-cell-19",
+   "set_id": "core",
+   "trajectory_id": "layout_03_ep12615"
+  },
+  "layout_meta_identity": {
+   "byte_identity_verified": true,
+   "note": "per-episode runtime echo; differs between scenes of the same layout, so it is not the per-layout geometry identity",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\layout_meta.json",
+   "scene": "NORMAL",
+   "sha256": "bd70b4eca63eb7ec4423107bcaee960749a3675e1845b6d33f91e6b1c9f48914"
+  },
+  "model_frame_key_relationship": {
+   "capture_key": [
+    "episode_id",
+    "trajectory_id",
+    "server_tick",
+    "render_frame_idx",
+    "action_idx",
+    "model_frame_idx"
+   ],
+   "model_facing_key": [
+    "trajectory_id",
+    "model_frame_idx"
+   ],
+   "relationship": "server_tick == render_frame_idx == action_idx == model_frame_idx",
+   "verified_against_person_a_frame_map": true,
+   "zero_based_dense": true
+  },
+  "oracle_eligibility": {
+   "person_b_adapter_code_when_ineligible": null,
+   "person_b_oracle_eligible": true,
+   "reason": "target-bearing capture"
+  },
+  "provenance": {
+   "acceptance_authority_path": "docs/status/person_c_c6a_completion_v0_1/c6a_completion_receipt.json",
+   "acceptance_authority_sha256": "5cc653f01db1363179253aeb8bdb0ad509f20e03b419f9945aa023e0ac7fbe46",
+   "authorization_commit": "28cac05a8c804372c71814fcf15c8f1a3b8fbe03",
+   "builder": "scripts/build_person_c_66_cell_capture_authority_v0_1.py",
+   "c7_5_provenance": {
+    "builder": {
+     "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+     "repaired_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+     "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4"
+    },
+    "episode_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/episode_inventory.json",
+     "sha256": "9846b705b747aa19e3abab1d08d4cbaf37546f7cfb0b163ede7ce0143875a82a"
+    },
+    "output_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/output_inventory.json",
+     "sha256": "3a33e1188ff517b6008893bb59063b2a72a8226e24e0b8931e2e9e2046cb4ade"
+    },
+    "sha256_inventory": {
+     "path": "docs/status/person_c_c6a_completion_v0_1/sha256_inventory.json",
+     "sha256": "724fca747565cc10071e91810072e1dbca3fd680b80492385d3d048589f8f4db"
+    },
+    "source_commit": "c836641c894c88e3add207ef2190a2db88726024"
+   },
+   "canonical_c6a_id": "person-c-c6a-post-c1-v0.1",
+   "episode_bytes_copied_into_repository": false,
+   "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3"
+  },
+  "qa_status": {
+   "accepted": true,
+   "cardinality_counts": {
+    "action_row_count": 8,
+    "client_tick_count": 8,
+    "completed_record_ticks": 8,
+    "frame_count": 8,
+    "schedule_draw_count": 300,
+    "server_row_count": 8
+   },
+   "continuity_alignment_status": "PASS",
+   "duration_error": {
+    "planned_max_ticks": 300,
+    "realized_record_ticks": 8,
+    "record_tick_limit": 300
+   },
+   "exclusion_reason_codes": [],
+   "motion_noise_realization_status": "PASS",
+   "realized_condition_status": "PASS",
+   "status": "PASS",
+   "structural_status": "PASS",
+   "warning_reason_codes": []
+  },
+  "raw_action_identity": {
+   "normalized_action_encoding": "mineocclude.data.package_episode reference conversion",
+   "normalized_action_owner": "person_a",
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12615\\raw_actions.jsonl",
+   "row_count": 8,
+   "sha256": "ec6be853a336666cd96b2a78b73b3d9b30fd52bb11fc0e9f62931b58111711e9"
+  },
+  "server_state_identity": {
+   "byte_identity_verified": true,
+   "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\server_state.jsonl",
+   "row_count": 8,
+   "sha256": "fa9bd4fd7f4e7cdee3ca5c53af5eb15e7c839464f848a44d29166fde2a4bbbca"
+  },
+  "source_media_identity": {
+   "canonical_derivative_height_pixels": 360,
+   "canonical_derivative_width_pixels": 640,
+   "fps": 20.0,
+   "frame_bytes_location": "retained on the Person C Windows runtime machine; only frame identities are published",
+   "frame_count": 8,
+   "frame_inventory_path": "data/autonomous/layout_03_ep12615/package_v0_1/frame_inventory.jsonl",
+   "frame_inventory_sha256": "d501b886b301fdb27757f774755437714d1f2fe714fae69541f21fdacec75365",
+   "mode": "numbered_frames",
+   "raw_framebuffer_height_pixels": 1046,
+   "raw_framebuffer_width_pixels": 1920
+  },
+  "source_sha256_inventory": {
+   "client_tick_log": {
+    "byte_size": 1624,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12615\\client_tick.jsonl",
+    "sha256": "852dd15f313be516767a2b66eea557d3ee2e5b54731148a304b7d18c1e5bdb7b"
+   },
+   "finalization": {
+    "byte_size": 140,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\finalization.json",
+    "sha256": "953502393a7c46ae30113adceb7b25841c90bfabaf598fe3318409e627a83fce"
+   },
+   "layout_meta": {
+    "byte_size": 468,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\layout_meta.json",
+    "sha256": "bd70b4eca63eb7ec4423107bcaee960749a3675e1845b6d33f91e6b1c9f48914"
+   },
+   "lifecycle": {
+    "byte_size": 525,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\lifecycle.jsonl",
+    "sha256": "98828b8befdd0c37238e505df7245f477d8ab1ebe4f90e781f8328c25887e0ce"
+   },
+   "noise_schedule": {
+    "path": "configs/collection/person_c_c6a_v0_1/schedules/episode_12615.jsonl",
+    "sha256": "fc0777eb4dcbfcc26f55ccc59043aa6255cddde2f3784cb8eaab1ab9a584997c"
+   },
+   "raw_actions": {
+    "byte_size": 2224,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\client\\mineocclude_client_out\\episode_12615\\raw_actions.jsonl",
+    "sha256": "ec6be853a336666cd96b2a78b73b3d9b30fd52bb11fc0e9f62931b58111711e9"
+   },
+   "reset_result": {
+    "byte_size": 332,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\reset_result.json",
+    "sha256": "262fad9ad8d26220d36f5775f659999445d0e2724818badc4a98e837d65c9e30"
+   },
+   "server_state": {
+    "byte_size": 3691,
+    "path": "C:\\Users\\lollo\\MineOcclude-Runtime\\person-c-c1-v0_1\\server\\mineocclude_out\\episode_12615\\server_state.jsonl",
+    "sha256": "fa9bd4fd7f4e7cdee3ca5c53af5eb15e7c839464f848a44d29166fde2a4bbbca"
+   }
+  },
+  "successor_of": {
+   "additive_successor": true,
+   "person_c_c7_5_bundle_path": "docs/status/person_c_c7_mvp_handoff_v0_1/per_trajectory/ep12615.json",
+   "person_c_c7_5_bundle_sha256": "4c6ede02e6ea4135105bbe98f4d04a8026d71198951f0bb8200714b74f773e02",
+   "rewrites_history": false
+  },
+  "target_count_identity": {
+   "expected": 1,
+   "observed": 1,
+   "required": true,
+   "target_present": true,
+   "valid": true
+  },
+  "visibility_channel_status": {
+   "c_to_e_request_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json",
+   "empirical_magenta_channel_present": false,
+   "empirical_magenta_channel_status": "absent_pending_person_e_frozen_detector",
+   "empirical_magenta_detector_version": null,
+   "empirical_magenta_owner_role": "person_e",
+   "geometric_channel_present": true,
+   "geometric_occluded_frame_count": 4,
+   "geometric_visibility_source": "server_state.geometric_visible",
+   "geometric_visibility_version": "person-c-layout-config-v0.4",
+   "geometric_visible_frame_count": 4,
+   "person_c_invented_empirical_values": false,
+   "visible_flag_final_available": false,
+   "visible_flag_final_blocked_by": "person_e_empirical_magenta_visibility_absent",
+   "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+  },
+  "wall_lane_shadow_geometry_authority": {
+   "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+   "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "accepted_geometry_version": "person-c-layout-config-v0.4",
+   "floor": {
+    "axis": "x",
+    "block": "minecraft:grass_block",
+    "bounds": {
+     "max_x": 11,
+     "max_z": 9,
+     "min_x": -11,
+     "min_z": -9,
+     "y": 3
+    },
+    "observed_position_count": 437
+   },
+   "lane": {
+    "axis": "X",
+    "axis_max": 9.0,
+    "axis_min": -9.0,
+    "feet_y": 4.0,
+    "ortho": 6.0,
+    "start_axis": -6.75,
+    "world_end_xyz": [
+     9.0,
+     4.0,
+     6.0
+    ],
+    "world_start_xyz": [
+     -9.0,
+     4.0,
+     6.0
+    ]
+   },
+   "markers": [
+    {
+     "block": "minecraft:blue_concrete",
+     "block_pos_xyz": [
+      -7,
+      3,
+      4
+     ],
+     "color": "blue",
+     "role": "near_west",
+     "top_face_centre_world_xyz": [
+      -6.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:yellow_concrete",
+     "block_pos_xyz": [
+      7,
+      3,
+      4
+     ],
+     "color": "yellow",
+     "role": "near_east",
+     "top_face_centre_world_xyz": [
+      7.5,
+      4.0,
+      4.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:lime_concrete",
+     "block_pos_xyz": [
+      -9,
+      3,
+      8
+     ],
+     "color": "lime",
+     "role": "far_west",
+     "top_face_centre_world_xyz": [
+      -8.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    },
+    {
+     "block": "minecraft:white_concrete",
+     "block_pos_xyz": [
+      9,
+      3,
+      8
+     ],
+     "color": "white",
+     "role": "far_east",
+     "top_face_centre_world_xyz": [
+      9.5,
+      4.0,
+      8.5
+     ],
+     "world_point_convention": "block_top_face_centre"
+    }
+   ],
+   "motion_sign": 1,
+   "scalar_axis": {
+    "origin_world_coordinate_blocks": 0.0,
+    "positive_world_direction": "+x",
+    "unit": "blocks",
+    "world_axis": "x"
+   },
+   "shadow": {
+    "camera_source": "observed_first_player",
+    "definition": "GeometryUtil.segmentHitsWall",
+    "integer_lane_samples": [
+     {
+      "axis_position": -9,
+      "occluded": false,
+      "target_world_xyz": [
+       -9.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -8,
+      "occluded": false,
+      "target_world_xyz": [
+       -8.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -7,
+      "occluded": false,
+      "target_world_xyz": [
+       -7.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -6,
+      "occluded": true,
+      "target_world_xyz": [
+       -6.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -5,
+      "occluded": true,
+      "target_world_xyz": [
+       -5.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -4,
+      "occluded": true,
+      "target_world_xyz": [
+       -4.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -3,
+      "occluded": true,
+      "target_world_xyz": [
+       -3.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -2,
+      "occluded": true,
+      "target_world_xyz": [
+       -2.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": -1,
+      "occluded": true,
+      "target_world_xyz": [
+       -1.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 0,
+      "occluded": true,
+      "target_world_xyz": [
+       0.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 1,
+      "occluded": true,
+      "target_world_xyz": [
+       1.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 2,
+      "occluded": true,
+      "target_world_xyz": [
+       2.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 3,
+      "occluded": true,
+      "target_world_xyz": [
+       3.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 4,
+      "occluded": true,
+      "target_world_xyz": [
+       4.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 5,
+      "occluded": true,
+      "target_world_xyz": [
+       5.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 6,
+      "occluded": true,
+      "target_world_xyz": [
+       6.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 7,
+      "occluded": true,
+      "target_world_xyz": [
+       7.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 8,
+      "occluded": false,
+      "target_world_xyz": [
+       8.0,
+       4.0,
+       6.0
+      ]
+     },
+     {
+      "axis_position": 9,
+      "occluded": false,
+      "target_world_xyz": [
+       9.0,
+       4.0,
+       6.0
+      ]
+     }
+    ],
+    "target_centre_y": 4.5
+   },
+   "target_start": {
+    "axis_position": -6.75,
+    "source": "runtime receipt lane declaration and server spawn log",
+    "world_xyz": [
+     -6.75,
+     4.0,
+     6.0
+    ]
+   },
+   "wall": {
+    "axis": "x",
+    "block": "minecraft:stone",
+    "bounds": {
+     "max_x": 4,
+     "max_y": 6,
+     "max_z": 2,
+     "min_x": -4,
+     "min_y": 4,
+     "min_z": 2
+    },
+    "observed_position_count": 69
+   }
+  }
+ },
+ "person_c_contract_version": "0.1",
+ "run_id": "person-c-c6a-post-c1-v0.1",
+ "schema_version": "1.0",
+ "scientific_use": "pending_cross_role_signoff",
+ "seed": 202608158785,
+ "streams": {
+  "client_tick_log": [
+   {
+    "action_idx": 0,
+    "client_tick": 0,
+    "episode_id": "12615",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 1,
+    "client_tick": 1,
+    "episode_id": "12615",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 2,
+    "client_tick": 2,
+    "episode_id": "12615",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 3,
+    "client_tick": 3,
+    "episode_id": "12615",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 4,
+    "client_tick": 4,
+    "episode_id": "12615",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 5,
+    "client_tick": 5,
+    "episode_id": "12615",
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 6,
+    "client_tick": 6,
+    "episode_id": "12615",
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 7,
+    "client_tick": 7,
+    "episode_id": "12615",
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_03_ep12615"
+   }
+  ],
+  "frame_map": [
+   {
+    "action_idx": 0,
+    "episode_id": "12615",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "source_frame_role": "frames/000000.png",
+    "source_frame_sha256": "6dadc4797ff18279025ac462d8c184102cc8828fa6cf6c679bb75681f0dbd83a",
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12615",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "source_frame_role": "frames/000001.png",
+    "source_frame_sha256": "6dadc4797ff18279025ac462d8c184102cc8828fa6cf6c679bb75681f0dbd83a",
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12615",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "source_frame_role": "frames/000002.png",
+    "source_frame_sha256": "7c4c4bc7a2ce20bfe36650e08cbbad3a90e25307ca1f9f30ff5b589d1d79541c",
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12615",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "source_frame_role": "frames/000003.png",
+    "source_frame_sha256": "1d24cfb7d7b22b85d4fab40e31fe3e812d99f93abe38a7640f583ed7f2166567",
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12615",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "source_frame_role": "frames/000004.png",
+    "source_frame_sha256": "98adfd6e2010dc8c9205fbe97f6d89811c083e5b0771a8e1aa28c491cdc3573b",
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12615",
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "source_frame_role": "frames/000005.png",
+    "source_frame_sha256": "fa2aa6a16eda5b8ac089a17159926555a9b8117b43f98bc751315d169f50e763",
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12615",
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "source_frame_role": "frames/000006.png",
+    "source_frame_sha256": "3125e7b7205b7924164f91ed5a7beb69c5bccf65ab7f9899ea113a9dc7866514",
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12615",
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "source_frame_role": "frames/000007.png",
+    "source_frame_sha256": "6713087950b779dc037f0c89141a942a7c61fd760bdbf76436e9682a41c18ef5",
+    "trajectory_id": "layout_03_ep12615"
+   }
+  ],
+  "normalized_actions": [
+   {
+    "action_idx": 0,
+    "episode_id": "12615",
+    "model_frame_idx": 0,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12615",
+    "model_frame_idx": 1,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12615",
+    "model_frame_idx": 2,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12615",
+    "model_frame_idx": 3,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12615",
+    "model_frame_idx": 4,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12615",
+    "model_frame_idx": 5,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12615",
+    "model_frame_idx": 6,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12615",
+    "model_frame_idx": 7,
+    "normalized_action": {
+     "camera_component_0": 5,
+     "camera_component_1": 5,
+     "drop_pick_item": 0,
+     "forward_back": 0,
+     "hotbar": 0,
+     "jump": 0,
+     "left_right": 0,
+     "sprint_sneak": 0,
+     "use_attack": 0
+    },
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_03_ep12615"
+   }
+  ],
+  "raw_actions": [
+   {
+    "action_idx": 0,
+    "episode_id": "12615",
+    "model_frame_idx": 0,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12615",
+    "model_frame_idx": 1,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12615",
+    "model_frame_idx": 2,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12615",
+    "model_frame_idx": 3,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12615",
+    "model_frame_idx": 4,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12615",
+    "model_frame_idx": 5,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12615",
+    "model_frame_idx": 6,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12615",
+    "model_frame_idx": 7,
+    "raw_action": {
+     "keyboard": {
+      "keys": []
+     },
+     "mouse": {
+      "buttons": [],
+      "dx": 0.0,
+      "dy": 0.0
+     }
+    },
+    "raw_action_flat": {
+     "attack": false,
+     "back": false,
+     "camera_dx": 0.0,
+     "camera_dy": 0.0,
+     "drop": false,
+     "forward": false,
+     "hotbar": 0,
+     "jump": false,
+     "left": false,
+     "pick_item": false,
+     "right": false,
+     "sneak": false,
+     "sprint": false,
+     "use": false
+    },
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_03_ep12615"
+   }
+  ],
+  "seed_noise": [
+   {
+    "action_idx": 0,
+    "draw_idx": 0,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 0,
+    "noise_draw": -0.135422680454605,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 0,
+    "seed": 202608158785,
+    "server_tick": 0,
+    "standard_normal_draw": -1.35422680454605,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 1,
+    "draw_idx": 1,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 1,
+    "noise_draw": 0.12013948718320695,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 1,
+    "seed": 202608158785,
+    "server_tick": 1,
+    "standard_normal_draw": 1.2013948718320695,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 2,
+    "draw_idx": 2,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 2,
+    "noise_draw": -0.04575670803658208,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 2,
+    "seed": 202608158785,
+    "server_tick": 2,
+    "standard_normal_draw": -0.4575670803658207,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 3,
+    "draw_idx": 3,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 3,
+    "noise_draw": 0.21298482818335884,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 3,
+    "seed": 202608158785,
+    "server_tick": 3,
+    "standard_normal_draw": 2.1298482818335884,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 4,
+    "draw_idx": 4,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 4,
+    "noise_draw": 0.008464036084666946,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 4,
+    "seed": 202608158785,
+    "server_tick": 4,
+    "standard_normal_draw": 0.08464036084666947,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 5,
+    "draw_idx": 5,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 5,
+    "noise_draw": 0.0031574539657511385,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 5,
+    "seed": 202608158785,
+    "server_tick": 5,
+    "standard_normal_draw": 0.031574539657511384,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 6,
+    "draw_idx": 6,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 6,
+    "noise_draw": -0.10819295478616904,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 6,
+    "seed": 202608158785,
+    "server_tick": 6,
+    "standard_normal_draw": -1.0819295478616904,
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 7,
+    "draw_idx": 7,
+    "dt_seconds": 0.05,
+    "episode_id": "12615",
+    "model_frame_idx": 7,
+    "noise_draw": 0.07763427180455404,
+    "noise_std_blocks": 0.1,
+    "q": 0.2,
+    "render_frame_idx": 7,
+    "seed": 202608158785,
+    "server_tick": 7,
+    "standard_normal_draw": 0.7763427180455403,
+    "trajectory_id": "layout_03_ep12615"
+   }
+  ],
+  "server_state": [
+   {
+    "action_idx": 0,
+    "episode_id": "12615",
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "state": {
+     "position_x_blocks": -6.835422680454605,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -1.7084536090920999,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.835422680454605
+    },
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 1,
+    "episode_id": "12615",
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "state": {
+     "position_x_blocks": -6.6652831932713985,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 3.4027897436641297,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.6652831932713985
+    },
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 2,
+    "episode_id": "12615",
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "state": {
+     "position_x_blocks": -6.661039901307981,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 0.08486583926835323,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.661039901307981
+    },
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 3,
+    "episode_id": "12615",
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "state": {
+     "position_x_blocks": -6.398055073124622,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 5.259696563667173,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.398055073124622
+    },
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 4,
+    "episode_id": "12615",
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "state": {
+     "position_x_blocks": -6.3395910370399555,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 1.1692807216933332,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.3395910370399555
+    },
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 5,
+    "episode_id": "12615",
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "state": {
+     "position_x_blocks": -6.286433583074205,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 1.0631490793150178,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.286433583074205
+    },
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 6,
+    "episode_id": "12615",
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "state": {
+     "position_x_blocks": -6.344626537860374,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": -1.1638590957233852,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.344626537860374
+    },
+    "trajectory_id": "layout_03_ep12615"
+   },
+   {
+    "action_idx": 7,
+    "episode_id": "12615",
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "state": {
+     "position_x_blocks": -6.21699226605582,
+     "position_y_blocks": 4.0,
+     "position_z_blocks": 6.0,
+     "target_entity_id": "magenta_sheep_12615",
+     "target_present": true,
+     "velocity_x_blocks_per_second": 2.552685436091071,
+     "velocity_y_blocks_per_second": 0.0,
+     "velocity_z_blocks_per_second": 0.0,
+     "wall_parallel_position_blocks": -6.21699226605582
+    },
+    "trajectory_id": "layout_03_ep12615"
+   }
+  ],
+  "visibility": [
+   {
+    "action_idx": 0,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": true,
+    "model_frame_idx": 0,
+    "render_frame_idx": 0,
+    "server_tick": 0,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 1,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": true,
+    "model_frame_idx": 1,
+    "render_frame_idx": 1,
+    "server_tick": 1,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 2,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": true,
+    "model_frame_idx": 2,
+    "render_frame_idx": 2,
+    "server_tick": 2,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 3,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": true,
+    "model_frame_idx": 3,
+    "render_frame_idx": 3,
+    "server_tick": 3,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "visible",
+    "visibility_identity_sha256": "4db9e3dd950866ecf38fdee552bd7602a7de6f60a398e4889ef9e0403d1e1e13",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 4,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": false,
+    "model_frame_idx": 4,
+    "render_frame_idx": 4,
+    "server_tick": 4,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 5,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": false,
+    "model_frame_idx": 5,
+    "render_frame_idx": 5,
+    "server_tick": 5,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 6,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": false,
+    "model_frame_idx": 6,
+    "render_frame_idx": 6,
+    "server_tick": 6,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   },
+   {
+    "action_idx": 7,
+    "empirical_channel_status": "absent_pending_person_e_frozen_detector",
+    "empirical_magenta_visible": null,
+    "episode_id": "12615",
+    "geometric_visible": false,
+    "model_frame_idx": 7,
+    "render_frame_idx": 7,
+    "server_tick": 7,
+    "trajectory_id": "layout_03_ep12615",
+    "visibility": "occluded",
+    "visibility_identity_sha256": "22b101d6443ce55a6d752aa8962f85fa34581ebc5ae98233bf24234f38feed84",
+    "visibility_source": "server_state.geometric_visible",
+    "visible_flag_final": null,
+    "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+   }
+  ]
+ },
+ "synthetic": false,
+ "temporal_alignment": {
+  "action_idx": 1,
+  "effect_server_tick": 2,
+  "evidence_hash": "4c6ede02e6ea4135105bbe98f4d04a8026d71198951f0bb8200714b74f773e02",
+  "evidence_scope": "synthetic_contract_only",
+  "status": "verified",
+  "visual_after_model_frame_idx": 2,
+  "visual_before_model_frame_idx": 1
+ },
+ "trajectory_id": "layout_03_ep12615"
+}

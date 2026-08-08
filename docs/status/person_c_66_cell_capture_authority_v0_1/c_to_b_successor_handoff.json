@@ -1,0 +1,216 @@
+{
+ "READY_FOR_B_COORDINATE_FRAME_COSIGN": true,
+ "READY_FOR_B_ORACLE_AFTER_E_VISIBILITY": true,
+ "accepted_geometry_identity": {
+  "agrees_with_person_b_reported_identity": true,
+  "independently_verified_by_person_c": true,
+  "path": "configs/scenes/layouts_v0_4.yaml",
+  "sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "version": "person-c-layout-config-v0.4"
+ },
+ "additive_successor": true,
+ "capture_package_authority": {
+  "adapter": "mineocclude.analysis.coordinates.build_state_input_from_capture_package",
+  "capture_package_count": 66,
+  "capture_packages_complete": true,
+  "duplicate_episode_identity_count": 0,
+  "frozen_contract_accepted_count": 66,
+  "frozen_contract_rejected_count": 0,
+  "layout_config_hash_binding": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "layout_config_hash_note": "episode_manifest.layout_config_hash is bound to the accepted geometry manifest so it matches each coordinate frame's source_layout_manifest_hash, as the frozen adapter requires",
+  "manifest_path": "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+  "manifest_sha256": "ca6ef6bd0a6ee144731ff3e6f470f767a2c1a82e8b46aef9fb5e458efb814f56",
+  "missing_count": 0,
+  "oracle_eligible_count": 60,
+  "oracle_ineligible_count": 6,
+  "oracle_ineligible_reason": "occluder_only_no_sheep controls carry no target object; Person B's frozen adapter rejects them with no_object_not_oracle_eligible by design, so they are not oracle inputs",
+  "path_convention": "data/autonomous/<trajectory_id>/capture_package_v0_1.json"
+ },
+ "consumer_role": "person_b",
+ "consumer_step": "66-cell oracle-target manifest construction",
+ "coordinate_frame_authority": {
+  "PERSON_C_COORDINATE_FRAME_SIGNED": true,
+  "READY_FOR_B_COORDINATE_FRAME_COSIGN": true,
+  "authority_path": "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json",
+  "authority_sha256": "1aed95e444f82ab4caf9935c039e87df3aafbf38830bf763a646aba3d62b509b",
+  "coordinate_frame_schema_version": "person-b-wall-parallel-frame-v0.1",
+  "frame_path_convention": "data/person_b/c6a_c_intake/coordinate_frames/layout_0N.json",
+  "frames": [
+   {
+    "adapter_signoff": {
+     "cosign_preserves_coordinate_frame_hash": true,
+     "person_b": false,
+     "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+     "person_c": true,
+     "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+    },
+    "coordinate_frame_hash": "3d75d33ccfae95b55d4c2a6cf6cc2e0f8b08bb8a5bf8235d643bceae025fa0dc",
+    "layout_id": "layout_01",
+    "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_01.json",
+    "sha256": "f4d1b1d327bcbacec0ef88f99cb7dd475ffec4c67d95b2c0cefc50beb69a6518"
+   },
+   {
+    "adapter_signoff": {
+     "cosign_preserves_coordinate_frame_hash": true,
+     "person_b": false,
+     "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+     "person_c": true,
+     "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+    },
+    "coordinate_frame_hash": "f309e51adfb941d963084afc7b5cdf7c7480e923fd01cfb8203f4e24e6eb5061",
+    "layout_id": "layout_02",
+    "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_02.json",
+    "sha256": "297b4dc85ac9c9c2a21305e04811d0c25853fcbc87e17d61e16bf050340b4dbb"
+   },
+   {
+    "adapter_signoff": {
+     "cosign_preserves_coordinate_frame_hash": true,
+     "person_b": false,
+     "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+     "person_c": true,
+     "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+    },
+    "coordinate_frame_hash": "b640ba429b7e0e1494b844385b3d5a1b3f5619ad100e9f3519f9365e294f9acc",
+    "layout_id": "layout_03",
+    "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_03.json",
+    "sha256": "b4d3a17edb9ebbe3afddb851ff20180ac0b85d5917b18b25c65f94ec3fb615db"
+   },
+   {
+    "adapter_signoff": {
+     "cosign_preserves_coordinate_frame_hash": true,
+     "person_b": false,
+     "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+     "person_c": true,
+     "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+    },
+    "coordinate_frame_hash": "3510cdd23ad9577398b34edf031779a69176d735e776c4736d08859847cb76a7",
+    "layout_id": "layout_04",
+    "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_04.json",
+    "sha256": "8fa448ff4a991283ff30d3d83280403f2d202fb5510ae63a90a77f5894c1551f"
+   },
+   {
+    "adapter_signoff": {
+     "cosign_preserves_coordinate_frame_hash": true,
+     "person_b": false,
+     "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+     "person_c": true,
+     "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+    },
+    "coordinate_frame_hash": "f6f9be4aef99a6e773a7e1cdb1a995e738a4bd867b14f36e3744bfcbd50d5679",
+    "layout_id": "layout_05",
+    "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_05.json",
+    "sha256": "cf76bee1a1a9c4d6e768664db960f40e37fef6417c67029457c5fd6f6d5073da"
+   },
+   {
+    "adapter_signoff": {
+     "cosign_preserves_coordinate_frame_hash": true,
+     "person_b": false,
+     "person_b_signoff_scope": "Person B must co-sign adapter_signoff.person_b on its own branch before live use; Person C does not sign Person B's side.",
+     "person_c": true,
+     "person_c_signoff_scope": "Person C owns the world coordinate system, the wall-parallel scalar axis, its origin, direction, sign convention, and the wall/lane/shadow bounds recorded here."
+    },
+    "coordinate_frame_hash": "b57a4448516c469435a08d24cfd587da1b8fc154188ee0fed97d62fc034a59de",
+    "layout_id": "layout_06",
+    "path": "data/person_b/c6a_c_intake/coordinate_frames/layout_06.json",
+    "sha256": "e84a894f28cbcee0cffe4f96c492f41e8263e12a33e50bdb900b9dfe79dbeaeb"
+   }
+  ],
+  "layout_count": 6,
+  "person_b_cosign_claimed_by_person_c": false,
+  "person_b_cosign_present": false
+ },
+ "empirical_visibility_status": {
+  "C_TO_E_EMPIRICAL_VISIBILITY_HANDOFF_READY": true,
+  "c_to_e_request_path": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json",
+  "c_to_e_request_sha256": "6934317b6b2723d4dddb5507ba58ef32e6ce39729bd4065751aa76e8ae1fc0ea",
+  "empirical_magenta_channel_present": false,
+  "geometric_channel_present": true,
+  "geometric_channel_source": "server_state.geometric_visible",
+  "owner_role": "person_e",
+  "person_c_invented_empirical_values": false,
+  "status": "absent_pending_person_e_frozen_detector",
+  "visible_flag_final_available": false,
+  "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+ },
+ "person_a_frame_map_binding": {
+  "duplicate_model_frame_key_count": 0,
+  "missing_model_frame_key_count": 0,
+  "model_frame_key_count": 2468,
+  "package_root": "data/handoff_a/person_a_66_cell_production_input_v0_1",
+  "package_sha256": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+  "person_a_commit": "77e43bd1665671b9e23d6d6ef927ee4944611342",
+  "person_c_independent_rederivation": "exact"
+ },
+ "person_b_adapter_note": "the frozen adapter anchors each occluded row to an earlier visible row; all 60 target-bearing captures begin geometrically visible, so every oracle-eligible package satisfies that rule",
+ "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+ "person_c_manifest": {
+  "accepted_count": 66,
+  "episode_id_range": [
+   12601,
+   12666
+  ],
+  "excluded_count": 0,
+  "frozen_decision_modified": false,
+  "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+  "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+ },
+ "person_c_owned_oracle_inputs_complete": true,
+ "producer_role": "person_c",
+ "readiness_qualification": "All Person C-owned oracle inputs are complete: 66 contract-valid capture packages, the Person C-signed wall-parallel frame for all six layouts, and hash-verified state/layout authorities. Person B still needs its own co-sign, Person E's empirical channel and Person A's model/preprocess hashes before the oracle-target manifest can be built.",
+ "remaining_inputs_required_before_b_oracle_target_manifest": [
+  {
+   "blocking": true,
+   "detail": "per-frame empirical_magenta_visible keyed by (trajectory_id, model_frame_idx) for all 2468 production frames, at Person E's frozen detector version",
+   "input_id": "person_e_empirical_magenta_visibility_for_66_cells",
+   "owner_role": "person_e",
+   "status": "outstanding",
+   "unblocked_by": "data/handoff_e/person_c_to_person_e_66_cell_empirical_visibility_request_v0_1/request_manifest.json"
+  },
+  {
+   "blocking": true,
+   "detail": "Person C publishes visible_flag = geometric_visible AND empirical_magenta_visible once Person E responds; the geometric half is already published per frame",
+   "input_id": "person_c_strict_join_visible_flag",
+   "owner_role": "person_c",
+   "status": "blocked_on_person_e"
+  },
+  {
+   "blocking": true,
+   "detail": "set adapter_signoff.person_b = true on the Person B branch; coordinate_frame_hash is unchanged by the co-sign",
+   "input_id": "person_b_coordinate_frame_cosign",
+   "owner_role": "person_b",
+   "status": "ready_for_person_b"
+  },
+  {
+   "blocking": true,
+   "detail": "the frozen adapter requires explicit SHA-256 model_hash and preprocess_hash arguments; both are Person A's",
+   "input_id": "person_a_model_hash_and_preprocess_hash",
+   "owner_role": "person_a",
+   "status": "outstanding"
+  }
+ ],
+ "rewrites_c7_5_history": false,
+ "schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1-c-to-b-successor-handoff",
+ "schema_version": "0.1",
+ "server_state_layout_meta_authorities": {
+  "layout_meta_count": 66,
+  "layout_meta_hashes_valid": true,
+  "payload_bytes_location": "Person C Windows runtime machine; identities published only",
+  "server_state_count": 66,
+  "server_state_hashes_valid": true,
+  "total_payloads_verified": 132,
+  "verification_receipt_path": "docs/status/person_c_66_cell_capture_authority_v0_1/verification_receipt.json",
+  "verification_receipt_sha256": "63628af7224856ce3674335305b5c40a099df17e85066efc11e169984bd9cc48"
+ },
+ "supersedes_nothing": true,
+ "u4_structural_eligibility_status": {
+  "CURRENT_66_CELL_U4_REVEAL_ELIGIBLE": false,
+  "U4_SUPPLEMENTAL_CAPTURE_REQUIRED": true,
+  "finding_path": "docs/status/person_c_66_cell_capture_authority_v0_1/u4_reveal_eligibility_finding.json",
+  "finding_sha256": "1a3546045b01cd36bf6578aa5dcaef29c3b5232767ca10f96f1d115c48dd424b",
+  "person_b_u4_rules_modified": false,
+  "person_c_chose_heldout_event_ids": false,
+  "requirements_path": "docs/status/person_c_66_cell_capture_authority_v0_1/u4_supplemental_capture_requirements.json",
+  "requirements_sha256": "e2397f8398e50dd4e7c4b8c34780fc5a9978e878cb0b5690c62b76a553298b75",
+  "structural_failure_reason": "no_heldout_terminal_reveal_window_exists_in_the_66_cell_capture"
+ }
+}

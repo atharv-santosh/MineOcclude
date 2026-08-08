@@ -1,0 +1,226 @@
+{
+ "capture_duration_requirements": {
+  "blip_definition_observed_in_66_cell": "post_visible_run_length between 1 and 4 frames",
+  "blip_reveals_not_acceptable": true,
+  "capture_must_continue_after_the_reveal": true,
+  "minimum_capture_frames_if_reveal_is_centred": 41,
+  "minimum_capture_seconds_if_reveal_is_centred": 2.0500000000000003,
+  "minimum_centred_span_frames": 41,
+  "minimum_post_reveal_frames": 20,
+  "minimum_post_reveal_visible_run_frames": 20,
+  "minimum_pre_reveal_frames": 20,
+  "observed_66_cell_max_frame_count": 67,
+  "observed_66_cell_shortfall": "the longest existing capture is 67 frames and every held-out candidate reveal has fewer than 20 frames on at least one side",
+  "reveal_must_not_be_the_final_frame": true,
+  "reveal_window_owner": "person_b",
+  "reveal_window_seconds": [
+   -1.0,
+   1.0
+  ]
+ },
+ "collection_performed_in_this_task": false,
+ "deterministic_capture_requirements": {
+  "capture_key": [
+   "episode_id",
+   "trajectory_id",
+   "server_tick",
+   "render_frame_idx",
+   "action_idx",
+   "model_frame_idx"
+  ],
+  "immutable_noise_schedule_required": true,
+  "java_consumption": "stored_draws_in_draw_idx_order",
+  "noise_schedule_bit_generator": "PCG64",
+  "noise_schedule_producer": "numpy.random.Generator",
+  "one_action_row_per_frame_required": true,
+  "one_client_tick_row_per_frame_required": true,
+  "one_state_row_per_frame_required": true,
+  "seed_must_be_recorded": true,
+  "server_tick_must_advance_by_exactly_one": true,
+  "synchronized_state_action_frame_capture_required": true
+ },
+ "episode_identity_requirements": {
+  "existing_66_cell_manifest_immutable": true,
+  "existing_accepted_count_unchanged": 66,
+  "existing_excluded_count_unchanged": 0,
+  "existing_run_id_not_to_be_reused": "person-c-c6a-post-c1-v0.1",
+  "first_available_episode_id": 12667,
+  "new_episode_ids_required": true,
+  "new_run_id_required": true,
+  "overwrite_of_existing_66_cells_forbidden": true,
+  "reuse_of_ep12601_ep12666_forbidden": true
+ },
+ "foreign_authorities": [
+  {
+   "authority": "held-out U4 event selection and event ids",
+   "note": "Person C does not choose scientific held-out event ids; Person B freezes them",
+   "owner_role": "person_b",
+   "person_c_decided": false
+  },
+  {
+   "authority": "required held-out event count",
+   "owner_role": "person_b",
+   "person_c_decided": false,
+   "value": 5
+  },
+  {
+   "authority": "reveal window definition",
+   "owner_role": "person_b",
+   "person_c_decided": false,
+   "value": [
+    -1.0,
+    1.0
+   ]
+  },
+  {
+   "authority": "empirical magenta visibility measurement",
+   "note": "detector version and thresholds are Person E's",
+   "owner_role": "person_e",
+   "person_c_decided": false
+  }
+ ],
+ "hashing_requirements": {
+  "byte_size_required": true,
+  "capture_package_required": true,
+  "capture_package_schema": "mineocclude.data.capture_contract.validate_capture_package",
+  "digest_algorithm": "sha256",
+  "exact_sha256_required_for_every_source_artifact": true,
+  "per_frame_sha256_required": true,
+  "required_roles": [
+   "server_state.jsonl",
+   "layout_meta.json",
+   "reset_result.json",
+   "finalization.json",
+   "lifecycle.jsonl",
+   "client_tick.jsonl",
+   "raw_actions.jsonl"
+  ]
+ },
+ "leakage_requirements": {
+  "fit_layout_ids_foreign_input": [
+   "layout_01",
+   "layout_02",
+   "layout_05"
+  ],
+  "heldout_layout_ids_foreign_input": [
+   "layout_03",
+   "layout_04"
+  ],
+  "must_not_be_used_in_direction_construction": true,
+  "must_not_be_used_in_dose_selection": true,
+  "must_not_be_used_in_layer_selection": true,
+  "must_not_be_used_in_probe_fit": true,
+  "must_not_be_used_to_tune_person_e_detector": true,
+  "no_overlap_with_fit_data": true,
+  "no_overlap_with_selection_data": true,
+  "no_overlap_with_tuning_data": true,
+  "partition_owner": "person_b"
+ },
+ "marker_visibility_requirements": {
+  "all_four_markers_must_be_recorded": true,
+  "magenta_reserved_for_target_only": true,
+  "marker_count": 4,
+  "marker_restriction": "non_magenta_ground_markers",
+  "rationale": "Person E's empirical magenta detector requires that no layout element other than the target is magenta"
+ },
+ "owner_role": "person_c",
+ "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+ "preserved_environment_requirements": {
+  "accepted_geometry_path": "configs/scenes/layouts_v0_4.yaml",
+  "accepted_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+  "dt_seconds": 0.05,
+  "environment_lock_path": "docs/status/person_c_c1_runtime_ingestion_v0_1/final_environment_lock_receipt.json",
+  "environment_lock_sha256": "f25ff4fab1e16968b0008807600e8d50d5647a83c4e7ba40d53b4cbf0a5ae66e",
+  "geometry_change_forbidden": true,
+  "layout_config_version": "person-c-layout-config-v0.4",
+  "lifecycle_version": "person-c-tick-lifecycle-v0.1",
+  "media_canonical_height_pixels": 360,
+  "media_canonical_width_pixels": 640,
+  "tick_rate_hz": 20.0
+ },
+ "required_canonical_pose": {
+  "camera_pose_must_be_recorded_per_episode": true,
+  "per_layout_camera": {
+   "layout_01": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "layout_02": {
+    "feet_xyz": [
+     -5.5,
+     4.0,
+     0.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": -90.0
+   },
+   "layout_03": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "layout_04": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -5.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "layout_05": {
+    "feet_xyz": [
+     0.5,
+     4.0,
+     -4.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": 0.0
+   },
+   "layout_06": {
+    "feet_xyz": [
+     -6.5,
+     4.0,
+     0.5
+    ],
+    "fov_degrees": 70.0,
+    "pitch_degrees": 0.0,
+    "roll_degrees": 0.0,
+    "yaw_degrees": -90.0
+   }
+  },
+  "requirement": "the accepted geometry camera pose for the captured layout, unchanged, because the accepted shadow bounds are that pose's segmentHitsWall result"
+ },
+ "schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1-u4-supplemental-capture-requirements",
+ "schema_version": "0.1",
+ "scope": "Person C-owned collection constraints for a future supplemental held-out capture. Selection and measurement criteria remain foreign authorities and are not decided here.",
+ "status": "requirements_only_not_executed",
+ "triggered_by": "no_heldout_terminal_reveal_window_exists_in_the_66_cell_capture",
+ "wall_shadow_geometry_requirements": {
+  "coordinate_frame_authority_path": "docs/status/person_c_66_cell_capture_authority_v0_1/coordinate_frame_authority.json",
+  "lane_bounds_must_match_accepted_geometry": true,
+  "shadow_bounds_must_match_accepted_geometry": true,
+  "wall_bounds_must_match_accepted_geometry": true,
+  "wall_parallel_axis_must_match_the_signed_coordinate_frame": true,
+  "wall_present_required_for_reveal_events": true
+ }
+}

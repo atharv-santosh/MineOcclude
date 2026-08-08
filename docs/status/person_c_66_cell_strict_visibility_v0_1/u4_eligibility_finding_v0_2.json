@@ -1,0 +1,117 @@
+{
+ "CURRENT_66_CELL_U4_REVEAL_ELIGIBLE": false,
+ "U4_SUPPLEMENTAL_CAPTURE_REQUIRED": true,
+ "U4_VALID_TERMINAL_REVEAL_COUNT": 0,
+ "counts": {
+  "accepted_trajectory_count": 66,
+  "applicable_trajectory_count": 60,
+  "not_applicable_trajectory_count": 6,
+  "raw_reveal_candidate_count": 11,
+  "raw_reveal_candidate_count_heldout_layouts": 4,
+  "reveal_candidates_rejected_by_insufficient_window": 0,
+  "reveal_candidates_rejected_by_stability": 10,
+  "stable_occlusion_event_count": 55,
+  "stable_reveal_event_count": 1,
+  "stable_reveal_event_count_heldout_layouts": 0,
+  "trajectories_with_missing_reveal": 54,
+  "trajectories_with_valid_occlusion": 54,
+  "trajectories_with_valid_terminal_reveal": 0,
+  "valid_terminal_reveal_count": 0,
+  "valid_terminal_reveal_count_heldout_layouts": 0
+ },
+ "derived_from": "joined Person C geometric AND Person E empirical channel",
+ "existing_66_cell_accepted_count": 66,
+ "existing_66_cell_excluded_count": 0,
+ "existing_66_cell_universe_remains_production": true,
+ "failure_reasons": [
+  "no applicable trajectory has a stable reveal that satisfies the frozen +/-20-frame reveal window and remains visible to the end of the capture",
+  "only 0 stable reveal events exist in the held-out layouts (layout_03, layout_04), fewer than the 5 held-out events Person B requires"
+ ],
+ "foreign_authorities_not_modified": {
+  "fit_layout_ids": [
+   "layout_01",
+   "layout_02",
+   "layout_05"
+  ],
+  "heldout_layout_ids": [
+   "layout_03",
+   "layout_04"
+  ],
+  "person_c_called_a_blip_a_reveal": false,
+  "person_c_changed_accepted_manifest": false,
+  "person_c_deleted_flickering_frames": false,
+  "person_c_extended_existing_episode_files": false,
+  "person_c_modified_person_b_oracle_logic": false,
+  "person_c_reduced_event_requirement": false,
+  "person_c_relaxed_reveal_window": false,
+  "person_c_tuned_detector": false,
+  "required_heldout_event_count": 5,
+  "required_heldout_event_count_owner": "person_b"
+ },
+ "frozen_rules_used": {
+  "event_rule_version": "person-c-event-stability-v0.1",
+  "final_visibility_interface_version": "person-c-final-visibility-interface-v1.0",
+  "geometry_rule_version": "person-c-geometric-visibility-v0.1",
+  "required_centred_span_frames": 41,
+  "required_post_frames": 20,
+  "required_pre_frames": 20,
+  "reveal_window_seconds": [
+   -1.0,
+   1.0
+  ],
+  "reveal_window_source": {
+   "field": "U3.reveal_window_seconds",
+   "owner_role": "person_b",
+   "path": "configs/analysis/core.yaml"
+  },
+  "rule_chosen_after_inspecting_results": false,
+  "stability_frames": 2,
+  "tick_rate_hz": 20.0,
+  "visible_flag_rule": "geometric_visible AND empirical_magenta_visible"
+ },
+ "historical_predecessor_invalidated": false,
+ "immutable": true,
+ "owner_role": "person_c",
+ "person_c_commit": "aceb319c47af6d494d6e5314049b12ab1a0a002f",
+ "person_c_copied_person_e_conclusion": false,
+ "person_c_independent_agreement_with_person_e": {
+  "channel_note": "Person C's own joined-channel raw candidate count is 11, which is larger than Person E's 7 because the joined channel transitions whenever either input channel transitions. The two numbers are not in conflict: they are counts over different channels, and Person C's empirical-only recount reproduces Person E's figure exactly.",
+  "empirical_channel_candidate_count_agrees": true,
+  "empirical_channel_candidate_count_person_c": 7,
+  "empirical_channel_candidate_count_person_e": 7,
+  "empirical_channel_heldout_candidate_count_agrees": true,
+  "empirical_channel_heldout_candidate_count_person_c": 0,
+  "empirical_channel_heldout_candidate_count_person_e": 0,
+  "ineligibility_agrees": true,
+  "valid_terminal_reveal_count_agrees": true,
+  "valid_terminal_reveal_count_person_c": 0,
+  "valid_terminal_reveal_count_person_e": 0
+ },
+ "person_e_reported": {
+  "empirical_occluded_to_visible_candidate_count": 7,
+  "u4_existing_66_still_ineligible": true,
+  "u4_valid_terminal_reveal_count": 0
+ },
+ "raw_candidate_counts_by_channel": {
+  "empirical_only": {
+   "raw_occluded_to_visible_candidate_count": 7,
+   "raw_occluded_to_visible_candidate_count_heldout_layouts": 0
+  },
+  "geometric_only": {
+   "raw_occluded_to_visible_candidate_count": 8,
+   "raw_occluded_to_visible_candidate_count_heldout_layouts": 4
+  },
+  "joined_visible_flag": {
+   "raw_occluded_to_visible_candidate_count": 11,
+   "raw_occluded_to_visible_candidate_count_heldout_layouts": 4
+  }
+ },
+ "recomputed_independently": true,
+ "schema_id": "mineocclude-person-c-66-cell-strict-visibility-v0.1-u4-eligibility-finding",
+ "schema_version": "0.1",
+ "structural_failure_reason": "no_heldout_terminal_reveal_window_exists_in_the_66_cell_capture",
+ "supersedes_for_new_evidence": "docs/status/person_c_66_cell_capture_authority_v0_1/u4_reveal_eligibility_finding.json",
+ "supplemental_capture_executed_in_this_task": false,
+ "supplemental_capture_must_use_new_episode_and_run_identities": true,
+ "supplemental_capture_requirements_path": "docs/status/person_c_66_cell_capture_authority_v0_1/u4_supplemental_capture_requirements.json"
+}

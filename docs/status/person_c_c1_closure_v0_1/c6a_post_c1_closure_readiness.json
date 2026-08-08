@@ -1,0 +1,40 @@
+{
+  "schema_version": "person-c-c6a-readiness-after-c1-closure-v0.1",
+  "status": "BLOCKED_ONLY_BY_E_HOMOGRAPHY_REFIT",
+  "c1_5_first_operator_prerequisite_satisfied": true,
+  "c1_5_second_operator_prerequisite_satisfied": true,
+  "person_c_c1_stop_gate_closed": true,
+  "schedule_version": "person-c-c6a-noise-schedules-v0.1",
+  "schedule_set_sha256": "79a81668362421fa91cb591d355b655e9b1a60aae088057de7bda977df663806",
+  "noise_schedule_still_valid": true,
+  "capture_manifest_still_valid": true,
+  "capture_manifest": {
+    "path": "docs/status/person_c_c6a_capture_manifest_v0_2/c6a_capture_manifest.json",
+    "size_bytes": 212580,
+    "sha256": "174def13f71ad8c2df5615a0ef5ec7fc9e10b431c105fc995dc6508e87c2dc7d",
+    "git_blob": "c051800dbc6e299c1de890ef0e4359a4ec35b9bd"
+  },
+  "schedule_manifest": {
+    "path": "configs/collection/person_c_c6a_v0_1/schedule_set_manifest.json",
+    "size_bytes": 42769,
+    "sha256": "1abf0fc1e9f5633e17616a512d0bf84d66e048eef9986427c1908b834945346e",
+    "git_blob": "381ecdd1bd092febdca4abb2133af1fa51b74a80"
+  },
+  "geometry_identity_current": true,
+  "jar_identity_current": true,
+  "runtime_schedule_hashes_current": true,
+  "output_paths_absent": true,
+  "execution_command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\lollo\\MineOcclude-Person-C-C1-C6A\\scripts\\person_c\\run-c6a-after-e-refit.ps1\" -ExecuteScientificCapture",
+  "execution_gate_wrapper": {
+    "path": "scripts/person_c/run-c6a-after-e-refit.ps1",
+    "size_bytes": 12337,
+    "sha256": "32abcce2e0e76099477148f8bc589064410fb0826a6bd34b55e6a13c1926d5bf",
+    "git_blob": "d2375cb51e937f98615aeac8dea535c505bac0e2"
+  },
+  "execution_authorized_now": false,
+  "remaining_blockers": [
+    "E_HOMOGRAPHY_REFIT_AND_VALIDATION_FOR_PERSON_C_LAYOUT_CONFIG_V0_4"
+  ],
+  "supersession": "This additive readiness record supersedes only the mutable prerequisite status in the v0.2 manifest; the immutable episode plan, schedules, hashes, and historical manifest remain unchanged.",
+  "c6a_executed": false
+}

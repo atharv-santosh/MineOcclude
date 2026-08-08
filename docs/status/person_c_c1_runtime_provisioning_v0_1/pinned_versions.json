@@ -1,0 +1,45 @@
+{
+  "schema_version": "person-c-c1-runtime-pinned-versions-v0.1",
+  "status": "BLOCKED_BEFORE_PROVISIONING",
+  "starting_commit": "8213c794a1da3ffcfb507b4f774d2047b1b20a43",
+  "versions": {
+    "minecraft": "1.16.5",
+    "fabric_loader": "0.15.11",
+    "yarn_mappings": "1.16.5+build.10",
+    "fabric_api": "0.42.0+1.16",
+    "gradle_wrapper": "8.3",
+    "loom_declared": "1.4-SNAPSHOT",
+    "loom_resolved_during_task_inventory": "1.4.6",
+    "loom_immutable_pin": false,
+    "required_build_java_major": 17,
+    "emitted_bytecode_java_major": 8,
+    "documented_minecraft_runtime_java_majors": [8, 11],
+    "mod_id": "mineocclude",
+    "mod_version": "0.1.0"
+  },
+  "fabric_metadata": {
+    "environment": "*",
+    "minecraft_constraint": "1.16.x",
+    "fabric_loader_constraint": ">=0.15.0",
+    "java_constraint": ">=8",
+    "fabric_api_constraint": "*",
+    "entrypoints": ["main", "server", "client"]
+  },
+  "committed_run_configuration": {
+    "build_task": "build",
+    "test_task": "test",
+    "server_task": "runServer",
+    "client_task": "runClient",
+    "server_task_description": "Starts the 'null' run configuration",
+    "client_task_description": "Starts the 'null' run configuration",
+    "external_run_directory_configured": false,
+    "deterministic_isolated_launch_ready": false
+  },
+  "source_files": [
+    {"path": "fabric/mineocclude-mod/build.gradle", "sha256": "2db21c8790227ab8eb87f5484c5eba5c744e58bd4bb85c15a65c5b46316e679d", "git_blob": "3777a866e4a8548517d44fbf7bfebe83c2938c2a"},
+    {"path": "fabric/mineocclude-mod/gradle.properties", "sha256": "08ad642c0fe0c4d11363064dcaa3d1991cedf715d100f4376139e38799a56dcd", "git_blob": "963f4ae7881ea1954ba4aee745de55098918129f"},
+    {"path": "fabric/mineocclude-mod/settings.gradle", "sha256": "d3e592159815a36731c338c55357b1a5e7b4da90936b3d7bebdf3163cc13e01b", "git_blob": "f2fe1740c87911608848276130e59087ad9b7776"},
+    {"path": "fabric/mineocclude-mod/gradle/wrapper/gradle-wrapper.properties", "sha256": "5dd9820fb8a0fbd1862266a5fa743a317aa8602cae1b53f3adc7da74150548b0", "git_blob": "e1bfc4b0d4019fc0961c4bdde25646dcd80270ac"},
+    {"path": "fabric/mineocclude-mod/src/main/resources/fabric.mod.json", "sha256": "f2d774580b32ce4f99387db68f8baf2eb46893ab2de7ee5535a1afd6b04dcc41", "git_blob": "25ac59469f64b88592fcc33fda3f1d98adb14b27"}
+  ]
+}

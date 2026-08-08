@@ -1,0 +1,194 @@
+{
+ "claim_verification": [
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "all_66_server_state_payloads_present",
+   "expected": 66,
+   "person_b_claim": true,
+   "person_c_independent_result": true,
+   "server_state_authority_count": 66
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "all_66_layout_meta_payloads_present",
+   "expected": 66,
+   "layout_meta_authority_count": 66,
+   "person_b_claim": true,
+   "person_c_independent_result": true
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "all_132_state_layout_payloads_hash_match",
+   "expected": 132,
+   "hash_matched_payload_count": 132,
+   "person_b_claim": true,
+   "person_c_independent_result": true,
+   "sha256_mismatch_count": 0
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "capture_package_v0_1_absent_for_ep12601_ep12666",
+   "evidence": "no data/autonomous/<trajectory_id>/capture_package_v0_1.json existed for any of ep12601-ep12666 at a8bed8adf7e2; the schema convention itself did already exist for 167 earlier autonomous trajectories",
+   "person_b_claim": true,
+   "person_c_independent_result": true,
+   "resolved_by_this_authority": true,
+   "verified_before_this_build": true
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "wall_parallel_frame_not_c_authorized_layout_01_06",
+   "evidence": "no data/person_b/c6a_c_intake/coordinate_frames/layout_0N.json existed at a8bed8adf7e2 for any of the six layouts",
+   "person_b_claim": true,
+   "person_c_independent_result": true,
+   "resolved_by_this_authority": "person_c_side_only",
+   "verified_before_this_build": true
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "empirical_magenta_visibility_absent",
+   "evidence": "every C7.5 per-trajectory bundle records visibility_artifact_path=null, detector_version=null and visibility_artifact_status='produced_downstream_not_at_c6a_raw_capture_layer'; no empirical channel exists anywhere in the 66-cell universe",
+   "owner_role": "person_e",
+   "person_b_claim": true,
+   "person_c_independent_result": true,
+   "resolved_by_this_authority": false
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "accepted_geometry_identity",
+   "evidence": "configs/scenes/layouts_v0_4.yaml hashes to 34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d; this is the accepted geometry the coordinate frames bind to",
+   "person_b_claim": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+   "person_c_independent_result": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "person_a_frame_map_package_identity",
+   "evidence": "data/handoff_a/person_a_66_cell_production_input_v0_1/sha256_inventory.json at 77e43bd16656 hashes to a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004; 2468 model-frame keys, 0 duplicate, 0 missing, re-derived exactly from Person C runtime bytes",
+   "person_b_claim": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004",
+   "person_c_independent_result": "a473bf830ed31e49762d62bba97032e52f4967e52f9987ad10cd5879ed9bd004"
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "eight_geometric_occluded_to_visible_transitions",
+   "person_b_claim": 8,
+   "person_c_independent_result": 8
+  },
+  {
+   "agrees_with_person_b": true,
+   "claim_id": "four_transitions_in_heldout_layouts",
+   "person_b_claim": 4,
+   "person_c_independent_result": 4
+  },
+  {
+   "agrees_with_person_b": false,
+   "claim_id": "every_capture_ends_while_target_is_occluded",
+   "detail": "60 of 66 captures end with the target geometrically occluded, not all 66. The 6 exceptions are all no_wall_visible controls, which contain zero occluded frames and therefore zero occluded-to-visible transitions; they cannot host a reveal event. Person B's U4 conclusion is unaffected.",
+   "discrepancy_class": "overstated_but_conclusion_unaffected",
+   "episodes_ending_occluded": 60,
+   "episodes_ending_visible": 6,
+   "exceptions": [
+    {
+     "episode_id": 12602,
+     "final_frame_geometric_visible": true,
+     "frame_count": 60,
+     "set_id": "nowall",
+     "trajectory_id": "layout_01_ep12602"
+    },
+    {
+     "episode_id": 12610,
+     "final_frame_geometric_visible": true,
+     "frame_count": 60,
+     "set_id": "nowall",
+     "trajectory_id": "layout_02_ep12610"
+    },
+    {
+     "episode_id": 12616,
+     "final_frame_geometric_visible": true,
+     "frame_count": 60,
+     "set_id": "nowall",
+     "trajectory_id": "layout_06_ep12616"
+    },
+    {
+     "episode_id": 12626,
+     "final_frame_geometric_visible": true,
+     "frame_count": 60,
+     "set_id": "nowall",
+     "trajectory_id": "layout_04_ep12626"
+    },
+    {
+     "episode_id": 12634,
+     "final_frame_geometric_visible": true,
+     "frame_count": 60,
+     "set_id": "nowall",
+     "trajectory_id": "layout_05_ep12634"
+    },
+    {
+     "episode_id": 12645,
+     "final_frame_geometric_visible": true,
+     "frame_count": 60,
+     "set_id": "nowall",
+     "trajectory_id": "layout_03_ep12645"
+    }
+   ],
+   "person_b_claim": true,
+   "person_c_independent_result": false
+  },
+  {
+   "agrees_with_person_b": "partially",
+   "all_transition_run_lengths": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    4,
+    14
+   ],
+   "claim_id": "each_transition_is_a_1_to_4_frame_blip",
+   "detail": "all four held-out candidate transitions have post_visible_run_length in {1, 2, 4}, exactly as Person B reports. Across all eight transitions the claim does not hold globally: layout_05_ep12664 has a 14-frame visible run. That transition sits in a fit layout, not a held-out layout, and its capture still ends occluded, so Person B's U4 conclusion is unaffected.",
+   "discrepancy_class": "scope_narrower_than_stated",
+   "heldout_candidate_run_lengths": [
+    1,
+    1,
+    2,
+    4
+   ],
+   "person_b_claim": true,
+   "person_c_independent_result": "true_for_the_four_heldout_candidates"
+  }
+ ],
+ "discrepancies": [],
+ "discrepancy_count": 0,
+ "oracle_block_cause": "missing Person C-side contract structure plus the absent Person E empirical channel, not missing Person C state bytes",
+ "owner_role": "person_c",
+ "person_b_report": {
+  "fold_manifest_declared_sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+  "fold_manifest_observed_sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+  "fold_manifest_path": "docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json",
+  "person_b_commit": "3678cc90c583877d330c01807fe11d393902d146"
+ },
+ "person_c_authority_verified": {
+  "accepted_count": 66,
+  "accepted_manifest_declared_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+  "accepted_manifest_observed_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+  "accepted_manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+  "episode_id_range": [
+   12601,
+   12666
+  ],
+  "excluded_count": 0,
+  "ledger_accepted_count": 66,
+  "ledger_excluded_count": 0
+ },
+ "person_c_commit": "a8bed8adf7e24ca7fe5b6b6afa3342da61434be3",
+ "schema_id": "mineocclude-person-c-66-cell-capture-authority-v0.1-verification-receipt",
+ "schema_version": "0.1",
+ "scope": "independent Person C verification of Person B's 66-cell preactivation findings; not a restatement of Person B's report",
+ "state_layout_payload_inventory": {
+  "layout_meta_authority_count": 66,
+  "layout_meta_hashes_valid": true,
+  "server_state_authority_count": 66,
+  "server_state_hashes_valid": true,
+  "total_payloads_verified": 132
+ }
+}

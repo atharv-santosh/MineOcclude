@@ -1,0 +1,33 @@
+{
+    "schema_version":  "1.0",
+    "command":  "$env:JAVA_HOME=\u0027C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\u0027; .\\gradlew.bat clean build --no-daemon",
+    "task":  ":test",
+    "source_commit":  "99b78b6578d17cffc0b5679118a42632284ce7f7",
+    "pass":  true,
+    "total":  21,
+    "failures":  0,
+    "errors":  0,
+    "skipped":  0,
+    "suites":  [
+                   {
+                       "name":  "EpisodeLifecycleTest",
+                       "tests":  6
+                   },
+                   {
+                       "name":  "GeometryUtilTest",
+                       "tests":  5
+                   },
+                   {
+                       "name":  "NoiseScheduleTest",
+                       "tests":  6
+                   },
+                   {
+                       "name":  "PythonScheduleCrossCheckTest",
+                       "tests":  1
+                   },
+                   {
+                       "name":  "RuntimeObservationToolingTest",
+                       "tests":  3
+                   }
+               ]
+}

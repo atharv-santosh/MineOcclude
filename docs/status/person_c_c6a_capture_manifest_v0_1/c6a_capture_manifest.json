@@ -1,0 +1,21 @@
+{
+  "schema_version": "person-c-c6a-capture-manifest-v1.0",
+  "status": "BLOCKED_PRECAPTURE",
+  "execution_authorized": false,
+  "accepted_geometry_version": "person-c-layout-config-v0.4",
+  "accepted_config_path": "configs/scenes/layouts_v0_4.yaml",
+  "new_capture_identity": {
+    "campaign_id": "person_c_c6a_v0_4_run_001",
+    "trajectory_reuse_forbidden": true,
+    "layout_00_ep9403_authority_forbidden": true
+  },
+  "execution_command": null,
+  "command_withheld_reason": "the current runtime removes the explicitly spawned target by warmup tick 1; scientific capture would be empty/invalid",
+  "blockers": [
+    "C6A_TARGET_RETENTION_DEFECT_UNDER_SPAWN_ANIMALS_FALSE",
+    "C6A_NEW_SCIENTIFIC_NOISE_SCHEDULES_NOT_YET_HASH_BOUND",
+    "C6A_FRESH_POST_FIX_RUNTIME_GATE_NOT_PASSED"
+  ],
+  "paid_compute_started": false,
+  "c6b_started": false
+}

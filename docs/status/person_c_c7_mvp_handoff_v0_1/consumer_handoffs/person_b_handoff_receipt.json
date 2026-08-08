@@ -1,0 +1,57 @@
+{
+  "accepted_count": 66,
+  "accepted_excluded_ledger": {
+    "path": "docs/status/person_c_c7_mvp_handoff_v0_1/accepted_excluded_ledger.json",
+    "sha256": "fa5f8e4251c7d4243b6f62f9992bf68bab2ef5dfcdbdac8dec61954ff952d8a1"
+  },
+  "authoritative_c_inputs": {
+    "accepted_conditions": "condition_count_table.json + per-bundle condition section",
+    "exclusions_and_qa": "accepted_excluded_ledger.json + qa_exclusion_report.json",
+    "oracle_relevant_identity": "identity + condition + target_variant per accepted trajectory",
+    "row_key_authority": "(trajectory_id, episode_id, planned_cell_id)",
+    "trajectory_layout_grouping": "trajectories_mvp_manifest.json records"
+  },
+  "authorization_commit": "28cac05a8c804372c71814fcf15c8f1a3b8fbe03",
+  "bundle_schema": {
+    "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0",
+    "schema_version": "1.0"
+  },
+  "consumer_role": "person_b",
+  "consumer_validation_command": "python scripts/build_person_c_c7_5_mvp_handoff_v0_1.py validate && PYTHONDONTWRITEBYTECODE=1 python -m pytest tests/data/test_person_c_c7_5_mvp_handoff_v0_1.py -q",
+  "downstream_acceptance_claimed": false,
+  "excluded_count": 0,
+  "expected_count_by_consumer": 66,
+  "fields_unavailable": [
+    {
+      "field": "visibility labels / strict-join disagreement",
+      "owner": "person_c_downstream",
+      "reason": "downstream product, not at C6A raw layer"
+    },
+    {
+      "field": "oracle targets and folds",
+      "owner": "person_b",
+      "reason": "Person B builds these; C does not generate them"
+    },
+    {
+      "field": "held-out U4 selection",
+      "owner": "person_b",
+      "reason": "Person B owns held-out selection (C8.2 pending)"
+    }
+  ],
+  "manifest_path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+  "manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+  "owner": "person_c",
+  "package_path": "docs/status/person_c_c7_mvp_handoff_v0_1",
+  "person_c_states_ready_for_consumer_validation": true,
+  "ready_for_consumer_validation": true,
+  "required_fields_available": [
+    "66 accepted conditions + control types",
+    "layout/speed/q/hidden/context grouping",
+    "accepted status + QA",
+    "row-key + manifest authority"
+  ],
+  "role_specific": {},
+  "schema_id": "mineocclude-person-c-c7-5-trajectory-handoff-v1.0-consumer-handoff-b",
+  "schema_version": "1.0",
+  "source_commit": "c836641c894c88e3add207ef2190a2db88726024"
+}

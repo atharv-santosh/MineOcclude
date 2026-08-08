@@ -1,0 +1,14 @@
+{
+  "disagreements_are_retained_not_dropped": true,
+  "owner": "Person C",
+  "package_id": "person-c-phase3-visibility-interface-v0_1",
+  "quarantine_categories": {
+    "geometry_hidden_detector_visible": "geometry says hidden, detector says visible -> quarantined, visible_flag=False",
+    "geometry_visible_detector_hidden": "geometry says visible, detector says hidden -> quarantined, visible_flag=False",
+    "invalid_geometry": "geometric_visible is null/invalid -> quarantined, visible_flag=False",
+    "missing_detector": "empirical value present-but-null -> quarantined, visible_flag=False",
+    "none": "channels agree (or both hidden); not quarantined"
+  },
+  "quarantine_never_flips_a_raw_channel": true,
+  "schema_version": "1.0"
+}
