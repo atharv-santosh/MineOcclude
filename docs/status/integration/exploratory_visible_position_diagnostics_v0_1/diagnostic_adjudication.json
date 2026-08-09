@@ -1,0 +1,53 @@
+{
+  "FINAL_DIAGNOSIS": "INSUFFICIENT_EVIDENCE",
+  "LAYER_SELECTION_STATUS": "EXPLORATORY_PRESELECTED_FROM_EXISTING_POSITIVE_CONTROL",
+  "NEXT_SCIENTIFIC_DIRECTION": "Increase independent visible/no-wall trajectory and layout coverage, then evaluate the token-preserving visible-position readout on a new untouched grouped evaluation authority before deciding whether mean pooling should be replaced for any future hidden-state study.",
+  "ORIGINAL_MVP_RESULT_MODIFIED": false,
+  "artifact_version": "visible-position-diagnostic-adjudication-v0.1",
+  "findings_preserved": [
+    {
+      "evidence": {
+        "fixed_test_r2_median_by_k": {
+          "2": 0.10044440134031146,
+          "3": 0.023387585478139628,
+          "4": -0.003692827446439173
+        },
+        "learning_curve_class": "HIGH_TRAJECTORY_VARIANCE",
+        "subset_count": 11
+      },
+      "finding": "trajectory_scaling",
+      "statement": "Current trajectory scaling does not show a coherent upward trend and is dominated by trajectory composition."
+    },
+    {
+      "evidence": {
+        "L03_delta_r2": 1.2310293804037276,
+        "L04_delta_r2": -0.5167055610655351,
+        "delta_r2": 0.491073548364108,
+        "mean_pool_r2": -0.003692827446439173,
+        "positive_r2_token_count": 187,
+        "token_flattened_r2": 0.4873807209176688,
+        "token_r2_max": 0.7547766741609041,
+        "token_result_class": "MIXED_TOKEN_GAIN"
+      },
+      "finding": "token_preserving_readout",
+      "statement": "Token-preserving decoding materially improves aggregate held-out R2 over mean pooling, but the improvement reverses direction across the two held-out layouts, so a stable pooling bottleneck is not established."
+    }
+  ],
+  "generated_at": "2026-08-09T07:45:04Z",
+  "inputs": {
+    "DATA_CURVE": "HIGH_TRAJECTORY_VARIANCE",
+    "DATA_LIMITATION_PLAUSIBLE": null,
+    "TOKEN_RESULT": "MIXED_TOKEN_GAIN"
+  },
+  "interpretation_note": "This is not a failed token probe. The token diagnostic found substantial exploratory evidence that spatial token identity can matter for visible-position readout; under the current authority that evidence is layout-dependent, which is why the adjudication is INSUFFICIENT_EVIDENCE rather than a negative result.",
+  "not_rerun": [
+    "U1",
+    "U2"
+  ],
+  "schema_version": "1.0",
+  "scope_limitations": [
+    "Layer 4 was preselected from an existing positive control, not searched under this authority.",
+    "Two held-out layouts (L03, L04) cannot separate layout identity from sample size.",
+    "Adjacent frames within a trajectory are correlated, so frame counts overstate independent sample size."
+  ]
+}

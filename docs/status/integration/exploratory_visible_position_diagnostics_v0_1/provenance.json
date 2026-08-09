@@ -1,0 +1,123 @@
+{
+  "ORIGINAL_MVP_RESULT_MODIFIED": false,
+  "artifact_version": "visible-position-diagnostic-provenance-v0.1",
+  "artifacts": {
+    "diagnostic_adjudication.json": {
+      "byte_size": 2635,
+      "sha256": "fc20123f6398dd458597ac2e55f78d1ae8170f600a5618b9d5300b3fa89ceb20"
+    },
+    "learning_curve.json": {
+      "byte_size": 14247,
+      "sha256": "60057c6e19d8efc38319ae6ebda87a2aefd58a13af94e9f46b28d2cec2354068"
+    },
+    "learning_curve_subsets.json": {
+      "byte_size": 6587,
+      "sha256": "0aca7874567ca21cc385d6c7cf01180648232f6a330eaaa8f4f990b4c78c727f"
+    },
+    "token_probe_metrics.json": {
+      "byte_size": 4697,
+      "sha256": "acaf6372ff91bb205d054d7031de36cb9ea9607dcdd7a96b88de863b048d78e1"
+    },
+    "token_spatial_map.json": {
+      "byte_size": 193936,
+      "sha256": "a1c0d5e81c48e560898d35004bbe722bcbccd22043a68748778a3bfc269a4cda"
+    },
+    "unpooled_activation_manifest.json": {
+      "byte_size": 29996,
+      "sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482"
+    },
+    "visible_position_learning_curve.png": {
+      "byte_size": 114311,
+      "sha256": "87cd595378b58da341da12404ef7bdf2376041554b4bd5b396b9ed0463d7e63a"
+    },
+    "visible_position_token_r2_map.png": {
+      "byte_size": 138240,
+      "sha256": "bb04ed38024ade926f27a76e876c77e39cb07fac8a800ef809c6d44d41839d6e"
+    }
+  },
+  "checkpoint": {
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "mineworld_source_revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "model_config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "tokenization_profile": "mineworld-700m-16f-interleaved-v1.0:9f49efbcc68a5f0cf60e78f0abc566eac409282f:vae.py#VAE.tokenize_images",
+    "vae_checkpoint_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "vae_config_sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb"
+  },
+  "durable_analysis_code": {
+    "config_path": "configs/experiments/exploratory_visible_position_diagnostics_v0_1.yaml",
+    "config_sha256": "20a53d5c75b2eab4abacfd0e3a0f7e6d3609b2fba83a8ec408d57fa4a47f74e0",
+    "modes": [
+      "extract",
+      "learning-curve",
+      "token-analysis",
+      "finalize"
+    ],
+    "path": "scripts/run_exploratory_visible_position_diagnostics.py",
+    "runner_version": "exploratory-visible-position-diagnostics-runner-v0.1",
+    "sha256": "de2a351ef39edde10137c809c1718f37bc898936f75287655310c05b7700f1cf"
+  },
+  "experiment_id": "exploratory-visible-position-diagnostics-v0.1",
+  "exploration_branch": "exploration/mentor-visible-position-diagnostics-v0-1",
+  "extraction_run": {
+    "external_root": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1",
+    "manifest_path": "unpooled_activation_manifest.json",
+    "manifest_sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482",
+    "run_id": "mentor-visible-position-diagnostics-layer4-v0-1"
+  },
+  "frozen_base_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+  "frozen_preprocessing_authority": {
+    "person_c_canonical_media_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "preprocessed_frame_manifest_path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+    "preprocessed_frame_manifest_sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1",
+    "preprocessing_identity": "person-a-bgr2rgb-inter-linear-224x384-v1.0"
+  },
+  "generated_at": "2026-08-09T07:45:04Z",
+  "layer_selection_limitation": "Layer 4 was carried over from an existing positive control; no layer search was performed under this authority, so the layer choice is exploratory and not itself evidence.",
+  "layer_selection_status": "EXPLORATORY_PRESELECTED_FROM_EXISTING_POSITIVE_CONTROL",
+  "row_authority": {
+    "oracle_target_path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_records.jsonl",
+    "oracle_target_sha256": "d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1",
+    "person_c_canonical_media_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "preprocessed_frame_manifest_path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+    "preprocessed_frame_manifest_sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1",
+    "row_universe_path": "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_records.jsonl",
+    "row_universe_sha256": "29b4cf003f3d9479b3606f17947879078801b400b09d942bd6827544b95227b2"
+  },
+  "schema_version": "1.0",
+  "scientific_scope": {
+    "eligible_row_count": 351,
+    "hidden_width": 2048,
+    "hook_site": "decoder_layer_output_residual_stream",
+    "layer_idx": 4,
+    "pooling_identity": "person-a-visual-token-mean-v1.0",
+    "token_grid_cols": 24,
+    "token_grid_rows": 14,
+    "visual_token_count": 336
+  },
+  "split": {
+    "fixed_test_row_count": 120,
+    "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+    "fixed_test_trajectory_ids": [
+      "layout_03_ep12645",
+      "layout_04_ep12626"
+    ],
+    "fixed_test_trajectory_labels": [
+      "L03",
+      "L04"
+    ],
+    "training_pool_row_count": 231,
+    "training_pool_trajectory_ids": [
+      "layout_01_ep12602",
+      "layout_02_ep12610",
+      "layout_05_ep12634",
+      "layout_06_ep12616"
+    ],
+    "training_pool_trajectory_labels": [
+      "L01",
+      "L02",
+      "L05",
+      "L06"
+    ]
+  }
+}

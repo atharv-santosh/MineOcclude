@@ -1,0 +1,138 @@
+{
+  "artifact_version": "visible-position-token-probe-metrics-v0.1",
+  "delta": {
+    "L03_delta_r2": 1.2310293804037276,
+    "L04_delta_r2": -0.5167055610655351,
+    "delta_mae": -0.19470628195141726,
+    "delta_r2": 0.491073548364108
+  },
+  "generated_at": "2026-08-09T07:45:03Z",
+  "historical_oof_reuse": false,
+  "historical_oof_reuse_reason": "PAYLOAD_UNAVAILABLE",
+  "mean_pool": {
+    "L03_mae": 1.0885528353804605,
+    "L03_r2": -0.6034499254148535,
+    "L03_sample_count": 60,
+    "L04_mae": 0.34042966560575333,
+    "L04_r2": 0.7090459816510991,
+    "L04_sample_count": 60,
+    "inner_fold_count": 4,
+    "mae": 0.7144912504931066,
+    "mse": 0.8616135982361945,
+    "r2": -0.003692827446439173,
+    "sample_count": 120,
+    "scaler_fit_scope": "training_subset_rows_only",
+    "scaler_training_row_count": 231,
+    "selected_alpha": 100.0,
+    "selection_policy": "leave-one-training-trajectory-out",
+    "training_group_ids": [
+      "L01",
+      "L02",
+      "L05",
+      "L06"
+    ],
+    "validation_mse_by_alpha": {
+      "0.1": 0.5041310506901046,
+      "1.0": 0.5024733875020432,
+      "10.0": 0.4764408595178769,
+      "100.0": 0.40504848637396984
+    }
+  },
+  "mean_pool_comparator_source": "REFIT_FROM_NEW_VERIFIED_LAYER4_EXTRACTION",
+  "provenance": {
+    "analysis_code_path": "scripts/run_exploratory_visible_position_diagnostics.py",
+    "analysis_code_sha256": "de2a351ef39edde10137c809c1718f37bc898936f75287655310c05b7700f1cf",
+    "analysis_mode": "token-analysis",
+    "base_head": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "config_path": "configs/experiments/exploratory_visible_position_diagnostics_v0_1.yaml",
+    "config_sha256": "20a53d5c75b2eab4abacfd0e3a0f7e6d3609b2fba83a8ec408d57fa4a47f74e0",
+    "extraction_manifest_path": "docs/status/integration/exploratory_visible_position_diagnostics_v0_1/unpooled_activation_manifest.json",
+    "extraction_manifest_sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482",
+    "extraction_run_id": "mentor-visible-position-diagnostics-layer4-v0-1",
+    "hook_site": "decoder_layer_output_residual_stream",
+    "interpreter": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+    "layer_idx": 4,
+    "numpy_version": "1.26.4",
+    "runner_version": "exploratory-visible-position-diagnostics-runner-v0.1"
+  },
+  "schema_version": "1.0",
+  "solver": {
+    "alpha": 100.0,
+    "fixture": "layer4_mean_pool_2048d_training_rows",
+    "library_path": "dual_sample_space",
+    "max_abs_prediction_difference_vs_independent_primal": 3.2862601528904634e-14,
+    "max_abs_prediction_difference_vs_sklearn_cholesky": 3.375077994860476e-14,
+    "pass": true,
+    "sklearn_available": true,
+    "tolerance": 5.97215009897594e-06,
+    "tolerance_basis": "1e-6 * max(|prediction|, 1.0), float64 solve"
+  },
+  "split": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "alpha_selection": "leave-one-training-trajectory-out",
+    "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+    "scaler_fit_scope": "training_rows_only",
+    "scored_test_identity_sha256": "cb7cce335f47f2a5262c3c348786ba5bd96dbd1945e4837b16e715c7e36bb109",
+    "seed": 20260719,
+    "test_row_count": 120,
+    "test_trajectory_ids": [
+      "layout_03_ep12645",
+      "layout_04_ep12626"
+    ],
+    "test_trajectory_labels": [
+      "L03",
+      "L04"
+    ],
+    "train_row_count": 231,
+    "train_test_trajectory_overlap_count": 0,
+    "train_trajectory_ids": [
+      "layout_01_ep12602",
+      "layout_02_ep12610",
+      "layout_05_ep12634",
+      "layout_06_ep12616"
+    ],
+    "train_trajectory_labels": [
+      "L01",
+      "L02",
+      "L05",
+      "L06"
+    ]
+  },
+  "token_flattened": {
+    "L03_mae": 0.41709590721230055,
+    "L03_r2": 0.627579454988874,
+    "L03_sample_count": 60,
+    "L04_mae": 0.6224740298710779,
+    "L04_r2": 0.192340420585564,
+    "L04_sample_count": 60,
+    "feature_count": 688128,
+    "flatten_order": "row-major over (token_index, hidden_unit); token order is the verified extraction order",
+    "inner_fold_count": 4,
+    "mae": 0.5197849685416893,
+    "mse": 0.4400546955178287,
+    "r2": 0.4873807209176688,
+    "sample_count": 120,
+    "scaler_fit_scope": "training_subset_rows_only",
+    "scaler_training_row_count": 231,
+    "selected_alpha": 100.0,
+    "selection_policy": "leave-one-training-trajectory-out",
+    "training_group_ids": [
+      "L01",
+      "L02",
+      "L05",
+      "L06"
+    ],
+    "validation_mse_by_alpha": {
+      "0.1": 1.0788773788042676,
+      "1.0": 1.0788770047807899,
+      "10.0": 1.0788732650833277,
+      "100.0": 1.0788359217421704
+    }
+  },
+  "token_result_class": "MIXED_TOKEN_GAIN"
+}

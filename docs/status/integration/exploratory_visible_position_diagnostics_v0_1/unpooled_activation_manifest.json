@@ -1,0 +1,605 @@
+{
+  "artifact_version": "exploratory-visible-position-unpooled-v0.1",
+  "authority": {
+    "eligible_row_keys_sha256": "445c7b82bc8d8308a42f7c2880c52dfd444c343e3a90f828f98c42da1636f854",
+    "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+    "oracle_target_path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_records.jsonl",
+    "oracle_target_sha256": "d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1",
+    "person_c_canonical_media_commit": "3846230a4f141a8a55084eeaaa040f9a10cfc408",
+    "preprocessed_frame_manifest_path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+    "preprocessed_frame_manifest_sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1",
+    "row_universe_path": "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_records.jsonl",
+    "row_universe_sha256": "29b4cf003f3d9479b3606f17947879078801b400b09d942bd6827544b95227b2"
+  },
+  "base_head": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+  "chunks": [
+    {
+      "eligible_row_count": 60,
+      "layout_id": "layout_01",
+      "person_c_capture_package_sha256": "bfa103aa829c40e8b98ca01ff0d665b49382f77d47f7b81cd6f6bf806839dfe1",
+      "person_c_frame_map_sha256": "c2789563ce83b7397d696ae43983442efff790872253e634542643dde0cd54ed",
+      "person_c_server_state_sha256": "6831ea7eaa2cdb514e6f8fa0397c07b31f0744da177a1a3c3fc1e06bc3bd88bd",
+      "pooled_array": {
+        "byte_size": 491648,
+        "dtype": "float32",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l01_layer4_mean_pooled.f32.npy",
+        "sha256": "fb93b13281a0d4c31ed471b2aea5139c5ad4c6bafcf9acbe2cdd2cf3cb43c7bd",
+        "shape": [
+          60,
+          2048
+        ]
+      },
+      "rows": {
+        "byte_size": 60002,
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l01_rows.jsonl",
+        "row_count": 60,
+        "sha256": "65069265ca3dd3355e7fbbe8cbf3271032e6ad7ae6476337d8b6328c97316413"
+      },
+      "source_frame_count": 60,
+      "token_array": {
+        "byte_size": 82575488,
+        "dtype": "float16",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l01_layer4_visual_tokens.f16.npy",
+        "sha256": "73940ffe558d1d02d5f940b28361753c8f206315effcd3dab6d6bdf7b95733dd",
+        "shape": [
+          60,
+          336,
+          2048
+        ]
+      },
+      "trajectory_id": "layout_01_ep12602",
+      "trajectory_label": "L01",
+      "windows": [
+        {
+          "frame_token_map_sha256": "578ad67748df1da476e41cf072a81937d3120c63d6f0c222976103a6b2019a01",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16,
+          "teacher_result_sha256": "17df67b01b0488db5e6f76ce3807d062b5735458de358b4bd3e3936f419b94f8"
+        },
+        {
+          "frame_token_map_sha256": "fe19e2c8293a39a5e409b5ddc4d38a379593e27cde8c157fc576269e702ff049",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 16,
+          "stop_model_frame_idx_exclusive": 32,
+          "teacher_result_sha256": "dbe1b6ee7edb9bda42fdf2fcb7461c951f278e535ee4574d3b63641870597627"
+        },
+        {
+          "frame_token_map_sha256": "ad4fe925c114ccd179915250b8736e995f789bbea6d911b94a9e045617d6c9be",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 32,
+          "stop_model_frame_idx_exclusive": 48,
+          "teacher_result_sha256": "8e153ffb2d9538bbb05bcc955d6dc118a30534aa6a2c118f2c6f291089042ffa"
+        },
+        {
+          "frame_token_map_sha256": "fed0cc7f35bf62e68ebe6c70f9ae7453a97738f8cfc55cebeb4f1bfe8d692409",
+          "sequence_length": 4164,
+          "source_frame_count": 12,
+          "start_model_frame_idx": 48,
+          "stop_model_frame_idx_exclusive": 60,
+          "teacher_result_sha256": "6091b7b9d88ef831919df1f9e005a864cbc14bbbcecc140141e18186750d1b09"
+        }
+      ]
+    },
+    {
+      "eligible_row_count": 60,
+      "layout_id": "layout_02",
+      "person_c_capture_package_sha256": "a1fdb6df7b44622ffdb67f23e9400f981d29d2528c716eed212584e851934c7b",
+      "person_c_frame_map_sha256": "ae0aa665feb37fe7418d34a1905a1f2f333233983854b2c879651a8920ca91a4",
+      "person_c_server_state_sha256": "32403d78a2ec0bf97d89a6f72bcddc9a210ea017ae1044ef78d15e4a4a2a96e3",
+      "pooled_array": {
+        "byte_size": 491648,
+        "dtype": "float32",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l02_layer4_mean_pooled.f32.npy",
+        "sha256": "aa82e0ae0615c59ee6b74876b052a39918c6bc9e6a3c3e5d3986275ca30e3f0c",
+        "shape": [
+          60,
+          2048
+        ]
+      },
+      "rows": {
+        "byte_size": 60008,
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l02_rows.jsonl",
+        "row_count": 60,
+        "sha256": "e9e1faf25480d5806d5ff607595ee8c84e3f1c2ef45bb106d9614ee2a9db956a"
+      },
+      "source_frame_count": 60,
+      "token_array": {
+        "byte_size": 82575488,
+        "dtype": "float16",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l02_layer4_visual_tokens.f16.npy",
+        "sha256": "d2db21a921e2c9637f8976e24fca7b10a96a1ea8f4881bdc5479af895f50c067",
+        "shape": [
+          60,
+          336,
+          2048
+        ]
+      },
+      "trajectory_id": "layout_02_ep12610",
+      "trajectory_label": "L02",
+      "windows": [
+        {
+          "frame_token_map_sha256": "4ed2600658e7295266af189bbf2c7d6fa1e158e8a275b48f80f5e315bbfd1681",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16,
+          "teacher_result_sha256": "1082cd5f3734baa16438d95c9aea4722829e408d0adf1b9c85c4146512bb314d"
+        },
+        {
+          "frame_token_map_sha256": "98766b2e9d630a456aad2426afbd7d25dbcac43a5ae66cc2a5bc94b36217d6a4",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 16,
+          "stop_model_frame_idx_exclusive": 32,
+          "teacher_result_sha256": "8659fd911689adb4859021b91ba730788103176b9df58c1382bb7a978f829361"
+        },
+        {
+          "frame_token_map_sha256": "ba91871aa6341a3008999c2816f615cc13f6ff1150e8f9f0d426f0d9c2b3645a",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 32,
+          "stop_model_frame_idx_exclusive": 48,
+          "teacher_result_sha256": "c45b777e79d206819901cd904d57500a096e99e7adcf75fb2b2be9ea738d7bc5"
+        },
+        {
+          "frame_token_map_sha256": "baced96a9abbd991b83be320068716a49b4e7f50870acd6d58f260854ac33910",
+          "sequence_length": 4164,
+          "source_frame_count": 12,
+          "start_model_frame_idx": 48,
+          "stop_model_frame_idx_exclusive": 60,
+          "teacher_result_sha256": "75013c4cb1b5133ce9b7c57a4b920671d7dadd06068d739bae566ae0b90f74e6"
+        }
+      ]
+    },
+    {
+      "eligible_row_count": 60,
+      "layout_id": "layout_03",
+      "person_c_capture_package_sha256": "e8068fb88248449ee6f22c0bf4ed2b3a4b3ff7cc581e1bfb78a90d5c74de3ace",
+      "person_c_frame_map_sha256": "7e88b175e245139534de62ff5ec611563345cdae368213e2af64baf568ebf027",
+      "person_c_server_state_sha256": "defda3ba95f61cdb1944909a964e8bb7281f3a164b72250a9ac28ad433936ea7",
+      "pooled_array": {
+        "byte_size": 491648,
+        "dtype": "float32",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l03_layer4_mean_pooled.f32.npy",
+        "sha256": "6c00732befc3689056fad73dc7568e81a1256fecb7ea43ffaed782cbf6bd8f70",
+        "shape": [
+          60,
+          2048
+        ]
+      },
+      "rows": {
+        "byte_size": 60009,
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l03_rows.jsonl",
+        "row_count": 60,
+        "sha256": "cb8351d5b55bd75414f1bc930a95919f61dc4937bada15391a073b593db86130"
+      },
+      "source_frame_count": 60,
+      "token_array": {
+        "byte_size": 82575488,
+        "dtype": "float16",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l03_layer4_visual_tokens.f16.npy",
+        "sha256": "a5708b4777b0729b7d54691c0856c1ce3f56072b2f4ab1efb38557acdba57bd6",
+        "shape": [
+          60,
+          336,
+          2048
+        ]
+      },
+      "trajectory_id": "layout_03_ep12645",
+      "trajectory_label": "L03",
+      "windows": [
+        {
+          "frame_token_map_sha256": "ff4cdf9f4a8fd8ea287c530d15e8b6f4a34602cce3a4508b1623b830da36c51f",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16,
+          "teacher_result_sha256": "9fbe28e5decfa51785715720d4e541f243f8fc1bfb71ef797e561f2883a6b37a"
+        },
+        {
+          "frame_token_map_sha256": "6ef194ab5ce36799c552d47ec6490206a40c94c197e7f88d16ad8439d81ca3c6",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 16,
+          "stop_model_frame_idx_exclusive": 32,
+          "teacher_result_sha256": "34b3aafcb20b2ade67abcefee258e33a5b66210e8e398f441c03850e1959b44f"
+        },
+        {
+          "frame_token_map_sha256": "d5d9a92015db3ff7d237b7fa00220b38768a2528a374eada83abae31c7b40430",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 32,
+          "stop_model_frame_idx_exclusive": 48,
+          "teacher_result_sha256": "bf8efb2ce89092c311645a68065171220f7ecb727c2077e11d5a6e4706d0ecbf"
+        },
+        {
+          "frame_token_map_sha256": "f4bf496292f96e17852f1224bfd05007d55e4ca344bd9edaa7314b5c0c04d341",
+          "sequence_length": 4164,
+          "source_frame_count": 12,
+          "start_model_frame_idx": 48,
+          "stop_model_frame_idx_exclusive": 60,
+          "teacher_result_sha256": "b82e50e6a51053253823fab5637e90fe351fce7e7f1577d7834ec526797a6af4"
+        }
+      ]
+    },
+    {
+      "eligible_row_count": 60,
+      "layout_id": "layout_04",
+      "person_c_capture_package_sha256": "b3bd655bfe0355f4f283c38f2a45d55333170024170f051e7538f57aef3813c2",
+      "person_c_frame_map_sha256": "db3ba8111d397a96f2d66d9c7f98ab9f0225539aed841104ab380115213a5aab",
+      "person_c_server_state_sha256": "720f1edbf3496e93b7dc0c80471ac8022dad37005fdc066ccb9f43588cb830be",
+      "pooled_array": {
+        "byte_size": 491648,
+        "dtype": "float32",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l04_layer4_mean_pooled.f32.npy",
+        "sha256": "cc46cf3d4225a97ac5cc607e522a19b990313613e2ebe19e9783cfb526edf77c",
+        "shape": [
+          60,
+          2048
+        ]
+      },
+      "rows": {
+        "byte_size": 60002,
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l04_rows.jsonl",
+        "row_count": 60,
+        "sha256": "e6353cd2cb9a1aa9e8d899ebe76f8c9ad30719b97666feaf8c8320a149abfecf"
+      },
+      "source_frame_count": 60,
+      "token_array": {
+        "byte_size": 82575488,
+        "dtype": "float16",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l04_layer4_visual_tokens.f16.npy",
+        "sha256": "a8164163cafb43c613c89b82b72a06f0222c93faeebe0ca71f04aa41ed2de37b",
+        "shape": [
+          60,
+          336,
+          2048
+        ]
+      },
+      "trajectory_id": "layout_04_ep12626",
+      "trajectory_label": "L04",
+      "windows": [
+        {
+          "frame_token_map_sha256": "52963cbabb9189a45a3df08f3a506131a8c8b59316491271fef01efd2a4ff67b",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16,
+          "teacher_result_sha256": "c958a475d9c7dfeca53f4fe57b84933d696dc24238e3f945ad5fdfdfc9574156"
+        },
+        {
+          "frame_token_map_sha256": "8041b9baaabf0229f6a427a7c41b17608d6d4bf368e61a6e5610522900ce88cb",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 16,
+          "stop_model_frame_idx_exclusive": 32,
+          "teacher_result_sha256": "983840d893f66b00aaab5fdb54dffd2ece31f6c021c2ce763b2eddc02d1af896"
+        },
+        {
+          "frame_token_map_sha256": "3c41f377bd70cfbf8753e5ddc90c60efd490557e145466240abb82d657b477b0",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 32,
+          "stop_model_frame_idx_exclusive": 48,
+          "teacher_result_sha256": "9b6c8dc745644d689f2d9b2a5ddb60efce3f356f9d92d0e7ae4faa7740f628ea"
+        },
+        {
+          "frame_token_map_sha256": "41978a87735d14f99fdc22df9466a543235440800fe0c3d4a96594011788e416",
+          "sequence_length": 4164,
+          "source_frame_count": 12,
+          "start_model_frame_idx": 48,
+          "stop_model_frame_idx_exclusive": 60,
+          "teacher_result_sha256": "fbe2ce9cfb9164b06a520865cf3ace9a25e1468aa2edae8122d0b4dc8d614e09"
+        }
+      ]
+    },
+    {
+      "eligible_row_count": 60,
+      "layout_id": "layout_05",
+      "person_c_capture_package_sha256": "373cce585cdf9d9e36665379b1d77623183e420505bd399273172d04ef82bed2",
+      "person_c_frame_map_sha256": "a660a2e983cbdbb0d82fe415c0c588a991e27761ab57eb5da2d2d18f71f9efe3",
+      "person_c_server_state_sha256": "499b70cf2c799772dae4a443bde8feb41f049fcec291c740dd7000997d5a8575",
+      "pooled_array": {
+        "byte_size": 491648,
+        "dtype": "float32",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l05_layer4_mean_pooled.f32.npy",
+        "sha256": "6097b287c57e88bd99191fe102758da1ad3a14eda809d6c3dedb7e58dc08da43",
+        "shape": [
+          60,
+          2048
+        ]
+      },
+      "rows": {
+        "byte_size": 60003,
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l05_rows.jsonl",
+        "row_count": 60,
+        "sha256": "eff3429a63b6767fb63bc34a36792a02707c2214b8562af99a7fb4d97ec83de0"
+      },
+      "source_frame_count": 60,
+      "token_array": {
+        "byte_size": 82575488,
+        "dtype": "float16",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l05_layer4_visual_tokens.f16.npy",
+        "sha256": "42ae22e04e602eb94f1f1c1e505a6079b66bb1961ece2625fc944cc8a0cf9a19",
+        "shape": [
+          60,
+          336,
+          2048
+        ]
+      },
+      "trajectory_id": "layout_05_ep12634",
+      "trajectory_label": "L05",
+      "windows": [
+        {
+          "frame_token_map_sha256": "4c5215168fdf0c598a9e70f7b2987afb195c19e91a97057e7fe839c4bf34fe6f",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16,
+          "teacher_result_sha256": "3435c502127c885a8043fb6b13c33ef4b5e1fa2e3b936a83db6740e8e2db66f1"
+        },
+        {
+          "frame_token_map_sha256": "33fa49f0511fe758237d9df4922a9bda02158a9b01bd2e9889c0a170ddfeaae0",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 16,
+          "stop_model_frame_idx_exclusive": 32,
+          "teacher_result_sha256": "9959ab645ca5238166317d5996c8f7d70e347c12daefe924e511519cb4cc96f0"
+        },
+        {
+          "frame_token_map_sha256": "04bc9f083a1ce26da186983ea0d9ab90a57feb68b3fafdff0d2cf26dfc86ac7e",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 32,
+          "stop_model_frame_idx_exclusive": 48,
+          "teacher_result_sha256": "cddfda02ad41c92e41c9353277071cad65599c4f7d0813691dcc4fe4c00f5a19"
+        },
+        {
+          "frame_token_map_sha256": "971885c4956168981755fdb7e4023ae92dd17d72558389896ec88ba97af5e67f",
+          "sequence_length": 4164,
+          "source_frame_count": 12,
+          "start_model_frame_idx": 48,
+          "stop_model_frame_idx_exclusive": 60,
+          "teacher_result_sha256": "75ef371e531672ef6c970324e883b29843a06c117d160f65fa095ca35f08eaa7"
+        }
+      ]
+    },
+    {
+      "eligible_row_count": 51,
+      "layout_id": "layout_06",
+      "person_c_capture_package_sha256": "c3dfbd8e761a0d22b349687057b0c515b71dc019b16a957c48793b5499fa8d27",
+      "person_c_frame_map_sha256": "475a188f53178502b6ef67af3c1e7747110b64d0a3d51d781665fd6b23f17761",
+      "person_c_server_state_sha256": "64687bf722dbd25044d9e7b76a86f553b052d20f150dffeaac9485be3daf1697",
+      "pooled_array": {
+        "byte_size": 417920,
+        "dtype": "float32",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l06_layer4_mean_pooled.f32.npy",
+        "sha256": "73f699d64ad71e430392315ef5362273db894a6b2a1a102df2c70fe03e9f414b",
+        "shape": [
+          51,
+          2048
+        ]
+      },
+      "rows": {
+        "byte_size": 51005,
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l06_rows.jsonl",
+        "row_count": 51,
+        "sha256": "69089defde27bb196c93ad97551ab0805b464d76175079a6d91fd890a848174d"
+      },
+      "source_frame_count": 60,
+      "token_array": {
+        "byte_size": 70189184,
+        "dtype": "float16",
+        "path": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1/l06_layer4_visual_tokens.f16.npy",
+        "sha256": "00a5d006220983bf03548c7961007a3a5561b357a7137d309639653b7400fd3f",
+        "shape": [
+          51,
+          336,
+          2048
+        ]
+      },
+      "trajectory_id": "layout_06_ep12616",
+      "trajectory_label": "L06",
+      "windows": [
+        {
+          "frame_token_map_sha256": "54308a46f73002a3adf7164beb926abdd33b85d0b07d7019dbc0b885f031543b",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16,
+          "teacher_result_sha256": "66e61b3165fa61ed06eec02d345ffd661a7460dd20963e039d2f74f60b5fc540"
+        },
+        {
+          "frame_token_map_sha256": "db51feb6799b1ffeabc2a541714cfc4c49b9d966456b273a2813722d7a9da427",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 16,
+          "stop_model_frame_idx_exclusive": 32,
+          "teacher_result_sha256": "8230991484149cbad1abbc888cd8290b8cd676c0e39689cd0556bfc09606bb3f"
+        },
+        {
+          "frame_token_map_sha256": "9b394c4f49421f13caa6827c13697064146e7b86e9a705d66f592491c18d6437",
+          "sequence_length": 5552,
+          "source_frame_count": 16,
+          "start_model_frame_idx": 32,
+          "stop_model_frame_idx_exclusive": 48,
+          "teacher_result_sha256": "ab2eda8c2ea0073734695ee97ffeaaa2644b7dd77abca2e38014429d6e2ab465"
+        },
+        {
+          "frame_token_map_sha256": "605bbdb8b36f2c6c95c7f7e54f673d72fc70afcf36f87767e0310171069aea7a",
+          "sequence_length": 4164,
+          "source_frame_count": 12,
+          "start_model_frame_idx": 48,
+          "stop_model_frame_idx_exclusive": 60,
+          "teacher_result_sha256": "a975a9751da305fa5e683e0c0cc07c20c4ed4269b93339540d6b33841f0c75e6"
+        }
+      ]
+    }
+  ],
+  "config_path": "configs/experiments/exploratory_visible_position_diagnostics_v0_1.yaml",
+  "config_sha256": "20a53d5c75b2eab4abacfd0e3a0f7e6d3609b2fba83a8ec408d57fa4a47f74e0",
+  "external_root": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1",
+  "generated_at": "2026-08-09T07:09:18Z",
+  "historical_frame0_bridge": {
+    "comparison": "float16 exact equality plus float32 maximum absolute difference",
+    "comparison_scope": "layer-4 visual tokens only",
+    "records": [
+      {
+        "exact": false,
+        "historical_artifact_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/bounded_audit/limited_unpooled_frame_0.npz",
+        "historical_artifact_sha256": "653b4e4d86767bbd730c7131228407bb633d50c0753acf6c6a3b33e9d5db42fa",
+        "historical_manifest_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/bounded_audit/limited_unpooled_frame_0.manifest.json",
+        "historical_manifest_sha256": "83ede09ee4ea605e8f75b7ad164ca85b450e41738009bb7d975fa3a0d34fec65",
+        "historical_preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+        "historical_token_sha256": "6f35f53a436d5002e0428b9b679f450dddf61d23bf321ea428c78ce90f1a20a1",
+        "layer_idx": 4,
+        "maximum_absolute_difference": 0.375,
+        "model_frame_idx": 0,
+        "new_token_sha256": "e9956873b103f0c9ac3bfeec01d9c1dbc0b0d7be1a2f5e3a2154986e88a166cf",
+        "sha256_equal": false,
+        "status": "COMPARED",
+        "trajectory_id": "layout_01_ep12602"
+      },
+      {
+        "exact": false,
+        "historical_artifact_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/bounded_audit/limited_unpooled_frame_0.npz",
+        "historical_artifact_sha256": "25617d74a7b405bd723854c32afffb9b219061cb027e1a098c3c3987fd6ab8cb",
+        "historical_manifest_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/bounded_audit/limited_unpooled_frame_0.manifest.json",
+        "historical_manifest_sha256": "8d1c39d18c370087d5dcb386cfc9cf0c82e1a2a54784f095266249a81db70465",
+        "historical_preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+        "historical_token_sha256": "5ee10967451737a0c0f21db36e976ae31d072830c54ef0a40b999170a5d81637",
+        "layer_idx": 4,
+        "maximum_absolute_difference": 0.375,
+        "model_frame_idx": 0,
+        "new_token_sha256": "ff75262dd08d3a65b7a41db6d4fc5255d49fcf6cbbd7d7d530197487ae9856dc",
+        "sha256_equal": false,
+        "status": "COMPARED",
+        "trajectory_id": "layout_02_ep12610"
+      },
+      {
+        "exact": false,
+        "historical_artifact_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.npz",
+        "historical_artifact_sha256": "59be81c226cf71f02cb2d3a3553e72f926ebd123e34d3d334fb53679fc999d18",
+        "historical_manifest_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.manifest.json",
+        "historical_manifest_sha256": "1104177cc5a2774f7129576782e6dc55b596cd644c537220b2700d4572727ed4",
+        "historical_preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+        "historical_token_sha256": "ab6899fb4a7462ee0a3c21f735c7a27874a3539489c7bfa0d776593c8864d706",
+        "layer_idx": 4,
+        "maximum_absolute_difference": 0.375,
+        "model_frame_idx": 0,
+        "new_token_sha256": "b4634b930b30fa2596f7720994d3f7c118006a457c1f6bc3efb5aaceda4ee56d",
+        "sha256_equal": false,
+        "status": "COMPARED",
+        "trajectory_id": "layout_03_ep12645"
+      },
+      {
+        "exact": false,
+        "historical_artifact_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.npz",
+        "historical_artifact_sha256": "ecaef091c390db5069721bd67471a5965f75cd4dd8201d91634ef5282a2a1f60",
+        "historical_manifest_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.manifest.json",
+        "historical_manifest_sha256": "248c17f26cf21313c96129251d24f270c21f21c77dc5a4bcbae298f3a85b857c",
+        "historical_preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+        "historical_token_sha256": "2cb927972a62af10ce537f2ee03911f6392b14b3995e4026636982629581072e",
+        "layer_idx": 4,
+        "maximum_absolute_difference": 0.375,
+        "model_frame_idx": 0,
+        "new_token_sha256": "f56a62a77a416908a8e787de6b86f77bdd019797a18002afdf664de291f539d1",
+        "sha256_equal": false,
+        "status": "COMPARED",
+        "trajectory_id": "layout_04_ep12626"
+      },
+      {
+        "exact": false,
+        "historical_artifact_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.npz",
+        "historical_artifact_sha256": "9383e0887e2f773a4dd83a443e251cb7fad96fa5c376370601c92fcdb39346cb",
+        "historical_manifest_path": "docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.manifest.json",
+        "historical_manifest_sha256": "f1fe9c91c694569bbab7d0c5527fa66a0e755e04d19681503f2a2a58815bacec",
+        "historical_preprocessing_profile": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+        "historical_token_sha256": "f6fda9911b8f11772542343fc9fab1b3370fdf08719c5496e76deb640ade5919",
+        "layer_idx": 4,
+        "maximum_absolute_difference": 0.375,
+        "model_frame_idx": 0,
+        "new_token_sha256": "03dde258484fd7352234593e3e6dd1d55ef599644949a9d5661552eb94248daa",
+        "sha256_equal": false,
+        "status": "COMPARED",
+        "trajectory_id": "layout_05_ep12634"
+      }
+    ]
+  },
+  "run_id": "mentor-visible-position-diagnostics-layer4-v0-1",
+  "runner_path": "scripts/run_exploratory_visible_position_diagnostics.py",
+  "runner_sha256": "bfd6d486eb2f12a82e4ab5fee7e15192ea7f01b0a2801f5eebbe6b8109f48fb2",
+  "runner_version": "exploratory-visible-position-diagnostics-runner-v0.1",
+  "runtime_identity": {
+    "adapter_code_sha256": "f225d0d8fdb2fdeec90fbd4dee156b3fe0c41c8ba47e0c084b9277ad88397962",
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "device": "cuda:0",
+    "environment_report_sha256": "8a270c70dc6acc9e9a603ee4dedac40d8503aa6cb3afaabefabb98c48d3e4e79",
+    "mineocclude_revision": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "mineworld_source_revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "model_config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "modelscope_asset_revision": "0dd5561ab317115831badc50e09a6ebe98693d0e",
+    "precision": "float16",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c",
+    "preprocessing_identity": "person-a-bgr2rgb-inter-linear-224x384-v1.0",
+    "runtime_id": "mentor-visible-position-diagnostics-layer4-v0-1:runtime",
+    "tokenization_profile": "mineworld-700m-16f-interleaved-v1.0:9f49efbcc68a5f0cf60e78f0abc566eac409282f:vae.py#VAE.tokenize_images",
+    "vae_checkpoint_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "vae_config_sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "action_tokens_retained": false,
+    "eligible_row_count": 351,
+    "hidden_width": 2048,
+    "hook_site": "decoder_layer_output_residual_stream",
+    "layer_idx": 4,
+    "noneligible_frames_retained": false,
+    "other_layers_retained": false,
+    "pooled_dtype": "float32",
+    "pooling_identity": "person-a-visual-token-mean-v1.0",
+    "token_dtype": "float16",
+    "trajectory_count": 6,
+    "trajectory_ids": [
+      "layout_01_ep12602",
+      "layout_02_ep12610",
+      "layout_03_ep12645",
+      "layout_04_ep12626",
+      "layout_05_ep12634",
+      "layout_06_ep12616"
+    ],
+    "trajectory_labels": [
+      "L01",
+      "L02",
+      "L03",
+      "L04",
+      "L05",
+      "L06"
+    ],
+    "visual_token_count": 336
+  },
+  "sequence_context": {
+    "all_source_frames_processed": true,
+    "policy": "production-66-cell-contiguous-windowing",
+    "source_frame_count_per_trajectory": {
+      "layout_01_ep12602": 60,
+      "layout_02_ep12610": 60,
+      "layout_03_ep12645": 60,
+      "layout_04_ep12626": 60,
+      "layout_05_ep12634": 60,
+      "layout_06_ep12616": 60
+    },
+    "teacher_forcing": true,
+    "window_size": 16
+  },
+  "status": "COMPLETE",
+  "storage": {
+    "array_file_bytes": 485942784,
+    "pooled_array_file_bytes": 2876160,
+    "token_array_file_bytes": 483066624
+  }
+}

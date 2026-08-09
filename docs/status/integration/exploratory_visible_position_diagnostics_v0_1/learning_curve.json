@@ -1,0 +1,468 @@
+{
+  "alpha_grid": [
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "alpha_selection": "leave-one-training-trajectory-out",
+  "artifact_version": "visible-position-learning-curve-v0.1",
+  "extracted_row_record_count": 351,
+  "extraction_identity": {
+    "eligible_row_keys_sha256": "445c7b82bc8d8308a42f7c2880c52dfd444c343e3a90f828f98c42da1636f854",
+    "manifest_path": "/home/sagemaker-user/MineOcclude/docs/status/integration/exploratory_visible_position_diagnostics_v0_1/unpooled_activation_manifest.json",
+    "manifest_sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482",
+    "run_id": "mentor-visible-position-diagnostics-layer4-v0-1"
+  },
+  "feature_source": "freshly_extracted_layer4_mean_pool",
+  "fixed_test_frame_count": 120,
+  "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+  "fixed_test_trajectory_labels": [
+    "L03",
+    "L04"
+  ],
+  "generated_at": "2026-08-09T07:18:19Z",
+  "layer_idx": 4,
+  "pooling_identity": "person-a-visual-token-mean-v1.0",
+  "results": [
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 2,
+      "k_trajectories": 2,
+      "mae": 0.7322839242384879,
+      "mse": 0.9126316876053163,
+      "prediction_sha256": "3c3602b0427c209659763411e85167de4578635ea66a73991a2c681c684a529d",
+      "r2": -0.06312374923624553,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 120,
+      "selected_alpha": 100.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L01+L02",
+      "training_frame_count": 120,
+      "training_group_ids": [
+        "L01",
+        "L02"
+      ],
+      "training_trajectory_ids": [
+        "layout_01_ep12602",
+        "layout_02_ep12610"
+      ],
+      "training_trajectory_labels": [
+        "L01",
+        "L02"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.6589409795682649,
+        "1.0": 0.6545441404254588,
+        "10.0": 0.6170498701616218,
+        "100.0": 0.5155573402999081
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 2,
+      "k_trajectories": 2,
+      "mae": 0.7114410967232068,
+      "mse": 0.7817606962008435,
+      "prediction_sha256": "78664aef3e24164f6e50c7e376a1b5c588d125ddc9e44cc362644a246b7b8815",
+      "r2": 0.0893277390670596,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 120,
+      "selected_alpha": 10.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L01+L05",
+      "training_frame_count": 120,
+      "training_group_ids": [
+        "L01",
+        "L05"
+      ],
+      "training_trajectory_ids": [
+        "layout_01_ep12602",
+        "layout_05_ep12634"
+      ],
+      "training_trajectory_labels": [
+        "L01",
+        "L05"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.5639091628779052,
+        "1.0": 0.562388045169344,
+        "10.0": 0.561248150986488,
+        "100.0": 0.6267239633802483
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 2,
+      "k_trajectories": 2,
+      "mae": 0.6607031458296778,
+      "mse": 0.7626746429389073,
+      "prediction_sha256": "1b3d8300c59f971f318403294996989d54440ec89e12586db6f58aa06e870feb",
+      "r2": 0.11156106361356333,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 111,
+      "selected_alpha": 100.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L01+L06",
+      "training_frame_count": 111,
+      "training_group_ids": [
+        "L01",
+        "L06"
+      ],
+      "training_trajectory_ids": [
+        "layout_01_ep12602",
+        "layout_06_ep12616"
+      ],
+      "training_trajectory_labels": [
+        "L01",
+        "L06"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.7914310683637916,
+        "1.0": 0.7811655950112795,
+        "10.0": 0.7263335621645776,
+        "100.0": 0.7083341648084953
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 2,
+      "k_trajectories": 2,
+      "mae": 0.7853286572452293,
+      "mse": 0.8864844905961012,
+      "prediction_sha256": "941cb1aa4c15a41c718561d4091cfc57e2013363b4e53b4f255bd200c57f851c",
+      "r2": -0.032664905330228144,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 120,
+      "selected_alpha": 10.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L02+L05",
+      "training_frame_count": 120,
+      "training_group_ids": [
+        "L02",
+        "L05"
+      ],
+      "training_trajectory_ids": [
+        "layout_02_ep12610",
+        "layout_05_ep12634"
+      ],
+      "training_trajectory_labels": [
+        "L02",
+        "L05"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.6375613956698566,
+        "1.0": 0.632391711588467,
+        "10.0": 0.6052826531286974,
+        "100.0": 0.6151916453001617
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 2,
+      "k_trajectories": 2,
+      "mae": 0.5855063715325344,
+      "mse": 0.5754228347451911,
+      "prediction_sha256": "67c204c81cfa4fe143d9a6d75dd5221a8d8bdd6b38e767877361e12c7e7fd741",
+      "r2": 0.3296905095683942,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 111,
+      "selected_alpha": 0.1,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L02+L06",
+      "training_frame_count": 111,
+      "training_group_ids": [
+        "L02",
+        "L06"
+      ],
+      "training_trajectory_ids": [
+        "layout_02_ep12610",
+        "layout_06_ep12616"
+      ],
+      "training_trajectory_labels": [
+        "L02",
+        "L06"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.4907751673847601,
+        "1.0": 0.49215954105383763,
+        "10.0": 0.5071580927886593,
+        "100.0": 0.6443432041794422
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 2,
+      "k_trajectories": 2,
+      "mae": 0.6408791812640975,
+      "mse": 0.7131657375018124,
+      "prediction_sha256": "5fbdc96ddb8a727762a16128d549444d761797c2258bf0e3a01559b5f0bf0f08",
+      "r2": 0.16923393853529134,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 111,
+      "selected_alpha": 0.1,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L05+L06",
+      "training_frame_count": 111,
+      "training_group_ids": [
+        "L05",
+        "L06"
+      ],
+      "training_trajectory_ids": [
+        "layout_05_ep12634",
+        "layout_06_ep12616"
+      ],
+      "training_trajectory_labels": [
+        "L05",
+        "L06"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 1.0656670932376981,
+        "1.0": 1.0687738688655908,
+        "10.0": 1.107385195248507,
+        "100.0": 1.392979365540567
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 3,
+      "k_trajectories": 3,
+      "mae": 0.7229546109573594,
+      "mse": 0.8792944110248623,
+      "prediction_sha256": "7690694745399005393484444c92d60c5bb3c43d05fd61215af38bc6f41eb629",
+      "r2": -0.024289188757051106,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 180,
+      "selected_alpha": 100.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L01+L02+L05",
+      "training_frame_count": 180,
+      "training_group_ids": [
+        "L01",
+        "L02",
+        "L05"
+      ],
+      "training_trajectory_ids": [
+        "layout_01_ep12602",
+        "layout_02_ep12610",
+        "layout_05_ep12634"
+      ],
+      "training_trajectory_labels": [
+        "L01",
+        "L02",
+        "L05"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.5218629147400352,
+        "1.0": 0.5124340435095439,
+        "10.0": 0.4785565628289914,
+        "100.0": 0.416488891924826
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 3,
+      "k_trajectories": 3,
+      "mae": 0.7162925674078239,
+      "mse": 0.86495581190207,
+      "prediction_sha256": "80a7cabe04cc762775076be39a350c710cbf62920a07f207279dbac250f71832",
+      "r2": -0.007586168836477336,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 171,
+      "selected_alpha": 100.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L01+L02+L06",
+      "training_frame_count": 171,
+      "training_group_ids": [
+        "L01",
+        "L02",
+        "L06"
+      ],
+      "training_trajectory_ids": [
+        "layout_01_ep12602",
+        "layout_02_ep12610",
+        "layout_06_ep12616"
+      ],
+      "training_trajectory_labels": [
+        "L01",
+        "L02",
+        "L06"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.6212320283470797,
+        "1.0": 0.6133323037562827,
+        "10.0": 0.5675933926989617,
+        "100.0": 0.5014339135973575
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 3,
+      "k_trajectories": 3,
+      "mae": 0.6886869397938189,
+      "mse": 0.8117773748820543,
+      "prediction_sha256": "0cc8c21207dfed36d503b1594a0519acc8e0bb07341a7d42b0a5bff7eecef79b",
+      "r2": 0.05436133979275659,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 171,
+      "selected_alpha": 100.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L01+L05+L06",
+      "training_frame_count": 171,
+      "training_group_ids": [
+        "L01",
+        "L05",
+        "L06"
+      ],
+      "training_trajectory_ids": [
+        "layout_01_ep12602",
+        "layout_05_ep12634",
+        "layout_06_ep12616"
+      ],
+      "training_trajectory_labels": [
+        "L01",
+        "L05",
+        "L06"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.7130579313657416,
+        "1.0": 0.6958353017062429,
+        "10.0": 0.6309187533253233,
+        "100.0": 0.5186442075705229
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 3,
+      "k_trajectories": 3,
+      "mae": 0.6316153079486274,
+      "mse": 0.638789689632397,
+      "prediction_sha256": "1ba92f21ee51a260ab7706f2767c4cbff55c17ca662727fca9ef55063d7d841a",
+      "r2": 0.2558745230538765,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 171,
+      "selected_alpha": 0.1,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L02+L05+L06",
+      "training_frame_count": 171,
+      "training_group_ids": [
+        "L02",
+        "L05",
+        "L06"
+      ],
+      "training_trajectory_ids": [
+        "layout_02_ep12610",
+        "layout_05_ep12634",
+        "layout_06_ep12616"
+      ],
+      "training_trajectory_labels": [
+        "L02",
+        "L05",
+        "L06"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.35247461381253853,
+        "1.0": 0.35442921393343846,
+        "10.0": 0.3611295115713036,
+        "100.0": 0.4184781755701675
+      }
+    },
+    {
+      "fixed_test_frame_count": 120,
+      "fixed_test_sha256": "d045dc3128971f01881cd12d6c3c3bbd3257f80ad1e5d7f64728995a45401317",
+      "fixed_test_trajectory_labels": [
+        "L03",
+        "L04"
+      ],
+      "inner_fold_count": 4,
+      "k_trajectories": 4,
+      "mae": 0.7144912504931066,
+      "mse": 0.8616135982361945,
+      "prediction_sha256": "786eb1998bc42b1b158c7459bd3ec297e772a13a13da7058bd8eeed192b7d89f",
+      "r2": -0.003692827446439173,
+      "scaler_fit_scope": "training_subset_rows_only",
+      "scaler_training_row_count": 231,
+      "selected_alpha": 100.0,
+      "selection_policy": "leave-one-training-trajectory-out",
+      "subset_id": "L01+L02+L05+L06",
+      "training_frame_count": 231,
+      "training_group_ids": [
+        "L01",
+        "L02",
+        "L05",
+        "L06"
+      ],
+      "training_trajectory_ids": [
+        "layout_01_ep12602",
+        "layout_02_ep12610",
+        "layout_05_ep12634",
+        "layout_06_ep12616"
+      ],
+      "training_trajectory_labels": [
+        "L01",
+        "L02",
+        "L05",
+        "L06"
+      ],
+      "validation_mse_by_alpha": {
+        "0.1": 0.5041310506901046,
+        "1.0": 0.5024733875020432,
+        "10.0": 0.4764408595178769,
+        "100.0": 0.40504848637396984
+      }
+    }
+  ],
+  "scaler_fit_scope": "each_training_subset_only",
+  "schema_version": "1.0",
+  "subset_count": 11
+}

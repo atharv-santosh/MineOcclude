@@ -1,0 +1,51 @@
+{
+  "FINAL_DIAGNOSIS": "INSUFFICIENT_EVIDENCE",
+  "NEXT_SCIENTIFIC_DIRECTION": "Increase independent visible/no-wall trajectory and layout coverage, then evaluate the token-preserving visible-position readout on a new untouched grouped evaluation authority before deciding whether mean pooling should be replaced for any future hidden-state study.",
+  "ORIGINAL_MVP_RESULT_MODIFIED": false,
+  "artifact_version": "visible-position-diagnostic-receipt-v0.1",
+  "diagnostic_1_learning_curve": {
+    "class": "HIGH_TRAJECTORY_VARIANCE",
+    "data_limitation_plausible": null,
+    "fixed_test_r2_median_by_k": {
+      "2": 0.10044440134031146,
+      "3": 0.023387585478139628,
+      "4": -0.003692827446439173
+    },
+    "subset_count": 11
+  },
+  "diagnostic_2_token": {
+    "L03_delta_r2": 1.2310293804037276,
+    "L04_delta_r2": -0.5167055610655351,
+    "class": "MIXED_TOKEN_GAIN",
+    "delta_mae": -0.19470628195141726,
+    "delta_r2": 0.491073548364108,
+    "mean_pool_mae": 0.7144912504931066,
+    "mean_pool_r2": -0.003692827446439173,
+    "positive_r2_token_count": 187,
+    "solver_equivalence_pass": true,
+    "spatial_token_count": 336,
+    "token_flattened_mae": 0.5197849685416893,
+    "token_flattened_r2": 0.4873807209176688,
+    "token_grid": "14x24",
+    "token_r2_max": 0.7547766741609041,
+    "token_r2_median": 0.03585055956158484,
+    "token_r2_min": -5.290526915645862
+  },
+  "experiment_id": "exploratory-visible-position-diagnostics-v0.1",
+  "exploration_branch": "exploration/mentor-visible-position-diagnostics-v0-1",
+  "frozen_base_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+  "generated_at": "2026-08-09T07:45:04Z",
+  "package_files": [
+    "diagnostic_receipt.json",
+    "learning_curve.json",
+    "learning_curve_subsets.json",
+    "unpooled_activation_manifest.json",
+    "token_probe_metrics.json",
+    "token_spatial_map.json",
+    "diagnostic_adjudication.json",
+    "provenance.json",
+    "visible_position_learning_curve.png",
+    "visible_position_token_r2_map.png"
+  ],
+  "schema_version": "1.0"
+}

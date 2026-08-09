@@ -1,0 +1,87 @@
+schema_version: "1.0"
+experiment_id: exploratory-visible-position-diagnostics-v0.1
+base_head: bb22364cbc4f65b788a56b60e7d6503e6226df7b
+
+scientific_scope:
+  layer_idx: 4
+  hook_site: decoder_layer_output_residual_stream
+  hidden_width: 2048
+  visual_token_count: 336
+  token_dtype: float16
+  pooled_dtype: float32
+  pooling_identity: person-a-visual-token-mean-v1.0
+  window_size: 16
+  seed: 20260725
+  precision: float16
+
+authority:
+  row_universe_path: docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_records.jsonl
+  row_universe_sha256: 29b4cf003f3d9479b3606f17947879078801b400b09d942bd6827544b95227b2
+  oracle_target_path: docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_records.jsonl
+  oracle_target_sha256: d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1
+  preprocessed_frame_manifest_path: docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json
+  preprocessed_frame_manifest_sha256: dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1
+  person_c_canonical_media_commit: 3846230a4f141a8a55084eeaaa040f9a10cfc408
+
+trajectories:
+  - label: L01
+    layout_id: layout_01
+    trajectory_id: layout_01_ep12602
+    source_frame_count: 60
+    eligible_frame_count: 60
+  - label: L02
+    layout_id: layout_02
+    trajectory_id: layout_02_ep12610
+    source_frame_count: 60
+    eligible_frame_count: 60
+  - label: L03
+    layout_id: layout_03
+    trajectory_id: layout_03_ep12645
+    source_frame_count: 60
+    eligible_frame_count: 60
+  - label: L04
+    layout_id: layout_04
+    trajectory_id: layout_04_ep12626
+    source_frame_count: 60
+    eligible_frame_count: 60
+  - label: L05
+    layout_id: layout_05
+    trajectory_id: layout_05_ep12634
+    source_frame_count: 60
+    eligible_frame_count: 60
+  - label: L06
+    layout_id: layout_06
+    trajectory_id: layout_06_ep12616
+    source_frame_count: 60
+    eligible_frame_count: 51
+
+fixed_test_trajectory_labels: [L03, L04]
+training_pool_trajectory_labels: [L01, L02, L05, L06]
+
+ridge:
+  alpha_grid: [0.1, 1.0, 10.0, 100.0]
+  selection: leave-one-training-trajectory-out
+  seed: 20260719
+  subset_sizes: [2, 3, 4]
+
+storage:
+  external_base_root: /mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1
+  frozen_frame_payload_root: /mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/input/person-a-66-cell-preprocessed-frames-v0-2/frames
+  receipt_root: docs/status/integration/exploratory_visible_position_diagnostics_v0_1
+
+historical_bridge:
+  - trajectory_id: layout_01_ep12602
+    model_frame_idx: 0
+    manifest_path: docs/status/phase6_runtime/person-a-canonical-c6a-layout-01-ep12602-seed-20260725-retry-20260804T193204Z-package-retry-20260804T193627Z/bounded_audit/limited_unpooled_frame_0.manifest.json
+  - trajectory_id: layout_02_ep12610
+    model_frame_idx: 0
+    manifest_path: docs/status/phase6_runtime/person-a-canonical-c6a-layout-02-ep12610-seed-20260725-multilayout-v0-1-retry-20260804T205757Z/bounded_audit/limited_unpooled_frame_0.manifest.json
+  - trajectory_id: layout_03_ep12645
+    model_frame_idx: 0
+    manifest_path: docs/status/phase6_runtime/person-a-canonical-c6a-layout-03-ep12645-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.manifest.json
+  - trajectory_id: layout_04_ep12626
+    model_frame_idx: 0
+    manifest_path: docs/status/phase6_runtime/person-a-canonical-c6a-layout-04-ep12626-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.manifest.json
+  - trajectory_id: layout_05_ep12634
+    model_frame_idx: 0
+    manifest_path: docs/status/phase6_runtime/person-a-canonical-c6a-layout-05-ep12634-seed-20260725-multilayout-v0-1/bounded_audit/limited_unpooled_frame_0.manifest.json
