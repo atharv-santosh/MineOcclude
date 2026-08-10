@@ -39,7 +39,7 @@ from mineocclude.data.noise_schedule import (  # noqa: E402
     serialize_schedule,
 )
 
-CONTROLLER_VERSION = "large-scale-no-wall-campaign-orchestrator-v0.3"
+CONTROLLER_VERSION = "large-scale-no-wall-campaign-orchestrator-v0.4"
 P1_HEAD = "ef6469ab68ea8edf572ec4778d2d938b61a07f59"
 PREDECESSOR_SHA = "18c8dd0de0987d3065206a5fd7df452badb1338b"
 FROZEN_MVP_SHA = "bb22364cbc4f65b788a56b60e7d6503e6226df7b"
@@ -60,6 +60,11 @@ DEFAULT_S3_PREFIX = (
     "s3://sagemaker-us-east-1-323206973672/mineocclude/"
     "exploratory_large_scale_no_wall_scaling_best_k_v0_1/"
 )
+DEFAULT_V2_LEDGER = PACKAGE / "p4c_capture_ledger_v2.jsonl"
+DEFAULT_V2_RUNTIME_ROOT = Path(
+    "/mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2"
+)
+DEFAULT_V2_S3_PREFIX = DEFAULT_S3_PREFIX.rstrip("/") + "/repaired_v2/"
 SERVER_ROOT = Path("/home/sagemaker-user/mineocclude-server")
 CLIENT_ROOT = Path("/home/sagemaker-user/mineocclude-client")
 FIFO = SERVER_ROOT / "cmd.fifo"
@@ -195,6 +200,10 @@ class CampaignAuthority:
                 raise CampaignError(
                     "SPEC_ID_OR_HASH_MISMATCH", spec["trajectory_spec_id"]
                 )
+
+    @property
+    def is_repaired_v2(self) -> bool:
+        return self.path.name == "capture_campaign_v2.json"
 
     @staticmethod
     def _verify_lock(source: Path, lock_path: Path) -> None:
@@ -1619,7 +1628,10 @@ def _remote_bytes(uri: str) -> bytes:
 
 
 def durability_gate(
-    runner: CampaignRunner, stage: str, capture_elapsed_seconds: float
+    runner: CampaignRunner,
+    stage: str,
+    capture_elapsed_seconds: float,
+    runtime_startup_seconds: float = 0.0,
 ) -> dict[str, Any]:
     gate_started = time.monotonic()
     expected = cumulative_specs(runner.authority, stage)
@@ -1686,7 +1698,11 @@ def durability_gate(
     per_layout = Counter(spec["layout_id"] for spec in expected)
     gate_elapsed = time.monotonic() - gate_started
     receipt = {
-        "schema_version": "large-scale-no-wall-p3-stage-gate-v0.1",
+        "schema_version": (
+            "large-scale-no-wall-p4c-v2-stage-gate-v0.1"
+            if runner.authority.is_repaired_v2
+            else "large-scale-no-wall-p3-stage-gate-v0.1"
+        ),
         "status": "PASS",
         "stage": stage,
         "new_accepted": len(stage_specs),
@@ -1701,10 +1717,15 @@ def durability_gate(
         "ledger_s3_roundtrip_verified": True,
         "s3_prefix": runner.s3_prefix,
         "capture_elapsed_seconds": capture_elapsed_seconds,
+        "runtime_startup_seconds": runtime_startup_seconds,
         "s3_durability_gate_elapsed_seconds": gate_elapsed,
         "stage_total_elapsed_seconds": capture_elapsed_seconds + gate_elapsed,
     }
-    path = PACKAGE / f"p3_stage_{stage.lower()}_receipt.json"
+    path = PACKAGE / (
+        f"p4c_v2_stage_{stage.lower()}_durability_receipt.json"
+        if runner.authority.is_repaired_v2
+        else f"p3_stage_{stage.lower()}_receipt.json"
+    )
     if path.exists():
         previous = read_json(path)
         for key in (
@@ -1978,10 +1999,12 @@ def write_p3_receipts(
         write_json_new(path, value)
 
 
-def launch_runtime() -> tuple[list[subprocess.Popen[Any]], float]:
+def launch_runtime(
+    runtime_root: Path = DEFAULT_RUNTIME_ROOT,
+) -> tuple[list[subprocess.Popen[Any]], float]:
     launch_started = time.monotonic()
     launch_wall_time = time.time()
-    log_root = DEFAULT_RUNTIME_ROOT / "runtime_logs"
+    log_root = runtime_root / "runtime_logs"
     log_root.mkdir(parents=True, exist_ok=True)
     processes = []
     environment = {
@@ -2072,6 +2095,33 @@ def stop_runtime(processes: list[subprocess.Popen[Any]]) -> None:
             process.kill()
 
 
+def validate_execution_namespace(
+    authority: CampaignAuthority,
+    ledger_path: Path,
+    runtime_root: Path,
+    s3_prefix: str,
+) -> None:
+    """Fail closed before V1/V2 acquisition authorities can share storage."""
+    if not authority.is_repaired_v2:
+        return
+    expected = {
+        "ledger": DEFAULT_V2_LEDGER.resolve(),
+        "runtime_root": DEFAULT_V2_RUNTIME_ROOT.resolve(),
+        "s3_prefix": DEFAULT_V2_S3_PREFIX,
+    }
+    observed = {
+        "ledger": ledger_path.resolve(),
+        "runtime_root": runtime_root.resolve(),
+        "s3_prefix": s3_prefix.rstrip("/") + "/",
+    }
+    for field in expected:
+        if observed[field] != expected[field]:
+            raise CampaignError(
+                "PRECHECK_FAILED",
+                f"V2 {field} namespace mismatch: {observed[field]} != {expected[field]}",
+            )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--campaign", type=Path, default=DEFAULT_CAMPAIGN)
@@ -2088,6 +2138,9 @@ def main() -> int:
     if args.dry_run:
         print(json.dumps(dry_run(authority, args.stage), indent=2, sort_keys=True))
         return 0
+    validate_execution_namespace(
+        authority, args.ledger, args.runtime_root, args.s3_prefix
+    )
     ledger = AppendOnlyLedger(args.ledger)
     runner = CampaignRunner(
         authority, ledger, args.runtime_root, args.s3_prefix, args.base_episode_id
@@ -2097,9 +2150,11 @@ def main() -> int:
     machine_started = time.monotonic()
     try:
         if args.launch_runtime:
-            processes, startup_seconds = launch_runtime()
+            processes, startup_seconds = launch_runtime(args.runtime_root)
         if args.stage == "A":
+            capture_started = time.monotonic()
             runner.run_stage_a(resume=args.resume)
+            capture_elapsed = time.monotonic() - capture_started
             subprocess.run(
                 [
                     "aws",
@@ -2112,10 +2167,18 @@ def main() -> int:
                 check=True,
                 timeout=120,
             )
-            write_p2_receipts(
-                runner, time.monotonic() - machine_started, startup_seconds
-            )
-            print("P2_STAGE_A_CAPTURE=PASS")
+            if authority.is_repaired_v2:
+                receipt = durability_gate(runner, "A", capture_elapsed, startup_seconds)
+                print(
+                    "P4C_V2_STAGE_A_GATE=PASS "
+                    f"cumulative={receipt['cumulative_accepted']}",
+                    flush=True,
+                )
+            else:
+                write_p2_receipts(
+                    runner, time.monotonic() - machine_started, startup_seconds
+                )
+                print("P2_STAGE_A_CAPTURE=PASS")
             return 0
 
         if not args.resume:
@@ -2139,7 +2202,12 @@ def main() -> int:
             capture_started = time.monotonic()
             runner.run_stage(stage, resume=True)
             capture_elapsed = time.monotonic() - capture_started
-            stage_receipts[stage] = durability_gate(runner, stage, capture_elapsed)
+            stage_receipts[stage] = durability_gate(
+                runner,
+                stage,
+                capture_elapsed,
+                startup_seconds if stage == "B" else 0.0,
+            )
             print(
                 f"P3_STAGE_{stage}_GATE=PASS "
                 f"cumulative={stage_receipts[stage]['cumulative_accepted']}",
@@ -2150,13 +2218,16 @@ def main() -> int:
             if processes:
                 stop_runtime(processes)
                 processes = []
-            write_p3_receipts(
-                runner,
-                stage_receipts,
-                machine_started,
-                startup_seconds,
-            )
-            print("P3_FULL_CAPTURE=PASS", flush=True)
+            if authority.is_repaired_v2:
+                print("P4C_V2_FULL_RAW_CAPTURE=PASS", flush=True)
+            else:
+                write_p3_receipts(
+                    runner,
+                    stage_receipts,
+                    machine_started,
+                    startup_seconds,
+                )
+                print("P3_FULL_CAPTURE=PASS", flush=True)
         else:
             print(f"P3_STAGE_{args.stage}_CAPTURE=PASS", flush=True)
         return 0
