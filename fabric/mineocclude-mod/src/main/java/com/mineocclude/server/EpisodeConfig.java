@@ -23,6 +23,8 @@ public final class EpisodeConfig {
     public final String layoutId;
     public final long episodeId;
     public final long seed;
+    public final String trajectorySpecId; // null for legacy/non-campaign captures
+    public final String specHash;         // null for legacy/non-campaign captures
 
     // Dynamics
     public final double driftV;       // blocks/s along the wall axis
@@ -64,9 +66,26 @@ public final class EpisodeConfig {
                          double laneY, Axis wallAxis, Scene scene, int hiddenTarget,
                          int revealTicks, int impulseTick, double impulseYawDeg,
                          boolean lockCamera) {
+        this(layoutId, episodeId, seed, driftV, processQ, hiddenFrames,
+                laneMin, laneMax, startPos, wallSegMin, wallSegMax,
+                wallOrthoConst, wallOrthoOffset, cameraDist, laneY, wallAxis,
+                scene, hiddenTarget, revealTicks, impulseTick, impulseYawDeg,
+                lockCamera, null, null);
+    }
+
+    public EpisodeConfig(String layoutId, long episodeId, long seed,
+                         double driftV, double processQ, int hiddenFrames,
+                         double laneMin, double laneMax, double startPos,
+                         double wallSegMin, double wallSegMax,
+                         double wallOrthoConst, double wallOrthoOffset, double cameraDist,
+                         double laneY, Axis wallAxis, Scene scene, int hiddenTarget,
+                         int revealTicks, int impulseTick, double impulseYawDeg,
+                         boolean lockCamera, String trajectorySpecId, String specHash) {
         this.layoutId = layoutId;
         this.episodeId = episodeId;
         this.seed = seed;
+        this.trajectorySpecId = trajectorySpecId;
+        this.specHash = specHash;
         this.driftV = driftV;
         this.processQ = processQ;
         this.hiddenFrames = hiddenFrames;

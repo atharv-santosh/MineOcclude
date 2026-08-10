@@ -124,6 +124,11 @@ public final class SheepController {
 
     /** Advance one authoritative motion tick after passing the retention gate. */
     public void step() {
+        step(cfg.driftV);
+    }
+
+    /** Advance one tick using the immutable campaign schedule's command. */
+    public void step(double commandedVelocity) {
         requireValid("armed-to-recording-pre-step");
         double dt = MineOcclude.DT_SECONDS;
         double eta;
@@ -132,7 +137,7 @@ public final class SheepController {
         } else {
             eta = rng.nextGaussian() * Math.sqrt(cfg.processQ * dt);
         }
-        double proposed = axisPos + cfg.driftV * dt + eta;
+        double proposed = axisPos + commandedVelocity * dt + eta;
         double clamped = cfg.clampAxis(proposed);
         this.lastNoiseDraw = eta;
         this.lastVelocity = (clamped - axisPos) / dt;

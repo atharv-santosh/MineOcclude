@@ -33,7 +33,8 @@ public final class ServerStateLogger implements AutoCloseable {
     public void write(EpisodeConfig cfg, long serverTick, long epochNanos,
                       SheepController sheep, boolean geometricVisible,
                       double playerX, double playerY, double playerZ,
-                      double playerYaw, double playerPitch) throws IOException {
+                      double playerYaw, double playerPitch,
+                      double commandedVelocity, int motionSegmentIndex) throws IOException {
         // Consecutive-tick assertion. A gap means a dropped tick -> recollect.
         if (lastTick >= 0 && serverTick != lastTick + 1) {
             MineOcclude.LOG.error("[MineOcclude] NON-CONSECUTIVE TICK: {} after {} (episode {})",
@@ -50,7 +51,11 @@ public final class ServerStateLogger implements AutoCloseable {
         kvs(sb, "regime", "A"); sb.append(',');
         kvs(sb, "scene", cfg.scene.name()); sb.append(',');
         kv(sb, "seed", cfg.seed); sb.append(',');
-        kv(sb, "v", cfg.driftV); sb.append(',');
+        kv(sb, "v", commandedVelocity); sb.append(',');
+        kv(sb, "commanded_v", commandedVelocity); sb.append(',');
+        kv(sb, "motion_segment_index", motionSegmentIndex); sb.append(',');
+        nullableString(sb, "trajectory_spec_id", cfg.trajectorySpecId); sb.append(',');
+        nullableString(sb, "spec_hash", cfg.specHash); sb.append(',');
         kv(sb, "q", cfg.processQ); sb.append(',');
         kv(sb, "hidden_frames", cfg.hiddenFrames); sb.append(',');
         // sheep is null for the NO_SHEEP control -> log nulls.
@@ -111,5 +116,10 @@ public final class ServerStateLogger implements AutoCloseable {
     }
     private static void kvb(StringBuilder sb, String k, boolean v) {
         sb.append('"').append(k).append("\":").append(v);
+    }
+    private static void nullableString(StringBuilder sb, String k, String v) {
+        sb.append('"').append(k).append("\":");
+        if (v == null) sb.append("null");
+        else sb.append('"').append(v).append('"');
     }
 }

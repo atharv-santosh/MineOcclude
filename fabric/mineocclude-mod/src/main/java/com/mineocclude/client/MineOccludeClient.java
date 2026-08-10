@@ -12,7 +12,10 @@ import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -107,6 +110,17 @@ public final class MineOccludeClient implements ClientModInitializer {
         try {
             client.options.fov = 70.0;            // Normal
             client.options.fovEffectScale = 0.0f; // no FOV change from speed/sprint
+            Path authorityRoot = client.runDirectory.toPath()
+                    .resolve("mineocclude_client_authority");
+            Files.createDirectories(authorityRoot);
+            String receipt = "{\"schema_version\":\"mineocclude-client-session-v0.1\""
+                    + ",\"fov_degrees\":" + client.options.fov
+                    + ",\"fov_effect_scale\":" + client.options.fovEffectScale
+                    + ",\"status\":\"PINNED\"}";
+            Files.write(authorityRoot.resolve("fov_receipt.json"),
+                    receipt.getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+                    StandardOpenOption.WRITE);
             MineOcclude.LOG.info("[MineOcclude/client] FOV pinned to 70 (Normal)");
         } catch (Throwable t) {
             MineOcclude.LOG.error("[MineOcclude/client] pinFov failed (non-fatal)", t);
@@ -192,6 +206,7 @@ public final class MineOccludeClient implements ClientModInitializer {
                 deleteRecursively(episodeDir);
                 java.nio.file.Files.createDirectories(episodeDir.resolve("frames"));
                 logger = new ClientLogger(episodeDir);
+                writeClientAuthority(client);
                 MineOcclude.LOG.info("[MineOcclude/client] episode {} recording -> {}",
                         pkt.episodeId, episodeDir);
             } catch (IOException e) {
@@ -218,6 +233,8 @@ public final class MineOccludeClient implements ClientModInitializer {
                 }
             }
             closeLogger();
+            boolean drained = frameCapture.awaitDrained(5000L);
+            writeCaptureComplete(drained);
             if (client.options != null) client.options.hudHidden = false; // restore HUD
             MineOcclude.LOG.info("[MineOcclude/client] episode {} finished, {} frames",
                     currentEpisodeId, renderFrameIdx);
@@ -298,6 +315,48 @@ public final class MineOccludeClient implements ClientModInitializer {
         if (logger != null) {
             try { logger.close(); } catch (IOException ignored) {}
             logger = null;
+        }
+    }
+
+    private void writeClientAuthority(MinecraftClient client) throws IOException {
+        double fov = client.options == null ? Double.NaN : client.options.fov;
+        double fovEffect = client.options == null
+                ? Double.NaN : client.options.fovEffectScale;
+        int width = client.getFramebuffer() == null
+                ? -1 : client.getFramebuffer().textureWidth;
+        int height = client.getFramebuffer() == null
+                ? -1 : client.getFramebuffer().textureHeight;
+        String json = "{\"schema_version\":\"mineocclude-client-authority-v0.1\""
+                + ",\"episode_id\":" + currentEpisodeId
+                + ",\"fov_degrees\":" + Double.toString(fov)
+                + ",\"fov_effect_scale\":" + Double.toString(fovEffect)
+                + ",\"framebuffer_width\":" + width
+                + ",\"framebuffer_height\":" + height
+                + ",\"hud_hidden\":"
+                + (client.options != null && client.options.hudHidden) + "}";
+        Files.write(episodeDir.resolve("client_authority.json"),
+                json.getBytes(StandardCharsets.UTF_8),
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+                StandardOpenOption.WRITE);
+    }
+
+    private void writeCaptureComplete(boolean drained) {
+        if (episodeDir == null) return;
+        long finalIndex = renderFrameIdx - 1;
+        String json = "{\"schema_version\":\"mineocclude-capture-drain-v0.1\""
+                + ",\"episode_id\":" + currentEpisodeId
+                + ",\"frame_count\":" + renderFrameIdx
+                + ",\"final_render_frame_idx\":" + finalIndex
+                + ",\"pending_writes\":" + frameCapture.pendingWrites()
+                + ",\"writer_errors\":" + frameCapture.writeErrors()
+                + ",\"drained\":" + drained + "}";
+        try {
+            Files.write(episodeDir.resolve("capture_complete.json"),
+                    json.getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+                    StandardOpenOption.WRITE);
+        } catch (IOException error) {
+            MineOcclude.LOG.error("[MineOcclude/client] capture drain receipt failed", error);
         }
     }
 

@@ -60,6 +60,7 @@ public final class EpisodeManager {
     // C2.2/C2.4 additions: explicit lifecycle + immutable noise schedule.
     private EpisodeLifecycle lifecycle;
     private NoiseSchedule noiseSchedule;
+    private MotionSchedule motionSchedule;
     private String failureReason;
 
     // C3.6 deterministic camera program: canonical pose held by the server.
@@ -92,6 +93,12 @@ public final class EpisodeManager {
      * recording begins. Recording lasts {@code lengthTicks} server ticks.
      */
     public boolean start(EpisodeConfig config, int lengthTicks, int warmupTicks) {
+        return start(config, lengthTicks, warmupTicks, null);
+    }
+
+    /** Arm an episode with an optional immutable campaign motion schedule. */
+    public boolean start(EpisodeConfig config, int lengthTicks, int warmupTicks,
+                         MotionSchedule schedule) {
         if (running) {
             MineOcclude.LOG.warn("[MineOcclude] a previous episode was still active; ending it before starting {}",
                     config.episodeId);
@@ -145,6 +152,7 @@ public final class EpisodeManager {
         applyRuntimeBaseline(world);
 
         this.cfg = config;
+        this.motionSchedule = schedule;
         this.wallOrtho = cfg.wallOrthoConst + cfg.wallOrthoOffset;
         // Camera sits on the opposite side of the wall from the sheep.
         this.camOrtho = wallOrtho - cfg.cameraDist;
@@ -340,9 +348,13 @@ public final class EpisodeManager {
             }
         }
 
+        double commandedVelocity = motionSchedule == null
+                ? cfg.driftV : motionSchedule.velocityAt((int) tickInEpisode);
+        int motionSegmentIndex = motionSchedule == null
+                ? -1 : motionSchedule.segmentIndexAt((int) tickInEpisode);
         if (sheep != null) {
             try {
-                sheep.step();  // null for the NO_SHEEP control
+                sheep.step(commandedVelocity);  // null for the NO_SHEEP control
             } catch (IllegalStateException e) {
                 // Noise exhaustion or target retention is episode-fatal. Never
                 // replace a draw or respawn a missing target silently.
@@ -402,7 +414,7 @@ public final class EpisodeManager {
         long epochNanos = System.nanoTime();
         try {
             logger.write(cfg, tickInEpisode, epochNanos, sheep, geometricVisible,
-                    px, py, pz, yaw, pitch);
+                    px, py, pz, yaw, pitch, commandedVelocity, motionSegmentIndex);
         } catch (IOException e) {
             MineOcclude.LOG.error("[MineOcclude] state write failed; ending episode to avoid a gap", e);
             failureReason = "state write failed: " + e;
@@ -503,6 +515,13 @@ public final class EpisodeManager {
                 String finalization = "{\"episode_id\":" + cfg.episodeId
                         + ",\"state\":\"" + lifecycle.state() + "\""
                         + ",\"ticks\":" + tickInEpisode
+                        + ",\"trajectory_spec_id\":"
+                        + (cfg.trajectorySpecId == null ? "null"
+                           : "\"" + cfg.trajectorySpecId + "\"")
+                        + ",\"spec_hash\":"
+                        + (cfg.specHash == null ? "null" : "\"" + cfg.specHash + "\"")
+                        + ",\"motion_schedule_segments\":"
+                        + (motionSchedule == null ? "null" : motionSchedule.segmentCount())
                         + ",\"rng_source\":\"" + rngSource + "\""
                         + ",\"schedule_draws_consumed\":" + drawsConsumed
                         + ",\"failure_reason\":"
@@ -989,6 +1008,11 @@ public final class EpisodeManager {
         String json = "{\"episode_id\":" + cfg.episodeId
                 + ",\"layout_id\":\"" + cfg.layoutId + "\""
                 + ",\"scene\":\"" + cfg.scene + "\""
+                + ",\"trajectory_spec_id\":"
+                + (cfg.trajectorySpecId == null ? "null"
+                   : "\"" + cfg.trajectorySpecId + "\"")
+                + ",\"spec_hash\":"
+                + (cfg.specHash == null ? "null" : "\"" + cfg.specHash + "\"")
                 + ",\"seed\":" + cfg.seed
                 + ",\"v\":" + cfg.driftV
                 + ",\"q\":" + cfg.processQ
@@ -999,6 +1023,8 @@ public final class EpisodeManager {
                 + (sheep != null ? sheep.rngSource() : "no_target") + "\""
                 + ",\"schedule_draws\":"
                 + (noiseSchedule != null ? noiseSchedule.size() : "null")
+                + ",\"motion_schedule_segments\":"
+                + (motionSchedule != null ? motionSchedule.segmentCount() : "null")
                 + ",\"target_count_ok\":" + (targetCount == expected)
                 + ",\"lock_camera\":" + cfg.lockCamera
                 + ",\"impulse_tick\":" + cfg.impulseTick

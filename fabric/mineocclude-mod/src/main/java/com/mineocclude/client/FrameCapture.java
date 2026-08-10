@@ -60,6 +60,7 @@ public final class FrameCapture {
                 return t;
             });
     private final AtomicInteger pending = new AtomicInteger(0);
+    private final AtomicInteger writeErrors = new AtomicInteger(0);
 
     /** Call when a new episode starts recording: a stale-frame streak carried
      *  over from the previous episode must not be silently attributed to (or
@@ -67,6 +68,7 @@ public final class FrameCapture {
     public void resetStaleDetector() {
         lastSample = NO_SAMPLE;
         staleStreak = 0;
+        writeErrors.set(0);
     }
 
     /** @return true on success. */
@@ -157,6 +159,7 @@ public final class FrameCapture {
             try {
                 img.writeFile(file);
             } catch (IOException e) {
+                writeErrors.incrementAndGet();
                 MineOcclude.LOG.error("[MineOcclude] frame write failed: {}", file, e);
             } finally {
                 img.close();
@@ -170,5 +173,20 @@ public final class FrameCapture {
     public int pendingWrites() {
         return pending.get();
     }
-}
 
+    public int writeErrors() { return writeErrors.get(); }
+
+    /** Bounded authoritative wait for all queued PNG writes to finish. */
+    public boolean awaitDrained(long timeoutMillis) {
+        long deadline = System.nanoTime() + timeoutMillis * 1_000_000L;
+        while (pending.get() > 0 && System.nanoTime() < deadline) {
+            try {
+                Thread.sleep(10L);
+            } catch (InterruptedException interrupted) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+        }
+        return pending.get() == 0 && writeErrors.get() == 0;
+    }
+}

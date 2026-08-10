@@ -23,6 +23,7 @@ import java.nio.file.Path;
  *
  * Commands (op level 2):
  *   /mineocclude start <layoutId> <episodeId> <seed> <v> <q> <ticks>
+ *   /mineocclude startspec <layoutId> <episodeId> <seed> <q> <ticks> <startPos> <specId> <specHash>
  *   /mineocclude markergeomstatus
  *   /mineocclude observegeometry <receiptId>
  *   /mineocclude targetstatus
@@ -93,6 +94,25 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
                                 DoubleArgumentType.getDouble(ctx, "q"),
                                 IntegerArgumentType.getInteger(ctx, "ticks"),
                                 warmupTicks)))))))))
+                .then(CommandManager.literal("startspec")
+                    .then(CommandManager.argument("layoutId", StringArgumentType.word())
+                    .then(CommandManager.argument("episodeId", LongArgumentType.longArg(0))
+                    .then(CommandManager.argument("seed", LongArgumentType.longArg())
+                    .then(CommandManager.argument("q", DoubleArgumentType.doubleArg(0))
+                    .then(CommandManager.argument("ticks", IntegerArgumentType.integer(1))
+                    .then(CommandManager.argument("startPos", DoubleArgumentType.doubleArg())
+                    .then(CommandManager.argument("specId", StringArgumentType.word())
+                    .then(CommandManager.argument("specHash", StringArgumentType.word())
+                        .executes(ctx -> startSpecCmd(ctx.getSource(),
+                                StringArgumentType.getString(ctx, "layoutId"),
+                                LongArgumentType.getLong(ctx, "episodeId"),
+                                LongArgumentType.getLong(ctx, "seed"),
+                                DoubleArgumentType.getDouble(ctx, "q"),
+                                IntegerArgumentType.getInteger(ctx, "ticks"),
+                                DoubleArgumentType.getDouble(ctx, "startPos"),
+                                StringArgumentType.getString(ctx, "specId"),
+                                StringArgumentType.getString(ctx, "specHash"),
+                                warmupTicks)))))))))))
                 .then(CommandManager.literal("markergeom")
                     .then(CommandManager.argument("nearOrtho", IntegerArgumentType.integer())
                     .then(CommandManager.argument("farOrtho", IntegerArgumentType.integer())
@@ -242,6 +262,59 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
         } catch (Exception e) {
             MineOcclude.LOG.error("[MineOcclude] start failed", e);
             src.sendError(new LiteralText("start failed: " + e));
+            return 0;
+        }
+    }
+
+    /** Start one P1-locked campaign spec using explicit start and speed authority. */
+    private static int startSpecCmd(ServerCommandSource src, String layoutId, long episodeId,
+                                    long seed, double q, int ticks, double startPos,
+                                    String specId, String specHash, int warmup) {
+        MineOcclude.LOG.info("[MineOcclude/P2] /startspec requested: spec={} hash={} layout={} "
+                        + "ep={} seed={} q={} ticks={} start={} warmup={}",
+                specId, specHash, layoutId, episodeId, seed, q, ticks, startPos, warmup);
+        if (manager == null) {
+            src.sendError(new LiteralText("MineOcclude not ready"));
+            return 0;
+        }
+        if (!Layouts.has(layoutId)) {
+            src.sendError(new LiteralText("Unknown layout '" + layoutId + "'"));
+            return 0;
+        }
+        if (sceneMode != EpisodeConfig.Scene.NO_WALL) {
+            src.sendError(new LiteralText("startspec requires scene mode nowall"));
+            return 0;
+        }
+        Layouts.Layout layout = Layouts.get(layoutId);
+        if (!Double.isFinite(startPos)
+                || startPos < layout.laneMin || startPos > layout.laneMax) {
+            src.sendError(new LiteralText("startspec start position outside layout lane"));
+            return 0;
+        }
+        try {
+            Path schedulePath = src.getMinecraftServer().getRunDirectory().toPath()
+                    .resolve("mineocclude_motion_schedules")
+                    .resolve("episode_" + episodeId + ".json");
+            MotionSchedule schedule = MotionSchedule.load(
+                    schedulePath, specId, specHash, ticks);
+            EpisodeConfig cfg = new EpisodeConfig(
+                    layoutId, episodeId, seed,
+                    schedule.velocityAt(0), q, ticks,
+                    layout.laneMin, layout.laneMax, startPos,
+                    layout.wallSegMin, layout.wallSegMax,
+                    layout.wallOrthoConst, layout.wallOrthoOffset, layout.cameraDist,
+                    layout.laneY, layout.wallAxis, EpisodeConfig.Scene.NO_WALL, 0,
+                    0, -1, 0.0, true, specId, specHash);
+            if (!manager.start(cfg, ticks, warmup, schedule)) {
+                src.sendError(new LiteralText("startspec REFUSED for episode " + episodeId));
+                return 0;
+            }
+            src.sendFeedback(new LiteralText("Armed locked spec " + specId
+                    + " as episode " + episodeId), true);
+            return 1;
+        } catch (Exception error) {
+            MineOcclude.LOG.error("[MineOcclude/P2] startspec failed", error);
+            src.sendError(new LiteralText("startspec failed: " + error));
             return 0;
         }
     }
