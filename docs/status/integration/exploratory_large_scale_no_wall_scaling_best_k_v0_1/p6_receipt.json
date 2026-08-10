@@ -1,0 +1,114 @@
+{
+  "activation_manifest_sha256": "a57be180a9054336dbe36d2ddaddbec2859e21d5b6a42dae5b25b1c276e2d5bb",
+  "alpha_selection_performed": false,
+  "authorities_preserved": {
+    "p1": true,
+    "p4b_v2_campaign": true,
+    "p4c_accepted_cohort": true,
+    "p5_p5a_split": true
+  },
+  "blocker": null,
+  "checkpoint_hash_prompt_typo_resolved": true,
+  "durability_receipt_sha256": "5f85f3da70cd768ca0e13601f2877ef48d1a938ccdb6fd4146721bb721cdf585",
+  "execution": {
+    "gpu_extraction_seconds": 949.8828976780023,
+    "input_preparation_seconds": 75.487517364003,
+    "model_load_seconds": 138.83648772999732,
+    "s3_bytes_uploaded": 9971727632,
+    "s3_upload_seconds": 28.402120014998218,
+    "total_p6_machine_seconds": 1235.2713216340017,
+    "validation_seconds": 42.662298847000784
+  },
+  "fresh_activations_extracted": true,
+  "fresh_r2_computed": false,
+  "input_preparation_seconds": 75.487517364003,
+  "k_selection_performed": false,
+  "manual_per_trajectory_commands": 0,
+  "model_input_manifest_sha256": "b56ff435979d1d96c656707ab61a342220580accb39529d7410d65dadf776c1f",
+  "operator_intervention_count": 0,
+  "p5a_head": "f9823c63b9c316c3849a6d18ef664faaad8c24e5",
+  "p7_started": false,
+  "runtime": {
+    "cuda_version": "12.6",
+    "extraction_elapsed_seconds": 949.8828976780023,
+    "forward_window_count": 480,
+    "gpu_model": "NVIDIA L4",
+    "model_load_seconds": 138.83648772999732,
+    "peak_cuda_allocated_bytes": 4779002880,
+    "status": "COMPLETE",
+    "torch_version": "2.6.0+cu126",
+    "total_elapsed_seconds": 1088.7193854079997,
+    "trajectory_retry_count": 0
+  },
+  "safe_for_p7": true,
+  "schema_version": "large-scale-no-wall-p6-receipt-v0.1",
+  "scope": {
+    "activation_rows": 7200,
+    "cohort": "V2_ACCEPTED_REPAIRED_PRIMARY",
+    "frames_per_trajectory": 60,
+    "hidden_width": 2048,
+    "layer": 4,
+    "teacher_forcing": true,
+    "token_count": 336,
+    "token_grid": [
+      14,
+      24
+    ],
+    "trajectory_count": 120,
+    "v1_rows_extracted": 0,
+    "window_schedule": [
+      [
+        0,
+        16
+      ],
+      [
+        16,
+        32
+      ],
+      [
+        32,
+        48
+      ],
+      [
+        48,
+        60
+      ]
+    ]
+  },
+  "status": "PASS_AUTHORITATIVE_V2_LAYER4_ACTIVATIONS_DURABLE",
+  "target_null_executed": false,
+  "test_rows_extracted": true,
+  "test_rows_used_for_selection": false,
+  "validation_commands": {
+    "format_status": "black 2 files unchanged after formatting",
+    "git_diff_check": "PASS",
+    "py_compile": "PASS: 2 changed Python files",
+    "pytest": "PASS: 5 focused P6 tests"
+  },
+  "token_ranking_performed": false,
+  "validation": {
+    "activation_rows": 7200,
+    "duplicate_activation_rows": 0,
+    "missing_activation_rows": 0,
+    "nonfinite_value_count": 0,
+    "pooled_bytes": 58997760,
+    "pooled_equivalence_max_abs_diff": 0.0,
+    "pooled_equivalence_mean_abs_diff": 0.0,
+    "pooled_equivalence_pass": true,
+    "pooled_equivalence_tolerance": 0.001,
+    "runtime": {
+      "cuda_version": "12.6",
+      "extraction_elapsed_seconds": 949.8828976780023,
+      "forward_window_count": 480,
+      "gpu_model": "NVIDIA L4",
+      "model_load_seconds": 138.83648772999732,
+      "peak_cuda_allocated_bytes": 4779002880,
+      "status": "COMPLETE",
+      "torch_version": "2.6.0+cu126",
+      "total_elapsed_seconds": 1088.7193854079997,
+      "trajectory_retry_count": 0
+    },
+    "unpooled_bytes": 9909058560,
+    "validation_seconds": 42.662298847000784
+  }
+}
