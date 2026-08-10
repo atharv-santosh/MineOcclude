@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Execute the P1-locked large-scale no-wall capture campaign.
+"""Execute a locked large-scale no-wall capture campaign.
 
 The P2 path remains Stage-A-only.  The P3 path resumes the same immutable
 campaign and runner through the locked B/C/D durability gates.  Both paths
 validate raw capture and profile authority without model outcomes, append one
-fsync'd hash-chain ledger, and durably copy accepted attempts to S3.
+fsync'd hash-chain ledger, and durably copy accepted attempts to S3.  P4B adds
+successor-aware lock and schedule validation without changing live motion code.
 """
 
 from __future__ import annotations
@@ -38,11 +39,14 @@ from mineocclude.data.noise_schedule import (  # noqa: E402
     serialize_schedule,
 )
 
-CONTROLLER_VERSION = "large-scale-no-wall-campaign-orchestrator-v0.2"
+CONTROLLER_VERSION = "large-scale-no-wall-campaign-orchestrator-v0.3"
 P1_HEAD = "ef6469ab68ea8edf572ec4778d2d938b61a07f59"
 PREDECESSOR_SHA = "18c8dd0de0987d3065206a5fd7df452badb1338b"
 FROZEN_MVP_SHA = "bb22364cbc4f65b788a56b60e7d6503e6226df7b"
 CAMPAIGN_SHA256 = "1605f4738840ea531e73fdcee19536d55652a1a05ddef704304adcb1bc41cdd6"
+REPAIRED_CAMPAIGN_SHA256 = (
+    "adb1eb0611d9cf05d221db6d2040eb65f50a0d5fb4dab32f6bdd3d585484ef9f"
+)
 STUDY_SHA256 = "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502"
 PACKAGE = (
     ROOT / "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1"
@@ -146,12 +150,26 @@ class CampaignAuthority:
     def __init__(self, campaign_path: Path):
         self.path = campaign_path.resolve()
         self.package = self.path.parent
-        if sha256_file(self.path) != CAMPAIGN_SHA256:
+        expected_campaign_hashes = {
+            "capture_campaign.json": CAMPAIGN_SHA256,
+            "capture_campaign_v2.json": REPAIRED_CAMPAIGN_SHA256,
+        }
+        expected_campaign_hash = expected_campaign_hashes.get(self.path.name)
+        if expected_campaign_hash is None:
+            raise CampaignError(
+                "PRECHECK_FAILED", f"unsupported campaign authority: {self.path.name}"
+            )
+        if sha256_file(self.path) != expected_campaign_hash:
             raise CampaignError("PRECHECK_FAILED", "capture campaign hash changed")
         study = self.package / "study_design.json"
         if sha256_file(study) != STUDY_SHA256:
             raise CampaignError("PRECHECK_FAILED", "study design hash changed")
-        self._verify_lock(self.path, self.package / "capture_campaign.lock.json")
+        lock_name = (
+            "capture_campaign_v2.lock.json"
+            if self.path.name == "capture_campaign_v2.json"
+            else "capture_campaign.lock.json"
+        )
+        self._verify_lock(self.path, self.package / lock_name)
         self._verify_lock(study, self.package / "study_design.lock.json")
         self.campaign = read_json(self.path)
         if self.campaign.get("campaign_shape", {}).get("trajectory_spec_count") != 120:
@@ -326,6 +344,39 @@ def validate_profile_semantics(spec: dict[str, Any]) -> None:
         float(row["signed_speed_blocks_per_second"])
         for row in spec["exact_speed_schedule"]
     ]
+    if spec.get("spec_version") == "large-scale-no-wall-trajectory-spec-v0.2":
+        allowed_families = {
+            "LONG_DWELL_RESTART",
+            "MULTI_DWELL_PULSE",
+            "DELAYED_BOUNDED_BURST",
+            "ASYMMETRIC_RESTART",
+            "TERMINAL_HOLD_RESTART",
+        }
+        direction_sign = 1.0 if spec["direction"] == "LEFT_TO_RIGHT" else -1.0
+        nonzero = [speed for speed in speeds if speed != 0.0]
+        valid = (
+            spec["profile_family"] in allowed_families
+            and re.fullmatch(
+                r"MONOTONIC_MULTI_DWELL_SHAPE_(0[1-9]|1[0-9]|20)",
+                spec.get("trajectory_shape_class", ""),
+            )
+            is not None
+            and spec.get("direction_semantics") == "NONZERO_COMMANDED_VELOCITY_SIGN"
+            and spec.get("commanded_direction_reversal_count") == 0
+            and len(speeds) >= 5
+            and any(speed == 0.0 for speed in speeds)
+            and bool(nonzero)
+            and all(math.copysign(1.0, speed) == direction_sign for speed in nonzero)
+            and all(abs(speed) in {0.0, 1.0, 1.5, 2.0} for speed in speeds)
+        )
+        if not valid:
+            raise CampaignError(
+                "MOTION_SCHEDULE_MISMATCH", "invalid v0.2 multi-dwell semantics"
+            )
+        for tick in range(EXPECTED_F):
+            expected_speed(spec, tick)
+        return
+
     family = spec["profile_family"]
     predicates = {
         "EARLY_CONSTANT": len(speeds) == 1 and speeds[0] != 0,

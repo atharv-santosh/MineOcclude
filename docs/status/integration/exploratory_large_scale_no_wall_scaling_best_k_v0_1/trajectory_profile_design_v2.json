@@ -1,0 +1,1401 @@
+{
+  "artifact_id": "large-scale-no-wall-trajectory-profile-design-v0.2",
+  "branch": "exploration/large-scale-no-wall-scaling-best-k-v0-1",
+  "candidate_search": {
+    "allowed_inputs": "frozen target schedules, layout lanes, starts, PCG64 process-noise schedules, and simulated target-profile geometry",
+    "candidate_limit": 3000,
+    "forbidden_inputs_used": [],
+    "fully_eligible_count": 1648,
+    "generator": {
+      "allowed_unsigned_speeds_blocks_per_second": [
+        0.0,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "breakpoint_population_ticks": [
+        3,
+        57
+      ],
+      "candidate_generator_seed": 1346650701,
+      "candidate_id_range": [
+        0,
+        2999
+      ],
+      "commanded_displacement_range_blocks_inclusive": [
+        2.0,
+        4.0
+      ],
+      "dwell_tick_range_inclusive": [
+        10,
+        38
+      ],
+      "minimum_compressed_segments": 5,
+      "minimum_realized_target_range_blocks": 1.3,
+      "minimum_realized_target_variance_blocks_squared": 0.1,
+      "planned_clamps_allowed": 0,
+      "raw_segment_count_range_half_open": [
+        7,
+        15
+      ],
+      "speed_probabilities": [
+        0.34,
+        0.22,
+        0.25,
+        0.19
+      ]
+    },
+    "outcome_blind": true,
+    "schedule_legal_count": 1814,
+    "selected_candidate_ids": [
+      1196,
+      241,
+      2904,
+      757,
+      2782,
+      133,
+      834,
+      1219,
+      2178,
+      325,
+      62,
+      1189,
+      2210,
+      747,
+      256,
+      2191,
+      1162,
+      157,
+      296,
+      2635
+    ],
+    "selection_algorithm": "Greedily add one six-layout shape group per round, alternating candidate parity for exact direction balance; lexicographically minimize command-only high-pair count, realized high-pair count, command mean abs-r, realized mean abs-r, then candidate ID.",
+    "selection_trace": [
+      {
+        "candidate_id": 1196,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 0,
+        "required_candidate_parity": 0,
+        "selection_index": 0
+      },
+      {
+        "candidate_id": 241,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 0,
+        "required_candidate_parity": 1,
+        "selection_index": 1
+      },
+      {
+        "candidate_id": 2904,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 0,
+        "required_candidate_parity": 0,
+        "selection_index": 2
+      },
+      {
+        "candidate_id": 757,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 0,
+        "required_candidate_parity": 1,
+        "selection_index": 3
+      },
+      {
+        "candidate_id": 2782,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 0,
+        "required_candidate_parity": 0,
+        "selection_index": 4
+      },
+      {
+        "candidate_id": 133,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 0,
+        "required_candidate_parity": 1,
+        "selection_index": 5
+      },
+      {
+        "candidate_id": 834,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 0,
+        "required_candidate_parity": 0,
+        "selection_index": 6
+      },
+      {
+        "candidate_id": 1219,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 2,
+        "required_candidate_parity": 1,
+        "selection_index": 7
+      },
+      {
+        "candidate_id": 2178,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 6,
+        "required_candidate_parity": 0,
+        "selection_index": 8
+      },
+      {
+        "candidate_id": 325,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 11,
+        "required_candidate_parity": 1,
+        "selection_index": 9
+      },
+      {
+        "candidate_id": 62,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 17,
+        "required_candidate_parity": 0,
+        "selection_index": 10
+      },
+      {
+        "candidate_id": 1189,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 22,
+        "required_candidate_parity": 1,
+        "selection_index": 11
+      },
+      {
+        "candidate_id": 2210,
+        "command_shape_high_pair_count_at_selection": 0,
+        "realized_high_pair_count_at_selection": 44,
+        "required_candidate_parity": 0,
+        "selection_index": 12
+      },
+      {
+        "candidate_id": 747,
+        "command_shape_high_pair_count_at_selection": 1,
+        "realized_high_pair_count_at_selection": 52,
+        "required_candidate_parity": 1,
+        "selection_index": 13
+      },
+      {
+        "candidate_id": 256,
+        "command_shape_high_pair_count_at_selection": 2,
+        "realized_high_pair_count_at_selection": 56,
+        "required_candidate_parity": 0,
+        "selection_index": 14
+      },
+      {
+        "candidate_id": 2191,
+        "command_shape_high_pair_count_at_selection": 3,
+        "realized_high_pair_count_at_selection": 67,
+        "required_candidate_parity": 1,
+        "selection_index": 15
+      },
+      {
+        "candidate_id": 1162,
+        "command_shape_high_pair_count_at_selection": 4,
+        "realized_high_pair_count_at_selection": 77,
+        "required_candidate_parity": 0,
+        "selection_index": 16
+      },
+      {
+        "candidate_id": 157,
+        "command_shape_high_pair_count_at_selection": 5,
+        "realized_high_pair_count_at_selection": 91,
+        "required_candidate_parity": 1,
+        "selection_index": 17
+      },
+      {
+        "candidate_id": 296,
+        "command_shape_high_pair_count_at_selection": 6,
+        "realized_high_pair_count_at_selection": 108,
+        "required_candidate_parity": 0,
+        "selection_index": 18
+      },
+      {
+        "candidate_id": 2635,
+        "command_shape_high_pair_count_at_selection": 7,
+        "realized_high_pair_count_at_selection": 130,
+        "required_candidate_parity": 1,
+        "selection_index": 19
+      }
+    ]
+  },
+  "capture_campaign_v2_sha256": "adb1eb0611d9cf05d221db6d2040eb65f50a0d5fb4dab32f6bdd3d585484ef9f",
+  "frozen_at": "2026-08-10T07:45:00Z",
+  "monotonic_first_decision": {
+    "attempted_first": true,
+    "controlled_reversals_used": false,
+    "direction_definition": "LEFT_TO_RIGHT or RIGHT_TO_LEFT is the common sign of every nonzero commanded velocity; process-noise jitter has its unchanged v0.1 meaning.",
+    "direction_field_meaning_changed": false,
+    "justification": "Twenty multi-dwell monotonic command shapes clear both the frozen 0.20 gate and 0.10 safety target; reversal would add needless task and grouping complexity.",
+    "result": "SUFFICIENT_WITH_STRONG_MARGIN"
+  },
+  "motion_capability": {
+    "arbitrary_finite_signed_segment_velocities": true,
+    "basis": "MotionSchedule.load accepts any nonempty number of finite signed segments with complete gap-free tick coverage; velocityAt supplies each command and SheepController integrates command*0.05 + frozen noise before lane clamp.",
+    "controlled_direction_reversals": true,
+    "more_than_one_speed_change": true,
+    "multiple_pauses": true,
+    "multiple_velocity_segments": true,
+    "runtime_change_description": "NONE",
+    "runtime_change_required": false,
+    "zero_velocity_dwells": true
+  },
+  "old_library_diagnosis": {
+    "failure_reproduced_offline": true,
+    "high_pair_result": "3644/7140 = 0.5103641456582633",
+    "structural_cause": [
+      "mostly monotonic ramp-like cumulative profiles",
+      "too few breakpoints and dwell intervals",
+      "shared transition timing and affine/time-warp similarity",
+      "insufficient temporal support diversity for Pearson geometry"
+    ]
+  },
+  "p4a_head": "b0620eb9a22bc48979b30b9abf25c19aad523a8c",
+  "phase": "P4B_OFFLINE_TRAJECTORY_SHAPE_REDESIGN_AND_CAMPAIGN_FREEZE",
+  "profile_audit_summary": {
+    "all_component_gates_pass": true,
+    "all_pairs": {
+      "high_abs_r_ge_0_95_count": 130,
+      "high_abs_r_ge_0_95_proportion": 0.018207282913165267,
+      "maximum_abs_r": 0.985951509223109,
+      "mean_abs_r": 0.6836832395566895,
+      "mean_r": -0.007503763015280921,
+      "median_abs_r": 0.749105741996241,
+      "p95_abs_r": 0.9300486193256641,
+      "pair_count": 7140
+    },
+    "command_only_all_pairs_auxiliary": {
+      "high_abs_r_ge_0_95_count": 552,
+      "high_abs_r_ge_0_95_proportion": 0.0773109243697479,
+      "pair_count": 7140,
+      "purpose": "Shows that frozen commanded temporal geometry, without process noise, independently clears the 0.10 design target."
+    },
+    "overall_time_position_correlation": -0.003921627030876186
+  },
+  "protected_authority_sha256": {
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/capture_campaign.json": "1605f4738840ea531e73fdcee19536d55652a1a05ddef704304adcb1bc41cdd6",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/capture_campaign.lock.json": "479471d468598d93d861767ffa83b3e0bd1c401dbd3310cfcb509ecf7ced22aa",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p4_profile_statistics.json": "3d87201a22d6fea88d563aefd6403765345c264e59105e2c567d110cf2c8844b",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p4_receipt.json": "91642203ff2b4d4318d953e1d97b44ccf82049c257fe4d2e6025fd31519a942e",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p4_retry_audit.json": "cafa60150998754917190a6377bc42427bd54805f868e987c6df050b16c524f8",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p4a_profile_gate_diagnosis.json": "dd59a211a8fa50bcbfb8aea7afac369bc452918531f8439f4fba8de01c2f306f",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p4a_receipt.json": "6e9b4edafb8df5da4a517bcf930dfdbb69998cd80a4cbc5708f5ef45e4b326f3",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p4a_signed_similarity_by_direction.png": "b296d3afa871cb82aa5e2896f03210ea62c530dcbe43e989f66291a385738aa6",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/pre_extraction_profile_audit.json": "59f91327c97825d0dcc96f888ec64928e62f079cf4d8812f6ea48ee03a99a993",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/profile_similarity_distribution.png": "dfd7290ab1fae597cec96f313f78d64e4081de28406b15427ea6bcd34eab0db9",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/study_design.json": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/study_design.lock.json": "05b337e81ffea6c6d3bb3f92ca76b7774c980f9c462565f5c50a71ad9f629f41",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/time_position_association.png": "be6c625e09346b7213f980c62d24eb2c97d52e3229527502ec2918099cf44745",
+    "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java": "984c3863c7b2cf1e5fdc606924fd39104ca76829cb7270a2d3133b0ced6fcf75",
+    "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MotionSchedule.java": "a51dfa021b23c2a17606c487f54891e03956723b28f2d5aa1ef19c2445015845",
+    "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/SheepController.java": "fb803f1fea628a29ae6fda40fb1936d02ff0bd329d492f3ea16bdc6e4d02753a"
+  },
+  "provenance": {
+    "fresh_activations_extracted_at_redesign": 0,
+    "fresh_r2_computed_at_redesign": false,
+    "model_outcomes_available_at_redesign": false,
+    "old_capture_reuse_in_primary": false,
+    "original_campaign_status": "FAILED_PRE_EXTRACTION_PROFILE_DIVERSITY_GATE",
+    "original_p4_result_preserved": true,
+    "p4a_diagnosis": "GENUINE_PROFILE_DIVERSITY_FAILURE",
+    "repaired_campaign_status": "PROSPECTIVE_PRE_EXTRACTION_REDESIGN",
+    "train_test_split_created_at_redesign": false
+  },
+  "schema_version": "large-scale-no-wall-trajectory-profile-design-v0.2",
+  "scope_control": {
+    "activations_extracted": 0,
+    "minecraft_started": false,
+    "mineworld_run": false,
+    "new_trajectories_captured": 0,
+    "p5_started": false,
+    "r2_computed": false,
+    "runtime_java_changed": false,
+    "train_test_split_created": false
+  },
+  "simulator": {
+    "maximum_absolute_error_blocks": 0.0,
+    "old_high_abs_r_ge_0_95_count": 3644,
+    "old_high_abs_r_ge_0_95_proportion": 0.5103641456582633,
+    "old_pair_count": 7140,
+    "old_profile_failure_reproduced": true,
+    "row_count": 7200,
+    "semantics": "For tick 0..59: x_next = clamp(x_previous + signed_speed_blocks_per_second * 0.05 + frozen_noise_draw).",
+    "status": "EXACT",
+    "tolerance_blocks": 1e-12,
+    "trajectory_count": 120
+  },
+  "status": "FROZEN_PROSPECTIVE_PRE_EXTRACTION_REDESIGN",
+  "trajectory_taxonomy": {
+    "each_shape_class_direction_counts": {
+      "LEFT_TO_RIGHT": 3,
+      "RIGHT_TO_LEFT": 3
+    },
+    "each_shape_class_per_layout": 1,
+    "primary_shape_taxonomy": "20 exact monotonic multi-dwell shape classes",
+    "reporting_families": [
+      "LONG_DWELL_RESTART",
+      "MULTI_DWELL_PULSE",
+      "DELAYED_BOUNDED_BURST",
+      "ASYMMETRIC_RESTART",
+      "TERMINAL_HOLD_RESTART"
+    ],
+    "reporting_family_role": "Balanced four-shape strata retain the frozen future split's profile/repeat scoring fields; they are not the failed v0.1 five motion primitives.",
+    "shape_class_count": 20,
+    "shape_classes": [
+      {
+        "candidate_id": 1196,
+        "commanded_displacement_blocks": 2.45,
+        "dwell_segment_count": 1,
+        "dwell_tick_count": 30,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.1621265759005195,
+          "minimum_across_layouts": 1.584012320788446
+        },
+        "reporting_family": "LONG_DWELL_RESTART",
+        "segment_count": 6,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 11
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 11,
+            "stop_model_frame_idx_exclusive": 13
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 13,
+            "stop_model_frame_idx_exclusive": 16
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 16,
+            "stop_model_frame_idx_exclusive": 20
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 20,
+            "stop_model_frame_idx_exclusive": 50
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 50,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 241,
+        "commanded_displacement_blocks": 2.075,
+        "dwell_segment_count": 3,
+        "dwell_tick_count": 32,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.151967272138457,
+          "minimum_across_layouts": 1.3141954949029309
+        },
+        "reporting_family": "LONG_DWELL_RESTART",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 6
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 6,
+            "stop_model_frame_idx_exclusive": 13
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 13,
+            "stop_model_frame_idx_exclusive": 16
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 16,
+            "stop_model_frame_idx_exclusive": 37
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 37,
+            "stop_model_frame_idx_exclusive": 41
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 41,
+            "stop_model_frame_idx_exclusive": 43
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 43,
+            "stop_model_frame_idx_exclusive": 56
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 56,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 2904,
+        "commanded_displacement_blocks": 2.225,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 23,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.4092584632359397,
+          "minimum_across_layouts": 1.711853314494956
+        },
+        "reporting_family": "LONG_DWELL_RESTART",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 3
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 3,
+            "stop_model_frame_idx_exclusive": 6
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 6,
+            "stop_model_frame_idx_exclusive": 9
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 9,
+            "stop_model_frame_idx_exclusive": 12
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 12,
+            "stop_model_frame_idx_exclusive": 13
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 13,
+            "stop_model_frame_idx_exclusive": 35
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 35,
+            "stop_model_frame_idx_exclusive": 55
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 55,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 757,
+        "commanded_displacement_blocks": 2.25,
+        "dwell_segment_count": 3,
+        "dwell_tick_count": 35,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.7771787459676274,
+          "minimum_across_layouts": 2.0912661643113153
+        },
+        "reporting_family": "LONG_DWELL_RESTART",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 6
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 6,
+            "stop_model_frame_idx_exclusive": 10
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 10,
+            "stop_model_frame_idx_exclusive": 11
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 11,
+            "stop_model_frame_idx_exclusive": 12
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 12,
+            "stop_model_frame_idx_exclusive": 13
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 13,
+            "stop_model_frame_idx_exclusive": 43
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 43,
+            "stop_model_frame_idx_exclusive": 46
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 46,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 2782,
+        "commanded_displacement_blocks": 2.125,
+        "dwell_segment_count": 3,
+        "dwell_tick_count": 36,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.982075800464198,
+          "minimum_across_layouts": 1.5085362352721194
+        },
+        "reporting_family": "MULTI_DWELL_PULSE",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 3
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 3,
+            "stop_model_frame_idx_exclusive": 14
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 14,
+            "stop_model_frame_idx_exclusive": 34
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 34,
+            "stop_model_frame_idx_exclusive": 35
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 35,
+            "stop_model_frame_idx_exclusive": 38
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 38,
+            "stop_model_frame_idx_exclusive": 43
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 43,
+            "stop_model_frame_idx_exclusive": 56
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 56,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 133,
+        "commanded_displacement_blocks": 2.625,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 19,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.26807132153254,
+          "minimum_across_layouts": 1.5240629980104812
+        },
+        "reporting_family": "MULTI_DWELL_PULSE",
+        "segment_count": 7,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 5
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 5,
+            "stop_model_frame_idx_exclusive": 17
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 17,
+            "stop_model_frame_idx_exclusive": 31
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 31,
+            "stop_model_frame_idx_exclusive": 33
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 33,
+            "stop_model_frame_idx_exclusive": 47
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 47,
+            "stop_model_frame_idx_exclusive": 52
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 52,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 834,
+        "commanded_displacement_blocks": 2.075,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 33,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.487948126625504,
+          "minimum_across_layouts": 1.4885569363815954
+        },
+        "reporting_family": "MULTI_DWELL_PULSE",
+        "segment_count": 7,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 3
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 3,
+            "stop_model_frame_idx_exclusive": 7
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 7,
+            "stop_model_frame_idx_exclusive": 15
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 15,
+            "stop_model_frame_idx_exclusive": 18
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 18,
+            "stop_model_frame_idx_exclusive": 23
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 23,
+            "stop_model_frame_idx_exclusive": 48
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 48,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 1219,
+        "commanded_displacement_blocks": 2.075,
+        "dwell_segment_count": 3,
+        "dwell_tick_count": 35,
+        "movement_onset_tick": 10,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.5191139293303895,
+          "minimum_across_layouts": 1.3656532754966166
+        },
+        "reporting_family": "MULTI_DWELL_PULSE",
+        "segment_count": 6,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 10
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 10,
+            "stop_model_frame_idx_exclusive": 15
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 15,
+            "stop_model_frame_idx_exclusive": 20
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 20,
+            "stop_model_frame_idx_exclusive": 26
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 26,
+            "stop_model_frame_idx_exclusive": 46
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 46,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 2178,
+        "commanded_displacement_blocks": 2.375,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 29,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.451221411480337,
+          "minimum_across_layouts": 1.8751663138075223
+        },
+        "reporting_family": "DELAYED_BOUNDED_BURST",
+        "segment_count": 6,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 17
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 17,
+            "stop_model_frame_idx_exclusive": 45
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 45,
+            "stop_model_frame_idx_exclusive": 52
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 52,
+            "stop_model_frame_idx_exclusive": 53
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 53,
+            "stop_model_frame_idx_exclusive": 55
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 55,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 325,
+        "commanded_displacement_blocks": 2.45,
+        "dwell_segment_count": 3,
+        "dwell_tick_count": 33,
+        "movement_onset_tick": 24,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.8878235735435918,
+          "minimum_across_layouts": 1.9332037967150502
+        },
+        "reporting_family": "DELAYED_BOUNDED_BURST",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 24
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 24,
+            "stop_model_frame_idx_exclusive": 25
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 25,
+            "stop_model_frame_idx_exclusive": 27
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 27,
+            "stop_model_frame_idx_exclusive": 38
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 38,
+            "stop_model_frame_idx_exclusive": 39
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 39,
+            "stop_model_frame_idx_exclusive": 46
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 46,
+            "stop_model_frame_idx_exclusive": 54
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 54,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 62,
+        "commanded_displacement_blocks": 2.125,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 33,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.4645326812245822,
+          "minimum_across_layouts": 1.5641043230708096
+        },
+        "reporting_family": "DELAYED_BOUNDED_BURST",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 9
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 9,
+            "stop_model_frame_idx_exclusive": 18
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 18,
+            "stop_model_frame_idx_exclusive": 20
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 20,
+            "stop_model_frame_idx_exclusive": 21
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 21,
+            "stop_model_frame_idx_exclusive": 26
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 26,
+            "stop_model_frame_idx_exclusive": 37
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 37,
+            "stop_model_frame_idx_exclusive": 38
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 38,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 1189,
+        "commanded_displacement_blocks": 2.225,
+        "dwell_segment_count": 3,
+        "dwell_tick_count": 33,
+        "movement_onset_tick": 16,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.9365748943971255,
+          "minimum_across_layouts": 1.7502348648699355
+        },
+        "reporting_family": "DELAYED_BOUNDED_BURST",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 16
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 16,
+            "stop_model_frame_idx_exclusive": 20
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 20,
+            "stop_model_frame_idx_exclusive": 21
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 21,
+            "stop_model_frame_idx_exclusive": 31
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 31,
+            "stop_model_frame_idx_exclusive": 45
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 45,
+            "stop_model_frame_idx_exclusive": 52
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 52,
+            "stop_model_frame_idx_exclusive": 57
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 57,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 2210,
+        "commanded_displacement_blocks": 3.2750000000000004,
+        "dwell_segment_count": 4,
+        "dwell_tick_count": 22,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 4.511460286622532,
+          "minimum_across_layouts": 2.1595743167092474
+        },
+        "reporting_family": "ASYMMETRIC_RESTART",
+        "segment_count": 11,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 11
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 11,
+            "stop_model_frame_idx_exclusive": 21
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 21,
+            "stop_model_frame_idx_exclusive": 24
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 24,
+            "stop_model_frame_idx_exclusive": 33
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 33,
+            "stop_model_frame_idx_exclusive": 34
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 34,
+            "stop_model_frame_idx_exclusive": 39
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 39,
+            "stop_model_frame_idx_exclusive": 40
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 40,
+            "stop_model_frame_idx_exclusive": 42
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 42,
+            "stop_model_frame_idx_exclusive": 47
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 47,
+            "stop_model_frame_idx_exclusive": 56
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 56,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 747,
+        "commanded_displacement_blocks": 2.85,
+        "dwell_segment_count": 1,
+        "dwell_tick_count": 29,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 4.398392140322778,
+          "minimum_across_layouts": 1.5759106497249507
+        },
+        "reporting_family": "ASYMMETRIC_RESTART",
+        "segment_count": 5,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 14
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 14,
+            "stop_model_frame_idx_exclusive": 16
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 16,
+            "stop_model_frame_idx_exclusive": 22
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 22,
+            "stop_model_frame_idx_exclusive": 51
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 51,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 256,
+        "commanded_displacement_blocks": 2.1750000000000003,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 32,
+        "movement_onset_tick": 16,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.6687362750841794,
+          "minimum_across_layouts": 1.7043781162640368
+        },
+        "reporting_family": "ASYMMETRIC_RESTART",
+        "segment_count": 7,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 16
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 16,
+            "stop_model_frame_idx_exclusive": 25
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 25,
+            "stop_model_frame_idx_exclusive": 26
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 26,
+            "stop_model_frame_idx_exclusive": 42
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 42,
+            "stop_model_frame_idx_exclusive": 47
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 47,
+            "stop_model_frame_idx_exclusive": 48
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 48,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 2191,
+        "commanded_displacement_blocks": 2.15,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 33,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.2246412019800883,
+          "minimum_across_layouts": 1.6451089318569112
+        },
+        "reporting_family": "ASYMMETRIC_RESTART",
+        "segment_count": 5,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 10
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 10,
+            "stop_model_frame_idx_exclusive": 35
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 35,
+            "stop_model_frame_idx_exclusive": 41
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 41,
+            "stop_model_frame_idx_exclusive": 49
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 49,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 1162,
+        "commanded_displacement_blocks": 2.275,
+        "dwell_segment_count": 1,
+        "dwell_tick_count": 30,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 4.26613453445815,
+          "minimum_across_layouts": 1.6330123316200194
+        },
+        "reporting_family": "TERMINAL_HOLD_RESTART",
+        "segment_count": 6,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 4
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 4,
+            "stop_model_frame_idx_exclusive": 34
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 34,
+            "stop_model_frame_idx_exclusive": 36
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 36,
+            "stop_model_frame_idx_exclusive": 51
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 51,
+            "stop_model_frame_idx_exclusive": 54
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 54,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 157,
+        "commanded_displacement_blocks": 2.6,
+        "dwell_segment_count": 4,
+        "dwell_tick_count": 30,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 3.2827975618775804,
+          "minimum_across_layouts": 2.005229196649545
+        },
+        "reporting_family": "TERMINAL_HOLD_RESTART",
+        "segment_count": 11,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 3
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 3,
+            "stop_model_frame_idx_exclusive": 5
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 5,
+            "stop_model_frame_idx_exclusive": 8
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 8,
+            "stop_model_frame_idx_exclusive": 12
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 12,
+            "stop_model_frame_idx_exclusive": 21
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 21,
+            "stop_model_frame_idx_exclusive": 35
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 35,
+            "stop_model_frame_idx_exclusive": 36
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 36,
+            "stop_model_frame_idx_exclusive": 39
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 39,
+            "stop_model_frame_idx_exclusive": 49
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 49,
+            "stop_model_frame_idx_exclusive": 50
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 50,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 296,
+        "commanded_displacement_blocks": 2.0,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 33,
+        "movement_onset_tick": 7,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.7603647687993043,
+          "minimum_across_layouts": 1.5133002631235648
+        },
+        "reporting_family": "TERMINAL_HOLD_RESTART",
+        "segment_count": 8,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 7
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 7,
+            "stop_model_frame_idx_exclusive": 15
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 15,
+            "stop_model_frame_idx_exclusive": 19
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 19,
+            "stop_model_frame_idx_exclusive": 29
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 29,
+            "stop_model_frame_idx_exclusive": 31
+          },
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 31,
+            "stop_model_frame_idx_exclusive": 33
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 33,
+            "stop_model_frame_idx_exclusive": 34
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 34,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      },
+      {
+        "candidate_id": 2635,
+        "commanded_displacement_blocks": 2.125,
+        "dwell_segment_count": 2,
+        "dwell_tick_count": 29,
+        "movement_onset_tick": 0,
+        "realized_target_range_blocks": {
+          "maximum_across_layouts": 2.930854389851675,
+          "minimum_across_layouts": 1.418896670369326
+        },
+        "reporting_family": "TERMINAL_HOLD_RESTART",
+        "segment_count": 7,
+        "shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+        "unsigned_speed_schedule": [
+          {
+            "signed_speed_blocks_per_second": 1.5,
+            "start_model_frame_idx": 0,
+            "stop_model_frame_idx_exclusive": 9
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 9,
+            "stop_model_frame_idx_exclusive": 25
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 25,
+            "stop_model_frame_idx_exclusive": 31
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 31,
+            "stop_model_frame_idx_exclusive": 35
+          },
+          {
+            "signed_speed_blocks_per_second": 1.0,
+            "start_model_frame_idx": 35,
+            "stop_model_frame_idx_exclusive": 44
+          },
+          {
+            "signed_speed_blocks_per_second": 0.0,
+            "start_model_frame_idx": 44,
+            "stop_model_frame_idx_exclusive": 57
+          },
+          {
+            "signed_speed_blocks_per_second": 2.0,
+            "start_model_frame_idx": 57,
+            "stop_model_frame_idx_exclusive": 60
+          }
+        ]
+      }
+    ]
+  }
+}
