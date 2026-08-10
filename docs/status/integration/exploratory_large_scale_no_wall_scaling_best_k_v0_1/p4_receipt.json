@@ -1,0 +1,33 @@
+{
+  "accepted_cohort_lock_count": 0,
+  "accepted_cohort_lock_created": false,
+  "artifact_paths": [
+    "pre_extraction_profile_audit.json",
+    "p4_profile_statistics.json",
+    "p4_retry_audit.json",
+    "time_position_association.png",
+    "profile_similarity_distribution.png",
+    "p4_receipt.json"
+  ],
+  "blocker": {
+    "bounded_same_spec_recollection_can_repair": false,
+    "maximum_allowed_fraction": 0.2,
+    "observed_high_similarity_count": 3644,
+    "observed_high_similarity_fraction": 0.5103641456582633,
+    "pair_count": 7140,
+    "reason": "The frozen target profiles are deterministic functions of each locked spec/seed/schedule, so same-spec recollection reproduces the profile. Passing would require a protocol/spec or threshold change forbidden in P4.",
+    "reason_code": "PROFILE_SIMILARITY_GATE_FAILED",
+    "repair_spec_ids": []
+  },
+  "fresh_activations_extracted": 0,
+  "fresh_r2_computed": false,
+  "p3_head": "222c41637381b208b2abd96776d376b428383b60",
+  "p5_started": false,
+  "repair_required": "FROZEN_PROTOCOL_LEVEL_PROFILE_DIVERSITY_REDESIGN",
+  "repair_spec_ids": [],
+  "safe_for_p5": false,
+  "schema_version": "large-scale-no-wall-p4-receipt-v0.1",
+  "status": "STOP_AND_REPORT",
+  "train_test_assignments_created": false,
+  "trajectory_profile_confound_controlled": false
+}
