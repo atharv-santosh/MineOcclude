@@ -1,0 +1,2435 @@
+{
+  "compatibility_mapping": {
+    "detailed_shape_classes_used_as_selection_criterion": false,
+    "mapping": "identity over the five committed P4B reporting strata",
+    "p1_split_field": "profile_family",
+    "v2_source_field": "reporting_stratum"
+  },
+  "contains_activation_model_probe_or_r2_outcomes": false,
+  "fixed_test": {
+    "authority_hash": "68455519777d8e5e613813f03ebc148c49b62cf33b11182993a3e58fd0809d4a",
+    "count": 18,
+    "members": [
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "5e0140ae095c1ee83cfd85f0c3bf6fa58fc3518c3965925a16645b103e684d51",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_17"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "ef5b592bbc1cffad5ede3e1cff742fde3b01aabe11c13550fdbc353c78d61bde",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_10"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "341cc42d9ea0bb5551d2405abc41e5d22723395a0720d83cf6fcaad78cd7897d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_16"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "4a78936537fd01e0b0252b2e1ce41bc852b44ff0ef8e0f5f3797a7ad18c3c6f2",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_06"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "60081cd8ca78a56cb5a1b0cdfb6c43ef9e10a225a19840ee2d6a91ee6d39c9bb",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_10"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "6d877f5231c25464a3621edaf1653c167227b6a9eed6750463ba4eb450921d07",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_19"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "0bda84dfbbb78f5c7bc4d9013626fbc9cccc71af5eddeaf7b0f426a91ff2c460",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_05"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "584510f94dcbb6593f9856201c2c08a0591769d5bd8ee887f44cdf43d54e8282",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_11"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "7fddbe461ef8a70c6f51bca0661babdda3712c2654841955020e3d262800acf6",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_16"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "f93208c692416046b84280b8a8103f15f7390d1032a2b169f34433c4b7ffccb4",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_10"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "73b1971f68dd852581cfb402b5f97009491c459446dbdb3a6134a1a8f968ef84",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_03"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "29cf9ddf789b69a6127f69e344def773f2b341245e035de30515aa1ff2aacac4",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_13"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "8b677720a1f670a86a80c4b7705521464b6a52d1fe28f716e94e0ad3de2108e8",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_17"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "f2e09f406b7e8af3902818dd5cc3ad9882b8dc96ad8d911c9afdf7c28e96b8e6",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_10"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "33e5cb650b12dd43b1965e19e82c3989b91c768c68b3b00fa832c905fec6d445",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_16"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "09acf236e729c66d63989fc60aa1ca20bba30cac7486c2f9cc29955691e010c9",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_04"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "1ddefd9abda120c1b200635ffb12fe68ef367498cb2290bfba874427b788a3e8",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_14"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "7a3e6580604ab7a1dedd082013c816e6e79fd8d2e16361874ef1aaef2b3f1a7d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_05"
+      }
+    ],
+    "per_layout": 3,
+    "seed": 2581732465984421845
+  },
+  "member_index": {
+    "fresh_vp_v2_l01_ltr_shape_01": {
+      "accepted_attempt": 2,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "3703125db2c00306cd7a6b8d734bca4327a51e1592cf6c6566fcc36bcc02d524",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_01"
+    },
+    "fresh_vp_v2_l01_ltr_shape_03": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "7728756606f06e46d854dde1ff7966bd6375bdf99e7ae13cf91c83813c373624",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_03"
+    },
+    "fresh_vp_v2_l01_ltr_shape_05": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "21b8a986cc134bf0edacad121fc53436a26d6e18a0b9c060ca7c78cfbecce66e",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_05"
+    },
+    "fresh_vp_v2_l01_ltr_shape_07": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "c30cf193af307e88a8751eba32a6875998dec97cdb9ac1ad6fbd21ac05e86df8",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_07"
+    },
+    "fresh_vp_v2_l01_ltr_shape_09": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "92707eece2d24cd3cce0643476a40da4931abd0ccff2480bcd0fa526a209287a",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_09"
+    },
+    "fresh_vp_v2_l01_ltr_shape_11": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "ea18e6b684f68722406f16e71b3ba4dec596ed23e05fea316ce6424b73e1310a",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_11"
+    },
+    "fresh_vp_v2_l01_ltr_shape_13": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "1af8f4e2467af7bbc29deb3f5f47edd2a845796493b5ce54b506360a9d437464",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_13"
+    },
+    "fresh_vp_v2_l01_ltr_shape_15": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "5fb05ba7b6657d14ceb1c1cf1d6a6f39b2fd08a0ce6f5979a681a217b611c5fe",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_15"
+    },
+    "fresh_vp_v2_l01_ltr_shape_17": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "5e0140ae095c1ee83cfd85f0c3bf6fa58fc3518c3965925a16645b103e684d51",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_17"
+    },
+    "fresh_vp_v2_l01_ltr_shape_19": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "4aa948a1a74a4188d94697fa2c2bc5e9bb46019b44ab28aa441383f29fbc439e",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+      "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_19"
+    },
+    "fresh_vp_v2_l01_rtl_shape_02": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "909aad6ed54af31fb2bb4d3085455d96164c74cc04267f2fa03ed59ec98b1fec",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_02"
+    },
+    "fresh_vp_v2_l01_rtl_shape_04": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "4e575efa5e582f8320e46181553a482f2b9f857c7916c1929d01b5457e0976b2",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_04"
+    },
+    "fresh_vp_v2_l01_rtl_shape_06": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "ac7325090c448554ddbac18a52226a40772a17d5beb8b09b3c004acef4ced83e",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_06"
+    },
+    "fresh_vp_v2_l01_rtl_shape_08": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "a6f5fb4a5579784c7b1616deea2c7c495ec6945367510ee0e7b8739eaf805e5a",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_08"
+    },
+    "fresh_vp_v2_l01_rtl_shape_10": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "ef5b592bbc1cffad5ede3e1cff742fde3b01aabe11c13550fdbc353c78d61bde",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_10"
+    },
+    "fresh_vp_v2_l01_rtl_shape_12": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "984c6cf71f039761511c11e3fb181eadb14c7cb3f7d7502d6746a6b398f2f4b6",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_12"
+    },
+    "fresh_vp_v2_l01_rtl_shape_14": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "628544d326a9f3fe58ace5c96cdd806f7850a9c47b66e49869565a3619d476ab",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_14"
+    },
+    "fresh_vp_v2_l01_rtl_shape_16": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "341cc42d9ea0bb5551d2405abc41e5d22723395a0720d83cf6fcaad78cd7897d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_16"
+    },
+    "fresh_vp_v2_l01_rtl_shape_18": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "f71af88aa6b1e8ec3e0602f7561c53fe655bd5915aa78e0ca3a9b8cf79130b85",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_18"
+    },
+    "fresh_vp_v2_l01_rtl_shape_20": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L01",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "f7356e23ae961fd791a339324802ce2f4e816d1203487e77c44c7e51359e185b",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+      "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_20"
+    },
+    "fresh_vp_v2_l02_ltr_shape_02": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "6a60a69d249a53a8008dadd7dfecab5e027352dfba72f16afbb2be6a3289481d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_02"
+    },
+    "fresh_vp_v2_l02_ltr_shape_04": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "9bf8aab79f02cdf6ba986eb6e4e076777ea17505bc71e9659a7e4e7bc7fe80da",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_04"
+    },
+    "fresh_vp_v2_l02_ltr_shape_06": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "4a78936537fd01e0b0252b2e1ce41bc852b44ff0ef8e0f5f3797a7ad18c3c6f2",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_06"
+    },
+    "fresh_vp_v2_l02_ltr_shape_08": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "6411297b30d1e686eb9fb1de446df55e0fc6c001a671630f1fe74233e016dd07",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_08"
+    },
+    "fresh_vp_v2_l02_ltr_shape_10": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "60081cd8ca78a56cb5a1b0cdfb6c43ef9e10a225a19840ee2d6a91ee6d39c9bb",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_10"
+    },
+    "fresh_vp_v2_l02_ltr_shape_12": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "f7b29bbf2a5fb0d2ac5e7bdf2a7e33d166fb18a91062504b88348fa6a6fd0214",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_12"
+    },
+    "fresh_vp_v2_l02_ltr_shape_14": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "6e600276376a0b4eb7b1e19ea80a0d0d8aa012c579ffe6132d23ae21e30859e7",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_14"
+    },
+    "fresh_vp_v2_l02_ltr_shape_16": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "818391b0273febce508b8c0804cb16884b681467617f5242bdda426f1da4f9e1",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_16"
+    },
+    "fresh_vp_v2_l02_ltr_shape_18": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "27f6db89e181f07bf7b68d97a03a20db12f65471ddccbf1be9ad2619cc563a81",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_18"
+    },
+    "fresh_vp_v2_l02_ltr_shape_20": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "b83ce904d6efeb4dd4169ca625cbbfb54c109b1b7f2e578b4d8d1e61aebe6bd8",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+      "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_20"
+    },
+    "fresh_vp_v2_l02_rtl_shape_01": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "a29580f4080a0c70a8f9002eb5d269d04d50ac6d9d0f7da40d0f49643b94fc67",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_01"
+    },
+    "fresh_vp_v2_l02_rtl_shape_03": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "9e4a85046a65af7267f469809f37747d7222b94d442c9b933f62d56e187f22a7",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_03"
+    },
+    "fresh_vp_v2_l02_rtl_shape_05": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "8cbe6768d586c7b503bb6759bdf51e97aaa927505284d3a4b868bcbb6bf4eabd",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_05"
+    },
+    "fresh_vp_v2_l02_rtl_shape_07": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "302adca5ea8ff499b096a0d0c8243b799452ea55805389230c2dac8964f121d3",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_07"
+    },
+    "fresh_vp_v2_l02_rtl_shape_09": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "bf7a60be221b6d7d6bc54065740be48cb878abbf790f6e54dabd9365539d0543",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_09"
+    },
+    "fresh_vp_v2_l02_rtl_shape_11": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "3d7c4344741190391c55100694a6b9fa76a642f74c6f9a9f39e16aad0a69e25d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_11"
+    },
+    "fresh_vp_v2_l02_rtl_shape_13": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "c6797aff07478492185d6ae4975b031e7714db9d4d5f55b2b9d627e870713211",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_13"
+    },
+    "fresh_vp_v2_l02_rtl_shape_15": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "633d23aa849370142f99f0bcf0d82e6f840a5353c8a0ea96968cad1e26be6cce",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_15"
+    },
+    "fresh_vp_v2_l02_rtl_shape_17": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "7d9413e6205af180fcb0655efac814108eed6f40ebf6fce9a9fd9a2f85f4fd79",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_17"
+    },
+    "fresh_vp_v2_l02_rtl_shape_19": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L02",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "6d877f5231c25464a3621edaf1653c167227b6a9eed6750463ba4eb450921d07",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+      "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_19"
+    },
+    "fresh_vp_v2_l03_ltr_shape_01": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "d221cdddf36fbabbf40f822715f5664777ae03dcfc83c5824739474782c45f86",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_01"
+    },
+    "fresh_vp_v2_l03_ltr_shape_03": {
+      "accepted_attempt": 2,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "36ec20bc06e72ecea0f5880dfdef9b3b2ab54378710f82879866c5e4f4dceca1",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_03"
+    },
+    "fresh_vp_v2_l03_ltr_shape_05": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "0bda84dfbbb78f5c7bc4d9013626fbc9cccc71af5eddeaf7b0f426a91ff2c460",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_05"
+    },
+    "fresh_vp_v2_l03_ltr_shape_07": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "58f51318191dcb978c133a93d603a3d7f38dc27f5763887f9fa74f0300fb8af0",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_07"
+    },
+    "fresh_vp_v2_l03_ltr_shape_09": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "fcdf627bba577a28e78d219284088edf38767ebd667f9436ee218502b4f90481",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_09"
+    },
+    "fresh_vp_v2_l03_ltr_shape_11": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "584510f94dcbb6593f9856201c2c08a0591769d5bd8ee887f44cdf43d54e8282",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_11"
+    },
+    "fresh_vp_v2_l03_ltr_shape_13": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "750c505d22745a8c6f6041a6a451e715c52ee98e4e5eff06776b5d994531f281",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_13"
+    },
+    "fresh_vp_v2_l03_ltr_shape_15": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "5a5e14db94b169e86c979f8a895044ce8a4683e3523011f4453c02d87b9e0d41",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_15"
+    },
+    "fresh_vp_v2_l03_ltr_shape_17": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "92a205ebdca52bf8b913c5d492c70d0e949ce750616875f1334ff750f8291157",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_17"
+    },
+    "fresh_vp_v2_l03_ltr_shape_19": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "4cbf06c2469c163974e1302ea3dfad75821a2dc8dcf1b31c5542e8711bd194c7",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+      "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_19"
+    },
+    "fresh_vp_v2_l03_rtl_shape_02": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "d749a2712fc1950bb67a28d5454efb6204e507ce810a4950f90768465c1b973d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_02"
+    },
+    "fresh_vp_v2_l03_rtl_shape_04": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "c2bf1d45bad65f2352faf093bb4847e61000f90b11d61ee6f86653a95767df8f",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_04"
+    },
+    "fresh_vp_v2_l03_rtl_shape_06": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "b0db5e056a8c9729177a606e6d1a0c252b1b2b957a1b929bba2d9aa5e647e163",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_06"
+    },
+    "fresh_vp_v2_l03_rtl_shape_08": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "dcb3b5996d8b587357a0d543d11ffeb8b943173fb26d02e427aafc8990b78116",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_08"
+    },
+    "fresh_vp_v2_l03_rtl_shape_10": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "94db6cca5a05c5e42d1ca4a70e6365a5423a687b4ca0ff578b88b0bcf6a47f30",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_10"
+    },
+    "fresh_vp_v2_l03_rtl_shape_12": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "9715d59bf1d901ef1e3b1e81139c762c23681ddcb5f4c50197e37b2d3acf1864",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_12"
+    },
+    "fresh_vp_v2_l03_rtl_shape_14": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "66e7775b36844e4093d7c08b3029355c2e9fab4d97fdd176ccd54d8ad45fe21c",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_14"
+    },
+    "fresh_vp_v2_l03_rtl_shape_16": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "7fddbe461ef8a70c6f51bca0661babdda3712c2654841955020e3d262800acf6",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_16"
+    },
+    "fresh_vp_v2_l03_rtl_shape_18": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "a729762e446e06c34d5eeaa81c70c447646b2e0ca7cafccb1fec8a96e3bc12df",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_18"
+    },
+    "fresh_vp_v2_l03_rtl_shape_20": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L03",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "b77cd92ca5a49a848d3ad8585cbfd13b9712f2c93f74c63bcc1303d65ad8d247",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+      "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_20"
+    },
+    "fresh_vp_v2_l04_ltr_shape_02": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "b97b9b054cb03fc2ee1d33a51d91f3673312014a1a1dc6082c9d8bce053a73e0",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_02"
+    },
+    "fresh_vp_v2_l04_ltr_shape_04": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "a94e20ac38e5225e2aaead3346db1ba73709b151ea4a93c4323d0207a51fcbe0",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_04"
+    },
+    "fresh_vp_v2_l04_ltr_shape_06": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "e8b87d12044258ae2428505bcbbf17ac1cf66bb6289f9fd12815b356cc0f08a8",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_06"
+    },
+    "fresh_vp_v2_l04_ltr_shape_08": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "60117c9715d5ff4d6337ad6354e5266ac3b2ff122281a819d83b7cd3be380acb",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_08"
+    },
+    "fresh_vp_v2_l04_ltr_shape_10": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "f93208c692416046b84280b8a8103f15f7390d1032a2b169f34433c4b7ffccb4",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_10"
+    },
+    "fresh_vp_v2_l04_ltr_shape_12": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "55fcbeef893e6da544deb3947bc13aa8152cfc19446bc35b9c5b019d96ad0449",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_12"
+    },
+    "fresh_vp_v2_l04_ltr_shape_14": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "2d9ec93ef643d35df8a75b22e01d8bf548bc55927dcf0a53b082274b0a266823",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_14"
+    },
+    "fresh_vp_v2_l04_ltr_shape_16": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "039150da32c94f17c94db2d1ed9fb8e15a044a693009b6f6cee66831a9317f55",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_16"
+    },
+    "fresh_vp_v2_l04_ltr_shape_18": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "827c061d238d39f5f5a5a4b4c3e049d14a7a8f5a3521514536a50a8fe3cf42e4",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_18"
+    },
+    "fresh_vp_v2_l04_ltr_shape_20": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "ddd0787e687c90a3c5623f23cbe7474135d559fbf897f4aef298013ec0473c9d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+      "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_20"
+    },
+    "fresh_vp_v2_l04_rtl_shape_01": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "51729f990d43221462f7e8dd4d958d47282f901201e8aa579f1f5d31f610106a",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_01"
+    },
+    "fresh_vp_v2_l04_rtl_shape_03": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "73b1971f68dd852581cfb402b5f97009491c459446dbdb3a6134a1a8f968ef84",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_03"
+    },
+    "fresh_vp_v2_l04_rtl_shape_05": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "e9edf0bb8c04f0c3e5997f8d76dbb0a730b4cea387f542a1a41ccd4ceb89c91b",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_05"
+    },
+    "fresh_vp_v2_l04_rtl_shape_07": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "74e9e2524e0159b952808848720e27b342036cf07a0b62aaa0e1a930d3b11d95",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_07"
+    },
+    "fresh_vp_v2_l04_rtl_shape_09": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "378017fc309851d73a37fa47c3e61552469ed02442f07200aabb8eb64ca77000",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_09"
+    },
+    "fresh_vp_v2_l04_rtl_shape_11": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "a507dc8ea2e60bca8d4ba7ed4f9bd7a6e9473d947164c8354446a048fa5b6f3d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_11"
+    },
+    "fresh_vp_v2_l04_rtl_shape_13": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "29cf9ddf789b69a6127f69e344def773f2b341245e035de30515aa1ff2aacac4",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_13"
+    },
+    "fresh_vp_v2_l04_rtl_shape_15": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "6f1d2d0b75276fc157b58e21a7d4ff9e190430f0f688576290462ea3435aec36",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_15"
+    },
+    "fresh_vp_v2_l04_rtl_shape_17": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "26ef6f5edf4ffa7a96a0b07a5c856a0aedce230e1a591cd82c5c47f102d542fa",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_17"
+    },
+    "fresh_vp_v2_l04_rtl_shape_19": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L04",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "aa0090b449af88a6b2c8764b8440407ba2638fd36c99a1790ce09a83af9dadd1",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+      "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_19"
+    },
+    "fresh_vp_v2_l05_ltr_shape_01": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "79b26a1df87e36f65a204e7ca2604006da3f894ce3cecf8e607c19a612d408c6",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_01"
+    },
+    "fresh_vp_v2_l05_ltr_shape_03": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "f9d7dca7071662e5d80947d0d77c2090cbfd962340f823e4b560387af586be51",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_03"
+    },
+    "fresh_vp_v2_l05_ltr_shape_05": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "07925167bc7fd7a2f204334549750603b6309cbc406e147fcb58fd31830fc1f3",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_05"
+    },
+    "fresh_vp_v2_l05_ltr_shape_07": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "03d032d62d85f557be22b8ffc39090af368c52d758384a2a09d3cb2c5dd1ad8d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_07"
+    },
+    "fresh_vp_v2_l05_ltr_shape_09": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "82f7b675a511272e97aff780783ecb1c5052f1b409516fa712783bab011e18dd",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_09"
+    },
+    "fresh_vp_v2_l05_ltr_shape_11": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "9efab34d5529c37f274b14e75a54d45db398e5e0bdc8b5bcd778ea4d07498584",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_11"
+    },
+    "fresh_vp_v2_l05_ltr_shape_13": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "2dcbaaea1c2a3755b5937438737f9b09a36f05ec470e626d47fb2c527402b29a",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_13"
+    },
+    "fresh_vp_v2_l05_ltr_shape_15": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "bb35feac2487aa19c5d06616b11837aa432156bbd428232ff202980670907886",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_15"
+    },
+    "fresh_vp_v2_l05_ltr_shape_17": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "8b677720a1f670a86a80c4b7705521464b6a52d1fe28f716e94e0ad3de2108e8",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_17"
+    },
+    "fresh_vp_v2_l05_ltr_shape_19": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "359a058f427331963e8d8535aa158641406876ea271fe333e0f8ea5a4c5e767c",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+      "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_19"
+    },
+    "fresh_vp_v2_l05_rtl_shape_02": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "8924a8e07f474817cd8c2791336cd47aa10697ee8eff9db6dab7f604f61741a4",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_02"
+    },
+    "fresh_vp_v2_l05_rtl_shape_04": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "dd3024261a464f4f2622b485c83832931cd287a3a7dccc356569f4bd04d983d5",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_04"
+    },
+    "fresh_vp_v2_l05_rtl_shape_06": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "22d35832ba32c49791664f5a7a79ef5e9db9b08aab773eeb67c4f088c1980c3b",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_06"
+    },
+    "fresh_vp_v2_l05_rtl_shape_08": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "2ed62e512ce83c6af8304a645e3893e8b94925ad17b7a2dd6236a291e5061f28",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_08"
+    },
+    "fresh_vp_v2_l05_rtl_shape_10": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "f2e09f406b7e8af3902818dd5cc3ad9882b8dc96ad8d911c9afdf7c28e96b8e6",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_10"
+    },
+    "fresh_vp_v2_l05_rtl_shape_12": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "36a6914637b7f456c6c03bc11fe634dced05e1ff4c0294be50b9d3675efc9f51",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_12"
+    },
+    "fresh_vp_v2_l05_rtl_shape_14": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "66578c47418e7b764424957f768e1abf4fd97f8b820af3abc81425fff346b623",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_14"
+    },
+    "fresh_vp_v2_l05_rtl_shape_16": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "33e5cb650b12dd43b1965e19e82c3989b91c768c68b3b00fa832c905fec6d445",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_16"
+    },
+    "fresh_vp_v2_l05_rtl_shape_18": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "c87558187ec9d552623b2081e9e47f02d7ba54c8c1f537d65be4c5a8a50d0a6b",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_18"
+    },
+    "fresh_vp_v2_l05_rtl_shape_20": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L05",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "810486bf606217bc40516c25b7504ca1ec362ed018134e60263efdb83ad0f020",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+      "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_20"
+    },
+    "fresh_vp_v2_l06_ltr_shape_02": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "cc4620b39a7022d40bba3f33200021fd0f20168ae5e0d141a37796c2a5c75cf7",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_02"
+    },
+    "fresh_vp_v2_l06_ltr_shape_04": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "09acf236e729c66d63989fc60aa1ca20bba30cac7486c2f9cc29955691e010c9",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_04"
+    },
+    "fresh_vp_v2_l06_ltr_shape_06": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "9dcf7605fa8f5e7ef7a41e45be32948820e9f48b0f6316bdd35af85140d3458d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_06"
+    },
+    "fresh_vp_v2_l06_ltr_shape_08": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "488a10810ecb9c37b7d07f073ceb45a50507a21fe6283ebc3a636b9e9394673c",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_08"
+    },
+    "fresh_vp_v2_l06_ltr_shape_10": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "d731f6fa9f926421f7c3d8e87243fb367d75a415ccd03584aff64bcf420dabe2",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_10"
+    },
+    "fresh_vp_v2_l06_ltr_shape_12": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "349b4465bc182cc8818818754406549c428165dd11f8a566c378d815dfb1dd49",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_12"
+    },
+    "fresh_vp_v2_l06_ltr_shape_14": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "1ddefd9abda120c1b200635ffb12fe68ef367498cb2290bfba874427b788a3e8",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_14"
+    },
+    "fresh_vp_v2_l06_ltr_shape_16": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "239cbc4cffc2933f5cce7a3f73f072fefe5a56fa4b99dd03dc127b50526a7fe1",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_16"
+    },
+    "fresh_vp_v2_l06_ltr_shape_18": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "d1bab72610d52eb3279d023284b49499c1bf9da8be3def20e4025ba0f73a5ab5",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_18"
+    },
+    "fresh_vp_v2_l06_ltr_shape_20": {
+      "accepted_attempt": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "e2fdc530659f24960044af81758307d20584ee2ea294991d6a1c876293141f1e",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+      "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_20"
+    },
+    "fresh_vp_v2_l06_rtl_shape_01": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "0a0837ead182457a7ee3aff8ad49da5533a41d88e6a0f898ee52b9529980c4ee",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_01"
+    },
+    "fresh_vp_v2_l06_rtl_shape_03": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "LONG_DWELL_RESTART",
+      "spec_hash": "2859c5cf16fb790ea9236f5f8636b0559f16e7791839bf42b5201448f4b8231b",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_03"
+    },
+    "fresh_vp_v2_l06_rtl_shape_05": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "7a3e6580604ab7a1dedd082013c816e6e79fd8d2e16361874ef1aaef2b3f1a7d",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_05"
+    },
+    "fresh_vp_v2_l06_rtl_shape_07": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "MULTI_DWELL_PULSE",
+      "spec_hash": "024532d28a02e55140324675f8c215d503e889277f7ac1a2984f6ad4c9eecf11",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_07"
+    },
+    "fresh_vp_v2_l06_rtl_shape_09": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "2c784657b20e459d7aba0baa4fc0d31388e0d3a3b163a47f48b591773002694a",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_09"
+    },
+    "fresh_vp_v2_l06_rtl_shape_11": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "DELAYED_BOUNDED_BURST",
+      "spec_hash": "3b787a7bb82f30e7164d69ae0896e9c68edc758416ebeb6af42c9de702f1c819",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_11"
+    },
+    "fresh_vp_v2_l06_rtl_shape_13": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "1c826641ac721c991f00181d8d561e6e130cd41ada1d1e495df03d80be396d8e",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_13"
+    },
+    "fresh_vp_v2_l06_rtl_shape_15": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "ASYMMETRIC_RESTART",
+      "spec_hash": "dcfd340b9c3823399bac89b611ae21e61eb411ed3c2d3b89bcef11baaf9921f1",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_15"
+    },
+    "fresh_vp_v2_l06_rtl_shape_17": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 1,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "6a89a78fc6db7f727247e7e967ff2212292785a717a87723f0ac0393db6943bd",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_17"
+    },
+    "fresh_vp_v2_l06_rtl_shape_19": {
+      "accepted_attempt": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "layout_id": "L06",
+      "repeat_id": 2,
+      "reporting_stratum": "TERMINAL_HOLD_RESTART",
+      "spec_hash": "becea59aa48f05cb41e7a7309dd5b05244ee6a91eca8d7f781cbd504c0fd648f",
+      "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+      "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_19"
+    }
+  },
+  "primary_cohort_lock": "accepted_cohort_v2.lock.json",
+  "primary_cohort_lock_sha256": "b73d1b6bbedc1ca72dab480ba6f4bafb22aa7c6675bc7a2f0dabf33fff2d8501",
+  "primary_cohort_version": "V2_ACCEPTED_REPAIRED_PRIMARY",
+  "primary_split_total": 120,
+  "schema_version": "large-scale-no-wall-p5-split-authority-v0.1",
+  "source_split_algorithm_sha256": "abce2236e6544356f2cb5d8913a8f29b03bb481487a89be548cf6f27e5f26b81",
+  "status": "FROZEN_PROSPECTIVE_BEFORE_ACTIVATIONS",
+  "train_test_overlap": 0,
+  "training_pool": {
+    "authority_hash": "58b0c10dbfc76fb073ce94d58f4e496a03b824232085d80660074120126d5754",
+    "count": 102,
+    "members": [
+      {
+        "accepted_attempt": 2,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "3703125db2c00306cd7a6b8d734bca4327a51e1592cf6c6566fcc36bcc02d524",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_01"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "7728756606f06e46d854dde1ff7966bd6375bdf99e7ae13cf91c83813c373624",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_03"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "21b8a986cc134bf0edacad121fc53436a26d6e18a0b9c060ca7c78cfbecce66e",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_05"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "c30cf193af307e88a8751eba32a6875998dec97cdb9ac1ad6fbd21ac05e86df8",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_07"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "92707eece2d24cd3cce0643476a40da4931abd0ccff2480bcd0fa526a209287a",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_09"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "ea18e6b684f68722406f16e71b3ba4dec596ed23e05fea316ce6424b73e1310a",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_11"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "1af8f4e2467af7bbc29deb3f5f47edd2a845796493b5ce54b506360a9d437464",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_13"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "5fb05ba7b6657d14ceb1c1cf1d6a6f39b2fd08a0ce6f5979a681a217b611c5fe",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_15"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "4aa948a1a74a4188d94697fa2c2bc5e9bb46019b44ab28aa441383f29fbc439e",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+        "trajectory_spec_id": "fresh_vp_v2_l01_ltr_shape_19"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "909aad6ed54af31fb2bb4d3085455d96164c74cc04267f2fa03ed59ec98b1fec",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_02"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "4e575efa5e582f8320e46181553a482f2b9f857c7916c1929d01b5457e0976b2",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_04"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "ac7325090c448554ddbac18a52226a40772a17d5beb8b09b3c004acef4ced83e",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_06"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "a6f5fb4a5579784c7b1616deea2c7c495ec6945367510ee0e7b8739eaf805e5a",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_08"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "984c6cf71f039761511c11e3fb181eadb14c7cb3f7d7502d6746a6b398f2f4b6",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_12"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "628544d326a9f3fe58ace5c96cdd806f7850a9c47b66e49869565a3619d476ab",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_14"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "f71af88aa6b1e8ec3e0602f7561c53fe655bd5915aa78e0ca3a9b8cf79130b85",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_18"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L01",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "f7356e23ae961fd791a339324802ce2f4e816d1203487e77c44c7e51359e185b",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+        "trajectory_spec_id": "fresh_vp_v2_l01_rtl_shape_20"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "6a60a69d249a53a8008dadd7dfecab5e027352dfba72f16afbb2be6a3289481d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_02"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "9bf8aab79f02cdf6ba986eb6e4e076777ea17505bc71e9659a7e4e7bc7fe80da",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_04"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "6411297b30d1e686eb9fb1de446df55e0fc6c001a671630f1fe74233e016dd07",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_08"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "f7b29bbf2a5fb0d2ac5e7bdf2a7e33d166fb18a91062504b88348fa6a6fd0214",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_12"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "6e600276376a0b4eb7b1e19ea80a0d0d8aa012c579ffe6132d23ae21e30859e7",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_14"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "818391b0273febce508b8c0804cb16884b681467617f5242bdda426f1da4f9e1",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_16"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "27f6db89e181f07bf7b68d97a03a20db12f65471ddccbf1be9ad2619cc563a81",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_18"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "b83ce904d6efeb4dd4169ca625cbbfb54c109b1b7f2e578b4d8d1e61aebe6bd8",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+        "trajectory_spec_id": "fresh_vp_v2_l02_ltr_shape_20"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "a29580f4080a0c70a8f9002eb5d269d04d50ac6d9d0f7da40d0f49643b94fc67",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_01"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "9e4a85046a65af7267f469809f37747d7222b94d442c9b933f62d56e187f22a7",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_03"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "8cbe6768d586c7b503bb6759bdf51e97aaa927505284d3a4b868bcbb6bf4eabd",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_05"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "302adca5ea8ff499b096a0d0c8243b799452ea55805389230c2dac8964f121d3",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_07"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "bf7a60be221b6d7d6bc54065740be48cb878abbf790f6e54dabd9365539d0543",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_09"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "3d7c4344741190391c55100694a6b9fa76a642f74c6f9a9f39e16aad0a69e25d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_11"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "c6797aff07478492185d6ae4975b031e7714db9d4d5f55b2b9d627e870713211",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_13"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "633d23aa849370142f99f0bcf0d82e6f840a5353c8a0ea96968cad1e26be6cce",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_15"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L02",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "7d9413e6205af180fcb0655efac814108eed6f40ebf6fce9a9fd9a2f85f4fd79",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+        "trajectory_spec_id": "fresh_vp_v2_l02_rtl_shape_17"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "d221cdddf36fbabbf40f822715f5664777ae03dcfc83c5824739474782c45f86",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_01"
+      },
+      {
+        "accepted_attempt": 2,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "36ec20bc06e72ecea0f5880dfdef9b3b2ab54378710f82879866c5e4f4dceca1",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_03"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "58f51318191dcb978c133a93d603a3d7f38dc27f5763887f9fa74f0300fb8af0",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_07"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "fcdf627bba577a28e78d219284088edf38767ebd667f9436ee218502b4f90481",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_09"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "750c505d22745a8c6f6041a6a451e715c52ee98e4e5eff06776b5d994531f281",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_13"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "5a5e14db94b169e86c979f8a895044ce8a4683e3523011f4453c02d87b9e0d41",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_15"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "92a205ebdca52bf8b913c5d492c70d0e949ce750616875f1334ff750f8291157",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_17"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "4cbf06c2469c163974e1302ea3dfad75821a2dc8dcf1b31c5542e8711bd194c7",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+        "trajectory_spec_id": "fresh_vp_v2_l03_ltr_shape_19"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "d749a2712fc1950bb67a28d5454efb6204e507ce810a4950f90768465c1b973d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_02"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "c2bf1d45bad65f2352faf093bb4847e61000f90b11d61ee6f86653a95767df8f",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_04"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "b0db5e056a8c9729177a606e6d1a0c252b1b2b957a1b929bba2d9aa5e647e163",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_06"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "dcb3b5996d8b587357a0d543d11ffeb8b943173fb26d02e427aafc8990b78116",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_08"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "94db6cca5a05c5e42d1ca4a70e6365a5423a687b4ca0ff578b88b0bcf6a47f30",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_10"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "9715d59bf1d901ef1e3b1e81139c762c23681ddcb5f4c50197e37b2d3acf1864",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_12"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "66e7775b36844e4093d7c08b3029355c2e9fab4d97fdd176ccd54d8ad45fe21c",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_14"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "a729762e446e06c34d5eeaa81c70c447646b2e0ca7cafccb1fec8a96e3bc12df",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_18"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L03",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "b77cd92ca5a49a848d3ad8585cbfd13b9712f2c93f74c63bcc1303d65ad8d247",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+        "trajectory_spec_id": "fresh_vp_v2_l03_rtl_shape_20"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "b97b9b054cb03fc2ee1d33a51d91f3673312014a1a1dc6082c9d8bce053a73e0",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_02"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "a94e20ac38e5225e2aaead3346db1ba73709b151ea4a93c4323d0207a51fcbe0",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_04"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "e8b87d12044258ae2428505bcbbf17ac1cf66bb6289f9fd12815b356cc0f08a8",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_06"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "60117c9715d5ff4d6337ad6354e5266ac3b2ff122281a819d83b7cd3be380acb",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_08"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "55fcbeef893e6da544deb3947bc13aa8152cfc19446bc35b9c5b019d96ad0449",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_12"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "2d9ec93ef643d35df8a75b22e01d8bf548bc55927dcf0a53b082274b0a266823",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_14"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "039150da32c94f17c94db2d1ed9fb8e15a044a693009b6f6cee66831a9317f55",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_16"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "827c061d238d39f5f5a5a4b4c3e049d14a7a8f5a3521514536a50a8fe3cf42e4",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_18"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "ddd0787e687c90a3c5623f23cbe7474135d559fbf897f4aef298013ec0473c9d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+        "trajectory_spec_id": "fresh_vp_v2_l04_ltr_shape_20"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "51729f990d43221462f7e8dd4d958d47282f901201e8aa579f1f5d31f610106a",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_01"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "e9edf0bb8c04f0c3e5997f8d76dbb0a730b4cea387f542a1a41ccd4ceb89c91b",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_05"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "74e9e2524e0159b952808848720e27b342036cf07a0b62aaa0e1a930d3b11d95",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_07"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "378017fc309851d73a37fa47c3e61552469ed02442f07200aabb8eb64ca77000",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_09"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "a507dc8ea2e60bca8d4ba7ed4f9bd7a6e9473d947164c8354446a048fa5b6f3d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_11"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "6f1d2d0b75276fc157b58e21a7d4ff9e190430f0f688576290462ea3435aec36",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_15"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "26ef6f5edf4ffa7a96a0b07a5c856a0aedce230e1a591cd82c5c47f102d542fa",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_17"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L04",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "aa0090b449af88a6b2c8764b8440407ba2638fd36c99a1790ce09a83af9dadd1",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+        "trajectory_spec_id": "fresh_vp_v2_l04_rtl_shape_19"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "79b26a1df87e36f65a204e7ca2604006da3f894ce3cecf8e607c19a612d408c6",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_01"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "f9d7dca7071662e5d80947d0d77c2090cbfd962340f823e4b560387af586be51",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_03"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "07925167bc7fd7a2f204334549750603b6309cbc406e147fcb58fd31830fc1f3",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_05",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_05"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "03d032d62d85f557be22b8ffc39090af368c52d758384a2a09d3cb2c5dd1ad8d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_07"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "82f7b675a511272e97aff780783ecb1c5052f1b409516fa712783bab011e18dd",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_09"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "9efab34d5529c37f274b14e75a54d45db398e5e0bdc8b5bcd778ea4d07498584",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_11"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "2dcbaaea1c2a3755b5937438737f9b09a36f05ec470e626d47fb2c527402b29a",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_13"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "bb35feac2487aa19c5d06616b11837aa432156bbd428232ff202980670907886",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_15"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "359a058f427331963e8d8535aa158641406876ea271fe333e0f8ea5a4c5e767c",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+        "trajectory_spec_id": "fresh_vp_v2_l05_ltr_shape_19"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "8924a8e07f474817cd8c2791336cd47aa10697ee8eff9db6dab7f604f61741a4",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_02"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "dd3024261a464f4f2622b485c83832931cd287a3a7dccc356569f4bd04d983d5",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_04",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_04"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "22d35832ba32c49791664f5a7a79ef5e9db9b08aab773eeb67c4f088c1980c3b",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_06"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "2ed62e512ce83c6af8304a645e3893e8b94925ad17b7a2dd6236a291e5061f28",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_08"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "36a6914637b7f456c6c03bc11fe634dced05e1ff4c0294be50b9d3675efc9f51",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_12"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "66578c47418e7b764424957f768e1abf4fd97f8b820af3abc81425fff346b623",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_14",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_14"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "c87558187ec9d552623b2081e9e47f02d7ba54c8c1f537d65be4c5a8a50d0a6b",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_18"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L05",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "810486bf606217bc40516c25b7504ca1ec362ed018134e60263efdb83ad0f020",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+        "trajectory_spec_id": "fresh_vp_v2_l05_rtl_shape_20"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "cc4620b39a7022d40bba3f33200021fd0f20168ae5e0d141a37796c2a5c75cf7",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_02",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_02"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "9dcf7605fa8f5e7ef7a41e45be32948820e9f48b0f6316bdd35af85140d3458d",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_06",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_06"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "488a10810ecb9c37b7d07f073ceb45a50507a21fe6283ebc3a636b9e9394673c",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_08",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_08"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "d731f6fa9f926421f7c3d8e87243fb367d75a415ccd03584aff64bcf420dabe2",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_10",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_10"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "349b4465bc182cc8818818754406549c428165dd11f8a566c378d815dfb1dd49",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_12",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_12"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "239cbc4cffc2933f5cce7a3f73f072fefe5a56fa4b99dd03dc127b50526a7fe1",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_16",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_16"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "d1bab72610d52eb3279d023284b49499c1bf9da8be3def20e4025ba0f73a5ab5",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_18",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_18"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "LEFT_TO_RIGHT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "e2fdc530659f24960044af81758307d20584ee2ea294991d6a1c876293141f1e",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_20",
+        "trajectory_spec_id": "fresh_vp_v2_l06_ltr_shape_20"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "0a0837ead182457a7ee3aff8ad49da5533a41d88e6a0f898ee52b9529980c4ee",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_01",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_01"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "LONG_DWELL_RESTART",
+        "spec_hash": "2859c5cf16fb790ea9236f5f8636b0559f16e7791839bf42b5201448f4b8231b",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_03",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_03"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "MULTI_DWELL_PULSE",
+        "spec_hash": "024532d28a02e55140324675f8c215d503e889277f7ac1a2984f6ad4c9eecf11",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_07",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_07"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "2c784657b20e459d7aba0baa4fc0d31388e0d3a3b163a47f48b591773002694a",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_09",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_09"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "DELAYED_BOUNDED_BURST",
+        "spec_hash": "3b787a7bb82f30e7164d69ae0896e9c68edc758416ebeb6af42c9de702f1c819",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_11",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_11"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "1c826641ac721c991f00181d8d561e6e130cd41ada1d1e495df03d80be396d8e",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_13",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_13"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "ASYMMETRIC_RESTART",
+        "spec_hash": "dcfd340b9c3823399bac89b611ae21e61eb411ed3c2d3b89bcef11baaf9921f1",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_15",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_15"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 1,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "6a89a78fc6db7f727247e7e967ff2212292785a717a87723f0ac0393db6943bd",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_17",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_17"
+      },
+      {
+        "accepted_attempt": 1,
+        "direction": "RIGHT_TO_LEFT",
+        "layout_id": "L06",
+        "repeat_id": 2,
+        "reporting_stratum": "TERMINAL_HOLD_RESTART",
+        "spec_hash": "becea59aa48f05cb41e7a7309dd5b05244ee6a91eca8d7f781cbd504c0fd648f",
+        "trajectory_shape_class": "MONOTONIC_MULTI_DWELL_SHAPE_19",
+        "trajectory_spec_id": "fresh_vp_v2_l06_rtl_shape_19"
+      }
+    ],
+    "per_layout": 17
+  },
+  "v1_primary_intersection": 0
+}

@@ -1,0 +1,114 @@
+{
+  "activation_model_probe_or_r2_inputs_used": false,
+  "best_k_ranking_subfolds_frozen": true,
+  "canonical_null_derangement_feasible": true,
+  "fixed_test": {
+    "count": 18,
+    "direction": {
+      "LEFT_TO_RIGHT": 9,
+      "RIGHT_TO_LEFT": 9
+    },
+    "per_layout": {
+      "L01": 3,
+      "L02": 3,
+      "L03": 3,
+      "L04": 3,
+      "L05": 3,
+      "L06": 3
+    },
+    "reporting_stratum": {
+      "ASYMMETRIC_RESTART": 5,
+      "DELAYED_BOUNDED_BURST": 5,
+      "LONG_DWELL_RESTART": 2,
+      "MULTI_DWELL_PULSE": 3,
+      "TERMINAL_HOLD_RESTART": 3
+    }
+  },
+  "frame_level_split_used": false,
+  "grouped_selection_folds_frozen": true,
+  "master_ordering_count": 20,
+  "n100_distinct_omitted_pair_count": 6,
+  "n100_omitted_pairs": [
+    [
+      "fresh_vp_v2_l01_rtl_shape_02",
+      "fresh_vp_v2_l02_rtl_shape_11"
+    ],
+    [
+      "fresh_vp_v2_l02_rtl_shape_03",
+      "fresh_vp_v2_l03_ltr_shape_09"
+    ],
+    [
+      "fresh_vp_v2_l03_ltr_shape_01",
+      "fresh_vp_v2_l04_ltr_shape_14"
+    ],
+    [
+      "fresh_vp_v2_l04_ltr_shape_20",
+      "fresh_vp_v2_l05_rtl_shape_12"
+    ],
+    [
+      "fresh_vp_v2_l05_ltr_shape_11",
+      "fresh_vp_v2_l06_ltr_shape_02"
+    ],
+    [
+      "fresh_vp_v2_l01_ltr_shape_05",
+      "fresh_vp_v2_l06_rtl_shape_01"
+    ]
+  ],
+  "n5_omission_balance_valid": true,
+  "n5_omitted_layout_counts": {
+    "L01": 4,
+    "L02": 4,
+    "L03": 3,
+    "L04": 3,
+    "L05": 3,
+    "L06": 3
+  },
+  "n_ge_15_all_layouts": true,
+  "primary_cohort_count": 120,
+  "primary_split_total": 120,
+  "schema_version": "large-scale-no-wall-p5-balance-audit-v0.1",
+  "shape_classes_recorded_descriptively_not_optimized": true,
+  "status": "PASS",
+  "total_subsets": 62,
+  "train_test_overlap": 0,
+  "training_exposure_by_n": {
+    "100": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
+    },
+    "15": {
+      "maximum": 3,
+      "minimum": 1,
+      "range": 2
+    },
+    "40": {
+      "maximum": 6,
+      "minimum": 3,
+      "range": 3
+    },
+    "5": {
+      "maximum": 2,
+      "minimum": 0,
+      "range": 2
+    },
+    "70": {
+      "maximum": 6,
+      "minimum": 4,
+      "range": 2
+    }
+  },
+  "training_pool": {
+    "count": 102,
+    "per_layout": {
+      "L01": 17,
+      "L02": 17,
+      "L03": 17,
+      "L04": 17,
+      "L05": 17,
+      "L06": 17
+    }
+  },
+  "v1_primary_intersection": 0,
+  "whole_trajectory_grouping_only": true
+}
