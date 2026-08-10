@@ -56,7 +56,7 @@ def test_live_ledger_hash_chain_is_valid():
         previous = claimed
 
 
-def test_exactly_locked_stage_a_was_accepted_and_no_later_stage():
+def test_exactly_locked_stage_a_was_accepted():
     campaign = load(PACKAGE / "capture_campaign.json")
     expected = {
         row["trajectory_spec_id"]
@@ -68,13 +68,11 @@ def test_exactly_locked_stage_a_was_accepted_and_no_later_stage():
         for row in ledger_rows()
         if row["record_type"] == "ATTEMPT_CLASSIFIED"
         and row.get("classification") == "ACCEPTED"
+        and row["trajectory_spec_id"] in expected
     ]
     assert len(accepted_rows) == 12
     assert {row["trajectory_spec_id"] for row in accepted_rows} == expected
     assert len({row["trajectory_spec_id"] for row in accepted_rows}) == 12
-    assert not [
-        row for row in ledger_rows() if row["trajectory_spec_id"] not in expected
-    ]
 
 
 def test_all_accepted_attempts_are_durable_and_balanced():
@@ -165,17 +163,25 @@ def test_no_activation_probe_or_decoder_outputs_exist():
 
 def test_no_retries_or_blocked_specs_and_one_crash_recovery():
     rows = ledger_rows()
+    campaign = load(PACKAGE / "capture_campaign.json")
+    stage_a = {
+        row["trajectory_spec_id"]
+        for row in campaign["campaign_order"]
+        if row["stage"] == "A"
+    }
     assert not [
         row
         for row in rows
         if row["record_type"] == "ATTEMPT_CLASSIFIED"
         and row.get("classification") == "REJECTED_WITH_REASON"
+        and row["trajectory_spec_id"] in stage_a
     ]
     accepted = [
         row
         for row in rows
         if row["record_type"] == "ATTEMPT_CLASSIFIED"
         and row.get("classification") == "ACCEPTED"
+        and row["trajectory_spec_id"] in stage_a
     ]
     assert Counter(row["attempt_number"] for row in accepted) == {1: 12}
     assert sum(bool(row.get("crash_recovered")) for row in accepted) == 1

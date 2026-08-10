@@ -169,15 +169,18 @@ def test_dry_run_passes_without_runtime_or_scientific_capture(authority):
     assert result["stage_b_in_stage_a_invocation"] is False
 
 
-def test_cli_refuses_stage_b_execution_in_p2():
+def test_cli_dry_run_validates_locked_p3_cumulative_membership():
     result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--stage", "B", "--dry-run"],
+        [sys.executable, str(SCRIPT), "--stage", "D", "--dry-run"],
         cwd=ROOT,
         capture_output=True,
         text=True,
     )
-    assert result.returncode != 0
-    assert "P2 dry-run is Stage A only" in result.stderr
+    assert result.returncode == 0
+    receipt = json.loads(result.stdout)
+    assert receipt["through_stage"] == "D"
+    assert receipt["cumulative_count"] == 120
+    assert receipt["per_layout"] == {f"L{index:02d}": 20 for index in range(1, 7)}
 
 
 def test_write_json_new_never_overwrites(tmp_path):
