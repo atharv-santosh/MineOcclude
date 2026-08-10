@@ -1,0 +1,286 @@
+{
+  "artifact_id": "large-scale-no-wall-p7-solver-benchmark-v0.1",
+  "benchmark_selection_basis": "predeclared subset IDs; no decoding behavior",
+  "cpu_gpu_comparison_performed": true,
+  "fixed_test_predictions_computed": false,
+  "fixed_test_scores_opened": false,
+  "fixed_test_targets_used": false,
+  "n100": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "benchmark_scope": "TRAINING_POOL_ONLY",
+    "best_k_cumulative_kernel": {
+      "candidate_boundaries_exercised": [
+        1,
+        4
+      ],
+      "full_candidate_grid_supported": [
+        1,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "status": "PASS"
+    },
+    "coarse_grouped_alpha_cv_representative_fold": {
+      "cuda": {
+        "kernel_seconds": 3.4636266229936155,
+        "peak_device_memory_bytes": 5438439424,
+        "scaling_seconds": 3.8858890010014875
+      },
+      "input_seconds": 0.690704143999028,
+      "solve": {
+        "alpha_count": 4,
+        "calibration_rows": 480,
+        "calibration_seconds": 0.024133946004440077,
+        "estimated_full_solve_seconds_cubic": 24.133946004440077,
+        "prediction_values_persisted": false
+      }
+    },
+    "fixed_test_target_count_loaded": 0,
+    "fixed_test_trajectory_count": 0,
+    "full_style_bounded_kernel": {
+      "estimated_five_fold_kernel_seconds": 1010.0388421218668,
+      "estimated_full_one_fold_kernel_seconds": 202.00776842437335,
+      "feature_order": "ascending visual_token_index",
+      "measured_token_count": 4
+    },
+    "global_grouped_alpha_cv_representative_fold": {
+      "cpu": {
+        "kernel_seconds": 1.1285309290033183,
+        "scaling_seconds": 0.11501372999919113
+      },
+      "cuda": {
+        "kernel_seconds": 0.291517355995893,
+        "peak_device_memory_bytes": 463634432,
+        "scaling_seconds": 0.09174733200052287
+      },
+      "exact_smaller_space_solve": {
+        "four_alpha_solve_predict_seconds": 0.6264268119994085,
+        "prediction_values_persisted": false,
+        "scaling_seconds": 0.11486893599794712,
+        "solve_space": "primal",
+        "sufficient_structure_seconds": 0.2360641549967113,
+        "system_dimension": 2048,
+        "total_seconds": 0.9773599029940669
+      },
+      "input_seconds": 0.18846249700436601,
+      "solve": {
+        "alpha_count": 4,
+        "calibration_rows": 480,
+        "calibration_seconds": 0.022353389002091717,
+        "estimated_full_solve_seconds_cubic": 22.353389002091717,
+        "prediction_values_persisted": false
+      }
+    },
+    "peak_host_rss_bytes": 6387040256,
+    "ranking_token_kernel": {
+      "cpu_batch_seconds": 8.228797014999145,
+      "cuda_batch_seconds": 2.4048543860044447,
+      "cuda_detail": {
+        "kernel_seconds": 1.1419764809979824,
+        "peak_device_memory_bytes": 1820590080,
+        "scaling_seconds": 0.7456536360041355
+      },
+      "exact_smaller_space_solve": {
+        "four_alpha_solve_predict_seconds": 0.6328374009972322,
+        "prediction_values_persisted": false,
+        "scaling_seconds": 0.19391459399776068,
+        "solve_space": "primal",
+        "sufficient_structure_seconds": 0.23136094799701823,
+        "system_dimension": 2048,
+        "total_seconds": 1.058112942992011
+      },
+      "input_seconds": 13.063776925999264,
+      "max_abs_cuda_vs_cpu_kernel_difference": 6.184563972055912e-11,
+      "solve": {
+        "alpha_count": 4,
+        "calibration_rows": 480,
+        "calibration_seconds": 0.02534363199811196,
+        "estimated_full_solve_seconds_cubic": 25.34363199811196,
+        "prediction_values_persisted": false
+      },
+      "token_batch_size": 4,
+      "tokens_per_second_cpu": 0.486097784731954,
+      "tokens_per_second_cuda": 1.6633023701055833
+    },
+    "representation_row_count": 6000,
+    "selected_kernel_device_by_runtime": "cuda:0",
+    "subset_id": "n100_r00",
+    "total_seconds": 39.65597804199933,
+    "training_row_count": 4800,
+    "training_trajectory_count": 80,
+    "validation_row_count": 1200,
+    "validation_trajectory_count": 20
+  },
+  "n5": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "benchmark_scope": "TRAINING_POOL_ONLY",
+    "best_k_cumulative_kernel": {
+      "candidate_boundaries_exercised": [
+        1,
+        4
+      ],
+      "full_candidate_grid_supported": [
+        1,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "status": "PASS"
+    },
+    "coarse_grouped_alpha_cv_representative_fold": {
+      "cuda": {
+        "kernel_seconds": 0.012326817995926831,
+        "peak_device_memory_bytes": 282329088,
+        "scaling_seconds": 0.05707180600438733
+      },
+      "input_seconds": 0.005981745001918171,
+      "solve": {
+        "alpha_count": 4,
+        "calibration_rows": 240,
+        "calibration_seconds": 0.005885413003852591,
+        "estimated_full_solve_seconds_cubic": 0.005885413003852591,
+        "prediction_values_persisted": false
+      }
+    },
+    "fixed_test_target_count_loaded": 0,
+    "fixed_test_trajectory_count": 0,
+    "full_style_bounded_kernel": {
+      "estimated_five_fold_kernel_seconds": 17.692933439975604,
+      "estimated_full_one_fold_kernel_seconds": 3.538586687995121,
+      "feature_order": "ascending visual_token_index",
+      "measured_token_count": 4
+    },
+    "global_grouped_alpha_cv_representative_fold": {
+      "cpu": {
+        "kernel_seconds": 0.0040623660024721175,
+        "scaling_seconds": 0.0034563720037112944
+      },
+      "cuda": {
+        "kernel_seconds": 0.09421579400077462,
+        "peak_device_memory_bytes": 22642688,
+        "scaling_seconds": 0.18917220299772453
+      },
+      "exact_smaller_space_solve": {
+        "four_alpha_solve_predict_seconds": 0.0031832469976507127,
+        "prediction_values_persisted": false,
+        "scaling_seconds": 0.007833223004126921,
+        "solve_space": "sample",
+        "sufficient_structure_seconds": 0.0017770569975255057,
+        "system_dimension": 240,
+        "total_seconds": 0.01279352699930314
+      },
+      "input_seconds": 0.007526879002398346,
+      "solve": {
+        "alpha_count": 4,
+        "calibration_rows": 240,
+        "calibration_seconds": 0.005504935994395055,
+        "estimated_full_solve_seconds_cubic": 0.005504935994395055,
+        "prediction_values_persisted": false
+      }
+    },
+    "peak_host_rss_bytes": 837513216,
+    "ranking_token_kernel": {
+      "cpu_batch_seconds": 0.044453001995861996,
+      "cuda_batch_seconds": 0.042126031999941915,
+      "cuda_detail": {
+        "kernel_seconds": 0.0037689789969590493,
+        "peak_device_memory_bytes": 101187584,
+        "scaling_seconds": 0.03486775000055786
+      },
+      "exact_smaller_space_solve": {
+        "four_alpha_solve_predict_seconds": 0.002907162001065444,
+        "prediction_values_persisted": false,
+        "scaling_seconds": 0.0076015790036763065,
+        "solve_space": "sample",
+        "sufficient_structure_seconds": 0.0017384960010531358,
+        "system_dimension": 240,
+        "total_seconds": 0.012247237005794886
+      },
+      "input_seconds": 0.29359624999779044,
+      "max_abs_cuda_vs_cpu_kernel_difference": 2.7284841053187847e-11,
+      "solve": {
+        "alpha_count": 4,
+        "calibration_rows": 240,
+        "calibration_seconds": 0.005150596996827517,
+        "estimated_full_solve_seconds_cubic": 0.005150596996827517,
+        "prediction_values_persisted": false
+      },
+      "token_batch_size": 4,
+      "tokens_per_second_cpu": 89.98267429435583,
+      "tokens_per_second_cuda": 94.95316340275095
+    },
+    "representation_row_count": 300,
+    "selected_kernel_device_by_runtime": "cuda:0",
+    "subset_id": "n005_r00",
+    "total_seconds": 3.3635457679993124,
+    "training_row_count": 240,
+    "training_trajectory_count": 4,
+    "validation_row_count": 60,
+    "validation_trajectory_count": 1
+  },
+  "no_scientific_r2_values_persisted": true,
+  "solver_equivalence": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "atol": 1e-07,
+    "checks": [
+      {
+        "case": "global_shaped",
+        "feature_count": 31,
+        "status": "PASS"
+      },
+      {
+        "case": "multi_token",
+        "feature_count": 47,
+        "status": "PASS"
+      },
+      {
+        "case": "small_full_style",
+        "feature_count": 83,
+        "status": "PASS"
+      },
+      {
+        "case": "coarse_style",
+        "feature_count": 53,
+        "status": "PASS"
+      },
+      {
+        "case": "primal_style",
+        "feature_count": 7,
+        "status": "PASS"
+      },
+      {
+        "case": "extracted_multi_token",
+        "feature_count": 6144,
+        "status": "PASS"
+      }
+    ],
+    "kernel_construction": "PASS",
+    "maximum_absolute_prediction_difference": 8.570921750106208e-14,
+    "rtol": 1e-07,
+    "standardization": "training-only population variance; constants scale to 1",
+    "status": "PASS"
+  },
+  "status": "PASS_TRAINING_ONLY"
+}

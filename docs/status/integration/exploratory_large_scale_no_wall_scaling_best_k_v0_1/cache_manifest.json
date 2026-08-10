@@ -1,0 +1,42 @@
+{
+  "artifact_id": "large-scale-no-wall-p7-cache-manifest-v0.1",
+  "cache_root": "/mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p7_representation_solver_v0_1",
+  "entries": {
+    "COARSE_2x6": {
+      "byte_size": 707788928,
+      "checksum": "4a1c9562a26416eb6b069baeeb9f1c73513f7306f30a7cfe54dd30efe7094bdf",
+      "dtype": "float32",
+      "durability_status": "RECONSTRUCTABLE_NVME_ONLY",
+      "path": "/mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p7_representation_solver_v0_1/coarse_2x6.f32.npy",
+      "reconstructable": true,
+      "representation_recipe_version": "coarse-2x6-contiguous-v0.1",
+      "row_order": "canonical row ordinal",
+      "shape": [
+        7200,
+        24576
+      ]
+    },
+    "FULL_TOKEN_GRID": {
+      "cache_materialized": false,
+      "durability_status": "P6_SOURCE_AUTHORITY_ONLY",
+      "reconstructable": true,
+      "representation_recipe_version": "ascending-token-flatten-v0.1"
+    },
+    "GLOBAL_MEAN": {
+      "cache_materialized": false,
+      "durability_status": "P6_POOLED_AUTHORITY_REUSED",
+      "reconstructable": true,
+      "representation_recipe_version": "p6-global-mean-f32-v0.1"
+    },
+    "TOKEN_INDEXED_VIEW": {
+      "cache_materialized": false,
+      "durability_status": "P6_SOURCE_AUTHORITY_ONLY",
+      "reconstructable": true,
+      "representation_recipe_version": "indexed-token-view-v0.1"
+    }
+  },
+  "p6_source_manifest_sha256": "a57be180a9054336dbe36d2ddaddbec2859e21d5b6a42dae5b25b1c276e2d5bb",
+  "reconstructable_cache_s3_upload_skipped": true,
+  "row_authority_sha256": "13a1b6f32a502b35875bf2a2d608326cbce2619949ea47808d175cbed28084c9",
+  "status": "PASS"
+}

@@ -1,0 +1,57 @@
+{
+  "artifact_id": "large-scale-no-wall-p8-execution-budget-v0.1",
+  "bounded_parallelism": 1,
+  "cache_root": "/mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p7_representation_solver_v0_1",
+  "cache_strategy": {
+    "COARSE_2x6": "retain reconstructable float32 NVMe cache",
+    "FULL_TOKEN_GRID": "manifest-addressed P6 float16 shards; no full cache",
+    "GLOBAL_MEAN": "reuse authoritative P6 float32 pooled shards",
+    "TOKEN_INDEXED_VIEW": "bounded manifest-addressed token reads"
+  },
+  "conditions_for_smallest_unit_retry": [
+    "cache identity mismatch: rebuild only named reconstructable cache",
+    "CUDA OOM: retry only current fold with token_batch_size=1",
+    "interrupted solve: retry only current subset/fold/representation"
+  ],
+  "device": {
+    "COARSE_2x6": "cuda:0",
+    "FULL_TOKEN_GRID": "cuda:0",
+    "GLOBAL_MEAN": "cuda:0",
+    "TOKEN_RANKING": "cpu_exact_smaller_space"
+  },
+  "expected_disk_footprint_bytes": 707788928,
+  "expected_machine_runtime": {
+    "estimated_single_machine_seconds": 161366.47993835382,
+    "method": "runtime-only extrapolation; no R2 or decoding trend used",
+    "note": "interpolates exact N=5/N=100 endpoints and frozen per-N replicate counts",
+    "ranking_exact_solve_seconds_by_training_size": {
+      "100": 1.058112942992011,
+      "15": 0.013467083287744111,
+      "40": 0.06454814634436787,
+      "5": 0.012247237005794886,
+      "70": 0.3472475221861006
+    }
+  },
+  "feature_chunk_size": 8192,
+  "frozen_alpha_grid": [
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "frozen_before_fixed_test_outcomes": true,
+  "gpu_memory_ceiling_bytes": 21474836480,
+  "host_memory_ceiling_bytes": 15032385536,
+  "numerical_computation_dtype": "float64",
+  "resume_granularity": "subset_id/selection_fold/kernel_family",
+  "selection_basis": [
+    "runtime",
+    "memory",
+    "stability",
+    "I/O",
+    "cost"
+  ],
+  "status": "LOCKED_FOR_P8",
+  "temporary_cache_footprint_bytes": 707788928,
+  "token_batch_size": 4
+}

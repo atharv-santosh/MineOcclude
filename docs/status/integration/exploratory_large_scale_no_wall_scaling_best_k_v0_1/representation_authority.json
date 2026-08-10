@@ -1,0 +1,107 @@
+{
+  "alpha_grid": [
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "artifact_id": "large-scale-no-wall-p7-representation-authority-v0.1",
+  "best_k_tokens": {
+    "candidate_k": [
+      1,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "feature_concatenation_order": "ascending visual_token_index",
+    "feature_dimensions": {
+      "1": 2048,
+      "128": 262144,
+      "16": 32768,
+      "32": 65536,
+      "4": 8192,
+      "64": 131072,
+      "8": 16384
+    },
+    "membership_order": "training-only rank order",
+    "nested_grouping": {
+      "fixed_test_ids_used": 0,
+      "nested_ranking_subfold_records": 1240,
+      "status": "PASS",
+      "subset_count": 62
+    }
+  },
+  "canonical_rows": {
+    "count": 7200,
+    "identity": [
+      "trajectory_spec_id",
+      "model_frame_idx"
+    ],
+    "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/canonical_row_authority.jsonl",
+    "sha256": "13a1b6f32a502b35875bf2a2d608326cbce2619949ea47808d175cbed28084c9"
+  },
+  "coarse_2x6": {
+    "dimension": 24576,
+    "geometry": "14x24 -> contiguous [2x7] by [6x4] bins; row-major flatten",
+    "validation": "PASS"
+  },
+  "fixed_test_guard": {
+    "fixed_test_rows_structurally_verified": true,
+    "scores_opened": false,
+    "targets_used_for_benchmark": false,
+    "test_authority_hash": "68455519777d8e5e613813f03ebc148c49b62cf33b11182993a3e58fd0809d4a"
+  },
+  "full_token_grid": {
+    "dimension": 688128,
+    "order": "visual_token_index 0..335; each token contributes contiguous 2048 values",
+    "strategy": "bounded manifest-addressed token/feature chunks; no full cache",
+    "validation": "PASS"
+  },
+  "global_mean": {
+    "dimension": 2048,
+    "equivalence_max_abs_difference": 0.0,
+    "source": "P6 authoritative pooled float32 shards",
+    "validation": "PASS"
+  },
+  "grouping_authority": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/grouped_fold_authority.json",
+  "kernel_formulation": "sum feature-block Z_scope @ Z_train.T; never p-by-p for FULL",
+  "logical_budgets": {
+    "best_k_candidate_logical_evaluations": 8680,
+    "core_final_outer_fits": 186,
+    "final_ranking_fold_batches_before_vectorization": 310,
+    "final_token_ranking_logical_evaluations": 416640,
+    "global_full_coarse_alpha_cv_logical_evaluations": 3720,
+    "learning_curve_subset_authorities": 62,
+    "nested_ranking_subfold_batches_before_vectorization": 1240,
+    "nested_token_ranking_logical_evaluations": 1666560,
+    "secondary_coarse_outer_fits": 62,
+    "status": "PASS"
+  },
+  "numerical_tolerance": {
+    "atol": 1e-07,
+    "rtol": 1e-07
+  },
+  "p6_source": {
+    "manifest": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p6_activation_manifest.json",
+    "sha256": "a57be180a9054336dbe36d2ddaddbec2859e21d5b6a42dae5b25b1c276e2d5bb"
+  },
+  "primary_cohort_version": "V2_ACCEPTED_REPAIRED_PRIMARY",
+  "scaler_authority": {
+    "constant_feature_scale": 1.0,
+    "fit_scope": "current fold training rows only",
+    "implementation": "mineocclude.probes.ridge.fit_standard_scaler",
+    "variance": "population ddof=0"
+  },
+  "solver": {
+    "implementation": "mineocclude.probes.p7_ridge",
+    "implementation_sha256": "4a5c750051cc71da839ef5edc1144715a2a17e51748ae47d0ed5f892058c7fb0",
+    "intercept": "unpenalized training-target mean",
+    "objective": "literal repository ridge alpha semantics",
+    "sample_space_kernel": true,
+    "token_ranking_solve": "exact bounded min(training_rows,2048) primal/sample system; four alphas per sufficient structure"
+  },
+  "status": "PASS_AUTHORITY_FROZEN"
+}
