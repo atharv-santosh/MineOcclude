@@ -104,6 +104,19 @@ def _sha256(path: str) -> str:
         return ""
 
 
+def _capturing_jar_path() -> str:
+    """Return the installed capture mod, preferring the accepted 0.1.1 build."""
+    override = os.environ.get("MINEOCCLUDE_MOD_JAR")
+    if override:
+        return os.path.expanduser(override)
+    mods = os.path.join(SRV, "mods")
+    for name in ("mineocclude-0.1.1.jar", "mineocclude-0.1.0.jar"):
+        candidate = os.path.join(mods, name)
+        if os.path.isfile(candidate):
+            return candidate
+    return os.path.join(mods, "mineocclude-0.1.1.jar")
+
+
 def _write_provenance(episode_id, command, seed, start_utc, end_utc, out_root,
                       layout, accepted, trajectory_id=None) -> str:
     """Record run-level provenance AT capture: exact command, UTC start/end,
@@ -127,8 +140,7 @@ def _write_provenance(episode_id, command, seed, start_utc, end_utc, out_root,
                                 "src", "fabric/mineocclude-mod/src", "scripts",
                                 "configs", "schemas"])),
         "working_tree_dirty": bool(_git(["status", "--porcelain"])),
-        "capturing_jar_sha256": _sha256(
-            os.path.expanduser("~/mineocclude-server/mods/mineocclude-0.1.0.jar")),
+        "capturing_jar_sha256": _sha256(_capturing_jar_path()),
         "accepted": accepted,
         "provenance_schema": "person-c-capture-provenance-v0.1",
     }
@@ -142,14 +154,48 @@ def _write_provenance(episode_id, command, seed, start_utc, end_utc, out_root,
 
 
 def focus_client() -> bool:
-    """Bring the Minecraft client frontmost so rendering is never throttled."""
-    script = (
-        'tell application "System Events" to set frontmost of '
-        '(first process whose name is "java") to true'
-    )
+    """Bring the sole visible Minecraft client frontmost.
+
+    Captures historically used macOS ``osascript``.  On Linux/X11, target the
+    Minecraft window itself (rather than an arbitrary Java process), activate
+    it through the window manager, and assert that it owns X input focus.
+    """
+    if sys.platform == "darwin":
+        command = [
+            "osascript", "-e",
+            'tell application "System Events" to set frontmost of '
+            '(first process whose name is "java") to true',
+        ]
+    elif sys.platform.startswith("linux"):
+        if not os.environ.get("DISPLAY"):
+            return False
+        try:
+            found = subprocess.run(
+                ["xdotool", "search", "--onlyvisible", "--name",
+                 r"^Minecraft"],
+                check=True, capture_output=True, text=True, timeout=10,
+            )
+            window_ids = [line.strip() for line in found.stdout.splitlines()
+                          if line.strip()]
+            # Multiple visible clients make OS-level input targeting ambiguous.
+            if len(window_ids) != 1:
+                return False
+            window_id = window_ids[0]
+            subprocess.run(
+                ["xdotool", "windowactivate", "--sync", window_id],
+                check=True, capture_output=True, text=True, timeout=10,
+            )
+            focused = subprocess.run(
+                ["xdotool", "getwindowfocus"],
+                check=True, capture_output=True, text=True, timeout=10,
+            )
+            return focused.stdout.strip() == window_id
+        except (subprocess.SubprocessError, OSError):
+            return False
+    else:
+        return False
     try:
-        subprocess.run(["osascript", "-e", script], check=True,
-                       capture_output=True, timeout=10)
+        subprocess.run(command, check=True, capture_output=True, timeout=10)
         return True
     except (subprocess.SubprocessError, OSError):
         return False

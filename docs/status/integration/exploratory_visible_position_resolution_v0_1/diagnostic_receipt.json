@@ -1,0 +1,186 @@
+{
+  "FINAL_SCIENTIFIC_CONCLUSION": "The successor diagnostics establish that the original mean-pooled probe was a measurement bottleneck: preserving MineWorld's spatial hidden-state structure produces strong, independently replicated within-layout visible-position decoding, and that advantage collapses when stable token-slot correspondence is destroyed by a locked sample-specific scramble. However, held-out-layout transfer remains heterogeneous, and observed cross-layout performance is not clearly separated from an audited trajectory-block target null that preserves the dataset's stereotyped temporal position profile. The work therefore establishes spatial measurement sensitivity but does not establish robust target-specific cross-layout decoding, and the original uncertainty hypothesis remains unresolved.",
+  "adjudication": {
+    "ACROSS_LAYOUT_GENERALIZATION": "MIXED",
+    "BOTH_TRAJECTORY_AND_LAYOUT_VARIANCE": true,
+    "CONFIRMATORY_VISIBLE_POSITION_SENSITIVITY": "NOT_ESTABLISHED",
+    "GROUPED_TARGET_NULL_SEPARATION": "NOT_ESTABLISHED",
+    "HIGH_DIMENSIONAL_OVERFIT_PLAUSIBLE": "Unclear",
+    "LAYOUT_SPECIFIC_REPRESENTATION_PLAUSIBLE": true,
+    "LAYOUT_VARIANCE_CLASS": "BOTH_TRAJECTORY_AND_LAYOUT_VARIANCE",
+    "LAYOUT_VARIANCE_DOMINANT": false,
+    "ORIGINAL_MVP_REINTERPRETED": false,
+    "ORIGINAL_MVP_STATUS": "INCONCLUSIVE_DUE_TO_UNESTABLISHED_MEASUREMENT_SENSITIVITY",
+    "ORIGINAL_UNCERTAINTY_HYPOTHESIS_RESOLVED": false,
+    "PROGRAM_STATUS": "EXPLORATORY_VISIBLE_POSITION_RESOLUTION_COMPLETE",
+    "SPATIAL_REPRESENTATION_BOTTLENECK_PLAUSIBLE": "Unclear",
+    "STABLE_SPATIAL_IDENTITY_MATTERS": true,
+    "STILL_INSUFFICIENT_EVIDENCE": true,
+    "TARGET_METRIC_INSTABILITY_CONTRIBUTES": false,
+    "TARGET_SPECIFIC_VISIBLE_POSITION_DECODING": "NOT_ESTABLISHED",
+    "TOKEN_PRESERVING_READOUT_GENERALIZES": "UNCLEAR",
+    "TRAJECTORY_VARIANCE_CLASS": "MIXED_TRAJECTORY_EFFECT",
+    "TRAJECTORY_VARIANCE_DOMINANT": false,
+    "U1_U2_INTERPRETABLE": false,
+    "VISIBLE_POSITION_MEASUREMENT_SENSITIVITY": "SUPPORTED_FOR_SPATIALLY_PRESERVING_EXPLORATORY_READOUT",
+    "WITHIN_LAYOUT_REPLICATION": "STRONG"
+  },
+  "artifact_id": "visible-position-resolution-diagnostic-receipt-v0.1",
+  "artifacts": {
+    "final_adjudication": {
+      "byte_size": 20603,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/final_adjudication.json",
+      "sha256": "be8c3c2aa0b702f7f1abbbb1d6c509bda0b27d9e0cd59892137f829210a0ec8b"
+    },
+    "package_files": [
+      "across_layout_generalization.json",
+      "capture_manifest.json",
+      "development_freeze.json",
+      "expanded_activation_manifest.json",
+      "expanded_visibility_eligibility.json",
+      "grouped_target_null.json",
+      "metric_decomposition.json",
+      "replication_authority_decision.json",
+      "replication_inventory.json",
+      "runtime_benchmark.json",
+      "six_layout_generalization.json",
+      "spatial_representation_ladder.json",
+      "spatial_scramble_control.json",
+      "within_layout_replication.json"
+    ],
+    "provenance": {
+      "byte_size": 27563,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/provenance.json",
+      "sha256": "fa95cb64261160720d768d38cc4fdf4177d10e4270ddf8d411b39c90d5941cae"
+    }
+  },
+  "authority": {
+    "condition": "no_wall_visible",
+    "eligible_rows": 1071,
+    "hidden_width": 2048,
+    "layer_idx": 4,
+    "layouts": 6,
+    "target": "x_true_blocks (regime_a_primary_v1)",
+    "token_count": 336,
+    "token_grid": [
+      14,
+      24
+    ],
+    "trajectories": 18,
+    "trajectories_per_layout": 3
+  },
+  "base_commit": "626dcc00710f2b51cbbe2bfdea86785cb2d70e61",
+  "generated_at": "2026-08-10T04:11:07Z",
+  "large_tensors_in_git": false,
+  "next_project_direction": "E_COMBINATION",
+  "next_project_direction_components": [
+    "MEASUREMENT_PATH",
+    "TARGET_TRAJECTORY_DESIGN"
+  ],
+  "program": "exploratory visible-position resolution (Tasks 1-5)",
+  "schema_version": "1.0",
+  "scope": "EXPLORATORY_SUCCESSOR_DIAGNOSTICS_NOT_CONFIRMATORY",
+  "status": "PASS",
+  "successor_branch": "exploration/visible-position-resolution-v0-1",
+  "tasks": {
+    "task_1": {
+      "outcome": "BALANCED_NEW_CAPTURE selected; 18-trajectory target set",
+      "question": "is there enough eligible independent authority to replicate?"
+    },
+    "task_2": {
+      "TARGET_METRIC_INSTABILITY_CONTRIBUTES": false,
+      "outcome": "spatial ladder run on the original 351-row authority; COARSE_2x6 survives as the single intermediate",
+      "question": "is the mean-pooled probe a spatial measurement bottleneck?"
+    },
+    "task_3": {
+      "outcome": "12 new accepted no-wall trajectories, 720 eligible rows",
+      "question": "can independent replication authority be captured?"
+    },
+    "task_4": {
+      "across_layout_macro_r2": {
+        "COARSE_2x6": 0.3191491809005946,
+        "FULL_TOKEN_GRID": 0.3175977234797748,
+        "GLOBAL_MEAN": 0.26574307713230466
+      },
+      "classifications": {
+        "both_trajectory_and_layout_variance": true,
+        "layout_specific_representation_plausible": true,
+        "layout_variance_class": "BOTH_TRAJECTORY_AND_LAYOUT_VARIANCE",
+        "layout_variance_dominant": false,
+        "token_preserving_readout_generalizes": "UNCLEAR",
+        "trajectory_variance_class": "MIXED_TRAJECTORY_EFFECT",
+        "trajectory_variance_dominant": false
+      },
+      "question": "does the spatial advantage replicate and transfer?",
+      "trajectories_beating_global": {
+        "COARSE_2x6": 18,
+        "FULL_TOKEN_GRID": 18
+      },
+      "within_layout_macro_r2": {
+        "COARSE_2x6": 0.8249646147116141,
+        "FULL_TOKEN_GRID": 0.815495540876805,
+        "GLOBAL_MEAN": 0.014819740599772898
+      }
+    },
+    "task_5": {
+      "control_a": {
+        "across_ordered_minus_scrambled_range": {
+          "COARSE_2x6": [
+            0.370576844992859,
+            0.4840102749305869
+          ],
+          "FULL_TOKEN_GRID": [
+            0.7396356340512016,
+            0.7793902239438522
+          ]
+        },
+        "seeds": [
+          20260901,
+          20260902,
+          20260903,
+          20260904,
+          20260905
+        ],
+        "verdict": {
+          "STABLE_SPATIAL_IDENTITY_ACROSS_LAYOUT": true,
+          "STABLE_SPATIAL_IDENTITY_MATTERS": true,
+          "STABLE_SPATIAL_IDENTITY_WITHIN_LAYOUT": true
+        },
+        "within_ordered_minus_scrambled_range": {
+          "COARSE_2x6": [
+            0.6596028612160443,
+            0.6961038020769071
+          ],
+          "FULL_TOKEN_GRID": [
+            0.8614920289464463,
+            0.8900015644417172
+          ]
+        }
+      },
+      "control_b": {
+        "COARSE_2x6": {
+          "empirical_percentile": 83.0,
+          "null_median": 0.132268009307053,
+          "observed": 0.3191491809005946,
+          "upper_tail_statistic": 0.1782178217821782
+        },
+        "FULL_TOKEN_GRID": {
+          "empirical_percentile": 59.0,
+          "null_median": 0.26187911306662737,
+          "observed": 0.3175977234797748,
+          "upper_tail_statistic": 0.4158415841584158
+        },
+        "GROUPED_NULL_B": 100,
+        "separation": "NOT_ESTABLISHED"
+      },
+      "question": "does the advantage depend on stable spatial slot identity, and is it unusual against the audited grouped target null?"
+    }
+  },
+  "top_limitations": [
+    "Exploratory throughout: this is not a confirmatory pass and no confirmatory gate was defined, met, or retrospectively applied.",
+    "Layer 4 remains EXPLORATORY_PRESELECTED_FROM_EXISTING_POSITIVE_CONTROL; no layer sweep was run, so the layer choice is inherited, not established.",
+    "Observed across-layout performance is NOT clearly separated from the audited grouped target null (COARSE empirical percentile 83.0, upper-tail statistic 0.178; FULL 59.0 and 0.416). Target-specific cross-layout decoding is NOT established.",
+    "The audited null is strong because x_true_blocks carries a stereotyped ramp shared across trajectories; a whole-trajectory block permutation therefore leaves much of the target profile predictable. This is a property of the capture design, not of the readout.",
+    "Null mapping conservatism: layout_06_ep12616 is the sole 51-frame trajectory and forms a singleton audited length stratum, so it retains its own target block in every replicate (51/1071 rows = 4.76% remain associated). This can only strengthen the null, never weaken it."
+  ]
+}

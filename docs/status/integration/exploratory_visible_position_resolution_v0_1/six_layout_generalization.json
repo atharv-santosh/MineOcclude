@@ -1,0 +1,834 @@
+{
+  "artifact_id": "visible-position-resolution-six-layout-generalization-v0.1",
+  "base_head": "626dcc00710f2b51cbbe2bfdea86785cb2d70e61",
+  "full_minus_global_r2_by_layout": {
+    "L01": 0.541050493242062,
+    "L02": 0.1640260406005679,
+    "L03": 1.4844068551595542,
+    "L04": -0.633986124440667,
+    "L05": -1.2304712517005205,
+    "L06": -0.6390669061368996
+  },
+  "full_minus_global_sign_counts": {
+    "negative_layout_count": 3,
+    "positive_layout_count": 3
+  },
+  "layer_idx": 4,
+  "nmae_std_definition": "NMAE_STD = MAE / test_target_std, where test_target_std is the population (ddof=0) standard deviation of the held-out targets; null when that standard deviation is exactly zero.",
+  "outer_design": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "alpha_selection_grouping": "training_layout",
+    "alpha_selection_seed": 20260719,
+    "independence_caveat": "These six folds are NOT independent replications; they reuse one six-trajectory development authority.",
+    "outer_fold_count": 6,
+    "outer_test_unit": "one complete held-out layout trajectory",
+    "scaler_fit_scope": "training_layout_rows_only",
+    "training_unit": "the other five layouts"
+  },
+  "pooling_equivalence": {
+    "comparison": "GLOBAL_1x1 region pooling vs frozen production mean pool",
+    "max_abs_difference": 2.9802322387695312e-08,
+    "note": "identical float32 means; any residual is summation order alone",
+    "pass": true,
+    "tolerance": 1e-06
+  },
+  "representations": {
+    "FULL_TOKEN_GRID": {
+      "definition": {
+        "feature_count": 688128,
+        "flattening": "region x hidden, region identity preserved",
+        "pooling": "mean over tokens inside the region, float32",
+        "region_cols": 24,
+        "region_count": 336,
+        "region_order": "row_block_major",
+        "region_rows": 14,
+        "representation": "FULL_14x24",
+        "token_grid": "14x24",
+        "tokens_per_region": 1
+      },
+      "folds": [
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 688128,
+          "held_out_layout": "L01",
+          "inner_fold_count": 5,
+          "mae": 0.3045078583659094,
+          "mse": 0.13456120534975238,
+          "nmae_std": 0.37061660269013946,
+          "pearson_r": 0.991288904989753,
+          "prediction_bias": 1.799652898309328,
+          "prediction_slope": 1.2997550793979,
+          "r2": 0.8006700304344402,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.220063563054,
+          "target_mean": -4.7206166464012345,
+          "target_min": -5.988137988913,
+          "target_range": 2.7680744258590004,
+          "target_sst": 40.50405635731415,
+          "target_std": 0.8216249789017103,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 91.1849895909836,
+            "final_fit": 3.8493012899998575,
+            "scaling": 1.5374275099893566
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L02",
+            "L03",
+            "L04",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.9732635819714031,
+            "1.0": 0.9732633034580951,
+            "10.0": 0.9732605188242293,
+            "100.0": 0.9732327223003481
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 688128,
+          "held_out_layout": "L02",
+          "inner_fold_count": 5,
+          "mae": 0.5153096598635067,
+          "mse": 0.3367782312554703,
+          "nmae_std": 0.6140920364151379,
+          "pearson_r": 0.9623302885798594,
+          "prediction_bias": 2.742619709419241,
+          "prediction_slope": 1.4595935298429574,
+          "r2": 0.521728639863992,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.086767911441,
+          "target_mean": -4.477648232948799,
+          "target_min": -5.920504677605,
+          "target_range": 2.833736766164,
+          "target_sst": 42.249433187013246,
+          "target_std": 0.8391407627946303,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 91.22310440300498,
+            "final_fit": 3.8224644199945033,
+            "scaling": 1.557885469024768
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L03",
+            "L04",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 1.166827715996385,
+            "1.0": 1.1668271244815505,
+            "10.0": 1.1668212103746858,
+            "100.0": 1.16676217315038
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 688128,
+          "held_out_layout": "L03",
+          "inner_fold_count": 5,
+          "mae": 0.4019069894007968,
+          "mse": 0.28707322916385053,
+          "nmae_std": 0.4108275279064508,
+          "pearson_r": 0.9237172204555721,
+          "prediction_bias": 2.965514875109085,
+          "prediction_slope": 1.6337590335191228,
+          "r2": 0.7000418618916407,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.401916690045,
+          "target_mean": -5.076525560035468,
+          "target_min": -6.628791703127,
+          "target_range": 3.2268750130819996,
+          "target_sst": 57.422658569806025,
+          "target_std": 0.9782864148585357,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 91.10528180800611,
+            "final_fit": 3.824185250996379,
+            "scaling": 1.5579057410068344
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L04",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.8501930499988338,
+            "1.0": 0.8501926596454222,
+            "10.0": 0.850188756866079,
+            "100.0": 0.8501498043522371
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 688128,
+          "held_out_layout": "L04",
+          "inner_fold_count": 5,
+          "mae": 0.645588168335293,
+          "mse": 0.5365189736677167,
+          "nmae_std": 0.8017409705690837,
+          "pearson_r": 0.9656773587492924,
+          "prediction_bias": 2.3311281917221303,
+          "prediction_slope": 1.7403003188535715,
+          "r2": 0.17254932397389044,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.145496977623,
+          "target_mean": -4.6044180014961835,
+          "target_min": -5.976126592803,
+          "target_range": 2.8306296151800003,
+          "target_sst": 38.90399676106766,
+          "target_std": 0.805232852048272,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 91.3617459499801,
+            "final_fit": 3.837142962991493,
+            "scaling": 1.578322251996724
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L03",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.8742923178522897,
+            "1.0": 0.8742921511659997,
+            "10.0": 0.8742904847027685,
+            "100.0": 0.8742738599290607
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 688128,
+          "held_out_layout": "L05",
+          "inner_fold_count": 5,
+          "mae": 1.2430438461515039,
+          "mse": 1.6759755969573342,
+          "nmae_std": 1.2337318392447543,
+          "pearson_r": 0.9616234418112934,
+          "prediction_bias": 2.7525085259177082,
+          "prediction_slope": 1.3170398374308496,
+          "r2": -0.6509591999778692,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -1.57983470977,
+          "target_mean": -3.5180760559978164,
+          "target_min": -5.164307131358,
+          "target_range": 3.584472421588,
+          "target_sst": 60.90915863867988,
+          "target_std": 1.0075478370668054,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 91.49789685397991,
+            "final_fit": 3.8556197920115665,
+            "scaling": 1.5705373599776067
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L03",
+            "L04",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.7285744904752715,
+            "1.0": 0.7285743265008422,
+            "10.0": 0.7285726870688432,
+            "100.0": 0.728556323863057
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 688128,
+          "held_out_layout": "L06",
+          "inner_fold_count": 5,
+          "mae": 1.1658994217340226,
+          "mse": 1.5979906848688743,
+          "nmae_std": 1.3934587720230318,
+          "pearson_r": 0.9757072408109507,
+          "prediction_bias": 4.1374522598121155,
+          "prediction_slope": 2.24571617678455,
+          "r2": -1.2826552102911286,
+          "sample_count": 51,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 300,
+          "selected_alpha": 100.0,
+          "target_max": -4.007367272253,
+          "target_mean": -5.423170684948392,
+          "target_min": -6.678733455255,
+          "target_range": 2.671366183002,
+          "target_sst": 35.70295003857304,
+          "target_std": 0.8366945941582203,
+          "test_row_count": 51,
+          "timings_seconds": {
+            "alpha_selection": 94.1412773229822,
+            "final_fit": 3.815526092017535,
+            "scaling": 1.6240834280033596
+          },
+          "train_row_count": 300,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L03",
+            "L04",
+            "L05"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.5307723182741096,
+            "1.0": 0.5307722058869009,
+            "10.0": 0.5307710824506117,
+            "100.0": 0.5307598915333657
+          }
+        }
+      ],
+      "pooled_row_metrics": {
+        "mae": 0.7010890650582786,
+        "mse": 0.7400340715440458,
+        "nmae_std": 0.6602333414269599,
+        "pearson_r": 0.5900823058067214,
+        "prediction_bias": -0.351171025398989,
+        "prediction_slope": 0.91566669176287,
+        "r2": 0.3437032814374458,
+        "sample_count": 351,
+        "scope": "SECONDARY_ONLY",
+        "target_max": -1.57983470977,
+        "target_mean": -4.616577705826604,
+        "target_min": -6.678733455255,
+        "target_range": 5.098898745485,
+        "target_sst": 395.7843331608889,
+        "target_std": 1.0618807337766636
+      },
+      "representation_name": "FULL_14x24",
+      "summary": {
+        "equal_layout_macro_mae": {
+          "layout_count": 6,
+          "macro_mean": 0.712709323975172,
+          "macro_median": 0.5804489140993998,
+          "maximum": 1.2430438461515039,
+          "minimum": 0.3045078583659094,
+          "range": 0.9385359877855945
+        },
+        "equal_layout_macro_r2": {
+          "layout_count": 6,
+          "macro_mean": 0.043562574315827586,
+          "macro_median": 0.3471389819189412,
+          "maximum": 0.8006700304344402,
+          "minimum": -1.2826552102911286,
+          "range": 2.0833252407255687
+        },
+        "feature_count": 688128,
+        "layouts_above_global": 3,
+        "layouts_below_global": 3,
+        "median_r2_delta_over_global": -0.23498004192004956,
+        "per_layout_mae": {
+          "L01": 0.3045078583659094,
+          "L02": 0.5153096598635067,
+          "L03": 0.4019069894007968,
+          "L04": 0.645588168335293,
+          "L05": 1.2430438461515039,
+          "L06": 1.1658994217340226
+        },
+        "per_layout_nmae_std": {
+          "L01": 0.37061660269013946,
+          "L02": 0.6140920364151379,
+          "L03": 0.4108275279064508,
+          "L04": 0.8017409705690837,
+          "L05": 1.2337318392447543,
+          "L06": 1.3934587720230318
+        },
+        "per_layout_r2": {
+          "L01": 0.8006700304344402,
+          "L02": 0.521728639863992,
+          "L03": 0.7000418618916407,
+          "L04": 0.17254932397389044,
+          "L05": -0.6509591999778692,
+          "L06": -1.2826552102911286
+        },
+        "per_layout_r2_delta_over_global": {
+          "L01": 0.541050493242062,
+          "L02": 0.1640260406005679,
+          "L03": 1.4844068551595542,
+          "L04": -0.633986124440667,
+          "L05": -1.2304712517005205,
+          "L06": -0.6390669061368996
+        },
+        "selected_alpha_by_layout": {
+          "L01": 100.0,
+          "L02": 100.0,
+          "L03": 100.0,
+          "L04": 100.0,
+          "L05": 100.0,
+          "L06": 100.0
+        }
+      }
+    },
+    "GLOBAL_MEAN": {
+      "definition": {
+        "feature_count": 2048,
+        "flattening": "region x hidden, region identity preserved",
+        "pooling": "mean over tokens inside the region, float32",
+        "region_cols": 1,
+        "region_count": 1,
+        "region_order": "row_block_major",
+        "region_rows": 1,
+        "representation": "GLOBAL_1x1",
+        "token_grid": "14x24",
+        "tokens_per_region": 336
+      },
+      "folds": [
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 2048,
+          "held_out_layout": "L01",
+          "inner_fold_count": 5,
+          "mae": 0.644668970312621,
+          "mse": 0.4998068665235705,
+          "nmae_std": 0.7846267906489024,
+          "pearson_r": 0.9366728703150469,
+          "prediction_bias": 1.1026615178917647,
+          "prediction_slope": 1.085719910367161,
+          "r2": 0.2596195371923782,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.220063563054,
+          "target_mean": -4.7206166464012345,
+          "target_min": -5.988137988913,
+          "target_range": 2.7680744258590004,
+          "target_sst": 40.50405635731415,
+          "target_std": 0.8216249789017103,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 0.2509870580106508,
+            "final_fit": 0.014899535017320886,
+            "scaling": 0.0040151000139303505
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L02",
+            "L03",
+            "L04",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.7252048210203298,
+            "1.0": 0.7268002613249129,
+            "10.0": 0.7135525394348603,
+            "100.0": 0.6820348985338621
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 2048,
+          "held_out_layout": "L02",
+          "inner_fold_count": 5,
+          "mae": 0.5002488215712265,
+          "mse": 0.45227835197687055,
+          "nmae_std": 0.596144108057895,
+          "pearson_r": 0.8307323547140998,
+          "prediction_bias": 3.7915787335459537,
+          "prediction_slope": 1.6989363302374063,
+          "r2": 0.35770259926342407,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.086767911441,
+          "target_mean": -4.477648232948799,
+          "target_min": -5.920504677605,
+          "target_range": 2.833736766164,
+          "target_sst": 42.249433187013246,
+          "target_std": 0.8391407627946303,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 0.25675405099173076,
+            "final_fit": 0.011867669003549963,
+            "scaling": 0.0045818159996997565
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L03",
+            "L04",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 1.0330777169269756,
+            "1.0": 1.0181513286955837,
+            "10.0": 0.9275901668207677,
+            "100.0": 0.8127538194858476
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 2048,
+          "held_out_layout": "L03",
+          "inner_fold_count": 5,
+          "mae": 1.1765057947917186,
+          "mse": 1.707716362872293,
+          "nmae_std": 1.2026189640605878,
+          "pearson_r": 0.8512113871283872,
+          "prediction_bias": 0.447679214878614,
+          "prediction_slope": 1.4164555841856925,
+          "r2": -0.7843649932679135,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.401916690045,
+          "target_mean": -5.076525560035468,
+          "target_min": -6.628791703127,
+          "target_range": 3.2268750130819996,
+          "target_sst": 57.422658569806025,
+          "target_std": 0.9782864148585357,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 0.256970274989726,
+            "final_fit": 0.01203333999728784,
+            "scaling": 0.004472129017813131
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L04",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.4356379544989396,
+            "1.0": 0.4496805961660179,
+            "10.0": 0.44309279400086093,
+            "100.0": 0.3561683023940053
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 2048,
+          "held_out_layout": "L04",
+          "inner_fold_count": 5,
+          "mae": 0.3027990781171907,
+          "mse": 0.12544240480435767,
+          "nmae_std": 0.37603915109394787,
+          "pearson_r": 0.9450697492341036,
+          "prediction_bias": 2.1010662935341218,
+          "prediction_slope": 1.446199389278415,
+          "r2": 0.8065354484145575,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 100.0,
+          "target_max": -3.145496977623,
+          "target_mean": -4.6044180014961835,
+          "target_min": -5.976126592803,
+          "target_range": 2.8306296151800003,
+          "target_sst": 38.90399676106766,
+          "target_std": 0.805232852048272,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 0.25766927999211475,
+            "final_fit": 0.011959194001974538,
+            "scaling": 0.004489729995839298
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L03",
+            "L05",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.7629960013004143,
+            "1.0": 0.761019161730486,
+            "10.0": 0.7362280572571109,
+            "100.0": 0.7347075667349434
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 2048,
+          "held_out_layout": "L05",
+          "inner_fold_count": 5,
+          "mae": 0.5135719506629691,
+          "mse": 0.42685945245463397,
+          "nmae_std": 0.5097246321902598,
+          "pearson_r": 0.8588075256068817,
+          "prediction_bias": 1.595911100500068,
+          "prediction_slope": 1.3257108606052403,
+          "r2": 0.5795120517226514,
+          "sample_count": 60,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 291,
+          "selected_alpha": 10.0,
+          "target_max": -1.57983470977,
+          "target_mean": -3.5180760559978164,
+          "target_min": -5.164307131358,
+          "target_range": 3.584472421588,
+          "target_sst": 60.90915863867988,
+          "target_std": 1.0075478370668054,
+          "test_row_count": 60,
+          "timings_seconds": {
+            "alpha_selection": 0.2623812649981119,
+            "final_fit": 0.012503239995567128,
+            "scaling": 0.004460989002836868
+          },
+          "train_row_count": 291,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L03",
+            "L04",
+            "L06"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.782432752679679,
+            "1.0": 0.7654024432582153,
+            "10.0": 0.7335123271757462,
+            "100.0": 0.808036601575866
+          }
+        },
+        {
+          "alpha_grid": [
+            0.1,
+            1.0,
+            10.0,
+            100.0
+          ],
+          "alpha_selection_grouping": "training_layout",
+          "feature_count": 2048,
+          "held_out_layout": "L06",
+          "inner_fold_count": 5,
+          "mae": 0.9875044770791798,
+          "mse": 1.1506068844549295,
+          "nmae_std": 1.1802448396032557,
+          "pearson_r": 0.9350897001831188,
+          "prediction_bias": 1.8758713666481583,
+          "prediction_slope": 1.6443166977828114,
+          "r2": -0.643588304154229,
+          "sample_count": 51,
+          "scaler_fit_scope": "training_layout_rows_only",
+          "scaler_training_row_count": 300,
+          "selected_alpha": 10.0,
+          "target_max": -4.007367272253,
+          "target_mean": -5.423170684948392,
+          "target_min": -6.678733455255,
+          "target_range": 2.671366183002,
+          "target_sst": 35.70295003857304,
+          "target_std": 0.8366945941582203,
+          "test_row_count": 51,
+          "timings_seconds": {
+            "alpha_selection": 0.2669506610254757,
+            "final_fit": 0.01264906901633367,
+            "scaling": 0.0019623669795691967
+          },
+          "train_row_count": 300,
+          "training_group_ids": [
+            "L01",
+            "L02",
+            "L03",
+            "L04",
+            "L05"
+          ],
+          "validation_mse_by_alpha": {
+            "0.1": 0.6179605234449148,
+            "1.0": 0.6138685645500919,
+            "10.0": 0.6055005330913674,
+            "100.0": 0.662828941999796
+          }
+        }
+      ],
+      "pooled_row_metrics": {
+        "mae": 0.679858704439834,
+        "mse": 0.7162597077638316,
+        "nmae_std": 0.6402401727563718,
+        "pearson_r": 0.6225473032339232,
+        "prediction_bias": -0.8064588154871131,
+        "prediction_slope": 0.8443481113718502,
+        "r2": 0.3647874957119477,
+        "sample_count": 351,
+        "scope": "SECONDARY_ONLY",
+        "target_max": -1.57983470977,
+        "target_mean": -4.616577705826604,
+        "target_min": -6.678733455255,
+        "target_range": 5.098898745485,
+        "target_sst": 395.7843331608889,
+        "target_std": 1.0618807337766636
+      },
+      "representation_name": "GLOBAL_1x1",
+      "summary": {
+        "equal_layout_macro_mae": {
+          "layout_count": 6,
+          "macro_mean": 0.6875498487558177,
+          "macro_median": 0.5791204604877951,
+          "maximum": 1.1765057947917186,
+          "minimum": 0.3027990781171907,
+          "range": 0.8737067166745278
+        },
+        "equal_layout_macro_r2": {
+          "layout_count": 6,
+          "macro_mean": 0.09590272319514477,
+          "macro_median": 0.3086610682279011,
+          "maximum": 0.8065354484145575,
+          "minimum": -0.7843649932679135,
+          "range": 1.590900441682471
+        },
+        "feature_count": 2048,
+        "per_layout_mae": {
+          "L01": 0.644668970312621,
+          "L02": 0.5002488215712265,
+          "L03": 1.1765057947917186,
+          "L04": 0.3027990781171907,
+          "L05": 0.5135719506629691,
+          "L06": 0.9875044770791798
+        },
+        "per_layout_nmae_std": {
+          "L01": 0.7846267906489024,
+          "L02": 0.596144108057895,
+          "L03": 1.2026189640605878,
+          "L04": 0.37603915109394787,
+          "L05": 0.5097246321902598,
+          "L06": 1.1802448396032557
+        },
+        "per_layout_r2": {
+          "L01": 0.2596195371923782,
+          "L02": 0.35770259926342407,
+          "L03": -0.7843649932679135,
+          "L04": 0.8065354484145575,
+          "L05": 0.5795120517226514,
+          "L06": -0.643588304154229
+        },
+        "selected_alpha_by_layout": {
+          "L01": 100.0,
+          "L02": 100.0,
+          "L03": 100.0,
+          "L04": 100.0,
+          "L05": 10.0,
+          "L06": 10.0
+        }
+      }
+    }
+  },
+  "row_authority": {
+    "outer_fold_layouts": [
+      "L01",
+      "L02",
+      "L03",
+      "L04",
+      "L05",
+      "L06"
+    ],
+    "outer_group_unit": "layout_trajectory",
+    "outer_test_row_counts": {
+      "L01": 60,
+      "L02": 60,
+      "L03": 60,
+      "L04": 60,
+      "L05": 60,
+      "L06": 51
+    },
+    "row_count": 351,
+    "row_keys_sha256": "445c7b82bc8d8308a42f7c2880c52dfd444c343e3a90f828f98c42da1636f854"
+  },
+  "runner_version": "exploratory-visible-position-resolution-runner-v0.1",
+  "schema_version": "1.0"
+}

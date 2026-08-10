@@ -1,0 +1,2115 @@
+{
+  "artifact_id": "visible-position-resolution-task3-capture-manifest-v0.1",
+  "authority_validation": {
+    "balanced_accounting": "PASS",
+    "camera_authority": "PASS",
+    "capture_resolution_timing": "PASS",
+    "context_identity": "PASS",
+    "eligibility_deterministic": "PASS",
+    "model_frame_idx": "PASS",
+    "no_wall_condition": "PASS",
+    "preprocessing_identity": "PASS",
+    "server_state": "PASS",
+    "target_identity": "PASS",
+    "visibility_identity": "PASS"
+  },
+  "base_head": "626dcc00710f2b51cbbe2bfdea86785cb2d70e61",
+  "blocker": null,
+  "branch": "exploration/visible-position-resolution-v0-1",
+  "capture_runtime_status": "CAPTURE_RUNTIME_READY_DURING_ACQUISITION_STOPPED_AFTER_CAPTURE",
+  "collision_audit": {
+    "all_attempted_ids_unique": true,
+    "old_authority_overwritten": false,
+    "repository_runtime_external_roots_scanned": true,
+    "round1_planned_ids_collision_free": true,
+    "round2_planned_ids_collision_free": true,
+    "status": "PASS"
+  },
+  "combined": {
+    "new_accepted_by_layout": {
+      "layout_01": 2,
+      "layout_02": 2,
+      "layout_03": 2,
+      "layout_04": 2,
+      "layout_05": 2,
+      "layout_06": 2
+    },
+    "per_layout": {
+      "layout_01": {
+        "original_trajectory_id": "layout_01_ep12602",
+        "round1_trajectory_id": "layout_01_ep12667",
+        "round2_trajectory_id": "layout_01_ep12673",
+        "total": 3
+      },
+      "layout_02": {
+        "original_trajectory_id": "layout_02_ep12610",
+        "round1_trajectory_id": "layout_02_ep12668",
+        "round2_trajectory_id": "layout_02_ep12674",
+        "total": 3
+      },
+      "layout_03": {
+        "original_trajectory_id": "layout_03_ep12645",
+        "round1_trajectory_id": "layout_03_ep12669",
+        "round2_trajectory_id": "layout_03_ep12675",
+        "total": 3
+      },
+      "layout_04": {
+        "original_trajectory_id": "layout_04_ep12626",
+        "round1_trajectory_id": "layout_04_ep12670",
+        "round2_trajectory_id": "layout_04_ep12676",
+        "total": 3
+      },
+      "layout_05": {
+        "original_trajectory_id": "layout_05_ep12634",
+        "round1_trajectory_id": "layout_05_ep12671",
+        "round2_trajectory_id": "layout_05_ep12677",
+        "total": 3
+      },
+      "layout_06": {
+        "original_trajectory_id": "layout_06_ep12616",
+        "round1_trajectory_id": "layout_06_ep12672",
+        "round2_trajectory_id": "layout_06_ep12678",
+        "total": 3
+      }
+    },
+    "total_new_accepted_trajectory_count": 12,
+    "total_new_eligible_row_count": 720,
+    "total_no_wall_trajectories_per_layout_after_task3": 3
+  },
+  "contains_decoder_metrics": false,
+  "external_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1",
+  "frozen_authority_invariance": {
+    "accepted_mvp_manifest_sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7",
+    "development_freeze_embedded_hash": "3fc436f13b96e47b54e3837d37c0c4ecd20428a23a6c0fda58ee6c570040fc07",
+    "expected_sha256": {
+      "development_freeze.json": "97e68c4981a781053baef4f33a64516208725627bd757e7ffc2eb572951856ce",
+      "expanded_visibility_eligibility.json": "1882ec400159f83e4d09dc7b113907857dca5ad5f7fbd90760ad296fb289d6ea",
+      "metric_decomposition.json": "8c6b193363b8d14f332f8656a1cad377b6dfe51cd7edef7bcf704a3843b4c55c",
+      "replication_authority_decision.json": "8c0d4f07329529ef00e185c9fb880a0f927a8da4d34ebcd4fcc1121fb1ac674a",
+      "replication_inventory.json": "8adc3196663a676047352fa073e97e8cbb6176b3620c3bc0e22f68a1325ef7e4",
+      "runtime_benchmark.json": "baf1bfe4a2405e33d6cb6c73f51a9bfe1d62d77d392c08afa63554ffdc0677a7",
+      "six_layout_generalization.json": "d8fa0beb7c0605694a14d09383c0991a358d21fea913eefaaca7e2504e63d0e4",
+      "spatial_representation_ladder.json": "fc4a6df133bbef2c52714e6ba3379d3632e9db1e259fed06639556e1a928a39c"
+    },
+    "frozen_mvp_files_modified": false,
+    "predecessor_unpooled_activation_manifest_sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482",
+    "prior_authority_modified": false
+  },
+  "generated_at": "2026-08-09T16:18:20Z",
+  "primary_path": "BALANCED_NEW_CAPTURE",
+  "probe_or_decoder_results_inspected": false,
+  "resolved_capture_authority": {
+    "capture_driver": "scripts/run_autonomous_pilot.py",
+    "client_mod_sha256": "5ca63710b119f56e96506de6aafee06c5a122724c3f65a5a0e687a4141b8113b",
+    "condition_contract": {
+      "camera_locked": true,
+      "condition": "no_wall_visible",
+      "control_type": "no_wall_visible_control",
+      "fps": 20.0,
+      "max_ticks": 60,
+      "q": 0.05,
+      "resolution": [
+        640,
+        360
+      ],
+      "scene": "NO_WALL",
+      "set_id": "nowall",
+      "v": 1.0,
+      "warmup_ticks": 60
+    },
+    "display": "Xvfb :99 640x360x24",
+    "fabric_api": "0.42.0+1.16",
+    "fabric_loader": "0.15.11",
+    "frozen_contract_validator": "mineocclude.data.capture_contract.validate_capture_package",
+    "java": "17.0.19",
+    "layout_config_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "minecraft": "1.16.5",
+    "seed_convention": "seed = 20260726 + episode_id * 7919",
+    "server_mod_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52"
+  },
+  "round1": {
+    "accepted_by_layout": {
+      "layout_01": 1,
+      "layout_02": 1,
+      "layout_03": 1,
+      "layout_04": 1,
+      "layout_05": 1,
+      "layout_06": 1
+    },
+    "accepted_ids": [
+      "layout_01_ep12667",
+      "layout_02_ep12668",
+      "layout_03_ep12669",
+      "layout_04_ep12670",
+      "layout_05_ep12671",
+      "layout_06_ep12672"
+    ],
+    "accepted_trajectory_count": 6,
+    "attempt_count": 6,
+    "attempted_ids": [
+      "layout_01_ep12667",
+      "layout_02_ep12668",
+      "layout_03_ep12669",
+      "layout_04_ep12670",
+      "layout_05_ep12671",
+      "layout_06_ep12672"
+    ],
+    "attempts": [
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 1,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 5002,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 58
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.25645537,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T15:30:31Z",
+          "start_utc": "2026-08-09T15:30:25Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l01_layer4_mean_pooled.f32.npy",
+              "sha256": "1b7f2a2dfd220e2f72db9fa15d2ff251f06404b2dd012b71494fa3d2c129379e",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90195,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l01_rows.jsonl",
+              "row_count": 60,
+              "sha256": "ef50200417b24f01a51dd240b78bcb8259dc621ed74cc3cfbe36b82555cd2bf9"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l01_layer4_visual_tokens.f16.npy",
+              "sha256": "d489b2753e88d5573d1d8f871e20cbe200c2ac68ae29878861500a83f729dfdd",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/eligibility.json",
+            "sha256": "899914c79b0a470981196f3ae38a832b37e2d5b9fdb5e6d4a3903538f0a25de8"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/preprocessed_frame_manifest.json",
+            "sha256": "086a855b3f9838bdce62ce58de18bc52b232ff9c19a4b01c096b142c01bd510a"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/preprocessed/frames/layout_01_ep12667",
+          "strict_visibility_records": {
+            "byte_size": 766551,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/strict_visibility_records.jsonl",
+            "sha256": "e25c85525e436f8e740d20beaf13cc0fa158b9c3f22a2a4ac11f135161f89ffd"
+          },
+          "target_document": {
+            "byte_size": 116944,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/layout_01_ep12667_oracle_targets.json",
+            "sha256": "a480720f88c469b18c992f3817e0e6ee8f6daef62e07e983abb2280155a0e216"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/oracle_target_records.jsonl",
+            "sha256": "0a16a69f077cfea2aeeeab1afed579efef761476eda1408a10fecc516a064fbf"
+          }
+        },
+        "episode_id": 12667,
+        "layout_id": "layout_01",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12667/frames_640x360",
+          "capture_package": {
+            "byte_size": 163851,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_01_ep12667/capture_package_v0_1.json",
+            "sha256": "223def0484a0ce421782aef6909d29abb34214c2ccbcc9fd9aa854e6136c545d"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_01_ep12667",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_01_ep12667/capture_provenance.json",
+            "sha256": "77267944047b92bf91733363fa68e797706fbee38889a239ea8a3c2433a13c1d"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12667/layout_meta.json",
+            "sha256": "efad5833ffe9b358461f687d9d4d93dde260ad576d038499aa7028837bca0a8f",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 47492,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_01_ep12667/video_640x360.mp4",
+            "sha256": "c8bf9791bea0228ecc974395a4b8bcb8d55791fa16bddff31d3ddc29ec556bc5"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_01_ep12667/qa_report_12667.json",
+            "sha256": "6782c39766016e23208881b6be7cd5922e19003c3808371771ed51769dc40803"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12667/raw_actions.jsonl",
+            "sha256": "6cbd51694c2f27e181fcd08fdd98ad1c72ae7301bfb2565ea46ae56530de622f"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12667",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12667/reset_result.json",
+            "sha256": "970a3184a78da4e61efc0747dcc3735ccbabfce04cb1085832c3de96666d3dbc"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12667/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12667",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12667/server_state.jsonl",
+            "sha256": "55a2af5d333047976ee38481530dcb32abde3e86245125c2c3ca5962a2886d72"
+          }
+        },
+        "round": 1,
+        "scene": "NO_WALL",
+        "seed": 120570699,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_01_ep12667"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 2,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 5809,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.16944094,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T15:30:42Z",
+          "start_utc": "2026-08-09T15:30:36Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l02_layer4_mean_pooled.f32.npy",
+              "sha256": "c615683534893e0c4a0fbe5d08c5452b5b8f7635ecf33dea46c616225e775d9c",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90190,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l02_rows.jsonl",
+              "row_count": 60,
+              "sha256": "7f47b7f85ff623f80844e0def79a55eaf9fe2d5369ed1c5bd354af347428d16b"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l02_layer4_visual_tokens.f16.npy",
+              "sha256": "2b718d06302a7b4147542bc2da65a9a29dacfa252a06245cc3a8bff68b4379e3",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/eligibility.json",
+            "sha256": "899914c79b0a470981196f3ae38a832b37e2d5b9fdb5e6d4a3903538f0a25de8"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/preprocessed_frame_manifest.json",
+            "sha256": "086a855b3f9838bdce62ce58de18bc52b232ff9c19a4b01c096b142c01bd510a"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/preprocessed/frames/layout_02_ep12668",
+          "strict_visibility_records": {
+            "byte_size": 766551,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/strict_visibility_records.jsonl",
+            "sha256": "e25c85525e436f8e740d20beaf13cc0fa158b9c3f22a2a4ac11f135161f89ffd"
+          },
+          "target_document": {
+            "byte_size": 116940,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/layout_02_ep12668_oracle_targets.json",
+            "sha256": "99a609c65e79f9d48c683a61ae4c6d62bad2361152b776442861e6381f2362ce"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/oracle_target_records.jsonl",
+            "sha256": "0a16a69f077cfea2aeeeab1afed579efef761476eda1408a10fecc516a064fbf"
+          }
+        },
+        "episode_id": 12668,
+        "layout_id": "layout_02",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12668/frames_640x360",
+          "capture_package": {
+            "byte_size": 163843,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_02_ep12668/capture_package_v0_1.json",
+            "sha256": "8abfecc3a0c770ef3d888b26e1763283ca6d8ac76451732dcb293981f852b9f1"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_02_ep12668",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_02_ep12668/capture_provenance.json",
+            "sha256": "67d8bdcd8d457673b606286929c8b97fa49602761383cd6706b5a3a7c9dc5c7d"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12668/layout_meta.json",
+            "sha256": "1f2b70b9fb502fa9123dcb1db212d0d28f0556d1d6545bda536ce26bdc2e3e81",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 46973,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_02_ep12668/video_640x360.mp4",
+            "sha256": "d16b4293aec713d55098c0c2b573602c15c0ec18e66ab21a5ca6cc5cbc98383d"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_02_ep12668/qa_report_12668.json",
+            "sha256": "e5f681e4914e9e67ea420a97c288af44d25a632adc1dd6129ab15c7ca72d9b37"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12668/raw_actions.jsonl",
+            "sha256": "bd9181ec48514b8ca8c5000e2d5d2cfd1a16b655771b1d3fca37c4bbf8efa6b7"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12668",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12668/reset_result.json",
+            "sha256": "df1096c95738e7a4d86a1b58a6ed2ea2cc67c66ade85a9a3f4f4da604d44b440"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12668/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12668",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12668/server_state.jsonl",
+            "sha256": "618e12d32377433e5680564466479f7f11a18e87f04c3ace53db1cd2fb1bb1fa"
+          }
+        },
+        "round": 1,
+        "scene": "NO_WALL",
+        "seed": 120578618,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_02_ep12668"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 3,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 5385,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.2323638,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T15:30:53Z",
+          "start_utc": "2026-08-09T15:30:47Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l03_layer4_mean_pooled.f32.npy",
+              "sha256": "600b0af3ee970503de861feeabd5002ec8da9d8244eeda8150c08c5eb2b5386d",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90192,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l03_rows.jsonl",
+              "row_count": 60,
+              "sha256": "5d98acbc453f37309af3e31e279de968b025efba546933b6d2bec4ba804824cd"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l03_layer4_visual_tokens.f16.npy",
+              "sha256": "120553acfb83ea950782e64077cfb1c2993f9270f92be0cdfc9267e1081b4a02",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/eligibility.json",
+            "sha256": "899914c79b0a470981196f3ae38a832b37e2d5b9fdb5e6d4a3903538f0a25de8"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/preprocessed_frame_manifest.json",
+            "sha256": "086a855b3f9838bdce62ce58de18bc52b232ff9c19a4b01c096b142c01bd510a"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/preprocessed/frames/layout_03_ep12669",
+          "strict_visibility_records": {
+            "byte_size": 766551,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/strict_visibility_records.jsonl",
+            "sha256": "e25c85525e436f8e740d20beaf13cc0fa158b9c3f22a2a4ac11f135161f89ffd"
+          },
+          "target_document": {
+            "byte_size": 117380,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/layout_03_ep12669_oracle_targets.json",
+            "sha256": "8172055c6caa929e8700d0c09b6bf4e81e03b4148e8316478834eb61a57e08ad"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/oracle_target_records.jsonl",
+            "sha256": "0a16a69f077cfea2aeeeab1afed579efef761476eda1408a10fecc516a064fbf"
+          }
+        },
+        "episode_id": 12669,
+        "layout_id": "layout_03",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12669/frames_640x360",
+          "capture_package": {
+            "byte_size": 163849,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_03_ep12669/capture_package_v0_1.json",
+            "sha256": "d1238f732fbc7f4538fdff65a0c6f4ebbff74331e0901962e1a903d33e79a41e"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_03_ep12669",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_03_ep12669/capture_provenance.json",
+            "sha256": "736ff897d67e8f5515568bf86bcf6bc24df517bcd5a011c278d3610f8df61458"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12669/layout_meta.json",
+            "sha256": "bbf41439a9aa626494f2f303e931a4869a1772eedb0fbc6f825407035878929e",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 47313,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_03_ep12669/video_640x360.mp4",
+            "sha256": "2b599fdcee4fc29917bf3ee6bbc662fec354f260d5903a180d458d28e411c76f"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_03_ep12669/qa_report_12669.json",
+            "sha256": "13f4b8dff57ebb72cbd7f762fd3e692c05990fab204cd45872f9fe4099ac6e05"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12669/raw_actions.jsonl",
+            "sha256": "c9620fd066a13f30106ade4244985ca2e3b0f5c404fa2b48eef3d871b41df013"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12669",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12669/reset_result.json",
+            "sha256": "91b7d26709a95cf4a80fcbd72d88af3b8b04fbdd25a1ebc7a90c55bcfe65133f"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12669/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12669",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12669/server_state.jsonl",
+            "sha256": "f7abe264b883a15bd866d4f7819aae6ab76c25b0c901e46d3c44f11b7cef7adc"
+          }
+        },
+        "round": 1,
+        "scene": "NO_WALL",
+        "seed": 120586537,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_03_ep12669"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 4,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 3401,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 58
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.15627056,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T15:31:05Z",
+          "start_utc": "2026-08-09T15:30:59Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l04_layer4_mean_pooled.f32.npy",
+              "sha256": "d9c75f89df89df2f61230513c1b5be89074d37525ee1c22ac4a83cbf4e3a18ea",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90192,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l04_rows.jsonl",
+              "row_count": 60,
+              "sha256": "e0673e180a5f0b8bcd499ba678f57f61858e44ef55e444e35713d8dc9ed1ac65"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l04_layer4_visual_tokens.f16.npy",
+              "sha256": "c53ac730b9919baec1d8c62c71394878479b834c5ce1980746e148ca9615463a",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/eligibility.json",
+            "sha256": "899914c79b0a470981196f3ae38a832b37e2d5b9fdb5e6d4a3903538f0a25de8"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/preprocessed_frame_manifest.json",
+            "sha256": "086a855b3f9838bdce62ce58de18bc52b232ff9c19a4b01c096b142c01bd510a"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/preprocessed/frames/layout_04_ep12670",
+          "strict_visibility_records": {
+            "byte_size": 766551,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/strict_visibility_records.jsonl",
+            "sha256": "e25c85525e436f8e740d20beaf13cc0fa158b9c3f22a2a4ac11f135161f89ffd"
+          },
+          "target_document": {
+            "byte_size": 116947,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/layout_04_ep12670_oracle_targets.json",
+            "sha256": "2885f3805eed6379c892a26eea53774d4207237ad5fffd13b741fce2e9a949cd"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/oracle_target_records.jsonl",
+            "sha256": "0a16a69f077cfea2aeeeab1afed579efef761476eda1408a10fecc516a064fbf"
+          }
+        },
+        "episode_id": 12670,
+        "layout_id": "layout_04",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12670/frames_640x360",
+          "capture_package": {
+            "byte_size": 163848,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_04_ep12670/capture_package_v0_1.json",
+            "sha256": "230512f53729a4e36759843a2b825e1ffa8d60e3d1894fc99e306ddb33bda8e4"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_04_ep12670",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_04_ep12670/capture_provenance.json",
+            "sha256": "943ee96d3b8f807be9929d0082531ddf314ee213a21e6bfb53d13482a3d58711"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12670/layout_meta.json",
+            "sha256": "f49e1400874e8ef15e2baf6424d0f635908ef7f5a7cf637d3f5fbfd165904406",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 45046,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_04_ep12670/video_640x360.mp4",
+            "sha256": "a1801293143bc1adf5af63e054a1cdd1c24054a05be736db7d1fc6a5c73290c3"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_04_ep12670/qa_report_12670.json",
+            "sha256": "504e5224a43ad77084c1cca000a61592c0f60964feb996afcdc921a75e0f727c"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12670/raw_actions.jsonl",
+            "sha256": "a2681123beaf946a66f9798bcf6913908ccf33ebf72425a4e301dbdb4dff597b"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12670",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12670/reset_result.json",
+            "sha256": "20497b12992487ec2d4fb8c5684edfc6011f9628409ec58889e988506506e333"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12670/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12670",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12670/server_state.jsonl",
+            "sha256": "608c710470864824d25fa399a399eca37dfda6d5d16006de021c13ab5aedcadb"
+          }
+        },
+        "round": 1,
+        "scene": "NO_WALL",
+        "seed": 120594456,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_04_ep12670"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 5,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 7920,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 58
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.19718855,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T15:31:16Z",
+          "start_utc": "2026-08-09T15:31:10Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l05_layer4_mean_pooled.f32.npy",
+              "sha256": "0196e7a854bf479fc1106e1acf25a8f3ccfe35822b5a853f3b9dc0c588f3d28a",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90197,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l05_rows.jsonl",
+              "row_count": 60,
+              "sha256": "2e1798e8da29a5975d2368fe29d4132f2d5ff7de42933af3daf2163c89c4e5e3"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l05_layer4_visual_tokens.f16.npy",
+              "sha256": "d1943becdf734d5eb02bc513fb6bc550b0c7a57bdec5192275fe5a990b108598",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/eligibility.json",
+            "sha256": "899914c79b0a470981196f3ae38a832b37e2d5b9fdb5e6d4a3903538f0a25de8"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/preprocessed_frame_manifest.json",
+            "sha256": "086a855b3f9838bdce62ce58de18bc52b232ff9c19a4b01c096b142c01bd510a"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/preprocessed/frames/layout_05_ep12671",
+          "strict_visibility_records": {
+            "byte_size": 766551,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/strict_visibility_records.jsonl",
+            "sha256": "e25c85525e436f8e740d20beaf13cc0fa158b9c3f22a2a4ac11f135161f89ffd"
+          },
+          "target_document": {
+            "byte_size": 116539,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/layout_05_ep12671_oracle_targets.json",
+            "sha256": "fb9c6e0994f455d95180e1137eb0596868f7d41e0d64c8e9f6262c1cd1c2adf0"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/oracle_target_records.jsonl",
+            "sha256": "0a16a69f077cfea2aeeeab1afed579efef761476eda1408a10fecc516a064fbf"
+          }
+        },
+        "episode_id": 12671,
+        "layout_id": "layout_05",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12671/frames_640x360",
+          "capture_package": {
+            "byte_size": 163872,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_05_ep12671/capture_package_v0_1.json",
+            "sha256": "347098161e1a343070834ce378c05c70ce8435e359670433419233eced0dcedd"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_05_ep12671",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_05_ep12671/capture_provenance.json",
+            "sha256": "2d88211e6d05c2bdd1801f7e97604b4c4e2e29b72932be87ce0ef9f9eda1d0a3"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12671/layout_meta.json",
+            "sha256": "ffa03f36e6039b542929b5166de4ebcdae72583667c9ee95bedc841a89854467",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 46933,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_05_ep12671/video_640x360.mp4",
+            "sha256": "228b9f878c4440caf22fa154e6f1f81a2f7df64b2b64efdc5466166c658d842c"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_05_ep12671/qa_report_12671.json",
+            "sha256": "5dc536b6e4ac98f2e9279b75ecd72ce008aa5d899fd191edfd3314bf85f38340"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12671/raw_actions.jsonl",
+            "sha256": "6d80b00c017204e30502b5b63e2ea6d77d82d25f8da5627455877126de31e529"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12671",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12671/reset_result.json",
+            "sha256": "e758c57eda8a5c89b7f1d6544b97ce5bfc6d72d9fb4c29e8a4c8a2758991fb3e"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12671/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12671",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12671/server_state.jsonl",
+            "sha256": "ffd86f311a8e1da84f24b77f5599a43461de64af5455c5ad8c02b26eecbd29ee"
+          }
+        },
+        "round": 1,
+        "scene": "NO_WALL",
+        "seed": 120602375,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_05_ep12671"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 6,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 4149,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 60
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.19347668,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T15:31:27Z",
+          "start_utc": "2026-08-09T15:31:21Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l06_layer4_mean_pooled.f32.npy",
+              "sha256": "ceb05e9ccb83a99b3eac469897b8faa9e4cf77799265f7fb491e4ad91d597bbd",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90200,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l06_rows.jsonl",
+              "row_count": 60,
+              "sha256": "457ca4f9333ada7e08e981c044f53bded114f4e407947e34c38ff657b57b855f"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/activations/r1_l06_layer4_visual_tokens.f16.npy",
+              "sha256": "84fff4f28022b019c8078094496018d2759034e91c0dfcb13a63f8c0d91407fd",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/eligibility.json",
+            "sha256": "899914c79b0a470981196f3ae38a832b37e2d5b9fdb5e6d4a3903538f0a25de8"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/preprocessed_frame_manifest.json",
+            "sha256": "086a855b3f9838bdce62ce58de18bc52b232ff9c19a4b01c096b142c01bd510a"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/preprocessed/frames/layout_06_ep12672",
+          "strict_visibility_records": {
+            "byte_size": 766551,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/strict_visibility_records.jsonl",
+            "sha256": "e25c85525e436f8e740d20beaf13cc0fa158b9c3f22a2a4ac11f135161f89ffd"
+          },
+          "target_document": {
+            "byte_size": 117341,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/layout_06_ep12672_oracle_targets.json",
+            "sha256": "0832b5161302676af759cf05fbcb795ff0be6ca2de7b674412bf8b14fecdaebc"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/authority/oracle_target_records.jsonl",
+            "sha256": "0a16a69f077cfea2aeeeab1afed579efef761476eda1408a10fecc516a064fbf"
+          }
+        },
+        "episode_id": 12672,
+        "layout_id": "layout_06",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12672/frames_640x360",
+          "capture_package": {
+            "byte_size": 163859,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_06_ep12672/capture_package_v0_1.json",
+            "sha256": "4f4af37e9028c3b6655d49165c4ec55971202e29627ba7163e57b07d0cdb8745"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_06_ep12672",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_06_ep12672/capture_provenance.json",
+            "sha256": "0df9d23301f6b36ddd8c1a2e742df12ddd6c62e5b2eb66b44bb9733a11e8e435"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12672/layout_meta.json",
+            "sha256": "deffe909218c8119dc5c527f77f4500007b9f5cc5e2733470a013558be8e897b",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 46908,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_06_ep12672/video_640x360.mp4",
+            "sha256": "fc73defb93ddcd9b6c6d2c7c33d65cc0f63b2fba662aa3f6bd0dd536bae09858"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round1/capture_processed/layout_06_ep12672/qa_report_12672.json",
+            "sha256": "7a032bef951ceb83d010b3e70e810ff876128b5f4ce36474444bb79039966783"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12672/raw_actions.jsonl",
+            "sha256": "22719ee5cad4bb930ab96356991c9231d0711fff2f8b5266a59138ee29c7f41b"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12672",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12672/reset_result.json",
+            "sha256": "454b3d2f830246285e38d96fa71a1282456e91f0cd32c7b801d9c1b39c99754f"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12672/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12672",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12672/server_state.jsonl",
+            "sha256": "0140e8f22ded626b1149e1724caea87a6fd0449900bb60c72f212fc94fb24e74"
+          }
+        },
+        "round": 1,
+        "scene": "NO_WALL",
+        "seed": 120610294,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_06_ep12672"
+      }
+    ],
+    "balanced_complete": true,
+    "capture_runtime_seconds": 67.20723827899201,
+    "eligible_row_count": 360,
+    "eligible_rows_by_layout": {
+      "layout_01": 60,
+      "layout_02": 60,
+      "layout_03": 60,
+      "layout_04": 60,
+      "layout_05": 60,
+      "layout_06": 60
+    },
+    "extraction_attempts": [
+      {
+        "attempt": 1,
+        "reason": "idle capture client/server consumed host RAM during audited checkpoint load",
+        "rows_written": 0,
+        "scientific_authority_modified": false,
+        "status": "FAILED_HOST_OOM"
+      },
+      {
+        "attempt": 2,
+        "repair": "stopped idle capture client/server/Xvfb before the same unmodified loader",
+        "status": "PASS"
+      }
+    ],
+    "planned_ids": [
+      "layout_01_ep12667",
+      "layout_02_ep12668",
+      "layout_03_ep12669",
+      "layout_04_ep12670",
+      "layout_05_ep12671",
+      "layout_06_ep12672"
+    ],
+    "planned_trajectory_count": 6,
+    "processing_runtime_components_seconds": {
+      "accepted_geometry_bind": 0.08959036599844694,
+      "package_and_validate": 0.27361145699978806,
+      "preprocessing_only": 3.527841153991176,
+      "strict_visibility_and_preprocessing": 494.0908543810074
+    },
+    "processing_runtime_note": "Measured package, accepted-geometry bind, strict-visibility, and preprocessing components; target construction passed but its subsecond duration was not separately instrumented.",
+    "processing_runtime_seconds": 494.4540562040056,
+    "rejected_attempts": [],
+    "successful_extraction_runtime_seconds": 136.14530631701928
+  },
+  "round2": {
+    "accepted_by_layout": {
+      "layout_01": 1,
+      "layout_02": 1,
+      "layout_03": 1,
+      "layout_04": 1,
+      "layout_05": 1,
+      "layout_06": 1
+    },
+    "accepted_ids": [
+      "layout_01_ep12673",
+      "layout_02_ep12674",
+      "layout_03_ep12675",
+      "layout_04_ep12676",
+      "layout_05_ep12677",
+      "layout_06_ep12678"
+    ],
+    "accepted_trajectory_count": 6,
+    "attempt_count": 6,
+    "attempted_ids": [
+      "layout_01_ep12673",
+      "layout_02_ep12674",
+      "layout_03_ep12675",
+      "layout_04_ep12676",
+      "layout_05_ep12677",
+      "layout_06_ep12678"
+    ],
+    "attempts": [
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 1,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 5215,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.868578797002556,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T16:02:27Z",
+          "start_utc": "2026-08-09T16:02:21Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l01_layer4_mean_pooled.f32.npy",
+              "sha256": "6401dd35588be8c91b7d6b04565cc108252cb2cca6ca905909d9b001e1dfa108",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90193,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l01_rows.jsonl",
+              "row_count": 60,
+              "sha256": "a2b0fc0fc53268ce5be943444a7ce72f094e02534227c4a6da716137dfd95883"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l01_layer4_visual_tokens.f16.npy",
+              "sha256": "da719bfb0b44109a246ff995824517a8a08468b576aa9b18edfd536bb27c0f8f",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/eligibility.json",
+            "sha256": "4825d5a456ec5ef10dc30e01a082442a5c43776172bce7c4c9eade3967998483"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/preprocessed_frame_manifest.json",
+            "sha256": "a8a2df1edbc6a321e03a252e597301a43ef54e18aecfe3c71b975a96f4752126"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/preprocessed/frames/layout_01_ep12673",
+          "strict_visibility_records": {
+            "byte_size": 766557,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/strict_visibility_records.jsonl",
+            "sha256": "492741213a24952267eb4f4af8beb0edf1a37b4d649383cf5bbcf57f6682c9a3"
+          },
+          "target_document": {
+            "byte_size": 116944,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/layout_01_ep12673_oracle_targets.json",
+            "sha256": "6eae7f57803a47a617e26cfb46b6b60bbd9d0f7cdc92045546205fdffc69a3cf"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/oracle_target_records.jsonl",
+            "sha256": "c180cc4b9768cc1edf3c0f286ed4fd6d024318232ba850629cf9d9a31ebf108b"
+          }
+        },
+        "episode_id": 12673,
+        "layout_id": "layout_01",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12673/frames_640x360",
+          "capture_package": {
+            "byte_size": 163889,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_01_ep12673/capture_package_v0_1.json",
+            "sha256": "bef2bd5d4c66b66a08eced005d7388227ad3d27c36536e8c2218b307ac3f4c6a"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_01_ep12673",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_01_ep12673/capture_provenance.json",
+            "sha256": "b7a0baee6ef48aed3a0b7b5397f4deef47825f2d7b5a1cdf92917dc41cb2f0f9"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12673/layout_meta.json",
+            "sha256": "efad5833ffe9b358461f687d9d4d93dde260ad576d038499aa7028837bca0a8f",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 46034,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_01_ep12673/video_640x360.mp4",
+            "sha256": "dea9943d9ff934730a3a92304f071c3779ef58010240e6870150b60c3557704f"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_01_ep12673/qa_report_12673.json",
+            "sha256": "4f4b519dfda2236a29b62891f4297a30dc58fadfb42ee141d14d0d0193036e27"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12673/raw_actions.jsonl",
+            "sha256": "3763781d10755b8335de4d3b145868a10a42601acd996f8f015a9ebe97b267c2"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12673",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12673/reset_result.json",
+            "sha256": "131b78e1351acf27f3c1e78a7286cbb2edcd687a43d5a414713b39a4f3e850bf"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12673/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12673",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12673/server_state.jsonl",
+            "sha256": "9818dc3ae279c3dda882350aab57e511c7e747f5cb08c694dcebad76cd6b4713"
+          }
+        },
+        "round": 2,
+        "scene": "NO_WALL",
+        "seed": 120618213,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_01_ep12673"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 2,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 5865,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.140741212002467,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T16:02:39Z",
+          "start_utc": "2026-08-09T16:02:33Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l02_layer4_mean_pooled.f32.npy",
+              "sha256": "6138c0fec2968796d98d4e1d1e248cc5b211b24cf5d27a3bf9fc6949d040a41c",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90190,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l02_rows.jsonl",
+              "row_count": 60,
+              "sha256": "a62aab1286bf7915c4d688233224609c0184bbee4776758132ab3eacdc1b883a"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l02_layer4_visual_tokens.f16.npy",
+              "sha256": "ae2edc7ce35c2f4fb858df08bb6b0d9fb5631edaa602af06fdbafec0838b02fe",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/eligibility.json",
+            "sha256": "4825d5a456ec5ef10dc30e01a082442a5c43776172bce7c4c9eade3967998483"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/preprocessed_frame_manifest.json",
+            "sha256": "a8a2df1edbc6a321e03a252e597301a43ef54e18aecfe3c71b975a96f4752126"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/preprocessed/frames/layout_02_ep12674",
+          "strict_visibility_records": {
+            "byte_size": 766557,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/strict_visibility_records.jsonl",
+            "sha256": "492741213a24952267eb4f4af8beb0edf1a37b4d649383cf5bbcf57f6682c9a3"
+          },
+          "target_document": {
+            "byte_size": 116949,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/layout_02_ep12674_oracle_targets.json",
+            "sha256": "d2d2ed59ee4dcfd5f2d76f6794fd04c90b4fbd2b077e409d7ba21e7351203934"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/oracle_target_records.jsonl",
+            "sha256": "c180cc4b9768cc1edf3c0f286ed4fd6d024318232ba850629cf9d9a31ebf108b"
+          }
+        },
+        "episode_id": 12674,
+        "layout_id": "layout_02",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12674/frames_640x360",
+          "capture_package": {
+            "byte_size": 163891,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_02_ep12674/capture_package_v0_1.json",
+            "sha256": "a8378f27dea36aebe51775e132a08c036a8d3b268441a021389586a8f24a7514"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_02_ep12674",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_02_ep12674/capture_provenance.json",
+            "sha256": "27bc00128e6684bfeeeb066706e3c6f1bc4a6842ce99313bdd9d7e45d882f283"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12674/layout_meta.json",
+            "sha256": "1f2b70b9fb502fa9123dcb1db212d0d28f0556d1d6545bda536ce26bdc2e3e81",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 47980,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_02_ep12674/video_640x360.mp4",
+            "sha256": "aea4912831b9f92a9dcfc1f608198b7e4b1fe16596fa7695d349fb037ccdb5cc"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_02_ep12674/qa_report_12674.json",
+            "sha256": "be5b8ea6d4e79feebf77685cb745a0e4d18ee403beda75730fae4f7f2ab1a230"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12674/raw_actions.jsonl",
+            "sha256": "7bf35d97a9101afee2eaf93686deee2251ed27d28c3a18cdaf72c04f993a679b"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12674",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12674/reset_result.json",
+            "sha256": "19b126255a975b5791f4149202362de23f5b2363d0a2f91c757514a7241075b0"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12674/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12674",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12674/server_state.jsonl",
+            "sha256": "9486ec64ce1b9c2c5761bb490d5bc4f682eaf69744dc5b73c3b9ff1c8e12166e"
+          }
+        },
+        "round": 2,
+        "scene": "NO_WALL",
+        "seed": 120626132,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_02_ep12674"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 3,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 5291,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.098155745014083,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T16:02:50Z",
+          "start_utc": "2026-08-09T16:02:44Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l03_layer4_mean_pooled.f32.npy",
+              "sha256": "df524a7e273ca925dd16a62a226961fcb9ce02712b3a7ba4ac738a6852332158",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90192,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l03_rows.jsonl",
+              "row_count": 60,
+              "sha256": "72cccb542313d51d012d76abfbea4c555d14476fd1fb0f35a54a428b86f6974a"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l03_layer4_visual_tokens.f16.npy",
+              "sha256": "a82185edcf76a9be022598bc537df20a9decd67892118808703e61e8091c6a9f",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/eligibility.json",
+            "sha256": "4825d5a456ec5ef10dc30e01a082442a5c43776172bce7c4c9eade3967998483"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/preprocessed_frame_manifest.json",
+            "sha256": "a8a2df1edbc6a321e03a252e597301a43ef54e18aecfe3c71b975a96f4752126"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/preprocessed/frames/layout_03_ep12675",
+          "strict_visibility_records": {
+            "byte_size": 766557,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/strict_visibility_records.jsonl",
+            "sha256": "492741213a24952267eb4f4af8beb0edf1a37b4d649383cf5bbcf57f6682c9a3"
+          },
+          "target_document": {
+            "byte_size": 117395,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/layout_03_ep12675_oracle_targets.json",
+            "sha256": "5be16e7a5bd8786af1aa766dabe2dd3f3acc2c00bc3b84c991202d97dee2800d"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/oracle_target_records.jsonl",
+            "sha256": "c180cc4b9768cc1edf3c0f286ed4fd6d024318232ba850629cf9d9a31ebf108b"
+          }
+        },
+        "episode_id": 12675,
+        "layout_id": "layout_03",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12675/frames_640x360",
+          "capture_package": {
+            "byte_size": 163859,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_03_ep12675/capture_package_v0_1.json",
+            "sha256": "d4f5db13fa58536d0e3b2ea61a9d9e41501331b3672d66fdbbb5a65bbb079793"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_03_ep12675",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_03_ep12675/capture_provenance.json",
+            "sha256": "49967f025dc32745a335756f7b8b73b2532562cb733a196dda606f02241469dd"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12675/layout_meta.json",
+            "sha256": "bbf41439a9aa626494f2f303e931a4869a1772eedb0fbc6f825407035878929e",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 46524,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_03_ep12675/video_640x360.mp4",
+            "sha256": "b01017ec68eb6facb5846077dc21dcef659654bca6712e27c0468b66e9754e45"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_03_ep12675/qa_report_12675.json",
+            "sha256": "aa36ce7d80ff2c5ecfd4bbceab83388a5593c250fcd221401223b2fefb3d5e3a"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12675/raw_actions.jsonl",
+            "sha256": "a0ad6445841c296a5b023282813df2eefd1b4f88ce5fb35b01975dc9e12ad108"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12675",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12675/reset_result.json",
+            "sha256": "16386f2d47d7c19c0d9c6917a5f75bd1e204ec1b27042a96f47923a04e23d991"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12675/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12675",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12675/server_state.jsonl",
+            "sha256": "6aa044e150fbf754298c30e83585efa7a90841b5ad361bf04c15a495d72ffbfa"
+          }
+        },
+        "round": 2,
+        "scene": "NO_WALL",
+        "seed": 120634051,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_03_ep12675"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 4,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 3444,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.108124822989339,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T16:03:01Z",
+          "start_utc": "2026-08-09T16:02:55Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l04_layer4_mean_pooled.f32.npy",
+              "sha256": "48107a96d1ea4d9d3974350121167f9dbb132c9b144d60f062c282173de48e0d",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90191,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l04_rows.jsonl",
+              "row_count": 60,
+              "sha256": "aa7ab7712933f5e6393133c7ae10e017352e8a720203717e5a7f47deee2ff48e"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l04_layer4_visual_tokens.f16.npy",
+              "sha256": "cc8016045c187d853289492bd1d37eb4a84732183dc6df86c0a50a56af014db9",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/eligibility.json",
+            "sha256": "4825d5a456ec5ef10dc30e01a082442a5c43776172bce7c4c9eade3967998483"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/preprocessed_frame_manifest.json",
+            "sha256": "a8a2df1edbc6a321e03a252e597301a43ef54e18aecfe3c71b975a96f4752126"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/preprocessed/frames/layout_04_ep12676",
+          "strict_visibility_records": {
+            "byte_size": 766557,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/strict_visibility_records.jsonl",
+            "sha256": "492741213a24952267eb4f4af8beb0edf1a37b4d649383cf5bbcf57f6682c9a3"
+          },
+          "target_document": {
+            "byte_size": 116941,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/layout_04_ep12676_oracle_targets.json",
+            "sha256": "804a78d0d057a17297d8fe19be0f0b4599c37d9e222c4b9c22c7d890b47886a9"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/oracle_target_records.jsonl",
+            "sha256": "c180cc4b9768cc1edf3c0f286ed4fd6d024318232ba850629cf9d9a31ebf108b"
+          }
+        },
+        "episode_id": 12676,
+        "layout_id": "layout_04",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12676/frames_640x360",
+          "capture_package": {
+            "byte_size": 163918,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_04_ep12676/capture_package_v0_1.json",
+            "sha256": "56259d669bf863f6b871861b87b0d31f404932518bd3e703aef3a09b9ffdd9a9"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_04_ep12676",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_04_ep12676/capture_provenance.json",
+            "sha256": "460eab502bebcb00ba0bf93a3279f0480f379cfd51b96fc12de43672768532b9"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12676/layout_meta.json",
+            "sha256": "f49e1400874e8ef15e2baf6424d0f635908ef7f5a7cf637d3f5fbfd165904406",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 45971,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_04_ep12676/video_640x360.mp4",
+            "sha256": "b8c729ffd56787114199d2c9e16789776bac9957c69304bf31135129f42cca49"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_04_ep12676/qa_report_12676.json",
+            "sha256": "af51be8aaa0d41102ba0d2525571a07a8015014f3fbae0a34f9b34cb2bad3960"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12676/raw_actions.jsonl",
+            "sha256": "582744b81735f69e4912b67dc5d7acf70bd910dabecb288c4a7d25be0e94a29d"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12676",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12676/reset_result.json",
+            "sha256": "750e6698cb7a83e7fbe5784295ba50e022364ed9f9014ab50c6f3b3cfbed0f7f"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12676/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12676",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12676/server_state.jsonl",
+            "sha256": "cd43d0eb60a3e664782f7cd09f51eb56d7e53e879383a19e450f52e7953486d7"
+          }
+        },
+        "round": 2,
+        "scene": "NO_WALL",
+        "seed": 120641970,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_04_ep12676"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 5,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 7815,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.132181713008322,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T16:03:12Z",
+          "start_utc": "2026-08-09T16:03:06Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l05_layer4_mean_pooled.f32.npy",
+              "sha256": "bcc8e7389ed199e4c0eb36a99e7c4a5eb7680b59b50123376a239c55c659d134",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90194,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l05_rows.jsonl",
+              "row_count": 60,
+              "sha256": "567f615d873334c95f1832df89859b0f2d8fdb481461fe7698fde4b4ff35e654"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l05_layer4_visual_tokens.f16.npy",
+              "sha256": "d022b227523d5e84dad6337b627cb27bbd111505b37f5417221fb035d675e384",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/eligibility.json",
+            "sha256": "4825d5a456ec5ef10dc30e01a082442a5c43776172bce7c4c9eade3967998483"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/preprocessed_frame_manifest.json",
+            "sha256": "a8a2df1edbc6a321e03a252e597301a43ef54e18aecfe3c71b975a96f4752126"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/preprocessed/frames/layout_05_ep12677",
+          "strict_visibility_records": {
+            "byte_size": 766557,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/strict_visibility_records.jsonl",
+            "sha256": "492741213a24952267eb4f4af8beb0edf1a37b4d649383cf5bbcf57f6682c9a3"
+          },
+          "target_document": {
+            "byte_size": 116539,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/layout_05_ep12677_oracle_targets.json",
+            "sha256": "1d1d0176029c20c3a9ad1f47e69a2f699f92064995517cf78f023f789972f37d"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/oracle_target_records.jsonl",
+            "sha256": "c180cc4b9768cc1edf3c0f286ed4fd6d024318232ba850629cf9d9a31ebf108b"
+          }
+        },
+        "episode_id": 12677,
+        "layout_id": "layout_05",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12677/frames_640x360",
+          "capture_package": {
+            "byte_size": 163890,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_05_ep12677/capture_package_v0_1.json",
+            "sha256": "5d6910c7f25c749b9a3c739a0684cc59e0e8116e849a276c1f120623c61deafa"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_05_ep12677",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_05_ep12677/capture_provenance.json",
+            "sha256": "4cd0d0e7620747d4c9e7ffe5c3d2f043a3fe79327492dc0ede18173fd09d88a1"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12677/layout_meta.json",
+            "sha256": "ffa03f36e6039b542929b5166de4ebcdae72583667c9ee95bedc841a89854467",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 47936,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_05_ep12677/video_640x360.mp4",
+            "sha256": "b6e74620bc77466aff9508e02220450f262cf4a78184fe1166ef3326495e366b"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_05_ep12677/qa_report_12677.json",
+            "sha256": "c228d1e6763dac5bf167ccc408811092edfaa193149b41d2a1ca77d8d0e051b9"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12677/raw_actions.jsonl",
+            "sha256": "1cc9b141772a889bbf1bef5e830805eeeeb9ebe1403d74519c639e16804910ab"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12677",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12677/reset_result.json",
+            "sha256": "d5cf777fccf0329e2041d00a7d361b6f93607e8f240c8b05100f07059ce62d81"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12677/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12677",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12677/server_state.jsonl",
+            "sha256": "103ca12cdcf0efe811e5197e503c277dcd503cde832649afac219ac63fdc0881"
+          }
+        },
+        "round": 2,
+        "scene": "NO_WALL",
+        "seed": 120649889,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_05_ep12677"
+      },
+      {
+        "acceptance": {
+          "capture_driver_result": true,
+          "eligibility": "PASS",
+          "frozen_capture_contract": "PASS",
+          "layer4_extraction": "PASS",
+          "preprocessing_authority": "PASS",
+          "qa_status": "accepted",
+          "rejection_reasons": [],
+          "strict_visibility_authority": "PASS",
+          "target_authority": "PASS"
+        },
+        "attempt_ordinal_within_round": 6,
+        "capture_contract": {
+          "camera_authority": "PASS_SERVER_LOCKED_CANONICAL_POSE",
+          "camera_lock_command_present": true,
+          "capturing_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+          "fps": 20.0,
+          "frame_count": 60,
+          "frame_variation": {
+            "all_frames_have_spatial_variance": true,
+            "first_last_changed_rgb_channel_count": 4350,
+            "frame_count": 60,
+            "status": "PASS_NONSTATIC",
+            "unique_canonical_pixel_sha256_count": 59
+          },
+          "model_frame_idx_dense_zero_based": true,
+          "no_wall_condition": "PASS",
+          "resolution": [
+            640,
+            360
+          ],
+          "server_state_authority": "PASS",
+          "tick_rate_hz": 20.0
+        },
+        "capture_runtime_seconds": 11.079466305003734,
+        "capture_timestamps": {
+          "end_utc": "2026-08-09T16:03:23Z",
+          "start_utc": "2026-08-09T16:03:17Z"
+        },
+        "condition": "no_wall_visible",
+        "control_type": "no_wall_visible_control",
+        "downstream_authority": {
+          "activation_chunk": {
+            "pooled_array": {
+              "byte_size": 491648,
+              "dtype": "float32",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l06_layer4_mean_pooled.f32.npy",
+              "sha256": "a1efdf3a809d5e9eb0679219b6cd82bcfb65cf4c3984cc83affe1612b4543eaa",
+              "shape": [
+                60,
+                2048
+              ]
+            },
+            "rows": {
+              "byte_size": 90190,
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l06_rows.jsonl",
+              "row_count": 60,
+              "sha256": "52c4c031a9bf1960457eb69c7c67412b1df7f70d1ac3ef22abc720826bdd9ed9"
+            },
+            "token_array": {
+              "byte_size": 82575488,
+              "dtype": "float16",
+              "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/activations/r2_l06_layer4_visual_tokens.f16.npy",
+              "sha256": "6fa728442429cdafff279faf5062e129ee320ca118d1a1db0c145df02c7b0deb",
+              "shape": [
+                60,
+                336,
+                2048
+              ]
+            }
+          },
+          "eligibility": {
+            "byte_size": 315911,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/eligibility.json",
+            "sha256": "4825d5a456ec5ef10dc30e01a082442a5c43776172bce7c4c9eade3967998483"
+          },
+          "eligible_row_count": 60,
+          "preprocessed_frame_manifest": {
+            "byte_size": 874927,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/preprocessed_frame_manifest.json",
+            "sha256": "a8a2df1edbc6a321e03a252e597301a43ef54e18aecfe3c71b975a96f4752126"
+          },
+          "preprocessed_payload_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/preprocessed/frames/layout_06_ep12678",
+          "strict_visibility_records": {
+            "byte_size": 766557,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/strict_visibility_records.jsonl",
+            "sha256": "492741213a24952267eb4f4af8beb0edf1a37b4d649383cf5bbcf57f6682c9a3"
+          },
+          "target_document": {
+            "byte_size": 117323,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/layout_06_ep12678_oracle_targets.json",
+            "sha256": "c05c1536d14dec77f957a04d01ca25d2c6cef5ad5fef646b9824c82551a1ec5e"
+          },
+          "target_records": {
+            "byte_size": 508968,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/authority/oracle_target_records.jsonl",
+            "sha256": "c180cc4b9768cc1edf3c0f286ed4fd6d024318232ba850629cf9d9a31ebf108b"
+          }
+        },
+        "episode_id": 12678,
+        "layout_id": "layout_06",
+        "path_metadata": {
+          "canonical_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12678/frames_640x360",
+          "capture_package": {
+            "byte_size": 163902,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_06_ep12678/capture_package_v0_1.json",
+            "sha256": "e878097671289d0a486904103b25fdabf391c1ac3e07ed04bf05bc30c97ea8c1"
+          },
+          "capture_processed_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_06_ep12678",
+          "capture_provenance": {
+            "byte_size": 712,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_06_ep12678/capture_provenance.json",
+            "sha256": "b68037b31a477f2fea0a747294a5481dd35d773bcaa852ca644617f12a44bc42"
+          },
+          "layout_meta": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12678/layout_meta.json",
+            "sha256": "deffe909218c8119dc5c527f77f4500007b9f5cc5e2733470a013558be8e897b",
+            "stable_geometry_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d"
+          },
+          "media": {
+            "byte_size": 46697,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_06_ep12678/video_640x360.mp4",
+            "sha256": "971938092f645d0a4112121273bd63e7eb68efdbbc1cf4b55757c0859df6cdd1"
+          },
+          "qa_report": {
+            "byte_size": 2399,
+            "path": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1/round2/capture_processed/layout_06_ep12678/qa_report_12678.json",
+            "sha256": "972ffe22c8bf3735ed340d086251f0299438e523ac1ee8dc870c556863c48996"
+          },
+          "raw_client_actions": {
+            "path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12678/raw_actions.jsonl",
+            "sha256": "9c144d4c052cc68990dc1f586581740a1ca1ac8e12a13ea999043c07d8c3fb63"
+          },
+          "raw_client_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12678",
+          "raw_config": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12678/reset_result.json",
+            "sha256": "5038a022b3e24fe2cb1448ccbdd908cc398b84226807bd5270aeb60e85552e00"
+          },
+          "raw_frame_root": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_12678/frames",
+          "raw_server_root": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12678",
+          "raw_server_state": {
+            "path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_12678/server_state.jsonl",
+            "sha256": "4c63eff04965f5e0a1532afa053d2c24b8c5f5511e10ebcb2ecd0ec9b6d33f20"
+          }
+        },
+        "round": 2,
+        "scene": "NO_WALL",
+        "seed": 120657808,
+        "set_id": "nowall",
+        "status": "ACCEPTED",
+        "trajectory_id": "layout_06_ep12678"
+      }
+    ],
+    "balanced_complete": true,
+    "capture_runtime_seconds": 67.42762000998482,
+    "eligible_row_count": 360,
+    "eligible_rows_by_layout": {
+      "layout_01": 60,
+      "layout_02": 60,
+      "layout_03": 60,
+      "layout_04": 60,
+      "layout_05": 60,
+      "layout_06": 60
+    },
+    "extraction_runtime_seconds": 136.80122304797987,
+    "planned_ids": [
+      "layout_01_ep12673",
+      "layout_02_ep12674",
+      "layout_03_ep12675",
+      "layout_04_ep12676",
+      "layout_05_ep12677",
+      "layout_06_ep12678"
+    ],
+    "planned_trajectory_count": 6,
+    "processing_runtime_components_seconds": {
+      "package_geometry_bind": 0.3303246709983796,
+      "preprocessing_only": 3.318846049020067,
+      "target_visibility_preprocessing_eligibility": 338.89906253799563
+    },
+    "processing_runtime_seconds": 339.229387208994,
+    "rejected_attempts": []
+  },
+  "round2_decision": {
+    "decision": "PROCEED",
+    "round2_ran": true,
+    "runtime_only_basis": {
+      "capture_failure_rate": 0.0,
+      "capture_retries": 0,
+      "decision_rule": "no probe or decoder performance used",
+      "preprocessing_runtime_seconds": 3.527841153991176,
+      "remaining_execution_assessment": "complete balanced second round technically reasonable",
+      "round1_capture_runtime_seconds": 67.20723827899201,
+      "runtime_stability": "PASS_AFTER_RECOVERABLE_HOST_MEMORY_REPAIR",
+      "successful_gpu_extraction_runtime_seconds": 136.14530631701928
+    }
+  },
+  "schema_version": "1.0",
+  "status": "BALANCED_ROUND1_AND_ROUND2_COMPLETE",
+  "stop_condition_triggered": false
+}

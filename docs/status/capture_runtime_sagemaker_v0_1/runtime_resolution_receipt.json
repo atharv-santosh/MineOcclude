@@ -1,0 +1,100 @@
+{
+  "schema_version": "mineocclude-sagemaker-capture-runtime-resolution-v0.1",
+  "recorded_utc": "2026-08-09T10:34:02Z",
+  "status": "CAPTURE_RUNTIME_READY",
+  "scientific_trajectories_captured": 0,
+  "accepted_runtime_authority": {
+    "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4",
+    "minecraft": "1.16.5",
+    "fabric_loader": "0.15.11",
+    "fabric_api": "0.42.0+1.16",
+    "yarn": "1.16.5+build.10",
+    "java": "17.0.19",
+    "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "layout_config_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "frame_geometry": [640, 360],
+    "tick_rate_hz": 20.0
+  },
+  "reconstructed_runtime": {
+    "server_mod_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+    "client_mod_sha256": "5ca63710b119f56e96506de6aafee06c5a122724c3f65a5a0e687a4141b8113b",
+    "client_source_sha256": "518c17060aa2cf95e1f60944a107651a01a86aa640cc7854ecca5a2579a61db9",
+    "java_build": "17.0.19+10-1-24.04.2-Ubuntu",
+    "display": "Xvfb :99, 640x360x24",
+    "renderer": "Mesa llvmpipe 25.2.8, OpenGL 4.5",
+    "client_auth_mode": "project-supported offline localhost legacy profile",
+    "runtime_receipt": "/home/sagemaker-user/mineocclude-capture-runtime-receipt.json"
+  },
+  "smoke_test": {
+    "id": "runtime_smoke_test_sagemaker_v0_1",
+    "root": "/mnt/sagemaker-nvme/mineocclude_runtime_smoke/runtime_smoke_test_sagemaker_v0_1",
+    "scratch_episode_ids": [19990, 19991, 19992, 20000, 20001, 20002, 20003],
+    "successful_calibration_episode": 20000,
+    "successful_plan_episodes": [20001, 20002, 20003],
+    "successful_frame_count": 648,
+    "plan_cells_accepted": "3/3",
+    "pairing_shift": 0,
+    "impulse_offset": 0,
+    "raw_frame_probe": {
+      "episode_id": 20001,
+      "frame_count": 273,
+      "geometry": [640, 360],
+      "png_mode": "RGBA",
+      "unique_sha256_count": 77,
+      "first_last_changed_pixels": 1747,
+      "all_frames_have_spatial_variance": true
+    },
+    "metadata_pass": true,
+    "qa_pass": true
+  },
+  "authority_equivalence": {
+    "pass": true,
+    "unresolved_scientific_authority_mismatches": 0,
+    "contracts": {
+      "minecraft_fabric_java_versions": "exact",
+      "server_mod_identity_and_source_behavior": "exact",
+      "layout_config_and_geometry": "exact",
+      "camera_pose_fov_and_lock": "exact",
+      "server_commands_and_fifo_control": "exact_behavior",
+      "server_state_raw_schema": "exact_source_behavior",
+      "client_raw_frame_format_and_geometry": "exact_contract",
+      "tick_action_frame_pairing": "exact_contract; measured offset 0",
+      "raw_config_layout_meta_and_output_schemas": "exact_source_behavior",
+      "acceptance_metadata": "existing validator v0.1 accepted all scratch cells"
+    }
+  },
+  "differences": [
+    {
+      "classification": "NONSCIENTIFIC_PLATFORM_DIFFERENCE",
+      "item": "Ubuntu/X11 paths and xdotool focus replace Windows/macOS host orchestration"
+    },
+    {
+      "classification": "NONSCIENTIFIC_PLATFORM_DIFFERENCE",
+      "item": "Xvfb plus Mesa llvmpipe replaces the historical workstation display/driver; raw pixel byte identity is not required"
+    },
+    {
+      "classification": "SCIENTIFICALLY_EQUIVALENT_IMPLEMENTATION_DIFFERENCE",
+      "item": "The Linux client waits 15 seconds at the title screen before direct localhost connection; capture, render, camera, packet, and episode code is unchanged"
+    },
+    {
+      "classification": "SCIENTIFICALLY_EQUIVALENT_IMPLEMENTATION_DIFFERENCE",
+      "item": "The locally generated Fabric launcher archive has host-generated ZIP metadata while resolving the same pinned loader and Minecraft identities"
+    }
+  ],
+  "evidence": {
+    "server_log": "/home/sagemaker-user/mineocclude-server/logs/latest.log",
+    "client_log": "/home/sagemaker-user/mineocclude-client/logs/latest.log",
+    "server_smoke_log": "/home/sagemaker-user/mineocclude-server/logs/2026-08-09-2.log.gz",
+    "client_smoke_log": "/home/sagemaker-user/mineocclude-client/logs/2026-08-09-5.log.gz",
+    "failed_client_launch_logs": "/home/sagemaker-user/mineocclude-client/logs/failed-attempt-01",
+    "connected_scene": "/mnt/sagemaker-nvme/mineocclude_runtime_logs/connected-scene.png",
+    "smoke_ledger": "/mnt/sagemaker-nvme/mineocclude_runtime_smoke/runtime_smoke_test_sagemaker_v0_1/pilot_smoke_ledger.json",
+    "accepted_comparison_source": "data/autonomous/layout_01_ep12602/capture_package_v0_1.json"
+  },
+  "validation": {
+    "portable_python_tests": "4 passed",
+    "fabric_gradle_tests": "32 passed",
+    "provisioner_syntax": "pass",
+    "git_diff_check": "pass"
+  }
+}

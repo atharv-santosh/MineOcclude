@@ -1,0 +1,119 @@
+{
+  "PRIMARY_PATH": "BALANCED_NEW_CAPTURE",
+  "all_controlling_source_hashes": {
+    "accepted_trajectory_manifest": {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+      "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+    },
+    "capture_package_manifest": {
+      "path": "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+      "sha256": "ca6ef6bd0a6ee144731ff3e6f470f767a2c1a82e8b46aef9fb5e458efb814f56"
+    },
+    "checkpoint_preprocessing_identity": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/person_a_identity_resolution.json",
+      "sha256": "870344e3a7623334a043cb06400a9fe2f679a0b118d43fc52349d3cff9d0e3cb"
+    },
+    "oracle_target_manifest": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+      "sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9"
+    },
+    "oracle_target_records": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_records.jsonl",
+      "sha256": "d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1"
+    },
+    "predecessor_context_manifest": {
+      "path": "docs/status/integration/exploratory_visible_position_diagnostics_v0_1/unpooled_activation_manifest.json",
+      "sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482"
+    },
+    "preprocessed_frame_manifest": {
+      "path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+      "sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1"
+    },
+    "production_context_runner": {
+      "path": "scripts/run_person_a_66_cell_production_extraction.py",
+      "sha256": "06f0a9d55352688fa789f18ab0072dcbed612f32a3d81d11dba1aa26f80977f0"
+    },
+    "row_universe": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_records.jsonl",
+      "sha256": "29b4cf003f3d9479b3606f17947879078801b400b09d942bd6827544b95227b2"
+    },
+    "strict_visibility_join": {
+      "path": "docs/status/person_c_66_cell_strict_visibility_v0_1/visibility_join.jsonl",
+      "sha256": "6fcfaba99feed706e7106d0f1d9b758700d920ee2001b3ca6f150320f09313b7"
+    }
+  },
+  "base_head": "626dcc00710f2b51cbbe2bfdea86785cb2d70e61",
+  "compatible_strata_counts": {
+    "EQ2": 0,
+    "GE3": 0,
+    "LT2": 60
+  },
+  "condition_shift_trajectories_kept_separate": [
+    "layout_01_ep12605",
+    "layout_01_ep12620",
+    "layout_01_ep12631",
+    "layout_01_ep12636",
+    "layout_01_ep12651",
+    "layout_01_ep12652",
+    "layout_01_ep12655",
+    "layout_01_ep12659",
+    "layout_01_ep12665",
+    "layout_02_ep12611",
+    "layout_02_ep12623",
+    "layout_02_ep12635",
+    "layout_02_ep12643",
+    "layout_02_ep12648",
+    "layout_02_ep12649",
+    "layout_02_ep12661",
+    "layout_02_ep12663",
+    "layout_02_ep12666",
+    "layout_03_ep12601",
+    "layout_03_ep12609",
+    "layout_03_ep12614",
+    "layout_03_ep12615",
+    "layout_03_ep12621",
+    "layout_03_ep12622",
+    "layout_03_ep12633",
+    "layout_03_ep12637",
+    "layout_04_ep12603",
+    "layout_04_ep12604",
+    "layout_04_ep12608",
+    "layout_04_ep12613",
+    "layout_04_ep12629",
+    "layout_04_ep12638",
+    "layout_04_ep12640",
+    "layout_04_ep12644",
+    "layout_04_ep12653",
+    "layout_05_ep12612",
+    "layout_05_ep12624",
+    "layout_05_ep12627",
+    "layout_05_ep12632",
+    "layout_05_ep12646",
+    "layout_05_ep12647",
+    "layout_05_ep12654",
+    "layout_05_ep12656",
+    "layout_05_ep12664",
+    "layout_06_ep12606",
+    "layout_06_ep12618",
+    "layout_06_ep12619",
+    "layout_06_ep12625",
+    "layout_06_ep12628",
+    "layout_06_ep12642",
+    "layout_06_ep12658",
+    "layout_06_ep12660",
+    "layout_06_ep12662"
+  ],
+  "context_semantics_sha256": "de3c1da016f89f6540f4ad72d8cb99edbf204af63450828134d0ed6354781ccf",
+  "eligible_trajectory_counts": {
+    "accepted": 66,
+    "eligible": 59,
+    "no_wall_eligible": 6,
+    "target_bearing": 60
+  },
+  "exact_trajectories_proposed_for_expanded_extraction": [],
+  "new_capture_required": true,
+  "runner_version": "exploratory-visible-position-resolution-runner-v0.1",
+  "schema_version": "1.0",
+  "scientific_reason": "All 60 target-bearing strata have fewer than two compatible eligible trajectories; each of the six no-wall layout strata contains exactly one trajectory, while visible wall-condition trajectories are separate condition shifts and cannot resolve the layout/trajectory confound.",
+  "selection_uses_decoder_results": false
+}

@@ -114,6 +114,7 @@ public final class MineOccludeClient implements ClientModInitializer {
     }
 
     private boolean autoConnectDone = false;
+    private long autoConnectAfterNanos = -1L;
 
     private void tryAutoConnect(MinecraftClient client) {
         if (autoConnectDone) return;
@@ -121,6 +122,33 @@ public final class MineOccludeClient implements ClientModInitializer {
         if (target == null || target.isEmpty()) return;
         if (client.world != null) { autoConnectDone = true; return; }
         if (!(client.currentScreen instanceof TitleScreen)) return;
+        // Linux software rendering can expose TitleScreen several seconds
+        // before vanilla finishes baking block models. Opening ConnectScreen
+        // in that interval races the resource reload and Indigo receives null
+        // baked models when the first world chunks arrive. The accepted
+        // Windows launch is fast enough not to hit the race. Permit the Linux
+        // launcher to request a bounded pre-connect delay; this changes only
+        // session orchestration before any episode starts.
+        if (autoConnectAfterNanos < 0L) {
+            long delayMs = 0L;
+            String configuredDelay = System.getenv("MINEOCCLUDE_AUTOCONNECT_DELAY_MS");
+            if (configuredDelay != null && !configuredDelay.isEmpty()) {
+                try {
+                    delayMs = Math.max(0L, Long.parseLong(configuredDelay));
+                } catch (NumberFormatException e) {
+                    MineOcclude.LOG.error("[MineOcclude/client] invalid auto-connect delay: {}",
+                            configuredDelay);
+                    autoConnectDone = true;
+                    return;
+                }
+            }
+            autoConnectAfterNanos = System.nanoTime() + delayMs * 1_000_000L;
+            if (delayMs > 0L) {
+                MineOcclude.LOG.info("[MineOcclude/client] deferring auto-connect by {} ms",
+                        delayMs);
+            }
+        }
+        if (System.nanoTime() < autoConnectAfterNanos) return;
         autoConnectDone = true;
         try {
             String host = target;

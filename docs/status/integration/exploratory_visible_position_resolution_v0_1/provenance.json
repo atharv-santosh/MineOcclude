@@ -1,0 +1,493 @@
+{
+  "artifact_id": "visible-position-resolution-provenance-v0.1",
+  "capture_runtime_portability_authority": {
+    "accepted_runtime_authority": {
+      "fabric_api": "0.42.0+1.16",
+      "fabric_loader": "0.15.11",
+      "frame_geometry": [
+        640,
+        360
+      ],
+      "java": "17.0.19",
+      "layout_config_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+      "minecraft": "1.16.5",
+      "mineocclude_jar_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52",
+      "source_commit": "538a176e1c83dc3b40e220dee8ebb2ac841bd9b4",
+      "tick_rate_hz": 20.0,
+      "yarn": "1.16.5+build.10"
+    },
+    "artifacts": [
+      {
+        "byte_size": 4676,
+        "path": "docs/status/capture_runtime_sagemaker_v0_1/runtime_resolution_receipt.json",
+        "sha256": "b1898460f0f72ea92225dfd7d3a07d63e6b02d987ee4373c95a1f1eb00a862fc"
+      }
+    ],
+    "authority_equivalence_pass": true,
+    "difference_classifications": [
+      "NONSCIENTIFIC_PLATFORM_DIFFERENCE",
+      "SCIENTIFICALLY_EQUIVALENT_IMPLEMENTATION_DIFFERENCE"
+    ],
+    "reconstructed_runtime": {
+      "client_auth_mode": "project-supported offline localhost legacy profile",
+      "client_mod_sha256": "5ca63710b119f56e96506de6aafee06c5a122724c3f65a5a0e687a4141b8113b",
+      "client_source_sha256": "518c17060aa2cf95e1f60944a107651a01a86aa640cc7854ecca5a2579a61db9",
+      "display": "Xvfb :99, 640x360x24",
+      "java_build": "17.0.19+10-1-24.04.2-Ubuntu",
+      "renderer": "Mesa llvmpipe 25.2.8, OpenGL 4.5",
+      "runtime_receipt": "/home/sagemaker-user/mineocclude-capture-runtime-receipt.json",
+      "server_mod_sha256": "9ecbb5e85b249409d38428ea479c3f09ec97dd884a97ecb48d79590e4c03de52"
+    },
+    "recorded_utc": "2026-08-09T10:34:02Z",
+    "scientific_impact": "platform portability only; validated before scientific capture and enabled the accepted 12 new Task 3 trajectories",
+    "source_changes": [
+      "fabric/mineocclude-mod/src/main/java/com/mineocclude/client/MineOccludeClient.java (env-gated bounded auto-connect delay for the Linux software-rendering resource-reload race)",
+      "scripts/run_autonomous_pilot.py (installed-jar resolution and Linux/X11 single-window focus assertion)",
+      "scripts/provision_capture_runtime_sagemaker.sh (runtime provisioning recipe)",
+      "tests/test_autonomous_pilot_portability.py (focused portability tests)"
+    ],
+    "status": "CAPTURE_RUNTIME_READY",
+    "unresolved_scientific_authority_mismatches": 0
+  },
+  "combined_authority": {
+    "combined_authority_sha256": "5f46fb152086eac419531bba0226eaa28f87ea2710dd83ab75a6875a97f8433e",
+    "eligible_row_count": 1071,
+    "eligible_rows_by_layout": {
+      "layout_01": 180,
+      "layout_02": 180,
+      "layout_03": 180,
+      "layout_04": 180,
+      "layout_05": 180,
+      "layout_06": 171
+    },
+    "row_keys_sha256": "83e8d082410dc155e1a119a7aeca2e5d2455f9ca65ce5367fd80e3b814073d2f",
+    "trajectory_count": 18,
+    "trajectory_count_by_layout": {
+      "layout_01": 3,
+      "layout_02": 3,
+      "layout_03": 3,
+      "layout_04": 3,
+      "layout_05": 3,
+      "layout_06": 3
+    },
+    "trajectory_ids_sha256": "c373198ef5a91fc0ebe15d90f3c52edd3568beff96fcca0c20c0367b9f06d2a7"
+  },
+  "development_freeze": {
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "discrepancy_note": "the raw-file SHA and the embedded canonical self-hash are different quantities by construction: the embedded value hashes the canonical JSON of the freeze body with the self-hash field removed, while the raw-file SHA hashes the serialized file including that field. Both are recorded; the discrepancy was reconciled during recovery and is not a defect.",
+    "embedded_canonical_self_hash": "3fc436f13b96e47b54e3837d37c0c4ecd20428a23a6c0fda58ee6c570040fc07",
+    "layer_idx": 4,
+    "raw_file_sha256": "97e68c4981a781053baef4f33a64516208725627bd757e7ffc2eb572951856ce",
+    "recomputed_canonical_self_hash": "3fc436f13b96e47b54e3837d37c0c4ecd20428a23a6c0fda58ee6c570040fc07",
+    "representation_set": [
+      "GLOBAL_MEAN",
+      "COARSE_2x6",
+      "FULL_TOKEN_GRID"
+    ],
+    "scaling": "training_rows_only",
+    "scramble_seeds": [
+      20260901,
+      20260902,
+      20260903,
+      20260904,
+      20260905
+    ],
+    "unchanged": true
+  },
+  "external_tensor_roots": {
+    "feature_cache_identities": {
+      "COARSE_2x6": {
+        "byte_size": 105283712,
+        "dtype": "float32",
+        "feature_count": 24576,
+        "path": "/mnt/sagemaker-nvme/mineocclude_task4_visible_position_resolution_v0_1/features/coarse_2x6.f32.npy",
+        "sha256": "6055c64925f7c6dadec310dcc8356de936c5d1a84ee381bb85f39f925dc1d891",
+        "shape": [
+          1071,
+          24576
+        ]
+      },
+      "FULL_TOKEN_GRID": {
+        "byte_size": 2947940480,
+        "dtype": "float32",
+        "feature_count": 688128,
+        "path": "/mnt/sagemaker-nvme/mineocclude_task4_visible_position_resolution_v0_1/features/full_token_grid.f32.npy",
+        "sha256": "215d8e2accbb96e9de595b671fd293a5ae93a085c99c3edb8181672b64704066",
+        "shape": [
+          1071,
+          688128
+        ]
+      },
+      "GLOBAL_MEAN": {
+        "byte_size": 8773760,
+        "dtype": "float32",
+        "feature_count": 2048,
+        "path": "/mnt/sagemaker-nvme/mineocclude_task4_visible_position_resolution_v0_1/features/global_mean.f32.npy",
+        "sha256": "cdb60563b52001ff2aed03fdca23a1e4ee06ee18307eb85ef8741f4f7d96f76f",
+        "shape": [
+          1071,
+          2048
+        ]
+      }
+    },
+    "feature_cache_source_identity_sha256": "1b33a738dcd5f8d660c33468b0c182ab1529865ba01aa37dfdbc1fd94a140613",
+    "note": "all large tensors, feature caches, Gram/kernel structures and null caches live outside Git on the instance NVMe volume",
+    "original_six_activation_root": "/mnt/sagemaker-nvme/mineocclude/exploratory_visible_position_diagnostics_v0_1/mentor-visible-position-diagnostics-layer4-v0-1",
+    "task3_activation_root": "/mnt/sagemaker-nvme/mineocclude_task3_visible_position_v0_1",
+    "task4_feature_cache_root": "/mnt/sagemaker-nvme/mineocclude_task4_visible_position_resolution_v0_1/features",
+    "task5_runtime_root": "/mnt/sagemaker-nvme/mineocclude_task5_visible_position_v0_1"
+  },
+  "final_adjudication": {
+    "byte_size": 20603,
+    "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/final_adjudication.json",
+    "sha256": "be8c3c2aa0b702f7f1abbbb1d6c509bda0b27d9e0cd59892137f829210a0ec8b"
+  },
+  "generated_at": "2026-08-10T04:11:07Z",
+  "git": {
+    "base_branch": "integration/mvp-final",
+    "base_commit": "626dcc00710f2b51cbbe2bfdea86785cb2d70e61",
+    "note": "the successor branch is a strict addition on top of the frozen MVP base commit; integration/mvp-final is not modified",
+    "successor_branch": "exploration/visible-position-resolution-v0-1"
+  },
+  "grouped_null_authority": {
+    "GROUPED_NULL_B": 100,
+    "GROUPED_NULL_B_FROZEN_BEFORE_RESULTS": true,
+    "GROUPED_NULL_B_SELECTION_BASIS": "RUNTIME_ONLY",
+    "GROUPED_NULL_SEEDS_FIRST": 20260720,
+    "GROUPED_NULL_SEEDS_LAST": 20260819,
+    "GROUPED_NULL_SEEDS_SHA256": "d73387ef0c868a3b55e2292804c58c0d94c36c03b2507708503b2f1728a70726",
+    "audited_caller": "src/mineocclude/probes/bridge.py::run_grouped_ridge_permutation",
+    "audited_caller_sha256": "297a6678693dcaacddb1dd738423d910fcd0c3ae920db9f75821d32579157ace",
+    "audited_source_file": "src/mineocclude/metrics/resampling.py::permute_trajectory_blocks",
+    "audited_source_file_sha256": "37db97c6d412f87925d32d43bbeb7bf82786e94a3c9e7cda70cabfcb8ee9d842",
+    "authority_mapping": {
+      "authority": "18 no-wall trajectories, 1,071 eligible rows, 6 layouts",
+      "block_lengths": {
+        "51": 1,
+        "60": 17
+      },
+      "conservatism": "51 of 1,071 rows (4.76%) retain their true feature-target association inside every null replicate, which can only make the null distribution stronger, never weaker",
+      "mapping_rule": "the audited permute_trajectory_blocks refuses a length stratum with fewer than two blocks; on this authority the 60-frame stratum holds 17 trajectories and the 51-frame stratum holds exactly one (layout_06_ep12616).  The audited function is therefore called verbatim on the 17-trajectory, 1,020-row equal-length stratum and the singleton block keeps its own target block.  Python's random.shuffle consumes no randomness for a one-element list, so this is bit-identical to running the audited function over all 18 trajectories with the minimum-stratum guard lifted.",
+      "unchanged_from_audited_design": [
+        "permutation unit is the whole trajectory block",
+        "frames are never rearranged inside a trajectory",
+        "scaler, alpha selection and ridge are refit inside every replicate",
+        "seeds are base_seed + replicate_index",
+        "the upper-tail statistic is the audited add-one rule"
+      ]
+    },
+    "derangement_required": false,
+    "model_selection_policy": "refit_scaler_alpha_and_ridge_inside_each_permutation (audited run_grouped_ridge_permutation policy string)",
+    "permutation_unit": "whole_trajectory_block",
+    "pre_outcome_b_freeze_artifact": {
+      "frozen_at": "2026-08-10T03:55:27Z",
+      "in_git": false,
+      "note": "kept outside Git on the NVMe runtime volume; written before any final null outcome was computed or inspected",
+      "path": "/mnt/sagemaker-nvme/mineocclude_task5_visible_position_v0_1/grouped_null_b_freeze.json",
+      "sha256": "aa6b24118696c3700ffda0808a1486150014102c441fd6af422ffed1827a6553"
+    },
+    "related_donor_implementation": "src/mineocclude/baselines/shuffled.py::build_donor_assignments (trajectory-level donor derangement used by the grouped_shuffled baseline floor and person-d grouped-null documents)",
+    "related_donor_implementation_sha256": "58965cec60447024bfc7afb20a52671a56f9f6d54be04bfc5b838cbe4d693a24",
+    "seed_generation": "permutation_seed = base_seed + permutation_index, base_seed = 20260720 (core analysis config resampling.permutation_seed, used verbatim by run_grouped_ridge_permutation)",
+    "temporal_preservation": "frames are never rearranged inside a trajectory; the donor block is copied in the recipient's own frame order, so within-trajectory temporal correlation is preserved exactly and neighbouring frame targets are never independently shuffled"
+  },
+  "large_tensors_in_git": false,
+  "layer_selection_limitation": {
+    "detail": "layer 4 was inherited from the existing positive-control work and was never selected by a layer sweep inside this program; no claim of layer optimality or layer specificity is made",
+    "status": "EXPLORATORY_PRESELECTED_FROM_EXISTING_POSITIVE_CONTROL"
+  },
+  "limitations": [
+    "Exploratory throughout: this is not a confirmatory pass and no confirmatory gate was defined, met, or retrospectively applied.",
+    "Layer 4 remains EXPLORATORY_PRESELECTED_FROM_EXISTING_POSITIVE_CONTROL; no layer sweep was run, so the layer choice is inherited, not established.",
+    "Observed across-layout performance is NOT clearly separated from the audited grouped target null (COARSE empirical percentile 83.0, upper-tail statistic 0.178; FULL 59.0 and 0.416). Target-specific cross-layout decoding is NOT established.",
+    "The audited null is strong because x_true_blocks carries a stereotyped ramp shared across trajectories; a whole-trajectory block permutation therefore leaves much of the target profile predictable. This is a property of the capture design, not of the readout.",
+    "Null mapping conservatism: layout_06_ep12616 is the sole 51-frame trajectory and forms a singleton audited length stratum, so it retains its own target block in every replicate (51/1071 rows = 4.76% remain associated). This can only strengthen the null, never weaken it.",
+    "The audited null design permits fixed points (it is not a derangement); fixed-point counts are recorded per replicate.",
+    "B = 100 bounds the resolution of the upper-tail statistic at 1/101; no conclusion is drawn from tail resolution finer than that.",
+    "Cross-layout transfer is heterogeneous with per-layout sign reversals; equal-layout macro means conceal that heterogeneity and are never read alone.",
+    "The scramble control demonstrates dependence on stable token-slot correspondence. It is NOT attention, saliency, causal localization, or evidence that individual tokens encode absolute position; transformer tokens are contextual.",
+    "FULL (688,128 features) shows no material advantage over COARSE (24,576). High-dimensional overfit is neither demonstrated nor eliminated.",
+    "Only three trajectories per layout and six layouts; trajectory- and layout-level effects are estimated from few independent units.",
+    "No pair holdout, occupancy analysis, U1/U2 objective, condition shift, or new representation was run.",
+    "The original MVP status NOT_INTERPRETABLE_POSITIVE_CONTROL_FAILED is historical authority and is unchanged by this work."
+  ],
+  "model_identity": {
+    "adapter_code_sha256": "f225d0d8fdb2fdeec90fbd4dee156b3fe0c41c8ba47e0c084b9277ad88397962",
+    "checkpoint_path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "device": "cuda:0",
+    "mineworld_source_revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "model_config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018",
+    "modelscope_asset_revision": "0dd5561ab317115831badc50e09a6ebe98693d0e",
+    "precision": "float16",
+    "tokenization_profile": "mineworld-700m-16f-interleaved-v1.0:9f49efbcc68a5f0cf60e78f0abc566eac409282f:vae.py#VAE.tokenize_images",
+    "vae_config_sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb",
+    "vae_path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt",
+    "vae_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+  },
+  "original_mvp_frozen_status": {
+    "SCIENTIFIC_INTERPRETATION_STATUS": "NOT_INTERPRETABLE_POSITIVE_CONTROL_FAILED",
+    "modified_by_this_program": false,
+    "mvp_manifest": {
+      "byte_size": 34542,
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+      "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+    },
+    "note": "the original mean-pooled visible-position positive control failed; that historical authority stands unchanged and this successor work is exploratory resolution work, not a retrospective pass",
+    "reinterpreted_by_this_program": false
+  },
+  "package_file_identities": {
+    "across_layout_generalization.json": {
+      "byte_size": 599203,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/across_layout_generalization.json",
+      "sha256": "1bdc58482ce9306df97584c797367340fe72160f8bc56833741647fc5a0b089f"
+    },
+    "capture_manifest.json": {
+      "byte_size": 102265,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/capture_manifest.json",
+      "sha256": "44575ecf539b3d93f50a64d1ae1270ea48a0124753a5d69c1f76f117aea37218"
+    },
+    "development_freeze.json": {
+      "byte_size": 27689,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/development_freeze.json",
+      "sha256": "97e68c4981a781053baef4f33a64516208725627bd757e7ffc2eb572951856ce"
+    },
+    "expanded_activation_manifest.json": {
+      "byte_size": 94995,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/expanded_activation_manifest.json",
+      "sha256": "59fc98f1d2d9569d8814140e29827ddf522553b5b207b2116b7f2cf8f6961871"
+    },
+    "expanded_visibility_eligibility.json": {
+      "byte_size": 1942159,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/expanded_visibility_eligibility.json",
+      "sha256": "1882ec400159f83e4d09dc7b113907857dca5ad5f7fbd90760ad296fb289d6ea"
+    },
+    "grouped_target_null.json": {
+      "byte_size": 200387,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/grouped_target_null.json",
+      "sha256": "0277bb12ba94eba708f8abc716023519bf339a6a76973dba1879ca88674a2629"
+    },
+    "metric_decomposition.json": {
+      "byte_size": 6054,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/metric_decomposition.json",
+      "sha256": "8c6b193363b8d14f332f8656a1cad377b6dfe51cd7edef7bcf704a3843b4c55c"
+    },
+    "replication_authority_decision.json": {
+      "byte_size": 4566,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/replication_authority_decision.json",
+      "sha256": "8c0d4f07329529ef00e185c9fb880a0f927a8da4d34ebcd4fcc1121fb1ac674a"
+    },
+    "replication_inventory.json": {
+      "byte_size": 135405,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/replication_inventory.json",
+      "sha256": "8adc3196663a676047352fa073e97e8cbb6176b3620c3bc0e22f68a1325ef7e4"
+    },
+    "runtime_benchmark.json": {
+      "byte_size": 1091,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/runtime_benchmark.json",
+      "sha256": "baf1bfe4a2405e33d6cb6c73f51a9bfe1d62d77d392c08afa63554ffdc0677a7"
+    },
+    "six_layout_generalization.json": {
+      "byte_size": 27266,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/six_layout_generalization.json",
+      "sha256": "d8fa0beb7c0605694a14d09383c0991a358d21fea913eefaaca7e2504e63d0e4"
+    },
+    "spatial_representation_ladder.json": {
+      "byte_size": 87898,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/spatial_representation_ladder.json",
+      "sha256": "fc4a6df133bbef2c52714e6ba3379d3632e9db1e259fed06639556e1a928a39c"
+    },
+    "spatial_scramble_control.json": {
+      "byte_size": 945218,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/spatial_scramble_control.json",
+      "sha256": "cd99fd1248eb49d021e9f898e314c164d5398a790537b8bffbbeefb88e6e1a44"
+    },
+    "within_layout_replication.json": {
+      "byte_size": 634908,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/within_layout_replication.json",
+      "sha256": "58ceb99c888fd0bc1212db5986dc6d6468852b92da93646f002779494e0c506d"
+    }
+  },
+  "predecessor_activation_authority": {
+    "artifacts": [
+      {
+        "byte_size": 29996,
+        "path": "docs/status/integration/exploratory_visible_position_diagnostics_v0_1/unpooled_activation_manifest.json",
+        "sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482"
+      }
+    ],
+    "eligible_row_count": 351,
+    "mineocclude_revision": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "runtime_id": "mentor-visible-position-diagnostics-layer4-v0-1:runtime",
+    "trajectory_count": 6,
+    "unchanged": true
+  },
+  "predeclared_criterion_clarification": {
+    "both_criteria_reported": "spatial_scramble_control.json reports both layout_majority_consistent_by_representation (the applied rule) and every_fold_directionally_consistent_by_representation (the original rule) for both designs and both representations, so a reader can recompute either verdict",
+    "classification": "PRE_OUTCOME_INTERPRETATION_CLARIFICATION",
+    "qualifications_disclosed": [
+      "equal-layout macro scramble outcomes WERE already known when the criterion was changed; only per-fold outcomes were unknown",
+      "the change was motivated in part by anticipating, from the frozen Task 4 ordered per-layout values (layout_05 ordered across-layout R2 is negative), that a unanimity rule could fail on a layout whose ordered fit is already poor",
+      "the change is material to the reported verdict: under the original unanimity rule STABLE_SPATIAL_IDENTITY_WITHIN_LAYOUT, STABLE_SPATIAL_IDENTITY_ACROSS_LAYOUT and STABLE_SPATIAL_IDENTITY_MATTERS would each read Unclear rather than True"
+    ],
+    "timing_evidence": [
+      "the first pipeline pass crashed in the reporting stage before any spatial_scramble_control.json was written, so no per-fold scramble outcome existed on disk when the criterion was changed",
+      "the first pass emitted only equal-layout macro values to its runtime log; no per-fold scramble value was printed",
+      "the only spatial_scramble_control.json in the repository was produced by the post-change rerun"
+    ],
+    "timing_substantiated": true,
+    "underlying_magnitudes_unaffected": "the material-advantage component and every macro and per-fold R2 value are identical under both criteria; only the consistency component differs",
+    "what_changed": "the Task 5 spatial-identity directional-consistency criterion was implemented first as 'every outer fold favours ordered' and was changed, before any per-fold scramble outcome existed, to the specification-consistent qualitative rule 'for every frozen seed a strict majority of layouts shows a positive median ordered-minus-scrambled delta'",
+    "why": "the specification reserves Unclear for evidence that is 'strongly mixed'; requiring unanimity across all 90 seed-by-fold cells is stricter than that language and would classify a single reversal out of 90 as strongly mixed"
+  },
+  "preprocessing_identity": {
+    "identity": "person-a-bgr2rgb-inter-linear-224x384-v1.0",
+    "implementation_path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "implementation_sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+    "preprocess_hash": "8b585e1ffe7d9b7c7bf549f8b5695825bbd2a5b2579e4adf607ca5fa5786635c"
+  },
+  "qualified_python": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+  "schema_version": "1.0",
+  "status": "PASS",
+  "task_1_eligibility_authority": {
+    "artifacts": [
+      {
+        "byte_size": 1942159,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/expanded_visibility_eligibility.json",
+        "sha256": "1882ec400159f83e4d09dc7b113907857dca5ad5f7fbd90760ad296fb289d6ea"
+      },
+      {
+        "byte_size": 135405,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/replication_inventory.json",
+        "sha256": "8adc3196663a676047352fa073e97e8cbb6176b3620c3bc0e22f68a1325ef7e4"
+      },
+      {
+        "byte_size": 4566,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/replication_authority_decision.json",
+        "sha256": "8c0d4f07329529ef00e185c9fb880a0f927a8da4d34ebcd4fcc1121fb1ac674a"
+      }
+    ],
+    "eligible_row_count_full_pool": 1413,
+    "eligible_row_keys_sha256": "ef1730d7f5a4f01286db3d5957dba9c466d03f3f6c93a443c708b781cc201e51",
+    "eligible_trajectory_count_full_pool": 59,
+    "rule_id": "expanded-strict-visible-authority-join-v0.1",
+    "rule_sha256": "b20667871ded64aecea444bd8bf608a74bd52f9428e2c3394c3e7dc65c18f56e"
+  },
+  "task_2_spatial_ladder_authority": {
+    "TARGET_METRIC_INSTABILITY_CONTRIBUTES": false,
+    "artifacts": [
+      {
+        "byte_size": 87898,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/spatial_representation_ladder.json",
+        "sha256": "fc4a6df133bbef2c52714e6ba3379d3632e9db1e259fed06639556e1a928a39c"
+      },
+      {
+        "byte_size": 6054,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/metric_decomposition.json",
+        "sha256": "8c6b193363b8d14f332f8656a1cad377b6dfe51cd7edef7bcf704a3843b4c55c"
+      },
+      {
+        "byte_size": 27266,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/six_layout_generalization.json",
+        "sha256": "d8fa0beb7c0605694a14d09383c0991a358d21fea913eefaaca7e2504e63d0e4"
+      },
+      {
+        "byte_size": 1091,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/runtime_benchmark.json",
+        "sha256": "baf1bfe4a2405e33d6cb6c73f51a9bfe1d62d77d392c08afa63554ffdc0677a7"
+      }
+    ],
+    "row_count": 351,
+    "row_keys_sha256": "445c7b82bc8d8308a42f7c2880c52dfd444c343e3a90f828f98c42da1636f854",
+    "surviving_intermediate": "COARSE_2x6"
+  },
+  "task_3_activation_authority": {
+    "artifacts": [
+      {
+        "byte_size": 94995,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/expanded_activation_manifest.json",
+        "sha256": "59fc98f1d2d9569d8814140e29827ddf522553b5b207b2116b7f2cf8f6961871"
+      }
+    ],
+    "eligible_row_count": 720,
+    "hidden_width": 2048,
+    "hook_site": "decoder_layer_output_residual_stream",
+    "layer": 4,
+    "teacher_forcing": true,
+    "token_count": 336,
+    "token_dtype": "float16",
+    "token_grid": [
+      14,
+      24
+    ],
+    "trajectory_count": 12
+  },
+  "task_3_capture_authority": {
+    "artifacts": [
+      {
+        "byte_size": 102265,
+        "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/capture_manifest.json",
+        "sha256": "44575ecf539b3d93f50a64d1ae1270ea48a0124753a5d69c1f76f117aea37218"
+      }
+    ],
+    "condition": "no_wall_visible",
+    "new_accepted_trajectories": 12,
+    "new_eligible_rows": 720
+  },
+  "task_4_authority": {
+    "across_layout_generalization": {
+      "byte_size": 599203,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/across_layout_generalization.json",
+      "sha256": "1bdc58482ce9306df97584c797367340fe72160f8bc56833741647fc5a0b089f"
+    },
+    "classifications": {
+      "both_trajectory_and_layout_variance": true,
+      "layout_specific_representation_plausible": true,
+      "layout_variance_class": "BOTH_TRAJECTORY_AND_LAYOUT_VARIANCE",
+      "layout_variance_dominant": false,
+      "token_preserving_readout_generalizes": "UNCLEAR",
+      "trajectory_variance_class": "MIXED_TRAJECTORY_EFFECT",
+      "trajectory_variance_dominant": false
+    },
+    "controls_run_at_task_4": [],
+    "optimization_equivalence": "PASS",
+    "runner_version": "visible-position-resolution-task4-runner-v0.1",
+    "within_layout_replication": {
+      "byte_size": 634908,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/within_layout_replication.json",
+      "sha256": "58ceb99c888fd0bc1212db5986dc6d6468852b92da93646f002779494e0c506d"
+    }
+  },
+  "task_5_authority": {
+    "grouped_target_null": {
+      "byte_size": 200387,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/grouped_target_null.json",
+      "sha256": "0277bb12ba94eba708f8abc716023519bf339a6a76973dba1879ca88674a2629"
+    },
+    "runner_sha256": "8744294f979dba06b8eb0b6bd19955061e4cae9a893529ee176d06d19202d58b",
+    "runner_version": "visible-position-resolution-task5-runner-v0.1",
+    "scramble_domain_separator": "mineocclude-visible-position-task5-sample-specific-spatial-scramble-v0.1",
+    "scramble_seeds": [
+      20260901,
+      20260902,
+      20260903,
+      20260904,
+      20260905
+    ],
+    "spatial_identity_classification": {
+      "STABLE_SPATIAL_IDENTITY_ACROSS_LAYOUT": true,
+      "STABLE_SPATIAL_IDENTITY_MATTERS": true,
+      "STABLE_SPATIAL_IDENTITY_WITHIN_LAYOUT": true
+    },
+    "spatial_scramble_control": {
+      "byte_size": 945218,
+      "path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/spatial_scramble_control.json",
+      "sha256": "cd99fd1248eb49d021e9f898e314c164d5398a790537b8bffbbeefb88e6e1a44"
+    }
+  }
+}

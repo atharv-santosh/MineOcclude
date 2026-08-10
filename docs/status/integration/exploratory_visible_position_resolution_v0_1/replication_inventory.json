@@ -1,0 +1,3528 @@
+{
+  "artifact_id": "exploratory-visible-position-resolution-replication-inventory-v0.1",
+  "base_head": "626dcc00710f2b51cbbe2bfdea86785cb2d70e61",
+  "classification_counts": {
+    "CONDITION_SHIFT_ONLY": 53,
+    "INVALID_FOR_EXPANDED_VISIBLE_DIAGNOSTIC": 6,
+    "NO_WITHIN_LAYOUT_REPLICATION": 7
+  },
+  "counts": {
+    "accepted_trajectory_count": 66,
+    "condition_shift_only_trajectory_count": 53,
+    "eligible_row_count": 1413,
+    "eligible_trajectory_count": 59,
+    "excluded_row_count": 1055,
+    "invalid_trajectory_count": 6,
+    "total_frame_count": 2468
+  },
+  "field_mapping": {
+    "condition_fields_authority": [
+      "control_type",
+      "set_id",
+      "scene",
+      "context_fraction",
+      "hidden_frames",
+      "speed_blocks_per_second",
+      "q_blocks_squared_per_second",
+      "seed"
+    ],
+    "condition_fields_used_for_compatibility": [
+      "control_type",
+      "set_id",
+      "scene",
+      "context_fraction",
+      "hidden_frames",
+      "speed_blocks_per_second",
+      "q_blocks_squared_per_second"
+    ],
+    "condition_seed_treatment": "seed is retained as acquisition identity and excluded from controlled condition matching so independent acquisitions may replicate a stratum",
+    "experimental_condition_additional_fields": [
+      "capture_package_manifest.records[].condition",
+      "strict_visibility_join[].wall_present"
+    ],
+    "layout_field": "layout_id",
+    "trajectory_category_field": "control_type",
+    "visibility_fields": [
+      "visible_flag",
+      "visible_flag_defined",
+      "visibility_applicable",
+      "visible_flag_rule"
+    ]
+  },
+  "runner_version": "exploratory-visible-position-resolution-runner-v0.1",
+  "schema_version": "1.0",
+  "source_authorities": {
+    "accepted_trajectory_manifest": {
+      "path": "docs/status/person_c_c7_mvp_handoff_v0_1/trajectories_mvp_manifest.json",
+      "sha256": "96ba43e15bc024aeaef7c519fa4ece0a4afe0bb0e877501dffaca44fee927ff7"
+    },
+    "capture_package_manifest": {
+      "path": "docs/status/person_c_66_cell_capture_authority_v0_1/capture_package_manifest.json",
+      "sha256": "ca6ef6bd0a6ee144731ff3e6f470f767a2c1a82e8b46aef9fb5e458efb814f56"
+    },
+    "checkpoint_preprocessing_identity": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/person_a_identity_resolution.json",
+      "sha256": "870344e3a7623334a043cb06400a9fe2f679a0b118d43fc52349d3cff9d0e3cb"
+    },
+    "oracle_target_manifest": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_manifest.json",
+      "sha256": "c064e1856be67ebab95cbcb07b80009729c396f2398b15b4dec57458b73b8ac9"
+    },
+    "oracle_target_records": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/oracle_target_records.jsonl",
+      "sha256": "d95c83518d2ad322e6862f5460727382511fe831c0c6658a6cf72c9f7a8858b1"
+    },
+    "predecessor_context_manifest": {
+      "path": "docs/status/integration/exploratory_visible_position_diagnostics_v0_1/unpooled_activation_manifest.json",
+      "sha256": "d7e9615f26856d64c96a55b4d52624dc24d7df5841e3f930a238a7d1c3987482"
+    },
+    "preprocessed_frame_manifest": {
+      "path": "docs/status/person_a_66_cell_preprocessed_media_v0_2/preprocessed_frame_manifest.json",
+      "sha256": "dda2220d1e388253c671f7a7d879987e53d4c0a1a1e815fbc8da6a19356de5a1"
+    },
+    "production_context_runner": {
+      "path": "scripts/run_person_a_66_cell_production_extraction.py",
+      "sha256": "06f0a9d55352688fa789f18ab0072dcbed612f32a3d81d11dba1aa26f80977f0"
+    },
+    "row_universe": {
+      "path": "docs/status/person_b_66_cell_oracle_target_v0_1/row_universe_records.jsonl",
+      "sha256": "29b4cf003f3d9479b3606f17947879078801b400b09d942bd6827544b95227b2"
+    },
+    "strict_visibility_join": {
+      "path": "docs/status/person_c_66_cell_strict_visibility_v0_1/visibility_join.jsonl",
+      "sha256": "6fcfaba99feed706e7106d0f1d9b758700d920ee2001b3ca6f150320f09313b7"
+    }
+  },
+  "trajectories": [
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "no_wall_visible",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:ea87bc9bb7eb42fa774efed94f84be9e70fa54c264b406871156005ee138f412",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_wall_visible_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nowall",
+        "seed": 202608055838,
+        "set_id": "nowall",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 60,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 60
+        }
+      ],
+      "eligible_visible_row_count": 60,
+      "exact_exclusion_or_limitation_reasons": [
+        "ONLY_ONE_COMPATIBLE_ELIGIBLE_TRAJECTORY_IN_STRATUM"
+      ],
+      "excluded_row_reason_counts": {},
+      "frame_count": 60,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "NO_WITHIN_LAYOUT_REPLICATION",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_wall_visible_control"
+      },
+      "trajectory_id": "layout_01_ep12602",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 60,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": false
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:53544a49cc96363c60c7a6f860472771044c3583f40ad4bcdb63b1b3e864499c",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608079595,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 9,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 9
+        }
+      ],
+      "eligible_visible_row_count": 9,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 7
+      },
+      "frame_count": 25,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12605",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 9,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:d6d764cc3c79eabba9954bd8a52ee1114c5a3eaa8cacb83e3c46b11d0292d0c6",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.5,
+        "control_type": "context_sentinel",
+        "hidden_frames": 24,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "normal",
+        "seed": 202608198380,
+        "set_id": "sentinel",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 26,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 26
+        }
+      ],
+      "eligible_visible_row_count": 26,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 24,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 16
+      },
+      "frame_count": 50,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "context_sentinel"
+      },
+      "trajectory_id": "layout_01_ep12620",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 26,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:b0ffa49a2705f0592c1417ebadd36471510cbc7951b13cb83a611529a06e28f1",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608285489,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 10,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 10
+        }
+      ],
+      "eligible_visible_row_count": 10,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 14,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12631",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 10,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:1b9cb665c83f8466337325744c4c853a9ba65b9d4c98f66749311c7d4235468a",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608325084,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 19,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 19
+        }
+      ],
+      "eligible_visible_row_count": 19,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 23,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12636",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 19,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "occluder_only_no_sheep",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": null,
+      "compatible_eligible_trajectory_count": 0,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_object_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nosheep",
+        "seed": 202608435950,
+        "set_id": "nosheep",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [],
+      "eligible_visible_row_count": 0,
+      "exact_exclusion_or_limitation_reasons": [
+        "TARGET_OBJECT_ABSENT_AND_X_TRUE_BLOCKS_UNAVAILABLE",
+        "FROZEN_VISIBILITY_NOT_APPLICABLE"
+      ],
+      "excluded_row_reason_counts": {
+        "ACCEPTED_ORACLE_TARGET_MISSING": 60,
+        "FROZEN_STRICT_VISIBILITY_NOT_APPLICABLE": 60,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 60
+      },
+      "frame_count": 60,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "INVALID_FOR_EXPANDED_VISIBLE_DIAGNOSTIC",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "MISSING",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_object_control"
+      },
+      "trajectory_id": "layout_01_ep12650",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 0,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:698eb6a3b339e4cdb3cf0c09b613ff61852ed979d713a61c558b930c4377df91",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608443869,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 24,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 24
+        }
+      ],
+      "eligible_visible_row_count": 24,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 12
+      },
+      "frame_count": 40,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12651",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 24,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:20808a5d52c8e3578bd432fefe73a39e0635b4eff290337b8d89283304074daf",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608451788,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 19,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 19
+        }
+      ],
+      "eligible_visible_row_count": 19,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 23,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12652",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 19,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:5ee86a8ca6a771ccd1086369e49d4d83186acee4473e2512f453a3dba8099e12",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608475545,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 11,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 11
+        }
+      ],
+      "eligible_visible_row_count": 11,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 9
+      },
+      "frame_count": 27,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12655",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 11,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:091e806f47bfdc370ba7ace5bf41e9f9786a22461474a67a9f694fb577297593",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608507221,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 15,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 15
+        }
+      ],
+      "eligible_visible_row_count": 15,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 19,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12659",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 15,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:1a17e308d29dd32294601bdd045a9ab1b08deb8bb63856d86caa5db1c10f5088",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608554735,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 17,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 17
+        },
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 20,
+          "stop_model_frame_idx_exclusive": 21
+        }
+      ],
+      "eligible_visible_row_count": 18,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 13
+      },
+      "frame_count": 34,
+      "layout_id": "layout_01",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_01_ep12665",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 18,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "no_wall_visible",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:ca91293ba45eaebb961caaac81ad72577dbd8de22d22ba0513fa95eda3842e9a",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_wall_visible_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nowall",
+        "seed": 202608119190,
+        "set_id": "nowall",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 60,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 60
+        }
+      ],
+      "eligible_visible_row_count": 60,
+      "exact_exclusion_or_limitation_reasons": [
+        "ONLY_ONE_COMPATIBLE_ELIGIBLE_TRAJECTORY_IN_STRATUM"
+      ],
+      "excluded_row_reason_counts": {},
+      "frame_count": 60,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "NO_WITHIN_LAYOUT_REPLICATION",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_wall_visible_control"
+      },
+      "trajectory_id": "layout_02_ep12610",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 60,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": false
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:181511e4b8a9aecd40eda298d8882f7e9363c58333ae04c385f2705640b8ae6a",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608127109,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 20,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 20
+        }
+      ],
+      "eligible_visible_row_count": 20,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 2
+      },
+      "frame_count": 36,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12611",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 20,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:ec814393953119c1f92ac49a9cf6d3df79061f4417ed37e827462e6ff6cc45ae",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608222137,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 13,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 13
+        },
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 14,
+          "stop_model_frame_idx_exclusive": 15
+        }
+      ],
+      "eligible_visible_row_count": 14,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 17,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 3
+      },
+      "frame_count": 31,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12623",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 14,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:0cfb20e35356ba00ac4b8571b3d3e3b65615b3a18b9bbe9b46372ebd9519a992",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608317165,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 23,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 23
+        }
+      ],
+      "eligible_visible_row_count": 23,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 1
+      },
+      "frame_count": 27,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12635",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 23,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "occluder_only_no_sheep",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": null,
+      "compatible_eligible_trajectory_count": 0,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_object_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nosheep",
+        "seed": 202608364679,
+        "set_id": "nosheep",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [],
+      "eligible_visible_row_count": 0,
+      "exact_exclusion_or_limitation_reasons": [
+        "TARGET_OBJECT_ABSENT_AND_X_TRUE_BLOCKS_UNAVAILABLE",
+        "FROZEN_VISIBILITY_NOT_APPLICABLE"
+      ],
+      "excluded_row_reason_counts": {
+        "ACCEPTED_ORACLE_TARGET_MISSING": 60,
+        "FROZEN_STRICT_VISIBILITY_NOT_APPLICABLE": 60,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 60
+      },
+      "frame_count": 60,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "INVALID_FOR_EXPANDED_VISIBLE_DIAGNOSTIC",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "MISSING",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_object_control"
+      },
+      "trajectory_id": "layout_02_ep12641",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 0,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:b427f635092682ca3bb3458f1984474cf94dd30c390c2ab31556128e68bb3319",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608380517,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 10,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 10
+        }
+      ],
+      "eligible_visible_row_count": 10,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 2
+      },
+      "frame_count": 14,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12643",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 10,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:dbc0e928be07e20308118457ff945642685c3c2f446ba276c2fad21ad6460284",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.5,
+        "control_type": "context_sentinel",
+        "hidden_frames": 24,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "normal",
+        "seed": 202608420112,
+        "set_id": "sentinel",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 41,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 41
+        }
+      ],
+      "eligible_visible_row_count": 41,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 24,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 1
+      },
+      "frame_count": 65,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "context_sentinel"
+      },
+      "trajectory_id": "layout_02_ep12648",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 41,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:fac2a82e42d3f33939a41834d114b3daaeb5431d8e212ade1368771fdebb37e2",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608428031,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 9,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 9
+        }
+      ],
+      "eligible_visible_row_count": 9,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 17,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 3
+      },
+      "frame_count": 26,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12649",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 9,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:0128bcf739c5be75d7a1b310fe257a5b5c931a0f336afa4f11cd1df7c39d984b",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608523059,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 20,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 20
+        }
+      ],
+      "eligible_visible_row_count": 20,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 2
+      },
+      "frame_count": 24,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12661",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 20,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:774bf91c207dbfd3640a412e02bc879184ce66b7552ea5b2fc1d36e789facda4",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608538897,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 9,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 9
+        }
+      ],
+      "eligible_visible_row_count": 9,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 3
+      },
+      "frame_count": 25,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12663",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 9,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:3c146d16065543fe1e4175ac37a37c4d431c4d5cb984a52148a6981be763c739",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608562654,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 7,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 7
+        }
+      ],
+      "eligible_visible_row_count": 7,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 2
+      },
+      "frame_count": 11,
+      "layout_id": "layout_02",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_02_ep12666",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 7,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:c4401bec38ca3035c67c8e285ce3d906c88c4a03da9a516135fb41e81468abec",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.5,
+        "control_type": "context_sentinel",
+        "hidden_frames": 24,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "normal",
+        "seed": 202608047919,
+        "set_id": "sentinel",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 5,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 5
+        },
+        {
+          "row_count": 4,
+          "start_model_frame_idx": 6,
+          "stop_model_frame_idx_exclusive": 10
+        },
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 11,
+          "stop_model_frame_idx_exclusive": 12
+        }
+      ],
+      "eligible_visible_row_count": 10,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 24,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 15
+      },
+      "frame_count": 34,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "context_sentinel"
+      },
+      "trajectory_id": "layout_03_ep12601",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 10,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:dd7ead2240197497b3279d9932c4859c722674b5696f2217690abfe236da04f0",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608111271,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 4,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 4
+        }
+      ],
+      "eligible_visible_row_count": 4,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 8,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12609",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 4,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:8da05c08c17b4fb4c6e61ff9632e08f732f93c2d81b6089ab49426d19b3ddb32",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608150866,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 3,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 3
+        }
+      ],
+      "eligible_visible_row_count": 3,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 7,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12614",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 3,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:2853cbc4a81aced03c6403027e29e2fb9bc21153197d1790dfa070e4ec382cd4",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608158785,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 4,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 4
+        }
+      ],
+      "eligible_visible_row_count": 4,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 8,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12615",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 4,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:180f8fa0677967ae470390dbc9f78a8ae8e7392951d181f969f45417e437d503",
+      "compatible_eligible_trajectory_count": 0,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608174623,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [],
+      "eligible_visible_row_count": 0,
+      "exact_exclusion_or_limitation_reasons": [
+        "NO_FULLY_VISIBLE_ROWS_UNDER_FROZEN_STRICT_VISIBILITY",
+        "COMPATIBLE_ELIGIBLE_TRAJECTORY_COUNT_LT2"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 20,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 20,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "NO_WITHIN_LAYOUT_REPLICATION",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12617",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 0,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:7b4c28f6ea99644df7a40bd621ce1142fd0ba7b45365e6e418bb66a401a04f54",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608206299,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 5,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 5
+        }
+      ],
+      "eligible_visible_row_count": 5,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 16
+      },
+      "frame_count": 21,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12621",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 5,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:7b773454a608f22700b293beabd554d5b11692ca3838e84cebaed67e3432dcfc",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608214218,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 1
+        }
+      ],
+      "eligible_visible_row_count": 1,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 5,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12622",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 1,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:533a0898694c6d0980c651cfc2530439d1711b228c8640851d91b1431887c6c3",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608301327,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 3,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 3
+        }
+      ],
+      "eligible_visible_row_count": 3,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 8
+      },
+      "frame_count": 19,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12633",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 3,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:4aaf03363d66d66136ca0ae5e4a71c67e69f8b2bd6abd2dedc21cdeddc6fa64b",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608333003,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 9,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 9
+        },
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 10,
+          "stop_model_frame_idx_exclusive": 11
+        }
+      ],
+      "eligible_visible_row_count": 10,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 13
+      },
+      "frame_count": 26,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_03_ep12637",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 10,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "occluder_only_no_sheep",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": null,
+      "compatible_eligible_trajectory_count": 0,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_object_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nosheep",
+        "seed": 202608348841,
+        "set_id": "nosheep",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [],
+      "eligible_visible_row_count": 0,
+      "exact_exclusion_or_limitation_reasons": [
+        "TARGET_OBJECT_ABSENT_AND_X_TRUE_BLOCKS_UNAVAILABLE",
+        "FROZEN_VISIBILITY_NOT_APPLICABLE"
+      ],
+      "excluded_row_reason_counts": {
+        "ACCEPTED_ORACLE_TARGET_MISSING": 60,
+        "FROZEN_STRICT_VISIBILITY_NOT_APPLICABLE": 60,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 60
+      },
+      "frame_count": 60,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "INVALID_FOR_EXPANDED_VISIBLE_DIAGNOSTIC",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "MISSING",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_object_control"
+      },
+      "trajectory_id": "layout_03_ep12639",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 0,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "no_wall_visible",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:8c83bf662898bad7421dbc33061df60e762bc38286c2398edb04530198037c53",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_wall_visible_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nowall",
+        "seed": 202608396355,
+        "set_id": "nowall",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 60,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 60
+        }
+      ],
+      "eligible_visible_row_count": 60,
+      "exact_exclusion_or_limitation_reasons": [
+        "ONLY_ONE_COMPATIBLE_ELIGIBLE_TRAJECTORY_IN_STRATUM"
+      ],
+      "excluded_row_reason_counts": {},
+      "frame_count": 60,
+      "layout_id": "layout_03",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "NO_WITHIN_LAYOUT_REPLICATION",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_wall_visible_control"
+      },
+      "trajectory_id": "layout_03_ep12645",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 60,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": false
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:60bd99934bfec78b62c78ed2d2a3e06ea81b52ccc366b80725c27c8c68caedae",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608063757,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 10,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 10
+        }
+      ],
+      "eligible_visible_row_count": 10,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 8
+      },
+      "frame_count": 26,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12603",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 10,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:372be040435998a184d80874a5c699417700fbf69dc362df3ef33c1c8fb40433",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608071676,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16
+        }
+      ],
+      "eligible_visible_row_count": 16,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 13
+      },
+      "frame_count": 32,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12604",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 16,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "occluder_only_no_sheep",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": null,
+      "compatible_eligible_trajectory_count": 0,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_object_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nosheep",
+        "seed": 202608095433,
+        "set_id": "nosheep",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [],
+      "eligible_visible_row_count": 0,
+      "exact_exclusion_or_limitation_reasons": [
+        "TARGET_OBJECT_ABSENT_AND_X_TRUE_BLOCKS_UNAVAILABLE",
+        "FROZEN_VISIBILITY_NOT_APPLICABLE"
+      ],
+      "excluded_row_reason_counts": {
+        "ACCEPTED_ORACLE_TARGET_MISSING": 60,
+        "FROZEN_STRICT_VISIBILITY_NOT_APPLICABLE": 60,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 60
+      },
+      "frame_count": 60,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "INVALID_FOR_EXPANDED_VISIBLE_DIAGNOSTIC",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "MISSING",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_object_control"
+      },
+      "trajectory_id": "layout_04_ep12607",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 0,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:c454145b989cfc92177c0cace56196c6a977fa5589c15dd01cdc064daf2d9e3e",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608103352,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 8,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 8
+        }
+      ],
+      "eligible_visible_row_count": 8,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 12
+      },
+      "frame_count": 24,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12608",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 8,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:45c3a98e8cf3a9c9169e74f84cf26875ab4c337c23fd834d5fc9dee5e088e4c2",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608142947,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 15,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 15
+        }
+      ],
+      "eligible_visible_row_count": 15,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 19,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12613",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 15,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "no_wall_visible",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:c55e7c92d21e239a1fd8a1553e84c84936cbf95ce0622574ae35a15ecb312bf7",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_wall_visible_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nowall",
+        "seed": 202608245894,
+        "set_id": "nowall",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 60,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 60
+        }
+      ],
+      "eligible_visible_row_count": 60,
+      "exact_exclusion_or_limitation_reasons": [
+        "ONLY_ONE_COMPATIBLE_ELIGIBLE_TRAJECTORY_IN_STRATUM"
+      ],
+      "excluded_row_reason_counts": {},
+      "frame_count": 60,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "NO_WITHIN_LAYOUT_REPLICATION",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_wall_visible_control"
+      },
+      "trajectory_id": "layout_04_ep12626",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 60,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": false
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:00807b2cea47abdc781e4f573b2cd7cef604e9df068ed8e2a4a794589b250bd4",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608269651,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 18,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 18
+        }
+      ],
+      "eligible_visible_row_count": 18,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 22,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12629",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 18,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:05a4451a16eb5239ba5180591e57dfd840d5b9255091acb09d920f8c80a8178f",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608340922,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 11,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 11
+        }
+      ],
+      "eligible_visible_row_count": 11,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 15,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12638",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 11,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:8b48d4e86fa4967a6054f35af3137761c725756f0f5e123fe0895928fe9560c0",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608356760,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 18,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 18
+        },
+        {
+          "row_count": 2,
+          "start_model_frame_idx": 19,
+          "stop_model_frame_idx_exclusive": 21
+        }
+      ],
+      "eligible_visible_row_count": 20,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 24,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12640",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 20,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:3366b135a5b0e4e5f9e56a93d0cc68dfeb59768f73dda0c03f0b6b1bb55f96c8",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.5,
+        "control_type": "context_sentinel",
+        "hidden_frames": 24,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "normal",
+        "seed": 202608388436,
+        "set_id": "sentinel",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 18,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 18
+        }
+      ],
+      "eligible_visible_row_count": 18,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 24,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 12
+      },
+      "frame_count": 42,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "context_sentinel"
+      },
+      "trajectory_id": "layout_04_ep12644",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 18,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:f135cc446b9329d349ccfe0b679b6de58cf8a782512fe06c3e2fe924cd3dd112",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608459707,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 14,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 14
+        }
+      ],
+      "eligible_visible_row_count": 14,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 14
+      },
+      "frame_count": 30,
+      "layout_id": "layout_04",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_04_ep12653",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 14,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:7e4c5d99e2595ade7c670b78bf340a05a5f3ac887cdea19c3199ad4c977a0c08",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608135028,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 38,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 38
+        }
+      ],
+      "eligible_visible_row_count": 38,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 13
+      },
+      "frame_count": 54,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12612",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 38,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:eb14b5a9d88cbe11f7974799e6228d1f8a93ee986f3bf220a0d6f224ad08dd2a",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608230056,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 23,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 23
+        }
+      ],
+      "eligible_visible_row_count": 23,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 14
+      },
+      "frame_count": 39,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12624",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 23,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:9035e2a54a4c2b755f3b58c5e684783bd5c4ecd7a7da7d7d80099eee18c21221",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.5,
+        "control_type": "context_sentinel",
+        "hidden_frames": 24,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "normal",
+        "seed": 202608253813,
+        "set_id": "sentinel",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 41,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 41
+        }
+      ],
+      "eligible_visible_row_count": 41,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 24,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 12
+      },
+      "frame_count": 65,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "context_sentinel"
+      },
+      "trajectory_id": "layout_05_ep12627",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 41,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "occluder_only_no_sheep",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": null,
+      "compatible_eligible_trajectory_count": 0,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_object_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nosheep",
+        "seed": 202608277570,
+        "set_id": "nosheep",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [],
+      "eligible_visible_row_count": 0,
+      "exact_exclusion_or_limitation_reasons": [
+        "TARGET_OBJECT_ABSENT_AND_X_TRUE_BLOCKS_UNAVAILABLE",
+        "FROZEN_VISIBILITY_NOT_APPLICABLE"
+      ],
+      "excluded_row_reason_counts": {
+        "ACCEPTED_ORACLE_TARGET_MISSING": 60,
+        "FROZEN_STRICT_VISIBILITY_NOT_APPLICABLE": 60,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 60
+      },
+      "frame_count": 60,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "INVALID_FOR_EXPANDED_VISIBLE_DIAGNOSTIC",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "MISSING",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_object_control"
+      },
+      "trajectory_id": "layout_05_ep12630",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 0,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:e23e549cadc9c85c156261699c26b7b7749a322ef83dc9bd0a69a912633d199a",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608293408,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 23,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 23
+        }
+      ],
+      "eligible_visible_row_count": 23,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 27,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12632",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 23,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "no_wall_visible",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:0769fae0990a1c60f3eb36002f229e41472cc7f3dbc94aa5614a7cb86df412be",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_wall_visible_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nowall",
+        "seed": 202608309246,
+        "set_id": "nowall",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 60,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 60
+        }
+      ],
+      "eligible_visible_row_count": 60,
+      "exact_exclusion_or_limitation_reasons": [
+        "ONLY_ONE_COMPATIBLE_ELIGIBLE_TRAJECTORY_IN_STRATUM"
+      ],
+      "excluded_row_reason_counts": {},
+      "frame_count": 60,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "NO_WITHIN_LAYOUT_REPLICATION",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_wall_visible_control"
+      },
+      "trajectory_id": "layout_05_ep12634",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 60,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": false
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:a360517764b6112f4eac30600abfc584c840022e15e5ac0651e17023e83d743d",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608404274,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 20,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 20
+        }
+      ],
+      "eligible_visible_row_count": 20,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 24,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12646",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 20,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:a1996f77c40c2efd47857249bddd9b786956a1b5d1d4d542195dbb9dc6c217d0",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608412193,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 44,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 44
+        }
+      ],
+      "eligible_visible_row_count": 44,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 48,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12647",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 44,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:1330e538e586666913a5de0b6cb43d7aa90b811bda32b42870a4bf0815c75da7",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608467626,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 22,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 22
+        }
+      ],
+      "eligible_visible_row_count": 22,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 9
+      },
+      "frame_count": 38,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12654",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 22,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:1da4327b4a332bf5e40567537a0fa9b0d1fbeedb907bde7ba8e4a4bfc2f39757",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608483464,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 43,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 43
+        }
+      ],
+      "eligible_visible_row_count": 43,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 4,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 47,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12656",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 43,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:4c00934443bbc29e90cbd9619e5a93aa75e55ad345be1f02556ccfa88fd49e5a",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608546816,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 26,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 26
+        },
+        {
+          "row_count": 14,
+          "start_model_frame_idx": 30,
+          "stop_model_frame_idx_exclusive": 44
+        }
+      ],
+      "eligible_visible_row_count": 40,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 16,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 16
+      },
+      "frame_count": 56,
+      "layout_id": "layout_05",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_05_ep12664",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 40,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:a7be3ebe34c3c832c9393a755f7ea8d1ef1a10cefc6dfe1227f2991beabb1f8c",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608087514,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 16,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 16
+        }
+      ],
+      "eligible_visible_row_count": 16,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 9,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 5
+      },
+      "frame_count": 25,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12606",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 16,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "no_wall_visible",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:279bfe774b2091f2372047d398ab93562b4a9be18f6f8cf20c0d7e34ea6c9f64",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_wall_visible_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nowall",
+        "seed": 202608166704,
+        "set_id": "nowall",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 51,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 51
+        }
+      ],
+      "eligible_visible_row_count": 51,
+      "exact_exclusion_or_limitation_reasons": [
+        "ONLY_ONE_COMPATIBLE_ELIGIBLE_TRAJECTORY_IN_STRATUM"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 9,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 9
+      },
+      "frame_count": 60,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "NO_WITHIN_LAYOUT_REPLICATION",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_wall_visible_control"
+      },
+      "trajectory_id": "layout_06_ep12616",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 51,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": false
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:bdc9d8f35fa530062d173630c1f8e0b990d042a90960414c6f13a7983f2c2768",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608182542,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 21,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 21
+        },
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 23,
+          "stop_model_frame_idx_exclusive": 24
+        }
+      ],
+      "eligible_visible_row_count": 22,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 20,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 42,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12618",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 22,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:bec5e5aa2cddf5998ae5979a3bc85e5d1bf9c079e3a56907a3ce62fc6e6f530e",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608190461,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 22,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 22
+        },
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 24,
+          "stop_model_frame_idx_exclusive": 25
+        }
+      ],
+      "eligible_visible_row_count": 23,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 7,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 3
+      },
+      "frame_count": 30,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12619",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 23,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:d77530286f76543385eb88132bfff977f9c0d990265524f0ea112b843816fdc1",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608237975,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 59,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 59
+        }
+      ],
+      "eligible_visible_row_count": 59,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 8,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 67,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12625",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 59,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:4e9f0d0168f16664556afe1c2a97ccab99a7e10e62a77bf39812462d4650133a",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 0.25,
+        "control_type": "core_regime_a",
+        "hidden_frames": 4,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608261732,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 42,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 42
+        }
+      ],
+      "eligible_visible_row_count": 42,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 14,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 10
+      },
+      "frame_count": 56,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12628",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 42,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:5dc0aca4340dd0b2ad26c3f0ec0dd6af8427366d4b3eca34659c76ef80609e65",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.02,
+        "scene": "normal",
+        "seed": 202608372598,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 42,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 42
+        }
+      ],
+      "eligible_visible_row_count": 42,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 23,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 7
+      },
+      "frame_count": 65,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12642",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 42,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "occluder_only_no_sheep",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": null,
+      "compatible_eligible_trajectory_count": 0,
+      "condition_fields": {
+        "context_fraction": 0.0,
+        "control_type": "no_object_control",
+        "hidden_frames": 0,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "nosheep",
+        "seed": 202608491383,
+        "set_id": "nosheep",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [],
+      "eligible_visible_row_count": 0,
+      "exact_exclusion_or_limitation_reasons": [
+        "TARGET_OBJECT_ABSENT_AND_X_TRUE_BLOCKS_UNAVAILABLE",
+        "FROZEN_VISIBILITY_NOT_APPLICABLE"
+      ],
+      "excluded_row_reason_counts": {
+        "ACCEPTED_ORACLE_TARGET_MISSING": 60,
+        "FROZEN_STRICT_VISIBILITY_NOT_APPLICABLE": 60,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 60
+      },
+      "frame_count": 60,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "INVALID_FOR_EXPANDED_VISIBLE_DIAGNOSTIC",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "MISSING",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "no_object_control"
+      },
+      "trajectory_id": "layout_06_ep12657",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 0,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:65be60ae21b668572342b9e93eaecff1f27d0d79a5e7ef708e48afde81d77444",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608499302,
+        "set_id": "core",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 37,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 37
+        }
+      ],
+      "eligible_visible_row_count": 37,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 30,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 14
+      },
+      "frame_count": 67,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12658",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 37,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:7e142fe31495601d0bd9159eda0a9171ba4fef876d0c8f5c369aa8f3723dd758",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.0,
+        "control_type": "core_regime_a",
+        "hidden_frames": 16,
+        "q_blocks_squared_per_second": 0.2,
+        "scene": "normal",
+        "seed": 202608515140,
+        "set_id": "core",
+        "speed_blocks_per_second": 2.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 19,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 19
+        },
+        {
+          "row_count": 1,
+          "start_model_frame_idx": 20,
+          "stop_model_frame_idx_exclusive": 21
+        }
+      ],
+      "eligible_visible_row_count": 20,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 20,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 4
+      },
+      "frame_count": 40,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "core_regime_a"
+      },
+      "trajectory_id": "layout_06_ep12660",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 20,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    },
+    {
+      "accepted_trajectory_status": "PASS",
+      "capture_condition": "core",
+      "checkpoint_preprocessing_identity_status": "COMPLETE",
+      "compatibility_stratum": "visible-compat-v0.1:6e0d65b8af945d4a8cf106e05b7ea51f3e6b30394ba480214e93929d320ebe6b",
+      "compatible_eligible_trajectory_count": 1,
+      "condition_fields": {
+        "context_fraction": 1.5,
+        "control_type": "context_sentinel",
+        "hidden_frames": 24,
+        "q_blocks_squared_per_second": 0.05,
+        "scene": "normal",
+        "seed": 202608530978,
+        "set_id": "sentinel",
+        "speed_blocks_per_second": 1.0
+      },
+      "continuous_visible_segment_summary": [
+        {
+          "row_count": 31,
+          "start_model_frame_idx": 0,
+          "stop_model_frame_idx_exclusive": 31
+        },
+        {
+          "row_count": 2,
+          "start_model_frame_idx": 32,
+          "stop_model_frame_idx_exclusive": 34
+        }
+      ],
+      "eligible_visible_row_count": 33,
+      "exact_exclusion_or_limitation_reasons": [
+        "WALL_PRESENT_CONDITION_MISMATCH_WITH_NO_WALL_VISIBLE_CONTROL",
+        "KEPT_SEPARATE_FROM_NO_WALL_REPLICATION_COUNT"
+      ],
+      "excluded_row_reason_counts": {
+        "FROZEN_STRICT_VISIBILITY_NOT_FULLY_VISIBLE": 29,
+        "FROZEN_VISIBILITY_ROW_QUARANTINED": 5
+      },
+      "frame_count": 62,
+      "layout_id": "layout_06",
+      "model_frame_idx_status": "VALID_CONTIGUOUS_ZERO_BASED",
+      "preprocessing_authority_status": "HASHED_IMMUTABLE_RESTORATION_POINTER_COMPLETE",
+      "replication_classification": "CONDITION_SHIFT_ONLY",
+      "sequence_context_status": "RECONSTRUCTIBLE_COMPLETE_CHRONOLOGICAL_CONTEXT",
+      "target_availability": "COMPLETE_X_TRUE_BLOCKS",
+      "trajectory_category": {
+        "field": "control_type",
+        "value": "context_sentinel"
+      },
+      "trajectory_id": "layout_06_ep12662",
+      "visibility_regime": {
+        "applicable_fully_visible_row_count": 33,
+        "field": "visible_flag",
+        "required_value": true,
+        "rule": "geometric_visible AND empirical_magenta_visible",
+        "wall_present": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,406 @@
+{
+  "ACROSS_LAYOUT_GENERALIZATION": "MIXED",
+  "BOTH_TRAJECTORY_AND_LAYOUT_VARIANCE": true,
+  "CONFIRMATORY_VISIBLE_POSITION_SENSITIVITY": "NOT_ESTABLISHED",
+  "FINAL_SCIENTIFIC_CONCLUSION": "The successor diagnostics establish that the original mean-pooled probe was a measurement bottleneck: preserving MineWorld's spatial hidden-state structure produces strong, independently replicated within-layout visible-position decoding, and that advantage collapses when stable token-slot correspondence is destroyed by a locked sample-specific scramble. However, held-out-layout transfer remains heterogeneous, and observed cross-layout performance is not clearly separated from an audited trajectory-block target null that preserves the dataset's stereotyped temporal position profile. The work therefore establishes spatial measurement sensitivity but does not establish robust target-specific cross-layout decoding, and the original uncertainty hypothesis remains unresolved.",
+  "GROUPED_TARGET_NULL_SEPARATION": "NOT_ESTABLISHED",
+  "HIGH_DIMENSIONAL_OVERFIT_PLAUSIBLE": "Unclear",
+  "LAYER_SELECTION_STATUS": "EXPLORATORY_PRESELECTED_FROM_EXISTING_POSITIVE_CONTROL",
+  "LAYOUT_SPECIFIC_REPRESENTATION_PLAUSIBLE": true,
+  "LAYOUT_VARIANCE_CLASS": "BOTH_TRAJECTORY_AND_LAYOUT_VARIANCE",
+  "LAYOUT_VARIANCE_DOMINANT": false,
+  "ORIGINAL_MVP_FROZEN_STATUS": "NOT_INTERPRETABLE_POSITIVE_CONTROL_FAILED (historical authority, unchanged)",
+  "ORIGINAL_MVP_REINTERPRETED": false,
+  "ORIGINAL_MVP_STATUS": "INCONCLUSIVE_DUE_TO_UNESTABLISHED_MEASUREMENT_SENSITIVITY",
+  "ORIGINAL_UNCERTAINTY_HYPOTHESIS_RESOLVED": false,
+  "PROGRAM_STATUS": "EXPLORATORY_VISIBLE_POSITION_RESOLUTION_COMPLETE",
+  "SPATIAL_REPRESENTATION_BOTTLENECK_PLAUSIBLE": "Unclear",
+  "STABLE_SPATIAL_IDENTITY_ACROSS_LAYOUT": true,
+  "STABLE_SPATIAL_IDENTITY_MATTERS": true,
+  "STABLE_SPATIAL_IDENTITY_WITHIN_LAYOUT": true,
+  "STILL_INSUFFICIENT_EVIDENCE": true,
+  "TARGET_METRIC_INSTABILITY_CONTRIBUTES": false,
+  "TARGET_SPECIFIC_VISIBLE_POSITION_DECODING": "NOT_ESTABLISHED",
+  "TOKEN_PRESERVING_READOUT_GENERALIZES": "UNCLEAR",
+  "TRAJECTORY_VARIANCE_CLASS": "MIXED_TRAJECTORY_EFFECT",
+  "TRAJECTORY_VARIANCE_DOMINANT": false,
+  "U1_U2_INTERPRETABLE": false,
+  "VISIBLE_POSITION_MEASUREMENT_SENSITIVITY": "SUPPORTED_FOR_SPATIALLY_PRESERVING_EXPLORATORY_READOUT",
+  "WITHIN_LAYOUT_REPLICATION": "STRONG",
+  "adjudication_method": "bounded evidence synthesis over the sealed Task 1-5 artifacts; no new fit, capture, extraction or recomputation was performed",
+  "artifact_id": "visible-position-resolution-final-adjudication-v0.1",
+  "authority": {
+    "condition": "no_wall_visible",
+    "eligible_rows": 1071,
+    "hidden_width": 2048,
+    "layer_idx": 4,
+    "layouts": 6,
+    "target": "x_true_blocks (regime_a_primary_v1)",
+    "token_count": 336,
+    "token_grid": [
+      14,
+      24
+    ],
+    "trajectories": 18,
+    "trajectories_per_layout": 3
+  },
+  "base_head": "626dcc00710f2b51cbbe2bfdea86785cb2d70e61",
+  "control_a_spatial_scramble": {
+    "across": {
+      "COARSE_2x6": {
+        "folds_ordered_better_by_seed": {
+          "20260901": 5,
+          "20260902": 5,
+          "20260903": 5,
+          "20260904": 5,
+          "20260905": 5
+        },
+        "layouts_with_positive_median_delta_by_seed": {
+          "20260901": 5,
+          "20260902": 5,
+          "20260903": 5,
+          "20260904": 5,
+          "20260905": 5
+        },
+        "ordered_macro_r2": 0.3191491809005946,
+        "ordered_minus_scrambled_by_seed": {
+          "20260901": 0.430689532171107,
+          "20260902": 0.370576844992859,
+          "20260903": 0.4247673043080055,
+          "20260904": 0.4502597120722666,
+          "20260905": 0.4840102749305869
+        },
+        "outer_fold_count": 6,
+        "scrambled_macro_r2_by_seed": {
+          "20260901": -0.11154035127051244,
+          "20260902": -0.05142766409226438,
+          "20260903": -0.10561812340741096,
+          "20260904": -0.13111053117167204,
+          "20260905": -0.16486109402999236
+        },
+        "scrambled_seed_population_std": 0.03705482566237124
+      },
+      "FULL_TOKEN_GRID": {
+        "folds_ordered_better_by_seed": {
+          "20260901": 6,
+          "20260902": 6,
+          "20260903": 6,
+          "20260904": 6,
+          "20260905": 6
+        },
+        "layouts_with_positive_median_delta_by_seed": {
+          "20260901": 6,
+          "20260902": 6,
+          "20260903": 6,
+          "20260904": 6,
+          "20260905": 6
+        },
+        "ordered_macro_r2": 0.3175977234797748,
+        "ordered_minus_scrambled_by_seed": {
+          "20260901": 0.7396356340512016,
+          "20260902": 0.7482208979787233,
+          "20260903": 0.7793902239438522,
+          "20260904": 0.7738895998537196,
+          "20260905": 0.75828681579093
+        },
+        "outer_fold_count": 6,
+        "scrambled_macro_r2_by_seed": {
+          "20260901": -0.42203791057142687,
+          "20260902": -0.43062317449894855,
+          "20260903": -0.4617925004640773,
+          "20260904": -0.4562918763739449,
+          "20260905": -0.4406890923111553
+        },
+        "scrambled_seed_population_std": 0.015001499042104138
+      }
+    },
+    "control": "SAMPLE_SPECIFIC_SPATIAL_SCRAMBLE",
+    "frozen_seeds": [
+      20260901,
+      20260902,
+      20260903,
+      20260904,
+      20260905
+    ],
+    "global_mean_permutation_invariance": "PASS",
+    "permutation_before_pooling": true,
+    "permutation_inputs": [
+      "frozen_seed",
+      "row_key"
+    ],
+    "single_global_permutation": false,
+    "within": {
+      "COARSE_2x6": {
+        "folds_ordered_better_by_seed": {
+          "20260901": 18,
+          "20260902": 17,
+          "20260903": 18,
+          "20260904": 17,
+          "20260905": 18
+        },
+        "layouts_with_positive_median_delta_by_seed": {
+          "20260901": 6,
+          "20260902": 6,
+          "20260903": 6,
+          "20260904": 6,
+          "20260905": 6
+        },
+        "ordered_macro_r2": 0.8249646147116141,
+        "ordered_minus_scrambled_by_seed": {
+          "20260901": 0.6951296218773203,
+          "20260902": 0.6654480117601179,
+          "20260903": 0.6886759694640647,
+          "20260904": 0.6961038020769071,
+          "20260905": 0.6596028612160443
+        },
+        "outer_fold_count": 18,
+        "scrambled_macro_r2_by_seed": {
+          "20260901": 0.12983499283429376,
+          "20260902": 0.15951660295149614,
+          "20260903": 0.13628864524754938,
+          "20260904": 0.12886081263470692,
+          "20260905": 0.16536175349556984
+        },
+        "scrambled_seed_population_std": 0.015403851008037565
+      },
+      "FULL_TOKEN_GRID": {
+        "folds_ordered_better_by_seed": {
+          "20260901": 18,
+          "20260902": 18,
+          "20260903": 18,
+          "20260904": 18,
+          "20260905": 18
+        },
+        "layouts_with_positive_median_delta_by_seed": {
+          "20260901": 6,
+          "20260902": 6,
+          "20260903": 6,
+          "20260904": 6,
+          "20260905": 6
+        },
+        "ordered_macro_r2": 0.815495540876805,
+        "ordered_minus_scrambled_by_seed": {
+          "20260901": 0.8614920289464463,
+          "20260902": 0.8811033707009668,
+          "20260903": 0.8900015644417172,
+          "20260904": 0.8785519978220104,
+          "20260905": 0.8738075049465307
+        },
+        "outer_fold_count": 18,
+        "scrambled_macro_r2_by_seed": {
+          "20260901": -0.04599648806964132,
+          "20260902": -0.06560782982416186,
+          "20260903": -0.07450602356491215,
+          "20260904": -0.06305645694520547,
+          "20260905": -0.05831196406972574
+        },
+        "scrambled_seed_population_std": 0.009369907556839507
+      }
+    }
+  },
+  "control_b_grouped_target_null": {
+    "COARSE_2x6": {
+      "null_maximum": 0.5222980983865525,
+      "null_mean": 0.05181480391989819,
+      "null_median": 0.132268009307053,
+      "null_q90": 0.40666284588808427,
+      "null_q95": 0.44832281326856177,
+      "null_q99": 0.5073976831948115,
+      "null_replicate_count": 100,
+      "null_sd": 0.3044936729701075,
+      "observed_across_layout_macro_r2": 0.3191491809005946,
+      "observed_empirical_percentile": 83.0,
+      "upper_tail_empirical_statistic": 0.1782178217821782,
+      "upper_tail_rule": "(1 + count(null >= observed)) / (B + 1)"
+    },
+    "FULL_TOKEN_GRID": {
+      "null_maximum": 0.6535120032407217,
+      "null_mean": 0.2444825097557754,
+      "null_median": 0.26187911306662737,
+      "null_q90": 0.44446410824806326,
+      "null_q95": 0.532946102816391,
+      "null_q99": 0.5592682468676052,
+      "null_replicate_count": 100,
+      "null_sd": 0.18331374383291635,
+      "observed_across_layout_macro_r2": 0.3175977234797748,
+      "observed_empirical_percentile": 59.0,
+      "upper_tail_empirical_statistic": 0.4158415841584158,
+      "upper_tail_rule": "(1 + count(null >= observed)) / (B + 1)"
+    },
+    "GROUPED_NULL_B": 100,
+    "GROUPED_NULL_B_FROZEN_BEFORE_RESULTS": true,
+    "GROUPED_NULL_B_SELECTION_BASIS": "RUNTIME_ONLY",
+    "audited_caller": "src/mineocclude/probes/bridge.py::run_grouped_ridge_permutation",
+    "audited_source": "src/mineocclude/metrics/resampling.py::permute_trajectory_blocks",
+    "authority_mapping": "the audited permute_trajectory_blocks refuses a length stratum with fewer than two blocks; on this authority the 60-frame stratum holds 17 trajectories and the 51-frame stratum holds exactly one (layout_06_ep12616).  The audited function is therefore called verbatim on the 17-trajectory, 1,020-row equal-length stratum and the singleton block keeps its own target block.  Python's random.shuffle consumes no randomness for a one-element list, so this is bit-identical to running the audited function over all 18 trajectories with the minimum-stratum guard lifted.",
+    "conservatism": "51 of 1,071 rows (4.76%) retain their true feature-target association inside every null replicate, which can only make the null distribution stronger, never weaker",
+    "control": "AUDITED_GROUPED_TARGET_NULL",
+    "derangement_required": false,
+    "model_selection_policy": "refit_scaler_alpha_and_ridge_inside_each_permutation (audited run_grouped_ridge_permutation policy string)",
+    "not_the_original_positive_control_gate": true,
+    "permutation_unit": "whole_trajectory_block",
+    "separation": "NOT_ESTABLISHED",
+    "temporal_rule": "frames are never rearranged inside a trajectory; the donor block is copied in the recipient's own frame order, so within-trajectory temporal correlation is preserved exactly and neighbouring frame targets are never independently shuffled"
+  },
+  "evidence_synthesis": {
+    "A_measurement_sensitivity": {
+      "claim": "Preserving spatial hidden-state organization materially improves visible-position decoding relative to global mean pooling.",
+      "explicitly_not_supported": "The original failure cannot be summarized as 'MineWorld hidden states contain no readable visible-position information'; that statement is unsupported.",
+      "support": [
+        "Within-layout equal-layout macro R2: GLOBAL 0.014819740599772898, COARSE_2x6 0.8249646147116141, FULL_TOKEN_GRID 0.815495540876805.",
+        "18/18 held-out trajectories beat GLOBAL for both COARSE and FULL; 6/6 layouts have a positive median delta.",
+        "The effect survives the move from the original six trajectories to the 18-trajectory authority.",
+        "It collapses under sample-specific destruction of stable token-slot identity (Control A)."
+      ]
+    },
+    "B_spatial_organization": {
+      "claim": "Stable spatial token-slot identity matters strongly.",
+      "explicitly_not_claimed": [
+        "not attention",
+        "not saliency",
+        "not causal localization",
+        "not proof that individual tokens encode absolute position (transformer tokens are contextual)"
+      ],
+      "support": "Locked sample-specific scramble over the 5 frozen seeds; ordered beats scrambled on every seed, both representations, both designs."
+    },
+    "C_generalization": {
+      "across_layout_macro_r2": {
+        "COARSE_2x6": 0.3191491809005946,
+        "FULL_TOKEN_GRID": 0.3175977234797748,
+        "GLOBAL_MEAN": 0.26574307713230466
+      },
+      "claim": "Cross-layout transfer remains heterogeneous.",
+      "per_layout_delta_r2_over_global": {
+        "COARSE_2x6": {
+          "layout_01": 0.6173282977504271,
+          "layout_02": -0.079581704595176,
+          "layout_03": 1.2640112673173483,
+          "layout_04": -0.4046150177770843,
+          "layout_05": -1.0810644347414624,
+          "layout_06": 0.004358214655686865
+        },
+        "FULL_TOKEN_GRID": {
+          "layout_01": 0.6539889155510993,
+          "layout_02": 0.26049424925817544,
+          "layout_03": 1.2421412854008373,
+          "layout_04": -0.27127265855241167,
+          "layout_05": -1.2274018878810162,
+          "layout_06": -0.34682202569186305
+        }
+      },
+      "verdict": "TOKEN_PRESERVING_READOUT_GENERALIZES=UNCLEAR remains correct."
+    },
+    "D_target_specificity_and_null": {
+      "COARSE_2x6": {
+        "null_maximum": 0.5222980983865525,
+        "null_mean": 0.05181480391989819,
+        "null_median": 0.132268009307053,
+        "null_q90": 0.40666284588808427,
+        "null_q95": 0.44832281326856177,
+        "null_q99": 0.5073976831948115,
+        "null_replicate_count": 100,
+        "null_sd": 0.3044936729701075,
+        "observed_across_layout_macro_r2": 0.3191491809005946,
+        "observed_empirical_percentile": 83.0,
+        "upper_tail_empirical_statistic": 0.1782178217821782,
+        "upper_tail_rule": "(1 + count(null >= observed)) / (B + 1)"
+      },
+      "FULL_TOKEN_GRID": {
+        "null_maximum": 0.6535120032407217,
+        "null_mean": 0.2444825097557754,
+        "null_median": 0.26187911306662737,
+        "null_q90": 0.44446410824806326,
+        "null_q95": 0.532946102816391,
+        "null_q99": 0.5592682468676052,
+        "null_replicate_count": 100,
+        "null_sd": 0.18331374383291635,
+        "observed_across_layout_macro_r2": 0.3175977234797748,
+        "observed_empirical_percentile": 59.0,
+        "upper_tail_empirical_statistic": 0.4158415841584158,
+        "upper_tail_rule": "(1 + count(null >= observed)) / (B + 1)"
+      },
+      "claim": "Observed cross-layout performance is not clearly separated from the audited trajectory-block target null, which is strong because the visible-position target has a stereotyped temporal/ramp structure shared across trajectories.",
+      "prominence": "MAJOR_LIMITATION",
+      "verdict": "The experiment does NOT establish that the spatial readout contains target-specific information beyond what preserved trajectory-level temporal structure can induce. This is a major limitation."
+    },
+    "E_high_dimensionality": {
+      "across_layout_macro_r2": {
+        "COARSE_2x6": 0.3191491809005946,
+        "FULL_TOKEN_GRID": 0.3175977234797748
+      },
+      "both_collapse_under_scramble": true,
+      "claim": "FULL does not materially outperform COARSE despite 28x more features.",
+      "feature_counts": {
+        "COARSE_2x6": 24576,
+        "FULL_TOKEN_GRID": 688128
+      },
+      "neither_separated_from_grouped_null": true,
+      "preference": "COARSE_2x6 is preferred for future experiments unless a future result demonstrates unique value from FULL.",
+      "verdict": "FULL's result is NOT concluded to be merely high-dimensional overfit, and high-dimensional overfit is NOT concluded to be eliminated. HIGH_DIMENSIONAL_OVERFIT_PLAUSIBLE=Unclear is retained.",
+      "within_layout_macro_r2": {
+        "COARSE_2x6": 0.8249646147116141,
+        "FULL_TOKEN_GRID": 0.815495540876805
+      }
+    }
+  },
+  "generated_at": "2026-08-10T04:11:07Z",
+  "limitations": [
+    "Exploratory throughout: this is not a confirmatory pass and no confirmatory gate was defined, met, or retrospectively applied.",
+    "Layer 4 remains EXPLORATORY_PRESELECTED_FROM_EXISTING_POSITIVE_CONTROL; no layer sweep was run, so the layer choice is inherited, not established.",
+    "Observed across-layout performance is NOT clearly separated from the audited grouped target null (COARSE empirical percentile 83.0, upper-tail statistic 0.178; FULL 59.0 and 0.416). Target-specific cross-layout decoding is NOT established.",
+    "The audited null is strong because x_true_blocks carries a stereotyped ramp shared across trajectories; a whole-trajectory block permutation therefore leaves much of the target profile predictable. This is a property of the capture design, not of the readout.",
+    "Null mapping conservatism: layout_06_ep12616 is the sole 51-frame trajectory and forms a singleton audited length stratum, so it retains its own target block in every replicate (51/1071 rows = 4.76% remain associated). This can only strengthen the null, never weaken it.",
+    "The audited null design permits fixed points (it is not a derangement); fixed-point counts are recorded per replicate.",
+    "B = 100 bounds the resolution of the upper-tail statistic at 1/101; no conclusion is drawn from tail resolution finer than that.",
+    "Cross-layout transfer is heterogeneous with per-layout sign reversals; equal-layout macro means conceal that heterogeneity and are never read alone.",
+    "The scramble control demonstrates dependence on stable token-slot correspondence. It is NOT attention, saliency, causal localization, or evidence that individual tokens encode absolute position; transformer tokens are contextual.",
+    "FULL (688,128 features) shows no material advantage over COARSE (24,576). High-dimensional overfit is neither demonstrated nor eliminated.",
+    "Only three trajectories per layout and six layouts; trajectory- and layout-level effects are estimated from few independent units.",
+    "No pair holdout, occupancy analysis, U1/U2 objective, condition shift, or new representation was run.",
+    "The original MVP status NOT_INTERPRETABLE_POSITIVE_CONTROL_FAILED is historical authority and is unchanged by this work."
+  ],
+  "next_project_direction": {
+    "components": [
+      {
+        "action": "Adopt COARSE_2x6 (24,576 features) or a similarly compact spatially preserving readout as the preferred measurement path; do not return to global mean pooling and do not default to FULL_TOKEN_GRID.",
+        "basis": "COARSE matches FULL within and across layout while using 28x fewer features, and both collapse under sample-specific spatial scramble.",
+        "component": "MEASUREMENT_PATH"
+      },
+      {
+        "action": "Design and collect target trajectories whose x_true_blocks profiles vary in direction, timing, speed, starting point and temporal shape enough that a whole-trajectory block permutation destroys target alignment and the audited grouped null collapses toward chance.",
+        "basis": "The audited grouped null reaches a median macro R2 of 0.1323 (COARSE) and 0.2619 (FULL) purely from preserved trajectory-level temporal structure.",
+        "component": "TARGET_TRAJECTORY_DESIGN",
+        "explicit_anti_pattern": "Do NOT collect more trajectories that merely repeat the same stereotyped ramp; additional stereotyped trajectories cannot separate observed performance from this null."
+      }
+    ],
+    "rationale": "The evidence simultaneously supports keeping a compact spatially preserving readout and redesigning the target trajectories, because Control A shows spatial structure carries the measurement gain while Control B shows the current capture design confounds that gain with a stereotyped temporal ramp shared across trajectories.",
+    "selection": "E_COMBINATION"
+  },
+  "schema_version": "1.0",
+  "scope": "EXPLORATORY_SUCCESSOR_DIAGNOSTICS_NOT_CONFIRMATORY",
+  "statements_explicitly_not_made": [
+    "MineWorld has uncertainty-aware beliefs",
+    "MineWorld lacks uncertainty-aware beliefs",
+    "the original hypothesis passed",
+    "the original hypothesis failed",
+    "the visible-position positive control is retrospectively passed",
+    "causal localization was established",
+    "attention explains the result",
+    "FULL is proven overfit"
+  ],
+  "status": "PASS",
+  "task2_context": {
+    "TARGET_METRIC_INSTABILITY_CONTRIBUTES": false,
+    "metric_decomposition_no_refit": true,
+    "spatial_ladder_macro_r2": {
+      "COARSE_2x3": 0.2889690820029222,
+      "COARSE_2x6": 0.22688739415752499,
+      "COLUMN_1x24": 0.14690912184991345,
+      "FULL_14x24": 0.043562574315827586,
+      "GLOBAL_1x1": 0.09590272319514477,
+      "MEDIUM_14x6": 0.15816600102988354,
+      "ROW_14x1": -0.03448642486882982
+    },
+    "surviving_intermediate": "COARSE_2x6"
+  }
+}
