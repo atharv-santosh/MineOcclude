@@ -494,7 +494,9 @@ def test_frozen_packages_have_no_worktree_changes() -> None:
         "tests/diagnostics/test_visible_position_resolution_closeout.py",
         "tests/test_autonomous_pilot_portability.py",
     )
+    # A clean worktree is the terminal state once the successor program is
+    # committed, so an empty change set passes; only paths outside the
+    # successor footprint are a failure.
     changed_paths = [line[3:] for line in status]
-    assert changed_paths
     unexpected = [path for path in changed_paths if not path.startswith(allowed)]
     assert not unexpected, unexpected
