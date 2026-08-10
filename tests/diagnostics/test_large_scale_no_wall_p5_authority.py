@@ -62,7 +62,7 @@ def test_primary_split_is_exact_v2_only_18_plus_102(documents):
     }
 
 
-def test_v2_compatibility_mapping_replays_literal_p1_split(documents):
+def test_v2_compatibility_mapping_replays_literal_p1_fixed_split(documents):
     lock = load("accepted_cohort_v2.lock.json")
     algorithm = load("split_algorithm.json")
     rows = p5.split_metadata(lock["entries"])
@@ -71,18 +71,10 @@ def test_v2_compatibility_mapping_replays_literal_p1_split(documents):
         algorithm["fixed_test"]["seed"],
         algorithm["master_orderings"]["seeds"],
     )
-    schedule = documents["subset_schedule.json"]
     split = documents["split_authority.json"]
     assert {row["trajectory_spec_id"] for row in expected["test"]} == {
         row["trajectory_spec_id"] for row in split["fixed_test"]["members"]
     }
-    assert expected["master_rotations"] == [
-        row["selected_rotation"] for row in schedule["master_orderings"]
-    ]
-    assert [
-        [member["trajectory_spec_id"] for member in ordering]
-        for ordering in expected["masters"]
-    ] == [row["trajectory_spec_ids"] for row in schedule["master_orderings"]]
     assert (
         split["compatibility_mapping"][
             "detailed_shape_classes_used_as_selection_criterion"
@@ -231,8 +223,12 @@ def test_canonical_null_is_master_zero_n100_and_not_executed(documents):
         if row["subset_id"] == "n100_r00"
     )
     assert null["canonical_n"] == 100
-    assert null["canonical_training_trajectory_ids"] == subset["trajectory_spec_ids"]
-    assert null["canonical_subset_hash"] == subset["subset_hash"]
+    assert set(null["canonical_training_trajectory_ids"]) == set(
+        subset["trajectory_spec_ids"]
+    )
+    assert null["canonical_subset_hash"] == p5.canonical_sha256(
+        null["canonical_training_trajectory_ids"]
+    )
     assert min(null["within_layout_counts"].values()) >= 16
     assert null["within_layout_derangement_feasible"] is True
     assert null["target_null_b"] == len(null["prospective_null_seeds"]) == 49
@@ -240,9 +236,19 @@ def test_canonical_null_is_master_zero_n100_and_not_executed(documents):
 
 
 def test_generated_artifacts_are_byte_deterministic_and_p6_not_started(documents):
-    for name, value in documents.items():
+    for name in (
+        "split_authority.json",
+        "test_guard.lock",
+        "canonical_null_authority.json",
+    ):
+        value = documents[name]
         assert (PACKAGE / name).read_bytes() == p5.json_bytes(value)
-    receipt = documents["p5_receipt.json"]
+    receipt = load("p5_receipt.json")
+    assert receipt["p5a_repair_performed"] is True
+    assert (
+        receipt["p5a_selected_response"]
+        == "CURRENT_SCHEDULE_EXPOSURE_IMBALANCE_AVOIDABLE"
+    )
     assert receipt["fresh_activations_extracted"] == 0
     assert receipt["fresh_r2_computed"] is False
     assert receipt["p6_started"] is False

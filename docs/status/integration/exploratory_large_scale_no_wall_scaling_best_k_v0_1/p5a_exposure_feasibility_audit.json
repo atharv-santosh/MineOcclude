@@ -1,0 +1,155 @@
+{
+  "arithmetic_lower_bounds": {
+    "100": {
+      "ideal_high_exposure": 6,
+      "ideal_high_exposure_trajectory_count": 90,
+      "ideal_low_exposure": 5,
+      "ideal_low_exposure_trajectory_count": 12,
+      "pool_size": 102,
+      "replicate_count": 6,
+      "total_selections": 600,
+      "unconstrained_minimum_range": 1
+    },
+    "15": {
+      "ideal_high_exposure": 3,
+      "ideal_high_exposure_trajectory_count": 36,
+      "ideal_low_exposure": 2,
+      "ideal_low_exposure_trajectory_count": 66,
+      "pool_size": 102,
+      "replicate_count": 16,
+      "total_selections": 240,
+      "unconstrained_minimum_range": 1
+    },
+    "40": {
+      "ideal_high_exposure": 5,
+      "ideal_high_exposure_trajectory_count": 72,
+      "ideal_low_exposure": 4,
+      "ideal_low_exposure_trajectory_count": 30,
+      "pool_size": 102,
+      "replicate_count": 12,
+      "total_selections": 480,
+      "unconstrained_minimum_range": 1
+    },
+    "5": {
+      "ideal_high_exposure": 1,
+      "ideal_high_exposure_trajectory_count": 100,
+      "ideal_low_exposure": 0,
+      "ideal_low_exposure_trajectory_count": 2,
+      "pool_size": 102,
+      "replicate_count": 20,
+      "total_selections": 100,
+      "unconstrained_minimum_range": 1
+    },
+    "70": {
+      "ideal_high_exposure": 6,
+      "ideal_high_exposure_trajectory_count": 50,
+      "ideal_low_exposure": 5,
+      "ideal_low_exposure_trajectory_count": 52,
+      "pool_size": 102,
+      "replicate_count": 8,
+      "total_selections": 560,
+      "unconstrained_minimum_range": 1
+    }
+  },
+  "constraints_preserved": {
+    "canonical_null_membership": true,
+    "fixed_test_ids": true,
+    "n5_exactly_five_layouts": true,
+    "n5_original_omission_sequence_and_counts": true,
+    "n_ge_15_all_layouts": true,
+    "nested_prefixes": true,
+    "original_per_subset_layout_direction_reporting_repeat_envelopes": true,
+    "six_complete_chains": true,
+    "six_original_distinct_n100_omitted_pairs": true,
+    "test_guard_scientific_meaning": true,
+    "training_pool_ids": true,
+    "training_sizes_and_replicates": true,
+    "whole_trajectory_grouping": true
+  },
+  "final_exposure_by_n": {
+    "100": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
+    },
+    "15": {
+      "maximum": 3,
+      "minimum": 2,
+      "range": 1
+    },
+    "40": {
+      "maximum": 5,
+      "minimum": 4,
+      "range": 1
+    },
+    "5": {
+      "maximum": 1,
+      "minimum": 0,
+      "range": 1
+    },
+    "70": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
+    }
+  },
+  "fresh_activations_extracted": 0,
+  "fresh_r2_computed": false,
+  "full_constraint_feasibility_result": "FEASIBLE_RANGE_ONE_AT_EVERY_N_WITH_ALL_FROZEN_CONSTRAINTS",
+  "model_outcomes_available": false,
+  "optimization": {
+    "constraint_count": 5787,
+    "first_pass_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "first_pass_status": 0,
+    "implementation": "scipy.optimize.milp/HiGHS",
+    "optimal": true,
+    "retained_original_memberships": 1955,
+    "scipy_version": "1.15.2",
+    "second_pass_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "second_pass_status": 0,
+    "total_anchor_memberships": 1980,
+    "variable_count": 6324
+  },
+  "original_exposure_by_n": {
+    "100": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
+    },
+    "15": {
+      "maximum": 3,
+      "minimum": 1,
+      "range": 2
+    },
+    "40": {
+      "maximum": 6,
+      "minimum": 3,
+      "range": 3
+    },
+    "5": {
+      "maximum": 2,
+      "minimum": 0,
+      "range": 2
+    },
+    "70": {
+      "maximum": 6,
+      "minimum": 4,
+      "range": 2
+    }
+  },
+  "original_p5_artifact_sha256": {
+    "canonical_null_authority.json": "11e59a2b8df90fce407d72a9f7e25549e78f240c7c49f6dd6aa0995c242182ff",
+    "grouped_fold_authority.json": "15cd4e05f59f857afe80ec4e4b981c78cacf513a3699272a4cabc70d6b23d060",
+    "p5_balance_audit.json": "b72273b376ad25633a6140ba003d435c69d562f11ba03477e3c10964b9f6f6b4",
+    "p5_receipt.json": "4da29206943e5e35204a4a96ef6d657212505765edd0e9565f9e938078e1fdfd",
+    "split_authority.json": "b39c81454ea18125c373fb3c777ac4c1668882c9c1ad188a7d0f20e0cab43de5",
+    "subset_schedule.json": "4406fc5c099cb041a5707088bc7d69ea522d605e8060477679f105a400031bd1",
+    "test_guard.lock": "0adc85a5d90eb92361ba0775d58a6ccc2eb674a8ae5ffd2e816b89d9d9b48ac5"
+  },
+  "outcome_blind": true,
+  "p5_head": "e94f977e000242af055d56402aa68ba164da2982",
+  "repair_performed": true,
+  "schema_version": "large-scale-no-wall-p5a-exposure-feasibility-audit-v0.1",
+  "selected_response": "CURRENT_SCHEDULE_EXPOSURE_IMBALANCE_AVOIDABLE",
+  "status": "PASS_REPAIR_REQUIRED_AND_CONSTRUCTED"
+}

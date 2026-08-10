@@ -64,14 +64,7 @@
     "L06": 3
   },
   "n_ge_15_all_layouts": true,
-  "primary_cohort_count": 120,
-  "primary_split_total": 120,
-  "schema_version": "large-scale-no-wall-p5-balance-audit-v0.1",
-  "shape_classes_recorded_descriptively_not_optimized": true,
-  "status": "PASS",
-  "total_subsets": 62,
-  "train_test_overlap": 0,
-  "training_exposure_by_n": {
+  "original_training_exposure_by_n": {
     "100": {
       "maximum": 6,
       "minimum": 5,
@@ -96,6 +89,41 @@
       "maximum": 6,
       "minimum": 4,
       "range": 2
+    }
+  },
+  "p5a_selected_response": "CURRENT_SCHEDULE_EXPOSURE_IMBALANCE_AVOIDABLE",
+  "primary_cohort_count": 120,
+  "primary_split_total": 120,
+  "schema_version": "large-scale-no-wall-p5-balance-audit-v0.2",
+  "shape_classes_recorded_descriptively_not_optimized": true,
+  "status": "PASS_P5A_EXPOSURE_REPAIRED",
+  "total_subsets": 62,
+  "train_test_overlap": 0,
+  "training_exposure_by_n": {
+    "100": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
+    },
+    "15": {
+      "maximum": 3,
+      "minimum": 2,
+      "range": 1
+    },
+    "40": {
+      "maximum": 5,
+      "minimum": 4,
+      "range": 1
+    },
+    "5": {
+      "maximum": 1,
+      "minimum": 0,
+      "range": 1
+    },
+    "70": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
     }
   },
   "training_pool": {

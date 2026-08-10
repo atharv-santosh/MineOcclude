@@ -25,10 +25,14 @@
   },
   "frame_level_split_used": false,
   "group_unit": "whole_trajectory_spec_id",
-  "schema_version": "large-scale-no-wall-p5-grouped-fold-authority-v0.1",
+  "p5a_amendment": {
+    "membership_source": "subset_schedule.json v0.2",
+    "original_grouped_fold_authority_sha256": "15cd4e05f59f857afe80ec4e4b981c78cacf513a3699272a4cabc70d6b23d060"
+  },
+  "schema_version": "large-scale-no-wall-p5-grouped-fold-authority-v0.2",
   "selection_fold_assignment": "Within each frozen master-prefix subset, prefix position modulo 5; no additional seed or outcome-dependent optimization.",
   "selection_fold_count": 5,
-  "status": "FROZEN_PROSPECTIVE_NO_ACTIVATIONS",
+  "status": "FROZEN_PROSPECTIVE_AMENDED_BY_P5A_EXPOSURE_REPAIR",
   "subsets": [
     {
       "best_k_ranking_subfolds_by_outer_selection_fold": {
@@ -5322,30 +5326,6 @@
           ],
           "validation_balance": {
             "direction": {
-              "RIGHT_TO_LEFT": 1
-            },
-            "layout": {
-              "L02": 1
-            },
-            "reporting_stratum": {
-              "LONG_DWELL_RESTART": 1
-            }
-          },
-          "validation_count": 1,
-          "validation_trajectory_ids": [
-            "fresh_vp_v2_l02_rtl_shape_03"
-          ]
-        },
-        {
-          "fold_id": "selection_fold_1",
-          "selection_training_fold_ids": [
-            "selection_fold_0",
-            "selection_fold_2",
-            "selection_fold_3",
-            "selection_fold_4"
-          ],
-          "validation_balance": {
-            "direction": {
               "LEFT_TO_RIGHT": 1
             },
             "layout": {
@@ -5361,10 +5341,10 @@
           ]
         },
         {
-          "fold_id": "selection_fold_2",
+          "fold_id": "selection_fold_1",
           "selection_training_fold_ids": [
             "selection_fold_0",
-            "selection_fold_1",
+            "selection_fold_2",
             "selection_fold_3",
             "selection_fold_4"
           ],
@@ -5385,36 +5365,12 @@
           ]
         },
         {
-          "fold_id": "selection_fold_3",
+          "fold_id": "selection_fold_2",
           "selection_training_fold_ids": [
             "selection_fold_0",
             "selection_fold_1",
-            "selection_fold_2",
+            "selection_fold_3",
             "selection_fold_4"
-          ],
-          "validation_balance": {
-            "direction": {
-              "LEFT_TO_RIGHT": 1
-            },
-            "layout": {
-              "L06": 1
-            },
-            "reporting_stratum": {
-              "TERMINAL_HOLD_RESTART": 1
-            }
-          },
-          "validation_count": 1,
-          "validation_trajectory_ids": [
-            "fresh_vp_v2_l06_ltr_shape_18"
-          ]
-        },
-        {
-          "fold_id": "selection_fold_4",
-          "selection_training_fold_ids": [
-            "selection_fold_0",
-            "selection_fold_1",
-            "selection_fold_2",
-            "selection_fold_3"
           ],
           "validation_balance": {
             "direction": {
@@ -5430,6 +5386,54 @@
           "validation_count": 1,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l01_ltr_shape_19"
+          ]
+        },
+        {
+          "fold_id": "selection_fold_3",
+          "selection_training_fold_ids": [
+            "selection_fold_0",
+            "selection_fold_1",
+            "selection_fold_2",
+            "selection_fold_4"
+          ],
+          "validation_balance": {
+            "direction": {
+              "LEFT_TO_RIGHT": 1
+            },
+            "layout": {
+              "L02": 1
+            },
+            "reporting_stratum": {
+              "TERMINAL_HOLD_RESTART": 1
+            }
+          },
+          "validation_count": 1,
+          "validation_trajectory_ids": [
+            "fresh_vp_v2_l02_ltr_shape_20"
+          ]
+        },
+        {
+          "fold_id": "selection_fold_4",
+          "selection_training_fold_ids": [
+            "selection_fold_0",
+            "selection_fold_1",
+            "selection_fold_2",
+            "selection_fold_3"
+          ],
+          "validation_balance": {
+            "direction": {
+              "RIGHT_TO_LEFT": 1
+            },
+            "layout": {
+              "L06": 1
+            },
+            "reporting_stratum": {
+              "ASYMMETRIC_RESTART": 1
+            }
+          },
+          "validation_count": 1,
+          "validation_trajectory_ids": [
+            "fresh_vp_v2_l06_rtl_shape_13"
           ]
         }
       ],
@@ -5643,15 +5647,15 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L03": 1
+              "L02": 1
             },
             "reporting_stratum": {
-              "LONG_DWELL_RESTART": 1
+              "DELAYED_BOUNDED_BURST": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l03_rtl_shape_04"
+            "fresh_vp_v2_l02_rtl_shape_11"
           ]
         },
         {
@@ -5664,18 +5668,18 @@
           ],
           "validation_balance": {
             "direction": {
-              "RIGHT_TO_LEFT": 1
+              "LEFT_TO_RIGHT": 1
             },
             "layout": {
-              "L04": 1
+              "L01": 1
             },
             "reporting_stratum": {
-              "TERMINAL_HOLD_RESTART": 1
+              "DELAYED_BOUNDED_BURST": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l04_rtl_shape_19"
+            "fresh_vp_v2_l01_ltr_shape_11"
           ]
         },
         {
@@ -5688,18 +5692,18 @@
           ],
           "validation_balance": {
             "direction": {
-              "RIGHT_TO_LEFT": 1
+              "LEFT_TO_RIGHT": 1
             },
             "layout": {
-              "L05": 1
+              "L04": 1
             },
             "reporting_stratum": {
-              "MULTI_DWELL_PULSE": 1
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l05_rtl_shape_06"
+            "fresh_vp_v2_l04_ltr_shape_20"
           ]
         },
         {
@@ -5715,15 +5719,15 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L01": 1
+              "L03": 1
             },
             "reporting_stratum": {
-              "LONG_DWELL_RESTART": 1
+              "MULTI_DWELL_PULSE": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l01_rtl_shape_02"
+            "fresh_vp_v2_l03_rtl_shape_06"
           ]
         },
         {
@@ -5736,18 +5740,18 @@
           ],
           "validation_balance": {
             "direction": {
-              "RIGHT_TO_LEFT": 1
+              "LEFT_TO_RIGHT": 1
             },
             "layout": {
-              "L02": 1
+              "L05": 1
             },
             "reporting_stratum": {
-              "DELAYED_BOUNDED_BURST": 1
+              "LONG_DWELL_RESTART": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l02_rtl_shape_11"
+            "fresh_vp_v2_l05_ltr_shape_01"
           ]
         }
       ],
@@ -6030,7 +6034,7 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1
+              "RIGHT_TO_LEFT": 1
             },
             "layout": {
               "L03": 1
@@ -6041,7 +6045,7 @@
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l03_ltr_shape_09"
+            "fresh_vp_v2_l03_rtl_shape_12"
           ]
         },
         {
@@ -6060,12 +6064,12 @@
               "L04": 1
             },
             "reporting_stratum": {
-              "MULTI_DWELL_PULSE": 1
+              "DELAYED_BOUNDED_BURST": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l04_rtl_shape_07"
+            "fresh_vp_v2_l04_rtl_shape_11"
           ]
         }
       ],
@@ -6276,30 +6280,6 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1
-            },
-            "layout": {
-              "L06": 1
-            },
-            "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1
-            }
-          },
-          "validation_count": 1,
-          "validation_trajectory_ids": [
-            "fresh_vp_v2_l06_ltr_shape_16"
-          ]
-        },
-        {
-          "fold_id": "selection_fold_1",
-          "selection_training_fold_ids": [
-            "selection_fold_0",
-            "selection_fold_2",
-            "selection_fold_3",
-            "selection_fold_4"
-          ],
-          "validation_balance": {
-            "direction": {
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
@@ -6315,6 +6295,30 @@
           ]
         },
         {
+          "fold_id": "selection_fold_1",
+          "selection_training_fold_ids": [
+            "selection_fold_0",
+            "selection_fold_2",
+            "selection_fold_3",
+            "selection_fold_4"
+          ],
+          "validation_balance": {
+            "direction": {
+              "RIGHT_TO_LEFT": 1
+            },
+            "layout": {
+              "L03": 1
+            },
+            "reporting_stratum": {
+              "TERMINAL_HOLD_RESTART": 1
+            }
+          },
+          "validation_count": 1,
+          "validation_trajectory_ids": [
+            "fresh_vp_v2_l03_rtl_shape_18"
+          ]
+        },
+        {
           "fold_id": "selection_fold_2",
           "selection_training_fold_ids": [
             "selection_fold_0",
@@ -6327,7 +6331,7 @@
               "LEFT_TO_RIGHT": 1
             },
             "layout": {
-              "L03": 1
+              "L04": 1
             },
             "reporting_stratum": {
               "LONG_DWELL_RESTART": 1
@@ -6335,7 +6339,7 @@
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l03_ltr_shape_01"
+            "fresh_vp_v2_l04_ltr_shape_02"
           ]
         },
         {
@@ -6351,15 +6355,15 @@
               "LEFT_TO_RIGHT": 1
             },
             "layout": {
-              "L04": 1
+              "L05": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1
+              "LONG_DWELL_RESTART": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l04_ltr_shape_14"
+            "fresh_vp_v2_l05_ltr_shape_03"
           ]
         },
         {
@@ -6372,18 +6376,18 @@
           ],
           "validation_balance": {
             "direction": {
-              "RIGHT_TO_LEFT": 1
+              "LEFT_TO_RIGHT": 1
             },
             "layout": {
-              "L05": 1
+              "L06": 1
             },
             "reporting_stratum": {
-              "LONG_DWELL_RESTART": 1
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 1,
           "validation_trajectory_ids": [
-            "fresh_vp_v2_l05_rtl_shape_02"
+            "fresh_vp_v2_l06_ltr_shape_20"
           ]
         }
       ],
@@ -9795,25 +9799,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 2,
-              "RIGHT_TO_LEFT": 1
+              "LEFT_TO_RIGHT": 1,
+              "RIGHT_TO_LEFT": 2
             },
             "layout": {
-              "L01": 1,
-              "L02": 1,
-              "L06": 1
+              "L01": 2,
+              "L02": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 1
+              "LONG_DWELL_RESTART": 2
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l02_rtl_shape_15",
             "fresh_vp_v2_l01_ltr_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_12"
+            "fresh_vp_v2_l01_rtl_shape_04"
           ]
         },
         {
@@ -9826,16 +9828,15 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 2
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L01": 1,
-              "L02": 1,
+              "L02": 2,
               "L03": 1
             },
             "reporting_stratum": {
-              "LONG_DWELL_RESTART": 1,
+              "ASYMMETRIC_RESTART": 1,
               "TERMINAL_HOLD_RESTART": 2
             }
           },
@@ -9843,7 +9844,7 @@
           "validation_trajectory_ids": [
             "fresh_vp_v2_l03_ltr_shape_17",
             "fresh_vp_v2_l02_rtl_shape_17",
-            "fresh_vp_v2_l01_rtl_shape_04"
+            "fresh_vp_v2_l02_ltr_shape_14"
           ]
         },
         {
@@ -9860,21 +9861,20 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L02": 1,
               "L03": 1,
-              "L05": 1
+              "L05": 1,
+              "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
               "DELAYED_BOUNDED_BURST": 1,
-              "MULTI_DWELL_PULSE": 1
+              "MULTI_DWELL_PULSE": 2
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l05_rtl_shape_12",
             "fresh_vp_v2_l03_ltr_shape_07",
-            "fresh_vp_v2_l02_ltr_shape_14"
+            "fresh_vp_v2_l06_ltr_shape_06"
           ]
         }
       ],
@@ -10527,12 +10527,11 @@
               "LEFT_TO_RIGHT": 3
             },
             "layout": {
-              "L03": 1,
-              "L04": 1,
+              "L04": 2,
               "L05": 1
             },
             "reporting_stratum": {
-              "MULTI_DWELL_PULSE": 1,
+              "LONG_DWELL_RESTART": 1,
               "TERMINAL_HOLD_RESTART": 2
             }
           },
@@ -10540,7 +10539,7 @@
           "validation_trajectory_ids": [
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07"
+            "fresh_vp_v2_l04_ltr_shape_02"
           ]
         },
         {
@@ -10558,20 +10557,19 @@
             },
             "layout": {
               "L01": 1,
-              "L04": 1,
-              "L05": 1
+              "L05": 2
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
               "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 1
+              "MULTI_DWELL_PULSE": 1
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l01_ltr_shape_15",
             "fresh_vp_v2_l05_rtl_shape_12",
-            "fresh_vp_v2_l04_ltr_shape_02"
+            "fresh_vp_v2_l05_ltr_shape_05"
           ]
         }
       ],
@@ -10782,25 +10780,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 2
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L01": 1,
-              "L03": 1,
+              "L01": 2,
               "L04": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 1,
-              "TERMINAL_HOLD_RESTART": 1
+              "DELAYED_BOUNDED_BURST": 2
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l04_ltr_shape_14",
             "fresh_vp_v2_l01_rtl_shape_12",
-            "fresh_vp_v2_l03_rtl_shape_18"
+            "fresh_vp_v2_l01_ltr_shape_09"
           ]
         },
         {
@@ -10813,16 +10809,14 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 2
+              "RIGHT_TO_LEFT": 3
             },
             "layout": {
-              "L01": 1,
-              "L04": 1,
+              "L04": 2,
               "L05": 1
             },
             "reporting_stratum": {
-              "DELAYED_BOUNDED_BURST": 1,
+              "ASYMMETRIC_RESTART": 1,
               "LONG_DWELL_RESTART": 1,
               "MULTI_DWELL_PULSE": 1
             }
@@ -10831,7 +10825,7 @@
           "validation_trajectory_ids": [
             "fresh_vp_v2_l05_rtl_shape_02",
             "fresh_vp_v2_l04_rtl_shape_05",
-            "fresh_vp_v2_l01_ltr_shape_09"
+            "fresh_vp_v2_l04_rtl_shape_15"
           ]
         },
         {
@@ -10844,23 +10838,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 2
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L04": 1,
-              "L05": 1,
+              "L05": 2,
               "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 3
+              "ASYMMETRIC_RESTART": 2,
+              "DELAYED_BOUNDED_BURST": 1
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l06_ltr_shape_16",
             "fresh_vp_v2_l05_rtl_shape_14",
-            "fresh_vp_v2_l04_rtl_shape_15"
+            "fresh_vp_v2_l05_ltr_shape_11"
           ]
         },
         {
@@ -10877,20 +10871,19 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L02": 1,
-              "L05": 1,
+              "L02": 2,
               "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 2
+              "LONG_DWELL_RESTART": 2
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l02_rtl_shape_13",
-            "fresh_vp_v2_l06_ltr_shape_10",
-            "fresh_vp_v2_l05_ltr_shape_11"
+            "fresh_vp_v2_l02_ltr_shape_02",
+            "fresh_vp_v2_l06_ltr_shape_02"
           ]
         },
         {
@@ -10903,22 +10896,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L02": 1,
-              "L03": 1,
+              "L03": 2,
               "L06": 1
             },
             "reporting_stratum": {
-              "LONG_DWELL_RESTART": 3
+              "LONG_DWELL_RESTART": 1,
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l03_ltr_shape_01",
-            "fresh_vp_v2_l02_ltr_shape_02",
-            "fresh_vp_v2_l06_ltr_shape_02"
+            "fresh_vp_v2_l03_rtl_shape_18",
+            "fresh_vp_v2_l06_ltr_shape_18"
           ]
         }
       ],
@@ -11255,21 +11249,20 @@
               "RIGHT_TO_LEFT": 2
             },
             "layout": {
-              "L01": 1,
+              "L02": 1,
               "L03": 1,
               "L04": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
               "LONG_DWELL_RESTART": 1,
-              "TERMINAL_HOLD_RESTART": 1
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l04_rtl_shape_19",
             "fresh_vp_v2_l03_rtl_shape_02",
-            "fresh_vp_v2_l01_ltr_shape_15"
+            "fresh_vp_v2_l02_ltr_shape_20"
           ]
         }
       ],
@@ -11541,13 +11534,12 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 2
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L01": 1,
-              "L02": 1,
-              "L06": 1
+              "L01": 2,
+              "L02": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
@@ -11559,7 +11551,7 @@
           "validation_trajectory_ids": [
             "fresh_vp_v2_l02_ltr_shape_12",
             "fresh_vp_v2_l01_rtl_shape_14",
-            "fresh_vp_v2_l06_rtl_shape_07"
+            "fresh_vp_v2_l01_ltr_shape_07"
           ]
         },
         {
@@ -11572,24 +11564,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 2
+              "RIGHT_TO_LEFT": 3
             },
             "layout": {
-              "L01": 1,
-              "L02": 1,
+              "L02": 2,
               "L04": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "MULTI_DWELL_PULSE": 2
+              "DELAYED_BOUNDED_BURST": 1,
+              "MULTI_DWELL_PULSE": 1
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l04_rtl_shape_15",
             "fresh_vp_v2_l02_rtl_shape_05",
-            "fresh_vp_v2_l01_ltr_shape_07"
+            "fresh_vp_v2_l02_rtl_shape_09"
           ]
         },
         {
@@ -11606,12 +11597,12 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L02": 1,
-              "L04": 1,
+              "L04": 2,
               "L05": 1
             },
             "reporting_stratum": {
-              "DELAYED_BOUNDED_BURST": 2,
+              "DELAYED_BOUNDED_BURST": 1,
+              "MULTI_DWELL_PULSE": 1,
               "TERMINAL_HOLD_RESTART": 1
             }
           },
@@ -11619,7 +11610,7 @@
           "validation_trajectory_ids": [
             "fresh_vp_v2_l05_ltr_shape_11",
             "fresh_vp_v2_l04_ltr_shape_18",
-            "fresh_vp_v2_l02_rtl_shape_09"
+            "fresh_vp_v2_l04_rtl_shape_07"
           ]
         }
       ],
@@ -11834,19 +11825,19 @@
             },
             "layout": {
               "L01": 1,
-              "L04": 1,
-              "L06": 1
+              "L04": 2
             },
             "reporting_stratum": {
               "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 2
+              "LONG_DWELL_RESTART": 1,
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l01_rtl_shape_04",
             "fresh_vp_v2_l04_rtl_shape_11",
-            "fresh_vp_v2_l06_rtl_shape_03"
+            "fresh_vp_v2_l04_rtl_shape_17"
           ]
         },
         {
@@ -11859,24 +11850,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 2
+              "LEFT_TO_RIGHT": 3
             },
             "layout": {
               "L01": 1,
-              "L02": 1,
-              "L04": 1
+              "L02": 2
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "TERMINAL_HOLD_RESTART": 2
+              "MULTI_DWELL_PULSE": 1,
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l02_ltr_shape_14",
-            "fresh_vp_v2_l01_rtl_shape_18",
-            "fresh_vp_v2_l04_rtl_shape_17"
+            "fresh_vp_v2_l02_ltr_shape_08",
+            "fresh_vp_v2_l01_ltr_shape_19"
           ]
         },
         {
@@ -11889,24 +11879,24 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 2,
-              "RIGHT_TO_LEFT": 1
+              "LEFT_TO_RIGHT": 1,
+              "RIGHT_TO_LEFT": 2
             },
             "layout": {
-              "L01": 1,
               "L02": 1,
-              "L03": 1
+              "L03": 2
             },
             "reporting_stratum": {
-              "MULTI_DWELL_PULSE": 2,
-              "TERMINAL_HOLD_RESTART": 1
+              "ASYMMETRIC_RESTART": 1,
+              "LONG_DWELL_RESTART": 1,
+              "MULTI_DWELL_PULSE": 1
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l03_rtl_shape_08",
-            "fresh_vp_v2_l02_ltr_shape_08",
-            "fresh_vp_v2_l01_ltr_shape_19"
+            "fresh_vp_v2_l03_ltr_shape_15",
+            "fresh_vp_v2_l02_rtl_shape_03"
           ]
         },
         {
@@ -11923,21 +11913,19 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L02": 1,
               "L03": 1,
-              "L05": 1
+              "L05": 2
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 1
+              "DELAYED_BOUNDED_BURST": 2,
+              "MULTI_DWELL_PULSE": 1
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l05_ltr_shape_09",
-            "fresh_vp_v2_l03_ltr_shape_15",
-            "fresh_vp_v2_l02_rtl_shape_03"
+            "fresh_vp_v2_l05_rtl_shape_08",
+            "fresh_vp_v2_l03_ltr_shape_09"
           ]
         },
         {
@@ -11954,20 +11942,19 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L03": 1,
-              "L05": 1,
-              "L06": 1
+              "L01": 1,
+              "L06": 2
             },
             "reporting_stratum": {
-              "DELAYED_BOUNDED_BURST": 2,
-              "MULTI_DWELL_PULSE": 1
+              "DELAYED_BOUNDED_BURST": 1,
+              "LONG_DWELL_RESTART": 2
             }
           },
           "validation_count": 3,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l06_ltr_shape_12",
-            "fresh_vp_v2_l05_rtl_shape_08",
-            "fresh_vp_v2_l03_ltr_shape_09"
+            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l01_ltr_shape_01"
           ]
         }
       ],
@@ -12178,22 +12165,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 4,
+              "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 2,
-              "L02": 2,
+              "L01": 1,
+              "L02": 1,
               "L03": 1,
               "L04": 1,
-              "L05": 1,
+              "L05": 3,
               "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 2,
-              "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 2,
+              "DELAYED_BOUNDED_BURST": 4,
+              "LONG_DWELL_RESTART": 1,
+              "MULTI_DWELL_PULSE": 1,
               "TERMINAL_HOLD_RESTART": 1
             }
           },
@@ -12203,10 +12190,10 @@
             "fresh_vp_v2_l01_ltr_shape_11",
             "fresh_vp_v2_l06_rtl_shape_13",
             "fresh_vp_v2_l05_rtl_shape_12",
-            "fresh_vp_v2_l04_ltr_shape_02",
-            "fresh_vp_v2_l03_rtl_shape_08",
-            "fresh_vp_v2_l02_ltr_shape_08",
-            "fresh_vp_v2_l01_rtl_shape_18"
+            "fresh_vp_v2_l05_ltr_shape_07",
+            "fresh_vp_v2_l05_ltr_shape_09",
+            "fresh_vp_v2_l04_rtl_shape_17",
+            "fresh_vp_v2_l03_ltr_shape_09"
           ]
         },
         {
@@ -12219,22 +12206,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 6
             },
             "layout": {
               "L01": 1,
-              "L02": 2,
-              "L03": 2,
+              "L02": 1,
+              "L03": 1,
               "L04": 1,
               "L05": 1,
-              "L06": 1
+              "L06": 3
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 2,
+              "ASYMMETRIC_RESTART": 1,
               "DELAYED_BOUNDED_BURST": 2,
-              "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 2
+              "LONG_DWELL_RESTART": 1,
+              "MULTI_DWELL_PULSE": 3,
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 8,
@@ -12243,10 +12231,10 @@
             "fresh_vp_v2_l02_rtl_shape_07",
             "fresh_vp_v2_l01_ltr_shape_15",
             "fresh_vp_v2_l06_rtl_shape_11",
-            "fresh_vp_v2_l05_ltr_shape_07",
-            "fresh_vp_v2_l04_rtl_shape_11",
-            "fresh_vp_v2_l03_ltr_shape_15",
-            "fresh_vp_v2_l02_rtl_shape_03"
+            "fresh_vp_v2_l06_rtl_shape_19",
+            "fresh_vp_v2_l06_ltr_shape_12",
+            "fresh_vp_v2_l05_rtl_shape_08",
+            "fresh_vp_v2_l04_rtl_shape_07"
           ]
         },
         {
@@ -12263,17 +12251,19 @@
               "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 1,
-              "L02": 1,
-              "L03": 2,
-              "L04": 2,
+              "L01": 2,
+              "L02": 2,
+              "L03": 1,
+              "L04": 1,
               "L05": 1,
               "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 2,
-              "DELAYED_BOUNDED_BURST": 3,
-              "TERMINAL_HOLD_RESTART": 3
+              "ASYMMETRIC_RESTART": 3,
+              "DELAYED_BOUNDED_BURST": 1,
+              "LONG_DWELL_RESTART": 2,
+              "MULTI_DWELL_PULSE": 1,
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 8,
@@ -12282,10 +12272,10 @@
             "fresh_vp_v2_l03_ltr_shape_13",
             "fresh_vp_v2_l02_rtl_shape_15",
             "fresh_vp_v2_l01_rtl_shape_20",
-            "fresh_vp_v2_l06_rtl_shape_19",
-            "fresh_vp_v2_l05_ltr_shape_09",
-            "fresh_vp_v2_l04_rtl_shape_17",
-            "fresh_vp_v2_l03_ltr_shape_09"
+            "fresh_vp_v2_l02_ltr_shape_14",
+            "fresh_vp_v2_l01_rtl_shape_04",
+            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l05_ltr_shape_05"
           ]
         },
         {
@@ -12298,21 +12288,19 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 4,
+              "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 1,
+              "L01": 2,
               "L02": 1,
-              "L03": 1,
-              "L04": 2,
-              "L05": 2,
-              "L06": 1
+              "L03": 3,
+              "L04": 1,
+              "L05": 1
             },
             "reporting_stratum": {
-              "DELAYED_BOUNDED_BURST": 1,
               "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 2,
+              "MULTI_DWELL_PULSE": 3,
               "TERMINAL_HOLD_RESTART": 3
             }
           },
@@ -12321,11 +12309,11 @@
             "fresh_vp_v2_l05_rtl_shape_18",
             "fresh_vp_v2_l04_rtl_shape_01",
             "fresh_vp_v2_l03_ltr_shape_17",
-            "fresh_vp_v2_l02_rtl_shape_17",
-            "fresh_vp_v2_l01_ltr_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_12",
-            "fresh_vp_v2_l05_rtl_shape_08",
-            "fresh_vp_v2_l04_rtl_shape_07"
+            "fresh_vp_v2_l03_ltr_shape_07",
+            "fresh_vp_v2_l03_rtl_shape_08",
+            "fresh_vp_v2_l02_ltr_shape_08",
+            "fresh_vp_v2_l01_rtl_shape_18",
+            "fresh_vp_v2_l01_ltr_shape_01"
           ]
         },
         {
@@ -12338,21 +12326,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 6,
-              "RIGHT_TO_LEFT": 2
+              "LEFT_TO_RIGHT": 5,
+              "RIGHT_TO_LEFT": 3
             },
             "layout": {
               "L01": 1,
               "L02": 1,
               "L03": 1,
-              "L04": 1,
-              "L05": 2,
-              "L06": 2
+              "L04": 3,
+              "L05": 1,
+              "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
+              "DELAYED_BOUNDED_BURST": 2,
               "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 3,
+              "MULTI_DWELL_PULSE": 1,
               "TERMINAL_HOLD_RESTART": 2
             }
           },
@@ -12361,11 +12350,11 @@
             "fresh_vp_v2_l06_ltr_shape_08",
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07",
-            "fresh_vp_v2_l02_ltr_shape_14",
-            "fresh_vp_v2_l01_rtl_shape_04",
-            "fresh_vp_v2_l06_rtl_shape_03",
-            "fresh_vp_v2_l05_ltr_shape_05"
+            "fresh_vp_v2_l04_ltr_shape_02",
+            "fresh_vp_v2_l04_rtl_shape_11",
+            "fresh_vp_v2_l03_ltr_shape_15",
+            "fresh_vp_v2_l02_rtl_shape_03",
+            "fresh_vp_v2_l01_rtl_shape_12"
           ]
         }
       ],
@@ -13814,21 +13803,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "RIGHT_TO_LEFT": 8
+              "LEFT_TO_RIGHT": 1,
+              "RIGHT_TO_LEFT": 7
             },
             "layout": {
-              "L01": 2,
+              "L01": 3,
               "L02": 1,
               "L03": 1,
               "L04": 1,
               "L05": 1,
-              "L06": 2
+              "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "LONG_DWELL_RESTART": 2,
+              "LONG_DWELL_RESTART": 3,
               "MULTI_DWELL_PULSE": 2,
-              "TERMINAL_HOLD_RESTART": 3
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 8,
@@ -13840,7 +13830,7 @@
             "fresh_vp_v2_l03_rtl_shape_02",
             "fresh_vp_v2_l02_rtl_shape_07",
             "fresh_vp_v2_l01_rtl_shape_20",
-            "fresh_vp_v2_l06_rtl_shape_19"
+            "fresh_vp_v2_l01_ltr_shape_03"
           ]
         },
         {
@@ -13853,12 +13843,12 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 4,
-              "RIGHT_TO_LEFT": 4
+              "LEFT_TO_RIGHT": 3,
+              "RIGHT_TO_LEFT": 5
             },
             "layout": {
-              "L01": 2,
-              "L02": 2,
+              "L01": 1,
+              "L02": 3,
               "L03": 1,
               "L04": 1,
               "L05": 1,
@@ -13867,8 +13857,8 @@
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 3,
               "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 1,
-              "MULTI_DWELL_PULSE": 3
+              "MULTI_DWELL_PULSE": 3,
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 8,
@@ -13880,7 +13870,7 @@
             "fresh_vp_v2_l04_ltr_shape_12",
             "fresh_vp_v2_l03_ltr_shape_13",
             "fresh_vp_v2_l02_rtl_shape_15",
-            "fresh_vp_v2_l01_ltr_shape_03"
+            "fresh_vp_v2_l02_rtl_shape_17"
           ]
         },
         {
@@ -13893,13 +13883,13 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 4,
+              "RIGHT_TO_LEFT": 4
             },
             "layout": {
               "L01": 1,
-              "L02": 2,
-              "L03": 2,
+              "L02": 1,
+              "L03": 3,
               "L04": 1,
               "L05": 1,
               "L06": 1
@@ -13907,8 +13897,8 @@
             "reporting_stratum": {
               "DELAYED_BOUNDED_BURST": 1,
               "LONG_DWELL_RESTART": 3,
-              "MULTI_DWELL_PULSE": 1,
-              "TERMINAL_HOLD_RESTART": 3
+              "MULTI_DWELL_PULSE": 2,
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 8,
@@ -13920,7 +13910,7 @@
             "fresh_vp_v2_l05_rtl_shape_18",
             "fresh_vp_v2_l04_rtl_shape_01",
             "fresh_vp_v2_l03_ltr_shape_17",
-            "fresh_vp_v2_l02_rtl_shape_17"
+            "fresh_vp_v2_l03_ltr_shape_07"
           ]
         },
         {
@@ -13939,16 +13929,15 @@
             "layout": {
               "L01": 1,
               "L02": 1,
-              "L03": 2,
+              "L03": 1,
               "L04": 2,
               "L05": 1,
-              "L06": 1
+              "L06": 2
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
               "DELAYED_BOUNDED_BURST": 2,
-              "MULTI_DWELL_PULSE": 1,
-              "TERMINAL_HOLD_RESTART": 4
+              "TERMINAL_HOLD_RESTART": 5
             }
           },
           "validation_count": 8,
@@ -13960,7 +13949,7 @@
             "fresh_vp_v2_l06_rtl_shape_13",
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07"
+            "fresh_vp_v2_l06_ltr_shape_18"
           ]
         }
       ],
@@ -15765,21 +15754,19 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 6,
-              "RIGHT_TO_LEFT": 2
+              "LEFT_TO_RIGHT": 5,
+              "RIGHT_TO_LEFT": 3
             },
             "layout": {
               "L01": 1,
-              "L02": 1,
-              "L03": 1,
-              "L04": 2,
+              "L04": 3,
               "L05": 1,
-              "L06": 2
+              "L06": 3
             },
             "reporting_stratum": {
-              "DELAYED_BOUNDED_BURST": 1,
-              "MULTI_DWELL_PULSE": 5,
-              "TERMINAL_HOLD_RESTART": 2
+              "DELAYED_BOUNDED_BURST": 2,
+              "MULTI_DWELL_PULSE": 3,
+              "TERMINAL_HOLD_RESTART": 3
             }
           },
           "validation_count": 8,
@@ -15787,10 +15774,10 @@
             "fresh_vp_v2_l06_rtl_shape_11",
             "fresh_vp_v2_l04_ltr_shape_20",
             "fresh_vp_v2_l05_ltr_shape_07",
-            "fresh_vp_v2_l03_rtl_shape_08",
-            "fresh_vp_v2_l02_ltr_shape_08",
-            "fresh_vp_v2_l01_ltr_shape_19",
-            "fresh_vp_v2_l06_ltr_shape_06",
+            "fresh_vp_v2_l06_ltr_shape_12",
+            "fresh_vp_v2_l01_rtl_shape_18",
+            "fresh_vp_v2_l06_ltr_shape_18",
+            "fresh_vp_v2_l04_rtl_shape_07",
             "fresh_vp_v2_l04_ltr_shape_06"
           ]
         },
@@ -15808,18 +15795,16 @@
               "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 2,
+              "L01": 3,
               "L02": 1,
               "L03": 1,
               "L04": 1,
-              "L05": 1,
               "L06": 2
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 4,
-              "TERMINAL_HOLD_RESTART": 2
+              "LONG_DWELL_RESTART": 3,
+              "MULTI_DWELL_PULSE": 2,
+              "TERMINAL_HOLD_RESTART": 3
             }
           },
           "validation_count": 8,
@@ -15827,9 +15812,9 @@
             "fresh_vp_v2_l01_rtl_shape_20",
             "fresh_vp_v2_l06_rtl_shape_19",
             "fresh_vp_v2_l04_ltr_shape_02",
-            "fresh_vp_v2_l05_ltr_shape_09",
-            "fresh_vp_v2_l03_ltr_shape_15",
-            "fresh_vp_v2_l02_rtl_shape_03",
+            "fresh_vp_v2_l03_rtl_shape_08",
+            "fresh_vp_v2_l02_ltr_shape_08",
+            "fresh_vp_v2_l01_ltr_shape_19",
             "fresh_vp_v2_l01_ltr_shape_01",
             "fresh_vp_v2_l06_rtl_shape_01"
           ]
@@ -15848,18 +15833,16 @@
               "RIGHT_TO_LEFT": 3
             },
             "layout": {
-              "L01": 2,
-              "L02": 2,
+              "L01": 3,
+              "L02": 3,
               "L03": 1,
-              "L04": 1,
-              "L05": 1,
-              "L06": 1
+              "L05": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 3,
-              "LONG_DWELL_RESTART": 1,
-              "MULTI_DWELL_PULSE": 2,
+              "ASYMMETRIC_RESTART": 2,
+              "DELAYED_BOUNDED_BURST": 1,
+              "LONG_DWELL_RESTART": 3,
+              "MULTI_DWELL_PULSE": 1,
               "TERMINAL_HOLD_RESTART": 1
             }
           },
@@ -15867,10 +15850,10 @@
           "validation_trajectory_ids": [
             "fresh_vp_v2_l02_rtl_shape_15",
             "fresh_vp_v2_l01_ltr_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_12",
-            "fresh_vp_v2_l04_rtl_shape_11",
-            "fresh_vp_v2_l05_rtl_shape_08",
-            "fresh_vp_v2_l03_ltr_shape_09",
+            "fresh_vp_v2_l01_rtl_shape_04",
+            "fresh_vp_v2_l05_ltr_shape_09",
+            "fresh_vp_v2_l03_ltr_shape_15",
+            "fresh_vp_v2_l02_rtl_shape_03",
             "fresh_vp_v2_l02_ltr_shape_20",
             "fresh_vp_v2_l01_ltr_shape_05"
           ]
@@ -15885,33 +15868,30 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 4,
+              "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 1,
-              "L02": 2,
-              "L03": 2,
+              "L02": 3,
+              "L03": 3,
               "L04": 1,
-              "L05": 1,
-              "L06": 1
+              "L05": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 2,
+              "ASYMMETRIC_RESTART": 2,
+              "DELAYED_BOUNDED_BURST": 3,
               "MULTI_DWELL_PULSE": 1,
-              "TERMINAL_HOLD_RESTART": 3
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 8,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l03_ltr_shape_17",
             "fresh_vp_v2_l02_rtl_shape_17",
-            "fresh_vp_v2_l01_rtl_shape_04",
-            "fresh_vp_v2_l06_rtl_shape_03",
-            "fresh_vp_v2_l04_rtl_shape_17",
-            "fresh_vp_v2_l05_ltr_shape_05",
+            "fresh_vp_v2_l02_ltr_shape_14",
+            "fresh_vp_v2_l04_rtl_shape_11",
+            "fresh_vp_v2_l05_rtl_shape_08",
+            "fresh_vp_v2_l03_ltr_shape_09",
             "fresh_vp_v2_l03_rtl_shape_10",
             "fresh_vp_v2_l02_ltr_shape_16"
           ]
@@ -15930,28 +15910,27 @@
               "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 1,
-              "L02": 1,
               "L03": 2,
               "L04": 1,
-              "L05": 2,
-              "L06": 1
+              "L05": 3,
+              "L06": 2
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 3,
+              "ASYMMETRIC_RESTART": 2,
               "DELAYED_BOUNDED_BURST": 1,
-              "MULTI_DWELL_PULSE": 2,
-              "TERMINAL_HOLD_RESTART": 2
+              "LONG_DWELL_RESTART": 1,
+              "MULTI_DWELL_PULSE": 3,
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 8,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l05_rtl_shape_12",
             "fresh_vp_v2_l03_ltr_shape_07",
-            "fresh_vp_v2_l02_ltr_shape_14",
-            "fresh_vp_v2_l01_rtl_shape_18",
-            "fresh_vp_v2_l06_ltr_shape_18",
-            "fresh_vp_v2_l04_rtl_shape_07",
+            "fresh_vp_v2_l06_ltr_shape_06",
+            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l04_rtl_shape_17",
+            "fresh_vp_v2_l05_ltr_shape_05",
             "fresh_vp_v2_l05_ltr_shape_15",
             "fresh_vp_v2_l03_rtl_shape_14"
           ]
@@ -16164,22 +16143,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 8
+              "LEFT_TO_RIGHT": 5,
+              "RIGHT_TO_LEFT": 3
             },
             "layout": {
               "L01": 2,
               "L02": 1,
               "L03": 1,
               "L04": 1,
-              "L05": 2,
-              "L06": 1
+              "L05": 1,
+              "L06": 2
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
-              "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 3,
+              "DELAYED_BOUNDED_BURST": 2,
+              "LONG_DWELL_RESTART": 1,
               "MULTI_DWELL_PULSE": 1,
-              "TERMINAL_HOLD_RESTART": 1
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 8,
@@ -16187,11 +16167,11 @@
             "fresh_vp_v2_l01_ltr_shape_05",
             "fresh_vp_v2_l05_ltr_shape_03",
             "fresh_vp_v2_l06_ltr_shape_20",
-            "fresh_vp_v2_l04_ltr_shape_16",
-            "fresh_vp_v2_l03_ltr_shape_01",
-            "fresh_vp_v2_l02_ltr_shape_02",
-            "fresh_vp_v2_l01_ltr_shape_13",
-            "fresh_vp_v2_l05_ltr_shape_11"
+            "fresh_vp_v2_l06_rtl_shape_09",
+            "fresh_vp_v2_l04_ltr_shape_14",
+            "fresh_vp_v2_l03_rtl_shape_18",
+            "fresh_vp_v2_l02_ltr_shape_12",
+            "fresh_vp_v2_l01_rtl_shape_14"
           ]
         },
         {
@@ -16204,21 +16184,20 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 4,
-              "RIGHT_TO_LEFT": 4
+              "LEFT_TO_RIGHT": 3,
+              "RIGHT_TO_LEFT": 5
             },
             "layout": {
-              "L01": 2,
+              "L01": 1,
               "L02": 2,
               "L03": 1,
               "L04": 1,
-              "L05": 1,
+              "L05": 2,
               "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 4,
-              "DELAYED_BOUNDED_BURST": 2,
-              "MULTI_DWELL_PULSE": 1,
+              "ASYMMETRIC_RESTART": 3,
+              "MULTI_DWELL_PULSE": 4,
               "TERMINAL_HOLD_RESTART": 1
             }
           },
@@ -16227,11 +16206,11 @@
             "fresh_vp_v2_l02_ltr_shape_16",
             "fresh_vp_v2_l01_rtl_shape_06",
             "fresh_vp_v2_l05_ltr_shape_13",
-            "fresh_vp_v2_l06_rtl_shape_09",
-            "fresh_vp_v2_l04_ltr_shape_14",
-            "fresh_vp_v2_l03_rtl_shape_18",
-            "fresh_vp_v2_l02_ltr_shape_12",
-            "fresh_vp_v2_l01_rtl_shape_14"
+            "fresh_vp_v2_l05_rtl_shape_20",
+            "fresh_vp_v2_l06_ltr_shape_16",
+            "fresh_vp_v2_l04_rtl_shape_05",
+            "fresh_vp_v2_l03_rtl_shape_06",
+            "fresh_vp_v2_l02_rtl_shape_05"
           ]
         },
         {
@@ -16244,12 +16223,12 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 2,
-              "RIGHT_TO_LEFT": 6
+              "LEFT_TO_RIGHT": 3,
+              "RIGHT_TO_LEFT": 5
             },
             "layout": {
-              "L01": 1,
-              "L02": 2,
+              "L01": 2,
+              "L02": 1,
               "L03": 2,
               "L04": 1,
               "L05": 1,
@@ -16257,9 +16236,9 @@
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
-              "LONG_DWELL_RESTART": 1,
-              "MULTI_DWELL_PULSE": 4,
-              "TERMINAL_HOLD_RESTART": 1
+              "DELAYED_BOUNDED_BURST": 2,
+              "LONG_DWELL_RESTART": 3,
+              "MULTI_DWELL_PULSE": 1
             }
           },
           "validation_count": 8,
@@ -16267,11 +16246,11 @@
             "fresh_vp_v2_l03_rtl_shape_14",
             "fresh_vp_v2_l02_ltr_shape_04",
             "fresh_vp_v2_l01_rtl_shape_08",
-            "fresh_vp_v2_l05_rtl_shape_20",
-            "fresh_vp_v2_l06_ltr_shape_16",
-            "fresh_vp_v2_l04_rtl_shape_05",
-            "fresh_vp_v2_l03_rtl_shape_06",
-            "fresh_vp_v2_l02_rtl_shape_05"
+            "fresh_vp_v2_l01_rtl_shape_12",
+            "fresh_vp_v2_l05_rtl_shape_02",
+            "fresh_vp_v2_l06_ltr_shape_10",
+            "fresh_vp_v2_l04_rtl_shape_15",
+            "fresh_vp_v2_l03_ltr_shape_03"
           ]
         },
         {
@@ -16284,22 +16263,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 4,
+              "RIGHT_TO_LEFT": 4
             },
             "layout": {
               "L01": 1,
-              "L02": 1,
-              "L03": 2,
+              "L02": 2,
+              "L03": 1,
               "L04": 2,
               "L05": 1,
               "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 3,
-              "LONG_DWELL_RESTART": 2,
-              "TERMINAL_HOLD_RESTART": 2
+              "ASYMMETRIC_RESTART": 2,
+              "DELAYED_BOUNDED_BURST": 2,
+              "LONG_DWELL_RESTART": 1,
+              "TERMINAL_HOLD_RESTART": 3
             }
           },
           "validation_count": 8,
@@ -16307,11 +16286,11 @@
             "fresh_vp_v2_l04_rtl_shape_09",
             "fresh_vp_v2_l03_rtl_shape_20",
             "fresh_vp_v2_l02_ltr_shape_18",
-            "fresh_vp_v2_l01_rtl_shape_12",
-            "fresh_vp_v2_l05_rtl_shape_02",
-            "fresh_vp_v2_l06_ltr_shape_10",
-            "fresh_vp_v2_l04_rtl_shape_15",
-            "fresh_vp_v2_l03_ltr_shape_03"
+            "fresh_vp_v2_l02_rtl_shape_13",
+            "fresh_vp_v2_l01_ltr_shape_09",
+            "fresh_vp_v2_l05_rtl_shape_14",
+            "fresh_vp_v2_l06_ltr_shape_02",
+            "fresh_vp_v2_l04_ltr_shape_18"
           ]
         },
         {
@@ -16324,21 +16303,21 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 4,
-              "RIGHT_TO_LEFT": 4
+              "LEFT_TO_RIGHT": 5,
+              "RIGHT_TO_LEFT": 3
             },
             "layout": {
               "L01": 1,
               "L02": 1,
-              "L03": 1,
+              "L03": 2,
               "L04": 2,
               "L05": 1,
-              "L06": 2
+              "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 2,
+              "ASYMMETRIC_RESTART": 1,
               "DELAYED_BOUNDED_BURST": 2,
-              "LONG_DWELL_RESTART": 3,
+              "LONG_DWELL_RESTART": 4,
               "TERMINAL_HOLD_RESTART": 1
             }
           },
@@ -16347,11 +16326,11 @@
             "fresh_vp_v2_l06_rtl_shape_01",
             "fresh_vp_v2_l04_ltr_shape_04",
             "fresh_vp_v2_l03_rtl_shape_12",
-            "fresh_vp_v2_l02_rtl_shape_13",
-            "fresh_vp_v2_l01_ltr_shape_09",
-            "fresh_vp_v2_l05_rtl_shape_14",
-            "fresh_vp_v2_l06_ltr_shape_02",
-            "fresh_vp_v2_l04_ltr_shape_18"
+            "fresh_vp_v2_l03_ltr_shape_01",
+            "fresh_vp_v2_l02_ltr_shape_02",
+            "fresh_vp_v2_l01_ltr_shape_13",
+            "fresh_vp_v2_l05_ltr_shape_11",
+            "fresh_vp_v2_l04_rtl_shape_19"
           ]
         }
       ],
@@ -16567,11 +16546,11 @@
             },
             "layout": {
               "L01": 1,
-              "L02": 2,
+              "L02": 3,
               "L03": 1,
               "L04": 1,
               "L05": 1,
-              "L06": 2
+              "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
@@ -16590,7 +16569,7 @@
             "fresh_vp_v2_l04_rtl_shape_11",
             "fresh_vp_v2_l03_ltr_shape_15",
             "fresh_vp_v2_l02_rtl_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_18"
+            "fresh_vp_v2_l02_ltr_shape_20"
           ]
         },
         {
@@ -16603,22 +16582,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 5,
-              "RIGHT_TO_LEFT": 3
+              "LEFT_TO_RIGHT": 4,
+              "RIGHT_TO_LEFT": 4
             },
             "layout": {
               "L01": 1,
-              "L02": 2,
-              "L03": 2,
+              "L02": 1,
+              "L03": 3,
               "L04": 1,
               "L05": 1,
               "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
-              "DELAYED_BOUNDED_BURST": 3,
+              "DELAYED_BOUNDED_BURST": 4,
               "LONG_DWELL_RESTART": 1,
-              "TERMINAL_HOLD_RESTART": 2
+              "TERMINAL_HOLD_RESTART": 1
             }
           },
           "validation_count": 8,
@@ -16630,7 +16609,7 @@
             "fresh_vp_v2_l05_ltr_shape_09",
             "fresh_vp_v2_l04_rtl_shape_17",
             "fresh_vp_v2_l03_ltr_shape_09",
-            "fresh_vp_v2_l02_ltr_shape_20"
+            "fresh_vp_v2_l03_rtl_shape_10"
           ]
         },
         {
@@ -16643,21 +16622,20 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 1,
-              "RIGHT_TO_LEFT": 7
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 6
             },
             "layout": {
               "L01": 1,
               "L02": 1,
-              "L03": 2,
-              "L04": 2,
+              "L03": 1,
+              "L04": 3,
               "L05": 1,
               "L06": 1
             },
             "reporting_stratum": {
-              "DELAYED_BOUNDED_BURST": 1,
               "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 2,
+              "MULTI_DWELL_PULSE": 3,
               "TERMINAL_HOLD_RESTART": 3
             }
           },
@@ -16670,7 +16648,7 @@
             "fresh_vp_v2_l01_rtl_shape_04",
             "fresh_vp_v2_l05_rtl_shape_08",
             "fresh_vp_v2_l04_rtl_shape_07",
-            "fresh_vp_v2_l03_rtl_shape_10"
+            "fresh_vp_v2_l04_ltr_shape_06"
           ]
         },
         {
@@ -16687,30 +16665,29 @@
               "RIGHT_TO_LEFT": 1
             },
             "layout": {
-              "L01": 1,
+              "L01": 2,
               "L02": 1,
-              "L03": 1,
               "L04": 2,
               "L05": 2,
               "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 1,
+              "ASYMMETRIC_RESTART": 2,
               "DELAYED_BOUNDED_BURST": 1,
-              "MULTI_DWELL_PULSE": 3,
-              "TERMINAL_HOLD_RESTART": 3
+              "LONG_DWELL_RESTART": 1,
+              "TERMINAL_HOLD_RESTART": 4
             }
           },
           "validation_count": 8,
           "validation_trajectory_ids": [
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07",
+            "fresh_vp_v2_l04_ltr_shape_02",
             "fresh_vp_v2_l02_ltr_shape_14",
             "fresh_vp_v2_l06_ltr_shape_12",
             "fresh_vp_v2_l01_rtl_shape_18",
-            "fresh_vp_v2_l05_ltr_shape_05",
-            "fresh_vp_v2_l04_ltr_shape_06"
+            "fresh_vp_v2_l01_ltr_shape_19",
+            "fresh_vp_v2_l05_ltr_shape_15"
           ]
         },
         {
@@ -16723,22 +16700,21 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 5,
-              "RIGHT_TO_LEFT": 3
+              "LEFT_TO_RIGHT": 4,
+              "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 2,
+              "L01": 1,
               "L02": 1,
-              "L03": 1,
-              "L04": 1,
+              "L03": 2,
               "L05": 2,
-              "L06": 1
+              "L06": 2
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 2,
+              "ASYMMETRIC_RESTART": 1,
               "DELAYED_BOUNDED_BURST": 1,
               "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 2,
+              "MULTI_DWELL_PULSE": 3,
               "TERMINAL_HOLD_RESTART": 1
             }
           },
@@ -16746,12 +16722,12 @@
           "validation_trajectory_ids": [
             "fresh_vp_v2_l01_ltr_shape_15",
             "fresh_vp_v2_l05_rtl_shape_12",
-            "fresh_vp_v2_l04_ltr_shape_02",
+            "fresh_vp_v2_l05_ltr_shape_05",
             "fresh_vp_v2_l03_rtl_shape_08",
             "fresh_vp_v2_l02_ltr_shape_08",
             "fresh_vp_v2_l06_rtl_shape_03",
-            "fresh_vp_v2_l01_ltr_shape_19",
-            "fresh_vp_v2_l05_ltr_shape_15"
+            "fresh_vp_v2_l06_ltr_shape_18",
+            "fresh_vp_v2_l03_rtl_shape_04"
           ]
         }
       ],
@@ -16962,22 +16938,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 6,
-              "RIGHT_TO_LEFT": 8
+              "LEFT_TO_RIGHT": 5,
+              "RIGHT_TO_LEFT": 9
             },
             "layout": {
-              "L01": 3,
+              "L01": 2,
               "L02": 3,
-              "L03": 2,
+              "L03": 3,
               "L04": 2,
-              "L05": 2,
-              "L06": 2
+              "L05": 3,
+              "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 2,
-              "DELAYED_BOUNDED_BURST": 3,
-              "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 3,
+              "ASYMMETRIC_RESTART": 1,
+              "DELAYED_BOUNDED_BURST": 6,
+              "LONG_DWELL_RESTART": 1,
+              "MULTI_DWELL_PULSE": 2,
               "TERMINAL_HOLD_RESTART": 4
             }
           },
@@ -16987,12 +16963,12 @@
             "fresh_vp_v2_l01_ltr_shape_11",
             "fresh_vp_v2_l06_rtl_shape_13",
             "fresh_vp_v2_l05_rtl_shape_12",
-            "fresh_vp_v2_l04_ltr_shape_02",
-            "fresh_vp_v2_l03_rtl_shape_08",
-            "fresh_vp_v2_l02_ltr_shape_08",
-            "fresh_vp_v2_l01_rtl_shape_18",
-            "fresh_vp_v2_l06_ltr_shape_18",
-            "fresh_vp_v2_l05_ltr_shape_15",
+            "fresh_vp_v2_l05_ltr_shape_07",
+            "fresh_vp_v2_l05_ltr_shape_09",
+            "fresh_vp_v2_l04_rtl_shape_17",
+            "fresh_vp_v2_l03_ltr_shape_09",
+            "fresh_vp_v2_l02_rtl_shape_17",
+            "fresh_vp_v2_l03_rtl_shape_10",
             "fresh_vp_v2_l04_rtl_shape_09",
             "fresh_vp_v2_l03_rtl_shape_20",
             "fresh_vp_v2_l02_ltr_shape_18",
@@ -17009,22 +16985,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 7,
-              "RIGHT_TO_LEFT": 7
+              "LEFT_TO_RIGHT": 6,
+              "RIGHT_TO_LEFT": 8
             },
             "layout": {
               "L01": 2,
-              "L02": 3,
-              "L03": 3,
-              "L04": 2,
+              "L02": 2,
+              "L03": 2,
+              "L04": 3,
               "L05": 2,
-              "L06": 2
+              "L06": 3
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 3,
+              "ASYMMETRIC_RESTART": 2,
               "DELAYED_BOUNDED_BURST": 3,
               "LONG_DWELL_RESTART": 4,
-              "MULTI_DWELL_PULSE": 3,
+              "MULTI_DWELL_PULSE": 4,
               "TERMINAL_HOLD_RESTART": 1
             }
           },
@@ -17034,12 +17010,12 @@
             "fresh_vp_v2_l02_rtl_shape_07",
             "fresh_vp_v2_l01_ltr_shape_15",
             "fresh_vp_v2_l06_rtl_shape_11",
-            "fresh_vp_v2_l05_ltr_shape_07",
-            "fresh_vp_v2_l04_rtl_shape_11",
-            "fresh_vp_v2_l03_ltr_shape_15",
-            "fresh_vp_v2_l02_rtl_shape_03",
-            "fresh_vp_v2_l01_ltr_shape_19",
-            "fresh_vp_v2_l06_ltr_shape_06",
+            "fresh_vp_v2_l06_rtl_shape_19",
+            "fresh_vp_v2_l06_ltr_shape_12",
+            "fresh_vp_v2_l05_rtl_shape_08",
+            "fresh_vp_v2_l04_rtl_shape_07",
+            "fresh_vp_v2_l01_ltr_shape_03",
+            "fresh_vp_v2_l04_ltr_shape_06",
             "fresh_vp_v2_l05_ltr_shape_03",
             "fresh_vp_v2_l04_ltr_shape_04",
             "fresh_vp_v2_l03_rtl_shape_12",
@@ -17062,16 +17038,17 @@
             "layout": {
               "L01": 2,
               "L02": 2,
-              "L03": 3,
-              "L04": 3,
+              "L03": 2,
+              "L04": 2,
               "L05": 2,
-              "L06": 2
+              "L06": 4
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 4,
-              "DELAYED_BOUNDED_BURST": 3,
-              "LONG_DWELL_RESTART": 3,
-              "TERMINAL_HOLD_RESTART": 4
+              "ASYMMETRIC_RESTART": 5,
+              "DELAYED_BOUNDED_BURST": 1,
+              "LONG_DWELL_RESTART": 4,
+              "MULTI_DWELL_PULSE": 2,
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 14,
@@ -17080,12 +17057,12 @@
             "fresh_vp_v2_l03_ltr_shape_13",
             "fresh_vp_v2_l02_rtl_shape_15",
             "fresh_vp_v2_l01_rtl_shape_20",
-            "fresh_vp_v2_l06_rtl_shape_19",
-            "fresh_vp_v2_l05_ltr_shape_09",
-            "fresh_vp_v2_l04_rtl_shape_17",
-            "fresh_vp_v2_l03_ltr_shape_09",
-            "fresh_vp_v2_l02_ltr_shape_20",
-            "fresh_vp_v2_l01_ltr_shape_01",
+            "fresh_vp_v2_l02_ltr_shape_14",
+            "fresh_vp_v2_l01_rtl_shape_04",
+            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l05_ltr_shape_05",
+            "fresh_vp_v2_l06_ltr_shape_18",
+            "fresh_vp_v2_l06_ltr_shape_06",
             "fresh_vp_v2_l06_rtl_shape_01",
             "fresh_vp_v2_l05_ltr_shape_13",
             "fresh_vp_v2_l04_ltr_shape_16",
@@ -17102,23 +17079,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 7,
-              "RIGHT_TO_LEFT": 7
+              "LEFT_TO_RIGHT": 9,
+              "RIGHT_TO_LEFT": 5
             },
             "layout": {
-              "L01": 2,
+              "L01": 4,
               "L02": 2,
-              "L03": 2,
-              "L04": 3,
-              "L05": 3,
-              "L06": 2
+              "L03": 3,
+              "L04": 2,
+              "L05": 2,
+              "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
-              "DELAYED_BOUNDED_BURST": 2,
               "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 3,
-              "TERMINAL_HOLD_RESTART": 5
+              "MULTI_DWELL_PULSE": 4,
+              "TERMINAL_HOLD_RESTART": 6
             }
           },
           "validation_count": 14,
@@ -17126,12 +17102,12 @@
             "fresh_vp_v2_l05_rtl_shape_18",
             "fresh_vp_v2_l04_rtl_shape_01",
             "fresh_vp_v2_l03_ltr_shape_17",
-            "fresh_vp_v2_l02_rtl_shape_17",
-            "fresh_vp_v2_l01_ltr_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_12",
-            "fresh_vp_v2_l05_rtl_shape_08",
-            "fresh_vp_v2_l04_rtl_shape_07",
-            "fresh_vp_v2_l03_rtl_shape_10",
+            "fresh_vp_v2_l03_ltr_shape_07",
+            "fresh_vp_v2_l03_rtl_shape_08",
+            "fresh_vp_v2_l02_ltr_shape_08",
+            "fresh_vp_v2_l01_rtl_shape_18",
+            "fresh_vp_v2_l01_ltr_shape_01",
+            "fresh_vp_v2_l01_ltr_shape_19",
             "fresh_vp_v2_l02_ltr_shape_16",
             "fresh_vp_v2_l01_ltr_shape_05",
             "fresh_vp_v2_l06_ltr_shape_20",
@@ -17149,23 +17125,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 8,
-              "RIGHT_TO_LEFT": 6
+              "LEFT_TO_RIGHT": 7,
+              "RIGHT_TO_LEFT": 7
             },
             "layout": {
               "L01": 2,
-              "L02": 2,
+              "L02": 3,
               "L03": 2,
-              "L04": 2,
-              "L05": 3,
-              "L06": 3
+              "L04": 3,
+              "L05": 2,
+              "L06": 2
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
-              "DELAYED_BOUNDED_BURST": 1,
+              "DELAYED_BOUNDED_BURST": 3,
               "LONG_DWELL_RESTART": 4,
-              "MULTI_DWELL_PULSE": 5,
-              "TERMINAL_HOLD_RESTART": 2
+              "MULTI_DWELL_PULSE": 2,
+              "TERMINAL_HOLD_RESTART": 3
             }
           },
           "validation_count": 14,
@@ -17173,12 +17149,12 @@
             "fresh_vp_v2_l06_ltr_shape_08",
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07",
-            "fresh_vp_v2_l02_ltr_shape_14",
-            "fresh_vp_v2_l01_rtl_shape_04",
-            "fresh_vp_v2_l06_rtl_shape_03",
-            "fresh_vp_v2_l05_ltr_shape_05",
-            "fresh_vp_v2_l04_ltr_shape_06",
+            "fresh_vp_v2_l04_ltr_shape_02",
+            "fresh_vp_v2_l04_rtl_shape_11",
+            "fresh_vp_v2_l03_ltr_shape_15",
+            "fresh_vp_v2_l02_rtl_shape_03",
+            "fresh_vp_v2_l01_rtl_shape_12",
+            "fresh_vp_v2_l02_ltr_shape_20",
             "fresh_vp_v2_l03_rtl_shape_14",
             "fresh_vp_v2_l02_ltr_shape_04",
             "fresh_vp_v2_l01_rtl_shape_06",
@@ -18687,22 +18663,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 8,
-              "RIGHT_TO_LEFT": 6
+              "LEFT_TO_RIGHT": 6,
+              "RIGHT_TO_LEFT": 8
             },
             "layout": {
               "L01": 2,
-              "L02": 2,
-              "L03": 2,
-              "L04": 2,
-              "L05": 3,
-              "L06": 3
+              "L02": 4,
+              "L03": 1,
+              "L04": 1,
+              "L05": 2,
+              "L06": 4
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
               "DELAYED_BOUNDED_BURST": 2,
-              "LONG_DWELL_RESTART": 4,
-              "MULTI_DWELL_PULSE": 4,
+              "LONG_DWELL_RESTART": 6,
+              "MULTI_DWELL_PULSE": 2,
               "TERMINAL_HOLD_RESTART": 2
             }
           },
@@ -18716,12 +18692,12 @@
             "fresh_vp_v2_l01_ltr_shape_15",
             "fresh_vp_v2_l06_rtl_shape_11",
             "fresh_vp_v2_l05_rtl_shape_12",
-            "fresh_vp_v2_l04_ltr_shape_02",
-            "fresh_vp_v2_l03_rtl_shape_08",
+            "fresh_vp_v2_l06_rtl_shape_19",
+            "fresh_vp_v2_l02_ltr_shape_14",
             "fresh_vp_v2_l02_ltr_shape_08",
-            "fresh_vp_v2_l01_ltr_shape_19",
-            "fresh_vp_v2_l06_ltr_shape_06",
-            "fresh_vp_v2_l05_ltr_shape_15"
+            "fresh_vp_v2_l02_rtl_shape_03",
+            "fresh_vp_v2_l01_ltr_shape_01",
+            "fresh_vp_v2_l06_rtl_shape_01"
           ]
         },
         {
@@ -18734,22 +18710,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 3,
-              "RIGHT_TO_LEFT": 11
+              "LEFT_TO_RIGHT": 6,
+              "RIGHT_TO_LEFT": 8
             },
             "layout": {
-              "L01": 3,
+              "L01": 4,
               "L02": 2,
-              "L03": 2,
+              "L03": 4,
               "L04": 2,
-              "L05": 2,
-              "L06": 3
+              "L05": 1,
+              "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 2,
               "DELAYED_BOUNDED_BURST": 1,
-              "LONG_DWELL_RESTART": 5,
-              "MULTI_DWELL_PULSE": 3,
+              "LONG_DWELL_RESTART": 4,
+              "MULTI_DWELL_PULSE": 4,
               "TERMINAL_HOLD_RESTART": 3
             }
           },
@@ -18762,13 +18738,13 @@
             "fresh_vp_v2_l03_rtl_shape_02",
             "fresh_vp_v2_l02_rtl_shape_07",
             "fresh_vp_v2_l01_rtl_shape_20",
-            "fresh_vp_v2_l06_rtl_shape_19",
-            "fresh_vp_v2_l05_ltr_shape_07",
-            "fresh_vp_v2_l04_rtl_shape_11",
+            "fresh_vp_v2_l01_ltr_shape_03",
+            "fresh_vp_v2_l04_ltr_shape_02",
+            "fresh_vp_v2_l03_rtl_shape_08",
             "fresh_vp_v2_l03_ltr_shape_15",
-            "fresh_vp_v2_l02_rtl_shape_03",
-            "fresh_vp_v2_l01_ltr_shape_01",
-            "fresh_vp_v2_l06_rtl_shape_01"
+            "fresh_vp_v2_l03_ltr_shape_09",
+            "fresh_vp_v2_l02_ltr_shape_20",
+            "fresh_vp_v2_l01_ltr_shape_05"
           ]
         },
         {
@@ -18781,22 +18757,21 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 9,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 5,
+              "RIGHT_TO_LEFT": 9
             },
             "layout": {
-              "L01": 3,
-              "L02": 3,
+              "L01": 1,
+              "L02": 4,
               "L03": 2,
-              "L04": 2,
+              "L04": 4,
               "L05": 2,
-              "L06": 2
+              "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 3,
-              "DELAYED_BOUNDED_BURST": 4,
-              "LONG_DWELL_RESTART": 1,
-              "MULTI_DWELL_PULSE": 4,
+              "ASYMMETRIC_RESTART": 4,
+              "DELAYED_BOUNDED_BURST": 3,
+              "MULTI_DWELL_PULSE": 5,
               "TERMINAL_HOLD_RESTART": 2
             }
           },
@@ -18809,13 +18784,13 @@
             "fresh_vp_v2_l04_ltr_shape_12",
             "fresh_vp_v2_l03_ltr_shape_13",
             "fresh_vp_v2_l02_rtl_shape_15",
-            "fresh_vp_v2_l01_ltr_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_12",
-            "fresh_vp_v2_l05_ltr_shape_09",
+            "fresh_vp_v2_l02_rtl_shape_17",
+            "fresh_vp_v2_l05_ltr_shape_07",
+            "fresh_vp_v2_l04_rtl_shape_11",
             "fresh_vp_v2_l04_rtl_shape_17",
-            "fresh_vp_v2_l03_ltr_shape_09",
-            "fresh_vp_v2_l02_ltr_shape_20",
-            "fresh_vp_v2_l01_ltr_shape_05"
+            "fresh_vp_v2_l04_rtl_shape_07",
+            "fresh_vp_v2_l03_rtl_shape_10",
+            "fresh_vp_v2_l02_ltr_shape_16"
           ]
         },
         {
@@ -18828,23 +18803,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 4,
-              "RIGHT_TO_LEFT": 10
+              "LEFT_TO_RIGHT": 8,
+              "RIGHT_TO_LEFT": 6
             },
             "layout": {
-              "L01": 2,
-              "L02": 3,
-              "L03": 3,
+              "L01": 1,
+              "L02": 1,
+              "L03": 4,
               "L04": 2,
-              "L05": 2,
+              "L05": 4,
               "L06": 2
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 1,
-              "DELAYED_BOUNDED_BURST": 2,
-              "LONG_DWELL_RESTART": 5,
-              "MULTI_DWELL_PULSE": 3,
-              "TERMINAL_HOLD_RESTART": 3
+              "DELAYED_BOUNDED_BURST": 3,
+              "LONG_DWELL_RESTART": 3,
+              "MULTI_DWELL_PULSE": 5,
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 14,
@@ -18856,13 +18831,13 @@
             "fresh_vp_v2_l05_rtl_shape_18",
             "fresh_vp_v2_l04_rtl_shape_01",
             "fresh_vp_v2_l03_ltr_shape_17",
-            "fresh_vp_v2_l02_rtl_shape_17",
-            "fresh_vp_v2_l01_rtl_shape_04",
-            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l03_ltr_shape_07",
+            "fresh_vp_v2_l06_ltr_shape_12",
+            "fresh_vp_v2_l05_ltr_shape_09",
             "fresh_vp_v2_l05_rtl_shape_08",
-            "fresh_vp_v2_l04_rtl_shape_07",
-            "fresh_vp_v2_l03_rtl_shape_10",
-            "fresh_vp_v2_l02_ltr_shape_16"
+            "fresh_vp_v2_l05_ltr_shape_05",
+            "fresh_vp_v2_l04_ltr_shape_06",
+            "fresh_vp_v2_l03_rtl_shape_14"
           ]
         },
         {
@@ -18879,18 +18854,19 @@
               "RIGHT_TO_LEFT": 4
             },
             "layout": {
-              "L01": 2,
-              "L02": 2,
-              "L03": 3,
-              "L04": 3,
+              "L01": 4,
+              "L02": 1,
+              "L03": 1,
+              "L04": 2,
               "L05": 2,
-              "L06": 2
+              "L06": 4
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 3,
               "DELAYED_BOUNDED_BURST": 2,
-              "MULTI_DWELL_PULSE": 3,
-              "TERMINAL_HOLD_RESTART": 6
+              "LONG_DWELL_RESTART": 1,
+              "MULTI_DWELL_PULSE": 1,
+              "TERMINAL_HOLD_RESTART": 7
             }
           },
           "validation_count": 14,
@@ -18902,13 +18878,13 @@
             "fresh_vp_v2_l06_rtl_shape_13",
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07",
-            "fresh_vp_v2_l02_ltr_shape_14",
-            "fresh_vp_v2_l01_rtl_shape_18",
             "fresh_vp_v2_l06_ltr_shape_18",
-            "fresh_vp_v2_l05_ltr_shape_05",
-            "fresh_vp_v2_l04_ltr_shape_06",
-            "fresh_vp_v2_l03_rtl_shape_14"
+            "fresh_vp_v2_l01_rtl_shape_04",
+            "fresh_vp_v2_l01_rtl_shape_18",
+            "fresh_vp_v2_l01_ltr_shape_19",
+            "fresh_vp_v2_l06_ltr_shape_06",
+            "fresh_vp_v2_l05_ltr_shape_15",
+            "fresh_vp_v2_l06_ltr_shape_16"
           ]
         }
       ],
@@ -20413,22 +20389,22 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 9,
-              "RIGHT_TO_LEFT": 11
+              "LEFT_TO_RIGHT": 8,
+              "RIGHT_TO_LEFT": 12
             },
             "layout": {
-              "L01": 4,
+              "L01": 3,
               "L02": 4,
-              "L03": 3,
+              "L03": 4,
               "L04": 3,
-              "L05": 3,
-              "L06": 3
+              "L05": 5,
+              "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 5,
-              "DELAYED_BOUNDED_BURST": 4,
-              "LONG_DWELL_RESTART": 3,
-              "MULTI_DWELL_PULSE": 4,
+              "ASYMMETRIC_RESTART": 4,
+              "DELAYED_BOUNDED_BURST": 7,
+              "LONG_DWELL_RESTART": 2,
+              "MULTI_DWELL_PULSE": 3,
               "TERMINAL_HOLD_RESTART": 4
             }
           },
@@ -20438,17 +20414,17 @@
             "fresh_vp_v2_l01_ltr_shape_11",
             "fresh_vp_v2_l06_rtl_shape_13",
             "fresh_vp_v2_l05_rtl_shape_12",
-            "fresh_vp_v2_l04_ltr_shape_02",
-            "fresh_vp_v2_l03_rtl_shape_08",
-            "fresh_vp_v2_l02_ltr_shape_08",
-            "fresh_vp_v2_l01_rtl_shape_18",
-            "fresh_vp_v2_l06_ltr_shape_18",
-            "fresh_vp_v2_l05_ltr_shape_15",
+            "fresh_vp_v2_l05_ltr_shape_07",
+            "fresh_vp_v2_l05_ltr_shape_09",
+            "fresh_vp_v2_l04_rtl_shape_17",
+            "fresh_vp_v2_l03_ltr_shape_09",
+            "fresh_vp_v2_l02_rtl_shape_17",
+            "fresh_vp_v2_l03_rtl_shape_10",
             "fresh_vp_v2_l04_rtl_shape_09",
             "fresh_vp_v2_l03_rtl_shape_20",
             "fresh_vp_v2_l02_ltr_shape_18",
             "fresh_vp_v2_l01_rtl_shape_08",
-            "fresh_vp_v2_l06_ltr_shape_16",
+            "fresh_vp_v2_l05_ltr_shape_15",
             "fresh_vp_v2_l05_rtl_shape_14",
             "fresh_vp_v2_l04_rtl_shape_15",
             "fresh_vp_v2_l03_ltr_shape_03",
@@ -20470,18 +20446,18 @@
               "RIGHT_TO_LEFT": 9
             },
             "layout": {
-              "L01": 3,
-              "L02": 3,
-              "L03": 5,
-              "L04": 3,
+              "L01": 2,
+              "L02": 2,
+              "L03": 4,
+              "L04": 4,
               "L05": 3,
-              "L06": 3
+              "L06": 5
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 3,
-              "DELAYED_BOUNDED_BURST": 6,
+              "DELAYED_BOUNDED_BURST": 5,
               "LONG_DWELL_RESTART": 5,
-              "MULTI_DWELL_PULSE": 3,
+              "MULTI_DWELL_PULSE": 4,
               "TERMINAL_HOLD_RESTART": 3
             }
           },
@@ -20491,17 +20467,17 @@
             "fresh_vp_v2_l02_rtl_shape_07",
             "fresh_vp_v2_l01_ltr_shape_15",
             "fresh_vp_v2_l06_rtl_shape_11",
-            "fresh_vp_v2_l05_ltr_shape_07",
-            "fresh_vp_v2_l04_rtl_shape_11",
-            "fresh_vp_v2_l03_ltr_shape_15",
-            "fresh_vp_v2_l02_rtl_shape_03",
-            "fresh_vp_v2_l01_ltr_shape_19",
-            "fresh_vp_v2_l06_ltr_shape_06",
+            "fresh_vp_v2_l06_rtl_shape_19",
+            "fresh_vp_v2_l06_ltr_shape_12",
+            "fresh_vp_v2_l05_rtl_shape_08",
+            "fresh_vp_v2_l04_rtl_shape_07",
+            "fresh_vp_v2_l01_ltr_shape_03",
+            "fresh_vp_v2_l04_ltr_shape_06",
             "fresh_vp_v2_l05_ltr_shape_03",
             "fresh_vp_v2_l04_ltr_shape_04",
             "fresh_vp_v2_l03_rtl_shape_12",
             "fresh_vp_v2_l02_rtl_shape_13",
-            "fresh_vp_v2_l01_rtl_shape_12",
+            "fresh_vp_v2_l06_ltr_shape_16",
             "fresh_vp_v2_l06_ltr_shape_10",
             "fresh_vp_v2_l05_ltr_shape_11",
             "fresh_vp_v2_l04_ltr_shape_18",
@@ -20525,17 +20501,17 @@
             "layout": {
               "L01": 3,
               "L02": 3,
-              "L03": 3,
-              "L04": 5,
+              "L03": 2,
+              "L04": 4,
               "L05": 3,
-              "L06": 3
+              "L06": 5
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 4,
-              "DELAYED_BOUNDED_BURST": 4,
-              "LONG_DWELL_RESTART": 6,
-              "MULTI_DWELL_PULSE": 1,
-              "TERMINAL_HOLD_RESTART": 5
+              "ASYMMETRIC_RESTART": 5,
+              "DELAYED_BOUNDED_BURST": 2,
+              "LONG_DWELL_RESTART": 7,
+              "MULTI_DWELL_PULSE": 3,
+              "TERMINAL_HOLD_RESTART": 3
             }
           },
           "validation_count": 20,
@@ -20544,12 +20520,12 @@
             "fresh_vp_v2_l03_ltr_shape_13",
             "fresh_vp_v2_l02_rtl_shape_15",
             "fresh_vp_v2_l01_rtl_shape_20",
-            "fresh_vp_v2_l06_rtl_shape_19",
-            "fresh_vp_v2_l05_ltr_shape_09",
-            "fresh_vp_v2_l04_rtl_shape_17",
-            "fresh_vp_v2_l03_ltr_shape_09",
-            "fresh_vp_v2_l02_ltr_shape_20",
-            "fresh_vp_v2_l01_ltr_shape_01",
+            "fresh_vp_v2_l02_ltr_shape_14",
+            "fresh_vp_v2_l01_rtl_shape_04",
+            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l05_ltr_shape_05",
+            "fresh_vp_v2_l06_ltr_shape_18",
+            "fresh_vp_v2_l06_ltr_shape_06",
             "fresh_vp_v2_l06_rtl_shape_01",
             "fresh_vp_v2_l05_ltr_shape_13",
             "fresh_vp_v2_l04_ltr_shape_16",
@@ -20572,23 +20548,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 9,
-              "RIGHT_TO_LEFT": 11
+              "LEFT_TO_RIGHT": 11,
+              "RIGHT_TO_LEFT": 9
             },
             "layout": {
-              "L01": 3,
+              "L01": 5,
               "L02": 3,
-              "L03": 3,
-              "L04": 3,
-              "L05": 5,
-              "L06": 3
+              "L03": 4,
+              "L04": 2,
+              "L05": 4,
+              "L06": 2
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 3,
-              "DELAYED_BOUNDED_BURST": 3,
+              "DELAYED_BOUNDED_BURST": 1,
               "LONG_DWELL_RESTART": 3,
-              "MULTI_DWELL_PULSE": 4,
-              "TERMINAL_HOLD_RESTART": 7
+              "MULTI_DWELL_PULSE": 5,
+              "TERMINAL_HOLD_RESTART": 8
             }
           },
           "validation_count": 20,
@@ -20596,12 +20572,12 @@
             "fresh_vp_v2_l05_rtl_shape_18",
             "fresh_vp_v2_l04_rtl_shape_01",
             "fresh_vp_v2_l03_ltr_shape_17",
-            "fresh_vp_v2_l02_rtl_shape_17",
-            "fresh_vp_v2_l01_ltr_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_12",
-            "fresh_vp_v2_l05_rtl_shape_08",
-            "fresh_vp_v2_l04_rtl_shape_07",
-            "fresh_vp_v2_l03_rtl_shape_10",
+            "fresh_vp_v2_l03_ltr_shape_07",
+            "fresh_vp_v2_l03_rtl_shape_08",
+            "fresh_vp_v2_l02_ltr_shape_08",
+            "fresh_vp_v2_l01_rtl_shape_18",
+            "fresh_vp_v2_l01_ltr_shape_01",
+            "fresh_vp_v2_l01_ltr_shape_19",
             "fresh_vp_v2_l02_ltr_shape_16",
             "fresh_vp_v2_l01_ltr_shape_05",
             "fresh_vp_v2_l06_ltr_shape_20",
@@ -20625,23 +20601,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 8,
-              "RIGHT_TO_LEFT": 12
+              "LEFT_TO_RIGHT": 7,
+              "RIGHT_TO_LEFT": 13
             },
             "layout": {
               "L01": 3,
-              "L02": 3,
+              "L02": 4,
               "L03": 3,
-              "L04": 3,
-              "L05": 3,
-              "L06": 5
+              "L04": 4,
+              "L05": 2,
+              "L06": 4
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 4,
-              "DELAYED_BOUNDED_BURST": 1,
+              "DELAYED_BOUNDED_BURST": 3,
               "LONG_DWELL_RESTART": 4,
-              "MULTI_DWELL_PULSE": 9,
-              "TERMINAL_HOLD_RESTART": 2
+              "MULTI_DWELL_PULSE": 6,
+              "TERMINAL_HOLD_RESTART": 3
             }
           },
           "validation_count": 20,
@@ -20649,12 +20625,12 @@
             "fresh_vp_v2_l06_ltr_shape_08",
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07",
-            "fresh_vp_v2_l02_ltr_shape_14",
-            "fresh_vp_v2_l01_rtl_shape_04",
-            "fresh_vp_v2_l06_rtl_shape_03",
-            "fresh_vp_v2_l05_ltr_shape_05",
-            "fresh_vp_v2_l04_ltr_shape_06",
+            "fresh_vp_v2_l04_ltr_shape_02",
+            "fresh_vp_v2_l04_rtl_shape_11",
+            "fresh_vp_v2_l03_ltr_shape_15",
+            "fresh_vp_v2_l02_rtl_shape_03",
+            "fresh_vp_v2_l01_rtl_shape_12",
+            "fresh_vp_v2_l02_ltr_shape_20",
             "fresh_vp_v2_l03_rtl_shape_14",
             "fresh_vp_v2_l02_ltr_shape_04",
             "fresh_vp_v2_l01_rtl_shape_06",
@@ -22263,23 +22239,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 10,
-              "RIGHT_TO_LEFT": 10
+              "LEFT_TO_RIGHT": 8,
+              "RIGHT_TO_LEFT": 12
             },
             "layout": {
-              "L01": 3,
-              "L02": 3,
-              "L03": 3,
-              "L04": 3,
-              "L05": 4,
-              "L06": 4
+              "L01": 4,
+              "L02": 5,
+              "L03": 1,
+              "L04": 1,
+              "L05": 3,
+              "L06": 6
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 3,
-              "DELAYED_BOUNDED_BURST": 5,
-              "LONG_DWELL_RESTART": 4,
-              "MULTI_DWELL_PULSE": 4,
-              "TERMINAL_HOLD_RESTART": 4
+              "DELAYED_BOUNDED_BURST": 4,
+              "LONG_DWELL_RESTART": 8,
+              "MULTI_DWELL_PULSE": 3,
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 20,
@@ -22292,15 +22268,15 @@
             "fresh_vp_v2_l01_ltr_shape_15",
             "fresh_vp_v2_l06_rtl_shape_11",
             "fresh_vp_v2_l05_rtl_shape_12",
-            "fresh_vp_v2_l04_ltr_shape_02",
-            "fresh_vp_v2_l03_rtl_shape_08",
+            "fresh_vp_v2_l06_rtl_shape_19",
+            "fresh_vp_v2_l02_ltr_shape_14",
             "fresh_vp_v2_l02_ltr_shape_08",
-            "fresh_vp_v2_l01_ltr_shape_19",
-            "fresh_vp_v2_l06_ltr_shape_06",
-            "fresh_vp_v2_l05_ltr_shape_15",
-            "fresh_vp_v2_l04_rtl_shape_09",
-            "fresh_vp_v2_l03_rtl_shape_20",
-            "fresh_vp_v2_l02_ltr_shape_18",
+            "fresh_vp_v2_l02_rtl_shape_03",
+            "fresh_vp_v2_l01_ltr_shape_01",
+            "fresh_vp_v2_l06_rtl_shape_01",
+            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l02_ltr_shape_04",
+            "fresh_vp_v2_l01_rtl_shape_08",
             "fresh_vp_v2_l01_rtl_shape_12",
             "fresh_vp_v2_l06_ltr_shape_10",
             "fresh_vp_v2_l05_rtl_shape_14"
@@ -22316,23 +22292,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 7,
-              "RIGHT_TO_LEFT": 13
+              "LEFT_TO_RIGHT": 9,
+              "RIGHT_TO_LEFT": 11
             },
             "layout": {
-              "L01": 5,
-              "L02": 3,
-              "L03": 3,
+              "L01": 6,
+              "L02": 4,
+              "L03": 5,
               "L04": 3,
-              "L05": 3,
-              "L06": 3
+              "L05": 1,
+              "L06": 1
             },
             "reporting_stratum": {
               "ASYMMETRIC_RESTART": 4,
               "DELAYED_BOUNDED_BURST": 3,
-              "LONG_DWELL_RESTART": 7,
-              "MULTI_DWELL_PULSE": 3,
-              "TERMINAL_HOLD_RESTART": 3
+              "LONG_DWELL_RESTART": 4,
+              "MULTI_DWELL_PULSE": 4,
+              "TERMINAL_HOLD_RESTART": 5
             }
           },
           "validation_count": 20,
@@ -22344,16 +22320,16 @@
             "fresh_vp_v2_l03_rtl_shape_02",
             "fresh_vp_v2_l02_rtl_shape_07",
             "fresh_vp_v2_l01_rtl_shape_20",
-            "fresh_vp_v2_l06_rtl_shape_19",
-            "fresh_vp_v2_l05_ltr_shape_07",
-            "fresh_vp_v2_l04_rtl_shape_11",
+            "fresh_vp_v2_l01_ltr_shape_03",
+            "fresh_vp_v2_l04_ltr_shape_02",
+            "fresh_vp_v2_l03_rtl_shape_08",
             "fresh_vp_v2_l03_ltr_shape_15",
-            "fresh_vp_v2_l02_rtl_shape_03",
-            "fresh_vp_v2_l01_ltr_shape_01",
-            "fresh_vp_v2_l06_rtl_shape_01",
-            "fresh_vp_v2_l05_ltr_shape_03",
-            "fresh_vp_v2_l04_ltr_shape_04",
-            "fresh_vp_v2_l03_rtl_shape_12",
+            "fresh_vp_v2_l03_ltr_shape_09",
+            "fresh_vp_v2_l02_ltr_shape_20",
+            "fresh_vp_v2_l01_ltr_shape_05",
+            "fresh_vp_v2_l04_rtl_shape_09",
+            "fresh_vp_v2_l03_rtl_shape_20",
+            "fresh_vp_v2_l02_ltr_shape_18",
             "fresh_vp_v2_l02_rtl_shape_13",
             "fresh_vp_v2_l01_ltr_shape_09",
             "fresh_vp_v2_l01_ltr_shape_13"
@@ -22369,23 +22345,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 15,
-              "RIGHT_TO_LEFT": 5
+              "LEFT_TO_RIGHT": 10,
+              "RIGHT_TO_LEFT": 10
             },
             "layout": {
-              "L01": 3,
-              "L02": 5,
-              "L03": 3,
-              "L04": 3,
+              "L01": 1,
+              "L02": 6,
+              "L03": 4,
+              "L04": 5,
               "L05": 3,
-              "L06": 3
+              "L06": 1
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 5,
+              "ASYMMETRIC_RESTART": 4,
               "DELAYED_BOUNDED_BURST": 5,
-              "LONG_DWELL_RESTART": 3,
-              "MULTI_DWELL_PULSE": 4,
-              "TERMINAL_HOLD_RESTART": 3
+              "LONG_DWELL_RESTART": 4,
+              "MULTI_DWELL_PULSE": 5,
+              "TERMINAL_HOLD_RESTART": 2
             }
           },
           "validation_count": 20,
@@ -22397,16 +22373,16 @@
             "fresh_vp_v2_l04_ltr_shape_12",
             "fresh_vp_v2_l03_ltr_shape_13",
             "fresh_vp_v2_l02_rtl_shape_15",
-            "fresh_vp_v2_l01_ltr_shape_03",
-            "fresh_vp_v2_l06_ltr_shape_12",
-            "fresh_vp_v2_l05_ltr_shape_09",
+            "fresh_vp_v2_l02_rtl_shape_17",
+            "fresh_vp_v2_l05_ltr_shape_07",
+            "fresh_vp_v2_l04_rtl_shape_11",
             "fresh_vp_v2_l04_rtl_shape_17",
-            "fresh_vp_v2_l03_ltr_shape_09",
-            "fresh_vp_v2_l02_ltr_shape_20",
-            "fresh_vp_v2_l01_ltr_shape_05",
-            "fresh_vp_v2_l06_ltr_shape_20",
-            "fresh_vp_v2_l05_ltr_shape_13",
-            "fresh_vp_v2_l04_ltr_shape_16",
+            "fresh_vp_v2_l04_rtl_shape_07",
+            "fresh_vp_v2_l03_rtl_shape_10",
+            "fresh_vp_v2_l02_ltr_shape_16",
+            "fresh_vp_v2_l05_ltr_shape_03",
+            "fresh_vp_v2_l04_ltr_shape_04",
+            "fresh_vp_v2_l03_rtl_shape_12",
             "fresh_vp_v2_l03_ltr_shape_01",
             "fresh_vp_v2_l02_ltr_shape_02",
             "fresh_vp_v2_l02_ltr_shape_12"
@@ -22422,23 +22398,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 5,
-              "RIGHT_TO_LEFT": 15
+              "LEFT_TO_RIGHT": 12,
+              "RIGHT_TO_LEFT": 8
             },
             "layout": {
-              "L01": 3,
-              "L02": 3,
-              "L03": 5,
-              "L04": 3,
-              "L05": 3,
+              "L01": 1,
+              "L02": 1,
+              "L03": 6,
+              "L04": 4,
+              "L05": 5,
               "L06": 3
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 2,
+              "ASYMMETRIC_RESTART": 4,
               "DELAYED_BOUNDED_BURST": 3,
-              "LONG_DWELL_RESTART": 5,
-              "MULTI_DWELL_PULSE": 5,
-              "TERMINAL_HOLD_RESTART": 5
+              "LONG_DWELL_RESTART": 3,
+              "MULTI_DWELL_PULSE": 6,
+              "TERMINAL_HOLD_RESTART": 4
             }
           },
           "validation_count": 20,
@@ -22450,16 +22426,16 @@
             "fresh_vp_v2_l05_rtl_shape_18",
             "fresh_vp_v2_l04_rtl_shape_01",
             "fresh_vp_v2_l03_ltr_shape_17",
-            "fresh_vp_v2_l02_rtl_shape_17",
-            "fresh_vp_v2_l01_rtl_shape_04",
-            "fresh_vp_v2_l06_rtl_shape_03",
+            "fresh_vp_v2_l03_ltr_shape_07",
+            "fresh_vp_v2_l06_ltr_shape_12",
+            "fresh_vp_v2_l05_ltr_shape_09",
             "fresh_vp_v2_l05_rtl_shape_08",
-            "fresh_vp_v2_l04_rtl_shape_07",
-            "fresh_vp_v2_l03_rtl_shape_10",
-            "fresh_vp_v2_l02_ltr_shape_16",
-            "fresh_vp_v2_l01_rtl_shape_06",
-            "fresh_vp_v2_l06_rtl_shape_09",
-            "fresh_vp_v2_l05_rtl_shape_20",
+            "fresh_vp_v2_l05_ltr_shape_05",
+            "fresh_vp_v2_l04_ltr_shape_06",
+            "fresh_vp_v2_l03_rtl_shape_14",
+            "fresh_vp_v2_l06_ltr_shape_20",
+            "fresh_vp_v2_l05_ltr_shape_13",
+            "fresh_vp_v2_l04_ltr_shape_16",
             "fresh_vp_v2_l04_ltr_shape_14",
             "fresh_vp_v2_l03_rtl_shape_18",
             "fresh_vp_v2_l03_rtl_shape_06"
@@ -22475,23 +22451,23 @@
           ],
           "validation_balance": {
             "direction": {
-              "LEFT_TO_RIGHT": 12,
-              "RIGHT_TO_LEFT": 8
+              "LEFT_TO_RIGHT": 10,
+              "RIGHT_TO_LEFT": 10
             },
             "layout": {
-              "L01": 3,
-              "L02": 3,
-              "L03": 3,
-              "L04": 5,
-              "L05": 3,
-              "L06": 3
+              "L01": 5,
+              "L02": 1,
+              "L03": 1,
+              "L04": 4,
+              "L05": 4,
+              "L06": 5
             },
             "reporting_stratum": {
-              "ASYMMETRIC_RESTART": 5,
-              "DELAYED_BOUNDED_BURST": 2,
+              "ASYMMETRIC_RESTART": 4,
+              "DELAYED_BOUNDED_BURST": 3,
               "LONG_DWELL_RESTART": 2,
-              "MULTI_DWELL_PULSE": 5,
-              "TERMINAL_HOLD_RESTART": 6
+              "MULTI_DWELL_PULSE": 3,
+              "TERMINAL_HOLD_RESTART": 8
             }
           },
           "validation_count": 20,
@@ -22503,16 +22479,16 @@
             "fresh_vp_v2_l06_rtl_shape_13",
             "fresh_vp_v2_l05_ltr_shape_19",
             "fresh_vp_v2_l04_ltr_shape_20",
-            "fresh_vp_v2_l03_ltr_shape_07",
-            "fresh_vp_v2_l02_ltr_shape_14",
-            "fresh_vp_v2_l01_rtl_shape_18",
             "fresh_vp_v2_l06_ltr_shape_18",
-            "fresh_vp_v2_l05_ltr_shape_05",
-            "fresh_vp_v2_l04_ltr_shape_06",
-            "fresh_vp_v2_l03_rtl_shape_14",
-            "fresh_vp_v2_l02_ltr_shape_04",
-            "fresh_vp_v2_l01_rtl_shape_08",
+            "fresh_vp_v2_l01_rtl_shape_04",
+            "fresh_vp_v2_l01_rtl_shape_18",
+            "fresh_vp_v2_l01_ltr_shape_19",
+            "fresh_vp_v2_l06_ltr_shape_06",
+            "fresh_vp_v2_l05_ltr_shape_15",
             "fresh_vp_v2_l06_ltr_shape_16",
+            "fresh_vp_v2_l01_rtl_shape_06",
+            "fresh_vp_v2_l06_rtl_shape_09",
+            "fresh_vp_v2_l05_rtl_shape_20",
             "fresh_vp_v2_l05_rtl_shape_02",
             "fresh_vp_v2_l04_rtl_shape_05",
             "fresh_vp_v2_l04_rtl_shape_15"

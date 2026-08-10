@@ -6,14 +6,17 @@
     "test_guard.lock",
     "canonical_null_authority.json",
     "p5_balance_audit.json",
-    "p5_receipt.json"
+    "p5_receipt.json",
+    "p5a_exposure_feasibility_audit.json",
+    "p5a_receipt.json"
   ],
   "artifact_sha256": {
     "canonical_null_authority.json": "11e59a2b8df90fce407d72a9f7e25549e78f240c7c49f6dd6aa0995c242182ff",
-    "grouped_fold_authority.json": "15cd4e05f59f857afe80ec4e4b981c78cacf513a3699272a4cabc70d6b23d060",
-    "p5_balance_audit.json": "b72273b376ad25633a6140ba003d435c69d562f11ba03477e3c10964b9f6f6b4",
+    "grouped_fold_authority.json": "597bc7b401ca691897b843fc83120cc997a414b7a946819da4c3e99768e7728e",
+    "p5_balance_audit.json": "5cf9f1bd50f50d3d900ae8115069dac3d0ae9e700677c5bbb52e68f56eb49d71",
+    "p5a_exposure_feasibility_audit.json": "7927ade9286f76bf4718d39fc47c047db46b8cc602e92932fd75515bb36c8f46",
     "split_authority.json": "b39c81454ea18125c373fb3c777ac4c1668882c9c1ad188a7d0f20e0cab43de5",
-    "subset_schedule.json": "4406fc5c099cb041a5707088bc7d69ea522d605e8060477679f105a400031bd1",
+    "subset_schedule.json": "0d6f5e8394328915164bafea70468e6d26342a2eda9a1923e4d4ad745f494a48",
     "test_guard.lock": "0adc85a5d90eb92361ba0775d58a6ccc2eb674a8ae5ffd2e816b89d9d9b48ac5"
   },
   "best_k_ranking_subfolds_frozen": true,
@@ -25,6 +28,8 @@
   "grouped_selection_folds_frozen": true,
   "master_ordering_count": 20,
   "p4c_head": "9f2ba9c5796cd022c6efd83bba500f14c452f58f",
+  "p5a_repair_performed": true,
+  "p5a_selected_response": "CURRENT_SCHEDULE_EXPOSURE_IMBALANCE_AVOIDABLE",
   "p6_started": false,
   "primary_cohort_count": 120,
   "primary_cohort_version": "V2_ACCEPTED_REPAIRED_PRIMARY",
@@ -43,9 +48,36 @@
     "study_design.lock.json": "05b337e81ffea6c6d3bb3f92ca76b7774c980f9c462565f5c50a71ad9f629f41"
   },
   "safe_for_p6": true,
-  "schema_version": "large-scale-no-wall-p5-receipt-v0.1",
-  "status": "PASS_SPLIT_AND_LEARNING_CURVE_AUTHORITY_FROZEN",
+  "schema_version": "large-scale-no-wall-p5-receipt-v0.2",
+  "status": "PASS_SPLIT_AUTHORITY_AMENDED_BY_P5A_EXPOSURE_REPAIR",
   "test_guard_created": true,
   "total_subsets": 62,
+  "training_exposure_by_n": {
+    "100": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
+    },
+    "15": {
+      "maximum": 3,
+      "minimum": 2,
+      "range": 1
+    },
+    "40": {
+      "maximum": 5,
+      "minimum": 4,
+      "range": 1
+    },
+    "5": {
+      "maximum": 1,
+      "minimum": 0,
+      "range": 1
+    },
+    "70": {
+      "maximum": 6,
+      "minimum": 5,
+      "range": 1
+    }
+  },
   "training_pool_count": 102
 }
