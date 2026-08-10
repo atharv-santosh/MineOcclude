@@ -1,0 +1,211 @@
+{
+  "apply_only_after": "P4 accepted-120 cohort lock",
+  "artifact_id": "large-scale-no-wall-future-split-algorithm-v0.1",
+  "blocked_hash": "SHA256(decimal_seed|'|'|ordered identity fields), lowercase hex lexical order",
+  "constraints": {
+    "n100_distinct_omitted_pairs": 6,
+    "n5_layout_coverage": "exactly 5 of 6, one trajectory per represented layout",
+    "n5_omitted_layout_balance": "counts differ by at most one across 20 subsets",
+    "n_ge_15_all_six_layouts": true,
+    "no_actual_ids_before_p4": true,
+    "training_exposure_balance": "greedy outcome-blind cyclic-rotation selection minimizes projected exposure range, then squared imbalance; deterministic master-seed hash is the final tie-break"
+  },
+  "fixed_test": {
+    "algorithm": "For each layout exhaustively score 3-combinations by profile duplicates, direction imbalance, repeat imbalance, then SHA-256 tie-break; choose lexicographic minimum.",
+    "count": 18,
+    "per_layout": 3,
+    "seed": 2581732465984421845,
+    "viewpoint_balance": "singleton canonical viewpoint by design"
+  },
+  "frozen_at": "2026-08-10T05:39:37Z",
+  "master_orderings": {
+    "algorithm": "Create one blocked-hash base rank per layout, then for each master greedily choose one of the 17 cyclic rotations that minimizes projected cross-schedule exposure range and squared imbalance; the master seed breaks rotation-score ties. Interleave round-robin. master_index mod 6 is sixth so each N=5 prefix omits exactly that layout. Reserve one final member from each predeclared tail-pair layout at positions 100 and 101.",
+    "count": 20,
+    "n100_tail_pairs_first_six": [
+      [
+        "L01",
+        "L02"
+      ],
+      [
+        "L02",
+        "L03"
+      ],
+      [
+        "L03",
+        "L04"
+      ],
+      [
+        "L04",
+        "L05"
+      ],
+      [
+        "L05",
+        "L06"
+      ],
+      [
+        "L06",
+        "L01"
+      ]
+    ],
+    "n5_omitted_layout_counts": {
+      "L01": 4,
+      "L02": 4,
+      "L03": 3,
+      "L04": 3,
+      "L05": 3,
+      "L06": 3
+    },
+    "n5_omitted_layout_sequence": [
+      "L01",
+      "L02",
+      "L03",
+      "L04",
+      "L05",
+      "L06",
+      "L01",
+      "L02",
+      "L03",
+      "L04",
+      "L05",
+      "L06",
+      "L01",
+      "L02",
+      "L03",
+      "L04",
+      "L05",
+      "L06",
+      "L01",
+      "L02"
+    ],
+    "seeds": [
+      4579138070154465340,
+      1683890770919043788,
+      1281224412974909550,
+      6679926619938707094,
+      1432099573500141430,
+      3143511279039983950,
+      220658110739845671,
+      8837561672458987628,
+      4693719364018343339,
+      2029405460006281629,
+      919559877287802357,
+      3208290886233527059,
+      5429599259912843977,
+      7687080742680257442,
+      8268224048733222116,
+      961003721939259387,
+      267571620939586405,
+      8037182584598486888,
+      7727599579959201534,
+      6043688141271417128
+    ]
+  },
+  "outcome_blind": true,
+  "schema_version": "1.0",
+  "status": "FROZEN_ALGORITHM_NO_ACTUAL_MEMBERSHIPS",
+  "subset_schedules": [
+    {
+      "master_ids": [
+        "master_00",
+        "master_01",
+        "master_02",
+        "master_03",
+        "master_04",
+        "master_05",
+        "master_06",
+        "master_07",
+        "master_08",
+        "master_09",
+        "master_10",
+        "master_11",
+        "master_12",
+        "master_13",
+        "master_14",
+        "master_15",
+        "master_16",
+        "master_17",
+        "master_18",
+        "master_19"
+      ],
+      "membership_rule": "nested prefix of referenced master ordering",
+      "replicate_count": 20,
+      "training_size": 5
+    },
+    {
+      "master_ids": [
+        "master_00",
+        "master_01",
+        "master_02",
+        "master_03",
+        "master_04",
+        "master_05",
+        "master_06",
+        "master_07",
+        "master_08",
+        "master_09",
+        "master_10",
+        "master_11",
+        "master_12",
+        "master_13",
+        "master_14",
+        "master_15"
+      ],
+      "membership_rule": "nested prefix of referenced master ordering",
+      "replicate_count": 16,
+      "training_size": 15
+    },
+    {
+      "master_ids": [
+        "master_00",
+        "master_01",
+        "master_02",
+        "master_03",
+        "master_04",
+        "master_05",
+        "master_06",
+        "master_07",
+        "master_08",
+        "master_09",
+        "master_10",
+        "master_11"
+      ],
+      "membership_rule": "nested prefix of referenced master ordering",
+      "replicate_count": 12,
+      "training_size": 40
+    },
+    {
+      "master_ids": [
+        "master_00",
+        "master_01",
+        "master_02",
+        "master_03",
+        "master_04",
+        "master_05",
+        "master_06",
+        "master_07"
+      ],
+      "membership_rule": "nested prefix of referenced master ordering",
+      "replicate_count": 8,
+      "training_size": 70
+    },
+    {
+      "master_ids": [
+        "master_00",
+        "master_01",
+        "master_02",
+        "master_03",
+        "master_04",
+        "master_05"
+      ],
+      "membership_rule": "nested prefix of referenced master ordering",
+      "replicate_count": 6,
+      "training_size": 100
+    }
+  ],
+  "tie_breaking": "All ties use ascending trajectory_spec_id after the seeded SHA-256 key.",
+  "total_subsets": 62,
+  "training_pool": {
+    "count": 102,
+    "per_layout": 17
+  }
+}

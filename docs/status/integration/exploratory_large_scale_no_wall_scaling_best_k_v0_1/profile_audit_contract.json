@@ -1,0 +1,52 @@
+{
+  "activation_or_probe_inputs_forbidden": true,
+  "additional_validity_thresholds": {
+    "all_expected_model_frame_indices_present": true,
+    "all_layout_direction_profile_repeat_cells_present": true,
+    "all_target_profiles_finite": true,
+    "no_unplanned_clamp_plateau": true,
+    "target_variance_each_trajectory_gt": 0.0
+  },
+  "artifact_id": "large-scale-no-wall-profile-diversity-audit-contract-v0.1",
+  "distribution_audits": [
+    "start and end axis positions",
+    "finite target range and target variance overall/by layout",
+    "signed and absolute speed distributions",
+    "movement onset distributions",
+    "pause start/duration distributions",
+    "speed-change distributions",
+    "process-noise schedule uniqueness"
+  ],
+  "frozen_at": "2026-08-10T05:39:37Z",
+  "pairwise_profile_similarity": {
+    "high_similarity_threshold_inclusive": 0.95,
+    "maximum_fraction_high_similarity": 0.2,
+    "pairs": "all unordered off-diagonal accepted trajectory pairs",
+    "profile": "the complete 60-row x_true_blocks vector after per-trajectory finite-value validation; Pearson is invariant to affine start/range differences",
+    "statistic": "absolute Pearson correlation",
+    "zero_variance_policy": "reject trajectory before similarity audit"
+  },
+  "required_counts": {
+    "per_direction_per_layout": 10,
+    "per_layout": 20,
+    "per_layout_direction_profile_cell": 2,
+    "total": 120,
+    "unique_repeat_settings_per_cell": 2,
+    "viewpoint_strata": [
+      "CANONICAL_LAYOUT_POSE"
+    ]
+  },
+  "schema_version": "1.0",
+  "status": "FROZEN_FOR_P4",
+  "time_target_correlation": {
+    "aggregate_cancellation_is_sufficient": false,
+    "global_absolute_correlation_max": 0.1,
+    "report": [
+      "overall",
+      "by profile family",
+      "by direction"
+    ],
+    "required_companion_reporting": "family and direction strata plus pairwise profile similarity",
+    "variables": "normalized model_frame_idx versus x_true_blocks"
+  }
+}

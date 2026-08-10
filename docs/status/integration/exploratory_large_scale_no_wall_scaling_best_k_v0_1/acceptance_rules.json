@@ -1,0 +1,158 @@
+{
+  "acceptance_uses_decoding_outcome": false,
+  "artifact_id": "large-scale-no-wall-acceptance-rules-v0.1",
+  "classification_enum": [
+    "ACCEPTED",
+    "REJECTED_WITH_REASON"
+  ],
+  "forbidden_acceptance_inputs": [
+    "model activations",
+    "probe predictions",
+    "R2 or any decoding metric",
+    "token scores/rankings",
+    "future test performance"
+  ],
+  "frozen_at": "2026-08-10T05:39:37Z",
+  "maximum_attempts_per_trajectory_spec": 3,
+  "reason_codes": [
+    "REQUIRED_FILES_MISSING",
+    "SPEC_ID_OR_HASH_MISMATCH",
+    "ATTEMPT_METADATA_MISSING",
+    "LAYOUT_MISMATCH",
+    "NO_WALL_MISMATCH",
+    "CAMERA_MISMATCH",
+    "SHEEP_INITIAL_STATE_MISMATCH",
+    "DIRECTION_MISMATCH",
+    "MOTION_SCHEDULE_MISMATCH",
+    "ONSET_MISMATCH",
+    "PAUSE_OR_CHANGE_MISMATCH",
+    "FRAME_COUNT_MISMATCH",
+    "ELIGIBLE_ROW_SCHEDULE_MISMATCH",
+    "TIMESTAMP_DISCONTINUITY",
+    "ACCIDENTAL_RESET",
+    "UNINTENDED_TELEPORT",
+    "CAMERA_DRIFT",
+    "TARGET_RANGE_INVALID",
+    "MODEL_CONTEXT_METADATA_MISMATCH",
+    "UNCLEAN_TERMINATION",
+    "PROVENANCE_OR_CHECKSUM_MISSING",
+    "PRECHECK_FAILED",
+    "RESET_FAILED",
+    "LAYOUT_VERIFICATION_FAILED",
+    "CAMERA_VERIFICATION_FAILED",
+    "TARGET_RETENTION_FAILURE",
+    "CAPTURE_START_FAILED",
+    "CAPTURE_STOP_FAILED",
+    "MAX_ATTEMPTS_EXHAUSTED"
+  ],
+  "retry_semantics": "A retry changes only attempt_number and operational timestamps/paths; it executes byte-identical scientific spec content and spec_hash.",
+  "rules": [
+    {
+      "acceptance_predicate": "all expected artifact paths exist and are regular files",
+      "fields": "required_files",
+      "reason_code": "REQUIRED_FILES_MISSING"
+    },
+    {
+      "acceptance_predicate": "attempt metadata and every bound receipt match immutable spec",
+      "fields": "trajectory_spec_id/spec_hash",
+      "reason_code": "SPEC_ID_OR_HASH_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "attempt number, timestamps, controller version and exact commands exist",
+      "fields": "attempt_metadata",
+      "reason_code": "ATTEMPT_METADATA_MISSING"
+    },
+    {
+      "acceptance_predicate": "layout receipt matches spec",
+      "fields": "runtime_layout_id",
+      "reason_code": "LAYOUT_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "scene=NO_WALL and wall_present=false",
+      "fields": "scene/wall_present",
+      "reason_code": "NO_WALL_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "pose/FOV/focus/lock match and no unexplained drift",
+      "fields": "camera receipt and raw_actions",
+      "reason_code": "CAMERA_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "one valid tagged target at exact start xyz",
+      "fields": "target receipt",
+      "reason_code": "SHEEP_INITIAL_STATE_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "net commanded and realized direction matches spec, allowing only frozen noise",
+      "fields": "server_state x_true_blocks",
+      "reason_code": "DIRECTION_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "every tick matches signed speed segment and noise draw",
+      "fields": "server_state speed/noise fields",
+      "reason_code": "MOTION_SCHEDULE_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "first nonzero commanded-drift tick matches spec",
+      "fields": "server_state",
+      "reason_code": "ONSET_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "pause/change timing and duration match when applicable",
+      "fields": "server_state",
+      "reason_code": "PAUSE_OR_CHANGE_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "each stream contains exactly 60 dense rows/frames",
+      "fields": "frame_map/server_state/raw_actions/media",
+      "reason_code": "FRAME_COUNT_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "all model_frame_idx 0..59 are eligible; partial acceptance forbidden",
+      "fields": "strict visibility and preprocessing eligibility",
+      "reason_code": "ELIGIBLE_ROW_SCHEDULE_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "monotonic continuous tick-aligned timestamps within frozen tolerance",
+      "fields": "all streams",
+      "reason_code": "TIMESTAMP_DISCONTINUITY"
+    },
+    {
+      "acceptance_predicate": "no reset transition during recording",
+      "fields": "lifecycle/server_state",
+      "reason_code": "ACCIDENTAL_RESET"
+    },
+    {
+      "acceptance_predicate": "target motion equals schedule and clamp; no extra position jump",
+      "fields": "server_state",
+      "reason_code": "UNINTENDED_TELEPORT"
+    },
+    {
+      "acceptance_predicate": "canonical pose reasserted and camera deltas zero",
+      "fields": "server_state/raw_actions",
+      "reason_code": "CAMERA_DRIFT"
+    },
+    {
+      "acceptance_predicate": "every x_true_blocks value finite and inside layout lane",
+      "fields": "server_state",
+      "reason_code": "TARGET_RANGE_INVALID"
+    },
+    {
+      "acceptance_predicate": "checkpoint/preprocessing/context references equal study authority",
+      "fields": "capture metadata",
+      "reason_code": "MODEL_CONTEXT_METADATA_MISMATCH"
+    },
+    {
+      "acceptance_predicate": "one normal stop after model_frame_idx 59",
+      "fields": "lifecycle/provenance",
+      "reason_code": "UNCLEAN_TERMINATION"
+    },
+    {
+      "acceptance_predicate": "required hashes exist and verify",
+      "fields": "provenance/checksum manifest",
+      "reason_code": "PROVENANCE_OR_CHECKSUM_MISSING"
+    }
+  ],
+  "schema_version": "1.0",
+  "status": "FROZEN_PROSPECTIVE"
+}

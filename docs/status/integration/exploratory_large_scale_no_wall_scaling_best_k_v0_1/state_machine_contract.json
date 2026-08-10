@@ -1,0 +1,374 @@
+{
+  "acknowledgement_gaps": [
+    "CLIENT_FOV_ACK_UNAVAILABLE: server records fov_status=not_server_observable; P2 must add/consume a client-side FOV receipt.",
+    "SPEC_START_POSITION_HOOK_UNAVAILABLE: current start command chooses start position internally; P2 must bind exact spec start position.",
+    "PIECEWISE_MOTION_HOOK_UNAVAILABLE: current SheepController exposes constant driftV only; P2 must add immutable per-tick speed consumption and logging.",
+    "ASYNC_CAPTURE_QUEUE_DRAIN_ACK_UNAVAILABLE: current pilot uses a fixed sleep; P2 must use bounded file-stability polling and the declared timing fallback."
+  ],
+  "artifact_id": "large-scale-no-wall-state-machine-contract-v0.1",
+  "fixed_sleep_policy": "Forbidden except STOP_CAPTURE bounded asynchronous-write fallback; polling and hard timeout remain mandatory.",
+  "frozen_at": "2026-08-10T05:39:37Z",
+  "implementation_phase": "P2",
+  "schema_version": "1.0",
+  "states": [
+    {
+      "ack_mode": "LOCAL_PRECONDITION",
+      "authoritative_acknowledgement_source": "local process/filesystem checks plus current git/runtime identity",
+      "controller_responsibility": "P2 orchestrator",
+      "entry_preconditions": [
+        "immutable spec and hash loaded",
+        "attempt_number <= 3"
+      ],
+      "failure_reason_codes": [
+        "PRECHECK_FAILED"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "RESET_EPISODE"
+      ],
+      "retryable": true,
+      "state": "PRECHECK",
+      "success_predicate_or_implementation_hook": "all binaries, directories, ports, qualified Python, spec hash, and prior ledger state pass",
+      "timeout_policy": {
+        "on_timeout": "PRECHECK_FAILED",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "EpisodeLifecycle transition log; no separate structured reset API exists",
+      "controller_responsibility": "P2 orchestrator issues reset/start preparation",
+      "entry_preconditions": [
+        "PRECHECK passed",
+        "no capture active"
+      ],
+      "failure_reason_codes": [
+        "RESET_COMMAND_FAILED",
+        "RESET_TIMEOUT"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "WAIT_RESET_ACK"
+      ],
+      "retryable": true,
+      "state": "RESET_EPISODE",
+      "success_predicate_or_implementation_hook": "server reaches RESETTING for this attempt identity; P2 must bind trajectory_spec_id/spec_hash",
+      "timeout_policy": {
+        "on_timeout": "RESET_COMMAND_FAILED",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "EpisodeLifecycle READY transition plus targetstatus",
+      "controller_responsibility": "P2 orchestrator polls lifecycle and target state",
+      "entry_preconditions": [
+        "reset requested"
+      ],
+      "failure_reason_codes": [
+        "RESET_ACK_TIMEOUT",
+        "TARGET_RETENTION_INVALID"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "APPLY_LAYOUT"
+      ],
+      "retryable": true,
+      "state": "WAIT_RESET_ACK",
+      "success_predicate_or_implementation_hook": "READY for intended attempt with no retention problems",
+      "timeout_policy": {
+        "on_timeout": "RESET_ACK_TIMEOUT",
+        "seconds": 45
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "start command result and server lifecycle log",
+      "controller_responsibility": "server runtime applies immutable Layouts.java record and NO_WALL scene",
+      "entry_preconditions": [
+        "reset acknowledged"
+      ],
+      "failure_reason_codes": [
+        "LAYOUT_APPLY_REFUSED",
+        "UNKNOWN_LAYOUT"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "VERIFY_LAYOUT"
+      ],
+      "retryable": true,
+      "state": "APPLY_LAYOUT",
+      "success_predicate_or_implementation_hook": "requested runtime_layout_id and NO_WALL are accepted; no fallback layout",
+      "timeout_policy": {
+        "on_timeout": "LAYOUT_APPLY_REFUSED",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "observegeometry receipt",
+      "controller_responsibility": "P2 orchestrator requests read-only geometry receipt",
+      "entry_preconditions": [
+        "layout applied"
+      ],
+      "failure_reason_codes": [
+        "LAYOUT_RECEIPT_MISSING",
+        "LAYOUT_GEOMETRY_MISMATCH",
+        "WALL_PRESENT"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "SET_CAMERA"
+      ],
+      "retryable": true,
+      "state": "VERIFY_LAYOUT",
+      "success_predicate_or_implementation_hook": "receipt matches layout contract and proves wall absent, target lane/markers exact",
+      "timeout_policy": {
+        "on_timeout": "LAYOUT_RECEIPT_MISSING",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "server camera placement log; FOV is not server-observable",
+      "controller_responsibility": "server applies canonical layout pose and per-tick lock",
+      "entry_preconditions": [
+        "layout verified",
+        "one client connected"
+      ],
+      "failure_reason_codes": [
+        "CAMERA_SET_FAILED",
+        "CLIENT_FOV_ACK_UNAVAILABLE"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "VERIFY_CAMERA"
+      ],
+      "retryable": true,
+      "state": "SET_CAMERA",
+      "success_predicate_or_implementation_hook": "canonical feet xyz/yaw/pitch applied and lockcam on; P2 must capture client FOV=70 receipt",
+      "timeout_policy": {
+        "on_timeout": "CAMERA_SET_FAILED",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "observegeometry camera fields, xdotool focus assertion, future P2 client FOV receipt",
+      "controller_responsibility": "P2 verifies geometry receipt, client focus, and client metadata",
+      "entry_preconditions": [
+        "canonical camera requested"
+      ],
+      "failure_reason_codes": [
+        "CAMERA_POSE_MISMATCH",
+        "CAMERA_FOCUS_MISMATCH",
+        "CLIENT_FOV_ACK_UNAVAILABLE"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "SPAWN_OR_POSITION_SHEEP"
+      ],
+      "retryable": true,
+      "state": "VERIFY_CAMERA",
+      "success_predicate_or_implementation_hook": "pose exact, one Minecraft window focused, FOV receipt exact; fail closed if P2 does not add FOV receipt",
+      "timeout_policy": {
+        "on_timeout": "CAMERA_POSE_MISMATCH",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "server target retention log",
+      "controller_responsibility": "server target controller creates/positions exactly one tagged magenta sheep",
+      "entry_preconditions": [
+        "camera verified",
+        "NO_WALL layout verified"
+      ],
+      "failure_reason_codes": [
+        "TARGET_SPAWN_FAILED",
+        "SPEC_START_POSITION_HOOK_UNAVAILABLE"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "VERIFY_SHEEP_STATE"
+      ],
+      "retryable": true,
+      "state": "SPAWN_OR_POSITION_SHEEP",
+      "success_predicate_or_implementation_hook": "target spawn/reset operation completes for exact spec start position; explicit-start hook must be implemented by P2",
+      "timeout_policy": {
+        "on_timeout": "TARGET_SPAWN_FAILED",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "targetstatus and observegeometry target fields",
+      "controller_responsibility": "P2 polls targetstatus and compares pose",
+      "entry_preconditions": [
+        "target positioned"
+      ],
+      "failure_reason_codes": [
+        "TARGET_COUNT_MISMATCH",
+        "TARGET_IDENTITY_MISMATCH",
+        "TARGET_START_POSE_MISMATCH"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "ARM_CAPTURE"
+      ],
+      "retryable": true,
+      "state": "VERIFY_SHEEP_STATE",
+      "success_predicate_or_implementation_hook": "one valid adult tagged magenta no-AI target at exact start xyz",
+      "timeout_policy": {
+        "on_timeout": "TARGET_COUNT_MISMATCH",
+        "seconds": 20
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "server lifecycle READY plus capture provenance preamble",
+      "controller_responsibility": "P2 arms capture and binds immutable piecewise speed schedule",
+      "entry_preconditions": [
+        "layout/camera/target verified",
+        "noise schedule hash matches spec"
+      ],
+      "failure_reason_codes": [
+        "CAPTURE_ARM_FAILED",
+        "NOISE_SCHEDULE_MISMATCH",
+        "PIECEWISE_MOTION_HOOK_UNAVAILABLE"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "START_TRAJECTORY"
+      ],
+      "retryable": true,
+      "state": "ARM_CAPTURE",
+      "success_predicate_or_implementation_hook": "spec/hash/seed/noise/speed schedule bound; current constant-drift controller lacks piecewise hook and P2 must add it",
+      "timeout_policy": {
+        "on_timeout": "CAPTURE_ARM_FAILED",
+        "seconds": 30
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "episode recording started lifecycle log and first tick-sync packet",
+      "controller_responsibility": "server transitions after 60-tick warmup",
+      "entry_preconditions": [
+        "capture armed"
+      ],
+      "failure_reason_codes": [
+        "RECORDING_START_TIMEOUT",
+        "FIRST_TICK_MISSING"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "RUN_TRAJECTORY"
+      ],
+      "retryable": true,
+      "state": "START_TRAJECTORY",
+      "success_predicate_or_implementation_hook": "recording starts once for intended attempt and model_frame_idx 0 arrives",
+      "timeout_policy": {
+        "on_timeout": "RECORDING_START_TIMEOUT",
+        "seconds": 20
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "server_state, tick-sync, frame_map, raw_actions streams",
+      "controller_responsibility": "server advances exact speed/noise schedule; client captures each tick",
+      "entry_preconditions": [
+        "recording started"
+      ],
+      "failure_reason_codes": [
+        "TICK_GAP",
+        "MOTION_SCHEDULE_MISMATCH",
+        "CAMERA_DRIFT",
+        "TARGET_RETENTION_FAILURE",
+        "UNINTENDED_TELEPORT"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "STOP_CAPTURE"
+      ],
+      "retryable": true,
+      "state": "RUN_TRAJECTORY",
+      "success_predicate_or_implementation_hook": "exactly 60 continuous ticks follow spec with target/camera retention valid",
+      "timeout_policy": {
+        "on_timeout": "TICK_GAP",
+        "seconds": 10
+      }
+    },
+    {
+      "ack_mode": "ACK_MODE=BOUNDED_TIMING_FALLBACK",
+      "authoritative_acknowledgement_source": "episode ended log; current client exposes no queue-drained acknowledgement",
+      "controller_responsibility": "server ends episode and client drains asynchronous PNG queue",
+      "entry_preconditions": [
+        "60th tick emitted"
+      ],
+      "failure_reason_codes": [
+        "STOP_TIMEOUT",
+        "ASYNC_CAPTURE_DRAIN_TIMEOUT"
+      ],
+      "fixed_sleep_necessary": true,
+      "next_legal_states": [
+        "VALIDATE_CAPTURE"
+      ],
+      "retryable": true,
+      "state": "STOP_CAPTURE",
+      "success_predicate_or_implementation_hook": "end log observed, then bounded <=5s stability poll confirms 60 immutable frames and no new writes",
+      "timeout_policy": {
+        "on_timeout": "STOP_TIMEOUT",
+        "seconds": 10
+      }
+    },
+    {
+      "ack_mode": "DERIVED_VALIDATION",
+      "authoritative_acknowledgement_source": "capture package, provenance, checksums, streams, geometry and schedule receipts",
+      "controller_responsibility": "P2 applies acceptance_rules.json without model outcomes",
+      "entry_preconditions": [
+        "capture stopped and files stable"
+      ],
+      "failure_reason_codes": [
+        "CAPTURE_VALIDATION_FAILED"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "ACCEPT_OR_RETRY"
+      ],
+      "retryable": true,
+      "state": "VALIDATE_CAPTURE",
+      "success_predicate_or_implementation_hook": "every mandatory acceptance predicate passes",
+      "timeout_policy": {
+        "on_timeout": "CAPTURE_VALIDATION_FAILED",
+        "seconds": 120
+      }
+    },
+    {
+      "ack_mode": "AUTHORITATIVE_SIGNAL",
+      "authoritative_acknowledgement_source": "fsync-complete append-only ledger record",
+      "controller_responsibility": "P2 appends one ledger event and selects legal continuation",
+      "entry_preconditions": [
+        "validation classification complete"
+      ],
+      "failure_reason_codes": [
+        "LEDGER_APPEND_FAILED",
+        "MAX_ATTEMPTS_EXHAUSTED"
+      ],
+      "fixed_sleep_necessary": false,
+      "next_legal_states": [
+        "PRECHECK",
+        "RESET_EPISODE",
+        "TERMINAL_ACCEPTED",
+        "TERMINAL_BLOCKED"
+      ],
+      "retryable": false,
+      "state": "ACCEPT_OR_RETRY",
+      "success_predicate_or_implementation_hook": "ACCEPTED advances schedule; rejection retries identical spec if attempts remain; otherwise blocks",
+      "timeout_policy": {
+        "on_timeout": "LEDGER_APPEND_FAILED",
+        "seconds": 15
+      }
+    }
+  ],
+  "status": "FROZEN_PROSPECTIVE"
+}

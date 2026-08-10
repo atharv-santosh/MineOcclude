@@ -1,0 +1,181 @@
+{
+  "acknowledgement_gaps": [
+    "CLIENT_FOV_ACK_UNAVAILABLE: server records fov_status=not_server_observable; P2 must add/consume a client-side FOV receipt.",
+    "SPEC_START_POSITION_HOOK_UNAVAILABLE: current start command chooses start position internally; P2 must bind exact spec start position.",
+    "PIECEWISE_MOTION_HOOK_UNAVAILABLE: current SheepController exposes constant driftV only; P2 must add immutable per-tick speed consumption and logging.",
+    "ASYNC_CAPTURE_QUEUE_DRAIN_ACK_UNAVAILABLE: current pilot uses a fixed sleep; P2 must use bounded file-stability polling and the declared timing fallback."
+  ],
+  "artifact_id": "large-scale-no-wall-p1-receipt-v0.1",
+  "artifacts": [
+    {
+      "byte_size": 15588,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/study_design.json",
+      "sha256": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502"
+    },
+    {
+      "byte_size": 473,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/study_design.lock.json",
+      "sha256": "05b337e81ffea6c6d3bb3f92ca76b7774c980f9c462565f5c50a71ad9f629f41"
+    },
+    {
+      "byte_size": 689525,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/capture_campaign.json",
+      "sha256": "1605f4738840ea531e73fdcee19536d55652a1a05ddef704304adcb1bc41cdd6"
+    },
+    {
+      "byte_size": 482,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/capture_campaign.lock.json",
+      "sha256": "479471d468598d93d861767ffa83b3e0bd1c401dbd3310cfcb509ecf7ced22aa"
+    },
+    {
+      "byte_size": 13818,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/state_machine_contract.json",
+      "sha256": "65daf8c9ee4a07d3ef968342554f608c649fd41f30cccdccb1235ac39582b33c"
+    },
+    {
+      "byte_size": 5456,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/acceptance_rules.json",
+      "sha256": "a0cad748e97cfe02bf6e3f6a490f08905691a1e1bdcae19963b302ed4d768d1d"
+    },
+    {
+      "byte_size": 15403,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/seed_manifest.json",
+      "sha256": "d84df8833f8c16497e8ca5f3fcf58142ec1770fa8f3da1d61fc81b320b098d8f"
+    },
+    {
+      "byte_size": 5373,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/split_algorithm.json",
+      "sha256": "abce2236e6544356f2cb5d8913a8f29b03bb481487a89be548cf6f27e5f26b81"
+    },
+    {
+      "byte_size": 2799,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/prospective_null_authority.json",
+      "sha256": "56e3e6d67707cd90866d73743de96d6600d4c518031769e2518b515510c91dc9"
+    },
+    {
+      "byte_size": 1964,
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/profile_audit_contract.json",
+      "sha256": "be9a7a8df59807d0811f1a5a0a93687630da5e88de3af207664a07935c8eae94"
+    }
+  ],
+  "authority_resolution": {
+    "alpha_authority_verified": true,
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "eligible_rows_per_trajectory_f": 60,
+    "expected_source_frame_count": 60,
+    "f_common_across_all_layouts": true,
+    "full_feature_dimension": 688128,
+    "hidden_width": 2048,
+    "historical_l06_51_row_cause": "source frames 0..59 existed; strict visibility quarantined 51..59 only",
+    "layer": 4,
+    "token_count": 336,
+    "token_grid": [
+      14,
+      24
+    ]
+  },
+  "blocker": null,
+  "branch": "exploration/large-scale-no-wall-scaling-best-k-v0-1",
+  "campaign": {
+    "directions": [
+      "LEFT_TO_RIGHT",
+      "RIGHT_TO_LEFT"
+    ],
+    "non_identical_repeats": true,
+    "profile_families": [
+      "EARLY_CONSTANT",
+      "LATE_ONSET",
+      "FAST_TRANSIT",
+      "PAUSE_RESUME",
+      "TWO_SPEED"
+    ],
+    "repeats_per_cell": 2,
+    "specs_per_layout": 20,
+    "stage_cumulative": {
+      "A": 12,
+      "B": 48,
+      "C": 84,
+      "D": 120
+    },
+    "trajectory_spec_count": 120
+  },
+  "durable_s3_root": "s3://sagemaker-us-east-1-323206973672/mineocclude/",
+  "experiment_s3_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/",
+  "frozen_mvp_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+  "p0_head": "4c240be1d19f95c508dedb31567c933dda9187b5",
+  "phase": "P1",
+  "predecessor_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+  "qualified_python": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+  "recorded_at": "2026-08-10T05:39:37Z",
+  "safe_for_p2_after_commit_push": true,
+  "schema_version": "1.0",
+  "scope": {
+    "fresh_activations_extracted": 0,
+    "fresh_r2_computed": false,
+    "fresh_trajectories_collected": 0,
+    "frozen_mvp_modified": false,
+    "java_xvfb_provisioned": false,
+    "minecraft_started": false,
+    "p2_started": false,
+    "predecessor_modified": false
+  },
+  "status": "PASS",
+  "validation": {
+    "n100_distinct_omitted_pairs": 6,
+    "n5_omitted_counts": {
+      "L01": 4,
+      "L02": 4,
+      "L03": 3,
+      "L04": 3,
+      "L05": 3,
+      "L06": 3
+    },
+    "null_seed_count": 49,
+    "split_determinism": "PASS",
+    "stage_a_count": 12,
+    "status": "PASS",
+    "subset_count": 62,
+    "synthetic_derangement": "PASS",
+    "training_exposure_max": 22,
+    "training_exposure_min": 17,
+    "trajectory_spec_count": 120,
+    "unique_spec_hashes": 120,
+    "unique_spec_ids": 120
+  },
+  "validation_execution": {
+    "focused_tests": {
+      "command": "/home/sagemaker-user/.conda/envs/mineworld/bin/python -m pytest -q tests/diagnostics/test_large_scale_no_wall_p1_authority.py",
+      "result": "11 passed"
+    },
+    "format": {
+      "files": [
+        "scripts/build_large_scale_no_wall_p1_authority.py",
+        "tests/diagnostics/test_large_scale_no_wall_p1_authority.py"
+      ],
+      "formatter": "/opt/conda/bin/black 26.5.1",
+      "result": "PASS"
+    },
+    "generator_replay_check": "PASS",
+    "git_diff_check": "PASS",
+    "python_compile": {
+      "files": [
+        "scripts/build_large_scale_no_wall_p1_authority.py",
+        "tests/diagnostics/test_large_scale_no_wall_p1_authority.py"
+      ],
+      "interpreter": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+      "result": "PASS"
+    }
+  },
+  "viewpoint": {
+    "status": "PART_OF_LAYOUT_IDENTITY_FIXED_WITHIN_LAYOUT",
+    "strata": [
+      "CANONICAL_LAYOUT_POSE"
+    ],
+    "variation_within_layout": false
+  }
+}
