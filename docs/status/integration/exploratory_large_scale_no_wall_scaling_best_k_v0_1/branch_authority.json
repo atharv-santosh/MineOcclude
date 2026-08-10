@@ -1,0 +1,68 @@
+{
+  "artifact_id": "large-scale-no-wall-scaling-best-k-branch-authority-v0.1",
+  "schema_version": "1.0",
+  "recorded_at": "2026-08-10T05:25:49Z",
+  "status": "PASS",
+  "predecessor": {
+    "branch": "exploration/visible-position-resolution-v0-1",
+    "local_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+    "remote": "origin",
+    "remote_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+    "local_remote_sha_match": true,
+    "package_path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/"
+  },
+  "successor": {
+    "branch": "exploration/large-scale-no-wall-scaling-best-k-v0-1",
+    "branch_base_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+    "created_from_exact_predecessor_sha": true,
+    "package_path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/"
+  },
+  "frozen_mvp": {
+    "branch": "integration/mvp-final",
+    "local_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "remote": "origin",
+    "remote_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "local_remote_sha_match": true,
+    "modified": false
+  },
+  "durable_storage_authority": {
+    "resolution": "The literal common MineOcclude prefix in the three cited prior project authority records was selected; no bucket or project root was fabricated.",
+    "resolved_root": "s3://sagemaker-us-east-1-323206973672/mineocclude/",
+    "intended_experiment_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/",
+    "aws_account": "323206973672",
+    "aws_region": "us-east-1",
+    "bucket": "sagemaker-us-east-1-323206973672",
+    "environment_variable": {
+      "name": "MINEOCCLUDE_DURABLE_S3_ROOT",
+      "state_at_resolution": "UNSET"
+    },
+    "project_authority_evidence": [
+      {
+        "path": "docs/status/person_a_phase6_durable_destination_v0_1/durable_destination_record.json",
+        "byte_size": 2072,
+        "sha256": "a9ff37f6576b4407e48f0b89feedcba549b2e89213f90745096705dc8d650b82"
+      },
+      {
+        "path": "docs/status/person_a_phase6_input_transfer_verification_v0_1/transfer_verification_receipt.json",
+        "byte_size": 2616,
+        "sha256": "e423e640c7d43dc21e08b503adf5b4ade595b3f773ee63119f2c11afdb729090"
+      },
+      {
+        "path": "docs/status/person_a_phase6_live_runtime_infrastructure_v0_1/runtime_infrastructure_receipt.json",
+        "byte_size": 3553,
+        "sha256": "cd91ae2efd4be419faadaf88e0f2053adb057551d7a40cd51658ebd166293778"
+      }
+    ]
+  },
+  "scope_guards": {
+    "p0_only": true,
+    "minecraft_started": false,
+    "fresh_trajectories_collected": false,
+    "activations_extracted": false,
+    "fresh_r2_or_scientific_outcomes_computed": false,
+    "predecessor_files_modified": false,
+    "frozen_mvp_files_modified": false,
+    "merge_performed": false,
+    "tag_created": false
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "artifact_id": "large-scale-no-wall-scaling-best-k-p0-receipt-v0.1",
+  "schema_version": "1.0",
+  "recorded_at": "2026-08-10T05:27:30Z",
+  "phase": "P0",
+  "status": "PASS",
+  "goal": "Finalize predecessor authority and create successor branch.",
+  "git_authority": {
+    "predecessor_branch": "exploration/visible-position-resolution-v0-1",
+    "predecessor_local_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+    "predecessor_remote_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+    "predecessor_local_remote_sha_match": true,
+    "worktree_clean_before_successor_creation": true,
+    "successor_branch": "exploration/large-scale-no-wall-scaling-best-k-v0-1",
+    "successor_branch_base_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+    "created_from_exact_predecessor_sha": true,
+    "frozen_mvp_branch": "integration/mvp-final",
+    "frozen_mvp_local_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "frozen_mvp_remote_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "frozen_mvp_local_remote_sha_match": true
+  },
+  "predecessor_authority": {
+    "package_path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/",
+    "package_exists": true,
+    "critical_authority_files_present": true,
+    "critical_authority_files": [
+      {
+        "name": "final_adjudication.json",
+        "byte_size": 20603,
+        "sha256": "be8c3c2aa0b702f7f1abbbb1d6c509bda0b27d9e0cd59892137f829210a0ec8b"
+      },
+      {
+        "name": "provenance.json",
+        "byte_size": 27563,
+        "sha256": "fa95cb64261160720d768d38cc4fdf4177d10e4270ddf8d411b39c90d5941cae"
+      },
+      {
+        "name": "diagnostic_receipt.json",
+        "byte_size": 8479,
+        "sha256": "8afed324e634aff4ed59944e207dad2d956d8ee1725f593fe9741fee6f9bd0f5"
+      }
+    ],
+    "predecessor_science_rerun": false,
+    "broad_historical_tests_run": false
+  },
+  "python_environment": {
+    "executable": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+    "python_version": "3.10.20",
+    "numpy_version": "1.26.4",
+    "sklearn_version": "1.6.1",
+    "torch_version": "2.6.0+cu126",
+    "cuda_available_at_p0": true
+  },
+  "model_authority_inherited_from_predecessor_provenance": {
+    "source_path": "docs/status/integration/exploratory_visible_position_resolution_v0_1/provenance.json",
+    "mineworld_checkpoint": {
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+      "path_exists": true,
+      "byte_size": 3798736924,
+      "sha256_inherited_not_recomputed": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5"
+    },
+    "vae_checkpoint": {
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt",
+      "path_exists": true,
+      "byte_size": 1657555486,
+      "sha256_inherited_not_recomputed": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+    }
+  },
+  "durable_storage": {
+    "resolved_root": "s3://sagemaker-us-east-1-323206973672/mineocclude/",
+    "intended_experiment_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/",
+    "authority_resolution_record": "branch_authority.json",
+    "aws_identity": {
+      "account": "323206973672",
+      "arn": "arn:aws:sts::323206973672:assumed-role/AmazonSageMaker-ExecutionRole-20260724T124458/SageMaker"
+    },
+    "accessibility_check": {
+      "head_bucket_pass": true,
+      "bucket_region": "us-east-1",
+      "existing_mineocclude_prefix_list_pass": true,
+      "observed_existing_key": "mineocclude/phase6/person-a/mineocclude-run-ea6169430d693f8adcd16a23a62c4422/input/person-a-66-cell-preprocessed-frames-v0-2.tar"
+    },
+    "write_probe": {
+      "required_for_resolution": true,
+      "key": "mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/_p0_write_probe_1786339497682-138393551",
+      "content_length": 8,
+      "etag": "de2b14ae7499f90736fc4a92327553a5",
+      "server_side_encryption": "AES256",
+      "put_pass": true,
+      "head_object_pass": true,
+      "delete_pass": true,
+      "post_delete_absence_verified": true,
+      "historical_scientific_artifacts_modified": false
+    }
+  },
+  "storage_roots": {
+    "home": {
+      "path": "/home/sagemaker-user",
+      "available_bytes_at_check": 23593242624
+    },
+    "nvme": {
+      "path": "/mnt/sagemaker-nvme",
+      "available_bytes_at_check": 248101892096
+    }
+  },
+  "runtime_provisioning": {
+    "status": "DEFERRED_TO_P2",
+    "minecraft_server_directory": "/home/sagemaker-user/mineocclude-server",
+    "minecraft_server_directory_exists": true,
+    "minecraft_client_directory": "/home/sagemaker-user/mineocclude-client",
+    "minecraft_client_directory_exists": true,
+    "autonomous_pilot_script": "scripts/run_autonomous_pilot.py",
+    "autonomous_pilot_script_exists": true,
+    "provisioning_script": "scripts/provision_capture_runtime_sagemaker.sh",
+    "provisioning_script_exists": true,
+    "java_available_in_current_shell": false,
+    "xvfb_available_in_current_shell": false,
+    "java_xvfb_provisioning_deferred_to_p2": true,
+    "minecraft_started": false
+  },
+  "created_authority_artifacts": [
+    {
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/branch_authority.json",
+      "byte_size": 2866,
+      "sha256": "e4afd4924d1afb200aae45411945083f11f94670ec29505abf89813f6cfc1a2a"
+    },
+    {
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/predecessor_inventory.json",
+      "byte_size": 4878,
+      "sha256": "17dc9f77878b63750a7064e321f067f930461f04e6907fd609ba003e5cdbbbb9"
+    }
+  ],
+  "scope_confirmation": {
+    "p0_only": true,
+    "fresh_trajectories_collected": false,
+    "activations_extracted": false,
+    "fresh_r2_computed": false,
+    "fresh_scientific_outcomes_generated": false,
+    "predecessor_files_modified": false,
+    "frozen_mvp_files_modified": false,
+    "only_successor_package_created": true,
+    "merge_performed": false,
+    "tag_created": false,
+    "reset_clean_stash_or_force_push_performed": false
+  }
+}
