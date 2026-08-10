@@ -1,0 +1,20 @@
+{
+  "artifact_id": "large-scale-no-wall-p7a-cache-manifest-v0.1",
+  "durable_cache_change": true,
+  "full_float32_cache_materialized": false,
+  "p6_source_manifest_sha256": "a57be180a9054336dbe36d2ddaddbec2859e21d5b6a42dae5b25b1c276e2d5bb",
+  "p7_cache_manifest_sha256": "0aff9b16a9e37cb004ea9bdde8725e05f59205050545176cdf5463a437aad89d",
+  "reconstructable_cache_s3_upload_skipped": true,
+  "status": "LOCKED_FOR_P8",
+  "token_cache": {
+    "cache_sha256": "2cf40e7ad1f0fe5269b16c0d7e03ff486e3ffa00379f8acea5145829bff6cf90",
+    "dtype": "float16",
+    "durability": "RECONSTRUCTABLE_NVME_ONLY",
+    "lifetime": "retain through P8",
+    "maximum_measured_byte_count": 8422686848,
+    "maximum_measured_peak_host_bytes": 4110966784,
+    "path": "/mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p7_representation_solver_v0_1/training_tokens.token_major.f16.npy",
+    "recipe": "training pool [row,token,hidden] -> [token,row,hidden] float16",
+    "resume_behavior": "validate and reuse; rebuild only this reconstructable cache"
+  }
+}

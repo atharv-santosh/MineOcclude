@@ -1,0 +1,41 @@
+{
+  "adoption_basis": "material runtime reduction with exact numerical equivalence",
+  "artifact_id": "large-scale-no-wall-p7a-execution-budget-v0.1",
+  "bounded_parallelism": 1,
+  "cache_strategy": "training-only token-major float16 NVMe cache; reconstructable, not S3",
+  "device": {
+    "COARSE_2x6": "cuda:0",
+    "FULL_TOKEN_GRID": "cuda:0 summed bounded token kernels",
+    "GLOBAL_MEAN": "cuda:0",
+    "TOKEN_RANKING": "cuda:0 exact batched float64 smaller-space"
+  },
+  "expected_machine_runtime": {
+    "absolute_hours_saved": 19.072706876559508,
+    "estimated_cpu_dominant_seconds": 9427.831103297649,
+    "estimated_gpu_active_seconds": 79932.92522667933,
+    "new_seconds": 92704.73524438578,
+    "old_seconds": 161366.48,
+    "relative_reduction": 0.4255019056969838,
+    "speedup": 1.7406498122734502
+  },
+  "feature_chunk_size": 32768,
+  "frozen_before_fixed_test_outcomes": true,
+  "gpu_memory_ceiling_bytes": 21474836480,
+  "host_memory_ceiling_bytes": 15032385536,
+  "new_projection": {
+    "BEST_K_candidate_and_other_wide_solves": 9427.831103297649,
+    "COARSE": 2278.349843438482,
+    "FULL": 53811.044486012834,
+    "GLOBAL": 0.0,
+    "IO_cache_overhead": 3343.9789144088054,
+    "final_all_training_token_ranking": 4768.706179445602,
+    "nested_token_ranking": 19074.82471778241
+  },
+  "numerical_computation_dtype": "float64",
+  "p7_execution_budget_sha256": "ec9cf3c384fa3aec15029b55d6f649c9cb5ce8cf018f2a3245f49090607aeab2",
+  "resume_granularity": "subset_id/selection_fold/kernel_family/token_batch",
+  "staged_device_plan": "single hybrid environment; logical CPU/CUDA stages only because instance migration adds setup risk and no proven billing control",
+  "status": "LOCKED_FOR_P8",
+  "token_batch_size": 4,
+  "wide_kernel_token_batch_size": 16
+}

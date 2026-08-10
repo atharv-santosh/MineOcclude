@@ -1,0 +1,38 @@
+{
+  "adoption_threshold": 0.2,
+  "artifact_id": "large-scale-no-wall-p7a-execution-optimization-v0.1",
+  "artifacts": {
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/cache_manifest.p7a.json": "b031b56535b39c21630a1105b154a7b0a29ffd9f665a9fdab113ac2ca538ae5f",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/execution_budget.p7a.lock.json": "19660de8a39bd26bc96af303d6837c7176f8dd711fea20278da74eac7b45c82d",
+    "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/solver_benchmark.p7a.json": "8c6bfe5dd476c3ae89260ec8fe6dc240700f050e11ec35b39a0b496cac77d82d"
+  },
+  "batched_sufficient_statistics_optimized": true,
+  "blocker": null,
+  "execution_plan_changed": true,
+  "fixed_test_predictions_computed": false,
+  "fixed_test_scores_opened_at_optimization": false,
+  "fixed_test_targets_used": false,
+  "logical_budgets_unchanged": true,
+  "maximum_prediction_difference": 5.0071960799868975e-08,
+  "model_outcomes_used_for_optimization": false,
+  "p7_head": "00b5ee06e4fbb6c9b1868d46ed3551c152ff8e53",
+  "p7_scientific_authority_unchanged": true,
+  "p8_started": false,
+  "runner_version": "large-scale-no-wall-p7a-exact-execution-optimization-v0.1",
+  "safe_for_p8": true,
+  "scientific_authority_changed": false,
+  "selected_configuration": {
+    "n100_adjusted_runtime_seconds": 19.401607372420237,
+    "token_ranking": {
+      "batch_size": 4,
+      "device": "cuda:0",
+      "parallelism": 1
+    },
+    "wide_kernel": {
+      "batch_size": 16,
+      "device": "cuda:0",
+      "parallelism": 1
+    }
+  },
+  "status": "PASS_P7A_EXACT_EXECUTION_PLAN_OPTIMIZED"
+}
