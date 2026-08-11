@@ -1,0 +1,42 @@
+{
+  "artifact_id": "large-scale-no-wall-p9-receipt-v0.1",
+  "best_k_stability_sha256": "242c4c36d2d4647b9a6b51c42d12c42ab69e8f1ba694c55dd23484adba921aa9",
+  "blocker": null,
+  "deterministic_recomputation_passed": true,
+  "durable_objects": [
+    {
+      "byte_count": 472829,
+      "name": "best_k_stability.json",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p9_best_k_stability_v0_1/best_k_stability.json",
+      "sha256": "242c4c36d2d4647b9a6b51c42d12c42ab69e8f1ba694c55dd23484adba921aa9"
+    },
+    {
+      "byte_count": 123295,
+      "name": "token_selection_frequency.png",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p9_best_k_stability_v0_1/token_selection_frequency.png",
+      "sha256": "4f232d1671ba55a0a98d8403f8961bf954940ed7c5219e39f5bf7a64949d8770"
+    },
+    {
+      "byte_count": 193569,
+      "name": "token_stability_vs_n.png",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p9_best_k_stability_v0_1/token_stability_vs_n.png",
+      "sha256": "5ec94a397704beb952027b9d19668b48cc0c994e5b2cfaa1cbb0a2560a905831"
+    }
+  ],
+  "figure_sha256": {
+    "token_selection_frequency.png": "4f232d1671ba55a0a98d8403f8961bf954940ed7c5219e39f5bf7a64949d8770",
+    "token_stability_vs_n.png": "5ec94a397704beb952027b9d19668b48cc0c994e5b2cfaa1cbb0a2560a905831"
+  },
+  "p10_authorized_by_p9_validation": true,
+  "provenance_status": "PASS_TRAINING_ONLY_SELECTION",
+  "stability_adjudication": {
+    "authority_note": "Frozen Version 1.0 declares BEST-K/scaling stability descriptive and supplies no numeric stability threshold; no post-outcome threshold was added.",
+    "descriptive_result": "STABLE_AT_LARGE_N",
+    "n100_median_jaccard": 0.25,
+    "n100_median_kuncheva_realized_k": 1.0,
+    "n100_median_rank_spearman": 0.982419504849639,
+    "pass_fail_status": "NOT_APPLICABLE_DESCRIPTIVE_RULE",
+    "rule_id": "BEST_K_TOKEN_SELECTION_STABLE"
+  },
+  "status": "PASS_P9_COMPLETE_VALIDATED"
+}
