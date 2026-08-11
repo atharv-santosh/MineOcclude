@@ -1,26 +1,58 @@
-# Frozen P11 five-worker handoff
+# Frozen P11 distributed operational closure
 
-No distributed shard has been launched. P11 is paused after exact frozen seed index 2: 3/49 seeds and 12/196 jobs are independently validated and durable. The remaining original seed indices 3–48 are assigned whole-seed-only by frozen round-robin order.
+No distributed shard has been launched. P11 remains paused after original seed indices `0,1,2`: 3/49 seeds and 12/196 jobs are independently validated and durable. The original seed indices `3..48` remain assigned whole-seed-only by the frozen round-robin manifests.
 
-All workers must use branch `exploration/large-scale-no-wall-scaling-best-k-v0-1` at commit `173a3ca3e92ffe771d19911c15c006dba6acc934`. Each person follows their own `RUNME.md`; the procedures are identical apart from the signed manifest, mutable local paths, log, and durable S3 prefix.
+## Immutable authorities and checkout boundary
 
-## Shared scientific inputs
+- Scientific implementation: `173a3ca3e92ffe771d19911c15c006dba6acc934`.
+- Original immutable handoff: `c701eef7ef4042802c489748fb3f1c532d322cf2`.
+- Parent P11 manifest: `634720967cd8e23b2e9f0994981150768123018ef08a8f76ee9d8433f8886f87`.
+- Operational closure tooling: the exact `NEW_OPERATIONAL_HANDOFF_COMMIT` recorded in `P11_DISTRIBUTED_OPERATIONAL_CLOSURE_RECEIPT`.
 
-Each worker receives this small handoff plus exactly 240 protected P6 activation arrays (`9,968,056,320` bytes). The runner downloads only those arrays and verifies every SHA-256. It then reconstructs the token cache (`8,422,686,848` bytes, SHA `2cf40e7ad1f0fe5269b16c0d7e03ff486e3ffa00379f8acea5145829bff6cf90`) and COARSE cache (`707,788,928` bytes, SHA `4a1c9562a26416eb6b069baeeb9f1c73513f7306f30a7cfe54dd30efe7094bdf`) locally. Reserve at least `23,098,532,096` bytes; the preflight requires 24 GB free NVMe.
+The `173a3ca3..c701eef` Git range adds only `p11_distributed_handoff/`; it changes no scientific code. The old single-checkout guide was impossible because pulling the handoff produced HEAD `c701eef`, while every frozen shard manifest and `environment_preflight()` require the named branch at exact HEAD `173a3ca3`.
 
-Raw Minecraft captures, Minecraft/MineWorld runtime, new extraction, and P8/P9/P10 recomputation are neither needed nor authorized. Never copy AWS keys, session tokens, `.aws/credentials`, passwords, or SSH private keys. Each worker uses their own authorized AWS identity. If direct access is unavailable, transfer the same immutable 240-array set through an approved shared location.
+The tested deployment model uses two checkouts. A detached operational checkout at the exact closure commit supplies commands and handoff files. A separate scientific worktree stays on branch `exploration/large-scale-no-wall-scaling-best-k-v0-1` at exact HEAD `173a3ca3`. Bootstrap verifies that the common authority, all original shard manifests, and the authority bundle are byte-identical to `c701eef`; no moving branch HEAD is used.
 
-## Return authority
+Each worker runs the fresh bootstrap and exact commands in their own `RUNME.md`. The scientific preflight intentionally retains the exact branch/HEAD requirements; it also proves checkout separation and immutable handoff bytes.
 
-Each worker returns only their `p11_shard_<name>_return.tar.gz`, `package_upload_receipt.json`, immutable shard manifest/SHA, and durable URI. Do not return the P6 arrays or reconstructable caches.
+## Durable recovery and takeover
 
-## Final merge hard gate
+Every durable control snapshot binds worker, shard SHA, parent manifest SHA, durable prefix, exact control-file sizes/hashes, and validated job-result hashes. The snapshot is published only after each validated job directory. Full-loss restore downloads into a new staging root, rejects foreign or missing job keys, validates the complete ledger transition history and exact job identities, verifies the control receipt is unchanged throughout restoration, revalidates every restored result with frozen science, then atomically installs the original shard root. `--run --resume` skips those validated jobs and executes only unfinished original jobs.
 
-After extracting the five returned packages into isolated roots, the owner runs:
+The only supported takeover is whole-shard takeover. The original process must be proven stopped in an operator attestation. The replacement restores the same durable state and runs the same frozen shard manifest with `--resume`. The human may change; worker identity, shard SHA, durable prefix, job identities, and seed ownership may not. Partial-reassignment manifests and manual seed-list edits are unsupported.
+
+## Owner collection
+
+From the operational checkout, with the separate frozen scientific root installed by bootstrap:
+
+```bash
+export P11_OPERATIONAL_ROOT=/path/to/p11-owner/operational
+export P11_SCIENTIFIC_ROOT=/path/to/p11-owner/scientific
+cd "$P11_OPERATIONAL_ROOT"
+/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/collect_large_scale_no_wall_p11_returns.py \
+  --scientific-root "$P11_SCIENTIFIC_ROOT" \
+  --common-authority p11_distributed_handoff/common_authority.json \
+  --output-root /mnt/sagemaker-nvme/p11_merge_inputs
+```
+
+The collector reads each durable `package_upload_receipt.json`, validates worker/shard/parent/prefix plus package size/SHA, downloads the fixed package name, safely extracts without links/devices/traversal/duplicate members, revalidates all exact jobs, rejects cross-worker duplicates or foreign jobs, and creates exactly these five isolated directories:
+
+```text
+/mnt/sagemaker-nvme/p11_merge_inputs/me
+/mnt/sagemaker-nvme/p11_merge_inputs/alan
+/mnt/sagemaker-nvme/p11_merge_inputs/atharv
+/mnt/sagemaker-nvme/p11_merge_inputs/ayman
+/mnt/sagemaker-nvme/p11_merge_inputs/sahil
+```
+
+## Five-root gate and canonical aggregation
+
+Validation only:
 
 ```bash
 /home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/validate_large_scale_no_wall_p11_merge.py \
-  --common-authority /home/sagemaker-user/MineOcclude/p11_distributed_handoff/common_authority.json \
+  --scientific-root "$P11_SCIENTIFIC_ROOT" \
+  --common-authority p11_distributed_handoff/common_authority.json \
   --sequential-result-root /mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p11_prospective_derangement_null_v0_1 \
   --shard-result me=/mnt/sagemaker-nvme/p11_merge_inputs/me \
   --shard-result alan=/mnt/sagemaker-nvme/p11_merge_inputs/alan \
@@ -30,4 +62,21 @@ After extracting the five returned packages into isolated roots, the owner runs:
   --validate-only
 ```
 
-The validator hard-fails before aggregation unless all exact original 49 seeds / 196 jobs are present once, with four representations per seed, matching parent/study/P5/P6/P7/P10/fold/test/grid/null authority and BEST-K training-only provenance. It does not aggregate or calculate the final p-value.
+Canonical aggregation repeats that exact hard gate internally before writing anything. It then delegates to the frozen `build_result()` implementation, preserving `B=49` and `p=(1+count(null>=observed))/50`, creates a deterministic canonical package and receipt, and uploads both to the explicit durable URI:
+
+```bash
+/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/validate_large_scale_no_wall_p11_merge.py \
+  --scientific-root "$P11_SCIENTIFIC_ROOT" \
+  --common-authority p11_distributed_handoff/common_authority.json \
+  --sequential-result-root /mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p11_prospective_derangement_null_v0_1 \
+  --shard-result me=/mnt/sagemaker-nvme/p11_merge_inputs/me \
+  --shard-result alan=/mnt/sagemaker-nvme/p11_merge_inputs/alan \
+  --shard-result atharv=/mnt/sagemaker-nvme/p11_merge_inputs/atharv \
+  --shard-result ayman=/mnt/sagemaker-nvme/p11_merge_inputs/ayman \
+  --shard-result sahil=/mnt/sagemaker-nvme/p11_merge_inputs/sahil \
+  --aggregate \
+  --output-root /mnt/sagemaker-nvme/p11_canonical_distributed_aggregation \
+  --durable-output-uri s3://sagemaker-us-east-1-323206973672/mineocclude/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p11_prospective_derangement_null_v0_1/canonical_distributed_aggregation_v0_1/
+```
+
+The aggregation command hard-requires 49/49 original seeds, 196/196 original jobs, four representations per seed, and zero missing, extra/foreign, duplicate, or partial state. This operational closure does not interpret the scientific result.

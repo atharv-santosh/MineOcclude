@@ -7,17 +7,32 @@ import argparse
 import json
 import os
 import resource
+import shutil
 import statistics
 import subprocess
 import sys
 import tarfile
+import tempfile
 from collections import Counter, defaultdict
 from collections.abc import Mapping
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
-ROOT = Path(__file__).resolve().parents[1]
+OPERATIONAL_ROOT = Path(__file__).resolve().parents[1]
+
+
+def requested_scientific_root() -> Path:
+    """Resolve the frozen science checkout before importing scientific modules."""
+
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--scientific-root", type=Path)
+    known, _unknown = parser.parse_known_args()
+    configured = known.scientific_root or os.environ.get("MINEOCCLUDE_SCIENTIFIC_ROOT")
+    return Path(configured).resolve() if configured else OPERATIONAL_ROOT
+
+
+ROOT = requested_scientific_root()
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
@@ -37,6 +52,9 @@ P6_TRANSFER_BYTES = 9_968_056_320
 TOKEN_CACHE_BYTES = 8_422_686_848
 COARSE_CACHE_BYTES = 707_788_928
 MAX_ATTEMPTS = 2
+SCIENTIFIC_IMPLEMENTATION_COMMIT = "173a3ca3e92ffe771d19911c15c006dba6acc934"
+IMMUTABLE_HANDOFF_COMMIT = "c701eef7ef4042802c489748fb3f1c532d322cf2"
+CONTROL_RECEIPT_NAME = "durable_control_receipt.json"
 
 
 def now_utc() -> str:
@@ -111,14 +129,90 @@ def latest_ledger(path: Path) -> tuple[dict[str, dict[str, Any]], Counter[str], 
     return latest, Counter(event["state"] for event in latest.values()), attempts
 
 
-def validate_ledger_authority(shard: Mapping[str, Any], parent: Mapping[str, Any]) -> None:
-    ledger = Path(str(shard["ledger_path"]))
+def validate_ledger_authority(
+    shard: Mapping[str, Any], parent: Mapping[str, Any], ledger: Path | None = None
+) -> None:
+    ledger = ledger or Path(str(shard["ledger_path"]))
     allowed = {job["job_id"]: job for job in assigned_jobs(shard, parent)}
-    for event in read_jsonl(ledger):
+    events = read_jsonl(ledger)
+    seen_events: set[str] = set()
+    by_job: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for event in events:
         authority.require(event.get("job_id") in allowed, "foreign job in shard ledger")
         job = allowed[event["job_id"]]
         authority.require(event.get("identity_sha256") == job["identity_sha256"], "ledger identity mismatch")
         authority.require(int(event.get("seed_index", job["seed_index"])) == job["seed_index"], "ledger seed mismatch")
+        serialized = json.dumps(event, sort_keys=True, separators=(",", ":"))
+        authority.require(serialized not in seen_events, "duplicate ledger event")
+        seen_events.add(serialized)
+        by_job[event["job_id"]].append(event)
+    authority.require(set(by_job) == set(allowed), "ledger missing assigned job identity")
+    for job_id, history in by_job.items():
+        authority.require(
+            history[0].get("state") == "PENDING" and int(history[0].get("attempt", -1)) == 0,
+            f"ambiguous initial ledger state: {job_id}",
+        )
+        previous_state = "PENDING"
+        previous_attempt = 0
+        for event in history[1:]:
+            state = str(event.get("state"))
+            attempt = int(event.get("attempt", -1))
+            if previous_state in {"VALIDATED", "BLOCKED"}:
+                authority.require(False, f"event after terminal ledger state: {job_id}")
+            if state == "RUNNING":
+                authority.require(
+                    previous_state in {"PENDING", "FAILED_RETRYABLE"}
+                    and attempt == previous_attempt + 1,
+                    f"ambiguous RUNNING transition: {job_id}",
+                )
+            else:
+                authority.require(
+                    previous_state == "RUNNING"
+                    and state in {"VALIDATED", "FAILED_RETRYABLE", "BLOCKED"}
+                    and attempt == previous_attempt,
+                    f"ambiguous terminal/retry transition: {job_id}",
+                )
+            authority.require(0 <= attempt <= MAX_ATTEMPTS, f"foreign attempt count: {job_id}")
+            previous_state, previous_attempt = state, attempt
+
+
+def control_paths(shard: Mapping[str, Any], root: Path | None = None) -> list[Path]:
+    actual_root = root or Path(str(shard["local_result_root"]))
+    return [
+        actual_root / "shard_manifest.json",
+        actual_root / Path(str(shard["ledger_path"])).name,
+        actual_root / Path(str(shard["progress_path"])).name,
+    ]
+
+
+def durable_control_receipt(
+    shard: Mapping[str, Any], parent: Mapping[str, Any], root: Path | None = None
+) -> dict[str, Any]:
+    actual_root = root or Path(str(shard["local_result_root"]))
+    ledger = actual_root / Path(str(shard["ledger_path"])).name
+    validate_ledger_authority(shard, parent, ledger)
+    latest, _counts, _attempts = latest_ledger(ledger)
+    validated: dict[str, str] = {}
+    for job in assigned_jobs(shard, parent):
+        if latest[job["job_id"]]["state"] == "VALIDATED":
+            result_path = actual_root / "jobs" / job["job_id"] / "job_result.json"
+            authority.require(result_path.is_file(), f"validated job result absent: {job['job_id']}")
+            validated[job["job_id"]] = authority.sha256_file(result_path)
+    files = {
+        path.name: {"byte_count": path.stat().st_size, "sha256": authority.sha256_file(path)}
+        for path in control_paths(shard, actual_root)
+    }
+    return {
+        "artifact_id": "large-scale-no-wall-p11-durable-shard-control-v0.1",
+        "worker_name": shard["worker_name"],
+        "worker_slug": shard["worker_slug"],
+        "shard_manifest_sha": shard["shard_manifest_sha"],
+        "parent_p11_manifest_sha": shard["parent_p11_manifest_sha"],
+        "durable_output_prefix": shard["durable_output_prefix"],
+        "control_files": files,
+        "validated_jobs": validated,
+        "written_at": now_utc(),
+    }
 
 
 def initialize(shard: Mapping[str, Any], parent: Mapping[str, Any], shard_path: Path) -> None:
@@ -177,17 +271,23 @@ def write_progress(
     )
 
 
-def sync_control(shard: Mapping[str, Any]) -> None:
+def sync_control(shard: Mapping[str, Any], parent: Mapping[str, Any]) -> None:
     root = Path(str(shard["local_result_root"]))
-    paths = [root / "shard_manifest.json", Path(str(shard["ledger_path"])), Path(str(shard["progress_path"]))]
+    paths = control_paths(shard, root)
+    receipt_path = root / CONTROL_RECEIPT_NAME
+    write_json(receipt_path, durable_control_receipt(shard, parent, root))
     for path in paths:
         subprocess.run(
             ["aws", "s3", "cp", str(path), f"{p11.S3_URI}{path.name}", "--only-show-errors"],
             check=True,
         )
+    subprocess.run(
+        ["aws", "s3", "cp", str(receipt_path), f"{p11.S3_URI}{CONTROL_RECEIPT_NAME}", "--only-show-errors"],
+        check=True,
+    )
 
 
-def sync_job(shard: Mapping[str, Any], job_id: str) -> None:
+def sync_job(shard: Mapping[str, Any], parent: Mapping[str, Any], job_id: str) -> None:
     subprocess.run(
         [
             "aws", "s3", "sync", str(p11.JOB_ROOT / job_id),
@@ -195,7 +295,7 @@ def sync_job(shard: Mapping[str, Any], job_id: str) -> None:
         ],
         check=True,
     )
-    sync_control(shard)
+    sync_control(shard, parent)
 
 
 def restore_job(job_id: str) -> None:
@@ -204,6 +304,192 @@ def restore_job(job_id: str) -> None:
         ["aws", "s3", "sync", f"{p11.S3_URI}jobs/{job_id}/", str(p11.JOB_ROOT / job_id), "--only-show-errors"],
         check=True,
     )
+
+
+class DurableTransport(Protocol):
+    def download_file(self, relative: str, destination: Path) -> None: ...
+    def download_tree(self, relative: str, destination: Path) -> None: ...
+    def list_keys(self, relative_prefix: str) -> list[str]: ...
+
+
+class S3DurableTransport:
+    def __init__(self, shard: Mapping[str, Any]) -> None:
+        self.bucket = p11.p8.S3_BUCKET
+        self.prefix = str(shard["durable_output_prefix"]).strip("/")
+        self.uri = f"s3://{self.bucket}/{self.prefix}/"
+
+    def download_file(self, relative: str, destination: Path) -> None:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            ["aws", "s3", "cp", f"{self.uri}{relative}", str(destination), "--only-show-errors"],
+            check=True,
+        )
+
+    def download_tree(self, relative: str, destination: Path) -> None:
+        destination.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            ["aws", "s3", "sync", f"{self.uri}{relative.rstrip('/')}/", str(destination), "--only-show-errors"],
+            check=True,
+        )
+
+    def list_keys(self, relative_prefix: str) -> list[str]:
+        prefix = f"{self.prefix}/{relative_prefix.lstrip('/')}"
+        completed = subprocess.run(
+            [
+                "aws", "s3api", "list-objects-v2", "--bucket", self.bucket,
+                "--prefix", prefix, "--output", "json",
+            ],
+            check=True, capture_output=True, text=True,
+        )
+        document = json.loads(completed.stdout)
+        authority.require(not document.get("IsTruncated"), "durable job listing is truncated/ambiguous")
+        marker = f"{self.prefix}/"
+        keys = [str(item["Key"]) for item in document.get("Contents", [])]
+        authority.require(len(keys) == len(set(keys)), "duplicate durable object key")
+        authority.require(all(key.startswith(marker) for key in keys), "foreign durable object prefix")
+        return [key[len(marker):] for key in keys]
+
+
+def validate_control_receipt(receipt: Mapping[str, Any], shard: Mapping[str, Any]) -> None:
+    authority.require(
+        receipt.get("artifact_id") == "large-scale-no-wall-p11-durable-shard-control-v0.1",
+        "foreign durable control receipt",
+    )
+    for key in (
+        "worker_name", "worker_slug", "shard_manifest_sha", "parent_p11_manifest_sha",
+        "durable_output_prefix",
+    ):
+        authority.require(receipt.get(key) == shard.get(key), f"durable control {key} mismatch")
+    expected_names = {path.name for path in control_paths(shard)}
+    authority.require(set(receipt.get("control_files", {})) == expected_names, "durable control file set mismatch")
+    validated = receipt.get("validated_jobs", {})
+    authority.require(isinstance(validated, dict), "ambiguous validated job map")
+    authority.require(
+        set(validated) <= set(shard["exact_original_job_ids"]), "foreign job in durable control receipt"
+    )
+
+
+def validate_restored_state(
+    shard: Mapping[str, Any], parent: Mapping[str, Any], root: Path, receipt: Mapping[str, Any]
+) -> None:
+    validate_control_receipt(receipt, shard)
+    for path in control_paths(shard, root):
+        claim = receipt["control_files"][path.name]
+        authority.require(path.is_file(), f"restored control file absent: {path.name}")
+        authority.require(path.stat().st_size == int(claim["byte_count"]), f"restored control size mismatch: {path.name}")
+        authority.require(authority.sha256_file(path) == claim["sha256"], f"restored control hash mismatch: {path.name}")
+    authority.require(read_json(root / "shard_manifest.json") == dict(shard), "restored shard manifest mismatch")
+    ledger = root / Path(str(shard["ledger_path"])).name
+    validate_ledger_authority(shard, parent, ledger)
+    latest, counts, _attempts = latest_ledger(ledger)
+    expected_validated = {
+        job_id for job_id, event in latest.items() if event["state"] == "VALIDATED"
+    }
+    authority.require(
+        set(receipt["validated_jobs"]) == expected_validated,
+        "validated jobs disagree between restored ledger and control receipt",
+    )
+    progress = read_json(root / Path(str(shard["progress_path"])).name)
+    authority.require(progress.get("worker_name") == shard["worker_name"], "restored progress worker mismatch")
+    authority.require(progress.get("shard_manifest_sha") == shard["shard_manifest_sha"], "restored progress shard mismatch")
+    authority.require(int(progress.get("validated_jobs", -1)) == counts["VALIDATED"], "restored progress count mismatch")
+
+
+def validate_takeover_attestation(
+    path: Path, shard: Mapping[str, Any], operator_name: str
+) -> dict[str, Any]:
+    document = read_json(path)
+    authority.require(document.get("process_proven_stopped") is True, "original process is not proven stopped")
+    authority.require(document.get("original_worker_name") == shard["worker_name"], "takeover worker mismatch")
+    authority.require(document.get("shard_manifest_sha") == shard["shard_manifest_sha"], "takeover shard mismatch")
+    authority.require(document.get("durable_output_prefix") == shard["durable_output_prefix"], "takeover prefix mismatch")
+    authority.require(document.get("replacement_operator") == operator_name, "takeover operator mismatch")
+    authority.require(bool(document.get("observed_stopped_at")), "takeover stop observation absent")
+    return document
+
+
+def restore_durable_state(
+    shard: Mapping[str, Any],
+    parent: Mapping[str, Any],
+    *,
+    operator_name: str,
+    takeover_attestation: Path | None = None,
+    transport: DurableTransport | None = None,
+) -> dict[str, Any]:
+    """Restore one exact original shard after total local mutable-state loss."""
+
+    configure_namespace(shard)
+    root = Path(str(shard["local_result_root"]))
+    authority.require(bool(operator_name.strip()), "restoring operator name required")
+    authority.require(not root.exists(), "restore target already exists; refusing ambiguous merge")
+    attestation = None
+    if takeover_attestation is not None:
+        attestation = validate_takeover_attestation(takeover_attestation, shard, operator_name)
+    durable = transport or S3DurableTransport(shard)
+    root.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=f".{shard['worker_slug']}.restore-", dir=root.parent))
+    first_receipt = staging / CONTROL_RECEIPT_NAME
+    installed = False
+    try:
+        durable.download_file(CONTROL_RECEIPT_NAME, first_receipt)
+        receipt = read_json(first_receipt)
+        validate_control_receipt(receipt, shard)
+        for name in receipt["control_files"]:
+            durable.download_file(name, staging / name)
+        validated_jobs = set(receipt["validated_jobs"])
+        keys = durable.list_keys("jobs/")
+        observed_jobs: set[str] = set()
+        for key in keys:
+            parts = Path(key).parts
+            authority.require(len(parts) >= 3 and parts[0] == "jobs", "ambiguous durable job key")
+            observed_jobs.add(parts[1])
+        authority.require(observed_jobs == validated_jobs, "missing or foreign durable jobs")
+        for job_id in sorted(validated_jobs):
+            durable.download_tree(f"jobs/{job_id}", staging / "jobs" / job_id)
+        second_receipt = staging / f".{CONTROL_RECEIPT_NAME}.stable"
+        durable.download_file(CONTROL_RECEIPT_NAME, second_receipt)
+        authority.require(
+            authority.sha256_file(first_receipt) == authority.sha256_file(second_receipt),
+            "durable control changed during restoration; state is ambiguous",
+        )
+        validate_restored_state(shard, parent, staging, receipt)
+        jobs = {job["job_id"]: job for job in assigned_jobs(shard, parent)}
+        for job_id, expected_sha in receipt["validated_jobs"].items():
+            result_path = staging / "jobs" / job_id / "job_result.json"
+            authority.require(authority.sha256_file(result_path) == expected_sha, f"restored result hash mismatch: {job_id}")
+        second_receipt.unlink()
+        os.replace(staging, root)
+        installed = True
+        configure_namespace(shard)
+        for job_id in receipt["validated_jobs"]:
+            validate_result(jobs[job_id])
+    except BaseException:
+        if installed and root.exists() and not staging.exists():
+            os.replace(root, staging)
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
+    configure_namespace(shard)
+    restoration = {
+        "artifact_id": "large-scale-no-wall-p11-durable-restoration-v0.1",
+        "status": "PASS_EXACT_ORIGINAL_SHARD_RESTORED_FOR_RESUME",
+        "worker_name": shard["worker_name"],
+        "shard_manifest_sha": shard["shard_manifest_sha"],
+        "parent_p11_manifest_sha": shard["parent_p11_manifest_sha"],
+        "durable_output_prefix": shard["durable_output_prefix"],
+        "restoring_operator": operator_name,
+        "takeover": attestation is not None,
+        "process_stopped_attestation_sha256": (
+            authority.sha256_file(takeover_attestation) if takeover_attestation else None
+        ),
+        "restored_control_sha256": {
+            name: claim["sha256"] for name, claim in receipt["control_files"].items()
+        },
+        "restored_validated_job_count": len(receipt["validated_jobs"]),
+        "restored_at": now_utc(),
+        "next_action": "run the same frozen shard manifest with --run --resume",
+    }
+    write_json(root / "restoration_receipt.json", restoration)
+    return restoration
 
 
 def validate_result(job: Mapping[str, Any]) -> dict[str, Any]:
@@ -236,6 +522,7 @@ def run_shard(
     p11.validate_manifest(require_p10_complete=True)
     p11.p10.ensure_coarse_cache(full_hash=True)
     initialize(shard, parent, shard_path)
+    sync_control(shard, parent)
     latest, _, attempts = latest_ledger(Path(str(shard["ledger_path"])))
     jobs_requiring_execution = set(resume_job_ids(shard, parent, latest))
     for job in assigned_jobs(shard, parent):
@@ -246,7 +533,7 @@ def run_shard(
             except Exception:  # noqa: BLE001 - exact frozen validator drives S3 restore
                 restore_job(job["job_id"])
                 validate_result(job)
-            sync_job(shard, job["job_id"])
+            sync_job(shard, parent, job["job_id"])
             continue
         if event["state"] == "RUNNING":
             append_jsonl(
@@ -271,7 +558,7 @@ def run_shard(
                 },
             )
             write_progress(shard, parent, current_job=job["job_id"])
-            sync_control(shard)
+            sync_control(shard, parent)
             log_path = p11.RESULT_ROOT / "attempt_logs" / f"{job['job_id']}__attempt_{attempt}.log"
             log_path.parent.mkdir(parents=True, exist_ok=True)
             with log_path.open("w", encoding="utf-8") as log:
@@ -280,6 +567,7 @@ def run_shard(
                         str(QUALIFIED_PYTHON), str(Path(__file__).resolve()),
                         "--shard-manifest", str(shard_path.resolve()),
                         "--common-authority", str(common_path.resolve()),
+                        "--scientific-root", str(ROOT),
                         "--worker", job["job_id"],
                     ],
                     cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, text=True, check=False,
@@ -302,7 +590,7 @@ def run_shard(
                         },
                     )
                     write_progress(shard, parent, current_job=None)
-                    sync_job(shard, job["job_id"])
+                    sync_job(shard, parent, job["job_id"])
                     succeeded = True
             else:
                 failure = f"worker exit {completed.returncode}; log={log_path}"
@@ -318,7 +606,7 @@ def run_shard(
                     },
                 )
                 write_progress(shard, parent, current_job=None)
-                sync_control(shard)
+                sync_control(shard, parent)
                 authority.require(state != "BLOCKED", f"P11 shard job blocked: {job['job_id']}")
         latest, _, _ = latest_ledger(Path(str(shard["ledger_path"])))
     validate_complete(shard, parent)
@@ -361,6 +649,7 @@ def package_upload(shard: Mapping[str, Any], parent: Mapping[str, Any]) -> dict[
             archive.add(path, arcname=path.relative_to(root), recursive=True)
     package_receipt = {
         **receipt,
+        "durable_output_prefix": shard["durable_output_prefix"],
         "package_path": str(package),
         "package_byte_count": package.stat().st_size,
         "package_sha256": authority.sha256_file(package),
@@ -427,19 +716,71 @@ def acquire_inputs() -> dict[str, Any]:
     }
 
 
-def environment_preflight(shard: Mapping[str, Any]) -> dict[str, Any]:
+def immutable_handoff_paths() -> list[str]:
+    paths = [
+        "p11_distributed_handoff/common_authority.json",
+        "p11_distributed_handoff/authority_bundle.sha256",
+    ]
+    paths.extend(
+        f"p11_distributed_handoff/{slug}/shard_manifest.json" for _worker, slug, _shard in authority.WORKERS
+    )
+    paths.extend(
+        f"p11_distributed_handoff/p11_shard_{slug}.json" for _worker, slug, _shard in authority.WORKERS
+    )
+    listed = subprocess.check_output(
+        ["git", "ls-tree", "-r", "--name-only", IMMUTABLE_HANDOFF_COMMIT, "--", "p11_distributed_handoff/authority_bundle"],
+        cwd=OPERATIONAL_ROOT, text=True,
+    ).splitlines()
+    return paths + listed
+
+
+def prove_immutable_handoff() -> None:
+    for relative in immutable_handoff_paths():
+        path = OPERATIONAL_ROOT / relative
+        authority.require(path.is_file(), f"immutable handoff path absent: {relative}")
+        frozen = subprocess.check_output(
+            ["git", "show", f"{IMMUTABLE_HANDOFF_COMMIT}:{relative}"], cwd=OPERATIONAL_ROOT
+        )
+        authority.require(path.read_bytes() == frozen, f"immutable handoff authority changed: {relative}")
+
+
+def validate_bootstrap_receipt(path: Path, shard: Mapping[str, Any]) -> dict[str, Any]:
+    document = read_json(path)
+    authority.require(document.get("status") == "PASS_FRESH_WORKER_BOOTSTRAP", "bootstrap did not pass")
+    authority.require(document.get("scientific_implementation_commit") == SCIENTIFIC_IMPLEMENTATION_COMMIT, "bootstrap science authority mismatch")
+    authority.require(document.get("immutable_handoff_commit") == IMMUTABLE_HANDOFF_COMMIT, "bootstrap handoff authority mismatch")
+    authority.require(document.get("worker_slug") == shard["worker_slug"], "bootstrap worker mismatch")
+    authority.require(Path(document["scientific_root"]).resolve() == ROOT, "bootstrap science path mismatch")
+    authority.require(Path(document["operational_root"]).resolve() == OPERATIONAL_ROOT, "bootstrap operational path mismatch")
+    operational_commit = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=OPERATIONAL_ROOT, text=True
+    ).strip()
+    authority.require(document.get("operational_handoff_commit") == operational_commit, "bootstrap operational commit mismatch")
+    return document
+
+
+def environment_preflight(
+    shard: Mapping[str, Any], bootstrap_receipt: Path | None = None
+) -> dict[str, Any]:
     import torch
 
     branch = subprocess.check_output(["git", "branch", "--show-current"], cwd=ROOT, text=True).strip()
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    authority.require(ROOT != OPERATIONAL_ROOT, "scientific and operational checkouts must be separate")
     authority.require(branch == shard["repository_branch"], "wrong repository branch")
     authority.require(commit == shard["implementation_commit_sha"], "wrong implementation commit")
+    authority.require(commit == SCIENTIFIC_IMPLEMENTATION_COMMIT, "unexpected scientific implementation authority")
+    prove_immutable_handoff()
+    bootstrap = validate_bootstrap_receipt(bootstrap_receipt, shard) if bootstrap_receipt else None
     authority.require(Path(sys.executable).resolve() == QUALIFIED_PYTHON.resolve(), "wrong qualified Python")
     authority.require(torch.cuda.is_available(), "CUDA unavailable")
     free_disk = os.statvfs("/mnt/sagemaker-nvme").f_bavail * os.statvfs("/mnt/sagemaker-nvme").f_frsize
     authority.require(free_disk >= 24_000_000_000, "less than 24 GB free NVMe")
     return {
         "status": "PASS", "branch": branch, "commit": commit, "python": sys.executable,
+        "scientific_root": str(ROOT), "operational_root": str(OPERATIONAL_ROOT),
+        "immutable_handoff_commit": IMMUTABLE_HANDOFF_COMMIT,
+        "operational_handoff_commit": None if bootstrap is None else bootstrap["operational_handoff_commit"],
         "numpy": np.__version__, "torch": torch.__version__, "cuda": torch.version.cuda,
         "gpu_name": torch.cuda.get_device_name(0),
         "gpu_total_bytes": torch.cuda.get_device_properties(0).total_memory,
@@ -506,27 +847,89 @@ def handoff_readme(slug: str, worker: str, shard: Mapping[str, Any], common: Map
     python = str(QUALIFIED_PYTHON)
     runner = "scripts/run_large_scale_no_wall_p11_shard.py"
     log = str(shard["log_path"])
-    text = f"""# P11 shard handoff: {worker}\n\nThis shard is frozen to {shard['expected_seed_count']} whole seeds / {shard['expected_job_count']} jobs. Do not edit the manifests. Do not share AWS or SSH credentials. Authenticate with your own authorized environment.\n\n## 1. Repository\n\n```bash\ngit fetch origin\ngit checkout {shard['repository_branch']}\ngit checkout {shard['implementation_commit_sha']}\ngit status --short --branch\n```\n\n## 2. Install the small authority bundle\n\nFrom the repository root after receiving the handoff directory:\n\n```bash\ncp p11_distributed_handoff/authority_bundle/* docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/\nsha256sum -c p11_distributed_handoff/authority_bundle.sha256\n```\n\n## 3. Environment preflight\n\n```bash\n{python} {runner} --shard-manifest {manifest} --common-authority {common_path} --environment-preflight\n```\n\nRequires the qualified `mineworld` Python, CUDA, one comparable GPU, and at least 24 GB free under `/mnt/sagemaker-nvme`.\n\n## 4. Acquire only P6 activations\n\n```bash\nmkdir -p /mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p6_layer4_activations_v0_1\naws s3 sync {P6_S3_PREFIX} /mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/p6_layer4_activations_v0_1/ --only-show-errors\n```\n\nThis is {P6_TRANSFER_BYTES} bytes of immutable scientific input. It replaces raw captures, Minecraft/MineWorld, and P8/P9/P10 recomputation. If your AWS identity cannot read it, request the same immutable prefix through an approved shared location; never request credentials.\n\n## 5. Reconstruct cheap caches and verify hashes\n\n```bash\n{python} {runner} --reconstruct-caches\n```\n\nExpected token cache: `{authority.TOKEN_CACHE_SHA}` ({TOKEN_CACHE_BYTES} bytes). Expected COARSE cache: `{authority.COARSE_CACHE_SHA}` ({COARSE_CACHE_BYTES} bytes).\n\n## 6. Validate the frozen shard\n\n```bash\n{python} {runner} --shard-manifest {manifest} --common-authority {common_path} --validate-shard\n```\n\n## 7. Future detached launch (do not run until the owner approves)\n\n```bash\nnohup setsid {python} {runner} --shard-manifest {manifest} --common-authority {common_path} --run --resume </dev/null >{log} 2>&1 &\n```\n\n## 8. Read-only status/watchdog\n\n```bash\nwatch -n 600 '{python} {runner} --shard-manifest {manifest} --common-authority {common_path} --status'\n```\n\n## 9. Completion validation\n\n```bash\n{python} {runner} --shard-manifest {manifest} --common-authority {common_path} --validate-complete\n```\n\nThis hard-requires {shard['expected_seed_count']}/{shard['expected_seed_count']} seeds, {shard['expected_job_count']}/{shard['expected_job_count']} jobs, and zero missing, duplicate, blocked, retryable, or running jobs.\n\n## 10. Durable package/upload\n\n```bash\n{python} {runner} --shard-manifest {manifest} --common-authority {common_path} --package-upload\n```\n\nReturn the small `p11_shard_{slug}_return.tar.gz`, `package_upload_receipt.json`, shard manifest/SHA, and the durable S3 URI to the owner. Do not return P6 activations or reconstructable token/COARSE caches.\n"""
-    old = (
-        "mkdir -p /mnt/sagemaker-nvme/mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/"
-        "p6_layer4_activations_v0_1\naws s3 sync "
-        f"{P6_S3_PREFIX} /mnt/sagemaker-nvme/"
-        "mineocclude_large_scale_no_wall_scaling_best_k_v0_1_v2/"
-        "p6_layer4_activations_v0_1/ --only-show-errors"
-    )
-    text = text.replace(old, f"{python} {runner} --acquire-inputs", 1)
-    repository_old = (
-        f"git fetch origin\ngit checkout {shard['repository_branch']}\n"
-        f"git checkout {shard['implementation_commit_sha']}\ngit status --short --branch"
-    )
-    repository_new = (
-        f"git fetch origin {shard['repository_branch']}\n"
-        f"git checkout {shard['repository_branch']}\n"
-        f"git pull --ff-only origin {shard['repository_branch']}\n"
-        f"test \"$(git rev-parse HEAD)\" = \"{shard['implementation_commit_sha']}\"\n"
-        "git status --short --branch"
-    )
-    return text.replace(repository_old, repository_new, 1)
+    return f"""# P11 shard handoff: {worker}
+
+This shard is frozen to {shard['expected_seed_count']} whole seeds / {shard['expected_job_count']} jobs. Do not edit the manifests or seed lists. The immutable handoff authority is `{IMMUTABLE_HANDOFF_COMMIT}` and the scientific implementation authority is `{SCIENTIFIC_IMPLEMENTATION_COMMIT}`.
+
+## 1. Fresh-worker bootstrap (exact commits, two checkouts)
+
+Obtain `NEW_OPERATIONAL_HANDOFF_COMMIT` from `P11_DISTRIBUTED_OPERATIONAL_CLOSURE_RECEIPT`, then run the bootstrap script from that exact owner-delivered commit:
+
+```bash
+export P11_OPERATIONAL_HANDOFF_COMMIT=NEW_OPERATIONAL_HANDOFF_COMMIT
+export P11_WORKER_HOME="$HOME/mineocclude-p11-{slug}"
+python3 /path/to/exact-commit/scripts/bootstrap_large_scale_no_wall_p11_worker.py \\
+  --repository-url https://github.com/atharv-santosh/MineOcclude.git \\
+  --destination "$P11_WORKER_HOME" \\
+  --operational-handoff-commit "$P11_OPERATIONAL_HANDOFF_COMMIT" \\
+  --worker {slug}
+export P11_OPERATIONAL_ROOT="$P11_WORKER_HOME/operational"
+export P11_SCIENTIFIC_ROOT="$P11_WORKER_HOME/scientific"
+cd "$P11_OPERATIONAL_ROOT"
+```
+
+The operational checkout is detached at the supplied exact closure commit. The separate scientific worktree is the named branch `{shard['repository_branch']}` at exact HEAD `{shard['implementation_commit_sha']}`. The bootstrap verifies that all common/shard/bundle authority bytes still equal commit `{IMMUTABLE_HANDOFF_COMMIT}` and installs the verified authority bundle into the scientific worktree. It never pulls a moving branch HEAD.
+
+## 2. Environment preflight
+
+```bash
+{python} {runner} \\
+  --scientific-root "$P11_SCIENTIFIC_ROOT" \\
+  --bootstrap-receipt "$P11_OPERATIONAL_ROOT/p11_worker_bootstrap_receipt.json" \\
+  --shard-manifest {manifest} --common-authority {common_path} \\
+  --environment-preflight
+```
+
+The preflight deliberately requires the named scientific branch and exact frozen HEAD, plus separate operational/scientific roots, immutable `c701eef` handoff bytes, qualified Python, CUDA, a comparable GPU, and at least 24 GB free NVMe.
+
+## 3. Acquire inputs and reconstruct caches
+
+```bash
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --acquire-inputs
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --reconstruct-caches
+```
+
+The input command verifies exactly {P6_TRANSFER_BYTES} bytes of protected P6 arrays. Expected cache hashes are `{authority.TOKEN_CACHE_SHA}` and `{authority.COARSE_CACHE_SHA}`.
+
+## 4. Validate and future launch (do not launch without owner approval)
+
+```bash
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --validate-shard
+nohup setsid {python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --run --resume </dev/null >{log} 2>&1 &
+```
+
+## 5. Full NVMe-loss recovery
+
+After reacquiring P6 inputs and reconstructing caches, restore only into the absent original shard root, then resume the same manifest:
+
+```bash
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --restore-durable --operator-name "$USER"
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --run --resume
+```
+
+Restoration validates worker, shard SHA, parent manifest SHA, durable prefix, control hashes, ledger transitions, job identities, foreign objects, and stable non-ambiguous durable state. Already validated jobs are restored, revalidated, and skipped.
+
+## 6. Whole-shard takeover only
+
+Partial reassignment manifests are not supported. A replacement operator must first create a stopped-process attestation naming the same original worker, shard SHA, durable prefix, replacement operator, observation time, and `process_proven_stopped: true`, then run:
+
+```bash
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --takeover-restore --operator-name "$USER" --process-stopped-attestation /path/to/stopped_process_attestation.json
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --run --resume
+```
+
+Human operators may change; `worker_name`, shard manifest, durable prefix, original job identities, and seed ownership may not.
+
+## 7. Status, completion, and durable return
+
+```bash
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --status
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --validate-complete
+{python} {runner} --scientific-root "$P11_SCIENTIFIC_ROOT" --shard-manifest {manifest} --common-authority {common_path} --package-upload
+```
+
+Completion requires {shard['expected_seed_count']}/{shard['expected_seed_count']} seeds and {shard['expected_job_count']}/{shard['expected_job_count']} jobs with no missing, duplicate, blocked, retryable, or running job. Return `p11_shard_{slug}_return.tar.gz`, `package_upload_receipt.json`, immutable shard identity, and its durable URI; never return P6 arrays or reconstructable caches.
+"""
 
 
 def generate_handoffs(output: Path, implementation_commit: str) -> dict[str, Any]:
@@ -613,6 +1016,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--shard-manifest", type=Path)
     parser.add_argument("--common-authority", type=Path)
+    parser.add_argument("--scientific-root", type=Path)
+    parser.add_argument("--bootstrap-receipt", type=Path)
     parser.add_argument("--validate-shard", action="store_true")
     parser.add_argument("--environment-preflight", action="store_true")
     parser.add_argument("--acquire-inputs", action="store_true")
@@ -623,10 +1028,14 @@ def main() -> int:
     parser.add_argument("--status", action="store_true")
     parser.add_argument("--validate-complete", action="store_true")
     parser.add_argument("--package-upload", action="store_true")
+    parser.add_argument("--restore-durable", action="store_true")
+    parser.add_argument("--takeover-restore", action="store_true")
+    parser.add_argument("--operator-name")
+    parser.add_argument("--process-stopped-attestation", type=Path)
     parser.add_argument("--generate-handoffs", type=Path)
     parser.add_argument("--implementation-commit")
     args = parser.parse_args()
-    actions = [args.validate_shard, args.environment_preflight, args.acquire_inputs, args.reconstruct_caches, args.run, bool(args.worker), args.status, args.validate_complete, args.package_upload, bool(args.generate_handoffs)]
+    actions = [args.validate_shard, args.environment_preflight, args.acquire_inputs, args.reconstruct_caches, args.run, bool(args.worker), args.status, args.validate_complete, args.package_upload, args.restore_durable, args.takeover_restore, bool(args.generate_handoffs)]
     authority.require(sum(bool(value) for value in actions) == 1, "choose exactly one shard action")
     if args.acquire_inputs:
         print(json.dumps(acquire_inputs(), indent=2, sort_keys=True))
@@ -645,7 +1054,19 @@ def main() -> int:
         p11.validate_manifest(require_p10_complete=True)
         print(f"PASS immutable P11 shard {shard['worker_name']} {shard['expected_seed_count']} seeds/{shard['expected_job_count']} jobs")
     elif args.environment_preflight:
-        print(json.dumps(environment_preflight(shard), indent=2, sort_keys=True))
+        print(json.dumps(environment_preflight(shard, args.bootstrap_receipt), indent=2, sort_keys=True))
+    elif args.restore_durable or args.takeover_restore:
+        authority.require(bool(args.operator_name), "--operator-name required for restoration")
+        if args.takeover_restore:
+            authority.require(args.process_stopped_attestation is not None, "takeover requires --process-stopped-attestation")
+        else:
+            authority.require(args.process_stopped_attestation is None, "stopped-process attestation is takeover-only")
+        print(json.dumps(
+            restore_durable_state(
+                shard, parent, operator_name=args.operator_name,
+                takeover_attestation=args.process_stopped_attestation,
+            ), indent=2, sort_keys=True,
+        ))
     elif args.run:
         authority.require(args.resume, "distributed execution requires explicit --resume")
         run_shard(args.shard_manifest, args.common_authority, shard, parent)

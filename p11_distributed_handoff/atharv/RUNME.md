@@ -1,80 +1,15 @@
 # P11 shard handoff: ATHARV
 
-This shard is frozen to 9 whole seeds / 36 jobs. Do not edit the manifests. Do not share AWS or SSH credentials. Authenticate with your own authorized environment.
+Frozen identity: 9 whole seeds / 36 jobs; shard SHA `c22f1f68a4f02ab70b2df04b9b4eb2daa9b3a2196ac86fa712addcd90a9be2f7`. Never edit this manifest or its seed list.
 
-## 1. Repository
+Obtain `NEW_OPERATIONAL_HANDOFF_COMMIT` from `P11_DISTRIBUTED_OPERATIONAL_CLOSURE_RECEIPT`, then run `scripts/bootstrap_large_scale_no_wall_p11_worker.py` from that exact owner-delivered commit with `--worker atharv`, repository URL `https://github.com/atharv-santosh/MineOcclude.git`, and a new destination such as `$HOME/mineocclude-p11-atharv`.
 
-```bash
-git fetch origin exploration/large-scale-no-wall-scaling-best-k-v0-1
-git checkout exploration/large-scale-no-wall-scaling-best-k-v0-1
-git pull --ff-only origin exploration/large-scale-no-wall-scaling-best-k-v0-1
-test "$(git rev-parse HEAD)" = "173a3ca3e92ffe771d19911c15c006dba6acc934"
-git status --short --branch
+Export `P11_OPERATIONAL_ROOT=<destination>/operational` and `P11_SCIENTIFIC_ROOT=<destination>/scientific`, change to the operational root, and follow every tested command in `p11_distributed_handoff/README.md`. In every shard command use:
+
+```text
+--scientific-root "$P11_SCIENTIFIC_ROOT"
+--shard-manifest p11_distributed_handoff/atharv/shard_manifest.json
+--common-authority p11_distributed_handoff/common_authority.json
 ```
 
-## 2. Install the small authority bundle
-
-From the repository root after receiving the handoff directory:
-
-```bash
-cp p11_distributed_handoff/authority_bundle/* docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/
-sha256sum -c p11_distributed_handoff/authority_bundle.sha256
-```
-
-## 3. Environment preflight
-
-```bash
-/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --shard-manifest p11_distributed_handoff/atharv/shard_manifest.json --common-authority p11_distributed_handoff/common_authority.json --environment-preflight
-```
-
-Requires the qualified `mineworld` Python, CUDA, one comparable GPU, and at least 24 GB free under `/mnt/sagemaker-nvme`.
-
-## 4. Acquire only P6 activations
-
-```bash
-/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --acquire-inputs
-```
-
-This is 9968056320 bytes of immutable scientific input. It replaces raw captures, Minecraft/MineWorld, and P8/P9/P10 recomputation. If your AWS identity cannot read it, request the same immutable prefix through an approved shared location; never request credentials.
-
-## 5. Reconstruct cheap caches and verify hashes
-
-```bash
-/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --reconstruct-caches
-```
-
-Expected token cache: `2cf40e7ad1f0fe5269b16c0d7e03ff486e3ffa00379f8acea5145829bff6cf90` (8422686848 bytes). Expected COARSE cache: `4a1c9562a26416eb6b069baeeb9f1c73513f7306f30a7cfe54dd30efe7094bdf` (707788928 bytes).
-
-## 6. Validate the frozen shard
-
-```bash
-/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --shard-manifest p11_distributed_handoff/atharv/shard_manifest.json --common-authority p11_distributed_handoff/common_authority.json --validate-shard
-```
-
-## 7. Future detached launch (do not run until the owner approves)
-
-```bash
-nohup setsid /home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --shard-manifest p11_distributed_handoff/atharv/shard_manifest.json --common-authority p11_distributed_handoff/common_authority.json --run --resume </dev/null >$HOME/mineocclude_p11_shard_atharv.log 2>&1 &
-```
-
-## 8. Read-only status/watchdog
-
-```bash
-watch -n 600 '/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --shard-manifest p11_distributed_handoff/atharv/shard_manifest.json --common-authority p11_distributed_handoff/common_authority.json --status'
-```
-
-## 9. Completion validation
-
-```bash
-/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --shard-manifest p11_distributed_handoff/atharv/shard_manifest.json --common-authority p11_distributed_handoff/common_authority.json --validate-complete
-```
-
-This hard-requires 9/9 seeds, 36/36 jobs, and zero missing, duplicate, blocked, retryable, or running jobs.
-
-## 10. Durable package/upload
-
-```bash
-/home/sagemaker-user/.conda/envs/mineworld/bin/python scripts/run_large_scale_no_wall_p11_shard.py --shard-manifest p11_distributed_handoff/atharv/shard_manifest.json --common-authority p11_distributed_handoff/common_authority.json --package-upload
-```
-
-Return the small `p11_shard_atharv_return.tar.gz`, `package_upload_receipt.json`, shard manifest/SHA, and the durable S3 URI to the owner. Do not return P6 activations or reconstructable token/COARSE caches.
+Do not launch until the owner approves. Partial reassignment is unsupported; takeover always restores and resumes this same original ATHARV shard.
