@@ -237,9 +237,10 @@ def run_shard(
     p11.p10.ensure_coarse_cache(full_hash=True)
     initialize(shard, parent, shard_path)
     latest, _, attempts = latest_ledger(Path(str(shard["ledger_path"])))
+    jobs_requiring_execution = set(resume_job_ids(shard, parent, latest))
     for job in assigned_jobs(shard, parent):
         event = latest[job["job_id"]]
-        if event["state"] == "VALIDATED":
+        if job["job_id"] not in jobs_requiring_execution:
             try:
                 validate_result(job)
             except Exception:  # noqa: BLE001 - exact frozen validator drives S3 restore

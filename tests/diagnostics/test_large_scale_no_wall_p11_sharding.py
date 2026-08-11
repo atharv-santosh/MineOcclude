@@ -123,7 +123,7 @@ def test_resume_skips_already_validated_shard_jobs() -> None:
     assert set(pending) <= set(shards[0]["exact_original_job_ids"])
 
 
-def test_each_shard_has_an_independent_mutable_namespace() -> None:
+def test_each_shard_has_an_independent_mutable_namespace(tmp_path: Path) -> None:
     parent, parent_sha, shards = frozen_shards()
     authority.validate_partition(parent, parent_sha, [0, 1, 2], shards)
     fields = ("local_result_root", "ledger_path", "progress_path", "log_path", "durable_output_prefix")
@@ -131,6 +131,11 @@ def test_each_shard_has_an_independent_mutable_namespace() -> None:
         values = [shard[field] for shard in shards]
         assert len(values) == len(set(values)) == 5
     assert all(Path(shard["ledger_path"]).parent == Path(shard["local_result_root"]) for shard in shards)
+    me_ledger = tmp_path / "me" / "ledger.jsonl"
+    alan_ledger = tmp_path / "alan" / "ledger.jsonl"
+    runner.append_jsonl(me_ledger, {"job_id": "only-me", "state": "PENDING"})
+    assert me_ledger.is_file()
+    assert not alan_ledger.exists()
 
 
 def test_overlap_and_non_round_robin_assignment_hard_fail() -> None:
@@ -140,4 +145,3 @@ def test_overlap_and_non_round_robin_assignment_hard_fail() -> None:
     relock(changed[1])
     with pytest.raises(authority.ShardAuthorityError):
         authority.validate_partition(parent, parent_sha, [0, 1, 2], changed)
-
