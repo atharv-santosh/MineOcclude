@@ -1,0 +1,427 @@
+{
+  "allowed_inputs": [
+    {
+      "id": "P8_RUN_MANIFEST",
+      "path": "p8_run_manifest.json",
+      "root": "STATUS_ROOT",
+      "sha256": "6a788740e85dbb75a2b39fbe0b8f0865a2929b8f0368797bc52c269932517707"
+    },
+    {
+      "id": "P8_LEARNING_RESULTS",
+      "path": "learning_curve_results.json",
+      "root": "STATUS_ROOT",
+      "sha256": "dd45a79594caea5b6f9cce92c4898c195f383f988cf82a3a6f8d25d381861b91"
+    },
+    {
+      "id": "P8_BEST_K_RESULTS",
+      "path": "best_k_results.json",
+      "root": "STATUS_ROOT",
+      "sha256": "8b84bbdb443f1e07d0adf5015e8807532f8517ca6fd06adc7b081d7f516d16a5"
+    },
+    {
+      "id": "P8_PREDICTION_MANIFEST",
+      "path": "p8_prediction_manifest.json",
+      "root": "STATUS_ROOT",
+      "sha256": "e092d689792357ef8915f9fffcca99900c90e6132294503e13d7429fc7906a2f"
+    },
+    {
+      "id": "P8_VALIDATION",
+      "path": "p8_validation_receipt.json",
+      "root": "STATUS_ROOT",
+      "sha256": "ec568acfd81a1cea75711cbe6504e6bff6f0d73643fdc116c42ff0d0ec215936"
+    },
+    {
+      "id": "P9_STABILITY",
+      "path": "best_k_stability.json",
+      "root": "STATUS_ROOT",
+      "sha256": "242c4c36d2d4647b9a6b51c42d12c42ab69e8f1ba694c55dd23484adba921aa9"
+    },
+    {
+      "id": "P9_RECEIPT",
+      "path": "p9_receipt.json",
+      "root": "STATUS_ROOT",
+      "sha256": "60742f7de7b975408c9dd380c385fa708bf8e7de5ed5cf732731ddbc581689e6"
+    },
+    {
+      "id": "P10_COARSE_RESULTS",
+      "path": "coarse_learning_curve_results.json",
+      "root": "STATUS_ROOT",
+      "sha256": "aae10d9b980227225b0aeb3cb07ff9aab4e13ba940cf7a111364da16a760d01f"
+    },
+    {
+      "id": "P10_VALIDATION",
+      "path": "p10_validation_receipt.json",
+      "root": "STATUS_ROOT",
+      "sha256": "6e11de0c984a354b63bc7f4c7777d7fd4cc34e49cf341a71e4126cabacbc0b44"
+    },
+    {
+      "id": "P11_CANONICAL_RESULT",
+      "path": "prospective_target_null_results.json",
+      "root": "P11_ROOT",
+      "sha256": "ac58a3bb47710fe11e2638efb9acfa0e4d741e48beeb529b8d8cc21b68a8211f"
+    },
+    {
+      "id": "P11_AGGREGATION_RECEIPT",
+      "path": "canonical_distributed_aggregation_receipt.json",
+      "root": "P11_ROOT",
+      "sha256": "255ff8e292596cbfa4d276da40d7958f1655dc9eb2a84881cfffecf2a3d92378"
+    },
+    {
+      "id": "P11_PACKAGE_RECEIPT",
+      "path": "canonical_distributed_package_receipt.json",
+      "root": "P11_ROOT",
+      "sha256": "88245039ca2c9a6f217e79c50373e4dfd0cc552426a89829afc633af4c0f29b7"
+    },
+    {
+      "id": "P11_MERGE_VALIDATION",
+      "path": "five_root_merge_validation_receipt.json",
+      "root": "P11_ROOT",
+      "sha256": "7ac2f1289cb38f405ed6005a62787866c4f0126b18dbd43e2c31e4c937c66448"
+    },
+    {
+      "id": "STUDY_DESIGN",
+      "path": "study_design.json",
+      "root": "STATUS_ROOT",
+      "sha256": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502"
+    },
+    {
+      "id": "STUDY_DESIGN_LOCK",
+      "path": "study_design.lock.json",
+      "root": "STATUS_ROOT",
+      "sha256": "05b337e81ffea6c6d3bb3f92ca76b7774c980f9c462565f5c50a71ad9f629f41"
+    },
+    {
+      "id": "SPLIT_AUTHORITY",
+      "path": "split_authority.json",
+      "root": "STATUS_ROOT",
+      "sha256": "b39c81454ea18125c373fb3c777ac4c1668882c9c1ad188a7d0f20e0cab43de5"
+    },
+    {
+      "id": "SUBSET_SCHEDULE",
+      "path": "subset_schedule.json",
+      "root": "STATUS_ROOT",
+      "sha256": "0d6f5e8394328915164bafea70468e6d26342a2eda9a1923e4d4ad745f494a48"
+    },
+    {
+      "id": "GROUPED_FOLDS",
+      "path": "grouped_fold_authority.json",
+      "root": "STATUS_ROOT",
+      "sha256": "597bc7b401ca691897b843fc83120cc997a414b7a946819da4c3e99768e7728e"
+    },
+    {
+      "id": "ACCEPTED_COHORT",
+      "path": "accepted_cohort_v2.lock.json",
+      "root": "STATUS_ROOT",
+      "sha256": "b73d1b6bbedc1ca72dab480ba6f4bafb22aa7c6675bc7a2f0dabf33fff2d8501"
+    },
+    {
+      "id": "PROFILE_DESIGN",
+      "path": "trajectory_profile_design_v2.json",
+      "root": "STATUS_ROOT",
+      "sha256": "287b6006e4ab592d01112c8d651b5fdb95ea7cfea79b1fcceb443e1ea37483dd"
+    },
+    {
+      "id": "PROFILE_AUDIT",
+      "path": "p4c_actual_profile_audit_v2.json",
+      "root": "STATUS_ROOT",
+      "sha256": "0f033e2fbec621ff3eab70f374e9e4290d038852b2397dcba3de2ee81f537c2e"
+    },
+    {
+      "id": "REPRESENTATION_AUTHORITY",
+      "path": "representation_authority.json",
+      "root": "STATUS_ROOT",
+      "sha256": "757217b2b3e54e236b4ad7b9b3574d7391f896558760a54bb1b5e457b186259e"
+    },
+    {
+      "id": "PROSPECTIVE_NULL_AUTHORITY",
+      "path": "prospective_null_authority.json",
+      "root": "STATUS_ROOT",
+      "sha256": "56e3e6d67707cd90866d73743de96d6600d4c518031769e2518b515510c91dc9"
+    },
+    {
+      "id": "P12_STATUS",
+      "path": "secondary_fresh_layout_status.json",
+      "root": "STATUS_ROOT",
+      "sha256": "76232b1ac6362345ed5779a8f6c54bc423b540e0d2a789460108c36164080d17"
+    }
+  ],
+  "anchors": {
+    "all": [5, 15, 40, 70, 100],
+    "high_n": [70, 100],
+    "null": 100,
+    "token_replication": [40, 70, 100]
+  },
+  "artifact_id": "large-scale-no-wall-p13-adjudication-authority-v1.0",
+  "authority_base_commit": "ebe9826c6345ea67896faf9efaba9b0df66bf354",
+  "bootstrap": {
+    "base_seed": 20260810,
+    "chain_gain_rule": {
+      "complete_masters": [
+        "master_00",
+        "master_01",
+        "master_02",
+        "master_03",
+        "master_04",
+        "master_05"
+      ],
+      "replicate_statistic": "mean",
+      "seed": 20260810,
+      "unit": "one paired N100-minus-N5 delta per complete master chain"
+    },
+    "coverage": 0.95,
+    "frames_as_independent_units": false,
+    "interval": "equal_tailed_percentile",
+    "quantile_method": "linear",
+    "replicates": 10000,
+    "resample_layouts": false,
+    "reuse_validated_upstream_intervals": true,
+    "rng": "numpy.random.default_rng",
+    "trajectory_rule": "Within each fixed layout sample its three whole-trajectory metric values with replacement; retain all six layout strata and every frozen subset authority; compute within-layout mean, then equal-six-layout mean, then mean across retained subset authorities.",
+    "unseeded_missing_curve_interval_policy": "Use base_seed 20260810 when a required curve interval is absent upstream; this applies to COARSE_2x6 only."
+  },
+  "classification_enum": ["True", "False", "Unclear"],
+  "controlling_roadmap": {
+    "date": "2026-08-10",
+    "document_status": "FINAL DESIGN AUTHORITY - EXECUTION REQUIRES OPERATOR APPROVAL",
+    "title": "MineOcclude Large-Scale No-Wall Trajectory Scaling and Best-K Token Study",
+    "version": "1.0 FINAL"
+  },
+  "execution_policy": {
+    "ACTIVATION_OR_CACHE_RECONSTRUCTION_ALLOWED": false,
+    "BEST_K_RESELECTION_ALLOWED": false,
+    "CONTINUOUS_EVIDENCE_BEFORE_CLASSIFICATIONS": true,
+    "CPU_ONLY": true,
+    "FAIL_CLOSED_ON_HASH_MISMATCH": true,
+    "NEW_EXPERIMENT": false,
+    "P11_NULL_GENERATION_ALLOWED": false,
+    "POST_OUTCOME_RULE_CHANGE_ALLOWED": false,
+    "UPSTREAM_REFIT_ALLOWED": false
+  },
+  "experiment_id": "exploratory_large_scale_no_wall_scaling_best_k_v0_1",
+  "layout_positivity": {
+    "operator": ">",
+    "readiness_scope": "For each representation and layout, median per-layout equal-trajectory macro R2 over frozen N100 subset authorities.",
+    "required_layout_count": 5,
+    "target_null_requirement_applies_to_each_qualifying_core": true,
+    "target_null_scope": "Per-layout metrics from the exact canonical observed N100 P11 subset/model for the representation.",
+    "threshold": 0.0,
+    "total_layout_count": 6
+  },
+  "metrics": {
+    "layout_positive": "per-layout equal-trajectory macro held-out R2 > 0",
+    "paired_delta": "representation A minus representation B on identical subset and fixed-test authority",
+    "per_layout": "mean of the three whole-trajectory held-out R2 values in one fixed-test layout",
+    "primary": "fixed-test equal-layout macro per-trajectory held-out R2",
+    "primary_construction": [
+      "compute held-out R2 separately for every fixed-test trajectory",
+      "average the three trajectory R2 values within each layout",
+      "average the six layout values with equal layout weight"
+    ],
+    "spearman": "Spearman rho between [5,15,40,70,100] and the corresponding five subset-median primary metrics",
+    "subset_summary_statistic": "median",
+    "win": "paired_delta > 0"
+  },
+  "outputs": {
+    "fail_if_any_destination_exists": true,
+    "figures": [
+      "p13_learning_curve_decision.png",
+      "p13_representation_comparison_decision.png",
+      "p13_null_layout_profile_decision.png"
+    ],
+    "json": [
+      "learning_curve_summary.json",
+      "representation_comparison.json",
+      "diagnostic_adjudication.json"
+    ],
+    "receipt": "p13_receipt.json",
+    "single_canonical_summary_required": true
+  },
+  "prospective_null": {
+    "B": 49,
+    "alpha": 0.05,
+    "empirical_p_formula": "(1 + count(null >= observed)) / 50",
+    "empirical_p_operator": "<=",
+    "nearest_rank_order_statistic": 47,
+    "percentile_index_zero_based": 46,
+    "percentile_operator": ">",
+    "percentile_probability": 0.95,
+    "percentile_rule": "sort null ascending and select null_sorted[46]"
+  },
+  "qualitative_predicate_policy": {
+    "fallback": "UNCLEAR_UNLESS_ANOTHER_LITERAL_BRANCH_INDEPENDENTLY_DETERMINES_FIELD",
+    "policy": "DO_NOT_INVENT_NUMERIC_THRESHOLD",
+    "predicates": [
+      "GLOBAL has comparable calibration/null behavior",
+      "comparable null/calibration behavior",
+      "null behavior is not worse"
+    ],
+    "report_continuous_evidence": true,
+    "unresolved_predicate_satisfies_boolean_clause": false
+  },
+  "representations": {
+    "core": ["GLOBAL_MEAN", "FULL_TOKEN_GRID", "BEST_K_TOKENS"],
+    "posthoc_best_test_selection_allowed": false,
+    "readiness_eligible": [
+      "GLOBAL_MEAN",
+      "FULL_TOKEN_GRID",
+      "BEST_K_TOKENS",
+      "COARSE_2x6"
+    ],
+    "secondary": ["COARSE_2x6"],
+    "token_preserving": ["FULL_TOKEN_GRID", "BEST_K_TOKENS"]
+  },
+  "rules": {
+    "BEST_K_ADVANTAGE": {
+      "false": {
+        "all": [
+          "median_delta(BEST_K_TOKENS-FULL_TOKEN_GRID,N100) <= 0",
+          "win_rate(BEST_K_TOKENS-FULL_TOKEN_GRID,N100) <= 0.50"
+        ]
+      },
+      "otherwise": "Unclear",
+      "true": {
+        "all": [
+          "median_delta(BEST_K_TOKENS-FULL_TOKEN_GRID,N70) >= 0.05",
+          "median_delta(BEST_K_TOKENS-FULL_TOKEN_GRID,N100) >= 0.05",
+          "win_rate(BEST_K_TOKENS-FULL_TOKEN_GRID,N70) >= 0.75",
+          "win_rate(BEST_K_TOKENS-FULL_TOKEN_GRID,N100) >= 0.75",
+          "paired_interval_lower(BEST_K_TOKENS-FULL_TOKEN_GRID,N100) > 0"
+        ]
+      }
+    },
+    "BEST_K_TOKEN_SELECTION_STABLE": {
+      "false": {
+        "any": [
+          "median_pairwise_jaccard(N100) <= 0.20",
+          "median_chance_adjusted_overlap(N100) <= 0"
+        ]
+      },
+      "otherwise": "Unclear",
+      "true": {
+        "all_at_each_anchor": {
+          "anchors": [70, 100],
+          "conditions": [
+            "median_pairwise_jaccard >= 0.50",
+            "median_rank_spearman >= 0.50",
+            "median_chance_adjusted_overlap > 0"
+          ]
+        }
+      }
+    },
+    "COARSE_SPATIAL_READOUT_SUFFICIENT": {
+      "false": "max(M[FULL_TOKEN_GRID,N100],M[BEST_K_TOKENS,N100])-M[COARSE_2x6,N100] >= 0.10",
+      "otherwise": "Unclear",
+      "true": {
+        "all": [
+          "max(M[FULL_TOKEN_GRID,N100],M[BEST_K_TOKENS,N100])-M[COARSE_2x6,N100] <= 0.03",
+          "paired_interval_lower(COARSE_2x6-best_token,N100) > -0.05 for every tied best token representation",
+          "unresolved predicate 'COARSE null behavior not worse' is True"
+        ],
+        "currently_satisfiable": false
+      }
+    },
+    "DATA_SCALE_LIMITATION_PLAUSIBLE": {
+      "false": {
+        "all": [
+          "six_chain_gain(core) < 0.10 for every core representation",
+          "Spearman_rho(core) <= 0.30 for every core representation"
+        ]
+      },
+      "otherwise": "Unclear",
+      "true": {
+        "minimum_qualifying_core_representations": 2,
+        "qualifying_core_all": [
+          "six_chain_N100_minus_N5_gain >= 0.20",
+          "Spearman_rho >= 0.70",
+          "M[N70]-M[N5] >= 0.15",
+          "M[N100]-M[N5] >= 0.15",
+          "six_chain_gain_interval_lower > 0"
+        ]
+      }
+    },
+    "FULL_TOKEN_GRID_NEEDED": {
+      "false": {
+        "all": [
+          "at least one of BEST_K_TOKENS or COARSE_2x6 has FULL_TOKEN_GRID-minus-reduced median delta <= 0.03 at N100",
+          "unresolved comparable null/calibration predicate is True"
+        ],
+        "currently_satisfiable": false
+      },
+      "otherwise": "Unclear",
+      "true": {
+        "all": [
+          "FULL_TOKEN_GRID-minus-reduced median delta >= 0.05 for both reduced representations at both N70 and N100",
+          "FULL_TOKEN_GRID-minus-reduced N100 paired interval lower > 0 for both reduced representations"
+        ]
+      }
+    },
+    "LAYOUT_GENERALIZATION": {
+      "historical_context": "MIXED",
+      "known_layout_fixed_test_is_fresh_layout_evidence": false,
+      "p12": "DEFERRED_BY_DESIGN",
+      "primary_study": "NOT_ADJUDICATED_IN_PRIMARY_STUDY"
+    },
+    "MEAN_POOLING_BOTTLENECK_PLAUSIBLE": {
+      "false": {
+        "all": [
+          "absolute median delta to GLOBAL_MEAN <= 0.05 for FULL_TOKEN_GRID and BEST_K_TOKENS at both N70 and N100",
+          "unresolved predicate 'GLOBAL has comparable calibration/null behavior' is True"
+        ],
+        "currently_satisfiable": false
+      },
+      "otherwise": "Unclear",
+      "true": {
+        "any_token_representation_all": [
+          "median delta to GLOBAL_MEAN at N70 >= 0.10",
+          "median delta to GLOBAL_MEAN at N100 >= 0.10",
+          "N100 paired interval lower > 0"
+        ]
+      }
+    },
+    "TARGET_SPECIFIC_DECODING_ESTABLISHED": {
+      "best_observed_core_ties": "entire argmax set; every tied best core must qualify",
+      "false": "no core representation satisfies both observed > q95 and empirical p <= 0.05",
+      "otherwise": "Unclear",
+      "qualifies_core": "observed > q95 AND empirical p <= 0.05 AND canonical observed N100 per-layout R2 > 0 in at least 5 of 6 layouts",
+      "secondary_can_count": false,
+      "true": "at least two core representations qualify AND every member of the tied best observed core argmax set qualifies"
+    },
+    "TOKEN_PRESERVING_ADVANTAGE_REPLICATED": {
+      "false": "both FULL_TOKEN_GRID and BEST_K_TOKENS have N100 median delta to GLOBAL_MEAN <= 0 AND N100 win rate <= 0.50",
+      "otherwise": "Unclear",
+      "true": "at least one token-preserving representation has win rate >= 0.75 independently at N40, N70, and N100 AND N100 median delta to GLOBAL_MEAN >= 0.10"
+    },
+    "TRAJECTORY_PROFILE_CONFOUND_CONTROLLED": {
+      "false": "the frozen pre-outcome P4C gate or any named component gate does not pass",
+      "must_not_infer_from_decoding": true,
+      "named_components": [
+        "profile matrix",
+        "non-identical repeats",
+        "layout/direction balance",
+        "target range/variance",
+        "speed/timing distributions",
+        "overall and stratified time-position associations",
+        "profile similarity",
+        "row authority"
+      ],
+      "true": "the frozen pre-outcome P4C gate and every named component gate pass"
+    },
+    "VISIBLE_POSITION_MEASUREMENT_PATH_READY_FOR_OCCLUDED_EXPERIMENT": {
+      "false": {
+        "any": [
+          "maximum N100 subset-median primary R2 across all readiness-eligible representations <= 0.10",
+          "TARGET_SPECIFIC_DECODING_ESTABLISHED is False"
+        ]
+      },
+      "otherwise": "Unclear",
+      "true": "at least one readiness-eligible predeclared representation has N100 subset-median primary R2 >= 0.50, N100 trajectory-bootstrap lower bound > 0, positive N100 layout medians in at least 5 of 6 layouts, and TARGET_SPECIFIC_DECODING_ESTABLISHED is True"
+    }
+  },
+  "schema_version": "1.0",
+  "status": "LOCKED_OPERATOR_APPROVED",
+  "win_rate_scope": {
+    "aggregation": "EACH_NAMED_ANCHOR_INDEPENDENTLY",
+    "pool_anchors": false,
+    "win_operator": ">"
+  }
+}
