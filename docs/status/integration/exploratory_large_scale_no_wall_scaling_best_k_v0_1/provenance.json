@@ -1,0 +1,226 @@
+{
+  "artifact_id": "large-scale-no-wall-p14-provenance-v1.0",
+  "schema_version": "1.0",
+  "experiment_id": "mineocclude-large-scale-no-wall-scaling-best-k-v0-1",
+  "branch": "exploration/large-scale-no-wall-scaling-best-k-v0-1",
+  "execution_head": "2fdc4567111a63d137a01183144d4b09067b4abe",
+  "p13_execution_commit": "2fdc4567111a63d137a01183144d4b09067b4abe",
+  "lineage": {
+    "frozen_original_mvp_sha": "bb22364cbc4f65b788a56b60e7d6503e6226df7b",
+    "validated_predecessor_sha": "18c8dd0de0987d3065206a5fd7df452badb1338b",
+    "lineage_authority": {
+      "path": "study_design.json",
+      "sha256": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502",
+      "json_pointer": "/lineage"
+    },
+    "original_mvp_modified": false,
+    "historical_u1_u2_reinterpreted": false
+  },
+  "frozen_authorities": {
+    "study_design": {
+      "path": "study_design.json",
+      "sha256": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502"
+    },
+    "study_design_lock": {
+      "path": "study_design.lock.json",
+      "sha256": "05b337e81ffea6c6d3bb3f92ca76b7774c980f9c462565f5c50a71ad9f629f41"
+    },
+    "final_cohort": {
+      "path": "accepted_cohort_v2.lock.json",
+      "sha256": "b73d1b6bbedc1ca72dab480ba6f4bafb22aa7c6675bc7a2f0dabf33fff2d8501"
+    },
+    "split": {
+      "path": "split_authority.json",
+      "sha256": "b39c81454ea18125c373fb3c777ac4c1668882c9c1ad188a7d0f20e0cab43de5"
+    },
+    "subset_schedule": {
+      "path": "subset_schedule.json",
+      "sha256": "0d6f5e8394328915164bafea70468e6d26342a2eda9a1923e4d4ad745f494a48"
+    },
+    "grouped_folds": {
+      "path": "grouped_fold_authority.json",
+      "sha256": "597bc7b401ca691897b843fc83120cc997a414b7a946819da4c3e99768e7728e"
+    },
+    "representation": {
+      "path": "representation_authority.json",
+      "sha256": "757217b2b3e54e236b4ad7b9b3574d7391f896558760a54bb1b5e457b186259e"
+    },
+    "prospective_null": {
+      "path": "prospective_null_authority.json",
+      "sha256": "56e3e6d67707cd90866d73743de96d6600d4c518031769e2518b515510c91dc9"
+    }
+  },
+  "p8": {
+    "run_manifest": {
+      "path": "p8_run_manifest.json",
+      "sha256": "6a788740e85dbb75a2b39fbe0b8f0865a2929b8f0368797bc52c269932517707"
+    },
+    "prediction_manifest": {
+      "path": "p8_prediction_manifest.json",
+      "sha256": "e092d689792357ef8915f9fffcca99900c90e6132294503e13d7429fc7906a2f"
+    },
+    "learning_curve_result": {
+      "path": "learning_curve_results.json",
+      "sha256": "dd45a79594caea5b6f9cce92c4898c195f383f988cf82a3a6f8d25d381861b91"
+    },
+    "best_k_result": {
+      "path": "best_k_results.json",
+      "sha256": "8b84bbdb443f1e07d0adf5015e8807532f8517ca6fd06adc7b081d7f516d16a5"
+    },
+    "receipt": {
+      "path": "p8_receipt.json",
+      "sha256": "6a583834d4180b2f3703a5ca43be07421c5763386278fed298d91af115b3999a"
+    },
+    "validation": {
+      "path": "p8_validation_receipt.json",
+      "sha256": "ec568acfd81a1cea75711cbe6504e6bff6f0d73643fdc116c42ff0d0ec215936"
+    },
+    "durability": {
+      "path": "p8_s3_durability_receipt.json",
+      "sha256": "ff9657371f19fc1df1b8a03e028f6d1ec41c6beb1f943e2ad1df3512d1fc0170"
+    }
+  },
+  "p9": {
+    "result": {
+      "path": "best_k_stability.json",
+      "sha256": "242c4c36d2d4647b9a6b51c42d12c42ab69e8f1ba694c55dd23484adba921aa9"
+    },
+    "receipt": {
+      "path": "p9_receipt.json",
+      "sha256": "60742f7de7b975408c9dd380c385fa708bf8e7de5ed5cf732731ddbc581689e6"
+    }
+  },
+  "p10": {
+    "run_manifest": {
+      "path": "p10_run_manifest.json",
+      "sha256": "d04db26c1e05eb9d0c526d19e2c5cb813ea22332d8e507032e5ad91cad487092"
+    },
+    "result": {
+      "path": "coarse_learning_curve_results.json",
+      "sha256": "aae10d9b980227225b0aeb3cb07ff9aab4e13ba940cf7a111364da16a760d01f"
+    },
+    "receipt": {
+      "path": "p10_receipt.json",
+      "sha256": "72783ad039539cc83e94e2a27806f8dcebc2fb6152e1e00578f8bf5f77c447a7"
+    },
+    "validation": {
+      "path": "p10_validation_receipt.json",
+      "sha256": "6e11de0c984a354b63bc7f4c7777d7fd4cc34e49cf341a71e4126cabacbc0b44"
+    }
+  },
+  "p11": {
+    "runtime_root": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation",
+    "parent_manifest": {
+      "repository_path": "p11_run_manifest.json",
+      "sha256": "634720967cd8e23b2e9f0994981150768123018ef08a8f76ee9d8433f8886f87"
+    },
+    "canonical_result": {
+      "absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/prospective_target_null_results.json",
+      "sha256": "ac58a3bb47710fe11e2638efb9acfa0e4d741e48beeb529b8d8cc21b68a8211f"
+    },
+    "aggregation_receipt": {
+      "absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/canonical_distributed_aggregation_receipt.json",
+      "sha256": "255ff8e292596cbfa4d276da40d7958f1655dc9eb2a84881cfffecf2a3d92378"
+    },
+    "package_receipt": {
+      "absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/canonical_distributed_package_receipt.json",
+      "sha256": "88245039ca2c9a6f217e79c50373e4dfd0cc552426a89829afc633af4c0f29b7"
+    },
+    "merge_validation_receipt": {
+      "absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/five_root_merge_validation_receipt.json",
+      "sha256": "7ac2f1289cb38f405ed6005a62787866c4f0126b18dbd43e2c31e4c937c66448"
+    }
+  },
+  "p12": {
+    "path": "secondary_fresh_layout_status.json",
+    "sha256": "76232b1ac6362345ed5779a8f6c54bc423b540e0d2a789460108c36164080d17",
+    "status": "DEFERRED_BY_DESIGN"
+  },
+  "p13": {
+    "authority": {
+      "path": "p13_adjudication_authority.json",
+      "sha256": "f54c9b5ecd52b4b8bc0a4de50522f763676deeb78fb8ae433b2083b9ae88367d"
+    },
+    "authority_lock": {
+      "path": "p13_adjudication_authority.lock.json",
+      "sha256": "279b262ff6d1d36795aa5d25c21d57d8ba08badf4c2a6efd803345006c0e27cb"
+    },
+    "receipt": {
+      "path": "p13_receipt.json",
+      "sha256": "498e002b94d4710bf835f9fa7bb8b15c9b9396cdd30f5cc4471d55e30bd4a66f",
+      "status": "PASS_P13_COMPLETE"
+    },
+    "seven_outputs": {
+      "learning_curve_summary.json": "47213d2bf05aa8034b45813efb7517119b40c5a499b2151009783a3731028205",
+      "representation_comparison.json": "d7113e50920f68e5f22a2aba67905be6a5e2e5208a1aae5b7a919918ba474a52",
+      "diagnostic_adjudication.json": "64a68adccfb5ab3a3fe9b8060ab1f230f5907b5703a33275ca79f5923fc5978d",
+      "p13_learning_curve_decision.png": "5413a5c1a8b5311270292e39eb4c780f4aef5eb90f6130684d407092b9b55178",
+      "p13_representation_comparison_decision.png": "2f927c72ab8f51838b27bab7b89445299f2dc2d37bc4081805765ef53392a05f",
+      "p13_null_layout_profile_decision.png": "34a851a7c0dc26d9ac60045ebe21fa5af8e9589f807fb97610aebcd81947d68c",
+      "p13_receipt.json": "498e002b94d4710bf835f9fa7bb8b15c9b9396cdd30f5cc4471d55e30bd4a66f"
+    }
+  },
+  "mentor_report": {
+    "path": "mentor_report.md",
+    "sha256": "fd3d525001ba4982f85c761ddcd0276fc761d113d65667255acb57b2d9e47887"
+  },
+  "mentor_claim_sources": {
+    "study_population_split_anchors_and_metric": [
+      {"path": "study_design.json", "json_pointers": ["/cohort", "/learning_curve", "/model_authority/fixed_layer"]},
+      {"path": "learning_curve_summary.json", "json_pointers": ["/continuous_evidence/learning/anchors", "/continuous_evidence/learning/primary_metric"]}
+    ],
+    "learning_curves_subset_dispersion_scaling_layout_and_profile_breakdowns": [
+      {"path": "learning_curve_summary.json", "json_pointers": ["/continuous_evidence/learning", "/continuous_evidence/scaling"]}
+    ],
+    "representation_comparisons_intervals_and_win_rates": [
+      {"path": "representation_comparison.json", "json_pointers": ["/continuous_evidence/comparisons"]}
+    ],
+    "best_k_selection_and_stability": [
+      {"path": "best_k_results.json", "json_pointers": ["/selected_k_distribution_by_n", "/k_alpha_selection_training_only", "/token_ranking_training_only"]},
+      {"path": "best_k_stability.json", "json_pointers": ["/adjudication", "/per_n"]}
+    ],
+    "prospective_null_design": [
+      {"path": "prospective_null_authority.json", "json_pointers": ["/B", "/assignment_scope", "/derangement_algorithm", "/temporal_order_and_frame_alignment_preserved", "/test_targets", "/training_target_unit"]},
+      {"absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/prospective_target_null_results.json", "json_pointers": ["/status", "/empirical_upper_tail_formula", "/representations"]}
+    ],
+    "profile_confound_and_all_frozen_classifications": [
+      {"path": "diagnostic_adjudication.json", "json_pointers": ["/continuous_evidence/profile_control", "/categorical_adjudications"]}
+    ],
+    "layout_generalization_scope": [
+      {"path": "secondary_fresh_layout_status.json", "json_pointers": ["/status", "/known_layout_fixed_test_is_fresh_layout_evidence", "/historical_layout_generalization"]},
+      {"path": "diagnostic_adjudication.json", "json_pointers": ["/continuous_evidence/layout_generalization", "/categorical_adjudications/LAYOUT_GENERALIZATION"]}
+    ],
+    "next_direction": [
+      {"path": "diagnostic_adjudication.json", "json_pointers": ["/categorical_adjudications/VISIBLE_POSITION_MEASUREMENT_PATH_READY_FOR_OCCLUDED_EXPERIMENT"]},
+      {"authority": "MineOcclude Large-Scale No-Wall Trajectory Scaling and Best-K Token Study Version 1.0 FINAL P14 roadmap"}
+    ]
+  },
+  "large_runtime_artifacts_excluded_from_git": true,
+  "large_runtime_artifact_authorities": {
+    "raw_captures_and_video": {
+      "authority_path": "accepted_cohort_v2.lock.json",
+      "authority_sha256": "b73d1b6bbedc1ca72dab480ba6f4bafb22aa7c6675bc7a2f0dabf33fff2d8501"
+    },
+    "activation_tensors_and_dense_features": {
+      "authority_path": "p6_activation_manifest.json",
+      "authority_sha256": "a57be180a9054336dbe36d2ddaddbec2859e21d5b6a42dae5b25b1c276e2d5bb"
+    },
+    "solver_caches_and_gram_structures": {
+      "authority_path": "cache_manifest.p7a.json",
+      "authority_sha256": "b031b56535b39c21630a1105b154a7b0a29ffd9f665a9fdab113ac2ca538ae5f"
+    },
+    "p8_intermediate_predictions": {
+      "authority_path": "p8_prediction_manifest.json",
+      "authority_sha256": "e092d689792357ef8915f9fffcca99900c90e6132294503e13d7429fc7906a2f"
+    },
+    "p11_runtime_null_job_predictions": {
+      "authority_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/canonical_distributed_package_receipt.json",
+      "authority_sha256": "88245039ca2c9a6f217e79c50373e4dfd0cc552426a89829afc633af4c0f29b7"
+    }
+  },
+  "scientific_interpretation_source": "P13",
+  "new_scientific_computation_in_p14": false,
+  "original_mvp_modified": false,
+  "historical_u1_u2_reinterpreted": false,
+  "fresh_layout_generalization_claimed": false
+}

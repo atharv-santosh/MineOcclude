@@ -1,0 +1,68 @@
+{
+  "artifact_id": "large-scale-no-wall-p14-diagnostic-receipt-v1.0",
+  "schema_version": "1.0",
+  "experiment_id": "mineocclude-large-scale-no-wall-scaling-best-k-v0-1",
+  "phase": "P14",
+  "status": "PASS_P14_PACKAGE_VALIDATED",
+  "branch": "exploration/large-scale-no-wall-scaling-best-k-v0-1",
+  "execution_head": "2fdc4567111a63d137a01183144d4b09067b4abe",
+  "compute_type": "CPU_ONLY",
+  "new_experiment": false,
+  "new_scientific_computation": false,
+  "scientific_interpretation_source": "P13",
+  "mentor_report_present": true,
+  "provenance_present": true,
+  "package_manifest_present": true,
+  "p13_status": "PASS_P13_COMPLETE",
+  "final_next_direction": "RETURN_TO_HIDDEN_OCCLUDED_UNCERTAINTY_EXPERIMENT",
+  "visible_position_measurement_path_ready_for_occluded_experiment": true,
+  "target_specific_decoding_established": true,
+  "fresh_layout_generalization": "NOT_ADJUDICATED_IN_PRIMARY_STUDY",
+  "historical_layout_context": "MIXED",
+  "original_mvp_modified": false,
+  "historical_u1_u2_reinterpreted": false,
+  "artifacts": {
+    "mentor_report.md": {
+      "sha256": "fd3d525001ba4982f85c761ddcd0276fc761d113d65667255acb57b2d9e47887",
+      "byte_size": 22446
+    },
+    "provenance.json": {
+      "sha256": "ee7c71f5a88a6e00689e7c44ed963ad4c68b692f25687b4b14659f6d84755d68",
+      "byte_size": 10822
+    },
+    "p14_package_manifest.json": {
+      "sha256": "d4d8660867fa1c3ce1be6d2f12ad20c8315fe923f82f226c5e1df8b0967ee7d6",
+      "byte_size": 13128
+    }
+  },
+  "p13_outputs": {
+    "learning_curve_summary.json": "47213d2bf05aa8034b45813efb7517119b40c5a499b2151009783a3731028205",
+    "representation_comparison.json": "d7113e50920f68e5f22a2aba67905be6a5e2e5208a1aae5b7a919918ba474a52",
+    "diagnostic_adjudication.json": "64a68adccfb5ab3a3fe9b8060ab1f230f5907b5703a33275ca79f5923fc5978d",
+    "p13_learning_curve_decision.png": "5413a5c1a8b5311270292e39eb4c780f4aef5eb90f6130684d407092b9b55178",
+    "p13_representation_comparison_decision.png": "2f927c72ab8f51838b27bab7b89445299f2dc2d37bc4081805765ef53392a05f",
+    "p13_null_layout_profile_decision.png": "34a851a7c0dc26d9ac60045ebe21fa5af8e9589f807fb97610aebcd81947d68c",
+    "p13_receipt.json": "498e002b94d4710bf835f9fa7bb8b15c9b9396cdd30f5cc4471d55e30bd4a66f"
+  },
+  "included_figures": {
+    "p8_primary_learning_curves.png": "e7b0eead4b578733a49fc6e685bd40a469fceede583b78fd5bcd178c8a7ef40a",
+    "token_selection_frequency.png": "4f232d1671ba55a0a98d8403f8961bf954940ed7c5219e39f5bf7a64949d8770",
+    "token_stability_vs_n.png": "5ec94a397704beb952027b9d19668b48cc0c994e5b2cfaa1cbb0a2560a905831",
+    "p13_learning_curve_decision.png": "5413a5c1a8b5311270292e39eb4c780f4aef5eb90f6130684d407092b9b55178",
+    "p13_representation_comparison_decision.png": "2f927c72ab8f51838b27bab7b89445299f2dc2d37bc4081805765ef53392a05f",
+    "p13_null_layout_profile_decision.png": "34a851a7c0dc26d9ac60045ebe21fa5af8e9589f807fb97610aebcd81947d68c"
+  },
+  "validation": {
+    "targeted_checks_complete": true,
+    "p8_through_p13_rerun": false,
+    "model_fit_performed": false,
+    "scientific_results_modified": false,
+    "large_runtime_artifacts_added": false,
+    "python_compile_changed_code": "NOT_APPLICABLE",
+    "format_changed_code": "NOT_APPLICABLE",
+    "diagnostic_receipt_self_sha256_included": false,
+    "manifest_receipt_closure": "The receipt hashes the manifest. This receipt is bound by the first P14 package commit and later commit_remote_receipt.json, avoiding a manifest-receipt hash cycle."
+  },
+  "commit_remote_receipt_required": true,
+  "commit_remote_receipt_status": "PENDING_POST_COMMIT"
+}

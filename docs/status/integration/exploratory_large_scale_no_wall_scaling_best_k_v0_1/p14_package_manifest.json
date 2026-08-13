@@ -1,0 +1,96 @@
+{
+  "artifact_id": "large-scale-no-wall-p14-compact-package-manifest-v1.0",
+  "schema_version": "1.0",
+  "experiment_id": "mineocclude-large-scale-no-wall-scaling-best-k-v0-1",
+  "package_root": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/",
+  "branch": "exploration/large-scale-no-wall-scaling-best-k-v0-1",
+  "execution_head": "2fdc4567111a63d137a01183144d4b09067b4abe",
+  "path_semantics": "Included paths are relative to package_root; external runtime paths are absolute and are references, not copied package files.",
+  "AUTHORITY": {
+    "included_files": [
+      {"relative_path": "study_design.json", "sha256": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502", "byte_size": 15588, "purpose": "Frozen Version 1.0 study design and scientific rules."},
+      {"relative_path": "study_design.lock.json", "sha256": "05b337e81ffea6c6d3bb3f92ca76b7774c980f9c462565f5c50a71ad9f629f41", "byte_size": 473, "purpose": "Operator-approved lock for the study design."},
+      {"relative_path": "accepted_cohort_v2.lock.json", "sha256": "b73d1b6bbedc1ca72dab480ba6f4bafb22aa7c6675bc7a2f0dabf33fff2d8501", "byte_size": 431094, "purpose": "Frozen 120-trajectory accepted cohort identity."},
+      {"relative_path": "split_authority.json", "sha256": "b39c81454ea18125c373fb3c777ac4c1668882c9c1ad188a7d0f20e0cab43de5", "byte_size": 100613, "purpose": "Frozen 102-train/18-test split authority."},
+      {"relative_path": "subset_schedule.json", "sha256": "0d6f5e8394328915164bafea70468e6d26342a2eda9a1923e4d4ad745f494a48", "byte_size": 189779, "purpose": "Frozen 62-subset N=5/15/40/70/100 schedule."},
+      {"relative_path": "grouped_fold_authority.json", "sha256": "597bc7b401ca691897b843fc83120cc997a414b7a946819da4c3e99768e7728e", "byte_size": 732857, "purpose": "Frozen grouped training-fold authority."},
+      {"relative_path": "representation_authority.json", "sha256": "757217b2b3e54e236b4ad7b9b3574d7391f896558760a54bb1b5e457b186259e", "byte_size": 3628, "purpose": "Frozen GLOBAL, FULL, BEST-K, and secondary COARSE representation definitions."},
+      {"relative_path": "prospective_null_authority.json", "sha256": "56e3e6d67707cd90866d73743de96d6600d4c518031769e2518b515510c91dc9", "byte_size": 2799, "purpose": "Prospective B=49 within-layout whole-trajectory derangement authority."},
+      {"relative_path": "p13_adjudication_authority.json", "sha256": "f54c9b5ecd52b4b8bc0a4de50522f763676deeb78fb8ae433b2083b9ae88367d", "byte_size": 16072, "purpose": "Frozen outcome-blind P13 adjudication rules and input hashes."},
+      {"relative_path": "p13_adjudication_authority.lock.json", "sha256": "279b262ff6d1d36795aa5d25c21d57d8ba08badf4c2a6efd803345006c0e27cb", "byte_size": 577, "purpose": "Operator-approved lock for P13 adjudication authority."}
+    ]
+  },
+  "RESULTS": {
+    "included_files": [
+      {"relative_path": "learning_curve_results.json", "sha256": "dd45a79594caea5b6f9cce92c4898c195f383f988cf82a3a6f8d25d381861b91", "byte_size": 2480020, "purpose": "Validated P8 GLOBAL/FULL learning-curve result and subset evidence."},
+      {"relative_path": "learning_curve_summary.json", "sha256": "47213d2bf05aa8034b45813efb7517119b40c5a499b2151009783a3731028205", "byte_size": 101532, "purpose": "Canonical P13 learning, dispersion, scaling, layout, and profile summary."},
+      {"relative_path": "best_k_results.json", "sha256": "8b84bbdb443f1e07d0adf5015e8807532f8517ca6fd06adc7b081d7f516d16a5", "byte_size": 836858, "purpose": "Validated P8 training-selected BEST-K results."},
+      {"relative_path": "best_k_stability.json", "sha256": "242c4c36d2d4647b9a6b51c42d12c42ab69e8f1ba694c55dd23484adba921aa9", "byte_size": 472829, "purpose": "Validated P9 token-selection stability evidence."},
+      {"relative_path": "coarse_learning_curve_results.json", "sha256": "aae10d9b980227225b0aeb3cb07ff9aab4e13ba940cf7a111364da16a760d01f", "byte_size": 783200, "purpose": "Validated P10 secondary COARSE_2x6 learning-curve result."},
+      {"relative_path": "representation_comparison.json", "sha256": "d7113e50920f68e5f22a2aba67905be6a5e2e5208a1aae5b7a919918ba474a52", "byte_size": 77982, "purpose": "Canonical P13 matched comparisons, paired intervals, and win rates."}
+    ],
+    "external_runtime_authorities": [
+      {"absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/prospective_target_null_results.json", "sha256": "ac58a3bb47710fe11e2638efb9acfa0e4d741e48beeb529b8d8cc21b68a8211f", "byte_size": 14136, "purpose": "Canonical P11 prospective B=49 result; referenced in place and not copied into Git."},
+      {"absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/canonical_distributed_aggregation_receipt.json", "sha256": "255ff8e292596cbfa4d276da40d7958f1655dc9eb2a84881cfffecf2a3d92378", "byte_size": 893, "purpose": "P11 aggregation validation authority; referenced in place."},
+      {"absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/canonical_distributed_package_receipt.json", "sha256": "88245039ca2c9a6f217e79c50373e4dfd0cc552426a89829afc633af4c0f29b7", "byte_size": 1493, "purpose": "P11 durable runtime package receipt; referenced in place."},
+      {"absolute_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/five_root_merge_validation_receipt.json", "sha256": "7ac2f1289cb38f405ed6005a62787866c4f0126b18dbd43e2c31e4c937c66448", "byte_size": 686, "purpose": "P11 five-root merge validation; referenced in place."}
+    ]
+  },
+  "DECISION": {
+    "included_files": [
+      {"relative_path": "diagnostic_adjudication.json", "sha256": "64a68adccfb5ab3a3fe9b8060ab1f230f5907b5703a33275ca79f5923fc5978d", "byte_size": 15980, "purpose": "Canonical frozen P13 categorical adjudications and supporting evidence."},
+      {"relative_path": "mentor_report.md", "sha256": "fd3d525001ba4982f85c761ddcd0276fc761d113d65667255acb57b2d9e47887", "byte_size": 22446, "purpose": "Final mentor-facing answer, evidence summary, caveats, and next direction."},
+      {"relative_path": "provenance.json", "sha256": "ee7c71f5a88a6e00689e7c44ed963ad4c68b692f25687b4b14659f6d84755d68", "byte_size": 10822, "purpose": "Claim-level trace from the mentor report to frozen authorities."}
+    ],
+    "validation_closure": {
+      "relative_path": "diagnostic_receipt.json",
+      "purpose": "Final P14 package-validation receipt; hashes this manifest and is itself bound by the first package commit and later commit_remote_receipt.json.",
+      "manifest_hash_entry_intentionally_omitted": true,
+      "reason": "A manifest SHA inside diagnostic_receipt.json and a diagnostic_receipt.json SHA inside this manifest would be a cryptographic cycle. The one-way closure is manifest -> diagnostic receipt -> Git package commit -> post-commit remote receipt."
+    }
+  },
+  "FIGURES": {
+    "included_files": [
+      {"relative_path": "p8_primary_learning_curves.png", "sha256": "e7b0eead4b578733a49fc6e685bd40a469fceede583b78fd5bcd178c8a7ef40a", "byte_size": 243315, "purpose": "Primary learning curves with frozen subset dispersion."},
+      {"relative_path": "token_selection_frequency.png", "sha256": "4f232d1671ba55a0a98d8403f8961bf954940ed7c5219e39f5bf7a64949d8770", "byte_size": 123295, "purpose": "BEST-K token-selection frequency."},
+      {"relative_path": "token_stability_vs_n.png", "sha256": "5ec94a397704beb952027b9d19668b48cc0c994e5b2cfaa1cbb0a2560a905831", "byte_size": 193569, "purpose": "BEST-K selection stability versus N."},
+      {"relative_path": "p13_learning_curve_decision.png", "sha256": "5413a5c1a8b5311270292e39eb4c780f4aef5eb90f6130684d407092b9b55178", "byte_size": 149146, "purpose": "P13 learning-curve decision view."},
+      {"relative_path": "p13_representation_comparison_decision.png", "sha256": "2f927c72ab8f51838b27bab7b89445299f2dc2d37bc4081805765ef53392a05f", "byte_size": 70963, "purpose": "P13 representation-comparison decision view."},
+      {"relative_path": "p13_null_layout_profile_decision.png", "sha256": "34a851a7c0dc26d9ac60045ebe21fa5af8e9589f807fb97610aebcd81947d68c", "byte_size": 211509, "purpose": "P13 prospective-null, layout, and profile decision view."}
+    ]
+  },
+  "RECEIPTS": {
+    "included_files": [
+      {"relative_path": "p8_run_manifest.json", "sha256": "6a788740e85dbb75a2b39fbe0b8f0865a2929b8f0368797bc52c269932517707", "byte_size": 621236, "purpose": "P8 authorized job and execution manifest."},
+      {"relative_path": "p8_prediction_manifest.json", "sha256": "e092d689792357ef8915f9fffcca99900c90e6132294503e13d7429fc7906a2f", "byte_size": 122004, "purpose": "Compact authority for excluded P8 intermediate predictions."},
+      {"relative_path": "p8_receipt.json", "sha256": "6a583834d4180b2f3703a5ca43be07421c5763386278fed298d91af115b3999a", "byte_size": 910, "purpose": "P8 completion receipt."},
+      {"relative_path": "p8_s3_durability_receipt.json", "sha256": "ff9657371f19fc1df1b8a03e028f6d1ec41c6beb1f943e2ad1df3512d1fc0170", "byte_size": 938, "purpose": "P8 result durability receipt."},
+      {"relative_path": "p8_validation_receipt.json", "sha256": "ec568acfd81a1cea75711cbe6504e6bff6f0d73643fdc116c42ff0d0ec215936", "byte_size": 1299, "purpose": "P8 deterministic validation receipt."},
+      {"relative_path": "p9_receipt.json", "sha256": "60742f7de7b975408c9dd380c385fa708bf8e7de5ed5cf732731ddbc581689e6", "byte_size": 2122, "purpose": "P9 stability result and figure validation/durability receipt."},
+      {"relative_path": "p10_run_manifest.json", "sha256": "d04db26c1e05eb9d0c526d19e2c5cb813ea22332d8e507032e5ad91cad487092", "byte_size": 176408, "purpose": "P10 authorized COARSE job manifest."},
+      {"relative_path": "p10_receipt.json", "sha256": "72783ad039539cc83e94e2a27806f8dcebc2fb6152e1e00578f8bf5f77c447a7", "byte_size": 255, "purpose": "P10 completion receipt."},
+      {"relative_path": "p10_validation_receipt.json", "sha256": "6e11de0c984a354b63bc7f4c7777d7fd4cc34e49cf341a71e4126cabacbc0b44", "byte_size": 606, "purpose": "P10 deterministic validation receipt."},
+      {"relative_path": "secondary_fresh_layout_status.json", "sha256": "76232b1ac6362345ed5779a8f6c54bc423b540e0d2a789460108c36164080d17", "byte_size": 1717, "purpose": "P12 deferred-by-design fresh-layout status."},
+      {"relative_path": "p13_receipt.json", "sha256": "498e002b94d4710bf835f9fa7bb8b15c9b9396cdd30f5cc4471d55e30bd4a66f", "byte_size": 3537, "purpose": "PASS_P13_COMPLETE receipt binding upstream inputs and six generated outputs."}
+    ],
+    "validation_closure": {
+      "relative_path": "diagnostic_receipt.json",
+      "binding": "Bound by the first P14 Git package commit; its SHA is subsequently recorded by commit_remote_receipt.json after remote equality is observed."
+    }
+  },
+  "EXCLUDED_LARGE_RUNTIME_ARTIFACTS": {
+    "excluded_from_git": true,
+    "items": [
+      {"class": "raw captures and video", "reason": "Durable under the frozen cohort/capture authorities; not duplicated into the compact Git package.", "authority_path": "accepted_cohort_v2.lock.json", "authority_sha256": "b73d1b6bbedc1ca72dab480ba6f4bafb22aa7c6675bc7a2f0dabf33fff2d8501"},
+      {"class": "activation tensors and dense features", "reason": "Durable/reconstructable under the activation authority; not duplicated into Git.", "authority_path": "p6_activation_manifest.json", "authority_sha256": "a57be180a9054336dbe36d2ddaddbec2859e21d5b6a42dae5b25b1c276e2d5bb"},
+      {"class": "solver caches and Gram structures", "reason": "Runtime optimization artifacts remain governed by their cache authority.", "authority_path": "cache_manifest.p7a.json", "authority_sha256": "b031b56535b39c21630a1105b154a7b0a29ffd9f665a9fdab113ac2ca538ae5f"},
+      {"class": "P8 intermediate predictions", "reason": "Prediction identities and durable locations are recorded by the compact prediction manifest.", "authority_path": "p8_prediction_manifest.json", "authority_sha256": "e092d689792357ef8915f9fffcca99900c90e6132294503e13d7429fc7906a2f"},
+      {"class": "P11 runtime null job predictions and parent execution manifest", "reason": "Canonical compact results and receipts are referenced by exact absolute path/SHA; distributed runtime trees and transient progress state are not copied.", "authority_path": "/home/sagemaker-user/mineocclude_p11_owner_runtime/canonical_aggregation/canonical_distributed_package_receipt.json", "authority_sha256": "88245039ca2c9a6f217e79c50373e4dfd0cc552426a89829afc633af4c0f29b7", "parent_manifest_sha256": "634720967cd8e23b2e9f0994981150768123018ef08a8f76ee9d8433f8886f87"},
+      {"class": "execution ledgers and progress files", "reason": "Transient progress state is unnecessary because final manifests, results, validations, and receipts are included."},
+      {"class": "other large intermediate predictions", "reason": "Excluded when a frozen manifest/receipt provides durable identity or deterministic reconstruction authority."}
+    ]
+  },
+  "included_file_count_excluding_validation_closure": 36,
+  "diagnostic_receipt_is_one_way_validation_closure": true,
+  "commit_remote_receipt_expected_after_first_package_commit": true
+}

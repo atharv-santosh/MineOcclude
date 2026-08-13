@@ -1,0 +1,478 @@
+{
+  "authority": {
+    "artifact_id": "large-scale-no-wall-p13-adjudication-authority-v1.0",
+    "authority_base_commit": "ebe9826c6345ea67896faf9efaba9b0df66bf354",
+    "input_sha256": {
+      "ACCEPTED_COHORT": "b73d1b6bbedc1ca72dab480ba6f4bafb22aa7c6675bc7a2f0dabf33fff2d8501",
+      "GROUPED_FOLDS": "597bc7b401ca691897b843fc83120cc997a414b7a946819da4c3e99768e7728e",
+      "P10_COARSE_RESULTS": "aae10d9b980227225b0aeb3cb07ff9aab4e13ba940cf7a111364da16a760d01f",
+      "P10_VALIDATION": "6e11de0c984a354b63bc7f4c7777d7fd4cc34e49cf341a71e4126cabacbc0b44",
+      "P11_AGGREGATION_RECEIPT": "255ff8e292596cbfa4d276da40d7958f1655dc9eb2a84881cfffecf2a3d92378",
+      "P11_CANONICAL_RESULT": "ac58a3bb47710fe11e2638efb9acfa0e4d741e48beeb529b8d8cc21b68a8211f",
+      "P11_MERGE_VALIDATION": "7ac2f1289cb38f405ed6005a62787866c4f0126b18dbd43e2c31e4c937c66448",
+      "P11_PACKAGE_RECEIPT": "88245039ca2c9a6f217e79c50373e4dfd0cc552426a89829afc633af4c0f29b7",
+      "P12_STATUS": "76232b1ac6362345ed5779a8f6c54bc423b540e0d2a789460108c36164080d17",
+      "P8_BEST_K_RESULTS": "8b84bbdb443f1e07d0adf5015e8807532f8517ca6fd06adc7b081d7f516d16a5",
+      "P8_LEARNING_RESULTS": "dd45a79594caea5b6f9cce92c4898c195f383f988cf82a3a6f8d25d381861b91",
+      "P8_PREDICTION_MANIFEST": "e092d689792357ef8915f9fffcca99900c90e6132294503e13d7429fc7906a2f",
+      "P8_RUN_MANIFEST": "6a788740e85dbb75a2b39fbe0b8f0865a2929b8f0368797bc52c269932517707",
+      "P8_VALIDATION": "ec568acfd81a1cea75711cbe6504e6bff6f0d73643fdc116c42ff0d0ec215936",
+      "P9_RECEIPT": "60742f7de7b975408c9dd380c385fa708bf8e7de5ed5cf732731ddbc581689e6",
+      "P9_STABILITY": "242c4c36d2d4647b9a6b51c42d12c42ab69e8f1ba694c55dd23484adba921aa9",
+      "PROFILE_AUDIT": "0f033e2fbec621ff3eab70f374e9e4290d038852b2397dcba3de2ee81f537c2e",
+      "PROFILE_DESIGN": "287b6006e4ab592d01112c8d651b5fdb95ea7cfea79b1fcceb443e1ea37483dd",
+      "PROSPECTIVE_NULL_AUTHORITY": "56e3e6d67707cd90866d73743de96d6600d4c518031769e2518b515510c91dc9",
+      "REPRESENTATION_AUTHORITY": "757217b2b3e54e236b4ad7b9b3574d7391f896558760a54bb1b5e457b186259e",
+      "SPLIT_AUTHORITY": "b39c81454ea18125c373fb3c777ac4c1668882c9c1ad188a7d0f20e0cab43de5",
+      "STUDY_DESIGN": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502",
+      "STUDY_DESIGN_LOCK": "05b337e81ffea6c6d3bb3f92ca76b7774c980f9c462565f5c50a71ad9f629f41",
+      "SUBSET_SCHEDULE": "0d6f5e8394328915164bafea70468e6d26342a2eda9a1923e4d4ad745f494a48"
+    }
+  },
+  "schema_version": "1.0",
+  "source_canonical_summary_artifact_id": "large-scale-no-wall-p13-canonical-summary-v1.0",
+  "artifact_id": "large-scale-no-wall-p13-diagnostic-adjudication-v1.0",
+  "continuous_evidence": {
+    "layout_generalization": {
+      "historical_context": "MIXED",
+      "known_layout_fixed_test_is_fresh_layout_evidence": false,
+      "p12": "DEFERRED_BY_DESIGN",
+      "primary_study": "NOT_ADJUDICATED_IN_PRIMARY_STUDY"
+    },
+    "profile_control": {
+      "component_gates": {
+        "aggregate_cancellation_not_sole_pass": true,
+        "camera_authority": true,
+        "capture_validity": true,
+        "direction_balance": true,
+        "exact_frozen_membership_120": true,
+        "f_60": true,
+        "layout_balance": true,
+        "motion_schedule_compliance": true,
+        "no_wall_authority": true,
+        "overall_time_position": true,
+        "profile_similarity_frozen_gate": true,
+        "raw_authority_durable": true,
+        "reporting_stratum_balance": true,
+        "retry_immutability": true,
+        "shape_class_balance": true,
+        "simulator_live_equivalence": true,
+        "start_end_and_target_bounds": true,
+        "target_range": true,
+        "target_variance": true,
+        "unique_repeats_specs_and_seeds": true
+      },
+      "trajectory_profile_confound_controlled": true
+    },
+    "prospective_null": {
+      "GLOBAL_MEAN": {
+        "B": 49,
+        "count_null_greater_equal_observed": 0,
+        "empirical_p": 0.02,
+        "observed": 0.15128414212699445,
+        "q95_empirical_nearest_rank": -73.7307101276475,
+        "separates": true,
+        "sorted_null": [
+          -169.0131364719614,
+          -147.88993565019794,
+          -147.33277912580877,
+          -143.84515781398576,
+          -135.39880176983985,
+          -132.97819784631074,
+          -126.79438875169626,
+          -125.03115916757294,
+          -123.45879493053194,
+          -122.96425832116118,
+          -122.55639050565738,
+          -122.50382219168148,
+          -121.70541631041499,
+          -119.79397284841339,
+          -118.36403528282857,
+          -114.93694183230957,
+          -113.85667778683195,
+          -112.62019676000848,
+          -111.59570919947852,
+          -108.92352719095696,
+          -108.51551937364559,
+          -106.32890397327382,
+          -105.65624590549078,
+          -104.59736184664719,
+          -104.41979494931752,
+          -104.26431550060566,
+          -103.58553694891884,
+          -103.37715715111644,
+          -102.85289372581944,
+          -102.68872347239517,
+          -97.95062818329455,
+          -97.69277723243731,
+          -96.68382230588408,
+          -96.28559126142066,
+          -94.8681973750967,
+          -94.6433489759745,
+          -94.25750153908776,
+          -92.26729508081023,
+          -92.0091516168913,
+          -91.97152196078487,
+          -91.9145208208169,
+          -89.19740488359939,
+          -87.75917054121936,
+          -85.09796414092368,
+          -83.44897268286739,
+          -76.25528258840185,
+          -73.7307101276475,
+          -71.39402790533194,
+          -56.74483149591382
+        ],
+        "canonical_observed_per_layout_r2": {
+          "L01": 0.5697981505015033,
+          "L02": 0.4122872172694228,
+          "L03": 0.46686781816850703,
+          "L04": 0.7063144087989225,
+          "L05": -0.8192806359817676,
+          "L06": -0.42828210599462135
+        },
+        "positive_layout_count": 4
+      },
+      "FULL_TOKEN_GRID": {
+        "B": 49,
+        "count_null_greater_equal_observed": 0,
+        "empirical_p": 0.02,
+        "observed": 0.6586437442101604,
+        "q95_empirical_nearest_rank": -130.4709852704585,
+        "separates": true,
+        "sorted_null": [
+          -256.7431220084361,
+          -231.24567155311067,
+          -225.62399546458232,
+          -214.27723602517833,
+          -200.14263228118287,
+          -199.78465275801304,
+          -198.23707943601963,
+          -196.37731474419897,
+          -194.1948134006453,
+          -194.0732851410669,
+          -186.52357886230956,
+          -185.94979178620974,
+          -185.85014147542634,
+          -183.84348633397758,
+          -181.33235559138953,
+          -179.49215492293433,
+          -178.64346869980184,
+          -175.0904568500515,
+          -174.07426098868675,
+          -173.7318892570388,
+          -170.4277305521357,
+          -169.99593605116377,
+          -169.06366490858184,
+          -169.01859266078506,
+          -167.6286899334398,
+          -165.8625256151245,
+          -165.37081464182114,
+          -163.75352189356963,
+          -161.2695851138091,
+          -161.1854109759534,
+          -160.63726434877935,
+          -156.77331080802668,
+          -154.1985944815008,
+          -153.7527401936096,
+          -151.96387952246377,
+          -151.3187730701836,
+          -150.2694448872874,
+          -149.0613268747197,
+          -145.45208338822403,
+          -145.18490505279874,
+          -142.87369173867867,
+          -139.8382635779918,
+          -139.21113453022386,
+          -136.8878255903467,
+          -135.5122426041761,
+          -133.0718442607323,
+          -130.4709852704585,
+          -130.03745552800464,
+          -99.4983290261049
+        ],
+        "canonical_observed_per_layout_r2": {
+          "L01": 0.8119234939441062,
+          "L02": 0.6974872376390758,
+          "L03": 0.6892254139059085,
+          "L04": 0.8888419739248622,
+          "L05": 0.4035517370924069,
+          "L06": 0.46083260875460264
+        },
+        "positive_layout_count": 6
+      },
+      "BEST_K_TOKENS": {
+        "B": 49,
+        "count_null_greater_equal_observed": 0,
+        "empirical_p": 0.02,
+        "observed": 0.5536849680151364,
+        "q95_empirical_nearest_rank": -81.08669636140074,
+        "separates": true,
+        "sorted_null": [
+          -164.07270033825458,
+          -142.6519017129412,
+          -140.19482802879358,
+          -136.77667001867175,
+          -135.10822129258227,
+          -128.4577956260088,
+          -120.32572644044899,
+          -117.56516686540043,
+          -116.37595804154212,
+          -115.99754163022662,
+          -114.73582400858186,
+          -112.11651877952754,
+          -111.5867841342254,
+          -110.28371105333353,
+          -108.1926627895205,
+          -107.96578339128051,
+          -105.5905636421263,
+          -105.38655604329574,
+          -104.81280564575995,
+          -104.51413804515666,
+          -102.76907209463502,
+          -102.21432262640106,
+          -101.39444492003581,
+          -100.93709620470895,
+          -100.6330220769875,
+          -99.49307229145319,
+          -99.33377919724443,
+          -99.3153722630736,
+          -97.45910391974995,
+          -97.03559484956361,
+          -96.48376810236755,
+          -96.45576268160134,
+          -96.25941308686185,
+          -95.95023766295564,
+          -93.10307158993349,
+          -92.38057616150087,
+          -91.43465012761351,
+          -90.82345565386596,
+          -89.5606759031118,
+          -89.50466621878343,
+          -88.5841658589004,
+          -87.50598108232242,
+          -87.16028335344441,
+          -87.14104433224418,
+          -86.64926955819601,
+          -85.55658241012618,
+          -81.08669636140074,
+          -68.12136193336896,
+          -58.135420431622265
+        ],
+        "canonical_observed_per_layout_r2": {
+          "L01": 0.8463357828938142,
+          "L02": 0.6794847707395367,
+          "L03": 0.7392523403889478,
+          "L04": 0.8640765457576397,
+          "L05": 0.29997109018360246,
+          "L06": -0.10701072187272231
+        },
+        "positive_layout_count": 5
+      },
+      "COARSE_2x6": {
+        "B": 49,
+        "count_null_greater_equal_observed": 0,
+        "empirical_p": 0.02,
+        "observed": 0.6454811092837313,
+        "q95_empirical_nearest_rank": -112.94761154743696,
+        "separates": true,
+        "sorted_null": [
+          -251.8539792066292,
+          -199.09713369135443,
+          -188.00994063377132,
+          -185.89232122900498,
+          -181.9930960673167,
+          -181.85709142529416,
+          -181.09622360478338,
+          -174.3552305009788,
+          -166.62163847037078,
+          -166.4670456038596,
+          -164.27665000891471,
+          -163.35046825365689,
+          -161.3343822432268,
+          -160.78766926618115,
+          -159.8915437328559,
+          -159.61996308319772,
+          -159.26782628644656,
+          -153.51065423798894,
+          -153.28134862491558,
+          -152.41474200416067,
+          -151.92011100215507,
+          -151.46814431913987,
+          -150.35875698870217,
+          -148.80762145275432,
+          -146.2965839672124,
+          -142.2208240461181,
+          -140.48479404193162,
+          -140.15081438214307,
+          -139.3965402196287,
+          -139.24509425067444,
+          -138.96265461067676,
+          -137.9291776925432,
+          -137.5936211606172,
+          -136.94716035548194,
+          -132.5217423547102,
+          -131.35381052391548,
+          -129.2166531588397,
+          -128.8314710650537,
+          -127.44668725885823,
+          -125.6394204548888,
+          -124.94001389116227,
+          -123.33559569833817,
+          -120.43218309889681,
+          -118.2366826562902,
+          -114.8420698305493,
+          -113.62736917264829,
+          -112.94761154743696,
+          -109.60582720657169,
+          -86.31405113773899
+        ],
+        "canonical_observed_per_layout_r2": {
+          "L01": 0.8025705941543695,
+          "L02": 0.707113982609267,
+          "L03": 0.6349058875169699,
+          "L04": 0.8528075384885959,
+          "L05": 0.3907210831986328,
+          "L06": 0.48476756973455276
+        },
+        "positive_layout_count": 6
+      }
+    }
+  },
+  "categorical_adjudications": {
+    "BEST_K_ADVANTAGE": {
+      "classification": "False"
+    },
+    "BEST_K_TOKEN_SELECTION_STABLE": {
+      "classification": "Unclear"
+    },
+    "COARSE_SPATIAL_READOUT_SUFFICIENT": {
+      "best_token_set": [
+        "FULL_TOKEN_GRID"
+      ],
+      "classification": "Unclear",
+      "qualitative_predicate": "UNRESOLVED"
+    },
+    "DATA_SCALE_LIMITATION_PLAUSIBLE": {
+      "classification": "True",
+      "components": {
+        "GLOBAL_MEAN": {
+          "qualifies": true
+        },
+        "FULL_TOKEN_GRID": {
+          "qualifies": true
+        },
+        "BEST_K_TOKENS": {
+          "qualifies": true
+        }
+      }
+    },
+    "FULL_TOKEN_GRID_NEEDED": {
+      "classification": "Unclear",
+      "qualitative_predicate": "UNRESOLVED"
+    },
+    "LAYOUT_GENERALIZATION": {
+      "historical_context": "MIXED",
+      "known_layout_fixed_test_is_fresh_layout_evidence": false,
+      "p12": "DEFERRED_BY_DESIGN",
+      "primary_study": "NOT_ADJUDICATED_IN_PRIMARY_STUDY"
+    },
+    "MEAN_POOLING_BOTTLENECK_PLAUSIBLE": {
+      "classification": "True",
+      "components": {
+        "FULL_TOKEN_GRID": {
+          "supports": true
+        },
+        "BEST_K_TOKENS": {
+          "supports": true
+        }
+      },
+      "qualitative_predicate": "UNRESOLVED"
+    },
+    "TARGET_SPECIFIC_DECODING_ESTABLISHED": {
+      "best_observed_core_set": [
+        "FULL_TOKEN_GRID"
+      ],
+      "classification": "True",
+      "components": {
+        "GLOBAL_MEAN": {
+          "positive_layout_count": 4,
+          "qualifies": false,
+          "separates": true
+        },
+        "FULL_TOKEN_GRID": {
+          "positive_layout_count": 6,
+          "qualifies": true,
+          "separates": true
+        },
+        "BEST_K_TOKENS": {
+          "positive_layout_count": 5,
+          "qualifies": true,
+          "separates": true
+        }
+      },
+      "qualifying_core_representations": [
+        "BEST_K_TOKENS",
+        "FULL_TOKEN_GRID"
+      ]
+    },
+    "TOKEN_PRESERVING_ADVANTAGE_REPLICATED": {
+      "classification": "True",
+      "components": {
+        "FULL_TOKEN_GRID": {
+          "replicated": true
+        },
+        "BEST_K_TOKENS": {
+          "replicated": false
+        }
+      }
+    },
+    "TRAJECTORY_PROFILE_CONFOUND_CONTROLLED": {
+      "classification": "True",
+      "components": {
+        "aggregate_cancellation_not_sole_pass": true,
+        "camera_authority": true,
+        "capture_validity": true,
+        "direction_balance": true,
+        "exact_frozen_membership_120": true,
+        "f_60": true,
+        "layout_balance": true,
+        "motion_schedule_compliance": true,
+        "no_wall_authority": true,
+        "overall_time_position": true,
+        "profile_similarity_frozen_gate": true,
+        "raw_authority_durable": true,
+        "reporting_stratum_balance": true,
+        "retry_immutability": true,
+        "shape_class_balance": true,
+        "simulator_live_equivalence": true,
+        "start_end_and_target_bounds": true,
+        "target_range": true,
+        "target_variance": true,
+        "unique_repeats_specs_and_seeds": true
+      }
+    },
+    "VISIBLE_POSITION_MEASUREMENT_PATH_READY_FOR_OCCLUDED_EXPERIMENT": {
+      "classification": "True",
+      "components": {
+        "GLOBAL_MEAN": {
+          "positive_layout_count": 4,
+          "ready": false
+        },
+        "FULL_TOKEN_GRID": {
+          "positive_layout_count": 6,
+          "ready": true
+        },
+        "BEST_K_TOKENS": {
+          "positive_layout_count": 6,
+          "ready": true
+        },
+        "COARSE_2x6": {
+          "positive_layout_count": 6,
+          "ready": true
+        }
+      }
+    }
+  },
+  "continuous_evidence_precedes_categories": true
+}
