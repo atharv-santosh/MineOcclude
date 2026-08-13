@@ -318,7 +318,7 @@ def test_exact_five_root_gate_on_controlled_196_job_fixture(
     monkeypatch.setattr(merger.p11, "MANIFEST", parent_path)
     monkeypatch.setattr(merger.p11, "validate_manifest", lambda **_kwargs: parent)
     monkeypatch.setattr(merger.p11.p8, "JobContext", lambda: type("Context", (), {
-        "test_ids": ["row"], "true_targets": lambda self, ids: np.array([0.0]),
+        "test_ids": ["row"], "targets": lambda self, ids: np.array([0.0]),
         "layouts": lambda self, ids: ["layout"],
         "access": type("Access", (), {"row_ordinals": lambda self, ids: [0]})(),
     })())

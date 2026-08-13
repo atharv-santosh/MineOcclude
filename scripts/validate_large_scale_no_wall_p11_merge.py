@@ -138,7 +138,7 @@ def validate_merge_with_results(
         require(observed == allowed_by_source[source], f"missing or foreign job directory for {source}")
     context = p11.p8.JobContext()
     test_ids = list(context.test_ids)
-    true_targets = context.true_targets(test_ids)
+    true_targets = context.targets(test_ids)
     expected_rows = np.asarray(context.access.row_ordinals(test_ids), dtype=np.int64)
     validated_results: dict[str, str] = {}
     ordered_results: list[dict[str, Any]] = []
