@@ -4,6 +4,7 @@ import importlib.util
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from PIL import Image
 
@@ -152,6 +153,32 @@ class RegimeAMagentaAdapterTests(unittest.TestCase):
         for image in malformed:
             with self.subTest(image=image), self.assertRaises(VisionInputError):
                 detect_magenta(image, hsv_ranges=[self.threshold])
+
+    def test_target_reconciliation_reports_exact_indices_without_packaging(self):
+        worker = object.__new__(self.runner.ProductionCaptureWorker)
+        visibility = [
+            {"model_frame_idx": index, "tau": index - 9 if 10 <= index <= 28 else None}
+            for index in range(40)
+        ]
+        with (
+            patch.object(worker, "_capture_context", return_value={}),
+            patch.object(
+                worker,
+                "_post_capture_artifacts",
+                return_value=(
+                    visibility,
+                    [],
+                    [],
+                    list(range(10, 29)),
+                    list(range(10, 29)),
+                ),
+            ),
+        ):
+            result = worker.target_reconciliation({}, Path("/non-scientific"))
+        self.assertEqual(result["observed_onset_model_frame_idx"], 10)
+        self.assertEqual(result["expected_target_count"], 19)
+        self.assertTrue(result["exact_reconciliation"])
+        self.assertFalse(result["unexplained_mismatch"])
 
 
 if __name__ == "__main__":

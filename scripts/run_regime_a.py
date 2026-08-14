@@ -203,18 +203,20 @@ class ProductionCaptureWorker:
             "signed_speed": signed_speed,
         }
 
-    def _validate_and_package(
+    def _post_capture_artifacts(
         self, spec: dict[str, object], partial: Path, context: dict[str, object]
-    ) -> None:
-        from mineocclude.data.build_dataset import process_episode
-        from mineocclude.data.package_episode import package_and_validate
+    ) -> tuple[
+        list[dict[str, object]],
+        list[dict[str, object]],
+        list[dict[str, object]],
+        list[int],
+        list[int],
+    ]:
+        """Derive the frozen post-capture target inputs without packaging or models."""
+
         from mineocclude.vision.magenta import HsvRange, detect_magenta
 
         frames = int(context["frames"])
-        server_episode = Path(context["server_episode"])
-        client_episode = Path(context["client_episode"])
-        noise_path = Path(context["noise_path"])
-        motion_path = Path(context["motion_path"])
         schedule = context["schedule"]
         signed_speed = float(context["signed_speed"])
         raw = partial / "raw"
@@ -321,6 +323,51 @@ class ProductionCaptureWorker:
                 int(spec["expected_stable_hidden_onset_frame"]),
                 int(spec["expected_stable_hidden_onset_frame"]) + 19,
             )
+        )
+        return visibility, frame_map, coordinates, targets, expected_targets
+
+    def target_reconciliation(
+        self, spec: dict[str, object], partial: Path
+    ) -> dict[str, object]:
+        """Compare prospective geometry targets with actual frozen dual visibility."""
+
+        context = self._capture_context(spec)
+        visibility, _frame_map, _coordinates, targets, expected_targets = (
+            self._post_capture_artifacts(spec, partial, context)
+        )
+        onset = next(
+            (
+                int(row["model_frame_idx"])
+                for row in visibility
+                if row.get("tau") == 1
+            ),
+            None,
+        )
+        return {
+            "expected_target_model_frame_indices": expected_targets,
+            "observed_target_model_frame_indices": targets,
+            "expected_target_count": len(expected_targets),
+            "observed_target_count": len(targets),
+            "expected_onset_model_frame_idx": expected_targets[0],
+            "observed_onset_model_frame_idx": onset,
+            "exact_reconciliation": targets == expected_targets,
+            "unexplained_mismatch": targets != expected_targets,
+        }
+
+    def _validate_and_package(
+        self, spec: dict[str, object], partial: Path, context: dict[str, object]
+    ) -> None:
+        from mineocclude.data.build_dataset import process_episode
+        from mineocclude.data.package_episode import package_and_validate
+
+        frames = int(context["frames"])
+        server_episode = Path(context["server_episode"])
+        client_episode = Path(context["client_episode"])
+        noise_path = Path(context["noise_path"])
+        motion_path = Path(context["motion_path"])
+        raw = partial / "raw"
+        visibility, frame_map, coordinates, targets, expected_targets = (
+            self._post_capture_artifacts(spec, partial, context)
         )
         if targets != expected_targets:
             raise RegimeAError("observed stable-hidden targets differ from frozen targets")
@@ -456,7 +503,13 @@ class ProductionCaptureWorker:
         self.runtime = self.live.LiveRuntime()
         self.runtime.precheck()
 
-    def capture(self, spec: dict[str, object], partial: Path) -> None:
+    def capture(
+        self,
+        spec: dict[str, object],
+        partial: Path,
+        *,
+        validate_and_package: bool = True,
+    ) -> None:
         context = self._capture_context(spec)
         self._ensure_started()
         assert self.runtime is not None
@@ -512,7 +565,8 @@ class ProductionCaptureWorker:
         shutil.copy2(server_episode / "server_state.jsonl", raw / "server_state.jsonl")
         shutil.copy2(client_episode / "client_tick.jsonl", raw / "client_tick.jsonl")
         shutil.copy2(client_episode / "raw_actions.jsonl", raw / "actions.jsonl")
-        self._validate_and_package(spec, partial, context)
+        if validate_and_package:
+            self._validate_and_package(spec, partial, context)
     def close(self) -> None:
         if self.processes:
             self.live.stop_runtime(self.processes)

@@ -1,0 +1,91 @@
+{
+  "artifact_id": "regime-a-t01-capture-provenance-compatibility-v1.0",
+  "status": "PASS_RAW_CAPTURE_PROVENANCE_COMPATIBLE",
+  "created_utc": "2026-08-14T04:35:00Z",
+  "capture_governing_commit": "39cc5c9dab86bb224bdbe488c5e2fb115205efaa",
+  "current_comparison_commit": "08d1632911717c12154f12267d25060bc3f6975d",
+  "capture_governing_evidence": {
+    "authorization_path": "/home/sagemaker-user/regime-a-a4-authorization/a4_operator_authorization_v7.json",
+    "authorization_sha256": "c03b31b2e35e300eb528bbb4b817552c71b56ae1f6e532d6a5db4e5788f5a42d",
+    "authorization_bound_commit": "39cc5c9dab86bb224bdbe488c5e2fb115205efaa",
+    "retry6_started_utc": "2026-08-14T04:04:02Z",
+    "retry6_log_sha256": "811aabd5339f17ba6ef25286570db91d848951ef5570a9adf5521f2b7fb7e50f",
+    "reset_result_sha256": "ceabf9ed533654c298fb0bbf844146b9b164d5136b1b5ab69300f69141f82277",
+    "capture_complete_sha256": "e6fe661313aa18644f5925e1fc5c41f2540cb805c3a4b5f7a88fba7eaae360f2"
+  },
+  "unchanged_raw_capture_dependencies": [
+    {
+      "path": "scripts/run_large_scale_no_wall_campaign.py",
+      "git_object_at_capture_and_current": "ae62058cf5a08be82a46a496f7936afa71593427"
+    },
+    {
+      "path": "scripts/provision_capture_runtime_sagemaker.sh",
+      "git_object_at_capture_and_current": "27f6f3786ee32ac2b266635ffd0b2cc0008bf2b3"
+    },
+    {
+      "path": "src/mineocclude/data/noise_schedule.py",
+      "git_object_at_capture_and_current": "27e9af554127c285ec4143c9748cfd12697154bb"
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main",
+      "git_object_at_capture_and_current": "383cf3fbb68d46a208f1a638f938dbb12602a232"
+    }
+  ],
+  "changes_since_capture": [
+    {
+      "path": "scripts/run_regime_a.py",
+      "functions": {
+        "authorization_bindings": "AUTHORIZATION_ONLY",
+        "detector_rgb_rows": "POST_CAPTURE_ONLY",
+        "ProductionCaptureWorker._capture_context": "CAPTURE_AFFECTING_SCOPE_SEMANTICALLY_UNCHANGED_REFACTOR",
+        "ProductionCaptureWorker._validate_and_package": "POST_CAPTURE_ONLY",
+        "ProductionCaptureWorker.resume_capture": "POST_CAPTURE_ONLY",
+        "ProductionCaptureWorker.capture": "CAPTURE_AFFECTING_SCOPE_SEMANTICALLY_UNCHANGED_REFACTOR"
+      },
+      "capture_semantic_comparison": "The startspec command, mode/duration/reveal/warmup/impulse/pairshift/lockcam commands, episode ID, seed, q, frame count, start position, noise bytes, motion bytes, runtime waits, and four raw-copy sources are value-identical; only shared-context extraction and the subsequent post-capture call changed."
+    },
+    {
+      "path": "src/mineocclude/regime_a.py",
+      "functions": {
+        "AtomicTrajectoryStore.same_spec_partial": "POST_CAPTURE_ONLY",
+        "AtomicTrajectoryStore.discard_same_spec_partial": "POST_CAPTURE_ONLY"
+      }
+    },
+    {
+      "path": "src/mineocclude/regime_a_execution.py",
+      "functions": {
+        "A4ExecutionRunner.run": "POST_CAPTURE_ONLY"
+      }
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "classification": "AUTHORIZATION_ONLY"
+    },
+    {
+      "path": "tests/test_regime_a_a4_runner.py",
+      "classification": "TEST_ONLY"
+    },
+    {
+      "path": "tests/test_regime_a_magenta_adapter.py",
+      "classification": "TEST_ONLY"
+    },
+    {
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/a4_magenta_adapter_supersession_receipt.json",
+      "classification": "RECEIPT_ONLY"
+    },
+    {
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/a4_magenta_adapter_rgba_supersession_receipt.json",
+      "classification": "RECEIPT_ONLY"
+    }
+  ],
+  "capture_affecting_semantic_changes_since_capture": [],
+  "post_capture_only_changes_present": true,
+  "authorization_only_changes_present": true,
+  "test_only_changes_present": true,
+  "receipt_only_changes_present": true,
+  "T01_RAW_CAPTURE_PROVENANCE_COMPATIBLE_WITH_CURRENT_PIPELINE": true,
+  "eventual_recapture_required_for_provenance": false,
+  "qualification_caveat": "Compatibility establishes raw-capture provenance only. It does not resolve or waive the frozen expected-versus-observed stable-hidden target mismatch.",
+  "SCIENTIFIC_RAW_CAPTURE_SEALED": true,
+  "FURTHER_SCIENTIFIC_PROCESSING_AUTHORIZED": false
+}

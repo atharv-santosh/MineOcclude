@@ -1,0 +1,44 @@
+{
+  "artifact_id": "regime-a-target-schedule-source-comparison-v1.0",
+  "status": "BLOCKED_CLASSIFICATION_CHANGING_TARGET_AUTHORITY",
+  "created_utc": "2026-08-14T05:11:17Z",
+  "analysis_scope": "Frozen source and authority only; no t01 outcome or mismatch detail was consulted.",
+  "expected_target_algorithm": {
+    "source": "src/mineocclude/regime_a.py:simulate_path,stable_hidden_interval",
+    "frame_origin": "positions[0] is the state after the first signed-speed plus PCG64 noise increment",
+    "stable_hidden_definition": "first 19-frame consecutive run with world x in the inclusive interval [-4.09654256549771, 5.426536982279787]",
+    "tau_1_definition": "the first frame of that fixed-world-x run",
+    "targets": "tau 1 through 19 are onset through onset+18, inclusive",
+    "guard_role": "entry and exit guards validate containment margins; they do not shift or discard hidden target frames"
+  },
+  "observed_target_algorithm": {
+    "source": "scripts/run_regime_a.py:ProductionCaptureWorker._post_capture_artifacts and src/mineocclude/regime_a.py:assign_stable_hidden_tau",
+    "geometric_signal_used": "the server_state.jsonl geometric_visible boolean emitted by the Fabric runtime",
+    "magenta_signal_used": "the frozen HSV largest-valid-blob detector on each captured 640x360 PNG",
+    "stable_hidden_definition": "first 19-frame consecutive OCCLUDED_AGREEMENT run",
+    "tau_1_definition": "the first captured model frame of that run; no already-stable hidden frames are discarded",
+    "targets": "rows assigned tau 1 through 19",
+    "guard_role": "the contiguous disagreement/invalid run immediately before onset must not exceed the direction-specific entry guard"
+  },
+  "deterministic_alignment_trace": {
+    "index_base": 0,
+    "startspec_recording_origin": "server tick 0, client render frame 0, action index 0, and model frame 0",
+    "warmup": "60 ticks occur before recording and are absent from all recorded frame identities",
+    "joins": "server_tick, render_frame_idx, action_idx, and model_frame_idx are required to equal the same 0-based index",
+    "context": "target frame t consumes the trailing inclusive window max(0,t-15)..t",
+    "mechanical_offset_found": false
+  },
+  "prospective_divergence_points": [
+    "The expected schedule substitutes a fixed empirical world-x interval for the live dual-visibility onset.",
+    "The expected schedule has no magenta-detector term and therefore cannot prospectively reproduce detector-dependent agreement transitions.",
+    "The production adapter consumes the Fabric server geometric_visible boolean, while visibility_authority.json identifies src/mineocclude/data/visibility.py and its four-way visible/occluded/boundary/invalid slab rule as the frozen geometric detector.",
+    "The Fabric boolean has no boundary/invalid representation, so boundary cases are coerced before dual classification.",
+    "Direction-specific guards validate different quantities in planning (distance from GEOMETRIC_ENTRY to fixed hidden onset) and observation (length of the immediately preceding disagreement/invalid run).",
+    "The A0 authority states that matched reverse-direction empirical wall crossing was not available and that bidirectional symmetry must not be assumed."
+  ],
+  "purely_mechanical_discrepancy_proven": false,
+  "classification_changing_authority_issue": true,
+  "scientific_authority_modified": false,
+  "t01_visibility_processed": false,
+  "FURTHER_SCIENTIFIC_PROCESSING_AUTHORIZED": false
+}
