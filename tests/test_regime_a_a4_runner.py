@@ -297,6 +297,23 @@ class RegimeAA4RunnerTests(unittest.TestCase):
         self.assertNotIn("best_k", source.lower())
         self.assertIn("runtime root must be outside the Git repository", source)
 
+    def test_first25_v2_entrypoint_uses_exact_production_workers_and_stays_sealed(self):
+        from scripts import run_regime_a as production
+        from scripts import run_regime_a_first25_v2 as v2
+
+        rows, digest = v2.validate_manifest(
+            v2.V2 / "trajectory_manifest.jsonl",
+            v2.V2 / "trajectory_manifest.sha256",
+        )
+        self.assertEqual(len(rows), 25)
+        self.assertEqual(digest, sha256_file(v2.V2 / "trajectory_manifest.jsonl"))
+        self.assertIs(v2.ProductionCaptureWorker, production.ProductionCaptureWorker)
+        self.assertIs(v2.PersistentMineWorldWorker, production.PersistentMineWorldWorker)
+        source = Path(v2.__file__).read_text()
+        self.assertIn("A4-v2 scientific execution is sealed: authorization absent", source)
+        self.assertNotIn("macro_r2(", source)
+        self.assertNotIn("best_k", source.lower())
+
 
 if __name__ == "__main__":
     unittest.main()

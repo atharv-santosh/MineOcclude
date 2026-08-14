@@ -463,7 +463,7 @@ class ProductionCaptureWorker:
             str(client_episode),
             str(noise_path),
             str(ROOT),
-            SCIENTIFIC_RUN_ID,
+            str(spec.get("scientific_run_id", SCIENTIFIC_RUN_ID)),
         )
         if not result.accepted:
             raise RegimeAError("frozen capture-package validator refused trajectory")
