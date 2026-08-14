@@ -1,0 +1,58 @@
+{
+  "artifact_id": "regime-a-s0-exact-runtime-target-retention-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "POST_WARMUP_TARGET_RETENTION_PASS",
+  "authority_scope": "NON_SCIENTIFIC_S0_READ_ONLY_RUNTIME_SMOKE",
+  "exact_runtime": {
+    "minecraft": "1.16.5",
+    "server_client_mod_sha256": "210ed855a15b2a0343e8470183db3af11254c89f0019350e0df0280d8cbeec16",
+    "runtime_authority_path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p2_runtime_authority.json",
+    "runtime_authority_sha256": "395078b1ff526e792531d55950c8fe3a32a59943e629171262b0bc0f41f4f5f3"
+  },
+  "smoke": {
+    "trajectory_id": "fresh_vp_v2_l01_rtl_shape_20",
+    "episode_id": 40121,
+    "designation": "NON_SCIENTIFIC_EXISTING_RUNTIME_SMOKE_NEVER_REGIME_A_DATA",
+    "direction": "RIGHT_TO_LEFT",
+    "warmup_frames": 60,
+    "recorded_frames": 60,
+    "start_target_uuid": "192ea5bc-0e50-49ed-85e6-5a448b8b15a0",
+    "tagged_target_count": 1,
+    "target_entity_type": "minecraft:sheep",
+    "target_color": "magenta",
+    "warmup_alive": true,
+    "warmup_removed": false,
+    "recording_respawns": 0,
+    "final_state": "COMPLETED",
+    "server_rows": 60,
+    "client_tick_rows": 60,
+    "raw_action_rows": 60,
+    "png_frames": 60,
+    "tick_render_action_alignment": "EXACT_0_THROUGH_59",
+    "world_coordinate_rows_finite": true,
+    "camera_pose_stable": true,
+    "frame_set_sha256": "2cd494ff55a33ff17ad8a1f346002e18b7e31561a83991d1019438c5439e3892"
+  },
+  "identity_and_reconstruction": {
+    "retention_policy_source_sha256": "f05990895d79fd1b81a3cd5d3a318664d3f4c764335fb13295484f47680ba289",
+    "retention_mixin_source_sha256": "5505e41952d025d1c454ab63ea51b4ce338aeb70e791bc16808caba7178266ba",
+    "policy": "Preserve only the tagged experiment sheep; hard-refuse count, UUID, world, state, or pose drift; never silently replace it.",
+    "world_reconstruction_removed_or_replaced_target": false,
+    "visibility_reference": "the same authoritative per-episode tagged sheep world state",
+    "trailing_window_compatibility": "Every model frame has one aligned state, frame, and action row, so each independent trailing window retains one unchanged episode/target identity."
+  },
+  "current_smoke_sources": [
+    {"path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_40121/server_state.jsonl", "sha256": "83100c15dda9e823e1cde1d3ffc2b2f27cf4d4603eb6fab4d21be014574959ae"},
+    {"path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_40121/client_tick.jsonl", "sha256": "0d7293199f871c6d62865f8f38e2521a1732de1a52f4a5a0e0c1e33e3ac309e9"},
+    {"path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_40121/raw_actions.jsonl", "sha256": "cc740699e740c6164ccad0b775616c76eb9619a965802bb90cb0e133f7dade4e"},
+    {"path": "/home/sagemaker-user/mineocclude-client/mineocclude_client_out/episode_40121/capture_complete.json", "sha256": "467a586495fc1de881d32df1f3d2a5057260a849891472677f031108b939d983"},
+    {"path": "/home/sagemaker-user/mineocclude-server/mineocclude_out/episode_40121/finalization.json", "sha256": "58429db43c0af6ef98a7596afe84e697e2782c525284e0cb5f10777a8b6000b8"}
+  ],
+  "independent_exact_runtime_corroboration": {
+    "first_operator_receipt_sha256": "88c54a40a9f8d7909f75d71ae422bb36d4f0d1f088272080bb00da87cc5c9156",
+    "second_operator_receipt_sha256": "32f50f3b9a2d23d67583f195887213cbdc3c70cbe0bd4006a859a97940db35b7",
+    "both_observed_one_valid_target_after_warmup": true
+  },
+  "checkpoint_loaded": false,
+  "scientific_trajectory_collected": false
+}

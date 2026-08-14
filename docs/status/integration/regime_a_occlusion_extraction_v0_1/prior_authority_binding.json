@@ -1,0 +1,93 @@
+{
+  "artifact_id": "regime-a-a0-prior-authority-binding-v0.1",
+  "created_utc": "2026-08-14T00:02:27Z",
+  "status": "PASS_PRIOR_AUTHORITY_BOUND",
+  "scope": "NON_SCIENTIFIC_A0_ONLY",
+  "repository": {
+    "branch": "exploration/regime-a-occlusion-extraction-v0-1",
+    "head": "2238fbdd0f5b93ad616374f8f75cae9a8211c33a"
+  },
+  "closed_visible_study": {
+    "status": "CLOSED",
+    "terminal_receipt": {
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/diagnostic_receipt.json",
+      "sha256": "2e2e96a0c4dc836bdfd6d372a8e4101864c43f24b61ecb6c20b0566d78b61d10",
+      "status": "PASS_P14_PACKAGE_VALIDATED",
+      "p13_status": "PASS_P13_COMPLETE",
+      "visible_position_measurement_path_ready_for_occluded_experiment": true
+    },
+    "package_manifest": {
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/p14_package_manifest.json",
+      "sha256": "d4d8660867fa1c3ce1be6d2f12ad20c8315fe923f82f226c5e1df8b0967ee7d6"
+    },
+    "representation_authority": {
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/representation_authority.json",
+      "sha256": "757217b2b3e54e236b4ad7b9b3574d7391f896558760a54bb1b5e457b186259e",
+      "status": "PASS_AUTHORITY_FROZEN"
+    }
+  },
+  "inherited_scientific_authorities": {
+    "primary_layer": 4,
+    "primary_readout": "FULL_TOKEN_GRID",
+    "best_k_role": "SECONDARY",
+    "all_layers_extracted_once": true,
+    "visual_token_grid": {
+      "rows": 14,
+      "columns": 24,
+      "token_count": 336
+    },
+    "hidden_width": 2048,
+    "full_token_grid": {
+      "dimension": 688128,
+      "order": "visual_token_index 0..335; each token contributes 2048 contiguous values"
+    },
+    "best_k_procedure": "Training-only token ranking; K and ridge alpha are selected within nested training folds; fixed-test identities and targets are excluded from selection.",
+    "historical_u1_u2": "FROZEN",
+    "fresh_layout_generalization": "NOT_ADJUDICATED",
+    "fresh_layout_source": {
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/secondary_fresh_layout_status.json",
+      "sha256": "76232b1ac6362345ed5779a8f6c54bc423b540e0d2a789460108c36164080d17",
+      "status": "DEFERRED_BY_DESIGN"
+    }
+  },
+  "checkpoint_identity": {
+    "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+    "sha256_inherited_not_recomputed": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5"
+  },
+  "p8_metric_inheritance": {
+    "valid": true,
+    "source_commit": "173a3ca3e92ffe771d19911c15c006dba6acc934",
+    "source_path": "src/mineocclude/probes/p8_core.py",
+    "source_sha256_at_commit": "db6f90494b9d8d05d0617cc17d25300d8b1b5260c5732eaf4b252f8db646eae9",
+    "functions": [
+      "trajectory_metrics",
+      "metric_document",
+      "selection_score"
+    ],
+    "mathematical_behavior": {
+      "trajectory_r2": "For each trajectory t independently: R2_t = 1 - sum_i(y_ti - yhat_ti)^2 / sum_i(y_ti - mean_i(y_ti))^2; a zero trajectory TSS yields null.",
+      "trajectory_aggregation": "Within each layout, each trajectory contributes once to an unweighted arithmetic mean of its trajectory-level metric.",
+      "layout_aggregation": "The primary macro statistic is the unweighted arithmetic mean of the per-layout means; each layout contributes equally.",
+      "selection_score": "Returns equal_layout_macro.r2 from metric_document."
+    },
+    "verification_method": "Static mechanical inspection of the exact Git blob; P8 was not rerun.",
+    "blocked_authority": false
+  },
+  "prior_confound_authority": {
+    "absolute_pooled_normalized_time_correlation_max": 0.10,
+    "high_profile_similarity_fraction_overall_max": 0.20,
+    "high_profile_similarity_fraction_within_approved_direction_max": 0.10,
+    "high_profile_similarity_fraction_across_approved_path_shape_strata_max": 0.10,
+    "source": {
+      "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/trajectory_profile_design_v2.json",
+      "sha256": "287b6006e4ab592d01112c8d651b5fdb95ea7cfea79b1fcceb443e1ea37483dd"
+    }
+  },
+  "prohibitions_observed": {
+    "visible_study_recomputed": false,
+    "visible_study_modified": false,
+    "p8_rerun": false,
+    "probe_outcome_computed": false,
+    "scientific_regime_a_trajectory_collected": false
+  }
+}

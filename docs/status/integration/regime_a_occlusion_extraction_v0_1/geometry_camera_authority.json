@@ -1,0 +1,115 @@
+{
+  "artifact_id": "regime-a-a0-geometry-camera-authority-v0.1",
+  "created_utc": "2026-08-14T00:02:27Z",
+  "status": "PASS_CANDIDATE_GEOMETRY_OPERATIONALLY_FEASIBLE",
+  "scope": "NON_SCIENTIFIC_A0_ONLY_CANDIDATE_NOT_FROZEN",
+  "layout": {
+    "candidate_layout_id": "layout_01",
+    "config_path": "configs/scenes/layouts_v0_4.yaml",
+    "config_sha256": "34495d650d6a8c62b00a916796c90389b48f80d8f20a23eac93207758e993f5d",
+    "camera": {
+      "fixed": true,
+      "feet_world_xyz": [0.5, 4.0, -5.5],
+      "eye_world_xyz": [0.5, 5.6200000048, -5.5],
+      "yaw_degrees": 0.0,
+      "pitch_degrees": 0.0,
+      "roll_degrees": 0.0,
+      "fov_degrees": 70.0
+    },
+    "lane": {
+      "world_axis": "x",
+      "axis_min_blocks": -8.0,
+      "axis_max_blocks": 8.0,
+      "fixed_y": 4.0,
+      "fixed_z": 6.0,
+      "candidate_first_slice_direction": "LEFT_TO_RIGHT_PLUS_X"
+    },
+    "wall": {
+      "block_indices": {
+        "x_inclusive": [-3, 3],
+        "y_inclusive": [4, 6],
+        "z_inclusive": [2, 2]
+      },
+      "closed_world_volume": {
+        "x": [-3.0, 4.0],
+        "y": [4.0, 7.0],
+        "z": [2.0, 3.0]
+      },
+      "motion_axis_block_count": 7
+    }
+  },
+  "visible_footprint": {
+    "empirical_source_trajectory": "layout_01_ep12602",
+    "full_visible_sample_frames": 16,
+    "bbox_width_px_range": [26, 27],
+    "bbox_height_px_range": [24, 25],
+    "blob_area_px_range": [303, 379],
+    "token_footprint_cells": [2, 2],
+    "no_frame_edge_clipping_on_candidate_lane": true,
+    "source": {
+      "path": "data/handoff_c/person_e_66_cell_empirical_visibility_v0_1/empirical_visibility_records.jsonl",
+      "sha256": "fd0ad70ce880645fcda668d23dacc07784c2f8e418a3eceabd9f88ac391e07f9",
+      "schema_sha256": "85e3b077930157293f1db37978edaeea43b63f5fd7fcc6e92bb355de396eb74e"
+    }
+  },
+  "projection": {
+    "world_plane": "ground_plane_world_xz_blocks",
+    "screen_coordinate_convention": "pixel_center_xy_zero_based; +x right; +y down",
+    "raw_resolution_px": [1920, 1046],
+    "canonical_resolution_px": [640, 360],
+    "model_input_resolution_px": [384, 224],
+    "visual_token_grid": [14, 24],
+    "homography_path": "data/handoff_e/person_e_v0_4_homography_refit_v0_2/layout_01_homography.json",
+    "homography_sha256": "d684d55a683b6cb3833f7ffb886d9563a9425a17bd752e78688a28e09e6bd0d4",
+    "fit_summary_path": "data/handoff_e/person_e_v0_4_homography_refit_v0_2/fit_summary.json",
+    "fit_summary_sha256": "d5449cec9d1cc1a527e4f74535019b9188122623f277c8e2bba54791df78855d",
+    "coordinate_convention_sha256": "cfd281d4c3841f56b13ced4ea77ec3384ad0709d5baeec9b447dd14df3b65e71",
+    "world_to_screen_rule": "Apply the recorded inverse homography to [world_x, world_z, 1], divide by its homogeneous denominator, then scale raw x by 640/1920 and raw y by 360/1046.",
+    "screen_to_model_rule": "x_model = x_screen * 384/640; y_model = y_screen * 224/360.",
+    "screen_to_token_rule": "token_col = floor(x_screen * 24/640); token_row = floor(y_screen * 14/360). Preserve continuous (token_row_f, token_col_f) before flooring.",
+    "lane_endpoint_projection": {
+      "world_x_minus_8_canonical_xy_approx": [502.2, 216.0],
+      "world_x_plus_8_canonical_xy_approx": [156.56, 216.0],
+      "token_col_range_approx": [5.87, 18.83],
+      "token_row_approx": 8.4,
+      "all_finite_and_in_bounds": true
+    },
+    "axis_orientation": "Increasing world x moves left on screen and decreases screen x/token column.",
+    "wall_parallel_scalar": "world x in blocks, origin 0, positive direction +x",
+    "fit_roundtrip_max_error_px": 2.27e-13,
+    "heldout_wall_parallel_absolute_error_blocks": 0.0850084741404844,
+    "planning_gate_passed": true,
+    "frame_alignment_requirement": "World, screen, token, visibility, action, and activation records must use the same captured model-frame identity."
+  },
+  "runway": {
+    "stable_visible_boundary_world_x_approx": -4.8,
+    "candidate_start_world_x": -8.0,
+    "available_visible_lead_in_blocks": 3.2,
+    "effective_context_seconds": 0.75,
+    "entry_guard_seconds": 1.0,
+    "margin_formula": "max(entry_guard_duration, 0.10 * C)",
+    "margin_seconds": 1.0,
+    "required_clear_time_seconds": 1.75,
+    "candidate_speed_blocks_per_second": 1.5,
+    "required_runway_blocks": 2.625,
+    "runway_surplus_blocks": 0.575,
+    "full_context_clear_lead_in_supported": true
+  },
+  "occlusion_path": {
+    "stable_hidden_world_x_approx": [-4.15, 5.47],
+    "available_stable_hidden_length_blocks_at_least": 9.62,
+    "available_stable_hidden_seconds_at_candidate_speed_at_least": 6.41,
+    "beyond_context_upper_edge_seconds": 0.95,
+    "exit_guard_seconds": 0.4,
+    "required_hidden_time_seconds": 1.35,
+    "required_hidden_length_blocks": 2.025,
+    "one_long_wall_supports_all_candidate_bins": true,
+    "prospectively_all_25_can_span_all_bins": true
+  },
+  "bidirectional_geometry": {
+    "BIDIRECTIONAL_GEOMETRY_SUPPORTED": "UNCLEAR",
+    "reason": "Static containment and projection are compatible with both directions, but no matched reverse-direction wall crossing exists to validate empirical entry/exit agreement and guard symmetry.",
+    "recommendation": "Use one left-to-right direction for the first slice and retain the stronger inherited plus proposed confound controls. Do not assume 13/12 bidirectional symmetry."
+  },
+  "pre_collection_runtime_caveat": "The v0.4 geometry authority records a historical target-retention runtime caveat. Before any approved A2 collection, the exact runtime must demonstrate that the explicit magenta sheep remains present after warmup; this A0 geometry analysis does not itself authorize collection."
+}

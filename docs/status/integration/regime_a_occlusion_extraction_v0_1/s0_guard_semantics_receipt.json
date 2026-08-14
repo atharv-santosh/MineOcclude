@@ -1,0 +1,43 @@
+{
+  "artifact_id": "regime-a-s0-guard-tau-semantics-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "PASS_GUARD_TAU_SEMANTICS",
+  "authority_scope": "NON_SCIENTIFIC_S0",
+  "tau_definition": {
+    "tau_1": "the first captured model target frame satisfying OCCLUDED_AGREEMENT after the pre-stable-hidden entry transition",
+    "target_frame_requirement": "geometric=hidden AND magenta=hidden",
+    "visible_sheep_pixels_allowed_in_primary_target": false,
+    "prior_context_may_contain_partial_or_disagreement_frames": true,
+    "guard_frames_count_toward_tau": false
+  },
+  "guard_interpretation": {
+    "entry": "g_entry bounds the observed consecutive pre-stable-hidden partial/disagreement transition. It never discards already-stable OCCLUDED_AGREEMENT frames.",
+    "exit": "g_exit bounds the observed consecutive post-stable-hidden partial/disagreement transition and is not part of eligible hidden tau.",
+    "a0_left_to_right": {
+      "maximum_entry_transition_frames": 19,
+      "g_entry_frames": 20,
+      "maximum_exit_transition_frames": 7,
+      "g_exit_frames": 8
+    },
+    "matched_right_to_left_time_reversal": {
+      "maximum_entry_transition_frames": 7,
+      "g_entry_frames": 8,
+      "maximum_exit_transition_frames": 19,
+      "g_exit_frames": 20
+    },
+    "direction_specific_freeze_required": true
+  },
+  "duration_bins": {
+    "index_origin": "stable clean hidden onset",
+    "SHORT": [1, 4],
+    "INTERMEDIATE": [5, 8],
+    "LONG": [9, 12],
+    "NEAR_CONTEXT": [13, 15],
+    "BEYOND_CONTEXT": [16, 19]
+  },
+  "source": {
+    "path": "visibility_calibration_report.json",
+    "sha256": "df630149e17cadfbaa0bd65f15a181624d6964de4cb7d78d01b9ad9476c75f50"
+  },
+  "BLOCKED_DURATION_AUTHORITY": false
+}

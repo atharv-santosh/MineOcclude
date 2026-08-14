@@ -1,0 +1,58 @@
+{
+  "artifact_id": "regime-a-s0-matched-reverse-geometry-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "PASS_BIDIRECTIONAL_GEOMETRY",
+  "BIDIRECTIONAL_GEOMETRY_SUPPORTED": "YES",
+  "authority_scope": "NON_SCIENTIFIC_S0",
+  "method": {
+    "dynamic_negative_direction": "Existing exact-runtime right-to-left episode 40121 proves signed negative motion, fixed-camera containment, target retention, frame alignment, projection validity, and magenta footprint.",
+    "wall_crossing": "Reverse-time replay of the three A0 non-scientific full wall crossings. Static camera projection, ray visibility, wall occupancy, and pixel visibility are functions of pose, so reversing ordered frames supplies the matched right-to-left transition order without neural data.",
+    "new_scientific_capture": false
+  },
+  "right_to_left_runtime": {
+    "x_first_last_blocks": [5.92177713091857, 3.8633702864011856],
+    "aligned_frame_count": 60,
+    "magenta_detected_frame_count": 60,
+    "vectorized_frozen_threshold_crosscheck_area_px_range": [324, 404],
+    "bbox_width_px_range": [21, 25],
+    "bbox_height_px_range": [24, 26],
+    "exact_detector_spot_checks": [
+      {"frame": 0, "area_px": 391, "bbox_xyxy": [181, 184, 206, 210]},
+      {"frame": 30, "area_px": 340, "bbox_xyxy": [211, 184, 234, 209]},
+      {"frame": 59, "area_px": 400, "bbox_xyxy": [228, 184, 250, 210]}
+    ],
+    "screen_x_range": [203.69622307876804, 255.69764870029348],
+    "screen_y_range": [215.51666829271664, 215.6218932003315],
+    "continuous_token_row_range": [8.381203766938981, 8.385295846679558],
+    "continuous_token_col_range": [7.638608365453801, 9.588661826261006],
+    "projection_finite_in_bounds": true
+  },
+  "matched_transition_replay": [
+    {"source_trajectory": "layout_00_ep9403", "right_to_left_entry_transition_frames": 7, "right_to_left_exit_transition_frames": 18},
+    {"source_trajectory": "layout_00_ep9522", "right_to_left_entry_transition_frames": 6, "right_to_left_exit_transition_frames": 19},
+    {"source_trajectory": "layout_00_ep9761", "right_to_left_entry_transition_frames": 2, "right_to_left_exit_transition_frames": 14}
+  ],
+  "direction_specific_guards": {
+    "LEFT_TO_RIGHT": {"entry_frames": 20, "exit_frames": 8},
+    "RIGHT_TO_LEFT": {"entry_frames": 8, "exit_frames": 20}
+  },
+  "geometry_checks": {
+    "camera_containment": true,
+    "runway": true,
+    "wall_entry": true,
+    "full_hidden_period": true,
+    "wall_exit": true,
+    "geometric_visibility": true,
+    "magenta_visibility": true,
+    "projection_validity": true,
+    "pixel_footprint": true,
+    "token_footprint": true,
+    "candidate_duration_coverage": true,
+    "post_warmup_target_retention": true
+  },
+  "source_authorities": [
+    {"path": "geometry_camera_authority.json", "sha256": "0ab79fc93b4bcb3fccf3c99de9435077f574e85001030f25d2f7d5c3433b5274"},
+    {"path": "visibility_calibration_report.json", "sha256": "df630149e17cadfbaa0bd65f15a181624d6964de4cb7d78d01b9ad9476c75f50"},
+    {"path": "s0_target_retention_receipt.json", "sha256": "8f3bf99a9b418f089cc703c2b9b225131ab97836250902d118e4b2adfbdacebd"}
+  ]
+}

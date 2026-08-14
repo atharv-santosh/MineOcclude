@@ -1,0 +1,112 @@
+{
+  "artifact_id": "regime-a-study-manifest-v1.0",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "FROZEN_BEFORE_SCIENTIFIC_COLLECTION",
+  "study": {
+    "name": "MineOcclude Regime A Occlusion Extraction",
+    "controlling_design": "Single-Operator Scientific Design and Phase-by-Phase Execution Roadmap Version 1.1, August 13 2026",
+    "question": "Can the validated token-preserving MineWorld measurement path decode the best-guess position of a sheep while the sheep is genuinely occluded?",
+    "first_slice_trajectory_count": 25,
+    "first_25_role": "REAL_REGIME_A_SCIENTIFIC_DATA_WHEN_EXECUTED_NOT_DISPOSABLE_PILOTS"
+  },
+  "repository": {
+    "branch": "exploration/regime-a-occlusion-extraction-v0-1",
+    "base_head": "2238fbdd0f5b93ad616374f8f75cae9a8211c33a",
+    "mineworld_source_head": "9f49efbcc68a5f0cf60e78f0abc566eac409282f"
+  },
+  "environment": {
+    "conda_prefix": "/home/sagemaker-user/.conda/envs/mineworld",
+    "python": "3.10.20",
+    "numpy": "1.26.4",
+    "scikit_learn": "1.6.1",
+    "pytorch": "2.6.0+cu126",
+    "cuda": "12.6",
+    "gpu": "NVIDIA L4",
+    "authority_sha256": "b2ed4fb9e12f6ca3640fbf890dce998cf7da871f3a2ae198aa26eed63b60a3f6"
+  },
+  "model": {
+    "checkpoint_path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "vae_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018"
+  },
+  "frozen_protocol": {
+    "primary_target": "WORLD_WALL_PARALLEL_X_BLOCKS",
+    "secondary_target": "CONTINUOUS_SCREEN_TOKEN_ROW_COL",
+    "effective_context_steps_E": 15,
+    "effective_context_seconds_C": 0.75,
+    "capture_model_hz": 20,
+    "duration_bins": {"SHORT": [1, 4], "INTERMEDIATE": [5, 8], "LONG": [9, 12], "NEAR_CONTEXT": [13, 15], "BEYOND_CONTEXT": [16, 19]},
+    "layout_id": "layout_01",
+    "camera": {"feet_xyz": [0.5, 4.0, -5.5], "eye_xyz": [0.5, 5.6200000048, -5.5], "yaw_pitch_roll_degrees": [0.0, 0.0, 0.0], "fov_degrees": 70.0, "fixed": true},
+    "lane": {"axis": "x", "range": [-8.0, 8.0], "y": 4.0, "z": 6.0},
+    "wall_block_indices": {"x": [-3, 3], "y": [4, 6], "z": [2, 2]},
+    "one_long_wall_all_trajectories_span_all_bins": true,
+    "directions": {"LEFT_TO_RIGHT": 13, "RIGHT_TO_LEFT": 12},
+    "guards_by_direction": {"LEFT_TO_RIGHT": {"entry": 20, "exit": 8}, "RIGHT_TO_LEFT": {"entry": 8, "exit": 20}},
+    "speed_blocks_per_second": 1.5,
+    "motion_noise_q": 0.05,
+    "split": "NESTED_FIVE_FOLD_TRAJECTORY_GROUPED_OOF",
+    "primary_layer": 4,
+    "primary_readout": "FULL_TOKEN_GRID",
+    "secondary_readout": "LAYER4_BEST_K_TRAINING_ONLY_SHARED_ACROSS_BINS",
+    "all_layers_extracted_once": true
+  },
+  "target_retention": {
+    "status": "PASS",
+    "authority_path": "s0_target_retention_receipt.json",
+    "authority_sha256": "8f3bf99a9b418f089cc703c2b9b225131ab97836250902d118e4b2adfbdacebd"
+  },
+  "trajectory_design": {
+    "a3_master_seed_domain": "SHA256(REGIME_A_A3_V1|study_manifest_sha256|trajectory_index)",
+    "s0_design_candidate_seed_reuse_forbidden": true,
+    "randomized_start_position": true,
+    "randomized_occlusion_onset_and_initial_motion_phase": true,
+    "unique_motion_noise_seed": true,
+    "exact_duplicates_allowed": 0,
+    "near_duplicate_metric": "complete-profile RMS world-x distance <0.10 block",
+    "fold_direction_balance": "2/3 or 3/2",
+    "support_overlap": "positive train/test interval overlap required for every outer-fold/direction/duration-bin cell"
+  },
+  "capture_and_restart": {
+    "deterministic_spec_id_and_seed": true,
+    "same_spec_retry_identity": true,
+    "failure_seed_replacement": false,
+    "per_trajectory_staging": "atomic temporary directory renamed only after validation",
+    "ledger": "append-only fsync hash chain",
+    "state_machine": ["PLANNED", "RUNNING", "CAPTURED", "VALIDATED", "DURABLE", "COMPLETE_VALIDATED_DURABLE"],
+    "resume": "validate and skip COMPLETE_VALIDATED_DURABLE; retry identical spec for operational failure; quarantine invalid partial unit",
+    "nvme_role": "staging and reconstructable cache only",
+    "durable_authority": "object store with uploaded byte size, SHA-256 metadata, and downloaded-byte verification",
+    "durable_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/"
+  },
+  "bound_component_authorities": [
+    {"path": "operator_approval_provenance.json", "sha256": "07d30ed863eedd580cbfc3787803447c6d0c7bfe899c18ee957e9e3f30e824d8"},
+    {"path": "target_authority.json", "sha256": "1d14c364c9673b55ce436f06ef16a39b40e60ff4a82fe9a0d5a704ee185d5800"},
+    {"path": "visibility_authority.json", "sha256": "32b82e690fac3a739f91485051cb42e34463d8917d84acf6adf4612a0bbf33c4"},
+    {"path": "split_authority.json", "sha256": "37153654ade645e6a6c570f257a2bdb8862592fffe6d462e2cd8a4419b2b82fc"},
+    {"path": "representation_authority.json", "sha256": "87c7b45fbf558f6e43f0b83abbde51c84dd12756fdf8af2b75135f3d41562c5b"},
+    {"path": "analysis_manifest.json", "sha256": "d846b4abbbef90b6bf34b2d2e253d2c7b7137a6d5f806ccd44c8996efa02a45c"}
+  ],
+  "a0_inputs": [
+    {"path": "prior_authority_binding.json", "sha256": "9993b3ed2ad1d9387299656978eb505ba3332e9370c7929cbec6c2b7e9e9c1ed"},
+    {"path": "environment_authority.json", "sha256": "b2ed4fb9e12f6ca3640fbf890dce998cf7da871f3a2ae198aa26eed63b60a3f6"},
+    {"path": "context_calibration.json", "sha256": "20080dc42d0a4f7a1b74bc9a7e73214b5fa8346f02d5a07c6175fe2bb16954ff"},
+    {"path": "geometry_camera_authority.json", "sha256": "0ab79fc93b4bcb3fccf3c99de9435077f574e85001030f25d2f7d5c3433b5274"},
+    {"path": "visibility_calibration_report.json", "sha256": "df630149e17cadfbaa0bd65f15a181624d6964de4cb7d78d01b9ad9476c75f50"},
+    {"path": "occlusion_duration_bin_authority.json", "sha256": "013fec343aa37ead73789e0759e8b3da578a4c8d025ffbaff9af6a04c91c1c3d"},
+    {"path": "a0_validation_receipt.json", "sha256": "062f34fc69b001a3a0bf09710b5f80668e76376d64dc36c6f7f95426a28698a0"}
+  ],
+  "s0_inputs": [
+    {"path": "s0_guard_semantics_receipt.json", "sha256": "47f38ba780ff1cd22db89055fc97c2146893c9d6fe7d63cfad349569187128eb"},
+    {"path": "s0_target_retention_receipt.json", "sha256": "8f3bf99a9b418f089cc703c2b9b225131ab97836250902d118e4b2adfbdacebd"},
+    {"path": "s0_bidirectional_geometry_receipt.json", "sha256": "589899db65b3d78dbf3cbf2f8f440f7bfc1224523af1072246942e3c3f8325bf"},
+    {"path": "s0_confound_feasibility_report.json", "sha256": "2a86f02f2870934a85f6ee38d8a4d2fdc44055907cf5a3296ecdd6cf1511e9ae"},
+    {"path": "s0_validation_receipt.json", "sha256": "8786ffb80ba28b7ff5c4dd26ce682fce8915c781a52bc85d0e93c4ef7da3563a"}
+  ],
+  "outcome_sealed": true,
+  "scientific_outcome_exists": false,
+  "scientific_collection_authorized": false,
+  "a4_started": false,
+  "outcome_informed": false
+}

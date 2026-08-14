@@ -1,0 +1,16 @@
+{
+  "artifact_id": "regime-a-a2-cache-equivalence-v0.1",
+  "status": "PASS",
+  "created_utc": "2026-08-14T00:54:00Z",
+  "scope": "outer-training-only BEST-K target-specific null ridge solve",
+  "cache": ["centered outer-training feature matrix", "heldout projection", "regularized sample-space Gram matrix"],
+  "not_cached": ["donor target vector", "donor mapping", "null statistic"],
+  "synthetic_engineering_rows": {"training": 20, "heldout": 5, "k": 128, "hidden_width": 2048},
+  "cached_seconds": 0.00356618299974798,
+  "direct_seconds": 0.0296059479996984,
+  "prediction_max_absolute_error": 0.0,
+  "equivalent_rtol": 1e-10,
+  "equivalent_atol": 1e-10,
+  "result": "BYTE_NUMERIC_EQUIVALENCE_PASS",
+  "scientific_targets_used": false
+}

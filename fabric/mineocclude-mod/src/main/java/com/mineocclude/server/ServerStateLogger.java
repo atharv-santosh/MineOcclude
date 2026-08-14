@@ -59,6 +59,11 @@ public final class ServerStateLogger implements AutoCloseable {
         kv(sb, "q", cfg.processQ); sb.append(',');
         kv(sb, "hidden_frames", cfg.hiddenFrames); sb.append(',');
         // sheep is null for the NO_SHEEP control -> log nulls.
+        nullableString(sb, "target_entity_uuid", sheep == null ? null : sheep.targetUuid()); sb.append(',');
+        nullableString(sb, "target_entity_tag", sheep == null ? null
+                : TargetRetentionPolicy.EXPERIMENT_TARGET_TAG); sb.append(',');
+        kvb(sb, "target_present", sheep != null && sheep.entityAlive()); sb.append(',');
+        kv(sb, "target_respawn_count", sheep == null ? 0 : sheep.respawnCount()); sb.append(',');
         double noise = sheep == null ? Double.NaN : sheep.lastNoiseDraw();
         double apos  = sheep == null ? Double.NaN : sheep.axisPos();
         double avel  = sheep == null ? Double.NaN : sheep.lastVelocity();

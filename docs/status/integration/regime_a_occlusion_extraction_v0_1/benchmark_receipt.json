@@ -1,0 +1,29 @@
+{
+  "artifact_id": "regime-a-a2-benchmark-receipt-v0.1",
+  "status": "PASS_A2_BENCHMARK",
+  "created_utc": "2026-08-14T00:54:00Z",
+  "scientific_data": false,
+  "scientific_decoding": false,
+  "hardware": {"gpu": "NVIDIA L4", "gpu_total_bytes": 23661248512},
+  "checkpoint_load_seconds": 92.73074749199986,
+  "checkpoint_load_count_in_successful_process": 1,
+  "one_trajectory_generation": {
+    "state_geometry_generation_seconds_260_frames": 0.00008618500032753218,
+    "exact_runtime_reference_frames": 60,
+    "exact_runtime_reference_seconds_at_20hz": 3.0,
+    "projected_exact_runtime_260_frames_seconds": 13.0,
+    "reference": "S0 non-scientific exact-runtime episode 40121; not recollected"
+  },
+  "one_non_scientific_all_layer_extraction_seconds": 30.546506572,
+  "all_layer_forward_seconds_19": [0.9343801439999879, 0.8719947230001708, 0.8708692679992964, 0.8673783180001919, 0.8724329940005191, 0.8723103479997008, 0.8681421150004098, 0.8770866069999101, 0.8713452489992051, 0.8738511499996093, 0.8734112189995358, 0.8764250459998948, 0.8705825919996641, 0.8773570499997732, 0.8773264490000656, 0.8735642169995117, 0.882719291000285, 0.8719623159995535, 0.8830751269997563],
+  "activation_bytes_per_trajectory_float16": 522977280,
+  "full": {"dimension": 688128, "training_rows": 20, "heldout_rows": 5, "feature_preparation_seconds": 0.17462457900001027, "fit_seconds": 0.12549467400003778},
+  "best_k": {"k_benchmarked": 128, "training_rows": 20, "ranking_seconds": 0.06799037099972338, "feature_preparation_seconds": 0.00490421900030924, "fit_seconds": 0.029941633999442274},
+  "one_cached_null_replicate_seconds": 0.00356618299974798,
+  "equivalent_direct_null_seconds": 0.0296059479996984,
+  "durable_copy_and_two_hashes_seconds_64_mib": 0.09792333499990491,
+  "durable_copy_verified": true,
+  "peak_cpu_ram_bytes": 554020864,
+  "peak_gpu_vram_bytes": 4801740800,
+  "all_values_are_engineering_benchmarks_not_scientific_results": true
+}

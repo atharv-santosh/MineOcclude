@@ -1,0 +1,42 @@
+{
+  "artifact_id": "regime-a-a1-target-authority-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "FROZEN_BEFORE_SCIENTIFIC_COLLECTION",
+  "primary_target": {
+    "name": "WORLD_WALL_PARALLEL_X",
+    "value": "authoritative sheep world x coordinate",
+    "units": "blocks",
+    "axis_origin_blocks": 0.0,
+    "positive_direction": "+x",
+    "per_tick_required": true
+  },
+  "secondary_target": {
+    "name": "CONTINUOUS_SCREEN_TOKEN_COORDINATE",
+    "value_order": ["token_row", "token_col"],
+    "mapping": {
+      "token_row": "screen_y * 14 / 360",
+      "token_col": "screen_x * 24 / 640"
+    },
+    "per_tick_required": true
+  },
+  "additional_required_coordinates": {
+    "world_xyz": true,
+    "canonical_screen_xy": true,
+    "discrete_token_cell": "floor(token_row), floor(token_col)",
+    "raw_and_continuous_values_preserved": true
+  },
+  "coordinate_conventions": {
+    "screen": "zero-based pixel-center x/y; +x right, +y down",
+    "axis_orientation": "increasing world x decreases screen x and token column",
+    "frame_identity_join": ["trajectory_id", "model_frame_idx", "server_tick", "render_frame_idx", "action_idx"]
+  },
+  "projection_authority": {
+    "homography_path": "data/handoff_e/person_e_v0_4_homography_refit_v0_2/layout_01_homography.json",
+    "homography_sha256": "d684d55a683b6cb3833f7ffb886d9563a9425a17bd752e78688a28e09e6bd0d4",
+    "geometry_authority_path": "geometry_camera_authority.json",
+    "geometry_authority_sha256": "0ab79fc93b4bcb3fccf3c99de9435077f574e85001030f25d2f7d5c3433b5274",
+    "heldout_wall_parallel_absolute_error_blocks": 0.0850084741404844
+  },
+  "missing_nonfinite_or_out_of_bounds_policy": "FAIL_FRAME_AND_FAIL_TRAJECTORY_QUALITY_GATE",
+  "outcome_informed": false
+}

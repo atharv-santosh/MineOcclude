@@ -1,0 +1,223 @@
+{
+  "artifact_id": "regime-a-pre-a4-source-freeze-receipt-v1.0",
+  "created_utc": "2026-08-14T01:20:00Z",
+  "status": "READY_FOR_IMMUTABLE_PRE_A4_COMMIT",
+  "repository": {
+    "branch": "exploration/regime-a-occlusion-extraction-v0-1",
+    "pre_commit_head": "2238fbdd0f5b93ad616374f8f75cae9a8211c33a",
+    "final_commit_sha": "PENDING_COMMIT"
+  },
+  "canonical_authority": {
+    "path": "pre_a4_canonical_authority.json",
+    "sha256": "ea93a2ab1daac02d4fff476dee70e8901c44f7e0a220c5274abd78c037c95ded"
+  },
+  "a1_trajectory_generation_authority": {
+    "path": "regime_a_study_manifest.json",
+    "sha256": "624111acde79a89936e0af09f063568a9e28f123fdbbb6f9bb204a7d5e6381c4"
+  },
+  "a2_validation_receipt": {
+    "path": "implementation_test_receipt.json",
+    "sha256": "f29d49f58d5c41ac5680124974d812a862af3852da4e18e0e3d9095a94772190"
+  },
+  "a3_validation_receipt": {
+    "path": "a3_validation_receipt.json",
+    "sha256": "56f5f398eaa489a67388948e0eb9971891f08c24d0d2969311ffdadb6b55b7c9"
+  },
+  "a3_trajectory_manifest": {
+    "path": "trajectory_manifest.jsonl",
+    "sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "trajectory_count": 25
+  },
+  "checkpoint_identity": {
+    "sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5"
+  },
+  "environment_identity": {
+    "path": "environment_authority.json",
+    "sha256": "b2ed4fb9e12f6ca3640fbf890dce998cf7da871f3a2ae198aa26eed63b60a3f6"
+  },
+  "governed_source_files": [
+    {
+      "path": "src/mineocclude/regime_a.py",
+      "sha256": "745229b952c05f637cd39a759711118b6d288c30c0851233ff4853465e4ae766",
+      "governs": [
+        "scientific trajectory generation",
+        "visibility classification",
+        "tau and bins",
+        "FULL and BEST-K analysis",
+        "grouped folds",
+        "macro-R2",
+        "B49 null",
+        "bootstrap",
+        "restart/resume/durability",
+        "A4 authorization validation"
+      ]
+    },
+    {
+      "path": "scripts/freeze_regime_a_a3.py",
+      "sha256": "6a52482a2054eb647e18064627bbd06dca6b61e8f49d8a75f7d15424b0d4a4c7",
+      "governs": [
+        "frozen A3 specification generation",
+        "fold assignment",
+        "pre-extraction confound validation",
+        "B49 donor feasibility"
+      ]
+    },
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "e9b9f4ccc08e76ff7b45464a5b99161cd38f8873b39f9b47f2776660933101bf",
+      "governs": [
+        "manifest intake",
+        "A4 fail-closed boundary",
+        "progress ledger",
+        "atomic completion and durability"
+      ]
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "6040b2a2fddea4c38c0581531e75135faccb9c7e4b30dc3dabea268799da941e",
+      "governs": [
+        "post-commit A4 authorization creation and immutable binding"
+      ]
+    },
+    {
+      "path": "scripts/benchmark_regime_a_a2_gpu.py",
+      "sha256": "78889c2c6b7f15b5c3f9d148c01ee0d3bdb2cc4834e62a88802ee25b87adf713",
+      "governs": [
+        "validated overlapping trailing-window all-layer extraction path"
+      ]
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeConfig.java",
+      "sha256": "fe2ca2f2101b92216cff45255ba1a90f86b8ce829b3f9308a9c25c2642178c34",
+      "governs": [
+        "runtime episode specification"
+      ]
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java",
+      "sha256": "984c3863c7b2cf1e5fdc606924fd39104ca76829cb7270a2d3133b0ced6fcf75",
+      "governs": [
+        "fixed camera/wall execution",
+        "geometric visibility",
+        "tick alignment"
+      ]
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/GeometryUtil.java",
+      "sha256": "1e5031c0345c0f7acb63ffc06400da16a18187e410aac5402443ee6c5e57b107",
+      "governs": [
+        "geometric ray/wall visibility"
+      ]
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MotionSchedule.java",
+      "sha256": "a51dfa021b23c2a17606c487f54891e03956723b28f2d5aa1ef19c2445015845",
+      "governs": [
+        "deterministic speed schedule"
+      ]
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/NoiseSchedule.java",
+      "sha256": "e42472090a645aecae617d11c0ae6e961b2b52cdc7d1898b5496d299d50b0993",
+      "governs": [
+        "deterministic stochastic-motion schedule"
+      ]
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ServerStateLogger.java",
+      "sha256": "c2aeca8ab3dc84cb106585a107eea8a3b06006f8baceb0e8ff1f20cc058c81e7",
+      "governs": [
+        "per-tick world/motion/visibility/entity logging"
+      ]
+    },
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/SheepController.java",
+      "sha256": "fb803f1fea628a29ae6fda40fb1936d02ff0bd329d492f3ea16bdc6e4d02753a",
+      "governs": [
+        "target identity retention and realized motion"
+      ]
+    },
+    {
+      "path": "src/mineocclude/vision/magenta.py",
+      "sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+      "governs": [
+        "frozen magenta-pixel detector"
+      ]
+    },
+    {
+      "path": "src/mineocclude/vision/homography.py",
+      "sha256": "08e462d2c36ee0c7905eafe819f39f27fee1780e63f1cf381fe4ebe098730fc3",
+      "governs": [
+        "screen/world projection authority implementation"
+      ]
+    },
+    {
+      "path": "src/mineocclude/data/visibility_join.py",
+      "sha256": "1f9e68cbb90f339fd94195f46f8b62adcafd2644fff0c4ebebf001a93917bba5",
+      "governs": [
+        "raw geometric and empirical visibility join semantics"
+      ]
+    },
+    {
+      "path": "src/mineocclude/models/mineworld_adapter.py",
+      "sha256": "5555e33fceaeb33c96a6948b971951b9945a1ba75649c6bedab914f2ef9609ea",
+      "governs": [
+        "MineWorld adapter contract and trailing-window token identities"
+      ]
+    },
+    {
+      "path": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+      "sha256": "02fd79fe5cd8463dc0117c3207f8d37c6c4f69b9f7017a9aaa4e8ef5e77609f8",
+      "governs": [
+        "checkpoint runtime/preprocessing/action implementation"
+      ]
+    },
+    {
+      "path": "src/mineocclude/models/_mineworld_adapter_wave3.py",
+      "sha256": "1c1bd2cd39d53c7a41f58cf05ee88e95d1bb778eceb53f9078e5468b1bd46f3c",
+      "governs": [
+        "trajectory validation and tokenization implementation"
+      ]
+    },
+    {
+      "path": "src/mineocclude/models/_mineworld_adapter_wave4.py",
+      "sha256": "88d26a6a0272ce79e5fdb7dff716ae9d6b27cc4c764c4003db08f67aa4a3272b",
+      "governs": [
+        "hook-bound teacher-forced execution provenance"
+      ]
+    },
+    {
+      "path": "src/mineocclude/models/_mineworld_adapter_wave5.py",
+      "sha256": "54ab00ebb6f688f75f149662d83827a6e7330016d5667e7a52b6a079ce35e8ce",
+      "governs": [
+        "reviewed preprocessing identity binding"
+      ]
+    },
+    {
+      "path": "src/mineocclude/activations/hooks.py",
+      "sha256": "6dc708dfc7a68030d5e83e920e7acce3664550bc33466a7f5efa5ff0acbe5088",
+      "governs": [
+        "all-layer scoped activation capture"
+      ]
+    },
+    {
+      "path": "src/mineocclude/activations/store_v2.py",
+      "sha256": "8c2313f4ab99c02abb302af1d0b688ba353e34a1cd7985492ed9e562995dd575",
+      "governs": [
+        "activation inventory and hash-verified publication"
+      ]
+    },
+    {
+      "path": "src/mineocclude/probes/p8_core.py",
+      "sha256": "db6f90494b9d8d05d0617cc17d25300d8b1b5260c5732eaf4b252f8db646eae9",
+      "governs": [
+        "inherited exact trajectory-level primary statistic reference"
+      ]
+    }
+  ],
+  "scientific_trajectories_executed": 0,
+  "scientific_activations_extracted": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "a4_started": false,
+  "large_runtime_artifacts_in_commit": false
+}

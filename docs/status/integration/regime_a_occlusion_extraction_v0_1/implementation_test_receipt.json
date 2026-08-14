@@ -1,0 +1,57 @@
+{
+  "artifact_id": "regime-a-a2-implementation-test-receipt-v0.1",
+  "status": "PASS_A2_IMPLEMENTATION_FOCUSED_VALIDATION",
+  "created_utc": "2026-08-14T00:54:00Z",
+  "scientific_trajectories_executed": 0,
+  "scientific_activations_extracted": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "a1_study_manifest_sha256": "624111acde79a89936e0af09f063568a9e28f123fdbbb6f9bb204a7d5e6381c4",
+  "implementation": {
+    "regime_a_module": {"path": "src/mineocclude/regime_a.py", "sha256": "745229b952c05f637cd39a759711118b6d288c30c0851233ff4853465e4ae766"},
+    "production_runner": {"path": "scripts/run_regime_a.py", "sha256": "e9b9f4ccc08e76ff7b45464a5b99161cd38f8873b39f9b47f2776660933101bf"},
+    "gpu_benchmark": {"path": "scripts/benchmark_regime_a_a2_gpu.py", "sha256": "78889c2c6b7f15b5c3f9d148c01ee0d3bdb2cc4834e62a88802ee25b87adf713"},
+    "cpu_benchmark": {"path": "scripts/benchmark_regime_a_a2_cpu.py", "sha256": "19f0ca4acad802d16bfc4b7acaa02dd025ac49026aabe1b60348db8ef1398ff7"},
+    "focused_python_test": {"path": "tests/test_regime_a_production.py", "sha256": "c783bfbd952176032e81e4073f266700b5e5437a0a2ad6b546d4ed48782ed9a0"},
+    "exact_entity_logger": {"path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ServerStateLogger.java", "sha256": "c2aeca8ab3dc84cb106585a107eea8a3b06006f8baceb0e8ff1f20cc058c81e7"}
+  },
+  "focused_python_tests": {
+    "command": "PYTHONPATH=src python -m unittest tests.test_regime_a_production -v",
+    "tests_run": 9,
+    "failures": 0,
+    "errors": 0,
+    "covered": [
+      "manifest and seed determinism", "frame/tick/action alignment", "entity identity and presence",
+      "stable-hidden tau and guard exclusion", "dual visibility classification", "world/screen/token projection",
+      "duration bins", "trajectory-grouped folds and separation", "BEST-K training-only scope and shared selection",
+      "exact equal-trajectory macro-R2", "zero-TSS fail closed", "whole-trajectory bootstrap",
+      "B49 unique stratified no-self training-only donors", "atomic staging", "hash validation",
+      "verified durable copy", "hash-chain ledger", "exact resume"
+    ]
+  },
+  "focused_java_validation": {
+    "jdk": "Eclipse Temurin 17.0.20+8 runtime-only external NVMe toolchain",
+    "command": "./gradlew compileJava test --tests com.mineocclude.server.TargetRetentionPolicyTest --tests com.mineocclude.server.RuntimeObservationToolingTest",
+    "compile_java": "PASS",
+    "tests_run": 14,
+    "failures": 0,
+    "exact_entity_fields_added_per_tick": ["target_entity_uuid", "target_entity_tag", "target_present", "target_respawn_count"]
+  },
+  "exact_checkpoint_smoke": {
+    "status": "PASS",
+    "successful_process_checkpoint_load_count": 1,
+    "all_20_layers_same_forward_path": true,
+    "layer_indices": "0..19 exact",
+    "capture_shape_each_layer": [1, 5552, 2048],
+    "visual_tokens_per_target": 336,
+    "target_windows": 19,
+    "pairs_per_window": 16,
+    "first_two_window_overlap_pairs": 15,
+    "reset_equivalence_layer4_target_digest_equal": true,
+    "cross_trajectory_persistent_state": false,
+    "input": "non-scientific episode-40121 calibration pixels; no target labels or neural outcomes used",
+    "recovery_note": "A first attempt refused before load because the shell Python lacked diffusers; a second attempt loaded then refused before inference on a provenance-label mismatch; only the repaired bounded process performed forwards. No successful GPU work was repeated."
+  },
+  "production_capabilities_1_through_39": "IMPLEMENTED_OR_REUSED_AND_FOCUSED_VALIDATED",
+  "outcome_sealed_until": "A5_OPERATIONAL_QUALITY_VALIDATION_PASS",
+  "a4_started": false
+}

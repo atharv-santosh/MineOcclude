@@ -1,0 +1,16 @@
+{
+  "artifact_id": "regime-a-a2-restart-recovery-receipt-v0.1",
+  "status": "PASS",
+  "created_utc": "2026-08-14T00:54:00Z",
+  "staging": "hidden per-spec partial directory containing spec-hash prefix",
+  "publication": "completion inventory with byte sizes and SHA256, then atomic directory rename",
+  "durability": "copy to distinct durable root followed by source/destination size and SHA256 equality",
+  "ledger": "append-only fsync hash chain",
+  "states": ["PLANNED", "RUNNING", "CAPTURED", "VALIDATED", "DURABLE", "COMPLETE_VALIDATED_DURABLE"],
+  "resume_rule": "skip only exact spec identity in COMPLETE_VALIDATED_DURABLE; reject spec-hash drift",
+  "partial_rule": "fail closed for validation/quarantine; never silently overwrite",
+  "retry_rule": "identical frozen spec and seed only",
+  "tested": ["atomic finalization", "artifact hash tamper boundary", "durable copy verification", "ledger reload", "complete-ID resume", "state regression refusal", "completed spec collision refusal"],
+  "focused_test": "tests.test_regime_a_production.RegimeAProductionTests.test_atomic_hash_durable_and_resume",
+  "result": "PASS"
+}

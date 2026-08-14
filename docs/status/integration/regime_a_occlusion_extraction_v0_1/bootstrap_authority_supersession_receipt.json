@@ -1,0 +1,52 @@
+{
+  "artifact_id": "regime-a-pre-a4-bootstrap-authority-supersession-v1.0",
+  "created_utc": "2026-08-14T01:20:00Z",
+  "status": "PASS_PROSPECTIVE_SUPERSESSION_BEFORE_SCIENTIFIC_COLLECTION",
+  "controlling_authority": "MineOcclude Regime A Single-Operator Scientific Design and Phase-by-Phase Execution Roadmap Version 1.1, August 13 2026",
+  "superseded_authority": {
+    "path": "analysis_manifest.json",
+    "sha256": "d846b4abbbef90b6bf34b2d2e253d2c7b7137a6d5f806ccd44c8996efa02a45c",
+    "bootstrap_replicates": 2000,
+    "bytes_preserved_unchanged": true
+  },
+  "superseding_authority": {
+    "path": "analysis_manifest_v1_1_bootstrap_repair.json",
+    "sha256": "40bc9185d7751673251b0601b267d460642ff383b54b809ed89438b6884a4d26",
+    "bootstrap_replicates": 10000,
+    "canonical_for_regime_a_first_slice_analysis": true
+  },
+  "reason": "Restore the controlling Version 1.1 authority before scientific collection; the local A1 value 2000 was a prospective transcription mismatch.",
+  "bootstrap_semantics": {
+    "resampling_unit": "whole heldout trajectory",
+    "frame_level_resampling": false,
+    "replicates": 10000,
+    "statistic": "exact frozen equal-trajectory macro_R2",
+    "role": "reporting only",
+    "hard_continuation_threshold": false,
+    "can_rescue_or_fail_primary_gate": false
+  },
+  "continuation_gate": {
+    "changed": false,
+    "requirements": [
+      "operational quality PASS",
+      "every primary TSS_t > 0",
+      "layer-4 FULL macro-R2 > 0 on aggregate SHORT through NEAR_CONTEXT",
+      "B=49 empirical p <= 0.05"
+    ]
+  },
+  "unchanged_authorities": {
+    "study_manifest_path": "regime_a_study_manifest.json",
+    "study_manifest_sha256": "624111acde79a89936e0af09f063568a9e28f123fdbbb6f9bb204a7d5e6381c4",
+    "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "a3_validation_receipt_sha256": "56f5f398eaa489a67388948e0eb9971891f08c24d0d2969311ffdadb6b55b7c9",
+    "trajectory_specifications_regenerated": false
+  },
+  "scientific_state_at_repair": {
+    "scientific_trajectories_executed": 0,
+    "scientific_activations_extracted": 0,
+    "scientific_decoding_outcomes_computed": 0,
+    "outcome_informed": false,
+    "a4_started": false
+  },
+  "only_scientific_decision_changed": "BOOTSTRAP_REPLICATES: 2000 -> 10000"
+}

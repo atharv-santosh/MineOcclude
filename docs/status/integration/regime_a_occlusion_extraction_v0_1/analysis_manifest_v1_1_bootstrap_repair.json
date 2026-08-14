@@ -1,0 +1,105 @@
+{
+  "artifact_id": "regime-a-a1-analysis-manifest-v1.1-bootstrap-repair",
+  "created_utc": "2026-08-14T01:20:00Z",
+  "status": "FROZEN_BEFORE_SCIENTIFIC_COLLECTION_SUPERSEDING_V1_0",
+  "primary_eligible_domain": "OCCLUDED_AGREEMENT target frames in SHORT through NEAR_CONTEXT; BEYOND_CONTEXT is required characterization but outside the continuation-gate aggregate",
+  "primary_metric": {
+    "for_each_heldout_trajectory_t": {
+      "E_t": "all frozen eligible primary rows in SHORT through NEAR_CONTEXT",
+      "ybar_t": "arithmetic mean of true world-x over E_t",
+      "SSE_t": "sum over E_t of (y-yhat)^2",
+      "TSS_t": "sum over E_t of (y-ybar_t)^2",
+      "R2_t": "1-SSE_t/TSS_t"
+    },
+    "macro_R2": "unweighted arithmetic mean of R2_t across the 25 out-of-fold heldout trajectories",
+    "trajectory_weight": "exactly equal; frame count cannot alter weight",
+    "zero_TSS_policy": "BLOCK_FIRST_SLICE_ADJUDICATION; never drop or pool trajectory",
+    "pooled_frame_R2_role": "secondary reporting only; cannot rescue gate",
+    "historical_source_commit": "173a3ca3e92ffe771d19911c15c006dba6acc934",
+    "historical_source_path": "src/mineocclude/probes/p8_core.py",
+    "historical_source_sha256": "db6f90494b9d8d05d0617cc17d25300d8b1b5260c5732eaf4b252f8db646eae9"
+  },
+  "duration_characterization": {
+    "required_bins": [
+      "SHORT",
+      "INTERMEDIATE",
+      "LONG",
+      "NEAR_CONTEXT",
+      "BEYOND_CONTEXT"
+    ],
+    "model_and_representation_shared_across_bins": true,
+    "reporting": [
+      "macro trajectory-level R2 where defined",
+      "trajectory-equal MAE in blocks",
+      "pooled secondary diagnostics",
+      "trajectory bootstrap interval"
+    ],
+    "no_bin_specific_tuning": true
+  },
+  "natural_unit_secondary_metrics": {
+    "primary_target": "per-trajectory MAE in blocks followed by unweighted trajectory mean; also median absolute error in blocks",
+    "secondary_target": "Euclidean error in continuous token-cell units plus row/column MAE",
+    "per_bin_required": true
+  },
+  "kinematic_baselines": {
+    "LAST_VISIBLE_POSITION": "carry forward the last VISIBLE_AGREEMENT world-x before the entry transition",
+    "CONSTANT_VELOCITY_EXTRAPOLATION": "causal least-squares world-x versus time fit on the last up-to-E=15 VISIBLE_AGREEMENT frames before transition; extrapolate without hidden targets",
+    "TRAINING_MEAN": "outer-training-only mean world-x stratified by direction and duration bin; no heldout statistic"
+  },
+  "target_specific_null": {
+    "B": 49,
+    "unit": "whole trajectory target profile",
+    "donor_scope": "outer-training trajectories only",
+    "motion_strata": [
+      "direction"
+    ],
+    "no_self_donor": true,
+    "temporal_order_preserved": true,
+    "outer_heldout_targets": "true and untouched",
+    "statistic": "same exact primary macro_R2",
+    "empirical_p": "(1 + count(null_macro_R2 >= observed_macro_R2)) / 50",
+    "mapping_cache": "hash-bound and validated before outcomes"
+  },
+  "bootstrap": {
+    "unit": "whole heldout trajectory",
+    "replicates": 10000,
+    "seed_derivation": "SHA256 of frozen A3 manifest hash and literal REGIME_A_BOOTSTRAP_V1",
+    "statistic": "same exact primary macro_R2",
+    "interval": "two-sided 2.5/97.5 percentile",
+    "hard_gate": false
+  },
+  "continuation_gate": {
+    "all_required": true,
+    "operational_quality": "PASS",
+    "every_primary_TSS_t_gt_0": true,
+    "layer4_FULL_primary_macro_R2_gt_0": true,
+    "domain": "aggregate SHORT through NEAR_CONTEXT exactly as primary_metric.E_t",
+    "B49_empirical_p_lte": 0.05,
+    "bootstrap_hard_threshold": false
+  },
+  "outcome_sealing": {
+    "sealed_until": "A5_OPERATIONAL_QUALITY_VALIDATION_PASS",
+    "before_unseal_prohibited": [
+      "scientific prediction inspection",
+      "scientific R2 calculation",
+      "null execution",
+      "aggregate outcome inspection"
+    ],
+    "quality_checks_may_not_use_decoding_outcomes": true
+  },
+  "prohibitions": {
+    "posthoc_layer_hunting": true,
+    "posthoc_token_hunting": true,
+    "frame_level_random_split": true,
+    "successful_expensive_rerun_for_reassurance": true
+  },
+  "outcome_informed": false,
+  "supersession": {
+    "supersedes_path": "analysis_manifest.json",
+    "supersedes_sha256": "d846b4abbbef90b6bf34b2d2e253d2c7b7137a6d5f806ccd44c8996efa02a45c",
+    "superseded_bootstrap_replicates": 2000,
+    "authoritative_bootstrap_replicates": 10000,
+    "reason": "Restore controlling Regime-A Version 1.1 authority before scientific collection.",
+    "scientific_outcomes_present_at_repair": false
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "artifact_id": "regime-a-s0-validation-receipt-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "PASS_S0_COMPLETE_A1_FREEZE_ALLOWED",
+  "guard_tau_semantics": "PASS",
+  "post_warmup_target_retention": "PASS",
+  "bidirectional_geometry_supported": "YES",
+  "confound_feasibility": "PASS",
+  "selected_motion_design": "BALANCED_BIDIRECTIONAL_13_12",
+  "inherited_profile_thresholds_nontransferable_to_regime_a": true,
+  "artifacts": [
+    {"path": "s0_guard_semantics_receipt.json", "sha256": "47f38ba780ff1cd22db89055fc97c2146893c9d6fe7d63cfad349569187128eb"},
+    {"path": "s0_target_retention_receipt.json", "sha256": "8f3bf99a9b418f089cc703c2b9b225131ab97836250902d118e4b2adfbdacebd"},
+    {"path": "s0_bidirectional_geometry_receipt.json", "sha256": "589899db65b3d78dbf3cbf2f8f440f7bfc1224523af1072246942e3c3f8325bf"},
+    {"path": "s0_confound_feasibility_report.json", "sha256": "2a86f02f2870934a85f6ee38d8a4d2fdc44055907cf5a3296ecdd6cf1511e9ae"},
+    {"path": "scripts/calibrate_regime_a_s0.py", "sha256": "9bb7e8d4848d358e9f41814dea347f80b12bdd3f0881c2f19d5baee29a4d3146"}
+  ],
+  "conditional_approval_findings": {
+    "highest_quality_methodology": true,
+    "meaningful_research_contribution": true,
+    "consistent_with_nick_direction": true,
+    "outcome_blind_evidence_complete": true,
+    "classification_changing_ambiguity_remaining": false
+  },
+  "prohibitions": {
+    "scientific_trajectory_executed": false,
+    "scientific_activation_extracted": false,
+    "scientific_decoding_outcome_computed": false,
+    "visible_study_rerun": false,
+    "checkpoint_loaded": false
+  },
+  "blocked_duration_authority": false,
+  "blocked_confound_authority": false,
+  "blockers_to_a1": []
+}

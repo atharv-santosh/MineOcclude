@@ -1,0 +1,47 @@
+{
+  "artifact_id": "regime-a-a1-visibility-authority-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "FROZEN_BEFORE_SCIENTIFIC_COLLECTION",
+  "raw_signals_required": ["geometric_status", "magenta_status"],
+  "classification": {
+    "VISIBLE_AGREEMENT": "geometric=visible AND magenta=visible",
+    "OCCLUDED_AGREEMENT": "geometric=occluded AND magenta=not_detected",
+    "VISIBILITY_DISAGREEMENT": "both valid and binary but unequal",
+    "INVALID_VISIBILITY": "one or both raw systems boundary, rejected, invalid, missing, or unknown"
+  },
+  "primary_hidden_target_requirement": "OCCLUDED_AGREEMENT",
+  "primary_target_may_contain_visible_sheep_pixels": false,
+  "tau": {
+    "tau_1": "first captured model target frame satisfying OCCLUDED_AGREEMENT after the entry transition",
+    "prior_context_partial_or_disagreement_allowed": true,
+    "already_stable_hidden_frames_discarded_before_tau_1": 0
+  },
+  "direction_specific_transition_guards": {
+    "LEFT_TO_RIGHT": {"entry_frames": 20, "exit_frames": 8},
+    "RIGHT_TO_LEFT": {"entry_frames": 8, "exit_frames": 20},
+    "semantics": "maximum observed pre/post stable-hidden transition plus one frame; transition frames excluded from eligible tau"
+  },
+  "geometric_detector": {
+    "version": "person-c-geometric-visibility-v0.1",
+    "source_path": "src/mineocclude/data/visibility.py",
+    "source_sha256": "00b7242a5925e44a24ab0975130517034fff541aa65c84275221c24705eaae3d"
+  },
+  "magenta_detector": {
+    "version": "hsv-largest-valid-blob-v1.0-candidate",
+    "source_path": "src/mineocclude/vision/magenta.py",
+    "source_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "config_sha256": "99acc45e0a49b8526eca2ab777e21c07f88934d744bc5679e63ab8a00b181b8d"
+  },
+  "duration_bins_from_stable_hidden_onset": {
+    "SHORT": [1, 4],
+    "INTERMEDIATE": [5, 8],
+    "LONG": [9, 12],
+    "NEAR_CONTEXT": [13, 15],
+    "BEYOND_CONTEXT": [16, 19]
+  },
+  "sources": [
+    {"path": "s0_guard_semantics_receipt.json", "sha256": "47f38ba780ff1cd22db89055fc97c2146893c9d6fe7d63cfad349569187128eb"},
+    {"path": "s0_bidirectional_geometry_receipt.json", "sha256": "589899db65b3d78dbf3cbf2f8f440f7bfc1224523af1072246942e3c3f8325bf"}
+  ],
+  "outcome_informed": false
+}

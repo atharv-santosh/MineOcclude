@@ -1,0 +1,46 @@
+{
+  "artifact_id": "regime-a-pre-a4-canonical-authority-v1.1",
+  "created_utc": "2026-08-14T01:20:00Z",
+  "status": "FROZEN_BEFORE_A4_COMMIT_PENDING",
+  "authority_model": "immutable original authorities plus explicit versioned supersession",
+  "a1_protocol_authority": {
+    "path": "regime_a_study_manifest.json",
+    "sha256": "624111acde79a89936e0af09f063568a9e28f123fdbbb6f9bb204a7d5e6381c4",
+    "role": "unchanged trajectory-generation and protocol authority"
+  },
+  "canonical_analysis_authority": {
+    "path": "analysis_manifest_v1_1_bootstrap_repair.json",
+    "sha256": "40bc9185d7751673251b0601b267d460642ff383b54b809ed89438b6884a4d26",
+    "supersedes_path": "analysis_manifest.json",
+    "supersedes_sha256": "d846b4abbbef90b6bf34b2d2e253d2c7b7137a6d5f806ccd44c8996efa02a45c",
+    "only_changed_scientific_field": "bootstrap.replicates",
+    "authoritative_value": 10000
+  },
+  "supersession_receipt": {
+    "path": "bootstrap_authority_supersession_receipt.json",
+    "sha256": "530c555541096f63a306aaeec77ff7532b2ce6b9aef696c250e553a93a5ec834"
+  },
+  "a2_validation": {
+    "path": "implementation_test_receipt.json",
+    "sha256": "f29d49f58d5c41ac5680124974d812a862af3852da4e18e0e3d9095a94772190",
+    "status": "PASS_A2_IMPLEMENTATION_FOCUSED_VALIDATION"
+  },
+  "a3_freeze": {
+    "receipt_path": "a3_validation_receipt.json",
+    "receipt_sha256": "56f5f398eaa489a67388948e0eb9971891f08c24d0d2969311ffdadb6b55b7c9",
+    "trajectory_manifest_path": "trajectory_manifest.jsonl",
+    "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "specifications_changed_by_repair": false
+  },
+  "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+  "environment_authority": {
+    "path": "environment_authority.json",
+    "sha256": "b2ed4fb9e12f6ca3640fbf890dce998cf7da871f3a2ae198aa26eed63b60a3f6"
+  },
+  "pre_a4_git_commit_sha": "PENDING_COMMIT",
+  "scientific_trajectories_executed": 0,
+  "scientific_activations_extracted": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "scientific_collection_authorized": false,
+  "a4_started": false
+}

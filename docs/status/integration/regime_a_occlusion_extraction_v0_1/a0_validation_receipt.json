@@ -1,0 +1,71 @@
+{
+  "artifact_id": "regime-a-a0-validation-receipt-v0.1",
+  "created_utc": "2026-08-14T00:02:27Z",
+  "phase": "A0",
+  "status": "PASS_A0_COMPLETE_A1_REVIEW_READY",
+  "scope": "NON_SCIENTIFIC_CALIBRATION_AND_PRECOLLECTION_PACKET_ONLY",
+  "repository": {
+    "branch": "exploration/regime-a-occlusion-extraction-v0-1",
+    "head_before_and_after": "2238fbdd0f5b93ad616374f8f75cae9a8211c33a",
+    "initial_tree_clean": true,
+    "git_writes_performed": false
+  },
+  "artifact_inventory": [
+    {"path": "prior_authority_binding.json", "sha256": "9993b3ed2ad1d9387299656978eb505ba3332e9370c7929cbec6c2b7e9e9c1ed", "byte_size": 4400},
+    {"path": "environment_authority.json", "sha256": "b2ed4fb9e12f6ca3640fbf890dce998cf7da871f3a2ae198aa26eed63b60a3f6", "byte_size": 3576},
+    {"path": "context_calibration.json", "sha256": "20080dc42d0a4f7a1b74bc9a7e73214b5fa8346f02d5a07c6175fe2bb16954ff", "byte_size": 4672},
+    {"path": "geometry_camera_authority.json", "sha256": "0ab79fc93b4bcb3fccf3c99de9435077f574e85001030f25d2f7d5c3433b5274", "byte_size": 5639},
+    {"path": "visibility_calibration_report.json", "sha256": "df630149e17cadfbaa0bd65f15a181624d6964de4cb7d78d01b9ad9476c75f50", "byte_size": 6362},
+    {"path": "occlusion_duration_bin_authority.json", "sha256": "013fec343aa37ead73789e0759e8b3da578a4c8d025ffbaff9af6a04c91c1c3d", "byte_size": 2451},
+    {"path": "a1_precollection_approval_packet.md", "sha256": "102ddf598299948c5b5cc092b2a209d0f96deb59ffe30919f7c2293ffa3db07e", "byte_size": 6100}
+  ],
+  "a0_domain_checks": {
+    "prior_authority_binding": "PASS",
+    "environment_checkpoint_identity": "PASS",
+    "nominal_and_effective_context": "PASS_FINITE_E15_C0.75",
+    "capture_and_model_cadence": "PASS_20_HZ_ONE_TO_ONE",
+    "teacher_forcing_warmup_prefix": "PASS_SPECIFIED",
+    "camera_and_visible_lead_in": "PASS",
+    "wall_and_beyond_context_coverage": "PASS",
+    "geometric_visibility": "PASS",
+    "magenta_visibility": "PASS",
+    "world_screen_token_projection": "PASS",
+    "transition_guards": "PASS_ENTRY20_EXIT8",
+    "bidirectional_geometry": "UNCLEAR_RECOMMEND_SINGLE_DIRECTION",
+    "existing_speed_noise_candidates": "PASS_FOUND_NOT_FROZEN",
+    "p8_metric_inheritance": "PASS_VALID"
+  },
+  "focused_validation": {
+    "all_a0_json_parse": true,
+    "candidate_bins_derive_only_from_E15": true,
+    "candidate_bin_widths": [4, 4, 4, 3, 4],
+    "all_candidate_bins_at_least_three_clean_frames": true,
+    "camera_projection_finite_and_in_bounds": true,
+    "homography_roundtrip_and_heldout_gate_pass": true,
+    "guard_formula_applied": true,
+    "no_large_files_in_status_root": true,
+    "broad_pytest_run": false,
+    "checkpoint_loaded": false,
+    "gpu_inference_run": false
+  },
+  "scope_guards": {
+    "scientific_regime_a_trajectory_manifest_created": false,
+    "scientific_regime_a_trajectory_collected": false,
+    "probe_decoding_outcome_computed": false,
+    "a1_authority_frozen": false,
+    "a2_implementation_started": false,
+    "completed_visible_position_experiment_rerun": false,
+    "closed_visible_study_modified": false,
+    "nulls_executed": false
+  },
+  "pre_collection_items_requiring_approval_or_implementation": [
+    "Mentor/operator decisions 1 through 8 in a1_precollection_approval_packet.md.",
+    "A1 must freeze the approved values in a separate authority; this packet does not freeze them.",
+    "A2 must later implement and validate independent overlapping trailing 16-pair extraction windows.",
+    "The exact runtime must pass a target-retention smoke check after warmup before scientific collection.",
+    "Bidirectional symmetry remains unclear; use single left-to-right motion unless a matched reverse calibration is separately approved."
+  ],
+  "blockers_to_a1_approval_review": [],
+  "ready_for_a1_approval_review": true,
+  "scientific_collection_authorized": false
+}

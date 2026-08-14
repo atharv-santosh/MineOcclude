@@ -1,0 +1,91 @@
+{
+  "artifact_id": "regime-a-a0-environment-authority-v0.1",
+  "created_utc": "2026-08-14T00:02:27Z",
+  "status": "PASS_ENVIRONMENT_IDENTITY_BOUND",
+  "scope": "NON_SCIENTIFIC_A0_ONLY",
+  "qualified_environment": {
+    "prefix": "/home/sagemaker-user/.conda/envs/mineworld",
+    "python": "3.10.20",
+    "numpy": "1.26.4",
+    "scikit_learn": "1.6.1",
+    "pytorch": "2.6.0+cu126",
+    "pytorch_cuda": "12.6",
+    "cuda_available": true,
+    "gpu": "NVIDIA L4",
+    "driver": "595.71.05",
+    "gpu_memory_mib": 23034,
+    "binding": "Use this qualified environment for future approved work; the base environment is not authority."
+  },
+  "mineworld_source": {
+    "path": "/home/sagemaker-user/MineWorld-Upstream",
+    "head": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+    "tracked_worktree_clean": true,
+    "model_config_path": "/home/sagemaker-user/MineWorld-Upstream/configs/700M_16f.yaml",
+    "model_config_sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018"
+  },
+  "assets": {
+    "main_checkpoint": {
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+      "size_bytes": 3798736924,
+      "sha256_inherited_immutable_identity": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5"
+    },
+    "vae_config": {
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/config.json",
+      "size_bytes": 805,
+      "sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb"
+    },
+    "vae_checkpoint": {
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt",
+      "size_bytes": 1657555486,
+      "sha256_inherited_immutable_identity": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab"
+    }
+  },
+  "model": {
+    "max_position_embeddings": 5552,
+    "hidden_size": 2048,
+    "intermediate_size": 4096,
+    "attention_heads": 32,
+    "key_value_heads": 4,
+    "layer_count": 20,
+    "visual_tokens_per_frame": 336,
+    "visual_token_grid": [14, 24],
+    "action_tokens_per_frame": 11,
+    "tokens_per_frame_action_pair": 347,
+    "maximum_complete_pairs": 16,
+    "primary_extraction_layer": 4,
+    "primary_readout": "FULL_TOKEN_GRID"
+  },
+  "factor_candidates": {
+    "speed": {
+      "available_project_levels_blocks_per_second": [1.0, 2.0],
+      "visible_study_strata_blocks_per_second": [0.0, 1.0, 1.5, 2.0],
+      "candidate_ordinal_middle_blocks_per_second": 1.5,
+      "derivation": "Unique moving-speed middle and exact arithmetic midpoint of validated 1.0 and 2.0 endpoints.",
+      "status": "CANDIDATE_PENDING_A1_APPROVAL"
+    },
+    "motion_noise_q": {
+      "available_levels": [0.02, 0.05, 0.2],
+      "candidate_ordinal_middle": 0.05,
+      "status": "CANDIDATE_PENDING_A1_APPROVAL"
+    },
+    "sources": [
+      {
+        "path": "configs/collection/mvp_matrix.csv",
+        "sha256": "5eebbbd9f5950184b6c11a17722295c970e37a460e3963bed3b9390b99c1ac17"
+      },
+      {
+        "path": "scripts/design_large_scale_no_wall_profiles_v2.py",
+        "sha256": "b3006933940278ed633d378ce020fec52a4ca0223cbbd0ab477a33c6fd6692be"
+      },
+      {
+        "path": "docs/status/integration/exploratory_large_scale_no_wall_scaling_best_k_v0_1/study_design.json",
+        "sha256": "08d77261f70a3d7e554ce6f8fe4a565fa09591ae793a87efd60e4a742c016502"
+      }
+    ]
+  },
+  "execution": {
+    "checkpoint_loaded_during_a0": false,
+    "gpu_inference_performed_during_a0": false,
+    "reason": "Source/configuration and existing immutable authorities resolved all A0 identity and context questions."
+  }
+}

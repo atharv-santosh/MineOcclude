@@ -1,0 +1,48 @@
+{
+  "artifact_id": "regime-a-a1-split-authority-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "FROZEN_BEFORE_SCIENTIFIC_COLLECTION",
+  "independence_unit": "complete trajectory",
+  "outer_evaluation": {
+    "type": "five-fold trajectory-grouped out-of-fold",
+    "trajectory_count": 25,
+    "fold_count": 5,
+    "heldout_trajectories_per_fold": 5,
+    "training_trajectories_per_fold": 20,
+    "each_trajectory_held_out_exactly_once": true,
+    "direction_counts_per_fold": "2/3 or 3/2",
+    "frame_level_random_split": false
+  },
+  "inner_selection": {
+    "type": "five-fold trajectory-grouped within each outer-training set",
+    "fit_scope": "outer training only",
+    "controls": ["scaling", "ridge alpha", "BEST-K token ranking", "K selection"],
+    "outer_heldout_identity_or_target_access": false
+  },
+  "motion_design": {
+    "direction_balance": {"LEFT_TO_RIGHT": 13, "RIGHT_TO_LEFT": 12},
+    "fold_balance_algorithm": "five folds of five; direction pattern 3/2,2/3,3/2,2/3,3/2",
+    "speed_blocks_per_second": 1.5,
+    "motion_noise_q": 0.05
+  },
+  "confound_authority": {
+    "inherited_profile_thresholds_nontransferable_to_regime_a": true,
+    "reason": "Fixed wall/speed/noise monotonic paths necessarily have high complete-profile correlations; weakening prior numeric thresholds is prohibited.",
+    "required_preoutcome_controls": [
+      "randomized frozen start position",
+      "randomized frozen occlusion onset and initial motion phase",
+      "unique frozen stochastic motion realization",
+      "positive target-support interval overlap within every outer-fold/direction/duration-bin cell",
+      "reported target support across duration bins",
+      "zero exact duplicate complete profiles",
+      "prospectively minimized and reported complete-profile RMS-near-duplicate concentration",
+      "five equal balanced outer folds",
+      "continuous time-only predictability reporting without a hard threshold",
+      "mandatory B=49 target-specific whole-trajectory null"
+    ],
+    "near_duplicate_definition": "complete-profile RMS world-x distance <0.10 block",
+    "outcome_blind_s0_path": "s0_confound_feasibility_report.json",
+    "outcome_blind_s0_sha256": "2a86f02f2870934a85f6ee38d8a4d2fdc44055907cf5a3296ecdd6cf1511e9ae"
+  },
+  "outcome_informed": false
+}

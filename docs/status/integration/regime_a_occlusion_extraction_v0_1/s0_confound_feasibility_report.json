@@ -1,0 +1,922 @@
+{
+  "INHERITED_PROFILE_THRESHOLDS_NONTRANSFERABLE_TO_REGIME_A": true,
+  "bidirectional_result": {
+    "absolute_pooled_clean_tau_world_x_correlation": 0.0028205354008747035,
+    "absolute_pooled_normalized_time_world_x_correlation": 0.06852215136470916,
+    "direction_counts": {
+      "LEFT_TO_RIGHT": 13,
+      "RIGHT_TO_LEFT": 12
+    },
+    "exact_duplicate_complete_profile_count": 0,
+    "family": "BALANCED_BIDIRECTIONAL_13_12",
+    "fold_counts": {
+      "0": 5,
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4": 5
+    },
+    "fold_direction_counts": {
+      "0": {
+        "LEFT_TO_RIGHT": 3,
+        "RIGHT_TO_LEFT": 2
+      },
+      "1": {
+        "LEFT_TO_RIGHT": 2,
+        "RIGHT_TO_LEFT": 3
+      },
+      "2": {
+        "LEFT_TO_RIGHT": 3,
+        "RIGHT_TO_LEFT": 2
+      },
+      "3": {
+        "LEFT_TO_RIGHT": 2,
+        "RIGHT_TO_LEFT": 3
+      },
+      "4": {
+        "LEFT_TO_RIGHT": 3,
+        "RIGHT_TO_LEFT": 2
+      }
+    },
+    "pairwise_profiles": {
+      "cross_direction": {
+        "absolute_r_ge_0_95_fraction": 1.0,
+        "absolute_r_median": 0.9979836984975581,
+        "near_duplicate_rms_lt_0_10_fraction": 0.0,
+        "pair_count": 156,
+        "profile_rms_distance_blocks_median": 8.10801195458075,
+        "profile_rms_distance_blocks_min": 7.829751919323584
+      },
+      "overall": {
+        "absolute_r_ge_0_95_fraction": 1.0,
+        "absolute_r_median": 0.9980292080787841,
+        "near_duplicate_rms_lt_0_10_fraction": 0.0,
+        "pair_count": 300,
+        "profile_rms_distance_blocks_median": 7.862547493798747,
+        "profile_rms_distance_blocks_min": 0.13321206313167297
+      },
+      "within_direction": {
+        "absolute_r_ge_0_95_fraction": 1.0,
+        "absolute_r_median": 0.9980388717333939,
+        "near_duplicate_rms_lt_0_10_fraction": 0.0,
+        "pair_count": 144,
+        "profile_rms_distance_blocks_median": 0.3790271428581213,
+        "profile_rms_distance_blocks_min": 0.13321206313167297
+      }
+    },
+    "stable_onset_frame": {
+      "range": [
+        24,
+        63
+      ],
+      "unique_count": 19
+    },
+    "start_position": {
+      "range": [
+        -7.972629039174176,
+        7.965466297696578
+      ],
+      "unique_count": 25
+    },
+    "support_overlap": {
+      "all_fold_direction_bin_intervals_overlap": true,
+      "checks": [
+        {
+          "bin": "SHORT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.7787681410346602,
+          "test_min_max": [
+            -4.092746508786263,
+            -3.555944343710836
+          ],
+          "train_min_max": [
+            -4.090005924822329,
+            -3.6719615006231576
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.8014336582501382,
+          "test_min_max": [
+            -3.959245361089044,
+            -3.2997400928678493
+          ],
+          "train_min_max": [
+            -3.926021838078478,
+            -3.177793598034743
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.853079871157474,
+          "test_min_max": [
+            -3.8057770435366107,
+            -2.7939318245891647
+          ],
+          "train_min_max": [
+            -3.712335643244149,
+            -2.7292027980220874
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.675931601366674,
+          "test_min_max": [
+            -3.7377793730243196,
+            -2.4191572399258785
+          ],
+          "train_min_max": [
+            -3.4203253552832606,
+            -2.529026985260492
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.5817638297906997,
+          "test_min_max": [
+            -3.5425990596058297,
+            -2.2046048034676202
+          ],
+          "train_min_max": [
+            -3.2185522288852715,
+            -2.4401555661963483
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.6660455420203867,
+          "test_min_max": [
+            5.107283439728572,
+            5.380989595643234
+          ],
+          "train_min_max": [
+            5.0139576767886105,
+            5.424899780063411
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.7098269798052536,
+          "test_min_max": [
+            4.740166319303668,
+            5.27998915158341
+          ],
+          "train_min_max": [
+            4.568707961519788,
+            5.329207136160694
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.9103027314341025,
+          "test_min_max": [
+            4.316665341880439,
+            5.092058406605556
+          ],
+          "train_min_max": [
+            4.246954564306646,
+            5.0859656778705915
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.747408935816814,
+          "test_min_max": [
+            4.0720230064837875,
+            4.697308899094629
+          ],
+          "train_min_max": [
+            4.035482817943907,
+            4.87208760368612
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 0,
+          "interval_overlap_fraction": 0.8476696618405444,
+          "test_min_max": [
+            3.7735540393266875,
+            4.421656970105769
+          ],
+          "train_min_max": [
+            3.826116250616616,
+            4.4761163065618454
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.20308469034910182,
+          "test_min_max": [
+            -4.088745313720654,
+            -3.9797290122475837
+          ],
+          "train_min_max": [
+            -4.092746508786263,
+            -3.555944343710836
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.40397546133869255,
+          "test_min_max": [
+            -3.9001549668616873,
+            -3.5844676303678913
+          ],
+          "train_min_max": [
+            -3.959245361089044,
+            -3.177793598034743
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.36314849786949305,
+          "test_min_max": [
+            -3.712335643244149,
+            -3.321379323140567
+          ],
+          "train_min_max": [
+            -3.8057770435366107,
+            -2.7292027980220874
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.36941626983136383,
+          "test_min_max": [
+            -3.4203253552832606,
+            -2.9332048855569584
+          ],
+          "train_min_max": [
+            -3.7377793730243196,
+            -2.4191572399258785
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.511373912574841,
+          "test_min_max": [
+            -3.2185522288852715,
+            -2.5343368711212113
+          ],
+          "train_min_max": [
+            -3.5425990596058297,
+            -2.2046048034676202
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.7906901756367913,
+          "test_min_max": [
+            5.075430069891243,
+            5.4003579537061475
+          ],
+          "train_min_max": [
+            5.0139576767886105,
+            5.424899780063411
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.35867331328223145,
+          "test_min_max": [
+            4.947858969893005,
+            5.220629728609861
+          ],
+          "train_min_max": [
+            4.568707961519788,
+            5.329207136160694
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.5758550180483012,
+          "test_min_max": [
+            4.513902631455374,
+            5.000559919815101
+          ],
+          "train_min_max": [
+            4.246954564306646,
+            5.092058406605556
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.5069891708161288,
+          "test_min_max": [
+            4.251562771747215,
+            4.675712338371465
+          ],
+          "train_min_max": [
+            4.035482817943907,
+            4.87208760368612
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 1,
+          "interval_overlap_fraction": 0.7936787389717355,
+          "test_min_max": [
+            3.8900271461459983,
+            4.447635880454322
+          ],
+          "train_min_max": [
+            3.7735540393266875,
+            4.4761163065618454
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.7455375158763844,
+          "test_min_max": [
+            -4.072167653290556,
+            -3.6719615006231576
+          ],
+          "train_min_max": [
+            -4.092746508786263,
+            -3.555944343710836
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.9331680794915013,
+          "test_min_max": [
+            -3.926021838078478,
+            -3.177793598034743
+          ],
+          "train_min_max": [
+            -3.959245361089044,
+            -3.196795997133848
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.5366244262113629,
+          "test_min_max": [
+            -3.615523397491442,
+            -3.03780736071828
+          ],
+          "train_min_max": [
+            -3.8057770435366107,
+            -2.7292027980220874
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.1744303566868608,
+          "test_min_max": [
+            -3.112598479611588,
+            -2.8825907506000377
+          ],
+          "train_min_max": [
+            -3.7377793730243196,
+            -2.4191572399258785
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.375910162249977,
+          "test_min_max": [
+            -2.9431212041108,
+            -2.4401555661963483
+          ],
+          "train_min_max": [
+            -3.5425990596058297,
+            -2.2046048034676202
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.6587383345001165,
+          "test_min_max": [
+            5.1406698553887376,
+            5.424899780063411
+          ],
+          "train_min_max": [
+            5.0139576767886105,
+            5.411373172075955
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.5118893907143011,
+          "test_min_max": [
+            4.812894399940674,
+            5.202185859086336
+          ],
+          "train_min_max": [
+            4.568707961519788,
+            5.329207136160694
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.4622133179960308,
+          "test_min_max": [
+            4.422352785536383,
+            4.812971036536556
+          ],
+          "train_min_max": [
+            4.246954564306646,
+            5.092058406605556
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.7528293970195855,
+          "test_min_max": [
+            4.114003370286801,
+            4.74382404668081
+          ],
+          "train_min_max": [
+            4.035482817943907,
+            4.87208760368612
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 2,
+          "interval_overlap_fraction": 0.8682678663223838,
+          "test_min_max": [
+            3.826116250616616,
+            4.436128491347503
+          ],
+          "train_min_max": [
+            3.7735540393266875,
+            4.4761163065618454
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.6297182992348872,
+          "test_min_max": [
+            -4.063828229791957,
+            -3.725794083375054
+          ],
+          "train_min_max": [
+            -4.092746508786263,
+            -3.555944343710836
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.7495056846580623,
+          "test_min_max": [
+            -3.782498535829112,
+            -3.196795997133848
+          ],
+          "train_min_max": [
+            -3.959245361089044,
+            -3.177793598034743
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.7823958632563942,
+          "test_min_max": [
+            -3.6362390607681014,
+            -2.7292027980220874
+          ],
+          "train_min_max": [
+            -3.8057770435366107,
+            -2.7939318245891647
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.6681921926478019,
+          "test_min_max": [
+            -3.410119999649461,
+            -2.529026985260492
+          ],
+          "train_min_max": [
+            -3.7377793730243196,
+            -2.4191572399258785
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.389429047154024,
+          "test_min_max": [
+            -3.001294070823426,
+            -2.480240242557966
+          ],
+          "train_min_max": [
+            -3.5425990596058297,
+            -2.2046048034676202
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.4262872686927573,
+          "test_min_max": [
+            5.235120749964368,
+            5.41030013676024
+          ],
+          "train_min_max": [
+            5.0139576767886105,
+            5.424899780063411
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.6450060747937879,
+          "test_min_max": [
+            4.789462564064364,
+            5.329207136160694
+          ],
+          "train_min_max": [
+            4.568707961519788,
+            5.27998915158341
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.9005763437054082,
+          "test_min_max": [
+            4.324885149521648,
+            5.0859656778705915
+          ],
+          "train_min_max": [
+            4.246954564306646,
+            5.092058406605556
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.6512838409101086,
+          "test_min_max": [
+            4.198956868498843,
+            4.87208760368612
+          ],
+          "train_min_max": [
+            4.035482817943907,
+            4.74382404668081
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 3,
+          "interval_overlap_fraction": 0.6237069391728398,
+          "test_min_max": [
+            4.009442919178751,
+            4.4761163065618454
+          ],
+          "train_min_max": [
+            3.7735540393266875,
+            4.447635880454322
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.6863535513201181,
+          "test_min_max": [
+            -4.090005924822329,
+            -3.721569852466481
+          ],
+          "train_min_max": [
+            -4.092746508786263,
+            -3.555944343710836
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.513875840555594,
+          "test_min_max": [
+            -3.8139934131244644,
+            -3.4124242315312845
+          ],
+          "train_min_max": [
+            -3.959245361089044,
+            -3.177793598034743
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.47146247749190723,
+          "test_min_max": [
+            -3.573158809781389,
+            -3.065594448787131
+          ],
+          "train_min_max": [
+            -3.8057770435366107,
+            -2.7292027980220874
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.45485441972472607,
+          "test_min_max": [
+            -3.4093613753597607,
+            -2.8095802701730888
+          ],
+          "train_min_max": [
+            -3.7377793730243196,
+            -2.4191572399258785
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.5156915029945907,
+          "test_min_max": [
+            -3.20264952512058,
+            -2.5126572561745375
+          ],
+          "train_min_max": [
+            -3.5425990596058297,
+            -2.2046048034676202
+          ]
+        },
+        {
+          "bin": "SHORT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.817494969504411,
+          "test_min_max": [
+            5.0139576767886105,
+            5.411373172075955
+          ],
+          "train_min_max": [
+            5.075430069891243,
+            5.424899780063411
+          ]
+        },
+        {
+          "bin": "INTERMEDIATE",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.2832140270088277,
+          "test_min_max": [
+            4.568707961519788,
+            4.955550353090609
+          ],
+          "train_min_max": [
+            4.740166319303668,
+            5.329207136160694
+          ]
+        },
+        {
+          "bin": "LONG",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.5257258469073082,
+          "test_min_max": [
+            4.246954564306646,
+            4.760958275097654
+          ],
+          "train_min_max": [
+            4.316665341880439,
+            5.092058406605556
+          ]
+        },
+        {
+          "bin": "NEAR_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.5007515881362342,
+          "test_min_max": [
+            4.035482817943907,
+            4.490954181586575
+          ],
+          "train_min_max": [
+            4.0720230064837875,
+            4.87208760368612
+          ]
+        },
+        {
+          "bin": "BEYOND_CONTEXT",
+          "direction": "RIGHT_TO_LEFT",
+          "fold": 4,
+          "interval_overlap_fraction": 0.6052676400492787,
+          "test_min_max": [
+            3.9268865749816935,
+            4.352124780458788
+          ],
+          "train_min_max": [
+            3.7735540393266875,
+            4.4761163065618454
+          ]
+        }
+      ],
+      "minimum_interval_overlap_fraction": 0.1744303566868608
+    },
+    "target_support_by_bin": {
+      "BEYOND_CONTEXT": [
+        -3.5425990596058297,
+        4.4761163065618454
+      ],
+      "INTERMEDIATE": [
+        -3.959245361089044,
+        5.329207136160694
+      ],
+      "LONG": [
+        -3.8057770435366107,
+        5.092058406605556
+      ],
+      "NEAR_CONTEXT": [
+        -3.7377793730243196,
+        4.87208760368612
+      ],
+      "SHORT": [
+        -4.092746508786263,
+        5.424899780063411
+      ]
+    },
+    "trajectory_count": 25
+  },
+  "designation": "NON_SCIENTIFIC_DESIGN_ONLY_NEVER_ELIGIBLE_FOR_REGIME_A_RESULTS",
+  "document_sha256_without_self": "4b23ef16532139ed1a6a2bbb6bc81bc8388b5a9467ac53bd6c8ab17e19fcd4f0",
+  "inputs": {
+    "dt_seconds": 0.05,
+    "effective_context_steps": 15,
+    "entry_guards_by_direction": {
+      "LEFT_TO_RIGHT": 20,
+      "RIGHT_TO_LEFT": 8
+    },
+    "exit_guards_by_direction": {
+      "LEFT_TO_RIGHT": 8,
+      "RIGHT_TO_LEFT": 20
+    },
+    "hidden_interval_conservative_blocks": [
+      -4.09654256549771,
+      5.426536982279787
+    ],
+    "master_seed": 2026081401,
+    "motion_noise_q": 0.05,
+    "pool_per_direction": 512,
+    "speed_blocks_per_second": 1.5
+  },
+  "prospective_confound_authority": {
+    "exact_duplicate_complete_profiles": 0,
+    "near_duplicate_concentration": "MINIMIZE_PROSPECTIVELY_AND_REPORT; NO OUTCOME-BASED THRESHOLD",
+    "near_duplicate_definition": "complete-profile RMS world-x distance <0.10 block",
+    "outer_fold_direction_balance": "2/3 or 3/2",
+    "outer_fold_size": 5,
+    "randomized_occlusion_onset_and_motion_phase": true,
+    "randomized_start_position": true,
+    "target_specific_null": "MANDATORY_B49_WHOLE_TRAJECTORY_OUTER_TRAINING_ONLY",
+    "target_support_overlap_across_duration_bins": "REQUIRED_AND_REPORTED",
+    "target_support_overlap_across_grouped_folds_by_direction_and_bin": "REQUIRED_POSITIVE_INTERVAL_OVERLAP",
+    "time_only_predictability": "CONTINUOUS_MANDATORY_REPORTING_NO_HARD_THRESHOLD",
+    "varied_stochastic_motion_realization": true
+  },
+  "schema_version": "regime-a-s0-confound-calibration-v0.1",
+  "scientific_outcomes_read": false,
+  "scientific_specs_generated": false,
+  "selected_motion_design": "BALANCED_BIDIRECTIONAL_13_12",
+  "selection_reason": "Balanced direction materially reduces pooled time/world-x and clean-tau/world-x association while retaining visibility/runway/bin feasibility, exact uniqueness, five equal outer folds, and within-direction train/test target-support overlap.",
+  "single_direction_result": {
+    "absolute_pooled_clean_tau_world_x_correlation": 0.8999082680166492,
+    "absolute_pooled_normalized_time_world_x_correlation": 0.9971776458918451,
+    "direction_counts": {
+      "LEFT_TO_RIGHT": 25
+    },
+    "exact_duplicate_complete_profile_count": 0,
+    "family": "SINGLE_PLUS_X",
+    "pairwise_profiles": {
+      "cross_direction": null,
+      "overall": {
+        "absolute_r_ge_0_95_fraction": 1.0,
+        "absolute_r_median": 0.9981475664724251,
+        "near_duplicate_rms_lt_0_10_fraction": 0.0,
+        "pair_count": 300,
+        "profile_rms_distance_blocks_median": 0.3475483707832846,
+        "profile_rms_distance_blocks_min": 0.14726681633933278
+      },
+      "within_direction": {
+        "absolute_r_ge_0_95_fraction": 1.0,
+        "absolute_r_median": 0.9981475664724251,
+        "near_duplicate_rms_lt_0_10_fraction": 0.0,
+        "pair_count": 300,
+        "profile_rms_distance_blocks_median": 0.3475483707832846,
+        "profile_rms_distance_blocks_min": 0.14726681633933278
+      }
+    },
+    "stable_onset_frame": {
+      "range": [
+        38,
+        67
+      ],
+      "unique_count": 14
+    },
+    "start_position": {
+      "range": [
+        -7.997305278472385,
+        -7.660606822952911
+      ],
+      "unique_count": 25
+    },
+    "target_support_by_bin": {
+      "BEYOND_CONTEXT": [
+        -3.5425990596058297,
+        -2.2046048034676202
+      ],
+      "INTERMEDIATE": [
+        -3.959245361089044,
+        -3.177793598034743
+      ],
+      "LONG": [
+        -3.8057770435366107,
+        -2.7292027980220874
+      ],
+      "NEAR_CONTEXT": [
+        -3.7377793730243196,
+        -2.4191572399258785
+      ],
+      "SHORT": [
+        -4.092746508786263,
+        -3.555944343710836
+      ]
+    },
+    "trajectory_count": 25
+  },
+  "status": "PASS_OUTCOME_BLIND_CONFOUND_FEASIBILITY",
+  "valid_candidate_counts": {
+    "LEFT_TO_RIGHT": 512,
+    "RIGHT_TO_LEFT": 482
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "artifact_id": "regime-a-a0-dual-visibility-calibration-v0.1",
+  "created_utc": "2026-08-14T00:02:27Z",
+  "status": "PASS_DUAL_VISIBILITY_CALIBRATED",
+  "scope": "NON_SCIENTIFIC_A0_ONLY",
+  "future_semantics": {
+    "VISIBLE_AGREEMENT": "geometric=visible AND magenta=visible",
+    "OCCLUDED_AGREEMENT": "geometric=hidden AND magenta=hidden",
+    "VISIBILITY_DISAGREEMENT": "the two valid systems disagree",
+    "INVALID_VISIBILITY": "one or both systems are invalid or unknown",
+    "raw_signals_preserved": true
+  },
+  "geometric_detector": {
+    "version": "person-c-geometric-visibility-v0.1",
+    "source_path": "src/mineocclude/data/visibility.py",
+    "source_sha256": "00b7242a5925e44a24ab0975130517034fff541aa65c84275221c24705eaae3d",
+    "semantics": "Ray from the actual camera eye to sheep center at feet_y+0.5; exact open-segment slab intersection against the closed wall-block volume; epsilon 1e-6.",
+    "raw_statuses": ["visible", "occluded", "boundary", "invalid"],
+    "primary_for_regime_a": true,
+    "server_raw_crosscheck_preserved": true
+  },
+  "magenta_detector": {
+    "version": "hsv-largest-valid-blob-v1.0-candidate:sha256:0cad...",
+    "source_path": "src/mineocclude/vision/magenta.py",
+    "source_sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214",
+    "config_path": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json",
+    "config_sha256": "99acc45e0a49b8526eca2ab777e21c07f88934d744bc5679e63ab8a00b181b8d",
+    "hue_degrees_inclusive": [280.0, 320.0],
+    "saturation_inclusive": [0.5, 1.0],
+    "value_inclusive": [0.35, 1.0],
+    "blob_area_px_inclusive": [19, 5000],
+    "connectivity": 8,
+    "morphology": "none",
+    "selection": "largest valid component, then topmost, then leftmost",
+    "verified_independently": true
+  },
+  "existing_operational_authority": {
+    "joined_visibility_path": "data/handoff_b/person_c_phase3_step3_3_joined_visibility_v0_1/joined_visibility_records.jsonl",
+    "joined_visibility_sha256": "e9bb71ae4ebb046297abf700f6fabb1813facdd691be9f02e0e730dfe79ad17e",
+    "empirical_records_path": "data/handoff_c/person_e_66_cell_empirical_visibility_v0_1/empirical_visibility_records.jsonl",
+    "empirical_records_sha256": "fd0ad70ce880645fcda668d23dacc07784c2f8e418a3eceabd9f88ac391e07f9",
+    "empirical_schema_sha256": "85e3b077930157293f1db37978edaeea43b63f5fd7fcc6e92bb355de396eb74e"
+  },
+  "calibration_inputs": {
+    "designation": "NON_SCIENTIFIC_CALIBRATION_ONLY",
+    "eligibility": "NEVER_REUSABLE_AS_REGIME_A_SCIENTIFIC_OBSERVATION",
+    "historical_provenance_unchanged": true,
+    "legacy_layout_mapping": "Historical layout_00 maps to one-based layout_01 geometry; trajectory IDs and capture paths remain verbatim provenance.",
+    "mapping_source": {
+      "path": "scripts/migrate_handoff_e_layout_ids.py",
+      "sha256": "53e9f4ef08d51686fd25249f7bdeea39b6fcd21dbbd831f36df59cf8bdaa7b56"
+    },
+    "crossings": [
+      {
+        "trajectory_id": "layout_00_ep9403",
+        "video_sha256": "694ddc9a6d9b234c1939a6a0ce818a56f84a0f921f91764c860bdc16b89b0560",
+        "frame_map_sha256": "bd9c2b6e7e7af5f3fb2772747aa81910cbe11926134c3d0a9f57284f936409fa",
+        "server_state_sha256": "ef6213e4e67ecec4164bd405e8e9520464d5fd6a985d46cd847eb97165352ea4",
+        "geometric_entry_hidden_frame": 19,
+        "magenta_entry_hidden_frame": 37,
+        "entry_partial_or_disagreement_frames": 18,
+        "magenta_exit_visible_frame": 221,
+        "geometric_exit_visible_frame": 228,
+        "exit_partial_or_disagreement_frames": 7,
+        "stable_visible_blob_area_px": {"minimum": 133, "median": 289.0, "maximum": 335}
+      },
+      {
+        "trajectory_id": "layout_00_ep9522",
+        "video_sha256": "b3d095213ee51e0fee6310db8ca85070e5a4083225d943c56853dd6242530772",
+        "frame_map_sha256": "56c8634f03aaac29562d7bbbd03324128970cec7811a2997a6a004120172d836",
+        "server_state_sha256": "083463cb176e1fe748d909010140586b43a5b882440baf26c87f4abf9080fad8",
+        "geometric_entry_hidden_frame": 24,
+        "magenta_entry_hidden_frame": 43,
+        "entry_partial_or_disagreement_frames": 19,
+        "magenta_exit_visible_frame": 242,
+        "geometric_exit_visible_frame": 248,
+        "exit_partial_or_disagreement_frames": 6,
+        "stable_visible_blob_area_px": {"minimum": 111, "median": 288.5, "maximum": 335}
+      },
+      {
+        "trajectory_id": "layout_00_ep9761",
+        "video_sha256": "61c77dc631df7b78631c476fefa084187e8bd170187819943af97d2460eff031",
+        "frame_map_sha256": "0680229e8fd4aaeda0241b5b0f79247d2f16f558ae6fe60cb6122c4c98cb6db1",
+        "server_state_sha256": "5e7bc70b3c86e71b23b28e7d8800383cf170102cbdd13e98947667f0ab6268e0",
+        "geometric_entry_hidden_frame": 17,
+        "magenta_entry_hidden_frame": 31,
+        "entry_partial_or_disagreement_frames": 14,
+        "magenta_exit_visible_frame": 236,
+        "geometric_exit_visible_frame": 238,
+        "exit_partial_or_disagreement_frames": 2,
+        "stable_visible_blob_area_px": {"minimum": 76, "median": 288.0, "maximum": 335}
+      }
+    ]
+  },
+  "transition_detector_spot_checks": [
+    {"trajectory_id": "layout_00_ep9403", "entry_last_detected_frame": 36, "entry_first_not_detected_frame": 37, "exit_last_not_detected_frame": 220, "exit_first_detected_frame": 221},
+    {"trajectory_id": "layout_00_ep9522", "entry_last_detected_frame": 42, "entry_first_not_detected_frame": 43, "exit_last_not_detected_frame": 241, "exit_first_detected_frame": 242},
+    {"trajectory_id": "layout_00_ep9761", "entry_last_detected_frame": 30, "entry_first_not_detected_frame": 31, "exit_last_not_detected_frame": 235, "exit_first_detected_frame": 236}
+  ],
+  "guard_calibration": {
+    "rule": "maximum consecutive partial/disagreement run observed plus one captured model frame, minimum one frame",
+    "entry_max_observed_frames": 19,
+    "g_entry_frames": 20,
+    "g_entry_seconds": 1.0,
+    "exit_max_observed_frames": 7,
+    "g_exit_frames": 8,
+    "g_exit_seconds": 0.4,
+    "capture_model_hz": 20.0,
+    "tuned_from_probe_outcomes": false
+  },
+  "result": {
+    "geometric_visibility_works": true,
+    "magenta_visibility_works": true,
+    "stable_dual_agreement_observed": true,
+    "partial_or_disagreement_transitions_observed": true,
+    "bidirectional_visibility_symmetry": "UNCLEAR"
+  }
+}

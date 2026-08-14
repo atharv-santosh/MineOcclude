@@ -1,0 +1,43 @@
+{
+  "artifact_id": "regime-a-a1-precollection-approval-receipt-v1.0",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "FROZEN_BEFORE_SCIENTIFIC_COLLECTION",
+  "a1_status": "PASS_A1_PROTOCOL_FROZEN",
+  "approval_basis": {
+    "operator_approval_provenance_sha256": "07d30ed863eedd580cbfc3787803447c6d0c7bfe899c18ee957e9e3f30e824d8",
+    "mentor_direction": "Nick's stated Regime-A scientific direction",
+    "s0_validation_sha256": "8786ffb80ba28b7ff5c4dd26ce682fce8915c781a52bc85d0e93c4ef7da3563a"
+  },
+  "authority_inventory": [
+    {"path": "operator_approval_provenance.json", "sha256": "07d30ed863eedd580cbfc3787803447c6d0c7bfe899c18ee957e9e3f30e824d8"},
+    {"path": "target_authority.json", "sha256": "1d14c364c9673b55ce436f06ef16a39b40e60ff4a82fe9a0d5a704ee185d5800"},
+    {"path": "visibility_authority.json", "sha256": "32b82e690fac3a739f91485051cb42e34463d8917d84acf6adf4612a0bbf33c4"},
+    {"path": "split_authority.json", "sha256": "37153654ade645e6a6c570f257a2bdb8862592fffe6d462e2cd8a4419b2b82fc"},
+    {"path": "representation_authority.json", "sha256": "87c7b45fbf558f6e43f0b83abbde51c84dd12756fdf8af2b75135f3d41562c5b"},
+    {"path": "analysis_manifest.json", "sha256": "d846b4abbbef90b6bf34b2d2e253d2c7b7137a6d5f806ccd44c8996efa02a45c"},
+    {"path": "regime_a_study_manifest.json", "sha256": "624111acde79a89936e0af09f063568a9e28f123fdbbb6f9bb204a7d5e6381c4"}
+  ],
+  "freeze_checks": {
+    "all_classification_changing_decisions_frozen": true,
+    "all_json_parse": true,
+    "cross_hashes_valid": true,
+    "contradictory_authority_found": false,
+    "remaining_precollection_choice_field_count": 0,
+    "outcome_informed_decision_count": 0,
+    "conflicts_with_nick_direction": false,
+    "highest_quality_methodology": true,
+    "meaningful_research_contribution": true
+  },
+  "phase_authorization": {
+    "a2_implementation": "AUTHORIZED",
+    "a3_specification_freeze_after_a2_pass": "AUTHORIZED",
+    "a4_scientific_execution": "NOT_AUTHORIZED"
+  },
+  "scientific_state": {
+    "trajectory_executed": false,
+    "activation_extracted": false,
+    "decoding_outcome_computed": false,
+    "outcome_sealed": true
+  },
+  "blockers_to_a2": []
+}

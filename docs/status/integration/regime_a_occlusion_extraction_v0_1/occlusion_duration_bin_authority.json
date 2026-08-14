@@ -1,0 +1,76 @@
+{
+  "artifact_id": "regime-a-a0-occlusion-duration-bin-candidates-v0.1",
+  "created_utc": "2026-08-14T00:02:27Z",
+  "status": "CANDIDATE_PENDING_A1_APPROVAL",
+  "authority_type": "CANDIDATE_NOT_FROZEN",
+  "derivation": {
+    "effective_context_steps_E": 15,
+    "effective_context_seconds_C": 0.75,
+    "capture_model_hz": 20.0,
+    "ceil_E_over_4": 4,
+    "ceil_E_over_2": 8,
+    "ceil_3E_over_4": 12,
+    "source": "context_calibration.json"
+  },
+  "duration_semantics": "Duration index tau begins at the first OCCLUDED_AGREEMENT frame after exclusion of the entry guard. Guard frames are excluded and do not count toward a bin.",
+  "candidate_bins": [
+    {
+      "name": "SHORT",
+      "start_frame_inclusive": 1,
+      "end_frame_inclusive": 4,
+      "start_seconds_inclusive": 0.05,
+      "end_seconds_inclusive": 0.20,
+      "clean_frame_count": 4,
+      "at_least_three_clean_frames": true
+    },
+    {
+      "name": "INTERMEDIATE",
+      "start_frame_inclusive": 5,
+      "end_frame_inclusive": 8,
+      "start_seconds_inclusive": 0.25,
+      "end_seconds_inclusive": 0.40,
+      "clean_frame_count": 4,
+      "at_least_three_clean_frames": true
+    },
+    {
+      "name": "LONG",
+      "start_frame_inclusive": 9,
+      "end_frame_inclusive": 12,
+      "start_seconds_inclusive": 0.45,
+      "end_seconds_inclusive": 0.60,
+      "clean_frame_count": 4,
+      "at_least_three_clean_frames": true
+    },
+    {
+      "name": "NEAR_CONTEXT",
+      "start_frame_inclusive": 13,
+      "end_frame_inclusive": 15,
+      "start_seconds_inclusive": 0.65,
+      "end_seconds_inclusive": 0.75,
+      "clean_frame_count": 3,
+      "at_least_three_clean_frames": true
+    },
+    {
+      "name": "BEYOND_CONTEXT",
+      "start_frame_inclusive": 16,
+      "end_frame_inclusive": 19,
+      "start_seconds_inclusive": 0.80,
+      "end_seconds_inclusive": 0.95,
+      "clean_frame_count": 4,
+      "at_least_three_clean_frames": true
+    }
+  ],
+  "guard_bands": {
+    "entry_frames": 20,
+    "entry_seconds": 1.0,
+    "exit_frames": 8,
+    "exit_seconds": 0.4,
+    "application": "Exclude transition frames before assigning tau; candidate-bin clean-frame counts are the bin widths after that exclusion."
+  },
+  "feasibility": {
+    "all_bins_have_at_least_three_clean_model_frames": true,
+    "one_long_wall_candidate_supports_every_bin": true,
+    "all_25_trajectories_can_prospectively_span_every_bin": true,
+    "scientific_trajectories_collected": 0
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "a1_authorities": [
+    "regime_a_study_manifest.json",
+    "target_authority.json",
+    "visibility_authority.json",
+    "split_authority.json",
+    "representation_authority.json",
+    "analysis_manifest.json",
+    "precollection_approval_receipt.json"
+  ],
+  "a2_authorities": [
+    "implementation_test_receipt.json",
+    "benchmark_receipt.json",
+    "cache_equivalence_receipt.json",
+    "restart_recovery_receipt.json",
+    "cost_projection.json"
+  ],
+  "a3_artifacts": [
+    "trajectory_manifest.jsonl",
+    "trajectory_manifest.sha256",
+    "preextraction_confound_report.json",
+    "null_donor_manifest.jsonl",
+    "null_donor_manifest.sha256",
+    "expected_inventory.json",
+    "a3_validation_receipt.json"
+  ],
+  "artifact_id": "regime-a-a3-expected-inventory-v0.1",
+  "eventual_per_trajectory_required": [
+    "raw/server_state.jsonl",
+    "raw/client_tick.jsonl",
+    "raw/actions.jsonl",
+    "raw/frame_map.jsonl",
+    "raw/visibility.jsonl",
+    "coordinates.jsonl",
+    "activation_inventory.json",
+    "completion.json",
+    "durable_receipt.json"
+  ],
+  "eventual_state": "COMPLETE_VALIDATED_DURABLE",
+  "large_runtime_artifacts_inside_git": false,
+  "manifest_sidecar": "trajectory_manifest.sha256",
+  "outcomes_sealed_until": "A5_OPERATIONAL_QUALITY_VALIDATION_PASS",
+  "status": "FROZEN_25_SLICE_BEFORE_OUTCOMES",
+  "trajectory_count": 25,
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785"
+}

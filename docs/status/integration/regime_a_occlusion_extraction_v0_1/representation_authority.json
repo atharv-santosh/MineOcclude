@@ -1,0 +1,53 @@
+{
+  "artifact_id": "regime-a-a1-representation-authority-v0.1",
+  "created_utc": "2026-08-14T00:27:48Z",
+  "status": "FROZEN_BEFORE_SCIENTIFIC_COLLECTION",
+  "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+  "source_revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f",
+  "context": {
+    "complete_pairs": 16,
+    "effective_preceding_steps_E": 15,
+    "effective_seconds_C": 0.75,
+    "capture_model_hz": 20,
+    "window": "independent overlapping trailing contiguous window ending at every target frame",
+    "position_ids": "reset 0..sequence_length-1 per window",
+    "cross_window_kv_persistence": false,
+    "cross_trajectory_state": false,
+    "unusable_full_context_prefix_frames": 15
+  },
+  "extraction": {
+    "all_layers_extracted_once": true,
+    "layer_indices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+    "hook_site": "decoder_layer_output_residual_stream",
+    "visual_token_grid": [14, 24],
+    "visual_token_count": 336,
+    "hidden_width": 2048,
+    "stored_dtype": "float16",
+    "model_execution_rule": "one teacher-forced model forward per target window with all 20 layer hooks attached together"
+  },
+  "primary": {
+    "layer": 4,
+    "readout": "FULL_TOKEN_GRID",
+    "dimension": 688128,
+    "order": "visual token 0..335, each contributes 2048 contiguous values",
+    "per_duration_representation_tuning": false
+  },
+  "secondary_best_k": {
+    "layer": 4,
+    "candidate_k": [1, 4, 8, 16, 32, 64, 128],
+    "ranking_scope": "outer-training-only nested folds",
+    "selection_target": "primary world wall-parallel x",
+    "selection_rows": "combined eligible SHORT through NEAR_CONTEXT outer-training rows",
+    "shared_across": ["duration bins", "screen/token cells", "motion directions"],
+    "heldout_reselection": false,
+    "per_bin_reselection": false,
+    "per_cell_reselection": false,
+    "per_direction_reselection": false,
+    "posthoc_token_hunting": false
+  },
+  "prior_authority": {
+    "path": "prior_authority_binding.json",
+    "sha256": "9993b3ed2ad1d9387299656978eb505ba3332e9370c7929cbec6c2b7e9e9c1ed"
+  },
+  "outcome_informed": false
+}

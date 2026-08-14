@@ -1,0 +1,27 @@
+{
+  "artifact_id": "regime-a-a2-first25-cost-projection-v0.1",
+  "status": "COMPLETE",
+  "created_utc": "2026-08-14T00:54:00Z",
+  "trajectory_count": 25,
+  "assumptions": {
+    "checkpoint_loaded_once_for_campaign": true,
+    "eligible_target_windows_per_trajectory": 19,
+    "all_layers_captured_together": true,
+    "stored_dtype": "float16",
+    "exact_runtime_capture_hz": 20,
+    "maximum_state_frames_per_spec": 260
+  },
+  "projected_gpu_seconds": 856.3934117919999,
+  "projected_gpu_minutes": 14.273223529866664,
+  "gpu_formula": "92.730747492 checkpoint load + 25 * 30.546506572 all-layer trajectory",
+  "projected_exact_runtime_capture_seconds": 325.0,
+  "projected_cpu_analysis_seconds_conservative": 10.0,
+  "projected_cpu_total_seconds": 335.0,
+  "projected_activation_storage_bytes": 13074432000,
+  "projected_activation_storage_gib": 12.176513671875,
+  "projected_durable_storage_bytes_with_10_percent_metadata_margin": 14381875200,
+  "peak_gpu_vram_bytes_measured": 4801740800,
+  "peak_cpu_ram_bytes_measured": 554020864,
+  "interpretation": "bounded engineering projection; capture wall time excludes Minecraft warmup and operational retry time",
+  "scientific_outcomes_used": false
+}
