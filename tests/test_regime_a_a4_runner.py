@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import io
+import importlib.util
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -98,6 +100,17 @@ def make_runner(root: Path, capture=None, model=None, s3=None):
 
 
 class RegimeAA4RunnerTests(unittest.TestCase):
+    def test_capture_worker_uses_qualified_java_home(self):
+        runner_path = Path(__file__).parents[1] / "scripts/run_regime_a.py"
+        module_spec = importlib.util.spec_from_file_location("regime_a_runner_test", runner_path)
+        module = importlib.util.module_from_spec(module_spec)
+        assert module_spec.loader is not None
+        module_spec.loader.exec_module(module)
+        java_home = Path(os.environ["JAVA_HOME"])
+        worker = module.ProductionCaptureWorker(Path("/mnt/sagemaker-nvme/non-scientific-test"))
+        self.assertEqual(worker.java_home, java_home)
+        self.assertEqual(worker.live.JAVA_PATH, java_home / "bin/java")
+
     def test_authorization_required_and_full_binding_obsolete_commit_refused(self):
         with self.assertRaises(RegimeAError):
             validate_a4_authorization({}, "1" * 64, "2" * 64)

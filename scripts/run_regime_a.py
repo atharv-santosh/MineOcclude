@@ -81,6 +81,7 @@ def authorization_bindings() -> dict[str, str]:
         "a3_validation_receipt_sha256": sha256_file(STATUS / "a3_validation_receipt.json"),
         "a2_execution_runner_supersession_receipt_sha256": sha256_file(STATUS / "a2_execution_runner_supersession_receipt.json"),
         "pre_a4_source_freeze_receipt_v2_sha256": sha256_file(STATUS / "pre_a4_source_freeze_receipt_v2.json"),
+        "a4_launch_recovery_source_freeze_receipt_sha256": sha256_file(STATUS / "a4_launch_recovery_source_freeze_receipt.json"),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "scientific_run_id": SCIENTIFIC_RUN_ID,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",
@@ -111,7 +112,13 @@ class ProductionCaptureWorker:
     def __init__(self, runtime_root: Path):
         from scripts import run_large_scale_no_wall_campaign as live
 
+        java_home = Path(os.environ.get("JAVA_HOME", ""))
+        java_path = java_home / "bin/java"
+        if not java_home.is_absolute() or not java_path.is_file():
+            raise RegimeAError("JAVA_HOME must identify the qualified A4 JDK")
+        live.JAVA_PATH = java_path
         self.live = live
+        self.java_home = java_home
         self.runtime_root = runtime_root
         self.processes: list[object] = []
         self.runtime = None
@@ -124,7 +131,7 @@ class ProductionCaptureWorker:
             [str(ROOT / "fabric/mineocclude-mod/gradlew"), "-p", str(ROOT / "fabric/mineocclude-mod"), "build", "--no-daemon"],
             check=True,
             timeout=600,
-            env={**os.environ, "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64"},
+            env={**os.environ, "JAVA_HOME": str(self.java_home)},
         )
         if not jar.is_file():
             raise RegimeAError("governed Fabric mod build did not produce the runtime JAR")

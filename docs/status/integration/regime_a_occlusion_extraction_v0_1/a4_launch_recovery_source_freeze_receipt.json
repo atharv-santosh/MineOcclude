@@ -1,0 +1,38 @@
+{
+  "artifact_id": "regime-a-a4-launch-recovery-source-freeze-v1.0",
+  "status": "PASS_PENDING_COMMIT",
+  "created_utc": "2026-08-14T03:20:00Z",
+  "prior_reviewed_commit": "f528663dd50d8c775b464145f87f5e8011226eae",
+  "new_final_commit_sha": "PENDING_COMMIT",
+  "failure_classification": "FAILED_PRE_SCIENTIFIC_DISPATCH",
+  "scientific_trajectories_dispatched_before_repair": 0,
+  "scientific_activations_extracted_before_repair": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "repair_scope": "Use the operator-qualified JAVA_HOME in the Regime-A capture worker and reused live runtime module; bind this recovery receipt into the next authorization.",
+  "protocol_modified": false,
+  "manifest_modified": false,
+  "seeds_modified": false,
+  "folds_modified": false,
+  "old_authorization_obsolete": true,
+  "changed_governed_files": [
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "cd2da71f5d2595dafb99bf4ef4d501cc448a53b50b9e0c1dc3af1ed910dd362c"
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "a34076c07158ea94e5a3fe1853a198bcb20849184a537fb0db9eb3a53b899e26"
+    },
+    {
+      "path": "tests/test_regime_a_a4_runner.py",
+      "sha256": "aaf318dad92f5dc3279a62fe388708472e43cc734e1e4c18406ca84582d3f808"
+    }
+  ],
+  "focused_test": {
+    "command": "JAVA_HOME=/home/sagemaker-user/.local/jdks/amazon-corretto-17.0.20.8.1-linux-x64 PYTHONPATH=/home/sagemaker-user/MineOcclude:/home/sagemaker-user/MineOcclude/src python -m pytest -q tests/test_regime_a_a4_runner.py",
+    "result": "10 passed, 3 subtests passed"
+  },
+  "qualified_java_home": "/home/sagemaker-user/.local/jdks/amazon-corretto-17.0.20.8.1-linux-x64",
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b"
+}
