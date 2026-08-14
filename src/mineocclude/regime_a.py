@@ -638,7 +638,17 @@ class HashChainLedger:
             None,
         )
         if previous_state is not None and STATE_ORDER.index(state) < STATE_ORDER.index(str(previous_state)):
-            raise RegimeAError("ledger state regression")
+            if not fields.get("retry_same_spec") or state not in {"PLANNED", "RUNNING"}:
+                raise RegimeAError("ledger state regression")
+            prior = next(
+                row for row in reversed(self.records)
+                if row["trajectory_spec_id"] == trajectory_spec_id
+            )
+            if (
+                prior.get("spec_hash") not in {None, fields.get("spec_hash")}
+                or prior.get("seed") not in {None, fields.get("seed")}
+            ):
+                raise RegimeAError("retry changed frozen spec hash or seed")
         body: dict[str, object] = {
             "schema_version": "regime-a-progress-ledger-v1.0",
             "record_index": len(self.records),
@@ -679,7 +689,26 @@ class AtomicTrajectoryStore:
         if partial.exists():
             raise RegimeAError("partial staging exists; validate/quarantine before retry")
         partial.mkdir(parents=True)
+        _atomic_json(
+            partial / "partial_identity.json",
+            {"trajectory_spec_id": spec_id, "spec_hash": spec_hash},
+        )
         return partial
+
+    def discard_same_spec_partial(self, spec_id: str, spec_hash: str) -> bool:
+        """Discard only an identity-proven, non-final partial retry unit."""
+
+        partial = self.root / f".{spec_id}.{spec_hash[:16]}.partial"
+        if not partial.exists():
+            return False
+        marker = partial / "partial_identity.json"
+        if not marker.is_file():
+            raise RegimeAError("partial staging lacks an identity marker")
+        identity = json.loads(marker.read_text(encoding="utf-8"))
+        if identity != {"trajectory_spec_id": spec_id, "spec_hash": spec_hash}:
+            raise RegimeAError("partial staging identity mismatch")
+        shutil.rmtree(partial)
+        return True
 
     def finalize(self, partial: Path, spec_id: str, spec_hash: str) -> Path:
         files = sorted(path for path in partial.rglob("*") if path.is_file())
@@ -727,7 +756,13 @@ def verified_local_durable_copy(source: Path, destination: Path) -> dict[str, ob
     return {"byte_size": source.stat().st_size, "sha256": source_hash, "verified": True}
 
 
-def validate_a4_authorization(document: Mapping[str, Any], manifest_sha256: str, study_sha256: str) -> None:
+def validate_a4_authorization(
+    document: Mapping[str, Any],
+    manifest_sha256: str,
+    study_sha256: str,
+    *,
+    expected_bindings: Mapping[str, str] | None = None,
+) -> None:
     if (
         document.get("status") != "AUTHORIZED_A4_SCIENTIFIC_EXECUTION"
         or document.get("trajectory_manifest_sha256") != manifest_sha256
@@ -735,6 +770,9 @@ def validate_a4_authorization(document: Mapping[str, Any], manifest_sha256: str,
         or document.get("operator") != "Kazim Abbas"
     ):
         raise RegimeAError("missing or mismatched A4 operator authorization")
+    for field, expected in dict(expected_bindings or {}).items():
+        if document.get(field) != expected:
+            raise RegimeAError(f"A4 authorization binding mismatch: {field}")
 
 
 def activation_bytes_per_trajectory(eligible_frames: int = 19) -> int:

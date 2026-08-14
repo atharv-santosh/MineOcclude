@@ -1,0 +1,17 @@
+{
+  "artifact_id": "regime-a-a4-durability-cost-projection-v1.0",
+  "status": "PROSPECTIVE_SUPPLEMENT",
+  "created_utc": "2026-08-14T00:00:00Z",
+  "supersedes_gpu_projection": false,
+  "source_projection": "cost_projection.json",
+  "trajectory_count": 25,
+  "activation_storage_bytes": 13074432000,
+  "durable_bytes_with_prior_10_percent_margin": 14381875200,
+  "minimum_host_to_s3_upload_bytes_projected": 14381875200,
+  "minimum_s3_to_host_verification_download_bytes_projected": 14381875200,
+  "minimum_total_durability_transfer_bytes_projected": 28763750400,
+  "additional_raw_frame_and_validation_bytes": "NOT_INCLUDED_AND_MEASURED_AT_EXECUTION",
+  "gpu_seconds_projection_unchanged": 856.3934117919999,
+  "checkpoint_load_count_projection_unchanged": 1,
+  "interpretation": "The repaired frozen durability contract adds one full upload and one literal full downloaded-byte verification. GPU extraction and scientific protocol costs are unchanged."
+}

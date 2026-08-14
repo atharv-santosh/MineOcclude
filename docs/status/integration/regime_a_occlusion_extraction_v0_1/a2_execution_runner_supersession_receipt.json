@@ -1,0 +1,56 @@
+{
+  "artifact_id": "regime-a-a2-execution-runner-supersession-v1.0",
+  "status": "PASS_PROSPECTIVE_PENDING_COMMIT",
+  "created_utc": "2026-08-14T00:00:00Z",
+  "supersedes_only": [
+    "A2 execution-loop implementation authority",
+    "A2 local-only durability authority",
+    "A2 restart implementation authority"
+  ],
+  "prior_reviewed_commit": "ce3411168a5925edf8ea9fbd66fa67d6f98ae5c7",
+  "new_final_commit_sha": "PENDING_COMMIT",
+  "scientific_data_present_before_repair": false,
+  "scientific_trajectories_executed": 0,
+  "scientific_activations_extracted": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "old_authorization_obsolete": true,
+  "execution_loop_semantics": {
+    "manifest_order": true,
+    "dispatches_every_non_complete_frozen_spec": true,
+    "capture_and_model_workers_are_production_adapters": true,
+    "checkpoint_loaded_once_per_process": true,
+    "independent_teacher_forced_window_calls": true,
+    "scientific_analysis_invoked": false
+  },
+  "restart_semantics": {
+    "ledger_hash_chain_validated_on_load": true,
+    "skip_state": "COMPLETE_VALIDATED_DURABLE_ONLY",
+    "local_validated_unit_resumes_at_durability": true,
+    "unproven_partial_discard_requires_exact_spec_identity_marker": true,
+    "retry_seed_and_spec_hash_must_match": true,
+    "replacement_specs_generated": false
+  },
+  "durability_semantics": {
+    "authority": "S3_PREFIX_NOT_LOCAL_PATH",
+    "complete_local_trajectory_tree_uploaded": true,
+    "deterministic_key": "<prefix>/<trajectory_spec_id>/<relative_path>",
+    "head_object_size_and_sha256_metadata_verified": true,
+    "full_downloaded_bytes_sha256_verified_for_every_object": true,
+    "durable_receipt_uploaded_and_verified": true,
+    "complete_before_durability_possible": false,
+    "failure_mode": "FAIL_CLOSED_RETRY_SAME_SPEC"
+  },
+  "focused_validation": {
+    "command": "python -m pytest -q tests/test_regime_a_a4_runner.py tests/test_regime_a_production.py",
+    "result": "18 passed, 3 subtests passed",
+    "scientific_fixtures": false,
+    "s3_client": "mocked",
+    "scientific_collection_performed": false,
+    "java_compile": "NOT_RUN_JAVA_EXECUTABLE_ABSENT_ON_CURRENT_HOST",
+    "python_compile": "PASS"
+  },
+  "gpu_rerun_required": false,
+  "benchmark_change": "NONE; checkpoint/window/all-layer forward contract unchanged",
+  "runtime_implication": "adds full S3 upload plus literal full downloaded-byte verification for each finalized trajectory",
+  "storage_implication": "all reconstruction inputs, raw frames, full target-token activations, validation products, completion and durable receipt are uploaded"
+}

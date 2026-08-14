@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Create the post-commit Regime-A A4 launch authorization.
 
-This must be run only after the reviewed pre-A4 commit is pushed.  The output
-is deliberately external to Git and contains the four fields enforced by the
-production runner plus the complete pre-A4 provenance binding.
+This must be run only after the reviewed pre-A4 commit is pushed. The output
+is deliberately external to Git and binds the complete repaired pre-A4
+provenance set enforced by the production runner.
 """
 
 from __future__ import annotations
@@ -68,11 +68,13 @@ def main() -> int:
     canonical = STATUS / "pre_a4_canonical_authority.json"
     a2 = STATUS / "implementation_test_receipt.json"
     a3 = STATUS / "a3_validation_receipt.json"
+    a2_runner = STATUS / "a2_execution_runner_supersession_receipt.json"
+    source_freeze_v2 = STATUS / "pre_a4_source_freeze_receipt_v2.json"
     manifest_sha256 = sha256_file(manifest)
     require(manifest_sidecar.read_text().strip() == manifest_sha256, "manifest sidecar mismatch")
 
     document = {
-        "schema_version": "regime-a-a4-operator-authorization-v1.0",
+        "schema_version": "regime-a-a4-operator-authorization-v2.0",
         "status": "AUTHORIZED_A4_SCIENTIFIC_EXECUTION",
         "operator": args.operator,
         "scientific_run_id": args.scientific_run_id,
@@ -83,6 +85,8 @@ def main() -> int:
         "pre_a4_canonical_authority_sha256": sha256_file(canonical),
         "a2_implementation_test_receipt_sha256": sha256_file(a2),
         "a3_validation_receipt_sha256": sha256_file(a3),
+        "a2_execution_runner_supersession_receipt_sha256": sha256_file(a2_runner),
+        "pre_a4_source_freeze_receipt_v2_sha256": sha256_file(source_freeze_v2),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "protocol_modification": False,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",

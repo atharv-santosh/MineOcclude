@@ -281,8 +281,8 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
             src.sendError(new LiteralText("Unknown layout '" + layoutId + "'"));
             return 0;
         }
-        if (sceneMode != EpisodeConfig.Scene.NO_WALL) {
-            src.sendError(new LiteralText("startspec requires scene mode nowall"));
+        if (sceneMode != EpisodeConfig.Scene.NORMAL) {
+            src.sendError(new LiteralText("startspec requires scene mode normal"));
             return 0;
         }
         Layouts.Layout layout = Layouts.get(layoutId);
@@ -303,7 +303,7 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
                     layout.laneMin, layout.laneMax, startPos,
                     layout.wallSegMin, layout.wallSegMax,
                     layout.wallOrthoConst, layout.wallOrthoOffset, layout.cameraDist,
-                    layout.laneY, layout.wallAxis, EpisodeConfig.Scene.NO_WALL, 0,
+                    layout.laneY, layout.wallAxis, EpisodeConfig.Scene.NORMAL, 0,
                     0, -1, 0.0, true, specId, specHash);
             if (!manager.start(cfg, ticks, warmup, schedule)) {
                 src.sendError(new LiteralText("startspec REFUSED for episode " + episodeId));

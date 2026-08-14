@@ -1,0 +1,63 @@
+{
+  "artifact_id": "regime-a-pre-a4-source-freeze-receipt-v2.0",
+  "status": "READY_FOR_REVIEWED_REPAIR_COMMIT",
+  "created_utc": "2026-08-14T00:00:00Z",
+  "supersedes": "pre_a4_source_freeze_receipt.json only for A4 execution and durability source",
+  "prior_reviewed_commit": "ce3411168a5925edf8ea9fbd66fa67d6f98ae5c7",
+  "new_final_commit_sha": "PENDING_COMMIT",
+  "branch": "exploration/regime-a-occlusion-extraction-v0-1",
+  "old_authorization_obsolete": true,
+  "scientific_data_present_before_repair": false,
+  "changed_governed_files": [
+    {
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java",
+      "sha256": "93788f02cb09572089408ed024530eb22d84687ae11e138f961378f20931990b",
+      "governs": "locked startspec admission for wall-present NORMAL scene"
+    },
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "defc7ad3fa49dcdcdf1e7e62514ec16870b58250a8b744a2a4d85f378d173bc9",
+      "governs": "production capture, alignment, dual visibility, coordinates, persistent MineWorld extraction and CLI execution"
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "186cf974f465339ec0e5a8c5574659de478b7dc279ab4b5db98e9e7375b36b23",
+      "governs": "post-repair source-freeze and A2 supersession authorization binding"
+    },
+    {
+      "path": "src/mineocclude/regime_a.py",
+      "sha256": "982ff4d3e87d65f5bcfd638edb7289ab4436df090ab8b5cd94cc80c3775bc2b0",
+      "governs": "identity-marked same-spec partial retry and full authorization binding validation"
+    },
+    {
+      "path": "src/mineocclude/regime_a_execution.py",
+      "sha256": "fa46df6353d277f923e7e5e9c70168aea1dd0e7f538c189246489ef0deb3659e",
+      "governs": "A4 lifecycle, required inventory validation, resume and S3 durability"
+    },
+    {
+      "path": "tests/test_regime_a_a4_runner.py",
+      "sha256": "3f824b954417f6ae2a857802ab4f728c2889c81785b76ec6e1b95fa887b2ef9f",
+      "governs": "non-scientific focused runner and durability validation"
+    }
+  ],
+  "supporting_receipts": [
+    {
+      "path": "a2_execution_runner_supersession_receipt.json",
+      "sha256": "97d134b5c86515e3e4b3ef5074a5713e7bd71c0067a037bdcacaa37ef3304764"
+    },
+    {
+      "path": "a4_execution_cost_projection.json",
+      "sha256": "db50afabc32b873d0aa8849eae9c4c2202b4e44e391337776e212695f7750e94"
+    }
+  ],
+  "frozen_a3": {
+    "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "null_donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b"
+  },
+  "focused_tests": "18 passed, 3 subtests passed",
+  "gpu_rerun_required": false,
+  "benchmark_change": "NONE",
+  "scientific_trajectories_executed": 0,
+  "scientific_activations_extracted": 0,
+  "scientific_decoding_outcomes_computed": 0
+}
