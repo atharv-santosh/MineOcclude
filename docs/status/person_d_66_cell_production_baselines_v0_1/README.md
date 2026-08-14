@@ -185,6 +185,53 @@ rather than run.
 Populate `--authority-root` with `git cat-file blob <commit>:<path>`
 (raw bytes; a shell redirect that re-encodes will fail the digest check).
 
+## Steps 4.5 / 6.3 / 6.4 / 6.5 (real)
+
+`scripts/run_person_d_66_cell_step6_3to6_5_completion.py` wires this
+package's real predictions and Person B's real row-universe/oracle-target
+records through the generic `grouped_nulls_v0_1` / `missingness_audit_v0_1`
+/ `preliminary_report_v0_1` / `result_lock_v0_1` modules that, before this,
+had only ever been exercised against synthetic fixtures
+(`docs/status/person_d_phase6to8_completion_v0_1/`). Every family row
+consumed is recomputed from the real execution universe through the exact
+same `eight_family_runner.compute_family_rows` dispatch this package's own
+production run used, then cross-checked against the real predictions
+already published in `prediction_manifest.json` (tight relative tolerance,
+to allow for ordinary cross-machine floating-point noise, not logic
+drift) before being trusted.
+
+* `step6_3_grouped_nulls.json` -- the real grouped-shuffled null rows
+  (1,324 = 662 x 2 targets; 217 available / 1,107 non-applicable, matching
+  `prediction_manifest.json`'s own `family_status.grouped_shuffled` exactly).
+* `step6_3_paired_comparisons_u1.json` / `_u2.json` -- one real paired
+  comparison per frozen objective pair (`last_seen` vs `grouped_shuffled`
+  for U1; `time_only` vs `visible_history_q` for U2).
+* `step4_5_missingness_exclusion_report.json` -- the consolidated real
+  audit over all 10,592 real prediction rows; `audit_passed: true`, zero
+  rows missing a reason code, zero duplicates, zero orphans.
+* `step6_4_preliminary_comparison_report.json` -- 8 of 10 required
+  sections rendered from real, registered `baseline_metrics.json` values
+  (matching this README's headline numbers exactly); the remaining 2
+  (`visible_positive_control`, `no_object_negative_control`) are honestly
+  blocked, not fabricated -- no Step 4.3 gate has been registered against
+  this dataset's 351 real no-wall rows yet, and this dataset's real row
+  universe contains zero no-sheep/occluder-only rows at all.
+* `step6_5_result_lock.json` -- real locked facts (10,592 predictions,
+  3,786 scored, 6,806 non-applicable, 0 missing, 42 accepted / 24 excluded
+  trajectories), bound to Person B's real row-universe-receipt and
+  fold-manifest SHA-256s.
+
+Reproduce:
+
+```
+python scripts/run_person_d_66_cell_step6_3to6_5_completion.py \
+    --authority-root <DIR WITH row_universe_records.jsonl AND
+                       oracle_target_records.jsonl, verified against
+                       PERSON_B_ROW_UNIVERSE_RECORDS_SHA256 /
+                       PERSON_B_ORACLE_TARGET_RECORDS_SHA256> \
+    --output-root docs/status/person_d_66_cell_production_baselines_v0_1
+```
+
 ## U4
 
 Not touched. The U4 control manifest remains **unpromoted** and

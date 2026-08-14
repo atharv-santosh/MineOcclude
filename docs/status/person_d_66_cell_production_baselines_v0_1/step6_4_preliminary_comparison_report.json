@@ -1,0 +1,413 @@
+{
+  "accepted_manifest_sha256": "e897c31cda46e2dbe7fab605320cd98eba68a1396a80ccd78b178c8dc5547351",
+  "blocked_section_count": 2,
+  "blockers": [
+    {
+      "exact_command_after_receipt": "re-run this script once Person C's real row universe contains a no_sheep/occluder-only control_type",
+      "expected_owner": "person_c",
+      "expected_schema_or_version": "person-c-66-cell-oracle-target-v0.1",
+      "missing_artifact": "Real no-sheep/occluder-only rows -- this 66-cell dataset's own counts_by_control_type contains zero of them (only core_regime_a, no_wall_visible_control, and context_sentinel)",
+      "required_identity_fields": [
+        "trajectory_id",
+        "model_frame_idx",
+        "control_type"
+      ]
+    },
+    {
+      "exact_command_after_receipt": "python -c \"from mineocclude.baselines.positive_control_gate import run_positive_control_gate; ...\" over the real no-wall contexts",
+      "expected_owner": "person_d",
+      "expected_schema_or_version": "person-d-step4-3-positive-control-gate-v0-1",
+      "missing_artifact": "A registered Step 4.3 positive-control-gate run over the real 66-cell no-wall rows (351 real no_wall_visible_control rows exist in this universe, but no positive_control_gate.py execution has been registered against them yet)",
+      "required_identity_fields": [
+        "trajectory_id",
+        "model_frame_idx",
+        "fold_idx"
+      ]
+    }
+  ],
+  "evidence_kind": "real",
+  "fold_manifest_sha256": "86739975882f4926c3398d5bfa21611daf06c579b3893809eb385e8dcd03001d",
+  "generated_from_registered_sources_only": true,
+  "manual_scientific_values_present": false,
+  "metric_identity": {
+    "loss_by_target": {
+      "log_sigma_oracle": "squared_error_in_log_sigma",
+      "mu_oracle_blocks": "squared_error_in_blocks"
+    },
+    "owner_role": "person_b",
+    "positive_direction": "probe_better",
+    "primary_statistic": "layout_macro_paired_loss_improvement"
+  },
+  "metric_run_ids": [
+    "person-d-66-cell-production-baselines-v0-1"
+  ],
+  "objective_baselines": {
+    "U1": [
+      "last_seen",
+      "grouped_shuffled"
+    ],
+    "U2": [
+      "time_only",
+      "visible_history_q"
+    ]
+  },
+  "person_b_contract_id": "person-b-step4-1-final-comparison-contract-v0-1",
+  "planning_thresholds": {
+    "owner_role": "person_d",
+    "scope": "operational_readiness_only_never_a_scientific_verdict",
+    "targets": {
+      "maximum_tolerated_missing_prediction_fraction": 0.0,
+      "minimum_accepted_trajectories_to_execute": 2,
+      "minimum_layouts_for_layout_macro_aggregation": 2
+    }
+  },
+  "prediction_run_ids": [
+    "person-d-66-cell-production-baselines-v0-1"
+  ],
+  "producer_role": "person_d",
+  "rendered_section_count": 8,
+  "report_complete": false,
+  "resampling_unit": "whole_trajectory_pair_with_one_shared_sign_per_layout",
+  "run_id": "person-d-step6-4-real-66-cell-preliminary-report-v0-1",
+  "sample_unit": "whole_trajectory",
+  "schema_id": "person-d-preliminary-comparison-report-v0-1",
+  "schema_version": "1.0",
+  "scientific_thresholds": {
+    "gates": {
+      "U1_green": {
+        "held_out_r2_strictly_greater_than": 0.0,
+        "max_t_adjusted_p_strictly_less_than": 0.01,
+        "paired_loss_improvement_strictly_greater_than": 0.0,
+        "required_primary_baselines": [
+          "last_seen",
+          "grouped_shuffled"
+        ]
+      },
+      "U2_green": {
+        "average_absolute_coverage_error_at_most": 0.1,
+        "coverage_error_strictly_better_than": [
+          "time_only",
+          "visible_history_q"
+        ],
+        "coverage_levels": [
+          0.5,
+          0.8,
+          0.95
+        ],
+        "partial_correlation_bootstrap_ci_lower_strictly_greater_than": 0.0
+      }
+    },
+    "owner_role": "person_b",
+    "source_contract_id": "person-b-step4-1-final-comparison-contract-v0-1"
+  },
+  "section_count": 10,
+  "sections": [
+    {
+      "blockers": [],
+      "comparison_classes": [
+        "memory_heuristic",
+        "chance_floor"
+      ],
+      "comparison_kind": "baseline_versus_chance_floor",
+      "methods": [
+        "last_seen",
+        "grouped_shuffled"
+      ],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [],
+      "section_id": "u1_vs_last_seen",
+      "status": "rendered",
+      "target_name": "mu_oracle_blocks",
+      "title": "u1 vs last seen",
+      "values": [
+        {
+          "metric_id": "last_seen_r2_mu_oracle_blocks",
+          "owner_role": "person_d",
+          "sample_count": 662,
+          "sample_unit": "rows",
+          "source_record_id": "person-d-66-cell-baseline-metrics-v0-1",
+          "source_sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5",
+          "unit": "r2",
+          "value": 0.6432063924777439
+        }
+      ]
+    },
+    {
+      "blockers": [],
+      "comparison_classes": [
+        "chance_floor"
+      ],
+      "comparison_kind": "baseline_versus_chance_floor",
+      "methods": [
+        "grouped_shuffled"
+      ],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [],
+      "section_id": "u1_vs_grouped_shuffled_floor",
+      "status": "rendered",
+      "target_name": "mu_oracle_blocks",
+      "title": "u1 vs grouped shuffled floor",
+      "values": [
+        {
+          "metric_id": "grouped_shuffled_r2_mu_oracle_blocks",
+          "owner_role": "person_d",
+          "sample_count": 151,
+          "sample_unit": "rows",
+          "source_record_id": "person-d-66-cell-baseline-metrics-v0-1",
+          "source_sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5",
+          "unit": "r2",
+          "value": -1.2012393415981757
+        }
+      ]
+    },
+    {
+      "blockers": [],
+      "comparison_classes": [
+        "clock_floor",
+        "chance_floor"
+      ],
+      "comparison_kind": "baseline_versus_chance_floor",
+      "methods": [
+        "time_only",
+        "grouped_shuffled"
+      ],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [],
+      "section_id": "u2_vs_time_only",
+      "status": "rendered",
+      "target_name": "log_sigma_oracle",
+      "title": "u2 vs time only",
+      "values": [
+        {
+          "metric_id": "time_only_r2_log_sigma_oracle",
+          "owner_role": "person_d",
+          "sample_count": 311,
+          "sample_unit": "rows",
+          "source_record_id": "person-d-66-cell-baseline-metrics-v0-1",
+          "source_sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5",
+          "unit": "r2",
+          "value": 0.21856799840032182
+        }
+      ]
+    },
+    {
+      "blockers": [],
+      "comparison_classes": [
+        "fair_baseline",
+        "chance_floor"
+      ],
+      "comparison_kind": "baseline_versus_chance_floor",
+      "methods": [
+        "visible_history_q",
+        "grouped_shuffled"
+      ],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [],
+      "section_id": "u2_vs_visible_history_spread",
+      "status": "rendered",
+      "target_name": "log_sigma_oracle",
+      "title": "u2 vs visible history spread",
+      "values": [
+        {
+          "metric_id": "visible_history_q_r2_log_sigma_oracle",
+          "owner_role": "person_d",
+          "sample_count": 311,
+          "sample_unit": "rows",
+          "source_record_id": "person-d-66-cell-baseline-metrics-v0-1",
+          "source_sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5",
+          "unit": "r2",
+          "value": 0.2516116669664651
+        }
+      ]
+    },
+    {
+      "blockers": [],
+      "comparison_classes": [
+        "fair_fitted_ceiling",
+        "chance_floor"
+      ],
+      "comparison_kind": "baseline_versus_chance_floor",
+      "methods": [
+        "raw_pixel",
+        "grouped_shuffled"
+      ],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "raw_pixel scores below the chance floor on this real universe (see docs/status/person_d_66_cell_production_baselines_v0_1/README.md); this is the scientifically desired outcome, not an engineering failure."
+      ],
+      "section_id": "raw_pixel_comparison",
+      "status": "rendered",
+      "target_name": "mu_oracle_blocks",
+      "title": "raw pixel comparison",
+      "values": [
+        {
+          "metric_id": "raw_pixel_r2_mu_oracle_blocks",
+          "owner_role": "person_d",
+          "sample_count": 662,
+          "sample_unit": "rows",
+          "source_record_id": "person-d-66-cell-baseline-metrics-v0-1",
+          "source_sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5",
+          "unit": "r2",
+          "value": -1.8961121560121192
+        }
+      ]
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "python -c \"from mineocclude.baselines.positive_control_gate import run_positive_control_gate; ...\" over the real no-wall contexts",
+          "expected_owner": "person_d",
+          "expected_schema_or_version": "person-d-step4-3-positive-control-gate-v0-1",
+          "missing_artifact": "A registered Step 4.3 positive-control-gate run over the real 66-cell no-wall rows (351 real no_wall_visible_control rows exist in this universe, but no positive_control_gate.py execution has been registered against them yet)",
+          "required_identity_fields": [
+            "trajectory_id",
+            "model_frame_idx",
+            "fold_idx"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "positive_control_gate",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "351 real no_wall_visible_control rows exist in this universe, but no Step 4.3 positive-control-gate run has been registered against them yet -- structurally empty and blocked, not a null result."
+      ],
+      "section_id": "visible_positive_control",
+      "status": "blocked",
+      "target_name": null,
+      "title": "visible positive control",
+      "values": []
+    },
+    {
+      "blockers": [
+        {
+          "exact_command_after_receipt": "re-run this script once Person C's real row universe contains a no_sheep/occluder-only control_type",
+          "expected_owner": "person_c",
+          "expected_schema_or_version": "person-c-66-cell-oracle-target-v0.1",
+          "missing_artifact": "Real no-sheep/occluder-only rows -- this 66-cell dataset's own counts_by_control_type contains zero of them (only core_regime_a, no_wall_visible_control, and context_sentinel)",
+          "required_identity_fields": [
+            "trajectory_id",
+            "model_frame_idx",
+            "control_type"
+          ]
+        }
+      ],
+      "comparison_classes": [],
+      "comparison_kind": "negative_control_audit",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "This dataset's real row universe contains zero no-sheep/occluder-only rows (counts_by_control_type has only core_regime_a, no_wall_visible_control, context_sentinel)."
+      ],
+      "section_id": "no_object_negative_control",
+      "status": "blocked",
+      "target_name": null,
+      "title": "no object negative control",
+      "values": []
+    },
+    {
+      "blockers": [],
+      "comparison_classes": [
+        "privileged_oracle_ceiling"
+      ],
+      "comparison_kind": "privileged_oracle_ceiling",
+      "methods": [
+        "known_q_analytic"
+      ],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "known_q_analytic consumes the true scripted q; it is a privileged reference ceiling and must never be read as a fair competitor."
+      ],
+      "section_id": "known_q_oracle_ceiling",
+      "status": "rendered",
+      "target_name": "log_sigma_oracle",
+      "title": "known q oracle ceiling",
+      "values": [
+        {
+          "metric_id": "known_q_analytic_r2_log_sigma_oracle",
+          "owner_role": "person_d",
+          "sample_count": 311,
+          "sample_unit": "rows",
+          "source_record_id": "person-d-66-cell-baseline-metrics-v0-1",
+          "source_sha256": "cecaf081e3b320043419106686222c1f9508d13d125ce4055043d1e57e3254f5",
+          "unit": "r2",
+          "value": 1.0
+        }
+      ]
+    },
+    {
+      "blockers": [],
+      "comparison_classes": [],
+      "comparison_kind": "control_failure_summary",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Zero control failures were registered by this real run: all eight families completed, every non-applicable row carries a reason, and admission reconciles exactly to Person B's declared accounting (reconciliation_mismatch_count=0 in execution_universe.json)."
+      ],
+      "section_id": "failed_controls",
+      "status": "rendered",
+      "target_name": null,
+      "title": "failed controls",
+      "values": [
+        {
+          "metric_id": "registered_control_failure_count",
+          "owner_role": "person_d",
+          "sample_count": 10592,
+          "sample_unit": "prediction_rows",
+          "source_record_id": "person-d-66-cell-baseline-predictions-v0-1",
+          "source_sha256": "ffd8f8316f8d3fd74e8ca441dda6f9f45d4d05c7834496abc461a76b97337ea7",
+          "unit": "count",
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "blockers": [],
+      "comparison_classes": [],
+      "comparison_kind": "missingness_summary",
+      "methods": [],
+      "missing_count": 0,
+      "na_count": 0,
+      "notes": [
+        "Full breakdown by family/target/layout/fold/condition/reason is in step4_5_missingness_exclusion_report.json; every non-applicable row carries an explicit reason and no non-applicable row is ever scored as zero."
+      ],
+      "section_id": "na_and_missing_cells",
+      "status": "rendered",
+      "target_name": null,
+      "title": "na and missing cells",
+      "values": [
+        {
+          "metric_id": "non_applicable_prediction_count",
+          "owner_role": "person_d",
+          "sample_count": 10592,
+          "sample_unit": "prediction_rows",
+          "source_record_id": "person-d-66-cell-baseline-predictions-v0-1",
+          "source_sha256": "ffd8f8316f8d3fd74e8ca441dda6f9f45d4d05c7834496abc461a76b97337ea7",
+          "unit": "count",
+          "value": 6806.0
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "missing_cells": 0,
+    "na_cells": 0
+  },
+  "uncertainty": {
+    "bootstrap_count": 2000,
+    "coverage": 0.95,
+    "owner_role": "person_b",
+    "type": "equal_tailed_percentile_bootstrap",
+    "unit": "whole_layout_then_whole_trajectory"
+  }
+}

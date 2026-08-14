@@ -138,13 +138,28 @@ the current A/B/C authorities and does not vendor copies of them.
       `scripts/run_person_d_phase6to8_completion.py`. Step 8.4's frozen
       operating handoff is at
       `docs/status/person_d_terminal_handoff_v0_1/`.
-- [ ] Run all of the above against real accepted rows/folds/targets once
-      C/B/A hand off real data. Every Phase 6-8 document is currently
-      labeled `evidence_kind = "synthetic"`; blocked sections are
-      structurally empty and name the missing artifact, its owner, its
-      schema, and the exact command to run on receipt. The five exact
-      remaining external dependencies are listed in
-      `docs/status/person_d_terminal_handoff_v0_1/person_d_terminal_status_package.json`.
+- [x] Steps 4.5/6.3/6.4/6.5 run for real against the real 66-cell
+      execution universe. `scripts/run_person_d_66_cell_step6_3to6_5_completion.py`
+      wires the already-real `person_d_66_cell_production_baselines_v0_1`
+      predictions and Person B's real row-universe/oracle-target records
+      through `grouped_nulls_v0_1`/`missingness_audit_v0_1`/
+      `preliminary_report_v0_1`/`result_lock_v0_1` (every family row
+      recomputed and cross-checked against the already-published real
+      predictions before being trusted). Output:
+      `docs/status/person_d_66_cell_production_baselines_v0_1/step6_3_grouped_nulls.json`,
+      `step6_3_paired_comparisons_{u1,u2}.json`,
+      `step4_5_missingness_exclusion_report.json`,
+      `step6_4_preliminary_comparison_report.json` (8/10 sections real,
+      2 honestly blocked -- no Step 4.3 gate registered yet, and this
+      dataset has zero no-sheep rows), `step6_5_result_lock.json`. Note
+      the `person_d_phase6to8_completion_v0_1` package (Steps 6.1-8.4
+      machinery, still `evidence_kind = "synthetic"` there) and
+      `person_d_terminal_handoff_v0_1/person_d_terminal_status_package.json`
+      predate this and are stale for Steps 4.5/6.3-6.5 specifically.
+- [ ] Run Phase 7 (U4) for real once B/A/E hand off a real direction and
+      real rollout measurements -- the only remaining external
+      dependency; everything else in Phase 6-8 that can run on already-real
+      data now has.
 
 ## Post-MVP work
 
