@@ -71,6 +71,7 @@ def main() -> int:
     a2_runner = STATUS / "a2_execution_runner_supersession_receipt.json"
     source_freeze_v2 = STATUS / "pre_a4_source_freeze_receipt_v2.json"
     launch_recovery = STATUS / "a4_launch_recovery_source_freeze_receipt.json"
+    storage_recovery = STATUS / "a4_launch_storage_recovery_source_freeze_receipt.json"
     manifest_sha256 = sha256_file(manifest)
     require(manifest_sidecar.read_text().strip() == manifest_sha256, "manifest sidecar mismatch")
 
@@ -89,6 +90,7 @@ def main() -> int:
         "a2_execution_runner_supersession_receipt_sha256": sha256_file(a2_runner),
         "pre_a4_source_freeze_receipt_v2_sha256": sha256_file(source_freeze_v2),
         "a4_launch_recovery_source_freeze_receipt_sha256": sha256_file(launch_recovery),
+        "a4_launch_storage_recovery_source_freeze_receipt_sha256": sha256_file(storage_recovery),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "protocol_modification": False,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",

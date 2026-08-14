@@ -7,6 +7,7 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from mineocclude.regime_a import (
     AtomicTrajectoryStore,
@@ -107,9 +108,17 @@ class RegimeAA4RunnerTests(unittest.TestCase):
         assert module_spec.loader is not None
         module_spec.loader.exec_module(module)
         java_home = Path(os.environ["JAVA_HOME"])
-        worker = module.ProductionCaptureWorker(Path("/mnt/sagemaker-nvme/non-scientific-test"))
-        self.assertEqual(worker.java_home, java_home)
-        self.assertEqual(worker.live.JAVA_PATH, java_home / "bin/java")
+        with tempfile.TemporaryDirectory() as tmp:
+            server, client = Path(tmp) / "server", Path(tmp) / "client"
+            server.mkdir()
+            client.mkdir()
+            with patch.dict(os.environ, {"MINEOCCLUDE_SERVER_ROOT": str(server), "MINEOCCLUDE_CLIENT_ROOT": str(client)}):
+                worker = module.ProductionCaptureWorker(Path("/mnt/sagemaker-nvme/non-scientific-test"))
+            self.assertEqual(worker.java_home, java_home)
+            self.assertEqual(worker.live.JAVA_PATH, java_home / "bin/java")
+            self.assertEqual(worker.live.SERVER_ROOT, server)
+            self.assertEqual(worker.live.CLIENT_ROOT, client)
+            self.assertEqual(worker.live.FIFO, server / "cmd.fifo")
 
     def test_authorization_required_and_full_binding_obsolete_commit_refused(self):
         with self.assertRaises(RegimeAError):

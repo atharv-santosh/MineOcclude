@@ -82,6 +82,7 @@ def authorization_bindings() -> dict[str, str]:
         "a2_execution_runner_supersession_receipt_sha256": sha256_file(STATUS / "a2_execution_runner_supersession_receipt.json"),
         "pre_a4_source_freeze_receipt_v2_sha256": sha256_file(STATUS / "pre_a4_source_freeze_receipt_v2.json"),
         "a4_launch_recovery_source_freeze_receipt_sha256": sha256_file(STATUS / "a4_launch_recovery_source_freeze_receipt.json"),
+        "a4_launch_storage_recovery_source_freeze_receipt_sha256": sha256_file(STATUS / "a4_launch_storage_recovery_source_freeze_receipt.json"),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "scientific_run_id": SCIENTIFIC_RUN_ID,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",
@@ -116,9 +117,18 @@ class ProductionCaptureWorker:
         java_path = java_home / "bin/java"
         if not java_home.is_absolute() or not java_path.is_file():
             raise RegimeAError("JAVA_HOME must identify the qualified A4 JDK")
+        server_root = Path(os.environ.get("MINEOCCLUDE_SERVER_ROOT", str(SERVER_ROOT))).resolve()
+        client_root = Path(os.environ.get("MINEOCCLUDE_CLIENT_ROOT", str(CLIENT_ROOT))).resolve()
+        if not server_root.is_dir() or not client_root.is_dir():
+            raise RegimeAError("qualified capture runtime roots must already exist")
         live.JAVA_PATH = java_path
+        live.SERVER_ROOT = server_root
+        live.CLIENT_ROOT = client_root
+        live.FIFO = server_root / "cmd.fifo"
         self.live = live
         self.java_home = java_home
+        self.server_root = server_root
+        self.client_root = client_root
         self.runtime_root = runtime_root
         self.processes: list[object] = []
         self.runtime = None
@@ -135,7 +145,7 @@ class ProductionCaptureWorker:
         )
         if not jar.is_file():
             raise RegimeAError("governed Fabric mod build did not produce the runtime JAR")
-        destination = SERVER_ROOT / "mods/mineocclude-0.1.1.jar"
+        destination = self.server_root / "mods/mineocclude-0.1.1.jar"
         shutil.copy2(jar, destination)
         if sha256_file(jar) != sha256_file(destination):
             raise RegimeAError("governed Fabric server mod installation mismatch")
@@ -153,8 +163,8 @@ class ProductionCaptureWorker:
         assert self.runtime is not None
         episode_id = int(spec["episode_id"])
         frames = int(spec["expected_max_frames"])
-        server_episode = SERVER_ROOT / f"mineocclude_out/episode_{episode_id}"
-        client_episode = CLIENT_ROOT / f"mineocclude_client_out/episode_{episode_id}"
+        server_episode = self.server_root / f"mineocclude_out/episode_{episode_id}"
+        client_episode = self.client_root / f"mineocclude_client_out/episode_{episode_id}"
         if server_episode.exists() or client_episode.exists():
             reset = server_episode / "reset_result.json"
             if not reset.is_file():
@@ -174,8 +184,8 @@ class ProductionCaptureWorker:
         noise_values = np.asarray([row.noise_draw for row in schedule.rows], dtype="<f8")
         if hashlib.sha256(noise_values.tobytes()).hexdigest() != spec["noise_schedule_sha256"]:
             raise RegimeAError("frozen raw noise schedule hash mismatch")
-        noise_path = SERVER_ROOT / f"mineocclude_schedules/episode_{episode_id}.jsonl"
-        motion_path = SERVER_ROOT / f"mineocclude_motion_schedules/episode_{episode_id}.json"
+        noise_path = self.server_root / f"mineocclude_schedules/episode_{episode_id}.jsonl"
+        motion_path = self.server_root / f"mineocclude_motion_schedules/episode_{episode_id}.json"
         noise_path.parent.mkdir(parents=True, exist_ok=True)
         motion_path.parent.mkdir(parents=True, exist_ok=True)
         noise_path.write_bytes(serialize_schedule(schedule))
