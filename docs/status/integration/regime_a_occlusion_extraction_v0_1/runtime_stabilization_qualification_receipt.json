@@ -1,0 +1,187 @@
+{
+  "artifact_id": "regime-a-runtime-stabilization-qualification-v1.0",
+  "status": "PASS_RUNTIME_INSTRUMENTATION_QUALIFIED",
+  "created_utc": "2026-08-14T07:20:00Z",
+  "scope": "NON_SCIENTIFIC_RUNTIME_STABILIZATION_ONLY",
+  "prior_reviewed_commit": "ccac8629a85b27c3e5053f37dc71cc1ff86d6951",
+
+  "home_storage": {
+    "blocker": "B6",
+    "free_before": "116M",
+    "free_after": "2.0G",
+    "nvme_free_before": "228G",
+    "nvme_free_after": "226G",
+    "relocated": [
+      {"path": "~/.gradle", "size": "725M", "to": "/mnt/sagemaker-nvme/mineocclude-runtime/home-caches/.gradle", "method": "move plus symlink", "why_safe": "reproducible build cache (fabric-loom, modules-2, wrapper dists)"},
+      {"path": "~/.cache", "size": "292M", "to": "/mnt/sagemaker-nvme/mineocclude-runtime/home-caches/.cache", "method": "move plus symlink", "why_safe": "reproducible caches (pip http, aws toolkits, huggingface gradio, mesa shader cache)"},
+      {"path": "~/mineocclude-client/mineocclude_client_out", "size": "1.3G", "to": "/mnt/sagemaker-nvme/mineocclude-runtime/preserved-home-client-out/", "method": "move, preserved not deleted", "why_safe": "263 stale episodes predating the NVMe redirect; NVMe capture-client holds a superset and neither t01 (51001) nor any rehearsal episode is present here"}
+    ],
+    "deleted": [],
+    "scientific_evidence_touched": false,
+    "result": "PASS"
+  },
+
+  "native_display_environment": {
+    "blocker": "B7",
+    "required": {
+      "PATH": ["operator-tools/bin", "operator-tools/root/usr/bin"],
+      "LD_LIBRARY_PATH": ["operator-tools/root/usr/lib/x86_64-linux-gnu", "operator-tools/root/usr/lib"],
+      "LIBGL_DRIVERS_PATH": "operator-tools/root/usr/lib/x86_64-linux-gnu/dri",
+      "XDG_DATA_DIRS": "operator-tools/root/usr/share",
+      "XDG_CONFIG_DIRS": "operator-tools/root/etc/xdg",
+      "FONTCONFIG_PATH": "operator-tools/root/etc/fonts",
+      "FONTCONFIG_FILE": "operator-tools/root/etc/fonts/fonts.conf",
+      "XKB_BINDIR": "operator-tools/root/usr/bin"
+    },
+    "launcher_integration": "setup_native_env runs at script load in provision_capture_runtime_sagemaker.sh; verify_native_env fails closed naming any unresolved shared library; the runner additionally pins XVFB_PATH, XDPYINFO_PATH and XDOTOOL_PATH by absolute path and passes NATIVE_ENV_OVERRIDES into every launched subprocess",
+    "depends_on_interactive_shell": false,
+    "missing_libraries_after_repair": [],
+    "verified": {
+      "Xvfb": "resolves, 0 unresolved libraries, starts with no Fatal server error",
+      "xdpyinfo": "resolves, display query succeeds",
+      "xdotool": "resolves",
+      "openbox": "resolves",
+      "XKEYBOARD_extension_present": true
+    },
+    "result": "PASS"
+  },
+
+  "client_stall_diagnosis": {
+    "blocker": "B4",
+    "reproduced": true,
+    "stage": "between LWJGL backend initialization and OpenAL initialization; successful boots cover that gap in 5 to 9 seconds, stalled boots emit nothing further and die at the 180 second launch precheck",
+    "root_cause": "environment selection, not a code defect in the capture path",
+    "contributing_findings": [
+      "operator-tools ships TWO Xvfb binaries with different SHA256: a binary-patched one in operator-tools/bin whose compiled-in XKB paths were rewritten to short stand-ins (/tmp/abc and /tmp/abcde/X11/xkb, chosen to fit the original byte length), and the unpatched distro build in operator-tools/root/usr/bin",
+      "there is no /usr/share/X11/xkb and no /usr/bin/xkbcomp on this host, and /usr/bin is not writable, so the unpatched binary cannot compile a keymap and dies with 'Failed to activate virtual core keyboard: 2'",
+      "the patched binary depends on /tmp stand-in paths, which are volatile and disappear when /tmp is cleaned; that volatility is why the failure was intermittent rather than reproducible",
+      "the home filesystem was at 116 MB free while the Minecraft client installation and caches live there"
+    ],
+    "mechanical_repair": [
+      "pin the operator-tools search order so the patched Xvfb is selected ahead of the distro build",
+      "pass -xkbdir explicitly to Xvfb from the qualified keymap data",
+      "export XKB_BINDIR",
+      "re-establish the /tmp stand-in paths from the qualified operator-tools copies on every launch",
+      "pin Xvfb, xdpyinfo and xdotool by absolute path in the runner so the production path never resolves them from PATH",
+      "restore real headroom on the home filesystem"
+    ],
+    "camera_verification_weakened": false,
+    "window_verification_weakened": false,
+    "focus_verification_weakened": false,
+    "identity_checks_weakened": false,
+    "governed_jar_verification_weakened": false,
+    "initialization_subsystem_suppressed": false,
+    "result": "PASS"
+  },
+
+  "bounded_relaunch": {
+    "blocker": "B5",
+    "implemented": true,
+    "attempt_bound": 3,
+    "location": "ProductionCaptureWorker._launch_with_bounded_retry",
+    "retry_eligibility": "only before startspec dispatch; a launch that never reaches the readiness gate has sent no startspec, armed no episode and captured no frame, so retrying is observationally identical to an operator re-running the entry point",
+    "permanent_gate": "startspec_dispatch_attempted is set immediately before the FIFO send and never cleared; _launch_with_bounded_retry refuses outright once it is set, so a trajectory failure can never be answered by relaunching underneath it",
+    "stale_cleanup": "stop_runtime, then pkill of the three launcher entry points plus KnotClient and fabric-server-launch, then Xvfb and openbox, then stale X lock and socket removal, then a settle delay",
+    "identity_preserved": "each attempt records the unchanged trajectory_spec_id, spec_hash and seed; no replacement identity is generated",
+    "evidence": "runtime_logs/pre_scientific_launch_attempts.jsonl, one fsynced record per attempt with outcome, stage, reason and elapsed seconds",
+    "tests": "tests/test_regime_a_bounded_relaunch.py: first-attempt success, failure then success, bound exhaustion, precheck failure sends no startspec, cleanup ordering, and startspec-failure never re-entering relaunch",
+    "result": "PASS"
+  },
+  "startup_qualification": {
+    "scope": "NON_SCIENTIFIC_READINESS_ONLY",
+    "cycles": 5,
+    "qualified_cycles": 5,
+    "consecutive_qualified_cycles": 5,
+    "raw_launch_successes": 5,
+    "bounded_relaunch_recoveries": 0,
+    "attempts_per_cycle": [1, 1, 1, 1, 1],
+    "readiness_elapsed_seconds": [48.519740524, 49.643232839, 49.544895956, 50.042118035, 54.183435596],
+    "startspecs_sent": 0,
+    "frames_captured": 0,
+    "evidence": "/mnt/sagemaker-nvme/mineocclude-regime-a-runtime-stabilization-20260814/runtime_logs/pre_scientific_launch_attempts.jsonl (final five READY records)",
+    "rerun_for_this_receipt": false,
+    "result": "PASS"
+  },
+
+  "non_scientific_capture": {
+    "trajectory_spec_id": "regime_a_rehearsal_v2_ltr",
+    "spec_hash": "52922e217e26af819c839af1e7a6c260e4d58bdb1c4cbc01b9fad6c2cc4be8c4",
+    "seed": 8496223121943661250,
+    "episode_id": 62001,
+    "direction": "LEFT_TO_RIGHT",
+    "NON_SCIENTIFIC_INTEGRATION_REHEARSAL": true,
+    "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+    "governed_jar_sha256": "78b4da2453ecf74140c5963df4013746845845427c12872d919b7ca98f2c4dc6",
+    "launch_attempts": 1,
+    "frames": 260,
+    "state_rows": 260,
+    "client_tick_rows": 260,
+    "action_rows": 260,
+    "cardinality_ok": true,
+    "capture_acks": {
+      "sent_after_framebuffer_reads": 260,
+      "missing": 0,
+      "duplicate": 0,
+      "out_of_order": 0,
+      "client_send_failures": 0,
+      "server_ack_timeouts": 0
+    },
+    "result": "PASS"
+  },
+
+  "temporal_alignment": {
+    "validator": "validate_capture_temporal_alignment",
+    "acceptance_rule": "each frame captured at or after its own tick and strictly before the NEXT recorded server tick, taken from the capture's own recorded timestamps; plus tick_queue_depth_at_capture equal to zero. No tuned tolerance.",
+    "min_lag_ms": 1.32,
+    "median_lag_ms": 35.09,
+    "p95_lag_ms": 76.75,
+    "max_lag_ms": 4733.69,
+    "max_lag_excluding_first_frame_ms": 129.8,
+    "frames_over_200ms": 1,
+    "largest_lag_frame_idx": 0,
+    "large_lag_interpretation": "Under lockstep a long capture does not desynchronize anything: the server holds the world until the acknowledgement arrives. The matching inter-tick gap for frame 0 is 4762.4 ms, i.e. the server waited. What matters is that no frame was captured after its successor tick was emitted, which held for all 260.",
+    "stale_frames": 0,
+    "first_stale_frame_idx": null,
+    "tick_queue_depth_all_zero": true,
+    "dropped_frames": 0,
+    "duplicate_rows": 0,
+    "monotonicity_violations": 0,
+    "index_join_intact": true,
+    "action_rows_aligned": true,
+    "backlog_pattern_present": false,
+    "comparison_to_defective_capture": {
+      "old_t01_median_lag_ms": 1066.8,
+      "old_t01_stale_frames": 259,
+      "new_median_lag_ms": 35.09,
+      "new_stale_frames": 0
+    },
+    "TEMPORAL_ALIGNMENT_QUALIFIED": true,
+    "result": "PASS"
+  },
+
+  "scientific_work_not_performed": {
+    "directional_visibility_recalibration": false,
+    "guard_or_hidden_boundary_change": false,
+    "scientific_v2_manifest_generated": false,
+    "mineworld_checkpoint_loaded": false,
+    "activations_extracted": false,
+    "rehearsal_s3_objects_written": false,
+    "scientific_a4_executed": false,
+    "scientific_trajectories_executed": 0,
+    "scientific_decoding_outcomes_computed": 0
+  },
+
+  "scientific_state_preserved": {
+    "old_run_identity": "mineocclude-regime-a-first25-v1",
+    "old_run_status": "INVALID_PREQUALIFICATION_CAPTURE",
+    "ELIGIBLE_FOR_RESULTS": false,
+    "t01_raw_files": 264,
+    "t01_raw_bytes_modified": false,
+    "scientific_ledger_records": 14,
+    "scientific_activations": 0,
+    "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b"
+  },
+
+  "next_action": "Fresh non-scientific LTR and RTL directional visibility calibration on temporally aligned captures, then guard and hidden-boundary supersession, then the corrected scientific v2 manifest."
+}
