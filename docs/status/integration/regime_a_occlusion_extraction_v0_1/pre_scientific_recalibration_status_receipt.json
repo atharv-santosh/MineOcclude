@@ -1,0 +1,118 @@
+{
+  "artifact_id": "regime-a-pre-scientific-recalibration-status-v1.0",
+  "status": "BLOCKED_RUNTIME_CAPTURE_QUALIFICATION_INCOMPLETE",
+  "created_utc": "2026-08-14T06:12:00Z",
+  "READY_FOR_SCIENTIFIC_A4_V2_AUTHORIZATION": false,
+
+  "SCIENTIFIC_A4_V2_TRAJECTORIES_EXECUTED": 0,
+  "SCIENTIFIC_DECODING_OUTCOMES_COMPUTED": 0,
+  "scientific_a4_v2_authorization_created": false,
+  "scientific_a4_v2_launched": false,
+  "scientific_ledger_written_this_pass": false,
+
+  "r1_temporal_capture_repair": {
+    "status": "IMPLEMENTED",
+    "root_cause": "PRODUCER_CONSUMER_RATE_EQUALITY_WITH_UNBOUNDED_QUEUE",
+    "detail": "The server broadcast one TICK_SYNC per server tick at 20 Hz with no back-pressure while the client drained exactly one queued tick per client tick from an unbounded queue. Equal rates meant no drain margin, so any startup or render-stall backlog was permanent and the framebuffer read always returned a world strictly later than the state row it was joined to.",
+    "repair": "lockstep capture acknowledgement on a new mineocclude:capture_ack channel; the recorded episode holds all world advancement until the client reports its framebuffer read for the outstanding tick",
+    "tolerance_increased": false,
+    "frames_dropped_to_force_alignment": false,
+    "simulated_cadence_changed": false,
+    "secondary_repair": "the governed mod JAR is now installed into both runtime roots; the client had been running an Aug 10 build against an Aug 14 server",
+    "receipt": "a4_capture_lockstep_supersession_receipt.json",
+    "focused_tests": "53 passed, 7 subtests passed",
+    "fabric_mod_build": "BUILD SUCCESSFUL including mod unit tests",
+    "runtime_jar_sha256": "78b4da2453ecf74140c5963df4013746845845427c12872d919b7ca98f2c4dc6"
+  },
+
+  "r2_temporal_alignment_qualification": {
+    "status": "NOT_DEMONSTRATED",
+    "blocker": "B4",
+    "captures_completed_after_repair": 0,
+    "acceptance_condition": "every captured frame taken at or after its own tick was emitted and strictly before the next tick was emitted, plus tick_queue_depth_at_capture equal to zero; both derived from the capture's own recorded tick structure rather than a chosen tolerance"
+  },
+
+  "r3_fresh_directional_calibration": {"status": "NOT_STARTED", "reason": "gated on R2"},
+  "r4_context_bin_revalidation": {
+    "status": "NOT_REVALIDATED_ON_NEW_CAPTURES",
+    "prospective_analysis": "The lockstep repair changes wall-clock episode duration only. Each recorded tick still advances the target by speed * 0.05 blocks, so E = 15 preceding captured frames, C = 0.75 s and 20 Hz simulated cadence are unaffected. This is an argument from the repair's construction, not a measurement, and must still be confirmed against real post-repair captures.",
+    "classification_changing_context_issue_found": false
+  },
+  "r5_authority_supersession": {
+    "status": "NOT_ISSUED",
+    "reason": "No fresh calibration exists yet, and the controlling rule requires the guards to be derived from new non-scientific measurements taken after the capture defect is fixed. Issuing corrected values now would be exactly the outcome-driven choice this pass forbids.",
+    "enabling_work_done": "VisibilityCalibration makes the hidden boundaries, geometric entry boundaries, and direction guards a spec-time input rather than module globals, so a corrected calibration can generate a new manifest without mutating v1 history. Verified that the superseded v1 manifest still validates and still regenerates byte-identically to 54f47bfb..."
+  },
+  "r6_scientific_v2_manifest": {"status": "NOT_GENERATED", "reason": "gated on R5, which is gated on R3, which is gated on R2"},
+  "r7_rehearsal_identities": {
+    "status": "CREATED",
+    "manifest": "non_scientific_integration_rehearsal_manifest_v2.jsonl",
+    "ltr_id": "regime_a_rehearsal_v2_ltr",
+    "ltr_seed": 8496223121943661250,
+    "rtl_id": "regime_a_rehearsal_v2_rtl",
+    "rtl_seed": 1690904890621232686,
+    "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+    "runtime_root": "/mnt/sagemaker-nvme/mineocclude-regime-a-rehearsal-v2",
+    "s3_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/_non_scientific_integration_rehearsal_v2/"
+  },
+  "r8_target_reconciliation": {"status": "NOT_RUN", "reason": "gated on R2 and R6"},
+  "r9_ltr_full_rehearsal": {"status": "NOT_RUN"},
+  "r10_rtl_full_rehearsal": {"status": "NOT_RUN"},
+  "r11_recovery_rehearsal": {"status": "NOT_RUN"},
+  "r12_production_path_equivalence": {"status": "NOT_RUN"},
+
+  "old_first25_v1_disposition": {
+    "run_identity": "mineocclude-regime-a-first25-v1",
+    "status": "INVALID_PREQUALIFICATION_CAPTURE",
+    "ELIGIBLE_FOR_RESULTS": false,
+    "preserved_for_provenance": true,
+    "t01_raw_bytes_modified": false,
+    "t01_reused": false,
+    "t01_disposition": "SAME_FROZEN_SPEC_SEED_RECAPTURE_REQUIRED_AFTER_REAUTHORIZATION",
+    "old_trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "old_donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+    "old_manifests_overwritten": false
+  },
+
+  "scientific_authority_preservation": {
+    "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+    "v1_regenerates_byte_identically": true,
+    "guards_changed": false,
+    "hidden_boundaries_changed": false,
+    "bins_changed": false,
+    "visibility_semantics_changed": false,
+    "seeds_changed": false,
+    "folds_changed": false
+  },
+
+  "blockers": [
+    {
+      "id": "B4",
+      "severity": "RUNTIME_OPERATIONAL",
+      "statement": "The Minecraft client intermittently stalls between LWJGL backend init and OpenAL init under Xvfb software rendering. Successful boots reach OpenAL within 5 to 8 seconds; stalled boots produce no further log output and are killed by the 180 second launch precheck. Observed on 2026-08-14 at 04:42, 04:47, 04:52, 05:59, 06:05 and 06:09, against both the previous and the current mod build, so it is environmental and predates this repair. No post-repair capture has completed, so lockstep alignment is implemented but not yet demonstrated on real frames.",
+      "owner": "engineering",
+      "unblocks": ["R2", "R3", "R4", "R5", "R6", "R8", "R9", "R10", "R11", "R12"]
+    },
+    {
+      "id": "B5",
+      "severity": "RUNTIME_OPERATIONAL",
+      "statement": "The production runner has no automatic bounded relaunch for a stalled client launch. With an observed launch failure rate near one half, scientific A4 v2 would depend on an operator re-running the entry point.",
+      "owner": "engineering"
+    },
+    {
+      "id": "B6",
+      "severity": "ENVIRONMENT",
+      "statement": "/home/sagemaker-user is 100 percent full with roughly 120 MB free. The Minecraft client installation and its library classpath live there. Runtime output is redirected to NVMe, but the installation filesystem has no headroom.",
+      "owner": "operator"
+    },
+    {
+      "id": "B7",
+      "severity": "ENVIRONMENT",
+      "statement": "The qualified display tools require LD_LIBRARY_PATH to point at the operator-tools extracted library roots. Without it Xvfb fails on libunwind.so.8 and xdpyinfo on libXext.so.6. This is not recorded in the launch path, so a correct PATH alone is insufficient.",
+      "owner": "engineering"
+    }
+  ],
+
+  "next_action": "Stabilise the client GL launch (B4/B5) so a post-repair non-scientific capture can complete. Only then can R2 alignment qualification, R3 fresh directional calibration, and everything downstream proceed. No scientific authority may be recalibrated before a valid capture exists."
+}
