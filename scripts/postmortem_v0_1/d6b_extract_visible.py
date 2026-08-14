@@ -29,6 +29,9 @@ import numpy as np
 from PIL import Image
 
 REPO = Path("/home/sagemaker-user/MineOcclude")
+# Mirrors scripts/run_person_a_66_cell_production_extraction.py: src/ must be
+# importable for `mineocclude`, and the repo root for the `scripts` package.
+sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(REPO / "scripts/postmortem_v0_1"))
 
