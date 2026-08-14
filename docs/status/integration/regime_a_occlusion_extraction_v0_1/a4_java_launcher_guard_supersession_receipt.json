@@ -1,0 +1,51 @@
+{
+  "artifact_id": "regime-a-a4-java-launcher-guard-supersession-v1.0",
+  "status": "PASS_PENDING_COMMIT",
+  "created_utc": "2026-08-14T03:35:55Z",
+  "previous_commit": "8f0220fdc6ad3a52d5093d9fbb563f247a3d4a67",
+  "final_repair_commit": "PENDING_COMMIT",
+  "scientific_capture_before_repair": false,
+  "scientific_activations_before_repair": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "launcher_blocker": "verify_java accepted a 17.0.19 version substring and refused the prospectively qualified Corretto 17.0.20+8-LTS runtime before Minecraft server startup.",
+  "previous_accepted_java_authority": "OpenJDK 17.0.19+10",
+  "newly_accepted_qualified_java_authority": {
+    "java_home": "/home/sagemaker-user/.local/jdks/amazon-corretto-17.0.20.8.1-linux-x64",
+    "distribution": "Corretto-17.0.20.8.1",
+    "runtime_build": "17.0.20+8-LTS"
+  },
+  "guard_semantics": "Fail closed unless java -version reports exact OpenJDK 17.0.19 with runtime build 17.0.19+10 (optional -LTS suffix) or exact OpenJDK 17.0.20 with runtime identity Corretto-17.0.20.8.1 and build 17.0.20+8-LTS.",
+  "broad_java_acceptance_introduced": false,
+  "operational_only_reason": "The repair changes launcher compatibility validation only; it does not alter Java, runtime artifacts, trajectory specifications, seeds, folds, capture protocol, activations, or analysis.",
+  "protocol_modified": false,
+  "manifest_modified": false,
+  "seeds_modified": false,
+  "folds_modified": false,
+  "changed_source_files": [
+    {
+      "path": "scripts/provision_capture_runtime_sagemaker.sh",
+      "sha256": "93aa8ccac3cf1057d9cd285dd7d8ebc11e3d24599542d1f20e5337f6d0902b0d"
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "5dd6371a61a242af23eed9711d0c0851048dca27f8f5e8f9868c007c28b5072b"
+    },
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "acf038a41e8d9ec8fb99c8559332912c7d44eb1eef211c8dd2ecd73b68de21d3"
+    },
+    {
+      "path": "tests/test_provision_capture_runtime_java_guard.py",
+      "sha256": "6925a360019b2bc9795ae794943ee085ea4ca6d7c00950e3e267add40961299c"
+    }
+  ],
+  "focused_tests": {
+    "command": "qualified operator environment python -m pytest -q tests/test_provision_capture_runtime_java_guard.py tests/test_regime_a_a4_runner.py",
+    "result": "18 passed, 3 subtests passed",
+    "qualified_java_home_live_check": "PASS"
+  },
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+  "old_authorization_v5_obsolete": true,
+  "same_spec_retry_required": "regime_a_v1_t01"
+}

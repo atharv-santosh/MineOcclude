@@ -39,11 +39,27 @@ verify_java() {
         echo "Pinned Java executable is absent: $JAVA_EXE" >&2
         return 1
     }
-    "$JAVA_EXE" -version 2>&1 | grep -F 'version "17.0.19' >/dev/null || {
-        echo "Java 17.0.19+10 is required: $JAVA_EXE" >&2
-        "$JAVA_EXE" -version >&2 || true
+    local version_output version_line runtime_line
+    version_output=$("$JAVA_EXE" -version 2>&1) || {
+        echo "Pinned Java executable failed version inspection: $JAVA_EXE" >&2
+        printf '%s\n' "$version_output" >&2
         return 1
     }
+    version_line=$(printf '%s\n' "$version_output" | sed -n '1p')
+    runtime_line=$(printf '%s\n' "$version_output" | sed -n '2p')
+    if [[ "$version_line" =~ ^openjdk\ version\ \"17\.0\.19\"([[:space:]].*)?$ ]] \
+        && [[ "$runtime_line" =~ \(build[[:space:]]17\.0\.19\+10(-LTS)?\)$ ]]; then
+        return 0
+    fi
+    if [[ "$version_line" =~ ^openjdk\ version\ \"17\.0\.20\"([[:space:]].*)?$ ]] \
+        && [[ "$runtime_line" == "OpenJDK Runtime Environment Corretto-17.0.20.8.1 (build 17.0.20+8-LTS)" ]]; then
+        return 0
+    fi
+    {
+        echo "Approved Java 17.0.19+10 or Corretto 17.0.20+8-LTS is required: $JAVA_EXE"
+        printf '%s\n' "$version_output"
+    } >&2
+    return 1
 }
 
 provision() {
@@ -514,11 +530,12 @@ start_client() {
 
 case "${1:-provision}" in
     provision) provision ;;
+    verify-java) verify_java ;;
     start-display) start_display ;;
     start-server) start_server ;;
     start-client) start_client ;;
     *)
-        echo "Usage: $0 [provision|start-display|start-server|start-client]" >&2
+        echo "Usage: $0 [provision|verify-java|start-display|start-server|start-client]" >&2
         exit 2
         ;;
 esac
