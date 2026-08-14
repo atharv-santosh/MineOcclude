@@ -124,19 +124,29 @@ NO_SHEEP_BLOCKER = Blocker(
         "A registered negative-control audit (mineocclude.baselines.controls"
         ".audit_occluder_only_control) run against the real 360 no-sheep "
         "rows -- these rows are real and present (control_type="
-        "'no_object_control', 6 trajectories, one per layout) but are all "
-        "status='excluded' with exclusion_reason="
-        "'no_object_control_not_oracle_eligible' (no mu_oracle target exists "
-        "for a frame with no object), so build_execution_universe's "
-        "accepted-only contexts never include them and no baseline family "
-        "has ever been run against them"
+        "'no_object_control', 6 trajectories, one per layout), excluded from "
+        "oracle scoring by design (exclusion_reason="
+        "'no_object_control_not_oracle_eligible', no mu_oracle target exists "
+        "for a frame with no object). Verified but unresolved: every one of "
+        "these 360 rows is also Person C's own quarantined=true, "
+        "quarantine_category='invalid_geometry' -- most likely a structural "
+        "artifact of geometric visibility being undefined with no object to "
+        "locate (not a disagreement category like 'geometry_hidden_detector_"
+        "visible'), but this was not traced to Person C's exact "
+        "classification code, so it is reported as an open question, not "
+        "assumed either way. Running the negative control before this is "
+        "resolved risks building a real scientific finding on data Person C "
+        "has flagged, which needs a decision, not a silent judgment call."
     ),
-    expected_owner="person_d",
+    expected_owner="person_c",
     expected_schema_or_version="person-d-occluder-only-negative-control-audit-v0-1",
     required_identity_fields=("trajectory_id", "model_frame_idx", "control_type"),
     exact_command_after_receipt=(
-        "build TrajectoryContexts for the excluded no_object_control rows, "
-        "run each baseline family against them, and call "
+        "confirm with Person C whether quarantine_category='invalid_geometry' "
+        "on no_object_control rows is the expected, harmless consequence of "
+        "having no object to compute geometric visibility for, or a real "
+        "capture-quality defect; if confirmed harmless, build TrajectoryContexts "
+        "for these rows, run each baseline family against them, and call "
         "mineocclude.baselines.controls.audit_occluder_only_control"
     ),
 )
@@ -597,11 +607,14 @@ def build_all(
             notes=(
                 (
                     "360 real no-sheep rows exist (6 trajectories, one per "
-                    "layout) but are excluded from oracle-target scoring by "
-                    "design (no mu_oracle target exists with no object); no "
-                    "structural negative-control audit has been run and "
-                    "registered against them yet -- structurally empty and "
-                    "blocked, not a claim that the data does not exist."
+                    "layout), excluded from oracle-target scoring by design "
+                    "(no mu_oracle target with no object). Every one is also "
+                    "quarantined=true, quarantine_category='invalid_geometry' "
+                    "-- verified but not traced to Person C's exact "
+                    "classification code, so whether this is a harmless "
+                    "structural consequence of having no target or a real "
+                    "capture-quality flag is an open question, not assumed "
+                    "either way. See NO_SHEEP_BLOCKER."
                 ),
             ),
         ),
@@ -623,11 +636,18 @@ def build_all(
             ),
             notes=(
                 (
-                    "Zero control failures were registered by this real run: all "
-                    "eight families completed, every non-applicable row carries a "
-                    "reason, and admission reconciles exactly to Person B's "
-                    "declared accounting (reconciliation_mismatch_count=0 in "
-                    "execution_universe.json)."
+                    "Zero control failures were registered across what has "
+                    "actually been checked: all eight families completed, "
+                    "every non-applicable row carries a reason, admission "
+                    "reconciles exactly to Person B's declared accounting "
+                    "(reconciliation_mismatch_count=0 in "
+                    "execution_universe.json), and the no-wall structural "
+                    "control implicitly passed inside the Step 4.3 gate "
+                    "(audit_no_wall_control). This is not comprehensive: the "
+                    "no-sheep structural control "
+                    "(audit_occluder_only_control) has not been run yet -- "
+                    "see no_object_negative_control -- so a real failure "
+                    "there would not be reflected in this count."
                 ),
             ),
         ),

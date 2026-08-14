@@ -215,11 +215,18 @@ drift) before being trusted.
   below). Only `no_object_negative_control` stays blocked: 360 real
   no-sheep rows exist (6 trajectories, one per layout; `control_type=
   "no_object_control"`), excluded from oracle-target scoring by design
-  (there is no `mu_oracle_blocks` target with no object to locate), but
-  no structural negative-control audit
-  (`mineocclude.baselines.controls.audit_occluder_only_control`) has been
-  run and registered against them yet -- a real, actionable next step,
-  not a claim that the data is absent.
+  (there is no `mu_oracle_blocks` target with no object to locate) --
+  but every one of these 360 rows is also Person C's own
+  `quarantined=true, quarantine_category="invalid_geometry"`. Verified
+  but not resolved: this is most likely the structural, harmless
+  consequence of geometric visibility being undefined with no object to
+  locate (a different category from the two real geometry/detector
+  *disagreement* categories), but that wasn't traced to Person C's exact
+  classification code. Running
+  `mineocclude.baselines.controls.audit_occluder_only_control` before
+  that's confirmed would mean publishing a real scientific finding on
+  data Person C itself has flagged -- an open question for Person C, not
+  a silent judgment call either way.
 * `step6_5_result_lock.json` -- real locked facts (10,592 predictions,
   3,786 scored, 6,806 non-applicable, 0 missing, 42 accepted / 24 excluded
   trajectories), bound to Person B's real row-universe-receipt and
