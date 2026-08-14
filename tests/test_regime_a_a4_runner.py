@@ -65,6 +65,24 @@ class Capture:
         self.closed += 1
 
 
+class ResumableCapture(Capture):
+    def __init__(self, *, accept: bool = True, fail: bool = False):
+        super().__init__()
+        self.accept = accept
+        self.fail = fail
+        self.resume_calls: list[str] = []
+
+    def resume_capture(self, value, partial):
+        self.resume_calls.append(value["trajectory_spec_id"])
+        if self.fail:
+            raise RegimeAError("synthetic post-capture validation failure")
+        if not self.accept:
+            return False
+        super().capture(value, partial)
+        self.calls.clear()
+        return True
+
+
 class Model:
     def __init__(self):
         self.load_count = 0
@@ -173,6 +191,38 @@ class RegimeAA4RunnerTests(unittest.TestCase):
             self.assertEqual(capture2.calls, [("synthetic_t01", 7)])
             records = [row for row in runner.ledger.records if row["trajectory_spec_id"] == "synthetic_t01"]
             self.assertTrue(any(row.get("retry_same_spec") for row in records))
+
+    def test_identity_proven_raw_partial_resumes_without_recapture(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            value = spec()
+            partial = AtomicTrajectoryStore(root / "trajectories").begin(
+                value["trajectory_spec_id"], value["spec_hash"]
+            )
+            (partial / "raw").mkdir()
+            capture, model = ResumableCapture(), Model()
+            runner = make_runner(root, capture=capture, model=model)
+            self.assertEqual(runner.run([value]), ["synthetic_t01"])
+            self.assertEqual(capture.resume_calls, ["synthetic_t01"])
+            self.assertEqual(capture.calls, [])
+            self.assertEqual(model.calls, ["synthetic_t01"])
+            captured = [row for row in runner.ledger.records if row["state"] == "CAPTURED"]
+            self.assertTrue(captured[-1]["resumed_existing_raw_capture"])
+
+    def test_failed_post_capture_resume_preserves_partial_and_blocks_model(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            value = spec()
+            partial = AtomicTrajectoryStore(root / "trajectories").begin(
+                value["trajectory_spec_id"], value["spec_hash"]
+            )
+            (partial / "raw").mkdir()
+            capture, model = ResumableCapture(fail=True), Model()
+            with self.assertRaises(RegimeAError):
+                make_runner(root, capture=capture, model=model).run([value])
+            self.assertTrue(partial.is_dir())
+            self.assertEqual(model.calls, [])
+            self.assertFalse(any(row["state"] == "CAPTURED" for row in HashChainLedger(root / "progress_ledger.jsonl").records))
 
     def test_partial_identity_and_atomic_final(self):
         with tempfile.TemporaryDirectory() as tmp:

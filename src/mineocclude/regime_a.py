@@ -698,17 +698,25 @@ class AtomicTrajectoryStore:
     def discard_same_spec_partial(self, spec_id: str, spec_hash: str) -> bool:
         """Discard only an identity-proven, non-final partial retry unit."""
 
+        partial = self.same_spec_partial(spec_id, spec_hash)
+        if partial is None:
+            return False
+        shutil.rmtree(partial)
+        return True
+
+    def same_spec_partial(self, spec_id: str, spec_hash: str) -> Path | None:
+        """Return only an identity-proven partial, without mutating it."""
+
         partial = self.root / f".{spec_id}.{spec_hash[:16]}.partial"
         if not partial.exists():
-            return False
+            return None
         marker = partial / "partial_identity.json"
         if not marker.is_file():
             raise RegimeAError("partial staging lacks an identity marker")
         identity = json.loads(marker.read_text(encoding="utf-8"))
         if identity != {"trajectory_spec_id": spec_id, "spec_hash": spec_hash}:
             raise RegimeAError("partial staging identity mismatch")
-        shutil.rmtree(partial)
-        return True
+        return partial
 
     def finalize(self, partial: Path, spec_id: str, spec_hash: str) -> Path:
         files = sorted(path for path in partial.rglob("*") if path.is_file())

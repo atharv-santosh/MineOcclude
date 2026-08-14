@@ -259,13 +259,30 @@ class A4ExecutionRunner:
                     self._finish_durability(spec, final)
                     completed.add(spec_id)
                     continue
-                retried = self.store.discard_same_spec_partial(spec_id, spec_hash)
-                self.ledger.append(spec_id, "PLANNED", spec_hash=spec_hash, seed=int(spec["seed"]), retry_same_spec=retried)
-                partial = self.store.begin(spec_id, spec_hash)
-                self.ledger.append(spec_id, "RUNNING", spec_hash=spec_hash, seed=int(spec["seed"]), retry_same_spec=retried)
-                dispatched.append(spec_id)
-                self.capture_worker.capture(spec, partial)
-                self.ledger.append(spec_id, "CAPTURED", spec_hash=spec_hash)
+                partial = self.store.same_spec_partial(spec_id, spec_hash)
+                resume_capture = getattr(self.capture_worker, "resume_capture", None)
+                resumed = bool(
+                    partial is not None
+                    and callable(resume_capture)
+                    and resume_capture(spec, partial)
+                )
+                if resumed:
+                    dispatched.append(spec_id)
+                    self.ledger.append(
+                        spec_id,
+                        "CAPTURED",
+                        spec_hash=spec_hash,
+                        resumed_existing_raw_capture=True,
+                    )
+                else:
+                    retried = self.store.discard_same_spec_partial(spec_id, spec_hash)
+                    self.ledger.append(spec_id, "PLANNED", spec_hash=spec_hash, seed=int(spec["seed"]), retry_same_spec=retried)
+                    partial = self.store.begin(spec_id, spec_hash)
+                    self.ledger.append(spec_id, "RUNNING", spec_hash=spec_hash, seed=int(spec["seed"]), retry_same_spec=retried)
+                    dispatched.append(spec_id)
+                    self.capture_worker.capture(spec, partial)
+                    self.ledger.append(spec_id, "CAPTURED", spec_hash=spec_hash)
+                assert partial is not None
                 self.model_worker.extract(spec, partial)
                 validate_required_inventory(partial, durable=False)
                 final = self.store.finalize(partial, spec_id, spec_hash)

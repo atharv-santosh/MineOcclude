@@ -1,0 +1,99 @@
+{
+  "artifact_id": "regime-a-a4-magenta-adapter-supersession-v1.0",
+  "status": "PASS_PENDING_COMMIT",
+  "created_utc": "2026-08-14T04:17:46Z",
+  "previous_commit": "39cc5c9dab86bb224bdbe488c5e2fb115205efaa",
+  "final_repair_commit": "PENDING_COMMIT",
+  "chronology": {
+    "t01_raw_capture_existed_before_repair": true,
+    "t01_raw_capture_complete_before_repair": true,
+    "activation_extraction_before_repair": false,
+    "scientific_decoding_outcomes_before_repair": 0,
+    "failure_boundary": "deterministic post-capture magenta validation before detector semantics executed",
+    "failure": "Regime-A passed a numpy.ndarray to detect_magenta; its frozen input validator requires nested Python Sequence rows and pixels.",
+    "repair_selected_without_examining_t01_detector_outcomes": true
+  },
+  "repair": {
+    "boundary": "Regime-A PNG-to-detector caller adapter",
+    "representation": "nested list rows containing RGB tuples of exact Python int channels in [0,255]",
+    "pixel_source": "Pillow RGB PNG decode and direct getdata sequence",
+    "numpy_tolist_used": false,
+    "detector_algorithm_changed": false,
+    "hsv_ranges_changed": false,
+    "blob_or_morphology_semantics_changed": false,
+    "visibility_semantics_changed": false,
+    "strict_post_capture_resume_added": true
+  },
+  "non_scientific_equivalence": {
+    "command": "qualified operator environment PYTHONPATH=repo:repo/src python -m unittest -v tests.test_regime_a_magenta_adapter tests.test_regime_a_a4_runner",
+    "result": "16 tests passed",
+    "scientific_fixtures_used": false,
+    "cases": [
+      "no-magenta",
+      "valid magenta blob",
+      "tiny invalid magenta blob",
+      "boundary blob pixels",
+      "mixed background",
+      "640x360 RGB shape",
+      "malformed mode, size, dtype, and shape refusal",
+      "exact DetectionResult equality with historical nested-list inputs",
+      "resume without recapture",
+      "post-capture failure blocks activation and preserves partial"
+    ]
+  },
+  "preserved_t01_raw_capture": {
+    "trajectory_spec_id": "regime_a_v1_t01",
+    "seed": 1932859534325097948,
+    "spec_hash": "f8649d4a3810b99e5f21a0ebf230220af3dfc026373c954b4eb6a63ac49c49c0",
+    "reusable": true,
+    "recapture_required": false,
+    "raw_file_count": 263,
+    "raw_frame_count": 260,
+    "raw_stream_count": 3,
+    "raw_byte_size": 19015760,
+    "raw_inventory_sha256": "7259f16f7e44c011ed8f71d8dde94a76031e32257799938638e0ca95442986f1",
+    "raw_inventory_hash_method": "SHA256 of compact canonical JSON over sorted path, byte_size, sha256 rows relative to raw/",
+    "server_state_sha256": "c5a717f9a68d78c0991ff691806f0a03c12d796c5fc0e31d6b597d59a0b7da90",
+    "client_tick_sha256": "525c24de5221543cdf6c199bf0facf6ca5165be8a1d9a983cf6e4510c60e41d9",
+    "actions_sha256": "798d3bf38a4f6465e1780ef1b7ae857da00a036f791c837124600a860dfb0780",
+    "capture_complete_sha256": "e6fe661313aa18644f5925e1fc5c41f2540cb805c3a4b5f7a88fba7eaae360f2",
+    "reset_result_sha256": "ceabf9ed533654c298fb0bbf844146b9b164d5136b1b5ab69300f69141f82277",
+    "copied_streams_equal_runtime_sources": true,
+    "copied_frames_equal_runtime_sources": true,
+    "strict_resume_gate_structural_check": "PASS",
+    "minecraft_started_by_structural_check": false,
+    "post_capture_scientific_processing_invoked_by_structural_check": false
+  },
+  "changed_files": [
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "77c278807e7b8392a4dd04cdc4f92fbecc45061512f047b69fd9dfd6502cf2b1"
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "f338fa27387965e38362bc04e051c18e480d8fecf2d7d194bb5cbed62c533857"
+    },
+    {
+      "path": "src/mineocclude/regime_a.py",
+      "sha256": "2b8149667020b0a9e1d882762a9a6ee4e60c45aa9a39318fcef8a61e4e05240c"
+    },
+    {
+      "path": "src/mineocclude/regime_a_execution.py",
+      "sha256": "5ebf8c5f9f4768327f18b6dfd3edc5c5b42db2f23630951b0be92f7ba759ceb0"
+    },
+    {
+      "path": "tests/test_regime_a_a4_runner.py",
+      "sha256": "e2b258b7d2d32e065683232e291ff44fc393706b11e2483560d6a77682d80aa3"
+    },
+    {
+      "path": "tests/test_regime_a_magenta_adapter.py",
+      "sha256": "8b3c36c9676a1a0a6a02f58425c083097887c2755d250a5875a09771f41f6cf5"
+    }
+  ],
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+  "specifications_changed": false,
+  "seeds_changed": false,
+  "analysis_authority_changed": false,
+  "authorization_v7_obsolete": true
+}

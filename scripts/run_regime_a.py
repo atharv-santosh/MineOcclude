@@ -86,6 +86,7 @@ def authorization_bindings() -> dict[str, str]:
         "a4_display_tool_recovery_source_freeze_receipt_sha256": sha256_file(STATUS / "a4_display_tool_recovery_source_freeze_receipt.json"),
         "a4_java_launcher_guard_supersession_receipt_sha256": sha256_file(STATUS / "a4_java_launcher_guard_supersession_receipt.json"),
         "a4_client_focus_precheck_supersession_receipt_sha256": sha256_file(STATUS / "a4_client_focus_precheck_supersession_receipt.json"),
+        "a4_magenta_adapter_supersession_receipt_sha256": sha256_file(STATUS / "a4_magenta_adapter_supersession_receipt.json"),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "scientific_run_id": SCIENTIFIC_RUN_ID,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",
@@ -108,6 +109,32 @@ def _write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
     with path.open("x", encoding="utf-8") as stream:
         for row in rows:
             stream.write(json.dumps(row, sort_keys=True, allow_nan=False) + "\n")
+
+
+def detector_rgb_rows(
+    path: Path, *, expected_size: tuple[int, int] | None = None
+) -> list[list[tuple[int, int, int]]]:
+    """Decode one RGB PNG into the detector's nested Sequence contract."""
+
+    with Image.open(path) as image:
+        image.load()
+        if image.mode != "RGB":
+            raise RegimeAError(f"detector frame must be RGB, not {image.mode}")
+        if expected_size is not None and image.size != expected_size:
+            raise RegimeAError(
+                f"detector frame is {image.size[0]}x{image.size[1]}, not "
+                f"{expected_size[0]}x{expected_size[1]}"
+            )
+        width, height = image.size
+        pixels = list(image.getdata())
+    if len(pixels) != width * height or any(
+        not isinstance(pixel, tuple)
+        or len(pixel) != 3
+        or any(not isinstance(channel, int) or isinstance(channel, bool) for channel in pixel)
+        for pixel in pixels
+    ):
+        raise RegimeAError("detector RGB decode did not yield exact integer RGB pixels")
+    return [pixels[offset : offset + width] for offset in range(0, len(pixels), width)]
 
 
 class ProductionCaptureWorker:
@@ -136,6 +163,277 @@ class ProductionCaptureWorker:
         self.processes: list[object] = []
         self.runtime = None
 
+    def _capture_context(self, spec: dict[str, object]) -> dict[str, object]:
+        from mineocclude.data.noise_schedule import generate_noise_schedule, serialize_schedule
+
+        episode_id = int(spec["episode_id"])
+        frames = int(spec["expected_max_frames"])
+        schedule = generate_noise_schedule(
+            int(spec["noise_seed"]), frames, float(spec["motion_noise_q"])
+        )
+        noise_values = np.asarray([row.noise_draw for row in schedule.rows], dtype="<f8")
+        if hashlib.sha256(noise_values.tobytes()).hexdigest() != spec["noise_schedule_sha256"]:
+            raise RegimeAError("frozen raw noise schedule hash mismatch")
+        signed_speed = float(spec["speed_blocks_per_second"]) * (
+            1 if spec["direction"] == "LEFT_TO_RIGHT" else -1
+        )
+        motion_document = {
+            "schedule_format_version": "mineocclude-motion-schedule-v0.1",
+            "trajectory_spec_id": spec["trajectory_spec_id"],
+            "spec_hash": spec["spec_hash"],
+            "expected_ticks": frames,
+            "segments": [{
+                "start_model_frame_idx": 0,
+                "stop_model_frame_idx_exclusive": frames,
+                "signed_speed_blocks_per_second": signed_speed,
+            }],
+        }
+        return {
+            "episode_id": episode_id,
+            "frames": frames,
+            "server_episode": self.server_root / f"mineocclude_out/episode_{episode_id}",
+            "client_episode": self.client_root / f"mineocclude_client_out/episode_{episode_id}",
+            "noise_path": self.server_root / f"mineocclude_schedules/episode_{episode_id}.jsonl",
+            "motion_path": self.server_root / f"mineocclude_motion_schedules/episode_{episode_id}.json",
+            "noise_bytes": serialize_schedule(schedule),
+            "motion_bytes": (json.dumps(motion_document, sort_keys=True) + "\n").encode(),
+            "schedule": schedule,
+            "signed_speed": signed_speed,
+        }
+
+    def _validate_and_package(
+        self, spec: dict[str, object], partial: Path, context: dict[str, object]
+    ) -> None:
+        from mineocclude.data.build_dataset import process_episode
+        from mineocclude.data.package_episode import package_and_validate
+        from mineocclude.vision.magenta import HsvRange, detect_magenta
+
+        frames = int(context["frames"])
+        server_episode = Path(context["server_episode"])
+        client_episode = Path(context["client_episode"])
+        noise_path = Path(context["noise_path"])
+        motion_path = Path(context["motion_path"])
+        schedule = context["schedule"]
+        signed_speed = float(context["signed_speed"])
+        raw = partial / "raw"
+        state = read_jsonl(raw / "server_state.jsonl")
+        ticks = read_jsonl(raw / "client_tick.jsonl")
+        actions = read_jsonl(raw / "actions.jsonl")
+        if not (len(state) == len(ticks) == len(actions) == frames):
+            raise RegimeAError("capture stream cardinality mismatch")
+        uuids = {row.get("target_entity_uuid") for row in state}
+        expected_position = float(spec["start_world_x"])
+        for index, row in enumerate(state):
+            expected_position = min(
+                8.0,
+                max(
+                    -8.0,
+                    expected_position
+                    + signed_speed * 0.05
+                    + float(schedule.rows[index].noise_draw),
+                ),
+            )
+            if (
+                row.get("server_tick") != index
+                or row.get("trajectory_spec_id") != spec["trajectory_spec_id"]
+                or row.get("spec_hash") != spec["spec_hash"]
+                or row.get("seed") != spec["seed"]
+                or row.get("scene") != "NORMAL"
+                or row.get("target_respawn_count") != 0
+                or not np.isclose(
+                    float(row["sheep_x"]), expected_position, atol=1e-9, rtol=0
+                )
+            ):
+                raise RegimeAError(f"server state mismatch at frame {index}")
+            if (
+                ticks[index].get("server_tick") != index
+                or actions[index].get("server_tick") != index
+            ):
+                raise RegimeAError("client/server frame alignment mismatch")
+        if len(uuids) != 1 or None in uuids:
+            raise RegimeAError("target entity UUID was not retained")
+
+        config = json.loads(
+            (
+                ROOT
+                / "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json"
+            ).read_text()
+        )["configuration"]["detector_settings"]
+        thresholds = tuple(HsvRange(*values) for values in config["hsv_ranges"])
+        visibility = []
+        frame_map = []
+        homography = json.loads(
+            (
+                ROOT
+                / "data/handoff_e/person_e_v0_4_homography_refit_v0_2/layout_01_homography.json"
+            ).read_text()
+        )
+        coordinates = []
+        for index, row in enumerate(state):
+            result = detect_magenta(
+                detector_rgb_rows(
+                    raw / f"frames/{index:06d}.png", expected_size=(640, 360)
+                ),
+                hsv_ranges=thresholds,
+                min_area_pixels=config["min_area_pixels"],
+                max_area_pixels=config["max_area_pixels"],
+                open_iterations=config["open_iterations"],
+                close_iterations=config["close_iterations"],
+                morphology_radius_pixels=config["morphology_radius_pixels"],
+                connectivity=config["connectivity"],
+            )
+            key = {
+                "trajectory_id": spec["trajectory_spec_id"],
+                "model_frame_idx": index,
+                "server_tick": index,
+                "render_frame_idx": index,
+                "action_idx": index,
+            }
+            visibility.append({
+                **key,
+                "geometric_status": "visible" if row["geometric_visible"] else "occluded",
+                "magenta_status": result.status,
+                "magenta_area_pixels": result.area_pixels,
+            })
+            frame_map.append({
+                **key,
+                "target_entity_uuid": next(iter(uuids)),
+                "frame_path": f"raw/frames/{index:06d}.png",
+            })
+            coordinates.append({
+                **key,
+                **project_world_to_coordinates(
+                    float(row["sheep_x"]),
+                    float(row["sheep_z"]),
+                    homography["inverse_matrix"],
+                ),
+            })
+        visibility = assign_stable_hidden_tau(visibility, str(spec["direction"]))
+        targets = [
+            int(row["model_frame_idx"])
+            for row in visibility
+            if row["tau"] in range(1, 20)
+        ]
+        expected_targets = list(
+            range(
+                int(spec["expected_stable_hidden_onset_frame"]),
+                int(spec["expected_stable_hidden_onset_frame"]) + 19,
+            )
+        )
+        if targets != expected_targets:
+            raise RegimeAError("observed stable-hidden targets differ from frozen targets")
+        _write_jsonl(raw / "visibility.jsonl", visibility)
+        _write_jsonl(raw / "frame_map.jsonl", frame_map)
+        _write_jsonl(partial / "coordinates.jsonl", coordinates)
+
+        processed = partial / "capture_validation"
+        summary = process_episode(
+            str(server_episode),
+            str(client_episode),
+            str(processed),
+            run_empirical=True,
+            canonical_640=True,
+        )
+        if not summary.get("accepted") or summary.get("n_frames") != frames:
+            raise RegimeAError(
+                f"validated capture adapter refused trajectory: {summary.get('problems')}"
+            )
+        _package, result = package_and_validate(
+            str(processed),
+            str(server_episode),
+            str(client_episode),
+            str(noise_path),
+            str(ROOT),
+            SCIENTIFIC_RUN_ID,
+        )
+        if not result.accepted:
+            raise RegimeAError("frozen capture-package validator refused trajectory")
+        shutil.copy2(
+            processed / "capture_package_v0_1.json",
+            partial / "capture_package_v0_1.json",
+        )
+        shutil.copy2(noise_path, partial / "noise_schedule.jsonl")
+        shutil.copy2(motion_path, partial / "motion_schedule.json")
+
+    def resume_capture(self, spec: dict[str, object], partial: Path) -> bool:
+        """Resume only an exact, complete raw capture at post-capture validation."""
+
+        context = self._capture_context(spec)
+        raw = partial / "raw"
+        if not raw.exists():
+            return False
+        frames = int(context["frames"])
+        expected_partial_files = {"partial_identity.json"}
+        expected_partial_files.update(
+            {
+                "raw/server_state.jsonl",
+                "raw/client_tick.jsonl",
+                "raw/actions.jsonl",
+                *(f"raw/frames/{index:06d}.png" for index in range(frames)),
+            }
+        )
+        observed_partial_files = {
+            path.relative_to(partial).as_posix()
+            for path in partial.rglob("*")
+            if path.is_file()
+        }
+        if observed_partial_files != expected_partial_files:
+            raise RegimeAError("raw partial inventory is incomplete or beyond the resumable boundary")
+
+        server_episode = Path(context["server_episode"])
+        client_episode = Path(context["client_episode"])
+        reset_path = server_episode / "reset_result.json"
+        complete_path = client_episode / "capture_complete.json"
+        if not reset_path.is_file() or not complete_path.is_file():
+            raise RegimeAError("reusable raw capture lacks runtime completion receipts")
+        reset = json.loads(reset_path.read_text(encoding="utf-8"))
+        if (
+            reset.get("episode_id") != context["episode_id"]
+            or reset.get("trajectory_spec_id") != spec["trajectory_spec_id"]
+            or reset.get("spec_hash") != spec["spec_hash"]
+            or reset.get("seed") != spec["seed"]
+        ):
+            raise RegimeAError("reusable raw capture runtime identity mismatch")
+        complete = json.loads(complete_path.read_text(encoding="utf-8"))
+        if (
+            complete.get("episode_id") != context["episode_id"]
+            or complete.get("frame_count") != frames
+            or complete.get("final_render_frame_idx") != frames - 1
+            or complete.get("pending_writes") != 0
+            or complete.get("writer_errors") != 0
+            or complete.get("drained") is not True
+        ):
+            raise RegimeAError("reusable raw capture is not completely drained")
+        noise_path = Path(context["noise_path"])
+        motion_path = Path(context["motion_path"])
+        if (
+            not noise_path.is_file()
+            or noise_path.read_bytes() != context["noise_bytes"]
+            or not motion_path.is_file()
+            or motion_path.read_bytes() != context["motion_bytes"]
+        ):
+            raise RegimeAError("reusable raw capture schedule bytes mismatch")
+        source_pairs = [
+            (raw / "server_state.jsonl", server_episode / "server_state.jsonl"),
+            (raw / "client_tick.jsonl", client_episode / "client_tick.jsonl"),
+            (raw / "actions.jsonl", client_episode / "raw_actions.jsonl"),
+        ]
+        source_pairs.extend(
+            (
+                raw / f"frames/{index:06d}.png",
+                client_episode / f"frames/{index:06d}.png",
+            )
+            for index in range(frames)
+        )
+        if any(
+            not source.is_file()
+            or sha256_file(copied) != sha256_file(source)
+            for copied, source in source_pairs
+        ):
+            raise RegimeAError("reusable raw capture differs from runtime source bytes")
+        self._validate_and_package(spec, partial, context)
+        return True
+
     def _ensure_started(self) -> None:
         if self.runtime is not None:
             return
@@ -157,21 +455,19 @@ class ProductionCaptureWorker:
         self.runtime.precheck()
 
     def capture(self, spec: dict[str, object], partial: Path) -> None:
-        from mineocclude.data.build_dataset import process_episode
-        from mineocclude.data.noise_schedule import generate_noise_schedule, serialize_schedule
-        from mineocclude.data.package_episode import package_and_validate
-        from mineocclude.vision.magenta import HsvRange, detect_magenta
-
+        context = self._capture_context(spec)
         self._ensure_started()
         assert self.runtime is not None
-        episode_id = int(spec["episode_id"])
-        frames = int(spec["expected_max_frames"])
-        server_episode = self.server_root / f"mineocclude_out/episode_{episode_id}"
-        client_episode = self.client_root / f"mineocclude_client_out/episode_{episode_id}"
+        episode_id = int(context["episode_id"])
+        frames = int(context["frames"])
+        server_episode = Path(context["server_episode"])
+        client_episode = Path(context["client_episode"])
         if server_episode.exists() or client_episode.exists():
             reset = server_episode / "reset_result.json"
             if not reset.is_file():
-                raise RegimeAError("existing runtime episode lacks a same-spec identity receipt")
+                raise RegimeAError(
+                    "existing runtime episode lacks a same-spec identity receipt"
+                )
             identity = json.loads(reset.read_text(encoding="utf-8"))
             if (
                 identity.get("episode_id") != episode_id
@@ -183,33 +479,26 @@ class ProductionCaptureWorker:
             if client_episode.exists():
                 shutil.rmtree(client_episode)
 
-        schedule = generate_noise_schedule(int(spec["noise_seed"]), frames, float(spec["motion_noise_q"]))
-        noise_values = np.asarray([row.noise_draw for row in schedule.rows], dtype="<f8")
-        if hashlib.sha256(noise_values.tobytes()).hexdigest() != spec["noise_schedule_sha256"]:
-            raise RegimeAError("frozen raw noise schedule hash mismatch")
-        noise_path = self.server_root / f"mineocclude_schedules/episode_{episode_id}.jsonl"
-        motion_path = self.server_root / f"mineocclude_motion_schedules/episode_{episode_id}.json"
+        noise_path = Path(context["noise_path"])
+        motion_path = Path(context["motion_path"])
         noise_path.parent.mkdir(parents=True, exist_ok=True)
         motion_path.parent.mkdir(parents=True, exist_ok=True)
-        noise_path.write_bytes(serialize_schedule(schedule))
-        signed_speed = float(spec["speed_blocks_per_second"]) * (1 if spec["direction"] == "LEFT_TO_RIGHT" else -1)
-        motion_path.write_text(json.dumps({
-            "schedule_format_version": "mineocclude-motion-schedule-v0.1",
-            "trajectory_spec_id": spec["trajectory_spec_id"],
-            "spec_hash": spec["spec_hash"],
-            "expected_ticks": frames,
-            "segments": [{
-                "start_model_frame_idx": 0,
-                "stop_model_frame_idx_exclusive": frames,
-                "signed_speed_blocks_per_second": signed_speed,
-            }],
-        }, sort_keys=True) + "\n", encoding="utf-8")
+        noise_path.write_bytes(context["noise_bytes"])
+        motion_path.write_bytes(context["motion_bytes"])
         offset = len(self.runtime.log_text())
         self.runtime.send([
-            "mineocclude mode normal", "mineocclude duration 0", "mineocclude reveal 0",
-            "mineocclude warmup 60", "mineocclude impulse -1 0", "mineocclude pairshift 0",
+            "mineocclude mode normal",
+            "mineocclude duration 0",
+            "mineocclude reveal 0",
+            "mineocclude warmup 60",
+            "mineocclude impulse -1 0",
+            "mineocclude pairshift 0",
             "mineocclude lockcam on",
-            f"mineocclude startspec layout_01 {episode_id} {spec['seed']} {spec['motion_noise_q']} {frames} {spec['start_world_x']} {spec['trajectory_spec_id']} {spec['spec_hash']}",
+            (
+                f"mineocclude startspec layout_01 {episode_id} {spec['seed']} "
+                f"{spec['motion_noise_q']} {frames} {spec['start_world_x']} "
+                f"{spec['trajectory_spec_id']} {spec['spec_hash']}"
+            ),
         ])
         self.runtime.wait_log(rf"episode {episode_id} armed", 30, offset)
         self.runtime.wait_log(rf"episode {episode_id} recording started", 30, offset)
@@ -221,62 +510,7 @@ class ProductionCaptureWorker:
         shutil.copy2(server_episode / "server_state.jsonl", raw / "server_state.jsonl")
         shutil.copy2(client_episode / "client_tick.jsonl", raw / "client_tick.jsonl")
         shutil.copy2(client_episode / "raw_actions.jsonl", raw / "actions.jsonl")
-        state = read_jsonl(raw / "server_state.jsonl")
-        ticks = read_jsonl(raw / "client_tick.jsonl")
-        actions = read_jsonl(raw / "actions.jsonl")
-        if not (len(state) == len(ticks) == len(actions) == frames):
-            raise RegimeAError("capture stream cardinality mismatch")
-        uuids = {row.get("target_entity_uuid") for row in state}
-        expected_position = float(spec["start_world_x"])
-        for index, row in enumerate(state):
-            expected_position = min(8.0, max(-8.0, expected_position + signed_speed * 0.05 + float(schedule.rows[index].noise_draw)))
-            if (
-                row.get("server_tick") != index
-                or row.get("trajectory_spec_id") != spec["trajectory_spec_id"]
-                or row.get("spec_hash") != spec["spec_hash"]
-                or row.get("seed") != spec["seed"]
-                or row.get("scene") != "NORMAL"
-                or row.get("target_respawn_count") != 0
-                or not np.isclose(float(row["sheep_x"]), expected_position, atol=1e-9, rtol=0)
-            ):
-                raise RegimeAError(f"server state mismatch at frame {index}")
-            if ticks[index].get("server_tick") != index or actions[index].get("server_tick") != index:
-                raise RegimeAError("client/server frame alignment mismatch")
-        if len(uuids) != 1 or None in uuids:
-            raise RegimeAError("target entity UUID was not retained")
-
-        config = json.loads((ROOT / "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json").read_text())["configuration"]["detector_settings"]
-        thresholds = tuple(HsvRange(*values) for values in config["hsv_ranges"])
-        visibility = []
-        frame_map = []
-        homography = json.loads((ROOT / "data/handoff_e/person_e_v0_4_homography_refit_v0_2/layout_01_homography.json").read_text())
-        coordinates = []
-        for index, row in enumerate(state):
-            result = detect_magenta(np.asarray(Image.open(raw / f"frames/{index:06d}.png").convert("RGB")), hsv_ranges=thresholds, min_area_pixels=config["min_area_pixels"], max_area_pixels=config["max_area_pixels"], open_iterations=config["open_iterations"], close_iterations=config["close_iterations"], morphology_radius_pixels=config["morphology_radius_pixels"], connectivity=config["connectivity"])
-            key = {"trajectory_id": spec["trajectory_spec_id"], "model_frame_idx": index, "server_tick": index, "render_frame_idx": index, "action_idx": index}
-            visibility.append({**key, "geometric_status": "visible" if row["geometric_visible"] else "occluded", "magenta_status": result.status, "magenta_area_pixels": result.area_pixels})
-            frame_map.append({**key, "target_entity_uuid": next(iter(uuids)), "frame_path": f"raw/frames/{index:06d}.png"})
-            coordinates.append({**key, **project_world_to_coordinates(float(row["sheep_x"]), float(row["sheep_z"]), homography["inverse_matrix"])})
-        visibility = assign_stable_hidden_tau(visibility, str(spec["direction"]))
-        targets = [int(row["model_frame_idx"]) for row in visibility if row["tau"] in range(1, 20)]
-        expected_targets = list(range(int(spec["expected_stable_hidden_onset_frame"]), int(spec["expected_stable_hidden_onset_frame"]) + 19))
-        if targets != expected_targets:
-            raise RegimeAError("observed stable-hidden targets differ from frozen targets")
-        _write_jsonl(raw / "visibility.jsonl", visibility)
-        _write_jsonl(raw / "frame_map.jsonl", frame_map)
-        _write_jsonl(partial / "coordinates.jsonl", coordinates)
-
-        processed = partial / "capture_validation"
-        summary = process_episode(str(server_episode), str(client_episode), str(processed), run_empirical=True, canonical_640=True)
-        if not summary.get("accepted") or summary.get("n_frames") != frames:
-            raise RegimeAError(f"validated capture adapter refused trajectory: {summary.get('problems')}")
-        package, result = package_and_validate(str(processed), str(server_episode), str(client_episode), str(noise_path), str(ROOT), SCIENTIFIC_RUN_ID)
-        if not result.accepted:
-            raise RegimeAError("frozen capture-package validator refused trajectory")
-        shutil.copy2(processed / "capture_package_v0_1.json", partial / "capture_package_v0_1.json")
-        shutil.copy2(noise_path, partial / "noise_schedule.jsonl")
-        shutil.copy2(motion_path, partial / "motion_schedule.json")
-
+        self._validate_and_package(spec, partial, context)
     def close(self) -> None:
         if self.processes:
             self.live.stop_runtime(self.processes)
