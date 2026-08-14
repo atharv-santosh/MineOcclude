@@ -47,7 +47,7 @@ synthetic run can never be silently mistaken for a satisfied gate.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Mapping, Optional, Sequence, Tuple
+from typing import Callable, Mapping, Optional, Sequence, Tuple
 
 from mineocclude.analysis.config import load_core_analysis_config
 from mineocclude.baselines.controls import audit_no_wall_control
@@ -114,6 +114,9 @@ def evaluate_no_wall_positive_control_gate(
     fold_manifest: Mapping[str, object],
     data_provenance: str,
     r2_threshold: float = STEP_4_3_R2_THRESHOLD,
+    attach_fold_assignments: Callable[..., Sequence[TrajectoryContext]] = (
+        attach_b_fold_assignments
+    ),
 ) -> PositiveControlGateFinding:
     """Run Step 4.3's positive-control ridge and report a fail-closed verdict.
 
@@ -122,6 +125,17 @@ def evaluate_no_wall_positive_control_gate(
     docstring. When blocked, no ridge is fit and no R^2 is computed;
     the finding's numeric fields are ``None``, never a fabricated or
     stubbed value.
+
+    ``attach_fold_assignments`` defaults to
+    :func:`mineocclude.baselines.export.attach_b_fold_assignments`
+    (the historical/production-fold-contract dispatch, unchanged). Pass
+    :func:`mineocclude.baselines.preactivation_fold_manifest_66_cell_v0_1
+    .attach_66_cell_fold_assignments` to run this gate against Person
+    B's real 66-cell pre-activation fold manifest instead -- a real,
+    later format that manifest was never structurally compatible with,
+    not a relaxation of the fail-closed contract. Both callables raise
+    on invalid input; whichever is supplied is still the sole source of
+    truth for fold membership.
 
     Raises :class:`PositiveControlGateError` if the no-wall structural
     audit fails, a target/position is missing for a submitted row, or
@@ -165,8 +179,8 @@ def evaluate_no_wall_positive_control_gate(
         )
 
     try:
-        annotated = attach_b_fold_assignments(contexts, fold_manifest=fold_manifest)
-    except BaselineExportError as error:
+        annotated = attach_fold_assignments(contexts, fold_manifest=fold_manifest)
+    except (BaselineExportError, ValueError) as error:
         raise PositiveControlGateError(
             f"could not attach Person B's real fold manifest: {error}"
         ) from error

@@ -24,9 +24,9 @@ the current A/B/C authorities and does not vendor copies of them.
       `80d41c5ca0e341263a7b0c683fae4b51be376c55` checkpoint -- recorded in
       `docs/contracts/schema_v1_0_signed_record.md`
       (`APPROVED_FOR_PHASE_1_FREEZE`). This covers Phase 0/1 interface
-      compatibility only; it does not approve real-data baselines, final
-      scientific comparisons, or the Step 4.3 positive-control gate (still
-      BLOCKED pending real no-wall data -- see below).
+      compatibility only; it does not approve real-data baselines or final
+      scientific comparisons. The Step 4.3 positive-control gate itself has
+      since run for real and PASSED -- see below.
 
 - [ ] Receive Person B's real persisted `fold_manifest` artifact. D's Phase 1
       tests consume the sealed synthetic B-style artifact at
@@ -117,8 +117,30 @@ the current A/B/C authorities and does not vendor copies of them.
       authorities and requires held-out R^2 >= 0.50 with a bootstrap CI
       strictly above zero. Fails closed to `BLOCKED` (not PASSED, not
       FAILED) unless the caller explicitly declares real no-wall data
-      provenance; currently `BLOCKED`, since real no-wall rows, a real B
-      fold manifest, and real oracle targets do not exist yet.
+      provenance. **Run for real and PASSED**: R^2=0.99999985 (95%
+      bootstrap CI [0.99999980, 0.99999987]) on the real 351 no-wall
+      rows in the 66-cell execution universe. This needed a second real
+      artifact: Person B's real 66-cell pre-activation fold manifest
+      (`docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json`)
+      uses a later real schema
+      (`artifact_type="person_b_66_cell_fold_manifest"`) that neither
+      `export.attach_b_fold_assignments` nor the historical
+      `probes.splits.validate_fold_manifest` recognized, and its
+      layout-to-fold assignment is structurally unreproducible by
+      recomputing from admitted-row counts alone (every layout is
+      deliberately balanced to exactly 164 admitted rows -- ties, not a
+      defect). `mineocclude.baselines.preactivation_fold_manifest_66_cell_v0_1`
+      closes that gap: it reuses Person B's own real recomputation basis
+      (the full 2,468-row set, not just the 984 admitted, via the same
+      shared, already-tested `assign_layout_grouped_folds`), verified to
+      reproduce the real declared assignment exactly.
+      `scripts/run_person_d_step4_3_real_positive_control_gate.py`
+      publishes the real finding at
+      `docs/status/person_d_66_cell_production_baselines_v0_1/step4_3_positive_control_gate.json`,
+      and `run_person_d_66_cell_step6_3to6_5_completion.py` now renders
+      it into Step 6.4's `visible_positive_control` section (9/10
+      sections real; only `no_object_negative_control` stays blocked --
+      this dataset genuinely has zero no-sheep rows).
 - [x] Phase 6-8 machinery (Steps 6.1-8.4). Step 6.1 binds the **real**
       accepted 66-cell MVP identity (48 core + 6 no-wall + 6 no-sheep +
       6 sentinel, zero shortfall), re-derived byte-identically from

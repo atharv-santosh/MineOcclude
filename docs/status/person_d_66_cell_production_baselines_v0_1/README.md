@@ -209,13 +209,12 @@ drift) before being trusted.
 * `step4_5_missingness_exclusion_report.json` -- the consolidated real
   audit over all 10,592 real prediction rows; `audit_passed: true`, zero
   rows missing a reason code, zero duplicates, zero orphans.
-* `step6_4_preliminary_comparison_report.json` -- 8 of 10 required
-  sections rendered from real, registered `baseline_metrics.json` values
-  (matching this README's headline numbers exactly); the remaining 2
-  (`visible_positive_control`, `no_object_negative_control`) are honestly
-  blocked, not fabricated -- no Step 4.3 gate has been registered against
-  this dataset's 351 real no-wall rows yet, and this dataset's real row
-  universe contains zero no-sheep/occluder-only rows at all.
+* `step6_4_preliminary_comparison_report.json` -- 9 of 10 required
+  sections rendered from real, registered values (matching this README's
+  headline numbers exactly), including `visible_positive_control` (see
+  below). Only `no_object_negative_control` stays honestly blocked, not
+  fabricated -- this dataset's real row universe contains zero
+  no-sheep/occluder-only rows at all.
 * `step6_5_result_lock.json` -- real locked facts (10,592 predictions,
   3,786 scored, 6,806 non-applicable, 0 missing, 42 accepted / 24 excluded
   trajectories), bound to Person B's real row-universe-receipt and
@@ -229,6 +228,47 @@ python scripts/run_person_d_66_cell_step6_3to6_5_completion.py \
                        oracle_target_records.jsonl, verified against
                        PERSON_B_ROW_UNIVERSE_RECORDS_SHA256 /
                        PERSON_B_ORACLE_TARGET_RECORDS_SHA256> \
+    --output-root docs/status/person_d_66_cell_production_baselines_v0_1
+```
+
+## Step 4.3 (real, PASSED)
+
+`step4_3_positive_control_gate.json`: the frozen visible-position ridge
+fit on the real 351 no-wall rows, real fold assignments, real oracle
+targets. **PASSED**: held-out R^2=0.99999985 (95% bootstrap CI
+[0.99999980, 0.99999987], 1000 resamples), against the roadmap's
+R^2>=0.50-and-CI-above-zero pass condition. This is the expected result
+for a no-wall row (no occlusion ever occurs, so the last visible
+position essentially *is* the true position) -- it's the sanity check
+that the measurement pipeline can decode a visible target at all, not a
+novel finding.
+
+Getting a real verdict needed a second real artifact Person D's fold
+tooling didn't recognize yet: Person B's real 66-cell pre-activation
+fold manifest
+(`docs/status/person_b_66_cell_preactivation_v0_1/fold_manifest.json`)
+declares `artifact_type="person_b_66_cell_fold_manifest"` -- a later
+real schema neither `export.attach_b_fold_assignments` nor the
+historical `probes.splits.validate_fold_manifest` recognized. Its
+layout-to-fold assignment is also structurally unreproducible by
+recomputing from admitted-row counts alone: Person B's admission policy
+deliberately balances every layout to exactly 164 admitted rows, so
+there are no distinct counts left to break ties with. Verified directly
+(not assumed): Person B's own builder computes the assignment from
+*every* model-frame row (984 accepted + 1,484 excluded = 2,468), via
+the same shared, already-tested `assign_layout_grouped_folds` D's
+historical validator itself calls -- just over the full row set.
+`mineocclude.baselines.preactivation_fold_manifest_66_cell_v0_1`
+reproduces that and verifies it matches the real declared assignment
+exactly.
+
+Reproduce:
+
+```
+python scripts/run_person_d_step4_3_real_positive_control_gate.py \
+    --authority-root <DIR WITH row_universe_records.jsonl,
+                       oracle_target_records.jsonl, AND
+                       fold_manifest.json> \
     --output-root docs/status/person_d_66_cell_production_baselines_v0_1
 ```
 

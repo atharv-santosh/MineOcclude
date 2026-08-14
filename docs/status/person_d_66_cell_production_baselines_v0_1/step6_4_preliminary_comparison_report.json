@@ -1,6 +1,6 @@
 {
   "accepted_manifest_sha256": "e897c31cda46e2dbe7fab605320cd98eba68a1396a80ccd78b178c8dc5547351",
-  "blocked_section_count": 2,
+  "blocked_section_count": 1,
   "blockers": [
     {
       "exact_command_after_receipt": "re-run this script once Person C's real row universe contains a no_sheep/occluder-only control_type",
@@ -11,17 +11,6 @@
         "trajectory_id",
         "model_frame_idx",
         "control_type"
-      ]
-    },
-    {
-      "exact_command_after_receipt": "python -c \"from mineocclude.baselines.positive_control_gate import run_positive_control_gate; ...\" over the real no-wall contexts",
-      "expected_owner": "person_d",
-      "expected_schema_or_version": "person-d-step4-3-positive-control-gate-v0-1",
-      "missing_artifact": "A registered Step 4.3 positive-control-gate run over the real 66-cell no-wall rows (351 real no_wall_visible_control rows exist in this universe, but no positive_control_gate.py execution has been registered against them yet)",
-      "required_identity_fields": [
-        "trajectory_id",
-        "model_frame_idx",
-        "fold_idx"
       ]
     }
   ],
@@ -65,7 +54,7 @@
     "person-d-66-cell-production-baselines-v0-1"
   ],
   "producer_role": "person_d",
-  "rendered_section_count": 8,
+  "rendered_section_count": 9,
   "report_complete": false,
   "resampling_unit": "whole_trajectory_pair_with_one_shared_sign_per_layout",
   "run_id": "person-d-step6-4-real-66-cell-preliminary-report-v0-1",
@@ -258,32 +247,31 @@
       ]
     },
     {
-      "blockers": [
-        {
-          "exact_command_after_receipt": "python -c \"from mineocclude.baselines.positive_control_gate import run_positive_control_gate; ...\" over the real no-wall contexts",
-          "expected_owner": "person_d",
-          "expected_schema_or_version": "person-d-step4-3-positive-control-gate-v0-1",
-          "missing_artifact": "A registered Step 4.3 positive-control-gate run over the real 66-cell no-wall rows (351 real no_wall_visible_control rows exist in this universe, but no positive_control_gate.py execution has been registered against them yet)",
-          "required_identity_fields": [
-            "trajectory_id",
-            "model_frame_idx",
-            "fold_idx"
-          ]
-        }
-      ],
+      "blockers": [],
       "comparison_classes": [],
       "comparison_kind": "positive_control_gate",
       "methods": [],
       "missing_count": 0,
       "na_count": 0,
       "notes": [
-        "351 real no_wall_visible_control rows exist in this universe, but no Step 4.3 positive-control-gate run has been registered against them yet -- structurally empty and blocked, not a null result."
+        "Step 4.3 gate status: PASSED. held-out R^2=1.0000 (threshold 0.5), 95% bootstrap CI=[1.0000, 1.0000] over 1000 resamples -- meets the Step 4.3 pass condition (R^2 >= 0.50 and CI strictly above zero)."
       ],
       "section_id": "visible_positive_control",
-      "status": "blocked",
-      "target_name": null,
+      "status": "rendered",
+      "target_name": "mu_oracle_blocks",
       "title": "visible positive control",
-      "values": []
+      "values": [
+        {
+          "metric_id": "step4_3_no_wall_positive_control_r2",
+          "owner_role": "person_d",
+          "sample_count": 351,
+          "sample_unit": "rows",
+          "source_record_id": "person-d-step4-3-real-positive-control-gate-v0-1",
+          "source_sha256": "adc839de392f791b7d6db8f5fa11dbdb3a2d0e91178089cda8a18e13e4cb2000",
+          "unit": "r2",
+          "value": 0.9999998469089919
+        }
+      ]
     },
     {
       "blockers": [

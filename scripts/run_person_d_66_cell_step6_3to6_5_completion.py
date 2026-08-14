@@ -338,6 +338,14 @@ def build_all(
         (existing_package_root / "baseline_metrics.json").read_text(encoding="utf-8")
     )
 
+    positive_control_path = existing_package_root / "step4_3_positive_control_gate.json"
+    positive_control_gate = None
+    positive_control_gate_sha256 = None
+    if positive_control_path.is_file():
+        positive_control_text = positive_control_path.read_text(encoding="utf-8")
+        positive_control_gate = json.loads(positive_control_text)
+        positive_control_gate_sha256 = _sha256_of_text(positive_control_text)
+
     # ---- recompute + cross-check the null/pair families -----------------
     rows_by_family = _recomputed_family_rows(universe)
     _cross_check_against_published_predictions(rows_by_family, prediction_manifest)
@@ -531,19 +539,46 @@ def build_all(
                 ),
             ),
         ),
-        "visible_positive_control": blocked_section(
-            "visible_positive_control",
-            "visible positive control",
-            "positive_control_gate",
-            blockers=[NO_WALL_BLOCKER],
-            notes=(
-                (
-                    "351 real no_wall_visible_control rows exist in this universe, "
-                    "but no Step 4.3 positive-control-gate run has been registered "
-                    "against them yet -- structurally empty and blocked, not a "
-                    "null result."
+        "visible_positive_control": (
+            ReportSection(
+                section_id="visible_positive_control",
+                title="visible positive control",
+                comparison_kind="positive_control_gate",
+                status="rendered",
+                target_name="mu_oracle_blocks",
+                values=(
+                    _metric_value(
+                        metric_id="step4_3_no_wall_positive_control_r2",
+                        value=positive_control_gate["finding"]["r2"],
+                        unit="r2",
+                        sample_count=positive_control_gate["no_wall_row_count"],
+                        sample_unit="rows",
+                        source_record_id=positive_control_gate["schema_id"],
+                        source_sha256=positive_control_gate_sha256,
+                    ),
                 ),
-            ),
+                notes=(
+                    (
+                        f"Step 4.3 gate status: {positive_control_gate['finding']['status']}. "
+                        f"{positive_control_gate['finding']['detail']}"
+                    ),
+                ),
+            )
+            if positive_control_gate is not None
+            else blocked_section(
+                "visible_positive_control",
+                "visible positive control",
+                "positive_control_gate",
+                blockers=[NO_WALL_BLOCKER],
+                notes=(
+                    (
+                        "351 real no_wall_visible_control rows exist in this universe, "
+                        "but no Step 4.3 positive-control-gate run has been registered "
+                        "against them yet -- structurally empty and blocked, not a "
+                        "null result."
+                    ),
+                ),
+            )
         ),
         "no_object_negative_control": blocked_section(
             "no_object_negative_control",

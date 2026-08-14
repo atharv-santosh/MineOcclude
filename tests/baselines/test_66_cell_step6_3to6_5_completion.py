@@ -158,13 +158,20 @@ def test_preliminary_report_real_sections_match_published_metrics(built):
         assert section["values"][0]["value"] == pytest.approx(r2_by_family_target[(family, target)])
         assert section["values"][0]["source_sha256"]
 
-    for section_id in ("visible_positive_control", "no_object_negative_control"):
-        section = sections_by_id[section_id]
-        assert section["status"] == "blocked"
-        assert section["values"] == []
-        assert section["blockers"]
+    # visible_positive_control is real and rendered once the Step 4.3 gate
+    # evidence has been published (see test_step4_3_positive_control_gate.py);
+    # no_object_negative_control genuinely has no data in this dataset (zero
+    # no-sheep rows) and stays blocked regardless.
+    positive_control = sections_by_id["visible_positive_control"]
+    assert positive_control["status"] == "rendered"
+    assert positive_control["values"][0]["value"] == pytest.approx(1.0, abs=1e-4)
 
-    assert document["report_complete"] is False  # honest: two sections genuinely blocked
+    negative_control = sections_by_id["no_object_negative_control"]
+    assert negative_control["status"] == "blocked"
+    assert negative_control["values"] == []
+    assert negative_control["blockers"]
+
+    assert document["report_complete"] is False  # honest: one section genuinely blocked
 
 
 def test_result_lock_facts_match_published_manifest(built):
