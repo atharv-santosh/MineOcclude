@@ -119,6 +119,8 @@ class RegimeAA4RunnerTests(unittest.TestCase):
             self.assertEqual(worker.live.SERVER_ROOT, server)
             self.assertEqual(worker.live.CLIENT_ROOT, client)
             self.assertEqual(worker.live.FIFO, server / "cmd.fifo")
+            self.assertTrue(worker.live.XVFB_PATH.is_file())
+            self.assertTrue(worker.live.XDOTOOL_PATH.is_file())
 
     def test_authorization_required_and_full_binding_obsolete_commit_refused(self):
         with self.assertRaises(RegimeAError):

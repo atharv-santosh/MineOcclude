@@ -83,6 +83,7 @@ def authorization_bindings() -> dict[str, str]:
         "pre_a4_source_freeze_receipt_v2_sha256": sha256_file(STATUS / "pre_a4_source_freeze_receipt_v2.json"),
         "a4_launch_recovery_source_freeze_receipt_sha256": sha256_file(STATUS / "a4_launch_recovery_source_freeze_receipt.json"),
         "a4_launch_storage_recovery_source_freeze_receipt_sha256": sha256_file(STATUS / "a4_launch_storage_recovery_source_freeze_receipt.json"),
+        "a4_display_tool_recovery_source_freeze_receipt_sha256": sha256_file(STATUS / "a4_display_tool_recovery_source_freeze_receipt.json"),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "scientific_run_id": SCIENTIFIC_RUN_ID,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",

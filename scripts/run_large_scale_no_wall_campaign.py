@@ -69,7 +69,8 @@ SERVER_ROOT = Path("/home/sagemaker-user/mineocclude-server")
 CLIENT_ROOT = Path("/home/sagemaker-user/mineocclude-client")
 FIFO = SERVER_ROOT / "cmd.fifo"
 JAVA_PATH = Path("/usr/lib/jvm/java-17-openjdk-amd64/bin/java")
-XVFB_PATH = Path("/usr/bin/Xvfb")
+XVFB_PATH = Path(shutil.which("Xvfb") or "/usr/bin/Xvfb")
+XDOTOOL_PATH = Path(shutil.which("xdotool") or "/usr/bin/xdotool")
 DISPLAY = ":99"
 MAX_ATTEMPTS = 3
 EXPECTED_F = 60
@@ -481,7 +482,7 @@ class LiveRuntime:
         required = [
             JAVA_PATH,
             XVFB_PATH,
-            Path("/usr/bin/xdotool"),
+            XDOTOOL_PATH,
             self.server_root,
             self.client_root,
             FIFO,

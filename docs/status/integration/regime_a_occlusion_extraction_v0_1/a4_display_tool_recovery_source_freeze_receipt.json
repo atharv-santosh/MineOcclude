@@ -1,0 +1,43 @@
+{
+  "artifact_id": "regime-a-a4-display-tool-recovery-source-freeze-v1.0",
+  "status": "PASS_PENDING_COMMIT",
+  "created_utc": "2026-08-14T03:30:00Z",
+  "prior_reviewed_commit": "aa0b0f8ea970bd369bbd3d79acef1cf3f2b5b901",
+  "new_final_commit_sha": "PENDING_COMMIT",
+  "failure_classification": "PRE_CAPTURE_DISPLAY_TOOL_PATH_DEFECT",
+  "failed_spec_id": "regime_a_v1_t01",
+  "same_spec_retry_required": true,
+  "scientific_capture_began": false,
+  "scientific_activations_extracted": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "repair_scope": "Resolve Xvfb and xdotool from the qualified process PATH instead of requiring /usr/bin installation.",
+  "protocol_modified": false,
+  "manifest_modified": false,
+  "seeds_modified": false,
+  "folds_modified": false,
+  "old_authorization_obsolete": true,
+  "changed_governed_files": [
+    {
+      "path": "scripts/run_large_scale_no_wall_campaign.py",
+      "sha256": "de4db2698777c0b83b7cbec3d5d99f2fe4dae4591ebf7615ee1a69fc49d23d1c"
+    },
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "295e831d7de3da6dfccc1eee4225fba5f158adf86d03b5e22351c541daf5a233"
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "8680d7a6abbe547a3ce85093cbf7164b55a49c48647ec4bfdb7abed62e523470"
+    },
+    {
+      "path": "tests/test_regime_a_a4_runner.py",
+      "sha256": "60c6cf8c46f39443e488c2202467835a03d39ef435c0840493d336f975b18956"
+    }
+  ],
+  "focused_test": {
+    "command": "qualified PATH/LD_LIBRARY_PATH/JAVA_HOME/PYTHONPATH python -m pytest -q tests/test_regime_a_a4_runner.py",
+    "result": "10 passed, 3 subtests passed"
+  },
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b"
+}
