@@ -109,30 +109,75 @@ def simulate_path(seed: int, direction: str, start: float, frames: int = 260) ->
     return positions, noise
 
 
-def stable_hidden_interval(positions: np.ndarray, direction: str) -> tuple[int, int]:
+@dataclass(frozen=True)
+class VisibilityCalibration:
+    """One frozen directional visibility geometry.
+
+    Bundling these values makes the geometry a spec-time input rather than a
+    module constant, so a corrected calibration can generate a new manifest
+    without disturbing the byte-for-byte reproducibility of an older one.
+    """
+
+    hidden_left: float
+    hidden_right: float
+    geometric_entry: Mapping[str, float]
+    entry_guard: Mapping[str, int]
+    exit_guard: Mapping[str, int]
+
+    def as_authority(self) -> dict[str, Any]:
+        return {
+            "hidden_left": float(self.hidden_left),
+            "hidden_right": float(self.hidden_right),
+            "geometric_entry": {key: float(value) for key, value in sorted(self.geometric_entry.items())},
+            "entry_guard_frames": {key: int(value) for key, value in sorted(self.entry_guard.items())},
+            "exit_guard_frames": {key: int(value) for key, value in sorted(self.exit_guard.items())},
+        }
+
+
+#: The original first-25 geometry. Retained so the superseded v1 manifest keeps
+#: validating exactly as generated; it is NOT the calibration for new work.
+V1_CALIBRATION = VisibilityCalibration(
+    hidden_left=HIDDEN_LEFT,
+    hidden_right=HIDDEN_RIGHT,
+    geometric_entry=GEOMETRIC_ENTRY,
+    entry_guard=ENTRY_GUARD,
+    exit_guard=EXIT_GUARD,
+)
+
+
+def stable_hidden_interval(
+    positions: np.ndarray,
+    direction: str,
+    calibration: VisibilityCalibration = V1_CALIBRATION,
+) -> tuple[int, int]:
     positions = np.asarray(positions, dtype=np.float64)
-    inside = (positions >= HIDDEN_LEFT) & (positions <= HIDDEN_RIGHT)
+    inside = (positions >= calibration.hidden_left) & (positions <= calibration.hidden_right)
     entry = next(
         (index for index in range(len(positions) - 18) if inside[index : index + 19].all()),
         None,
     )
     if entry is None:
         raise RegimeAError("path lacks 19 consecutive stable-hidden frames")
-    crossed = positions >= GEOMETRIC_ENTRY[direction] if direction == "LEFT_TO_RIGHT" else positions <= GEOMETRIC_ENTRY[direction]
+    boundary = calibration.geometric_entry[direction]
+    crossed = positions >= boundary if direction == "LEFT_TO_RIGHT" else positions <= boundary
     transition_indices = np.flatnonzero(crossed)
     if transition_indices.size == 0:
         raise RegimeAError("path lacks geometric entry")
     transition = int(transition_indices[0])
     if transition < EFFECTIVE_PRECEDING_STEPS:
         raise RegimeAError("path lacks full pre-entry causal history")
-    if entry - transition > ENTRY_GUARD[direction]:
+    if entry - transition > calibration.entry_guard[direction]:
         raise RegimeAError("entry transition exceeds frozen direction guard")
-    exited = positions > HIDDEN_RIGHT if direction == "LEFT_TO_RIGHT" else positions < HIDDEN_LEFT
+    exited = (
+        positions > calibration.hidden_right
+        if direction == "LEFT_TO_RIGHT"
+        else positions < calibration.hidden_left
+    )
     exit_indices = np.flatnonzero(exited & (np.arange(len(positions)) > entry + 18))
     if exit_indices.size == 0:
         raise RegimeAError("path lacks stable-hidden exit")
     exit_frame = int(exit_indices[0])
-    if exit_frame + EXIT_GUARD[direction] >= len(positions):
+    if exit_frame + calibration.exit_guard[direction] >= len(positions):
         raise RegimeAError("path lacks post-exit containment margin")
     return entry, exit_frame
 
@@ -538,13 +583,14 @@ def _candidate_spec(
     index: int,
     serial: int,
     authority_bindings: Mapping[str, str],
+    calibration: VisibilityCalibration = V1_CALIBRATION,
 ) -> dict[str, Any] | None:
     seed = deterministic_seed(f"A3_{direction}", study_sha256, index)
     rng = np.random.default_rng(seed ^ 0xA3A3A3A3)
     start = float(rng.uniform(*START_RANGE[direction]))
     positions, noise = simulate_path(seed, direction, start)
     try:
-        entry, exit_frame = stable_hidden_interval(positions, direction)
+        entry, exit_frame = stable_hidden_interval(positions, direction, calibration)
     except RegimeAError:
         return None
     identity = f"regime_a_v1_t{serial + 1:02d}"
@@ -569,8 +615,8 @@ def _candidate_spec(
         "expected_profile_sha256": hashlib.sha256(np.asarray(positions, dtype="<f8").tobytes()).hexdigest(),
         "noise_schedule_sha256": hashlib.sha256(np.asarray(noise, dtype="<f8").tobytes()).hexdigest(),
         "expected_max_frames": len(positions),
-        "entry_guard_frames": ENTRY_GUARD[direction],
-        "exit_guard_frames": EXIT_GUARD[direction],
+        "entry_guard_frames": calibration.entry_guard[direction],
+        "exit_guard_frames": calibration.exit_guard[direction],
         "target_entity_logical_id": f"{identity}:magenta_sheep",
         "camera_authority": "layout_01_fixed_v0.4",
         "wall_authority": "layout_01_long_wall_v0.4",
@@ -582,7 +628,9 @@ def _candidate_spec(
 
 
 def generate_scientific_specs(
-    study_sha256: str, authority_bindings: Mapping[str, str] | None = None
+    study_sha256: str,
+    authority_bindings: Mapping[str, str] | None = None,
+    calibration: VisibilityCalibration = V1_CALIBRATION,
 ) -> list[dict[str, Any]]:
     if len(study_sha256) != 64:
         raise RegimeAError("study authority hash is invalid")
@@ -593,7 +641,9 @@ def generate_scientific_specs(
     for direction, needed in (("LEFT_TO_RIGHT", 13), ("RIGHT_TO_LEFT", 12)):
         index = 0
         while sum(row["direction"] == direction for row in specs) < needed:
-            candidate = _candidate_spec(study_sha256, direction, index, len(specs), bindings)
+            candidate = _candidate_spec(
+                study_sha256, direction, index, len(specs), bindings, calibration
+            )
             index += 1
             if candidate is not None and all(
                 math.sqrt(
@@ -622,11 +672,14 @@ def generate_scientific_specs(
         body["outer_fold"] = assignments[row["trajectory_spec_id"]]
         body["spec_hash"] = canonical_sha256(body)
         result.append(body)
-    validate_scientific_specs(result)
+    validate_scientific_specs(result, calibration)
     return result
 
 
-def validate_scientific_specs(specs: Sequence[Mapping[str, Any]]) -> dict[str, object]:
+def validate_scientific_specs(
+    specs: Sequence[Mapping[str, Any]],
+    calibration: VisibilityCalibration = V1_CALIBRATION,
+) -> dict[str, object]:
     if len(specs) != 25:
         raise RegimeAError("manifest count is not 25")
     ids = [str(row["trajectory_spec_id"]) for row in specs]
@@ -646,7 +699,7 @@ def validate_scientific_specs(specs: Sequence[Mapping[str, Any]]) -> dict[str, o
             raise RegimeAError("spec execution state is not frozen/unexecuted")
         direction = str(row["direction"])
         positions, noise = simulate_path(int(row["seed"]), direction, float(row["start_world_x"]))
-        entry, exit_frame = stable_hidden_interval(positions, direction)
+        entry, exit_frame = stable_hidden_interval(positions, direction, calibration)
         if entry != row["expected_stable_hidden_onset_frame"] or exit_frame != row["expected_stable_hidden_exit_frame"]:
             raise RegimeAError("expected geometry drift")
         expected = [float(value) for value in positions[entry : entry + 19]]
