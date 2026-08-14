@@ -71,6 +71,8 @@ FIFO = SERVER_ROOT / "cmd.fifo"
 JAVA_PATH = Path("/usr/lib/jvm/java-17-openjdk-amd64/bin/java")
 XVFB_PATH = Path(shutil.which("Xvfb") or "/usr/bin/Xvfb")
 XDOTOOL_PATH = Path(shutil.which("xdotool") or "/usr/bin/xdotool")
+XDPYINFO_PATH = Path(shutil.which("xdpyinfo") or "/usr/bin/xdpyinfo")
+NATIVE_ENV_OVERRIDES: dict[str, str] = {}
 DISPLAY = ":99"
 MINECRAFT_WINDOW_CLASS = r"^Minecraft\* 1\.16\.5$"
 MINECRAFT_WINDOW_TITLE_PREFIX = "Minecraft* 1.16.5"
@@ -425,7 +427,7 @@ def _xdotool(*arguments: str) -> str:
         capture_output=True,
         text=True,
         timeout=10,
-        env={**os.environ, "DISPLAY": DISPLAY},
+        env={**os.environ, **NATIVE_ENV_OVERRIDES, "DISPLAY": DISPLAY},
     ).stdout.strip()
 
 
@@ -2098,6 +2100,7 @@ def launch_runtime(
     processes = []
     environment = {
         **os.environ,
+        **NATIVE_ENV_OVERRIDES,
         "JAVA_HOME": str(JAVA_PATH.parent.parent),
         "MINEOCCLUDE_DISPLAY": DISPLAY,
     }
@@ -2115,7 +2118,7 @@ def launch_runtime(
             deadline = time.monotonic() + 20
             while time.monotonic() < deadline:
                 result = subprocess.run(
-                    ["xdpyinfo"],
+                    [str(XDPYINFO_PATH)],
                     env={**environment, "DISPLAY": DISPLAY},
                     capture_output=True,
                 )

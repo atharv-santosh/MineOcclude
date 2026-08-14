@@ -192,8 +192,12 @@ def test_precheck_rejects_frozen_camera_authority_drift(tmp_path: Path) -> None:
 
 def test_camera_precheck_precedes_startspec_in_regime_a() -> None:
     ensure_source = inspect.getsource(run_regime_a.ProductionCaptureWorker._ensure_started)
+    launch_source = inspect.getsource(
+        run_regime_a.ProductionCaptureWorker._launch_with_bounded_retry
+    )
     capture_source = inspect.getsource(run_regime_a.ProductionCaptureWorker.capture)
-    assert "self.runtime.precheck()" in ensure_source
-    assert capture_source.index("self._ensure_started()") < capture_source.index(
+    assert "runtime.precheck()" in launch_source
+    assert "_launch_with_bounded_retry" in ensure_source
+    assert capture_source.index("self._ensure_started(spec)") < capture_source.index(
         "mineocclude startspec"
     )

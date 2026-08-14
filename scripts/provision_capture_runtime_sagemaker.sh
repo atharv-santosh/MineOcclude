@@ -23,6 +23,108 @@ FABRIC_LOADER_VERSION=0.15.11
 FABRIC_API_VERSION=0.42.0+1.16
 MINECRAFT_VERSION=1.16.5
 
+# Operator-tools native environment. The qualified Xvfb/xdpyinfo/xdotool/
+# openbox binaries are unpacked under a relocatable root and cannot resolve
+# their shared libraries from the system loader path: Xvfb fails on
+# libunwind.so.8 and xdpyinfo on libXext.so.6. A correct PATH alone is
+# therefore not sufficient, and relying on an interactive shell to have
+# exported LD_LIBRARY_PATH made the launch contract depend on operator memory.
+# Establish it here, launcher-local, so every entry point inherits it.
+OPERATOR_TOOLS=${MINEOCCLUDE_OPERATOR_TOOLS:-/mnt/sagemaker-nvme/mineocclude-regime-a-first25-v1/operator-tools}
+
+# The patched Xvfb in operator-tools/bin has its compiled-in XKB locations
+# rewritten to these short stand-ins, because the replacement had to fit the
+# original byte length. They live under /tmp, so they disappear whenever /tmp
+# is cleaned and the next launch dies with "Failed to activate virtual core
+# keyboard: 2". That volatility is why the stall was intermittent rather than
+# reproducible. Re-establish them from the qualified operator-tools copies.
+ensure_patched_xvfb_xkb_paths() {
+    local bindir=/tmp/abc
+    local xkbparent=/tmp/abcde/X11
+    [[ -x "$OPERATOR_TOOLS/root/usr/bin/xkbcomp" ]] || return 0
+    [[ -d "$OPERATOR_TOOLS/root/usr/share/X11/xkb" ]] || return 0
+    if [[ ! -x "$bindir/xkbcomp" ]]; then
+        mkdir -p "$bindir"
+        ln -sfn "$OPERATOR_TOOLS/root/usr/bin/xkbcomp" "$bindir/xkbcomp"
+    fi
+    if [[ ! -e "$xkbparent/xkb" ]]; then
+        mkdir -p "$xkbparent"
+        ln -sfn "$OPERATOR_TOOLS/root/usr/share/X11/xkb" "$xkbparent/xkb"
+    fi
+    return 0
+}
+
+setup_native_env() {
+    [[ -d "$OPERATOR_TOOLS" ]] || return 0
+    # Order matters and is not cosmetic. operator-tools/bin holds a
+    # binary-patched Xvfb whose compiled-in XKB paths were rewritten to short
+    # stand-ins that exist on this host; root/usr/bin holds the unpatched
+    # distro Xvfb, which looks for /usr/bin/xkbcomp and dies with "Failed to
+    # activate virtual core keyboard: 2". Prepend in reverse so the patched
+    # binary ends up ahead of the distro one.
+    local bin_dirs=("$OPERATOR_TOOLS/root/usr/bin" "$OPERATOR_TOOLS/bin")
+    local lib_dirs=("$OPERATOR_TOOLS/root/usr/lib/x86_64-linux-gnu" "$OPERATOR_TOOLS/root/usr/lib")
+    local dir
+    for dir in "${bin_dirs[@]}"; do
+        [[ -d "$dir" ]] && case ":$PATH:" in *":$dir:"*) ;; *) PATH="$dir:$PATH" ;; esac
+    done
+    for dir in "${lib_dirs[@]}"; do
+        [[ -d "$dir" ]] && case ":${LD_LIBRARY_PATH:-}:" in
+            *":$dir:"*) ;;
+            *) LD_LIBRARY_PATH="$dir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" ;;
+        esac
+    done
+    export PATH LD_LIBRARY_PATH
+    local dri="$OPERATOR_TOOLS/root/usr/lib/x86_64-linux-gnu/dri"
+    [[ -d "$dri" ]] && export LIBGL_DRIVERS_PATH=${LIBGL_DRIVERS_PATH:-$dri}
+    # Openbox is relocatable too. Without these qualified theme/config roots it
+    # exits immediately, so the focus gate has no _NET_ACTIVE_WINDOW authority.
+    local xdg_data="$OPERATOR_TOOLS/root/usr/share"
+    local xdg_config="$OPERATOR_TOOLS/root/etc/xdg"
+    local fontconfig="$OPERATOR_TOOLS/root/etc/fonts"
+    [[ -d "$xdg_data" ]] \
+        && export XDG_DATA_DIRS=${XDG_DATA_DIRS:-$xdg_data}
+    [[ -d "$xdg_config" ]] \
+        && export XDG_CONFIG_DIRS=${XDG_CONFIG_DIRS:-$xdg_config}
+    if [[ -f "$fontconfig/fonts.conf" ]]; then
+        export FONTCONFIG_PATH=${FONTCONFIG_PATH:-$fontconfig}
+        export FONTCONFIG_FILE=${FONTCONFIG_FILE:-$fontconfig/fonts.conf}
+    fi
+    # The X server spawns the keymap compiler by absolute path from its
+    # compiled-in XKB_BINDIR, which is /usr/bin here. There is no
+    # /usr/bin/xkbcomp on this host and /usr/bin is not writable, so PATH
+    # cannot fix it and Xvfb fails with "Failed to activate virtual core
+    # keyboard: 2". The server honours XKB_BINDIR at runtime; point it at the
+    # qualified operator-tools copy.
+    [[ -x "$OPERATOR_TOOLS/root/usr/bin/xkbcomp" ]] \
+        && export XKB_BINDIR=${XKB_BINDIR:-$OPERATOR_TOOLS/root/usr/bin}
+    ensure_patched_xvfb_xkb_paths
+    return 0
+}
+
+
+# Fail closed when a required runtime binary cannot resolve its shared
+# libraries. Without this the failure surfaces far downstream as an opaque
+# "Xvfb launch timeout" instead of naming the missing library.
+verify_native_env() {
+    local tool missing resolved status=0
+    for tool in "$@"; do
+        resolved=$(command -v "$tool" 2>/dev/null) || {
+            echo "Required command is absent: $tool" >&2
+            status=1
+            continue
+        }
+        missing=$(ldd "$resolved" 2>/dev/null | awk '/not found/ {print $1}' | tr '\n' ' ')
+        if [[ -n "$missing" ]]; then
+            echo "Unresolved shared libraries for $tool ($resolved): $missing" >&2
+            status=1
+        fi
+    done
+    return $status
+}
+
+setup_native_env
+
 sha256() {
     sha256sum "$1" | awk '{print $1}'
 }
@@ -457,16 +559,24 @@ PY
 }
 
 start_display() {
-    require_command Xvfb
-    require_command openbox
+    verify_native_env Xvfb openbox xdpyinfo || return 1
     local display=${MINEOCCLUDE_DISPLAY:-:99}
     if DISPLAY="$display" xdpyinfo >/dev/null 2>&1; then
         echo "Display $display is already ready"
         return 0
     fi
-    Xvfb "$display" -screen 0 640x360x24 +extension GLX +render -noreset &
+    # There is no system /usr/share/X11/xkb on this host, so Xvfb cannot compile
+    # a keymap and intermittently dies with "Failed to activate virtual core
+    # keyboard: 2". When it survived that failure the X server came up without
+    # XKEYBOARD, and GLFW's input setup during client window creation then hung
+    # between LWJGL backend init and OpenAL init. Point Xvfb at the qualified
+    # operator-tools keymap data so the keyboard always initializes.
+    local xkb_args=()
+    if [[ -d "$OPERATOR_TOOLS/root/usr/share/X11/xkb" ]]; then
+        xkb_args=(-xkbdir "$OPERATOR_TOOLS/root/usr/share/X11/xkb")
+    fi
+    Xvfb "$display" -screen 0 640x360x24 +extension GLX +render -noreset "${xkb_args[@]}" &
     local xvfb_pid=$!
-    trap 'kill "$xvfb_pid" "${wm_pid:-}" 2>/dev/null || true' EXIT INT TERM
     for _ in $(seq 1 50); do
         DISPLAY="$display" xdpyinfo >/dev/null 2>&1 && break
         sleep 0.1
@@ -474,6 +584,9 @@ start_display() {
     DISPLAY="$display" xdpyinfo >/dev/null
     DISPLAY="$display" openbox &
     local wm_pid=$!
+    # Expand function-local PIDs while installing the trap. A trap evaluated
+    # after this function returned cannot safely reference locals under set -u.
+    trap "kill $xvfb_pid $wm_pid 2>/dev/null || true" EXIT INT TERM
     wait "$xvfb_pid"
 }
 
@@ -491,7 +604,7 @@ start_server() {
 
 start_client() {
     verify_java
-    require_command xdotool
+    verify_native_env xdotool xdpyinfo || return 1
     local display=${MINEOCCLUDE_DISPLAY:-:99}
     DISPLAY="$display" xdpyinfo >/dev/null 2>&1 || {
         echo "Display $display is not ready" >&2
@@ -531,11 +644,18 @@ start_client() {
 case "${1:-provision}" in
     provision) provision ;;
     verify-java) verify_java ;;
+    verify-native-env) verify_native_env Xvfb xdpyinfo xdotool openbox ;;
+    print-native-env)
+        printf 'PATH=%s\nLD_LIBRARY_PATH=%s\nLIBGL_DRIVERS_PATH=%s\nXDG_DATA_DIRS=%s\nXDG_CONFIG_DIRS=%s\nFONTCONFIG_PATH=%s\nFONTCONFIG_FILE=%s\n' \
+            "$PATH" "${LD_LIBRARY_PATH:-}" "${LIBGL_DRIVERS_PATH:-}" \
+            "${XDG_DATA_DIRS:-}" "${XDG_CONFIG_DIRS:-}" \
+            "${FONTCONFIG_PATH:-}" "${FONTCONFIG_FILE:-}"
+        ;;
     start-display) start_display ;;
     start-server) start_server ;;
     start-client) start_client ;;
     *)
-        echo "Usage: $0 [provision|verify-java|start-display|start-server|start-client]" >&2
+        echo "Usage: $0 [provision|verify-java|verify-native-env|print-native-env|start-display|start-server|start-client]" >&2
         exit 2
         ;;
 esac

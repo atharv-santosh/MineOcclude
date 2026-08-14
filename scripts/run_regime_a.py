@@ -11,6 +11,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import numpy as np
@@ -143,6 +144,10 @@ def detector_rgb_rows(
 class ProductionCaptureWorker:
     """Thin wall-present adapter over the validated live capture runtime."""
 
+    # Three total attempts bounds a host-startup workaround to two recoveries.
+    # This is intentionally a launch-only bound, not a trajectory retry policy.
+    LAUNCH_ATTEMPT_BOUND = 3
+
     def __init__(self, runtime_root: Path):
         from scripts import run_large_scale_no_wall_campaign as live
 
@@ -158,6 +163,46 @@ class ProductionCaptureWorker:
         live.SERVER_ROOT = server_root
         live.CLIENT_ROOT = client_root
         live.FIFO = server_root / "cmd.fifo"
+        operator_tools = Path(
+            os.environ.get(
+                "MINEOCCLUDE_OPERATOR_TOOLS",
+                "/mnt/sagemaker-nvme/mineocclude-regime-a-first25-v1/operator-tools",
+            )
+        ).resolve()
+        native_paths = {
+            "Xvfb": operator_tools / "bin/Xvfb",
+            "xdpyinfo": operator_tools / "root/usr/bin/xdpyinfo",
+            "xdotool": operator_tools / "root/usr/bin/xdotool",
+        }
+        missing_native = [str(path) for path in native_paths.values() if not path.is_file()]
+        if missing_native:
+            raise RegimeAError(f"qualified native runtime tools are absent: {missing_native}")
+        live.XVFB_PATH = native_paths["Xvfb"]
+        live.XDPYINFO_PATH = native_paths["xdpyinfo"]
+        live.XDOTOOL_PATH = native_paths["xdotool"]
+        native_bin_dirs = [operator_tools / "bin", operator_tools / "root/usr/bin"]
+        native_lib_dirs = [
+            operator_tools / "root/usr/lib/x86_64-linux-gnu",
+            operator_tools / "root/usr/lib",
+        ]
+        live.NATIVE_ENV_OVERRIDES = {
+            "PATH": ":".join(
+                [*(str(path) for path in native_bin_dirs), os.environ.get("PATH", "")]
+            ).rstrip(":"),
+            "LD_LIBRARY_PATH": ":".join(
+                [
+                    *(str(path) for path in native_lib_dirs),
+                    os.environ.get("LD_LIBRARY_PATH", ""),
+                ]
+            ).rstrip(":"),
+            "LIBGL_DRIVERS_PATH": str(
+                operator_tools / "root/usr/lib/x86_64-linux-gnu/dri"
+            ),
+            "XDG_DATA_DIRS": str(operator_tools / "root/usr/share"),
+            "XDG_CONFIG_DIRS": str(operator_tools / "root/etc/xdg"),
+            "FONTCONFIG_PATH": str(operator_tools / "root/etc/fonts"),
+            "FONTCONFIG_FILE": str(operator_tools / "root/etc/fonts/fonts.conf"),
+        }
         self.live = live
         self.java_home = java_home
         self.server_root = server_root
@@ -165,6 +210,10 @@ class ProductionCaptureWorker:
         self.runtime_root = runtime_root
         self.processes: list[object] = []
         self.runtime = None
+        self.launch_attempts = 0
+        self.launch_failures: list[str] = []
+        self.launch_attempt_history: list[dict[str, object]] = []
+        self.startspec_dispatch_attempted = False
 
     def _capture_context(self, spec: dict[str, object]) -> dict[str, object]:
         from mineocclude.data.noise_schedule import generate_noise_schedule, serialize_schedule
@@ -485,7 +534,7 @@ class ProductionCaptureWorker:
         self._validate_and_package(spec, partial, context)
         return True
 
-    def _ensure_started(self) -> None:
+    def _ensure_started(self, spec: dict[str, object] | None = None) -> None:
         if self.runtime is not None:
             return
         jar = ROOT / "fabric/mineocclude-mod/build/libs/mineocclude-0.1.1.jar"
@@ -507,9 +556,147 @@ class ProductionCaptureWorker:
             shutil.copy2(jar, destination)
             if sha256_file(jar) != sha256_file(destination):
                 raise RegimeAError(f"governed Fabric mod installation mismatch at {destination}")
-        self.processes, _elapsed = self.live.launch_runtime(self.runtime_root)
-        self.runtime = self.live.LiveRuntime()
-        self.runtime.precheck()
+        launch_identity = {
+            key: spec.get(key) if spec is not None else None
+            for key in ("trajectory_spec_id", "spec_hash", "seed")
+        }
+        self.processes, self.launch_attempts = self._launch_with_bounded_retry(
+            launch_identity
+        )
+
+    def _record_launch_attempt(
+        self,
+        *,
+        attempt: int,
+        outcome: str,
+        stage: str,
+        reason: str,
+        elapsed_seconds: float,
+        identity: dict[str, object],
+    ) -> None:
+        record = {
+            "schema_version": "regime-a-pre-scientific-launch-attempt-v1.0",
+            "attempt": attempt,
+            "attempt_bound": self.LAUNCH_ATTEMPT_BOUND,
+            "outcome": outcome,
+            "stage": stage,
+            "reason": reason,
+            "elapsed_seconds": elapsed_seconds,
+            "automatic_retry_eligible": not self.startspec_dispatch_attempted,
+            "startspec_dispatch_attempted": self.startspec_dispatch_attempted,
+            "trajectory_simulation_started": False,
+            "capture_started": False,
+            **identity,
+        }
+        self.launch_attempt_history.append(record)
+        log_root = self.runtime_root / "runtime_logs"
+        log_root.mkdir(parents=True, exist_ok=True)
+        with (log_root / "pre_scientific_launch_attempts.jsonl").open(
+            "a", encoding="utf-8"
+        ) as stream:
+            stream.write(json.dumps(record, sort_keys=True, allow_nan=False) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+
+    def _launch_with_bounded_retry(
+        self, identity: dict[str, object] | None = None
+    ) -> tuple[list[object], int]:
+        """Bring the runtime up, retrying a failed launch a bounded number of times.
+
+        Client startup on this host is not reliable end to end, and a launch
+        that never reaches the join/readiness gate leaves nothing behind: no
+        startspec has been sent, no episode has been armed, and no frame has
+        been captured. Retrying is therefore observationally identical to the
+        operator re-running the entry point, which is what production depended
+        on. Retry is confined to this method for exactly that reason -- once
+        capture() sends a startspec, a failure is a trajectory failure and is
+        handled by same-spec retry policy, never by relaunching underneath it.
+        """
+
+        if self.startspec_dispatch_attempted:
+            raise RegimeAError(
+                "runtime relaunch is forbidden after startspec dispatch was attempted"
+            )
+        frozen_identity = dict(identity or {
+            "trajectory_spec_id": None,
+            "spec_hash": None,
+            "seed": None,
+        })
+        failures: list[str] = []
+        for attempt in range(1, self.LAUNCH_ATTEMPT_BOUND + 1):
+            attempt_started = time.monotonic()
+            try:
+                processes, _elapsed = self.live.launch_runtime(self.runtime_root)
+            except Exception as error:  # noqa: BLE001 - recorded and retried below
+                reason = f"{type(error).__name__}: {error}"
+                failures.append(f"attempt {attempt}: launch: {reason}")
+                self._record_launch_attempt(
+                    attempt=attempt,
+                    outcome="FAILED",
+                    stage="launch",
+                    reason=reason,
+                    elapsed_seconds=time.monotonic() - attempt_started,
+                    identity=frozen_identity,
+                )
+                self._teardown_failed_launch([])
+                continue
+            try:
+                runtime = self.live.LiveRuntime()
+                runtime.precheck()
+            except Exception as error:  # noqa: BLE001 - recorded and retried below
+                reason = f"{type(error).__name__}: {error}"
+                failures.append(f"attempt {attempt}: precheck: {reason}")
+                self._record_launch_attempt(
+                    attempt=attempt,
+                    outcome="FAILED",
+                    stage="precheck",
+                    reason=reason,
+                    elapsed_seconds=time.monotonic() - attempt_started,
+                    identity=frozen_identity,
+                )
+                self._teardown_failed_launch(processes)
+                continue
+            self.runtime = runtime
+            self.launch_failures = failures
+            self._record_launch_attempt(
+                attempt=attempt,
+                outcome="READY",
+                stage="precheck",
+                reason="runtime readiness precheck passed",
+                elapsed_seconds=time.monotonic() - attempt_started,
+                identity=frozen_identity,
+            )
+            return processes, attempt
+        self.launch_failures = failures
+        raise RegimeAError(
+            f"runtime launch failed on all {self.LAUNCH_ATTEMPT_BOUND} attempts: {failures}"
+        )
+
+    def _teardown_failed_launch(self, processes: list[object]) -> None:
+        """Leave no half-started runtime behind for the next attempt to trip on."""
+
+        if processes:
+            try:
+                self.live.stop_runtime(processes)
+            except Exception:  # noqa: BLE001 - best effort teardown
+                pass
+        for pattern in (
+            "provision_capture_runtime_sagemaker.sh start-display",
+            "provision_capture_runtime_sagemaker.sh start-server",
+            "provision_capture_runtime_sagemaker.sh start-client",
+            "KnotClient",
+            "fabric-server-launch",
+        ):
+            subprocess.run(["pkill", "-9", "-f", pattern], check=False, capture_output=True)
+        for name in ("Xvfb", "openbox"):
+            subprocess.run(["pkill", "-9", "-x", name], check=False, capture_output=True)
+        display = getattr(self.live, "DISPLAY", ":99").lstrip(":")
+        for stale in (Path(f"/tmp/.X{display}-lock"), Path(f"/tmp/.X11-unix/X{display}")):
+            try:
+                stale.unlink()
+            except OSError:
+                pass
+        time.sleep(3)
 
     def capture(
         self,
@@ -519,7 +706,7 @@ class ProductionCaptureWorker:
         validate_and_package: bool = True,
     ) -> None:
         context = self._capture_context(spec)
-        self._ensure_started()
+        self._ensure_started(spec)
         assert self.runtime is not None
         episode_id = int(context["episode_id"])
         frames = int(context["frames"])
@@ -549,6 +736,10 @@ class ProductionCaptureWorker:
         noise_path.write_bytes(context["noise_bytes"])
         motion_path.write_bytes(context["motion_bytes"])
         offset = len(self.runtime.log_text())
+        # From this assignment onward, a partial FIFO write could have sent the
+        # startspec even if send() raises. Keep the gate closed permanently and
+        # leave any recovery to the governed same-spec trajectory policy.
+        self.startspec_dispatch_attempted = True
         self.runtime.send([
             "mineocclude mode normal",
             "mineocclude duration 0",
