@@ -52,7 +52,7 @@ public final class ClientLogger implements AutoCloseable {
 
     public void writeTick(long episodeId, long serverTick, long renderFrameIdx,
                           long serverEpochNanos, long clientRecvNanos, long clientCaptureNanos,
-                          String framePath) throws IOException {
+                          int queueDepthAtCapture, String framePath) throws IOException {
         StringBuilder sb = new StringBuilder(256);
         sb.append('{');
         sb.append("\"episode_id\":").append(episodeId).append(',');
@@ -61,6 +61,10 @@ public final class ClientLogger implements AutoCloseable {
         sb.append("\"server_epoch_nanos\":").append(serverEpochNanos).append(',');
         sb.append("\"client_recv_nanos\":").append(clientRecvNanos).append(',');
         sb.append("\"client_capture_nanos\":").append(clientCaptureNanos).append(',');
+        // Unconsumed tick backlog at the moment of the framebuffer read. Under
+        // lockstep this is always 0; any nonzero value is direct evidence that
+        // the world advanced past the state this frame is joined to.
+        sb.append("\"tick_queue_depth_at_capture\":").append(queueDepthAtCapture).append(',');
         sb.append("\"frame_path\":\"").append(framePath.replace("\\", "/")).append('"');
         sb.append('}');
         ticks.write(sb.toString());

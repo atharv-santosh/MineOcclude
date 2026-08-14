@@ -57,6 +57,19 @@ public final class EpisodeManager {
     private int dbgWarm = 0;
     private String lastBuiltArenaKey = null;  // geometry key of the arena currently standing
 
+    /** Lockstep back-pressure. The recorded episode broadcasts tick N and then
+     *  stalls until the client acknowledges capturing N, so the world can never
+     *  advance past the state the client just photographed. -1 = nothing
+     *  outstanding. Without this the server free-ran at 20 Hz while the client
+     *  drained one queued tick per client tick, making any backlog permanent. */
+    private long awaitingAckTick = -1;
+    private long awaitingAckSinceNanos = 0L;
+    private int stalledTicks = 0;
+    private int maxStalledTicksObserved = 0;
+    /** A client that stops acknowledging must fail the episode, never let it
+     *  silently continue with unaligned frames. 20 s at 20 Hz. */
+    private static final int ACK_TIMEOUT_TICKS = 400;
+
     // C2.2/C2.4 additions: explicit lifecycle + immutable noise schedule.
     private EpisodeLifecycle lifecycle;
     private NoiseSchedule noiseSchedule;
@@ -272,6 +285,9 @@ public final class EpisodeManager {
         this.sawVisible = false;
         this.hiddenCount = 0;
         this.capturing = true;
+        this.awaitingAckTick = -1;
+        this.stalledTicks = 0;
+        this.maxStalledTicksObserved = 0;
 
         // Diagnostic: how many connected clients have the mod's channel? If 0,
         // the client mod is NOT loaded on the connected client (check that the
@@ -304,6 +320,28 @@ public final class EpisodeManager {
         MineOcclude.LOG.info("[MineOcclude] episode {} recording started", cfg.episodeId);
     }
 
+    /**
+     * Release the lockstep gate for a captured tick. Called on the server
+     * thread when the client reports that its framebuffer read for
+     * (episodeId, serverTick) is complete.
+     *
+     * An acknowledgement for anything other than the tick currently
+     * outstanding is ignored: it is either a duplicate or a straggler from a
+     * previous episode, and honouring it would release the gate early and
+     * reintroduce exactly the drift this mechanism exists to prevent.
+     */
+    public void onCaptureAck(long episodeId, long serverTick) {
+        if (!running || !capturing || cfg == null) return;
+        if (episodeId != cfg.episodeId || serverTick != awaitingAckTick) return;
+        awaitingAckTick = -1;
+        stalledTicks = 0;
+    }
+
+    /** Largest number of server ticks a single frame capture held the world for. */
+    public int maxStalledTicks() {
+        return maxStalledTicksObserved;
+    }
+
     /** Called once per server tick. */
     public void tick() {
         if (!running) return;
@@ -324,6 +362,24 @@ public final class EpisodeManager {
             if (warmupRemaining <= 0) beginCapture();
             return;
         }
+
+        // Lockstep gate. Tick N was broadcast and the client has not yet
+        // reported capturing it, so the recorded world must not move: stepping
+        // the sheep here would photograph tick N+1 pixels under a tick N state
+        // row. Hold the whole recorded episode until the acknowledgement lands.
+        if (awaitingAckTick >= 0) {
+            stalledTicks++;
+            maxStalledTicksObserved = Math.max(maxStalledTicksObserved, stalledTicks);
+            if (stalledTicks > ACK_TIMEOUT_TICKS) {
+                MineOcclude.LOG.error("[MineOcclude] no capture acknowledgement for tick {} after {} "
+                        + "server ticks — failing episode {} rather than recording unaligned frames",
+                        awaitingAckTick, stalledTicks, cfg.episodeId);
+                failureReason = "capture acknowledgement timeout at tick " + awaitingAckTick;
+                end();
+            }
+            return;
+        }
+        stalledTicks = 0;
 
         // C3.6 deterministic camera program: the server re-asserts the
         // canonical pose every recorded tick, so operator mouse/keyboard
@@ -422,12 +478,20 @@ public final class EpisodeManager {
             return;
         }
 
-        // Broadcast the authoritative tick to every client that can receive it.
+        // Broadcast the authoritative tick to every client that can receive it,
+        // then arm the lockstep gate so the world holds at this state until the
+        // client reports that its framebuffer read for this tick is done.
         TickSyncPacket pkt = new TickSyncPacket(cfg.episodeId, tickInEpisode, epochNanos);
+        int broadcastTo = 0;
         for (ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) {
             if (ServerPlayNetworking.canSend(p, NetworkingIds.TICK_SYNC)) {
                 ServerPlayNetworking.send(p, NetworkingIds.TICK_SYNC, pkt.write());
+                broadcastTo++;
             }
+        }
+        if (broadcastTo > 0) {
+            awaitingAckTick = tickInEpisode;
+            awaitingAckSinceNanos = epochNanos;
         }
 
         tickInEpisode++;

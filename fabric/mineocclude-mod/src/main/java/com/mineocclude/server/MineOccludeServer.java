@@ -1,6 +1,8 @@
 package com.mineocclude.server;
 
 import com.mineocclude.MineOcclude;
+import com.mineocclude.net.CaptureAckPacket;
+import com.mineocclude.net.NetworkingIds;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
@@ -10,6 +12,7 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
@@ -60,6 +63,22 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (manager != null) manager.tick();
         });
+
+        // Lockstep back-pressure: release the recorded episode only once the
+        // client reports the framebuffer read for the outstanding tick is done.
+        ServerPlayNetworking.registerGlobalReceiver(NetworkingIds.CAPTURE_ACK,
+            (server, player, handler, buf, responseSender) -> {
+                final CaptureAckPacket pkt;
+                try {
+                    pkt = CaptureAckPacket.read(buf);
+                } catch (Throwable t) {
+                    MineOcclude.LOG.error("[MineOcclude] capture_ack read failed", t);
+                    return;
+                }
+                server.execute(() -> {
+                    if (manager != null) manager.onCaptureAck(pkt.episodeId, pkt.serverTick);
+                });
+            });
 
         // Close any in-progress episode on shutdown so its logs are finalized.
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {

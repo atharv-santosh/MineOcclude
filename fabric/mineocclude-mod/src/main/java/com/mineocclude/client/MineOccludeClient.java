@@ -1,6 +1,7 @@
 package com.mineocclude.client;
 
 import com.mineocclude.MineOcclude;
+import com.mineocclude.net.CaptureAckPacket;
 import com.mineocclude.net.EpisodeEventPacket;
 import com.mineocclude.net.NetworkingIds;
 import com.mineocclude.net.TickSyncPacket;
@@ -281,6 +282,18 @@ public final class MineOccludeClient implements ClientModInitializer {
                 .resolve(String.format("%06d.png", idx));
         long captureNanos = System.nanoTime();
         boolean ok = frameCapture.capture(client, framePath, pt.episodeId, pt.serverTick);
+        // Release the server's lockstep gate as soon as the framebuffer read is
+        // done. The read above is the only part that must observe this tick's
+        // world; PNG encoding happens off-thread and cannot affect what was
+        // photographed, so acknowledging here keeps the stall as short as the
+        // capture itself while still preventing the world from advancing early.
+        try {
+            ClientPlayNetworking.send(NetworkingIds.CAPTURE_ACK,
+                    new CaptureAckPacket(pt.episodeId, pt.serverTick).write());
+        } catch (Throwable t) {
+            MineOcclude.LOG.error("[MineOcclude/client] capture_ack send failed at tick {}",
+                    pt.serverTick, t);
+        }
         // Frozen orientation: visual_i -> action_i -> visual_(i+1). The
         // sample taken at capture k is written as action index
         // k - 1 + pairingShift, where pairingShift is calibrated per
@@ -300,6 +313,7 @@ public final class MineOccludeClient implements ClientModInitializer {
             }
             logger.writeTick(pt.episodeId, pt.serverTick, idx,
                     pt.serverEpochNanos, pt.recvNanos, captureNanos,
+                    pending.size(),
                     episodeDir.relativize(framePath).toString());
         } catch (IOException e) {
             MineOcclude.LOG.error("[MineOcclude/client] log write failed", e);

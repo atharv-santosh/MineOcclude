@@ -20,4 +20,9 @@ public final class NetworkingIds {
 
     /** Server -> client: episode lifecycle (start/reset/end) so the client rotates output files. */
     public static final Identifier EPISODE_EVENT = new Identifier(NAMESPACE, "episode_event");
+
+    /** Client -> server: the frame for (episodeId, serverTick) has been captured.
+     *  The recorded episode stalls until this arrives, so the world cannot
+     *  advance past the state the client just photographed. */
+    public static final Identifier CAPTURE_ACK = new Identifier(NAMESPACE, "capture_ack");
 }

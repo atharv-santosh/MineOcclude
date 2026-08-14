@@ -497,10 +497,16 @@ class ProductionCaptureWorker:
         )
         if not jar.is_file():
             raise RegimeAError("governed Fabric mod build did not produce the runtime JAR")
-        destination = self.server_root / "mods/mineocclude-0.1.1.jar"
-        shutil.copy2(jar, destination)
-        if sha256_file(jar) != sha256_file(destination):
-            raise RegimeAError("governed Fabric server mod installation mismatch")
+        # Deploy to BOTH runtime roots. Installing only server-side let the
+        # client keep whatever JAR happened to be on disk, so the two sides ran
+        # different builds and any client-side capture change never reached the
+        # process that actually takes the screenshots.
+        for root in (self.server_root, self.client_root):
+            destination = root / "mods/mineocclude-0.1.1.jar"
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(jar, destination)
+            if sha256_file(jar) != sha256_file(destination):
+                raise RegimeAError(f"governed Fabric mod installation mismatch at {destination}")
         self.processes, _elapsed = self.live.launch_runtime(self.runtime_root)
         self.runtime = self.live.LiveRuntime()
         self.runtime.precheck()

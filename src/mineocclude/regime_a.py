@@ -274,6 +274,17 @@ def validate_capture_temporal_alignment(
             raise RegimeAError(f"server/client tick timestamp join mismatch at frame {index}")
         if capture_nanos < server_nanos:
             raise RegimeAError(f"frame {index} was captured before its own tick")
+        # Emitted by the lockstep client build. Absent on pre-lockstep captures,
+        # which the timestamp test below rejects on its own merits.
+        queue_depth = tick_row.get("tick_queue_depth_at_capture")
+        if queue_depth is not None:
+            if type(queue_depth) is not int or queue_depth < 0:
+                raise RegimeAError(f"frame {index} has a malformed tick queue depth")
+            if queue_depth != 0:
+                raise RegimeAError(
+                    f"frame {index} was captured with {queue_depth} unconsumed server "
+                    "ticks queued, so the world had already advanced past it"
+                )
         emitted.append(server_nanos)
         captured.append(capture_nanos)
     if any(emitted[index] >= emitted[index + 1] for index in range(len(emitted) - 1)):

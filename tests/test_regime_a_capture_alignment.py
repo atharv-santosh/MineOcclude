@@ -8,7 +8,9 @@ from mineocclude.regime_a import RegimeAError, validate_capture_temporal_alignme
 TICK_NANOS = 50_000_000
 
 
-def streams(capture_offsets: list[int]) -> tuple[list[dict], list[dict]]:
+def streams(
+    capture_offsets: list[int], queue_depths: list[int] | None = None
+) -> tuple[list[dict], list[dict]]:
     """Build joined server/client streams whose screenshots lag by the given offsets."""
 
     state = [
@@ -21,6 +23,11 @@ def streams(capture_offsets: list[int]) -> tuple[list[dict], list[dict]]:
             "render_frame_idx": index,
             "server_epoch_nanos": index * TICK_NANOS,
             "client_capture_nanos": index * TICK_NANOS + offset,
+            **(
+                {}
+                if queue_depths is None
+                else {"tick_queue_depth_at_capture": queue_depths[index]}
+            ),
         }
         for index, offset in enumerate(capture_offsets)
     ]
@@ -81,6 +88,26 @@ class CaptureTemporalAlignmentTests(unittest.TestCase):
         with self.assertRaises(RegimeAError) as caught:
             validate_capture_temporal_alignment(state, ticks)
         self.assertIn("strictly increasing", str(caught.exception))
+
+    def test_accepts_lockstep_capture_reporting_a_drained_tick_queue(self) -> None:
+        state, ticks = streams([12_000_000] * 6, queue_depths=[0] * 6)
+        summary = validate_capture_temporal_alignment(state, ticks)
+        self.assertEqual(summary["stale_frame_count"], 0)
+
+    def test_refuses_capture_taken_with_ticks_still_queued(self) -> None:
+        # Timestamps alone look fine here; only the queue depth reveals that the
+        # world had already advanced past the frame being written.
+        state, ticks = streams([12_000_000] * 6, queue_depths=[0, 0, 3, 0, 0, 0])
+        with self.assertRaises(RegimeAError) as caught:
+            validate_capture_temporal_alignment(state, ticks)
+        self.assertIn("3 unconsumed server ticks", str(caught.exception))
+        self.assertIn("frame 2", str(caught.exception))
+
+    def test_refuses_malformed_queue_depth(self) -> None:
+        state, ticks = streams([12_000_000] * 3, queue_depths=[0, 0, 0])
+        ticks[1]["tick_queue_depth_at_capture"] = -1
+        with self.assertRaises(RegimeAError):
+            validate_capture_temporal_alignment(state, ticks)
 
     def test_refuses_unequal_or_empty_streams(self) -> None:
         state, ticks = streams([1_000_000] * 3)
