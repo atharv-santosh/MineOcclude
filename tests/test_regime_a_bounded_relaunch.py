@@ -214,3 +214,81 @@ def test_startspec_send_failure_never_enters_runtime_relaunch(tmp_path: Path) ->
     with pytest.raises(RegimeAError, match="forbidden after startspec"):
         value._launch_with_bounded_retry(IDENTITY)
     value.live.launch_runtime.assert_not_called()
+
+
+def test_resume_capture_regenerates_only_bounded_postcapture_derivatives(
+    tmp_path: Path,
+) -> None:
+    value = object.__new__(ProductionCaptureWorker)
+    partial = tmp_path / "trajectories/.rehearsal.partial"
+    raw = partial / "raw"
+    frames = raw / "frames"
+    frames.mkdir(parents=True)
+    (partial / "partial_identity.json").write_text("{}\n")
+    for index in range(2):
+        (frames / f"{index:06d}.png").write_bytes(f"png-{index}".encode())
+    server_episode = tmp_path / "server/episode_41"
+    client_episode = tmp_path / "client/episode_41"
+    server_episode.mkdir(parents=True)
+    client_episode.mkdir(parents=True)
+    source_pairs = (
+        ("server_state.jsonl", server_episode / "server_state.jsonl"),
+        ("client_tick.jsonl", client_episode / "client_tick.jsonl"),
+        ("actions.jsonl", client_episode / "raw_actions.jsonl"),
+    )
+    for relative, source in source_pairs:
+        payload = f"{relative}\n".encode()
+        (raw / relative).write_bytes(payload)
+        source.write_bytes(payload)
+    source_frames = client_episode / "frames"
+    source_frames.mkdir()
+    for index in range(2):
+        (source_frames / f"{index:06d}.png").write_bytes(f"png-{index}".encode())
+    (server_episode / "reset_result.json").write_text(
+        json.dumps({"episode_id": 41, **IDENTITY}) + "\n"
+    )
+    (client_episode / "capture_complete.json").write_text(
+        json.dumps(
+            {
+                "episode_id": 41,
+                "frame_count": 2,
+                "final_render_frame_idx": 1,
+                "pending_writes": 0,
+                "writer_errors": 0,
+                "drained": True,
+            }
+        )
+        + "\n"
+    )
+    noise_path = tmp_path / "server/noise.jsonl"
+    motion_path = tmp_path / "server/motion.json"
+    noise_path.write_bytes(b"noise\n")
+    motion_path.write_bytes(b"motion\n")
+    context = {
+        "episode_id": 41,
+        "frames": 2,
+        "server_episode": server_episode,
+        "client_episode": client_episode,
+        "noise_path": noise_path,
+        "motion_path": motion_path,
+        "noise_bytes": b"noise\n",
+        "motion_bytes": b"motion\n",
+    }
+    value._capture_context = Mock(return_value=context)
+    (raw / "visibility.jsonl").write_text("derived\n")
+    (raw / "frame_map.jsonl").write_text("derived\n")
+    (partial / "coordinates.jsonl").write_text("derived\n")
+    validation = partial / "capture_validation/layout_01_ep41"
+    validation.mkdir(parents=True)
+    (validation / "interrupted.mp4.frames.txt").write_text("derived\n")
+
+    def assert_clean(_spec, observed_partial, _context):
+        assert not (observed_partial / "raw/visibility.jsonl").exists()
+        assert not (observed_partial / "raw/frame_map.jsonl").exists()
+        assert not (observed_partial / "coordinates.jsonl").exists()
+        assert not (observed_partial / "capture_validation").exists()
+
+    value._validate_and_package = Mock(side_effect=assert_clean)
+
+    assert value.resume_capture(IDENTITY, partial) is True
+    value._validate_and_package.assert_called_once_with(IDENTITY, partial, context)

@@ -260,13 +260,30 @@ class A4ExecutionRunner:
                     completed.add(spec_id)
                     continue
                 partial = self.store.same_spec_partial(spec_id, spec_hash)
+                last_state = self._last_state(spec_id)
+                resume_packaged = getattr(
+                    self.capture_worker, "resume_packaged_capture", None
+                )
+                packaged_resume = bool(
+                    partial is not None
+                    and last_state == "CAPTURED"
+                    and callable(resume_packaged)
+                    and resume_packaged(spec, partial)
+                )
+                if partial is not None and last_state == "CAPTURED" and not callable(
+                    resume_packaged
+                ):
+                    packaged_resume = True
                 resume_capture = getattr(self.capture_worker, "resume_capture", None)
                 resumed = bool(
-                    partial is not None
+                    not packaged_resume
+                    and partial is not None
                     and callable(resume_capture)
                     and resume_capture(spec, partial)
                 )
-                if resumed:
+                if packaged_resume:
+                    dispatched.append(spec_id)
+                elif resumed:
                     dispatched.append(spec_id)
                     self.ledger.append(
                         spec_id,

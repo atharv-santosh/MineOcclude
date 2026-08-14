@@ -123,15 +123,43 @@ class VisibilityCalibration:
     geometric_entry: Mapping[str, float]
     entry_guard: Mapping[str, int]
     exit_guard: Mapping[str, int]
+    directional_hidden_entry: Mapping[str, float] | None = None
+    directional_hidden_exit: Mapping[str, float] | None = None
+
+    def hidden_bounds(self, direction: str) -> tuple[float, float]:
+        """Return the direction-specific stable-hidden entry and exit bounds."""
+
+        if direction not in self.geometric_entry:
+            raise RegimeAError(f"unknown direction: {direction}")
+        if self.directional_hidden_entry is not None:
+            if self.directional_hidden_exit is None:
+                raise RegimeAError("directional hidden calibration is incomplete")
+            return (
+                float(self.directional_hidden_entry[direction]),
+                float(self.directional_hidden_exit[direction]),
+            )
+        if direction == "LEFT_TO_RIGHT":
+            return float(self.hidden_left), float(self.hidden_right)
+        return float(self.hidden_right), float(self.hidden_left)
 
     def as_authority(self) -> dict[str, Any]:
-        return {
+        authority = {
             "hidden_left": float(self.hidden_left),
             "hidden_right": float(self.hidden_right),
             "geometric_entry": {key: float(value) for key, value in sorted(self.geometric_entry.items())},
             "entry_guard_frames": {key: int(value) for key, value in sorted(self.entry_guard.items())},
             "exit_guard_frames": {key: int(value) for key, value in sorted(self.exit_guard.items())},
         }
+        if self.directional_hidden_entry is not None:
+            authority["directional_hidden_entry"] = {
+                key: float(value)
+                for key, value in sorted(self.directional_hidden_entry.items())
+            }
+            authority["directional_hidden_exit"] = {
+                key: float(value)
+                for key, value in sorted((self.directional_hidden_exit or {}).items())
+            }
+        return authority
 
 
 #: The original first-25 geometry. Retained so the superseded v1 manifest keeps
@@ -145,13 +173,42 @@ V1_CALIBRATION = VisibilityCalibration(
 )
 
 
+#: Prospectively calibrated from two fresh lockstep crossings per direction.
+#: The directional stable-hidden bounds are conservative inner support points:
+#: every calibration replicate had dual-hidden support at least this far into
+#: the wall, so simulated planning never assumes a favorable edge pixel.
+V2_CALIBRATION = VisibilityCalibration(
+    hidden_left=-3.9567355841276197,
+    hidden_right=5.066808337160708,
+    geometric_entry={
+        "LEFT_TO_RIGHT": -4.825455171027592,
+        "RIGHT_TO_LEFT": 5.825610843706404,
+    },
+    entry_guard={"LEFT_TO_RIGHT": 11, "RIGHT_TO_LEFT": 13},
+    exit_guard={"LEFT_TO_RIGHT": 7, "RIGHT_TO_LEFT": 4},
+    directional_hidden_entry={
+        "LEFT_TO_RIGHT": -3.9567355841276197,
+        "RIGHT_TO_LEFT": 5.066808337160708,
+    },
+    directional_hidden_exit={
+        "LEFT_TO_RIGHT": 5.42739195539593,
+        "RIGHT_TO_LEFT": -4.4947431452152475,
+    },
+)
+
+
 def stable_hidden_interval(
     positions: np.ndarray,
     direction: str,
     calibration: VisibilityCalibration = V1_CALIBRATION,
 ) -> tuple[int, int]:
     positions = np.asarray(positions, dtype=np.float64)
-    inside = (positions >= calibration.hidden_left) & (positions <= calibration.hidden_right)
+    hidden_entry, hidden_exit = calibration.hidden_bounds(direction)
+    inside = (
+        (positions >= hidden_entry) & (positions <= hidden_exit)
+        if direction == "LEFT_TO_RIGHT"
+        else (positions <= hidden_entry) & (positions >= hidden_exit)
+    )
     entry = next(
         (index for index in range(len(positions) - 18) if inside[index : index + 19].all()),
         None,
@@ -168,11 +225,7 @@ def stable_hidden_interval(
         raise RegimeAError("path lacks full pre-entry causal history")
     if entry - transition > calibration.entry_guard[direction]:
         raise RegimeAError("entry transition exceeds frozen direction guard")
-    exited = (
-        positions > calibration.hidden_right
-        if direction == "LEFT_TO_RIGHT"
-        else positions < calibration.hidden_left
-    )
+    exited = positions > hidden_exit if direction == "LEFT_TO_RIGHT" else positions < hidden_exit
     exit_indices = np.flatnonzero(exited & (np.arange(len(positions)) > entry + 18))
     if exit_indices.size == 0:
         raise RegimeAError("path lacks stable-hidden exit")
@@ -201,8 +254,12 @@ def classify_visibility(geometric_status: str, magenta_status: str) -> str:
     return "INVALID_VISIBILITY"
 
 
-def assign_stable_hidden_tau(rows: Sequence[Mapping[str, Any]], direction: str) -> list[dict[str, Any]]:
-    if direction not in ENTRY_GUARD:
+def assign_stable_hidden_tau(
+    rows: Sequence[Mapping[str, Any]],
+    direction: str,
+    entry_guard: Mapping[str, int] = ENTRY_GUARD,
+) -> list[dict[str, Any]]:
+    if direction not in entry_guard:
         raise RegimeAError("unknown direction")
     output = [dict(row) for row in rows]
     labels = [
@@ -225,7 +282,7 @@ def assign_stable_hidden_tau(rows: Sequence[Mapping[str, Any]], direction: str) 
         "INVALID_VISIBILITY",
     }:
         transition_start -= 1
-    if onset - transition_start > ENTRY_GUARD[direction]:
+    if onset - transition_start > entry_guard[direction]:
         raise RegimeAError("observed entry transition exceeds frozen guard")
     tau = 0
     for index, row in enumerate(output):

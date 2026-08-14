@@ -1,0 +1,250 @@
+{
+  "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+  "LEFT_TO_RIGHT": {
+    "all_capture_ack_identities_exact": true,
+    "all_temporally_aligned": true,
+    "crossing_count": 2,
+    "crossings": [
+      {
+        "capture_ack_count": 260,
+        "capture_ack_identity_exact": true,
+        "capture_ack_queue_depth_max": 0,
+        "derived_g_entry": 11,
+        "derived_g_exit": 7,
+        "direction": "LEFT_TO_RIGHT",
+        "entry_transition_max_consecutive_frames": 10,
+        "entry_transition_run_immediately_before_stable_frames": 10,
+        "entry_transition_start_frame": 37,
+        "evidence_jsonl": "/mnt/sagemaker-nvme/mineocclude-regime-a-calibration-v2/evidence/regime_a_calibration_v2_ltr_r01.94eeb0167b42d4de.partial.visibility_evidence.jsonl",
+        "exit_transition_max_consecutive_frames": 6,
+        "exit_transition_run_immediately_after_stable_frames": 6,
+        "exit_transition_stop_frame": 174,
+        "frame_count": 260,
+        "geometric_first_hidden_frame": 37,
+        "geometric_first_hidden_world_x": -4.80359228123259,
+        "geometric_first_visible_after_exit_frame": 175,
+        "geometric_first_visible_after_exit_world_x": 5.878740646425009,
+        "geometric_last_hidden_frame": 174,
+        "geometric_last_hidden_world_x": 5.709172639301317,
+        "geometric_last_visible_before_entry_frame": 36,
+        "geometric_last_visible_before_entry_world_x": -4.885481239739632,
+        "guard_rule": "maximum consecutive partial/disagreement run + 1 captured frame, minimum 1",
+        "label_histogram": {
+          "OCCLUDED_AGREEMENT": 122,
+          "VISIBILITY_DISAGREEMENT": 20,
+          "VISIBLE_AGREEMENT": 118
+        },
+        "seed": 3032084322369915898,
+        "spec_hash": "94eeb0167b42d4de81e2ef07f0650e9d5d0ce18d4ba421763680229c0bc47e26",
+        "stable_hidden_last_frame": 168,
+        "stable_hidden_last_world_x": 5.512845484053474,
+        "stable_hidden_length_frames": 122,
+        "stable_hidden_onset_frame": 47,
+        "stable_hidden_onset_world_x": -3.9567355841276197,
+        "temporal_alignment": {
+          "capture_lag_nanos_max": 590203607,
+          "capture_lag_nanos_median": 36066448,
+          "first_stale_frame_idx": null,
+          "frame_count": 260,
+          "stale_frame_count": 0
+        },
+        "trajectory_partial": ".regime_a_calibration_v2_ltr_r01.94eeb0167b42d4de.partial",
+        "trajectory_spec_id": "regime_a_calibration_v2_ltr_r01"
+      },
+      {
+        "capture_ack_count": 260,
+        "capture_ack_identity_exact": true,
+        "capture_ack_queue_depth_max": 0,
+        "derived_g_entry": 11,
+        "derived_g_exit": 4,
+        "direction": "LEFT_TO_RIGHT",
+        "entry_transition_max_consecutive_frames": 10,
+        "entry_transition_run_immediately_before_stable_frames": 10,
+        "entry_transition_start_frame": 45,
+        "evidence_jsonl": "/mnt/sagemaker-nvme/mineocclude-regime-a-calibration-v2/evidence/regime_a_calibration_v2_ltr_r02.2d7e1f74180cb723.partial.visibility_evidence.jsonl",
+        "exit_transition_max_consecutive_frames": 3,
+        "exit_transition_run_immediately_after_stable_frames": 3,
+        "exit_transition_stop_frame": 181,
+        "frame_count": 260,
+        "geometric_first_hidden_frame": 45,
+        "geometric_first_hidden_world_x": -4.769074626920407,
+        "geometric_first_visible_after_exit_frame": 182,
+        "geometric_first_visible_after_exit_world_x": 5.880678705984994,
+        "geometric_last_hidden_frame": 181,
+        "geometric_last_hidden_world_x": 5.748315314901201,
+        "geometric_last_visible_before_entry_frame": 44,
+        "geometric_last_visible_before_entry_world_x": -4.847318060822594,
+        "guard_rule": "maximum consecutive partial/disagreement run + 1 captured frame, minimum 1",
+        "label_histogram": {
+          "OCCLUDED_AGREEMENT": 124,
+          "VISIBILITY_DISAGREEMENT": 13,
+          "VISIBLE_AGREEMENT": 123
+        },
+        "seed": 2783885104571693688,
+        "spec_hash": "2d7e1f74180cb723cc2a2a0740ee3d16dab906fed06172a8f2a903795696a95c",
+        "stable_hidden_last_frame": 178,
+        "stable_hidden_last_world_x": 5.42739195539593,
+        "stable_hidden_length_frames": 124,
+        "stable_hidden_onset_frame": 55,
+        "stable_hidden_onset_world_x": -4.020083772036895,
+        "temporal_alignment": {
+          "capture_lag_nanos_max": 57546525,
+          "capture_lag_nanos_median": 43601376,
+          "first_stale_frame_idx": null,
+          "frame_count": 260,
+          "stale_frame_count": 0
+        },
+        "trajectory_partial": ".regime_a_calibration_v2_ltr_r02.2d7e1f74180cb723.partial",
+        "trajectory_spec_id": "regime_a_calibration_v2_ltr_r02"
+      }
+    ],
+    "derived_g_entry": 11,
+    "derived_g_exit": 7,
+    "direction": "LEFT_TO_RIGHT",
+    "dual_visibility_qualified": true,
+    "entry_transition_max_consecutive_frames": 10,
+    "exit_transition_max_consecutive_frames": 6,
+    "geometric_first_hidden_world_x_observed": [
+      -4.80359228123259,
+      -4.769074626920407
+    ],
+    "geometric_first_visible_after_exit_world_x_observed": [
+      5.878740646425009,
+      5.880678705984994
+    ],
+    "stable_hidden_entry_world_x_conservative": -3.9567355841276197,
+    "stable_hidden_exit_world_x_conservative": 5.42739195539593
+  },
+  "NON_SCIENTIFIC_CALIBRATION": true,
+  "RIGHT_TO_LEFT": {
+    "all_capture_ack_identities_exact": true,
+    "all_temporally_aligned": true,
+    "crossing_count": 2,
+    "crossings": [
+      {
+        "capture_ack_count": 260,
+        "capture_ack_identity_exact": true,
+        "capture_ack_queue_depth_max": 0,
+        "derived_g_entry": 13,
+        "derived_g_exit": 4,
+        "direction": "RIGHT_TO_LEFT",
+        "entry_transition_max_consecutive_frames": 12,
+        "entry_transition_run_immediately_before_stable_frames": 12,
+        "entry_transition_start_frame": 23,
+        "evidence_jsonl": "/mnt/sagemaker-nvme/mineocclude-regime-a-calibration-v2/evidence/regime_a_calibration_v2_rtl_r01.61d1446c58bba16e.partial.visibility_evidence.jsonl",
+        "exit_transition_max_consecutive_frames": 3,
+        "exit_transition_run_immediately_after_stable_frames": 3,
+        "exit_transition_stop_frame": 160,
+        "frame_count": 260,
+        "geometric_first_hidden_frame": 23,
+        "geometric_first_hidden_world_x": 5.796773831064205,
+        "geometric_first_visible_after_exit_frame": 161,
+        "geometric_first_visible_after_exit_world_x": -4.862955190454871,
+        "geometric_last_hidden_frame": 160,
+        "geometric_last_hidden_world_x": -4.791711073095257,
+        "geometric_last_visible_before_entry_frame": 22,
+        "geometric_last_visible_before_entry_world_x": 5.853891746595381,
+        "guard_rule": "maximum consecutive partial/disagreement run + 1 captured frame, minimum 1",
+        "label_histogram": {
+          "OCCLUDED_AGREEMENT": 123,
+          "VISIBILITY_DISAGREEMENT": 15,
+          "VISIBLE_AGREEMENT": 122
+        },
+        "seed": 3315130421667172902,
+        "spec_hash": "61d1446c58bba16e5511dba7d5fc165d4cafa4aad965d82d71331504e9022451",
+        "stable_hidden_last_frame": 157,
+        "stable_hidden_last_world_x": -4.4947431452152475,
+        "stable_hidden_length_frames": 123,
+        "stable_hidden_onset_frame": 35,
+        "stable_hidden_onset_world_x": 5.066808337160708,
+        "temporal_alignment": {
+          "capture_lag_nanos_max": 51047802,
+          "capture_lag_nanos_median": 43102361,
+          "first_stale_frame_idx": null,
+          "frame_count": 260,
+          "stale_frame_count": 0
+        },
+        "trajectory_partial": ".regime_a_calibration_v2_rtl_r01.61d1446c58bba16e.partial",
+        "trajectory_spec_id": "regime_a_calibration_v2_rtl_r01"
+      },
+      {
+        "capture_ack_count": 260,
+        "capture_ack_identity_exact": true,
+        "capture_ack_queue_depth_max": 0,
+        "derived_g_entry": 9,
+        "derived_g_exit": 3,
+        "direction": "RIGHT_TO_LEFT",
+        "entry_transition_max_consecutive_frames": 8,
+        "entry_transition_run_immediately_before_stable_frames": 8,
+        "entry_transition_start_frame": 21,
+        "evidence_jsonl": "/mnt/sagemaker-nvme/mineocclude-regime-a-calibration-v2/evidence/regime_a_calibration_v2_rtl_r02.1951afbad2a7a558.partial.visibility_evidence.jsonl",
+        "exit_transition_max_consecutive_frames": 2,
+        "exit_transition_run_immediately_after_stable_frames": 2,
+        "exit_transition_stop_frame": 165,
+        "frame_count": 260,
+        "geometric_first_hidden_frame": 21,
+        "geometric_first_hidden_world_x": 5.797329940817425,
+        "geometric_first_visible_after_exit_frame": 166,
+        "geometric_first_visible_after_exit_world_x": -4.966905373895691,
+        "geometric_last_hidden_frame": 165,
+        "geometric_last_hidden_world_x": -4.796125316080467,
+        "geometric_last_visible_before_entry_frame": 20,
+        "geometric_last_visible_before_entry_world_x": 5.962401263163685,
+        "guard_rule": "maximum consecutive partial/disagreement run + 1 captured frame, minimum 1",
+        "label_histogram": {
+          "OCCLUDED_AGREEMENT": 135,
+          "VISIBILITY_DISAGREEMENT": 10,
+          "VISIBLE_AGREEMENT": 115
+        },
+        "seed": 2439491163644790062,
+        "spec_hash": "1951afbad2a7a55826aa8e8436443acf9565e22be90b1204dbbf38a45b1ee938",
+        "stable_hidden_last_frame": 163,
+        "stable_hidden_last_world_x": -4.606219546427318,
+        "stable_hidden_length_frames": 135,
+        "stable_hidden_onset_frame": 29,
+        "stable_hidden_onset_world_x": 5.1864553760832255,
+        "temporal_alignment": {
+          "capture_lag_nanos_max": 61768665,
+          "capture_lag_nanos_median": 41657682,
+          "first_stale_frame_idx": null,
+          "frame_count": 260,
+          "stale_frame_count": 0
+        },
+        "trajectory_partial": ".regime_a_calibration_v2_rtl_r02.1951afbad2a7a558.partial",
+        "trajectory_spec_id": "regime_a_calibration_v2_rtl_r02"
+      }
+    ],
+    "derived_g_entry": 13,
+    "derived_g_exit": 4,
+    "direction": "RIGHT_TO_LEFT",
+    "dual_visibility_qualified": true,
+    "entry_transition_max_consecutive_frames": 12,
+    "exit_transition_max_consecutive_frames": 3,
+    "geometric_first_hidden_world_x_observed": [
+      5.796773831064205,
+      5.797329940817425
+    ],
+    "geometric_first_visible_after_exit_world_x_observed": [
+      -4.862955190454871,
+      -4.966905373895691
+    ],
+    "stable_hidden_entry_world_x_conservative": 5.066808337160708,
+    "stable_hidden_exit_world_x_conservative": -4.4947431452152475
+  },
+  "guard_rule": "maximum consecutive partial/disagreement run + 1 captured frame, minimum 1",
+  "observed_symmetry": {
+    "entry_runs_equal": false,
+    "exit_runs_equal": false,
+    "imposed": false,
+    "ltr_entry_vs_rtl_exit": [
+      10,
+      3
+    ],
+    "ltr_exit_vs_rtl_entry": [
+      6,
+      12
+    ]
+  },
+  "schema_version": "regime-a-fresh-directional-visibility-calibration-v2.0",
+  "time_reversal_assumed": false
+}

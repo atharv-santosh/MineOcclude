@@ -224,6 +224,31 @@ class RegimeAA4RunnerTests(unittest.TestCase):
             self.assertEqual(model.calls, [])
             self.assertFalse(any(row["state"] == "CAPTURED" for row in HashChainLedger(root / "progress_ledger.jsonl").records))
 
+    def test_ledger_captured_partial_resumes_directly_at_model(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            value = spec()
+            store = AtomicTrajectoryStore(root / "trajectories")
+            partial = store.begin(value["trajectory_spec_id"], value["spec_hash"])
+            Capture().capture(value, partial)
+            ledger = HashChainLedger(root / "progress_ledger.jsonl")
+            ledger.append(value["trajectory_spec_id"], "CAPTURED", spec_hash=value["spec_hash"])
+            capture, model = ResumableCapture(fail=True), Model()
+            runner = A4ExecutionRunner(
+                store=store,
+                ledger=ledger,
+                capture_worker=capture,
+                model_worker=model,
+                durable_store=S3DurableStore(
+                    "s3://synthetic-bucket/non-scientific/", FakeS3()
+                ),
+            )
+
+            self.assertEqual(runner.run([value]), ["synthetic_t01"])
+            self.assertEqual(capture.resume_calls, [])
+            self.assertEqual(capture.calls, [])
+            self.assertEqual(model.calls, ["synthetic_t01"])
+
     def test_partial_identity_and_atomic_final(self):
         with tempfile.TemporaryDirectory() as tmp:
             store = AtomicTrajectoryStore(Path(tmp))

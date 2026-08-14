@@ -1,0 +1,168 @@
+{
+  "LEFT_TO_RIGHT": {
+    "calibration_ids": [
+      "regime_a_calibration_v2_ltr_r01",
+      "regime_a_calibration_v2_ltr_r02"
+    ],
+    "capture_ack_identity": true,
+    "dual_visibility": true,
+    "entry_transition_disagreement_runs_frames": [
+      10,
+      10
+    ],
+    "exit_transition_disagreement_runs_frames": [
+      6,
+      3
+    ],
+    "g_entry_frames": 11,
+    "g_exit_frames": 7,
+    "geometric_hidden_boundary_bracket_world_x": [
+      -4.847318060822594,
+      -4.80359228123259
+    ],
+    "geometric_hidden_boundary_point_world_x": -4.825455171027592,
+    "maximum_entry_run_frames": 10,
+    "maximum_exit_run_frames": 6,
+    "qualified_crossings": 2,
+    "replication_stability": "PASS_BOUNDED_DIRECTIONAL_REPLICATION",
+    "seeds": [
+      3032084322369915898,
+      2783885104571693688
+    ],
+    "stable_dual_hidden_entry_conservative_world_x": -3.9567355841276197,
+    "stable_dual_hidden_entry_observed_world_x": [
+      -3.9567355841276197,
+      -4.020083772036895
+    ],
+    "stable_dual_hidden_exit_conservative_world_x": 5.42739195539593,
+    "stable_dual_hidden_exit_observed_world_x": [
+      5.512845484053474,
+      5.42739195539593
+    ],
+    "temporal_alignment": true
+  },
+  "RIGHT_TO_LEFT": {
+    "calibration_ids": [
+      "regime_a_calibration_v2_rtl_r01",
+      "regime_a_calibration_v2_rtl_r02"
+    ],
+    "capture_ack_identity": true,
+    "dual_visibility": true,
+    "entry_transition_disagreement_runs_frames": [
+      12,
+      8
+    ],
+    "exit_transition_disagreement_runs_frames": [
+      3,
+      2
+    ],
+    "g_entry_frames": 13,
+    "g_exit_frames": 4,
+    "geometric_hidden_boundary_bracket_world_x": [
+      5.797329940817425,
+      5.853891746595381
+    ],
+    "geometric_hidden_boundary_point_world_x": 5.825610843706404,
+    "maximum_entry_run_frames": 12,
+    "maximum_exit_run_frames": 3,
+    "qualified_crossings": 2,
+    "replication_stability": "PASS_BOUNDED_DIRECTIONAL_REPLICATION",
+    "seeds": [
+      3315130421667172902,
+      2439491163644790062
+    ],
+    "stable_dual_hidden_entry_conservative_world_x": 5.066808337160708,
+    "stable_dual_hidden_entry_observed_world_x": [
+      5.066808337160708,
+      5.1864553760832255
+    ],
+    "stable_dual_hidden_exit_conservative_world_x": -4.4947431452152475,
+    "stable_dual_hidden_exit_observed_world_x": [
+      -4.4947431452152475,
+      -4.606219546427318
+    ],
+    "temporal_alignment": true
+  },
+  "artifact_id": "regime-a-directional-visibility-authority-v2.0",
+  "context_duration_simulated_seconds": 0.75,
+  "directional_symmetry": "ASYMMETRIC",
+  "duration_bins": {
+    "BEYOND_CONTEXT": [
+      16,
+      19
+    ],
+    "INTERMEDIATE": [
+      5,
+      8
+    ],
+    "LONG": [
+      9,
+      12
+    ],
+    "NEAR_CONTEXT": [
+      13,
+      15
+    ],
+    "SHORT": [
+      1,
+      4
+    ]
+  },
+  "effective_preceding_frames": 15,
+  "guard_rule": "directional maximum consecutive partial/disagreement run plus one captured frame, minimum one",
+  "historical_v1": {
+    "LTR": {
+      "entry_guard_frames": 20,
+      "exit_guard_frames": 8
+    },
+    "RTL": {
+      "entry_guard_frames": 8,
+      "exit_guard_frames": 20
+    },
+    "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+    "status": "SUPERSEDED_PRESERVED_INVALID_PREQUALIFICATION_CAPTURE",
+    "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785"
+  },
+  "outcome_independent": true,
+  "planning_calibration": {
+    "directional_hidden_entry": {
+      "LEFT_TO_RIGHT": -3.9567355841276197,
+      "RIGHT_TO_LEFT": 5.066808337160708
+    },
+    "directional_hidden_exit": {
+      "LEFT_TO_RIGHT": 5.42739195539593,
+      "RIGHT_TO_LEFT": -4.4947431452152475
+    },
+    "entry_guard_frames": {
+      "LEFT_TO_RIGHT": 11,
+      "RIGHT_TO_LEFT": 13
+    },
+    "exit_guard_frames": {
+      "LEFT_TO_RIGHT": 7,
+      "RIGHT_TO_LEFT": 4
+    },
+    "geometric_entry": {
+      "LEFT_TO_RIGHT": -4.825455171027592,
+      "RIGHT_TO_LEFT": 5.825610843706404
+    },
+    "hidden_left": -3.9567355841276197,
+    "hidden_right": 5.066808337160708
+  },
+  "prospective": true,
+  "replication_interpretation": "geometric boundary brackets overlap tightly; pixel transition widths vary but are deterministically bounded by the directional observed maxima",
+  "scientific_activations_existed_at_correction": false,
+  "scientific_decoding_outcomes_existed_at_correction": false,
+  "scientific_run_id": "mineocclude-regime-a-first25-v2",
+  "simulated_capture_hz": 20,
+  "source_calibration_report_sha256": "7ae6de7d20594f84bd81375add002778ef3158039683f503856347a7b525fee6",
+  "source_raw_recovery_receipt_sha256": "aba849d4cd713e50758e5e8c48ccc6488f72de4149f58af59fc3cdab385a911e",
+  "status": "FROZEN_PROSPECTIVE_BEFORE_SCIENTIFIC_V2_COLLECTION",
+  "supersession_reason": [
+    "v1 capture had a render/state temporal join defect",
+    "v1 RTL authority relied on unsupported time-reversal symmetry",
+    "fresh capture_ack lockstep directional calibration independently measured both directions"
+  ],
+  "symmetry_imposed": false,
+  "time_reversal_assumed": false,
+  "wall_clock_time_does_not_define_context": true
+}

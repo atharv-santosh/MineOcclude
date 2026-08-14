@@ -25,6 +25,7 @@ from mineocclude.regime_a import (  # noqa: E402
     COMPLETE_STATE,
     HashChainLedger,
     RegimeAError,
+    V1_CALIBRATION,
     assign_stable_hidden_tau,
     project_world_to_coordinates,
     sha256_file,
@@ -363,7 +364,19 @@ class ProductionCaptureWorker:
                     homography["inverse_matrix"],
                 ),
             })
-        visibility = assign_stable_hidden_tau(visibility, str(spec["direction"]))
+        direction = str(spec["direction"])
+        visibility = assign_stable_hidden_tau(
+            visibility,
+            direction,
+            {
+                direction: int(
+                    spec.get(
+                        "entry_guard_frames",
+                        V1_CALIBRATION.entry_guard[direction],
+                    )
+                )
+            },
+        )
         targets = [
             int(row["model_frame_idx"])
             for row in visibility
@@ -420,8 +433,11 @@ class ProductionCaptureWorker:
         visibility, frame_map, coordinates, targets, expected_targets = (
             self._post_capture_artifacts(spec, partial, context)
         )
-        if targets != expected_targets:
+        v2_dual_visibility_targets = "visibility_calibration" in spec
+        if not v2_dual_visibility_targets and targets != expected_targets:
             raise RegimeAError("observed stable-hidden targets differ from frozen targets")
+        if v2_dual_visibility_targets and len(targets) != 19:
+            raise RegimeAError("v2 dual-visibility path did not produce tau 1..19")
         _write_jsonl(raw / "visibility.jsonl", visibility)
         _write_jsonl(raw / "frame_map.jsonl", frame_map)
         _write_jsonl(partial / "coordinates.jsonl", coordinates)
@@ -438,8 +454,11 @@ class ProductionCaptureWorker:
             raise RegimeAError(
                 f"validated capture adapter refused trajectory: {summary.get('problems')}"
             )
+        processed_bundle = Path(str(summary.get("frame_map", ""))).resolve().parent
+        if processed.resolve() not in processed_bundle.parents:
+            raise RegimeAError("validated capture adapter returned an unsafe bundle path")
         _package, result = package_and_validate(
-            str(processed),
+            str(processed_bundle),
             str(server_episode),
             str(client_episode),
             str(noise_path),
@@ -449,7 +468,7 @@ class ProductionCaptureWorker:
         if not result.accepted:
             raise RegimeAError("frozen capture-package validator refused trajectory")
         shutil.copy2(
-            processed / "capture_package_v0_1.json",
+            processed_bundle / "capture_package_v0_1.json",
             partial / "capture_package_v0_1.json",
         )
         shutil.copy2(noise_path, partial / "noise_schedule.jsonl")
@@ -477,7 +496,19 @@ class ProductionCaptureWorker:
             for path in partial.rglob("*")
             if path.is_file()
         }
-        if observed_partial_files != expected_partial_files:
+        derived_files = {
+            "coordinates.jsonl",
+            "raw/frame_map.jsonl",
+            "raw/visibility.jsonl",
+        }
+        allowed_files = expected_partial_files | derived_files
+        unexpected_files = {
+            relative
+            for relative in observed_partial_files
+            if relative not in allowed_files
+            and not relative.startswith("capture_validation/")
+        }
+        if expected_partial_files - observed_partial_files or unexpected_files:
             raise RegimeAError("raw partial inventory is incomplete or beyond the resumable boundary")
 
         server_episode = Path(context["server_episode"])
@@ -531,7 +562,67 @@ class ProductionCaptureWorker:
             for copied, source in source_pairs
         ):
             raise RegimeAError("reusable raw capture differs from runtime source bytes")
+        # A validation/packaging interruption may leave only reproducible
+        # derivatives of the already verified raw bytes. Remove exactly that
+        # bounded set and regenerate it; never discard or recapture the raw
+        # trajectory, and refuse any unknown artifact at this boundary.
+        for relative in derived_files:
+            path = partial / relative
+            if path.exists():
+                path.unlink()
+        processed = partial / "capture_validation"
+        if processed.exists():
+            shutil.rmtree(processed)
         self._validate_and_package(spec, partial, context)
+        return True
+
+    def resume_packaged_capture(
+        self, spec: dict[str, object], partial: Path
+    ) -> bool:
+        """Resume a ledger-proven CAPTURED unit directly at model extraction."""
+
+        context = self._capture_context(spec)
+        required = (
+            "capture_package_v0_1.json",
+            "noise_schedule.jsonl",
+            "motion_schedule.json",
+            "coordinates.jsonl",
+            "raw/server_state.jsonl",
+            "raw/client_tick.jsonl",
+            "raw/actions.jsonl",
+            "raw/frame_map.jsonl",
+            "raw/visibility.jsonl",
+        )
+        missing = [relative for relative in required if not (partial / relative).is_file()]
+        if missing:
+            raise RegimeAError(f"CAPTURED partial inventory is incomplete: {missing}")
+        frames = int(context["frames"])
+        if len(list((partial / "raw/frames").glob("*.png"))) != frames:
+            raise RegimeAError("CAPTURED partial PNG cardinality mismatch")
+        visibility, frame_map, coordinates, targets, _expected = (
+            self._post_capture_artifacts(spec, partial, context)
+        )
+        if (
+            read_jsonl(partial / "raw/visibility.jsonl") != visibility
+            or read_jsonl(partial / "raw/frame_map.jsonl") != frame_map
+            or read_jsonl(partial / "coordinates.jsonl") != coordinates
+            or len(targets) != 19
+        ):
+            raise RegimeAError("CAPTURED partial derived target artifacts mismatch")
+        if (
+            (partial / "noise_schedule.jsonl").read_bytes() != context["noise_bytes"]
+            or (partial / "motion_schedule.json").read_bytes() != context["motion_bytes"]
+        ):
+            raise RegimeAError("CAPTURED partial schedule bytes mismatch")
+        package = json.loads((partial / "capture_package_v0_1.json").read_text())
+        if package.get("episode_manifest", {}).get("status") != "accepted":
+            raise RegimeAError("CAPTURED partial package is not accepted")
+        activation_root = partial / "activations"
+        if activation_root.exists():
+            shutil.rmtree(activation_root)
+        inventory = partial / "activation_inventory.json"
+        if inventory.exists():
+            inventory.unlink()
         return True
 
     def _ensure_started(self, spec: dict[str, object] | None = None) -> None:
