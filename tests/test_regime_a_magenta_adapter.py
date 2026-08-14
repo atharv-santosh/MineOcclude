@@ -36,6 +36,31 @@ class RegimeAMagentaAdapterTests(unittest.TestCase):
             image.save(path)
             return self.runner.detector_rgb_rows(path, expected_size=size)
 
+    def test_rgba_source_restores_prior_convert_rgb_semantics(self):
+        rgba = [
+            (255, 0, 255, 0),
+            (0, 0, 0, 255),
+            (255, 0, 255, 17),
+            (1, 2, 3, 99),
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "rgba.png"
+            image = Image.new("RGBA", (2, 2))
+            image.putdata(rgba)
+            image.save(path)
+            adapted = self.runner.detector_rgb_rows(path, expected_size=(2, 2))
+        historical = [
+            [[255, 0, 255], [0, 0, 0]],
+            [[255, 0, 255], [1, 2, 3]],
+        ]
+        self.assertEqual(
+            [[list(pixel) for pixel in row] for row in adapted], historical
+        )
+        self.assertEqual(
+            detect_magenta(adapted, hsv_ranges=[self.threshold]).to_record(),
+            detect_magenta(historical, hsv_ranges=[self.threshold]).to_record(),
+        )
+
     def assert_historical_equivalence(self, pixels, size, **settings):
         adapted = self.adapter_rows(pixels, size)
         historical = [
@@ -112,7 +137,7 @@ class RegimeAMagentaAdapterTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             gray = Path(temporary) / "gray.png"
             Image.new("L", (2, 2), 0).save(gray)
-            with self.assertRaisesRegex(RegimeAError, "must be RGB"):
+            with self.assertRaisesRegex(RegimeAError, "must be RGB or RGBA"):
                 self.runner.detector_rgb_rows(gray, expected_size=(2, 2))
             rgb = Path(temporary) / "rgb.png"
             Image.new("RGB", (2, 2), (0, 0, 0)).save(rgb)

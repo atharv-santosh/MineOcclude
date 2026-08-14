@@ -87,6 +87,7 @@ def authorization_bindings() -> dict[str, str]:
         "a4_java_launcher_guard_supersession_receipt_sha256": sha256_file(STATUS / "a4_java_launcher_guard_supersession_receipt.json"),
         "a4_client_focus_precheck_supersession_receipt_sha256": sha256_file(STATUS / "a4_client_focus_precheck_supersession_receipt.json"),
         "a4_magenta_adapter_supersession_receipt_sha256": sha256_file(STATUS / "a4_magenta_adapter_supersession_receipt.json"),
+        "a4_magenta_adapter_rgba_supersession_receipt_sha256": sha256_file(STATUS / "a4_magenta_adapter_rgba_supersession_receipt.json"),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "scientific_run_id": SCIENTIFIC_RUN_ID,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",
@@ -117,9 +118,10 @@ def detector_rgb_rows(
     """Decode one RGB PNG into the detector's nested Sequence contract."""
 
     with Image.open(path) as image:
+        if image.mode not in {"RGB", "RGBA"}:
+            raise RegimeAError(f"detector frame must be RGB or RGBA, not {image.mode}")
+        image = image.convert("RGB")
         image.load()
-        if image.mode != "RGB":
-            raise RegimeAError(f"detector frame must be RGB, not {image.mode}")
         if expected_size is not None and image.size != expected_size:
             raise RegimeAError(
                 f"detector frame is {image.size[0]}x{image.size[1]}, not "

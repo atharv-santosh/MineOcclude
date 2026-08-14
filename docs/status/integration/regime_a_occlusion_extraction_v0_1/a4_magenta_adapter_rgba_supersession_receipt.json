@@ -1,0 +1,70 @@
+{
+  "artifact_id": "regime-a-a4-magenta-adapter-rgba-supersession-v1.0",
+  "status": "PASS_PENDING_COMMIT",
+  "created_utc": "2026-08-14T04:23:49Z",
+  "previous_commit": "26d815cc1f3520eea7dec29e1e1445343422b7d4",
+  "final_repair_commit": "PENDING_COMMIT",
+  "additional_fix_authority": "R13 one additional purely mechanical post-capture fix",
+  "chronology": {
+    "t01_raw_capture_existed_before_fix": true,
+    "activation_extraction_before_fix": false,
+    "scientific_decoding_outcomes_before_fix": 0,
+    "retry8_failure": "REGIME_A_REFUSAL: detector frame must be RGB, not RGBA",
+    "retry8_log_sha256": "6cc384d3875fb473bc97aeeaab9f0aa6eea93cc7745abd3032cf15a27d76ecad",
+    "failure_boundary": "PNG source-mode adapter before detect_magenta was invoked",
+    "scientific_detector_outcomes_examined": false,
+    "partial_files_written_by_retry8": false
+  },
+  "root_cause": "The pre-repair caller used Pillow convert('RGB') on captured RGBA PNGs. The first adapter repair required an already-RGB source and therefore rejected the capture before restoring that established conversion.",
+  "repair": {
+    "accepted_source_modes": [
+      "RGB",
+      "RGBA"
+    ],
+    "detector_representation": "nested list rows containing three-channel RGB tuples of exact Python int values",
+    "rgba_alpha_semantics": "discarded by Pillow convert('RGB'), identical to the original Regime-A caller",
+    "other_source_modes": "fail closed",
+    "detector_algorithm_changed": false,
+    "hsv_ranges_changed": false,
+    "blob_or_morphology_semantics_changed": false,
+    "visibility_semantics_changed": false
+  },
+  "non_scientific_equivalence": {
+    "command": "qualified operator environment PYTHONPATH=repo:repo/src python -m unittest -v tests.test_regime_a_magenta_adapter tests.test_regime_a_a4_runner",
+    "result": "17 tests passed",
+    "new_case": "RGBA pixels with varying alpha convert to exact historical RGB lists and exact equal DetectionResult records",
+    "scientific_fixtures_used": false
+  },
+  "preserved_t01_raw_capture": {
+    "trajectory_spec_id": "regime_a_v1_t01",
+    "seed": 1932859534325097948,
+    "spec_hash": "f8649d4a3810b99e5f21a0ebf230220af3dfc026373c954b4eb6a63ac49c49c0",
+    "reusable": true,
+    "recapture_required": false,
+    "raw_file_count": 263,
+    "raw_byte_size": 19015760,
+    "raw_inventory_sha256_before_retry8": "7259f16f7e44c011ed8f71d8dde94a76031e32257799938638e0ca95442986f1",
+    "raw_inventory_sha256_after_retry8": "7259f16f7e44c011ed8f71d8dde94a76031e32257799938638e0ca95442986f1",
+    "raw_inventory_preserved": true
+  },
+  "changed_files": [
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "c6cd585636dd2683dd747520cf5d61fc500b95cebf81ea33399fb92e33b71d80"
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "d9c2475ed743353f290bc1a226b60fb0442f350ad2c5de55084eaf9f16c27dd7"
+    },
+    {
+      "path": "tests/test_regime_a_magenta_adapter.py",
+      "sha256": "d26299f4a5c6ee87940e9f5438ca2acdbcf63a624bf43222506dcd7f0178b90f"
+    }
+  ],
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+  "specifications_changed": false,
+  "seeds_changed": false,
+  "analysis_authority_changed": false,
+  "authorization_v8_obsolete": true
+}
