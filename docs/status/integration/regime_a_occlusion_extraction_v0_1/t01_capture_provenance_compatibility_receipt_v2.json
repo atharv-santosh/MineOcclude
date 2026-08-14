@@ -1,0 +1,41 @@
+{
+  "artifact_id": "regime-a-t01-capture-provenance-compatibility-v2.0",
+  "status": "SUPERSEDES_V1_RAW_CAPTURE_NOT_REUSABLE",
+  "created_utc": "2026-08-14T06:22:00Z",
+  "supersedes": {
+    "path": "t01_capture_provenance_compatibility_receipt.json",
+    "artifact_id": "regime-a-t01-capture-provenance-compatibility-v1.0",
+    "prior_conclusion": "PASS_RAW_CAPTURE_PROVENANCE_COMPATIBLE, eventual_recapture_required_for_provenance=false",
+    "why_superseded": "The v1 receipt compared only Git-level code provenance between the capture-governing commit and HEAD. It never evaluated whether the captured bytes themselves are a valid capture. They are not: the t01 raw capture is temporally misaligned, so code-provenance compatibility is moot."
+  },
+  "capture_governing_commit": "39cc5c9dab86bb224bdbe488c5e2fb115205efaa",
+  "current_comparison_commit": "79e1565758a1938bb7834d87b5ad665d3c433a68",
+  "code_provenance_finding_retained": {
+    "capture_affecting_semantic_changes_since_capture": [],
+    "post_capture_only_changes_present": true,
+    "comment": "The v1 code-level classification is not disputed. It is simply not sufficient."
+  },
+  "capture_validity_finding": {
+    "defect": "CAPTURE_RENDER_TICK_TEMPORAL_JOIN_DEFECT",
+    "structural_fields_read": ["server_epoch_nanos", "client_capture_nanos", "server_tick", "render_frame_idx", "episode_id"],
+    "scientific_content_inspected": false,
+    "visibility_classification_run": false,
+    "pixels_inspected": false,
+    "capture_lag_ms": {"min": 19.6, "median": 1066.8, "max": 1598.8},
+    "frames_depicting_a_later_tick_than_joined": 259,
+    "frame_count": 260,
+    "interpretation": "The median screenshot was taken roughly twenty-one server ticks after the tick it is joined to. Frame-to-world correspondence is not recoverable from the recorded bytes."
+  },
+  "T01_RAW_CAPTURE_PROVENANCE_COMPATIBLE_WITH_CURRENT_PIPELINE": false,
+  "compatibility_basis": "CAPTURE_INVALID_NOT_CODE_DRIFT",
+  "future_disposition": "B_SAME_FROZEN_SPEC_SEED_RECAPTURE_REQUIRED_AFTER_REAUTHORIZATION",
+  "recapture_eventually_required": true,
+  "disposition_reason": "The existing raw bytes cannot support a valid frame-to-tick join, so no post-capture processing of them can be scientifically valid. Recapture must reuse the identical frozen spec id regime_a_v1_t01, frozen seed 1932859534325097948, and frozen spec hash f8649d4a3810b99e5f21a0ebf230220af3dfc026373c954b4eb6a63ac49c49c0. No scientific identity changes.",
+  "disposition_not_chosen_for_convenience": true,
+  "t01_results_used_to_choose_disposition": false,
+  "raw_capture_bytes_modified": false,
+  "SCIENTIFIC_RAW_CAPTURE_SEALED": true,
+  "FURTHER_SCIENTIFIC_PROCESSING_AUTHORIZED": false,
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b"
+}

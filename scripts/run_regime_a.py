@@ -28,6 +28,7 @@ from mineocclude.regime_a import (  # noqa: E402
     project_world_to_coordinates,
     sha256_file,
     validate_a4_authorization,
+    validate_capture_temporal_alignment,
     validate_scientific_specs,
 )
 from mineocclude.regime_a_execution import (  # noqa: E402
@@ -225,6 +226,7 @@ class ProductionCaptureWorker:
         actions = read_jsonl(raw / "actions.jsonl")
         if not (len(state) == len(ticks) == len(actions) == frames):
             raise RegimeAError("capture stream cardinality mismatch")
+        validate_capture_temporal_alignment(state, ticks)
         uuids = {row.get("target_entity_uuid") for row in state}
         expected_position = float(spec["start_world_x"])
         for index, row in enumerate(state):

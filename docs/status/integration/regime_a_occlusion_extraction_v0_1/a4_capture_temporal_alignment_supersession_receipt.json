@@ -1,0 +1,49 @@
+{
+  "artifact_id": "regime-a-a4-capture-temporal-alignment-supersession-v1.0",
+  "status": "PASS_PENDING_COMMIT",
+  "created_utc": "2026-08-14T06:20:00Z",
+  "prior_reviewed_commit": "79e1565758a1938bb7834d87b5ad665d3c433a68",
+  "new_final_commit_sha": "PENDING_COMMIT",
+  "failure_classification": "CAPTURE_RENDER_TICK_TEMPORAL_JOIN_DEFECT",
+  "root_cause": "The production post-capture path joined render frame i to server tick i using index equality alone. It never checked that the screenshot for frame i was actually taken during tick i. The client screenshot pipeline can fall arbitrarily far behind the 20 Hz server tick stream, so a frame labelled tick i may depict a world many ticks later, while every downstream visibility, coordinate, and target decision reads that frame as if it showed tick i.",
+  "evidence_source": "NON_SCIENTIFIC_INTEGRATION_REHEARSAL plus structural timestamp fields only",
+  "t01_values_used_for_diagnosis": false,
+  "t01_visibility_or_pixels_inspected": false,
+  "measured_capture_lag_ms": {
+    "_field": "client_capture_nanos minus server_epoch_nanos, from client_tick.jsonl",
+    "regime_a_integration_rehearsal_v1_rtl": {"min": 9.4, "median": 26.8, "max": 184.9, "stale_frames": 73, "first_stale_frame_idx": 186},
+    "regime_a_integration_rehearsal_v1_ltr": {"min": 98.3, "median": 1492.4, "max": 1995.3, "stale_frames": 259, "first_stale_frame_idx": 0},
+    "regime_a_v1_t01_structural_only": {"min": 19.6, "median": 1066.8, "max": 1598.8, "stale_frames": 259, "first_stale_frame_idx": 0}
+  },
+  "visible_consequence_in_rehearsal_ltr": "Frames 0-9 are blank sky captured before world load. Frames 10-18 are one frozen partially-loaded render in which the occluding wall chunk is absent, so the magenta target is spuriously detected while standing inside the occluder footprint. Frames 19+ show the loaded world. Every visibility label derived from this capture is therefore invalid.",
+  "repair_scope": "Add a fail-closed post-capture join-validity check. A captured frame must have been taken at or after its own tick was emitted and strictly before the next tick was emitted; otherwise the frame depicts a different world than the row it is joined to.",
+  "threshold_invented": false,
+  "threshold_rationale": "The bound is the next recorded server tick timestamp from the capture itself, not a tuned tolerance. No scientific quantity is decided by this check.",
+  "protocol_modified": false,
+  "manifest_modified": false,
+  "seeds_modified": false,
+  "folds_modified": false,
+  "guards_modified": false,
+  "bins_modified": false,
+  "visibility_semantics_modified": false,
+  "target_definitions_modified": false,
+  "detector_algorithm_modified": false,
+  "classification": "POST_CAPTURE_ONLY",
+  "changed_governed_files": [
+    {"path": "src/mineocclude/regime_a.py", "change": "add validate_capture_temporal_alignment"},
+    {"path": "scripts/run_regime_a.py", "change": "call validate_capture_temporal_alignment in _post_capture_artifacts"},
+    {"path": "tests/test_regime_a_capture_alignment.py", "change": "new focused tests", "classification": "TEST_ONLY"}
+  ],
+  "focused_test": {
+    "command": "qualified PATH/JAVA_HOME/PYTHONPATH python -m pytest -q tests/test_regime_a_production.py tests/test_regime_a_a4_runner.py tests/test_regime_a_magenta_adapter.py tests/test_regime_a_capture_alignment.py tests/test_regime_a_client_focus.py",
+    "result": "50 passed, 7 subtests passed"
+  },
+  "gate_applied_to_existing_captures": {
+    "regime_a_v1_t01": "REFUSED",
+    "regime_a_integration_rehearsal_v1_ltr": "REFUSED",
+    "regime_a_integration_rehearsal_v1_rtl": "REFUSED"
+  },
+  "detection_only_caveat": "This repair makes a temporally invalid capture impossible to process silently. It does not by itself make the client screenshot pipeline keep pace with the server tick stream. Remediating the capture-side backlog remains an open blocker before any recapture.",
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b"
+}

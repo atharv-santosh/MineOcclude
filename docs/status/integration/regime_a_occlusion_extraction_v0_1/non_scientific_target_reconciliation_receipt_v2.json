@@ -1,0 +1,126 @@
+{
+  "artifact_id": "regime-a-non-scientific-target-reconciliation-v2.0",
+  "status": "BLOCKED_CLASSIFICATION_CHANGING_TARGET_AUTHORITY",
+  "created_utc": "2026-08-14T06:24:00Z",
+  "NON_SCIENTIFIC_INTEGRATION_REHEARSAL": true,
+  "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+  "supersedes": {
+    "path": "non_scientific_target_reconciliation_receipt.json",
+    "artifact_id": "regime-a-non-scientific-target-reconciliation-v1.0",
+    "prior_conclusion": "BLOCKED_CLASSIFICATION_CHANGING_TARGET_AUTHORITY with mechanical_repair_justified=false",
+    "why_superseded": "The v1 verdict is upheld but its reasoning was unsound. v1 drew its left-to-right evidence from a capture that is temporally invalid, and it declared no mechanical repair justified when a real mechanical production defect was present. The blocking finding is relocated to the right-to-left rehearsal, whose entry transition was captured with correct frame-to-tick alignment."
+  },
+  "runtime_root": "/mnt/sagemaker-nvme/mineocclude-regime-a-rehearsal-v1",
+  "reserved_durable_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/_non_scientific_integration_rehearsal/",
+  "durable_prefix_written": false,
+  "scientific_ledger_written": false,
+
+  "source_level_algorithm_comparison": {
+    "prospective_expected_target_algorithm": {
+      "implementation": "src/mineocclude/regime_a.py::stable_hidden_interval",
+      "rule": "entry = first index whose next 19 world-x samples all lie inside the fixed interval [HIDDEN_LEFT, HIDDEN_RIGHT]; guard check requires entry minus the first GEOMETRIC_ENTRY crossing to be at most ENTRY_GUARD[direction]",
+      "constants": {"HIDDEN_LEFT": -4.09654256549771, "HIDDEN_RIGHT": 5.426536982279787, "GEOMETRIC_ENTRY_LTR": -4.82, "GEOMETRIC_ENTRY_RTL": 5.84},
+      "consumed_as": "expected_stable_hidden_onset_frame, frozen into all 25 scientific spec hashes"
+    },
+    "observed_target_algorithm": {
+      "implementation": "src/mineocclude/regime_a.py::assign_stable_hidden_tau",
+      "rule": "onset = first index beginning a 19-frame run of OCCLUDED_AGREEMENT; transition_start walks back over consecutive VISIBILITY_DISAGREEMENT or INVALID_VISIBILITY; refuse when onset minus transition_start exceeds ENTRY_GUARD[direction]",
+      "consumed_as": "tau, duration_bin, primary_hidden_eligible"
+    },
+    "kind_compatibility": "Both quantities measure the same kind of thing, a pre-stable-hidden disagreement transition width, so the comparison is well posed. The two are not related by any frame-index offset.",
+    "deterministic_divergence_points_examined_and_excluded": [
+      "frame 0 versus frame 1 origin",
+      "0-based versus 1-based indexing",
+      "current versus prior frame association",
+      "startspec command frame versus first episode frame",
+      "server tick versus client tick offset",
+      "action/render/state row offset",
+      "frame_map join key",
+      "guard inclusive versus exclusive bounds",
+      "LTR versus RTL guard binding",
+      "duration bin interval inclusivity"
+    ],
+    "divergence_point_confirmed": "render frame to server tick temporal validity, which index equality alone does not establish",
+    "verified_correct": {
+      "server_geometric_detector": "geometric_visible flips exactly at the frozen GEOMETRIC_ENTRY constants and is direction-consistent and symmetric about camera world x 0.5: occluded span measured [-4.8203, 5.9122] left-to-right and [-4.8729, 5.8290] right-to-left",
+      "stream_index_join": "server_epoch_nanos identical across server_state and client_tick for 260/260 rows in both rehearsals; render_frame_idx equals row index; streams strictly monotonic",
+      "guard_binding": "ENTRY_GUARD/EXIT_GUARD are bound to direction correctly in both the prospective and observed implementations"
+    }
+  },
+
+  "left_to_right": {
+    "trajectory_spec_id": "regime_a_integration_rehearsal_v1_ltr",
+    "seed": 8541900834925880671,
+    "spec_hash": "355558295c482e9b3c06c0efd862e9b5fbda949bf31b71abec4ae8b196f2afe5",
+    "raw_capture_complete": true,
+    "raw_frame_count": 260,
+    "capture_valid": false,
+    "capture_invalidation": "CAPTURE_RENDER_TICK_TEMPORAL_JOIN_DEFECT",
+    "capture_lag_ms": {"min": 98.3, "median": 1492.4, "max": 1995.3},
+    "frames_depicting_a_later_tick_than_joined": 259,
+    "observed_artifact": "frames 0-9 blank sky before world load; frames 10-18 a single frozen partially-loaded render in which the occluder chunk is absent and the target is spuriously detected inside the occluder footprint",
+    "expected_onset_model_frame_idx": 49,
+    "observed_onset_model_frame_idx": 37,
+    "exact_reconciliation": false,
+    "verdict": "EVIDENCE_VOID_CAPTURE_MUST_BE_REPEATED",
+    "prior_v1_mismatch_treated_as_authority_evidence": false
+  },
+
+  "right_to_left": {
+    "trajectory_spec_id": "regime_a_integration_rehearsal_v1_rtl",
+    "seed": 8380585627542586459,
+    "spec_hash": "b504003884a39289dccdae3349fc101e0035d26f8a3bb0cebda810c163a8a503",
+    "raw_capture_complete": true,
+    "raw_frame_count": 260,
+    "capture_lag_ms": {"min": 9.4, "median": 26.8, "max": 184.9},
+    "frames_depicting_a_later_tick_than_joined": 73,
+    "first_stale_frame_idx": 186,
+    "entry_transition_window_frames_25_to_42_all_correctly_aligned": true,
+    "entry_transition_window_lag_ms_range": [15.0, 33.5],
+    "measurement_trustworthy": true,
+    "measurement_trust_basis": "Every frame in the entry transition window was captured strictly inside its own tick. The 73 stale frames all occur at index 186 or later, in the post-exit tail, and do not touch the entry measurement.",
+    "geometric_entry_flip_frame": 29,
+    "geometric_entry_flip_world_x": 5.829,
+    "magenta_fully_hidden_frame": 39,
+    "magenta_fully_hidden_world_x": 4.9569,
+    "magenta_partial_occlusion_ramp_pixels": [363, 349, 332, 308, 254, 216, 132, 112, 70, 42, 0],
+    "entry_transition_width_frames": 10,
+    "entry_guard_frames": 8,
+    "entry_guard_passed": false,
+    "observed_target_eligibility": "REFUSED_FAIL_CLOSED",
+    "refusal": "observed entry transition exceeds frozen guard",
+    "exit_transition_width_frames": 3,
+    "exit_guard_frames": 20,
+    "exit_guard_passed": true,
+    "exact_reconciliation": false
+  },
+
+  "blocking_finding": {
+    "statement": "On a capture with correct frame-to-tick alignment, the real production geometry produces a right-to-left entry transition of 10 frames against a frozen entry guard of 8. The refusal is correct and cannot be removed by any mechanical repair.",
+    "underlying_constant_error": "The frozen prospective full-hidden boundary HIDDEN_RIGHT = 5.426536982279787 overstates the measured visual full-hidden boundary of approximately 4.957. The frozen model therefore predicts a right-to-left entry transition of about 5.5 frames where the production runtime produces 10.",
+    "why_not_mechanically_repairable": "Correcting HIDDEN_LEFT/HIDDEN_RIGHT, or widening ENTRY_GUARD[RIGHT_TO_LEFT], changes values that are hash-bound into entry_guard_frames, expected_stable_hidden_onset_frame, expected_stable_hidden_exit_frame, and expected_tau_1_to_19_world_x in every frozen spec body, and therefore changes all 25 spec hashes and the frozen trajectory manifest SHA256.",
+    "guard_provenance_note": "g_entry for RIGHT_TO_LEFT was never measured. s0_guard_semantics_receipt.json derives it as a time reversal of the left-to-right A0 measurement, and geometry_camera_authority.json records BIDIRECTIONAL_GEOMETRY_SUPPORTED = UNCLEAR with an explicit recommendation not to assume bidirectional symmetry."
+  },
+
+  "mechanical_repair_justified": true,
+  "mechanical_repairs_made": [
+    {
+      "defect": "CAPTURE_RENDER_TICK_TEMPORAL_JOIN_DEFECT",
+      "receipt": "a4_capture_temporal_alignment_supersession_receipt.json",
+      "scientific_semantics_changed": false
+    }
+  ],
+  "classification_changing_authority_issue": true,
+  "classification_changing_authority_modified": false,
+  "EXPECTED_AND_OBSERVED_STABLE_HIDDEN_TARGETS_RECONCILE": false,
+  "LTR_EXPECTED_OBSERVED_TARGETS_RECONCILE": "NO_EVIDENCE_VOID",
+  "RTL_EXPECTED_OBSERVED_TARGETS_RECONCILE": "NO",
+  "full_end_to_end_rehearsal_authorized": false,
+  "full_end_to_end_rehearsal_gate": "Q8 requires exact target eligibility reconciliation before the complete production path may run. That gate is not met.",
+  "activation_extraction_started": false,
+  "scientific_capture_or_processing_started": false,
+  "t01_values_used_for_diagnosis_or_repair_choice": false,
+  "scientific_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+  "blocker": "BLOCKED_CLASSIFICATION_CHANGING_TARGET_AUTHORITY"
+}

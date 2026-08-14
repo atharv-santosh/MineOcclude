@@ -1,0 +1,142 @@
+{
+  "artifact_id": "regime-a-pre-scientific-qualification-status-v1.0",
+  "status": "BLOCKED_CLASSIFICATION_CHANGING_TARGET_AUTHORITY",
+  "created_utc": "2026-08-14T06:26:00Z",
+  "READY_FOR_SCIENTIFIC_A4_REAUTHORIZATION": false,
+
+  "scope": "Pre-scientific end-to-end production qualification. Scientific A4 remained stopped throughout.",
+  "SCIENTIFIC_A4_EXECUTED_DURING_THIS_PASS": false,
+  "SCIENTIFIC_ACTIVATIONS_EXTRACTED_DURING_THIS_PASS": false,
+  "SCIENTIFIC_DECODING_OUTCOMES_COMPUTED": 0,
+  "scientific_a4_authorization_created": false,
+  "scientific_launch_receipt_created": false,
+
+  "q0_t01_seal": {
+    "receipt": "t01_raw_capture_seal_receipt.json",
+    "SCIENTIFIC_RAW_CAPTURE_SEALED": true,
+    "FURTHER_SCIENTIFIC_PROCESSING_AUTHORIZED": false,
+    "raw_file_count": 263,
+    "raw_bytes": 19015760,
+    "raw_inventory_sha256": "7259f16f7e44c011ed8f71d8dde94a76031e32257799938638e0ca95442986f1",
+    "activation_artifacts": 0,
+    "decoding_artifacts": 0,
+    "raw_bytes_modified_this_pass": false
+  },
+
+  "q1_q14_t01_disposition": {
+    "receipt": "t01_capture_provenance_compatibility_receipt_v2.json",
+    "T01_RAW_CAPTURE_PROVENANCE_COMPATIBLE_WITH_CURRENT_PIPELINE": false,
+    "future_disposition": "B_SAME_FROZEN_SPEC_SEED_RECAPTURE_REQUIRED_AFTER_REAUTHORIZATION",
+    "recapture_required": true
+  },
+
+  "q2_target_schedule_diagnosis": {
+    "receipt": "non_scientific_target_reconciliation_receipt_v2.json",
+    "mechanical_mismatch_found": true,
+    "classification_changing_authority_issue_found": true
+  },
+
+  "q3_rehearsal_identities": {
+    "manifest": "non_scientific_integration_rehearsal_manifest.jsonl",
+    "ltr_id": "regime_a_integration_rehearsal_v1_ltr",
+    "ltr_seed": 8541900834925880671,
+    "rtl_id": "regime_a_integration_rehearsal_v1_rtl",
+    "rtl_seed": 8380585627542586459,
+    "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+    "local_runtime_root": "/mnt/sagemaker-nvme/mineocclude-regime-a-rehearsal-v1",
+    "s3_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/_non_scientific_integration_rehearsal/",
+    "scientific_ledger_contaminated": false,
+    "scientific_durable_prefix_written": false
+  },
+
+  "q4_q5_target_reconciliation": {
+    "LTR_EXPECTED_OBSERVED_TARGETS_RECONCILE": "NO_EVIDENCE_VOID",
+    "RTL_EXPECTED_OBSERVED_TARGETS_RECONCILE": "NO",
+    "unexplained_mismatch_remaining": false,
+    "mismatch_fully_explained_by": [
+      "CAPTURE_RENDER_TICK_TEMPORAL_JOIN_DEFECT (left-to-right)",
+      "frozen HIDDEN_RIGHT constant overstates the measured visual full-hidden boundary (right-to-left)"
+    ]
+  },
+
+  "q6_mechanical_repairs": {
+    "repair_count": 1,
+    "repairs": [
+      {
+        "root_cause": "CAPTURE_RENDER_TICK_TEMPORAL_JOIN_DEFECT",
+        "changed_files": ["src/mineocclude/regime_a.py", "scripts/run_regime_a.py", "tests/test_regime_a_capture_alignment.py"],
+        "scientific_semantics_changed": false,
+        "receipt": "a4_capture_temporal_alignment_supersession_receipt.json"
+      }
+    ]
+  },
+
+  "q7_stop_condition": {
+    "triggered": true,
+    "return_code": "BLOCKED_CLASSIFICATION_CHANGING_TARGET_AUTHORITY",
+    "trigger": "guard authority itself is scientifically invalid",
+    "detail": "A correctly aligned right-to-left production capture yields a 10-frame entry transition against a frozen entry guard of 8. Resolving this requires changing HIDDEN_LEFT/HIDDEN_RIGHT or ENTRY_GUARD[RIGHT_TO_LEFT], all of which are hash-bound into the 25 frozen spec hashes and the frozen trajectory manifest.",
+    "scientific_change_made": false,
+    "t01_used_to_resolve": false
+  },
+
+  "q8_q12_not_reached": {
+    "LTR_END_TO_END_REHEARSAL": "NOT_RUN",
+    "RTL_END_TO_END_REHEARSAL": "NOT_RUN",
+    "MODEL_EXTRACTION_QUALIFICATION": "NOT_RUN",
+    "S3_DURABILITY_QUALIFICATION": "NOT_RUN",
+    "RECOVERY_REHEARSAL": "NOT_RUN",
+    "reason": "Q8 gates the complete production path on exact target eligibility reconciliation, which is not met. Running model extraction, S3 durability, or recovery now would qualify a path whose target schedule is known to be unresolved, and would spend GPU and wall-clock on evidence that a later authority change would invalidate.",
+    "checkpoint_loaded_this_pass": false,
+    "gpu_used_this_pass": false
+  },
+
+  "q13_production_path_equivalence": {
+    "assessed": "PARTIAL",
+    "rehearsal_uses_exact_production_capture_path": true,
+    "shared_entry_point": "scripts/run_regime_a.py::ProductionCaptureWorker",
+    "identity_separation_verified": true,
+    "science_only_branches_still_unexercised": [
+      "PersistentMineWorldWorker.extract all-layer extraction",
+      "S3DurableStore upload, head, metadata SHA, full downloaded-byte rehash",
+      "A4ExecutionRunner VALIDATED / DURABLE / COMPLETE_VALIDATED_DURABLE ledger progression",
+      "restart and same-spec interrupted retry across a durable unit"
+    ]
+  },
+
+  "scientific_authority_preservation": {
+    "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+    "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+    "specs_unchanged": true,
+    "seeds_unchanged": true,
+    "folds_unchanged": true,
+    "guards_unchanged": true,
+    "bins_unchanged": true,
+    "visibility_semantics_unchanged": true,
+    "target_definitions_unchanged": true,
+    "analysis_authority_unchanged": true
+  },
+
+  "blockers": [
+    {
+      "id": "B1",
+      "severity": "CLASSIFICATION_CHANGING",
+      "statement": "Frozen entry guard of 8 for RIGHT_TO_LEFT is smaller than the 10-frame entry transition the real production geometry produces, and the frozen full-hidden boundary constants do not match the measured occlusion geometry. Operator adjudication of the frozen target/guard authority is required.",
+      "owner": "operator"
+    },
+    {
+      "id": "B2",
+      "severity": "MECHANICAL_OPEN",
+      "statement": "The client screenshot pipeline can fall 1.5 to 2.0 seconds behind the 20 Hz server tick stream. Detection is now fail-closed, but the capture-side backlog itself is not remediated, so no valid capture can currently be guaranteed. This must be fixed before any recapture.",
+      "owner": "engineering"
+    },
+    {
+      "id": "B3",
+      "severity": "QUALIFICATION_OPEN",
+      "statement": "Model extraction, S3 durability, and restart/recovery integration boundaries remain unexercised end to end.",
+      "owner": "engineering"
+    }
+  ],
+
+  "next_action": "Operator adjudication of B1. This pass deliberately did not choose a resolution, because every available fix changes frozen scientific authority."
+}

@@ -247,6 +247,58 @@ def validate_frame_alignment(rows: Sequence[Mapping[str, Any]], target_entity_id
             raise RegimeAError(f"target identity/presence mismatch at {index}")
 
 
+def validate_capture_temporal_alignment(
+    state: Sequence[Mapping[str, Any]], ticks: Sequence[Mapping[str, Any]]
+) -> dict[str, Any]:
+    """Refuse captures whose screenshots do not depict the tick they are joined to.
+
+    Every captured frame is labelled with a server tick, and every downstream
+    visibility, coordinate, and target decision reads the frame as if it showed
+    that tick's world.  The minimal condition for that label to be true is that
+    the screenshot was taken before the next tick's state was emitted; a frame
+    captured later depicts a strictly later world than the row it is joined to.
+    This is a join-validity check derived from the recorded timestamps, not a
+    tuned quality threshold, and it decides no scientific quantity.
+    """
+
+    if len(state) != len(ticks) or not ticks:
+        raise RegimeAError("capture temporal alignment needs equal-length streams")
+    emitted: list[int] = []
+    captured: list[int] = []
+    for index, (state_row, tick_row) in enumerate(zip(state, ticks, strict=True)):
+        server_nanos = tick_row.get("server_epoch_nanos")
+        capture_nanos = tick_row.get("client_capture_nanos")
+        if type(server_nanos) is not int or type(capture_nanos) is not int:
+            raise RegimeAError(f"capture timestamps missing at frame {index}")
+        if state_row.get("server_epoch_nanos") != server_nanos:
+            raise RegimeAError(f"server/client tick timestamp join mismatch at frame {index}")
+        if capture_nanos < server_nanos:
+            raise RegimeAError(f"frame {index} was captured before its own tick")
+        emitted.append(server_nanos)
+        captured.append(capture_nanos)
+    if any(emitted[index] >= emitted[index + 1] for index in range(len(emitted) - 1)):
+        raise RegimeAError("server tick timestamps are not strictly increasing")
+    stale = [
+        index
+        for index in range(len(emitted) - 1)
+        if captured[index] >= emitted[index + 1]
+    ]
+    lags = [captured[index] - emitted[index] for index in range(len(emitted))]
+    summary = {
+        "frame_count": len(emitted),
+        "capture_lag_nanos_max": max(lags),
+        "capture_lag_nanos_median": int(np.median(np.asarray(lags, dtype=np.int64))),
+        "stale_frame_count": len(stale),
+        "first_stale_frame_idx": stale[0] if stale else None,
+    }
+    if stale:
+        raise RegimeAError(
+            f"{len(stale)} captured frames depict a later tick than they are joined to "
+            f"(first at frame {stale[0]}, max capture lag {max(lags) / 1e6:.1f} ms)"
+        )
+    return summary
+
+
 def trajectory_r2(actual: Sequence[float], predicted: Sequence[float]) -> dict[str, float]:
     y = np.asarray(actual, dtype=np.float64)
     yhat = np.asarray(predicted, dtype=np.float64)
