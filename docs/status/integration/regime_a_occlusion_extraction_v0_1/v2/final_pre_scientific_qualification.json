@@ -1,0 +1,652 @@
+{
+  "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+  "NON_SCIENTIFIC_INTEGRATION_REHEARSAL": true,
+  "PASS": true,
+  "calibration": {
+    "LEFT_TO_RIGHT": {
+      "calibration_ids": [
+        "regime_a_calibration_v2_ltr_r01",
+        "regime_a_calibration_v2_ltr_r02"
+      ],
+      "capture_ack_identity": true,
+      "dual_visibility": true,
+      "entry_transition_disagreement_runs_frames": [
+        10,
+        10
+      ],
+      "exit_transition_disagreement_runs_frames": [
+        6,
+        3
+      ],
+      "g_entry_frames": 11,
+      "g_exit_frames": 7,
+      "geometric_hidden_boundary_bracket_world_x": [
+        -4.847318060822594,
+        -4.80359228123259
+      ],
+      "geometric_hidden_boundary_point_world_x": -4.825455171027592,
+      "maximum_entry_run_frames": 10,
+      "maximum_exit_run_frames": 6,
+      "qualified_crossings": 2,
+      "replication_stability": "PASS_BOUNDED_DIRECTIONAL_REPLICATION",
+      "seeds": [
+        3032084322369915898,
+        2783885104571693688
+      ],
+      "stable_dual_hidden_entry_conservative_world_x": -3.9567355841276197,
+      "stable_dual_hidden_entry_observed_world_x": [
+        -3.9567355841276197,
+        -4.020083772036895
+      ],
+      "stable_dual_hidden_exit_conservative_world_x": 5.42739195539593,
+      "stable_dual_hidden_exit_observed_world_x": [
+        5.512845484053474,
+        5.42739195539593
+      ],
+      "temporal_alignment": true
+    },
+    "RIGHT_TO_LEFT": {
+      "calibration_ids": [
+        "regime_a_calibration_v2_rtl_r01",
+        "regime_a_calibration_v2_rtl_r02"
+      ],
+      "capture_ack_identity": true,
+      "dual_visibility": true,
+      "entry_transition_disagreement_runs_frames": [
+        12,
+        8
+      ],
+      "exit_transition_disagreement_runs_frames": [
+        3,
+        2
+      ],
+      "g_entry_frames": 13,
+      "g_exit_frames": 4,
+      "geometric_hidden_boundary_bracket_world_x": [
+        5.797329940817425,
+        5.853891746595381
+      ],
+      "geometric_hidden_boundary_point_world_x": 5.825610843706404,
+      "maximum_entry_run_frames": 12,
+      "maximum_exit_run_frames": 3,
+      "qualified_crossings": 2,
+      "replication_stability": "PASS_BOUNDED_DIRECTIONAL_REPLICATION",
+      "seeds": [
+        3315130421667172902,
+        2439491163644790062
+      ],
+      "stable_dual_hidden_entry_conservative_world_x": 5.066808337160708,
+      "stable_dual_hidden_entry_observed_world_x": [
+        5.066808337160708,
+        5.1864553760832255
+      ],
+      "stable_dual_hidden_exit_conservative_world_x": -4.4947431452152475,
+      "stable_dual_hidden_exit_observed_world_x": [
+        -4.4947431452152475,
+        -4.606219546427318
+      ],
+      "temporal_alignment": true
+    },
+    "directional_symmetry": "ASYMMETRIC",
+    "symmetry_imposed": false
+  },
+  "directional_visibility_authority_sha256": "985c7b802c17873d9fcee7306d9071a90a97a330c9e6f8a962d6e464e18ccf56",
+  "donor_manifest_sha256": "6c72c50cf72c38fd5a20403c75d68c242cf674983cf6b6b487185cbd319fd15d",
+  "generated_against_commit": "de83354ef2fea0ae130395449c7d4972526dfc8f",
+  "model_extraction": {
+    "PASS": true,
+    "activation_shapes": [
+      [
+        19,
+        336,
+        2048
+      ],
+      [
+        19,
+        336,
+        2048
+      ]
+    ],
+    "checkpoint_load_count": 1,
+    "checkpoint_path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+    "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "context_pairs": 16,
+    "effective_preceding_frames": 15,
+    "hidden_width": 2048,
+    "independent_trajectory_inputs": true,
+    "layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "teacher_forced_kv_cache_refreshed_each_request": true,
+    "token_count": 336,
+    "token_grid": [
+      14,
+      24
+    ]
+  },
+  "production_path_equivalence": {
+    "PASS": true,
+    "allowed_differences": [
+      "identity",
+      "eligibility flag",
+      "runtime namespace",
+      "S3 namespace"
+    ],
+    "capture_source_sha256": "61ec37b31a972b810de93454aa0892d7a038c561a007868ed14693c57684e8a8",
+    "durability_source_sha256": "e758f46b10a2b1649e07363b43c14b379cd7d3a66ac294f4ee06157d3a82041b",
+    "important_unexercised_integration_branch": false,
+    "model_extraction_source_sha256": "16e27ee6e90d5390971e54705f68523737f7994af492ba6777b39c8137b272de",
+    "non_authorized_v2_plan_validation_available": true,
+    "packaging_source_sha256": "33656f50479c932b591bd6f46cb6187b33980784cb67477cbf22e26dec831aff",
+    "rehearsal_entrypoint": "scripts/run_regime_a_first25_v2_rehearsal.py",
+    "remaining_untested_science_only_branches": [
+      "operator-supplied A4-v2 authorization validation",
+      "iteration over the 25 frozen scientific identities",
+      "scientific runtime and S3 namespaces"
+    ],
+    "runner_source_sha256": "137f00edc2aea095a0e47a7cb7721555e2701137d2309a678e9dc56650a85ce5",
+    "same_A4ExecutionRunner": true,
+    "same_PersistentMineWorldWorker": true,
+    "same_ProductionCaptureWorker": true,
+    "same_S3DurableStore": true,
+    "scientific_entrypoint": "scripts/run_regime_a_first25_v2.py",
+    "temporal_visibility_coordinate_source_sha256": "2124a68f08282970ee891ac8ca062ae098b8b93b07fea4aee68dfb783da57395"
+  },
+  "recovery": {
+    "PASS": true,
+    "completed_durable_units_recognized": [
+      "regime_a_first25_v2_rehearsal_ltr",
+      "regime_a_first25_v2_rehearsal_rtl"
+    ],
+    "completed_durable_units_skipped": [
+      "regime_a_first25_v2_rehearsal_ltr",
+      "regime_a_first25_v2_rehearsal_rtl"
+    ],
+    "controlled_interrupted_unit": "regime_a_first25_v2_rehearsal_ltr",
+    "duplicate_capture_prevented": true,
+    "duplicate_extraction_prevented": true,
+    "ledger_hash_chain": "PASS",
+    "replacement_identity_generated": false,
+    "restart_checkpoint_load_count": 0,
+    "same_seed_preserved": true,
+    "same_spec_preserved": true
+  },
+  "s3_durability": {
+    "PASS": true,
+    "downloaded_byte_checks_from_publish_receipts": 614,
+    "governed_object_count": 614,
+    "head_size_checks": 614,
+    "metadata_sha_checks": 614,
+    "prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/_non_scientific_first25_v2_rehearsal/",
+    "total_bytes": 1091032407
+  },
+  "schema_version": "regime-a-first25-v2-final-pre-scientific-qualification-v1.0",
+  "scientific_execution": {
+    "first25_v2_scientific_startspecs_sent": 0,
+    "scientific_activations_extracted": 0,
+    "scientific_decoders_fitted": 0,
+    "scientific_decoding_outcomes_computed": 0,
+    "scientific_trajectories_executed": 0
+  },
+  "status": "PASS_READY_FOR_SEPARATE_A4_V2_AUTHORIZATION",
+  "target_reconciliation": {
+    "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+    "LTR_PASS": true,
+    "NON_SCIENTIFIC_INTEGRATION_REHEARSAL": true,
+    "PASS": true,
+    "RTL_PASS": true,
+    "controlled_recovery": {
+      "controlled_interrupted_unit": "regime_a_first25_v2_rehearsal_ltr",
+      "partial_created": true,
+      "partial_path": "/mnt/sagemaker-nvme/mineocclude-regime-a-first25-v2-rehearsal/trajectories/.regime_a_first25_v2_rehearsal_ltr.1ee2122ebcadc7f6.partial",
+      "replacement_identity_generated": false,
+      "same_seed_preserved": true,
+      "same_spec_preserved": true
+    },
+    "results": [
+      {
+        "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+        "NON_SCIENTIFIC_INTEGRATION_REHEARSAL": true,
+        "direction": "LEFT_TO_RIGHT",
+        "entry_guard_frames": 11,
+        "entry_transition_run_frames": 10,
+        "exact_reconciliation": true,
+        "independently_recomputed_authority_indices": [
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69
+        ],
+        "label_histogram": {
+          "OCCLUDED_AGREEMENT": 121,
+          "VISIBILITY_DISAGREEMENT": 15,
+          "VISIBLE_AGREEMENT": 124
+        },
+        "observed_production_target_indices": [
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69
+        ],
+        "prospective_support_forecast_indices": [
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69
+        ],
+        "seed": 7383927642454204327,
+        "spec_hash": "1ee2122ebcadc7f688489626ea9e9f198afa066201507b5501ca39f017c57f9b",
+        "temporal_alignment": {
+          "capture_lag_nanos_max": 962776936,
+          "capture_lag_nanos_median": 38827470,
+          "first_stale_frame_idx": null,
+          "frame_count": 260,
+          "stale_frame_count": 0
+        },
+        "trajectory_spec_id": "regime_a_first25_v2_rehearsal_ltr",
+        "unexplained_mismatch": false
+      },
+      {
+        "ELIGIBLE_FOR_REGIME_A_RESULTS": false,
+        "NON_SCIENTIFIC_INTEGRATION_REHEARSAL": true,
+        "direction": "RIGHT_TO_LEFT",
+        "entry_guard_frames": 13,
+        "entry_transition_run_frames": 12,
+        "exact_reconciliation": true,
+        "independently_recomputed_authority_indices": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "label_histogram": {
+          "OCCLUDED_AGREEMENT": 125,
+          "VISIBILITY_DISAGREEMENT": 17,
+          "VISIBLE_AGREEMENT": 118
+        },
+        "observed_production_target_indices": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "prospective_support_forecast_indices": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "seed": 1825623777694484051,
+        "spec_hash": "df125867e258594b3573f6f382c36052d7985ce139623e808a14902e90c7f4b4",
+        "temporal_alignment": {
+          "capture_lag_nanos_max": 50110686,
+          "capture_lag_nanos_median": 41811284,
+          "first_stale_frame_idx": null,
+          "frame_count": 260,
+          "stale_frame_count": 0
+        },
+        "trajectory_spec_id": "regime_a_first25_v2_rehearsal_rtl",
+        "unexplained_mismatch": false
+      }
+    ],
+    "schema_version": "regime-a-first25-v2-target-reconciliation-v1.0"
+  },
+  "trajectories": [
+    {
+      "PASS": true,
+      "action_rows": 260,
+      "activation_shape": [
+        19,
+        336,
+        2048
+      ],
+      "atomic_finalization": true,
+      "bin_counts": {
+        "BEYOND_CONTEXT": 4,
+        "INTERMEDIATE": 4,
+        "LONG": 4,
+        "NEAR_CONTEXT": 3,
+        "SHORT": 4
+      },
+      "camera_fixed": true,
+      "capture_ack_identity_exact": true,
+      "capture_ack_queue_depth_max": 0,
+      "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "client_tick_rows": 260,
+      "context_pairs": 16,
+      "coordinate_rows": 260,
+      "coordinates_complete": true,
+      "direction": "LEFT_TO_RIGHT",
+      "effective_preceding_frames": 15,
+      "entry_guard_frames": 11,
+      "entry_transition_run_frames": 10,
+      "frame_count": 260,
+      "frame_map_rows": 260,
+      "layer_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "ledger_states": [
+        "CAPTURED",
+        "VALIDATED",
+        "DURABLE",
+        "COMPLETE_VALIDATED_DURABLE"
+      ],
+      "local_validation": "VALIDATED",
+      "package_code_sha": "b6523baee995543b563e9d39cea6d0d84c773378",
+      "png_count": 260,
+      "s3_downloaded_byte_sha_verified": true,
+      "s3_metadata_sha_verified": true,
+      "s3_object_count": 307,
+      "s3_size_verified": true,
+      "s3_total_bytes": 545434362,
+      "seed": 7383927642454204327,
+      "serialization": "numpy-npy-little-endian-target-token-tensors",
+      "spec_hash": "1ee2122ebcadc7f688489626ea9e9f198afa066201507b5501ca39f017c57f9b",
+      "state_rows": 260,
+      "tau": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "temporal_alignment": {
+        "capture_lag_nanos_max": 962776936,
+        "capture_lag_nanos_median": 38827470,
+        "first_stale_frame_idx": null,
+        "frame_count": 260,
+        "stale_frame_count": 0
+      },
+      "terminal_state": "COMPLETE_VALIDATED_DURABLE",
+      "trajectory_spec_id": "regime_a_first25_v2_rehearsal_ltr",
+      "visibility_target_count": 19,
+      "visibility_target_indices": [
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69
+      ]
+    },
+    {
+      "PASS": true,
+      "action_rows": 260,
+      "activation_shape": [
+        19,
+        336,
+        2048
+      ],
+      "atomic_finalization": true,
+      "bin_counts": {
+        "BEYOND_CONTEXT": 4,
+        "INTERMEDIATE": 4,
+        "LONG": 4,
+        "NEAR_CONTEXT": 3,
+        "SHORT": 4
+      },
+      "camera_fixed": true,
+      "capture_ack_identity_exact": true,
+      "capture_ack_queue_depth_max": 0,
+      "checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "client_tick_rows": 260,
+      "context_pairs": 16,
+      "coordinate_rows": 260,
+      "coordinates_complete": true,
+      "direction": "RIGHT_TO_LEFT",
+      "effective_preceding_frames": 15,
+      "entry_guard_frames": 13,
+      "entry_transition_run_frames": 12,
+      "frame_count": 260,
+      "frame_map_rows": 260,
+      "layer_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "ledger_states": [
+        "CAPTURED",
+        "VALIDATED",
+        "DURABLE",
+        "COMPLETE_VALIDATED_DURABLE"
+      ],
+      "local_validation": "VALIDATED",
+      "package_code_sha": "b6523baee995543b563e9d39cea6d0d84c773378",
+      "png_count": 260,
+      "s3_downloaded_byte_sha_verified": true,
+      "s3_metadata_sha_verified": true,
+      "s3_object_count": 307,
+      "s3_size_verified": true,
+      "s3_total_bytes": 545598045,
+      "seed": 1825623777694484051,
+      "serialization": "numpy-npy-little-endian-target-token-tensors",
+      "spec_hash": "df125867e258594b3573f6f382c36052d7985ce139623e808a14902e90c7f4b4",
+      "state_rows": 260,
+      "tau": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "temporal_alignment": {
+        "capture_lag_nanos_max": 50110686,
+        "capture_lag_nanos_median": 41811284,
+        "first_stale_frame_idx": null,
+        "frame_count": 260,
+        "stale_frame_count": 0
+      },
+      "terminal_state": "COMPLETE_VALIDATED_DURABLE",
+      "trajectory_spec_id": "regime_a_first25_v2_rehearsal_rtl",
+      "visibility_target_count": 19,
+      "visibility_target_indices": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ]
+    }
+  ],
+  "trajectory_manifest_sha256": "ca14f6dbda3e31cf1c7a9ecee98d199307cd1a81b0670eca9104039010eef257"
+}
