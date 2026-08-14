@@ -140,7 +140,9 @@ the current A/B/C authorities and does not vendor copies of them.
       and `run_person_d_66_cell_step6_3to6_5_completion.py` now renders
       it into Step 6.4's `visible_positive_control` section (9/10
       sections real; only `no_object_negative_control` stays blocked --
-      this dataset genuinely has zero no-sheep rows).
+      360 real no-sheep rows exist (excluded from oracle scoring by
+      design, not absent) but no negative-control audit has been run
+      against them yet; a real, actionable next step).
 - [x] Phase 6-8 machinery (Steps 6.1-8.4). Step 6.1 binds the **real**
       accepted 66-cell MVP identity (48 core + 6 no-wall + 6 no-sheep +
       6 sentinel, zero shortfall), re-derived byte-identically from
@@ -171,9 +173,10 @@ the current A/B/C authorities and does not vendor copies of them.
       `docs/status/person_d_66_cell_production_baselines_v0_1/step6_3_grouped_nulls.json`,
       `step6_3_paired_comparisons_{u1,u2}.json`,
       `step4_5_missingness_exclusion_report.json`,
-      `step6_4_preliminary_comparison_report.json` (8/10 sections real,
-      2 honestly blocked -- no Step 4.3 gate registered yet, and this
-      dataset has zero no-sheep rows), `step6_5_result_lock.json`. Note
+      `step6_4_preliminary_comparison_report.json` (9/10 sections real
+      as of the Step 4.3 gate run below; `no_object_negative_control`
+      remains honestly blocked pending a registered negative-control
+      audit), `step6_5_result_lock.json`. Note
       the `person_d_phase6to8_completion_v0_1` package (Steps 6.1-8.4
       machinery, still `evidence_kind = "synthetic"` there) and
       `person_d_terminal_handoff_v0_1/person_d_terminal_status_package.json`

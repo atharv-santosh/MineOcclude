@@ -28,12 +28,14 @@ actually run, and the script fails closed rather than silently
 publishing a different result.
 
 What stays out of scope: no U4/Phase 7 artifact is touched (no real
-Person B direction or Person E measurement data exists anywhere), and
-the two report sections with no real data in this dataset
-(``visible_positive_control`` -- no registered positive-control-gate
-run over 66-cell no-wall rows yet; ``no_object_negative_control`` -- this
-dataset contains zero no-sheep/occluder-only rows) are published
-honestly blocked, not fabricated.
+Person B direction or Person E measurement data exists anywhere).
+``visible_positive_control`` renders real once
+``step4_3_positive_control_gate.json`` has been published (see
+``run_person_d_step4_3_real_positive_control_gate.py``).
+``no_object_negative_control`` stays honestly blocked: 360 real
+no-sheep rows exist (excluded from oracle scoring by design, not
+absent), but no negative-control audit has been run and registered
+against them yet.
 
 Usage:
 
@@ -119,16 +121,23 @@ NO_WALL_BLOCKER = Blocker(
 
 NO_SHEEP_BLOCKER = Blocker(
     missing_artifact=(
-        "Real no-sheep/occluder-only rows -- this 66-cell dataset's own "
-        "counts_by_control_type contains zero of them (only "
-        "core_regime_a, no_wall_visible_control, and context_sentinel)"
+        "A registered negative-control audit (mineocclude.baselines.controls"
+        ".audit_occluder_only_control) run against the real 360 no-sheep "
+        "rows -- these rows are real and present (control_type="
+        "'no_object_control', 6 trajectories, one per layout) but are all "
+        "status='excluded' with exclusion_reason="
+        "'no_object_control_not_oracle_eligible' (no mu_oracle target exists "
+        "for a frame with no object), so build_execution_universe's "
+        "accepted-only contexts never include them and no baseline family "
+        "has ever been run against them"
     ),
-    expected_owner="person_c",
-    expected_schema_or_version="person-c-66-cell-oracle-target-v0.1",
+    expected_owner="person_d",
+    expected_schema_or_version="person-d-occluder-only-negative-control-audit-v0-1",
     required_identity_fields=("trajectory_id", "model_frame_idx", "control_type"),
     exact_command_after_receipt=(
-        "re-run this script once Person C's real row universe contains a "
-        "no_sheep/occluder-only control_type"
+        "build TrajectoryContexts for the excluded no_object_control rows, "
+        "run each baseline family against them, and call "
+        "mineocclude.baselines.controls.audit_occluder_only_control"
     ),
 )
 
@@ -587,9 +596,12 @@ def build_all(
             blockers=[NO_SHEEP_BLOCKER],
             notes=(
                 (
-                    "This dataset's real row universe contains zero no-sheep/"
-                    "occluder-only rows (counts_by_control_type has only "
-                    "core_regime_a, no_wall_visible_control, context_sentinel)."
+                    "360 real no-sheep rows exist (6 trajectories, one per "
+                    "layout) but are excluded from oracle-target scoring by "
+                    "design (no mu_oracle target exists with no object); no "
+                    "structural negative-control audit has been run and "
+                    "registered against them yet -- structurally empty and "
+                    "blocked, not a claim that the data does not exist."
                 ),
             ),
         ),

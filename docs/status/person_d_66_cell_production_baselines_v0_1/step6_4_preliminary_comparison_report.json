@@ -3,10 +3,10 @@
   "blocked_section_count": 1,
   "blockers": [
     {
-      "exact_command_after_receipt": "re-run this script once Person C's real row universe contains a no_sheep/occluder-only control_type",
-      "expected_owner": "person_c",
-      "expected_schema_or_version": "person-c-66-cell-oracle-target-v0.1",
-      "missing_artifact": "Real no-sheep/occluder-only rows -- this 66-cell dataset's own counts_by_control_type contains zero of them (only core_regime_a, no_wall_visible_control, and context_sentinel)",
+      "exact_command_after_receipt": "build TrajectoryContexts for the excluded no_object_control rows, run each baseline family against them, and call mineocclude.baselines.controls.audit_occluder_only_control",
+      "expected_owner": "person_d",
+      "expected_schema_or_version": "person-d-occluder-only-negative-control-audit-v0-1",
+      "missing_artifact": "A registered negative-control audit (mineocclude.baselines.controls.audit_occluder_only_control) run against the real 360 no-sheep rows -- these rows are real and present (control_type='no_object_control', 6 trajectories, one per layout) but are all status='excluded' with exclusion_reason='no_object_control_not_oracle_eligible' (no mu_oracle target exists for a frame with no object), so build_execution_universe's accepted-only contexts never include them and no baseline family has ever been run against them",
       "required_identity_fields": [
         "trajectory_id",
         "model_frame_idx",
@@ -276,10 +276,10 @@
     {
       "blockers": [
         {
-          "exact_command_after_receipt": "re-run this script once Person C's real row universe contains a no_sheep/occluder-only control_type",
-          "expected_owner": "person_c",
-          "expected_schema_or_version": "person-c-66-cell-oracle-target-v0.1",
-          "missing_artifact": "Real no-sheep/occluder-only rows -- this 66-cell dataset's own counts_by_control_type contains zero of them (only core_regime_a, no_wall_visible_control, and context_sentinel)",
+          "exact_command_after_receipt": "build TrajectoryContexts for the excluded no_object_control rows, run each baseline family against them, and call mineocclude.baselines.controls.audit_occluder_only_control",
+          "expected_owner": "person_d",
+          "expected_schema_or_version": "person-d-occluder-only-negative-control-audit-v0-1",
+          "missing_artifact": "A registered negative-control audit (mineocclude.baselines.controls.audit_occluder_only_control) run against the real 360 no-sheep rows -- these rows are real and present (control_type='no_object_control', 6 trajectories, one per layout) but are all status='excluded' with exclusion_reason='no_object_control_not_oracle_eligible' (no mu_oracle target exists for a frame with no object), so build_execution_universe's accepted-only contexts never include them and no baseline family has ever been run against them",
           "required_identity_fields": [
             "trajectory_id",
             "model_frame_idx",
@@ -293,7 +293,7 @@
       "missing_count": 0,
       "na_count": 0,
       "notes": [
-        "This dataset's real row universe contains zero no-sheep/occluder-only rows (counts_by_control_type has only core_regime_a, no_wall_visible_control, context_sentinel)."
+        "360 real no-sheep rows exist (6 trajectories, one per layout) but are excluded from oracle-target scoring by design (no mu_oracle target exists with no object); no structural negative-control audit has been run and registered against them yet -- structurally empty and blocked, not a claim that the data does not exist."
       ],
       "section_id": "no_object_negative_control",
       "status": "blocked",

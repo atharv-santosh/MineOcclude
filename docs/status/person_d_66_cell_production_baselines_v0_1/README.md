@@ -212,9 +212,14 @@ drift) before being trusted.
 * `step6_4_preliminary_comparison_report.json` -- 9 of 10 required
   sections rendered from real, registered values (matching this README's
   headline numbers exactly), including `visible_positive_control` (see
-  below). Only `no_object_negative_control` stays honestly blocked, not
-  fabricated -- this dataset's real row universe contains zero
-  no-sheep/occluder-only rows at all.
+  below). Only `no_object_negative_control` stays blocked: 360 real
+  no-sheep rows exist (6 trajectories, one per layout; `control_type=
+  "no_object_control"`), excluded from oracle-target scoring by design
+  (there is no `mu_oracle_blocks` target with no object to locate), but
+  no structural negative-control audit
+  (`mineocclude.baselines.controls.audit_occluder_only_control`) has been
+  run and registered against them yet -- a real, actionable next step,
+  not a claim that the data is absent.
 * `step6_5_result_lock.json` -- real locked facts (10,592 predictions,
   3,786 scored, 6,806 non-applicable, 0 missing, 42 accepted / 24 excluded
   trajectories), bound to Person B's real row-universe-receipt and
