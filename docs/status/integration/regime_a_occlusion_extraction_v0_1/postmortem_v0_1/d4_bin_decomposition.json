@@ -1,0 +1,133 @@
+{
+  "artifact_id": "regime-a-postmortem-d4-bin-decomposition-v0.1",
+  "linking_note": "Joins target headroom (D1), in-context evidence (D2) and frozen prediction error on identical rows.",
+  "method": "descriptive breakdown of frozen OOF predictions; no per-bin refit",
+  "per_bin": {
+    "BEYOND_CONTEXT": {
+      "best_k_mae_blocks": 3.0625520776978394,
+      "best_k_rmse_blocks": 3.4400407145521537,
+      "context_evidence": {
+        "median_clean_visible_frames": 0.0,
+        "median_max_context_magenta_pixels": 0.0,
+        "median_rendered_evidence_frames": 0.0,
+        "pct_rows_with_clean_visible": 0.0,
+        "pct_rows_with_rendered_evidence": 0.0
+      },
+      "correlation_meaningfulness_caveat": "NEAR_CONTEXT contributes only 3 rows per trajectory and every bin has very small within-trajectory TSS; pooled correlation here is dominated by between-trajectory spread and per-bin R2 is not reported.",
+      "full_mae_blocks": 3.0110912011822752,
+      "full_normalized_rmse_over_within_traj_sd": 38.339992659995126,
+      "full_pearson_r_pooled": 0.30653770815061526,
+      "full_rmse_blocks": 3.273163596454554,
+      "full_signed_bias_blocks": 1.1448867814219221,
+      "mean_within_trajectory_target_range_blocks": 0.21763060124464695,
+      "mean_within_trajectory_target_sd_blocks": 0.08537204546389629,
+      "pooled_target_sd_blocks": 3.2126471543715716,
+      "rows": 100,
+      "tau_range": [
+        16,
+        19
+      ]
+    },
+    "INTERMEDIATE": {
+      "best_k_mae_blocks": 0.25616211131077005,
+      "best_k_rmse_blocks": 0.31301565083221056,
+      "context_evidence": {
+        "median_clean_visible_frames": 0.0,
+        "median_max_context_magenta_pixels": 323.0,
+        "median_rendered_evidence_frames": 9.5,
+        "pct_rows_with_clean_visible": 21.0,
+        "pct_rows_with_rendered_evidence": 100.0
+      },
+      "correlation_meaningfulness_caveat": "NEAR_CONTEXT contributes only 3 rows per trajectory and every bin has very small within-trajectory TSS; pooled correlation here is dominated by between-trajectory spread and per-bin R2 is not reported.",
+      "full_mae_blocks": 0.34548393696235963,
+      "full_normalized_rmse_over_within_traj_sd": 5.331060635676619,
+      "full_pearson_r_pooled": 0.9935814382170334,
+      "full_rmse_blocks": 0.4508142055106213,
+      "full_signed_bias_blocks": 0.008165776997946685,
+      "mean_within_trajectory_target_range_blocks": 0.22168568915316175,
+      "mean_within_trajectory_target_sd_blocks": 0.08456369873073183,
+      "pooled_target_sd_blocks": 3.968833127932273,
+      "rows": 100,
+      "tau_range": [
+        5,
+        8
+      ]
+    },
+    "LONG": {
+      "best_k_mae_blocks": 0.25266139026834616,
+      "best_k_rmse_blocks": 0.3375616935570196,
+      "context_evidence": {
+        "median_clean_visible_frames": 0.0,
+        "median_max_context_magenta_pixels": 195.5,
+        "median_rendered_evidence_frames": 5.5,
+        "pct_rows_with_clean_visible": 0.0,
+        "pct_rows_with_rendered_evidence": 100.0
+      },
+      "correlation_meaningfulness_caveat": "NEAR_CONTEXT contributes only 3 rows per trajectory and every bin has very small within-trajectory TSS; pooled correlation here is dominated by between-trajectory spread and per-bin R2 is not reported.",
+      "full_mae_blocks": 0.29194926098987617,
+      "full_normalized_rmse_over_within_traj_sd": 4.005815118674962,
+      "full_pearson_r_pooled": 0.9947837330704676,
+      "full_rmse_blocks": 0.3760300132369975,
+      "full_signed_bias_blocks": 0.01108190723209261,
+      "mean_within_trajectory_target_range_blocks": 0.2467636941169586,
+      "mean_within_trajectory_target_sd_blocks": 0.09387103550634661,
+      "pooled_target_sd_blocks": 3.671355486970142,
+      "rows": 100,
+      "tau_range": [
+        9,
+        12
+      ]
+    },
+    "NEAR_CONTEXT": {
+      "best_k_mae_blocks": 0.28117467354671516,
+      "best_k_rmse_blocks": 0.3587931665074258,
+      "context_evidence": {
+        "median_clean_visible_frames": 0.0,
+        "median_max_context_magenta_pixels": 56.0,
+        "median_rendered_evidence_frames": 2.0,
+        "pct_rows_with_clean_visible": 0.0,
+        "pct_rows_with_rendered_evidence": 100.0
+      },
+      "correlation_meaningfulness_caveat": "NEAR_CONTEXT contributes only 3 rows per trajectory and every bin has very small within-trajectory TSS; pooled correlation here is dominated by between-trajectory spread and per-bin R2 is not reported.",
+      "full_mae_blocks": 0.3175397987115535,
+      "full_normalized_rmse_over_within_traj_sd": 8.307664906645565,
+      "full_pearson_r_pooled": 0.9931141227941177,
+      "full_rmse_blocks": 0.40757873003182993,
+      "full_signed_bias_blocks": 0.007185593150460902,
+      "mean_within_trajectory_target_range_blocks": 0.11632804875106494,
+      "mean_within_trajectory_target_sd_blocks": 0.04906056450420801,
+      "pooled_target_sd_blocks": 3.4381150932031823,
+      "rows": 75,
+      "tau_range": [
+        13,
+        15
+      ]
+    },
+    "SHORT": {
+      "best_k_mae_blocks": 0.3354392139218854,
+      "best_k_rmse_blocks": 0.4315039826933307,
+      "context_evidence": {
+        "median_clean_visible_frames": 3.0,
+        "median_max_context_magenta_pixels": 339.0,
+        "median_rendered_evidence_frames": 13.5,
+        "pct_rows_with_clean_visible": 91.0,
+        "pct_rows_with_rendered_evidence": 100.0
+      },
+      "correlation_meaningfulness_caveat": "NEAR_CONTEXT contributes only 3 rows per trajectory and every bin has very small within-trajectory TSS; pooled correlation here is dominated by between-trajectory spread and per-bin R2 is not reported.",
+      "full_mae_blocks": 0.3955650692165473,
+      "full_normalized_rmse_over_within_traj_sd": 5.928338838604772,
+      "full_pearson_r_pooled": 0.9931395039274845,
+      "full_rmse_blocks": 0.5066466223938195,
+      "full_signed_bias_blocks": -0.0077726851880102026,
+      "mean_within_trajectory_target_range_blocks": 0.2260750229588646,
+      "mean_within_trajectory_target_sd_blocks": 0.08546181926960474,
+      "pooled_target_sd_blocks": 4.279314677687602,
+      "rows": 100,
+      "tau_range": [
+        1,
+        4
+      ]
+    }
+  },
+  "status": "EXPLORATORY"
+}

@@ -1,0 +1,82 @@
+{
+  "artifact_id": "regime-a-first25-postmortem-authority-v0.1",
+  "confirmatory_status": {
+    "REGIME_A_FIRST25_PASS_CONTINUE": "NO",
+    "adjudication_recorded": "FAIL_NO_DEFENSIBLE_DECODING",
+    "frozen_best_k_macro_r2": -0.509944,
+    "frozen_grouped_null_p": 0.9,
+    "frozen_macro_r2": -1.2289064171181214,
+    "frozen_mae_blocks": 0.338974,
+    "frozen_pooled_r2": 0.987131,
+    "frozen_rmse_blocks": 0.417009,
+    "primary_layer": 4,
+    "primary_readout": "FULL_TOKEN_GRID",
+    "primary_rows": "tau1..15",
+    "primary_target": "WORLD_WALL_PARALLEL_X",
+    "scientific_adjudication": "FAIL_NO_DEFENSIBLE_DECODING",
+    "state": "CLOSED_IMMUTABLE"
+  },
+  "constraints": {
+    "confirmatory_artifacts_are_read_only": true,
+    "confirmatory_result_unchanged": true,
+    "exploratory_activation_s3_prefix": "mineocclude/regime_a_occlusion_extraction_v0_1/postmortem_v0_1_exploratory",
+    "no_exploratory_metric_may_replace_the_primary_result": true,
+    "no_exploratory_result_may_be_reinterpreted_as_confirmatory": true,
+    "no_new_minecraft_scientific_collection_authorized": true,
+    "no_regime_a_expansion_authorized": true,
+    "no_run_b_or_run_c_authorized": true,
+    "visible_extraction_forbids": [
+      "minecraft_recapture",
+      "new_trajectories",
+      "changed_camera",
+      "changed_speed_or_noise",
+      "changed_checkpoint",
+      "changed_trajectory_seeds",
+      "recomputation_of_hidden_scientific_outcomes",
+      "modification_of_the_closed_confirmatory_package"
+    ],
+    "visible_frame_activation_extraction_from_existing_immutable_captures": "ALLOWED_ONLY_FOR_D6_MATCHED_POSITIVE_CONTROL"
+  },
+  "created_utc": "2026-08-14T19:37:07.336447+00:00",
+  "diagnostics": {
+    "D1": "target headroom on exact tau1..15 rows; reproduce frozen macro R2",
+    "D2": "exact in-context visibility audit of all 475 frozen target rows",
+    "D3": "trajectory bias / motion decomposition from frozen OOF predictions",
+    "D4": "bin-specific descriptive decomposition (no per-bin refit)",
+    "D5": "training-size learning curve on frozen layer-4 activations",
+    "D6": "matched visible-sheep positive control (same readout/folds/target)",
+    "D7": "optional descriptive physical-scale context"
+  },
+  "frozen_amended_guards": {
+    "LEFT_TO_RIGHT": {
+      "g_entry_frames": 18,
+      "g_exit_frames": 11
+    },
+    "RIGHT_TO_LEFT": {
+      "g_entry_frames": 20,
+      "g_exit_frames": 8
+    }
+  },
+  "frozen_model_input_semantics": {
+    "activation_capture_line_934": "span = tokenized.frame_token_map.spans[-1]",
+    "captured_tokens": "336 visual tokens of the TARGET (last) frame",
+    "context_assembly_line_930": "indices = list(range(target - 15, target + 1))",
+    "context_includes_target_frame": true,
+    "context_pairs": 16,
+    "effective_preceding_frames": 15,
+    "source_of_truth": "scripts/run_regime_a.py :: PersistentMineWorldWorker.extract",
+    "teacher_forced": true
+  },
+  "guard_rule": "directional maximum consecutive partial/disagreement run plus one captured frame; a REJECTION THRESHOLD on transition length, not a temporal offset applied before scoring",
+  "interpretive_constraints": {
+    "d3_centering_is_oracle_descriptive_not_an_operational_decoder": true,
+    "d3_centering_may_not_rescue_regime_a": true,
+    "token_pitch_is_not_a_hard_resolution_bound": true
+  },
+  "mode": "OUTCOME_AWARE_EXPLORATORY_POSTMORTEM",
+  "repository": {
+    "branch": "exploration/regime-a-postmortem-v0-1",
+    "starting_head": "fa31aaca8af2872663ea81a54d6ed3a51e9f7f0a",
+    "worktree_clean_at_phase0": false
+  }
+}
