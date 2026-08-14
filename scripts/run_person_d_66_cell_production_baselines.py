@@ -157,7 +157,9 @@ def _write(output_root: Path, name: str, document: Any) -> str:
     text = json.dumps(document, indent=2, sort_keys=True, default=_json_default) + "\n"
     path = output_root / name
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8", newline="\n")
+    # write_bytes (not write_text(..., newline="\n"), which needs Python
+    # >=3.10) guarantees the exact "\n"-only line endings above, portably.
+    path.write_bytes(text.encode("utf-8"))
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 

@@ -53,6 +53,15 @@ def test_the_published_package_exists():
     assert (PACKAGE_ROOT / "sha256_inventory.json").is_file()
 
 
+#: step8_1_clean_workflow_run.json embeds its own generating machine's
+#: python_version/platform/interpreter_path -- legitimately different on
+#: every real machine, so it is excluded here the same way
+#: run_person_d_66_cell_production_baselines.py excludes
+#: execution_receipt.json. Checked for shape/validity separately below,
+#: never for byte identity.
+NON_DETERMINISTIC_ARTIFACTS = ("step8_1_clean_workflow_run.json",)
+
+
 def test_regeneration_is_byte_identical_to_the_published_package(regenerated):
     published = sorted(p.name for p in PACKAGE_ROOT.iterdir() if p.is_file())
     produced = sorted(p.name for p in regenerated.iterdir() if p.is_file())
@@ -61,12 +70,21 @@ def test_regeneration_is_byte_identical_to_the_published_package(regenerated):
     differing = [
         name
         for name in published
-        if _sha256(PACKAGE_ROOT / name) != _sha256(regenerated / name)
+        if name not in NON_DETERMINISTIC_ARTIFACTS
+        and _sha256(PACKAGE_ROOT / name) != _sha256(regenerated / name)
     ]
     assert not differing, (
         f"published artifacts differ from a fresh generation: {differing}; the "
         "committed evidence must be exactly what the generator produces"
     )
+
+
+def test_step8_1_is_well_formed_but_excluded_from_the_byte_identity_check(regenerated):
+    document = json.loads((regenerated / "step8_1_clean_workflow_run.json").read_text())
+    assert document["environment"]["python_version"]
+    inventory = json.loads((regenerated / "sha256_inventory.json").read_text())
+    assert "step8_1_clean_workflow_run.json" in inventory["excluded_from_inventory"]
+    assert "step8_1_clean_workflow_run.json" not in inventory["artifact_sha256"]
 
 
 def test_inventory_hashes_match_the_published_bytes():

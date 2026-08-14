@@ -317,7 +317,10 @@ def _synthetic_family_rows(contexts, family, target, applicable_when):
 def _write(output_root: Path, name: str, text: str) -> str:
     path = output_root / name
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8", newline="\n")
+    # write_bytes (not write_text(..., newline="\n"), which needs Python
+    # >=3.10) guarantees the exact "\n"-only line endings dump_* already
+    # produces, portably.
+    path.write_bytes(text.encode("utf-8"))
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
@@ -656,7 +659,13 @@ def build_all(output_root: Path, repository_root: Path) -> dict:
         package_lock_sha256=_file_sha256(repository_root / "requirements.txt"),
         evidence_kind="synthetic",
     )
-    inventory["step8_1_clean_workflow_run.json"] = _write(
+    # Deliberately not added to `inventory`/sha256_inventory.json: this
+    # document's own `environment` block (python_version, platform,
+    # interpreter_path) legitimately varies by machine, so its bytes can
+    # never be identical across two real regenerations -- the same reason
+    # `run_person_d_66_cell_production_baselines.py` excludes
+    # `execution_receipt.json`.
+    _write(
         output_root,
         "step8_1_clean_workflow_run.json",
         dump_workflow_document(workflow),
@@ -817,6 +826,7 @@ def build_all(output_root: Path, repository_root: Path) -> dict:
         },
         "evidence_kind": "synthetic",
         "real_execution_performed": False,
+        "excluded_from_inventory": ["step8_1_clean_workflow_run.json", "sha256_inventory.json"],
         "artifact_sha256": dict(sorted(inventory.items())),
         "artifact_count": len(inventory),
     }
