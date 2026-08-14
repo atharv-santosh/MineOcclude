@@ -1,0 +1,61 @@
+{
+  "artifact_id": "regime-a-a4-client-focus-precheck-supersession-v1.0",
+  "status": "PASS_PENDING_COMMIT",
+  "created_utc": "2026-08-14T04:02:30Z",
+  "previous_commit": "a7997d8b6652a9bbf13a10d7a95dbeea05a24da6",
+  "final_repair_commit": "PENDING_COMMIT",
+  "scientific_capture_before_repair": false,
+  "scientific_activations_before_repair": 0,
+  "scientific_decoding_outcomes_computed": 0,
+  "focus_failure": "CAMERA_VERIFICATION_FAILED: client focus failed after the Minecraft client joined and before startspec.",
+  "root_cause": "The GLFW client published its title through _NET_WM_NAME but no legacy WM_NAME. The inherited xdotool --name search therefore returned no window even though the exact Minecraft client window was visible, active, and focusable through Openbox.",
+  "repair": "Discover one visible exact Minecraft 1.16.5 WM_CLASS window; validate its title prefix, KnotClient PID/gameDir, 640x360 geometry, activation, active-window ID, and input-focus ID with bounded readiness polling. Then require the pinned FOV receipt and fixed-camera server marker.",
+  "camera_input_validity": "Strengthened: the pre-start gate now binds the exact client process/render window and dimensions, retains verified X input focus, and fails closed on FOV or fixed-camera drift.",
+  "camera_verification_weakened": false,
+  "fail_closed_preserved": true,
+  "protocol_modified": false,
+  "manifest_modified": false,
+  "seeds_modified": false,
+  "folds_modified": false,
+  "affected_source_files": [
+    {
+      "path": "scripts/run_large_scale_no_wall_campaign.py",
+      "sha256": "6624723eb4c352280c9c3c084c62d835e59e86643bb7a0a3caf7b7d8a4cc5c45"
+    },
+    {
+      "path": "scripts/create_regime_a_a4_authorization.py",
+      "sha256": "b6679945c0aa77f49f7859b594368ffd194fb4bf9fc8933e6b78d233967771a7"
+    },
+    {
+      "path": "scripts/run_regime_a.py",
+      "sha256": "f272f7178e7d38327d8a55de4ad1a75877c7d6f2e77ac012d92953247d0ed445"
+    },
+    {
+      "path": "tests/test_regime_a_client_focus.py",
+      "sha256": "8fa900aca2d29e19be96a4f5f377d63ae2b1aafae79fad995ba323a04a2c87c4"
+    }
+  ],
+  "focused_tests": {
+    "command": "qualified operator environment python -m pytest -q tests/test_regime_a_client_focus.py tests/test_regime_a_a4_runner.py",
+    "result": "25 passed, 3 subtests passed"
+  },
+  "non_scientific_runtime_smoke": {
+    "server_started": true,
+    "client_started": true,
+    "client_joined": true,
+    "minecraft_window_found": true,
+    "focus_readiness_passed": true,
+    "camera_verification_passed": true,
+    "render_dimensions": [640, 360],
+    "fov_degrees": 70.0,
+    "fov_effect_scale": 0.0,
+    "canonical_feet_xyz": [0.5, 4.0, -5.5],
+    "canonical_yaw_degrees": 0.0,
+    "canonical_pitch_degrees": 0.0,
+    "startspec_sent": false
+  },
+  "trajectory_manifest_sha256": "54f47bfb7167cb0a74a58b42f363258080501a05ec5519cf1c9c3edb113fd785",
+  "donor_manifest_sha256": "0b8b224ead6737ba24d17251955ae56d5cb0e5ab1ca37ba5f5fb87529508676b",
+  "old_authorization_v6_obsolete": true,
+  "same_spec_retry_required": "regime_a_v1_t01"
+}

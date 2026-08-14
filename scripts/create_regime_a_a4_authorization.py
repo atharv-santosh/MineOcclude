@@ -74,6 +74,7 @@ def main() -> int:
     storage_recovery = STATUS / "a4_launch_storage_recovery_source_freeze_receipt.json"
     display_recovery = STATUS / "a4_display_tool_recovery_source_freeze_receipt.json"
     java_guard_recovery = STATUS / "a4_java_launcher_guard_supersession_receipt.json"
+    client_focus_recovery = STATUS / "a4_client_focus_precheck_supersession_receipt.json"
     manifest_sha256 = sha256_file(manifest)
     require(manifest_sidecar.read_text().strip() == manifest_sha256, "manifest sidecar mismatch")
 
@@ -95,6 +96,7 @@ def main() -> int:
         "a4_launch_storage_recovery_source_freeze_receipt_sha256": sha256_file(storage_recovery),
         "a4_display_tool_recovery_source_freeze_receipt_sha256": sha256_file(display_recovery),
         "a4_java_launcher_guard_supersession_receipt_sha256": sha256_file(java_guard_recovery),
+        "a4_client_focus_precheck_supersession_receipt_sha256": sha256_file(client_focus_recovery),
         "checkpoint_sha256": CHECKPOINT_SHA256,
         "protocol_modification": False,
         "authorization_scope": "launch the exact frozen 25-spec Regime-A A4 collection only",

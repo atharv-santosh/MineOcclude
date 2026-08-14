@@ -72,6 +72,13 @@ JAVA_PATH = Path("/usr/lib/jvm/java-17-openjdk-amd64/bin/java")
 XVFB_PATH = Path(shutil.which("Xvfb") or "/usr/bin/Xvfb")
 XDOTOOL_PATH = Path(shutil.which("xdotool") or "/usr/bin/xdotool")
 DISPLAY = ":99"
+MINECRAFT_WINDOW_CLASS = r"^Minecraft\* 1\.16\.5$"
+MINECRAFT_WINDOW_TITLE_PREFIX = "Minecraft* 1.16.5"
+CLIENT_RENDER_WIDTH = 640
+CLIENT_RENDER_HEIGHT = 360
+CLIENT_FOV_DEGREES = 70.0
+CLIENT_FOV_EFFECT_SCALE = 0.0
+FIXED_CAMERA_LOG_MARKER = "camera pose (0.5, 4.0, -5.5) yaw=0.0"
 MAX_ATTEMPTS = 3
 EXPECTED_F = 60
 
@@ -411,37 +418,102 @@ def validate_profile_semantics(spec: dict[str, Any]) -> None:
         expected_speed(spec, tick)
 
 
-def focus_client() -> bool:
+def _xdotool(*arguments: str) -> str:
+    return subprocess.run(
+        [str(XDOTOOL_PATH), *arguments],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        env={**os.environ, "DISPLAY": DISPLAY},
+    ).stdout.strip()
+
+
+def _parse_window_ids(output: str) -> list[str]:
+    ids = [line.strip() for line in output.splitlines() if line.strip()]
+    if not ids or any(not value.isdecimal() or int(value) <= 0 for value in ids):
+        return []
+    return ids
+
+
+def _expected_client_process(pid_text: str) -> bool:
+    if not pid_text.isdecimal() or int(pid_text) <= 0:
+        return False
     try:
-        found = subprocess.run(
-            ["xdotool", "search", "--onlyvisible", "--name", r"^Minecraft"],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=10,
-            env={**os.environ, "DISPLAY": DISPLAY},
+        arguments = [
+            value
+            for value in Path(f"/proc/{int(pid_text)}/cmdline").read_bytes().split(b"\0")
+            if value
+        ]
+        game_dir_index = arguments.index(b"--gameDir")
+    except (OSError, ValueError):
+        return False
+    return (
+        b"net.fabricmc.loader.impl.launch.knot.KnotClient" in arguments
+        and game_dir_index + 1 < len(arguments)
+        and Path(os.fsdecode(arguments[game_dir_index + 1])).resolve()
+        == CLIENT_ROOT.resolve()
+    )
+
+
+def _parse_window_geometry(output: str, window_id: str) -> bool:
+    fields: dict[str, str] = {}
+    for line in output.splitlines():
+        if "=" not in line:
+            return False
+        key, value = line.split("=", 1)
+        if key in fields or not value.strip().lstrip("-").isdecimal():
+            return False
+        fields[key] = value.strip()
+    return (
+        set(fields) == {"WINDOW", "X", "Y", "WIDTH", "HEIGHT", "SCREEN"}
+        and fields["WINDOW"] == window_id
+        and fields["WIDTH"] == str(CLIENT_RENDER_WIDTH)
+        and fields["HEIGHT"] == str(CLIENT_RENDER_HEIGHT)
+        and fields["SCREEN"] == "0"
+    )
+
+
+def _focus_client_once() -> bool:
+    try:
+        ids = _parse_window_ids(
+            _xdotool(
+                "search", "--onlyvisible", "--class", MINECRAFT_WINDOW_CLASS
+            )
         )
-        ids = [line.strip() for line in found.stdout.splitlines() if line.strip()]
         if len(ids) != 1:
             return False
-        subprocess.run(
-            ["xdotool", "windowactivate", "--sync", ids[0]],
-            check=True,
-            capture_output=True,
-            timeout=10,
-            env={**os.environ, "DISPLAY": DISPLAY},
+        window_id = ids[0]
+        if (
+            not _xdotool("getwindowname", window_id).startswith(
+                MINECRAFT_WINDOW_TITLE_PREFIX
+            )
+            or not _expected_client_process(_xdotool("getwindowpid", window_id))
+            or not _parse_window_geometry(
+                _xdotool("getwindowgeometry", "--shell", window_id), window_id
+            )
+        ):
+            return False
+        _xdotool("windowactivate", "--sync", window_id)
+        return (
+            _xdotool("getactivewindow") == window_id
+            and _xdotool("getwindowfocus") == window_id
         )
-        focused = subprocess.run(
-            ["xdotool", "getwindowfocus"],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=10,
-            env={**os.environ, "DISPLAY": DISPLAY},
-        )
-        return focused.stdout.strip() == ids[0]
     except (OSError, subprocess.SubprocessError):
         return False
+
+
+def focus_client(timeout_seconds: float = 10.0, poll_interval: float = 0.1) -> bool:
+    if timeout_seconds < 0 or poll_interval <= 0:
+        return False
+    deadline = time.monotonic() + timeout_seconds
+    while True:
+        if _focus_client_once():
+            return True
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return False
+        time.sleep(min(poll_interval, remaining))
 
 
 class LiveRuntime:
@@ -499,6 +571,22 @@ class LiveRuntime:
             raise CampaignError("PRECHECK_FAILED", "client is not connected")
         if not focus_client():
             raise CampaignError("CAMERA_VERIFICATION_FAILED", "client focus failed")
+        fov_receipt = self.client_root / "mineocclude_client_authority/fov_receipt.json"
+        try:
+            fov = json.loads(fov_receipt.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            raise CampaignError(
+                "CAMERA_VERIFICATION_FAILED", "client FOV receipt missing or malformed"
+            )
+        if (
+            fov.get("status") != "PINNED"
+            or not _close(fov.get("fov_degrees"), CLIENT_FOV_DEGREES)
+            or not _close(fov.get("fov_effect_scale"), CLIENT_FOV_EFFECT_SCALE)
+            or FIXED_CAMERA_LOG_MARKER not in self.log_text()
+        ):
+            raise CampaignError(
+                "CAMERA_VERIFICATION_FAILED", "frozen FOV/fixed camera mismatch"
+            )
 
 
 def append_transition(
