@@ -565,3 +565,35 @@ accepted; `docs/status/person_d_real_pilot_baseline_preview.json`'s
 was merged or integrated. Baseline suite: 92 -> 113 passing. Repo-wide:
 same 13 pre-existing A/B-owned failures, confirmed unchanged by direct
 re-run.
+
+## 2026-08-14 -- Phase 1 foundation commit attribution note
+
+**Finding:** `role/person-d-baselines`'s actual Phase 1 foundation commit,
+`48bce1d` ("Complete Person D Phase 0-1 technical foundation", authored
+by Kazim Abbas, 2026-07-22 14:24:55 -0400), is 96.7% byte-identical
+(3,011 of 3,114 compared lines; 17 of 30 shared files are byte-for-byte
+identical in both directions, including `last_seen.py`,
+`constant_velocity.py`, `known_q_analytic.py`, `u4_control_matrix.py`,
+`controls.py`, `leakage.py`, `shuffled.py`, `visible_history_q.py`, and
+7 of the corresponding test files) to Alan Zhang's own
+commit `2e78286` ("Add Person D Phase 1 baselines, controls, and
+leakage/U4 audits"), authored roughly 15 hours earlier
+(2026-07-21 23:39:52 -0700). `2e78286` is not an ancestor of
+`role/person-d-baselines`'s current history; it survives only on
+`origin/backup/person-d-before-final-sync`, apparently left out of the
+branch during an earlier sync/reconciliation between the two commits.
+
+**Verification method:** `git branch -a --contains 2e78286` (confirms
+it is absent from `role/person-d-baselines`); `git merge-base
+--is-ancestor 2e78286 role/person-d-baselines` (confirms `NO`); per-file
+`diff` between `git show 2e78286:<path>` and `git show 48bce1d:<path>`
+for every path both commits touch, counted with
+`difflib.SequenceMatcher`.
+
+**Not a correction, a record.** No history was rewritten and no
+authorship metadata was changed by this entry -- doing so would rewrite
+every one of the ~57 commits built on top of `48bce1d`, force-push a
+shared branch, and risk orphaning downstream work built on the current
+commit hashes. This entry exists so the byte-level relationship between
+`2e78286` and `48bce1d` has one permanent, checked-in, cited record,
+independent of git blame on the branch that currently ships.
