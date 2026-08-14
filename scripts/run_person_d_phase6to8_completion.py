@@ -224,8 +224,11 @@ BLOCKER_B_DIRECTION = SectionBlocker(
     expected_owner="person_b",
     expected_schema_or_version="person-b-intervention-request-v1.0",
     exact_command_after_receipt=(
-        "python scripts/run_person_d_phase6to8_completion.py "
-        "--u4-direction-record <B_DIRECTION_RECORD> --freeze-real-control-manifest"
+        "python scripts/run_person_d_u4_real_completion.py "
+        "--u4-direction-record <B_DIRECTION_RECORD.json> "
+        "--person-a-commit <REAL_PERSON_A_COMMIT> "
+        "--person-b-commit <REAL_PERSON_B_COMMIT> "
+        "--output-root docs/status/person_d_u4_real_completion_v0_1"
     ),
 )
 
@@ -234,8 +237,12 @@ BLOCKER_E_MEASUREMENTS = SectionBlocker(
     expected_owner="person_e",
     expected_schema_or_version="person-b-u4-measurement-input-v0.1",
     exact_command_after_receipt=(
-        "python scripts/run_person_d_phase6to8_completion.py "
-        "--u4-measurements <E_MEASUREMENT_TABLE> --output-root <OUTPUT_ROOT>"
+        "python scripts/run_person_d_u4_real_completion.py "
+        "--u4-direction-record <B_DIRECTION_RECORD.json> "
+        "--u4-measurements <E_MEASUREMENT_TABLE.json> "
+        "--person-a-commit <REAL_PERSON_A_COMMIT> "
+        "--person-b-commit <REAL_PERSON_B_COMMIT> "
+        "--output-root docs/status/person_d_u4_real_completion_v0_1"
     ),
 )
 

@@ -159,7 +159,20 @@ the current A/B/C authorities and does not vendor copies of them.
 - [ ] Run Phase 7 (U4) for real once B/A/E hand off a real direction and
       real rollout measurements -- the only remaining external
       dependency; everything else in Phase 6-8 that can run on already-real
-      data now has.
+      data now has. `scripts/run_person_d_u4_real_completion.py` is the
+      real CLI path (built because the blockers below previously named a
+      command whose flags did not exist): given `--u4-direction-record
+      <B_DIRECTION_RECORD.json>` (and optionally `--u4-measurements
+      <E_MEASUREMENT_TABLE.json>`), it builds a real, frozen Step 7.1
+      control manifest, a real Step 7.2 direction-control audit (reaches
+      an honest `PASS`/`FAIL`/`BLOCKED` decision depending on exactly
+      which real evidence fields are supplied), and a real Step 7.3
+      measurement join -- all through the same generic, already-tested
+      `u4_control_manifest_v0_1`/`direction_control_audit_v0_1`/
+      `u4_measurement_join_v0_1` modules the synthetic package uses, kept
+      additive and separate from that well-tested synthetic generator.
+      `BLOCKER_B_DIRECTION`/`BLOCKER_E_MEASUREMENTS` in
+      `run_person_d_phase6to8_completion.py` now cite this real command.
 
 ## Post-MVP work
 

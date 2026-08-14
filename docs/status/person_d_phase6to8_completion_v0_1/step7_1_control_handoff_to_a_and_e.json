@@ -1,7 +1,7 @@
 {
   "blocking_inputs": [
     {
-      "exact_command_after_receipt": "python scripts/run_person_d_phase6to8_completion.py --u4-direction-record <B_DIRECTION_RECORD> --freeze-real-control-manifest",
+      "exact_command_after_receipt": "python scripts/run_person_d_u4_real_completion.py --u4-direction-record <B_DIRECTION_RECORD.json> --person-a-commit <REAL_PERSON_A_COMMIT> --person-b-commit <REAL_PERSON_B_COMMIT> --output-root docs/status/person_d_u4_real_completion_v0_1",
       "expected_owner": "person_b",
       "expected_schema_or_version": "person-b-intervention-request-v1.0",
       "missing_artifact": "Person B fitted U4 direction, held-out event identities, signed dose table, target layer/timestep, and direction-construction record"
