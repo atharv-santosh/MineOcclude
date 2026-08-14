@@ -149,6 +149,22 @@ class ProductionCaptureWorker:
     # This is intentionally a launch-only bound, not a trajectory retry policy.
     LAUNCH_ATTEMPT_BOUND = 3
 
+    @staticmethod
+    def _raw_capture_spec_hash(spec: dict[str, object]) -> str:
+        """Return the physical-capture identity, distinct only for amendments.
+
+        Historical specifications use ``spec_hash`` for both capture and
+        downstream authority.  A versioned authority amendment can retain the
+        exact physical capture contract while assigning a new analysis/spec
+        identity; in that case the manifest explicitly binds the original
+        capture hash as ``raw_capture_spec_hash``.
+        """
+
+        value = str(spec.get("raw_capture_spec_hash", spec["spec_hash"]))
+        if len(value) != 64 or any(character not in "0123456789abcdef" for character in value):
+            raise RegimeAError("raw capture spec hash is not lowercase SHA256")
+        return value
+
     def __init__(self, runtime_root: Path):
         from scripts import run_large_scale_no_wall_campaign as live
 
@@ -230,10 +246,11 @@ class ProductionCaptureWorker:
         signed_speed = float(spec["speed_blocks_per_second"]) * (
             1 if spec["direction"] == "LEFT_TO_RIGHT" else -1
         )
+        capture_spec_hash = self._raw_capture_spec_hash(spec)
         motion_document = {
             "schedule_format_version": "mineocclude-motion-schedule-v0.1",
             "trajectory_spec_id": spec["trajectory_spec_id"],
-            "spec_hash": spec["spec_hash"],
+            "spec_hash": capture_spec_hash,
             "expected_ticks": frames,
             "segments": [{
                 "start_model_frame_idx": 0,
@@ -268,6 +285,7 @@ class ProductionCaptureWorker:
         from mineocclude.vision.magenta import HsvRange, detect_magenta
 
         frames = int(context["frames"])
+        capture_spec_hash = self._raw_capture_spec_hash(spec)
         schedule = context["schedule"]
         signed_speed = float(context["signed_speed"])
         raw = partial / "raw"
@@ -292,7 +310,7 @@ class ProductionCaptureWorker:
             if (
                 row.get("server_tick") != index
                 or row.get("trajectory_spec_id") != spec["trajectory_spec_id"]
-                or row.get("spec_hash") != spec["spec_hash"]
+                or row.get("spec_hash") != capture_spec_hash
                 or row.get("seed") != spec["seed"]
                 or row.get("scene") != "NORMAL"
                 or row.get("target_respawn_count") != 0
@@ -518,10 +536,11 @@ class ProductionCaptureWorker:
         if not reset_path.is_file() or not complete_path.is_file():
             raise RegimeAError("reusable raw capture lacks runtime completion receipts")
         reset = json.loads(reset_path.read_text(encoding="utf-8"))
+        capture_spec_hash = self._raw_capture_spec_hash(spec)
         if (
             reset.get("episode_id") != context["episode_id"]
             or reset.get("trajectory_spec_id") != spec["trajectory_spec_id"]
-            or reset.get("spec_hash") != spec["spec_hash"]
+            or reset.get("spec_hash") != capture_spec_hash
             or reset.get("seed") != spec["seed"]
         ):
             raise RegimeAError("reusable raw capture runtime identity mismatch")
@@ -803,6 +822,7 @@ class ProductionCaptureWorker:
         frames = int(context["frames"])
         server_episode = Path(context["server_episode"])
         client_episode = Path(context["client_episode"])
+        capture_spec_hash = self._raw_capture_spec_hash(spec)
         if server_episode.exists() or client_episode.exists():
             reset = server_episode / "reset_result.json"
             if not reset.is_file():
@@ -813,7 +833,7 @@ class ProductionCaptureWorker:
             if (
                 identity.get("episode_id") != episode_id
                 or identity.get("trajectory_spec_id") != spec["trajectory_spec_id"]
-                or identity.get("spec_hash") != spec["spec_hash"]
+                or identity.get("spec_hash") != capture_spec_hash
             ):
                 raise RegimeAError("existing runtime episode belongs to another spec")
             shutil.rmtree(server_episode)
@@ -842,7 +862,7 @@ class ProductionCaptureWorker:
             (
                 f"mineocclude startspec layout_01 {episode_id} {spec['seed']} "
                 f"{spec['motion_noise_q']} {frames} {spec['start_world_x']} "
-                f"{spec['trajectory_spec_id']} {spec['spec_hash']}"
+                f"{spec['trajectory_spec_id']} {capture_spec_hash}"
             ),
         ])
         self.runtime.wait_log(rf"episode {episode_id} armed", 30, offset)
