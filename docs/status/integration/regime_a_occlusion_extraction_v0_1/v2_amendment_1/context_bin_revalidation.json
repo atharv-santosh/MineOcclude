@@ -1,14 +1,12 @@
 {
+  "all_fold_direction_bin_support_pass": true,
+  "all_primary_target_tss_positive_by_direction": {
+    "LEFT_TO_RIGHT": true,
+    "RIGHT_TO_LEFT": true
+  },
   "all_trajectories_have_19_clean_target_frames": true,
   "all_trajectories_have_at_least_15_preceding_frames": true,
-  "calibration_extension_stable": true,
-  "clean_frames_per_trajectory_by_bin": {
-    "BEYOND_CONTEXT": 4,
-    "INTERMEDIATE": 4,
-    "LONG": 4,
-    "NEAR_CONTEXT": 3,
-    "SHORT": 4
-  },
+  "authority_sha256": "fef2d4e89e9919801b802093eb89053b65d359161a62ad3ddb1d99a0bed0ec83",
   "context_duration_simulated_seconds_C": 0.75,
   "duration_bins": {
     "BEYOND_CONTEXT": [
@@ -33,10 +31,914 @@
     ]
   },
   "effective_preceding_frames_E": 15,
+  "exact_duplicate_profile_count": 0,
+  "fold_direction_bin_support": [
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        -3.703287398533371,
+        -3.3643995740829933
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.3388878244503779,
+      "pass": true,
+      "train_range_world_x": [
+        -3.730760988127736,
+        -3.360184030345965
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        -3.3026465578481377,
+        -2.9887981224844395
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.3138484353636981,
+      "pass": true,
+      "train_range_world_x": [
+        -3.4894694414864595,
+        -2.9582679069467313
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        -3.0876435726183136,
+        -2.6454127928363373
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.4422307797819762,
+      "pass": true,
+      "train_range_world_x": [
+        -3.418222705247575,
+        -2.522925958518039
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        -2.812555516382094,
+        -2.562209653969532
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.25034586241256207,
+      "pass": true,
+      "train_range_world_x": [
+        -3.1940515752001426,
+        -2.28713089450513
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        -2.653195865406267,
+        -2.094780565635796
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.5584152997704708,
+      "pass": true,
+      "train_range_world_x": [
+        -3.140612673906853,
+        -2.0097757701507195
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        4.421161847121686,
+        4.736162146185035
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.3150002990633487,
+      "pass": true,
+      "train_range_world_x": [
+        4.31639127506749,
+        4.836096491710988
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        4.158201122881554,
+        4.410907583113488
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.2527064602319342,
+      "pass": true,
+      "train_range_world_x": [
+        4.14824179805372,
+        4.603292808385262
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        3.8724061375417644,
+        4.246026328506343
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.3736201909645782,
+      "pass": true,
+      "train_range_world_x": [
+        3.6784920206905207,
+        4.4961112379259145
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        3.806893834249963,
+        4.0608565345508705
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.2539627003009075,
+      "pass": true,
+      "train_range_world_x": [
+        3.50006252782505,
+        4.062754959111331
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        3.53936495114253,
+        3.861582934943285
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 0,
+      "overlap_width_blocks": 0.3034799221455122,
+      "pass": true,
+      "train_range_world_x": [
+        3.237942503473275,
+        3.8428448732880423
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        -3.7033175591052414,
+        -3.3641717433123377
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.3391458157929037,
+      "pass": true,
+      "train_range_world_x": [
+        -3.730760988127736,
+        -3.360184030345965
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        -3.386805183131438,
+        -3.211953976245497
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.1748512068859407,
+      "pass": true,
+      "train_range_world_x": [
+        -3.4894694414864595,
+        -2.9582679069467313
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        -3.211066622758972,
+        -2.7956220099246263
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.41544461283434586,
+      "pass": true,
+      "train_range_world_x": [
+        -3.418222705247575,
+        -2.522925958518039
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        -2.811007196735998,
+        -2.5265747876564584
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.2844324090795398,
+      "pass": true,
+      "train_range_world_x": [
+        -3.1940515752001426,
+        -2.28713089450513
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        -2.5946401656940266,
+        -2.157140970104397
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.4374991955896297,
+      "pass": true,
+      "train_range_world_x": [
+        -3.140612673906853,
+        -2.0097757701507195
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        4.31639127506749,
+        4.783529803399289
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.36236795627760277,
+      "pass": true,
+      "train_range_world_x": [
+        4.421161847121686,
+        4.836096491710988
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        4.176938408319285,
+        4.555495526504901
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.37855711818561577,
+      "pass": true,
+      "train_range_world_x": [
+        4.14824179805372,
+        4.603292808385262
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        3.839925731712391,
+        4.4961112379259145
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.4279675495671489,
+      "pass": true,
+      "train_range_world_x": [
+        3.6784920206905207,
+        4.26789328127954
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        3.608071850068309,
+        4.062754959111331
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.4527846844825616,
+      "pass": true,
+      "train_range_world_x": [
+        3.50006252782505,
+        4.0608565345508705
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        3.502342632636977,
+        3.8368510470276003
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 1,
+      "overlap_width_blocks": 0.3345084143906232,
+      "pass": true,
+      "train_range_world_x": [
+        3.237942503473275,
+        3.861582934943285
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        -3.730760988127736,
+        -3.4056554817679796
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.31453930315216727,
+      "pass": true,
+      "train_range_world_x": [
+        -3.720194784920147,
+        -3.360184030345965
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        -3.481905005869595,
+        -2.9582679069467313
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.5058658078507783,
+      "pass": true,
+      "train_range_world_x": [
+        -3.4894694414864595,
+        -2.9760391980188166
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        -3.1382165759793113,
+        -2.522925958518039
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.4928037831429739,
+      "pass": true,
+      "train_range_world_x": [
+        -3.418222705247575,
+        -2.6454127928363373
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        -2.7160222722053193,
+        -2.28713089450513
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.18944748454886096,
+      "pass": true,
+      "train_range_world_x": [
+        -3.1940515752001426,
+        -2.5265747876564584
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        -2.657127500505144,
+        -2.0097757701507195
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.562346934869348,
+      "pass": true,
+      "train_range_world_x": [
+        -3.140612673906853,
+        -2.094780565635796
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        4.492747583220741,
+        4.807527610235601
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.3147800270148604,
+      "pass": true,
+      "train_range_world_x": [
+        4.31639127506749,
+        4.836096491710988
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        4.152685676557634,
+        4.479630267790149
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.3269445912325155,
+      "pass": true,
+      "train_range_world_x": [
+        4.14824179805372,
+        4.603292808385262
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        3.9656697700786374,
+        4.26789328127954
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.30222351120090263,
+      "pass": true,
+      "train_range_world_x": [
+        3.6784920206905207,
+        4.4961112379259145
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        3.702367325734791,
+        3.977165135242022
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.274797809507231,
+      "pass": true,
+      "train_range_world_x": [
+        3.50006252782505,
+        4.062754959111331
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        3.4698581675740954,
+        3.8428448732880423
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 2,
+      "overlap_width_blocks": 0.3729867057139469,
+      "pass": true,
+      "train_range_world_x": [
+        3.237942503473275,
+        3.861582934943285
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        -3.720194784920147,
+        -3.4353449297685366
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.2848498551516103,
+      "pass": true,
+      "train_range_world_x": [
+        -3.730760988127736,
+        -3.360184030345965
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        -3.43802327285014,
+        -3.2296128192864844
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.20841045356365573,
+      "pass": true,
+      "train_range_world_x": [
+        -3.4894694414864595,
+        -2.9582679069467313
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        -3.1966011356274366,
+        -2.991430230447258
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.20517090518017866,
+      "pass": true,
+      "train_range_world_x": [
+        -3.418222705247575,
+        -2.522925958518039
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        -3.0034349589083655,
+        -2.7660901129683255
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.23734484594004002,
+      "pass": true,
+      "train_range_world_x": [
+        -3.1940515752001426,
+        -2.28713089450513
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        -2.812737737727753,
+        -2.5226426005053817
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.29009513722237124,
+      "pass": true,
+      "train_range_world_x": [
+        -3.140612673906853,
+        -2.0097757701507195
+      ],
+      "train_trajectory_count": 11
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        4.449746482050365,
+        4.820139636845704
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.3703931547953392,
+      "pass": true,
+      "train_range_world_x": [
+        4.31639127506749,
+        4.836096491710988
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        4.14824179805372,
+        4.537226313545857
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.3845406369882234,
+      "pass": true,
+      "train_range_world_x": [
+        4.152685676557634,
+        4.603292808385262
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        3.6784920206905207,
+        4.135759584481135
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.29583385276874363,
+      "pass": true,
+      "train_range_world_x": [
+        3.839925731712391,
+        4.4961112379259145
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        3.50006252782505,
+        3.8280850357319096
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.22001318566360073,
+      "pass": true,
+      "train_range_world_x": [
+        3.608071850068309,
+        4.062754959111331
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        3.237942503473275,
+        3.778115233988043
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 3,
+      "overlap_width_blocks": 0.3384814022525253,
+      "pass": true,
+      "train_range_world_x": [
+        3.4396338317355175,
+        3.861582934943285
+      ],
+      "train_trajectory_count": 9
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        -3.7196478241050066,
+        -3.360184030345965
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.3554760807926689,
+      "pass": true,
+      "train_range_world_x": [
+        -3.730760988127736,
+        -3.3641717433123377
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        -3.4894694414864595,
+        -2.9760391980188166
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.5058658078507783,
+      "pass": true,
+      "train_range_world_x": [
+        -3.481905005869595,
+        -2.9582679069467313
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        -3.418222705247575,
+        -2.856240940631661
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.354825682127311,
+      "pass": true,
+      "train_range_world_x": [
+        -3.211066622758972,
+        -2.522925958518039
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        -3.1940515752001426,
+        -2.7830659061636833
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.22036905274468221,
+      "pass": true,
+      "train_range_world_x": [
+        -3.0034349589083655,
+        -2.28713089450513
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        -3.140612673906853,
+        -2.364310130442875
+      ],
+      "heldout_trajectory_count": 3,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.44842760728487807,
+      "pass": true,
+      "train_range_world_x": [
+        -2.812737737727753,
+        -2.0097757701507195
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "SHORT",
+      "heldout_range_world_x": [
+        4.59409701057287,
+        4.836096491710988
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.2260426262728341,
+      "pass": true,
+      "train_range_world_x": [
+        4.31639127506749,
+        4.820139636845704
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "INTERMEDIATE",
+      "heldout_range_world_x": [
+        4.180379748466196,
+        4.603292808385262
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.37511577803870466,
+      "pass": true,
+      "train_range_world_x": [
+        4.14824179805372,
+        4.555495526504901
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "LONG",
+      "heldout_range_world_x": [
+        3.8766338596726255,
+        4.2618116894343725
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.38517782976174697,
+      "pass": true,
+      "train_range_world_x": [
+        3.6784920206905207,
+        4.4961112379259145
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 3,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "NEAR_CONTEXT",
+      "heldout_range_world_x": [
+        3.7630395651210016,
+        3.992512458226197
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.22947289310519547,
+      "pass": true,
+      "train_range_world_x": [
+        3.50006252782505,
+        4.062754959111331
+      ],
+      "train_trajectory_count": 10
+    },
+    {
+      "clean_frames_per_trajectory": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "duration_bin": "BEYOND_CONTEXT",
+      "heldout_range_world_x": [
+        3.4396338317355175,
+        3.750092772666437
+      ],
+      "heldout_trajectory_count": 2,
+      "outer_fold": 4,
+      "overlap_width_blocks": 0.3104589409309195,
+      "pass": true,
+      "train_range_world_x": [
+        3.237942503473275,
+        3.861582934943285
+      ],
+      "train_trajectory_count": 10
+    }
+  ],
   "left_to_right_support": true,
-  "left_to_right_trajectory_count": 13,
+  "manifest_sha256": "2fa1ff3026a654303b3fd248734f92276a568ba0207f0aa6e9a515fc729090e2",
+  "pass": true,
   "right_to_left_support": true,
-  "right_to_left_trajectory_count": 12,
-  "schema_version": "regime-a-v2-amendment-1-context-bin-revalidation-v1.0",
+  "schema_version": "regime-a-v2-amendment-1-context-bin-revalidation-v1.1",
+  "scientific_outcomes_computed": 0,
   "status": "PASS"
 }
