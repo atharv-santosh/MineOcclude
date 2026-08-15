@@ -1,0 +1,56 @@
+{
+  "aggregate_max_abs_diff_vs_historical_wall": 0.0,
+  "all_replayed_frames_bitwise_identical": true,
+  "artifact_id": "regime-a-prime-p2-path-equivalence-authority-v0.1",
+  "classification": "NON_SCIENTIFIC_PATH_REPEATABILITY_QUALIFICATION",
+  "epsilon_path": 0.0,
+  "epsilon_path_basis": "EXACT_DETERMINISTIC_IDENTITY: every replayed frame reproduced the historical wall coordinate bit-for-bit, so exact equality is required",
+  "frozen_before_any_p2_no_wall_outcome": true,
+  "motion_determinism_note": "The sheep path is a clamped cumulative recurrence over the immutable per-tick noise schedule; the wall occupies z=2 while the lane is z=6, so wall removal cannot enter the recurrence.",
+  "neural_outcomes_used_in_epsilon_choice": false,
+  "neural_outcomes_used_in_unit_selection": false,
+  "path_equivalence_rule": "EXACT_EQUALITY_REQUIRED",
+  "phase": "P2",
+  "replay_is_nonscientific_and_excluded_from_all_p2_results": true,
+  "replay_wall_clock_seconds": 88.43927470299968,
+  "runtime_rebuild": {
+    "gate_weakened": false,
+    "java": "Amazon Corretto 17.0.20.8.1 (build 17.0.20+8-LTS)",
+    "java_approved_by_frozen_gate": true,
+    "native_tools": "system Xvfb/openbox/xdotool/xdpyinfo replacing the wiped operator-tools bundle; the frozen provisioning script falls back to system tools by design",
+    "reason": "the NVMe capture runtime was wiped between P1 and P2",
+    "server_and_client_trees": "original durable $HOME trees, unmodified"
+  },
+  "schema_version": "1.0",
+  "source_p1_commit": "4ba4794a0bc22a218358fdc710c6a9b1663887dd",
+  "status": "PASS",
+  "stored_coordinate_quantization_unit": 1.7763568394002505e-15,
+  "unit_selection_rule": "first specification of each direction in deterministic id order; direction is the only factor that flips the sign of the motion recurrence",
+  "units": [
+    {
+      "bitwise_identical_all_frames": true,
+      "capture_seconds": 22.56165791500098,
+      "direction": "LEFT_TO_RIGHT",
+      "frames": 260,
+      "max_abs_diff_vs_analytic_recurrence": 0.0,
+      "max_abs_diff_vs_historical_wall": 0.0,
+      "mean_abs_diff_vs_historical_wall": 0.0,
+      "n_frames_bitwise_identical": 260,
+      "replay_episode_id": 60001,
+      "trajectory_spec_id": "regime_a_v2_t01"
+    },
+    {
+      "bitwise_identical_all_frames": true,
+      "capture_seconds": 18.66222878300323,
+      "direction": "RIGHT_TO_LEFT",
+      "frames": 260,
+      "max_abs_diff_vs_analytic_recurrence": 0.0,
+      "max_abs_diff_vs_historical_wall": 0.0,
+      "mean_abs_diff_vs_historical_wall": 0.0,
+      "n_frames_bitwise_identical": 260,
+      "replay_episode_id": 60014,
+      "trajectory_spec_id": "regime_a_v2_t14"
+    }
+  ],
+  "wall_trajectories_recollected_for_science": 0
+}

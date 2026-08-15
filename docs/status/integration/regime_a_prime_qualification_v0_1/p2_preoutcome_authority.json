@@ -1,0 +1,167 @@
+{
+  "P3_NOT_STARTED": true,
+  "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+  "artifact_id": "regime-a-prime-p2-preoutcome-authority-v0.1",
+  "branch": "exploration/regime-a-prime-qualification-v0-1",
+  "classification": "EXPLORATORY_MATCHED_DIAGNOSTIC",
+  "condition_definition": {
+    "held_identical": [
+      "seed",
+      "noise schedule",
+      "direction",
+      "nominal speed",
+      "motion policy",
+      "initial state",
+      "camera",
+      "FOV",
+      "cadence",
+      "frame/action semantics",
+      "target timestamps",
+      "fold assignment",
+      "checkpoint",
+      "preprocessing"
+    ],
+    "historical_wall": {
+      "recollected": false,
+      "scene": "NORMAL",
+      "server_command": "mineocclude mode normal"
+    },
+    "known_limitation": "removing the wall changes scene pixels as well as visibility; P2 is therefore a COMPOUND contrast and cannot attribute effects to occlusion alone",
+    "only_manipulated_factor": "presence of the occluding wall",
+    "p2_no_wall": {
+      "newly_collected": true,
+      "scene": "NO_WALL",
+      "server_command": "mineocclude mode nowall"
+    }
+  },
+  "contamination_status": {
+    "diagnostic_to_confirmatory_reuse": "PROHIBITED",
+    "historical_wall_runs_recollected": 0,
+    "p2_data_confirmatory_membership": false,
+    "p2_is_diagnostic_tier_3": true
+  },
+  "durability": {
+    "durable_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_prime_qualification_v0_1/p2_no_wall_diagnostic_v0_1",
+    "large_artifacts_in_git": false,
+    "working_root": "/mnt/sagemaker-nvme/p2_no_wall_v0_1"
+  },
+  "expected_artifact_inventory": {
+    "activation_dtype": "float16",
+    "activation_rows": 475,
+    "activation_shape_per_run": [
+      19,
+      336,
+      2048
+    ],
+    "layers": [
+      4
+    ],
+    "no_wall_runs": 25,
+    "target_rows": 475
+  },
+  "extraction": {
+    "all_layer_extraction_forbidden": true,
+    "context_pairs": 16,
+    "context_rule": "indices = range(target-15, target+1), teacher forced",
+    "gated_on_path_equivalence_pass": true,
+    "layers": [
+      4
+    ],
+    "visual_tokens_per_target": 336
+  },
+  "frozen_readouts": {
+    "BEST_K": {
+      "authority": "docs/.../first25_analysis/slice_best_k_results.json",
+      "authority_sha256": "11d5d2f0527feb31a27a18a19ac76d342f5c72ca3326bee1863b75187dfc4427",
+      "k_or_alpha_may_be_tuned_on_p2_outcomes": false,
+      "procedure": "frozen nested TRAINING-ONLY BEST-K from the closed Regime A analysis; k/alpha selected inside the training split of each outer fold only"
+    },
+    "FULL": {
+      "may_be_restored_as_primary_by_passing_here": false,
+      "procedure": "frozen FULL_TOKEN_GRID ridge readout",
+      "secondary": true
+    },
+    "evaluation": "existing trajectory-grouped outer folds; no frame-level splitting; standardization fit on outer-training rows only"
+  },
+  "p2_is_not_the_confirmatory_experiment": true,
+  "p2_trajectories_are_permanently_nonconfirmatory": true,
+  "p2_visible_qualification_rule": {
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20260815,
+      "unit": "WHOLE_TRAJECTORY"
+    },
+    "criteria": [
+      "frozen layer-4 BEST-K procedure used without test leakage",
+      "trajectory-equal visible macro R2 > 0",
+      "deterministic whole-trajectory 95% bootstrap lower bound for visible macro R2 > 0",
+      "RMSE and MAE in world blocks reported continuously",
+      "no pooled-row metric may override the trajectory-equal result",
+      "all path/identity/quality gates pass"
+    ],
+    "frozen_before_any_p2_neural_outcome": true,
+    "full_readout_treatment": "report the same continuous diagnostics and classify against the same criterion; FULL remains secondary regardless of outcome",
+    "id": "P2_BEST_K_VISIBLE_QUALIFICATION_v0.1",
+    "pre_existing_project_rule_found": false,
+    "scope_limits": {
+      "is_E_vis_max": false,
+      "is_confirmatory_threshold": false,
+      "is_final_a_prime_rmse_margin": false,
+      "is_future_a_prime_primary_success_criterion": false
+    }
+  },
+  "path_identity_rules": {
+    "authority_artifact": "p2_path_equivalence_authority.json",
+    "epsilon_path": 0.0,
+    "epsilon_path_basis": "EXACT_DETERMINISTIC_IDENTITY: every replayed frame reproduced the historical wall coordinate bit-for-bit, so exact equality is required",
+    "exact_agreement_required_fields": [
+      "source specification identity/mapping",
+      "seed",
+      "motion policy",
+      "direction",
+      "nominal speed",
+      "noise draws",
+      "target tick ids",
+      "capture cadence",
+      "frame/action mapping",
+      "target row count",
+      "target row ordering"
+    ],
+    "frozen_before_outcomes": true,
+    "rule": "EXACT_EQUALITY_REQUIRED"
+  },
+  "phase": "P2",
+  "purpose": "Test whether the exact low-N layer-4 readout recovers sheep position when the sheep is VISIBLE at the SAME physical target times under mechanically matched trajectory conditions.",
+  "recovery_policy": {
+    "atomic_unit": "one P2 no-wall run",
+    "favorable_unit_duplication_forbidden": true,
+    "ledger": "p2_capture_ledger.jsonl",
+    "max_attempts_per_unit": 3,
+    "on_operational_failure": "retry the SAME frozen spec/seed",
+    "seed_substitution_forbidden": true,
+    "skipping_difficult_units_forbidden": true
+  },
+  "runtime_rebuild_disclosure": {
+    "gate_weakened": false,
+    "java": "Amazon Corretto 17.0.20.8.1 (build 17.0.20+8-LTS)",
+    "java_approved_by_frozen_gate": true,
+    "native_tools": "system Xvfb/openbox/xdotool/xdpyinfo replacing the wiped operator-tools bundle; the frozen provisioning script falls back to system tools by design",
+    "reason": "the NVMe capture runtime was wiped between P1 and P2",
+    "server_and_client_trees": "original durable $HOME trees, unmodified"
+  },
+  "schema_version": "1.0",
+  "source_p1_commit": "4ba4794a0bc22a218358fdc710c6a9b1663887dd",
+  "source_specifications": {
+    "binding_artifact": "p2_source_spec_binding.json",
+    "count": 25,
+    "mapping_integrity_sha256": "0cb55de7ffc78d9246b6b219a81f7a42b2eb37aa1ec74077cce4e5fa723b7d92"
+  },
+  "status": "FROZEN_PRE_OUTCOME",
+  "target_rows": {
+    "artifact": "p2_target_row_manifest.json",
+    "frozen_pre_outcome": true,
+    "integrity_sha256": "3b926ff12019603783e1a3634518ddcc2de4d7b258a66c43f4cfe97dc4e965fe",
+    "per_spec": 19,
+    "total": 475
+  }
+}
