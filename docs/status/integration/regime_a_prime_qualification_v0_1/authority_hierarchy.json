@@ -1,0 +1,83 @@
+{
+  "artifact_id": "regime-a-prime-authority-hierarchy-v0.1",
+  "contamination_rules": {
+    "development_to_confirmatory_reuse": "PROHIBITED",
+    "diagnostic_to_confirmatory_reuse": "PROHIBITED",
+    "new_confirmatory_ids_and_seeds_required": true,
+    "old_regime_a_to_a_prime_confirmatory_reuse": "PROHIBITED",
+    "same_stochastic_identity_relabeling": "PROHIBITED"
+  },
+  "current_allowed_transition": "P0_TO_P1_ONLY",
+  "mutual_exclusivity_required": true,
+  "phase": "P0",
+  "recorded_at": "2026-08-15T06:47:03.335146+00:00",
+  "schema_version": "1.0",
+  "scientific_collection_authorized": false,
+  "status": "PASS",
+  "tiers": [
+    {
+      "allowed_use": "Historical result and immutable provenance authority.",
+      "forbidden_use": [
+        "Modification or rescue of the frozen result",
+        "Retesting under changed rules as Regime A confirmation",
+        "Membership in future Regime A prime confirmation"
+      ],
+      "name": "CLOSED_CONFIRMATORY_REGIME_A",
+      "package_path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/",
+      "source_commit": "fa31aaca8af2872663ea81a54d6ed3a51e9f7f0a",
+      "status": "CLOSED_IMMUTABLE",
+      "tier": 1
+    },
+    {
+      "allowed_use": "Explain failure modes and motivate prospective redesign.",
+      "final_commit": "9b7d0c7f379956ae1fb52720cc15e10d07adb0e4",
+      "forbidden_use": [
+        "Rescue of closed Regime A",
+        "Independent confirmation",
+        "Unlabeled threshold setting"
+      ],
+      "freeze_commit": "1ad7e5396406d66365e0bf88963e586b4cfc89a1",
+      "name": "OUTCOME_AWARE_POSTMORTEM",
+      "package_path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/",
+      "status": "EXPLORATORY_COMPLETE",
+      "tier": 2
+    },
+    {
+      "confirmatory_membership_allowed": false,
+      "name": "NEW_MATCHED_DIAGNOSTICS",
+      "note": "P1 may derive diagnostic outputs from historical data; P2 trajectories are exploratory new data and are excluded from future Regime A prime confirmation.",
+      "planned_scope": [
+        "P1 existing-data BEST-K versus last-seen",
+        "P1 matched visible versus SHORT",
+        "P2 matched 25-specification no-wall diagnostic"
+      ],
+      "status": "PENDING_P1",
+      "tier": 3
+    },
+    {
+      "confirmatory_membership_allowed": false,
+      "contamination_rule": "Any specification used to choose design parameters is development data and cannot enter confirmatory A prime.",
+      "name": "DEVELOPMENT_PREFLIGHT",
+      "planned_scope": [
+        "camera qualification",
+        "motion/headroom qualification",
+        "stride/input qualification",
+        "readout/statistical freeze development"
+      ],
+      "status": "NOT_STARTED",
+      "tier": 4
+    },
+    {
+      "collection_authorized": false,
+      "name": "CONFIRMATORY_REGIME_A_PRIME",
+      "required_identity": [
+        "new specification IDs",
+        "new random seeds",
+        "prospectively frozen generator authority",
+        "no diagnostic/development membership"
+      ],
+      "status": "NOT_AUTHORIZED",
+      "tier": 5
+    }
+  ]
+}

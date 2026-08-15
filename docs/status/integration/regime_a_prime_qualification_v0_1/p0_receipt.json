@@ -1,0 +1,67 @@
+{
+  "artifact_id": "regime-a-prime-qualification-p0-receipt-v0.1",
+  "created_authority_artifacts": [
+    {
+      "byte_size": 1755,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/branch_authority.json",
+      "sha256": "5ca09744f2beb403930cfc48bb523063d438e4f0a91aeb80702a66eab7b6695b"
+    },
+    {
+      "byte_size": 3118,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/authority_hierarchy.json",
+      "sha256": "406468398cee824378e8966dd1da4b579ee27dda94b7dfa39f2c9b1e88bbe053"
+    },
+    {
+      "byte_size": 6480,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/closed_regime_a_postmortem_receipt.json",
+      "sha256": "792d916bfdfa590725a775232a8e5c1004f0a46bae83553220c95e6c16c58be1"
+    },
+    {
+      "byte_size": 17606,
+      "path": "scripts/regime_a_prime_qualification_v0_1/p0_bind.py",
+      "sha256": "e19279e8891f9a4e3a3567462c5308fd59320b63f3c13baeb9840b5028a5af97"
+    }
+  ],
+  "git_authority": {
+    "created_from_exact_predecessor_sha": true,
+    "predecessor_branch": "exploration/regime-a-postmortem-v0-1",
+    "predecessor_sha": "9b7d0c7f379956ae1fb52720cc15e10d07adb0e4",
+    "successor_branch": "exploration/regime-a-prime-qualification-v0-1",
+    "successor_branch_base_sha": "9b7d0c7f379956ae1fb52720cc15e10d07adb0e4",
+    "successor_remote_sha_before_p0_commit": "9b7d0c7f379956ae1fb52720cc15e10d07adb0e4"
+  },
+  "goal": "Bind closed Regime A and outcome-aware postmortem authorities, freeze successor lineage, and establish contamination tiers before P1 existing-data qualification.",
+  "historical_authority": {
+    "closed_regime_a_commit": "fa31aaca8af2872663ea81a54d6ed3a51e9f7f0a",
+    "frozen_result_preserved": true,
+    "postmortem_final_commit": "9b7d0c7f379956ae1fb52720cc15e10d07adb0e4",
+    "postmortem_freeze_commit": "1ad7e5396406d66365e0bf88963e586b4cfc89a1",
+    "postmortem_labeled_exploratory": true
+  },
+  "next_phase": {
+    "classification": "EXPLORATORY_EXISTING_DATA",
+    "new_mineworld_extraction_allowed": false,
+    "new_trajectory_collection_allowed": false,
+    "phase": "P1"
+  },
+  "phase": "P0",
+  "recorded_at": "2026-08-15T06:47:03.335146+00:00",
+  "schema_version": "1.0",
+  "scope_confirmation": {
+    "closed_regime_a_modified": false,
+    "confirmatory_collection_authorized": false,
+    "fresh_scientific_outcomes_generated": false,
+    "fresh_trajectories_collected": false,
+    "new_activations_generated": false,
+    "new_decoder_fit": false,
+    "new_mineworld_extraction": false,
+    "p0_only": true,
+    "postmortem_modified": false
+  },
+  "status": "PASS",
+  "tier_authority": {
+    "confirmatory_a_prime_authorized": false,
+    "mutually_exclusive": true,
+    "tier_count": 5
+  }
+}
