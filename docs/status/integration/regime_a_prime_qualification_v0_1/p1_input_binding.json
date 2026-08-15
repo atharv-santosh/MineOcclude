@@ -1,0 +1,915 @@
+{
+  "artifact_id": "regime-a-prime-qualification-p1-input-binding-v0.1",
+  "capture_source_note": "Per-frame coordinates.jsonl and raw/visibility.jsonl are existing immutable capture artifacts read from the original Regime A S3 prefixes. They are the only way to reconstruct a per-row causal last-evidence world position. Each is hash-verified against durable_receipt.json, which is itself hash-verified against the P0-bound analysis_input_binding.json. No activations were read.",
+  "classification": "EXPLORATORY_EXISTING_DATA",
+  "confirmatory_membership": {
+    "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+    "p1_outputs_are_confirmatory_a_prime_evidence": false
+  },
+  "git": {
+    "branch": "exploration/regime-a-prime-qualification-v0-1",
+    "historical_package_worktree_clean": true,
+    "p0_commit_sha": "da2dd7c0dbb06b42022dfe1d5155445859aebfb7",
+    "p0_receipt_status": "PASS"
+  },
+  "immutable_capture_sources": [
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t01/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t01/coordinates.jsonl",
+      "sha256": "38a4158188a7a103f610eeb8d4306a1bb199959e65af391da584f6a7534aca0e",
+      "trajectory_id": "regime_a_v2_t01"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t01/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t01/raw/visibility.jsonl",
+      "sha256": "4f1f6e6c678af2166d5abe6a8690687a6017fb077249ea8ce27187f76eeaedb8",
+      "trajectory_id": "regime_a_v2_t01"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t01/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t01/durable_receipt.json",
+      "sha256": "a4f5aec44f3e7f27f1c5fe98c2d88a06543b0648e6d7fd5df231418cccf62e1b",
+      "trajectory_id": "regime_a_v2_t01"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t02/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t02/coordinates.jsonl",
+      "sha256": "cd04bab670c90b8fb32f57612643f5a4214d727b5f617291de7d61b6987a49f2",
+      "trajectory_id": "regime_a_v2_t02"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t02/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t02/raw/visibility.jsonl",
+      "sha256": "43e2d3c13267079f3cf53e7659ba168ac79e8b2bdd3704997dd24df840825aca",
+      "trajectory_id": "regime_a_v2_t02"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t02/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t02/durable_receipt.json",
+      "sha256": "afa2e343e050fce8e6867a667aa0ffec33aa2b6df5e8fc417054d0e303d140d4",
+      "trajectory_id": "regime_a_v2_t02"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t03/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t03/coordinates.jsonl",
+      "sha256": "e88f18511badd23caec9f5f9d81944eebc50b5b48c96a4793e7ea9c037c71cf8",
+      "trajectory_id": "regime_a_v2_t03"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t03/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t03/raw/visibility.jsonl",
+      "sha256": "4fe71dc322d275194dfab7a4770e9814d26d2bba86145f8e7764458ff64a6816",
+      "trajectory_id": "regime_a_v2_t03"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t03/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2/regime_a_v2_t03/durable_receipt.json",
+      "sha256": "4b21acb4e9db6a38809340a4582c14f84953c6959442484a551b3657dec215b5",
+      "trajectory_id": "regime_a_v2_t03"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t04/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t04/coordinates.jsonl",
+      "sha256": "70b11761145ea3e5025959448ae668d7535c0c40dad8d7912afa4eab9cdc0d41",
+      "trajectory_id": "regime_a_v2_t04"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t04/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t04/raw/visibility.jsonl",
+      "sha256": "1a1c8b724bb489863a231df6f3323cc757ae3b4b976041e25dfb6a8255fd9a3e",
+      "trajectory_id": "regime_a_v2_t04"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t04/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t04/durable_receipt.json",
+      "sha256": "acd1235ae4ba30598d7dabf4883b40f81fd2951899113b7b31546b9290231d63",
+      "trajectory_id": "regime_a_v2_t04"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t05/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t05/coordinates.jsonl",
+      "sha256": "1c71fa44ef644bb363617801777a4452c20ab9504f302feb8be29c96502800ba",
+      "trajectory_id": "regime_a_v2_t05"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t05/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t05/raw/visibility.jsonl",
+      "sha256": "e8054248f4f6d6cd7706b5430f4ace4bc022cf7064ce5cc40920f691ad8c3408",
+      "trajectory_id": "regime_a_v2_t05"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t05/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t05/durable_receipt.json",
+      "sha256": "214c60d837cdfd51867ac7b6be6151ea4dd6999a196185b212b7ca6688eb51cb",
+      "trajectory_id": "regime_a_v2_t05"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t06/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t06/coordinates.jsonl",
+      "sha256": "fa294a95a6ad192cd34f710700f82cf2394a4ecad9514016465ef855d37bf217",
+      "trajectory_id": "regime_a_v2_t06"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t06/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t06/raw/visibility.jsonl",
+      "sha256": "daa34f3c6946af09fe82c643241b273293995422ef0840f5124397cda05b611c",
+      "trajectory_id": "regime_a_v2_t06"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t06/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t06/durable_receipt.json",
+      "sha256": "3d572e6c33810f47a0117ee463ee51c621c89864939b1e3f0dd2f07f419a2266",
+      "trajectory_id": "regime_a_v2_t06"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t07/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t07/coordinates.jsonl",
+      "sha256": "53518495ee234325f8e462a45af9b4bea874f9bd472cc07bf3b436896843ac71",
+      "trajectory_id": "regime_a_v2_t07"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t07/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t07/raw/visibility.jsonl",
+      "sha256": "24a859686bdccf85fc0c7374bc6163a4404fa293801585da6e40b051fd6a41fe",
+      "trajectory_id": "regime_a_v2_t07"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t07/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t07/durable_receipt.json",
+      "sha256": "12ccc5d0ab0a8c8116fb18cd38f7b8e4f6051d4f1c6989d1f63269dbb07d5e07",
+      "trajectory_id": "regime_a_v2_t07"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t08/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t08/coordinates.jsonl",
+      "sha256": "c45ba8c29f603f0c7dcb934dd2e56a7fd2e9eed9c46cbfaf028b1b5dfe599ff1",
+      "trajectory_id": "regime_a_v2_t08"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t08/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t08/raw/visibility.jsonl",
+      "sha256": "3cb5a1dda1228fdbe8557e9830534d68b539f034b2ed1689e3f2084d5110d3cc",
+      "trajectory_id": "regime_a_v2_t08"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t08/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t08/durable_receipt.json",
+      "sha256": "def3541a0bf81bebdd4048143953a8ed64dde2b635e123606d97cf42c5122b6c",
+      "trajectory_id": "regime_a_v2_t08"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t09/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t09/coordinates.jsonl",
+      "sha256": "544c650c9cd37e9ce183b8fbfb6103672c9b81bdeb6c4e56c932c6f633515b27",
+      "trajectory_id": "regime_a_v2_t09"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t09/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t09/raw/visibility.jsonl",
+      "sha256": "949a716c85d1492a42de1ea86014d496fd9642ec3088a768aea119de08597c29",
+      "trajectory_id": "regime_a_v2_t09"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t09/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t09/durable_receipt.json",
+      "sha256": "43f9a45f91fa7ef6a66eff9d6993cae16d734b417fe63cd89873e31ee6084165",
+      "trajectory_id": "regime_a_v2_t09"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t10/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t10/coordinates.jsonl",
+      "sha256": "8d951cc9120987977fc78723acfd41f00d430996dd8c0df500c1f3c65788b9ec",
+      "trajectory_id": "regime_a_v2_t10"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t10/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t10/raw/visibility.jsonl",
+      "sha256": "18ebca4606efc4365a9695010eb38e77e6d4fe2484a88f3c4aca447301805355",
+      "trajectory_id": "regime_a_v2_t10"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t10/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t10/durable_receipt.json",
+      "sha256": "3f010b04d492283ef0fd95e249a509ca6a73ba27d900108a71a46a57eeaf144f",
+      "trajectory_id": "regime_a_v2_t10"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t11/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t11/coordinates.jsonl",
+      "sha256": "aad2b345d559ee35837d875e11e5d3aab4d152cc7d0d175ae23ee011328509f8",
+      "trajectory_id": "regime_a_v2_t11"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t11/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t11/raw/visibility.jsonl",
+      "sha256": "65671f21a66f9a5334462c78af5db7de0b7be101b6763c81796b3bca1be9771e",
+      "trajectory_id": "regime_a_v2_t11"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t11/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t11/durable_receipt.json",
+      "sha256": "05ab741ee461d1dc714e812b144e05e603d1f2235321379782bfe717f0bdcd03",
+      "trajectory_id": "regime_a_v2_t11"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t12/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t12/coordinates.jsonl",
+      "sha256": "591ec1441e94153f58c32e50fed7d9ec7a98e4984209fe901d13da446a9a9f6a",
+      "trajectory_id": "regime_a_v2_t12"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t12/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t12/raw/visibility.jsonl",
+      "sha256": "eb74c4aab968b3f2fe37e7bb5617b6960da09974745dca32d20d075855be4d9b",
+      "trajectory_id": "regime_a_v2_t12"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t12/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t12/durable_receipt.json",
+      "sha256": "438f5ed6381974b83a1793a3c8459ee938f31e0bec2ebc8c709f8ee2bd5061f7",
+      "trajectory_id": "regime_a_v2_t12"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t13/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t13/coordinates.jsonl",
+      "sha256": "33d9787afabc19a83e4d44109163b0b4613242f35426f750dc2cb1d8891c06bc",
+      "trajectory_id": "regime_a_v2_t13"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t13/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t13/raw/visibility.jsonl",
+      "sha256": "a143e474b9904d5d3a3911307f5edb6e66d3d543fdadbe1ec48abdd9e21a29eb",
+      "trajectory_id": "regime_a_v2_t13"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t13/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t13/durable_receipt.json",
+      "sha256": "fa9ef17f9178f2ecd86abbf45e83f93a900489ffac5d6c14016132c32d04c66e",
+      "trajectory_id": "regime_a_v2_t13"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t14/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t14/coordinates.jsonl",
+      "sha256": "5d81c0f14d8590482059870d503990fcf5e20d3bba8ed062e7ff924200af8d65",
+      "trajectory_id": "regime_a_v2_t14"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t14/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t14/raw/visibility.jsonl",
+      "sha256": "5edb0a243d1a4ede1279701646ddf35978818e247187a207994ca0b8231ff287",
+      "trajectory_id": "regime_a_v2_t14"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t14/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t14/durable_receipt.json",
+      "sha256": "393e3371d8e09a308bb67c510e8ee198fc6307af1541eb02c4f09a5a2134154c",
+      "trajectory_id": "regime_a_v2_t14"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t15/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t15/coordinates.jsonl",
+      "sha256": "874e7b4481db766495582a99971f4d35c564c407688737feeba485262a17e1df",
+      "trajectory_id": "regime_a_v2_t15"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t15/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t15/raw/visibility.jsonl",
+      "sha256": "525e2ca482273c36087494e67a37eb00adf84eea70b1fcd6f76ac3bb96c8139d",
+      "trajectory_id": "regime_a_v2_t15"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t15/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t15/durable_receipt.json",
+      "sha256": "b07218beff5e06d6f628dd148c5fc8bc82af88673e9265b4cc05931c3f6d9d3c",
+      "trajectory_id": "regime_a_v2_t15"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t16/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t16/coordinates.jsonl",
+      "sha256": "649484bb8d85b40d38c71046e8034e7a425169918c1de7e0339115e2cc5b1403",
+      "trajectory_id": "regime_a_v2_t16"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t16/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t16/raw/visibility.jsonl",
+      "sha256": "f79e6577247c221eeb003c421ee924a6428c835d676908f127605a02e421101e",
+      "trajectory_id": "regime_a_v2_t16"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t16/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t16/durable_receipt.json",
+      "sha256": "c55a612d6ffa605b618d5cedb7d8a965ffbece0a9cb559201f8d8b8e283b41cf",
+      "trajectory_id": "regime_a_v2_t16"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t17/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t17/coordinates.jsonl",
+      "sha256": "a6dc1846e6edb1096560f9a7adba18023eb135375534508ec6078bcb02d2bd35",
+      "trajectory_id": "regime_a_v2_t17"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t17/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t17/raw/visibility.jsonl",
+      "sha256": "fd0b13f82a425b723f78d18194498ea1b22f13dd2c3cf90b9d398117cf19f922",
+      "trajectory_id": "regime_a_v2_t17"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t17/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t17/durable_receipt.json",
+      "sha256": "c79e7ef900a8e4c4ea7e47298494c53501ee4cb94430b183c23a979cfb94d8ad",
+      "trajectory_id": "regime_a_v2_t17"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t18/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t18/coordinates.jsonl",
+      "sha256": "434e1b7dc4569df5a6dda29ddf6a9f284bccbe60c1b792adde1b8463d7203050",
+      "trajectory_id": "regime_a_v2_t18"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t18/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t18/raw/visibility.jsonl",
+      "sha256": "136adcaf8d1c4546d9b57fff70bbbbbf3c448472b530d68cff9d4f18e6afb0e8",
+      "trajectory_id": "regime_a_v2_t18"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t18/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t18/durable_receipt.json",
+      "sha256": "949295c5a4bea33c3722088b1cd758179dfb97224f5dccef41dd132f1b434811",
+      "trajectory_id": "regime_a_v2_t18"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t19/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t19/coordinates.jsonl",
+      "sha256": "a6d251bb96cf537ee4cc09c1762677b7f79f193d5394828429f24223d66180d5",
+      "trajectory_id": "regime_a_v2_t19"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t19/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t19/raw/visibility.jsonl",
+      "sha256": "0b2066c4a76f50ecfbd675db50a6d6d046e289a4417a30910a8a1db4b8d22367",
+      "trajectory_id": "regime_a_v2_t19"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t19/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t19/durable_receipt.json",
+      "sha256": "04e8611e85c11c6204d174fb0645d8025b99f81ab487f075a2f51ddd054528b1",
+      "trajectory_id": "regime_a_v2_t19"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t20/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t20/coordinates.jsonl",
+      "sha256": "672de9ea2682a7d31e8dcd9afa833e83f654314fa4fddcaf60e74c309536b33e",
+      "trajectory_id": "regime_a_v2_t20"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t20/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t20/raw/visibility.jsonl",
+      "sha256": "dec08c58215df63e7b1b71954bf9b94a69ca974e86e1f9533a7d946ebd0312fa",
+      "trajectory_id": "regime_a_v2_t20"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t20/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t20/durable_receipt.json",
+      "sha256": "38f8d64d5e855a917207b8a9baa5811a74dee43ecaeff9c1ed6e88beb664a12c",
+      "trajectory_id": "regime_a_v2_t20"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t21/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t21/coordinates.jsonl",
+      "sha256": "4ea9a204b7c2dc38e45025254521deab6e4fb209ede7e1a96280c965b6c7daae",
+      "trajectory_id": "regime_a_v2_t21"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t21/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t21/raw/visibility.jsonl",
+      "sha256": "4e11cfd081372f4bad3e4004410dac2b012897d71b40d540abfc4b2f46ae77ba",
+      "trajectory_id": "regime_a_v2_t21"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t21/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t21/durable_receipt.json",
+      "sha256": "cbb1a0d3256e551e0255e5835ed7f18bc61cd8380983b30865e4eda6e8e2f527",
+      "trajectory_id": "regime_a_v2_t21"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t22/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t22/coordinates.jsonl",
+      "sha256": "712cf609160453fc3df9fb0d24930ad1db9505d8daaf5d07fbb21734e0ba107f",
+      "trajectory_id": "regime_a_v2_t22"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t22/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t22/raw/visibility.jsonl",
+      "sha256": "7d62e2aa5c0e5149b2f26690030cbe6bce077832eb57cb536f8bd811c26647e5",
+      "trajectory_id": "regime_a_v2_t22"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t22/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t22/durable_receipt.json",
+      "sha256": "9d2018203dad9528d60c71a1a15d5382efa96ee881f7a356c922b0a5439befca",
+      "trajectory_id": "regime_a_v2_t22"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t23/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t23/coordinates.jsonl",
+      "sha256": "f352145e3d1781d711ac762ee47ab0cbf5a989c36733aa30305bcf4756344f47",
+      "trajectory_id": "regime_a_v2_t23"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t23/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t23/raw/visibility.jsonl",
+      "sha256": "f43b4e416fbc167cd75420ee86699abc4de8ef6d962b22a1e9f5786525c9840d",
+      "trajectory_id": "regime_a_v2_t23"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t23/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t23/durable_receipt.json",
+      "sha256": "f232910542599950ddf5f5ef4f1666d00287079e62a8b1d107acee48a338cf99",
+      "trajectory_id": "regime_a_v2_t23"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t24/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t24/coordinates.jsonl",
+      "sha256": "119dd3592f78ebcbb5eca45d58f6acfb9c101553d106a49c318638ccae43d288",
+      "trajectory_id": "regime_a_v2_t24"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t24/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t24/raw/visibility.jsonl",
+      "sha256": "89011d752077e75726ed9cbb5081d9109a87049df00231f7482bd910959aabfc",
+      "trajectory_id": "regime_a_v2_t24"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t24/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t24/durable_receipt.json",
+      "sha256": "19c90b3857db37df3fc1e7eed440e98632a9c31559d44cebc3fdbbb7b8d24750",
+      "trajectory_id": "regime_a_v2_t24"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t25/coordinates.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame world coordinates",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t25/coordinates.jsonl",
+      "sha256": "46a184a638ea0467bcfaacd0ae8f029857cda8ab2d3bc15da31898a8a3ba58aa",
+      "trajectory_id": "regime_a_v2_t25"
+    },
+    {
+      "bound_by": "durable_receipt.json -> analysis_input_binding.json",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t25/visibility.jsonl",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "per-frame detector visibility states",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t25/raw/visibility.jsonl",
+      "sha256": "84c70cd073fc790db5806f11ba084b7ab325e4ea3a7a6b25a558177896cb2fe1",
+      "trajectory_id": "regime_a_v2_t25"
+    },
+    {
+      "bound_by": "analysis_input_binding.json :: durable_receipts",
+      "local_path": "/home/sagemaker-user/.mineocclude_cache/p1_qualification_v0_1/meta/regime_a_v2_t25/durable_receipt.json",
+      "modified_by_p1": false,
+      "provenance_tier": "CLOSED_REGIME_A_IMMUTABLE_CAPTURE",
+      "role": "capture object hash authority",
+      "s3_uri": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_occlusion_extraction_v0_1/mineocclude-regime-a-first25-v2-amendment-1/regime_a_v2_t25/durable_receipt.json",
+      "sha256": "676c9e9c27e6e336f33428a70c6d03dfc99e09981d883e7cca60723d61915eb3",
+      "trajectory_id": "regime_a_v2_t25"
+    }
+  ],
+  "phase": "P1",
+  "repository_sources": [
+    {
+      "belongs_to_closed_regime_a": true,
+      "belongs_to_exploratory_postmortem": false,
+      "byte_size": 47452,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/slice_predictions.parquet",
+      "provenance_tier": "CLOSED_CONFIRMATORY_REGIME_A",
+      "role": "frozen held-out layer-4 FULL and BEST_K predictions plus WORLD_WALL_PARALLEL_X targets and row identity for all 475 confirmatory rows; REUSED, never recomputed",
+      "sha256": "4a8adbc6c2080da58fba1a64542301ae445a9ddc51b75b1e3a10ee175373e54a"
+    },
+    {
+      "belongs_to_closed_regime_a": true,
+      "belongs_to_exploratory_postmortem": false,
+      "byte_size": 188189,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/analysis_input_binding.json",
+      "provenance_tier": "CLOSED_CONFIRMATORY_REGIME_A",
+      "role": "row identity hash and durable-receipt hash authority used to bind immutable capture metadata",
+      "sha256": "775c3b56b0dfca98bc2ddb23f8767f7bde2708a08254d2c8883aea9469f5d688"
+    },
+    {
+      "belongs_to_closed_regime_a": true,
+      "belongs_to_exploratory_postmortem": false,
+      "byte_size": 115118,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/slice_validation_receipt.json",
+      "provenance_tier": "CLOSED_CONFIRMATORY_REGIME_A",
+      "role": "closed Regime A validation authority for the frozen prediction package",
+      "sha256": "634fe4ea8885519e3b46be4409137ac47d0be41dc32bc0fd7598e36b9642760e"
+    },
+    {
+      "belongs_to_closed_regime_a": true,
+      "belongs_to_exploratory_postmortem": false,
+      "byte_size": 52361,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/slice_best_k_results.json",
+      "provenance_tier": "CLOSED_CONFIRMATORY_REGIME_A",
+      "role": "frozen BEST_K readout authority (k/alpha selection recorded per outer fold)",
+      "sha256": "11d5d2f0527feb31a27a18a19ac76d342f5c72ca3326bee1863b75187dfc4427"
+    },
+    {
+      "belongs_to_closed_regime_a": true,
+      "belongs_to_exploratory_postmortem": false,
+      "byte_size": 16783,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/slice_primary_results.json",
+      "provenance_tier": "CLOSED_CONFIRMATORY_REGIME_A",
+      "role": "frozen confirmatory primary result; read-only reference",
+      "sha256": "28c1c5725873df1c419dd2d9e283641a3dc74aa88b48ff0fd6de3fad2d40d226"
+    },
+    {
+      "belongs_to_closed_regime_a": true,
+      "belongs_to_exploratory_postmortem": false,
+      "byte_size": 1177,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/continuation_adjudication.json",
+      "provenance_tier": "CLOSED_CONFIRMATORY_REGIME_A",
+      "role": "frozen verdict FAIL_NO_DEFENSIBLE_DECODING / PASS_CONTINUE=NO; read-only",
+      "sha256": "af67f3edd9821a793baf5d1b0b63a2a0227791e5a4ae131d2e5dbbe8b1f25a07"
+    },
+    {
+      "belongs_to_closed_regime_a": true,
+      "belongs_to_exploratory_postmortem": false,
+      "byte_size": 9896,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/scientific_report.md",
+      "provenance_tier": "CLOSED_CONFIRMATORY_REGIME_A",
+      "role": "closed Regime A scientific report; read-only reference",
+      "sha256": "1d69caed87a5d4ca5319b2b494b11c2597d35c8fbee612dc9c316f77c9ae4850"
+    },
+    {
+      "belongs_to_closed_regime_a": false,
+      "belongs_to_exploratory_postmortem": true,
+      "byte_size": 3562,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/postmortem_authority.json",
+      "provenance_tier": "OUTCOME_AWARE_POSTMORTEM",
+      "role": "outcome-aware exploratory postmortem authority and frozen model-input semantics",
+      "sha256": "354fb2014a2efc90e535d7dd5a2d20f46acc99827f27c499b93609a39dc48ce0"
+    },
+    {
+      "belongs_to_closed_regime_a": false,
+      "belongs_to_exploratory_postmortem": true,
+      "byte_size": 22857,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/d2_context_visibility.parquet",
+      "provenance_tier": "OUTCOME_AWARE_POSTMORTEM",
+      "role": "independent reconciliation target for P1 causal last-evidence indexing",
+      "sha256": "8e91ed22360a176ce1af8b5e4c2bd5fa35d69ef9aa303654394723d193fafae8"
+    },
+    {
+      "belongs_to_closed_regime_a": false,
+      "belongs_to_exploratory_postmortem": true,
+      "byte_size": 44715,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/d2_context_visibility_summary.json",
+      "provenance_tier": "OUTCOME_AWARE_POSTMORTEM",
+      "role": "context visibility summary; reconciliation reference",
+      "sha256": "e48a9828be023bde3a4b3352299e28da6f58a3a59ec29741f51e616b1f2f1b52"
+    },
+    {
+      "belongs_to_closed_regime_a": false,
+      "belongs_to_exploratory_postmortem": true,
+      "byte_size": 21289,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/d6_visible_positive_control.json",
+      "provenance_tier": "OUTCOME_AWARE_POSTMORTEM",
+      "role": "per-trajectory visible-control metrics and the frozen matched-span (tau 8..15) hidden comparator definition",
+      "sha256": "281950670d29dc9b9d83d8b2a9a8d3494113adae3f0aa347cbc17ec7beeb12c0"
+    },
+    {
+      "belongs_to_closed_regime_a": false,
+      "belongs_to_exploratory_postmortem": true,
+      "byte_size": 97261,
+      "modified_by_p1": false,
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/visible_positive_control_manifest.json",
+      "provenance_tier": "OUTCOME_AWARE_POSTMORTEM",
+      "role": "metadata-only visible row selection (200 rows, 8 per trajectory) used as the visible side of P1C matching",
+      "sha256": "062175ecbc015c3785666c840dccd9adcc3b34fb52664343a12fd069f2762fd2"
+    }
+  ],
+  "row_identity": {
+    "closed_regime_a_row_identity_hash": "d42f28dbb8a3bbd6ab0b9db70cf0150730c633f23ad88d22fcc3e5ad0da0affc",
+    "join_authority": "(trajectory_id, tau) with (model_frame_idx, server_tick, activation_row, outer_fold) carried verbatim from the frozen confirmatory package",
+    "p1_row_identity_sha256": "d42f28dbb8a3bbd6ab0b9db70cf0150730c633f23ad88d22fcc3e5ad0da0affc",
+    "total_frozen_rows": 475,
+    "trajectories": 25
+  },
+  "schema_version": "1.0",
+  "scope_negatives": {
+    "closed_regime_a_modified": false,
+    "decoder_refit": false,
+    "frozen_predictions_recomputed": false,
+    "gpu_used": false,
+    "minecraft_started": false,
+    "new_activation_generation": false,
+    "new_mineworld_extraction": false,
+    "new_model_inference": false,
+    "new_trajectory_collection": false,
+    "postmortem_modified": false
+  },
+  "source_counts": {
+    "immutable_capture_sources": 75,
+    "repository_sources": 12
+  },
+  "status": "PASS"
+}

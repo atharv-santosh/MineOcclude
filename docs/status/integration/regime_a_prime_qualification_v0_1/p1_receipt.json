@@ -1,0 +1,60 @@
+{
+  "P1_DISPLACEMENT_STATUS": "DEFERRED",
+  "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+  "artifact_id": "regime-a-prime-qualification-p1-receipt-v0.1",
+  "classification": "EXPLORATORY_EXISTING_DATA",
+  "confirmatory_a_prime_membership": false,
+  "counts": {
+    "full_domain_rows": 375,
+    "matched_span_rows": 200,
+    "matched_trajectory_count": 25,
+    "metadata_matched_visible_short_pairs": 100,
+    "metadata_matched_visible_short_pairs_row_level_scored": 0,
+    "short_rows": 100,
+    "trajectories": 25
+  },
+  "historical_postmortem_modified": false,
+  "historical_regime_a_result_modified": false,
+  "new_activation_generation": false,
+  "new_mineworld_extraction": false,
+  "new_trajectory_collection": false,
+  "p0_commit_sha": "da2dd7c0dbb06b42022dfe1d5155445859aebfb7",
+  "p2_started": false,
+  "phase": "P1",
+  "schema_version": "1.0",
+  "scientific_result": {
+    "controlling_caveat": "on every domain the neural readout is beaten by frozen non-neural baselines (TIME_ONLY_LINEAR, TRAINING_MEAN) and its macro R2 is negative, so beating a stale static baseline is not evidence of hidden-position decoding",
+    "full_bootstrap_95": [
+      0.2629178574599135,
+      0.421429358724913
+    ],
+    "full_domain": "NEURAL_BEATS_LAST_SEEN",
+    "full_last_seen_rmse_blocks": 0.6955022390072351,
+    "full_mean_delta_blocks": 0.3452878679532483,
+    "full_neural_rmse_blocks": 0.35021437105398684,
+    "matched_span_domain": "NEURAL_BEATS_LAST_SEEN",
+    "matched_span_last_seen_rmse_blocks": 0.8901454993134635,
+    "matched_span_neural_rmse_blocks": 0.31330756895344686,
+    "short_domain": "NEURAL_DOES_NOT_BEAT_LAST_SEEN",
+    "short_last_seen_rmse_blocks": 0.2164405736637554,
+    "short_mean_delta_blocks": -0.17835311269642154,
+    "short_neural_rmse_blocks": 0.39479368636017703,
+    "summary": "MIXED_BY_EVIDENCE_AGE"
+  },
+  "status": "PASS",
+  "status_meaning": "PASS means P1 executed validly on existing data. It does NOT mean BEST-K beat last seen.",
+  "unsupported_quantities": [
+    "exact row-level visible BEST-K scoring of the 100 metadata-matched pairs (UNSUPPORTED_FROM_PERSISTED_PREDICTIONS: never persisted; refit forbidden)",
+    "LAST_CLEAN_VISIBLE_POSITION on full domains (undefined on most hidden rows; reported only on explicitly restricted subdomains)"
+  ],
+  "validation_checks_failed": 0,
+  "validation_checks_total": 26,
+  "visible_vs_short_sub_analysis": {
+    "d6_visible_window_population": "D6 visible positive-control window, 8 rows per trajectory, 200 rows; NOT the 100 metadata-matched visible rows",
+    "d6_visible_window_trajectory_equal_rmse_blocks": 0.109826431282652,
+    "exact_row_level_visible_scoring_status": "UNSUPPORTED_FROM_PERSISTED_PREDICTIONS",
+    "no_visible_rmse_derived_from_matched_pairs": true,
+    "short_matched_trajectory_equal_rmse_blocks": 0.39479368636017703,
+    "status": "PARTIAL_UNSUPPORTED_ROW_LEVEL_SCORING"
+  }
+}

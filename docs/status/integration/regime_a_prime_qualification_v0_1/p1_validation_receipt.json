@@ -1,0 +1,152 @@
+{
+  "artifact_hashes": {
+    "p1_best_k_vs_last_seen.json": "3caf973a41d8c1678bbba86a28eabc3f0429d6eeb27f8cac39dca63f19722fea",
+    "p1_displacement_diagnostic.json": "65e4d0d470681332c8be57a2933112387cbba8110db04ca98ee18b2cad1c6396",
+    "p1_input_binding.json": "94f0af24e911e703341859803daa2c33c9ee650d1d1c1cc87ad43ffcb1b698df",
+    "p1_matching_manifest.json": "575b4458316401227dd94e67c33abbc97c9a029d65aece0e90c468a9444f3baf",
+    "p1_visible_vs_short.json": "499cdb832be248bfaccbeb8de7d166035c26dd2a33eba8e06b7bfcda2680c38c"
+  },
+  "artifact_id": "regime-a-prime-qualification-p1-validation-receipt-v0.1",
+  "checks": [
+    {
+      "check": "SCRIPTS_COMPILE",
+      "detail": "8 scripts compiled",
+      "result": "PASS"
+    },
+    {
+      "check": "INPUT_HASH_VALIDATION",
+      "detail": "12 repository sources verified; 75 capture sources hash-bound via durable receipts",
+      "result": "PASS"
+    },
+    {
+      "check": "ROW_IDENTITY_RECONCILIATION",
+      "detail": "475 frozen rows joined 1:1 on (trajectory_id, tau)",
+      "result": "PASS"
+    },
+    {
+      "check": "TRAJECTORY_ID_RECONCILIATION",
+      "detail": "25 trajectory ids identical to the frozen package",
+      "result": "PASS"
+    },
+    {
+      "check": "HELD_OUT_BEST_K_REUSED_NOT_RECOMPUTED",
+      "detail": "BEST-K column byte-equal to the frozen package",
+      "result": "PASS"
+    },
+    {
+      "check": "FROZEN_AUTHORITY_MACRO_R2_RECONCILIATION",
+      "detail": "tau1..15 macro R2 -0.509943600283311 rounds to the closed Regime A stored value -0.509944 (authority holds 6 dp); tau8..15 macro R2 -8.806103656007005 is bit-exact against postmortem D6",
+      "result": "PASS"
+    },
+    {
+      "check": "LAST_SEEN_CAUSAL_INDEXING",
+      "detail": "every baseline frame is strictly prior to its target and inside the frozen [T-15, T] model input window",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_TARGET_OR_FUTURE_FRAME_USED",
+      "detail": "all 475 targets are OCCLUDED_AGREEMENT with no rendered pixels at the target frame; minimum evidence age is 1 frame",
+      "result": "PASS"
+    },
+    {
+      "check": "D2_INDEPENDENT_VISIBILITY_RECONCILIATION",
+      "detail": "P1 causal indexing reproduces all four postmortem D2 columns on all 475 rows with zero mismatches",
+      "result": "PASS"
+    },
+    {
+      "check": "METADATA_ONLY_MATCHING",
+      "detail": "matching keys are trajectory_id, direction, outer_fold, boundary_offset_k; unit test confirms the manifest hash is invariant to perturbed predictions",
+      "result": "PASS"
+    },
+    {
+      "check": "MATCH_MANIFEST_FROZEN_BEFORE_OUTCOME_ANALYSIS",
+      "detail": "manifest written to disk before any outcome column is joined; integrity hash 9e441b7287e8d3f7",
+      "result": "PASS"
+    },
+    {
+      "check": "UNMATCHED_ROWS_HAVE_REASONS",
+      "detail": "100 unmatched rows each carry an explicit reason",
+      "result": "PASS"
+    },
+    {
+      "check": "MATCH_MANIFEST_DECISIONS_UNCHANGED",
+      "detail": "integrity hash 9e441b7287e8d3f7 over (algorithm, pairs, unmatched) is unchanged; only schema labels were added",
+      "result": "PASS"
+    },
+    {
+      "check": "EXACT_ROW_LEVEL_VISIBLE_SCORING_LABELLED_UNSUPPORTED",
+      "detail": "manifest, P1C payload and receipt all declare UNSUPPORTED_FROM_PERSISTED_PREDICTIONS",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_MATCHED_ROW_VISIBLE_RMSE_CLAIMED",
+      "detail": "ambiguous field names removed; all 2 report lines carrying 0.1098 name it as the D6 visible-window figure",
+      "result": "PASS"
+    },
+    {
+      "check": "TRAJECTORY_GROUPED_BOOTSTRAP",
+      "detail": "10000 whole-trajectory resamples per domain, fixed seed, no frame-level inferential resampling",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_NEW_ACTIVATIONS",
+      "detail": "no .npy activation tensor was read or written",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_MINECRAFT_EXECUTION",
+      "detail": "no Minecraft process launched",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_MINEWORLD_EXTRACTION",
+      "detail": "no MineWorld checkpoint loaded; no new model inference",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_NEW_TRAJECTORY_COLLECTION",
+      "detail": "no trajectory collected",
+      "result": "PASS"
+    },
+    {
+      "check": "GPU_NOT_USED",
+      "detail": "CPU only",
+      "result": "PASS"
+    },
+    {
+      "check": "HISTORICAL_PACKAGE_MODIFICATION_CHECK",
+      "detail": "closed Regime A and postmortem packages are byte-identical to their committed state",
+      "result": "PASS"
+    },
+    {
+      "check": "JSON_PARSE_VALIDATION",
+      "detail": "9 JSON artifacts parse",
+      "result": "PASS"
+    },
+    {
+      "check": "GIT_DIFF_CHECK",
+      "detail": "no whitespace or conflict-marker errors",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_UNRELATED_FILES_CHANGED",
+      "detail": "worktree changes confined to the two P1 paths",
+      "result": "PASS"
+    },
+    {
+      "check": "NARROW_UNIT_TESTS",
+      "detail": "19 narrow invariant tests passed",
+      "result": "PASS"
+    }
+  ],
+  "checks_failed": 0,
+  "checks_total": 26,
+  "classification": "EXPLORATORY_EXISTING_DATA",
+  "deterministic_rerun": {
+    "detail": "all five JSON artifacts and the derived parquet are byte-identical across repeated runs; outputs contain no timestamps",
+    "result": "PASS"
+  },
+  "phase": "P1",
+  "schema_version": "1.0",
+  "status": "PASS"
+}
