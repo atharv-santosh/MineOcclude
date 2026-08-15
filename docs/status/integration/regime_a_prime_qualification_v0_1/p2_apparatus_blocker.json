@@ -1,0 +1,42 @@
+{
+  "apparatus_state_after_session": {
+    "gradle_build_performed": false,
+    "installed_mod_sha256": "78b4da2453ecf74140c5963df4013746845845427c12872d919b7ca98f2c4dc6",
+    "installed_mod_unchanged": true,
+    "mod_source_sha256": "f2c7f47b4f147e416f912e72ee297600d9b5c1d44821070804b7ce0a8068565a",
+    "mod_source_unchanged": true,
+    "patch_applied": false
+  },
+  "artifact_id": "regime-a-prime-p2-apparatus-blocker-v0.2",
+  "blocker_id": "RENDER_EQUIVALENCE_FAIL",
+  "failure_is_independent_of_the_authorised_patch": true,
+  "operator_decision_required": true,
+  "phase": "P2",
+  "remedy_options": [
+    "restore a pixel-identical rendering stack (the original bundled operator-tools Mesa/llvmpipe + Xvfb) and re-run GATE A and GATE B",
+    "establish, prospectively and before any P2 outcome, an operator-authorised rendering-equivalence rule that the current stack demonstrably satisfies",
+    "redesign P2 so that BOTH conditions are captured on one self-consistent apparatus -- but this would require recollecting the wall runs, which the current P2 authority forbids, and would change P2's matched-control design"
+  ],
+  "root_cause": {
+    "current_renderer": "Mesa 25.2.8-0ubuntu0.24.04.2, llvmpipe (LLVM 20.1.2)",
+    "current_xvfb": "2:21.1.12-1ubuntu1.6",
+    "diagnosis": "client-side software rasterisation differs; server-side motion is unaffected, which is why coordinates are bit-exact while pixels are not",
+    "operator_tools_recoverable": false,
+    "original_gl_stack_location": "bundled operator-tools DRI drivers on the wiped NVMe (LIBGL_DRIVERS_PATH pointed into operator-tools/root/usr/lib/x86_64-linux-gnu/dri)",
+    "original_renderer": "UNKNOWN_NOT_RECORDED",
+    "provenance_gap": "mineocclude-capture-runtime-receipt.json pins Java, Minecraft, Fabric and mod hashes but records NO renderer, Mesa, GL, DRI or Xvfb identity, so the original rendering stack cannot be reconstructed from frozen authority",
+    "searched": [
+      "local $HOME archives",
+      "durable S3 mineocclude prefix"
+    ]
+  },
+  "schema_version": "1.1",
+  "stage": "GATE_B_RENDERED_PIXEL_EQUIVALENCE",
+  "startspec_blocker_still_present": true,
+  "startspec_patch_still_required_once_rendering_is_restored": true,
+  "startspec_proposed_patch": "--- a/fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java\n+++ b/fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java\n@@ startSpecCmd\n-        if (sceneMode != EpisodeConfig.Scene.NORMAL) {\n-            src.sendError(new LiteralText(\"startspec requires scene mode normal\"));\n+        if (sceneMode != EpisodeConfig.Scene.NORMAL\n+                && sceneMode != EpisodeConfig.Scene.NO_WALL) {\n+            src.sendError(new LiteralText(\"startspec requires scene mode normal or nowall\"));\n             return 0;\n         }\n@@ EpisodeConfig construction inside startSpecCmd\n-                    layout.laneY, layout.wallAxis, EpisodeConfig.Scene.NORMAL, 0,\n+                    layout.laneY, layout.wallAxis, sceneMode, 0,\n                     0, -1, 0.0, true, specId, specHash);\n",
+  "status": "BLOCKED",
+  "summary": "The operator authorised the minimal startspec scene-gating repair, but the rebuilt capture runtime does not reproduce historical rendered pixels. GATE B fails on 14 of 18 hash-bound historical frames, changes the magenta detector area on 11, and flips the detector verdict on 2 occluded frames -- one of which is a frozen Regime A target row (t01, tau=1, frame 43). The same pixels feed MineWorld, so P2 activations captured on this runtime would not be comparable to the historical apparatus.",
+  "supersedes_blocker": "STARTSPEC_IS_WALL_ONLY",
+  "why_patch_not_applied": "the failure is caused by client-side software rasterisation, not by the server mod. Rebuilding the mod cannot change rendered pixels, so applying and building the patch would not have unblocked P2. GATE B was run first because it is cheap and patch-independent, avoiding a Gradle build, 25 captures and all GPU extraction that could not have produced usable data."
+}
