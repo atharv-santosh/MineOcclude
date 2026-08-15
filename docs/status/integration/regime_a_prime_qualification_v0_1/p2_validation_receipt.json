@@ -20,20 +20,20 @@
     {"check": "P1_UNMODIFIED", "detail": "no worktree delta", "result": "PASS"},
     {"check": "ORIGINAL_P2_AUTHORITY_UNMODIFIED", "detail": "four authority artifacts unchanged", "result": "PASS"},
     {"check": "JSON_PARSE_VALIDATION", "detail": "all P2 JSON artifacts parse", "result": "PASS"},
-    {"check": "GPU_NOT_USED", "detail": "extraction remains gated", "result": "PASS"},
+    {"check": "GPU_USE_GATED", "detail": "GPU used only after capture, path, and visibility PASS", "result": "PASS"},
     {"check": "WALL_RUNS_NOT_RECOLLECTED", "detail": "0", "result": "PASS"},
     {"check": "P3_NOT_STARTED", "detail": "no P3 work", "result": "PASS"},
-    {"check": "25_OF_25_NO_WALL_CAPTURE", "detail": "pre-scientific commit", "result": "NOT_REACHED"},
-    {"check": "PATH_EQUIVALENCE_EXACT", "detail": "requires capture", "result": "NOT_REACHED"},
-    {"check": "NO_WALL_VISIBILITY_VALID", "detail": "requires capture", "result": "NOT_REACHED"},
-    {"check": "LAYER4_ONLY_EXTRACTION", "detail": "gated", "result": "NOT_REACHED"},
-    {"check": "BEST_K_TRAINING_ONLY", "detail": "no readout executed", "result": "NOT_REACHED"},
-    {"check": "FULL_FROZEN", "detail": "no readout executed", "result": "NOT_REACHED"}
+    {"check": "25_OF_25_NO_WALL_CAPTURE", "detail": "25/25 COMPLETE_VALIDATED_DURABLE; 0 retries", "result": "PASS"},
+    {"check": "PATH_EQUIVALENCE_EXACT", "detail": "25/25 trajectories; 475 target rows; max difference 0.0", "result": "PASS"},
+    {"check": "NO_WALL_VISIBILITY_VALID", "detail": "475/475 jointly geometric- and magenta-visible", "result": "PASS"},
+    {"check": "LAYER4_ONLY_EXTRACTION", "detail": "25/25; 475 rows; layer 4 only; 653724800 bytes", "result": "PASS"},
+    {"check": "BEST_K_TRAINING_ONLY", "detail": "frozen nested trajectory procedure; qualification PASS", "result": "PASS"},
+    {"check": "FULL_FROZEN", "detail": "frozen FULL_TOKEN_GRID trajectory procedure; qualification PASS", "result": "PASS"}
   ],
-  "checks_not_reached": 6,
-  "checks_passed_current_authority": 20,
+  "checks_not_reached": 0,
+  "checks_passed_current_authority": 26,
   "historical_failures_preserved": 1,
   "phase": "P2",
-  "schema_version": "1.3",
-  "status": "READY_FOR_P2_CAPTURE"
+  "schema_version": "1.4",
+  "status": "PASS"
 }

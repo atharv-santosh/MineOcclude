@@ -1,0 +1,79 @@
+{
+  "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+  "artifact_id": "regime-a-prime-p2-closeout-v0.1",
+  "artifact_sha256": {
+    "p2_activation_manifest.json": "35b15e96e31962ebc6d15ca3c101b1278e10d877536fb8c9084d0d722949b93c",
+    "p2_best_k_results.json": "9cf0e783a8a040d7240cb94a58fa925240d712935f35b304df6e119f660bd523",
+    "p2_capture_manifest.json": "f675b6c3cadf06af1fd0fd58462d88dfbe77eb5c96735f7938e154f153f6a80d",
+    "p2_extraction_validation_receipt.json": "38165d361ef802f5130cfa5fad3bb231fb2d5b0fb4b8386e384c7eecd0298b46",
+    "p2_final_analysis_receipt.json": "e145503c490934def6b805b2a7e48ba2a9af384b68788be2a37915e2bd14d019",
+    "p2_full_results.json": "74b2f1e58a6d4ba6ea99ca419d52eaae1350fb7a981cf0388bf096e0b5391af3",
+    "p2_path_equivalence_receipt.json": "7c763d975b227bc9fc4f02b282d6f50f854fc6c11a50b4ab41a4aabfa06d4177",
+    "p2_readout_authority_receipt.json": "9d9c9d122ce80051c33f9c0947b8b79184df277b083af6f5ec13c6ad52d862e4",
+    "p2_report.md": "1518c9942e9c4631cc40a759d4278942893ea5ad52647aa12daf82bc16303417",
+    "p2_visibility_qualification_receipt.json": "7083069fb10b385aa5cbdf8ef136550e5a36fc091dafe1a85d895a1175dc46b3"
+  },
+  "best_k_qualification_status": "PASS",
+  "capture_cohort": {
+    "complete_validated_durable": 25,
+    "confirmatory_membership": false,
+    "retries": 0,
+    "run_count": 25,
+    "scene": "NO_WALL",
+    "source_spec_count": 25
+  },
+  "checks": {
+    "activation_manifest_hash_authorized": true,
+    "all_machine_readable_artifacts_parse": true,
+    "best_k_qualified": true,
+    "capture_25_of_25": true,
+    "classification_nonconfirmatory": true,
+    "confirmatory_collection_not_authorized": true,
+    "decision_exact": true,
+    "extraction_valid": true,
+    "full_qualified": true,
+    "historical_comparison_narrowed": true,
+    "p3_allowed_not_started": true,
+    "path_exact": true,
+    "readout_authority_bound_before_scoring": true,
+    "report_decision_exact": true,
+    "report_interpretation_bounded": true,
+    "report_matches_best_k": true,
+    "report_matches_full": true,
+    "visibility_exact": true
+  },
+  "checks_failed": 0,
+  "classification": "EXPLORATORY_MATCHED_DIAGNOSTIC",
+  "confirmatory_membership": false,
+  "contamination_detected": false,
+  "controlling_authorities": {
+    "historical_renderer_blocker_commit": "af8ab21087a1b4d08514721d19762ca2a00d4ed5",
+    "narrowed_role_supersession_commit": "76a2e7fdf6db02816a9df5d07dea33792bbeca86",
+    "original_preoutcome_commit": "6943e04c114ad8be43b28be5342f7a6c0a49523f",
+    "patch_acceptance_supersession": "p2_patch_acceptance_supersession.json",
+    "readout_authority": "p2_preoutcome_authority.json"
+  },
+  "full_qualification_status": "PASS",
+  "historical_comparison": "DESCRIPTIVE_CROSS_APPARATUS_CONTEXT_ONLY",
+  "interpretation_boundary": {
+    "does_not_establish": [
+      "hidden-state decoding",
+      "object permanence",
+      "memory",
+      "belief",
+      "historical pixel causality",
+      "confirmatory Regime A-prime success",
+      "rescue of closed Regime A"
+    ],
+    "establishes": "visible-position recovery on the current qualified apparatus at matched physical paths/times"
+  },
+  "p2_decision": "GO_BEST_K_FULL_VISIBLE",
+  "p2_final_status": "PASS_CURRENT_APPARATUS_VISIBLE_READOUT_QUALIFICATION",
+  "p2_role": "CURRENT_APPARATUS_VISIBLE_READOUT_QUALIFICATION_AT_MATCHED_PHYSICAL_PATHS",
+  "p3_allowed": true,
+  "p3_started": false,
+  "phase": "P2_CLOSEOUT",
+  "schema_version": "1.0",
+  "status": "PASS",
+  "validation_runtime_seconds": 0.005169712996575981
+}

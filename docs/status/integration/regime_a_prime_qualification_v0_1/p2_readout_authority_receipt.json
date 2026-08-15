@@ -1,0 +1,52 @@
+{
+  "alpha_grid": [
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "alpha_selection": "maximum inner trajectory-equal macro R2; exact tie smaller alpha",
+  "artifact_id": "regime-a-prime-p2-readout-authority-binding-v0.1",
+  "best_k": {
+    "k_grid": [
+      1,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "ranking_scope": "training rows only inside every inner/final fold",
+    "token_ranking": "absolute maximum hidden-dimension training correlation"
+  },
+  "best_k_authority": "docs/status/integration/regime_a_occlusion_extraction_v0_1/first25_analysis/slice_best_k_results.json",
+  "best_k_authority_sha256": "11d5d2f0527feb31a27a18a19ac76d342f5c72ca3326bee1863b75187dfc4427",
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260815,
+    "unit": "WHOLE_TRAJECTORY"
+  },
+  "controlling_preoutcome_authority": "p2_preoutcome_authority.json",
+  "controlling_preoutcome_authority_sha256": "ad9804ed7b8ae9770d0192dc8f9e863fc85c96429031600e251470ebdbaa03f7",
+  "feature_standardization": "training rows only for every kernel",
+  "full_token_grid": "exact standardized summed-token kernel ridge",
+  "inner_folds": "inner_fold_assignment: deterministic direction-stratified trajectories",
+  "k_selection": "maximum inner trajectory-equal macro R2; exact tie smaller K then alpha",
+  "outer_folds": "frozen trajectory-grouped outer_fold from source specs",
+  "p2_outcomes_observed_before_binding": false,
+  "selection_training_scope": "tau1..15, matching frozen source procedure",
+  "source_analysis_commit": "8c1b8ec921ac7cd2b742b926db162d99ff877395",
+  "source_generator": "scripts/run_regime_a_first25_science.py",
+  "source_generator_sha256": "a847993f4b48bd5dc7b42cef636b44faf7a9249f79d9026cdd1331ccd118a9d7",
+  "source_mechanics": "src/mineocclude/regime_a_first25_analysis.py",
+  "source_mechanics_sha256": "504be73d74e2f8790247bf29e550126c540263a4f362390fad7b990b8756bf64",
+  "status": "BOUND_BEFORE_P2_SCORING",
+  "target_handling": "training-target centering inside ridge; no target standardization",
+  "visible_evaluation_scope": "all frozen qualified tau1..19 rows (475)",
+  "visible_qualification": {
+    "bootstrap_requirement": "whole-trajectory 95% lower bound > 0",
+    "metric": "trajectory-equal visible macro R2",
+    "threshold": "> 0"
+  }
+}

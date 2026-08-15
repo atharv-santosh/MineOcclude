@@ -9,7 +9,17 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from p2_common import OUT, WORK, p2_run_id, read_jsonl, source_specs, wall_coordinates, write_json
+from p2_common import (
+    OUT,
+    WORK,
+    capture_context,
+    p2_episode_id,
+    p2_run_id,
+    read_jsonl,
+    source_specs,
+    wall_coordinates,
+    write_json,
+)
 
 CAPTURES = WORK / "captures"
 
@@ -43,6 +53,19 @@ def main() -> int:
         wall = wall_coordinates(spec_id)
         expected_targets = sorted(frozen_by_spec[spec_id], key=lambda row: row["target_order"])
         target_frames = [int(row["target_model_frame_idx"]) for row in expected_targets]
+
+        context = capture_context(spec, p2_episode_id(spec), Path("/nonwriting-authority-check"))
+        authority_ok = (
+            (root / "noise_schedule.jsonl").read_bytes() == context["noise_bytes"]
+            and (root / "motion_schedule.json").read_bytes() == context["motion_bytes"]
+            and all(row["p2_no_wall_run_id"] == run_id for row in expected_targets)
+            and all(row["direction"] == spec["direction"] for row in expected_targets)
+            and all(int(row["outer_fold"]) == int(spec["outer_fold"])
+                    for row in expected_targets)
+        )
+        if not authority_ok:
+            failures.append({"run_id": run_id, "reason": "mapping/direction/motion authority mismatch"})
+            continue
 
         if not (len(state) == len(ticks) == len(actions) == len(visible)):
             failures.append({"run_id": run_id, "reason": "stream cardinality mismatch"})
@@ -111,6 +134,11 @@ def main() -> int:
         "path_equivalence_status": path_status,
         "max_path_difference": max_difference,
         "path_failure_count": len(failures),
+        "path_trajectories_pass": len(specs) - len(failures),
+        "path_trajectories_fail": len(failures),
+        "all_capture_rows_checked": sum(len(read_jsonl(CAPTURES / p2_run_id(
+            str(spec["trajectory_spec_id"])) / "raw/server_state.jsonl")) for spec in specs),
+        "path_rows_checked": len(frozen["rows"]),
         "source_spec_count": len(specs),
         "exact_coordinate_identity_required": True,
         "exact_spec_seed_direction_motion_target_order_timing_required": True,
@@ -139,6 +167,12 @@ def main() -> int:
         "geometric_visible_rows": geometric_visible,
         "ambiguous_or_partial_rows": ambiguous,
         "zero_evidence_rows": zero,
+        "visibility_trajectories_pass": sum(
+            row["qualified_rendered_evidence_rows"] == 19 for row in visibility_runs
+        ),
+        "visibility_trajectories_fail": sum(
+            row["qualified_rendered_evidence_rows"] != 19 for row in visibility_runs
+        ),
         "runs": visibility_runs,
     })
     print(f"PATH_EQUIVALENCE_STATUS=PASS max={max_difference}")

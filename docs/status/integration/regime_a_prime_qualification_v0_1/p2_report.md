@@ -4,7 +4,7 @@
 
 **Role:** `CURRENT_APPARATUS_VISIBLE_READOUT_QUALIFICATION_AT_MATCHED_PHYSICAL_PATHS`
 
-**State:** `READY_FOR_P2_CAPTURE`; no scientific P2 capture, activation, or neural result existed at this freeze.
+**State:** `PASS`; no scientific P2 capture, activation, or neural result existed at the prospective authority freeze.
 
 ## Patch acceptance
 
@@ -43,4 +43,30 @@ The autonomous runner must collect the 25 frozen NO_WALL specifications, persist
 and validate them durably, and enforce exact path identity (`epsilon_path=0.0`).
 Visibility qualification precedes any GPU use. Extraction, if authorized by
 capture/path/visibility, is layer 4 only. Final scientific results remain
-uncommitted and unpushed for operator review; P3 remains prohibited.
+uncommitted and unpushed for operator review; P3 must not be started during
+this P2 session.
+
+## Final P2 result
+
+Capture, exact path equivalence, and current-renderer visibility all passed:
+25/25 durable NO_WALL trajectories, 475/475 jointly geometric- and
+magenta-visible targets, and maximum path difference `0.0`. Layer-4-only
+extraction produced 475 rows (`653,724,800` bytes) with all local hashes and
+durable receipt readbacks exact.
+
+The frozen trajectory-grouped visible readouts both qualified:
+
+| Readout | RMSE (blocks) | MAE (blocks) | Macro R² | Whole-trajectory bootstrap 95% |
+|---|---:|---:|---:|---:|
+| BEST-K | 0.166027 | 0.133158 | 0.790695 | [0.723873, 0.847242] |
+| FULL_TOKEN_GRID | 0.166577 | 0.134004 | 0.754803 | [0.621274, 0.855558] |
+
+Both macro R² values and both bootstrap lower bounds exceed the prospectively
+frozen threshold of zero. `P2_DECISION=GO_BEST_K_FULL_VISIBLE` and
+`P3_ALLOWED=true`; P3 was not started.
+
+This establishes only current-apparatus visible-readout qualification at the
+matched physical paths/times. It does not establish hidden-state decoding,
+memory, object permanence, belief, a clean historical pixel-causal contrast,
+or confirmatory Regime A′ success. Historical comparison remains
+`DESCRIPTIVE_CROSS_APPARATUS_CONTEXT_ONLY`.
