@@ -1,0 +1,59 @@
+{
+  "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+  "artifact_id": "regime-a-prime-p2-patch-acceptance-supersession-v0.1",
+  "classification": "EXPLORATORY_MATCHED_DIAGNOSTIC",
+  "current_renderer_identity": {
+    "mesa": "25.2.8-0ubuntu0.24.04.2",
+    "renderer": "llvmpipe",
+    "llvm": "20.1.2",
+    "xvfb": "21.1.12"
+  },
+  "current_renderer_provenance_bound_for_p2": true,
+  "current_no_wall_visibility_gate": {
+    "detector_thresholds_changed": false,
+    "frozen_before_capture_outcomes": true,
+    "pixel_tolerance_introduced": false,
+    "rule": "all 475 frozen NO_WALL target rows must be detector-visible and geometric-visible; any ambiguous/partial or zero-evidence row stops P2 before GPU"
+  },
+  "effective_status": "FROZEN_PROSPECTIVE_PRE_OUTCOME",
+  "empirical_same_binary_control": {
+    "artifact": "p2_patch_inertness_receipt.json",
+    "frames_exactly_pixel_identical": 4,
+    "frames_tested": 18,
+    "renderer_deterministic_across_runs": false
+  },
+  "exact_pixel_gate_disposition": "NOT_APPLICABLE_AS_PATCH_INERTNESS_GATE_DUE_TO_EMPIRICALLY_ESTABLISHED_RENDERER_NONDETERMINISM",
+  "future_confirmatory_requirement": "fresh paired wall/no-wall collection under one prospectively pinned apparatus",
+  "historical_clean_wall_vs_no_wall_pixel_claim_prohibited": true,
+  "historical_pixel_equivalence": "FAIL",
+  "historical_pixel_result_preserved_not_reinterpreted": true,
+  "no_detector_aware_tolerance_introduced": true,
+  "no_gpu_renderer_sensitivity_study_performed": true,
+  "no_pixel_tolerance_introduced": true,
+  "operator_ruling": "Exact rendered-pixel equality is not a well-posed deterministic patch-inertness criterion on an apparatus where identical-binary repeats are not pixel-identical. This is not a pixel PASS claim.",
+  "p2_role": "CURRENT_APPARATUS_VISIBLE_READOUT_QUALIFICATION_AT_MATCHED_PHYSICAL_PATHS",
+  "patch_acceptance": {
+    "client_renderer_code_modified": false,
+    "no_sheep_still_refused": true,
+    "normal_max_coordinate_difference": 0.0,
+    "normal_path_state_equivalence": "PASS",
+    "normal_scene_specification_semantics_unchanged": true,
+    "patch_scope_valid": true,
+    "required_conditions_all_satisfied": true
+  },
+  "patch_acceptance_status": "PASS",
+  "phase": "P2",
+  "pre_outcome_state_at_ruling": {
+    "best_k_or_full_result_exists": false,
+    "gpu_used": false,
+    "no_wall_scientific_runs": 0,
+    "p2_activations": 0
+  },
+  "prior_exact_pixel_patch_gate": "PATCH_CURRENT_PIXEL_EQUIVALENCE=PASS",
+  "schema_version": "1.0",
+  "source_authorities": {
+    "historical_renderer_blocker_commit": "af8ab21087a1b4d08514721d19762ca2a00d4ed5",
+    "narrowed_role_supersession_commit": "76a2e7fdf6db02816a9df5d07dea33792bbeca86",
+    "original_p2_preoutcome_commit": "6943e04c114ad8be43b28be5342f7a6c0a49523f"
+  }
+}

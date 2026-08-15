@@ -1,173 +1,39 @@
 {
-  "artifact_id": "regime-a-prime-p2-validation-receipt-v0.2",
+  "artifact_id": "regime-a-prime-p2-validation-receipt-v0.4",
   "checks": [
-    {
-      "check": "PRE_PATCH_SOURCE_HASH_BOUND",
-      "detail": "MineOccludeServer.java sha256 f2c7f47b4f147e41 recorded before any edit",
-      "result": "PASS"
-    },
-    {
-      "check": "PRE_PATCH_MOD_HASH_BOUND",
-      "detail": "installed mod sha256 78b4da2453ecf741 recorded before any edit",
-      "result": "PASS"
-    },
-    {
-      "check": "POST_PATCH_SOURCE_HASH_BOUND",
-      "detail": "source unchanged: patch not applied because GATE B failed",
-      "result": "PASS"
-    },
-    {
-      "check": "POST_PATCH_MOD_HASH_BOUND",
-      "detail": "installed mod unchanged: no rebuild performed",
-      "result": "PASS"
-    },
-    {
-      "check": "PATCH_SCOPE_VALID",
-      "detail": "the authorised patch is scoped to startspec scene gating only; it was reviewed and left unapplied, so no scope violation could occur",
-      "result": "PASS"
-    },
-    {
-      "check": "NO_SHEEP_STILL_REFUSED",
-      "detail": "unchanged apparatus still refuses NO_SHEEP on startspec",
-      "result": "PASS"
-    },
-    {
-      "check": "NORMAL_SCENE_WALL_PATH_BIT_EXACT",
-      "detail": "GATE A: 260/260 coordinate frames bit-identical in both directions (pre-existing authority, unchanged runtime)",
-      "result": "PASS"
-    },
-    {
-      "check": "HISTORICAL_PIXEL_EQUIVALENCE",
-      "detail": "GATE B: only 4/18 frames pixel-identical; 2 detector status flips including 1 on a frozen target row",
-      "result": "FAIL"
-    },
-    {
-      "check": "P2_PREOUTCOME_AUTHORITY_UNCHANGED",
-      "detail": "all four frozen pre-outcome artifacts hash-identical to commit 6943e04",
-      "result": "PASS"
-    },
-    {
-      "check": "TARGET_ROWS_UNCHANGED",
-      "detail": "475 frozen target rows unchanged",
-      "result": "PASS"
-    },
-    {
-      "check": "VISIBLE_RULE_UNCHANGED",
-      "detail": "P2_BEST_K_VISIBLE_QUALIFICATION_v0.1 unchanged",
-      "result": "PASS"
-    },
-    {
-      "check": "EPSILON_PATH_UNCHANGED",
-      "detail": "epsilon_path remains 0.0 / EXACT_EQUALITY_REQUIRED; not weakened",
-      "result": "PASS"
-    },
-    {
-      "check": "25_SPEC_MAPPING_UNCHANGED",
-      "detail": "25-spec mapping unchanged",
-      "result": "PASS"
-    },
-    {
-      "check": "PATH_GATE_BEFORE_ACTIVATION_OUTCOMES",
-      "detail": "no activation or decoder outcome exists; all gates precede outcomes",
-      "result": "PASS"
-    },
-    {
-      "check": "HISTORICAL_REGIME_A_UNMODIFIED",
-      "detail": "byte-identical",
-      "result": "PASS"
-    },
-    {
-      "check": "POSTMORTEM_UNMODIFIED",
-      "detail": "byte-identical",
-      "result": "PASS"
-    },
-    {
-      "check": "P0_UNMODIFIED",
-      "detail": "untouched",
-      "result": "PASS"
-    },
-    {
-      "check": "P1_UNMODIFIED",
-      "detail": "untouched",
-      "result": "PASS"
-    },
-    {
-      "check": "APPARATUS_UNMODIFIED",
-      "detail": "fabric/ clean; mod source and installed jar byte-identical",
-      "result": "PASS"
-    },
-    {
-      "check": "HISTORICAL_FRAMES_HASH_VERIFIED",
-      "detail": "18/18 historical frames verified against durable receipts",
-      "result": "PASS"
-    },
-    {
-      "check": "NO_TOLERANCE_INVENTED",
-      "detail": "exact-equality rule fixed from project precedent before comparison",
-      "result": "PASS"
-    },
-    {
-      "check": "JSON_PARSE_VALIDATION",
-      "detail": "all P2 JSON artifacts parse",
-      "result": "PASS"
-    },
-    {
-      "check": "GIT_DIFF_CHECK",
-      "detail": "no whitespace errors",
-      "result": "PASS"
-    },
-    {
-      "check": "NO_P3_WORK",
-      "detail": "no P3 work performed",
-      "result": "PASS"
-    },
-    {
-      "check": "GPU_NOT_USED",
-      "detail": "GPU idle; extraction correctly gated",
-      "result": "PASS"
-    },
-    {
-      "check": "WALL_RUNS_NOT_RECOLLECTED",
-      "detail": "0 wall trajectories recollected",
-      "result": "PASS"
-    },
-    {
-      "check": "LAYER4_ONLY_EXTRACTION",
-      "detail": "gated behind GATE B",
-      "result": "NOT_REACHED"
-    },
-    {
-      "check": "25_OF_25_REQUIRED_RUN_STATUS",
-      "detail": "0 of 25; capture never started",
-      "result": "NOT_REACHED"
-    },
-    {
-      "check": "PATH_EQUIVALENCE",
-      "detail": "requires no-wall captures",
-      "result": "NOT_REACHED"
-    },
-    {
-      "check": "BEST_K_TRAINING_ONLY_SELECTION",
-      "detail": "no readout executed",
-      "result": "NOT_REACHED"
-    },
-    {
-      "check": "FULL_PROCEDURE_FROZEN",
-      "detail": "no readout executed",
-      "result": "NOT_REACHED"
-    },
-    {
-      "check": "BOOTSTRAP_TRAJECTORY_GROUPED",
-      "detail": "no readout executed",
-      "result": "NOT_REACHED"
-    }
+    {"check": "NO_P2_OUTCOMES_BEFORE_RULING", "detail": "0 scientific captures, 0 activations, no BEST-K/FULL result", "result": "PASS"},
+    {"check": "PATCH_SCOPE_VALID", "detail": "startspec scene gate and sceneMode pass-through only", "result": "PASS"},
+    {"check": "NO_SHEEP_STILL_REFUSED", "detail": "startspec permits NORMAL and NO_WALL only", "result": "PASS"},
+    {"check": "NORMAL_SPECIFICATION_SEMANTICS_UNCHANGED", "detail": "NORMAL remains accepted and passed through unchanged", "result": "PASS"},
+    {"check": "PATCH_NORMAL_PATH_STATE_EQUIVALENCE", "detail": "520/520 frames exact; max coordinate difference 0.0", "result": "PASS"},
+    {"check": "CLIENT_RENDERER_CODE_MODIFIED", "detail": "server startspec code only; no client renderer code changed", "result": "PASS_FALSE"},
+    {"check": "CURRENT_RENDERER_PROVENANCE_BOUND", "detail": "Mesa 25.2.8 / llvmpipe LLVM 20.1.2 / Xvfb 21.1.12", "result": "PASS"},
+    {"check": "SAME_BINARY_PIXEL_DETERMINISM", "detail": "4/18 exact frames; exact equality empirically unsatisfiable", "result": "FAIL_EXPECTED_APPARATUS_PROPERTY"},
+    {"check": "PATCH_PIXEL_GATE_SUPERSESSION", "detail": "not applicable as patch gate; no PASS pixel claim and no tolerance", "result": "PASS"},
+    {"check": "HISTORICAL_PIXEL_EQUIVALENCE", "detail": "historical FAIL preserved and not causally reinterpreted", "result": "FAIL_PRESERVED_HISTORICAL"},
+    {"check": "SOURCE_SPEC_MAPPING", "detail": "25 frozen source specifications unchanged", "result": "PASS"},
+    {"check": "TARGET_ROWS", "detail": "475 frozen target rows unchanged", "result": "PASS"},
+    {"check": "EPSILON_PATH", "detail": "0.0 exact equality, not weakened", "result": "PASS"},
+    {"check": "HISTORICAL_REGIME_A_UNMODIFIED", "detail": "no worktree delta", "result": "PASS"},
+    {"check": "POSTMORTEM_UNMODIFIED", "detail": "no worktree delta", "result": "PASS"},
+    {"check": "P0_UNMODIFIED", "detail": "no worktree delta", "result": "PASS"},
+    {"check": "P1_UNMODIFIED", "detail": "no worktree delta", "result": "PASS"},
+    {"check": "ORIGINAL_P2_AUTHORITY_UNMODIFIED", "detail": "four authority artifacts unchanged", "result": "PASS"},
+    {"check": "JSON_PARSE_VALIDATION", "detail": "all P2 JSON artifacts parse", "result": "PASS"},
+    {"check": "GPU_NOT_USED", "detail": "extraction remains gated", "result": "PASS"},
+    {"check": "WALL_RUNS_NOT_RECOLLECTED", "detail": "0", "result": "PASS"},
+    {"check": "P3_NOT_STARTED", "detail": "no P3 work", "result": "PASS"},
+    {"check": "25_OF_25_NO_WALL_CAPTURE", "detail": "pre-scientific commit", "result": "NOT_REACHED"},
+    {"check": "PATH_EQUIVALENCE_EXACT", "detail": "requires capture", "result": "NOT_REACHED"},
+    {"check": "NO_WALL_VISIBILITY_VALID", "detail": "requires capture", "result": "NOT_REACHED"},
+    {"check": "LAYER4_ONLY_EXTRACTION", "detail": "gated", "result": "NOT_REACHED"},
+    {"check": "BEST_K_TRAINING_ONLY", "detail": "no readout executed", "result": "NOT_REACHED"},
+    {"check": "FULL_FROZEN", "detail": "no readout executed", "result": "NOT_REACHED"}
   ],
-  "checks_failed": 1,
   "checks_not_reached": 6,
-  "checks_passed": 25,
-  "checks_total": 32,
-  "expected_failure": "HISTORICAL_PIXEL_EQUIVALENCE is the gate that correctly stopped P2; it is a real negative finding, not a defect",
+  "checks_passed_current_authority": 20,
+  "historical_failures_preserved": 1,
   "phase": "P2",
-  "schema_version": "1.1",
-  "status": "BLOCKED"
+  "schema_version": "1.3",
+  "status": "READY_FOR_P2_CAPTURE"
 }

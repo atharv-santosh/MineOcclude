@@ -1,0 +1,329 @@
+"""P2.8: layer-4-only activation extraction for the 25 no-wall diagnostic runs.
+
+Runs ONLY after path equivalence passes. Extraction mirrors the frozen Regime A
+extractor (scripts/run_regime_a.py :: PersistentMineWorldWorker.extract) exactly
+-- same checkpoint, same preprocessing, same teacher-forced 16-frame window,
+same target-frame token span -- but retains layer 4 alone instead of all 20
+layers. The checkpoint is loaded once and reused across runs.
+"""
+
+from __future__ import annotations
+
+import dataclasses
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+from PIL import Image
+
+from p2_common import (
+    LAYER,
+    OUT,
+    REPO,
+    S3_PREFIX,
+    WORK,
+    read_jsonl,
+    sha256_file,
+    source_specs,
+    p2_run_id,
+    write_json,
+)
+
+CAPTURES = WORK / "captures"
+ACT = WORK / "activations"
+LEDGER = OUT / "p2_extraction_ledger.jsonl"
+PROGRESS = OUT / "p2_extraction_progress.json"
+MAX_PERSIST_ATTEMPTS = 3
+
+
+def append_ledger(entry: dict[str, Any]) -> None:
+    LEDGER.parent.mkdir(parents=True, exist_ok=True)
+    with LEDGER.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(entry, sort_keys=True) + "\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def completed_records() -> dict[str, dict[str, Any]]:
+    if not LEDGER.exists():
+        return {}
+    return {
+        row["p2_no_wall_run_id"]: row
+        for row in read_jsonl(LEDGER)
+        if row.get("status") == "COMPLETE_VALIDATED_DURABLE"
+    }
+
+
+def persist_activation(record: dict[str, Any]) -> dict[str, Any]:
+    run_id = record["p2_no_wall_run_id"]
+    activation = Path(record["activation_path"])
+    uri = f"{S3_PREFIX}/{run_id}/layer4"
+    receipt = activation.with_suffix(".receipt.json")
+    durable = {
+        **record,
+        "durable_activation_uri": f"{uri}/{activation.name}",
+        "status": "COMPLETE_VALIDATED_DURABLE",
+    }
+    write_json(receipt, durable)
+    proc = subprocess.run(
+        ["aws", "s3", "cp", str(activation), durable["durable_activation_uri"],
+         "--only-show-errors"], capture_output=True, text=True,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"activation upload failed: {proc.stderr.strip()[:200]}")
+    receipt_uri = f"{uri}/{receipt.name}"
+    proc = subprocess.run(
+        ["aws", "s3", "cp", str(receipt), receipt_uri, "--only-show-errors"],
+        capture_output=True, text=True,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"activation receipt upload failed: {proc.stderr.strip()[:200]}")
+    remote = subprocess.run(
+        ["aws", "s3", "cp", receipt_uri, "-", "--only-show-errors"],
+        capture_output=True,
+    )
+    if remote.returncode != 0 or remote.stdout != receipt.read_bytes():
+        raise RuntimeError("activation durable receipt readback mismatch")
+    durable["durable_receipt_uri"] = receipt_uri
+    durable["durable_receipt_readback_exact"] = True
+    return durable
+
+
+class Layer4Extractor:
+    """One checkpoint load; independent teacher-forced window calls."""
+
+    def __init__(self) -> None:
+        sys.path.insert(0, str(REPO))
+        sys.path.insert(0, str(REPO / "src"))
+        self.load_count = 0
+        self.runtime = None
+        self.adapter = None
+
+    def ensure_loaded(self) -> None:
+        from scripts import run_person_a_66_cell_production_extraction as production
+
+        if production._RUNTIME.adapter is None:
+            production._RUNTIME.ensure_loaded()
+            self.load_count += 1
+        self.production = production
+        self.adapter = production._RUNTIME.adapter
+        self.runtime = production._RUNTIME.runtime_identity
+
+    def extract(self, run_id: str, source: Path, destination: Path) -> dict[str, Any]:
+        from mineocclude.contracts.identity import SCHEMA_VERSION
+        from mineocclude.models import mineworld_adapter as api
+
+        adapter, runtime, production = self.adapter, self.runtime, self.production
+        package_bytes = (source / "capture_package_v0_1.json").read_bytes()
+        package_hash = hashlib.sha256(package_bytes).hexdigest()
+        document = json.loads(package_bytes)
+        validated = adapter.validate_trajectory(api.AcceptedTrajectoryInput(
+            schema_version=SCHEMA_VERSION,
+            trajectory_id=document["trajectory_id"],
+            accepted_manifest_sha256=package_hash,
+            document=document,
+        ))
+        visibility = read_jsonl(source / "raw/visibility.jsonl")
+        targets = [int(r["model_frame_idx"]) for r in visibility
+                   if r.get("tau") in range(1, 20)]
+        if len(targets) != 19 or targets != sorted(targets):
+            raise RuntimeError(f"{run_id}: frozen target rows malformed")
+
+        required = range(targets[0] - 15, targets[-1] + 1)
+        identities = {i.model_frame_idx: i for i in validated.frame_identities}
+        frames = {}
+        for index in required:
+            rgb = np.asarray(
+                Image.open(source / f"raw/frames/{index:06d}.png").convert("RGB")
+            )
+            processed = adapter.preprocess_frame(
+                api.FramePreprocessRequest(identities[index], index, rgb)
+            )
+            frames[index] = dataclasses.replace(
+                processed, preprocessing_profile=runtime.preprocessing_identity
+            )
+        raw_actions = {r["model_frame_idx"]: r for r in document["streams"]["raw_actions"]}
+        actions = {
+            index: adapter.convert_action(api.ActionConversionRequest(
+                identities[index], int(raw_actions[index]["action_idx"]),
+                raw_actions[index]["raw_action"]))
+            for index in required
+        }
+
+        destination.mkdir(parents=True, exist_ok=True)
+        path = destination / f"{run_id}.layer_{LAYER:02d}.npy"
+        array = np.lib.format.open_memmap(
+            path, mode="w+", dtype=np.float16, shape=(19, 336, 2048)
+        )
+        token_span = None
+        for tau_index, target in enumerate(targets):
+            indices = list(range(target - 15, target + 1))
+            window = dataclasses.replace(
+                validated, frame_identities=tuple(identities[i] for i in indices)
+            )
+            tokenized = adapter.tokenize_trajectory(api.TrajectoryTokenizationRequest(
+                runtime_identity=runtime, trajectory=window,
+                frames=tuple(frames[i] for i in indices),
+                actions=tuple(actions[i] for i in indices),
+            ))
+            _result, captures = production._teacher_capture(
+                adapter, runtime, tokenized, package_hash
+            )
+            span = tokenized.frame_token_map.spans[-1]
+            token_span = len(span.visual_positions)
+            wrote = False
+            for capture in captures:
+                if int(capture.layer.layer_idx) != LAYER:
+                    continue
+                tensor = capture.output.tensor[:, span.visual_positions, :]
+                array[tau_index] = tensor[0].detach().cpu().numpy().astype(
+                    np.float16, copy=False)
+                wrote = True
+            if not wrote:
+                raise RuntimeError(f"{run_id}: layer {LAYER} capture missing at tau {tau_index+1}")
+            del captures, _result
+        array.flush()
+        del array
+
+        return {
+            "p2_no_wall_run_id": run_id,
+            "targets": targets,
+            "rows": len(targets),
+            "layer": LAYER,
+            "visual_tokens_per_target": token_span,
+            "shape": [19, 336, 2048],
+            "dtype": "float16",
+            "activation_path": str(path),
+            "activation_sha256": sha256_file(path),
+            "byte_size": path.stat().st_size,
+            "capture_package_sha256": package_hash,
+            "checkpoint_sha256": getattr(runtime, "checkpoint_sha256", None)
+            or str(getattr(runtime, "checkpoint_identity", "")),
+            "preprocessing_identity": str(runtime.preprocessing_identity),
+        }
+
+
+def main() -> int:
+    adjudication = json.loads((OUT / "p2_path_equivalence_receipt.json").read_text())
+    if adjudication["path_equivalence_status"] != "PASS":
+        raise RuntimeError("BLOCKED: layer-4 extraction requires PATH_EQUIVALENCE=PASS")
+    visibility = json.loads((OUT / "p2_visibility_qualification_receipt.json").read_text())
+    if visibility["visibility_qualification_status"] != "PASS":
+        raise RuntimeError("BLOCKED: layer-4 extraction requires VISIBILITY=PASS")
+
+    specs = source_specs()
+    ACT.mkdir(parents=True, exist_ok=True)
+    complete_by_run = completed_records()
+    extractor = Layer4Extractor()
+    if len(complete_by_run) < 25:
+        extractor.ensure_loaded()
+
+    started = time.monotonic()
+    retries = 0
+
+    def progress(current: str | None, status: str, error: str | None = None) -> None:
+        write_json(PROGRESS, {
+            "artifact_id": "regime-a-prime-p2-extraction-progress-v0.1",
+            "total_expected": 25,
+            "complete_validated_durable": len(complete_by_run),
+            "current_run_id": current,
+            "remaining": 25 - len(complete_by_run),
+            "extraction_retries": retries,
+            "campaign_status": status,
+            "last_error_code": error,
+            "elapsed_seconds": time.monotonic() - started,
+        })
+
+    progress(None, "RUNNING")
+    for spec in specs:
+        run_id = p2_run_id(str(spec["trajectory_spec_id"]))
+        if run_id in complete_by_run:
+            continue
+        progress(run_id, "RUNNING")
+        try:
+            record = extractor.extract(run_id, CAPTURES / run_id, ACT)
+        except Exception as exc:  # identity/model failures are not retryable here
+            error = f"{type(exc).__name__}: {exc}"[:400]
+            append_ledger({"p2_no_wall_run_id": run_id, "status": "FAILED_HARD",
+                           "error": error})
+            progress(None, "STOPPED_HARD_FAILURE", "FAILED_HARD")
+            raise
+        record["source_regime_a_spec_id"] = str(spec["trajectory_spec_id"])
+        record["outer_fold"] = int(spec["outer_fold"])
+        record["direction"] = spec["direction"]
+        durable = None
+        for attempt in range(1, MAX_PERSIST_ATTEMPTS + 1):
+            try:
+                durable = persist_activation(record)
+                durable["persist_attempts"] = attempt
+                break
+            except Exception as exc:  # noqa: BLE001 - same artifact retry only
+                append_ledger({
+                    "p2_no_wall_run_id": run_id,
+                    "status": "FAILED_RETRYABLE",
+                    "attempt": attempt,
+                    "error": f"{type(exc).__name__}: {exc}"[:400],
+                })
+                progress(run_id, "RUNNING_WITH_RETRY", "FAILED_RETRYABLE")
+                if attempt < MAX_PERSIST_ATTEMPTS:
+                    retries += 1
+        if durable is None:
+            progress(None, "STOPPED_RETRY_EXHAUSTED", "FAILED_RETRYABLE")
+            raise RuntimeError(f"{run_id}: durable persistence retries exhausted")
+        append_ledger(durable)
+        complete_by_run[run_id] = durable
+        progress(run_id, "RUNNING")
+        print(f"  {run_id}: rows={record['rows']} tokens={record['visual_tokens_per_target']} "
+              f"{record['byte_size']/1e6:.1f}MB", flush=True)
+
+    records = [complete_by_run[p2_run_id(str(spec["trajectory_spec_id"]))]
+               for spec in specs]
+    total_rows = sum(r["rows"] for r in records)
+    if total_rows != 475:
+        raise RuntimeError(f"expected 475 activation rows, got {total_rows}")
+    seen = {(r["p2_no_wall_run_id"], t) for r in records for t in r["targets"]}
+    if len(seen) != 475:
+        raise RuntimeError("duplicate activation rows detected")
+    tokens = {r["visual_tokens_per_target"] for r in records}
+    if tokens != {336}:
+        raise RuntimeError(f"token grid identity mismatch: {tokens}")
+
+    payload = {
+        "artifact_id": "regime-a-prime-p2-activation-manifest-v0.1",
+        "schema_version": "1.0",
+        "phase": "P2",
+        "classification": "EXPLORATORY_MATCHED_DIAGNOSTIC",
+        "status": "PASS",
+        "layers_extracted": [LAYER],
+        "all_layer_extraction_performed": False,
+        "gated_on_path_equivalence_pass": True,
+        "checkpoint_load_count": extractor.load_count,
+        "run_count": len(records),
+        "total_activation_rows": total_rows,
+        "duplicate_rows": 0,
+        "missing_rows": 0,
+        "extraction_seconds": time.monotonic() - started,
+        "extraction_retries": retries,
+        "activation_bytes": sum(r["byte_size"] for r in records),
+        "working_root": str(ACT),
+        "durable_prefix": S3_PREFIX,
+        "runs": records,
+    }
+    digest = write_json(OUT / "p2_activation_manifest.json", payload)
+    progress(None, "COMPLETE")
+    print(f"\nP2_EXTRACTION_STATUS=PASS")
+    print(f"P2_ACTIVATION_MANIFEST_SHA256={digest}")
+    print(f"P2_LAYERS_EXTRACTED=[{LAYER}] ROWS={total_rows} "
+          f"BYTES={payload['activation_bytes']/1e9:.2f}GB "
+          f"SECONDS={payload['extraction_seconds']:.0f}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

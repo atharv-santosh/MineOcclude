@@ -300,8 +300,14 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
             src.sendError(new LiteralText("Unknown layout '" + layoutId + "'"));
             return 0;
         }
-        if (sceneMode != EpisodeConfig.Scene.NORMAL) {
-            src.sendError(new LiteralText("startspec requires scene mode normal"));
+        // Regime A prime P2 matched no-wall diagnostic: the locked-spec path must
+        // also serve the NO_WALL positive-control scene so a no-wall counterpart
+        // can be captured at the SAME frozen start position, motion schedule and
+        // spec identity as its wall source. NO_SHEEP stays refused because it
+        // removes the target the spec exists to move.
+        if (sceneMode != EpisodeConfig.Scene.NORMAL
+                && sceneMode != EpisodeConfig.Scene.NO_WALL) {
+            src.sendError(new LiteralText("startspec requires scene mode normal or nowall"));
             return 0;
         }
         Layouts.Layout layout = Layouts.get(layoutId);
@@ -322,7 +328,7 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
                     layout.laneMin, layout.laneMax, startPos,
                     layout.wallSegMin, layout.wallSegMax,
                     layout.wallOrthoConst, layout.wallOrthoOffset, layout.cameraDist,
-                    layout.laneY, layout.wallAxis, EpisodeConfig.Scene.NORMAL, 0,
+                    layout.laneY, layout.wallAxis, sceneMode, 0,
                     0, -1, 0.0, true, specId, specHash);
             if (!manager.start(cfg, ticks, warmup, schedule)) {
                 src.sendError(new LiteralText("startspec REFUSED for episode " + episodeId));

@@ -1,0 +1,197 @@
+{
+  "PATCH_CURRENT_PATH_EQUIVALENCE": "PASS",
+  "PATCH_CURRENT_PIXEL_EQUIVALENCE": "INDETERMINATE_RENDERER_NONDETERMINISTIC",
+  "PATCH_INERTNESS_STATUS": "ACCEPTED_UNDER_PROSPECTIVE_SUCCESSOR_AUTHORITY",
+  "PATCH_PIXEL_GATE_STATUS": "NOT_APPLICABLE_AS_PATCH_INERTNESS_GATE_DUE_TO_EMPIRICALLY_ESTABLISHED_RENDERER_NONDETERMINISM",
+  "apparatus": {
+    "build": "Gradle (Fabric Loom), GRADLE_USER_HOME=/mnt/sagemaker-nvme/gradle_home, Corretto 17.0.20.8.1, BUILD SUCCESSFUL",
+    "patch_committed": false,
+    "patch_installed": true,
+    "post_patch_installed_mod_sha256": "febf31cad7c6de003a6d2d87ed9183c6a6739e086e293b30e92999520e3bfaba",
+    "post_patch_source_sha256": "3c37227654415956ab34a0c3245fe25697ed8c2b8d18dcbca7373a21f5c32de0",
+    "pre_patch_jar_backup": "/home/sagemaker-user/mineocclude-server/mods/.mineocclude-0.1.1.jar.prepatch-backup",
+    "pre_patch_mod_sha256": "78b4da2453ecf74140c5963df4013746845845427c12872d919b7ca98f2c4dc6",
+    "pre_patch_source_sha256": "f2c7f47b4f147e416f912e72ee297600d9b5c1d44821070804b7ce0a8068565a"
+  },
+  "artifact_id": "regime-a-prime-p2-patch-inertness-receipt-v0.2",
+  "client_renderer_code_modified": false,
+  "criterion_changed_by_codex": false,
+  "decisive_control": "same-binary repeat (post-patch run1 vs post-patch run2)",
+  "gate": "STEP5_PATCH_INERTNESS_CURRENT_APPARATUS",
+  "gpu_used": false,
+  "headline": "Coordinates are bit-exact (260/260, both directions, all comparisons). Pixel exactness is NOT satisfiable on this apparatus: two runs of the IDENTICAL post-patch binary differ as much as, and in worst case far more than, the pre/post-patch and historical comparisons.",
+  "interpretation": [
+    "The pixel differences observed in B are NOT attributable to the patch: the same-binary control A shows equal or larger divergence with no code change at all.",
+    "The patch only gates startspec scene selection; both replays ran mode normal, so it is inert by construction, and the coordinate/state evidence confirms this exactly.",
+    "The previously recorded HISTORICAL_PIXEL_EQUIVALENCE=FAIL is now known to be confounded with renderer nondeterminism and cannot be cleanly attributed to a renderer version change. That finding remains recorded and is not withdrawn.",
+    "Exact pixel equality is not a well-posed gate on this apparatus."
+  ],
+  "nonscientific": true,
+  "operator_decision_required": false,
+  "operator_ruling_artifact": "p2_patch_acceptance_supersession.json",
+  "p2_captures_started": false,
+  "patch_evidence_that_IS_conclusive": {
+    "coords_bitwise_identical_all_units": true,
+    "frames_per_unit": 260,
+    "max_coord_difference": 0.0,
+    "no_sheep_still_refused": true,
+    "scene_remained_NORMAL": true,
+    "spec_identity_preserved": true,
+    "tick_ordering_preserved": true,
+    "units": 2
+  },
+  "per_unit_detail_v0_1": [
+    {
+      "coord_frames_identical": 260,
+      "coords_bitwise_identical": true,
+      "coords_max_abs_diff_pre_vs_post": 0.0,
+      "detector_area_changes": 4,
+      "detector_status_flips": 0,
+      "direction": "LEFT_TO_RIGHT",
+      "frames": 260,
+      "frames_compared_for_pixels": 9,
+      "frames_pixel_identical": 2,
+      "pixel_diff_frames": [
+        {
+          "max_abs_channel_difference": 205,
+          "model_frame_idx": 3,
+          "n_differing_pixels": 3837
+        },
+        {
+          "max_abs_channel_difference": 134,
+          "model_frame_idx": 39,
+          "n_differing_pixels": 187
+        },
+        {
+          "max_abs_channel_difference": 77,
+          "model_frame_idx": 43,
+          "n_differing_pixels": 5
+        },
+        {
+          "max_abs_channel_difference": 21,
+          "model_frame_idx": 174,
+          "n_differing_pixels": 4
+        },
+        {
+          "max_abs_channel_difference": 139,
+          "model_frame_idx": 178,
+          "n_differing_pixels": 156
+        },
+        {
+          "max_abs_channel_difference": 157,
+          "model_frame_idx": 203,
+          "n_differing_pixels": 720
+        },
+        {
+          "max_abs_channel_difference": 80,
+          "model_frame_idx": 259,
+          "n_differing_pixels": 214
+        }
+      ],
+      "scene_set": [
+        "NORMAL"
+      ],
+      "spec_identity_ok": true,
+      "tick_ordering_ok": true,
+      "trajectory_spec_id": "regime_a_v2_t01"
+    },
+    {
+      "coord_frames_identical": 260,
+      "coords_bitwise_identical": true,
+      "coords_max_abs_diff_pre_vs_post": 0.0,
+      "detector_area_changes": 7,
+      "detector_status_flips": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "frames": 260,
+      "frames_compared_for_pixels": 9,
+      "frames_pixel_identical": 1,
+      "pixel_diff_frames": [
+        {
+          "max_abs_channel_difference": 159,
+          "model_frame_idx": 0,
+          "n_differing_pixels": 981
+        },
+        {
+          "max_abs_channel_difference": 139,
+          "model_frame_idx": 28,
+          "n_differing_pixels": 366
+        },
+        {
+          "max_abs_channel_difference": 82,
+          "model_frame_idx": 35,
+          "n_differing_pixels": 114
+        },
+        {
+          "max_abs_channel_difference": 70,
+          "model_frame_idx": 39,
+          "n_differing_pixels": 16
+        },
+        {
+          "max_abs_channel_difference": 117,
+          "model_frame_idx": 166,
+          "n_differing_pixels": 68
+        },
+        {
+          "max_abs_channel_difference": 86,
+          "model_frame_idx": 169,
+          "n_differing_pixels": 131
+        },
+        {
+          "max_abs_channel_difference": 127,
+          "model_frame_idx": 201,
+          "n_differing_pixels": 535
+        },
+        {
+          "max_abs_channel_difference": 65,
+          "model_frame_idx": 259,
+          "n_differing_pixels": 118
+        }
+      ],
+      "scene_set": [
+        "NORMAL"
+      ],
+      "spec_identity_ok": true,
+      "tick_ordering_ok": true,
+      "trajectory_spec_id": "regime_a_v2_t14"
+    }
+  ],
+  "phase": "P2",
+  "operator_ruling": "Exact RGB equality is prospectively superseded as a patch-inertness gate. No pixel or detector-aware tolerance is introduced. Patch acceptance instead requires the exact scope, semantics, refusal, path/state, client-code, and renderer-provenance conditions recorded in p2_patch_acceptance_supersession.json.",
+  "renderer_deterministic_across_runs": false,
+  "schema_version": "1.1",
+  "status": "PASS_PATCH_ACCEPTANCE",
+  "three_way_comparison": {
+    "A_same_binary_repeat": {
+      "detector_area_changes": 6,
+      "detector_status_flips": 0,
+      "frames": 18,
+      "identical": 4,
+      "max_abs_channel": 245,
+      "max_diff_pixels": 230400,
+      "meaning": "pure run-to-run renderer nondeterminism; no code difference whatsoever",
+      "median_diff_pixels": 47.5
+    },
+    "B_pre_vs_post_patch": {
+      "detector_area_changes": 11,
+      "detector_status_flips": 1,
+      "frames": 18,
+      "identical": 3,
+      "max_abs_channel": 205,
+      "max_diff_pixels": 3837,
+      "meaning": "patch effect CONFOUNDED with run-to-run nondeterminism",
+      "median_diff_pixels": 124.5
+    },
+    "C_historical_vs_current": {
+      "detector_area_changes": 10,
+      "detector_status_flips": 1,
+      "frames": 18,
+      "identical": 3,
+      "max_abs_channel": 205,
+      "max_diff_pixels": 1899,
+      "meaning": "cross-apparatus difference CONFOUNDED with run-to-run nondeterminism",
+      "median_diff_pixels": 48.5
+    }
+  },
+  "tolerance_invented": false,
+  "wall_trajectories_recollected_for_science": 0
+}
