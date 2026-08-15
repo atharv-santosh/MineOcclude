@@ -1,0 +1,309 @@
+{
+  "activation_and_readout": {
+    "BEST_K": {
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "feature_standardization": "training rows only",
+      "k_grid": [
+        1,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "role": "LEADING_QUALIFICATION_READOUT",
+      "selection": "Nested training-only trajectory-grouped selection; exact ties choose smaller K then smaller alpha.",
+      "token_ranking": "absolute maximum hidden-dimension training correlation"
+    },
+    "FULL_TOKEN_GRID": {
+      "may_rescue_or_advance_candidate": false,
+      "procedure": "exact standardized summed-token kernel ridge",
+      "role": "QUALIFIED_SECONDARY_REPORT_ONLY"
+    },
+    "activation_layers": [
+      4
+    ],
+    "all_layer_extraction_forbidden": true,
+    "evaluation_scope": "all qualified tau 1..19 rows; primary qualification metrics also reported for tau 1..15",
+    "extraction_gated_on_capture_path_visibility_pass": true,
+    "k_adaptation_outside_frozen_training_only_procedure_forbidden": true,
+    "outer_evaluation": "Five frozen trajectory-grouped folds; no row/frame splitting.",
+    "representation_search_forbidden": true,
+    "selection_scope": "tau 1..15 outer-training rows only"
+  },
+  "artifact_id": "regime-a-prime-p3-development-preoutcome-authority-v0.1",
+  "candidate_qualification_rule": {
+    "BEST_K_controls_progression": true,
+    "absolute_rmse_ceiling_blocks": 0.3320548468891168,
+    "absolute_rmse_ceiling_formula": "2 * completed P2 BEST-K visible RMSE",
+    "all_required": [
+      "capture, durability, identity, path/state, and dual visibility gates PASS",
+      "prospective headroom gate PASS",
+      "layer-4-only extraction validation PASS",
+      "NORMAL BEST-K trajectory-equal macro R2 > 0 and whole-trajectory bootstrap 95% lower bound > 0",
+      "NO_WALL BEST-K trajectory-equal macro R2 > 0 and whole-trajectory bootstrap 95% lower bound > 0",
+      "NORMAL and NO_WALL BEST-K trajectory-equal RMSE each <= 0.3320548468891168 blocks",
+      "NORMAL BEST-K RMSE strictly less than frozen time-only RMSE",
+      "time-only trajectory-equal macro R2 on tau 1..15 <= 0.10"
+    ],
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 2026081503,
+      "unit": "WHOLE_TRAJECTORY"
+    },
+    "full_token_grid_reported_against_same_continuous_metrics_but_noncontrolling": true,
+    "natural_unit_metrics_required": [
+      "RMSE_BLOCKS",
+      "MAE_BLOCKS",
+      "SIGNED_BIAS_BLOCKS"
+    ],
+    "pooled_row_metrics_cannot_override": true
+  },
+  "classification": "DEVELOPMENT_PREFLIGHT",
+  "confirmatory_membership": false,
+  "development_manifest": {
+    "candidate_count": 3,
+    "paired_scenes": [
+      "NORMAL",
+      "NO_WALL"
+    ],
+    "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p3_development_manifest.json",
+    "sha256": "bb74f9ae761647e49cddf24f334bd1329843304259643688f6735029170f6b32",
+    "specs_per_candidate": 25
+  },
+  "fixed_apparatus": {
+    "camera_authority": "layout_01_fixed_v0.4",
+    "camera_change_rule": "Any camera, FOV, resolution, projection, renderer, or layout change invalidates this authority and requires a new prospective authority plus fresh dual-detector visibility calibration before capture.",
+    "camera_eye_world_xyz": [
+      0.5,
+      5.6200000048,
+      -5.5
+    ],
+    "camera_feet_world_xyz": [
+      0.5,
+      4.0,
+      -5.5
+    ],
+    "camera_fixed": true,
+    "camera_or_fov_change_in_sequence_allowed": false,
+    "canonical_frame_pixels": [
+      640,
+      360
+    ],
+    "fov_degrees": 70.0,
+    "lane": {
+      "axis": "x",
+      "max_blocks": 8.0,
+      "min_blocks": -8.0,
+      "y": 4.0,
+      "z": 6.0
+    },
+    "layout_id": "layout_01",
+    "model_input_pixels": [
+      384,
+      224
+    ],
+    "visual_token_count": 336,
+    "visual_token_grid": [
+      14,
+      24
+    ],
+    "wall_authority": "layout_01_long_wall_v0.4",
+    "yaw_pitch_roll_degrees": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "motion_and_sampling": {
+    "capture_hz": 20,
+    "capture_stride_server_ticks": 1,
+    "context_pairs": 16,
+    "effective_preceding_frames": 15,
+    "motion_noise_q": 0.05,
+    "motion_recurrence": "x[t] = clamp(-8, 8, x[t-1] + signed_speed*0.05 + frozen_noise_draw[t])",
+    "occlusion_phase_offsets_frames": [
+      0,
+      3,
+      6,
+      9,
+      12
+    ],
+    "one_action_one_frame_one_server_tick_lockstep": true,
+    "phase_design": "Each outer fold contains every phase once; phase changes target-window placement relative to stable hidden onset and is fixed, not searched.",
+    "seconds_per_server_tick": 0.05,
+    "target_rows_per_trajectory": 19,
+    "target_tau": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "target_timestamp_authority": "Exact per-spec server ticks and seconds are frozen in p3_development_manifest.json; no shifting, adding, dropping, or reordering after capture or neural outcomes."
+  },
+  "ordered_search": {
+    "advance_rule": "Advance exactly one candidate only after the prior candidate has a terminal FAIL against this frozen rule; operational failures retry only the identical unit and do not authorize advancement or substitution.",
+    "broad_grid_search_forbidden": true,
+    "candidate_reordering_forbidden": true,
+    "candidate_sequence": [
+      {
+        "candidate_id": "P3DEV_C01",
+        "order": 1,
+        "speed_blocks_per_second": 2.0
+      },
+      {
+        "candidate_id": "P3DEV_C02",
+        "order": 2,
+        "speed_blocks_per_second": 2.5
+      },
+      {
+        "candidate_id": "P3DEV_C03",
+        "order": 3,
+        "speed_blocks_per_second": 3.0
+      }
+    ],
+    "candidate_skipping_forbidden": true,
+    "initial_candidate": "P3DEV_C01",
+    "new_candidates_or_threshold_changes_after_outcomes_forbidden": true,
+    "only_variable": "speed_blocks_per_second",
+    "parallel_candidate_execution_forbidden": true,
+    "stop_rule": "STOP immediately at the first PASS. If P3DEV_C03 fails, stop BLOCKED_REQUIRES_NEW_PROSPECTIVE_AUTHORITY."
+  },
+  "path_and_state_gate": {
+    "any_mismatch_result": "FAIL_PATH_STATE; no activation extraction for that candidate",
+    "epsilon_path": 0.0,
+    "exact_fields": [
+      "trajectory_spec_id",
+      "seed",
+      "noise_seed",
+      "direction",
+      "speed_blocks_per_second",
+      "motion_noise_q",
+      "noise schedule",
+      "start state",
+      "target tick IDs and order",
+      "camera/FOV",
+      "capture cadence",
+      "frame/action/server-tick identity",
+      "world x/y/z"
+    ],
+    "paired_exact_equality_required": true,
+    "rows_checked_per_scene_per_candidate": 4500,
+    "substitution_or_clamping_mismatch_allowed": false
+  },
+  "phase": "P3",
+  "post_p3_boundary": {
+    "p3_pass_does_not_authorize_regime_a_prime_collection": true,
+    "p4_p5_p6_not_started": true,
+    "required_next_document": "A separate outcome-informed but prospectively frozen confirmatory Regime A-prime authority using wholly new identities/seeds."
+  },
+  "prospective_headroom_gate": {
+    "computed_from_frozen physical target paths_before_capture": true,
+    "minimum_candidate_median_formula": "3 * P2 BEST-K visible RMSE",
+    "minimum_candidate_median_target_sd_blocks": 0.4980822703336752,
+    "minimum_each_trajectory_formula": "2 * P2 BEST-K visible RMSE",
+    "minimum_each_trajectory_target_sd_blocks": 0.3320548468891168,
+    "reference_p2_best_k_visible_rmse_blocks": 0.1660274234445584
+  },
+  "purpose": "Find the first and therefore minimum member of a prospectively ordered motion-headroom sequence that qualifies the fixed apparatus for later, entirely new confirmatory Regime A-prime design.",
+  "recovery": {
+    "atomic_unit": "one frozen calibration or paired trajectory run",
+    "favorable_duplication_or_row_dropping_forbidden": true,
+    "max_attempts_per_unit": 3,
+    "retry": "identical candidate/spec/seed/scene only",
+    "seed_or_spec_substitution_forbidden": true
+  },
+  "schema_version": "1.0",
+  "scope_boundary": {
+    "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+    "all_p3_calibration_and_trajectory_data_permanently_excluded_from_confirmatory_a_prime": true,
+    "eventual_confirmatory_cohort_must_be_entirely_new": true,
+    "eventual_confirmatory_wall_and_no_wall_renderer_apparatus_must_be_one_prospectively_pinned_runtime": true,
+    "gpu_used_by_this_freeze": false,
+    "minecraft_started_by_this_freeze": false,
+    "p3_may_authorize_confirmatory_collection": false,
+    "p3_started": false
+  },
+  "source_bindings": {
+    "camera_geometry": {
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/geometry_camera_authority.json",
+      "sha256": "0ab79fc93b4bcb3fccf3c99de9435077f574e85001030f25d2f7d5c3433b5274"
+    },
+    "closed_postmortem": {
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/postmortem_report.md",
+      "sha256": "8244d0a549a0143482646c4167f75c445f912eba231fe90607bc7ff0ba94b09c"
+    },
+    "d1_headroom": {
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/postmortem_v0_1/d1_headroom.json",
+      "sha256": "eef9b158d84acf1f0444e10b80b67290121ec34831b4da79aebc9baeea44d82b"
+    },
+    "directional_visibility": {
+      "path": "docs/status/integration/regime_a_occlusion_extraction_v0_1/v2_amendment_1/directional_visibility_authority_v2_1_amendment_1.json",
+      "sha256": "fef2d4e89e9919801b802093eb89053b65d359161a62ad3ddb1d99a0bed0ec83"
+    },
+    "magenta_detector": {
+      "path": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json",
+      "sha256": "99acc45e0a49b8526eca2ab777e21c07f88934d744bc5679e63ab8a00b181b8d"
+    },
+    "p2_best_k": {
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_best_k_results.json",
+      "sha256": "9cf0e783a8a040d7240cb94a58fa925240d712935f35b304df6e119f660bd523"
+    },
+    "p2_closeout": {
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_closeout_receipt.json",
+      "sha256": "4d669ffe88a051b815bbddd31a6b76c44ca661630dc48f707796144ceb47c170"
+    },
+    "p2_full": {
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_full_results.json",
+      "sha256": "74b2f1e58a6d4ba6ea99ca419d52eaae1350fb7a981cf0388bf096e0b5391af3"
+    },
+    "p2_preoutcome": {
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_preoutcome_authority.json",
+      "sha256": "ad9804ed7b8ae9770d0192dc8f9e863fc85c96429031600e251470ebdbaa03f7"
+    },
+    "p2_readout": {
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_readout_authority_receipt.json",
+      "sha256": "9d9c9d122ce80051c33f9c0947b8b79184df277b083af6f5ec13c6ad52d862e4"
+    }
+  },
+  "source_p2_closeout_commit": "c2ca2472e77934ba4780139f3f9743e8bcf74b78",
+  "status": "FROZEN_BEFORE_P3_EXECUTION_OR_OUTCOMES",
+  "time_confound_gate": {
+    "baseline": "Outer-training least squares with frozen features [1, direction_sign, tau, tau*direction_sign], fit on tau 1..15 only.",
+    "interpretation": "At or below 0.10 is the prospectively frozen operational meaning of approximately zero for this development gate.",
+    "maximum_trajectory_equal_macro_r2_tau_1_to_15": 0.1,
+    "rmse_blocks_and_whole_trajectory_bootstrap_interval_reported": true
+  },
+  "visibility_authority": {
+    "ambiguous_target_rows_allowed": 0,
+    "calibration_gate": "At least 0.95 precision and 0.95 recall for the frozen magenta detector against geometric visibility, with no identity/timestamp ambiguity; otherwise candidate FAIL_VISIBILITY.",
+    "detector_alone_may_not_qualify": true,
+    "fresh_calibration_required_after_any_camera_or_apparatus_change": true,
+    "no_wall_target_rule": "Every target row must be geometrically visible AND rendered-magenta detected.",
+    "normal_target_rule": "Every target row must be geometrically occluded AND rendered-magenta not detected.",
+    "pre_candidate_calibration": "Run only the four frozen candidate-specific visibility-calibration specs (two per direction) before that candidate's paired cohort.",
+    "qualified_target_rows_required": 475,
+    "zero_evidence_no_wall_target_rows_allowed": 0
+  }
+}
