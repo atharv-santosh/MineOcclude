@@ -1,0 +1,109 @@
+{
+  "HISTORICAL_RENDER_EQUIVALENCE": "FAIL",
+  "ORIGINAL_P2_PREOUTCOME_COMMIT": "6943e04c114ad8be43b28be5342f7a6c0a49523f",
+  "ORIGINAL_RENDERER_IDENTITY": "UNRECOVERABLE_FROM_FROZEN_AUTHORITY",
+  "P2_PRIMARY_ROLE": "CURRENT_APPARATUS_VISIBLE_READOUT_QUALIFICATION_AT_MATCHED_PHYSICAL_PATHS",
+  "P3_NOT_STARTED": true,
+  "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+  "artifact_id": "regime-a-prime-p2-authority-supersession-v0.1",
+  "blocker_evidence_commit": "af8ab21087a1b4d08514721d19762ca2a00d4ed5",
+  "blocker_evidence_preserved": true,
+  "classification": "EXPLORATORY_MATCHED_DIAGNOSTIC",
+  "classification_unchanged": "EXPLORATORY_MATCHED_DIAGNOSTIC",
+  "confirmatory_membership": false,
+  "controlling_question": "Can the frozen layer-4 BEST-K/FULL readout recover sheep position when the sheep is visibly available on the CURRENT qualified apparatus, at the same frozen physical trajectories and target times as the original 25 Regime A specifications?",
+  "decoder_parameters_changed": false,
+  "future_confirmatory_requirement": "confirmatory Regime A prime must use a fresh paired wall/no-wall cohort collected under one prospectively pinned rendering apparatus",
+  "future_renderer_provenance_requirement": {
+    "applies_to": "ALL newly collected MineOcclude data",
+    "must_record": [
+      "Mesa version",
+      "GL renderer string",
+      "LLVM/llvmpipe identity",
+      "DRI driver identity/path",
+      "X server/Xvfb version",
+      "screen depth and resolution",
+      "relevant GL environment variables",
+      "hashes of bundled rendering libraries where feasible"
+    ]
+  },
+  "historical_comparison_label": "DESCRIPTIVE_CROSS_APPARATUS_CONTEXT_ONLY",
+  "historical_render_evidence": {
+    "artifact": "p2_render_equivalence_receipt.json",
+    "detector_area_changed": 11,
+    "detector_status_flips": 2,
+    "frames_pixel_identical": 4,
+    "frames_tested": 18,
+    "frozen_target_row_flips": [
+      {
+        "detector_historical": {
+          "area_pixels": null,
+          "status": "not_detected"
+        },
+        "detector_replay": {
+          "area_pixels": 28,
+          "status": "detected"
+        },
+        "model_frame_idx": 43,
+        "tau": 1,
+        "trajectory_spec_id": "regime_a_v2_t01"
+      }
+    ]
+  },
+  "historical_wall_captures_role": "IMMUTABLE_HISTORICAL_CONTEXT",
+  "matched_quantities_unchanged": [
+    "original specification mapping",
+    "seed",
+    "direction",
+    "motion schedule",
+    "noise authority",
+    "initial state",
+    "camera",
+    "FOV",
+    "target tick IDs",
+    "target timestamps",
+    "capture cadence",
+    "frame/action semantics",
+    "fold assignment",
+    "target coordinates",
+    "MineWorld checkpoint",
+    "preprocessing",
+    "layer 4",
+    "BEST-K procedure",
+    "FULL procedure"
+  ],
+  "no_new_wall_scientific_cohort_required": true,
+  "original_authority_hashes_verified": {
+    "p2_path_equivalence_authority.json": true,
+    "p2_preoutcome_authority.json": true,
+    "p2_source_spec_binding.json": true,
+    "p2_target_row_manifest.json": true
+  },
+  "original_authority_modified": false,
+  "path_requirement": {
+    "epsilon_path": 0.0,
+    "requirement": "new no-wall trajectories must reproduce historical target coordinates and ticks exactly",
+    "rule": "EXACT_EQUALITY_REQUIRED",
+    "weakened": false
+  },
+  "phase": "P2",
+  "pre_outcome_evidence": {
+    "best_k_outcomes_observed": false,
+    "full_outcomes_observed": false,
+    "gpu_used": false,
+    "no_wall_scientific_captures": 0,
+    "p2_activations": 0
+  },
+  "prohibited_claim": "P2 proves a clean wall-vs-no-wall causal effect against historical Regime A",
+  "prohibited_interpretation": "new P2 no-wall differs from historical Regime A wall only by wall removal at the pixel/apparatus level",
+  "reason": "The NVMe-resident bundled renderer/operator-tools were lost and renderer identity was never recorded in the historical capture authority, so the apparatus that produced the historical Regime A pixels cannot be reconstructed or verified.",
+  "schema_version": "1.0",
+  "status": "FROZEN_PRE_OUTCOME",
+  "supersession_type": "NARROWING_OF_INTERPRETATION_ONLY",
+  "thresholds_changed": false,
+  "visible_qualification_rule": {
+    "changed_by_this_supersession": false,
+    "id": "P2_BEST_K_VISIBLE_QUALIFICATION_v0.1",
+    "source_commit": "6943e04c114ad8be43b28be5342f7a6c0a49523f"
+  }
+}
