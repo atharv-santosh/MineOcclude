@@ -132,8 +132,10 @@ def verify_renderer_identity() -> None:
     required = ("llvmpipe", "LLVM 20.1.2", "Mesa 25.2.8")
     if proc.returncode != 0 or any(value not in identity for value in required):
         raise RuntimeError("PRECHECK_FAILED: current renderer identity mismatch")
-    xvfb = subprocess.run(["Xvfb", "-version"], capture_output=True, text=True)
-    if "21.1.12" not in xvfb.stdout + xvfb.stderr:
+    xvfb = subprocess.run(
+        ["dpkg-query", "-W", "-f=${Version}", "xvfb"], capture_output=True, text=True
+    )
+    if xvfb.returncode != 0 or not xvfb.stdout.startswith("2:21.1.12-"):
         raise RuntimeError("PRECHECK_FAILED: Xvfb identity mismatch")
 
 
