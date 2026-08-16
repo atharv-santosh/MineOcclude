@@ -8,12 +8,16 @@ from pathlib import Path
 import numpy as np
 
 from mineocclude.regime_a import (
+    CANONICAL_FRAME_WIDTH,
+    RAW_FRAMEBUFFER_HEIGHT,
+    RAW_FRAMEBUFFER_WIDTH,
     AtomicTrajectoryStore,
     HashChainLedger,
     RegimeAError,
     ZeroTSS,
     assign_stable_hidden_tau,
     best_k_features,
+    canonical_crop_window,
     bootstrap_macro_r2,
     build_null_mappings,
     canonical_sha256,
@@ -80,10 +84,42 @@ class RegimeAProductionTests(unittest.TestCase):
 
     def test_projection_and_baselines(self) -> None:
         projection = project_world_to_coordinates(0.5, 6.0, [[300, 0, 960], [0, 0, 523], [0, 0, 1]])
-        self.assertAlmostEqual(projection["screen_x"], 370.0)
+        # The homography lands this point at raw framebuffer x=1110. The
+        # canonical frame is the 16:9 centre crop of the raw framebuffer, then
+        # resized, so the expected value is derived from that crop rather than
+        # from the superseded bare 640/1920 scale, which returned 370.0 and was
+        # exact only at the frame centre.
+        crop_x0, _, crop_width, _ = canonical_crop_window()
+        self.assertAlmostEqual(projection["screen_x"],
+                               (1110.0 - crop_x0) * CANONICAL_FRAME_WIDTH / crop_width)
         self.assertEqual(training_mean_baseline([1, 3], 2).tolist(), [2, 2])
         predicted = constant_velocity_baseline([0, 1, 2], [1, 3, 5], [3, 4])
         np.testing.assert_allclose(predicted, [7, 9])
+
+    def test_canonical_crop_window_reproduces_to_canonical(self) -> None:
+        """Prove the restated crop rule, rather than trusting the restatement.
+
+        ``project_world_to_coordinates`` reimplements the centre crop that
+        ``preprocess.to_canonical`` performs before resizing. If the two ever
+        disagree, every prospective screen and token coordinate is silently
+        wrong, so the agreement is checked against the real function.
+        """
+        from mineocclude.data.preprocess import to_canonical
+
+        crop_x0, crop_y0, crop_width, crop_height = canonical_crop_window()
+        raw = np.zeros((RAW_FRAMEBUFFER_HEIGHT, RAW_FRAMEBUFFER_WIDTH, 3), dtype=np.uint8)
+        raw[..., 0] = 255  # red everywhere the crop is expected to discard
+        raw[crop_y0:crop_y0 + crop_height, crop_x0:crop_x0 + crop_width] = (0, 255, 0)
+        canonical = to_canonical(raw)
+        # Nothing outside the predicted window survives the real crop.
+        self.assertEqual(int(canonical[..., 0].max()), 0)
+        self.assertEqual(int(canonical[..., 1].min()), 255)
+        # ...and the window is not larger than the real crop either: shrinking
+        # it by one column on each side leaves discarded pixels visible.
+        narrow = raw.copy()
+        narrow[:, crop_x0] = (255, 0, 0)
+        narrow[:, crop_x0 + crop_width - 1] = (255, 0, 0)
+        self.assertGreater(int(to_canonical(narrow)[..., 0].max()), 0)
 
     def test_primary_metric_and_zero_tss(self) -> None:
         result = macro_r2({"a": [0, 1], "b": [0, 2]}, {"a": [0, 1], "b": [1, 1]})

@@ -42,6 +42,14 @@ BIN_BOUNDS = {
     "BEYOND_CONTEXT": (16, 19),
 }
 PRIMARY_BINS = ("SHORT", "INTERMEDIATE", "LONG", "NEAR_CONTEXT")
+# The frozen layout_01 homography maps world coordinates into the raw
+# framebuffer declared by its own resolution_id, framebuffer_1920x1046_rgb8.
+RAW_FRAMEBUFFER_WIDTH = 1920
+RAW_FRAMEBUFFER_HEIGHT = 1046
+CANONICAL_FRAME_WIDTH = 640
+CANONICAL_FRAME_HEIGHT = 360
+TOKEN_GRID_ROWS = 14
+TOKEN_GRID_COLUMNS = 24
 ALL_LAYERS = tuple(range(20))
 VISUAL_TOKEN_COUNT = 336
 HIDDEN_WIDTH = 2048
@@ -309,6 +317,28 @@ def duration_bin(tau: int) -> str | None:
     return None
 
 
+def canonical_crop_window(
+    raw_width: int = RAW_FRAMEBUFFER_WIDTH, raw_height: int = RAW_FRAMEBUFFER_HEIGHT
+) -> tuple[int, int, int, int]:
+    """Reproduce ``preprocess.to_canonical``'s centre crop exactly.
+
+    ``to_canonical`` centre-crops the raw framebuffer to 16:9 *before* resizing
+    to 640x360, so the canonical frame does not span the full raw width.  The
+    integer arithmetic here mirrors that rule tap for tap; ``test_regime_a``
+    proves the two agree rather than trusting the restatement.
+    """
+    aspect = raw_width / raw_height
+    canonical_aspect = CANONICAL_FRAME_WIDTH / CANONICAL_FRAME_HEIGHT
+    x0, y0, width, height = 0, 0, raw_width, raw_height
+    if aspect > canonical_aspect:
+        width = int(round(raw_height * canonical_aspect))
+        x0 = (raw_width - width) // 2
+    elif aspect < canonical_aspect:
+        height = int(round(raw_width / canonical_aspect))
+        y0 = (raw_height - height) // 2
+    return x0, y0, width, height
+
+
 def project_world_to_coordinates(
     world_x: float, world_z: float, world_to_raw_screen: Sequence[Sequence[float]]
 ) -> dict[str, object]:
@@ -319,11 +349,24 @@ def project_world_to_coordinates(
     if not np.isfinite(homogeneous).all() or abs(homogeneous[2]) <= 1e-12:
         raise RegimeAError("projection is nonfinite or singular")
     raw_x, raw_y = homogeneous[:2] / homogeneous[2]
-    screen_x = float(raw_x * 640.0 / 1920.0)
-    screen_y = float(raw_y * 360.0 / 1046.0)
-    token_row = screen_y * 14.0 / 360.0
-    token_col = screen_x * 24.0 / 640.0
-    if not (0 <= screen_x < 640 and 0 <= screen_y < 360 and 0 <= token_row < 14 and 0 <= token_col < 24):
+    # The homography's output lives in the raw 1920x1046 framebuffer, but the
+    # detector, the token grid and every downstream consumer live in the
+    # canonical 640x360 frame that to_canonical produces by centre-cropping to
+    # 16:9 first.  Scaling by 640/1920 ignores that crop: it is exact only at
+    # the frame centre and drifts to a full 10 canonical pixels (0.375 of a
+    # token column) at the crop edges, and it silently accepts the 30-pixel
+    # columns on each side that the crop removes altogether.
+    crop_x0, crop_y0, crop_width, crop_height = canonical_crop_window()
+    screen_x = float((raw_x - crop_x0) * CANONICAL_FRAME_WIDTH / crop_width)
+    screen_y = float((raw_y - crop_y0) * CANONICAL_FRAME_HEIGHT / crop_height)
+    token_row = screen_y * TOKEN_GRID_ROWS / CANONICAL_FRAME_HEIGHT
+    token_col = screen_x * TOKEN_GRID_COLUMNS / CANONICAL_FRAME_WIDTH
+    if not (
+        0 <= screen_x < CANONICAL_FRAME_WIDTH
+        and 0 <= screen_y < CANONICAL_FRAME_HEIGHT
+        and 0 <= token_row < TOKEN_GRID_ROWS
+        and 0 <= token_col < TOKEN_GRID_COLUMNS
+    ):
         raise RegimeAError("projected coordinate outside frozen bounds")
     return {
         "world_x": float(world_x),

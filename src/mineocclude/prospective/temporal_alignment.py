@@ -18,10 +18,88 @@ __all__ = [
     "AlignmentEstimate",
     "estimate_alignment",
     "EvidenceScope",
+    "PURE_DELAY_OFF_PEAK_MASS_TOLERANCE",
+    "normalized_kernel",
+    "kernel_off_peak_mass",
+    "kernel_group_delay_ticks",
+    "kernel_is_effectively_pure_delay",
 ]
 
 
 VALID_DIRECTIONS = frozenset({"LEFT_TO_RIGHT", "RIGHT_TO_LEFT"})
+
+# Numerical tolerance only. A normalized causal FIR kernel carrying all but this
+# fraction of its mass on a single tap is not numerically separable from a bare
+# integer-tick delay in binary64, so counting "how many taps are > 0" is not a
+# usable pure-delay test: [1e-300, 0, 0, 1, 0, ...] has two positive taps and is
+# still a 3-tick delay. This constant is a float64 round-off allowance, NOT a
+# scientific threshold -- it makes no claim about how much smoothing is
+# physically meaningful. The scientific requirement (that the fitted FIR
+# actually beats the best pure delay on every trajectory) is enforced
+# separately by the caller's authority-bound improvement-coverage rule.
+PURE_DELAY_OFF_PEAK_MASS_TOLERANCE = 1e-9
+
+
+def normalized_kernel(taps: Sequence[float]) -> list[float]:
+    """Return a nonnegative causal kernel rescaled to unit mass."""
+    values = [_finite(tap, "FIR coefficient") for tap in taps]
+    if len(values) < 2:
+        raise ValueError("a causal FIR kernel requires at least two taps")
+    if any(value < 0 for value in values):
+        raise ValueError("a causal FIR kernel must be nonnegative")
+    total = math.fsum(values)
+    if not total > 0 or not math.isfinite(total):
+        raise ValueError("a causal FIR kernel must carry positive mass")
+    return [value / total for value in values]
+
+
+def kernel_off_peak_mass(taps: Sequence[float]) -> float:
+    """Normalized mass lying off the single largest tap."""
+    kernel = normalized_kernel(taps)
+    return 1.0 - max(kernel)
+
+
+def kernel_group_delay_ticks(taps: Sequence[float]) -> float:
+    """First moment of the normalized kernel, in ticks."""
+    kernel = normalized_kernel(taps)
+    return math.fsum(lag * tap for lag, tap in enumerate(kernel))
+
+
+def kernel_mode_lag(taps: Sequence[float]) -> int:
+    """Lag index carrying the largest mass; lowest index wins a tie.
+
+    This is the estimand of a single-tap lag search such as
+    ``derivative_cross_correlation_lag``, which selects the one lag whose
+    increments best explain the rendered increments. It is a different
+    functional of the same kernel from :func:`kernel_group_delay_ticks`, and for
+    a right-tailed causal response it is strictly smaller.
+    """
+    kernel = normalized_kernel(taps)
+    return max(range(len(kernel)), key=lambda lag: (kernel[lag], -lag))
+
+
+def kernel_positive_mass_support(taps: Sequence[float]) -> tuple[int, int]:
+    """Lowest and highest lag index carrying non-zero mass."""
+    kernel = normalized_kernel(taps)
+    carried = [lag for lag, tap in enumerate(kernel) if tap > 0.0]
+    if not carried:
+        raise ValueError("a causal FIR kernel must carry positive mass")
+    return carried[0], carried[-1]
+
+
+def kernel_is_effectively_pure_delay(
+    taps: Sequence[float],
+    *,
+    tolerance: float = PURE_DELAY_OFF_PEAK_MASS_TOLERANCE,
+) -> bool:
+    """Whether the kernel is numerically indistinguishable from a bare delay.
+
+    Measured from kernel mass, never from decoder or Stage-1 outcomes.
+    """
+    allowance = _finite(tolerance, "pure-delay off-peak mass tolerance")
+    if allowance < 0:
+        raise ValueError("pure-delay off-peak mass tolerance must be non-negative")
+    return kernel_off_peak_mass(taps) <= allowance
 
 
 class EvidenceScope:
@@ -112,14 +190,30 @@ class AlignmentEvidence:
 
 @dataclass(frozen=True)
 class UncertaintyRequest:
+    """Request a Student-t interval, and optionally a trajectory bootstrap.
+
+    The bootstrap is optional because a caller whose authority carries no
+    interval-width gate has nothing to spend a replicate count and seed on.
+    Requiring them anyway would force such a caller to invent two numbers that
+    no authority derives and no rule reads, which is exactly the kind of
+    unjustified constant this package refuses. Both must be supplied together
+    or omitted together.
+    """
+
     confidence_level: float
-    bootstrap_replicates: int
-    bootstrap_seed: int
+    bootstrap_replicates: int | None = None
+    bootstrap_seed: int | None = None
 
     def __post_init__(self) -> None:
         confidence = _finite(self.confidence_level, "confidence_level")
         if not 0 < confidence < 1:
             raise ValueError("confidence_level must lie strictly between zero and one")
+        if (self.bootstrap_replicates is None) != (self.bootstrap_seed is None):
+            raise ValueError(
+                "bootstrap_replicates and bootstrap_seed must be supplied together"
+            )
+        if self.bootstrap_replicates is None:
+            return
         _plain_positive_int(self.bootstrap_replicates, "bootstrap_replicates")
         if not isinstance(self.bootstrap_seed, int) or isinstance(self.bootstrap_seed, bool):
             raise ValueError("bootstrap_seed must be a plain int")
@@ -136,6 +230,12 @@ class AlignmentRequirements:
     minimum_usable_samples_per_trajectory: int
     maximum_t_interval_width_ticks: float
     maximum_pure_delay_relative_improvement: float
+    # When the caller's authority forbids a pure-delay interpretation, the sign
+    # of the pure-delay requirement inverts: the fit must be separable from a
+    # bare delay and must beat the best pure delay on *every* trajectory, so a
+    # single large-improvement trajectory cannot rescue widespread failure.
+    pure_delay_interpretation_allowed: bool = True
+    pure_delay_off_peak_mass_tolerance: float = PURE_DELAY_OFF_PEAK_MASS_TOLERANCE
 
     def __post_init__(self) -> None:
         _plain_positive_int(self.minimum_trajectories, "minimum_trajectories")
@@ -165,6 +265,13 @@ class AlignmentRequirements:
         )
         if discrepancy < 0:
             raise ValueError("pure-delay discrepancy allowance must be non-negative")
+        if not isinstance(self.pure_delay_interpretation_allowed, bool):
+            raise ValueError("pure_delay_interpretation_allowed must be an explicit bool")
+        if _finite(
+            self.pure_delay_off_peak_mass_tolerance,
+            "pure_delay_off_peak_mass_tolerance",
+        ) < 0:
+            raise ValueError("pure-delay off-peak mass tolerance must be non-negative")
 
 
 @dataclass
@@ -394,24 +501,36 @@ def estimate_alignment(
         critical = float(t.ppf(1.0 - alpha / 2.0, df=delays.size - 1))
         assert standard_error is not None
         t_interval = (mean - critical * standard_error, mean + critical * standard_error)
-        rng = np.random.default_rng(uncertainty.bootstrap_seed)
-        draws = rng.choice(
-            delays,
-            size=(uncertainty.bootstrap_replicates, delays.size),
-            replace=True,
-        ).mean(axis=1)
-        bootstrap_interval = tuple(
-            float(value)
-            for value in np.quantile(draws, [alpha / 2.0, 1.0 - alpha / 2.0])
-        )
+        if uncertainty.bootstrap_replicates is not None:
+            rng = np.random.default_rng(uncertainty.bootstrap_seed)
+            draws = rng.choice(
+                delays,
+                size=(uncertainty.bootstrap_replicates, delays.size),
+                replace=True,
+            ).mean(axis=1)
+            bootstrap_interval = tuple(
+                float(value)
+                for value in np.quantile(draws, [alpha / 2.0, 1.0 - alpha / 2.0])
+            )
 
     kernel = np.mean(np.asarray([fit["kernel"] for fit in fits]), axis=0)
     kernel /= kernel.sum()
-    improvement = float(
-        np.mean([fit["fir_vs_pure_delay_relative_improvement"] for fit in fits])
+    improvements = [fit["fir_vs_pure_delay_relative_improvement"] for fit in fits]
+    improvement = float(np.mean(improvements))
+    # Measured property of the fitted kernel, independent of whether the caller
+    # supplied requirements and independent of any decoder outcome.
+    tolerance = (
+        PURE_DELAY_OFF_PEAK_MASS_TOLERANCE
+        if requirements is None
+        else requirements.pure_delay_off_peak_mass_tolerance
     )
+    pure_delay = kernel_is_effectively_pure_delay(kernel.tolist(), tolerance=tolerance)
+    for fit in fits:
+        fit["kernel_off_peak_mass"] = kernel_off_peak_mass(fit["kernel"])
+        fit["kernel_is_effectively_pure_delay"] = kernel_is_effectively_pure_delay(
+            fit["kernel"], tolerance=tolerance
+        )
     reasons: list[str] = []
-    pure_delay: bool | None = None
     if failed:
         reasons.append(f"trajectories without estimable fits: {failed}")
     if requirements is None:
@@ -438,9 +557,29 @@ def estimate_alignment(
             reasons.append("requested uncertainty evidence was not supplied or estimable")
         elif t_interval[1] - t_interval[0] > requirements.maximum_t_interval_width_ticks:
             reasons.append("t-interval width exceeds the caller-supplied maximum")
-        pure_delay = improvement <= requirements.maximum_pure_delay_relative_improvement
-        if not pure_delay:
-            reasons.append("FIR/pure-delay discrepancy exceeds the caller-supplied maximum")
+        if requirements.pure_delay_interpretation_allowed:
+            if improvement > requirements.maximum_pure_delay_relative_improvement:
+                reasons.append(
+                    "FIR/pure-delay discrepancy exceeds the caller-supplied maximum"
+                )
+        else:
+            if pure_delay:
+                reasons.append(
+                    "fitted kernel is numerically indistinguishable from a pure delay"
+                )
+            if any(
+                fit["kernel_is_effectively_pure_delay"] for fit in fits
+            ):
+                reasons.append(
+                    "a per-trajectory kernel is numerically indistinguishable from a pure delay"
+                )
+            # Coverage, not central tendency: the authority requires the causal
+            # FIR to beat the best pure delay, and a mean improvement lets one
+            # large trajectory rescue a majority that are worse than a delay.
+            if not all(value > 0 for value in improvements):
+                reasons.append(
+                    "at least one trajectory does not beat its own best pure delay"
+                )
         adjudication = "PASS" if not reasons else "FAIL"
 
     resolved = requirements is not None and not reasons

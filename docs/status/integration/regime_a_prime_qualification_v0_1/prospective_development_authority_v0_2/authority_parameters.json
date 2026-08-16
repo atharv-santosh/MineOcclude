@@ -1,0 +1,375 @@
+{
+  "schema_version": "1.1",
+  "artifact_id": "regime-a-prime-prospective-development-authority-v0.2",
+  "status": "DRAFT_REPAIRED_UNFROZEN_NOT_AUTHORIZED",
+  "classification": "DEVELOPMENT_ONLY",
+  "immutable_software_forensic_base_sha": "db2e110549856a465ae517c17438d4d248d9657b",
+  "prospective_source_commit_binding": "BOUND_AT_LAUNCH_BY_PREOUTCOME_PROVENANCE_RECEIPT",
+  "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+  "STAGE_1_COLLECTION_AUTHORIZED": false,
+  "STAGE_2_COLLECTION_AUTHORIZED": false,
+  "confirmatory_collection_authorized": false,
+  "confirmatory_interpretation_authorized": false,
+  "apparatus": {
+    "layout_id": "layout_01",
+    "camera_authority": "layout_01_fixed_v0.4",
+    "wall_authority": "layout_01_long_wall_v0.4",
+    "camera_eye_world_xyz": [0.5, 5.6200000048, -5.5],
+    "camera_feet_world_xyz": [0.5, 4.0, -5.5],
+    "yaw_pitch_roll_degrees": [0.0, 0.0, 0.0],
+    "fov_degrees": 70.0,
+    "canonical_frame_pixels": [640, 360],
+    "model_input_pixels": [384, 224],
+    "visual_token_grid": [14, 24],
+    "capture_hz": 20,
+    "seconds_per_server_tick": 0.05,
+    "server_ticks_per_model_frame": 1,
+    "lane_world_x_blocks": [-8.0, 8.0],
+    "wall_relative_origin_world_x": 0.5,
+    "lane_world_y": 4.0,
+    "lane_world_z": 6.0,
+    "minecraft_version": "1.16.5",
+    "java": "Amazon Corretto 17.0.20.8.1",
+    "xvfb": "21.1.12",
+    "mesa": "25.2.8",
+    "renderer": "llvmpipe LLVM 20.1.2",
+    "installed_mod_sha256": "febf31cad7c6de003a6d2d87ed9183c6a6739e086e293b30e92999520e3bfaba",
+    "mod_source_sha256": "3c37227654415956ab34a0c3245fe25697ed8c2b8d18dcbca7373a21f5c32de0",
+    "detector_config_sha256": "99acc45e0a49b8526eca2ab777e21c07f88934d744bc5679e63ab8a00b181b8d"
+  },
+  "stage_binding_policy": {
+    "derivation": "Closes the cross-stage substitution attack: --stage stage1-capture --manifest stage2_locked_manifest.json previously reached capture because nothing tied the requested stage to the manifest's own identity, to the unit's declared role, or to the authorization receipt type. Every entrypoint -- direct, delegated, backend, and restart/resume -- now resolves the requested stage through this table before any capture or extraction, and refuses on the first disagreement. No Stage-1 authorization can launch a Stage-2 unit and no Stage-2 authorization can launch a Stage-1 unit, because the two stages disagree on all of manifest artifact_id, run namespace, unit role, and authorization artifact_id.",
+    "fail_closed_before_capture_and_extraction": true,
+    "stages": {
+      "stage1-capture": {
+        "stage_role": "stage1",
+        "manifest_artifact_id": "regime-a-prime-stage1-manifest-v0.2",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2/stage1_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage1",
+        "authorization_artifact_id": "regime-a-prime-stage1-authorization-v0.2",
+        "unit_collections": ["units"],
+        "unit_role": "stage1_capture_unit"
+      },
+      "stage2-capture": {
+        "stage_role": "stage2",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.2",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage2",
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.2",
+        "unit_collections": ["units", "capture_units"],
+        "unit_role": "stage2_capture_unit"
+      },
+      "stage2-gates": {
+        "stage_role": "stage2",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.2",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage2",
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.2",
+        "unit_collections": ["units"],
+        "unit_role": "stage2_physical_gate_unit"
+      },
+      "stage2-extract": {
+        "stage_role": "stage2",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.2",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage2",
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.2",
+        "unit_collections": ["units", "extraction_units"],
+        "unit_role": "stage2_extraction_unit"
+      },
+      "stage2-best-k": {
+        "stage_role": "stage2",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.2",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage2",
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.2",
+        "unit_collections": ["units", "readout_and_terminal_units"],
+        "unit_role": "stage2_readout_unit"
+      },
+      "stage2-full": {
+        "stage_role": "stage2",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.2",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage2",
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.2",
+        "unit_collections": ["units", "readout_and_terminal_units"],
+        "unit_role": "stage2_readout_unit"
+      },
+      "stage2-terminal": {
+        "stage_role": "stage2",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.2",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage2",
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.2",
+        "unit_collections": ["units", "readout_and_terminal_units"],
+        "unit_role": "stage2_terminal_unit"
+      }
+    }
+  },
+  "runtime_identity_policy": {
+    "required_fields": {
+      "branch": "exploration/regime-a-prime-qualification-v0-1",
+      "java": "Corretto-17.0.20.8.1",
+      "minecraft_version": "1.16.5",
+      "renderer": "llvmpipe LLVM 20.1.2",
+      "xvfb": "21.1.12",
+      "mesa": "25.2.8",
+      "detector_config_id": "frozen_any_magenta_silhouette_detector"
+    },
+    "critical_file_sha256": {
+      "installed_mod": "febf31cad7c6de003a6d2d87ed9183c6a6739e086e293b30e92999520e3bfaba",
+      "mod_source": "3c37227654415956ab34a0c3245fe25697ed8c2b8d18dcbca7373a21f5c32de0",
+      "detector_config": "99acc45e0a49b8526eca2ab777e21c07f88934d744bc5679e63ab8a00b181b8d",
+      "minecraft_server_jar": "58f329c7d2696526f948470aa6fd0b45545039b64cb75015e64c12194b373da6",
+      "fabric_server_launcher_jar": "1caefab680c8832254dd8644c6df536c169315188e715191c9b52ed69adee66e"
+    },
+    "critical_file_paths": {
+      "installed_mod": "/home/sagemaker-user/mineocclude-server/mods/mineocclude-0.1.1.jar",
+      "mod_source": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java",
+      "detector_config": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json",
+      "minecraft_server_jar": "/home/sagemaker-user/mineocclude-server/server.jar",
+      "fabric_server_launcher_jar": "/home/sagemaker-user/mineocclude-server/fabric-server-launch.jar"
+    },
+    "java_identity_pin_derivation": "Substring of the qualified JDK's own `java -version` output. The superseded pin `Amazon Corretto 17.0.20.8.1` was a marketing spelling that the runtime never emits: the qualified Corretto build prints `OpenJDK Runtime Environment Corretto-17.0.20.8.1`, so the probe's own substring test could not have matched and Stage-1 capture would have aborted at launch with `Java/JDK identity mismatch`. The same JDK build is pinned; only the spelling is corrected to the token the runtime actually produces.",
+    "runtime_reconstruction": {
+      "reason": "Overlay-installed components are not guaranteed to survive a SageMaker Space rebuild, and `java` is not on the default PATH even when the qualified JDK is present. Collection must therefore reconstruct the runtime deterministically from this pin rather than inherit whatever a shell happened to export.",
+      "java_home": "/usr/lib/jvm/amazon-corretto-17.0.20.8.1-linux-x64",
+      "java_executable_relative_path": "bin/java",
+      "display": ":99",
+      "xvfb_screen": "0 1280x720x24",
+      "path_reconstruction": "prepend_java_home_bin_to_inherited_path",
+      "forbid_inherited_java_from_path": true,
+      "forbid_inherited_java_from_path_derivation": "A `java` resolved from an inherited PATH is an unpinned runtime. The probe must execute the absolute pinned interpreter so that the executable bytes recorded in the probe evidence are the bytes of the qualified JDK.",
+      "reinstall_procedure": [
+        "The qualified JDK is an overlay install. If /usr/lib/jvm/amazon-corretto-17.0.20.8.1-linux-x64 is absent after a Space rebuild, reinstall exactly this build before any collection; do not accept a different Corretto patch level.",
+        "Verify with: <java_home>/bin/java -version, whose output must contain Corretto-17.0.20.8.1.",
+        "Re-verify every critical_file_sha256 pin against disk before collection; the server JAR, Fabric launcher, and installed mod are also overlay artefacts.",
+        "Run: python3 scripts/regime_a_prime_qualification_v0_2/generate_receipts.py runtime-preflight --output <probe_evidence.json>. It resolves the pinned JDK without consulting PATH, reconstructs the pinned virtual display, executes every identity probe, re-verifies the resulting evidence with verify_probe_execution, and fails closed on any mismatch."
+      ]
+    },
+    "successful_flags_require_independent_probe": true,
+    "evidence_builder_may_assert_success": false,
+    "probe_evidence_policy": {
+      "digest_primitive": "sha256_over_canonical_json_of_the_probe_execution_record",
+      "digest_is_a_signature": false,
+      "digest_primitive_derivation": "There is no asymmetric key and no authenticated signer anywhere in this package, so no receipt is signed. The primitive is a deterministic cryptographic digest over independently generated probe evidence, and it is named accordingly. It establishes that the recorded probe evidence has not been edited since it was assembled; it does not establish who assembled it. Authorship is constrained separately, by independent_probe_producers plus the byte-level rehashing of the probe source, the probed executables, and the pinned apparatus artefacts.",
+      "independent_probe_producers": [
+        "scripts.regime_a_prime_qualification_v0_2.stage_unit_driver.probe_runtime"
+      ],
+      "forbidden_probe_producers": [
+        "scripts.regime_a_prime_qualification_v0_2.build_stage1_evidence.main",
+        "scripts.regime_a_prime_qualification_v0_2.build_stage1_evidence.build_evidence",
+        "mineocclude.prospective.development_workflow.Stage1Evaluator"
+      ],
+      "forbidden_probe_producers_derivation": "The evidence builder and the evaluator may never author the evidence that the runtime was independently verified; a PASS that either of them can emit is a self-assertion, which is the defect this policy replaces.",
+      "required_invocation_ids": ["java_version", "renderer", "xvfb"],
+      "required_invocation_ids_derivation": "One invocation per runtime identity pin that is established by executing something: the JDK, the GL renderer stack, and the virtual framebuffer. The remaining pins are file artefacts and are covered byte-for-byte by critical_file_sha256 instead.",
+      "required_exit_status": 0,
+      "requires_executable_byte_identity": true,
+      "requires_normalized_output_identity_tokens": true,
+      "requires_probe_source_byte_identity": true,
+      "requires_runtime_critical_source_closure": true
+    }
+  },
+  "apparatus_observation_policy": {
+    "camera_feet_world_xyz": [0.5, 4.0, -5.5],
+    "camera_eye_world_xyz": [0.5, 5.6200000048, -5.5],
+    "yaw_pitch_degrees": [0.0, 0.0],
+    "fov_degrees": 70.0,
+    "canonical_frame_pixels": [640, 360],
+    "target_respawn_count": 0,
+    "target_uuid_must_be_constant": true,
+    "wall_scene_requires_both_point_visible_and_point_hidden_rows": true,
+    "no_wall_requires_every_point_visible": true
+  },
+  "clock_domains": {
+    "causal_order": ["server_entity_state", "network_update", "client_entity_state", "client_render", "capture_frame", "model_frame", "activation_row", "ground_truth_target"],
+    "frame_label": "causal_fir_convolution_of_server_entity_state_at_or_before_same_numbered_capture_tick",
+    "bare_index_interchange_forbidden": true,
+    "alignment_required_before_scientific_row_emission": true
+  },
+  "fixed_development_configuration": {
+    "speed_blocks_per_second": 2.0,
+    "motion_noise_q": 0.05,
+    "expected_frames_per_run": 180,
+    "start_world_x_by_direction": {
+      "LEFT_TO_RIGHT": -7.8,
+      "RIGHT_TO_LEFT": 7.8
+    },
+    "speed_sweep_authorized": false,
+    "rationale": "Frozen P3 C01 had adequate headroom and zero target-row contamination; speed was not established as the redesign variable."
+  },
+  "stage1_policy": {
+    "run_count": 8,
+    "run_count_derivation": "2 directions x 2 scenes x 2 predeclared roles (transition measurement and held-out validation); the minimum replicated full-factorial design",
+    "directions": ["LEFT_TO_RIGHT", "RIGHT_TO_LEFT"],
+    "scenes": ["WALL", "NO_WALL"],
+    "replicates_per_direction_scene": 2,
+    "replicate_roles": {"1": "TRANSITION_MEASUREMENT", "2": "HELD_OUT_VALIDATION"},
+    "temporal_alignment": {
+      "measurement_separate_by_direction": true,
+      "minimum_trajectories_per_direction": 4,
+      "required_method_ids": ["causal_fir_group_delay", "derivative_cross_correlation_lag"],
+      "agreement_rule": "causal_kernel_mode_and_first_moment_estimand_pairing_within_admissible_causal_lag_range",
+      "agreement_rule_derivation": "The two required methods do not share an estimand, so requiring their point estimates to fall inside each other's intervals compares quantities that are not expected to coincide. causal_fir_group_delay reports the FIRST MOMENT sum(k*h[k]) of the fitted causal kernel; derivative_cross_correlation_lag selects the single lag whose increment series best explains the rendered increments, which is the kernel's MODE, sub-tick refined. For a right-tailed causal smoothing kernel the mode lies strictly before the first moment, so mutual containment is satisfiable only by a kernel whose mode equals its mean -- that is, by the symmetric or bare-delay response this same authority forbids under pure_delay_interpretation_allowed=false. Agreement is therefore defined between matched estimands: (i) every estimate and interval endpoint lies inside the admissible causal lag range [0, maximum_lag_ticks_for_estimation], whose lower bound is the frozen clock_domains causal_order (render is at-or-after server entity state, so a negative lag is acausal) and whose upper bound is the estimator's own declared search range; (ii) each method's point estimate lies inside its own interval, which is reproduced from that method's own per-trajectory values; (iii) for EVERY trajectory, the cross-correlation lag lies within cross_correlation_subtick_refinement_bound_ticks of the mode of that trajectory's own bound FIR kernel; (iv) the aggregate cross-correlation estimate lies within the same bound of the aggregate kernel's mode; (v) both aggregate point estimates lie inside the aggregate kernel's positive-mass support. Checks (iii)-(v) are computed from kernels already bound to the per-trajectory group delays, so no new independently mutable field is trusted, and unlike interval overlap they cannot be satisfied by widening an interval. No precision threshold is taken from Stage-1 outcomes; see frozen_forensic_reference_agreement_check.",
+      "cross_correlation_subtick_refinement_bound_ticks": 1.0,
+      "cross_correlation_subtick_refinement_bound_ticks_classification": "PURE_IMPLEMENTATION_CONSTANT",
+      "cross_correlation_subtick_refinement_bound_ticks_derivation": "Structural clamp of derivative_cross_correlation_lag itself, which returns best_integer_lag + offset with offset hard-limited to [-1, +1] by its parabolic refinement. It is the estimator's own maximum departure from an integer tap index, not a fitted tolerance, and it was not searched: the frozen forensic reference attains a maximum per-trajectory departure of 0.392766 ticks against this bound of 1.0, leaving 0.607234 ticks of unused slack.",
+      "frozen_forensic_reference_agreement_check": {
+        "purpose": "Bounded coherence check of the agreement rule against already-frozen P2/P3 forensic evidence. No refitting, no P2 rerun, no threshold search, and no Stage-1 outcome was consulted.",
+        "acceptance_gate": false,
+        "sources": [
+          "p2_temporal_alignment_forensic_v0_1/impulse_response_raw.json",
+          "p2_temporal_alignment_forensic_v0_1/lag_multimethod_raw.json"
+        ],
+        "trajectory_count": 12,
+        "method_1_causal_fir_group_delay_estimate_ticks": 3.363631073825902,
+        "method_1_student_t_interval_ticks": [3.1850024634276997, 3.5422596842241045],
+        "method_2_derivative_cross_correlation_lag_estimate_ticks": 2.4597455789132974,
+        "method_2_student_t_interval_ticks": [2.2587886058224114, 2.6607025520041834],
+        "superseded_rule_satisfied": false,
+        "superseded_rule_violation_margin_ticks": 0.7252568845144023,
+        "superseded_rule_intervals_overlap": false,
+        "repaired_rule_satisfied": true,
+        "repaired_rule_maximum_per_trajectory_mode_departure_ticks": 0.392765753882379,
+        "repaired_rule_aggregate_mode_departure_ticks": 0.4597455789132974,
+        "aggregate_kernel_mode_lag": 2,
+        "aggregate_kernel_positive_mass_support": [0, 8],
+        "observed_mode_precedes_first_moment_in_trajectories": "12/12",
+        "observed_minimum_first_moment_minus_mode_margin_ticks": 0.4100623006769153,
+        "observed_ordering_is_an_acceptance_gate": false,
+        "observed_ordering_derivation": "Recorded as a frozen observation only. Requiring first_moment >= cross_correlation_lag would impose right-skew on a prospective measurement, and a legitimately symmetric response would fail it for no scientific reason; the pure-delay refusal already covers the degenerate case."
+      },
+      "confidence_level": 0.95,
+      "maximum_lag_ticks_for_estimation": 8,
+      "pure_delay_off_peak_mass_tolerance": 1e-09,
+      "pure_delay_off_peak_mass_tolerance_classification": "PURE_IMPLEMENTATION_CONSTANT",
+      "pure_delay_off_peak_mass_tolerance_derivation": "Binary64 round-off allowance only, not a scientific threshold. A normalized causal FIR kernel carrying all but 1e-09 of its mass on one tap is not numerically separable from a bare integer-tick delay, so kernels such as [1e-300, 0, 0, 1, 0, ...] are rejected. It makes no claim about physically meaningful smoothing; that requirement is carried by causal_fir_must_beat_best_pure_delay_scope.",
+      "causal_fir_must_beat_best_pure_delay_scope": "EVERY_TRAJECTORY",
+      "causal_fir_must_beat_best_pure_delay_scope_derivation": "Coverage rule read directly from causal_fir_must_beat_best_pure_delay, requiring no numeric threshold: a mean relative improvement lets one large trajectory rescue a majority that are worse than a pure delay, so every trajectory must beat its own best pure delay. Not selected from Stage-1 outcomes.",
+      "minimum_usable_samples_per_trajectory": 9,
+      "minimum_usable_samples_per_trajectory_derivation": "maximum_lag_ticks_for_estimation + 1: the algebraic identifiability minimum for a (maximum_lag + 1)-tap causal fit. PURE_IMPLEMENTATION_CONSTANT. Estimate adequacy is enforced by agreement_rule and the improvement-coverage scope rather than by a fabricated sample count, because WALL scenes legitimately exclude detector-absent frames.",
+      "historical_group_delay_reference_only_ticks": {
+        "estimate": 3.363631073825902,
+        "student_t_interval": [3.1850024634276997, 3.5422596842241045],
+        "acceptance_gate": false
+      },
+      "prospective_ci_width": {"classification": "PROSPECTIVE_STAGE1_MEASURED", "acceptance_threshold": null},
+      "unit_spaced_clock_coordinates_required": true,
+      "causal_fir_must_beat_best_pure_delay": true,
+      "pure_delay_interpretation_allowed": false
+    },
+    "visibility": {
+      "primary_predicate": "point_visibility_only_outside_prospectively_measured_transition_band",
+      "rendered_detector_predicate": "frozen_any_magenta_silhouette_detector",
+      "no_wall_stable_visible_requires": ["point_visible", "projected_in_frame", "render_frame_present", "resolved_clock", "valid_identity", "in_support"],
+      "transition_policy": "measure direction-specific stable-visible and detector-absent edges on predeclared WALL measurement replicates; apply the complete measured band to held-out validation replicates",
+      "partial_transition_observation_required_on_held_out_wall": true,
+      "transition_guard_blocks": {"classification": "PROSPECTIVE_STAGE1_MEASURED", "acceptance_threshold": null},
+      "silhouette_half_extent_blocks": {"classification": "PROSPECTIVE_STAGE1_MEASURED", "historical_reference_range": [0.6, 0.8], "acceptance_threshold": null},
+      "detector_truth_predicate_independent_of_scored_detector": true,
+      "detector_truth_predicate_derivation": "Ground truth for detector scoring is server-side point visibility inside the transition band measured on the independent, predeclared TRANSITION_MEASUREMENT replicates. The scored detector may never appear in the predicate that decides whether a row is occluded or visible, otherwise the observed false-positive rate is identically zero by construction.",
+      "calibration_detector_response_required": true,
+      "calibration_detector_response_derivation": "Non-held-out calibration and transition-measurement evidence is required evidence. A run whose rendered detector never fires across its qualified stable-visible rows must fail rather than pass because it is not the held-out replicate.",
+      "minimum_stable_samples_per_direction_per_class": 60,
+      "maximum_observed_false_positive_rate": 0.0,
+      "maximum_observed_false_negative_rate": 0.0,
+      "maximum_one_sided_error_upper_95": 0.05,
+      "precision_gate_forbidden": true,
+      "pooled_accuracy_gate_forbidden": true
+    },
+    "calibration_support": {
+      "coordinates_required": ["world_x", "wall_relative_x"],
+      "world_x_bounds": [-8.0, 8.0],
+      "wall_relative_formula": "world_x - 0.5",
+      "complete_expected_path_and_frame_coverage_required": true,
+      "endpoint_tolerance_blocks": null,
+      "maximum_gap_blocks": null,
+      "minimum_samples_per_stratum": null,
+      "support_extent_gap_and_count_are_stage1_measurements_not_acceptance_thresholds": true,
+      "required_strata": "direction x WALL/NO_WALL",
+      "out_of_support_samples_do_not_count": true,
+      "required_evidence_completeness": {
+        "zero_tolerance_row_classes": ["malformed_or_missing", "identity_valid", "in_support", "path_state_valid", "runtime_provenance_resolved", "render_frame_present"],
+        "temporal_alignment_unresolved_rows_permitted": "EXACTLY_THE_CAUSAL_FIR_WARMUP_PREFIX",
+        "unresolved_regime_permitted_only_when": ["INDEX_PRECEDES_COMPLETE_CAUSAL_FIR_HISTORY", "TARGET_PROJECTS_OUTSIDE_CANONICAL_FRAME"],
+        "derivation": "A frame may only remain unresolved for a prospectively expected reason. Every other captured frame must land in a physical regime, so 'unresolved' cannot become an unbounded budget absorbing contradictory or unusable evidence. Required apparatus evidence fails closed on every frame with no numeric allowance."
+      }
+    },
+    "physical_hidden_onset": {
+      "policy": "measure first fully detector-absent aligned physical row by direction on transition-measurement runs and validate on held-out WALL runs",
+      "fixed_silhouette_or_hidden_bound_forbidden": true,
+      "hidden_onset_world_x": {"classification": "PROSPECTIVE_STAGE1_MEASURED", "acceptance_threshold": null},
+      "stage2_target_windows_must_be_materialized_after_stage1_and_before_stage2_manifest_freeze": true
+    },
+    "contamination": {
+      "required_hidden_rows_per_wall_validation_run": 19,
+      "designated_hidden_row_selection_rule": "FIRST_N_QUALIFIED_STABLE_OCCLUDED_ROWS_IN_ASCENDING_MODEL_FRAME_ORDER",
+      "designated_hidden_row_selection_rule_derivation": "Designated rows must be reproducible from the frozen schedule rather than selected after the run is observed. The evaluator recomputes the schedule from the measured regimes, so substituting the last N qualified rows for the first N fails even though both sets are individually qualified.",
+      "prohibited_classes": ["point_visible", "partial_transition", "detector_visible", "clock_unresolved", "out_of_support", "ambiguous_or_invalid_identity", "runtime_or_provenance_unresolved", "path_state_invalid", "malformed_or_missing"],
+      "maximum_rows_each_class": 0
+    },
+    "stop_rules": {
+      "fail_closed_on_any_failed_or_malformed_gate": true,
+      "terminate_after_stage1_decision": true,
+      "automatic_stage2_start": false,
+      "retry_same_unit_maximum_attempts": 3,
+      "substitution_or_recollection_of_verified_durable_unit_forbidden": true
+    }
+  },
+  "stage2_policy": {
+    "manifest_state": "POST_STAGE1_TARGET_WINDOWS_TO_BE_MATERIALIZED_AND_SEPARATELY_FROZEN",
+    "paired_trajectory_identities": 25,
+    "outer_folds": 5,
+    "phase_offsets_frames": [0, 3, 6, 9, 12],
+    "left_to_right_phase_indices_by_fold": {
+      "0": [0, 1, 2],
+      "1": [2, 3],
+      "2": [4, 0, 1],
+      "3": [1, 2],
+      "4": [3, 4, 0]
+    },
+    "scenes_per_identity": ["WALL", "NO_WALL"],
+    "scientific_capture_count": 50,
+    "required_target_rows_per_capture": 19,
+    "speed_blocks_per_second": 2.0,
+    "physical_gates_before_extraction": ["durability", "identity", "path_state", "clock_alignment", "stable_visibility", "physical_support", "hidden_row_validity", "zero_target_row_contamination", "runtime_provenance", "pair_coverage"],
+    "temporal_labels": {"source": "qualified_stage1_direction_specific_causal_fir", "raw_same_tick_server_state_forbidden": true},
+    "extraction": {"layers": [4], "all_layer_extraction_forbidden": true},
+    "readout": {
+      "leading": "BEST_K",
+      "secondary_non_rescuing": "FULL",
+      "corrected_p2_best_k_visible_rmse_reference_blocks": 0.07780238881820632,
+      "best_k_each_scene_rmse_maximum_blocks": 0.15560477763641264,
+      "rmse_ceiling_formula": "2 * corrected P2 BEST-K visible RMSE, preserving the controlling P3 formula",
+      "best_k_each_scene_macro_r2_must_be_strictly_positive": true,
+      "best_k_each_scene_whole_trajectory_bootstrap95_lower_r2_must_be_strictly_positive": true,
+      "best_k_wall_must_beat_training_only_time_baseline_rmse": true,
+      "training_only_time_baseline_macro_r2_tau_1_to_15_maximum": 0.1,
+      "training_only_time_baseline_training_tau_maximum": 15,
+      "full_may_not_rescue_best_k_failure": true,
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 2026081503,
+      "bootstrap_unit": "WHOLE_TRAJECTORY"
+    },
+    "headroom": {
+      "minimum_each_trajectory_target_sd_blocks": 0.15560477763641264,
+      "minimum_candidate_median_target_sd_blocks": 0.23340716645461895,
+      "derivation": "controlling P3 formulas 2x and 3x corrected P2 BEST-K visible RMSE"
+    },
+    "post_stage2": {"development_qualification_only": true, "may_authorize_confirmatory_collection": false, "confirmatory_reuse_forbidden": true}
+  },
+  "provenance": {
+    "tracked_source_bytes_modes_and_expected_commit_required": true,
+    "authority_manifest_schema_and_controller_sha256_required": true,
+    "runtime_renderer_java_mod_camera_scene_and_detector_identity_required": true,
+    "per_unit_raw_and_derived_sha256_manifest_with_remote_readback_required": true,
+    "pre_outcome_receipt_required_before_collection": true
+  },
+  "restart_resume": {
+    "durable_atomic_unit": "one run for Stage 1; one scene/trajectory capture or one extraction unit for Stage 2",
+    "resume_revalidation": ["local receipt hash", "remote checksum manifest readback", "every remote object existence", "authority binding", "manifest binding", "source commit", "run namespace", "unit identity"],
+    "maximum_identical_attempts": 3,
+    "completed_verified_units_must_not_be_recollected": true
+  }
+}

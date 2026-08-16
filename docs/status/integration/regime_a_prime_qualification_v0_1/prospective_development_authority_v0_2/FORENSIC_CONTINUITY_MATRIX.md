@@ -1,0 +1,25 @@
+# Forensic continuity matrix
+
+| Material frozen finding | Prospective disposition | Implementation binding |
+|---|---|---|
+| Render/state relation is causal smoothing, not pure delay | `INCORPORATED` — unchanged | Causal multi-tap FIR required and used for labels |
+| Frozen delay estimate/interval | `DEFERRED_EXPLICITLY` — reference evidence only | Recorded, never used as prospective acceptance envelope |
+| Corrected P2 BEST-K is `0.07780238881820632` | `INCORPORATED` | Controlling 2×/3× formulas recomputed from corrected value |
+| Point visibility and silhouette detection disagree over a transition | `INCORPORATED` | Transition measured separately and excluded from held-out scoring |
+| Silhouette half-extent is only approximately `0.6–0.8` | `SUPERSEDED_WITH_JUSTIFICATION` — measured prospectively | No exact extent or fixed hidden onset remains |
+| Pooled precision was speed/base-rate confounded | `SUPERSEDED_WITH_JUSTIFICATION` | Directional stable-regime FPR/FNR used; transition excluded |
+| Speed did not resolve the instrument defect | `INCORPORATED` | Fixed 2.0 blocks/s; no speed sweep |
+| P3 C01 target contamination was zero | `INCORPORATED` | Exactly 19 hidden rows and every prohibited class must be zero |
+| Calibration previously omitted NO_WALL and physical-coordinate support | `INCORPORATED` | Both scenes and both world/wall-relative x required |
+| Historical `HIDDEN_BOUNDS` became stale | `SUPERSEDED_WITH_JUSTIFICATION` | Stage-1 measured bounds materialize Stage-2 windows |
+| Path/state requires exact binary64 and paired equality | `INCORPORATED` — unchanged | Independent path receipt plus Stage-2 pair gate |
+| Historical P3 controller provenance cannot be repaired retroactively | `DEFERRED_EXPLICITLY` — permanent historical limitation | New controller/source/commit hashes are prospectively required |
+| Local restart state is insufficient evidence of durability | `INCORPORATED` | Remote manifest/object readback required before reuse |
+| Regime A substantive failure is stable | `DEFERRED_EXPLICITLY` — historical conclusion preserved | No historical reinterpretation or modification |
+| Development data cannot enter confirmation | `INCORPORATED` — unchanged | Development-only identities and confirmatory authorization false |
+| Canonical-frame projection scaled the raw framebuffer without its 16:9 centre crop | `SUPERSEDED_WITH_JUSTIFICATION` — corrected prospectively | Crop-aware `project_world_to_coordinates`; historical artifacts immutable, bounded blast radius recorded in `PROJECTION_FORENSIC_CONTINUITY.md` |
+| Methods B < A < C disagree systematically, the signature of a spread causal response | `INCORPORATED` | Agreement rule repaired to pair matched estimands: cross-correlation against the bound FIR kernel's mode, never against its first moment. The superseded mutual-containment rule contradicted this frozen finding and was satisfiable only by the symmetric response the authority forbids |
+| `argmax(per-trajectory FIR kernel)` equals the best single-tap delay in 12/12 frozen trajectories | `INCORPORATED` | Identifies the cross-correlation estimand as the kernel mode, so agreement is checked against kernel evidence already bound to the per-trajectory group delays rather than against a new mutable field |
+| Qualified JDK is Corretto 17.0.20.8.1 | `INCORPORATED` | Runtime pin corrected from the marketing spelling `Amazon Corretto 17.0.20.8.1`, which the JDK never emits, to the token `Corretto-17.0.20.8.1` that its own `java -version` prints. Same JDK build; the superseded spelling would have aborted Stage-1 capture at launch |
+| Runtime provenance must be independently probed, not self-asserted | `INCORPORATED` | `verify_signed_probe` replaced by `verify_probe_execution`, which re-derives probe source bytes, argv, resolved executable bytes, exit status, and normalized output from disk. The digest is named a digest, not a signature: no signing mechanism exists |
+

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mineocclude://schemas/regime_a_prime_stage1_decision_v0_2.schema.json",
+  "title": "Regime A-prime Stage-1 development qualification decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_id", "classification", "status", "authority_sha256", "stage1_manifest_sha256", "stage1_evidence_sha256", "gates", "reasons", "stage2_collection_authorized", "confirmatory_interpretation_authorized"],
+  "properties": {
+    "schema_version": {"const": "1.1"},
+    "artifact_id": {"const": "regime-a-prime-stage1-decision-v0.2"},
+    "classification": {"const": "DEVELOPMENT_ONLY"},
+    "status": {"enum": ["PASS", "FAIL"]},
+    "authority_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage1_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage1_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "gates": {"type": "object", "minProperties": 1},
+    "reasons": {"type": "array", "items": {"type": "string"}},
+    "stage2_collection_authorized": {"const": false},
+    "confirmatory_interpretation_authorized": {"const": false}
+  }
+}
