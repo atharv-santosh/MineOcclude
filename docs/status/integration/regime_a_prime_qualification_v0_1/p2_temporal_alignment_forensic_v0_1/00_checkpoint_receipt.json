@@ -1,0 +1,205 @@
+{
+  "CHECKPOINT_STATUS": "PASS",
+  "artifact_id": "p2-temporal-alignment-forensic-checkpoint-receipt-v0.1",
+  "branch": {
+    "expected": "exploration/regime-a-prime-qualification-v0-1",
+    "match": true,
+    "observed": "exploration/regime-a-prime-qualification-v0-1"
+  },
+  "claude_modification_boundary": {
+    "branch_change": false,
+    "commit": false,
+    "may_modify": "future-facing source code on confirmed defect; new tests; new forensic artifacts",
+    "must_not_modify": [
+      "Codex freeze artifacts",
+      "historical authority",
+      "historical P1/P2/P3 manifests",
+      "historical P1/P2/P3 results",
+      "historical P3 progress/events",
+      "historical terminal verdicts"
+    ],
+    "push": false
+  },
+  "freeze_artifacts": {
+    "deferred_to_claude_repair.json": {
+      "expected": null,
+      "match": null,
+      "observed": "14f7f7639c45a4d7c7a9d7c7b8edd84c3e377ba4a627c41a03b73f2fd1218a8e"
+    },
+    "forensic_audit_hash_manifest.json": {
+      "expected": "cfbacee9ed3688882345b0095796db7a99c66316f88fec8ede1843d7a592afed",
+      "match": true,
+      "observed": "cfbacee9ed3688882345b0095796db7a99c66316f88fec8ede1843d7a592afed"
+    },
+    "historical_evidence_manifest.json": {
+      "expected": "369502d9e075d5e1ca0434cf1c5ef5657bb2c03a51d229b6a0275c41a9c9af78",
+      "match": true,
+      "observed": "369502d9e075d5e1ca0434cf1c5ef5657bb2c03a51d229b6a0275c41a9c9af78"
+    },
+    "p3_terminal_receipt.json": {
+      "expected": "f4b044636725777c15187349a5f066282622af3a48e404f2cc8f8d629279f5a0",
+      "match": true,
+      "observed": "f4b044636725777c15187349a5f066282622af3a48e404f2cc8f8d629279f5a0"
+    },
+    "posthoc_p3_controller_receipt.json": {
+      "expected": null,
+      "match": null,
+      "observed": "954dd4356d3227d269e58db62b0f22f7a0403758f22411aaf0b034d0444d51bc"
+    },
+    "runtime_recovery_manifest.json": {
+      "expected": null,
+      "match": null,
+      "observed": "a39a459fd889e74849f96e35cd2b48f4e2f8fcf4d7784ed1f61131f3eba09277"
+    },
+    "s3_preservation_receipt.json": {
+      "expected": null,
+      "match": null,
+      "observed": "bc2fc13c8a715ea5e6c6483aa3ea9b5e6d8a28dba69eddfce7caa5aac58949b3"
+    }
+  },
+  "freeze_artifacts_all_expected_hashes_match": true,
+  "head": {
+    "expected": "351da852965bb20f89fe848bdef71703c34f0705",
+    "match": true,
+    "observed": "351da852965bb20f89fe848bdef71703c34f0705"
+  },
+  "historical_artifact_hashes": {
+    "p0_receipt.json": {
+      "bytes": 2736,
+      "sha256": "fe339e321b9f9bab243432fc0777d52feae4c387a78bfaaf733651ebf0ffd478"
+    },
+    "p1_receipt.json": {
+      "bytes": 2903,
+      "sha256": "53d19ee7cd8c7a066fac8d3d4aa0577390ddbbf0c261195b137ad9c782698d71"
+    },
+    "p2_activation_manifest.json": {
+      "bytes": 41001,
+      "sha256": "35b15e96e31962ebc6d15ca3c101b1278e10d877536fb8c9084d0d722949b93c"
+    },
+    "p2_best_k_results.json": {
+      "bytes": 28411,
+      "sha256": "9cf0e783a8a040d7240cb94a58fa925240d712935f35b304df6e119f660bd523"
+    },
+    "p2_capture_ledger.jsonl": {
+      "bytes": 33516,
+      "sha256": "2490e097af3123e49bb964e135c31779650cc8fce74ade069aa9c06340976f45"
+    },
+    "p2_closeout_receipt.json": {
+      "bytes": 3541,
+      "sha256": "4d669ffe88a051b815bbddd31a6b76c44ca661630dc48f707796144ceb47c170"
+    },
+    "p2_full_results.json": {
+      "bytes": 19628,
+      "sha256": "74b2f1e58a6d4ba6ea99ca419d52eaae1350fb7a981cf0388bf096e0b5391af3"
+    },
+    "p2_predictions.parquet": {
+      "bytes": 21242,
+      "sha256": "d56177ee2cf1e9e649b1b1520e2eb405a0de2537328e9fe3bacc41a39ca92353"
+    },
+    "p2_preoutcome_authority.json": {
+      "bytes": 6323,
+      "sha256": "ad9804ed7b8ae9770d0192dc8f9e863fc85c96429031600e251470ebdbaa03f7"
+    },
+    "p2_target_row_manifest.json": {
+      "bytes": 138260,
+      "sha256": "691dad6fe4ceb992e084098e4699892e25775183c28238168cede4b5f9d4b2ef"
+    },
+    "p3_development_manifest.json": {
+      "bytes": 268612,
+      "sha256": "bb74f9ae761647e49cddf24f334bd1329843304259643688f6735029170f6b32"
+    },
+    "p3_events.jsonl": {
+      "bytes": 73415,
+      "sha256": "9a76c73fcc1dd8f7e4b4d16bae5d1abfd47802f76cd17f60fc9f9d067d4a55c8"
+    },
+    "p3_p3dev_c01_non_neural_gates.json": {
+      "bytes": 1269,
+      "sha256": "2aea620f4d716f963ff38fe1cfeb6a023c7af350612fec6411b6a0eca3321ec5"
+    },
+    "p3_p3dev_c02_non_neural_gates.json": {
+      "bytes": 1268,
+      "sha256": "b5dc37d11d0e81de5c99845f3d8cb5bff54fbfed2db432a44316df02a6158225"
+    },
+    "p3_p3dev_c03_non_neural_gates.json": {
+      "bytes": 1269,
+      "sha256": "6ba918584ba32d018d9c081932a3620f172b1d023c46847edbe081bdfd7b1d59"
+    },
+    "p3_preoutcome_authority.json": {
+      "bytes": 12331,
+      "sha256": "bd391bd6f1bae0c90ea1ae74ee60c1315c5a3a171a91f98df14098e4232c9e23"
+    },
+    "p3_progress.json": {
+      "bytes": 2894,
+      "sha256": "8d81acd6b5c5a23a1c426043166c6570a414de55b4fd310cbf62a5cc38d91d5c"
+    },
+    "p3_terminal_result.json": {
+      "bytes": 5804,
+      "sha256": "5b1746d344f3c3a2542d10570153c5404d64a51b10fc05f1d71540312e86e29c"
+    }
+  },
+  "historical_p2_headline": {
+    "best_k_macro_r2_expected": 0.7906954002303574,
+    "best_k_rmse_expected": 0.1660274234445584,
+    "full_macro_r2_expected": 0.7548030087626074,
+    "full_rmse_expected": 0.16657677302324672
+  },
+  "historical_p3_verdicts_observed": {
+    "c01": {
+      "capture_status": "PASS",
+      "headroom_status": "PASS",
+      "path_status": "PASS",
+      "status": "FAIL_ADVANCE_ALLOWED",
+      "visibility_status": "FAIL"
+    },
+    "c02": {
+      "capture_status": "PASS",
+      "headroom_status": "PASS",
+      "path_status": "PASS",
+      "status": "FAIL_ADVANCE_ALLOWED",
+      "visibility_status": "FAIL"
+    },
+    "c03": {
+      "capture_status": "PASS",
+      "headroom_status": "PASS",
+      "path_status": "PASS",
+      "status": "FAIL_ADVANCE_ALLOWED",
+      "visibility_status": "FAIL"
+    }
+  },
+  "label": "EXPLORATORY_FORENSIC_DIAGNOSTIC_ONLY",
+  "phase": "PHASE_0",
+  "posthoc_controller": {
+    "expected": "29ee438980448f8b0f0c8d9ecc534a63aecb539309065692f70e5fc920630c1b",
+    "match": true,
+    "observed": "29ee438980448f8b0f0c8d9ecc534a63aecb539309065692f70e5fc920630c1b",
+    "path": "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
+    "provenance_caveat": "THIS HASH DOES NOT RETROACTIVELY PROVE THAT THE EXECUTED P3 CONTROLLER WAS BYTE-IDENTICAL TO THE CURRENT FILE. Historical gap is NOT repaired by this audit."
+  },
+  "s3_preservation": {
+    "LIMITATION": "Full 2.45 GB raw-object payload SHA-256 values were NOT independently recomputed by downloading the entire cohort. This limitation is preserved verbatim and is NOT repaired by this audit.",
+    "bytes": 2455084221,
+    "objects": 32844,
+    "primary": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_prime_qualification_v0_1/p3_sequential_development_v0_1/",
+    "secondary": "s3://sagemaker-us-east-1-323206973672/mineocclude/historical_preservation/regime_a_prime_qualification_v0_1/p3_terminal_preservation_2026-08-15/",
+    "verified_by_codex": "coverage/object-size/ETag comparison PASSED; all 162 unit SHA-256 manifests matched ledger-recorded hashes and backup copies"
+  },
+  "terminology_separation": {
+    "NORMAL_TARGET_ROW_CONTAMINATION": "C02=1 row, C03=7 rows - scientifically observed detector/geometry disagreement on scientific target rows. Codex handoff CONTAMINATION_DETECTED=true refers to THIS.",
+    "RUNTIME_RECOVERY_CONTAMINATION": "false - independently established by p3_terminal_forensic_audit_v0_1/07. These are DISTINCT concepts and must not be conflated."
+  },
+  "upstream": {
+    "expected": "351da852965bb20f89fe848bdef71703c34f0705",
+    "match": true,
+    "observed": "351da852965bb20f89fe848bdef71703c34f0705",
+    "ref": "origin/exploration/regime-a-prime-qualification-v0-1"
+  },
+  "verification_utc": "2026-08-16T02:10:28Z",
+  "worktree": {
+    "clean_tracked": true,
+    "porcelain_entries": [
+      "?? docs/status/integration/regime_a_prime_qualification_v0_1/p2_temporal_alignment_forensic_v0_1/"
+    ],
+    "tracked_modifications": [],
+    "untracked_count": 1
+  }
+}

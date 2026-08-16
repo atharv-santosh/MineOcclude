@@ -1,0 +1,103 @@
+{
+  "artifact_id": "p3-path-gate-blast-radius-v0.1",
+  "label": "EXPLORATORY_FORENSIC_DIAGNOSTIC_ONLY",
+  "implemented_by_historical_gate": [
+    "sha256 of sheep_x column",
+    "NORMAL==NO_WALL on sheep_x"
+  ],
+  "authority_exact_fields": [
+    "trajectory_spec_id",
+    "seed",
+    "noise_seed",
+    "direction",
+    "speed_blocks_per_second",
+    "motion_noise_q",
+    "noise schedule",
+    "start state",
+    "target tick IDs and order",
+    "camera/FOV",
+    "capture cadence",
+    "frame/action/server-tick identity",
+    "world x/y/z"
+  ],
+  "independently_rechecked": {
+    "P3DEV_C01": {
+      "rows_checked_total": 9000,
+      "checks": {
+        "sheep_x_sha": 50,
+        "paired_x_equal": 25,
+        "sheep_y_const": 50,
+        "sheep_z_const": 50,
+        "camera_eye_xyz": 50,
+        "camera_bitwise_constant": 50,
+        "camera_yaw_pitch": 50,
+        "tick_dense": 50,
+        "tick_order": 50,
+        "scene_field": 50,
+        "seed_field": 50,
+        "spec_hash_field": 50,
+        "spec_id_field": 50,
+        "q_field": 50,
+        "v_field": 50,
+        "v_sign_matches_direction": 50,
+        "commanded_v_field": 50,
+        "respawn_zero": 50,
+        "uuid_single": 50,
+        "row_count": 50
+      },
+      "any_failure": false
+    },
+    "P3DEV_C02": {
+      "rows_checked_total": 9000,
+      "checks": {
+        "sheep_x_sha": 50,
+        "paired_x_equal": 25,
+        "sheep_y_const": 50,
+        "sheep_z_const": 50,
+        "camera_eye_xyz": 50,
+        "camera_bitwise_constant": 50,
+        "camera_yaw_pitch": 50,
+        "tick_dense": 50,
+        "tick_order": 50,
+        "scene_field": 50,
+        "seed_field": 50,
+        "spec_hash_field": 50,
+        "spec_id_field": 50,
+        "q_field": 50,
+        "v_field": 50,
+        "v_sign_matches_direction": 50,
+        "commanded_v_field": 50,
+        "respawn_zero": 50,
+        "uuid_single": 50,
+        "row_count": 50
+      },
+      "any_failure": false
+    },
+    "P3DEV_C03": {
+      "rows_checked_total": 9000,
+      "checks": {
+        "sheep_x_sha": 50,
+        "paired_x_equal": 25,
+        "sheep_y_const": 50,
+        "sheep_z_const": 50,
+        "camera_eye_xyz": 50,
+        "camera_bitwise_constant": 50,
+        "camera_yaw_pitch": 50,
+        "tick_dense": 50,
+        "tick_order": 50,
+        "scene_field": 50,
+        "seed_field": 50,
+        "spec_hash_field": 50,
+        "spec_id_field": 50,
+        "q_field": 50,
+        "v_field": 50,
+        "v_sign_matches_direction": 50,
+        "commanded_v_field": 50,
+        "respawn_zero": 50,
+        "uuid_single": 50,
+        "row_count": 50
+      },
+      "any_failure": false
+    }
+  }
+}

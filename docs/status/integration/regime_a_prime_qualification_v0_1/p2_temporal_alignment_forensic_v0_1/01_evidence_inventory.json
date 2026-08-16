@@ -1,0 +1,286 @@
+{
+  "artifact_id": "p2-temporal-alignment-evidence-inventory-v0.1",
+  "evidence_used": {
+    "P1_last_seen_rows": {
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p1_last_seen_rows.parquet",
+      "rows": 475,
+      "used_for": "Regime A blast-radius reanalysis"
+    },
+    "P2_no_wall_diagnostic": {
+      "activation_bytes": 653724800,
+      "activations_downloaded": 25,
+      "frames_downloaded_for_lag": 8,
+      "frames_per_unit": 260,
+      "s3": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_prime_qualification_v0_1/p2_no_wall_diagnostic_v0_1/",
+      "scene": "NO_WALL",
+      "speed_blocks_per_second": 1.5,
+      "units": 25
+    },
+    "P3_development": {
+      "calibrations": 12,
+      "frames_downloaded_for_lag": 4,
+      "frames_per_unit": 180,
+      "s3": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_prime_qualification_v0_1/p3_sequential_development_v0_1/",
+      "speeds": [
+        2.0,
+        2.5,
+        3.0
+      ],
+      "units": 150
+    }
+  },
+  "ffmpeg_or_video_reencode_in_scientific_path": false,
+  "historical_artifacts_read": [
+    {
+      "access": "READ_ONLY",
+      "bytes": 64537,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p1_last_seen_rows.parquet",
+      "sha256": "2dbb90309d2020a8e2f0d113bc293b1af66fc5000ef5f7becda34c03c88e4d7b"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 96937,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p1_best_k_vs_last_seen.json",
+      "sha256": "3caf973a41d8c1678bbba86a28eabc3f0429d6eeb27f8cac39dca63f19722fea"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 28411,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_best_k_results.json",
+      "sha256": "9cf0e783a8a040d7240cb94a58fa925240d712935f35b304df6e119f660bd523"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 19628,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_full_results.json",
+      "sha256": "74b2f1e58a6d4ba6ea99ca419d52eaae1350fb7a981cf0388bf096e0b5391af3"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 41001,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_activation_manifest.json",
+      "sha256": "35b15e96e31962ebc6d15ca3c101b1278e10d877536fb8c9084d0d722949b93c"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 21242,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_predictions.parquet",
+      "sha256": "d56177ee2cf1e9e649b1b1520e2eb405a0de2537328e9fe3bacc41a39ca92353"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 6323,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p2_preoutcome_authority.json",
+      "sha256": "ad9804ed7b8ae9770d0192dc8f9e863fc85c96429031600e251470ebdbaa03f7"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 12331,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p3_preoutcome_authority.json",
+      "sha256": "bd391bd6f1bae0c90ea1ae74ee60c1315c5a3a171a91f98df14098e4232c9e23"
+    },
+    {
+      "access": "READ_ONLY",
+      "bytes": 268612,
+      "path": "docs/status/integration/regime_a_prime_qualification_v0_1/p3_development_manifest.json",
+      "sha256": "bb74f9ae761647e49cddf24f334bd1329843304259643688f6735029170f6b32"
+    }
+  ],
+  "label": "EXPLORATORY_FORENSIC_DIAGNOSTIC_ONLY",
+  "no_interpolation_or_nearest_join_found_in_pipeline": true,
+  "phase": "PHASE_1",
+  "timing_source_map": [
+    {
+      "bytes": 59550,
+      "clock_domain": "SERVER_ENTITY_STATE",
+      "function": "tick()",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java",
+      "role": "server entity update + geometric_visible single-ray point test (:453-459)",
+      "sha256": "64366394090aba0e0f5f8ab8e63e6e873d31cd5ac82b6a9a21d6234eb247228a"
+    },
+    {
+      "bytes": 6285,
+      "clock_domain": "SERVER_ENTITY_STATE",
+      "function": "write()",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ServerStateLogger.java",
+      "role": "server_state.jsonl emission incl. server_epoch_nanos",
+      "sha256": "c2aeca8ab3dc84cb106585a107eea8a3b06006f8baceb0e8ff1f20cc058c81e7"
+    },
+    {
+      "bytes": 11269,
+      "clock_domain": "SERVER_ENTITY_STATE",
+      "function": "-",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/SheepController.java",
+      "role": "target motion integration from the frozen noise schedule",
+      "sha256": "fb803f1fea628a29ae6fda40fb1936d02ff0bd329d492f3ea16bdc6e4d02753a"
+    },
+    {
+      "bytes": 5332,
+      "clock_domain": "SERVER_ENTITY_STATE",
+      "function": "-",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/NoiseSchedule.java",
+      "role": "immutable per-tick noise draws",
+      "sha256": "e42472090a645aecae617d11c0ae6e961b2b52cdc7d1898b5496d299d50b0993"
+    },
+    {
+      "bytes": 1858,
+      "clock_domain": "NETWORK_UPDATE",
+      "function": "-",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/net/TickSyncPacket.java",
+      "role": "authoritative tick broadcast (does NOT carry entity position)",
+      "sha256": "c9cd66dc993163a989e5fba89c405e12b13aee23b552ecf46609331c551afd1b"
+    },
+    {
+      "bytes": 2015,
+      "clock_domain": "NETWORK_UPDATE",
+      "function": "-",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/net/CaptureAckPacket.java",
+      "role": "lockstep acknowledgement: holds the world until capture completes",
+      "sha256": "0727d9776bfb7ec31441040916da94c7904cf380e5098c26dc2be34511bab292"
+    },
+    {
+      "bytes": 19078,
+      "clock_domain": "CLIENT_RENDER -> CAPTURE_FRAME",
+      "function": "onFrame()/captureOne()",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/client/MineOccludeClient.java",
+      "role": "capture at END_CLIENT_TICK of 'the last fully completed frame' (:88-101); entity position is the vanilla client-interpolated one",
+      "sha256": "c6cdb747e2e5c1fb842928ecbeba80e2af08f6cd24f4b4d8fc68e9932cff6189"
+    },
+    {
+      "bytes": 8575,
+      "clock_domain": "CAPTURE_FRAME",
+      "function": "capture()",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/client/FrameCapture.java",
+      "role": "framebuffer readback -> PNG; stale-frame detector",
+      "sha256": "740c509558a177f4c76454ca995ae5b51ced6632f84ffe3457fdf0f36e713f51"
+    },
+    {
+      "bytes": 4424,
+      "clock_domain": "CAPTURE_FRAME",
+      "function": "-",
+      "git_tracked": true,
+      "path": "fabric/mineocclude-mod/src/main/java/com/mineocclude/client/ClientLogger.java",
+      "role": "client_tick.jsonl: server_epoch_nanos, client_recv_nanos, client_capture_nanos",
+      "sha256": "096245346f53a276b45993b6cbe5f7eea95172069c7da65596f4bb5e9a4eddbc"
+    },
+    {
+      "bytes": 21888,
+      "clock_domain": "CAPTURE_FRAME -> MODEL_FRAME",
+      "function": "package()",
+      "git_tracked": true,
+      "path": "scripts/regime_a_prime_qualification_v0_1/p2c_capture.py",
+      "role": "capture packaging; scientific_run_id silent default (:233)",
+      "sha256": "23311c4d0a3a80ec779efeccc421af7e74fce1d1aa799379dd674323b83587e5"
+    },
+    {
+      "bytes": 50657,
+      "clock_domain": "MODEL_FRAME",
+      "function": "derive_artifacts()",
+      "git_tracked": true,
+      "path": "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
+      "role": "collapses model_frame_idx/server_tick/render_frame_idx/action_idx to one index (:340-367)",
+      "sha256": "29ee438980448f8b0f0c8d9ecc534a63aecb539309065692f70e5fc920630c1b"
+    },
+    {
+      "bytes": 13207,
+      "clock_domain": "ACTIVATION_ROW",
+      "function": "main()",
+      "git_tracked": true,
+      "path": "scripts/regime_a_prime_qualification_v0_1/p2d_extract.py",
+      "role": "context = range(target-15, target+1); layer-4 capture (:133-189)",
+      "sha256": "986266c118b38d0a5b4e44c751e61251769d4681a60b87e9db77f46c869eeda6"
+    },
+    {
+      "bytes": 18947,
+      "clock_domain": "GROUND_TRUTH_TARGET",
+      "function": "load()",
+      "git_tracked": true,
+      "path": "scripts/regime_a_prime_qualification_v0_1/p2e_analyze.py",
+      "role": "world_x := coordinates[model_frame_idx].world_x (:57-76)",
+      "sha256": "7f667f34d45802e9303edebf0596f01847ae997990009847c958a2c23a61c491"
+    },
+    {
+      "bytes": 12812,
+      "clock_domain": "-",
+      "function": "-",
+      "git_tracked": true,
+      "path": "src/mineocclude/regime_a_first25_analysis.py",
+      "role": "frozen BEST-K / kernel ridge mechanics",
+      "sha256": "504be73d74e2f8790247bf29e550126c540263a4f362390fad7b990b8756bf64"
+    },
+    {
+      "bytes": 35049,
+      "clock_domain": "-",
+      "function": "detect_magenta()",
+      "git_tracked": true,
+      "path": "src/mineocclude/vision/magenta.py",
+      "role": "frozen rendered-visibility detector",
+      "sha256": "026f3b9f25c8aef7ac43fada5b8de92662b605af4868f930698651e59a228214"
+    },
+    {
+      "bytes": 31358,
+      "clock_domain": "-",
+      "function": "first_stable_hidden_onset()",
+      "git_tracked": true,
+      "path": "scripts/regime_a_prime_qualification_v0_1/p3a_freeze.py",
+      "role": "HIDDEN_BOUNDS fixed world-x constants (:39-42), speed-blind",
+      "sha256": "42f834824eb12526c842e415f0448517fd73ce7faadf66ba3da4b77e1acbb998"
+    }
+  ],
+  "timing_streams": {
+    "actions.jsonl": {
+      "clock": "ACTION",
+      "key": "action_idx"
+    },
+    "client_tick.jsonl": {
+      "carries": "render_frame_idx, frame_path",
+      "clock": "CAPTURE_FRAME",
+      "key": "server_tick",
+      "timing_fields": [
+        "server_epoch_nanos",
+        "client_recv_nanos",
+        "client_capture_nanos",
+        "tick_queue_depth_at_capture"
+      ]
+    },
+    "coordinates.jsonl": {
+      "carries": "world_x (verified identical to sheep_x, max|delta|=0.0)",
+      "clock": "SERVER_ENTITY_STATE (labelled with MODEL_FRAME index)",
+      "key": "model_frame_idx"
+    },
+    "frames/NNNNNN.png": {
+      "clock": "CAPTURE_FRAME",
+      "key": "filename index"
+    },
+    "layer4/*.npy": {
+      "clock": "ACTIVATION_ROW",
+      "dtype": "float16",
+      "shape": [
+        19,
+        336,
+        2048
+      ]
+    },
+    "server_state.jsonl": {
+      "carries": "sheep_x/y/z, geometric_visible, player_*",
+      "clock": "SERVER_ENTITY_STATE",
+      "key": "server_tick",
+      "timing_fields": [
+        "server_epoch_nanos"
+      ]
+    },
+    "visibility.jsonl": {
+      "carries": "geometric_status, magenta_status, magenta_area_pixels, tau",
+      "clock": "MODEL_FRAME",
+      "key": "model_frame_idx"
+    }
+  }
+}
