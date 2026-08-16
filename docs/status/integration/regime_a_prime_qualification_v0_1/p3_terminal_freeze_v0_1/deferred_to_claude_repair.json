@@ -1,0 +1,39 @@
+{
+  "DEFERRED_TO_CLAUDE_REPAIR": [
+    {
+      "description": "Path/state gate implements a narrower set of fields and row-count checks than the frozen authority specifies.",
+      "evidence": "02_gate_traceability.md PATH / STATE GATE; independent reconstruction found full data exact and historical PASS unchanged.",
+      "file": "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
+      "line_or_function": "non_neural_gates, baseline lines 550-597",
+      "potential_impact": "Future resumed or reused units could be accepted without rechecking every authority-listed field; no P3 historical verdict change.",
+      "source": "existing p3_terminal_forensic_audit_v0_1 finding D-P1/D-P2/D-P3"
+    },
+    {
+      "description": "Visibility qualification compares centre-point geometric visibility with existential rendered-silhouette visibility, uses pooled speed-confounded precision, and lacks the named identity/timestamp ambiguity check.",
+      "evidence": "02_gate_traceability.md, 03_visibility_forensics.md, 04_candidate_comparison.json, 09_bug_hypothesis_log.md.",
+      "file": "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
+      "line_or_function": "calibration_gate and non_neural_gates, baseline lines 529-597",
+      "potential_impact": "Dominant P3 gate failure mechanism; requires new prospective authority, not retroactive repair.",
+      "source": "existing p3_terminal_forensic_audit_v0_1 findings D-V1 through D-V6"
+    },
+    {
+      "description": "Frame, server tick, render frame, and action indices are treated as synchronous identities despite observed approximate 3.3-server-tick render lag.",
+      "evidence": "03_visibility_forensics.md and 09_bug_hypothesis_log.md #22.",
+      "file": "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
+      "line_or_function": "derive_artifacts, baseline lines 338-367",
+      "potential_impact": "Temporal misalignment between rendered pixels and server-state labels.",
+      "source": "existing p3_terminal_forensic_audit_v0_1 finding #22"
+    },
+    {
+      "description": "P3 development capture packages retain the default historical Regime A first25 scientific_run_id.",
+      "evidence": "09_bug_hypothesis_log.md #31.",
+      "file": "scripts/regime_a_prime_qualification_v0_1/p2c_capture.py",
+      "line_or_function": "package, baseline line 233",
+      "potential_impact": "Bookkeeping/cohort-identity risk; scientific unit identities remain otherwise unique.",
+      "source": "existing p3_terminal_forensic_audit_v0_1 finding #31"
+    }
+  ],
+  "artifact_id": "regime-a-prime-p3-deferred-repair-register-v0.1",
+  "scope": "Transcription of existing forensic-audit findings; no repair performed and no new interpretation added.",
+  "timestamp": "2026-08-16T02:03:17.095871Z"
+}

@@ -1,0 +1,1092 @@
+{
+  "artifact_id": "p3-forensic-independent-gate-reconstruction-v0.1",
+  "candidates": {
+    "P3DEV_C01": {
+      "CALIBRATION": {
+        "ambiguous": 0,
+        "failing_predicate": "precision",
+        "false_positive_rate_on_occluded_rows": 0.11805555555555558,
+        "fn": 6,
+        "fp": 51,
+        "occluded_rows": 432,
+        "precision": 0.8468468468468469,
+        "recall": 0.9791666666666666,
+        "rows": 720,
+        "specificity": 0.8819444444444444,
+        "status": "FAIL",
+        "tn": 381,
+        "tp": 282,
+        "visible_base_rate": 0.4
+      },
+      "HEADROOM": {
+        "frozen_vs_observed_max_abs_sd_delta": 0.0,
+        "manifest": {
+          "maximum_target_sd_blocks": 0.6670707182627886,
+          "median_target_sd_blocks": 0.5682968838477693,
+          "median_threshold_blocks": 0.4980822703336752,
+          "minimum_target_sd_blocks": 0.4187338566214874,
+          "minimum_threshold_blocks": 0.3320548468891168,
+          "passes_deterministic_design_check": true
+        },
+        "matches_claimed_ddof1": false,
+        "observed_median_sd": 0.5838695447724706,
+        "observed_min_sd": 0.4302081415457834,
+        "recomputed_max_sd_ddof1": 0.6853500127716179,
+        "recomputed_median_sd_ddof0": 0.5682968838477693,
+        "recomputed_median_sd_ddof1": 0.5838695447724706,
+        "recomputed_min_sd_ddof0": 0.4187338566214874,
+        "recomputed_min_sd_ddof1": 0.4302081415457834,
+        "status": "PASS"
+      },
+      "OVERALL": {
+        "capture_status": "PASS",
+        "headroom_status": "PASS",
+        "path_status": "PASS",
+        "qualification": "FAIL_ADVANCE_ALLOWED",
+        "visibility_status": "FAIL"
+      },
+      "PATH": {
+        "distinct_frame_counts": [
+          180
+        ],
+        "paired_path_failures": [],
+        "path_failures": [],
+        "rows_checked_per_scene": 4500,
+        "scene_field_mismatch": [],
+        "status": "PASS",
+        "tick_identity_mismatch": []
+      },
+      "TARGET_VISIBILITY": {
+        "disagreements": 0,
+        "no_wall_geometric_visible_and_magenta_detected": 475,
+        "normal_geometric_occluded_and_magenta_absent": 475,
+        "required": 475
+      },
+      "VISIBILITY_STATUS": "FAIL",
+      "calib_expected_max_frames": [
+        180
+      ],
+      "calibration_false_positive_rows": [
+        {
+          "area": 312,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 31,
+          "x": -4.7849
+        },
+        {
+          "area": 295,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 32,
+          "x": -4.7144
+        },
+        {
+          "area": 306,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 33,
+          "x": -4.5957
+        },
+        {
+          "area": 278,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 34,
+          "x": -4.4687
+        },
+        {
+          "area": 222,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 35,
+          "x": -4.4328
+        },
+        {
+          "area": 127,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 36,
+          "x": -4.3779
+        },
+        {
+          "area": 84,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 37,
+          "x": -4.3293
+        },
+        {
+          "area": 56,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 38,
+          "x": -4.1814
+        },
+        {
+          "area": 56,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 39,
+          "x": -4.1001
+        },
+        {
+          "area": 42,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 40,
+          "x": -4.0335
+        },
+        {
+          "area": 28,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 41,
+          "x": -3.8377
+        },
+        {
+          "area": 61,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 134,
+          "x": 5.6175
+        },
+        {
+          "area": 100,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r01",
+          "tick": 135,
+          "x": 5.7554
+        },
+        {
+          "area": 311,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 27,
+          "x": -4.811
+        },
+        {
+          "area": 307,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 28,
+          "x": -4.7521
+        },
+        {
+          "area": 308,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 29,
+          "x": -4.6051
+        },
+        {
+          "area": 283,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 30,
+          "x": -4.5153
+        },
+        {
+          "area": 255,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 31,
+          "x": -4.3698
+        },
+        {
+          "area": 234,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 32,
+          "x": -4.3156
+        },
+        {
+          "area": 127,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 33,
+          "x": -4.2156
+        },
+        {
+          "area": 98,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 34,
+          "x": -4.0963
+        },
+        {
+          "area": 56,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 35,
+          "x": -3.9603
+        },
+        {
+          "area": 42,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 36,
+          "x": -3.8824
+        },
+        {
+          "area": 54,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 136,
+          "x": 5.7232
+        },
+        {
+          "area": 95,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 137,
+          "x": 5.7499
+        },
+        {
+          "area": 127,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c01_viscal_ltr_r02",
+          "tick": 138,
+          "x": 5.8192
+        },
+        {
+          "area": 323,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 18,
+          "x": 5.7413
+        },
+        {
+          "area": 312,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 19,
+          "x": 5.6841
+        },
+        {
+          "area": 358,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 20,
+          "x": 5.5726
+        },
+        {
+          "area": 311,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 21,
+          "x": 5.5673
+        },
+        {
+          "area": 236,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 22,
+          "x": 5.4701
+        },
+        {
+          "area": 171,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 23,
+          "x": 5.4285
+        },
+        {
+          "area": 127,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 24,
+          "x": 5.4172
+        },
+        {
+          "area": 112,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 25,
+          "x": 5.2135
+        },
+        {
+          "area": 98,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 26,
+          "x": 5.0634
+        },
+        {
+          "area": 70,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 27,
+          "x": 4.9568
+        },
+        {
+          "area": 28,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 28,
+          "x": 4.8411
+        },
+        {
+          "area": 39,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r01",
+          "tick": 116,
+          "x": -4.7296
+        },
+        {
+          "area": 320,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 19,
+          "x": 5.8013
+        },
+        {
+          "area": 342,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 20,
+          "x": 5.7629
+        },
+        {
+          "area": 321,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 21,
+          "x": 5.6185
+        },
+        {
+          "area": 241,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 22,
+          "x": 5.562
+        },
+        {
+          "area": 195,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 23,
+          "x": 5.3727
+        },
+        {
+          "area": 98,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 24,
+          "x": 5.2602
+        },
+        {
+          "area": 42,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 25,
+          "x": 5.1253
+        },
+        {
+          "area": 42,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 26,
+          "x": 4.9742
+        },
+        {
+          "area": 28,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 27,
+          "x": 4.812
+        },
+        {
+          "area": 41,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 131,
+          "x": -4.5495
+        },
+        {
+          "area": 102,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 132,
+          "x": -4.6382
+        },
+        {
+          "area": 122,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 133,
+          "x": -4.668
+        },
+        {
+          "area": 144,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c01_viscal_rtl_r02",
+          "tick": 134,
+          "x": -4.7555
+        }
+      ],
+      "calibration_unit_count": 4,
+      "capture_unit_count": 50,
+      "capture_units_unique": true,
+      "expected_max_frames": [
+        180
+      ],
+      "extra_units": [],
+      "missing_units": [],
+      "nowall_units": 25,
+      "speed_blocks_per_second": 2.0,
+      "stable_hidden_onset_ticks": [
+        24,
+        29,
+        31,
+        32,
+        34,
+        36,
+        37,
+        39,
+        40,
+        41,
+        42,
+        43,
+        45,
+        47
+      ],
+      "wall_units": 25
+    },
+    "P3DEV_C02": {
+      "CALIBRATION": {
+        "ambiguous": 0,
+        "failing_predicate": "precision",
+        "false_positive_rate_on_occluded_rows": 0.10385756676557867,
+        "fn": 4,
+        "fp": 35,
+        "occluded_rows": 337,
+        "precision": 0.9154589371980676,
+        "recall": 0.9895561357702349,
+        "rows": 720,
+        "specificity": 0.8961424332344213,
+        "status": "FAIL",
+        "tn": 302,
+        "tp": 379,
+        "visible_base_rate": 0.5319444444444444
+      },
+      "HEADROOM": {
+        "frozen_vs_observed_max_abs_sd_delta": 0.0,
+        "manifest": {
+          "maximum_target_sd_blocks": 0.9054659839930879,
+          "median_target_sd_blocks": 0.7070862923297558,
+          "median_threshold_blocks": 0.4980822703336752,
+          "minimum_target_sd_blocks": 0.593003811577863,
+          "minimum_threshold_blocks": 0.3320548468891168,
+          "passes_deterministic_design_check": true
+        },
+        "matches_claimed_ddof1": false,
+        "observed_median_sd": 0.7264621069574937,
+        "observed_min_sd": 0.6092534999840924,
+        "recomputed_max_sd_ddof1": 0.9302778651565123,
+        "recomputed_median_sd_ddof0": 0.7070862923297558,
+        "recomputed_median_sd_ddof1": 0.7264621069574937,
+        "recomputed_min_sd_ddof0": 0.593003811577863,
+        "recomputed_min_sd_ddof1": 0.6092534999840924,
+        "status": "PASS"
+      },
+      "OVERALL": {
+        "capture_status": "PASS",
+        "headroom_status": "PASS",
+        "path_status": "PASS",
+        "qualification": "FAIL_ADVANCE_ALLOWED",
+        "visibility_status": "FAIL"
+      },
+      "PATH": {
+        "distinct_frame_counts": [
+          180
+        ],
+        "paired_path_failures": [],
+        "path_failures": [],
+        "rows_checked_per_scene": 4500,
+        "scene_field_mismatch": [],
+        "status": "PASS",
+        "tick_identity_mismatch": []
+      },
+      "TARGET_VISIBILITY": {
+        "disagreements": 1,
+        "no_wall_geometric_visible_and_magenta_detected": 475,
+        "normal_geometric_occluded_and_magenta_absent": 474,
+        "required": 475
+      },
+      "VISIBILITY_STATUS": "FAIL",
+      "calib_expected_max_frames": [
+        180
+      ],
+      "calibration_false_positive_rows": [
+        {
+          "area": 326,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 23,
+          "x": -4.8275
+        },
+        {
+          "area": 314,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 24,
+          "x": -4.6596
+        },
+        {
+          "area": 263,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 25,
+          "x": -4.5368
+        },
+        {
+          "area": 242,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 26,
+          "x": -4.4402
+        },
+        {
+          "area": 141,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 27,
+          "x": -4.3169
+        },
+        {
+          "area": 98,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 28,
+          "x": -4.2101
+        },
+        {
+          "area": 70,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 29,
+          "x": -4.0653
+        },
+        {
+          "area": 28,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 30,
+          "x": -3.8848
+        },
+        {
+          "area": 59,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r01",
+          "tick": 106,
+          "x": 5.827
+        },
+        {
+          "area": 313,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 23,
+          "x": -4.7795
+        },
+        {
+          "area": 313,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 24,
+          "x": -4.5944
+        },
+        {
+          "area": 297,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 25,
+          "x": -4.4694
+        },
+        {
+          "area": 278,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 26,
+          "x": -4.2699
+        },
+        {
+          "area": 229,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 27,
+          "x": -4.1909
+        },
+        {
+          "area": 183,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 28,
+          "x": -4.105
+        },
+        {
+          "area": 84,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 29,
+          "x": -3.9123
+        },
+        {
+          "area": 42,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c02_viscal_ltr_r02",
+          "tick": 30,
+          "x": -3.7582
+        },
+        {
+          "area": 310,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 15,
+          "x": 5.6797
+        },
+        {
+          "area": 315,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 16,
+          "x": 5.5823
+        },
+        {
+          "area": 308,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 17,
+          "x": 5.4449
+        },
+        {
+          "area": 297,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 18,
+          "x": 5.3705
+        },
+        {
+          "area": 174,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 19,
+          "x": 5.2769
+        },
+        {
+          "area": 132,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 20,
+          "x": 5.1818
+        },
+        {
+          "area": 98,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 21,
+          "x": 4.9328
+        },
+        {
+          "area": 56,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 22,
+          "x": 4.9229
+        },
+        {
+          "area": 24,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 103,
+          "x": -4.773
+        },
+        {
+          "area": 79,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r01",
+          "tick": 104,
+          "x": -4.8072
+        },
+        {
+          "area": 311,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 15,
+          "x": 5.718
+        },
+        {
+          "area": 311,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 16,
+          "x": 5.5979
+        },
+        {
+          "area": 313,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 17,
+          "x": 5.4582
+        },
+        {
+          "area": 328,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 18,
+          "x": 5.2854
+        },
+        {
+          "area": 231,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 19,
+          "x": 5.202
+        },
+        {
+          "area": 127,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 20,
+          "x": 5.1232
+        },
+        {
+          "area": 84,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 21,
+          "x": 4.9814
+        },
+        {
+          "area": 42,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c02_viscal_rtl_r02",
+          "tick": 22,
+          "x": 4.7971
+        }
+      ],
+      "calibration_unit_count": 4,
+      "capture_unit_count": 50,
+      "capture_units_unique": true,
+      "expected_max_frames": [
+        180
+      ],
+      "extra_units": [],
+      "missing_units": [],
+      "nowall_units": 25,
+      "speed_blocks_per_second": 2.5,
+      "stable_hidden_onset_ticks": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        28,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "wall_units": 25
+    },
+    "P3DEV_C03": {
+      "CALIBRATION": {
+        "ambiguous": 0,
+        "failing_predicate": "precision",
+        "false_positive_rate_on_occluded_rows": 0.1028368794326241,
+        "fn": 2,
+        "fp": 29,
+        "occluded_rows": 282,
+        "precision": 0.9376344086021505,
+        "recall": 0.9954337899543378,
+        "rows": 720,
+        "specificity": 0.8971631205673759,
+        "status": "FAIL",
+        "tn": 253,
+        "tp": 436,
+        "visible_base_rate": 0.6083333333333333
+      },
+      "HEADROOM": {
+        "frozen_vs_observed_max_abs_sd_delta": 0.0,
+        "manifest": {
+          "maximum_target_sd_blocks": 0.9668049074732025,
+          "median_target_sd_blocks": 0.8234834869951193,
+          "median_threshold_blocks": 0.4980822703336752,
+          "minimum_target_sd_blocks": 0.6810523138534966,
+          "minimum_threshold_blocks": 0.3320548468891168,
+          "passes_deterministic_design_check": true
+        },
+        "matches_claimed_ddof1": false,
+        "observed_median_sd": 0.8460488564077391,
+        "observed_min_sd": 0.6997147367121529,
+        "recomputed_max_sd_ddof1": 0.9932976182944891,
+        "recomputed_median_sd_ddof0": 0.8234834869951193,
+        "recomputed_median_sd_ddof1": 0.8460488564077391,
+        "recomputed_min_sd_ddof0": 0.6810523138534966,
+        "recomputed_min_sd_ddof1": 0.6997147367121529,
+        "status": "PASS"
+      },
+      "OVERALL": {
+        "capture_status": "PASS",
+        "headroom_status": "PASS",
+        "path_status": "PASS",
+        "qualification": "FAIL_ADVANCE_ALLOWED",
+        "visibility_status": "FAIL"
+      },
+      "PATH": {
+        "distinct_frame_counts": [
+          180
+        ],
+        "paired_path_failures": [],
+        "path_failures": [],
+        "rows_checked_per_scene": 4500,
+        "scene_field_mismatch": [],
+        "status": "PASS",
+        "tick_identity_mismatch": []
+      },
+      "TARGET_VISIBILITY": {
+        "disagreements": 7,
+        "no_wall_geometric_visible_and_magenta_detected": 475,
+        "normal_geometric_occluded_and_magenta_absent": 468,
+        "required": 475
+      },
+      "VISIBILITY_STATUS": "FAIL",
+      "calib_expected_max_frames": [
+        180
+      ],
+      "calibration_false_positive_rows": [
+        {
+          "area": 328,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r01",
+          "tick": 19,
+          "x": -4.8015
+        },
+        {
+          "area": 300,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r01",
+          "tick": 20,
+          "x": -4.5956
+        },
+        {
+          "area": 300,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r01",
+          "tick": 21,
+          "x": -4.4162
+        },
+        {
+          "area": 239,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r01",
+          "tick": 22,
+          "x": -4.2341
+        },
+        {
+          "area": 84,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r01",
+          "tick": 23,
+          "x": -4.0753
+        },
+        {
+          "area": 307,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 20,
+          "x": -4.7186
+        },
+        {
+          "area": 297,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 21,
+          "x": -4.5487
+        },
+        {
+          "area": 290,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 22,
+          "x": -4.4432
+        },
+        {
+          "area": 275,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 23,
+          "x": -4.2901
+        },
+        {
+          "area": 217,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 24,
+          "x": -4.1576
+        },
+        {
+          "area": 112,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 25,
+          "x": -3.9859
+        },
+        {
+          "area": 84,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 26,
+          "x": -3.8266
+        },
+        {
+          "area": 28,
+          "dir": "LEFT_TO_RIGHT",
+          "run": "p3dev_c03_viscal_ltr_r02",
+          "tick": 27,
+          "x": -3.6625
+        },
+        {
+          "area": 317,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 13,
+          "x": 5.8152
+        },
+        {
+          "area": 308,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 14,
+          "x": 5.645
+        },
+        {
+          "area": 307,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 15,
+          "x": 5.4988
+        },
+        {
+          "area": 286,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 16,
+          "x": 5.3105
+        },
+        {
+          "area": 267,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 17,
+          "x": 5.1782
+        },
+        {
+          "area": 194,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 18,
+          "x": 5.0551
+        },
+        {
+          "area": 98,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 19,
+          "x": 4.9694
+        },
+        {
+          "area": 56,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r01",
+          "tick": 20,
+          "x": 4.7871
+        },
+        {
+          "area": 303,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 13,
+          "x": 5.8107
+        },
+        {
+          "area": 313,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 14,
+          "x": 5.7179
+        },
+        {
+          "area": 306,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 15,
+          "x": 5.5466
+        },
+        {
+          "area": 305,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 16,
+          "x": 5.4091
+        },
+        {
+          "area": 274,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 17,
+          "x": 5.2996
+        },
+        {
+          "area": 216,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 18,
+          "x": 5.0513
+        },
+        {
+          "area": 126,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 19,
+          "x": 4.9648
+        },
+        {
+          "area": 56,
+          "dir": "RIGHT_TO_LEFT",
+          "run": "p3dev_c03_viscal_rtl_r02",
+          "tick": 20,
+          "x": 4.8929
+        }
+      ],
+      "calibration_unit_count": 4,
+      "capture_unit_count": 50,
+      "capture_units_unique": true,
+      "expected_max_frames": [
+        180
+      ],
+      "extra_units": [],
+      "missing_units": [],
+      "nowall_units": 25,
+      "speed_blocks_per_second": 3.0,
+      "stable_hidden_onset_ticks": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        24,
+        26,
+        27,
+        28,
+        29
+      ],
+      "wall_units": 25
+    }
+  },
+  "label": "EXPLORATORY_FORENSIC_DIAGNOSTIC_ONLY"
+}
