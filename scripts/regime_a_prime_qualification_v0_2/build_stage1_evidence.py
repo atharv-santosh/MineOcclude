@@ -17,7 +17,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from mineocclude.prospective.clock_domains import TimebaseSpec  # noqa: E402
 from mineocclude.prospective.development_workflow import (  # noqa: E402
     Stage1Evaluator, atomic_write_json, causal_fir_targets, derive_projection_validity, load_json,
-    mean_student_t_interval, sha256_file,
+    mean_student_t_interval, refuse_operational_smoke_as_evidence, sha256_file,
 )
 from mineocclude.prospective.temporal_alignment import (  # noqa: E402
     AlignmentEvidence, AlignmentRequirements, UncertaintyRequest, estimate_alignment,
@@ -198,8 +198,14 @@ def main() -> None:
     stored, alignment_evidence = [], {d: [] for d in authority["stage1_policy"]["directions"]}
     cross_lags = {d: [] for d in authority["stage1_policy"]["directions"]}
     clock_coordinates: dict[str, dict[str, list[int]]] = {}
+    refuse_operational_smoke_as_evidence(manifest, "Stage-1 manifest")
     for unit in manifest["units"]:
         receipt = load_json(Path(unit["receipt_path"]))
+        # Structural barrier, checked by identity and namespace rather than by
+        # path: a non-scientific startup-smoke receipt can never be counted as a
+        # Stage-1 unit even if it is moved to a unit's receipt path.
+        refuse_operational_smoke_as_evidence(unit, f"unit {unit.get('unit_id')}")
+        refuse_operational_smoke_as_evidence(receipt, f"receipt for {unit.get('unit_id')}")
         capture = Path(unit["receipt_path"]).parent.parent / "captures" / unit["unit_id"]
         state = jsonl(capture / "raw/server_state.jsonl")
         coordinates = jsonl(capture / "coordinates.jsonl")

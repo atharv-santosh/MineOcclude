@@ -62,6 +62,21 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     "src/mineocclude/regime_a_execution.py",
     "src/mineocclude/regime_a_first25_analysis.py",
     "scripts/run_regime_a.py",
+    # Capture/startup apparatus. Both were outside the closure while controlling
+    # real Stage-1 behaviour, so their bytes could change what a capture did
+    # without changing the runtime-critical digest that authorizes it.
+    #
+    # p2_common.load_live() imports the campaign module directly
+    # ("from scripts import run_large_scale_no_wall_campaign as live"), and it
+    # owns LiveRuntime.send, the startspec FIFO command, launch_runtime,
+    # stop_runtime, SERVER_ROOT/CLIENT_ROOT and the scientific episode startup.
+    #
+    # launch_runtime execs the provisioning script for start-display,
+    # start-server and start-client, so that script owns the Xvfb geometry
+    # (640x360x24), LIBGL_ALWAYS_SOFTWARE, the JVM heap/runtime arguments and
+    # the natives path -- every one of which is physically material to a frame.
+    "scripts/run_large_scale_no_wall_campaign.py",
+    "scripts/provision_capture_runtime_sagemaker.sh",
     "scripts/regime_a_prime_qualification_v0_1/p2_common.py",
     "scripts/regime_a_prime_qualification_v0_1/p2c_capture.py",
     "scripts/regime_a_prime_qualification_v0_1/p2d_extract.py",
@@ -395,6 +410,490 @@ def verify_runtime_source_hashes(source_hashes: Mapping[str, Any], *,
         path = repository / relative
         if not path.is_file() or sha256_file(path) != expected:
             raise EvidenceError(f"runtime source bytes mismatch: {relative}")
+
+
+# --------------------------------------------------------------------------
+# Effective capture specification (v0.2 -> v0.1 capture contract)
+#
+# The v0.1 capture interface (`p2_common.capture_context` via
+# `run_regime_a.ProductionCaptureWorker._raw_capture_spec_hash`) requires every
+# capture spec to carry a physical-capture identity. v0.1 trajectory specs get
+# it from the freeze pipeline, which sets
+# ``body["spec_hash"] = canonical_sha256(body)`` over the spec body with the
+# field itself absent. The v0.2 Stage-1 manifest describes *units*, not v0.1
+# trajectory specs, so the identity has to be derived here or the reused v0.1
+# interface raises KeyError before any frame is rendered.
+#
+# Two fields with distinct meanings, per the v0.1 docstring:
+#   spec_hash             analysis/authority identity of the specification
+#   raw_capture_spec_hash physical-capture identity; present only when a
+#                         versioned amendment keeps the physical capture
+#                         contract but reassigns the analysis identity.
+# When absent, the physical identity IS the spec identity, so the v0.1 accessor
+# falls back to ``spec_hash``. We reproduce that: derive ``spec_hash``, and bind
+# ``raw_capture_spec_hash`` to the same value rather than inventing a second one.
+#
+# Field selection is deliberate and mirrors the split the frozen code already
+# makes. ``command`` and ``receipt_path`` are operational dispatch, bound
+# separately by ``stage_run_inventory_sha256``; letting them into a scientific
+# capture identity would make that identity change when a receipt moves on disk.
+# Everything else in the unit describes the physical capture and is included.
+# --------------------------------------------------------------------------
+
+# Operational dispatch; already bound by stage_run_inventory_sha256.
+CAPTURE_SPEC_DISPATCH_FIELDS = ("command", "receipt_path")
+# Self-referential identity fields, excluded so the digest is well-founded.
+CAPTURE_SPEC_IDENTITY_FIELDS = ("spec_hash", "raw_capture_spec_hash")
+# Every key the v0.1 functions the v0.2 driver actually calls will dereference:
+#   p2_common.capture_context     trajectory_spec_id, expected_max_frames,
+#                                 noise_seed, motion_noise_q,
+#                                 noise_schedule_sha256, speed_blocks_per_second,
+#                                 direction, start_world_x, spec_hash
+#   p3_run_sequential.derive_artifacts   + seed
+#   p2c_capture.package                  (scientific_run_id is defaulted there)
+# ``outer_fold`` and the other v0.1 keys in those modules belong to functions the
+# v0.2 driver never calls, so requiring them here would overconstrain the gate.
+CAPTURE_SPEC_REQUIRED_FIELDS = (
+    "trajectory_spec_id", "expected_max_frames", "noise_seed", "motion_noise_q",
+    "noise_schedule_sha256", "speed_blocks_per_second", "direction",
+    "start_world_x", "spec_hash", "seed",
+)
+
+
+def capture_spec_body(spec: Mapping[str, Any]) -> dict[str, Any]:
+    """The scientific body a capture identity is taken over."""
+    excluded = set(CAPTURE_SPEC_IDENTITY_FIELDS) | set(CAPTURE_SPEC_DISPATCH_FIELDS)
+    return {key: value for key, value in spec.items() if key not in excluded}
+
+
+def capture_spec_hash(spec: Mapping[str, Any]) -> str:
+    """Derive the v0.1 capture identity for an effective capture spec.
+
+    Reuses ``mineocclude.regime_a.canonical_sha256`` -- the exact helper the v0.1
+    freeze pipeline used -- rather than a local re-implementation. This is not
+    interchangeable with ``canonical_payload_sha256`` above: that one appends a
+    trailing newline before hashing, so it does not reproduce v0.1 identities.
+    Verified against the frozen v0.1 trajectory manifest: 25/25 reproduce.
+    """
+    from mineocclude.regime_a import canonical_sha256
+
+    return canonical_sha256(capture_spec_body(spec))
+
+
+def derive_effective_capture_spec(unit: Mapping[str, Any],
+                                  authority: Mapping[str, Any]) -> dict[str, Any]:
+    """Build the capture spec Stage-1 actually hands to the v0.1 interface.
+
+    Single source of truth: production capture and pre-authorization preflight
+    both call this, so a preflight cannot pass against a spec that differs from
+    the one the run will use.
+    """
+    import numpy
+
+    from mineocclude.data.noise_schedule import generate_noise_schedule
+
+    spec = dict(unit)
+    spec.update({
+        "trajectory_spec_id": unit.get("trajectory_id", unit["unit_id"]),
+        "expected_max_frames": unit["expected_frames"],
+        "classification": "DEVELOPMENT_ONLY",
+        "confirmatory_membership": False,
+    })
+    seconds_per_tick = authority["apparatus"]["seconds_per_server_tick"]
+    schedule = generate_noise_schedule(int(spec["noise_seed"]), int(spec["expected_frames"]),
+                                       float(spec["motion_noise_q"]), seconds_per_tick)
+    noise = numpy.asarray([row.noise_draw for row in schedule.rows], dtype="<f8")
+    spec["noise_schedule_sha256"] = hashlib.sha256(noise.tobytes()).hexdigest()
+    # Derived last, so it covers every scientific field set above.
+    spec["spec_hash"] = capture_spec_hash(spec)
+    spec["raw_capture_spec_hash"] = spec["spec_hash"]
+    return spec
+
+
+def require_capture_spec_contract(spec: Mapping[str, Any]) -> None:
+    """Refuse a capture spec the reused v0.1 interface would reject.
+
+    Re-derives the identity rather than trusting the field, so a hash copied
+    from an unrelated spec or left stale after a scientific edit is caught here
+    instead of silently mislabelling a capture.
+    """
+    missing = [field for field in CAPTURE_SPEC_REQUIRED_FIELDS if field not in spec]
+    if missing:
+        raise EvidenceError(f"effective capture spec is missing required fields: {missing}")
+    for field in CAPTURE_SPEC_IDENTITY_FIELDS:
+        if field not in spec:
+            continue
+        value = spec[field]
+        if (not isinstance(value, str) or len(value) != 64
+                or any(character not in "0123456789abcdef" for character in value)):
+            raise EvidenceError(f"{field} is not a lowercase SHA-256")
+    derived = capture_spec_hash(spec)
+    if spec["spec_hash"] != derived:
+        raise EvidenceError("spec_hash is not derived from this capture spec")
+    # raw_capture_spec_hash may legitimately differ under a versioned amendment,
+    # but Stage-1 v0.2 declares no amendment, so it must be the same identity.
+    if spec.get("raw_capture_spec_hash", derived) != derived:
+        raise EvidenceError("raw_capture_spec_hash does not match the derived capture identity")
+
+
+# --------------------------------------------------------------------------
+# Capture toolchain
+#
+# Exactly the executables the frozen capture path invokes, traced to their call
+# sites rather than taken from the apt closure that happened to be installed:
+#
+#   start-display : Xvfb, openbox, xdpyinfo   (provision_capture_runtime_sagemaker.sh)
+#   start-client  : xdotool, xdpyinfo
+#   launch_runtime: xdpyinfo                  (run_large_scale_no_wall_campaign.py)
+#
+# provision() additionally requires curl, tar, python3 and ffmpeg, but those run
+# only during one-time runtime provisioning and are never invoked by capture, so
+# requiring them before a capture authorization would overconstrain the gate.
+#
+# Materiality: Xvfb is already bound as a scientific identity pin (it is the X
+# server the frame is rendered through), together with the Mesa/LLVM renderer and
+# the JDK. openbox, xdotool and xdpyinfo cannot reach the rendered pixels --
+# frames are written by the mod to the client output directory, never screen
+# scraped -- so they gate startup only. They are required to be PRESENT and are
+# recorded with their package versions, but are deliberately not promoted into
+# the scientific identity pins, which stay exactly as they are.
+# --------------------------------------------------------------------------
+
+CAPTURE_PATH_EXECUTABLES: tuple[tuple[str, str], ...] = (
+    ("Xvfb", "scientific_identity_pinned"),
+    ("openbox", "operational_startup_only"),
+    ("xdpyinfo", "operational_startup_only"),
+    ("xdotool", "operational_startup_only"),
+)
+
+
+def _executable_package(path: str) -> dict[str, Any]:
+    """Owning package and version for a resolved executable, best effort."""
+    record: dict[str, Any] = {"package": None, "package_version": None}
+    try:
+        owner = subprocess.run(["dpkg-query", "-S", path], text=True,
+                               capture_output=True, check=False)
+        if owner.returncode == 0 and ":" in owner.stdout:
+            package = owner.stdout.split(":", 1)[0].strip()
+            record["package"] = package
+            version = subprocess.run(["dpkg-query", "-W", "-f=${Version}", package],
+                                     text=True, capture_output=True, check=False)
+            if version.returncode == 0:
+                record["package_version"] = version.stdout.strip()
+    except OSError:
+        pass
+    return record
+
+
+def capture_toolchain_evidence() -> dict[str, Any]:
+    """Resolve every capture-path executable and record what was found.
+
+    Reports rather than asserts: ``require_capture_toolchain`` adjudicates. Each
+    entry also carries unresolved shared libraries, because a present-but-unusable
+    binary fails at launch in exactly the same way a missing one does.
+    """
+    import shutil
+
+    tools: dict[str, Any] = {}
+    for name, materiality in CAPTURE_PATH_EXECUTABLES:
+        resolved = shutil.which(name)
+        entry: dict[str, Any] = {"required_by": "frozen_capture_path",
+                                 "materiality": materiality,
+                                 "present": resolved is not None,
+                                 "path": resolved, "missing_shared_libraries": []}
+        if resolved is not None:
+            entry.update(_executable_package(resolved))
+            try:
+                ldd = subprocess.run(["ldd", resolved], text=True,
+                                     capture_output=True, check=False)
+                entry["missing_shared_libraries"] = [
+                    line.split("=>")[0].strip()
+                    for line in ldd.stdout.splitlines() if "not found" in line]
+            except OSError:
+                pass
+        tools[name] = entry
+    return {"schema": "mineocclude-capture-toolchain-v0.1", "tools": tools,
+            "all_present": all(item["present"] for item in tools.values()),
+            "all_linkable": all(not item["missing_shared_libraries"]
+                                for item in tools.values())}
+
+
+def require_capture_toolchain(evidence: Mapping[str, Any]) -> None:
+    """Refuse authorization when the capture path could not run."""
+    tools = evidence.get("tools")
+    if not isinstance(tools, dict) or set(tools) != {name for name, _ in CAPTURE_PATH_EXECUTABLES}:
+        raise EvidenceError("capture toolchain evidence does not cover the required executables")
+    absent = sorted(name for name, item in tools.items() if not item.get("present"))
+    if absent:
+        raise EvidenceError(f"capture-path executables are absent: {absent}")
+    unlinkable = sorted(name for name, item in tools.items()
+                        if item.get("missing_shared_libraries"))
+    if unlinkable:
+        raise EvidenceError(f"capture-path executables cannot resolve libraries: {unlinkable}")
+
+
+def capture_contract_preflight(manifest: Mapping[str, Any],
+                               authority: Mapping[str, Any]) -> dict[str, Any]:
+    """Statically prove every unit builds a spec the v0.1 interface accepts.
+
+    Uses ``derive_effective_capture_spec`` -- the same call production capture
+    makes -- so this cannot pass against a spec the run would not use. Catches a
+    broken v0.2 -> v0.1 contract before a JVM is ever started.
+    """
+    units = manifest.get("units")
+    if not isinstance(units, list) or not units:
+        raise EvidenceError("manifest declares no units to preflight")
+    checked = {}
+    for unit in units:
+        spec = derive_effective_capture_spec(unit, authority)
+        require_capture_spec_contract(spec)
+        checked[str(unit.get("unit_id"))] = spec["spec_hash"]
+    if len(set(checked.values())) != len(checked):
+        raise EvidenceError("distinct units produced a colliding capture identity")
+    return {"schema": "mineocclude-capture-contract-preflight-v0.1",
+            "units_checked": len(checked), "capture_spec_sha256_by_unit": checked,
+            "required_fields": list(CAPTURE_SPEC_REQUIRED_FIELDS), "verified": True}
+
+
+# --------------------------------------------------------------------------
+# Non-scientific operational startup smoke
+#
+# The previous provenance chain reached FROZEN_VERIFIED while
+# minecraft_started_by_receipt_generation=false: it proved Java, display,
+# package and renderer identity, but never started the apparatus, so it could
+# not see a missing xdotool, a broken v0.2->v0.1 spec contract, or a startup
+# that leaks a server. This control exercises the real startup path and then
+# tears it down.
+#
+# It is emphatically not collection. The classification below is the tripwire:
+# the Stage-1 evidence builder refuses any receipt carrying it, and the smoke
+# runs under its own namespace so its artifacts cannot be confused for units.
+# --------------------------------------------------------------------------
+
+OPERATIONAL_SMOKE_CLASSIFICATION = "NON_SCIENTIFIC_OPERATIONAL_SMOKE"
+OPERATIONAL_SMOKE_NAMESPACE_SUFFIX = "-nonscientific-operational-smoke"
+OPERATIONAL_SMOKE_ARTIFACT_ID = "regime-a-prime-nonscientific-operational-smoke-v0.1"
+# v0.1 was a set of self-asserted booleans; refusing it by schema is what stops
+# an older hand-written PASS document from authorizing a successor campaign.
+OPERATIONAL_SMOKE_SCHEMA = "mineocclude-operational-smoke-v0.2"
+
+# The geometry the production capture display is started with, in
+# provision_capture_runtime_sagemaker.sh start_display:
+#   Xvfb "$display" -screen 0 640x360x24 ...
+# A smoke that ran against any other geometry did not exercise the real capture
+# display, so it cannot stand in for one.
+OPERATIONAL_SMOKE_DISPLAY_GEOMETRY = "640x360x24"
+OPERATIONAL_SMOKE_DISPLAY_WIDTH = 640
+OPERATIONAL_SMOKE_DISPLAY_HEIGHT = 360
+OPERATIONAL_SMOKE_DISPLAY_DEPTH = 24
+
+# Each stage of the startup, with the log marker that proves it happened. The
+# markers are the same strings launch_runtime waits on, so the smoke cannot
+# claim a stage the real startup path would not have accepted.
+OPERATIONAL_SMOKE_STAGES: tuple[tuple[str, str], ...] = (
+    ("display_ready", "640x360"),
+    ("server_ready", "server ready"),
+    ("client_joined", "joined the game"),
+    ("teardown", "teardown_complete"),
+)
+
+# A smoke that captured a frame, wrote a receipt, or put an object in the
+# Stage-1 durable namespace is no longer a smoke. These stay zero by
+# verification, not by assertion.
+OPERATIONAL_SMOKE_ZERO_COUNTS = (
+    "frames_captured", "scientific_receipts_written", "stage1_durable_objects_written",
+)
+
+
+def operational_smoke_namespace(run_namespace: str) -> str:
+    return f"{run_namespace}{OPERATIONAL_SMOKE_NAMESPACE_SUFFIX}"
+
+
+def _require_sha256_field(value: Any, label: str) -> str:
+    if (not isinstance(value, str) or len(value) != 64
+            or any(character not in "0123456789abcdef" for character in value)):
+        raise EvidenceError(f"{label} is not a lowercase SHA-256")
+    return value
+
+
+def require_operational_smoke(smoke: Mapping[str, Any], *, run_namespace: str,
+                              source_commit: str | None = None,
+                              closure_sha256: str | None = None) -> None:
+    """Refuse authorization unless bound execution evidence replays.
+
+    This deliberately verifies rather than trusts. The superseded version read a
+    set of booleans -- ``server_started``, ``client_joined``, ``runtime_torn_down``
+    -- straight out of the document, so a hand-written JSON file asserting PASS
+    authorized a real campaign. Nothing here reads a boolean that describes what
+    happened. Every claim is re-derived from evidence carried in the document:
+
+      payload identity  ``payload_sha256`` is recomputed over the canonical body
+                        with the field itself omitted, so any edit anywhere in
+                        the document invalidates it.
+      stage evidence    each stage carries the log excerpt it was concluded from
+                        and that excerpt's digest. The digest is recomputed from
+                        the excerpt bytes, and the stage's marker must actually
+                        appear in the excerpt -- so a forged digest fails the
+                        recomputation and a real digest over text that never
+                        contained the marker fails the marker check.
+      ordering          stages must be monotonic in the recorded clock, so
+                        evidence cannot be reassembled out of the order the
+                        startup can physically produce.
+      display           geometry must be the production 640x360x24, and the
+                        smoke must have owned the display it ran on.
+      counts            frames, receipts and Stage-1 durable writes must be zero.
+
+    This raises forgery from "write a JSON file" to "fabricate an internally
+    consistent execution record whose every digest, marker and ordering agrees".
+    It is emphatically NOT a cryptographic signature: the digests are computed
+    over evidence the same document carries, so an author with the code in front
+    of them can still construct a consistent fake. Defeating that needs a signing
+    key or an external witness, neither of which exists here, and this docstring
+    is the honest statement of that limit rather than a claim it does not apply.
+    """
+    if not isinstance(smoke, Mapping):
+        raise EvidenceError("operational startup smoke evidence is absent")
+
+    # Schema first: a v0.1 boolean document must be refused as a format, not
+    # silently re-interpreted against the fields v0.2 happens to share with it.
+    if smoke.get("schema") != OPERATIONAL_SMOKE_SCHEMA:
+        raise EvidenceError(
+            f"operational startup smoke is not {OPERATIONAL_SMOKE_SCHEMA} "
+            "(a self-asserted v0.1 smoke cannot authorize a campaign)")
+
+    identity = {
+        "artifact_id": OPERATIONAL_SMOKE_ARTIFACT_ID,
+        "classification": OPERATIONAL_SMOKE_CLASSIFICATION,
+        "run_namespace": operational_smoke_namespace(run_namespace),
+        "scientific_evidence": False,
+        "counts_toward_stage1_units": False,
+        "status": "PASS",
+    }
+    for key, value in identity.items():
+        if smoke.get(key) != value:
+            raise EvidenceError(f"operational startup smoke rejects {key}")
+
+    # Payload identity. Recomputed over everything else in the document, so a
+    # mutated field without a recomputed digest is caught here.
+    declared = _require_sha256_field(smoke.get("payload_sha256"), "payload_sha256")
+    if canonical_payload_sha256(smoke, omit="payload_sha256") != declared:
+        raise EvidenceError("operational startup smoke payload_sha256 does not reproduce")
+
+    if source_commit is not None and smoke.get("source_commit") != source_commit:
+        raise EvidenceError("operational startup smoke was not produced at this commit")
+    if closure_sha256 is not None and smoke.get(
+            "runtime_critical_source_closure_sha256") != closure_sha256:
+        raise EvidenceError(
+            "operational startup smoke is not bound to this runtime-critical closure")
+
+    # Java identity: the apparatus is a JVM, so which java ran is material.
+    java = smoke.get("java_executable")
+    if not isinstance(java, Mapping) or not java.get("path"):
+        raise EvidenceError("operational startup smoke does not identify the Java executable")
+    _require_sha256_field(java.get("sha256"), "java_executable.sha256")
+
+    # Display: the production capture geometry, owned by this smoke.
+    display = smoke.get("display")
+    if not isinstance(display, Mapping):
+        raise EvidenceError("operational startup smoke does not identify the display")
+    if display.get("geometry") != OPERATIONAL_SMOKE_DISPLAY_GEOMETRY:
+        raise EvidenceError(
+            f"operational startup smoke display geometry is not "
+            f"{OPERATIONAL_SMOKE_DISPLAY_GEOMETRY}: {display.get('geometry')!r}")
+    # Independently confirmed by xdpyinfo against the live server, so a document
+    # that merely names the right geometry string still has to agree with what
+    # the X server reported.
+    if (display.get("xdpyinfo_width") != OPERATIONAL_SMOKE_DISPLAY_WIDTH
+            or display.get("xdpyinfo_height") != OPERATIONAL_SMOKE_DISPLAY_HEIGHT
+            or display.get("xdpyinfo_depth") != OPERATIONAL_SMOKE_DISPLAY_DEPTH):
+        raise EvidenceError(
+            "operational startup smoke display was not confirmed as "
+            f"{OPERATIONAL_SMOKE_DISPLAY_GEOMETRY} by xdpyinfo")
+    if display.get("started_by_smoke") is not True:
+        raise EvidenceError(
+            "operational startup smoke did not start its own display; a pre-existing "
+            "generic display does not exercise the production Xvfb startup path")
+    if not display.get("name"):
+        raise EvidenceError("operational startup smoke does not name the display")
+
+    # openbox is part of the production start_display path; a smoke that skipped
+    # it did not exercise that path.
+    openbox = smoke.get("openbox")
+    if not isinstance(openbox, Mapping) or openbox.get("started_by_smoke") is not True:
+        raise EvidenceError("operational startup smoke did not start openbox")
+
+    # Stage evidence: digests recomputed, markers required, ordering enforced.
+    evidence = smoke.get("stage_evidence")
+    if not isinstance(evidence, Mapping):
+        raise EvidenceError("operational startup smoke carries no stage evidence")
+    expected_stages = [name for name, _ in OPERATIONAL_SMOKE_STAGES]
+    if set(evidence) != set(expected_stages):
+        raise EvidenceError(
+            f"operational startup smoke stage evidence must cover exactly {expected_stages}")
+    previous = None
+    for stage, marker in OPERATIONAL_SMOKE_STAGES:
+        entry = evidence[stage]
+        if not isinstance(entry, Mapping):
+            raise EvidenceError(f"stage evidence for {stage} is malformed")
+        excerpt = entry.get("excerpt")
+        if not isinstance(excerpt, str) or not excerpt:
+            raise EvidenceError(f"stage evidence for {stage} carries no excerpt")
+        declared_digest = _require_sha256_field(entry.get("excerpt_sha256"),
+                                                f"{stage}.excerpt_sha256")
+        if hashlib.sha256(excerpt.encode("utf-8")).hexdigest() != declared_digest:
+            raise EvidenceError(f"stage evidence for {stage} does not match its digest")
+        if marker not in excerpt:
+            raise EvidenceError(
+                f"stage evidence for {stage} does not contain the marker {marker!r}")
+        if not entry.get("source_path"):
+            raise EvidenceError(f"stage evidence for {stage} does not name its source")
+        observed = entry.get("observed_monotonic")
+        if not isinstance(observed, (int, float)) or isinstance(observed, bool):
+            raise EvidenceError(f"stage evidence for {stage} has no usable timestamp")
+        if previous is not None and observed < previous:
+            raise EvidenceError(
+                f"operational startup smoke stages are out of order at {stage}")
+        previous = observed
+
+    # Teardown outcome: every process the smoke started must be gone.
+    processes = smoke.get("launched_processes")
+    if not isinstance(processes, list) or not processes:
+        raise EvidenceError("operational startup smoke records no launched processes")
+    for entry in processes:
+        if not isinstance(entry, Mapping) or entry.get("pid") is None:
+            raise EvidenceError("operational startup smoke process record is malformed")
+        if entry.get("exited") is not True:
+            raise EvidenceError(
+                f"operational startup smoke left pid {entry.get('pid')} running")
+    if smoke.get("stranded_processes") != []:
+        raise EvidenceError("operational startup smoke stranded processes")
+    if smoke.get("session_lock_present_after_teardown") is not False:
+        raise EvidenceError("operational startup smoke left the world session.lock held")
+
+    # Non-collection: verified as counts, so a smoke that actually captured
+    # something is refused rather than relabelled.
+    for field in OPERATIONAL_SMOKE_ZERO_COUNTS:
+        value = smoke.get(field)
+        if value != 0 or isinstance(value, bool):
+            raise EvidenceError(
+                f"operational startup smoke is not non-scientific: {field}={value!r}")
+
+
+def refuse_operational_smoke_as_evidence(document: Mapping[str, Any], label: str) -> None:
+    """Structural barrier: smoke output can never enter Stage-1 evidence.
+
+    Checked by identity and namespace rather than by file location, so renaming
+    or relocating a smoke artifact does not launder it into a scientific unit.
+    """
+    if not isinstance(document, Mapping):
+        return
+    namespace = str(document.get("run_namespace", ""))
+    if (document.get("classification") == OPERATIONAL_SMOKE_CLASSIFICATION
+            or document.get("artifact_id") == OPERATIONAL_SMOKE_ARTIFACT_ID
+            or document.get("scientific_evidence") is False
+            or namespace.endswith(OPERATIONAL_SMOKE_NAMESPACE_SUFFIX)):
+        raise EvidenceError(
+            f"{label} is non-scientific operational smoke and cannot be Stage-1 evidence")
 
 
 def stage_run_inventory_sha256(manifest: Mapping[str, Any]) -> str:
@@ -1845,6 +2344,30 @@ def require_preoutcome_provenance(receipt: Mapping[str, Any], *, authority_path:
             or hashlib.sha256(canonical_json_bytes(dict(probe_evidence))).hexdigest()
                != receipt.get("probe_evidence_path_sha256")):
         raise PermissionError("pre-outcome runtime probe binding mismatch")
+    # The runtime probe above proves identity, not runnability. These two prove
+    # the capture path itself: that its executables resolve, and that the frozen
+    # units build a spec the reused v0.1 interface accepts. A receipt produced
+    # before these controls existed has neither field and is refused here, so an
+    # older provenance cannot authorize a successor campaign.
+    try:
+        require_capture_toolchain(receipt.get("capture_toolchain") or {})
+        preflight = receipt.get("capture_contract_preflight") or {}
+        if preflight.get("verified") is not True:
+            raise EvidenceError("capture contract preflight did not verify")
+        expected_preflight = capture_contract_preflight(manifest, authority)
+        if preflight.get("capture_spec_sha256_by_unit") != expected_preflight[
+                "capture_spec_sha256_by_unit"]:
+            raise EvidenceError("capture contract preflight does not reproduce")
+        # Bound to the closure as well as the commit: the expanded closure now
+        # covers the campaign module and the provisioning script, so a smoke
+        # taken before an apparatus edit cannot authorize the edited apparatus.
+        require_operational_smoke(receipt.get("operational_startup_smoke") or {},
+                                  run_namespace=str(manifest.get("run_namespace")),
+                                  source_commit=head,
+                                  closure_sha256=runtime_critical_source_closure_sha256(
+                                      repository))
+    except EvidenceError as exc:
+        raise PermissionError(f"pre-outcome capture-path preflight rejects receipt: {exc}") from exc
     bindings = receipt.get("source_bindings")
     if not isinstance(bindings, dict):
         raise PermissionError("pre-outcome provenance has no source bindings")

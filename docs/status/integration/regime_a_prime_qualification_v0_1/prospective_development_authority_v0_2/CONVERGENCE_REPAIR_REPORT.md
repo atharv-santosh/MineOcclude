@@ -16,7 +16,7 @@ commit, push, or freeze was performed.
   direction balance, fixed speed, 50 paired captures, extraction allocation,
   and pipeline order. Physical summaries and labels are reconstructed from
   durable-inventory-bound raw files.
-- B07 runtime provenance covers and rehashes the complete 37-file local import
+- B07 runtime provenance covers and rehashes the complete 40-file local import
   closure used by projection, capture, packaging, extraction, and readout.
 - B08 every direct backend phase revalidates predecessor bindings and remote
   object bytes; verified durable units remain non-recollectable.

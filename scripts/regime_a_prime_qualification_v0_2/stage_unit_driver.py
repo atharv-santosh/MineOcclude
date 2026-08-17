@@ -24,7 +24,8 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(LEGACY)]
 
 from mineocclude.prospective.development_workflow import (  # noqa: E402
     RUNTIME_CRITICAL_SOURCE_PATHS, atomic_write_json, canonical_payload_sha256,
-    causal_fir_targets, load_json, probe_evidence_digest,
+    causal_fir_targets, derive_effective_capture_spec, load_json, probe_evidence_digest,
+    require_capture_spec_contract,
     require_preoutcome_provenance, require_stage2_authorization,
     require_stage_manifest_binding, resolve_qualified_runtime,
     runtime_critical_source_closure_sha256, runtime_probe_identity_tokens,
@@ -345,16 +346,14 @@ def capture(stage: str, unit: dict, manifest: dict, manifest_path: Path, receipt
         raise RuntimeError("manifest runtime source-commit policy mismatch")
     if manifest.get("confirmatory_collection_authorized") is not False:
         raise RuntimeError("manifest confirmatory boundary is invalid")
-    spec = dict(unit)
-    spec.update({"trajectory_spec_id": unit.get("trajectory_id", unit["unit_id"]),
-        "expected_max_frames": unit["expected_frames"], "classification": "DEVELOPMENT_ONLY",
-        "confirmatory_membership": False})
+    # One shared construction path, also used by the pre-authorization preflight,
+    # so a preflight cannot pass against a spec this run would not actually use.
+    spec = derive_effective_capture_spec(unit, authority)
+    require_capture_spec_contract(spec)
     seconds_per_tick = authority["apparatus"]["seconds_per_server_tick"]
     lane_low, lane_high = authority["apparatus"]["lane_world_x_blocks"]
     schedule = generate_noise_schedule(int(spec["noise_seed"]), int(spec["expected_frames"]),
                                        float(spec["motion_noise_q"]), seconds_per_tick)
-    noise = np.asarray([row.noise_draw for row in schedule.rows], dtype="<f8")
-    spec["noise_schedule_sha256"] = hashlib.sha256(noise.tobytes()).hexdigest()
     destination = receipt_path.parent.parent / "captures" / unit["unit_id"]
     if destination.exists():
         quarantine = destination.with_name(destination.name + ".incomplete-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"))

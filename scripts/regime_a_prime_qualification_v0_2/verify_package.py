@@ -76,7 +76,16 @@ def main() -> None:
     corrected_sources = ("src/mineocclude/prospective/temporal_alignment.py",
                          "src/mineocclude/regime_a.py",
                          # Asserted the superseded uncropped projection value.
-                         "tests/test_regime_a_production.py")
+                         "tests/test_regime_a_production.py",
+                         # Stage-1 at 95d6fe9f terminated STAGE1_BLOCKED because a
+                         # failed startup stranded a server holding the world
+                         # session.lock: launch_runtime raised inside
+                         # CaptureSession.__enter__, so __exit__ never ran. The
+                         # partial-entry teardown lives in the two files that own
+                         # the acquisition, so the correction is recorded here
+                         # rather than the check being relaxed to hide it.
+                         "scripts/regime_a_prime_qualification_v0_1/p2_common.py",
+                         "scripts/run_large_scale_no_wall_campaign.py")
     allowed = ("docs/status/integration/regime_a_prime_qualification_v0_1/"
                "prospective_development_authority_v0_2/", "schemas/prospective/",
                "scripts/regime_a_prime_qualification_v0_2/",
@@ -84,6 +93,7 @@ def main() -> None:
                "tests/prospective/test_development_authority_v0_2_repair.py",
                "tests/prospective/test_provenance_authorization_and_stage_binding.py",
                "tests/prospective/test_stage1_evidence_builder_end_to_end.py",
+               "tests/prospective/test_capture_contract_and_startup_repair.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

@@ -144,6 +144,7 @@
         "The qualified JDK is an overlay install. If /usr/lib/jvm/amazon-corretto-17.0.20.8.1-linux-x64 is absent after a Space rebuild, reinstall exactly this build before any collection; do not accept a different Corretto patch level.",
         "Verify with: <java_home>/bin/java -version, whose output must contain Corretto-17.0.20.8.1.",
         "Re-verify every critical_file_sha256 pin against disk before collection; the server JAR, Fabric launcher, and installed mod are also overlay artefacts.",
+        "The renderer probe executes glxinfo, which is packaged separately from the Mesa libraries and is absent after a Space rebuild even when the pinned Mesa runtime is present. Restore/install the authority-compatible mesa-utils package providing glxinfo, and verify that glxinfo -B reports the required_fields renderer and mesa identity before running runtime-preflight; without it runtime-preflight fails closed with 'probe executable is absent from the reconstructed PATH: glxinfo' and no provenance can be generated. Install the mesa-utils build matching the pinned Mesa version; do not relax the renderer or mesa pins to accommodate a different one.",
         "Run: python3 scripts/regime_a_prime_qualification_v0_2/generate_receipts.py runtime-preflight --output <probe_evidence.json>. It resolves the pinned JDK without consulting PATH, reconstructs the pinned virtual display, executes every identity probe, re-verifies the resulting evidence with verify_probe_execution, and fails closed on any mismatch."
       ]
     },

@@ -12,11 +12,13 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import errno
 import hashlib
 import json
 import math
 import os
 import re
+import select
 import shutil
 import statistics
 import subprocess
@@ -83,6 +85,11 @@ CLIENT_FOV_EFFECT_SCALE = 0.0
 FIXED_CAMERA_LOG_MARKER = "camera pose (0.5, 4.0, -5.5) yaw=0.0"
 MAX_ATTEMPTS = 3
 EXPECTED_F = 60
+# Bound on a single console send. A healthy server drains the FIFO immediately
+# and commands are a few hundred bytes, far inside the pipe buffer, so this is
+# never reached in normal operation -- it exists to turn a wedged reader into a
+# failure instead of a hang.
+SEND_TIMEOUT_SECONDS = 10.0
 
 STATES = (
     "PRECHECK",
@@ -106,6 +113,10 @@ STATES = (
 class CampaignError(RuntimeError):
     """Fail-closed campaign error carrying a frozen reason code."""
 
+    #: Whether this failure is an outcome of the experiment rather than of the
+    #: apparatus. Scientific failures are evidence; operational ones are not.
+    operational_apparatus_failure = False
+
     def __init__(self, reason_code: str, detail: str):
         super().__init__(f"{reason_code}: {detail}")
         self.reason_code = reason_code
@@ -114,6 +125,26 @@ class CampaignError(RuntimeError):
 
 class CampaignBlocked(CampaignError):
     pass
+
+
+class OperationalCaptureError(CampaignError):
+    """The apparatus failed during a capture; the experiment did not.
+
+    A dead server, an unavailable command FIFO, or a send that could not be
+    completed within its bound says nothing about the phenomenon under study --
+    it says the machinery stopped working. Such an attempt must abort, run its
+    authoritative cleanup, and produce no scientific unit receipt, rather than
+    hang, continue silently, or be recorded as a scientific FAIL.
+
+    Carried as a distinct type, not just a reason code, so the distinction
+    survives being caught: anything deciding whether a failure is evidence can
+    ask ``operational_apparatus_failure`` instead of matching strings.
+    """
+
+    operational_apparatus_failure = True
+
+    def __init__(self, detail: str):
+        super().__init__("OPERATIONAL_APPARATUS_FAILURE", detail)
 
 
 def utc_now() -> str:
@@ -519,9 +550,14 @@ def focus_client(timeout_seconds: float = 10.0, poll_interval: float = 0.1) -> b
 
 
 class LiveRuntime:
-    def __init__(self):
+    def __init__(self, server: subprocess.Popen[Any] | None = None):
         self.server_root = SERVER_ROOT
         self.client_root = CLIENT_ROOT
+        # The FIFO reader, when the caller launched one. Optional so the
+        # log-reading uses of LiveRuntime keep working unchanged; when it is
+        # absent `send` still refuses to block, it just cannot name the cause
+        # as precisely.
+        self.server = server
 
     def log_text(self) -> str:
         path = self.server_root / "logs/latest.log"
@@ -531,9 +567,76 @@ class LiveRuntime:
         path = self.client_root / "logs/latest.log"
         return path.read_text(errors="ignore") if path.exists() else ""
 
-    def send(self, commands: list[str]) -> None:
-        with FIFO.open("w", encoding="utf-8") as stream:
-            stream.write("\n".join(commands) + "\n")
+    def send(self, commands: list[str], timeout: float = SEND_TIMEOUT_SECONDS) -> None:
+        """Write console commands to the server FIFO, bounded and never blocking.
+
+        Opening a FIFO for writing blocks until a reader attaches, and the reader
+        is the server JVM. Mid-episode that JVM can die, and the previous
+        blocking ``FIFO.open("w")`` then waited forever: the capture hung instead
+        of failing, so the attempt never reached the authoritative cleanup its
+        own context manager owns.
+
+        The same two independent guards as ``request_graceful_stop``, for the
+        same reasons. Liveness first, so a server already known dead is not even
+        attempted. Then ``O_NONBLOCK``, so the open fails with ENXIO rather than
+        waiting when no reader is attached -- which covers a server that died
+        without closing its end. The write is bounded by ``timeout`` for the
+        remaining case: a reader attached but not draining.
+
+        Unlike the teardown path this raises rather than reporting. A send that
+        did not arrive means the episode never received its commands, so
+        continuing would capture something other than the frozen spec. The
+        failure is operational, not scientific: it aborts the attempt and yields
+        no unit receipt.
+
+        Deliberately no retry here. Controller-level retry policy is
+        authoritative, and a retry hidden inside a single send could resend
+        commands an episode had already partly applied.
+        """
+        payload = ("\n".join(commands) + "\n").encode("utf-8")
+        status = None if self.server is None else self.server.poll()
+        if status is not None:
+            raise OperationalCaptureError(
+                f"server exited with status {status} before the console send; "
+                f"{len(commands)} command(s) were not delivered")
+        if not FIFO.exists():
+            raise OperationalCaptureError(f"server command FIFO is absent: {FIFO}")
+        deadline = time.monotonic() + timeout
+        descriptor = None
+        try:
+            try:
+                descriptor = os.open(FIFO, os.O_WRONLY | os.O_NONBLOCK)
+            except OSError as exc:
+                # ENXIO is the reader-less FIFO: the server is not listening.
+                raise OperationalCaptureError(
+                    f"server command FIFO {FIFO} could not be opened for writing "
+                    f"({errno.errorcode.get(exc.errno, exc.errno)}); no reader is "
+                    "attached, so the server is not consuming commands") from exc
+            pending = memoryview(payload)
+            while pending:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise OperationalCaptureError(
+                        f"server command FIFO {FIFO} did not accept "
+                        f"{len(pending)} of {len(payload)} bytes within "
+                        f"{timeout:g}s; the server is not draining its console")
+                try:
+                    pending = pending[os.write(descriptor, pending):]
+                except BlockingIOError:
+                    select.select([], [descriptor], [], min(remaining, 0.1))
+                except OSError as exc:
+                    # EPIPE: the reader went away mid-send.
+                    raise OperationalCaptureError(
+                        f"server command FIFO {FIFO} failed mid-send "
+                        f"({errno.errorcode.get(exc.errno, exc.errno)}); the "
+                        "server stopped reading before the commands were "
+                        "delivered") from exc
+        finally:
+            if descriptor is not None:
+                try:
+                    os.close(descriptor)
+                except OSError:
+                    pass
 
     def wait_log(self, pattern: str, timeout: float, offset: int = 0) -> None:
         deadline = time.monotonic() + timeout
@@ -2090,6 +2193,74 @@ def write_p3_receipts(
         write_json_new(path, value)
 
 
+def terminate_launched(
+    processes: list[subprocess.Popen[Any]], *, timeout: float = 15.0
+) -> list[str]:
+    """Stop exactly the processes one launch attempt started.
+
+    Only members of ``processes`` are signalled, so a runtime that was already
+    running before this attempt -- someone else's session, or a deliberately
+    pre-started display -- is never killed. Idempotent: already-exited processes
+    are skipped, so calling this twice, or after ``stop_runtime``, is harmless.
+
+    Returns a list of cleanup problems instead of raising. Cleanup runs on the
+    failure path, where raising would replace the exception that caused it.
+    Killing the server is also what releases the world ``session.lock``: the JVM
+    holds it for its lifetime, so confirming death is confirming the lock is
+    gone, which is why survivors are reported explicitly.
+    """
+    problems: list[str] = []
+    for process in reversed(processes):
+        try:
+            if process.poll() is None:
+                process.terminate()
+        except Exception as exc:  # noqa: BLE001 - reported, never raised
+            problems.append(f"terminate pid {process.pid}: {exc!r}")
+    for process in processes:
+        try:
+            process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            try:
+                process.kill()
+                process.wait(timeout=timeout)
+            except Exception as exc:  # noqa: BLE001
+                problems.append(f"kill pid {process.pid}: {exc!r}")
+        except Exception as exc:  # noqa: BLE001
+            problems.append(f"wait pid {process.pid}: {exc!r}")
+    survivors = []
+    for process in processes:
+        try:
+            if process.poll() is None:
+                survivors.append(process.pid)
+        except Exception as exc:  # noqa: BLE001
+            problems.append(f"poll pid {process.pid}: {exc!r}")
+    if survivors:
+        problems.append(
+            f"still running after teardown, world session.lock may be held: {survivors}"
+        )
+    return problems
+
+
+def release_partial_launch(
+    processes: list[subprocess.Popen[Any]], cause: BaseException
+) -> list[str]:
+    """Tear down a failed startup attempt without hiding why it failed.
+
+    Deliberately does not go through ``stop_runtime``: that first writes ``stop``
+    to the server FIFO, and opening a FIFO for write blocks until a reader
+    connects. On this path the server is frequently the thing that just died, so
+    that open would hang the cleanup forever.
+    """
+    problems = terminate_launched(processes)
+    if problems:
+        print(
+            f"partial-launch cleanup incomplete after "
+            f"{type(cause).__name__}: {'; '.join(problems)}",
+            file=sys.stderr,
+        )
+    return problems
+
+
 def launch_runtime(
     runtime_root: Path = DEFAULT_RUNTIME_ROOT,
 ) -> tuple[list[subprocess.Popen[Any]], float]:
@@ -2104,79 +2275,124 @@ def launch_runtime(
         "JAVA_HOME": str(JAVA_PATH.parent.parent),
         "MINEOCCLUDE_DISPLAY": DISPLAY,
     }
-    for name, mode in (("display", "start-display"), ("server", "start-server")):
-        log = (log_root / f"{name}.log").open("ab")
-        process = subprocess.Popen(
-            [str(ROOT / "scripts/provision_capture_runtime_sagemaker.sh"), mode],
+    # Every acquisition below is inside this guard. A precheck that fails partway
+    # used to abandon whatever it had already started: the caller never received
+    # the process list, so `CaptureSession.__enter__` never completed and
+    # `__exit__` never ran. The orphaned server kept holding the world
+    # `session.lock`, and the next attempt failed with a misleading
+    # "already locked" that hid the real cause.
+    try:
+        for name, mode in (("display", "start-display"), ("server", "start-server")):
+            log = (log_root / f"{name}.log").open("ab")
+            process = subprocess.Popen(
+                [str(ROOT / "scripts/provision_capture_runtime_sagemaker.sh"), mode],
+                cwd=ROOT,
+                env=environment,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+            )
+            processes.append(process)
+            if name == "display":
+                deadline = time.monotonic() + 20
+                while time.monotonic() < deadline:
+                    result = subprocess.run(
+                        [str(XDPYINFO_PATH)],
+                        env={**environment, "DISPLAY": DISPLAY},
+                        capture_output=True,
+                    )
+                    if result.returncode == 0:
+                        break
+                    time.sleep(0.2)
+                else:
+                    raise CampaignError("PRECHECK_FAILED", "Xvfb launch timeout")
+            else:
+                runtime = LiveRuntime()
+                deadline = time.monotonic() + 120
+                while time.monotonic() < deadline:
+                    server_log = SERVER_ROOT / "logs/latest.log"
+                    if (
+                        server_log.exists()
+                        and server_log.stat().st_mtime >= launch_wall_time
+                        and "server ready" in runtime.log_text()
+                    ):
+                        break
+                    if process.poll() is not None:
+                        raise CampaignError("PRECHECK_FAILED", "server exited")
+                    time.sleep(0.5)
+                else:
+                    raise CampaignError("PRECHECK_FAILED", "server launch timeout")
+        client_log = (log_root / "client.log").open("ab")
+        client = subprocess.Popen(
+            [str(ROOT / "scripts/provision_capture_runtime_sagemaker.sh"), "start-client"],
             cwd=ROOT,
             env=environment,
-            stdout=log,
+            stdout=client_log,
             stderr=subprocess.STDOUT,
         )
-        processes.append(process)
-        if name == "display":
-            deadline = time.monotonic() + 20
-            while time.monotonic() < deadline:
-                result = subprocess.run(
-                    [str(XDPYINFO_PATH)],
-                    env={**environment, "DISPLAY": DISPLAY},
-                    capture_output=True,
-                )
-                if result.returncode == 0:
-                    break
-                time.sleep(0.2)
-            else:
-                raise CampaignError("PRECHECK_FAILED", "Xvfb launch timeout")
+        processes.append(client)
+        runtime = LiveRuntime()
+        deadline = time.monotonic() + 180
+        while time.monotonic() < deadline:
+            client_log_path = CLIENT_ROOT / "logs/latest.log"
+            if (
+                client_log_path.exists()
+                and client_log_path.stat().st_mtime >= launch_wall_time
+                and "joined the game" in runtime.log_text()
+            ):
+                break
+            if client.poll() is not None:
+                raise CampaignError("PRECHECK_FAILED", "client exited")
+            time.sleep(0.5)
         else:
-            runtime = LiveRuntime()
-            deadline = time.monotonic() + 120
-            while time.monotonic() < deadline:
-                server_log = SERVER_ROOT / "logs/latest.log"
-                if (
-                    server_log.exists()
-                    and server_log.stat().st_mtime >= launch_wall_time
-                    and "server ready" in runtime.log_text()
-                ):
-                    break
-                if process.poll() is not None:
-                    raise CampaignError("PRECHECK_FAILED", "server exited")
-                time.sleep(0.5)
-            else:
-                raise CampaignError("PRECHECK_FAILED", "server launch timeout")
-    client_log = (log_root / "client.log").open("ab")
-    client = subprocess.Popen(
-        [str(ROOT / "scripts/provision_capture_runtime_sagemaker.sh"), "start-client"],
-        cwd=ROOT,
-        env=environment,
-        stdout=client_log,
-        stderr=subprocess.STDOUT,
-    )
-    processes.append(client)
-    runtime = LiveRuntime()
-    deadline = time.monotonic() + 180
-    while time.monotonic() < deadline:
-        client_log_path = CLIENT_ROOT / "logs/latest.log"
-        if (
-            client_log_path.exists()
-            and client_log_path.stat().st_mtime >= launch_wall_time
-            and "joined the game" in runtime.log_text()
-        ):
-            break
-        if client.poll() is not None:
-            raise CampaignError("PRECHECK_FAILED", "client exited")
-        time.sleep(0.5)
-    else:
-        raise CampaignError("PRECHECK_FAILED", "client connection timeout")
+            raise CampaignError("PRECHECK_FAILED", "client connection timeout")
+    except BaseException as cause:
+        release_partial_launch(processes, cause)
+        raise
     return processes, time.monotonic() - launch_started
 
 
-def stop_runtime(processes: list[subprocess.Popen[Any]]) -> None:
+def request_graceful_stop(processes: list[subprocess.Popen[Any]]) -> str:
+    """Ask the server to stop via the command FIFO, without ever blocking.
+
+    A FIFO opened for writing blocks until a reader connects, and the reader here
+    is the server JVM. When that JVM is already dead -- the common case on the
+    teardown path, and the whole reason ``release_partial_launch`` refuses to go
+    through ``stop_runtime`` -- a plain ``open(FIFO, "w")`` waits forever, so the
+    authoritative ``terminate_launched`` below it never runs.
+
+    Two independent guards, because either alone can be defeated. ``O_NONBLOCK``
+    makes the open itself fail with ENXIO instead of waiting when no reader is
+    attached, which covers a server that died without closing the FIFO. Checking
+    liveness first avoids even attempting the write once the launch is known
+    dead. Returns the outcome for evidence rather than raising: this runs on
+    teardown, where raising would replace the exception being unwound.
+    """
+    if not processes:
+        return "skipped_no_launched_processes"
+    # processes is [display, server, client]; the server is the FIFO reader.
+    server = processes[1] if len(processes) > 1 else None
+    if server is None or server.poll() is not None:
+        return "skipped_server_not_running"
+    if not FIFO.exists():
+        return "skipped_fifo_absent"
+    descriptor = None
     try:
-        if FIFO.exists():
-            with FIFO.open("w", encoding="utf-8") as stream:
-                stream.write("stop\n")
-    except OSError:
-        pass
+        descriptor = os.open(FIFO, os.O_WRONLY | os.O_NONBLOCK)
+        os.write(descriptor, b"stop\n")
+        return "sent"
+    except OSError as exc:
+        # ENXIO: no reader attached. Anything else is equally non-fatal here.
+        return f"skipped_{errno.errorcode.get(exc.errno, exc.errno)}"
+    finally:
+        if descriptor is not None:
+            try:
+                os.close(descriptor)
+            except OSError:
+                pass
+
+
+def stop_runtime(processes: list[subprocess.Popen[Any]]) -> None:
+    request_graceful_stop(processes)
     for process in reversed(processes):
         if process.poll() is None:
             process.terminate()

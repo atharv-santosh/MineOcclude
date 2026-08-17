@@ -227,13 +227,47 @@ class CaptureSession:
     def __enter__(self) -> CaptureSession:
         RUNTIME_ROOT.mkdir(parents=True, exist_ok=True)
         self.processes, self.launch_seconds = self.live.launch_runtime(RUNTIME_ROOT)
-        self.runtime = self.live.LiveRuntime()
+        # Anything acquired after launch_runtime returns is still inside a
+        # __enter__ that has not completed, so __exit__ will not run for it. A
+        # failure here would strand a fully started runtime holding the world
+        # session.lock, so release it before propagating the original cause.
+        try:
+            # processes is [display, server, client]; the server is the FIFO
+            # reader, so handing it over lets `send` fail fast and by name when
+            # the server dies mid-episode instead of writing into a dead FIFO.
+            self.runtime = self.live.LiveRuntime(
+                server=self.processes[1] if len(self.processes) > 1 else None)
+        except BaseException as cause:
+            self.live.release_partial_launch(self.processes, cause)
+            self.processes = []
+            raise
         return self
 
     def __exit__(self, *exc: Any) -> None:
-        if self.processes:
-            self.live.stop_runtime(self.processes)
-        self.processes = []
+        """Tear the runtime down authoritatively, and never hang doing it.
+
+        ``stop_runtime`` is the polite path: it asks the server to stop over the
+        command FIFO. That request is best-effort and now non-blocking, because a
+        FIFO opened for writing waits for a reader and the reader is the server
+        JVM -- so a server that already died used to stall this teardown forever
+        and the authoritative ``terminate_launched`` below never ran, leaving the
+        world ``session.lock`` held for the next attempt to trip over.
+
+        ``terminate_launched`` therefore runs unconditionally, even if the polite
+        stop raised, and only ever signals processes this attempt started.
+        Cleanup failures are reported on stderr rather than raised: when the
+        with-block is unwinding, the original exception is the one worth keeping.
+        """
+        processes, self.processes = self.processes, []
+        if not processes:
+            return
+        try:
+            self.live.stop_runtime(processes)
+        except BaseException as cause:  # noqa: BLE001 - reported, never raised
+            print(f"graceful runtime stop failed: {cause!r}", file=sys.stderr)
+        problems = self.live.terminate_launched(processes)
+        if problems:
+            print(f"runtime teardown incomplete: {'; '.join(problems)}", file=sys.stderr)
 
     def capture(self, spec: dict, episode_id: int, destination: Path) -> dict[str, Any]:
         """Run one episode and copy its raw streams to ``destination``."""

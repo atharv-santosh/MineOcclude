@@ -37,7 +37,7 @@ hashes remain explicit fail-closed materialization fields.
   physical/pair gates and the WALL training-only time-baseline gates precede
   extraction/readout qualification.
 - **B07:** the runner probes Git, Java, renderer stack, mod/JAR, detector, and
-  the complete 37-file local runtime import closure, then independently rehashes
+  the complete 40-file local runtime import closure, then independently rehashes
   those bytes and verifies camera, FOV, frame
   dimensions, target UUID, respawn count, layout authorities, and WALL/NO_WALL
   physical behavior from captured bytes. Evidence builders cannot assert
