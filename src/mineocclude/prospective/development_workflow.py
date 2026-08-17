@@ -24,8 +24,10 @@ from mineocclude.prospective.extent_geometry import (
     classify_extent,
 )
 from mineocclude.prospective.package_binding import (
+    PackageBindingError,
     artifact_version_tag,
     provenance_artifact_id_for,
+    stage1_decision_artifact_id,
 )
 from mineocclude.prospective.source_provenance import CriticalSource, verify_sources
 from mineocclude.prospective.temporal_alignment import (
@@ -109,6 +111,22 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     "scripts/regime_a_prime_qualification_v0_1/p2e_analyze.py",
     "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
     "schemas/prospective/regime_a_prime_stage1_decision_v0_2.schema.json",
+    # One decision schema per package version, pinning that version's decision
+    # identity as a const. A single schema with a loosened artifact_id pattern
+    # would have accepted the very cross-version substitution the Stage-2 gate
+    # now refuses.
+    "schemas/prospective/regime_a_prime_stage1_decision_v0_3.schema.json",
+    "schemas/prospective/regime_a_prime_stage1_decision_v0_4.schema.json",
+    # The v0.4 execution surface. As with v0.3, these carry no scientific logic
+    # -- they bind a version tag and delegate to the shared v0.2 implementations
+    # -- but the tag is precisely what selects WHICH inventory runs, so their
+    # bytes are as runtime-critical as the code they delegate to.
+    "scripts/regime_a_prime_qualification_v0_4/build_authority.py",
+    "scripts/regime_a_prime_qualification_v0_4/build_manifests.py",
+    "scripts/regime_a_prime_qualification_v0_4/development_controller.py",
+    "scripts/regime_a_prime_qualification_v0_4/generate_receipts.py",
+    "scripts/regime_a_prime_qualification_v0_4/verify_package.py",
+    "scripts/regime_a_prime_qualification_v0_4/acceptance_harness.py",
 )
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
@@ -1507,9 +1525,20 @@ class Decision:
     reasons: tuple[str, ...]
 
     def to_dict(self, *, authority_sha256: str, manifest_sha256: str,
-                evidence_sha256: str) -> dict[str, Any]:
+                evidence_sha256: str, artifact_id: str) -> dict[str, Any]:
+        """Serialize the decision under the identity of the experiment it judged.
+
+        ``artifact_id`` is required and unvalidated-by-default nowhere: every
+        caller derives it with
+        :func:`package_binding.stage1_decision_artifact_id` from the Stage-1
+        manifest that was actually evaluated. It used to be the literal
+        ``regime-a-prime-stage1-decision-v0.2``, which made every v0.3 decision
+        claim the predecessor's identity.
+        """
+        if not isinstance(artifact_id, str) or not artifact_id:
+            raise EvidenceError("Stage-1 decision artifact identity is missing")
         return {
-            "schema_version": "1.1", "artifact_id": "regime-a-prime-stage1-decision-v0.2",
+            "schema_version": "1.1", "artifact_id": artifact_id,
             "classification": "DEVELOPMENT_ONLY", "status": self.status,
             "authority_sha256": _sha(authority_sha256, "authority_sha256"),
             "stage1_manifest_sha256": _sha(manifest_sha256, "stage1_manifest_sha256"),
@@ -1604,6 +1633,99 @@ class Stage1Evaluator:
             wall,
             half_extent=binding["half_extent"],
             samples_per_axis=binding["samples_per_axis"])
+
+    def derive_transition_measurement(self, samples: Sequence[Mapping[str, Any]],
+                                      scene: str) -> dict[str, Any]:
+        """Derive one direction's transition block from a run's own rows.
+
+        Public for the same reason as :meth:`expected_regime`: the Stage-1
+        evidence builder emits this block and the evaluator re-derives it and
+        demands equality, so there must be exactly one derivation. Under
+        ``134a242`` there were two, and the builder's still spoke the v0.2
+        point/band schema while the evaluator expected the v0.3 extent schema.
+
+        ONLY rows whose aligned physical position is resolved may enter an
+        interval derivation. A finite raw ``world_x`` is not a substitute: over
+        the causal-FIR warm-up prefix the raw coordinate exists while the aligned
+        one does not, and admitting it drags the derived interval toward the lane
+        extremes.
+        """
+        admissible = [(_number(sample.get("world_x"), "world_x"), sample)
+                      for sample in samples
+                      if sample.get("temporal_alignment_resolved") is True]
+        if not admissible:
+            raise EvidenceError("transition measurement has no temporally aligned rows")
+        rendered_absent = [x for x, sample in admissible
+                           if sample.get("detector_visible") is False]
+        if self.extent_truth is not None:
+            # v0.3: the interval is GEOMETRIC. The detector-absent interval is
+            # still reported -- it is how the rendered detector's response across
+            # the geometric transition is calibrated -- but it no longer defines
+            # any boundary that held-out truth depends on.
+            extent_hidden = [x for x, _ in admissible
+                             if self.classify_extent_row(x, scene)
+                             is ExtentClass.EXTENT_FULLY_OCCLUDED]
+            extent_visible = [x for x, _ in admissible
+                              if self.classify_extent_row(x, scene)
+                              is ExtentClass.EXTENT_FULLY_VISIBLE]
+            if not extent_hidden or not extent_visible:
+                raise EvidenceError(
+                    "transition measurement lacks fully-occluded or fully-visible extent rows")
+            if not rendered_absent:
+                raise EvidenceError("transition measurement lacks detector-absent rows")
+            occluded = [min(extent_hidden), max(extent_hidden)]
+            return {
+                "extent_fully_occluded_world_x_interval": occluded,
+                "rendered_detector_absent_world_x_interval":
+                    [min(rendered_absent), max(rendered_absent)],
+                "geometric_extent_transition_world_x_intervals":
+                    [[min(x for x, _ in admissible), occluded[0]],
+                     [occluded[1], max(x for x, _ in admissible)]],
+                "aligned_rows_admitted": len(admissible),
+                "rows_excluded_unaligned": len(samples) - len(admissible),
+                "derivation": "EXTENT_GEOMETRY_ON_ALIGNED_ROWS_ONLY",
+                "detector_defines_held_out_truth": False,
+            }
+        lane_min, lane_max = self.authority["apparatus"]["lane_world_x_blocks"]
+        geometric_hidden = [x for x, sample in admissible
+                            if sample.get("point_visible") is False]
+        if not geometric_hidden or not rendered_absent:
+            raise EvidenceError("transition measurement lacks point-hidden or detector-absent rows")
+        geometric = [min(geometric_hidden), max(geometric_hidden)]
+        rendered = [min(rendered_absent), max(rendered_absent)]
+        stable_hidden = [max(geometric[0], rendered[0]), min(geometric[1], rendered[1])]
+        if stable_hidden[0] >= stable_hidden[1]:
+            raise EvidenceError("transition measurement has no stable-hidden intersection")
+        partial_intervals = [[min(geometric[0], rendered[0]), stable_hidden[0]],
+                             [stable_hidden[1], max(geometric[1], rendered[1])]]
+        return {
+            "geometric_point_hidden_world_x_interval": geometric,
+            "rendered_detector_absent_world_x_interval": rendered,
+            "stable_occluded_world_x_interval": stable_hidden,
+            "partial_transition_world_x_intervals": partial_intervals,
+            "stable_visible_world_x_intervals": [[lane_min, partial_intervals[0][0]],
+                                                 [partial_intervals[1][1], lane_max]],
+        }
+
+    def designated_hidden_row_indices(self, regimes: Sequence[str], *,
+                                      scene: str, design_role: str) -> list[int]:
+        """Reproduce the frozen FIRST_N designated hidden-row schedule.
+
+        The rule itself is unchanged and deliberately conservative:
+        ``FIRST_N_QUALIFIED_STABLE_OCCLUDED_ROWS_IN_ASCENDING_MODEL_FRAME_ORDER``.
+        What was wrong at ``134a242`` was the *pool* it was applied to -- the
+        builder selected over its stale v0.2 point-stable rows, so its LTR
+        schedule began at frame 38 where the extent-stable pool begins at 47.
+        Builder and evaluator now select from the same authority-selected pool by
+        calling this one method.
+        """
+        if self.policy["contamination"].get(
+                "designated_hidden_row_selection_rule") != DESIGNATED_HIDDEN_ROW_SELECTION_RULE:
+            raise EvidenceError("authority does not bind a designated hidden-row schedule")
+        required = (self.policy["contamination"]["required_hidden_rows_per_wall_validation_run"]
+                    if scene == "WALL" and design_role == "HELD_OUT_VALIDATION" else 0)
+        return [index for index, name in enumerate(regimes)
+                if name == "stable_occluded"][:required]
 
     def _validate_manifest_design(self) -> None:
         fixed = self.authority["fixed_development_configuration"]
@@ -1732,8 +1854,18 @@ class Stage1Evaluator:
         failed = any(value.get("status") != "PASS" for value in gates.values())
         return Decision("FAIL" if failed else "PASS", gates, tuple(reasons))
 
-    def _expected_regime(self, sample: Mapping[str, Any], unit: Mapping[str, Any],
-                         bounds: Mapping[str, Any]) -> str:
+    def expected_regime(self, sample: Mapping[str, Any], unit: Mapping[str, Any],
+                        bounds: Mapping[str, Any]) -> str:
+        """Classify one row under whichever truth predicate the authority selects.
+
+        Public because it is the *only* row classifier in the repository. The
+        Stage-1 evidence builder calls this exact method rather than keeping a
+        hand-copied twin, which is what produced the ``134a242`` failure: the
+        builder stayed on v0.2 point/band semantics while the authority moved to
+        v0.3 rendered-extent semantics, and 166 rows the evaluator called
+        ``partial_transition`` were labelled stable by the builder. Divergence is
+        now unrepresentable -- there is nothing left to diverge from.
+        """
         required_booleans = ("point_visible", "detector_visible", "render_frame_present",
             "projected_in_frame", "temporal_alignment_resolved", "identity_valid", "in_support",
             "runtime_provenance_resolved", "path_state_valid", "malformed_or_missing")
@@ -1860,6 +1992,14 @@ class Stage1Evaluator:
         unit_ok = complete
         support_ok = complete
         support: dict[str, Any] = {}
+        # Structured subconditions for the two gates whose ``134a242`` failures
+        # were diagnostically misleading. Neither gate's acceptance criterion
+        # changes: these record WHICH conjunct failed, so a scientific
+        # cleanliness failure can no longer read as a runtime/storage failure,
+        # and a pure regime disagreement can no longer read as broken
+        # world-coordinate arithmetic.
+        support_subconditions: dict[str, Any] = {}
+        unit_subconditions: dict[str, Any] = {}
         derived_transitions: dict[str, dict[str, Any]] = {}
         detector = {d: {"visible": [], "hidden": [], "partial": 0} for d in self.policy["directions"]}
         calibration = {d: {"visible": [], "units": []} for d in self.policy["directions"]}
@@ -1876,8 +2016,12 @@ class Stage1Evaluator:
             if unit_id not in observed:
                 continue
             row = observed[unit_id]
-            unit_ok &= all(row.get(key) == spec.get(key) for key in ("direction", "scene", "speed_blocks_per_second"))
-            unit_ok &= _integer(row.get("frame_count"), f"{unit_id}.frame_count") == spec["expected_frames"]
+            identity_ok = all(row.get(key) == spec.get(key)
+                              for key in ("direction", "scene", "speed_blocks_per_second"))
+            frame_count_ok = (_integer(row.get("frame_count"), f"{unit_id}.frame_count")
+                              == spec["expected_frames"])
+            unit_ok &= identity_ok
+            unit_ok &= frame_count_ok
             receipt_pass: dict[str, bool] = {}
             for receipt_name in ("runtime_provenance_receipt", "path_state_receipt", "durability_receipt"):
                 receipt = row.get(receipt_name)
@@ -1958,17 +2102,33 @@ class Stage1Evaluator:
                 "malformed_or_missing", "identity_valid", "in_support", "path_state_valid",
                 "runtime_provenance_resolved", "render_frame_present")}
             alignment_unresolved: list[int] = []
+            wall_relative_violations: list[int] = []
+            world_support_violations: list[int] = []
+            regime_mismatches: list[dict[str, Any]] = []
             for index, sample in enumerate(samples):
                 if not isinstance(sample, dict):
                     raise EvidenceError("visibility sample must be an object")
                 x = _number(sample.get("world_x"), "world_x")
                 relative = _number(sample.get("wall_relative_x"), "wall_relative_x")
                 if relative != x - wall_origin:
+                    wall_relative_violations.append(index)
                     support_ok = False
                 xs.append(x); rels.append(relative)
-                support_ok &= lane_min <= x <= lane_max and sample.get("in_support") is True
-                expected_regime = self._expected_regime(sample, spec, transitions[spec["direction"]])
-                support_ok &= sample.get("regime") == expected_regime
+                in_support = lane_min <= x <= lane_max and sample.get("in_support") is True
+                if not in_support:
+                    world_support_violations.append(index)
+                support_ok &= in_support
+                expected_regime = self.expected_regime(sample, spec, transitions[spec["direction"]])
+                if sample.get("regime") != expected_regime:
+                    # The single most valuable diagnostic this evaluator can
+                    # emit: at 134a242 every one of the 166 mismatches was a
+                    # builder "stable_*" against an evaluator "partial_transition",
+                    # which named the stale-builder root cause outright -- but the
+                    # gate reported only a wall of world_x/wall_relative_x extrema.
+                    if len(regime_mismatches) < 20:
+                        regime_mismatches.append({"index": index,
+                            "reported": sample.get("regime"), "expected": expected_regime})
+                    support_ok = False
                 regimes.append(expected_regime)
                 # Required apparatus evidence must be resolved on every frame of
                 # every unit; there is no legitimate reason for a captured frame
@@ -2025,78 +2185,24 @@ class Stage1Evaluator:
                 "complete": unit_complete,
             }
             if spec["scene"] == "WALL" and spec["design_role"] == "TRANSITION_MEASUREMENT":
-                # ONLY rows whose aligned physical position is resolved may enter an
-                # interval derivation. A finite raw world_x is not a substitute: over
-                # the causal-FIR warm-up prefix the raw coordinate exists while the
-                # aligned one does not, and admitting it drags the derived interval
-                # toward the lane extremes. This is the v0.2 builder/evaluator
-                # divergence -- the builder derived from aligned values, which are
-                # unavailable in warm-up and so self-excluding, while the evaluator
-                # re-derived from raw sample["world_x"] with no filter at all.
-                admissible = [(x, sample) for x, sample in zip(xs, samples, strict=True)
-                              if sample["temporal_alignment_resolved"] is True]
-                if not admissible:
-                    raise EvidenceError(
-                        "transition measurement has no temporally aligned rows")
-                if self.extent_truth is not None:
-                    # v0.3: the interval is GEOMETRIC. The detector-absent interval
-                    # is still reported -- it is how the rendered detector's response
-                    # across the geometric transition is calibrated -- but it no
-                    # longer defines any boundary that held-out truth depends on.
-                    extent_hidden = [x for x, _ in admissible
-                                     if self.classify_extent_row(x, spec["scene"])
-                                     is ExtentClass.EXTENT_FULLY_OCCLUDED]
-                    extent_visible = [x for x, _ in admissible
-                                      if self.classify_extent_row(x, spec["scene"])
-                                      is ExtentClass.EXTENT_FULLY_VISIBLE]
-                    rendered_absent = [x for x, sample in admissible
-                                       if sample["detector_visible"] is False]
-                    if not extent_hidden or not extent_visible:
-                        raise EvidenceError(
-                            "transition measurement lacks fully-occluded or fully-visible extent rows")
-                    if not rendered_absent:
-                        raise EvidenceError("transition measurement lacks detector-absent rows")
-                    occluded = [min(extent_hidden), max(extent_hidden)]
-                    derived_transitions[spec["direction"]] = {
-                        "extent_fully_occluded_world_x_interval": occluded,
-                        "rendered_detector_absent_world_x_interval":
-                            [min(rendered_absent), max(rendered_absent)],
-                        "geometric_extent_transition_world_x_intervals":
-                            [[min(x for x, _ in admissible), occluded[0]],
-                             [occluded[1], max(x for x, _ in admissible)]],
-                        "aligned_rows_admitted": len(admissible),
-                        "rows_excluded_unaligned": len(samples) - len(admissible),
-                        "derivation": "EXTENT_GEOMETRY_ON_ALIGNED_ROWS_ONLY",
-                        "detector_defines_held_out_truth": False,
-                    }
-                else:
-                    geometric_hidden = [x for x, sample in admissible
-                                        if sample["point_visible"] is False]
-                    rendered_hidden = [x for x, sample in admissible
-                                       if sample["detector_visible"] is False]
-                    if not geometric_hidden or not rendered_hidden:
-                        raise EvidenceError("transition measurement lacks point-hidden or detector-absent rows")
-                    geometric = [min(geometric_hidden), max(geometric_hidden)]
-                    rendered = [min(rendered_hidden), max(rendered_hidden)]
-                    stable_hidden = [max(geometric[0], rendered[0]), min(geometric[1], rendered[1])]
-                    if stable_hidden[0] >= stable_hidden[1]:
-                        raise EvidenceError("transition measurement has no stable-hidden intersection")
-                    partial_intervals = [[min(geometric[0], rendered[0]), stable_hidden[0]],
-                                         [stable_hidden[1], max(geometric[1], rendered[1])]]
-                    derived_transitions[spec["direction"]] = {
-                        "geometric_point_hidden_world_x_interval": geometric,
-                        "rendered_detector_absent_world_x_interval": rendered,
-                        "stable_occluded_world_x_interval": stable_hidden,
-                        "partial_transition_world_x_intervals": partial_intervals,
-                        "stable_visible_world_x_intervals": [[lane_min, partial_intervals[0][0]],
-                                                              [partial_intervals[1][1], lane_max]],
-                    }
+                derived_transitions[spec["direction"]] = self.derive_transition_measurement(
+                    samples, spec["scene"])
             support[f"{spec['direction']}/{spec['scene']}/{spec['replicate']}"] = {
                 "world_x": {"minimum": min(xs), "maximum": max(xs),
                             "maximum_gap": max((b-a for a,b in zip(sorted(xs), sorted(xs)[1:])), default=0.0)},
                 "wall_relative_x": {"minimum": min(rels), "maximum": max(rels),
                                     "maximum_gap": max((b-a for a,b in zip(sorted(rels), sorted(rels)[1:])), default=0.0)},
                 "measurement_only_no_numeric_acceptance_cutoff": True,
+            }
+            support_subconditions[unit_id] = {
+                "WORLD_COORDINATE_SUPPORT_OK": not world_support_violations,
+                "WALL_RELATIVE_ARITHMETIC_OK": not wall_relative_violations,
+                "REGIME_CONSISTENCY_OK": not regime_mismatches,
+                "world_coordinate_support_violation_count": len(world_support_violations),
+                "wall_relative_arithmetic_violation_count": len(wall_relative_violations),
+                "regime_mismatch_count": sum(1 for index, sample in enumerate(samples)
+                                             if sample.get("regime") != regimes[index]),
+                "regime_mismatch_examples": regime_mismatches,
             }
             summary = row.get("hidden_row_contamination")
             if not isinstance(summary, dict):
@@ -2113,13 +2219,8 @@ class Stage1Evaluator:
             # are reproduced here from the frozen selection rule applied to the
             # measured regimes, so substituting the last N qualified rows for the
             # first N fails even though both are individually qualified.
-            selection_rule = self.policy["contamination"].get(
-                "designated_hidden_row_selection_rule")
-            if selection_rule != DESIGNATED_HIDDEN_ROW_SELECTION_RULE:
-                raise EvidenceError("authority does not bind a designated hidden-row schedule")
-            qualified_indices = [index for index, name in enumerate(regimes)
-                                 if name == "stable_occluded"]
-            scheduled_indices = qualified_indices[:required_hidden]
+            scheduled_indices = self.designated_hidden_row_indices(
+                regimes, scene=spec["scene"], design_role=spec["design_role"])
             reproduces_schedule = indices == scheduled_indices
             derived = {name: 0 for name in self.PROHIBITED}
             # A designated hidden row must POSITIVELY qualify as stable-occluded.
@@ -2165,6 +2266,20 @@ class Stage1Evaluator:
                 "reproduces_frozen_row_schedule": reproduces_schedule,
                 "scheduled_hidden_row_indices": scheduled_indices, "clean": clean}
             unit_ok &= clean
+            # The 134a242 report showed unit_identity_runtime_path_durability
+            # FAIL on all eight units when identity, frame count, runtime
+            # provenance, path state and durability had each individually
+            # passed -- the gate failed only through ``clean``, a scientific
+            # cleanliness property. These subconditions separate the two so a
+            # contamination failure never again reads as a storage failure.
+            unit_subconditions[unit_id] = {
+                "IDENTITY_OK": identity_ok,
+                "FRAME_COUNT_OK": frame_count_ok,
+                "RUNTIME_PROVENANCE_OK": receipt_pass.get("runtime_provenance_receipt", False),
+                "PATH_STATE_OK": receipt_pass.get("path_state_receipt", False),
+                "DURABILITY_OK": receipt_pass.get("durability_receipt", False),
+                "CONTAMINATION_CLEAN": clean,
+            }
         for direction in self.policy["directions"]:
             reported = transitions.get(direction, {})
             derived = derived_transitions.get(direction)
@@ -2172,8 +2287,17 @@ class Stage1Evaluator:
                 reported.get(key) == value for key, value in (derived or {}).items())
         self._gate(gates, "prospective_transition_measurement", transition_ok,
                    {"reported": transitions, "derived_from_rows": derived_transitions}, reasons)
-        self._gate(gates, "unit_identity_runtime_path_durability", unit_ok, {"units": len(observed)}, reasons)
-        self._gate(gates, "calibration_world_and_wall_relative_support", support_ok, support, reasons)
+        self._gate(gates, "unit_identity_runtime_path_durability", unit_ok,
+                   {"units": len(observed), "subconditions_by_unit": unit_subconditions,
+                    "failing_subconditions": sorted({
+                        name for item in unit_subconditions.values()
+                        for name, passed in item.items() if not passed})}, reasons)
+        self._gate(gates, "calibration_world_and_wall_relative_support", support_ok,
+                   {"support": support, "subconditions_by_unit": support_subconditions,
+                    "failing_subconditions": sorted({
+                        name for item in support_subconditions.values()
+                        for name, passed in item.items()
+                        if isinstance(passed, bool) and not passed})}, reasons)
         self._gate(gates, "hidden_row_contamination", contamination_total == 0 and unit_ok,
                    contamination_detail, reasons)
 
@@ -2613,7 +2737,17 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
     if (not authorization_receipt_path.is_file() or not authorization_receipt
             or load_json(authorization_receipt_path) != dict(authorization_receipt)):
         raise PermissionError("exact on-disk Stage-2 authorization artifact is required")
-    required = {"artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.2",
+    # Both identities below used to be v0.2 literals. The authority's own stage
+    # binding table already names the Stage-2 authorization artifact per version,
+    # and the Stage-1 manifest already names its version, so neither is spelled
+    # here: a v0.3 gate demands v0.3 artifacts and refuses v0.2 ones, and the
+    # v0.2 package keeps its own identities on replay.
+    stage2_authorization_id = ((load_json(authority_path).get("stage_binding_policy") or {})
+                               .get("stages", {}).get("stage2-capture", {})
+                               .get("authorization_artifact_id"))
+    if not isinstance(stage2_authorization_id, str) or not stage2_authorization_id:
+        raise PermissionError("authority does not bind a Stage-2 authorization identity")
+    required = {"artifact_id": stage2_authorization_id,
                 "schema_version": "1.1",
                 "status": "FROZEN_AUTHORIZED", "STAGE_2_COLLECTION_AUTHORIZED": True,
                 "confirmatory_collection_authorized": False}
@@ -2633,8 +2767,12 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
         "calibration_detector_response", "required_evidence_completeness",
         "render_server_temporal_alignment"}
     decision_gates = stage1_decision.get("gates")
+    try:
+        expected_decision_id = stage1_decision_artifact_id(load_json(stage1_manifest_path))
+    except (PackageBindingError, OSError, ValueError) as exc:
+        raise PermissionError("Stage-1 decision identity is unresolvable") from exc
     genuine = (stage1_decision.get("schema_version") == "1.1"
-        and stage1_decision.get("artifact_id") == "regime-a-prime-stage1-decision-v0.2"
+        and stage1_decision.get("artifact_id") == expected_decision_id
         and stage1_decision.get("classification") == "DEVELOPMENT_ONLY"
         and stage1_decision.get("status") == "PASS"
         and stage1_decision.get("reasons") == []
@@ -2664,7 +2802,8 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
                 load_json(stage1_evidence_path)).to_dict(
                     authority_sha256=bindings["authority_sha256"],
                     manifest_sha256=bindings["stage1_manifest_sha256"],
-                    evidence_sha256=evidence_sha)
+                    evidence_sha256=evidence_sha,
+                    artifact_id=expected_decision_id)
     except (EvidenceError, KeyError, TypeError, ValueError) as exc:
         raise PermissionError("Stage-1 evidence cannot reproduce its decision") from exc
     if reproduced != dict(stage1_decision):

@@ -19,7 +19,8 @@ VERSION_TAG = "v0.2"
 #: The one genuinely version-specific expectation. Everything else below holds
 #: for every package in this family and is checked identically.
 AUTHORITY_STATUS = {"v0.2": "DRAFT_REPAIRED_UNFROZEN_NOT_AUTHORIZED",
-                    "v0.3": "DRAFT_PROSPECTIVE_UNFROZEN_NOT_AUTHORIZED"}
+                    "v0.3": "DRAFT_PROSPECTIVE_UNFROZEN_NOT_AUTHORIZED",
+                    "v0.4": "DRAFT_PROSPECTIVE_UNFROZEN_NOT_AUTHORIZED"}
 
 
 def load(name: str) -> dict:
@@ -131,6 +132,24 @@ def main() -> None:
                "tests/prospective/test_v0_3_execution_entrypoints.py",
                "tests/prospective/test_v0_3_probe_producer_authority.py",
                "tests/prospective/test_provenance_artifact_id_version_binding.py",
+               # The v0.3 builder-synchronization successor: the end-to-end
+               # regression that binds the builder to a v0.3 authority (the
+               # coverage gap 134a242 fell through), the decision-identity
+               # version-binding suite, and the audit pinning every scientific
+               # constant the repair was forbidden to move.
+               "tests/prospective/test_stage1_evidence_builder_v0_3_end_to_end.py",
+               "tests/prospective/test_stage1_decision_artifact_id_version_binding.py",
+               "tests/prospective/test_v0_3_scientific_non_change_audit.py",
+               # The v0.4 successor surface. v0.4 changes no science -- its
+               # scientific delta against v0.3 is empty and proved empty at build
+               # time -- but the v0.3 Stage-1 terminated in a scientific FAIL,
+               # which permanently closes its a1x_*/83xxx inventory. A new
+               # prospective inventory needs a new package version because that
+               # is what every artifact identity is templated off.
+               "docs/status/integration/regime_a_prime_qualification_v0_1/"
+               "prospective_development_authority_v0_4/",
+               "scripts/regime_a_prime_qualification_v0_4/",
+               "tests/prospective/test_v0_4_package_binding.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

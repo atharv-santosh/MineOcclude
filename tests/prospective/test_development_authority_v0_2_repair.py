@@ -20,6 +20,7 @@ from mineocclude.prospective.development_workflow import (
     verify_receipt_payload_digest, verify_runtime_identity,
     verify_remote_durable_objects, verify_runtime_source_hashes,
 )
+from mineocclude.prospective.package_binding import stage1_decision_artifact_id
 from scripts.regime_a_prime_qualification_v0_2.stage2_backend import (
     best_k_qualification_checks, bound_capture_artifact, require_backend_authorization,
     require_durable_unit_receipt,
@@ -261,7 +262,12 @@ def test_repaired_stage1_fixture_passes(authority, stage1):
     decision = evaluator(authority, stage1).evaluate(valid_evidence(authority, stage1))
     assert decision.status == "PASS"
     payload = decision.to_dict(authority_sha256="a" * 64, manifest_sha256="b" * 64,
-                               evidence_sha256="e" * 64)
+                               evidence_sha256="e" * 64,
+                               artifact_id=stage1_decision_artifact_id(stage1))
+    # This package is v0.2, so its decision must still carry the v0.2 identity
+    # and validate against the v0.2 schema -- the version-aware repair must not
+    # have dragged the predecessor's replay onto v0.3 artifacts.
+    assert payload["artifact_id"] == "regime-a-prime-stage1-decision-v0.2"
     Draft202012Validator(load_json(ROOT / "schemas/prospective/regime_a_prime_stage1_decision_v0_2.schema.json")).validate(payload)
 
 
@@ -507,7 +513,8 @@ def bound_stage2(tmp_path: Path):
     assert evaluated.status == "PASS"
     decision = evaluated.to_dict(authority_sha256=sha256_file(authority),
         manifest_sha256=sha256_file(stage1_manifest),
-        evidence_sha256=sha256_file(evidence_path))
+        evidence_sha256=sha256_file(evidence_path),
+        artifact_id=stage1_decision_artifact_id(stage1_value))
     decision_path.write_text(json.dumps(decision, sort_keys=True) + "\n")
     manifest_path = tmp_path / "stage2.json"
     manifest = load_json(STAGE2_PATH)

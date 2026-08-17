@@ -21,7 +21,7 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
     runtime_critical_source_closure_sha256, sha256_file, stage_run_inventory_sha256,
 )
 from mineocclude.prospective.package_binding import (  # noqa: E402
-    PackageBinding, resolve_package_binding,
+    PackageBinding, resolve_package_binding, stage1_decision_artifact_id,
 )
 
 
@@ -93,7 +93,8 @@ def main() -> int:
         decision = Stage1Evaluator(authority, manifest, authority_sha256=sha256_file(authority_path),
                                    manifest_sha256=sha256_file(stage1_path)).evaluate(load_json(args.evidence))
         atomic_write_json(args.output, decision.to_dict(authority_sha256=sha256_file(authority_path),
-            manifest_sha256=sha256_file(stage1_path), evidence_sha256=sha256_file(args.evidence)))
+            manifest_sha256=sha256_file(stage1_path), evidence_sha256=sha256_file(args.evidence),
+            artifact_id=stage1_decision_artifact_id(manifest)))
         return 0 if decision.status == "PASS" else 2
     if args.action == "run-stage1":
         manifest = load_json(stage1_path)
@@ -149,7 +150,8 @@ def main() -> int:
                                 ("operational_completion",))
         evidence_sha = sha256_file(args.evidence) if args.evidence.is_file() else "0" * 64
         atomic_write_json(args.decision, decision.to_dict(authority_sha256=sha256_file(authority_path),
-            manifest_sha256=sha256_file(stage1_path), evidence_sha256=evidence_sha))
+            manifest_sha256=sha256_file(stage1_path), evidence_sha256=evidence_sha,
+            artifact_id=stage1_decision_artifact_id(manifest)))
         return 0 if decision.status == "PASS" else 2
     manifest = load_json(stage2_path)
     bind_manifest(authority_path, manifest)

@@ -796,7 +796,7 @@ def test_flipping_every_detector_value_cannot_change_any_regime(authority, stage
     after = []
     for run, unit_regimes in zip(evidence["runs"], before, strict=True):
         unit = next(u for u in stage1["units"] if u["unit_id"] == run["unit_id"])
-        after.append([engine._expected_regime(
+        after.append([engine.expected_regime(
             s, unit, evidence["transition_measurement_by_direction"][run["direction"]])
             for s in run["visibility_samples"]])
     assert after == before

@@ -38,6 +38,7 @@ DOCUMENT_TABLE_AUDITS = {
     "v0.2": (("NUMERIC_TRACEABILITY.md", ALLOWED_NUMERIC_CLASSES, 1),
              ("FORENSIC_CONTINUITY_MATRIX.md", ALLOWED_CONTINUITY, 15)),
     "v0.3": (),
+    "v0.4": (),
 }
 
 #: Documents each package must carry, and the execution surface each accepts.
@@ -45,6 +46,10 @@ REQUIRED_DOCUMENTS = {
     "v0.2": ("PROSPECTIVE_DEVELOPMENT_AUTHORITY.md", "NUMERIC_TRACEABILITY.md",
              "FORENSIC_CONTINUITY_MATRIX.md"),
     "v0.3": ("PROSPECTIVE_DEVELOPMENT_AUTHORITY.md", "SAMPLE_FLOOR_ANALYSIS.md",
+             "TARGET_EXTENT_DERIVATION.md"),
+    # v0.4 inherits v0.3's science verbatim, so it carries the same two derivation
+    # documents unchanged alongside its own authority narrative.
+    "v0.4": ("PROSPECTIVE_DEVELOPMENT_AUTHORITY.md", "SAMPLE_FLOOR_ANALYSIS.md",
              "TARGET_EXTENT_DERIVATION.md"),
 }
 SUITES = {
@@ -60,9 +65,20 @@ SUITES = {
              # The execution-closure evidence: that the v0.3 entrypoints exist,
              # resolve the v0.3 inventory, and refuse every v0.2 substitution.
              "tests/prospective/test_v0_3_execution_entrypoints.py"),
+    "v0.4": (# The builder synchronization this package exists to carry: the real
+             # builder driven end to end under an extent authority, the
+             # version-aware decision identity, and the audit proving the
+             # scientific rules did not move.
+             "tests/prospective/test_stage1_evidence_builder_v0_3_end_to_end.py",
+             "tests/prospective/test_stage1_decision_artifact_id_version_binding.py",
+             "tests/prospective/test_v0_3_scientific_non_change_audit.py",
+             # That the v0.4 entrypoints exist, resolve the a1y_*/85xxx
+             # inventory, and refuse every closed predecessor substitution.
+             "tests/prospective/test_v0_4_package_binding.py"),
 }
 ENTRYPOINT_DIRECTORY = {"v0.2": "scripts/regime_a_prime_qualification_v0_2",
-                        "v0.3": "scripts/regime_a_prime_qualification_v0_3"}
+                        "v0.3": "scripts/regime_a_prime_qualification_v0_3",
+                        "v0.4": "scripts/regime_a_prime_qualification_v0_4"}
 
 
 def package() -> Path:
@@ -157,7 +173,7 @@ def audit_projection_exploit() -> None:
         "path_state_valid": True, "malformed_or_missing": False, "world_x": 0.0}
     no_wall = next(unit for unit in stage1["units"] if unit["scene"] == "NO_WALL")
     try:
-        evaluator._expected_regime(sample, no_wall, {})
+        evaluator.expected_regime(sample, no_wall, {})
     except EvidenceError:
         pass
     else:

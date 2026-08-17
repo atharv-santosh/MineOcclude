@@ -75,28 +75,24 @@ def derivative_cross_correlation_lag(logged: np.ndarray, rendered: np.ndarray,
     return float(best_lag)
 
 
-def intervals_for_measurement(state: list[dict], aligned_x: list[float], detected: list[bool],
-                              direction: str, lane: list[float], unit_id: str) -> dict:
-    geometric_hidden_x = [x for row, x in zip(state, aligned_x, strict=True)
-                          if row.get("geometric_visible") is False and math.isfinite(x)]
-    rendered_hidden_x = [x for x, visible in zip(aligned_x, detected, strict=True) if not visible and math.isfinite(x)]
-    if not geometric_hidden_x or not rendered_hidden_x:
-        raise RuntimeError(f"transition is unresolved for {unit_id}")
-    geometric = [min(geometric_hidden_x), max(geometric_hidden_x)]
-    rendered = [min(rendered_hidden_x), max(rendered_hidden_x)]
-    hidden = [max(geometric[0], rendered[0]), min(geometric[1], rendered[1])]
-    if hidden[0] >= hidden[1]:
-        raise RuntimeError(f"no stable hidden interval for {unit_id}")
-    partial = [[min(geometric[0], rendered[0]), hidden[0]],
-               [hidden[1], max(geometric[1], rendered[1])]]
-    visible = [[lane[0], partial[0][0]], [partial[1][1], lane[1]]]
+def transition_for_measurement(evaluator: Stage1Evaluator, samples: list[dict],
+                               scene: str, direction: str, unit_id: str) -> dict:
+    """Emit one direction's transition block under the *authority's* semantics.
+
+    The interval arithmetic is not reimplemented here. It is
+    :meth:`Stage1Evaluator.derive_transition_measurement` -- the same method the
+    evaluator re-derives with and then demands equality against -- so the schema
+    the builder writes is by construction the schema the active authority
+    expects. Only the three identity fields the evaluator checks separately
+    (status, measurement unit IDs, direction) are added on top.
+
+    At ``134a242`` this function's predecessor emitted the v0.2 point/band
+    schema unconditionally, so a v0.3 evaluator looking for
+    ``extent_fully_occluded_world_x_interval`` found nothing and
+    ``prospective_transition_measurement`` failed on every direction.
+    """
     return {"status": "MEASURED", "measurement_unit_ids": [unit_id], "direction": direction,
-        "geometric_point_hidden_world_x_interval": geometric,
-        "rendered_detector_absent_world_x_interval": rendered,
-        "stable_occluded_world_x_interval": hidden,
-        "partial_transition_world_x_intervals": partial,
-        "stable_visible_world_x_intervals": visible,
-        "measured_transition_widths_blocks": [partial[0][1] - partial[0][0], partial[1][1] - partial[1][0]]}
+            **evaluator.derive_transition_measurement(samples, scene)}
 
 
 def derive_unit_spacing(evidence_by_unit: dict, cadence: int) -> bool:
@@ -150,43 +146,6 @@ def alignment_requirements(authority: dict, direction: str) -> AlignmentRequirem
         maximum_pure_delay_relative_improvement=0.0,
         pure_delay_interpretation_allowed=policy["pure_delay_interpretation_allowed"],
         pure_delay_off_peak_mass_tolerance=policy["pure_delay_off_peak_mass_tolerance"])
-
-
-def regime_for(sample: dict, scene: str, transition: dict, valid: bool) -> str:
-    """Classify one row exactly as :meth:`Stage1Evaluator._expected_regime` does.
-
-    Any divergence here is silent contradiction: the evaluator rederives every
-    regime and fails the run when the builder's label disagrees.
-    """
-    required_true = ("temporal_alignment_resolved", "identity_valid", "in_support",
-                     "render_frame_present", "runtime_provenance_resolved", "path_state_valid")
-    if (not valid or sample["malformed_or_missing"]
-            or any(sample[name] is not True for name in required_true)):
-        return "unresolved"
-    if sample["point_visible"] is not True and scene == "NO_WALL":
-        return "unresolved"
-    if sample["projected_in_frame"] is not True:
-        return "unresolved"
-    if scene == "NO_WALL":
-        return "stable_visible"
-    sample_x = sample["world_x"]
-    hidden = transition["stable_occluded_world_x_interval"]
-    # Closed on the measured bands' own endpoints; geometry/band disagreement is
-    # a transition row, reported and never scored.
-    in_hidden = hidden[0] <= sample_x <= hidden[1]
-    in_partial = any(low <= sample_x <= high
-                     for low, high in transition["partial_transition_world_x_intervals"])
-    in_visible = any(low <= sample_x <= high
-                     for low, high in transition["stable_visible_world_x_intervals"])
-    if in_hidden and sample["point_visible"] is False:
-        return "stable_occluded"
-    if in_partial:
-        return "partial_transition"
-    if in_visible and sample["point_visible"] is True:
-        return "stable_visible"
-    if in_hidden or in_visible:
-        return "partial_transition"
-    return "unresolved"
 
 
 def main() -> None:
@@ -288,33 +247,30 @@ def main() -> None:
         kernels[direction] = estimate.kernel
 
     lane = authority["apparatus"]["lane_world_x_blocks"]
-    transitions: dict[str, dict] = {}
-    aligned_by_unit: dict[str, list[float]] = {}
-    for unit, _, _, state, _, logged, present in stored:
+    wall_origin = authority["apparatus"]["wall_relative_origin_world_x"]
+    token_grid = authority["apparatus"]["visual_token_grid"]
+    # The evaluator that will judge this document, constructed from the same
+    # authority and manifest bytes. Every semantic decision below -- row regime,
+    # transition schema, designated-row schedule -- is delegated to it, so the
+    # builder cannot be on a different version of the science than the gate.
+    evaluator = Stage1Evaluator(authority, manifest,
+        authority_sha256=sha256_file(args.authority),
+        manifest_sha256=sha256_file(args.manifest))
+
+    # Pass 1: physical rows, with no regime yet. The regime cannot be assigned
+    # until the transition blocks exist, and under a v0.2 authority those are
+    # derived from these very rows -- so the rows come first, unlabelled.
+    samples_by_unit: dict[str, list[dict]] = {}
+    for unit, receipt, _, state, coordinates, logged, present in stored:
         taps = kernels[unit["direction"]]
         aligned = [math.nan] * (len(taps) - 1)
         indices = list(range(len(taps) - 1, len(logged)))
         aligned.extend(causal_fir_targets(logged.tolist(), indices, taps,
             pure_delay_tolerance=policy["pure_delay_off_peak_mass_tolerance"]))
-        aligned_by_unit[unit["unit_id"]] = aligned
-        if unit["scene"] == "WALL" and unit["design_role"] == "TRANSITION_MEASUREMENT":
-            transitions[unit["direction"]] = intervals_for_measurement(
-                state, aligned, present, unit["direction"], lane, unit["unit_id"])
-
-    runs = []
-    prohibited_names = Stage1Evaluator.PROHIBITED
-    wall_origin = authority["apparatus"]["wall_relative_origin_world_x"]
-    token_grid = authority["apparatus"]["visual_token_grid"]
-    required_hidden = authority["stage1_policy"]["contamination"]["required_hidden_rows_per_wall_validation_run"]
-    for unit, receipt, _, state, coordinates, logged, present in stored:
-        transition = transitions[unit["direction"]]
-        aligned = aligned_by_unit[unit["unit_id"]]
         samples = []
         for index, (raw_x, physical_x, detected) in enumerate(zip(logged, aligned, present, strict=True)):
             aligned_ok = math.isfinite(physical_x)
             x = float(physical_x) if aligned_ok else float(raw_x)
-            point_visible = state[index].get("geometric_visible") is True
-            valid = aligned_ok and lane[0] <= x <= lane[1]
             projected = coordinates[index]
             raw_projection = {"screen_x": projected.get("screen_x"),
                 "screen_y": projected.get("screen_y"),
@@ -322,22 +278,43 @@ def main() -> None:
                 "token_col": projected.get("token_cell_col")}
             projection_valid = derive_projection_validity(
                 raw_projection, frame_pixels=frame_pixels, token_grid=token_grid)
-            sample = {"world_x": x, "wall_relative_x": x - wall_origin,
+            samples.append({"world_x": x, "wall_relative_x": x - wall_origin,
                 **raw_projection, "projection_frame_pixels": frame_pixels,
                 "projection_token_grid": token_grid,
-                "point_visible": point_visible, "detector_visible": bool(detected),
+                # Diagnostic and reference cross-check only under v0.3: the
+                # extent predicate never reads it. Kept because it is the
+                # primitive the Python geometry engine is validated against.
+                "point_visible": state[index].get("geometric_visible") is True,
+                "detector_visible": bool(detected),
                 "render_frame_present": True, "projected_in_frame": projection_valid,
                 "temporal_alignment_resolved": aligned_ok, "identity_valid": True,
                 "in_support": lane[0] <= x <= lane[1],
                 "runtime_provenance_resolved": receipt.get("runtime_provenance_receipt", {}).get("status") == "PASS",
                 "path_state_valid": receipt.get("path_state_receipt", {}).get("status") == "PASS",
-                "malformed_or_missing": False}
-            sample["regime"] = regime_for(sample, unit["scene"], transition, valid)
-            samples.append(sample)
-        designated_indices = ([index for index, row in enumerate(samples)
-                               if row["regime"] == "stable_occluded"][:required_hidden]
-                              if unit["scene"] == "WALL"
-                              and unit["design_role"] == "HELD_OUT_VALIDATION" else [])
+                "malformed_or_missing": False})
+        samples_by_unit[unit["unit_id"]] = samples
+
+    # Pass 2: transition blocks, from the predeclared WALL measurement
+    # replicates' own rows -- the same rows, in the same representation, the
+    # evaluator will re-derive from.
+    transitions: dict[str, dict] = {}
+    for unit, *_ in stored:
+        if unit["scene"] == "WALL" and unit["design_role"] == "TRANSITION_MEASUREMENT":
+            transitions[unit["direction"]] = transition_for_measurement(
+                evaluator, samples_by_unit[unit["unit_id"]], unit["scene"],
+                unit["direction"], unit["unit_id"])
+
+    # Pass 3: regimes and the designated-row schedule, both from the evaluator.
+    runs = []
+    prohibited_names = Stage1Evaluator.PROHIBITED
+    for unit, receipt, _, state, _, _, _ in stored:
+        transition = transitions[unit["direction"]]
+        samples = samples_by_unit[unit["unit_id"]]
+        for sample in samples:
+            sample["regime"] = evaluator.expected_regime(sample, unit, transition)
+        designated_indices = evaluator.designated_hidden_row_indices(
+            [sample["regime"] for sample in samples],
+            scene=unit["scene"], design_role=unit["design_role"])
         designated = [samples[index] for index in designated_indices]
         # Every prohibited class the authority enumerates must be counted. Three
         # of the nine were previously absent from the emitted summary, so the

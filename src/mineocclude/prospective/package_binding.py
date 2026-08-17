@@ -49,10 +49,20 @@ _AUTHORITY_ARTIFACT_ID = "regime-a-prime-prospective-development-authority-{tag}
 _STAGE1_MANIFEST_ARTIFACT_ID = "regime-a-prime-stage1-manifest-{tag}"
 _STAGE2_MANIFEST_ARTIFACT_ID = "regime-a-prime-stage2-locked-manifest-{tag}"
 
-# The one identity the frozen authority does not declare for itself. Every other
-# identifier below is read out of the authority; this one is constructed, so it
-# is constructed from the same tag the rest of the binding was proved against.
+# The two identities the frozen authority does not declare for itself. Every
+# other identifier below is read out of the authority; these are constructed, so
+# they are constructed from the same tag the rest of the binding was proved
+# against.
 _PROVENANCE_ARTIFACT_ID = "regime-a-prime-prospective-pre-outcome-provenance-{tag}"
+
+#: The Stage-1 gate decision's own identity. Until the v0.3 builder
+#: synchronization this was a module-level literal ending in ``v0.2`` inside
+#: ``Decision.to_dict``, so a v0.3 Stage-1 decision serialized itself as the
+#: predecessor's artifact and the Stage-2 gate compared against that same
+#: literal -- meaning a v0.3 Stage-2 would have accepted a v0.2 decision and
+#: refused its own. It never reached a live gate because Stage-2 has never been
+#: authorized, but it is repaired prospectively for exactly that reason.
+_STAGE1_DECISION_ARTIFACT_ID = "regime-a-prime-stage1-decision-{tag}"
 
 #: Repository root, resolved from this file's location (src/mineocclude/prospective).
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -133,6 +143,33 @@ def provenance_artifact_id_for(version_tag: str) -> str:
     if _VERSION_TAG.match(version_tag) is None:
         raise PackageBindingError(f"malformed package version tag: {version_tag!r}")
     return _PROVENANCE_ARTIFACT_ID.format(tag=version_tag)
+
+
+def stage1_decision_artifact_id_for(version_tag: str) -> str:
+    """The Stage-1 decision identity that a package version's gate emits.
+
+    Constructed here, once, from a version tag -- the same treatment
+    :func:`provenance_artifact_id_for` gives the other identity the authority
+    does not declare. Both the serializer (``Decision.to_dict``) and the Stage-2
+    gate route through this function, so a decision cannot be written under one
+    version's identity and then accepted by another version's gate.
+    """
+    if _VERSION_TAG.match(version_tag) is None:
+        raise PackageBindingError(f"malformed package version tag: {version_tag!r}")
+    return _STAGE1_DECISION_ARTIFACT_ID.format(tag=version_tag)
+
+
+def stage1_decision_artifact_id(manifest: Mapping[str, Any]) -> str:
+    """The decision identity implied by the Stage-1 manifest actually evaluated.
+
+    The version is recovered from the manifest's own ``artifact_id`` -- the same
+    derivation the evidence builder already uses to label the evidence document
+    -- so the decision, the evidence and the manifest cannot disagree about
+    which experiment produced them. A manifest carrying no versioned identity
+    raises rather than defaulting to any version.
+    """
+    return stage1_decision_artifact_id_for(
+        artifact_version_tag((manifest or {}).get("artifact_id")))
 
 
 def resolve_package_binding(version_tag: str,

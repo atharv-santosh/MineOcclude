@@ -1,0 +1,712 @@
+{
+  "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+  "STAGE_1_COLLECTION_AUTHORIZED": false,
+  "STAGE_2_COLLECTION_AUTHORIZED": false,
+  "apparatus": {
+    "camera_authority": "layout_01_fixed_v0.4",
+    "camera_eye_world_xyz": [
+      0.5,
+      5.6200000048,
+      -5.5
+    ],
+    "camera_feet_world_xyz": [
+      0.5,
+      4.0,
+      -5.5
+    ],
+    "canonical_frame_pixels": [
+      640,
+      360
+    ],
+    "capture_hz": 20,
+    "detector_config_sha256": "99acc45e0a49b8526eca2ab777e21c07f88934d744bc5679e63ab8a00b181b8d",
+    "fov_degrees": 70.0,
+    "installed_mod_sha256": "febf31cad7c6de003a6d2d87ed9183c6a6739e086e293b30e92999520e3bfaba",
+    "java": "Amazon Corretto 17.0.20.8.1",
+    "lane_world_x_blocks": [
+      -8.0,
+      8.0
+    ],
+    "lane_world_y": 4.0,
+    "lane_world_z": 6.0,
+    "layout_id": "layout_01",
+    "mesa": "25.2.8",
+    "minecraft_version": "1.16.5",
+    "mod_source_sha256": "3c37227654415956ab34a0c3245fe25697ed8c2b8d18dcbca7373a21f5c32de0",
+    "model_input_pixels": [
+      384,
+      224
+    ],
+    "reference_geometry_primitive": {
+      "definition": "GeometryUtil.segmentHitsWall",
+      "interior_samples": 63,
+      "march_samples": 64,
+      "note": "A discrete march, not an analytic slab intersection. The Python engine replicates it exactly -- including the sample count and the inclusive face tests -- because the mod is the trusted reference and is deliberately unmodified in v0.3, so every pinned apparatus artefact keeps its hash."
+    },
+    "renderer": "llvmpipe LLVM 20.1.2",
+    "seconds_per_server_tick": 0.05,
+    "server_ticks_per_model_frame": 1,
+    "target_centre_world_y": 4.5,
+    "target_centre_world_y_derivation": "cfg.laneY + 0.5, the target centre height EpisodeManager itself tests.",
+    "visual_token_grid": [
+      14,
+      24
+    ],
+    "wall_authority": "layout_01_long_wall_v0.4",
+    "wall_geometry_as_built": {
+      "derivation": "ArenaBuilder places whole blocks and a block at coordinate n occupies [n, n+1), so the realised occluder is wider and thicker than the raw layout spec. EpisodeManager therefore floors/ceils the spec at the call site, and these are those same expressions evaluated on layout_01. Binding them here stops the Python engine from carrying a second, privately hardcoded wall.",
+      "layout_id": "layout_01",
+      "ortho_half_thickness": 0.5,
+      "spec_wall_ortho_const": 6.0,
+      "spec_wall_ortho_offset": -4.0,
+      "spec_wall_seg_max": 2.5,
+      "spec_wall_seg_min": -2.5,
+      "wall_axis": "X",
+      "wall_axis_max": 4.0,
+      "wall_axis_min": -3,
+      "wall_height_blocks": 3,
+      "wall_ortho": 2.5,
+      "wall_y_max": 7.0,
+      "wall_y_min": 4.0
+    },
+    "wall_relative_origin_world_x": 0.5,
+    "xvfb": "21.1.12",
+    "yaw_pitch_roll_degrees": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "apparatus_observation_policy": {
+    "camera_eye_world_xyz": [
+      0.5,
+      5.6200000048,
+      -5.5
+    ],
+    "camera_feet_world_xyz": [
+      0.5,
+      4.0,
+      -5.5
+    ],
+    "canonical_frame_pixels": [
+      640,
+      360
+    ],
+    "fov_degrees": 70.0,
+    "no_wall_requires_every_point_visible": true,
+    "target_respawn_count": 0,
+    "target_uuid_must_be_constant": true,
+    "wall_scene_requires_both_point_visible_and_point_hidden_rows": true,
+    "yaw_pitch_degrees": [
+      0.0,
+      0.0
+    ]
+  },
+  "artifact_id": "regime-a-prime-prospective-development-authority-v0.4",
+  "change_log": {
+    "ALIGNMENT_ESTIMANDS_CHANGED": false,
+    "AUTHORITY_BINDING_FIELDS_CHANGED": true,
+    "AUTHORITY_BINDING_FIELDS_CHANGED_DERIVATION": "artifact_id, predecessor_authority, change_log, and the identity strings swept by the version retarget: stage_binding_policy artifact ids, manifest relative paths and run namespaces. These are cryptographic and naming bindings, not scientific parameters.",
+    "AUTHORITY_SCIENTIFIC_FIELDS_CHANGED": false,
+    "HIDDEN_FIRST_N_RULE_CHANGED": false,
+    "OLD_FAILED_ROW_EXCLUDED": false,
+    "OLD_FAILED_TRAJECTORY_EXCLUDED": false,
+    "OLD_FREEZE_SHA": "134a242981e3131c9c61d46b0f112234c8e83fce",
+    "OLD_STAGE1_EVIDENCE_SHA256": "e87b8382e27aa2bcafca3a9be511268736a43091341a8c1b08d6d725ba94239a",
+    "OLD_STAGE1_IMMUTABLE": true,
+    "OLD_STAGE1_OPERATIONAL_RETRIES": 0,
+    "OLD_STAGE1_RESULT": "SCIENTIFIC_FAIL",
+    "OLD_STAGE1_UNITS_COMPLETE": "8/8",
+    "OLD_STAGE2_AUTHORIZED": false,
+    "OLD_UNITS_REUSED": false,
+    "OPEN_SCIENTIFIC_QUESTION": "Does the frozen temporal-alignment qualification pass prospectively, including the RIGHT_TO_LEFT WALL trajectory class? The rule is unchanged, so the next campaign answers this on the same terms the last one failed.",
+    "OUTCOME_DERIVED_GUARD_BAND_ADDED": false,
+    "OUTCOME_DERIVED_TEMPORAL_EXCEPTION_ADDED": false,
+    "SAMPLE_FLOOR_CHANGED": false,
+    "SCIENTIFIC_DELTA": "EMPTY",
+    "SPEED_CHANGED": false,
+    "STAGE2_AUTHORIZED": false,
+    "STAGE2_LOCKED": true,
+    "TARGET_EXTENT_CHANGED": false,
+    "TARGET_EXTENT_HALF_WIDTH": 0.8727621336620037,
+    "TEMPORAL_FIR_RULE_CHANGED": false,
+    "TEMPORAL_REFINEMENT_BOUND_CHANGED": false,
+    "TRAJECTORY_STRUCTURE_CHANGED": false,
+    "UNIMODALITY_GATE_ADDED": false,
+    "VISIBILITY_TRUTH_CHANGE": "NONE",
+    "WHY_NEW_AUTHORITY_EXISTS": "NOT a scientific redesign. The v0.3 Stage-1 terminated in a scientific FAIL, which permanently closes its a1x_* / 83xxx unit inventory: those units are historical evidence and may never be recollected. A new prospective run therefore requires a new inventory, and package version is this repository's unit of inventory identity -- every artifact id, namespace and durable prefix a runner resolves is templated off the version tag. v0.4 advances the tag and nothing else. Its scientific delta against v0.3 is empty and is proved empty at build time.",
+    "WHY_THE_V0_3_STAGE1_FAILED": "Two independent roots. (1) A stale Stage-1 evidence builder: it remained on v0.2 point/band semantics while the authority and evaluator had moved to v0.3 rendered-extent semantics, producing 166 builder/evaluator regime mismatches, a v0.2 transition schema the v0.3 evaluator could not read, and a FIRST_N hidden-row schedule selected over the stale pool. That is a SOURCE defect and is repaired in the freeze that accompanies this authority. (2) One genuinely anomalous temporal-alignment trajectory, a1x_rtl_wall_r01, whose trimodal causal kernel put its cross-correlation lag 1.8213 ticks from its kernel mode against a 1.0-tick bound. That is a RESULT, not a defect. It is not repaired, excluded, or accommodated.",
+    "ZERO_ERROR_GATE_RELAXED": false
+  },
+  "classification": "DEVELOPMENT_ONLY",
+  "clock_domains": {
+    "alignment_required_before_scientific_row_emission": true,
+    "bare_index_interchange_forbidden": true,
+    "causal_order": [
+      "server_entity_state",
+      "network_update",
+      "client_entity_state",
+      "client_render",
+      "capture_frame",
+      "model_frame",
+      "activation_row",
+      "ground_truth_target"
+    ],
+    "frame_label": "causal_fir_convolution_of_server_entity_state_at_or_before_same_numbered_capture_tick"
+  },
+  "confirmatory_collection_authorized": false,
+  "confirmatory_interpretation_authorized": false,
+  "fixed_development_configuration": {
+    "expected_frames_per_run": 180,
+    "motion_noise_q": 0.05,
+    "rationale": "Frozen P3 C01 had adequate headroom and zero target-row contamination; speed was not established as the redesign variable.",
+    "speed_blocks_per_second": 2.0,
+    "speed_sweep_authorized": false,
+    "start_world_x_by_direction": {
+      "LEFT_TO_RIGHT": -7.8,
+      "RIGHT_TO_LEFT": 7.8
+    }
+  },
+  "immutable_software_forensic_base_sha": "db2e110549856a465ae517c17438d4d248d9657b",
+  "predecessor_authority": {
+    "artifact_id": "regime-a-prime-prospective-development-authority-v0.3",
+    "failed_gates": [
+      "prospective_transition_measurement",
+      "calibration_world_and_wall_relative_support",
+      "hidden_row_contamination",
+      "unit_identity_runtime_path_durability",
+      "render_server_temporal_alignment"
+    ],
+    "freeze_sha": "134a242981e3131c9c61d46b0f112234c8e83fce",
+    "note": "The predecessor Stage-1 is complete historical scientific evidence: 8/8 units, 0 operational retries, terminal FAIL. Four of its five failed gates trace to a stale evidence builder and are repaired in source; the fifth, render_server_temporal_alignment, is a real measurement on trajectory a1x_rtl_wall_r01 and is neither repaired nor excluded. Nothing in v0.4 may rewrite that decision or authorize Stage-2 from it.",
+    "stage1_evidence_sha256": "e87b8382e27aa2bcafca3a9be511268736a43091341a8c1b08d6d725ba94239a",
+    "stage1_result": "SCIENTIFIC_FAIL",
+    "stage1_result_immutable": true,
+    "stage1_result_may_be_reclassified": false,
+    "stage2_authorized": false
+  },
+  "prospective_source_commit_binding": "BOUND_AT_LAUNCH_BY_PREOUTCOME_PROVENANCE_RECEIPT",
+  "provenance": {
+    "authority_manifest_schema_and_controller_sha256_required": true,
+    "per_unit_raw_and_derived_sha256_manifest_with_remote_readback_required": true,
+    "pre_outcome_receipt_required_before_collection": true,
+    "runtime_renderer_java_mod_camera_scene_and_detector_identity_required": true,
+    "tracked_source_bytes_modes_and_expected_commit_required": true
+  },
+  "restart_resume": {
+    "completed_verified_units_must_not_be_recollected": true,
+    "durable_atomic_unit": "one run for Stage 1; one scene/trajectory capture or one extraction unit for Stage 2",
+    "maximum_identical_attempts": 3,
+    "resume_revalidation": [
+      "local receipt hash",
+      "remote checksum manifest readback",
+      "every remote object existence",
+      "authority binding",
+      "manifest binding",
+      "source commit",
+      "run namespace",
+      "unit identity"
+    ]
+  },
+  "runtime_identity_policy": {
+    "critical_file_paths": {
+      "detector_config": "docs/status/person_e_phase3_step3_1_candidate_freeze_v0_1/detector_candidate_config.json",
+      "fabric_server_launcher_jar": "/home/sagemaker-user/mineocclude-server/fabric-server-launch.jar",
+      "installed_mod": "/home/sagemaker-user/mineocclude-server/mods/mineocclude-0.1.1.jar",
+      "minecraft_server_jar": "/home/sagemaker-user/mineocclude-server/server.jar",
+      "mod_source": "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java"
+    },
+    "critical_file_sha256": {
+      "detector_config": "99acc45e0a49b8526eca2ab777e21c07f88934d744bc5679e63ab8a00b181b8d",
+      "fabric_server_launcher_jar": "1caefab680c8832254dd8644c6df536c169315188e715191c9b52ed69adee66e",
+      "installed_mod": "febf31cad7c6de003a6d2d87ed9183c6a6739e086e293b30e92999520e3bfaba",
+      "minecraft_server_jar": "58f329c7d2696526f948470aa6fd0b45545039b64cb75015e64c12194b373da6",
+      "mod_source": "3c37227654415956ab34a0c3245fe25697ed8c2b8d18dcbca7373a21f5c32de0"
+    },
+    "evidence_builder_may_assert_success": false,
+    "java_identity_pin_derivation": "Substring of the qualified JDK's own `java -version` output. The superseded pin `Amazon Corretto 17.0.20.8.1` was a marketing spelling that the runtime never emits: the qualified Corretto build prints `OpenJDK Runtime Environment Corretto-17.0.20.8.1`, so the probe's own substring test could not have matched and Stage-1 capture would have aborted at launch with `Java/JDK identity mismatch`. The same JDK build is pinned; only the spelling is corrected to the token the runtime actually produces.",
+    "probe_evidence_policy": {
+      "digest_is_a_signature": false,
+      "digest_primitive": "sha256_over_canonical_json_of_the_probe_execution_record",
+      "digest_primitive_derivation": "There is no asymmetric key and no authenticated signer anywhere in this package, so no receipt is signed. The primitive is a deterministic cryptographic digest over independently generated probe evidence, and it is named accordingly. It establishes that the recorded probe evidence has not been edited since it was assembled; it does not establish who assembled it. Authorship is constrained separately, by independent_probe_producers plus the byte-level rehashing of the probe source, the probed executables, and the pinned apparatus artefacts.",
+      "forbidden_probe_producers": [
+        "scripts.regime_a_prime_qualification_v0_2.build_stage1_evidence.main",
+        "scripts.regime_a_prime_qualification_v0_2.build_stage1_evidence.build_evidence",
+        "mineocclude.prospective.development_workflow.Stage1Evaluator"
+      ],
+      "forbidden_probe_producers_derivation": "The evidence builder and the evaluator may never author the evidence that the runtime was independently verified; a PASS that either of them can emit is a self-assertion, which is the defect this policy replaces.",
+      "independent_probe_producers": [
+        "scripts.regime_a_prime_qualification_v0_2.stage_unit_driver.probe_runtime"
+      ],
+      "required_exit_status": 0,
+      "required_invocation_ids": [
+        "java_version",
+        "renderer",
+        "xvfb"
+      ],
+      "required_invocation_ids_derivation": "One invocation per runtime identity pin that is established by executing something: the JDK, the GL renderer stack, and the virtual framebuffer. The remaining pins are file artefacts and are covered byte-for-byte by critical_file_sha256 instead.",
+      "requires_executable_byte_identity": true,
+      "requires_normalized_output_identity_tokens": true,
+      "requires_probe_source_byte_identity": true,
+      "requires_runtime_critical_source_closure": true
+    },
+    "required_fields": {
+      "branch": "exploration/regime-a-prime-qualification-v0-1",
+      "detector_config_id": "frozen_any_magenta_silhouette_detector",
+      "java": "Corretto-17.0.20.8.1",
+      "mesa": "25.2.8",
+      "minecraft_version": "1.16.5",
+      "renderer": "llvmpipe LLVM 20.1.2",
+      "xvfb": "21.1.12"
+    },
+    "runtime_reconstruction": {
+      "display": ":99",
+      "forbid_inherited_java_from_path": true,
+      "forbid_inherited_java_from_path_derivation": "A `java` resolved from an inherited PATH is an unpinned runtime. The probe must execute the absolute pinned interpreter so that the executable bytes recorded in the probe evidence are the bytes of the qualified JDK.",
+      "java_executable_relative_path": "bin/java",
+      "java_home": "/usr/lib/jvm/amazon-corretto-17.0.20.8.1-linux-x64",
+      "path_reconstruction": "prepend_java_home_bin_to_inherited_path",
+      "reason": "Overlay-installed components are not guaranteed to survive a SageMaker Space rebuild, and `java` is not on the default PATH even when the qualified JDK is present. Collection must therefore reconstruct the runtime deterministically from this pin rather than inherit whatever a shell happened to export.",
+      "reinstall_procedure": [
+        "The qualified JDK is an overlay install. If /usr/lib/jvm/amazon-corretto-17.0.20.8.1-linux-x64 is absent after a Space rebuild, reinstall exactly this build before any collection; do not accept a different Corretto patch level.",
+        "Verify with: <java_home>/bin/java -version, whose output must contain Corretto-17.0.20.8.1.",
+        "Re-verify every critical_file_sha256 pin against disk before collection; the server JAR, Fabric launcher, and installed mod are also overlay artefacts.",
+        "The renderer probe executes glxinfo, which is packaged separately from the Mesa libraries and is absent after a Space rebuild even when the pinned Mesa runtime is present. Restore/install the authority-compatible mesa-utils package providing glxinfo, and verify that glxinfo -B reports the required_fields renderer and mesa identity before running runtime-preflight; without it runtime-preflight fails closed with 'probe executable is absent from the reconstructed PATH: glxinfo' and no provenance can be generated. Install the mesa-utils build matching the pinned Mesa version; do not relax the renderer or mesa pins to accommodate a different one.",
+        "Run: python3 scripts/regime_a_prime_qualification_v0_4/generate_receipts.py runtime-preflight --output <probe_evidence.json>. It resolves the pinned JDK without consulting PATH, reconstructs the pinned virtual display, executes every identity probe, re-verifies the resulting evidence with verify_probe_execution, and fails closed on any mismatch."
+      ],
+      "xvfb_screen": "0 1280x720x24"
+    },
+    "successful_flags_require_independent_probe": true
+  },
+  "schema_version": "1.1",
+  "scientific_claim_boundary": {
+    "experiment_class": "DEVELOPMENT_APPARATUS_QUALIFICATION",
+    "note": "A v0.4 PASS qualifies the apparatus for the next authority-permitted development stage and establishes nothing about representation, permanence, belief, uncertainty, or causal use.",
+    "purpose": "qualify the measurement apparatus before any downstream model experiment",
+    "tests_belief": false,
+    "tests_causal_use": false,
+    "tests_hidden_state_representation": false,
+    "tests_model_activations": false,
+    "tests_object_permanence": false,
+    "tests_uncertainty": false
+  },
+  "stage1_policy": {
+    "calibration_support": {
+      "complete_expected_path_and_frame_coverage_required": true,
+      "coordinates_required": [
+        "world_x",
+        "wall_relative_x"
+      ],
+      "endpoint_tolerance_blocks": null,
+      "maximum_gap_blocks": null,
+      "minimum_samples_per_stratum": null,
+      "out_of_support_samples_do_not_count": true,
+      "required_evidence_completeness": {
+        "derivation": "A frame may only remain unresolved for a prospectively expected reason. Every other captured frame must land in a physical regime, so 'unresolved' cannot become an unbounded budget absorbing contradictory or unusable evidence. Required apparatus evidence fails closed on every frame with no numeric allowance.",
+        "temporal_alignment_unresolved_rows_permitted": "EXACTLY_THE_CAUSAL_FIR_WARMUP_PREFIX",
+        "unresolved_regime_permitted_only_when": [
+          "INDEX_PRECEDES_COMPLETE_CAUSAL_FIR_HISTORY",
+          "TARGET_PROJECTS_OUTSIDE_CANONICAL_FRAME"
+        ],
+        "zero_tolerance_row_classes": [
+          "malformed_or_missing",
+          "identity_valid",
+          "in_support",
+          "path_state_valid",
+          "runtime_provenance_resolved",
+          "render_frame_present"
+        ]
+      },
+      "required_strata": "direction x WALL/NO_WALL",
+      "support_extent_gap_and_count_are_stage1_measurements_not_acceptance_thresholds": true,
+      "wall_relative_formula": "world_x - 0.5",
+      "world_x_bounds": [
+        -8.0,
+        8.0
+      ]
+    },
+    "contamination": {
+      "designated_hidden_row_selection_rule": "FIRST_N_QUALIFIED_STABLE_OCCLUDED_ROWS_IN_ASCENDING_MODEL_FRAME_ORDER",
+      "designated_hidden_row_selection_rule_conservatism": "RETAINED DELIBERATELY. FIRST_N selects the qualified stable-occluded rows nearest the occlusion boundary, which is the hardest available stress test. It is not moved away from the boundary because the predecessor's first row failed there -- that would weaken the test in response to an outcome. Under extent geometry a FIRST_N row is fully occluded over the whole rendered extent, not merely at its centre.",
+      "designated_hidden_row_selection_rule_derivation": "Designated rows must be reproducible from the frozen schedule rather than selected after the run is observed. The evaluator recomputes the schedule from the measured regimes, so substituting the last N qualified rows for the first N fails even though both sets are individually qualified.",
+      "maximum_rows_each_class": 0,
+      "prohibited_classes": [
+        "point_visible",
+        "partial_transition",
+        "detector_visible",
+        "clock_unresolved",
+        "out_of_support",
+        "ambiguous_or_invalid_identity",
+        "runtime_or_provenance_unresolved",
+        "path_state_invalid",
+        "malformed_or_missing"
+      ],
+      "required_hidden_rows_per_wall_validation_run": 19
+    },
+    "directions": [
+      "LEFT_TO_RIGHT",
+      "RIGHT_TO_LEFT"
+    ],
+    "physical_hidden_onset": {
+      "fixed_silhouette_or_hidden_bound_forbidden": true,
+      "hidden_onset_world_x": {
+        "acceptance_threshold": null,
+        "classification": "PROSPECTIVE_STAGE1_MEASURED"
+      },
+      "policy": "measure first fully detector-absent aligned physical row by direction on transition-measurement runs and validate on held-out WALL runs",
+      "stage2_target_windows_must_be_materialized_after_stage1_and_before_stage2_manifest_freeze": true
+    },
+    "replicate_roles": {
+      "1": "TRANSITION_MEASUREMENT",
+      "2": "HELD_OUT_VALIDATION"
+    },
+    "replicates_per_direction_scene": 2,
+    "run_count": 8,
+    "run_count_derivation": "2 directions x 2 scenes x 2 predeclared roles (transition measurement and held-out validation); the minimum replicated full-factorial design",
+    "scenes": [
+      "WALL",
+      "NO_WALL"
+    ],
+    "stop_rules": {
+      "automatic_stage2_start": false,
+      "fail_closed_on_any_failed_or_malformed_gate": true,
+      "retry_same_unit_maximum_attempts": 3,
+      "substitution_or_recollection_of_verified_durable_unit_forbidden": true,
+      "terminate_after_stage1_decision": true
+    },
+    "temporal_alignment": {
+      "agreement_rule": "causal_kernel_mode_and_first_moment_estimand_pairing_within_admissible_causal_lag_range",
+      "agreement_rule_derivation": "The two required methods do not share an estimand, so requiring their point estimates to fall inside each other's intervals compares quantities that are not expected to coincide. causal_fir_group_delay reports the FIRST MOMENT sum(k*h[k]) of the fitted causal kernel; derivative_cross_correlation_lag selects the single lag whose increment series best explains the rendered increments, which is the kernel's MODE, sub-tick refined. For a right-tailed causal smoothing kernel the mode lies strictly before the first moment, so mutual containment is satisfiable only by a kernel whose mode equals its mean -- that is, by the symmetric or bare-delay response this same authority forbids under pure_delay_interpretation_allowed=false. Agreement is therefore defined between matched estimands: (i) every estimate and interval endpoint lies inside the admissible causal lag range [0, maximum_lag_ticks_for_estimation], whose lower bound is the frozen clock_domains causal_order (render is at-or-after server entity state, so a negative lag is acausal) and whose upper bound is the estimator's own declared search range; (ii) each method's point estimate lies inside its own interval, which is reproduced from that method's own per-trajectory values; (iii) for EVERY trajectory, the cross-correlation lag lies within cross_correlation_subtick_refinement_bound_ticks of the mode of that trajectory's own bound FIR kernel; (iv) the aggregate cross-correlation estimate lies within the same bound of the aggregate kernel's mode; (v) both aggregate point estimates lie inside the aggregate kernel's positive-mass support. Checks (iii)-(v) are computed from kernels already bound to the per-trajectory group delays, so no new independently mutable field is trusted, and unlike interval overlap they cannot be satisfied by widening an interval. No precision threshold is taken from Stage-1 outcomes; see frozen_forensic_reference_agreement_check.",
+      "aligned_position_field": "world_x",
+      "aligned_position_field_derivation": "Rows emit exactly one aligned physical coordinate. It is admissible only under the rule above; there is deliberately no second raw field for a consumer to reach for instead.",
+      "aligned_position_required_for_interval_derivation": true,
+      "causal_fir_must_beat_best_pure_delay": true,
+      "causal_fir_must_beat_best_pure_delay_scope": "EVERY_TRAJECTORY",
+      "causal_fir_must_beat_best_pure_delay_scope_derivation": "Coverage rule read directly from causal_fir_must_beat_best_pure_delay, requiring no numeric threshold: a mean relative improvement lets one large trajectory rescue a majority that are worse than a pure delay, so every trajectory must beat its own best pure delay. Not selected from Stage-1 outcomes.",
+      "confidence_level": 0.95,
+      "cross_correlation_subtick_refinement_bound_ticks": 1.0,
+      "cross_correlation_subtick_refinement_bound_ticks_classification": "PURE_IMPLEMENTATION_CONSTANT",
+      "cross_correlation_subtick_refinement_bound_ticks_derivation": "Structural clamp of derivative_cross_correlation_lag itself, which returns best_integer_lag + offset with offset hard-limited to [-1, +1] by its parabolic refinement. It is the estimator's own maximum departure from an integer tap index, not a fitted tolerance, and it was not searched: the frozen forensic reference attains a maximum per-trajectory departure of 0.392766 ticks against this bound of 1.0, leaving 0.607234 ticks of unused slack.",
+      "frozen_forensic_reference_agreement_check": {
+        "acceptance_gate": false,
+        "aggregate_kernel_mode_lag": 2,
+        "aggregate_kernel_positive_mass_support": [
+          0,
+          8
+        ],
+        "method_1_causal_fir_group_delay_estimate_ticks": 3.363631073825902,
+        "method_1_student_t_interval_ticks": [
+          3.1850024634276997,
+          3.5422596842241045
+        ],
+        "method_2_derivative_cross_correlation_lag_estimate_ticks": 2.4597455789132976,
+        "method_2_student_t_interval_ticks": [
+          2.2587886058224114,
+          2.6607025520041834
+        ],
+        "observed_minimum_first_moment_minus_mode_margin_ticks": 0.4100623006769153,
+        "observed_mode_precedes_first_moment_in_trajectories": "12/12",
+        "observed_ordering_derivation": "Recorded as a frozen observation only. Requiring first_moment >= cross_correlation_lag would impose right-skew on a prospective measurement, and a legitimately symmetric response would fail it for no scientific reason; the pure-delay refusal already covers the degenerate case.",
+        "observed_ordering_is_an_acceptance_gate": false,
+        "purpose": "Bounded coherence check of the agreement rule against already-frozen P2/P3 forensic evidence. No refitting, no P2 rerun, no threshold search, and no Stage-1 outcome was consulted.",
+        "repaired_rule_aggregate_mode_departure_ticks": 0.4597455789132974,
+        "repaired_rule_maximum_per_trajectory_mode_departure_ticks": 0.392765753882379,
+        "repaired_rule_satisfied": true,
+        "sources": [
+          "p2_temporal_alignment_forensic_v0_1/impulse_response_raw.json",
+          "p2_temporal_alignment_forensic_v0_1/lag_multimethod_raw.json"
+        ],
+        "superseded_rule_intervals_overlap": false,
+        "superseded_rule_satisfied": false,
+        "superseded_rule_violation_margin_ticks": 0.7252568845144023,
+        "trajectory_count": 12
+      },
+      "historical_group_delay_reference_only_ticks": {
+        "acceptance_gate": false,
+        "estimate": 3.363631073825902,
+        "student_t_interval": [
+          3.1850024634276997,
+          3.5422596842241045
+        ]
+      },
+      "interval_derivation_admissibility_rule": "A row may contribute to any interval or transition derivation that requires aligned physical position ONLY IF temporal_alignment_resolved == true. A finite raw world_x is NOT a substitute for a resolved aligned coordinate: during the causal-FIR warm-up prefix the raw coordinate exists and the aligned one does not, and admitting it inflates derived intervals toward the lane extremes. Builder and evaluator must read the same single aligned-position field through the same admissibility filter.",
+      "maximum_lag_ticks_for_estimation": 8,
+      "measurement_separate_by_direction": true,
+      "minimum_trajectories_per_direction": 4,
+      "minimum_usable_samples_per_trajectory": 9,
+      "minimum_usable_samples_per_trajectory_derivation": "maximum_lag_ticks_for_estimation + 1: the algebraic identifiability minimum for a (maximum_lag + 1)-tap causal fit. PURE_IMPLEMENTATION_CONSTANT. Estimate adequacy is enforced by agreement_rule and the improvement-coverage scope rather than by a fabricated sample count, because WALL scenes legitimately exclude detector-absent frames.",
+      "prospective_ci_width": {
+        "acceptance_threshold": null,
+        "classification": "PROSPECTIVE_STAGE1_MEASURED"
+      },
+      "pure_delay_interpretation_allowed": false,
+      "pure_delay_off_peak_mass_tolerance": 1e-09,
+      "pure_delay_off_peak_mass_tolerance_classification": "PURE_IMPLEMENTATION_CONSTANT",
+      "pure_delay_off_peak_mass_tolerance_derivation": "Binary64 round-off allowance only, not a scientific threshold. A normalized causal FIR kernel carrying all but 1e-09 of its mass on one tap is not numerically separable from a bare integer-tick delay, so kernels such as [1e-300, 0, 0, 1, 0, ...] are rejected. It makes no claim about physically meaningful smoothing; that requirement is carried by causal_fir_must_beat_best_pure_delay_scope.",
+      "raw_world_x_may_substitute_for_aligned_position": false,
+      "required_method_ids": [
+        "causal_fir_group_delay",
+        "derivative_cross_correlation_lag"
+      ],
+      "unit_spaced_clock_coordinates_required": true
+    },
+    "visibility": {
+      "calibration_detector_response_derivation": "Non-held-out calibration and transition-measurement evidence is required evidence. A run whose rendered detector never fires across its qualified stable-visible rows must fail rather than pass because it is not the held-out replicate.",
+      "calibration_detector_response_required": true,
+      "detector_truth_predicate_derivation": "Ground truth for detector scoring is the detector-independent extent occlusion class computed from camera geometry, as-built wall geometry, target centre and the renderer-derived target extent. The scored detector may never participate in deriving it.",
+      "detector_truth_predicate_independent_of_scored_detector": true,
+      "extent_classification": {
+        "classes": [
+          "EXTENT_FULLY_VISIBLE",
+          "EXTENT_PARTIAL",
+          "EXTENT_FULLY_OCCLUDED"
+        ],
+        "detector_may_influence_classification": false,
+        "fully_occluded_semantics": "every point of the declared extent is geometrically occluded. Decided exactly by the extent box corners: beyond the occluder the occluded set is the cone from the camera through the convex wall box, which is convex, so it contains the box iff it contains every corner. The sample lattice is closed on both faces of each axis and therefore always contains the corners.",
+        "fully_visible_semantics": "no sampled point of the declared extent is occluded",
+        "partial_semantics": "any mixture; reported and never scored",
+        "regime_mapping": {
+          "EXTENT_FULLY_OCCLUDED": "stable_occluded",
+          "EXTENT_FULLY_VISIBLE": "stable_visible",
+          "EXTENT_PARTIAL": "partial_transition"
+        },
+        "samples_per_axis": 5,
+        "samples_per_axis_derivation": "PURE_IMPLEMENTATION_CONSTANT. Corners alone are exact for FULLY_OCCLUDED; interior samples only make FULLY_VISIBLE conservative. Classification is invariant across 3, 5, 9 and 17 samples per axis on the frozen trajectory schedule, so this is not a tuned threshold.",
+        "scored_classes": [
+          "stable_visible",
+          "stable_occluded"
+        ],
+        "unscored_classes": [
+          "partial_transition"
+        ]
+      },
+      "held_out_rows_classified_directly_from_geometry": true,
+      "legacy_point_visible_role": "DIAGNOSTIC_AND_REFERENCE_CROSS_CHECK_ONLY. point_visible retains its v0.2 meaning and is neither redefined nor scored; it is the primitive the Python engine is validated against.",
+      "maximum_observed_false_negative_rate": 0.0,
+      "maximum_observed_false_positive_rate": 0.0,
+      "maximum_one_sided_error_upper_95": 0.05,
+      "minimum_stable_samples_per_direction_per_class": 60,
+      "no_wall_stable_visible_requires": [
+        "point_visible",
+        "projected_in_frame",
+        "render_frame_present",
+        "resolved_clock",
+        "valid_identity",
+        "in_support"
+      ],
+      "partial_transition_observation_required_on_held_out_wall": true,
+      "pooled_accuracy_gate_forbidden": true,
+      "precision_gate_forbidden": true,
+      "primary_predicate": "extent_occlusion_geometry_over_rendered_target_extent",
+      "primary_predicate_derivation": "Historical redesign Option A. The scored detector responds to rendered AREA, so the independent geometric truth predicate is an area predicate over the target's rendered extent rather than a centre ray. Rows are classified directly from camera geometry, wall geometry, target centre and declared target extent -- never from the detector, a detector edge, or a band transferred from another replicate.",
+      "rendered_detector_predicate": "frozen_any_magenta_silhouette_detector",
+      "target_extent": {
+        "applied_to_axes": [
+          "world_x",
+          "world_z"
+        ],
+        "bound_direction": "UPPER_BOUND_OVER_ALL_REACHABLE_ANIMATION_STATES",
+        "classification": "PROSPECTIVE_RENDERER_MODEL_DERIVED",
+        "closed_form": "(7 + sqrt(48.5)) / 16",
+        "detector_derived": false,
+        "fitted": false,
+        "half_width_blocks": 0.8727621336620037,
+        "outcome_derived": false,
+        "rejected_alternative": {
+          "reason": "back-solved from the observed detector transition; adopting it would make the truth predicate a function of the detector it scores. Used only as an after-the-fact corroboration check.",
+          "value_range": [
+            0.6,
+            0.8
+          ]
+        },
+        "source_artifact": "TARGET_EXTENT_DERIVATION.md",
+        "source_jar_sha1": "37fd3c903861eeff3bc24b71eed48f828b5269c8",
+        "source_model_class": "net.minecraft.client.model.SheepFurModel (obfuscated dvm)",
+        "yaw_independent": true
+      },
+      "transition_band_transferred_to_held_out": false,
+      "transition_policy": "Transition intervals are derived GEOMETRICALLY from the extent predicate on the predeclared WALL TRANSITION_MEASUREMENT replicates. They calibrate and report the rendered detector's response across the geometric transition; they never define held-out truth. Every held-out row is classified directly from its own geometry, so no detector edge and no band transferred from another replicate enters the truth predicate."
+    }
+  },
+  "stage2_policy": {
+    "extraction": {
+      "all_layer_extraction_forbidden": true,
+      "layers": [
+        4
+      ]
+    },
+    "headroom": {
+      "derivation": "controlling P3 formulas 2x and 3x corrected P2 BEST-K visible RMSE",
+      "minimum_candidate_median_target_sd_blocks": 0.23340716645461895,
+      "minimum_each_trajectory_target_sd_blocks": 0.15560477763641264
+    },
+    "left_to_right_phase_indices_by_fold": {
+      "0": [
+        0,
+        1,
+        2
+      ],
+      "1": [
+        2,
+        3
+      ],
+      "2": [
+        4,
+        0,
+        1
+      ],
+      "3": [
+        1,
+        2
+      ],
+      "4": [
+        3,
+        4,
+        0
+      ]
+    },
+    "manifest_state": "POST_STAGE1_TARGET_WINDOWS_TO_BE_MATERIALIZED_AND_SEPARATELY_FROZEN",
+    "outer_folds": 5,
+    "paired_trajectory_identities": 25,
+    "phase_offsets_frames": [
+      0,
+      3,
+      6,
+      9,
+      12
+    ],
+    "physical_gates_before_extraction": [
+      "durability",
+      "identity",
+      "path_state",
+      "clock_alignment",
+      "stable_visibility",
+      "physical_support",
+      "hidden_row_validity",
+      "zero_target_row_contamination",
+      "runtime_provenance",
+      "pair_coverage"
+    ],
+    "post_stage2": {
+      "confirmatory_reuse_forbidden": true,
+      "development_qualification_only": true,
+      "may_authorize_confirmatory_collection": false
+    },
+    "readout": {
+      "best_k_each_scene_macro_r2_must_be_strictly_positive": true,
+      "best_k_each_scene_rmse_maximum_blocks": 0.15560477763641264,
+      "best_k_each_scene_whole_trajectory_bootstrap95_lower_r2_must_be_strictly_positive": true,
+      "best_k_wall_must_beat_training_only_time_baseline_rmse": true,
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 2026081503,
+      "bootstrap_unit": "WHOLE_TRAJECTORY",
+      "corrected_p2_best_k_visible_rmse_reference_blocks": 0.07780238881820632,
+      "full_may_not_rescue_best_k_failure": true,
+      "leading": "BEST_K",
+      "rmse_ceiling_formula": "2 * corrected P2 BEST-K visible RMSE, preserving the controlling P3 formula",
+      "secondary_non_rescuing": "FULL",
+      "training_only_time_baseline_macro_r2_tau_1_to_15_maximum": 0.1,
+      "training_only_time_baseline_training_tau_maximum": 15
+    },
+    "required_target_rows_per_capture": 19,
+    "scenes_per_identity": [
+      "WALL",
+      "NO_WALL"
+    ],
+    "scientific_capture_count": 50,
+    "speed_blocks_per_second": 2.0,
+    "temporal_labels": {
+      "raw_same_tick_server_state_forbidden": true,
+      "source": "qualified_stage1_direction_specific_causal_fir"
+    }
+  },
+  "stage_binding_policy": {
+    "derivation": "Closes the cross-stage substitution attack: --stage stage1-capture --manifest stage2_locked_manifest.json previously reached capture because nothing tied the requested stage to the manifest's own identity, to the unit's declared role, or to the authorization receipt type. Every entrypoint -- direct, delegated, backend, and restart/resume -- now resolves the requested stage through this table before any capture or extraction, and refuses on the first disagreement. No Stage-1 authorization can launch a Stage-2 unit and no Stage-2 authorization can launch a Stage-1 unit, because the two stages disagree on all of manifest artifact_id, run namespace, unit role, and authorization artifact_id.",
+    "fail_closed_before_capture_and_extraction": true,
+    "stages": {
+      "stage1-capture": {
+        "authorization_artifact_id": "regime-a-prime-stage1-authorization-v0.4",
+        "manifest_artifact_id": "regime-a-prime-stage1-manifest-v0.4",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage1_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-4-stage1",
+        "stage_role": "stage1",
+        "unit_collections": [
+          "units"
+        ],
+        "unit_role": "stage1_capture_unit"
+      },
+      "stage2-best-k": {
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.4",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.4",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-4-stage2",
+        "stage_role": "stage2",
+        "unit_collections": [
+          "units",
+          "readout_and_terminal_units"
+        ],
+        "unit_role": "stage2_readout_unit"
+      },
+      "stage2-capture": {
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.4",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.4",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-4-stage2",
+        "stage_role": "stage2",
+        "unit_collections": [
+          "units",
+          "capture_units"
+        ],
+        "unit_role": "stage2_capture_unit"
+      },
+      "stage2-extract": {
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.4",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.4",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-4-stage2",
+        "stage_role": "stage2",
+        "unit_collections": [
+          "units",
+          "extraction_units"
+        ],
+        "unit_role": "stage2_extraction_unit"
+      },
+      "stage2-full": {
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.4",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.4",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-4-stage2",
+        "stage_role": "stage2",
+        "unit_collections": [
+          "units",
+          "readout_and_terminal_units"
+        ],
+        "unit_role": "stage2_readout_unit"
+      },
+      "stage2-gates": {
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.4",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.4",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-4-stage2",
+        "stage_role": "stage2",
+        "unit_collections": [
+          "units"
+        ],
+        "unit_role": "stage2_physical_gate_unit"
+      },
+      "stage2-terminal": {
+        "authorization_artifact_id": "regime-a-prime-stage2-post-stage1-authorization-v0.4",
+        "manifest_artifact_id": "regime-a-prime-stage2-locked-manifest-v0.4",
+        "manifest_relative_path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+        "run_namespace": "mineocclude-regime-a-prime-development-v0-4-stage2",
+        "stage_role": "stage2",
+        "unit_collections": [
+          "units",
+          "readout_and_terminal_units"
+        ],
+        "unit_role": "stage2_terminal_unit"
+      }
+    }
+  },
+  "status": "DRAFT_PROSPECTIVE_UNFROZEN_NOT_AUTHORIZED"
+}
