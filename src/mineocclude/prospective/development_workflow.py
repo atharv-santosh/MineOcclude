@@ -13,10 +13,16 @@ import os
 import statistics
 import subprocess
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
+from mineocclude.prospective.extent_geometry import (
+    TARGET_EXTENT_HALF_BLOCKS,
+    ExtentClass,
+    WallGeometry,
+    classify_extent,
+)
 from mineocclude.prospective.source_provenance import CriticalSource, verify_sources
 from mineocclude.prospective.temporal_alignment import (
     PURE_DELAY_OFF_PEAK_MASS_TOLERANCE,
@@ -29,7 +35,13 @@ from mineocclude.prospective.temporal_alignment import (
 )
 
 
+#: The v0.3 truth predicate, selected by the authority rather than by evidence.
+EXTENT_TRUTH_PREDICATE = "extent_occlusion_geometry_over_rendered_target_extent"
+
 RUNTIME_CRITICAL_SOURCE_PATHS = (
+    "scripts/regime_a_prime_qualification_v0_3/build_authority.py",
+    "scripts/regime_a_prime_qualification_v0_3/build_manifests.py",
+    "src/mineocclude/prospective/extent_geometry.py",
     "scripts/regime_a_prime_qualification_v0_2/build_manifests.py",
     "scripts/regime_a_prime_qualification_v0_2/build_stage1_evidence.py",
     "scripts/regime_a_prime_qualification_v0_2/development_controller.py",
@@ -1480,10 +1492,87 @@ class Stage1Evaluator:
         self.policy = authority["stage1_policy"]
         self.authority_sha256 = _sha(authority_sha256, "authority SHA")
         self.manifest_sha256 = _sha(manifest_sha256, "Stage-1 manifest SHA")
+        self.extent_truth = self._extent_truth_binding()
+
+    def _extent_truth_binding(self) -> dict[str, Any] | None:
+        """Bind the v0.3 extent truth predicate, or ``None`` under v0.2.
+
+        The predicate is selected by what the *authority* declares, never by a
+        flag on the evidence, so a v0.2 package keeps its v0.2 semantics and a
+        v0.3 package cannot silently fall back to the superseded band logic.
+        """
+        visibility = self.policy.get("visibility", {})
+        if visibility.get("primary_predicate") != EXTENT_TRUTH_PREDICATE:
+            return None
+        extent = visibility.get("target_extent")
+        classification = visibility.get("extent_classification")
+        wall_spec = self.authority.get("apparatus", {}).get("wall_geometry_as_built")
+        if not isinstance(extent, dict) or not isinstance(classification, dict) \
+                or not isinstance(wall_spec, dict):
+            raise EvidenceError(
+                "authority declares the extent truth predicate but omits its target "
+                "extent, classification policy or as-built wall geometry")
+        half = _number(extent.get("half_width_blocks"), "target_extent.half_width_blocks")
+        # The declared extent must be exactly what the pinned client jar's model
+        # geometry yields. A package that ships a hand-edited scalar -- in either
+        # direction -- fails closed here rather than quietly scoring against it.
+        if half != TARGET_EXTENT_HALF_BLOCKS:
+            raise EvidenceError(
+                "declared target extent does not reproduce the renderer-model "
+                f"derivation: {half!r} != {TARGET_EXTENT_HALF_BLOCKS!r}")
+        if extent.get("detector_derived") is not False or extent.get("outcome_derived") is not False:
+            raise EvidenceError("target extent must be declared detector- and outcome-independent")
+        samples = _integer(classification.get("samples_per_axis"),
+                           "extent_classification.samples_per_axis", minimum=2)
+        apparatus = self.authority["apparatus"]
+        return {
+            "half_extent": half,
+            "samples_per_axis": samples,
+            "camera": tuple(apparatus["camera_eye_world_xyz"]),
+            "target_centre_y": _number(apparatus.get("target_centre_world_y"),
+                                       "apparatus.target_centre_world_y"),
+            "lane_world_z": _number(apparatus.get("lane_world_z"), "apparatus.lane_world_z"),
+            "wall": WallGeometry(
+                wall_axis=wall_spec["wall_axis"],
+                wall_ortho=_number(wall_spec.get("wall_ortho"), "wall_ortho"),
+                wall_axis_min=_number(wall_spec.get("wall_axis_min"), "wall_axis_min"),
+                wall_axis_max=_number(wall_spec.get("wall_axis_max"), "wall_axis_max"),
+                wall_y_min=_number(wall_spec.get("wall_y_min"), "wall_y_min"),
+                wall_y_max=_number(wall_spec.get("wall_y_max"), "wall_y_max"),
+                half=_number(wall_spec.get("ortho_half_thickness"), "ortho_half_thickness"),
+                present=True),
+        }
+
+    def classify_extent_row(self, world_x: float, scene: str) -> ExtentClass:
+        """Detector-independent extent class for one row.
+
+        Reads only the frozen apparatus geometry and the row's aligned position.
+        It is deliberately given no access to the sample dict, so no future edit
+        can let ``detector_visible`` reach the truth predicate.
+        """
+        binding = self.extent_truth
+        if binding is None:
+            raise EvidenceError("authority does not declare the extent truth predicate")
+        wall = binding["wall"] if scene == "WALL" else replace(binding["wall"], present=False)
+        return classify_extent(
+            binding["camera"],
+            (world_x, binding["target_centre_y"], binding["lane_world_z"]),
+            wall,
+            half_extent=binding["half_extent"],
+            samples_per_axis=binding["samples_per_axis"])
 
     def _validate_manifest_design(self) -> None:
         fixed = self.authority["fixed_development_configuration"]
-        if (self.manifest.get("artifact_id") != "regime-a-prime-stage1-manifest-v0.2"
+        # The expected manifest identity is whatever the authority's own stage
+        # binding names, so a v0.3 package is not scored against a v0.2 artifact
+        # id -- and, more importantly, a manifest from the wrong authority
+        # version is still refused rather than accepted by a loosened check.
+        expected_manifest_id = (self.authority.get("stage_binding_policy", {})
+                                .get("stages", {}).get("stage1-capture", {})
+                                .get("manifest_artifact_id"))
+        if not isinstance(expected_manifest_id, str) or not expected_manifest_id:
+            raise EvidenceError("authority does not bind a Stage-1 manifest artifact id")
+        if (self.manifest.get("artifact_id") != expected_manifest_id
                 or self.manifest.get("classification") != "DEVELOPMENT_ONLY"
                 or self.manifest.get("STAGE_1_COLLECTION_AUTHORIZED") is not False
                 or self.manifest.get("STAGE_2_COLLECTION_AUTHORIZED") is not False
@@ -1623,6 +1712,14 @@ class Stage1Evaluator:
             return "unresolved"
         if sample.get("projected_in_frame") is not True:
             return "unresolved"
+        if self.extent_truth is not None:
+            # v0.3: classify this row directly from geometry. No detector output,
+            # no detector edge and no band transferred from another replicate
+            # participates. NO_WALL still resolves through the same call -- with
+            # no occluder present -- rather than short-circuiting, so both scenes
+            # share one predicate.
+            x = _number(sample.get("world_x"), "world_x")
+            return self.classify_extent_row(x, unit["scene"]).regime
         if unit["scene"] == "NO_WALL":
             return "stable_visible"
         x = _number(sample.get("world_x"), "world_x")
@@ -1698,12 +1795,24 @@ class Stage1Evaluator:
             required_units = {u["unit_id"] for u in expected.values() if u["direction"] == direction
                               and u["scene"] == "WALL" and u["design_role"] == "TRANSITION_MEASUREMENT"}
             transition_ok &= item.get("status") == "MEASURED" and set(item.get("measurement_unit_ids", [])) == required_units
-            hidden = item.get("stable_occluded_world_x_interval")
-            partial = item.get("partial_transition_world_x_intervals")
-            visible = item.get("stable_visible_world_x_intervals")
-            transition_ok &= isinstance(hidden, list) and len(hidden) == 2
-            transition_ok &= isinstance(partial, list) and len(partial) == 2
-            transition_ok &= isinstance(visible, list) and len(visible) == 2
+            if self.extent_truth is not None:
+                # v0.3 reports a geometric occlusion interval plus the detector's
+                # response across it. The detector interval is calibration
+                # evidence; it defines no boundary held-out truth depends on, and
+                # the evidence must say so rather than leave it implied.
+                occluded = item.get("extent_fully_occluded_world_x_interval")
+                rendered = item.get("rendered_detector_absent_world_x_interval")
+                transition_ok &= isinstance(occluded, list) and len(occluded) == 2
+                transition_ok &= isinstance(rendered, list) and len(rendered) == 2
+                transition_ok &= item.get("detector_defines_held_out_truth") is False
+                transition_ok &= item.get("derivation") == "EXTENT_GEOMETRY_ON_ALIGNED_ROWS_ONLY"
+            else:
+                hidden = item.get("stable_occluded_world_x_interval")
+                partial = item.get("partial_transition_world_x_intervals")
+                visible = item.get("stable_visible_world_x_intervals")
+                transition_ok &= isinstance(hidden, list) and len(hidden) == 2
+                transition_ok &= isinstance(partial, list) and len(partial) == 2
+                transition_ok &= isinstance(visible, list) and len(visible) == 2
         unit_ok = complete
         support_ok = complete
         support: dict[str, Any] = {}
@@ -1872,27 +1981,72 @@ class Stage1Evaluator:
                 "complete": unit_complete,
             }
             if spec["scene"] == "WALL" and spec["design_role"] == "TRANSITION_MEASUREMENT":
-                geometric_hidden = [x for x, sample in zip(xs, samples, strict=True)
-                                    if sample["point_visible"] is False]
-                rendered_hidden = [x for x, sample in zip(xs, samples, strict=True)
-                                   if sample["detector_visible"] is False]
-                if not geometric_hidden or not rendered_hidden:
-                    raise EvidenceError("transition measurement lacks point-hidden or detector-absent rows")
-                geometric = [min(geometric_hidden), max(geometric_hidden)]
-                rendered = [min(rendered_hidden), max(rendered_hidden)]
-                stable_hidden = [max(geometric[0], rendered[0]), min(geometric[1], rendered[1])]
-                if stable_hidden[0] >= stable_hidden[1]:
-                    raise EvidenceError("transition measurement has no stable-hidden intersection")
-                partial_intervals = [[min(geometric[0], rendered[0]), stable_hidden[0]],
-                                     [stable_hidden[1], max(geometric[1], rendered[1])]]
-                derived_transitions[spec["direction"]] = {
-                    "geometric_point_hidden_world_x_interval": geometric,
-                    "rendered_detector_absent_world_x_interval": rendered,
-                    "stable_occluded_world_x_interval": stable_hidden,
-                    "partial_transition_world_x_intervals": partial_intervals,
-                    "stable_visible_world_x_intervals": [[lane_min, partial_intervals[0][0]],
-                                                          [partial_intervals[1][1], lane_max]],
-                }
+                # ONLY rows whose aligned physical position is resolved may enter an
+                # interval derivation. A finite raw world_x is not a substitute: over
+                # the causal-FIR warm-up prefix the raw coordinate exists while the
+                # aligned one does not, and admitting it drags the derived interval
+                # toward the lane extremes. This is the v0.2 builder/evaluator
+                # divergence -- the builder derived from aligned values, which are
+                # unavailable in warm-up and so self-excluding, while the evaluator
+                # re-derived from raw sample["world_x"] with no filter at all.
+                admissible = [(x, sample) for x, sample in zip(xs, samples, strict=True)
+                              if sample["temporal_alignment_resolved"] is True]
+                if not admissible:
+                    raise EvidenceError(
+                        "transition measurement has no temporally aligned rows")
+                if self.extent_truth is not None:
+                    # v0.3: the interval is GEOMETRIC. The detector-absent interval
+                    # is still reported -- it is how the rendered detector's response
+                    # across the geometric transition is calibrated -- but it no
+                    # longer defines any boundary that held-out truth depends on.
+                    extent_hidden = [x for x, _ in admissible
+                                     if self.classify_extent_row(x, spec["scene"])
+                                     is ExtentClass.EXTENT_FULLY_OCCLUDED]
+                    extent_visible = [x for x, _ in admissible
+                                      if self.classify_extent_row(x, spec["scene"])
+                                      is ExtentClass.EXTENT_FULLY_VISIBLE]
+                    rendered_absent = [x for x, sample in admissible
+                                       if sample["detector_visible"] is False]
+                    if not extent_hidden or not extent_visible:
+                        raise EvidenceError(
+                            "transition measurement lacks fully-occluded or fully-visible extent rows")
+                    if not rendered_absent:
+                        raise EvidenceError("transition measurement lacks detector-absent rows")
+                    occluded = [min(extent_hidden), max(extent_hidden)]
+                    derived_transitions[spec["direction"]] = {
+                        "extent_fully_occluded_world_x_interval": occluded,
+                        "rendered_detector_absent_world_x_interval":
+                            [min(rendered_absent), max(rendered_absent)],
+                        "geometric_extent_transition_world_x_intervals":
+                            [[min(x for x, _ in admissible), occluded[0]],
+                             [occluded[1], max(x for x, _ in admissible)]],
+                        "aligned_rows_admitted": len(admissible),
+                        "rows_excluded_unaligned": len(samples) - len(admissible),
+                        "derivation": "EXTENT_GEOMETRY_ON_ALIGNED_ROWS_ONLY",
+                        "detector_defines_held_out_truth": False,
+                    }
+                else:
+                    geometric_hidden = [x for x, sample in admissible
+                                        if sample["point_visible"] is False]
+                    rendered_hidden = [x for x, sample in admissible
+                                       if sample["detector_visible"] is False]
+                    if not geometric_hidden or not rendered_hidden:
+                        raise EvidenceError("transition measurement lacks point-hidden or detector-absent rows")
+                    geometric = [min(geometric_hidden), max(geometric_hidden)]
+                    rendered = [min(rendered_hidden), max(rendered_hidden)]
+                    stable_hidden = [max(geometric[0], rendered[0]), min(geometric[1], rendered[1])]
+                    if stable_hidden[0] >= stable_hidden[1]:
+                        raise EvidenceError("transition measurement has no stable-hidden intersection")
+                    partial_intervals = [[min(geometric[0], rendered[0]), stable_hidden[0]],
+                                         [stable_hidden[1], max(geometric[1], rendered[1])]]
+                    derived_transitions[spec["direction"]] = {
+                        "geometric_point_hidden_world_x_interval": geometric,
+                        "rendered_detector_absent_world_x_interval": rendered,
+                        "stable_occluded_world_x_interval": stable_hidden,
+                        "partial_transition_world_x_intervals": partial_intervals,
+                        "stable_visible_world_x_intervals": [[lane_min, partial_intervals[0][0]],
+                                                              [partial_intervals[1][1], lane_max]],
+                    }
             support[f"{spec['direction']}/{spec['scene']}/{spec['replicate']}"] = {
                 "world_x": {"minimum": min(xs), "maximum": max(xs),
                             "maximum_gap": max((b-a for a,b in zip(sorted(xs), sorted(xs)[1:])), default=0.0)},

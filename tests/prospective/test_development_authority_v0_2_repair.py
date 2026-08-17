@@ -616,7 +616,17 @@ def test_rebound_edited_stage1_evidence_cannot_unlock_stage2(tmp_path):
     evidence_path, decision_path = bundle[3], bundle[4]
     decision, manifest, receipt = deepcopy(bundle[5]), deepcopy(bundle[7]), deepcopy(bundle[8])
     evidence = load_json(evidence_path)
-    evidence["runs"][0]["visibility_samples"][0]["point_visible"] = False
+    # Tamper with a row that actually carries physical weight: one whose aligned
+    # position is resolved. Editing a causal-FIR warm-up row instead would be
+    # scientifically inert -- such a row is "unresolved" in every regime and, since
+    # the v0.3 admissibility fix, contributes to no interval derivation either --
+    # so the decision would legitimately reproduce and prove nothing about
+    # tamper-evidence. The earlier form of this test edited index 0 and passed only
+    # because the evaluator was reading unaligned rows' raw world_x.
+    samples = evidence["runs"][0]["visibility_samples"]
+    aligned = next(index for index, sample in enumerate(samples)
+                   if sample["temporal_alignment_resolved"] is True)
+    samples[aligned]["point_visible"] = not samples[aligned]["point_visible"]
     evidence_path.write_text(json.dumps(evidence, sort_keys=True) + "\n")
     decision["stage1_evidence_sha256"] = sha256_file(evidence_path)
     decision_path.write_text(json.dumps(decision, sort_keys=True) + "\n")
