@@ -20,11 +20,32 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
     require_stage2_authorization, require_stage_manifest_binding,
     runtime_critical_source_closure_sha256, sha256_file, stage_run_inventory_sha256,
 )
+from mineocclude.prospective.package_binding import (  # noqa: E402
+    PackageBinding, resolve_package_binding,
+)
+
+
+#: Package version this controller drives. Rebound -- once, before ``main`` --
+#: by the sibling v0.3 entrypoint. Nothing else in this file names a version:
+#: the namespace, the stage role and the authorization identity all come out of
+#: the bound authority's own stage binding table.
+VERSION_TAG = "v0.2"
+
+
+def package_binding(root: Path) -> PackageBinding:
+    """Resolve the declared package, refusing if its bytes are another version.
+
+    Deliberately not named ``binding``: ``main`` binds that name locally to the
+    resolved *stage* binding, which would make this function unreachable from
+    inside it and crash ``run-stage1`` with ``UnboundLocalError`` before any
+    authorization was checked.
+    """
+    return resolve_package_binding(VERSION_TAG, root)
 
 
 def paths(root: Path) -> tuple[Path, Path, Path]:
-    package = root / "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2"
-    return package / "authority_parameters.json", package / "stage1_manifest.json", package / "stage2_locked_manifest.json"
+    bound = package_binding(root)
+    return bound.authority_path, bound.stage1_manifest_path, bound.stage2_manifest_path
 
 
 def required_sources(root: Path) -> list[Path]:
@@ -55,7 +76,10 @@ def main() -> int:
     run2.add_argument("--state-dir", type=Path, required=True)
     run2.add_argument("--events", type=Path, required=True)
     args = parser.parse_args()
-    authority_path, stage1_path, stage2_path = paths(args.repo.resolve())
+    bound = package_binding(args.repo.resolve())
+    authority_path = bound.authority_path
+    stage1_path = bound.stage1_manifest_path
+    stage2_path = bound.stage2_manifest_path
     authority = load_json(authority_path)
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=args.repo, text=True,
                           capture_output=True, check=True).stdout.strip()
@@ -81,7 +105,8 @@ def main() -> int:
             manifest_path=stage1_path, authority=authority, repository=args.repo.resolve())
         authorization = load_json(args.authorization)
         require_preoutcome_provenance(load_json(args.provenance), authority_path=authority_path,
-            manifest_path=stage1_path, required_source_paths=required_sources(args.repo))
+            manifest_path=stage1_path, required_source_paths=required_sources(args.repo),
+            provenance_artifact_id=bound.provenance_artifact_id)
         authorized = (
             authorization.get("artifact_id") == binding["authorization_artifact_id"]
             and authorization.get("status") == "FROZEN_AUTHORIZED"
@@ -133,7 +158,8 @@ def main() -> int:
     decision = load_json(args.stage1_decision)
     authorization = load_json(args.authorization)
     require_preoutcome_provenance(load_json(args.provenance), authority_path=authority_path,
-        manifest_path=stage2_path, required_source_paths=required_sources(args.repo))
+        manifest_path=stage2_path, required_source_paths=required_sources(args.repo),
+        provenance_artifact_id=bound.provenance_artifact_id)
     require_stage2_authorization(manifest, authorization,
         authorization_receipt_path=args.authorization, stage1_decision=decision,
         authority_path=authority_path, manifest_path=stage2_path,

@@ -42,6 +42,16 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     "scripts/regime_a_prime_qualification_v0_3/build_authority.py",
     "scripts/regime_a_prime_qualification_v0_3/build_manifests.py",
     "src/mineocclude/prospective/extent_geometry.py",
+    # The v0.3 execution surface. These carry no scientific logic -- they bind a
+    # version tag and delegate -- but the tag is precisely what selects WHICH
+    # experiment runs, so their bytes are as runtime-critical as the code they
+    # delegate to. Omitting them would let the closure certify an apparatus
+    # whose entrypoint had been repointed at the predecessor inventory.
+    "src/mineocclude/prospective/package_binding.py",
+    "scripts/regime_a_prime_qualification_v0_3/generate_receipts.py",
+    "scripts/regime_a_prime_qualification_v0_3/development_controller.py",
+    "scripts/regime_a_prime_qualification_v0_3/verify_package.py",
+    "scripts/regime_a_prime_qualification_v0_3/acceptance_harness.py",
     "scripts/regime_a_prime_qualification_v0_2/build_manifests.py",
     "scripts/regime_a_prime_qualification_v0_2/build_stage1_evidence.py",
     "scripts/regime_a_prime_qualification_v0_2/development_controller.py",
@@ -239,7 +249,15 @@ def validate_stage2_manifest_design(authority: Mapping[str, Any], manifest: Mapp
     """Bind the complete Stage-2 fold/phase/pair/pipeline design to authority."""
     policy = authority["stage2_policy"]
     fixed = authority["fixed_development_configuration"]
-    if (manifest.get("artifact_id") != "regime-a-prime-stage2-locked-manifest-v0.2"
+    # Read out of the authority's own stage binding table rather than spelled as
+    # a literal here. A literal made this shared validator silently v0.2-only:
+    # the v0.3 locked manifest, which correctly identifies itself as v0.3, was
+    # rejected as an invalid authority boundary. Deriving it is also strictly
+    # stronger, because a manifest must now match the identity the authority
+    # that binds it declares, not one this module remembers.
+    expected_artifact_id = (authority["stage_binding_policy"]["stages"]["stage2-capture"]
+                            ["manifest_artifact_id"])
+    if (manifest.get("artifact_id") != expected_artifact_id
             or manifest.get("classification") != "DEVELOPMENT_ONLY"
             or manifest.get("STAGE_2_COLLECTION_AUTHORIZED") is not False
             or manifest.get("confirmatory_collection_authorized") is not False
@@ -714,6 +732,14 @@ def capture_contract_preflight(manifest: Mapping[str, Any],
 # the Stage-1 evidence builder refuses any receipt carrying it, and the smoke
 # runs under its own namespace so its artifacts cannot be confused for units.
 # --------------------------------------------------------------------------
+
+# The provenance identity assumed when a caller names none. Deliberately the
+# predecessor's: a v0.3 receipt carries a v0.3 identifier, so a v0.3 runner that
+# forgot to pass its own identity is refused by this gate rather than quietly
+# accepting whatever receipt it was handed. Callers get their identity from
+# ``package_binding.PackageBinding.provenance_artifact_id``.
+DEFAULT_PREOUTCOME_PROVENANCE_ARTIFACT_ID = (
+    "regime-a-prime-prospective-pre-outcome-provenance-v0.2")
 
 OPERATIONAL_SMOKE_CLASSIFICATION = "NON_SCIENTIFIC_OPERATIONAL_SMOKE"
 OPERATIONAL_SMOKE_NAMESPACE_SUFFIX = "-nonscientific-operational-smoke"
@@ -2645,8 +2671,10 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
         raise PermissionError("Stage-2 authorization payload hash mismatch")
 
 
-def require_preoutcome_provenance(receipt: Mapping[str, Any], *, authority_path: Path,
-                                  manifest_path: Path, required_source_paths: Sequence[Path]) -> None:
+def require_preoutcome_provenance(
+        receipt: Mapping[str, Any], *, authority_path: Path, manifest_path: Path,
+        required_source_paths: Sequence[Path],
+        provenance_artifact_id: str = DEFAULT_PREOUTCOME_PROVENANCE_ARTIFACT_ID) -> None:
     repository = authority_path.resolve()
     while repository != repository.parent and not (repository / ".git").exists():
         repository = repository.parent
@@ -2660,7 +2688,7 @@ def require_preoutcome_provenance(receipt: Mapping[str, Any], *, authority_path:
     if (authority.get("prospective_source_commit_binding") != runtime_policy
             or manifest.get("source_commit_binding") != runtime_policy):
         raise PermissionError("authority/manifest runtime source-commit policy mismatch")
-    expected = {"artifact_id": "regime-a-prime-prospective-pre-outcome-provenance-v0.2",
+    expected = {"artifact_id": provenance_artifact_id,
                 "status": "FROZEN_VERIFIED", "authority_sha256": sha256_file(authority_path),
                 "manifest_sha256": sha256_file(manifest_path),
                 "source_paths_verified_bytes_and_modes": True, "runtime_identity_verified": True,

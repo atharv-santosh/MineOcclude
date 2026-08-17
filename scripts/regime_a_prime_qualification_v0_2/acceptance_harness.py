@@ -17,8 +17,10 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
 )
 
 
-PACKAGE = (ROOT / "docs/status/integration/regime_a_prime_qualification_v0_1"
-           / "prospective_development_authority_v0_2")
+#: Package version this harness accepts. Rebound -- once, before ``main`` -- by
+#: the sibling v0.3 entrypoint.
+VERSION_TAG = "v0.2"
+
 ALLOWED_NUMERIC_CLASSES = {
     "FROZEN_EVIDENCE_DERIVED", "PROSPECTIVE_STAGE1_MEASURED", "PURE_IMPLEMENTATION_CONSTANT"
 }
@@ -27,18 +29,65 @@ ALLOWED_CONTINUITY = {
     "NOT_AUTHORITY_RELEVANT",
 }
 
+#: Per-version classified-table audits: every row of the named document must
+#: carry exactly one disposition from the allowed set. The two packages document
+#: different things -- v0.2 traces numerics forward from the superseded run,
+#: v0.3 derives a new target extent -- so each version enumerates its own
+#: documents rather than one version's tables being asserted against the other's.
+DOCUMENT_TABLE_AUDITS = {
+    "v0.2": (("NUMERIC_TRACEABILITY.md", ALLOWED_NUMERIC_CLASSES, 1),
+             ("FORENSIC_CONTINUITY_MATRIX.md", ALLOWED_CONTINUITY, 15)),
+    "v0.3": (),
+}
+
+#: Documents each package must carry, and the execution surface each accepts.
+REQUIRED_DOCUMENTS = {
+    "v0.2": ("PROSPECTIVE_DEVELOPMENT_AUTHORITY.md", "NUMERIC_TRACEABILITY.md",
+             "FORENSIC_CONTINUITY_MATRIX.md"),
+    "v0.3": ("PROSPECTIVE_DEVELOPMENT_AUTHORITY.md", "SAMPLE_FLOOR_ANALYSIS.md",
+             "TARGET_EXTENT_DERIVATION.md"),
+}
+SUITES = {
+    "v0.2": ("tests/prospective/test_development_authority_v0_2_repair.py",
+             # D-A4 closure evidence: the artefact the real builder writes, not
+             # just a hand-built document, must reach a PASS through the frozen
+             # evaluator.
+             "tests/prospective/test_stage1_evidence_builder_end_to_end.py",
+             # A4/A6 closure evidence: probe-execution provenance, cross-stage
+             # binding, and the two receipt generators, each attacked directly.
+             "tests/prospective/test_provenance_authorization_and_stage_binding.py"),
+    "v0.3": ("tests/prospective/test_extent_geometry_v0_3.py",
+             # The execution-closure evidence: that the v0.3 entrypoints exist,
+             # resolve the v0.3 inventory, and refuse every v0.2 substitution.
+             "tests/prospective/test_v0_3_execution_entrypoints.py"),
+}
+ENTRYPOINT_DIRECTORY = {"v0.2": "scripts/regime_a_prime_qualification_v0_2",
+                        "v0.3": "scripts/regime_a_prime_qualification_v0_3"}
+
+
+def package() -> Path:
+    from mineocclude.prospective.package_binding import package_directory
+
+    return package_directory(VERSION_TAG, ROOT)
+
 
 def run(*command: str) -> None:
     subprocess.run(command, cwd=ROOT, check=True)
 
 
 def load(name: str) -> dict:
-    value = json.loads((PACKAGE / name).read_text())
+    value = json.loads((package() / name).read_text())
     assert isinstance(value, dict)
     return value
 
 
 def audit_documents() -> None:
+    from mineocclude.prospective.package_binding import resolve_package_binding
+
+    PACKAGE = package()
+    # Refuses here if the directory's bytes are another version's, so every
+    # assertion below is known to be about the package this harness declared.
+    resolve_package_binding(VERSION_TAG, ROOT)
     authority = load("authority_parameters.json")
     stage1 = load("stage1_manifest.json")
     stage2 = load("stage2_locked_manifest.json")
@@ -73,19 +122,16 @@ def audit_documents() -> None:
     assert authority["REGIME_A_PRIME_COLLECTION_AUTHORIZED"] == "NO"
     assert authority["confirmatory_collection_authorized"] is False
 
-    trace_rows = [line for line in (PACKAGE / "NUMERIC_TRACEABILITY.md").read_text().splitlines()
-                  if line.startswith("|") and "`" in line and "Choice" not in line]
-    assert trace_rows
-    for row in trace_rows:
-        classifications = {value for value in ALLOWED_NUMERIC_CLASSES if f"`{value}`" in row}
-        assert len(classifications) == 1, f"unclassified numeric traceability row: {row}"
+    for document in REQUIRED_DOCUMENTS[VERSION_TAG]:
+        assert (PACKAGE / document).is_file(), f"package document is absent: {document}"
 
-    continuity_rows = [line for line in (PACKAGE / "FORENSIC_CONTINUITY_MATRIX.md").read_text().splitlines()
-                       if line.startswith("|") and "`" in line]
-    assert len(continuity_rows) >= 15
-    for row in continuity_rows:
-        dispositions = {value for value in ALLOWED_CONTINUITY if f"`{value}`" in row}
-        assert len(dispositions) == 1, f"invalid forensic disposition: {row}"
+    for document, allowed, minimum_rows in DOCUMENT_TABLE_AUDITS[VERSION_TAG]:
+        rows = [line for line in (PACKAGE / document).read_text().splitlines()
+                if line.startswith("|") and "`" in line and "Choice" not in line]
+        assert len(rows) >= minimum_rows, f"{document} carries no classified rows"
+        for row in rows:
+            dispositions = {value for value in allowed if f"`{value}`" in row}
+            assert len(dispositions) == 1, f"unclassified {document} row: {row}"
 
 
 def audit_projection_exploit() -> None:
@@ -121,19 +167,16 @@ def audit_projection_exploit() -> None:
 def main() -> int:
     audit_documents()
     audit_projection_exploit()
-    run(sys.executable, "-m", "pytest",
-        "tests/prospective/test_development_authority_v0_2_repair.py",
-        # D-A4 closure evidence: the artefact the real builder writes, not just
-        # a hand-built document, must reach a PASS through the frozen evaluator.
-        "tests/prospective/test_stage1_evidence_builder_end_to_end.py",
-        # A4/A6 closure evidence: probe-execution provenance, cross-stage
-        # binding, and the two receipt generators, each attacked directly.
-        "tests/prospective/test_provenance_authorization_and_stage_binding.py", "-q")
-    run(sys.executable, "scripts/regime_a_prime_qualification_v0_2/verify_package.py")
-    run(sys.executable, "-m", "compileall", "-q",
-        "src/mineocclude/prospective", "scripts/regime_a_prime_qualification_v0_2",
-        "tests/prospective")
+    entrypoints = ENTRYPOINT_DIRECTORY[VERSION_TAG]
+    run(sys.executable, "-m", "pytest", *SUITES[VERSION_TAG], "-q")
+    run(sys.executable, f"{entrypoints}/verify_package.py")
+    # Both entrypoint trees: the v0.3 surface delegates into the v0.2 modules,
+    # so compiling only the declared version would leave half of what a v0.3
+    # command actually executes unchecked.
+    run(sys.executable, "-m", "compileall", "-q", "src/mineocclude/prospective",
+        *sorted(set(ENTRYPOINT_DIRECTORY.values())), "tests/prospective")
     print("PROSPECTIVE_ACCEPTANCE_HARNESS_STATUS=PASS")
+    print(f"ACCEPTED_PACKAGE_VERSION={VERSION_TAG}")
     return 0
 
 

@@ -32,6 +32,7 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
     sha256_file, stage_run_inventory_sha256,
     verify_probe_execution, verify_runtime_identity,
 )
+from mineocclude.prospective.package_binding import artifact_version_tag  # noqa: E402
 
 
 def required_runtime_sources() -> list[Path]:
@@ -446,7 +447,13 @@ def capture(stage: str, unit: dict, manifest: dict, manifest_path: Path, receipt
         "asserted_by_evidence_builder": False, "unit_id": unit["unit_id"],
         "durable_uri": durable_prefix, "remote_object_count": len(checksums),
         "remote_checksum_manifest_sha256": sha256_file(checksum_path)})
-    receipt = {"schema_version": "1.1", "artifact_id": "regime-a-prime-development-unit-receipt-v0.2",
+    # Labelled after the manifest this invocation was handed, not after the
+    # directory this file lives in. The v0.3 Stage-1 manifest names this driver
+    # in its own locked unit command, so the same bytes emit v0.2 and v0.3 unit
+    # receipts and neither can carry the other's identity.
+    receipt = {"schema_version": "1.1",
+        "artifact_id": "regime-a-prime-development-unit-receipt-"
+                       + artifact_version_tag(manifest["artifact_id"]),
         "unit_id": unit["unit_id"], "status": "COMPLETE_VALIDATED_DURABLE",
         "classification": "DEVELOPMENT_ONLY", "confirmatory_membership": False,
         "authority_sha256": sha256_file(authority_path), "manifest_sha256": sha256_file(manifest_path),

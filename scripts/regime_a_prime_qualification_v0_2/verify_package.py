@@ -10,22 +10,43 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
-PACKAGE = ROOT / "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2"
+
+#: Package version this audit verifies. Rebound -- once, before ``main`` -- by
+#: the sibling v0.3 entrypoint, so pointing this audit at a package is a
+#: deliberate act rather than a consequence of which directory it lives in.
+VERSION_TAG = "v0.2"
+
+#: The one genuinely version-specific expectation. Everything else below holds
+#: for every package in this family and is checked identically.
+AUTHORITY_STATUS = {"v0.2": "DRAFT_REPAIRED_UNFROZEN_NOT_AUTHORIZED",
+                    "v0.3": "DRAFT_PROSPECTIVE_UNFROZEN_NOT_AUTHORIZED"}
 
 
 def load(name: str) -> dict:
-    return json.loads((PACKAGE / name).read_text())
+    return json.loads((package() / name).read_text())
+
+
+def package() -> Path:
+    from mineocclude.prospective.package_binding import package_directory
+
+    return package_directory(VERSION_TAG, ROOT)
 
 
 def main() -> None:
     from mineocclude.prospective.development_workflow import bind_manifest, validate_stage2_manifest_design
+    from mineocclude.prospective.package_binding import resolve_package_binding
 
+    PACKAGE = package()
+    # Refuses before a single assertion runs if the directory's bytes belong to
+    # another version, so this audit cannot certify the predecessor package
+    # while reporting the successor's name.
+    binding = resolve_package_binding(VERSION_TAG, ROOT)
     authority_path = PACKAGE / "authority_parameters.json"
     authority = load("authority_parameters.json")
     stage1, stage2 = load("stage1_manifest.json"), load("stage2_locked_manifest.json")
     bind_manifest(authority_path, stage1); bind_manifest(authority_path, stage2)
     validate_stage2_manifest_design(authority, stage2, require_materialized=False)
-    assert authority["status"] == "DRAFT_REPAIRED_UNFROZEN_NOT_AUTHORIZED"
+    assert authority["status"] == AUTHORITY_STATUS[VERSION_TAG]
     assert authority["STAGE_1_COLLECTION_AUTHORIZED"] is False
     assert authority["STAGE_2_COLLECTION_AUTHORIZED"] is False
     assert authority["confirmatory_collection_authorized"] is False
@@ -95,6 +116,19 @@ def main() -> None:
                "tests/prospective/test_stage1_evidence_builder_end_to_end.py",
                "tests/prospective/test_capture_contract_and_startup_repair.py",
                "tests/prospective/test_captured_camera_apparatus.py",
+               # The v0.3 successor surface: its package, its builders and
+               # execution entrypoints, the extent-geometry engine its truth
+               # predicate is computed by, the version-binding module every
+               # entrypoint resolves through, and their tests. Enumerated one
+               # path at a time for the same reason the v0.2 entries are -- an
+               # unenumerated path is an unreviewed change to a frozen tree.
+               "docs/status/integration/regime_a_prime_qualification_v0_1/"
+               "prospective_development_authority_v0_3/",
+               "scripts/regime_a_prime_qualification_v0_3/",
+               "src/mineocclude/prospective/extent_geometry.py",
+               "src/mineocclude/prospective/package_binding.py",
+               "tests/prospective/test_extent_geometry_v0_3.py",
+               "tests/prospective/test_v0_3_execution_entrypoints.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()
@@ -106,6 +140,10 @@ def main() -> None:
     assert not unexpected, f"historical/base files changed: {unexpected}"
     touched = sorted({path for path in changed + status_paths if path in corrected_sources})
     print("PACKAGE_CONSISTENCY_STATUS=PASS")
+    print(f"PACKAGE_VERSION={binding.version_tag}")
+    print(f"PACKAGE_AUTHORITY_ARTIFACT_ID={binding.authority_artifact_id}")
+    print(f"PACKAGE_STAGE1_MANIFEST_ARTIFACT_ID={binding.stage1_manifest_artifact_id}")
+    print(f"PACKAGE_RUN_NAMESPACE={binding.run_namespace}")
     print("HISTORICAL_FROZEN_ARTIFACTS_MODIFIED=false")
     print(f"PROSPECTIVELY_CORRECTED_APPARATUS_SOURCES={','.join(touched) or 'none'}")
     print("COLLECTION_AUTHORIZED=false")

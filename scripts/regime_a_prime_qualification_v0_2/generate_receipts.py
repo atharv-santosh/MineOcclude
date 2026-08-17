@@ -70,15 +70,47 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
     verify_probe_execution, verify_runtime_identity, verify_runtime_source_hashes,
 )
 from mineocclude.prospective.source_provenance import CriticalSource, verify_sources  # noqa: E402
+from mineocclude.prospective.package_binding import (  # noqa: E402
+    PackageBinding, resolve_package_binding,
+)
 
-PACKAGE = (ROOT / "docs/status/integration/regime_a_prime_qualification_v0_1"
-           / "prospective_development_authority_v0_2")
-AUTHORITY_PATH = PACKAGE / "authority_parameters.json"
-STAGE1_MANIFEST_PATH = PACKAGE / "stage1_manifest.json"
-PROVENANCE_ARTIFACT_ID = "regime-a-prime-prospective-pre-outcome-provenance-v0.2"
-AUTHORIZATION_ARTIFACT_ID = "regime-a-prime-stage1-authorization-v0.2"
 SCHEMA_VERSION = "1.1"
 RUNTIME_POLICY = "BOUND_AT_LAUNCH_BY_PREOUTCOME_PROVENANCE_RECEIPT"
+
+#: Package version this process generates receipts for. Rebound -- once, before
+#: ``main`` -- by the sibling v0.3 entrypoint. Every function below reads these
+#: as globals at call time, so rebinding is what makes one implementation serve
+#: two experiments without either being able to impersonate the other.
+BINDING: PackageBinding
+PACKAGE: Path
+AUTHORITY_PATH: Path
+STAGE1_MANIFEST_PATH: Path
+PROVENANCE_ARTIFACT_ID: str
+AUTHORIZATION_ARTIFACT_ID: str
+GENERATED_BY: str
+
+
+def bind_package(version_tag: str, *, entrypoint: str) -> PackageBinding:
+    """Point this module at one verified qualification package.
+
+    ``resolve_package_binding`` refuses unless the package's own bytes identify
+    it as ``version_tag``, so a receipt generated here cannot carry a version it
+    was not actually built against. ``entrypoint`` is recorded verbatim in every
+    artifact's ``generated_by``, so the receipt names the command that made it.
+    """
+    global BINDING, PACKAGE, AUTHORITY_PATH, STAGE1_MANIFEST_PATH
+    global PROVENANCE_ARTIFACT_ID, AUTHORIZATION_ARTIFACT_ID, GENERATED_BY
+    BINDING = resolve_package_binding(version_tag, ROOT)
+    PACKAGE = BINDING.package
+    AUTHORITY_PATH = BINDING.authority_path
+    STAGE1_MANIFEST_PATH = BINDING.stage1_manifest_path
+    PROVENANCE_ARTIFACT_ID = BINDING.provenance_artifact_id
+    AUTHORIZATION_ARTIFACT_ID = BINDING.authorization_artifact_id
+    GENERATED_BY = entrypoint
+    return BINDING
+
+
+bind_package("v0.2", entrypoint="scripts/regime_a_prime_qualification_v0_2/generate_receipts.py")
 
 
 def git(*arguments: str) -> str:
@@ -486,7 +518,7 @@ def operational_startup_smoke(output: Path) -> int:
         "scientific_evidence": False,
         "counts_toward_stage1_units": False,
         "generated_at_utc": generation_time(),
-        "generated_by": "scripts/regime_a_prime_qualification_v0_2/generate_receipts.py",
+        "generated_by": GENERATED_BY,
         "source_commit": git("rev-parse", "HEAD"),
         "runtime_critical_source_closure_sha256": runtime_critical_source_closure_sha256(ROOT),
         "java_executable": qualified_java_identity(authority),
@@ -593,7 +625,7 @@ def build_provenance(probe_evidence_path: Path, output: Path, *,
                         "source_commit": None,
                         "reviewed_runtime_critical_source_closure_sha256": closure,
                         "post_freeze_verification_command":
-                            "python3 scripts/regime_a_prime_qualification_v0_2/generate_receipts.py "
+                            f"python3 {GENERATED_BY} "
                             "provenance --probe-evidence <probe.json> --output <receipt.json> "
                             "--freeze-commit <commit-sha>"}
     else:
@@ -623,7 +655,7 @@ def build_provenance(probe_evidence_path: Path, output: Path, *,
         "schema_version": SCHEMA_VERSION, "artifact_id": PROVENANCE_ARTIFACT_ID,
         "classification": "DEVELOPMENT_ONLY", "status": status,
         "generated_at_utc": generation_time(),
-        "generated_by": "scripts/regime_a_prime_qualification_v0_2/generate_receipts.py",
+        "generated_by": GENERATED_BY,
         "authority_sha256": sha256_file(AUTHORITY_PATH),
         "manifest_sha256": sha256_file(STAGE1_MANIFEST_PATH),
         "stage1_manifest_sha256": sha256_file(STAGE1_MANIFEST_PATH),
@@ -751,7 +783,7 @@ def build_stage1_authorization(provenance_path: Path, output: Path) -> int:
         "schema_version": SCHEMA_VERSION, "artifact_id": AUTHORIZATION_ARTIFACT_ID,
         "classification": "DEVELOPMENT_ONLY", "status": "FROZEN_AUTHORIZED",
         "generated_at_utc": generation_time(),
-        "generated_by": "scripts/regime_a_prime_qualification_v0_2/generate_receipts.py",
+        "generated_by": GENERATED_BY,
         "authority_sha256": authority_sha,
         "stage1_manifest_sha256": manifest_sha,
         "authorized_stage": binding["stage"],

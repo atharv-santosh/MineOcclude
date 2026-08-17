@@ -22,6 +22,7 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
 from mineocclude.prospective.temporal_alignment import (  # noqa: E402
     AlignmentEvidence, AlignmentRequirements, UncertaintyRequest, estimate_alignment,
 )
+from mineocclude.prospective.package_binding import artifact_version_tag  # noqa: E402
 from mineocclude.vision.magenta import HsvRange, detect_magenta  # noqa: E402
 from scripts.run_regime_a import detector_rgb_rows  # noqa: E402
 
@@ -367,7 +368,10 @@ def main() -> None:
                                          "prohibited_counts": counts},
             "visibility_samples": samples})
     atomic_write_json(args.output, {"schema_version": "1.1",
-        "artifact_id": "regime-a-prime-stage1-evidence-v0.2",
+        # Follows the manifest that was actually evaluated, so v0.3 evidence
+        # cannot present itself as the predecessor's.
+        "artifact_id": "regime-a-prime-stage1-evidence-"
+                       + artifact_version_tag(manifest["artifact_id"]),
         "authority_sha256": sha256_file(args.authority), "stage1_manifest_sha256": sha256_file(args.manifest),
         "runs": runs, "alignment_by_direction": alignments,
         "transition_measurement_by_direction": transitions})
