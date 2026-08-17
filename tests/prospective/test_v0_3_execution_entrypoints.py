@@ -401,10 +401,19 @@ def test_v0_3_controller_cli_resolves_the_new_manifest_not_the_predecessor():
 
 
 def test_v0_3_stage1_manifest_digest_is_the_frozen_one(v0_3):
-    """Pins the exact bytes every gate above was proved against."""
+    """Pins the exact bytes every gate above was proved against.
+
+    Rebound from the ``fa9d134`` digests by the probe-producer repair. That
+    freeze's authority required a probe producer that has never existed, so
+    correcting the producer allow-list changed the authority bytes and, through
+    ``authority_binding``, both manifests. The scientific content is unchanged:
+    the delta is three probe-producer strings and the binding digests that
+    deterministically follow. See
+    ``test_v0_3_probe_producer_authority.py`` for the producer contract itself.
+    """
     assert sha256_file(v0_3.stage1_manifest_path) == (
-        "1eedd44c0dc9742daaff8e8ef0d768434e44d1eeba70dd519f63f14baba558c9")
+        "424b583f93a2fd77886e534543872dd3120f0470e5f3f341ee445443c64039a3")
     assert sha256_file(v0_3.authority_path) == (
-        "a0573a1656f49a1979c6d73f79f9b4e90b77ac2331240b5f757b6b3c77847c35")
+        "495af6d19b73f35a4927e48d7def4ded587ddf4d7900a8d6827ffec3ad7e982f")
     assert sha256_file(v0_3.stage2_manifest_path) == (
-        "16ff65411606e85693d3ad8a2f9e50f85245c4f29ad17aa73f2652902ad16d55")
+        "aaf801b9007a9254ade2ba86a7b2579a11d366fa371478b4f9e97848560290da")

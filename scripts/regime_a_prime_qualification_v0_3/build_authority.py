@@ -95,16 +95,75 @@ def _retarget(value, old: str, new: str):
     return value
 
 
+# Fields the version sweep must not touch, because they name a Python
+# implementation rather than a versioned artifact identity.
+#
+# The sweep exists to move *package identities* -- artifact IDs, namespaces,
+# manifest paths -- from v0.2 to v0.3. A producer entry is a different kind of
+# string: it is the import path of code that actually executes. v0.3 changes the
+# truth predicate, not the apparatus ("the mod is the trusted reference and is
+# deliberately unmodified in v0.3"), so the runtime probe and the evidence
+# builder it is defended against both still live in the v0.2 package, and
+# build_manifests.py accordingly still binds all 8 unit commands to the v0.2
+# stage_unit_driver. Sweeping these renamed a real producer to a module that has
+# never existed, which both blocked the runtime preflight and left the forbidden
+# list naming nothing real.
+#
+# Restoring rather than exempting the whole policy keeps the rule narrow: only
+# these two lists are proven to name shared implementations.
+SHARED_IMPLEMENTATION_PRODUCER_FIELDS = (
+    "independent_probe_producers",
+    "forbidden_probe_producers",
+)
+
+
+def _producer_source_path(producer: str) -> Path | None:
+    """The file that defines ``producer``, or None if no such module exists.
+
+    A producer is a dotted path whose final component is the callable, e.g.
+    ``scripts.pkg.module.function``. Modules resolve either from the repository
+    root (``scripts/``) or from ``src/`` (``mineocclude/``), so both roots are
+    tried before concluding the producer names nothing.
+    """
+    parts = producer.split(".")
+    for root in (ROOT, ROOT / "src"):
+        candidate = root.joinpath(*parts[:-1]).with_suffix(".py")
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def require_producers_exist(authority: dict) -> None:
+    """Every declared probe producer must name a real implementation.
+
+    An allow-list entry that names nothing cannot be produced by, and a
+    forbidden entry that names nothing cannot forbid, anything -- so a sweep
+    that silently renames either one turns a provenance control into a string
+    comparison against a module that does not exist. Failing the build here is
+    what makes that class of defect unshippable.
+    """
+    policy = authority["runtime_identity_policy"]["probe_evidence_policy"]
+    for field in SHARED_IMPLEMENTATION_PRODUCER_FIELDS:
+        for producer in policy[field]:
+            if _producer_source_path(producer) is None:
+                raise RuntimeError(
+                    f"{field} names a producer with no implementation: {producer}")
+
+
 def build_authority() -> dict:
     authority = json.loads((PACKAGE_V02 / "authority_parameters.json").read_text())
 
     # Preserve values that must NOT be swept by the version retarget.
     forensic_base = authority["immutable_software_forensic_base_sha"]
+    shared_producers = {
+        field: list(authority["runtime_identity_policy"]["probe_evidence_policy"][field])
+        for field in SHARED_IMPLEMENTATION_PRODUCER_FIELDS}
 
     authority = _retarget(authority, "v0_2", "v0_3")
     authority = _retarget(authority, "v0-2", "v0-3")
     authority = _retarget(authority, "v0.2", "v0.3")
     authority["immutable_software_forensic_base_sha"] = forensic_base
+    authority["runtime_identity_policy"]["probe_evidence_policy"].update(shared_producers)
 
     authority["status"] = "DRAFT_PROSPECTIVE_UNFROZEN_NOT_AUTHORIZED"
     authority["classification"] = "DEVELOPMENT_ONLY"
@@ -302,6 +361,7 @@ def main() -> None:
     if derive_target_extent_half_blocks() != TARGET_EXTENT_HALF_BLOCKS:
         raise RuntimeError("target extent is not reproducible from model constants")
     authority = build_authority()
+    require_producers_exist(authority)
     path = PACKAGE_V03 / "authority_parameters.json"
     write(path, authority)
     print(f"authority_parameters.json sha256 = {hashlib.sha256(path.read_bytes()).hexdigest()}")

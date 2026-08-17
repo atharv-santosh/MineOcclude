@@ -129,6 +129,7 @@ def main() -> None:
                "src/mineocclude/prospective/package_binding.py",
                "tests/prospective/test_extent_geometry_v0_3.py",
                "tests/prospective/test_v0_3_execution_entrypoints.py",
+               "tests/prospective/test_v0_3_probe_producer_authority.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

@@ -211,13 +211,13 @@
       "digest_primitive": "sha256_over_canonical_json_of_the_probe_execution_record",
       "digest_primitive_derivation": "There is no asymmetric key and no authenticated signer anywhere in this package, so no receipt is signed. The primitive is a deterministic cryptographic digest over independently generated probe evidence, and it is named accordingly. It establishes that the recorded probe evidence has not been edited since it was assembled; it does not establish who assembled it. Authorship is constrained separately, by independent_probe_producers plus the byte-level rehashing of the probe source, the probed executables, and the pinned apparatus artefacts.",
       "forbidden_probe_producers": [
-        "scripts.regime_a_prime_qualification_v0_3.build_stage1_evidence.main",
-        "scripts.regime_a_prime_qualification_v0_3.build_stage1_evidence.build_evidence",
+        "scripts.regime_a_prime_qualification_v0_2.build_stage1_evidence.main",
+        "scripts.regime_a_prime_qualification_v0_2.build_stage1_evidence.build_evidence",
         "mineocclude.prospective.development_workflow.Stage1Evaluator"
       ],
       "forbidden_probe_producers_derivation": "The evidence builder and the evaluator may never author the evidence that the runtime was independently verified; a PASS that either of them can emit is a self-assertion, which is the defect this policy replaces.",
       "independent_probe_producers": [
-        "scripts.regime_a_prime_qualification_v0_3.stage_unit_driver.probe_runtime"
+        "scripts.regime_a_prime_qualification_v0_2.stage_unit_driver.probe_runtime"
       ],
       "required_exit_status": 0,
       "required_invocation_ids": [
