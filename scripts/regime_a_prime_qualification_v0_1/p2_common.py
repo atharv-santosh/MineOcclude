@@ -19,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -62,6 +63,12 @@ P2_EPISODE_BASE = 61000
 
 TAUS = list(range(1, 20))
 LAYER = 4
+
+# Non-scientific startspec preflight. The warmup is long enough that the episode
+# is torn down a minute of ticks before beginCapture() could fire, so "captured
+# no frame" is structural rather than a race the preflight has to win.
+ARM_ONLY_WARMUP_TICKS = 1200
+ARM_ONLY_TIMEOUT_SECONDS = 90.0
 
 
 def sha256_file(path: Path) -> str:
@@ -193,6 +200,26 @@ def capture_context(spec: dict, episode_id: int, server_root: Path) -> dict[str,
     }
 
 
+def startspec_command(spec: dict, episode_id: int, frames: int) -> str:
+    """The one startspec line. Production capture and the preflight both use it.
+
+    Single source of truth on purpose: a preflight that assembled its own copy
+    of this line could pass while production sent something different, which is
+    the exact class of gap that let a seed-contract break survive to collection.
+
+    ``spec['seed']`` is the episode seed the server verifies the noise schedule
+    header against (``NoiseSchedule.load(path, cfg.seed)``) and then logs into
+    every server_state row. It must equal ``spec['noise_seed']``, the value the
+    schedule was generated from; ``require_server_seed_contract`` refuses a spec
+    where it does not.
+    """
+    return (
+        f"mineocclude startspec layout_01 {episode_id} {spec['seed']} "
+        f"{spec['motion_noise_q']} {frames} {spec['start_world_x']} "
+        f"{spec['trajectory_spec_id']} {raw_capture_spec_hash(spec)}"
+    )
+
+
 def load_live():
     """Import and configure the validated live capture runtime."""
     sys.path.insert(0, str(REPO))
@@ -297,11 +324,7 @@ class CaptureSession:
             "mineocclude impulse -1 0",
             "mineocclude pairshift 0",
             "mineocclude lockcam on",
-            (
-                f"mineocclude startspec layout_01 {episode_id} {spec['seed']} "
-                f"{spec['motion_noise_q']} {frames} {spec['start_world_x']} "
-                f"{spec['trajectory_spec_id']} {raw_capture_spec_hash(spec)}"
-            ),
+            startspec_command(spec, episode_id, frames),
         ])
         self.runtime.wait_log(rf"episode {episode_id} armed", 60, offset)
         self.runtime.wait_log(rf"episode {episode_id} recording started", 60, offset)
@@ -325,6 +348,115 @@ class CaptureSession:
             "schedule": context["schedule"],
             "signed_speed": context["signed_speed"],
         }
+
+    def arm_only(self, spec: dict, episode_id: int) -> dict[str, Any]:
+        """NON-SCIENTIFIC: cross the real startspec contract, then stop.
+
+        Everything a scientific capture does up to and including the server
+        accepting the episode identity -- schedule materialization, the same
+        ``startspec`` line from :func:`startspec_command`, schedule load, seed
+        verification, arming -- and then nothing. No frame is captured, no
+        receipt is written, nothing is put in a durable namespace.
+
+        Capture is prevented structurally rather than by racing the server: the
+        warmup is set to ``ARM_ONLY_WARMUP_TICKS`` (a minute of ticks), and
+        ``EpisodeManager`` only calls ``beginCapture()`` when the warmup counter
+        reaches zero, so the episode is stopped a long way before the first frame
+        could be written. The recording marker is asserted absent afterwards, so
+        a warmup that somehow elapsed is a failure rather than a silent capture.
+
+        The arming line is the whole point of this call. It reads
+        ``... seed=<episode seed>, rng=immutable_numpy_schedule)`` and the server
+        can only reach it after ``NoiseSchedule.load`` accepted the schedule,
+        which it only does when the schedule header seed equals the episode seed.
+        A seed-contract break therefore cannot reach this line: it refuses at
+        ``REFUSED: noise schedule ... is invalid``. An episode that armed on the
+        ``java_util_random_nonscientific`` fallback -- a missing schedule rather
+        than a matching one -- reports a different rng source and fails too.
+        """
+        live = self.live
+        server_root, client_root = live.SERVER_ROOT, live.CLIENT_ROOT
+        context = capture_context(spec, episode_id, server_root)
+        frames = context["frames"]
+
+        # The server refuses to re-arm an episode id whose output already exists,
+        # so a previous preflight must not block the next one. These are runtime
+        # scratch directories, never scientific artifacts.
+        server_episode = server_root / f"mineocclude_out/episode_{episode_id}"
+        client_episode = client_root / f"mineocclude_client_out/episode_{episode_id}"
+        for path in (server_episode, client_episode):
+            if path.exists():
+                shutil.rmtree(path)
+
+        context["noise_path"].parent.mkdir(parents=True, exist_ok=True)
+        context["motion_path"].parent.mkdir(parents=True, exist_ok=True)
+        context["noise_path"].write_bytes(context["noise_bytes"])
+        context["motion_path"].write_bytes(context["motion_bytes"])
+
+        command = startspec_command(spec, episode_id, frames)
+        offset = len(self.runtime.log_text())
+        self.runtime.send([
+            f"mineocclude mode {self.scene_mode}",
+            "mineocclude duration 0",
+            "mineocclude reveal 0",
+            f"mineocclude warmup {ARM_ONLY_WARMUP_TICKS}",
+            "mineocclude impulse -1 0",
+            "mineocclude pairshift 0",
+            "mineocclude lockcam on",
+            command,
+        ])
+        armed_pattern = rf"episode {episode_id} armed \([^\n]*\)"
+        refusal_pattern = r"REFUSED[^\n]*|startspec (?:REFUSED|failed)[^\n]*"
+        armed_line, refusal = self._await_arming(armed_pattern, refusal_pattern, offset)
+        try:
+            self.runtime.send(["mineocclude stop"])
+        except BaseException as cause:  # noqa: BLE001 - reported, never raised
+            # The context manager's teardown kills the JVM regardless, so a stop
+            # that could not be delivered must not discard the evidence already
+            # gathered about what the server did with the episode identity.
+            print(f"arm-only stop failed: {cause!r}", file=sys.stderr)
+        tail = self.runtime.log_text()[offset:]
+
+        frame_dir = client_episode / "frames"
+        frames_written = len(list(frame_dir.glob("*.png"))) if frame_dir.is_dir() else 0
+        return {
+            "episode_id": episode_id,
+            "seed": int(spec["seed"]),
+            "noise_seed": int(spec["noise_seed"]),
+            "schedule_seed_header": int(
+                json.loads(context["noise_bytes"].decode().splitlines()[0])["seed"]),
+            "startspec_command": command,
+            "armed": armed_line is not None,
+            "armed_log_line": armed_line,
+            "refusal": refusal,
+            "rng_source": ("immutable_numpy_schedule"
+                           if armed_line and "rng=immutable_numpy_schedule" in armed_line
+                           else None),
+            # Asserted absent, not assumed: this is what makes "no frame was
+            # captured" a verified outcome rather than a claim about timing.
+            "recording_started": f"episode {episode_id} recording started" in tail,
+            "frames_written": frames_written,
+        }
+
+    def _await_arming(self, armed_pattern: str, refusal_pattern: str,
+                      offset: int) -> tuple[str | None, str | None]:
+        """Poll for arming or refusal, whichever the server reaches first.
+
+        Waiting only for the arming marker would turn a deterministic refusal
+        into a timeout, which reports as "the log never said X" and hides the
+        reason the server actually gave.
+        """
+        deadline = time.monotonic() + ARM_ONLY_TIMEOUT_SECONDS
+        while time.monotonic() < deadline:
+            tail = self.runtime.log_text()[offset:]
+            armed = re.search(armed_pattern, tail)
+            if armed:
+                return armed.group(0), None
+            refused = re.search(refusal_pattern, tail)
+            if refused:
+                return None, refused.group(0)
+            time.sleep(0.1)
+        return None, f"timed out after {ARM_ONLY_TIMEOUT_SECONDS:g}s without arming or refusal"
 
 
 def wall_coordinates(spec_id: str) -> dict[int, float]:

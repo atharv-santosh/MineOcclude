@@ -26,6 +26,37 @@ def seed(label: str) -> int:
     return int.from_bytes(hashlib.sha256(label.encode()).digest()[:8], "big") & ((1 << 63) - 1)
 
 
+def unit_seed(label: str) -> int:
+    """The ONE seed identity a capture unit carries.
+
+    ``seed`` and ``noise_seed`` are two names for a single value, not two
+    independent draws. The apparatus enforces this end to end:
+
+      * Python generates the schedule from ``noise_seed`` and the server is
+        handed ``seed`` on the ``startspec`` line;
+      * ``NoiseSchedule.load(schedulePath, cfg.seed)`` refuses any schedule whose
+        header seed differs from the episode seed, so a scientific episode cannot
+        even arm unless the two agree;
+      * the server logs that same ``cfg.seed`` into every ``server_state`` row,
+        and ``p3_run_sequential.derive_artifacts`` re-checks each row against
+        ``spec["seed"]`` -- so sending the noise seed instead would merely move
+        the refusal from arming to frame 0.
+
+    Every manifest that ever produced a real capture satisfies it: all 25 Regime
+    A v2.1 amendment-1 specs and all P3 development specs carry
+    ``seed == noise_seed``. Minting the two from different labels was a
+    generator defect, not a two-seed design.
+
+    The noise label is the surviving derivation deliberately. The seed value is
+    scientifically inert -- with a schedule loaded the server never draws from it
+    (``SheepController.rng`` is the ``java_util_random_nonscientific`` fallback
+    only) -- whereas the noise seed determines the physical trajectory. Keeping
+    the noise derivation leaves every noise realization, ``noise_schedule_sha256``
+    and Stage-2 ``expected_path_sha256`` byte-identical.
+    """
+    return seed(label + ":noise")
+
+
 def write(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
 
@@ -65,11 +96,12 @@ def build_stage1(authority_sha: str, authority: dict) -> dict:
                 scene_short = "wall" if scene == "WALL" else "nowall"
                 unit_id = f"a1q_{short}_{scene_short}_r{replicate:02d}"
                 receipt = Path(f"/mnt/sagemaker-nvme/regime_a_prime_a1q_v0_2/receipts/{unit_id}.json")
+                identity_seed = unit_seed(unit_id)
                 units.append({"unit_id": unit_id, "classification": "NONCONFIRMATORY_DEVELOPMENT_QUALIFICATION",
                     "confirmatory_membership": False, "direction": direction, "scene": scene,
                     "scientific_run_id": "mineocclude-regime-a-prime-development-v0-2-stage1",
-                    "replicate": replicate, "design_role": role, "episode_id": episode, "seed": seed(unit_id),
-                    "noise_seed": seed(unit_id + ":noise"),
+                    "replicate": replicate, "design_role": role, "episode_id": episode, "seed": identity_seed,
+                    "noise_seed": identity_seed,
                     "speed_blocks_per_second": fixed["speed_blocks_per_second"],
                     "motion_noise_q": fixed["motion_noise_q"],
                     "start_world_x": fixed["start_world_x_by_direction"][direction],
@@ -104,8 +136,9 @@ def build_stage2_template(authority_sha: str, stage1_sha: str, authority: dict) 
     for index, (fold, phase_index, phase) in enumerate(cells, start=1):
         trajectory_id = f"a2dev_t{index:02d}"
         direction = "LEFT_TO_RIGHT" if phase_index in ltr_by_fold[fold] else "RIGHT_TO_LEFT"
-        identity = {"trajectory_id": trajectory_id, "seed": seed(trajectory_id),
-            "noise_seed": seed(trajectory_id + ":noise"), "direction": direction,
+        identity_seed = unit_seed(trajectory_id)
+        identity = {"trajectory_id": trajectory_id, "seed": identity_seed,
+            "noise_seed": identity_seed, "direction": direction,
             "outer_fold": fold, "phase_frames": phase,
             "speed_blocks_per_second": fixed["speed_blocks_per_second"],
             "motion_noise_q": fixed["motion_noise_q"],

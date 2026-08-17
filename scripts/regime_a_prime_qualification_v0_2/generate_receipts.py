@@ -59,7 +59,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from mineocclude.prospective.development_workflow import (  # noqa: E402
     OPERATIONAL_SMOKE_ARTIFACT_ID, OPERATIONAL_SMOKE_CLASSIFICATION,
     OPERATIONAL_SMOKE_DISPLAY_GEOMETRY as CAPTURE_DISPLAY_GEOMETRY,
-    OPERATIONAL_SMOKE_SCHEMA,
+    OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA, OPERATIONAL_SMOKE_SCHEMA,
     RUNTIME_CRITICAL_SOURCE_PATHS, EvidenceError, atomic_write_json,
     canonical_json_bytes, canonical_payload_sha256, capture_contract_preflight,
     capture_toolchain_evidence, derive_effective_capture_spec, load_json,
@@ -367,13 +367,20 @@ def qualified_java_identity(authority: dict) -> dict:
 
 
 def operational_startup_smoke(output: Path) -> int:
-    """Start the real apparatus, cross the capture interface, tear it down.
+    """Start the real apparatus, cross the capture contract, tear it down.
 
-    Deliberately captures no frame. The defect this control exists to catch --
-    the v0.2 spec that the reused v0.1 ``capture_context`` rejects -- is reached
-    by building the context, which is strictly before any rendering. Capturing
-    would produce pixel data this session is not authorized to collect, so it
-    does not.
+    Deliberately captures no frame, and now goes as far as the server: the
+    previous version stopped at ``capture_context``, which proved only that the
+    Python side of the v0.2 -> v0.1 interface holds. It never issued a
+    ``startspec``, so the server never saw an episode identity, never loaded a
+    schedule, and never checked the schedule header seed against the episode
+    seed -- and a spec whose two seed fields disagreed passed this control and
+    was first refused by a real Stage-1 launch.
+
+    ``CaptureSession.arm_only`` closes that: schedule materialization, the same
+    startspec line production sends, schedule load, seed verification and arming,
+    then stop. Arming is strictly before ``beginCapture()``, so no pixel is ever
+    read; the handshake record asserts that absence rather than assuming it.
     """
     authority = load_json(AUTHORITY_PATH)
     manifest = load_json(STAGE1_MANIFEST_PATH)
@@ -412,6 +419,7 @@ def operational_startup_smoke(output: Path) -> int:
                               "started_by_smoke": False}
     openbox_evidence: dict = {"started_by_smoke": False}
     contract_crossed = False
+    handshake: dict = {}
     failure: str | None = None
     started = time.monotonic()
 
@@ -450,6 +458,17 @@ def operational_startup_smoke(output: Path) -> int:
                                       session.live.SERVER_ROOT)
             contract_crossed = bool(context["frames"]) and "schedule" in context
 
+            # Now the half the old smoke never reached: hand the identity to the
+            # server and require it to accept the schedule against the episode
+            # seed. Stops at armed -- strictly before the first captured frame.
+            handshake = {"schema": OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA,
+                         **session.arm_only(spec, int(spec["episode_id"]))}
+            # Sourced at the server log the line was read from, like the other
+            # stages, so the record names where the claim can be checked.
+            stages["episode_armed"] = stage_evidence(
+                session.live.SERVER_ROOT / "logs/latest.log",
+                (handshake.get("armed_log_line") or "") + "\n", started)
+
         # After __exit__: every process the smoke started must be gone.
         for record, process in zip(launched, handles):
             record["exited"] = process.poll() is not None
@@ -481,6 +500,7 @@ def operational_startup_smoke(output: Path) -> int:
         "capture_contract_preflight": contract,
         "smoke_capture_spec_sha256": spec["spec_hash"],
         "capture_contract_crossed": contract_crossed,
+        "startspec_handshake": handshake,
         # Verified as counts by require_operational_smoke; a smoke that captured
         # anything is refused rather than relabelled.
         "frames_captured": 0,
@@ -490,7 +510,8 @@ def operational_startup_smoke(output: Path) -> int:
     }
     smoke["status"] = "PASS" if (contract_crossed and not stranded and failure is None
                                  and set(stages) == {"display_ready", "server_ready",
-                                                     "client_joined", "teardown"}) else "FAIL"
+                                                     "client_joined", "episode_armed",
+                                                     "teardown"}) else "FAIL"
     smoke["payload_sha256"] = canonical_payload_sha256(smoke, omit="payload_sha256")
 
     # Reproduce, do not trust: the document must satisfy the same verifier the

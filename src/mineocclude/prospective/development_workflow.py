@@ -510,6 +510,38 @@ def derive_effective_capture_spec(unit: Mapping[str, Any],
     return spec
 
 
+def require_server_seed_contract(spec: Mapping[str, Any]) -> None:
+    """Refuse a spec the Java server would refuse to arm.
+
+    ``NoiseSchedule.load(schedulePath, cfg.seed)`` requires the schedule header
+    seed to equal the episode seed, and the episode seed is whatever the
+    ``startspec`` line carried -- ``spec["seed"]``. Python generates the schedule
+    from ``spec["noise_seed"]``. So a spec whose two seed fields disagree cannot
+    arm: the server logs ``REFUSED: noise schedule ... is invalid: schedule seed
+    X does not match the episode seed Y`` and the episode dies before any frame.
+
+    Sending ``noise_seed`` on the startspec line instead is not the alternative
+    reading of this contract: the server logs ``cfg.seed`` into every
+    ``server_state`` row and ``p3_run_sequential.derive_artifacts`` re-checks
+    each row against ``spec["seed"]``, so that only moves the refusal from
+    arming to ``CAPTURE_IDENTITY_MISMATCH`` at frame 0. One value, two names --
+    exactly as all 25 Regime A v2.1 amendment-1 specs and every P3 development
+    spec carry it.
+
+    Checked here rather than only at the apparatus so the mismatch is a static
+    pre-authorization refusal instead of a burnt launch attempt.
+    """
+    for field in ("seed", "noise_seed"):
+        value = spec.get(field)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise EvidenceError(f"{field} is not a non-negative integer seed")
+    if int(spec["seed"]) != int(spec["noise_seed"]):
+        raise EvidenceError(
+            f"capture spec violates the server seed contract: seed {spec['seed']} "
+            f"!= noise_seed {spec['noise_seed']}; the server refuses any schedule "
+            "whose header seed differs from the episode seed it was armed with")
+
+
 def require_capture_spec_contract(spec: Mapping[str, Any]) -> None:
     """Refuse a capture spec the reused v0.1 interface would reject.
 
@@ -520,6 +552,7 @@ def require_capture_spec_contract(spec: Mapping[str, Any]) -> None:
     missing = [field for field in CAPTURE_SPEC_REQUIRED_FIELDS if field not in spec]
     if missing:
         raise EvidenceError(f"effective capture spec is missing required fields: {missing}")
+    require_server_seed_contract(spec)
     for field in CAPTURE_SPEC_IDENTITY_FIELDS:
         if field not in spec:
             continue
@@ -694,8 +727,17 @@ OPERATIONAL_SMOKE_STAGES: tuple[tuple[str, str], ...] = (
     ("display_ready", "640x360"),
     ("server_ready", "server ready"),
     ("client_joined", "joined the game"),
+    # The startspec handshake. This marker is the server's own arming line, and
+    # it is unreachable unless NoiseSchedule.load accepted the materialized
+    # schedule against the episode seed the startspec line carried. An episode
+    # that armed on the java.util.Random fallback prints a different rng source
+    # and fails here, so the marker proves a real schedule was verified rather
+    # than merely that an episode started.
+    ("episode_armed", "rng=immutable_numpy_schedule"),
     ("teardown", "teardown_complete"),
 )
+
+OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA = "mineocclude-startspec-handshake-v0.1"
 
 # A smoke that captured a frame, wrote a receipt, or put an object in the
 # Stage-1 durable namespace is no longer a smoke. These stay zero by
@@ -703,6 +745,83 @@ OPERATIONAL_SMOKE_STAGES: tuple[tuple[str, str], ...] = (
 OPERATIONAL_SMOKE_ZERO_COUNTS = (
     "frames_captured", "scientific_receipts_written", "stage1_durable_objects_written",
 )
+
+
+def require_startspec_handshake(smoke: Mapping[str, Any]) -> None:
+    """Refuse a smoke that did not actually cross the server seed contract.
+
+    The v0.2 smoke built a capture context and stopped there, so it proved the
+    Python side of the interface and nothing about what the server would accept.
+    A startspec was never issued, and the seed-contract break that blocked
+    Stage-1 attempt 02 therefore survived every prelaunch gate and was first seen
+    by a real launch. This verifier closes that gap: the smoke must carry
+    evidence that a startspec was issued and armed, and that evidence is
+    re-derived rather than trusted.
+
+    All three seeds are required to agree -- the value on the startspec line, the
+    value the schedule was generated from, and the header of the materialized
+    schedule bytes -- and the seed must appear in the server's own arming line,
+    so a handshake record that names one seed while the apparatus armed another
+    is refused.
+    """
+    handshake = smoke.get("startspec_handshake")
+    if not isinstance(handshake, Mapping):
+        raise EvidenceError(
+            "operational startup smoke carries no startspec handshake; a smoke that "
+            "never issued a startspec cannot detect a server-side contract break")
+    if handshake.get("schema") != OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA:
+        raise EvidenceError(
+            f"startspec handshake is not {OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA}")
+
+    seeds = {}
+    for field in ("seed", "noise_seed", "schedule_seed_header"):
+        value = handshake.get(field)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise EvidenceError(f"startspec handshake {field} is not a non-negative integer")
+        seeds[field] = value
+    if len(set(seeds.values())) != 1:
+        raise EvidenceError(
+            f"startspec handshake seeds disagree: {seeds}; the episode seed, the "
+            "noise seed and the materialized schedule header must be one value")
+    seed_value = seeds["seed"]
+
+    episode_id = handshake.get("episode_id")
+    if not isinstance(episode_id, int) or isinstance(episode_id, bool):
+        raise EvidenceError("startspec handshake does not identify its episode")
+
+    command = handshake.get("startspec_command")
+    if not isinstance(command, str) or not command.startswith("mineocclude startspec "):
+        raise EvidenceError("startspec handshake does not carry the startspec command")
+    # Positional, because the server reads this line positionally: the seed is
+    # the third argument after the literal, layout and episode id.
+    fields = command.split()
+    if len(fields) < 5 or fields[3] != str(episode_id) or fields[4] != str(seed_value):
+        raise EvidenceError(
+            "startspec handshake command does not carry the declared episode and seed")
+
+    if handshake.get("armed") is not True:
+        raise EvidenceError(
+            f"startspec handshake did not arm: {handshake.get('refusal')!r}")
+    if handshake.get("rng_source") != "immutable_numpy_schedule":
+        raise EvidenceError(
+            "startspec handshake did not arm on the immutable schedule "
+            f"(rng_source={handshake.get('rng_source')!r})")
+    armed_line = handshake.get("armed_log_line")
+    if not isinstance(armed_line, str) or f"seed={seed_value}" not in armed_line:
+        raise EvidenceError(
+            "startspec handshake arming line does not carry the declared seed")
+    if "rng=immutable_numpy_schedule" not in armed_line:
+        raise EvidenceError(
+            "startspec handshake arming line does not show the immutable schedule")
+
+    # A handshake is not a capture. Both are verified as observations of the
+    # apparatus, so a preflight that ran on into recording is refused outright
+    # rather than relabelled as a smoke.
+    if handshake.get("recording_started") is not False:
+        raise EvidenceError("startspec handshake ran on into recording; that is a capture")
+    if handshake.get("frames_written") != 0 or isinstance(handshake.get("frames_written"), bool):
+        raise EvidenceError(
+            f"startspec handshake wrote {handshake.get('frames_written')!r} frames")
 
 
 def operational_smoke_namespace(run_namespace: str) -> str:
@@ -869,6 +988,10 @@ def require_operational_smoke(smoke: Mapping[str, Any], *, run_namespace: str,
         raise EvidenceError("operational startup smoke stranded processes")
     if smoke.get("session_lock_present_after_teardown") is not False:
         raise EvidenceError("operational startup smoke left the world session.lock held")
+
+    # The startspec handshake: the stage above proves the arming marker appeared,
+    # this proves the identity it appeared under is the one the smoke declares.
+    require_startspec_handshake(smoke)
 
     # Non-collection: verified as counts, so a smoke that actually captured
     # something is refused rather than relabelled.
@@ -1302,6 +1425,10 @@ class Stage1Evaluator:
             episode_ids.append(_integer(unit.get("episode_id"), "episode_id", minimum=0))
             _integer(unit.get("seed"), "seed", minimum=0)
             _integer(unit.get("noise_seed"), "noise_seed", minimum=0)
+            # One seed identity per unit. Checked at manifest validation too, so a
+            # manifest the apparatus could never arm is refused at its structure
+            # rather than only when a spec is derived from it.
+            require_server_seed_contract(unit)
             replicate = _integer(unit.get("replicate"), "replicate", minimum=1)
             observed_cells.add((unit.get("direction"), unit.get("scene"), replicate,
                                 unit.get("design_role")))

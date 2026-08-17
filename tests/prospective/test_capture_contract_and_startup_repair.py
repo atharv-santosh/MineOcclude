@@ -31,13 +31,15 @@ from mineocclude.prospective.source_provenance import ProvenanceViolation, verif
 from mineocclude.prospective.development_workflow import (
     CAPTURE_PATH_EXECUTABLES, CAPTURE_SPEC_REQUIRED_FIELDS, EvidenceError,
     OPERATIONAL_SMOKE_ARTIFACT_ID, OPERATIONAL_SMOKE_CLASSIFICATION,
-    OPERATIONAL_SMOKE_DISPLAY_GEOMETRY, OPERATIONAL_SMOKE_SCHEMA,
+    OPERATIONAL_SMOKE_DISPLAY_GEOMETRY, OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA,
+    OPERATIONAL_SMOKE_SCHEMA, OPERATIONAL_SMOKE_STAGES,
     RUNTIME_CRITICAL_SOURCE_PATHS,
     canonical_payload_sha256, capture_contract_preflight, capture_spec_hash,
     capture_toolchain_evidence, derive_effective_capture_spec, load_json,
     operational_smoke_namespace, refuse_operational_smoke_as_evidence,
     require_capture_spec_contract, require_capture_toolchain,
-    require_operational_smoke, runtime_critical_source_closure_sha256,
+    require_operational_smoke, require_server_seed_contract,
+    require_startspec_handshake, runtime_critical_source_closure_sha256,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -389,12 +391,47 @@ def test_incomplete_toolchain_coverage_is_refused():
         require_capture_toolchain(broken)
 
 
+# The server's real arming line, verbatim in shape: EpisodeManager logs
+# "episode {} armed (layout={}, {} warmup + {} record ticks, v={}, q={}, seed={},
+# rng={})". Both the seed and the rng source are read out of it by the verifier,
+# so a fixture that paraphrased it would not exercise the parse.
+_SMOKE_SEED = 1239302675008784277
+_ARMED_LINE = (
+    "[12:00:44] [Server thread/INFO]: [MineOcclude] episode 990001 armed "
+    "(layout=layout_01, 1200 warmup + 180 record ticks, v=2.0, q=0.05, "
+    f"seed={_SMOKE_SEED}, rng=immutable_numpy_schedule)"
+)
+_STARTSPEC_COMMAND = (
+    f"mineocclude startspec layout_01 990001 {_SMOKE_SEED} 0.05 180 -7.8 "
+    "smoke_a1q_ltr_wall_r01 " + "d" * 64
+)
+
+
+def _handshake(**overrides) -> dict:
+    """A startspec handshake record of the shape ``arm_only`` returns."""
+    record = {"schema": OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA,
+              "episode_id": 990001,
+              "seed": _SMOKE_SEED,
+              "noise_seed": _SMOKE_SEED,
+              "schedule_seed_header": _SMOKE_SEED,
+              "startspec_command": _STARTSPEC_COMMAND,
+              "armed": True,
+              "armed_log_line": _ARMED_LINE,
+              "refusal": None,
+              "rng_source": "immutable_numpy_schedule",
+              "recording_started": False,
+              "frames_written": 0}
+    record.update(overrides)
+    return record
+
+
 def _stage_evidence() -> dict:
     """Stage records whose digests are genuinely computed over their excerpts."""
     excerpts = {
         "display_ready": "dimensions:    640x360 pixels\ndepth of root window: 24 planes\n",
         "server_ready": "[12:00:01] [Server thread/INFO]: Done (5.1s)! server ready\n",
         "client_joined": "[12:00:31] [Render thread/INFO]: smoke joined the game\n",
+        "episode_armed": _ARMED_LINE + "\n",
         "teardown": "smoke: all launched pids exited; teardown_complete\n",
     }
     return {name: {"source_path": f"/runtime_logs/{name}.log",
@@ -429,6 +466,7 @@ def _passing_smoke(namespace: str, commit: str = "abc123",
                     "xdpyinfo_depth": 24, "started_by_smoke": True},
         "openbox": {"started_by_smoke": True, "pid": 4102},
         "stage_evidence": _stage_evidence(),
+        "startspec_handshake": _handshake(),
         "launched_processes": [{"pid": 4101, "role": "display", "exited": True},
                                {"pid": 4103, "role": "server", "exited": True},
                                {"pid": 4104, "role": "client", "exited": True}],
@@ -1471,3 +1509,434 @@ def test_the_smoke_does_not_read_session_processes_after_teardown():
     after = body.split("# After __exit__")[1][:300]
     assert "session.processes" not in after, "teardown evidence reads the cleared list"
     assert "handles" in after
+
+
+# ------------------------------------------------------- server seed contract
+#
+# The defect that blocked Stage-1 attempt 02 on every unit:
+#
+#   REFUSED: noise schedule ... is invalid: schedule seed 1239302675008784277
+#   does not match the episode seed 3901999841581120224
+#
+# The generator minted `seed` and `noise_seed` from two different labels, Python
+# generated the schedule from `noise_seed`, and `startspec` carried `seed`. The
+# server requires them to be one value, and so does every historical manifest.
+
+
+def test_all_eight_stage1_units_satisfy_the_server_seed_contract(stage1):
+    """The blocking condition, asserted directly on the frozen fixture."""
+    assert len(stage1["units"]) == 8
+    for unit in stage1["units"]:
+        assert unit["seed"] == unit["noise_seed"], unit["unit_id"]
+
+
+def test_stage1_units_still_carry_distinct_seeds(stage1):
+    """Collapsing the two fields must not collapse units into each other."""
+    seeds = [unit["seed"] for unit in stage1["units"]]
+    assert len(set(seeds)) == len(seeds)
+
+
+def test_every_stage2_identity_satisfies_the_server_seed_contract():
+    """Stage-2 was minted by the same defective generator, so it is checked too."""
+    stage2 = load_json(PACKAGE / "stage2_locked_manifest.json")
+    identities = stage2["trajectory_identities"]
+    assert len(identities) == 25
+    for identity in identities:
+        assert identity["seed"] == identity["noise_seed"], identity["trajectory_id"]
+    for unit in stage2["capture_units"]:
+        assert unit["seed"] == unit["noise_seed"], unit["unit_id"]
+
+
+def test_historical_capturing_manifests_carry_one_seed_identity():
+    """The authority for the contract: every spec that ever captured obeys it.
+
+    This is what proves the repair restores predeclared semantics rather than
+    inventing a convenient new rule -- all 25 Regime A v2.1 amendment-1 specs,
+    which produced the real historical wall corpus, carry seed == noise_seed.
+    """
+    import json
+
+    manifest = (ROOT / "docs/status/integration/regime_a_occlusion_extraction_v0_1"
+                / "v2_amendment_1/trajectory_manifest_v2_1_amendment_1.jsonl")
+    rows = [json.loads(line) for line in manifest.read_text().splitlines() if line.strip()]
+    assert len(rows) == 25
+    for row in rows:
+        assert row["seed"] == row["noise_seed"], row["trajectory_spec_id"]
+
+
+def test_effective_capture_spec_preserves_the_seed_identity(first_spec):
+    require_server_seed_contract(first_spec)
+    assert first_spec["seed"] == first_spec["noise_seed"]
+
+
+def test_mismatched_seed_is_refused_before_authorization(first_spec):
+    """The exact shape of the blocked attempt, refused statically."""
+    broken = deepcopy(first_spec)
+    broken["seed"] = broken["noise_seed"] + 1
+    with pytest.raises(EvidenceError, match="server seed contract"):
+        require_server_seed_contract(broken)
+    with pytest.raises(EvidenceError, match="server seed contract"):
+        require_capture_spec_contract(broken)
+
+
+def test_preflight_refuses_a_manifest_with_a_seed_break(stage1, authority):
+    """The gate that runs over all 8 units before a JVM starts."""
+    broken = deepcopy(stage1)
+    broken["units"][3]["noise_seed"] = broken["units"][3]["seed"] + 7
+    with pytest.raises(EvidenceError, match="server seed contract"):
+        capture_contract_preflight(broken, authority)
+
+
+@pytest.mark.parametrize("value", ["12345", 12.5, -1, True, None])
+def test_non_integer_seed_is_refused(first_spec, value):
+    broken = deepcopy(first_spec)
+    broken["seed"] = value
+    with pytest.raises(EvidenceError, match="non-negative integer seed"):
+        require_server_seed_contract(broken)
+
+
+def test_the_generator_mints_one_seed_per_unit():
+    """The repair lives in the generator, not only in the emitted bytes."""
+    source = (ROOT / "scripts/regime_a_prime_qualification_v0_2/build_manifests.py").read_text()
+    assert 'seed(unit_id + ":noise")' not in source
+    assert 'seed(trajectory_id + ":noise")' not in source
+    assert '"seed": identity_seed, "noise_seed": identity_seed' in source or (
+        '"seed": identity_seed,' in source and '"noise_seed": identity_seed,' in source)
+
+
+def test_regenerating_the_manifests_is_a_fixed_point(stage1):
+    """The frozen bytes are what the repaired generator produces.
+
+    Guards the case where the manifest was hand-corrected but the generator was
+    not, which would silently reintroduce the break on the next rebuild.
+    """
+    import json
+
+    result = subprocess.run(
+        [sys.executable,
+         str(ROOT / "scripts/regime_a_prime_qualification_v0_2/build_manifests.py")],
+        capture_output=True, text=True, cwd=str(ROOT), check=False)
+    assert result.returncode == 0, result.stderr
+    assert json.loads(STAGE1_PATH.read_text()) == stage1
+
+
+def test_the_startspec_line_is_built_once(first_spec):
+    """Production capture and the preflight must send the same bytes.
+
+    A preflight that assembled its own copy of the startspec line could pass
+    while production sent a different one -- which is how a seed break survives
+    a green prelaunch. Both call ``startspec_command``.
+    """
+    sys.path.insert(0, str(ROOT / "scripts/regime_a_prime_qualification_v0_1"))
+    import p2_common
+
+    line = p2_common.startspec_command(first_spec, 81001, 180)
+    assert line.split()[3] == "81001"
+    assert line.split()[4] == str(first_spec["seed"])
+    assert line.split()[4] == str(first_spec["noise_seed"])
+
+    source = (ROOT / "scripts/regime_a_prime_qualification_v0_1/p2_common.py").read_text()
+    capture_body = source.split("def capture(")[1].split("def ")[0]
+    assert "startspec_command(" in capture_body
+    assert "mineocclude startspec layout_01" not in capture_body
+
+
+def test_generated_schedule_header_seed_matches_the_startspec_seed(first_spec):
+    """The two ends of the contract, on the real bytes the apparatus consumes."""
+    import json
+
+    sys.path.insert(0, str(ROOT / "scripts/regime_a_prime_qualification_v0_1"))
+    sys.path.insert(0, str(ROOT / "src"))
+    from mineocclude.data.noise_schedule import generate_noise_schedule, serialize_schedule
+
+    schedule = generate_noise_schedule(int(first_spec["noise_seed"]),
+                                       int(first_spec["expected_max_frames"]),
+                                       float(first_spec["motion_noise_q"]))
+    header = json.loads(serialize_schedule(schedule).decode().splitlines()[0])
+    # This equality is precisely what NoiseSchedule.load(path, cfg.seed) checks.
+    assert header["seed"] == int(first_spec["seed"])
+
+
+# --------------------------------------------------- startspec handshake gate
+#
+# Part 5: the prelaunch control must issue a real startspec, so a seed mismatch
+# cannot again survive until scientific collection.
+
+
+def test_the_smoke_requires_an_arming_stage():
+    stages = dict(OPERATIONAL_SMOKE_STAGES)
+    assert stages["episode_armed"] == "rng=immutable_numpy_schedule"
+
+
+def test_a_genuine_handshake_is_accepted(stage1):
+    namespace = str(stage1["run_namespace"])
+    require_operational_smoke(_passing_smoke(namespace), run_namespace=namespace,
+                              source_commit="abc123", closure_sha256="c" * 64)
+
+
+def test_a_smoke_without_a_handshake_is_refused(stage1):
+    """The v0.2 smoke that let this defect through: it never issued a startspec."""
+    namespace = str(stage1["run_namespace"])
+    old = _passing_smoke(namespace)
+    old.pop("startspec_handshake")
+    with pytest.raises(EvidenceError, match="no startspec handshake"):
+        require_operational_smoke(_reseal(old), run_namespace=namespace,
+                                  source_commit="abc123")
+
+
+def test_handshake_with_a_seed_mismatch_is_refused():
+    """Attempt 02's exact condition must fail the preflight closed."""
+    with pytest.raises(EvidenceError, match="seeds disagree"):
+        require_startspec_handshake(
+            {"startspec_handshake": _handshake(noise_seed=_SMOKE_SEED + 1)})
+    with pytest.raises(EvidenceError, match="seeds disagree"):
+        require_startspec_handshake(
+            {"startspec_handshake": _handshake(schedule_seed_header=_SMOKE_SEED + 1)})
+
+
+def test_handshake_that_never_armed_is_refused():
+    refused = _handshake(
+        armed=False, armed_log_line=None, rng_source=None,
+        refusal=("REFUSED: noise schedule is invalid: schedule seed 123 "
+                 "does not match the episode seed 456"))
+    with pytest.raises(EvidenceError, match="did not arm"):
+        require_startspec_handshake({"startspec_handshake": refused})
+
+
+def test_handshake_on_the_nonscientific_fallback_is_refused():
+    """Arming without a schedule at all is not a crossed contract."""
+    fallback_line = _ARMED_LINE.replace("immutable_numpy_schedule",
+                                        "java_util_random_nonscientific")
+    fallback = _handshake(rng_source="java_util_random_nonscientific",
+                          armed_log_line=fallback_line)
+    with pytest.raises(EvidenceError, match="immutable schedule"):
+        require_startspec_handshake({"startspec_handshake": fallback})
+
+
+def test_handshake_naming_a_seed_the_apparatus_did_not_arm_is_refused():
+    """The arming line is the server's word; the record must agree with it."""
+    lying = _handshake(armed_log_line=_ARMED_LINE.replace(str(_SMOKE_SEED), "999"))
+    with pytest.raises(EvidenceError, match="arming line does not carry the declared seed"):
+        require_startspec_handshake({"startspec_handshake": lying})
+
+
+def test_handshake_command_must_carry_the_declared_identity():
+    borrowed = _handshake(
+        startspec_command=_STARTSPEC_COMMAND.replace(str(_SMOKE_SEED), "424242"))
+    with pytest.raises(EvidenceError, match="does not carry the declared episode and seed"):
+        require_startspec_handshake({"startspec_handshake": borrowed})
+
+    other_episode = _handshake(startspec_command=_STARTSPEC_COMMAND.replace("990001", "81001"))
+    with pytest.raises(EvidenceError, match="does not carry the declared episode and seed"):
+        require_startspec_handshake({"startspec_handshake": other_episode})
+
+
+@pytest.mark.parametrize("field, value", [("recording_started", True),
+                                          ("frames_written", 1)])
+def test_a_handshake_that_captured_is_refused(field, value):
+    """A preflight that ran on into recording is a capture, not a smoke."""
+    captured = _handshake(**{field: value})
+    with pytest.raises(EvidenceError):
+        require_startspec_handshake({"startspec_handshake": captured})
+
+
+def test_handshake_schema_is_pinned():
+    with pytest.raises(EvidenceError, match="handshake is not"):
+        require_startspec_handshake(
+            {"startspec_handshake": _handshake(schema="mineocclude-handshake-v0.0")})
+
+
+def test_the_smoke_runner_arms_and_never_captures():
+    """The runner must reach the server, and must stop before the first frame."""
+    source = (ROOT / "scripts/regime_a_prime_qualification_v0_2/generate_receipts.py").read_text()
+    body = source.split("def operational_startup_smoke(")[1]
+    assert "session.arm_only(" in body
+    assert "startspec_handshake" in body
+    assert 'stages["episode_armed"]' in body
+    assert "session.capture(" not in body
+
+    capture_source = (ROOT / "scripts/regime_a_prime_qualification_v0_1"
+                      / "p2_common.py").read_text()
+    arm_body = capture_source.split("def arm_only(")[1].split("\n    def ")[0]
+    # Warmup, not a race, is what keeps the frame count at zero.
+    assert "ARM_ONLY_WARMUP_TICKS" in arm_body
+    assert "mineocclude stop" in arm_body
+    # It must never reach the recording waits the scientific capture path uses.
+    assert "recording started" not in arm_body.split("recording_started")[0]
+    assert "capture_complete.json" not in arm_body
+    assert "shutil.copytree" not in arm_body
+
+
+def test_arm_only_is_classified_non_scientific():
+    capture_source = (ROOT / "scripts/regime_a_prime_qualification_v0_1"
+                      / "p2_common.py").read_text()
+    arm_doc = capture_source.split("def arm_only(")[1].split('"""')[1]
+    assert "NON-SCIENTIFIC" in arm_doc
+
+
+# ------------------------------------------------------- adversarial handshake
+#
+# Part 6. Each case is built from the REAL frozen fixture and the REAL
+# materialized schedule bytes, then put to the rule the apparatus applies, so a
+# passing case here is the legitimate configuration and nothing else.
+
+_MOD = ROOT / "fabric/mineocclude-mod/src/main/java/com/mineocclude/server"
+
+
+def _materialize(spec):
+    """The schedule bytes the capture path writes, and the header the server reads."""
+    import json
+
+    sys.path.insert(0, str(ROOT / "src"))
+    from mineocclude.data.noise_schedule import generate_noise_schedule, serialize_schedule
+
+    schedule = generate_noise_schedule(int(spec["noise_seed"]),
+                                       int(spec["expected_max_frames"]),
+                                       float(spec["motion_noise_q"]))
+    payload = serialize_schedule(schedule)
+    return payload, json.loads(payload.decode().splitlines()[0])
+
+
+def _server_accepts(schedule_header, startspec_seed) -> bool:
+    """The server's rule, verbatim: NoiseSchedule.java
+
+        long seed = header.get("seed").getAsLong();
+        if (seed != expectedSeed) { throw new IOException(...); }
+
+    where expectedSeed is cfg.seed -- the seed the startspec line carried.
+    """
+    return int(schedule_header["seed"]) == int(startspec_seed)
+
+
+def test_the_server_rule_this_suite_models_still_exists():
+    """Drift guard: if the server rule changes, these cases stop meaning anything."""
+    source = (_MOD / "NoiseSchedule.java").read_text()
+    assert "if (seed != expectedSeed)" in source
+    assert "does not match the episode seed" in source
+    manager = (_MOD / "EpisodeManager.java").read_text()
+    assert "NoiseSchedule.load(schedulePath, config.seed)" in manager
+
+
+def test_the_legitimate_eight_unit_fixture_passes_the_handshake(stage1, authority):
+    """The positive case: all 8 frozen units arm. No frames involved."""
+    for unit in stage1["units"]:
+        spec = derive_effective_capture_spec(unit, authority)
+        require_capture_spec_contract(spec)
+        _, header = _materialize(spec)
+        assert _server_accepts(header, spec["seed"]), unit["unit_id"]
+
+
+def test_schedule_generated_with_the_wrong_noise_seed_is_refused(first_spec):
+    wrong = deepcopy(first_spec)
+    wrong["noise_seed"] = int(wrong["noise_seed"]) ^ 0xDEAD
+    _, header = _materialize(wrong)
+    assert not _server_accepts(header, first_spec["seed"])
+    with pytest.raises(EvidenceError, match="server seed contract"):
+        require_capture_spec_contract(wrong)
+
+
+def test_startspec_given_the_wrong_seed_identity_is_refused(first_spec):
+    _, header = _materialize(first_spec)
+    assert not _server_accepts(header, int(first_spec["seed"]) + 1)
+
+
+def test_a_schedule_copied_from_another_unit_is_refused(stage1, authority):
+    """Unit A armed with unit B's schedule: the header seed betrays it."""
+    first = derive_effective_capture_spec(stage1["units"][0], authority)
+    second = derive_effective_capture_spec(stage1["units"][1], authority)
+    _, borrowed = _materialize(second)
+    assert not _server_accepts(borrowed, first["seed"])
+
+
+def test_a_stale_pre_repair_schedule_is_refused(first_spec):
+    """The schedule the blocked attempt actually wrote.
+
+    Attempt 02 generated from the old distinct noise_seed while startspec carried
+    the old distinct seed. Reconstructed here from the blocked attempt's own
+    numbers, it must still be refused.
+    """
+    blocked_noise_seed = 1239302675008784277
+    blocked_episode_seed = 3901999841581120224
+    assert blocked_noise_seed != blocked_episode_seed
+    stale = deepcopy(first_spec)
+    stale["noise_seed"] = blocked_noise_seed
+    _, header = _materialize(stale)
+    assert not _server_accepts(header, blocked_episode_seed)
+    # And the repaired fixture no longer produces that pairing.
+    assert int(first_spec["seed"]) == int(first_spec["noise_seed"])
+
+
+def test_a_schedule_written_for_another_episode_is_not_found(stage1, authority):
+    """Episode identity is carried by the schedule path, not only its bytes.
+
+    EpisodeManager resolves mineocclude_schedules/episode_<id>.jsonl. A schedule
+    filed under the wrong episode is simply absent for the armed one, and the
+    server then arms on the NON-SCIENTIFIC java.util.Random fallback -- which the
+    handshake gate refuses by rng source.
+    """
+    manager = (_MOD / "EpisodeManager.java").read_text()
+    assert 'resolve("episode_" + config.episodeId + ".jsonl")' in manager
+    assert "NON-SCIENTIFIC java.util.Random fallback" in manager
+
+    first = derive_effective_capture_spec(stage1["units"][0], authority)
+    second = derive_effective_capture_spec(stage1["units"][1], authority)
+    assert int(first["episode_id"]) != int(second["episode_id"])
+
+    fallback_line = _ARMED_LINE.replace("immutable_numpy_schedule",
+                                        "java_util_random_nonscientific")
+    with pytest.raises(EvidenceError, match="immutable schedule"):
+        require_startspec_handshake({"startspec_handshake": _handshake(
+            rng_source="java_util_random_nonscientific", armed_log_line=fallback_line)})
+
+
+def test_a_wrong_episode_id_on_the_startspec_line_is_refused():
+    mismatched = _handshake(episode_id=81001)
+    with pytest.raises(EvidenceError, match="does not carry the declared episode and seed"):
+        require_startspec_handshake({"startspec_handshake": mismatched})
+
+
+def test_a_wrong_spec_hash_is_refused(first_spec):
+    """Refused in Python before launch, and by MotionSchedule.load at the server."""
+    forged = deepcopy(first_spec)
+    forged["spec_hash"] = "f" * 64
+    with pytest.raises(EvidenceError, match="spec_hash is not derived"):
+        require_capture_spec_contract(forged)
+    motion = (_MOD / "MotionSchedule.java").read_text()
+    assert "motion schedule spec identity mismatch" in motion
+
+
+def test_a_wrong_raw_capture_spec_hash_is_refused(first_spec):
+    forged = deepcopy(first_spec)
+    forged["raw_capture_spec_hash"] = "e" * 64
+    with pytest.raises(EvidenceError, match="raw_capture_spec_hash"):
+        require_capture_spec_contract(forged)
+
+
+def test_no_adversarial_case_here_captures_a_frame():
+    """This suite reasons over bytes and rules; it never starts the apparatus."""
+    source = Path(__file__).read_text()
+    section = source.split("# ------------------------------------------------------- adversarial")[1]
+    for forbidden in ("CaptureSession(", "session.capture(", "arm_only(", "launch_runtime"):
+        assert forbidden not in section, forbidden
+
+
+def test_manifest_validation_refuses_a_seed_break(stage1, authority):
+    """Third gate: a manifest the apparatus could never arm is structurally invalid.
+
+    ``_validate_manifest_design`` runs before any Stage-1 evidence is scored, so
+    a manifest carrying the break is refused at its structure rather than only
+    when a capture spec is derived from it.
+    """
+    from mineocclude.prospective.development_workflow import Stage1Evaluator
+
+    broken = deepcopy(stage1)
+    broken["units"][0]["noise_seed"] = broken["units"][0]["seed"] + 1
+    authority_sha = stage1["authority_binding"]["sha256"]
+    evaluator = Stage1Evaluator(authority, broken,
+                                authority_sha256=authority_sha, manifest_sha256="b" * 64)
+    with pytest.raises(EvidenceError, match="server seed contract"):
+        evaluator._validate_manifest_design()
+
+    # The repaired manifest passes the same call.
+    Stage1Evaluator(authority, stage1, authority_sha256=authority_sha,
+                    manifest_sha256="b" * 64)._validate_manifest_design()
