@@ -120,6 +120,21 @@ def artifact_version_tag(artifact_id: Any) -> str:
     return match.group(1)
 
 
+def provenance_artifact_id_for(version_tag: str) -> str:
+    """The pre-outcome provenance identity that a package version's receipts carry.
+
+    The frozen authority declares every other identity a runner demands, but not
+    this one, so it has to be constructed -- here, once, from the version tag the
+    rest of the binding was proved against. Both ``resolve_package_binding`` and
+    ``development_workflow.require_stage_manifest_binding`` route through this
+    function, so a runner cannot end up demanding a provenance identity that
+    disagrees with the experiment it was actually bound to.
+    """
+    if _VERSION_TAG.match(version_tag) is None:
+        raise PackageBindingError(f"malformed package version tag: {version_tag!r}")
+    return _PROVENANCE_ARTIFACT_ID.format(tag=version_tag)
+
+
 def resolve_package_binding(version_tag: str,
                             repository: Path = REPOSITORY_ROOT) -> PackageBinding:
     """Resolve and verify the package for ``version_tag``, or refuse.
@@ -207,7 +222,7 @@ def resolve_package_binding(version_tag: str,
         stage1_manifest_artifact_id=str(stage1["artifact_id"]),
         stage2_manifest_artifact_id=str(stage2["artifact_id"]),
         authorization_artifact_id=str(authorization_artifact_id),
-        provenance_artifact_id=_PROVENANCE_ARTIFACT_ID.format(tag=version_tag),
+        provenance_artifact_id=provenance_artifact_id_for(version_tag),
         run_namespace=str(stage1["run_namespace"]),
         durable_prefix=str(stage1["durable_prefix"]),
         authority_status=str(authority["status"]),

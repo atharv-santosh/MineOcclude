@@ -23,6 +23,10 @@ from mineocclude.prospective.extent_geometry import (
     WallGeometry,
     classify_extent,
 )
+from mineocclude.prospective.package_binding import (
+    artifact_version_tag,
+    provenance_artifact_id_for,
+)
 from mineocclude.prospective.source_provenance import CriticalSource, verify_sources
 from mineocclude.prospective.temporal_alignment import (
     PURE_DELAY_OFF_PEAK_MASS_TOLERANCE,
@@ -1197,8 +1201,9 @@ def require_stage_manifest_binding(stage: str, manifest: Mapping[str, Any], *,
     * the stage the unit's own locked command declares;
     * the collection the unit is allowed to be drawn from.
 
-    Returns the resolved binding, including the authorization ``artifact_id``
-    the caller must then require, so no call site re-spells it as a literal.
+    Returns the resolved binding, including the authorization and pre-outcome
+    provenance ``artifact_id``s the caller must then require, so no call site
+    re-spells either as a literal.
     """
     policy = authority.get("stage_binding_policy")
     if not isinstance(policy, Mapping) or not isinstance(policy.get("stages"), Mapping):
@@ -1219,9 +1224,22 @@ def require_stage_manifest_binding(stage: str, manifest: Mapping[str, Any], *,
             f"stage {stage} manifest must be {binding['manifest_relative_path']}, got {relative}")
     if manifest.get("run_namespace") != binding["run_namespace"]:
         raise PermissionError(f"stage {stage} run namespace mismatch")
+    # The authority declares no provenance identity of its own, so it is derived
+    # from the version this stage's declared identities carry -- and those two
+    # must agree, or the stage table is itself mixing packages.
+    manifest_version = artifact_version_tag(binding["manifest_artifact_id"])
+    authorization_version = artifact_version_tag(binding["authorization_artifact_id"])
+    if manifest_version != authorization_version:
+        raise PermissionError(
+            f"stage {stage} binds a {manifest_version} manifest to an "
+            f"{authorization_version} authorization")
     resolved = {"stage": stage, "stage_role": binding["stage_role"],
                 "run_namespace": binding["run_namespace"],
                 "authorization_artifact_id": binding["authorization_artifact_id"],
+                # Carried here for the same reason the authorization identity is:
+                # the unit driver omitted it, and so checked a v0.3 provenance
+                # receipt against the deliberately fail-closed v0.2 default.
+                "provenance_artifact_id": provenance_artifact_id_for(manifest_version),
                 "manifest_sha256": sha256_file(manifest_path)}
     if unit is None:
         return resolved

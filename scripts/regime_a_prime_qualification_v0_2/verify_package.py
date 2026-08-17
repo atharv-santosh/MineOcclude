@@ -130,6 +130,7 @@ def main() -> None:
                "tests/prospective/test_extent_geometry_v0_3.py",
                "tests/prospective/test_v0_3_execution_entrypoints.py",
                "tests/prospective/test_v0_3_probe_producer_authority.py",
+               "tests/prospective/test_provenance_artifact_id_version_binding.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

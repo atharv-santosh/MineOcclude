@@ -74,8 +74,13 @@ def require_capture_authorization(stage: str, manifest: dict, manifest_path: Pat
     provenance_path = Path(os.environ.get("MINEOCCLUDE_PREOUTCOME_PROVENANCE_PATH", ""))
     if not provenance_path.is_file():
         raise PermissionError("bound pre-outcome provenance receipt is required")
+    # The provenance identity comes from the same binding the authorization
+    # identity does. Naming none leaves this gate on its fail-closed v0.2
+    # default, which is correct for a runner that cannot say which experiment it
+    # is running, and wrong for this one, which can.
     require_preoutcome_provenance(load_json(provenance_path), authority_path=authority_path,
-        manifest_path=manifest_path, required_source_paths=required_runtime_sources())
+        manifest_path=manifest_path, required_source_paths=required_runtime_sources(),
+        provenance_artifact_id=binding["provenance_artifact_id"])
     if stage == "stage1-capture":
         authorization_path = Path(os.environ.get("MINEOCCLUDE_STAGE1_AUTHORIZATION_PATH", ""))
         if not authorization_path.is_file():
