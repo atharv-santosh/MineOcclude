@@ -25,6 +25,7 @@ import time
 from copy import deepcopy
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from mineocclude.prospective.source_provenance import ProvenanceViolation, verify_sources
@@ -38,7 +39,8 @@ from mineocclude.prospective.development_workflow import (
     capture_toolchain_evidence, derive_effective_capture_spec, load_json,
     operational_smoke_namespace, refuse_operational_smoke_as_evidence,
     require_capture_spec_contract, require_capture_toolchain,
-    require_operational_smoke, require_server_seed_contract,
+    require_camera_apparatus_observation, require_operational_smoke,
+    require_server_seed_contract,
     require_startspec_handshake, runtime_critical_source_closure_sha256,
 )
 
@@ -407,6 +409,30 @@ _STARTSPEC_COMMAND = (
 )
 
 
+# The armed camera pose as `observegeometry` reports it: feet exactly where the
+# frozen policy declares them, eye at the runtime's binary64 feet + 1.62f.
+_OBSERVED_EYE_Y = 4.0 + float(np.float32(1.62))
+
+
+def _camera_observation(**overrides) -> dict:
+    """A camera observation of the shape ``arm_only._observe_camera`` returns."""
+    record = {"receipt_id": "armonlycam990001",
+              "episode_id": 990001,
+              "observation_only": True,
+              "scientific_use": "forbidden",
+              "mutates_runtime_state": False,
+              "capturing": False,
+              "canonical_feet_xyz": [0.5, 4.0, -5.5],
+              "observed_player_count": 1,
+              "observed_feet_xyz": [0.5, 4.0, -5.5],
+              "observed_eye_y": _OBSERVED_EYE_Y,
+              "observed_yaw_degrees": 0.0,
+              "observed_pitch_degrees": 0.0,
+              "fov_status": "not_server_observable"}
+    record.update(overrides)
+    return record
+
+
 def _handshake(**overrides) -> dict:
     """A startspec handshake record of the shape ``arm_only`` returns."""
     record = {"schema": OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA,
@@ -420,7 +446,8 @@ def _handshake(**overrides) -> dict:
               "refusal": None,
               "rng_source": "immutable_numpy_schedule",
               "recording_started": False,
-              "frames_written": 0}
+              "frames_written": 0,
+              "camera_apparatus_observation": _camera_observation()}
     record.update(overrides)
     return record
 
@@ -1940,3 +1967,136 @@ def test_manifest_validation_refuses_a_seed_break(stage1, authority):
     # The repaired manifest passes the same call.
     Stage1Evaluator(authority, stage1, authority_sha256=authority_sha,
                     manifest_sha256="b" * 64)._validate_manifest_design()
+
+
+# ------------------------------------------- camera apparatus preflight (Part 8)
+#
+# The gap this closes: the smoke crossed startspec -> schedule acceptance ->
+# episode armed, and stopped. The camera identity contract was first executed
+# by a governed launch, where a representation defect blocked all 8 units after
+# a full 180-tick capture.
+
+
+@pytest.fixture
+def apparatus_policy(authority):
+    return authority["apparatus_observation_policy"]
+
+
+def _smoke_with_camera(namespace, **camera_overrides):
+    return _passing_smoke(
+        namespace,
+        startspec_handshake=_handshake(
+            camera_apparatus_observation=_camera_observation(**camera_overrides)))
+
+
+def test_observed_armed_camera_satisfies_the_frozen_policy(apparatus_policy):
+    """The real armed pose passes without any tolerance loosening."""
+    require_camera_apparatus_observation(_smoke_with_camera("ns"), apparatus_policy)
+
+
+def test_a_smoke_without_a_camera_observation_is_refused(apparatus_policy):
+    smoke = _passing_smoke("ns", startspec_handshake=_handshake(
+        camera_apparatus_observation=None))
+    with pytest.raises(EvidenceError, match="no camera apparatus observation"):
+        require_camera_apparatus_observation(smoke, apparatus_policy)
+
+
+def test_the_live_eye_for_feet_confusion_is_refused(apparatus_policy):
+    """The exact defect that blocked Stage-1, caught before collection.
+
+    A runtime (or an instrument) reporting the EYE where the FEET belong is off
+    by the 1.62f standing eye height -- the constant that blocked every unit.
+    """
+    with pytest.raises(EvidenceError, match="observed camera feet"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", observed_feet_xyz=[0.5, _OBSERVED_EYE_Y, -5.5]),
+            apparatus_policy)
+
+
+def test_feet_reported_where_the_eye_belongs_is_refused(apparatus_policy):
+    with pytest.raises(EvidenceError, match="observed camera eye height"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", observed_eye_y=4.0), apparatus_policy)
+
+
+def test_individually_plausible_but_inconsistent_pose_is_refused(apparatus_policy):
+    """Feet and eye must be the SAME pose, not two separately satisfied numbers.
+
+    Both values below sit inside the encoding tolerance of their own declared
+    value, so each positional check passes; only the offset invariant catches
+    that they cannot describe one player.
+    """
+    feet_y = 4.0 + 9e-10
+    eye_y = apparatus_policy["camera_eye_world_xyz"][1] - 9e-10
+    with pytest.raises(EvidenceError, match="eye/feet offset"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns",
+                               observed_feet_xyz=[0.5, feet_y, -5.5],
+                               observed_eye_y=eye_y),
+            apparatus_policy)
+
+
+@pytest.mark.parametrize("feet", [
+    [1.5, 4.0, -5.5], [0.5, 5.0, -5.5], [0.5, 4.0, -4.5], [-5.5, 4.0, 0.5],
+])
+def test_a_displaced_camera_is_refused(apparatus_policy, feet):
+    with pytest.raises(EvidenceError, match="observed camera feet"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", observed_feet_xyz=feet), apparatus_policy)
+
+
+def test_no_tolerance_loophole_in_the_preflight(apparatus_policy):
+    """1e-9 is an encoding tolerance; 1e-8 of real displacement is refused."""
+    with pytest.raises(EvidenceError, match="observed camera feet"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", observed_feet_xyz=[0.5, 4.0 + 1e-8, -5.5]),
+            apparatus_policy)
+
+
+@pytest.mark.parametrize("field,value,message", [
+    ("observation_only", False, "not observation-only"),
+    ("scientific_use", "permitted", "scientific_use=forbidden"),
+    ("mutates_runtime_state", True, "mutate runtime state"),
+    ("capturing", True, "capturing episode"),
+])
+def test_a_non_diagnostic_instrument_is_refused(apparatus_policy, field, value, message):
+    """The preflight must not silently acquire a scientific role."""
+    with pytest.raises(EvidenceError, match=message):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", **{field: value}), apparatus_policy)
+
+
+@pytest.mark.parametrize("count", [0, 2])
+def test_an_ambiguous_player_observation_is_refused(apparatus_policy, count):
+    with pytest.raises(EvidenceError, match="exactly one observed player"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", observed_player_count=count), apparatus_policy)
+
+
+@pytest.mark.parametrize("field", ["observed_yaw_degrees", "observed_pitch_degrees"])
+def test_a_rotated_camera_is_refused(apparatus_policy, field):
+    with pytest.raises(EvidenceError, match="observed camera orientation"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", **{field: 10.0}), apparatus_policy)
+
+
+@pytest.mark.parametrize("feet,eye", [(None, _OBSERVED_EYE_Y), ([0.5, 4.0], _OBSERVED_EYE_Y),
+                                      ([0.5, 4.0, -5.5], None)])
+def test_a_malformed_observation_is_refused(apparatus_policy, feet, eye):
+    with pytest.raises(EvidenceError, match="carries no observed"):
+        require_camera_apparatus_observation(
+            _smoke_with_camera("ns", observed_feet_xyz=feet, observed_eye_y=eye),
+            apparatus_policy)
+
+
+def test_the_preflight_reads_the_authority_rather_than_a_hardcoded_pose(apparatus_policy):
+    """Moving the declared apparatus moves what the preflight accepts."""
+    moved = dict(apparatus_policy)
+    moved["camera_feet_world_xyz"] = [0.5, 9.0, -5.5]
+    moved["camera_eye_world_xyz"] = [0.5, 9.0 + float(np.float32(1.62)), -5.5]
+    with pytest.raises(EvidenceError, match="observed camera feet"):
+        require_camera_apparatus_observation(_smoke_with_camera("ns"), moved)
+    require_camera_apparatus_observation(
+        _smoke_with_camera("ns", observed_feet_xyz=[0.5, 9.0, -5.5],
+                           observed_eye_y=9.0 + float(np.float32(1.62))),
+        moved)

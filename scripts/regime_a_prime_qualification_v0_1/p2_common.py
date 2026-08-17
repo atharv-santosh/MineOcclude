@@ -341,6 +341,11 @@ class CaptureSession:
         shutil.copy2(server_episode / "server_state.jsonl", raw / "server_state.jsonl")
         shutil.copy2(client_episode / "client_tick.jsonl", raw / "client_tick.jsonl")
         shutil.copy2(client_episode / "raw_actions.jsonl", raw / "actions.jsonl")
+        # FOV/framebuffer/HUD are client-only properties the server reports as
+        # "not_server_observable". Capturing this per-episode record is what
+        # lets the camera apparatus check verify them from captured bytes
+        # instead of from a state column that never carried them.
+        shutil.copy2(client_episode / "client_authority.json", raw / "client_authority.json")
         return {
             "episode_id": episode_id,
             "frames": frames,
@@ -408,6 +413,16 @@ class CaptureSession:
         armed_pattern = rf"episode {episode_id} armed \([^\n]*\)"
         refusal_pattern = r"REFUSED[^\n]*|startspec (?:REFUSED|failed)[^\n]*"
         armed_line, refusal = self._await_arming(armed_pattern, refusal_pattern, offset)
+        # The camera apparatus exists as soon as the episode arms: `lockcam on`
+        # has teleported the player to the canonical feet pose. Observing it HERE
+        # is what lets a preflight cross the camera identity contract that the
+        # post-capture verifier applies, without rendering a scientific frame.
+        # `observegeometry` is a pure read that self-declares
+        # observation_only/scientific_use=forbidden and writes outside every
+        # scientific namespace, so it cannot become evidence for a unit.
+        camera_observation = None
+        if armed_line is not None:
+            camera_observation = self._observe_camera(server_root, episode_id)
         try:
             self.runtime.send(["mineocclude stop"])
         except BaseException as cause:  # noqa: BLE001 - reported, never raised
@@ -436,6 +451,51 @@ class CaptureSession:
             # captured" a verified outcome rather than a claim about timing.
             "recording_started": f"episode {episode_id} recording started" in tail,
             "frames_written": frames_written,
+            "camera_apparatus_observation": camera_observation,
+        }
+
+    def _observe_camera(self, server_root: Path, episode_id: int) -> dict[str, Any] | None:
+        """NON-SCIENTIFIC: read the armed camera pose from the running server.
+
+        Returns the observed feet/eye exactly as the server reports them, so the
+        caller can compare them against the frozen apparatus policy. Feet and eye
+        are reported separately here for the same reason the post-capture check
+        needs both: ``server_state``'s ``player_y`` column is the EYE
+        (``getEyeY()``), and reading it as the feet is precisely the defect this
+        preflight exists to catch.
+
+        A failure to observe is reported, never raised: the arming evidence this
+        call sits beside must not be discarded because a diagnostic read failed.
+        """
+        receipt_id = f"armonlycam{episode_id}"
+        receipt = server_root / "mineocclude_observations" / f"{receipt_id}.json"
+        # CREATE_NEW on the server side: a stale receipt would make the server
+        # refuse rather than silently hand back a previous preflight's pose.
+        if receipt.exists():
+            receipt.unlink()
+        try:
+            self.runtime.send([f"mineocclude observegeometry {receipt_id}"])
+            self.runtime.wait_file(receipt, 20)
+            document = json.loads(receipt.read_text())
+        except BaseException as cause:  # noqa: BLE001 - reported, never raised
+            print(f"arm-only camera observation failed: {cause!r}", file=sys.stderr)
+            return None
+        camera = document.get("camera") or {}
+        players = camera.get("observed_players") or []
+        return {
+            "receipt_id": receipt_id,
+            "episode_id": document.get("episode_id"),
+            "observation_only": document.get("observation_only"),
+            "scientific_use": document.get("scientific_use"),
+            "mutates_runtime_state": document.get("mutates_runtime_state"),
+            "capturing": document.get("capturing"),
+            "canonical_feet_xyz": camera.get("canonical_feet_xyz"),
+            "observed_player_count": len(players),
+            "observed_feet_xyz": players[0].get("feet_xyz") if players else None,
+            "observed_eye_y": players[0].get("eye_y") if players else None,
+            "observed_yaw_degrees": players[0].get("yaw_degrees") if players else None,
+            "observed_pitch_degrees": players[0].get("pitch_degrees") if players else None,
+            "fov_status": camera.get("fov_status"),
         }
 
     def _await_arming(self, armed_pattern: str, refusal_pattern: str,

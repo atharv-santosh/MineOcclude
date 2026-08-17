@@ -739,12 +739,101 @@ OPERATIONAL_SMOKE_STAGES: tuple[tuple[str, str], ...] = (
 
 OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA = "mineocclude-startspec-handshake-v0.1"
 
+# An ENCODING tolerance, not a scientific threshold. The frozen authority
+# serializes camera coordinates to 10 decimal places while the runtime produces
+# the exact binary64 `feet + (double) 1.62f`, so the declared and observed eye
+# differ by ~3.2e-11. Mirrors CAMERA_ROUNDING_TOLERANCE in path_state_gate.
+CAMERA_ENCODING_TOLERANCE = 1e-9
+
 # A smoke that captured a frame, wrote a receipt, or put an object in the
 # Stage-1 durable namespace is no longer a smoke. These stay zero by
 # verification, not by assertion.
 OPERATIONAL_SMOKE_ZERO_COUNTS = (
     "frames_captured", "scientific_receipts_written", "stage1_durable_objects_written",
 )
+
+
+def require_camera_apparatus_observation(smoke: Mapping[str, Any],
+                                         apparatus_policy: Mapping[str, Any]) -> None:
+    """Refuse a smoke that did not cross the camera apparatus identity contract.
+
+    The v0.2 smoke exercised startspec, schedule acceptance and arming, then
+    stopped. Everything after arming -- including the post-capture camera check
+    -- was first executed by a governed launch, and a representation defect
+    there blocked all 8 Stage-1 units after a full 180-tick capture: the
+    verifier read ``server_state``'s ``player_y`` column as the camera FEET when
+    ``EpisodeManager`` logs it as ``getEyeY()``, so the comparison was off by a
+    constant 1.62f eye height while the apparatus sat exactly where this policy
+    requires it. This verifier closes that gap before collection.
+
+    Feet and eye are checked SEPARATELY and against their own declared values,
+    which is the whole point: a check that derived one from the other would
+    still have accepted the confusion that caused the block.
+
+    The tolerance is an ENCODING tolerance, not a scientific threshold. The
+    frozen authority serializes eye coordinates to 10 decimal places while the
+    runtime produces the exact binary64 ``feet + (double) 1.62f``, so the two
+    differ by ~3.2e-11. This matches ``CAMERA_ROUNDING_TOLERANCE`` in
+    ``prospective/path_state_gate.py``.
+
+    This reads a NON-SCIENTIFIC observation: ``observegeometry`` is a pure read
+    that writes to ``mineocclude_observations/`` -- outside every scientific
+    namespace -- and self-declares ``observation_only`` and
+    ``scientific_use: forbidden``. Those self-declarations are verified here, so
+    a document sourced from a capturing episode or from a mutating instrument is
+    refused rather than accepted as a preflight.
+    """
+    observation = smoke.get("startspec_handshake", {})
+    observation = observation.get("camera_apparatus_observation") if isinstance(
+        observation, Mapping) else None
+    if not isinstance(observation, Mapping):
+        raise EvidenceError(
+            "operational startup smoke carries no camera apparatus observation; a "
+            "smoke that never observed the armed camera cannot show that the "
+            "apparatus identity contract is satisfiable")
+
+    # The instrument must be the non-scientific one, and it must not have been
+    # read out of an episode that was already capturing.
+    if observation.get("observation_only") is not True:
+        raise EvidenceError("camera apparatus observation is not observation-only")
+    if observation.get("scientific_use") != "forbidden":
+        raise EvidenceError("camera apparatus observation is not marked scientific_use=forbidden")
+    if observation.get("mutates_runtime_state") is not False:
+        raise EvidenceError("camera apparatus observation claims to mutate runtime state")
+    if observation.get("capturing") is not False:
+        raise EvidenceError("camera apparatus observation was taken from a capturing episode")
+    if observation.get("observed_player_count") != 1:
+        raise EvidenceError("camera apparatus observation does not carry exactly one observed player")
+
+    declared_feet = apparatus_policy["camera_feet_world_xyz"]
+    declared_eye = apparatus_policy["camera_eye_world_xyz"]
+    observed_feet = observation.get("observed_feet_xyz")
+    observed_eye_y = observation.get("observed_eye_y")
+    if (not isinstance(observed_feet, (list, tuple)) or len(observed_feet) != 3
+            or not all(isinstance(value, (int, float)) and not isinstance(value, bool)
+                       for value in observed_feet)):
+        raise EvidenceError("camera apparatus observation carries no observed feet")
+    if not isinstance(observed_eye_y, (int, float)) or isinstance(observed_eye_y, bool):
+        raise EvidenceError("camera apparatus observation carries no observed eye height")
+    if any(abs(float(observed) - float(declared)) > CAMERA_ENCODING_TOLERANCE
+           for observed, declared in zip(observed_feet, declared_feet)):
+        raise EvidenceError(
+            f"observed camera feet {list(observed_feet)} do not satisfy the frozen "
+            f"apparatus policy {list(declared_feet)}")
+    if abs(float(observed_eye_y) - float(declared_eye[1])) > CAMERA_ENCODING_TOLERANCE:
+        raise EvidenceError(
+            f"observed camera eye height {observed_eye_y} does not satisfy the frozen "
+            f"apparatus policy {declared_eye[1]}")
+    # Feet and eye must be the SAME pose, not two independently satisfied
+    # numbers: this is the eye/feet confusion, stated as an invariant.
+    declared_offset = float(declared_eye[1]) - float(declared_feet[1])
+    if abs((float(observed_eye_y) - float(observed_feet[1])) - declared_offset) > CAMERA_ENCODING_TOLERANCE:
+        raise EvidenceError(
+            "observed camera eye/feet offset does not match the frozen apparatus policy")
+
+    yaw_pitch = apparatus_policy["yaw_pitch_degrees"]
+    if [observation.get("observed_yaw_degrees"), observation.get("observed_pitch_degrees")] != list(yaw_pitch):
+        raise EvidenceError("observed camera orientation does not satisfy the frozen apparatus policy")
 
 
 def require_startspec_handshake(smoke: Mapping[str, Any]) -> None:
@@ -2493,6 +2582,12 @@ def require_preoutcome_provenance(receipt: Mapping[str, Any], *, authority_path:
                                   source_commit=head,
                                   closure_sha256=runtime_critical_source_closure_sha256(
                                       repository))
+        # The camera apparatus identity contract, crossed before collection
+        # rather than after a full capture. Checked here because this is where
+        # the frozen apparatus policy is in scope.
+        require_camera_apparatus_observation(
+            receipt.get("operational_startup_smoke") or {},
+            authority["apparatus_observation_policy"])
     except EvidenceError as exc:
         raise PermissionError(f"pre-outcome capture-path preflight rejects receipt: {exc}") from exc
     bindings = receipt.get("source_bindings")

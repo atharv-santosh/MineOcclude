@@ -225,17 +225,46 @@ def verify_captured_apparatus(authority: dict, unit: dict, artifacts: dict,
         raise RuntimeError("captured apparatus evidence is incomplete")
     feet = policy["camera_feet_world_xyz"]
     eye = policy["camera_eye_world_xyz"]
+    # server_state rows carry the camera EYE, not the feet: EpisodeManager logs
+    # `py = player.getEyeY()` beside `player.getX()/getZ()`, because that same
+    # triple is the sightline origin handed to GeometryUtil.segmentHitsWall.
+    # The feet are never a state column -- they are established by the lockcam
+    # teleport to camPoseFeetY -- so feet are derived from the observed eye by
+    # removing the authority's own declared eye-height offset. Reading player_y
+    # as feet compared the eye against the feet and blocked every unit by a
+    # constant +1.6200000047683716 (= the 1.62f standing eye height).
+    eye_height = float(eye[1]) - float(feet[1])
     for row in state:
-        observed_feet = [float(row["player_x"]), float(row["player_y"]), float(row["player_z"])]
-        observed_eye = [observed_feet[0], observed_feet[1] + (eye[1] - feet[1]), observed_feet[2]]
-        if not np.allclose(observed_feet, feet, rtol=0, atol=1e-9):
-            raise RuntimeError("captured camera feet mismatch")
+        observed_eye = [float(row["player_x"]), float(row["player_y"]), float(row["player_z"])]
+        observed_feet = [observed_eye[0], observed_eye[1] - eye_height, observed_eye[2]]
+        # atol is an ENCODING tolerance, not a scientific threshold: the frozen
+        # authority serializes eye coordinates to 10 decimal places, so the
+        # exact binary64 eye differs from the declared value by ~3.2e-11. This
+        # matches CAMERA_ROUNDING_TOLERANCE in prospective/path_state_gate.py.
         if not np.allclose(observed_eye, eye, rtol=0, atol=1e-9):
             raise RuntimeError("captured camera eye mismatch")
+        if not np.allclose(observed_feet, feet, rtol=0, atol=1e-9):
+            raise RuntimeError("captured camera feet mismatch")
         if [float(row["player_yaw"]), float(row["player_pitch"])] != policy["yaw_pitch_degrees"]:
             raise RuntimeError("captured camera orientation mismatch")
-        if float(row["fov_degrees"]) != policy["fov_degrees"]:
-            raise RuntimeError("captured FOV mismatch")
+    # FOV is a CLIENT property -- the server declares it "not_server_observable"
+    # -- so it is verified from the client authority record captured for THIS
+    # episode, not from a state column that never carried it. The episode
+    # binding is what makes a stale record from an earlier episode fail.
+    authority_record = destination / "raw/client_authority.json"
+    if not authority_record.is_file():
+        raise RuntimeError("captured client authority record is missing")
+    client = load_json(authority_record)
+    if int(client["episode_id"]) != int(unit["episode_id"]):
+        raise RuntimeError("captured client authority record is stale")
+    if float(client["fov_degrees"]) != float(policy["fov_degrees"]):
+        raise RuntimeError("captured FOV mismatch")
+    # Without the speed/sprint FOV effect pinned off, the pinned FOV above is
+    # not the FOV actually rendered into the frames.
+    if float(client["fov_effect_scale"]) != 0.0:
+        raise RuntimeError("captured FOV effect scale is not pinned")
+    if [int(client["framebuffer_width"]), int(client["framebuffer_height"])] != policy["canonical_frame_pixels"]:
+        raise RuntimeError("captured framebuffer dimensions mismatch")
     with Image.open(frames[0]) as image:
         if list(image.size) != policy["canonical_frame_pixels"]:
             raise RuntimeError("captured frame dimensions mismatch")
