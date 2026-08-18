@@ -432,10 +432,21 @@ def test_v0_3_stage1_manifest_digest_is_the_frozen_one(v0_3):
     added ``stage2_decision_authority_binding`` key and nothing else, and the
     authority and Stage-1 digests below are again unchanged, which is the check
     that it stayed inside the template.
+
+    The Stage-2 digest was rebound a fourth time by the final operational and
+    terminal verification closure (B001-B008), which promoted three further
+    already-implemented facts into the Stage-2 decision authority -- the frozen
+    selection tau ceiling, the bootstrap configuration contract a readout must
+    record having applied, and the layer-4 activation contract -- together with
+    the clause obliging the terminal to verify fold discipline, bootstrap
+    configuration, self-grade agreement and activation metadata independently.
+    Once again the only line that moves in each Stage-2 manifest is the
+    ``stage2_decision_authority_binding`` digest, and the authority and Stage-1
+    digests below are unchanged.
     """
     assert sha256_file(v0_3.stage1_manifest_path) == (
         "424b583f93a2fd77886e534543872dd3120f0470e5f3f341ee445443c64039a3")
     assert sha256_file(v0_3.authority_path) == (
         "495af6d19b73f35a4927e48d7def4ded587ddf4d7900a8d6827ffec3ad7e982f")
     assert sha256_file(v0_3.stage2_manifest_path) == (
-        "ad718685b33030a0c0de405cd9d3abb737c3f3e9d087ad7c78768fe151855eb8")
+        "2d6b2ef49cc852a8286f1638fb4844aa60bb81cde610be21f3004dd7d2fe9030")

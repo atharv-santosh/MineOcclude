@@ -39,6 +39,9 @@ from typing import Any
 from mineocclude.prospective.development_workflow import (
     EvidenceError, canonical_payload_sha256, load_json, sha256_file,
 )
+from mineocclude.prospective.fold_discipline import (
+    FoldDisciplineError, verify_selection_discipline,
+)
 from mineocclude.prospective.package_binding import (
     PackageBindingError, stage2_decision_artifact_id,
 )
@@ -104,15 +107,38 @@ class Stage2Decision:
             "full_may_not_rescue_best_k_failure": True,
             # The bounded interpretation, stated in the artifact so an auditor
             # reading the decision alone cannot mistake its scope.
+            #
+            # B005: the two time-baseline gates are stated as *satisfied frozen
+            # checks*, never as an independent baseline victory. Under the frozen
+            # design the WALL RMSE ceiling (0.1556 blocks) is far below the
+            # training-only time baseline's trajectory RMSE (~0.4136), so any
+            # readout that clears WALL_rmse necessarily clears
+            # WALL_beats_training_time_baseline; and the tau1-15 time baseline's
+            # macro R2 (~-0.18) is already below the 0.1 confound ceiling before
+            # a single activation is read. Both gates are real and both remain
+            # exactly as frozen -- but neither can bind independently, so a PASS
+            # may not be described as having beaten a motion or time baseline.
             "interpretation": (
                 "The frozen DEVELOPMENT_ONLY Stage-2 hidden-position decoding "
                 "experiment was evaluated against its prospectively frozen "
                 "decoding criteria. A PASS supports only the bounded statement "
                 "that layer-4 activations contain decodable information "
                 "according to those criteria, on this apparatus, at these "
-                "paths. It establishes nothing about object permanence, belief, "
-                "causal use, uncertainty representation, general world-model "
-                "competence, or behavioral reliance on the representation."),
+                "paths, against the matched visible control. The two "
+                "time-baseline gates were satisfied; under the frozen thresholds "
+                "neither can bind independently of the RMSE ceiling, so a PASS "
+                "is not evidence of having independently beaten a time or motion "
+                "baseline. This Stage tests no constant-velocity, last-seen-"
+                "position, or other motion-based alternative explanation, and "
+                "rules none of them out. It establishes nothing about object "
+                "permanence, belief, causal use, uncertainty representation, "
+                "general world-model competence, or behavioral reliance on the "
+                "representation."),
+            "time_baseline_gates_bind_independently": False,
+            "independent_motion_baseline_tested": False,
+            "rules_out_constant_velocity_explanation": False,
+            "rules_out_last_seen_position_explanation": False,
+            "rules_out_motion_based_explanations": False,
             "establishes_object_permanence": False,
             "establishes_belief": False,
             "establishes_causal_use": False,
@@ -165,6 +191,50 @@ class Stage2Evaluator:
             raise Stage2Blocked("Stage-2 leading readout is not BEST_K")
         if self.policy.get("full_may_not_rescue_best_k_failure") is not True:
             raise Stage2Blocked("authority does not forbid FULL from rescuing BEST-K")
+        # B001/B004/B007/B008: the promoted clause that obliges this evaluator to
+        # establish fold, bootstrap, self-grade and activation-metadata legitimacy
+        # independently. A decision authority that does not demand it cannot be
+        # evaluated by this evaluator, because the two would then disagree about
+        # what a terminal decision means.
+        self.verification = terminal.get("independent_verification_required")
+        if not isinstance(self.verification, Mapping) or not self.verification:
+            raise Stage2Blocked(
+                "Stage-2 decision authority requires no independent terminal "
+                "verification of fold discipline, bootstrap configuration, "
+                "self-grade agreement, or activation metadata")
+        self.readout_procedure = decision_authority.get("readout_procedure") or {}
+        self.inner_rule = self.readout_procedure.get("inner_fold_rule") or {}
+        self.selection_rule = self.readout_procedure.get("selection_rule") or {}
+        self.activation_contract = decision_authority.get("activation_contract") or {}
+        self.bootstrap_contract = (decision_authority.get("bootstrap_procedure") or {}).get(
+            "recorded_configuration_contract")
+        if not isinstance(self.bootstrap_contract, Mapping) or not self.bootstrap_contract:
+            raise Stage2Blocked(
+                "Stage-2 decision authority states no bootstrap configuration contract "
+                "for the readout to be verified against")
+        if not self.readout_procedure.get("k_grid") or not self.readout_procedure.get("alpha_grid"):
+            raise Stage2Blocked("Stage-2 decision authority declares no K/alpha grid")
+        if not self.activation_contract.get("expected_shape"):
+            raise Stage2Blocked("Stage-2 decision authority declares no activation contract")
+        # The promoted contract must still agree with the authority it extends.
+        # Otherwise a decision-authority edit could relax a rule that
+        # authority_parameters.json still states, and the terminal would obey the
+        # looser of the two.
+        expected_shape = [self.design["required_target_rows_per_capture"],
+                          self.authority["apparatus"]["visual_token_grid"][0]
+                          * self.authority["apparatus"]["visual_token_grid"][1],
+                          self.activation_contract.get("hidden_size")]
+        if (list(self.activation_contract["expected_shape"]) != expected_shape
+                or self.activation_contract.get("layer") != 4
+                or self.activation_contract.get("all_layer_extraction_forbidden") is not True):
+            raise Stage2Blocked(
+                "the promoted activation contract disagrees with the authority it extends")
+        for field, key in (("unit", "bootstrap_unit"), ("resamples", "bootstrap_resamples"),
+                           ("seed", "bootstrap_seed")):
+            if self.bootstrap_contract.get(field) != self.policy.get(key):
+                raise Stage2Blocked(
+                    f"the promoted bootstrap contract's {field} disagrees with the "
+                    "authority it extends")
 
     # -- gate re-derivation --------------------------------------------------
 
@@ -236,17 +306,151 @@ class Stage2Evaluator:
                 raise Stage2Blocked(
                     f"{record.get('unit_id')!r}: activations were not proved against "
                     "the authority's target rows")
-        bootstrap = evidence.get("bootstrap_configuration") or {}
-        for field, key in (("unit", "bootstrap_unit"), ("resamples", "bootstrap_resamples"),
-                           ("seed", "bootstrap_seed")):
-            if bootstrap.get(field) != self.policy[key]:
-                raise Stage2Blocked(f"Stage-2 bootstrap {field} is not the authority's")
+        self._require_activation_metadata(evidence)
         readouts = evidence.get("readouts") or {}
         for stage in ("best_k", "full"):
             if stage not in readouts:
                 raise Stage2Blocked(f"Stage-2 evidence carries no {stage} readout")
             if set(readouts[stage].get("scenes") or {}) != set(REQUIRED_SCENES):
                 raise Stage2Blocked(f"Stage-2 {stage} readout scene coverage is incomplete")
+        self._require_bootstrap_configuration(evidence, readouts)
+        self._require_fold_discipline(evidence, readouts)
+
+    # -- B008: activation and unit metadata, verified rather than recorded ----
+
+    def _require_activation_metadata(self, evidence: Mapping[str, Any]) -> None:
+        """Every capture record must match the manifest unit and layer contract.
+
+        Earlier consumers generally catch a wrong activation shape, and the
+        capture units are built from the manifest -- but "generally" and "built
+        from" are not verification, and a terminal that can be handed an
+        evidence document with ``activation_shape = [19, 336, 4096]`` or
+        ``episode_id = null`` and still reach PASS is trusting its inputs.
+        """
+        units = {str(unit.get("unit_id")): unit
+                 for unit in (self.manifest.get("capture_units") or [])
+                 if isinstance(unit, Mapping)}
+        expected_shape = list(self.activation_contract["expected_shape"])
+        required_rows = self.design["required_target_rows_per_capture"]
+        for record in evidence.get("capture_inventory") or []:
+            unit_id = record.get("unit_id")
+            unit = units.get(str(unit_id))
+            if unit is None:
+                raise Stage2Blocked(
+                    f"Stage-2 evidence names capture {unit_id!r}, which the frozen "
+                    "manifest does not declare")
+            if list(record.get("activation_shape") or []) != expected_shape:
+                raise Stage2Blocked(
+                    f"{unit_id}: activation shape {record.get('activation_shape')!r} is "
+                    f"not the frozen layer-4 contract {expected_shape}")
+            for field in ("episode_id", "scene", "trajectory_id", "outer_fold",
+                          "phase_frames", "direction"):
+                if record.get(field) != unit.get(field):
+                    raise Stage2Blocked(
+                        f"{unit_id}: evidence {field} is {record.get(field)!r}, the "
+                        f"manifest unit says {unit.get(field)!r}")
+            if record.get("episode_id") is None:
+                raise Stage2Blocked(f"{unit_id}: evidence records no episode identity")
+            rows = record.get("target_model_frame_indices")
+            if not isinstance(rows, list) or len(rows) != required_rows \
+                    or rows != list(unit.get("target_model_frame_indices") or []):
+                raise Stage2Blocked(
+                    f"{unit_id}: evidence target rows are not the manifest's "
+                    f"{required_rows} frozen rows")
+
+    # -- B004: the producer's record against frozen authority -----------------
+
+    def _require_bootstrap_configuration(self, evidence: Mapping[str, Any],
+                                         readouts: Mapping[str, Any]) -> None:
+        """Compare what the readouts DID against the frozen rule.
+
+        The evidence field is now the producing readout's own record of the
+        configuration it applied. Comparing it here against the frozen contract
+        is therefore a real comparison; the superseded version read the value out
+        of the authority and compared it back to the authority.
+        """
+        contract = dict(self.bootstrap_contract)
+        for stage in ("best_k", "full"):
+            recorded = (readouts[stage] or {}).get("bootstrap_configuration")
+            if not isinstance(recorded, Mapping) or not recorded:
+                raise Stage2Blocked(
+                    f"the {stage} readout recorded no bootstrap configuration, so what "
+                    "it actually resampled under cannot be established")
+            for field, expected in contract.items():
+                if recorded.get(field) != expected:
+                    raise Stage2Blocked(
+                        f"the {stage} readout's recorded bootstrap {field} is "
+                        f"{recorded.get(field)!r}, the frozen authority requires "
+                        f"{expected!r}")
+        top = evidence.get("bootstrap_configuration")
+        if not isinstance(top, Mapping) or dict(top) != contract:
+            raise Stage2Blocked(
+                "Stage-2 evidence bootstrap configuration is not the frozen authority's")
+
+    # -- B001: fold and model-selection discipline ---------------------------
+
+    def _require_fold_discipline(self, evidence: Mapping[str, Any],
+                                 readouts: Mapping[str, Any]) -> None:
+        """Re-derive every fold property the readout merely reported.
+
+        The expectation comes from the frozen manifest's own trajectory
+        identities -- carried into the capture inventory and cross-checked
+        against the manifest above -- never from the readout. See
+        :mod:`mineocclude.prospective.fold_discipline`.
+        """
+        folds: dict[str, int] = {}
+        directions: dict[str, str] = {}
+        for record in evidence.get("capture_inventory") or []:
+            identity = str(record.get("trajectory_id"))
+            fold, direction = record.get("outer_fold"), record.get("direction")
+            if (folds.setdefault(identity, fold) != fold
+                    or directions.setdefault(identity, direction) != direction):
+                raise Stage2Blocked(
+                    f"{identity!r} is bound to more than one fold or direction")
+        if len(folds) != self.design["paired_trajectory_identities"]:
+            raise Stage2Blocked(
+                f"Stage-2 evidence covers {len(folds)} trajectory identities, authority "
+                f"requires {self.design['paired_trajectory_identities']}")
+        verified: dict[str, Any] = {}
+        for stage, kind in (("best_k", "BEST_K"), ("full", "FULL")):
+            for scene in REQUIRED_SCENES:
+                block = readouts[stage]["scenes"][scene]
+                try:
+                    verified[f"{stage}.{scene}"] = verify_selection_discipline(
+                        block.get("selection_by_outer_fold"), kind=kind,
+                        identity_outer_folds=folds, identity_directions=directions,
+                        rows_per_trajectory=self.design["required_target_rows_per_capture"],
+                        outer_fold_count=self.design["outer_folds"],
+                        k_grid=self.readout_procedure["k_grid"] if kind == "BEST_K" else None,
+                        alpha_grid=self.readout_procedure["alpha_grid"],
+                        training_identities_required=self.inner_rule[
+                            "training_identities_required"],
+                        inner_fold_count=self.inner_rule["inner_fold_count"],
+                        identities_per_inner_fold=self.inner_rule["identities_per_inner_fold"],
+                        selection_training_tau_maximum=self.selection_rule[
+                            "selection_training_tau_maximum"],
+                        label=f"{stage} {scene}")
+                except FoldDisciplineError as exc:
+                    raise Stage2Blocked(str(exc)) from exc
+        if self.readout_procedure.get("outer_fold_aggregation", {}).get(
+                "each_row_predicted_exactly_once") is True and not all(
+                    item["each_row_predicted_exactly_once"] for item in verified.values()):
+            raise Stage2Blocked("out-of-fold row coverage was not established")
+
+    def _require_self_grade_agrees(self, best: Mapping[str, Any], derived: str) -> None:
+        """A recorded self-grade must agree with the re-derivation, or block."""
+        if self.verification.get("readout_self_grade", {}).get(
+                "claimed_status_must_agree_with_re_derived_status") is not True:
+            raise Stage2Blocked(
+                "Stage-2 decision authority does not require the readout self-grade "
+                "to agree with the re-derived status")
+        claimed = best.get("readout_claimed_qualification_status")
+        if claimed is None:
+            raise Stage2Blocked("the BEST-K readout recorded no qualification status")
+        if claimed != derived:
+            raise Stage2Blocked(
+                f"the BEST-K readout graded itself {claimed!r} but the re-derivation "
+                f"is {derived!r}; the evidence is internally inconsistent")
 
     # -- entry point ---------------------------------------------------------
 
@@ -265,6 +469,15 @@ class Stage2Evaluator:
                     "recorded BEST-K qualification checks disagree with the "
                     f"re-derivation: recorded={dict(sorted(claimed.items()))} "
                     f"re-derived={dict(sorted(checks.items()))}")
+            # B007. The readout's own overall grade was recorded and never
+            # compared, so a receipt could carry checks that agreed with the
+            # re-derivation and a summary status that did not. It cannot
+            # *control* the verdict -- the verdict below is re-derived from
+            # ``checks`` regardless -- but a disagreement means the evidence is
+            # internally inconsistent, and inconsistent evidence is not a
+            # completed analysis to reach a scientific verdict about.
+            derived_status = PASS if all(checks.values()) else FAIL
+            self._require_self_grade_agrees(best, derived_status)
         except Stage2Blocked as exc:
             return Stage2Decision(BLOCKED, {}, {}, (str(exc),))
         except (EvidenceError, KeyError, TypeError, ValueError) as exc:

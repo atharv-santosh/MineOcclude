@@ -48,7 +48,9 @@ from mineocclude.prospective.stage2_decision import (
     BEST_K_GATES, BLOCKED, FAIL, PASS, Stage2Evaluator, evaluate_stage2,
     require_stage2_decision_reproduction,
 )
+from mineocclude.prospective.fold_discipline import expected_row_keys, row_key_digest
 from mineocclude.prospective.stage2_evidence import build_stage2_evidence
+from mineocclude.regime_a_first25_analysis import inner_fold_assignment
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / ("docs/status/integration/regime_a_prime_qualification_v0_1/"
@@ -58,6 +60,22 @@ DECISION_AUTHORITY_PATH = PACKAGE / "stage2_decision_authority.json"
 STAGE2_PATH = PACKAGE / "stage2_locked_manifest.json"
 
 COMMIT = "c" * 40
+
+#: The bootstrap configuration a legitimate readout records having applied.
+#: Spelled literally rather than read back out of the decision authority: a
+#: fixture that read the authority would reproduce the very tautology B004
+#: removed, and would stop detecting a drift between the two.
+HONEST_BOOTSTRAP = {
+    "unit": "WHOLE_TRAJECTORY", "resamples": 10000, "seed": 2026081503,
+    "resample_population": "per_trajectory_macro_r2_sorted_by_trajectory_id",
+    "resample_population_size": 25,
+    "statistic": "mean_of_resampled_per_trajectory_r2",
+    "confidence_bound_definition": "two_sided_95_numpy_quantile_0.025_0.975",
+    "generator": "numpy.random.default_rng.choice(replace=True)",
+}
+
+#: The tau ceiling the frozen selection rule applies. Also spelled literally.
+SELECTION_TAU_MAXIMUM = 15
 
 
 def _sha(text: str) -> str:
@@ -406,15 +424,41 @@ class Campaign:
         return {"rmse_blocks": rmse, "mae_blocks": rmse * 0.8, "macro_r2": macro,
                 "bootstrap95_macro_r2": [lower, upper if upper is not None else lower + 0.1]}
 
-    def _scene(self, *, rmse=0.05, macro=0.80, lower=0.70, upper=None,
-               baseline_rmse=0.50, confound=0.05, kind="BEST_K"):
+    def honest_selection(self, kind="BEST_K"):
+        """The fold record a legitimate readout produces for this frozen design.
+
+        Built from the manifest's own identities and the frozen inner-fold
+        function, so the fixture stands in for an honest producer rather than
+        for an empty one. Before B001 this returned empty identity lists and the
+        terminal accepted them, which is the whole finding.
+        """
+        identities = self.manifest["trajectory_identities"]
+        folds = {item["trajectory_id"]: item["outer_fold"] for item in identities}
+        directions = {item["trajectory_id"]: item["direction"] for item in identities}
+        rows = self.manifest["required_target_rows_per_capture"]
         selection = {}
         for fold in range(5):
-            entry = {"selected_alpha": 1.0, "training_trajectory_ids": [],
-                     "test_trajectory_ids": []}
+            training = sorted(name for name, value in folds.items() if value != fold)
+            test = sorted(name for name, value in folds.items() if value == fold)
+            inner = inner_fold_assignment(
+                training, {name: directions[name] for name in training}, fold)
+            entry = {"selected_alpha": 1.0,
+                     "training_trajectory_ids": training,
+                     "test_trajectory_ids": test,
+                     "inner_fold_assignment": {name: int(value)
+                                               for name, value in sorted(inner.items())},
+                     "selection_training_tau_maximum": SELECTION_TAU_MAXIMUM,
+                     "predicted_row_count": len(test) * rows,
+                     "predicted_row_keys_sha256": row_key_digest(
+                         expected_row_keys(test, rows))}
             if kind == "BEST_K":
                 entry.update({"selected_k": 16, "selected_tokens": list(range(16))})
             selection[str(fold)] = entry
+        return selection
+
+    def _scene(self, *, rmse=0.05, macro=0.80, lower=0.70, upper=None,
+               baseline_rmse=0.50, confound=0.05, kind="BEST_K"):
+        selection = self.honest_selection(kind)
         return {"metrics": self._metrics(rmse, macro, lower, upper),
                 "training_time_baseline": self._metrics(baseline_rmse, 0.10, 0.02),
                 "training_time_baseline_tau1_15": self._metrics(baseline_rmse, confound, 0.01),
@@ -460,7 +504,8 @@ class Campaign:
             scenes = ({"WALL": wall, "NO_WALL": no_wall} if kind == "BEST_K" else
                       {"WALL": full_wall or self._scene(kind="FULL"),
                        "NO_WALL": self._scene(kind="FULL")})
-            payload = {"readout": kind, "scenes": copy.deepcopy(scenes)}
+            payload = {"readout": kind, "scenes": copy.deepcopy(scenes),
+                       "bootstrap_configuration": copy.deepcopy(HONEST_BOOTSTRAP)}
             if kind == "BEST_K":
                 checks = claimed if claimed is not None else self.true_checks(wall, no_wall)
                 payload["qualification_checks"] = checks
@@ -761,7 +806,7 @@ class TestTerminalBlocked:
             evidence, omit="evidence_payload_sha256")
         decision = campaign.decide(evidence)
         assert decision["status"] == BLOCKED
-        assert "bootstrap seed" in decision["reasons"][0]
+        assert "bootstrap configuration is not the frozen authority" in decision["reasons"][0]
 
     def test_a_decision_authority_with_a_different_gate_set_blocks(self, campaign):
         contract = copy.deepcopy(campaign.decision_authority)

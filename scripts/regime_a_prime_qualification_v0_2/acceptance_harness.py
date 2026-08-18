@@ -81,7 +81,15 @@ SUITES = {
              # fixtures, byte-identical decision reproduction under mutation, and
              # the two rehearsal defects -- an activation receipt that bound no
              # checkpoint, and target rows that were inferred rather than proved.
-             "tests/prospective/test_stage2_terminal_authority.py"),
+             "tests/prospective/test_stage2_terminal_authority.py",
+             # The final operational and terminal verification closure: the
+             # terminal's independent re-derivation of fold discipline, bootstrap
+             # configuration, self-grade agreement and activation metadata, and
+             # the production wiring of the unit-1 checkpoint, the per-unit
+             # structural probe, durable capture receipts and the explicit
+             # historical/current-source evaluation modes.
+             "tests/prospective/test_stage2_fold_and_terminal_verification.py",
+             "tests/prospective/test_stage2_operational_closure.py"),
 }
 ENTRYPOINT_DIRECTORY = {"v0.2": "scripts/regime_a_prime_qualification_v0_2",
                         "v0.3": "scripts/regime_a_prime_qualification_v0_3",

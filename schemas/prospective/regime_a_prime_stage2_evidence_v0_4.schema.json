@@ -53,7 +53,7 @@
       "maxItems": 50,
       "items": {
         "type": "object",
-        "required": ["unit_id", "trajectory_id", "scene", "direction", "outer_fold", "phase_frames", "capture_receipt_sha256", "extraction_unit_id", "extraction_receipt_sha256", "activation_sha256", "target_model_frame_indices", "aligned_target_world_x_blocks", "target_rows_authority_bound"],
+        "required": ["unit_id", "trajectory_id", "scene", "direction", "outer_fold", "phase_frames", "capture_receipt_sha256", "extraction_unit_id", "extraction_receipt_sha256", "activation_sha256", "activation_shape", "episode_id", "target_model_frame_indices", "aligned_target_world_x_blocks", "target_rows_authority_bound"],
         "properties": {
           "unit_id": {"type": "string", "minLength": 1},
           "trajectory_id": {"type": "string", "minLength": 1},
@@ -64,6 +64,8 @@
           "capture_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "extraction_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "activation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "activation_shape": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "integer", "minimum": 1}},
+          "episode_id": {"type": "integer"},
           "target_model_frame_indices": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"type": "integer"}},
           "aligned_target_world_x_blocks": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"type": "number"}},
           "target_rows_authority_bound": {"const": true}
@@ -77,11 +79,16 @@
     "all_layer_extraction_performed": {"const": false},
     "bootstrap_configuration": {
       "type": "object",
-      "required": ["unit", "resamples", "seed"],
+      "required": ["unit", "resamples", "seed", "resample_population", "resample_population_size", "statistic", "confidence_bound_definition", "generator"],
       "properties": {
         "unit": {"const": "WHOLE_TRAJECTORY"},
         "resamples": {"type": "integer", "minimum": 1},
-        "seed": {"type": "integer"}
+        "seed": {"type": "integer"},
+        "resample_population": {"type": "string", "minLength": 1},
+        "resample_population_size": {"type": "integer", "minimum": 1},
+        "statistic": {"type": "string", "minLength": 1},
+        "confidence_bound_definition": {"type": "string", "minLength": 1},
+        "generator": {"type": "string", "minLength": 1}
       }
     },
     "readouts": {
@@ -108,10 +115,24 @@
     },
     "readout": {
       "type": "object",
-      "required": ["readout", "receipt_sha256", "scenes"],
+      "required": ["readout", "receipt_sha256", "bootstrap_configuration", "scenes"],
       "properties": {
         "readout": {"enum": ["BEST_K", "FULL"]},
         "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bootstrap_configuration": {
+      "type": "object",
+      "required": ["unit", "resamples", "seed", "resample_population", "resample_population_size", "statistic", "confidence_bound_definition", "generator"],
+      "properties": {
+        "unit": {"const": "WHOLE_TRAJECTORY"},
+        "resamples": {"type": "integer", "minimum": 1},
+        "seed": {"type": "integer"},
+        "resample_population": {"type": "string", "minLength": 1},
+        "resample_population_size": {"type": "integer", "minimum": 1},
+        "statistic": {"type": "string", "minLength": 1},
+        "confidence_bound_definition": {"type": "string", "minLength": 1},
+        "generator": {"type": "string", "minLength": 1}
+      }
+    },
         "scenes": {
           "type": "object",
           "required": ["WALL", "NO_WALL"],
@@ -122,7 +143,26 @@
               "metrics": {"$ref": "#/$defs/metrics"},
               "training_time_baseline": {"$ref": "#/$defs/metrics"},
               "training_time_baseline_tau1_15": {"$ref": "#/$defs/metrics"},
-              "selection_by_outer_fold": {"type": "object", "minProperties": 5, "maxProperties": 5}
+              "selection_by_outer_fold": {
+                "type": "object",
+                "minProperties": 5,
+                "maxProperties": 5,
+                "additionalProperties": {
+                  "type": "object",
+                  "required": ["selected_alpha", "training_trajectory_ids", "test_trajectory_ids", "inner_fold_assignment", "selection_training_tau_maximum", "predicted_row_count", "predicted_row_keys_sha256"],
+                  "properties": {
+                    "selected_alpha": {"type": "number"},
+                    "selected_k": {"type": "integer"},
+                    "selected_token_count": {"type": "integer", "minimum": 0},
+                    "training_trajectory_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                    "test_trajectory_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                    "inner_fold_assignment": {"type": "object", "minProperties": 20, "maxProperties": 20, "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 4}},
+                    "selection_training_tau_maximum": {"type": "integer", "minimum": 1},
+                    "predicted_row_count": {"type": "integer", "minimum": 0},
+                    "predicted_row_keys_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                  }
+                }
+              }
             }
           }
         }

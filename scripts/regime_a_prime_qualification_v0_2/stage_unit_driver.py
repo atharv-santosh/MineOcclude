@@ -32,6 +32,7 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
     require_stage_manifest_binding, resolve_qualified_runtime,
     runtime_critical_source_closure_sha256, runtime_probe_identity_tokens,
     sha256_file, stage_run_inventory_sha256,
+    durable_unit_state_uri, publish_durable_unit_state,
     verify_probe_execution, verify_runtime_identity,
 )
 from mineocclude.prospective.package_binding import artifact_version_tag  # noqa: E402
@@ -491,7 +492,19 @@ def capture(stage: str, unit: dict, manifest: dict, manifest_path: Path, receipt
         receipt["stage1_decision_sha256"] = sha256_file(decision_path)
         receipt["server_state_path"] = str(destination / "raw/server_state.jsonl")
         receipt["server_state_sha256"] = sha256_file(destination / "raw/server_state.jsonl")
+    # B003. The capture bytes above are durable; the receipt was not. It is
+    # written here, outside the synced capture tree, and it embeds capture-time
+    # runtime provenance -- the probe execution record, the apparatus
+    # observation, the path-state derivation -- that cannot honestly be
+    # reconstructed after the fact. Losing local storage therefore left frames
+    # that survived and a receipt that did not, and nothing downstream could
+    # process the survivors. The receipt is now published to a durable sibling
+    # namespace with its own digest-bound state record, read back, and compared
+    # byte for byte before this unit is considered done.
+    receipt["durable_unit_state_uri"] = durable_unit_state_uri(manifest, unit["unit_id"])
     atomic_write_json(receipt_path, receipt)
+    publish_durable_unit_state(manifest, unit, receipt_path=receipt_path,
+                               staging=receipt_path.parent / ".unit_state_staging")
 
 
 def delegated(unit: dict, manifest: dict, manifest_path: Path, stage: str, receipt_path: Path) -> None:

@@ -15,14 +15,28 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 from mineocclude.prospective.development_workflow import (  # noqa: E402
-    Decision, DurableController, Stage1Evaluator, atomic_write_json, bind_manifest,
-    RUNTIME_CRITICAL_SOURCE_PATHS, canonical_payload_sha256, load_json, require_preoutcome_provenance,
+    Decision, DurableController, EvidenceError, Stage1Evaluator, atomic_write_json,
+    bind_manifest, bind_historical_source_closure, campaign_source_commit,
+    RUNTIME_CRITICAL_SOURCE_PATHS, canonical_payload_sha256, evidence_source_drift,
+    load_json, require_preoutcome_provenance,
     require_stage2_authorization, require_stage_manifest_binding,
+    restore_durable_capture_tree, restore_durable_unit_state,
     runtime_critical_source_closure_sha256, sha256_file, stage_run_inventory_sha256,
 )
 from mineocclude.prospective.package_binding import (  # noqa: E402
-    PackageBinding, resolve_package_binding, stage1_decision_artifact_id,
+    PackageBinding, artifact_version_tag, provenance_artifact_id_for,
+    resolve_package_binding, stage1_decision_artifact_id,
 )
+from mineocclude.prospective.stage2_processability import (  # noqa: E402
+    capture_root_for, capture_unit_structural_probe, make_unit1_checkpoint,
+)
+
+#: Exit status for an OPERATIONAL refusal. Deliberately distinct from 2, which
+#: this CLI has always used for a completed scientific FAIL: a provenance or
+#: binding problem must not be reportable with the same code as a real negative
+#: result, and a caller scripting on the exit status must be able to tell them
+#: apart without parsing text.
+BLOCKED_EXIT = 3
 
 
 #: Package version this controller drives. Rebound -- once, before ``main`` --
@@ -59,6 +73,19 @@ def main() -> int:
     evaluate = sub.add_parser("evaluate-stage1")
     evaluate.add_argument("evidence", type=Path)
     evaluate.add_argument("output", type=Path)
+    # B006. This used to evaluate any Stage-1 evidence in current-source mode
+    # silently, so pointing it at a COMPLETED campaign's frozen evidence at a
+    # later HEAD printed SCIENTIFIC FAIL for a legitimate PASS -- source drift
+    # presented as a negative scientific result. The mode is now explicit and
+    # required; neither branch can produce a scientific FAIL from drift.
+    mode = evaluate.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--historical", type=Path, metavar="STAGE1_PROVENANCE",
+                      help="evaluate a COMPLETED campaign against the source closure "
+                           "recorded in its own frozen pre-outcome provenance receipt")
+    mode.add_argument("--current-source", action="store_true",
+                      help="evaluate a campaign running against the working tree now; "
+                           "refuses with BLOCKED if the tree is not the source the "
+                           "evidence records")
     monitor = sub.add_parser("monitor")
     monitor.add_argument("state_dir", type=Path)
     run1 = sub.add_parser("run-stage1")
@@ -79,6 +106,20 @@ def main() -> int:
     run2.add_argument("--provenance", type=Path, required=True)
     run2.add_argument("--state-dir", type=Path, required=True)
     run2.add_argument("--events", type=Path, required=True)
+    # B003. Recovering a unit whose local receipt was lost with the NVMe. The
+    # raw bytes were always durable; the receipt now is too, so a lost local
+    # tree is restored rather than recollected.
+    restore = sub.add_parser("restore-unit")
+    restore.add_argument("--stage", choices=["stage1-capture", "stage2-capture"],
+                         required=True)
+    restore.add_argument("--unit-id", required=True)
+    restore.add_argument("--provenance", type=Path, required=True,
+                         help="the campaign's own frozen pre-outcome provenance "
+                              "receipt, which names the source freeze the receipt "
+                              "must be bound to")
+    restore.add_argument("--restore-capture-tree", action="store_true")
+    restore.add_argument("--overwrite", action="store_true",
+                         help="replace a differing local receipt; refused by default")
     args = parser.parse_args()
     bound = package_binding(args.repo.resolve())
     authority_path = bound.authority_path
@@ -94,12 +135,76 @@ def main() -> int:
     if args.action == "evaluate-stage1":
         manifest = load_json(stage1_path)
         bind_manifest(authority_path, manifest)
+        evidence = load_json(args.evidence)
+        closure = None
+        if args.historical:
+            # The completed campaign's own record of what ran. Failing to bind it
+            # is a provenance problem, not a result: nothing is written and the
+            # BLOCKED status is returned rather than a decision artifact.
+            try:
+                closure = bind_historical_source_closure(
+                    load_json(args.historical),
+                    provenance_sha256=sha256_file(args.historical),
+                    expected_artifact_id=provenance_artifact_id_for(
+                        artifact_version_tag(manifest["artifact_id"])),
+                    authority_sha256=sha256_file(authority_path),
+                    manifest_sha256=sha256_file(stage1_path))
+            except (EvidenceError, KeyError, TypeError, ValueError) as exc:
+                print(f"STAGE1_EVALUATION_STATUS=BLOCKED\nREASON=historical provenance "
+                      f"does not establish the source that ran: {exc}", file=sys.stderr)
+                return BLOCKED_EXIT
+        else:
+            drift = evidence_source_drift(evidence, args.repo.resolve())
+            if drift["drifted"]:
+                print("STAGE1_EVALUATION_STATUS=BLOCKED\nREASON=the working tree is not "
+                      "the source this evidence records; re-run with --historical "
+                      "<that campaign's pre-outcome provenance receipt>.\n"
+                      f"RECORDED_SOURCE_COMMITS={','.join(drift['recorded_source_commits'])}\n"
+                      f"DRIFTED_UNITS={','.join(drift['units'])}", file=sys.stderr)
+                return BLOCKED_EXIT
         decision = Stage1Evaluator(authority, manifest, authority_sha256=sha256_file(authority_path),
-                                   manifest_sha256=sha256_file(stage1_path)).evaluate(load_json(args.evidence))
+                                   manifest_sha256=sha256_file(stage1_path),
+                                   historical_source_closure=closure).evaluate(evidence)
         atomic_write_json(args.output, decision.to_dict(authority_sha256=sha256_file(authority_path),
             manifest_sha256=sha256_file(stage1_path), evidence_sha256=sha256_file(args.evidence),
             artifact_id=stage1_decision_artifact_id(manifest)))
+        print(f"STAGE1_EVALUATION_STATUS={decision.status}")
+        print(f"STAGE1_EVALUATION_MODE={'HISTORICAL' if closure else 'CURRENT_SOURCE'}")
         return 0 if decision.status == "PASS" else 2
+    if args.action == "restore-unit":
+        stage2 = args.stage == "stage2-capture"
+        manifest_path = stage2_path if stage2 else stage1_path
+        manifest = load_json(manifest_path)
+        bind_manifest(authority_path, manifest)
+        binding = require_stage_manifest_binding(args.stage, manifest,
+            manifest_path=manifest_path, authority=authority, repository=args.repo.resolve())
+        require_preoutcome_provenance(load_json(args.provenance), authority_path=authority_path,
+            manifest_path=manifest_path, required_source_paths=required_sources(args.repo),
+            provenance_artifact_id=bound.provenance_artifact_id)
+        unit = next((item for item in manifest["units"]
+                     if item.get("unit_id") == args.unit_id), None)
+        if unit is None:
+            print(f"RESTORE_STATUS=BLOCKED\nREASON=unknown unit {args.unit_id!r}",
+                  file=sys.stderr)
+            return BLOCKED_EXIT
+        try:
+            receipt = restore_durable_unit_state(manifest, unit,
+                receipt_path=Path(unit["receipt_path"]),
+                manifest_sha256=sha256_file(manifest_path),
+                authority_sha256=sha256_file(authority_path),
+                source_commit_sha=campaign_source_commit(load_json(args.provenance)),
+                run_namespace=binding["run_namespace"], overwrite=args.overwrite)
+            restored = (restore_durable_capture_tree(manifest, unit, receipt=receipt,
+                            destination=capture_root_for(unit))
+                        if args.restore_capture_tree else {})
+        except (EvidenceError, KeyError, TypeError, ValueError) as exc:
+            print(f"RESTORE_STATUS=BLOCKED\nREASON={exc}", file=sys.stderr)
+            return BLOCKED_EXIT
+        print(f"RESTORE_STATUS=RESTORED\nUNIT_ID={args.unit_id}")
+        print(f"CAPTURE_RECEIPT_SHA256={sha256_file(Path(unit['receipt_path']))}")
+        print(f"RESTORED_CAPTURE_OBJECTS={len(restored)}")
+        print("RECAPTURE_REQUIRED=false")
+        return 0
     if args.action == "run-stage1":
         manifest = load_json(stage1_path)
         bind_manifest(authority_path, manifest)
@@ -173,6 +278,23 @@ def main() -> int:
         stage1_evidence_path=args.stage1_evidence,
         current_source_commit=head, preoutcome_provenance_path=args.provenance,
         stage1_preoutcome_provenance_path=args.stage1_provenance)
+    # B002. The unit-1 operational processability checkpoint and the per-unit
+    # structural probe were implemented and never constructed here, so the
+    # module was dead code and a real campaign would have captured all fifty
+    # expensive scientific trajectories before anything tried to process one.
+    # Both are wired in below. Neither reads a scientific outcome; a failure of
+    # either is BLOCKED and stops the remaining collection without altering any
+    # scientific parameter.
+    decision_authority = load_json(bound.stage2_decision_authority_path)
+    activation_contract = decision_authority["activation_contract"]
+    stage1_decision_document = load_json(args.stage1_decision)
+    processability = {
+        "manifest": manifest, "manifest_sha256": sha256_file(stage2_path),
+        "authority_sha256": sha256_file(authority_path), "source_commit_sha": head,
+        "scientific_run_id": stage2_binding["run_namespace"],
+        "required_target_rows": manifest["required_target_rows_per_capture"],
+        "stage1_decision": stage1_decision_document,
+    }
     environment = {"MINEOCCLUDE_STAGE1_EVIDENCE_PATH": str(args.stage1_evidence),
                    "MINEOCCLUDE_STAGE1_DECISION_PATH": str(args.stage1_decision),
                    "MINEOCCLUDE_STAGE2_AUTHORIZATION_PATH": str(args.authorization),
@@ -198,7 +320,13 @@ def main() -> int:
         # value Stage 2 was already inheriting. Behaviour is therefore unchanged
         # to the number; no new retry policy is chosen here, and no scientific
         # subtree is touched.
-        maximum_attempts=authority["restart_resume"]["maximum_identical_attempts"]
+        maximum_attempts=authority["restart_resume"]["maximum_identical_attempts"],
+        capture_unit_probe=capture_unit_structural_probe(**processability),
+        unit1_checkpoint=make_unit1_checkpoint(
+            **processability,
+            expected_activation_shape=list(activation_contract["expected_shape"]),
+            expected_activation_dtype=activation_contract["dtype"],
+            receipts_root=Path(manifest["capture_units"][0]["receipt_path"]).parent.parent),
     ).run(authorized=True, stop_after_stage1=False, environment=environment)
     return 0
 

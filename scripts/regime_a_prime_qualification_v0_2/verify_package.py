@@ -177,7 +177,18 @@ def main() -> None:
                          # says so rather than passing its own derivation off as
                          # one.
                          "scripts/regime_a_prime_qualification_v0_1/p2d_extract.py",
-                         "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py")
+                         "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
+                         # B001. The readout recorded which identities each outer
+                         # fold trained and tested on, and nothing could check
+                         # them: a terminal PASS could have survived train ==
+                         # test, a K outside the grid, or one trajectory held out
+                         # in every fold. The two readout functions now also
+                         # record the inner-fold assignment they used and a
+                         # canonical digest of the rows they actually predicted,
+                         # which is what makes those properties re-derivable. The
+                         # tau ceiling on selection rows is named rather than
+                         # left as a bare literal. No number moves.
+                         "scripts/regime_a_prime_qualification_v0_1/p2e_analyze.py")
     allowed = ("docs/status/integration/regime_a_prime_qualification_v0_1/"
                "prospective_development_authority_v0_2/", "schemas/prospective/",
                "scripts/regime_a_prime_qualification_v0_2/",
@@ -254,6 +265,24 @@ def main() -> None:
                "src/mineocclude/prospective/stage2_decision.py",
                "src/mineocclude/prospective/activation_binding.py",
                "tests/prospective/test_stage2_terminal_authority.py",
+               # The final operational and terminal verification closure
+               # (B001-B008). Two new modules, enumerated one at a time like
+               # every entry above:
+               #
+               # fold_discipline.py re-derives outer/inner fold membership, held-
+               # out row coverage and K/alpha grid membership from frozen
+               # authority, so the terminal can establish what the readout
+               # previously only reported (B001).
+               #
+               # stage2_processability.py is the PRODUCTION prober the unit-1
+               # checkpoint never had, plus the per-capture-unit structural probe
+               # the controller now runs after every unit. Both are operational:
+               # they observe no scientific outcome and can change no scientific
+               # parameter (B002).
+               "src/mineocclude/prospective/fold_discipline.py",
+               "src/mineocclude/prospective/stage2_processability.py",
+               "tests/prospective/test_stage2_fold_and_terminal_verification.py",
+               "tests/prospective/test_stage2_operational_closure.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

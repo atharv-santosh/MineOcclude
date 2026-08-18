@@ -10,11 +10,12 @@ import hashlib
 import json
 import math
 import os
+import shutil
 import statistics
 import subprocess
 import tempfile
 from dataclasses import dataclass, replace
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Mapping, Sequence
 
 from mineocclude.prospective.extent_geometry import (
@@ -177,6 +178,15 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     # The operational unit-1 processability gate. It can STOP a scientific
     # collection, so its bytes govern whether units 2-50 run at all.
     "src/mineocclude/prospective/unit1_checkpoint.py",
+    # The final operational and terminal verification closure. fold_discipline
+    # is reached from stage2_decision and decides whether a terminal may reach a
+    # verdict at all, so its bytes govern the decision exactly as the evaluator's
+    # do. stage2_processability holds the production probes the controller runs
+    # between scientific captures: they cannot change a scientific value, but
+    # they can stop a campaign, and a file that can stop a campaign must not be
+    # able to change without changing the digest that authorizes the run.
+    "src/mineocclude/prospective/fold_discipline.py",
+    "src/mineocclude/prospective/stage2_processability.py",
     # The Stage-2 terminal decision chain (B009). Terminal no longer copies a
     # readout's self-assigned qualification_status; it builds evidence, evaluates
     # it independently against frozen authority, and proves the decision
@@ -1705,6 +1715,59 @@ def runtime_critical_source_closure_sha256(repository: Path = REPOSITORY_ROOT) -
     closure = {relative: sha256_file(repository / relative)
                for relative in RUNTIME_CRITICAL_SOURCE_PATHS}
     return hashlib.sha256(canonical_json_bytes(closure)).hexdigest()
+
+
+def evidence_source_drift(evidence: Mapping[str, Any],
+                          repository: Path = REPOSITORY_ROOT) -> dict[str, Any]:
+    """Compare the source a completed campaign recorded against the tree now (B006).
+
+    Stage-1 evidence describes a campaign that has already run, and each of its
+    units carries the runtime-critical source closure that campaign actually
+    executed. Evaluating such evidence in current-source mode asks the working
+    tree a question only the campaign's own frozen provenance can answer, and
+    once HEAD legitimately moves the answer is "no" -- which the evaluator
+    correctly reports as a failing provenance gate, and which a caller could then
+    mistake for a scientific FAIL of a genuine PASS.
+
+    This detects exactly that situation, before any gate runs, so a caller can
+    say BLOCKED instead. It is not a relaxation: it reaches no verdict and
+    changes no gate. Returns ``{"drifted": False, ...}`` when the tree really is
+    the source the evidence names.
+    """
+    if not isinstance(evidence, Mapping):
+        raise EvidenceError("Stage-1 evidence is missing")
+    live = {relative: sha256_file(repository / relative)
+            for relative in RUNTIME_CRITICAL_SOURCE_PATHS
+            if (repository / relative).is_file()}
+    absent = [relative for relative in RUNTIME_CRITICAL_SOURCE_PATHS
+              if not (repository / relative).is_file()]
+    drifted: dict[str, dict[str, Any]] = {}
+    commits: set[str] = set()
+    runs = evidence.get("runs")
+    for run in runs if isinstance(runs, list) else []:
+        if not isinstance(run, Mapping):
+            continue
+        receipt = run.get("runtime_provenance_receipt")
+        if not isinstance(receipt, Mapping):
+            continue
+        if isinstance(receipt.get("head"), str):
+            commits.add(receipt["head"])
+        pins = receipt.get("runtime_source_sha256")
+        if not isinstance(pins, Mapping):
+            continue
+        detail = {
+            "paths_recorded_but_absent_now": sorted(set(pins) - set(live) - set(absent)),
+            "paths_in_closure_now_but_not_recorded": sorted(set(live) - set(pins)),
+            "paths_whose_bytes_changed": sorted(
+                relative for relative in set(pins) & set(live)
+                if pins[relative] != live[relative]),
+        }
+        if any(detail.values()):
+            drifted[str(run.get("unit_id"))] = detail
+    return {"drifted": bool(drifted) or bool(absent),
+            "units": dict(sorted(drifted.items())),
+            "recorded_source_commits": sorted(commits),
+            "closure_paths_absent_from_the_tree": sorted(absent)}
 
 
 @dataclass(frozen=True)
@@ -3307,6 +3370,212 @@ def verify_remote_durable_objects(unit: Mapping[str, Any], receipt: Mapping[str,
     return receipt.get("unit_id") == unit.get("unit_id")
 
 
+#: Namespace, under a manifest's durable prefix, holding per-unit resume state.
+#: Deliberately a sibling of the unit prefixes rather than a member of one: the
+#: unit prefix's object listing is verified exactly by
+#: :func:`verify_remote_durable_objects`, so an extra object inside it would make
+#: every completed unit fail its own durability check.
+DURABLE_UNIT_STATE_NAMESPACE = "unit_state"
+
+#: The two objects a durable unit-state bundle holds.
+CAPTURE_RECEIPT_OBJECT = "capture_receipt.json"
+UNIT_STATE_OBJECT = "unit_state.json"
+
+UNIT_STATE_ARTIFACT_ID = "regime-a-prime-durable-unit-state-v0.1"
+
+
+class DurableStateError(EvidenceError):
+    """Durable unit state is absent, unreadable, or bound to something else."""
+
+
+def durable_unit_state_uri(manifest: Mapping[str, Any], unit_id: str) -> str:
+    """Where a unit's resume state lives, for this manifest and no other."""
+    prefix = manifest.get("durable_prefix")
+    if not isinstance(prefix, str) or not prefix.startswith("s3://"):
+        raise DurableStateError("durable manifest prefix is missing or malformed")
+    if not isinstance(unit_id, str) or not unit_id:
+        raise DurableStateError("durable unit state requires a unit identity")
+    return f"{prefix.rstrip('/')}/{DURABLE_UNIT_STATE_NAMESPACE}/{unit_id}"
+
+
+class AwsCliTransport:
+    """The production object transport. Injected everywhere, so tests need no S3."""
+
+    def upload(self, local: Path, uri: str) -> None:
+        subprocess.run(["aws", "s3", "sync", str(local), uri, "--only-show-errors"],
+                       check=True)
+
+    def download(self, uri: str) -> bytes:
+        result = subprocess.run(["aws", "s3", "cp", uri, "-", "--only-show-errors"],
+                                capture_output=True, check=False)
+        if result.returncode:
+            raise DurableStateError(f"durable object could not be read back: {uri}")
+        return result.stdout
+
+
+def build_unit_state(receipt: Mapping[str, Any], *, receipt_sha256: str) -> dict[str, Any]:
+    """The record that makes a capture receipt restorable, and provable.
+
+    Carries the receipt's digest and every binding the receipt itself carries, so
+    a restored receipt can be checked against an independent record rather than
+    only against itself.
+    """
+    bindings = ("unit_id", "status", "classification", "authority_sha256",
+                "manifest_sha256", "source_commit_sha", "scientific_run_id",
+                "durable_uri", "artifact_id")
+    missing = [name for name in bindings if not receipt.get(name)]
+    if missing:
+        raise DurableStateError(f"capture receipt cannot be made durable; missing {missing}")
+    payload = {"artifact_id": UNIT_STATE_ARTIFACT_ID,
+               "schema_version": "1.0",
+               "classification": "OPERATIONAL_RESUME_STATE_NOT_SCIENTIFIC_EVIDENCE",
+               "capture_receipt_object": CAPTURE_RECEIPT_OBJECT,
+               "capture_receipt_sha256": _sha(receipt_sha256, "capture receipt SHA"),
+               "capture_receipt_artifact_id": receipt["artifact_id"],
+               "unit_id": receipt["unit_id"],
+               "status": receipt["status"],
+               "classification_of_receipt": receipt["classification"],
+               "authority_sha256": receipt["authority_sha256"],
+               "manifest_sha256": receipt["manifest_sha256"],
+               "source_commit_sha": receipt["source_commit_sha"],
+               "scientific_run_id": receipt["scientific_run_id"],
+               "durable_uri": receipt["durable_uri"],
+               "remote_checksum_manifest_sha256": receipt.get("remote_checksum_manifest_sha256"),
+               "durable_object_count": len(receipt.get("durable_objects") or {})}
+    payload["payload_sha256"] = canonical_payload_sha256(payload, omit="payload_sha256")
+    return payload
+
+
+def publish_durable_unit_state(manifest: Mapping[str, Any], unit: Mapping[str, Any], *,
+                               receipt_path: Path, staging: Path,
+                               transport: Any = None) -> dict[str, Any]:
+    """Make a completed capture unit survive total loss of local storage (B003).
+
+    The raw capture bytes were already durable; the *receipt* was not. It was
+    written outside the synced capture directory, it embeds capture-time runtime
+    provenance that cannot honestly be recreated afterwards, and every downstream
+    stage requires it -- so an NVMe loss left recoverable frames that nothing
+    could legitimately process, and made recollection look necessary when it was
+    not.
+
+    Both objects are read back and compared byte for byte before this returns.
+    """
+    transport = AwsCliTransport() if transport is None else transport
+    unit_id = str(unit.get("unit_id"))
+    receipt = load_json(receipt_path)
+    if receipt.get("unit_id") != unit_id:
+        raise DurableStateError(
+            f"receipt at {receipt_path} is for {receipt.get('unit_id')!r}, not {unit_id!r}")
+    state = build_unit_state(receipt, receipt_sha256=sha256_file(receipt_path))
+    bundle = staging / unit_id
+    if bundle.exists():
+        shutil.rmtree(bundle)
+    bundle.mkdir(parents=True)
+    shutil.copy2(receipt_path, bundle / CAPTURE_RECEIPT_OBJECT)
+    atomic_write_json(bundle / UNIT_STATE_OBJECT, state)
+    uri = durable_unit_state_uri(manifest, unit_id)
+    transport.upload(bundle, uri)
+    if transport.download(f"{uri}/{CAPTURE_RECEIPT_OBJECT}") != receipt_path.read_bytes():
+        raise DurableStateError(f"durable capture receipt readback mismatch: {unit_id}")
+    if transport.download(f"{uri}/{UNIT_STATE_OBJECT}") != (bundle / UNIT_STATE_OBJECT).read_bytes():
+        raise DurableStateError(f"durable unit state readback mismatch: {unit_id}")
+    return state
+
+
+def restore_durable_unit_state(manifest: Mapping[str, Any], unit: Mapping[str, Any], *,
+                               receipt_path: Path, manifest_sha256: str,
+                               authority_sha256: str, source_commit_sha: str,
+                               run_namespace: str, transport: Any = None,
+                               overwrite: bool = False) -> dict[str, Any]:
+    """Rebuild a lost local capture receipt from durable state, or refuse.
+
+    Refuses a bundle belonging to another unit, another campaign, another
+    manifest revision, another source freeze, or another attempt of the same
+    unit; refuses a receipt whose bytes do not reproduce the digest the state
+    record binds; and refuses to overwrite a differing local receipt unless the
+    caller explicitly asked for it. Nothing here fabricates a runtime fact: the
+    restored receipt is the original bytes or there is no restore.
+    """
+    transport = AwsCliTransport() if transport is None else transport
+    unit_id = str(unit.get("unit_id"))
+    uri = durable_unit_state_uri(manifest, unit_id)
+    try:
+        state = json.loads(transport.download(f"{uri}/{UNIT_STATE_OBJECT}"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise DurableStateError(f"durable unit state is unreadable: {unit_id}") from exc
+    if not isinstance(state, dict):
+        raise DurableStateError(f"durable unit state is malformed: {unit_id}")
+    if state.get("payload_sha256") != canonical_payload_sha256(state, omit="payload_sha256"):
+        raise DurableStateError(f"durable unit state digest does not reproduce: {unit_id}")
+    expected = {"artifact_id": UNIT_STATE_ARTIFACT_ID, "unit_id": unit_id,
+                "status": DurableController.TERMINAL, "manifest_sha256": manifest_sha256,
+                "authority_sha256": authority_sha256, "source_commit_sha": source_commit_sha,
+                "scientific_run_id": run_namespace,
+                "durable_uri": durable_unit_uri(manifest, unit_id)}
+    for key, value in expected.items():
+        if state.get(key) != value:
+            raise DurableStateError(
+                f"durable unit state binding mismatch on {key!r} "
+                f"({state.get(key)!r} != {value!r})")
+    raw = transport.download(f"{uri}/{CAPTURE_RECEIPT_OBJECT}")
+    if hashlib.sha256(raw).hexdigest() != state["capture_receipt_sha256"]:
+        raise DurableStateError(
+            f"durable capture receipt does not match the digest its state record "
+            f"binds; this is a different attempt's receipt: {unit_id}")
+    try:
+        receipt = json.loads(raw)
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise DurableStateError(f"durable capture receipt is unreadable: {unit_id}") from exc
+    for key in ("unit_id", "status", "authority_sha256", "manifest_sha256",
+                "source_commit_sha", "scientific_run_id", "durable_uri"):
+        if receipt.get(key) != expected.get(key, state.get(key)):
+            raise DurableStateError(
+                f"restored capture receipt disagrees with its own durable state on {key!r}")
+    if receipt_path.is_file():
+        if receipt_path.read_bytes() == raw:
+            return receipt
+        if not overwrite:
+            raise DurableStateError(
+                f"a different local receipt already exists for {unit_id}; restoring "
+                "would discard it. Re-run with overwrite once the local copy is "
+                "known to be the lost one")
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.write_bytes(raw)
+    return receipt
+
+
+def restore_durable_capture_tree(manifest: Mapping[str, Any], unit: Mapping[str, Any], *,
+                                 receipt: Mapping[str, Any], destination: Path,
+                                 transport: Any = None) -> dict[str, str]:
+    """Rebuild a lost local capture tree from the unit's own durable objects.
+
+    Every object is verified against the receipt's durable inventory as it lands,
+    so a partial or substituted download cannot masquerade as a restored capture.
+    """
+    transport = AwsCliTransport() if transport is None else transport
+    objects = receipt.get("durable_objects")
+    if not isinstance(objects, Mapping) or not objects:
+        raise DurableStateError(f"{unit.get('unit_id')}: receipt declares no durable objects")
+    uri = durable_unit_uri(manifest, str(unit.get("unit_id")))
+    destination.mkdir(parents=True, exist_ok=True)
+    restored: dict[str, str] = {}
+    for relative, expected_sha in sorted(objects.items()):
+        candidate = PurePosixPath(str(relative))
+        if candidate.is_absolute() or ".." in candidate.parts or str(candidate) != relative:
+            raise DurableStateError(f"durable inventory path is unsafe: {relative!r}")
+        raw = transport.download(f"{uri}/{relative}")
+        observed = hashlib.sha256(raw).hexdigest()
+        if observed != expected_sha:
+            raise DurableStateError(
+                f"restored object {relative!r} hashes to {observed}, the receipt binds "
+                f"{expected_sha}")
+        path = destination / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+        restored[str(relative)] = observed
+    return restored
+
+
 class DurableController:
     TERMINAL = "COMPLETE_VALIDATED_DURABLE"
 
@@ -3315,7 +3584,8 @@ class DurableController:
                  source_commit_sha: str | None = None, run_namespace: str | None = None,
                  maximum_attempts: int = 3, stage_role: str | None = None,
                  durable_verifier: DurableVerifier = verify_remote_durable_objects,
-                 unit1_checkpoint: Callable[[Mapping[str, Any]], Any] | None = None):
+                 unit1_checkpoint: Callable[[Mapping[str, Any]], Any] | None = None,
+                 capture_unit_probe: Callable[[Mapping[str, Any]], Any] | None = None):
         self.manifest = manifest; self.state_dir = state_dir; self.event_log = event_log
         self.manifest_sha256 = manifest_sha256; self.authority_sha256 = authority_sha256
         self.source_commit_sha = source_commit_sha; self.run_namespace = run_namespace
@@ -3331,6 +3601,18 @@ class DurableController:
         # passes. It receives that unit and is expected to raise on a block. It
         # is never consulted for a derived unit, and never more than once.
         self.unit1_checkpoint = unit1_checkpoint
+        # B002, the per-unit half. The frozen Stage-2 pipeline is capture-first by
+        # rule -- ``fail_closed_before_extraction`` is true and the physical gate
+        # is a cohort gate over WALL/NO_WALL pairs -- so scientific extraction
+        # cannot legitimately be interleaved with capture. What can, and now
+        # does, run per unit is a structural probe: receipt bindings, durable
+        # readback, local bytes against the durable inventory, frozen target rows
+        # resolvable, temporal binding re-derivable. It runs after EVERY
+        # capture-role unit, including reused ones on the resume path, so a
+        # capture the pipeline cannot consume stops the campaign at that unit
+        # instead of at unit 50. It reads no scientific outcome and a failure is
+        # operational.
+        self.capture_unit_probe = capture_unit_probe
         self.maximum_attempts = _integer(maximum_attempts, "maximum_attempts", minimum=1)
         self.durable_verifier = durable_verifier
         units = manifest.get("units")
@@ -3407,6 +3689,20 @@ class DurableController:
                                            if isinstance(item, Mapping)}
         return True
 
+    def _apply_capture_unit_probe(self, unit: Mapping[str, Any]) -> None:
+        """Probe one completed capture unit for structural processability.
+
+        Anything the probe raises propagates unchanged -- in particular
+        ``StructuralProbeBlocked`` -- so the controller stops with the remaining
+        units uncollected rather than converting an operational block into a
+        scientific outcome.
+        """
+        if self.capture_unit_probe is None or not self._is_capture_unit(unit):
+            return
+        self._events({"event": "capture_unit_probe_started", "unit_id": unit.get("unit_id")})
+        self.capture_unit_probe(unit)
+        self._events({"event": "capture_unit_probe_passed", "unit_id": unit.get("unit_id")})
+
     def _apply_unit1_checkpoint(self, unit: Mapping[str, Any], pending: bool) -> bool:
         """Gate the remaining collection on the first capture unit, once.
 
@@ -3453,6 +3749,7 @@ class DurableController:
                     f"{self.stage_role!r} stage")
             if self.completed(unit_id):
                 self._events({"event": "unit_reused", "unit_id": unit_id})
+                self._apply_capture_unit_probe(unit)
                 checkpoint_pending = self._apply_unit1_checkpoint(unit, checkpoint_pending)
                 continue
             if not isinstance(command, list) or not command or not all(isinstance(part, str) and part for part in command):
@@ -3473,6 +3770,7 @@ class DurableController:
                 "manifest_sha256": self.manifest_sha256, "authority_sha256": self.authority_sha256,
                 "source_commit_sha": self.source_commit_sha, "scientific_run_id": self.run_namespace})
             self._events({"event": "unit_completed", "unit_id": unit_id})
+            self._apply_capture_unit_probe(unit)
             checkpoint_pending = self._apply_unit1_checkpoint(unit, checkpoint_pending)
         if stop_after_stage1:
             self._events({"event": "stage1_units_complete", "automatic_stage2_start": False})

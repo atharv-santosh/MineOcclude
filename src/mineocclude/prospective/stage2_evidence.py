@@ -152,8 +152,12 @@ def build_stage2_evidence(
     """
     manifest_sha256 = digest(manifest_path)
     authority = reader(authority_path)
-    policy = _mapping(_mapping(authority.get("stage2_policy"), "authority stage2_policy")
-                      .get("readout"), "authority stage2_policy.readout")
+    # Required present, but deliberately not read for any value the evidence
+    # carries: after B004 every readout parameter in this document comes from the
+    # producer's own record, so that the evaluator's comparison against this
+    # authority is a real one rather than the authority checked against itself.
+    _mapping(_mapping(authority.get("stage2_policy"), "authority stage2_policy")
+             .get("readout"), "authority stage2_policy.readout")
     decision_authority = reader(stage2_decision_authority_path)
 
     try:
@@ -308,9 +312,13 @@ def build_stage2_evidence(
             raise EvidenceError(
                 f"{unit['unit_id']}: scene coverage is {sorted(scenes)}, "
                 f"not {sorted(REQUIRED_SCENES)}")
-        block: dict[str, Any] = {"readout": expected_kind,
-                                 "receipt_sha256": digest(Path(unit["receipt_path"])),
-                                 "scenes": {}}
+        block: dict[str, Any] = {
+            "readout": expected_kind,
+            "receipt_sha256": digest(Path(unit["receipt_path"])),
+            # B004: what this readout recorded having actually resampled under.
+            "bootstrap_configuration": _producer_bootstrap_configuration(
+                receipt, str(unit.get("unit_id"))),
+            "scenes": {}}
         for scene in REQUIRED_SCENES:
             result = _mapping(scenes[scene], f"{unit['unit_id']} {scene}")
             block["scenes"][scene] = {
@@ -372,11 +380,11 @@ def build_stage2_evidence(
         "required_target_rows_per_capture": required_rows,
         "layer": 4,
         "all_layer_extraction_performed": False,
-        "bootstrap_configuration": {
-            "unit": policy.get("bootstrap_unit"),
-            "resamples": policy.get("bootstrap_resamples"),
-            "seed": policy.get("bootstrap_seed"),
-        },
+        # B004: the readouts' own recorded configuration, not the authority's,
+        # promoted to the top level only after both readouts are proved to agree.
+        # The evaluator compares this against frozen authority; reading it from
+        # the authority here would have made that comparison tautological.
+        "bootstrap_configuration": _agreed_bootstrap_configuration(readouts),
         "readouts": readouts,
         "evidence_builder_asserted_scientific_status": False,
     }
@@ -386,21 +394,81 @@ def build_stage2_evidence(
 
 
 def _selection(value: Any, label: str, kind: str) -> dict[str, Any]:
-    """Record what each outer fold selected, as measured, without judging it."""
+    """Record what each outer fold selected and predicted, as measured, unjudged.
+
+    B001: the fields below are what makes fold discipline *verifiable*. Before
+    this, evidence carried the training/test identity lists and the selected
+    hyperparameters and nothing checked them, so a readout that trained and
+    tested on all 25 identities, or selected a K outside the grid, produced
+    evidence indistinguishable from an honest one. The inner-fold assignment and
+    the held-out row digest are added here so
+    :mod:`mineocclude.prospective.fold_discipline` can re-derive both from frozen
+    authority at the terminal. This function still reaches no conclusion about
+    any of them; it only refuses evidence that omits the facts entirely.
+    """
     mapping = _mapping(value, f"{label} selection_by_outer_fold")
     if sorted(mapping) != [str(index) for index in range(5)]:
         raise EvidenceError(f"{label} does not report all five outer folds")
     recorded: dict[str, Any] = {}
     for fold, chosen in sorted(mapping.items()):
         block = _mapping(chosen, f"{label} outer fold {fold}")
+        inner = block.get("inner_fold_assignment")
+        if not isinstance(inner, Mapping) or not inner:
+            raise EvidenceError(
+                f"{label} outer fold {fold} records no inner-fold assignment, so its "
+                "model selection cannot be independently verified")
+        digest = block.get("predicted_row_keys_sha256")
+        if not isinstance(digest, str) or len(digest) != 64:
+            raise EvidenceError(
+                f"{label} outer fold {fold} records no held-out row inventory digest")
         entry = {"selected_alpha": block.get("selected_alpha"),
                  "training_trajectory_ids": list(block.get("training_trajectory_ids") or []),
-                 "test_trajectory_ids": list(block.get("test_trajectory_ids") or [])}
+                 "test_trajectory_ids": list(block.get("test_trajectory_ids") or []),
+                 "inner_fold_assignment": {str(name): value
+                                           for name, value in sorted(inner.items())},
+                 "selection_training_tau_maximum": block.get("selection_training_tau_maximum"),
+                 "predicted_row_count": block.get("predicted_row_count"),
+                 "predicted_row_keys_sha256": digest}
         if kind == "BEST_K":
             entry["selected_k"] = block.get("selected_k")
             entry["selected_token_count"] = len(block.get("selected_tokens") or [])
+        elif "selected_k" in block:
+            # Carried, not dropped. A FULL readout selects no token count, so a
+            # FULL record that reports one is malformed -- and a builder that
+            # quietly discarded the field would hide that from the evaluator,
+            # which is the shape of defect B001 is about.
+            entry["selected_k"] = block.get("selected_k")
         recorded[fold] = entry
     return recorded
+
+
+def _producer_bootstrap_configuration(receipt: Mapping[str, Any], label: str) -> dict[str, Any]:
+    """The bootstrap configuration the readout recorded having actually applied.
+
+    B004: this used to be read out of the decision authority and then compared
+    back to the decision authority, which proved only that the authority equals
+    itself. The producing component now records what it did, evidence consumes
+    that record, and the evaluator compares it to the frozen rule.
+    """
+    block = _mapping(receipt.get("bootstrap_configuration"),
+                     f"{label} recorded bootstrap configuration")
+    required = ("unit", "resamples", "seed", "resample_population",
+                "resample_population_size", "statistic", "confidence_bound_definition",
+                "generator")
+    missing = [name for name in required if block.get(name) in (None, "")]
+    if missing:
+        raise EvidenceError(
+            f"{label} bootstrap configuration is incomplete: {missing}")
+    return {name: block[name] for name in required}
+
+
+def _agreed_bootstrap_configuration(readouts: Mapping[str, Any]) -> dict[str, Any]:
+    """The one configuration both readouts recorded, or a refusal."""
+    recorded = [readouts[stage]["bootstrap_configuration"] for stage in REQUIRED_READOUTS]
+    if any(item != recorded[0] for item in recorded):
+        raise EvidenceError(
+            "the BEST-K and FULL readouts recorded different bootstrap configurations")
+    return dict(recorded[0])
 
 
 def verify_evidence_payload(evidence: Mapping[str, Any]) -> None:

@@ -32,6 +32,7 @@ from mineocclude.prospective.stage2_decision import (  # noqa: E402
     evaluate_stage2, require_stage2_decision_reproduction,
 )
 from mineocclude.prospective.stage2_evidence import build_stage2_evidence  # noqa: E402
+from mineocclude.prospective.stage2_processability import causal_fir_kernel  # noqa: E402
 from mineocclude.regime_a_first25_analysis import scalar_metrics  # noqa: E402
 from p2d_extract import Layer4Extractor  # noqa: E402
 from p2e_analyze import best_k_readout, full_readout  # noqa: E402
@@ -39,6 +40,16 @@ from p2e_analyze import best_k_readout, full_readout  # noqa: E402
 
 PHYSICAL_CHECKS = {"clock_alignment", "stable_visibility", "hidden_row_validity",
                    "physical_support", "zero_target_row_contamination"}
+
+#: The layer-4 activation contract, previously two bare literals -- ``2048`` in
+#: ``extraction`` and ``np.float16`` in ``load_scene``. Named here so the frozen
+#: Stage-2 decision authority can promote them by reading this module, and so the
+#: terminal can verify a recorded activation shape/dtype against a frozen rule
+#: rather than against nothing (B008). The row and token dimensions are not here:
+#: they come from the authority's own ``required_target_rows_per_capture`` and
+#: ``visual_token_grid``, and are read from it at every use.
+LAYER4_HIDDEN_SIZE = 2048
+LAYER4_ACTIVATION_DTYPE = "float16"
 
 
 def require_durable_unit_receipt(manifest: dict, manifest_path: Path, unit: dict,
@@ -342,7 +353,7 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     authority = load_json(ROOT / manifest["authority_binding"]["path"])
     target_rows = authority["stage2_policy"]["required_target_rows_per_capture"]
     token_rows, token_cols = authority["apparatus"]["visual_token_grid"]
-    expected_shape = [target_rows, token_rows * token_cols, 2048]
+    expected_shape = [target_rows, token_rows * token_cols, LAYER4_HIDDEN_SIZE]
     output_root = receipt_path().parent.parent.parent / "activations"
     # NEW-B002: the authority's own row set is handed to the extractor, which
     # proves its tau lookup equals it before opening a frame. Neither source is
@@ -375,12 +386,18 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
 
 
 def decision_fir(direction: str) -> list[float]:
+    """The frozen causal-FIR kernel for a direction, from the bound Stage-1 decision.
+
+    The walk into the decision document lives in ``causal_fir_kernel`` and is
+    delegated to rather than repeated: the unit-1 prober checks the same labels
+    this readout reconstructs, and two slightly different reads of one frozen
+    document is exactly the kind of divergence that has bitten this pipeline
+    before.
+    """
     path = Path(os.environ.get("MINEOCCLUDE_STAGE1_DECISION_PATH", ""))
     if not path.is_file():
         raise RuntimeError("bound Stage-1 decision is required for labels")
-    decision = load_json(path)
-    methods = decision["gates"]["render_server_temporal_alignment"]["detail"][direction]["methods"]
-    return next(method["kernel"] for method in methods if method["method_id"] == "causal_fir_group_delay")
+    return causal_fir_kernel(load_json(path), direction)
 
 
 def labels_from_capture(unit: dict, receipt: dict) -> tuple[list[int], list[float]]:
@@ -404,7 +421,7 @@ def load_scene(manifest: dict, scene: str):
     authority = load_json(ROOT / manifest["authority_binding"]["path"])
     target_rows = authority["stage2_policy"]["required_target_rows_per_capture"]
     token_rows, token_cols = authority["apparatus"]["visual_token_grid"]
-    expected_shape = (target_rows, token_rows * token_cols, 2048)
+    expected_shape = (target_rows, token_rows * token_cols, LAYER4_HIDDEN_SIZE)
     arrays, rows, identities, outer, directions = [], [], [], {}, {}
     reference_identity = None
     for identity in manifest["trajectory_identities"]:
@@ -431,7 +448,7 @@ def load_scene(manifest: dict, scene: str):
         if receipt.get("durable_objects", {}).get(relative_activation) != receipt["activation_sha256"]:
             raise RuntimeError(f"activation durable inventory mismatch: {capture_id}")
         array = np.load(activation, mmap_mode="r")
-        if array.shape != expected_shape or array.dtype != np.float16:
+        if array.shape != expected_shape or array.dtype != np.dtype(LAYER4_ACTIVATION_DTYPE):
             raise RuntimeError(f"activation shape/dtype mismatch: {capture_id}")
         arrays.append(array); trajectory = identity["trajectory_id"]; identities.append(trajectory)
         outer[trajectory] = identity["outer_fold"]; directions[trajectory] = identity["direction"]
@@ -443,14 +460,43 @@ def load_scene(manifest: dict, scene: str):
     return np.concatenate(arrays), np.asarray([row["world_x"] for row in rows]), rows, identities, outer, directions
 
 
-def summary(rows: list[dict], key: str, policy: dict) -> dict:
+#: The confidence-bound definition this module implements. Recorded in the
+#: readout receipt as a measured fact rather than read back out of the authority,
+#: which is the whole of B004: a verifier that compares the authority against
+#: itself proves nothing about what the readout did.
+BOOTSTRAP_CONFIDENCE_BOUND = "two_sided_95_numpy_quantile_0.025_0.975"
+BOOTSTRAP_STATISTIC = "mean_of_resampled_per_trajectory_r2"
+BOOTSTRAP_GENERATOR = "numpy.random.default_rng.choice(replace=True)"
+
+
+def summary(rows: list[dict], key: str, policy: dict) -> tuple[dict, dict]:
+    """Summarize one scene, and report the bootstrap configuration actually used.
+
+    The second return value is a *measurement of this call*, not a restatement of
+    the authority: the seed handed to the generator, the number of resamples
+    drawn, the population resampled, and the interval definition applied. The
+    readout receipt carries it, evidence consumes it from there, and the
+    evaluator compares it to frozen authority -- so a readout that resampled rows
+    instead of trajectories, or drew a different seed, is refusable.
+    """
     metrics = scalar_metrics(rows, key)
     values = np.asarray([metrics["per_trajectory"][name]["r2"] for name in sorted(metrics["per_trajectory"])])
-    rng = np.random.default_rng(policy["bootstrap_seed"])
-    draws = rng.choice(values, size=(policy["bootstrap_resamples"], len(values)), replace=True).mean(axis=1)
+    unit = policy["bootstrap_unit"]
+    if unit != "WHOLE_TRAJECTORY":
+        raise RuntimeError(f"unsupported bootstrap resampling unit: {unit!r}")
+    resamples = int(policy["bootstrap_resamples"])
+    seed = int(policy["bootstrap_seed"])
+    rng = np.random.default_rng(seed)
+    draws = rng.choice(values, size=(resamples, len(values)), replace=True).mean(axis=1)
+    configuration = {"unit": unit, "resamples": resamples, "seed": seed,
+        "resample_population": "per_trajectory_macro_r2_sorted_by_trajectory_id",
+        "resample_population_size": int(values.size),
+        "statistic": BOOTSTRAP_STATISTIC,
+        "confidence_bound_definition": BOOTSTRAP_CONFIDENCE_BOUND,
+        "generator": BOOTSTRAP_GENERATOR}
     return {"rmse_blocks": metrics["trajectory_aggregated_rmse"],
         "mae_blocks": metrics["trajectory_aggregated_mae"], "macro_r2": metrics["macro_r2"],
-        "bootstrap95_macro_r2": [float(np.quantile(draws, .025)), float(np.quantile(draws, .975))]}
+        "bootstrap95_macro_r2": [float(np.quantile(draws, .025)), float(np.quantile(draws, .975))]}, configuration
 
 
 def training_time_baseline(rows: list[dict], target: np.ndarray, training_tau_maximum: int) -> np.ndarray:
@@ -505,6 +551,7 @@ def readout(manifest: dict, manifest_path: Path, unit_id: str, kind: str) -> Non
                                      load_json(Path(best_unit["receipt_path"])),
                                      current_source_commit=head)
     output = {"readout": kind, "scenes": {}}
+    bootstrap_configurations: list[dict] = []
     for scene in ("WALL", "NO_WALL"):
         features, target, rows, identities, outer, directions = load_scene(manifest, scene)
         if kind == "BEST_K":
@@ -513,17 +560,31 @@ def readout(manifest: dict, manifest_path: Path, unit_id: str, kind: str) -> Non
         else:
             predictions, selection, _ = full_readout(features, target, rows, identities, outer, directions)
             key = "predicted_full"
+        # Pooled out-of-fold coverage, checked at the point of production as well
+        # as at the terminal: a readout that left a row unpredicted, or predicted
+        # one twice, must not reach an evidence document at all.
+        if set(predictions) != set(range(len(rows))):
+            raise RuntimeError(
+                f"{kind} {scene}: out-of-fold predictions do not cover each row exactly once")
         for index, row in enumerate(rows): row[key] = float(predictions[index])
-        metrics = summary(rows, key, policy)
+        metrics, metrics_bootstrap = summary(rows, key, policy)
         tau_maximum = policy["training_only_time_baseline_training_tau_maximum"]
         baseline = training_time_baseline(rows, target, tau_maximum)
         for index, row in enumerate(rows): row["predicted_training_time_baseline"] = float(baseline[index])
-        baseline_metrics = summary(rows, "predicted_training_time_baseline", policy)
+        baseline_metrics, baseline_bootstrap = summary(rows, "predicted_training_time_baseline", policy)
         tau_rows = [row for row in rows if row["tau"] <= tau_maximum]
-        baseline_tau1_15 = summary(tau_rows, "predicted_training_time_baseline", policy)
+        baseline_tau1_15, tau_bootstrap = summary(tau_rows, "predicted_training_time_baseline", policy)
+        bootstrap_configurations.extend([metrics_bootstrap, baseline_bootstrap, tau_bootstrap])
         output["scenes"][scene] = {"metrics": metrics, "training_time_baseline": baseline_metrics,
                                     "training_time_baseline_tau1_15": baseline_tau1_15,
                                     "selection_by_outer_fold": selection}
+    # B004: the configuration the readout ACTUALLY resampled under, recorded by
+    # the component that performed it. Every summary call in this readout must
+    # have used one configuration; a divergence between them is a defect in this
+    # file, not something to average over.
+    if any(item != bootstrap_configurations[0] for item in bootstrap_configurations):
+        raise RuntimeError("readout applied more than one bootstrap configuration")
+    output["bootstrap_configuration"] = bootstrap_configurations[0]
     if kind == "BEST_K":
         checks = best_k_qualification_checks(output["scenes"], policy)
         output["qualification_checks"] = checks

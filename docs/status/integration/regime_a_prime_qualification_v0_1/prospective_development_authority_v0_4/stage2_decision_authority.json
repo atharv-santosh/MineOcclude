@@ -1,5 +1,18 @@
 {
  "STAGE_2_COLLECTION_AUTHORIZED": false,
+ "activation_contract": {
+  "all_layer_extraction_forbidden": true,
+  "dtype": "float16",
+  "expected_shape": [
+   19,
+   336,
+   2048
+  ],
+  "hidden_size": 2048,
+  "layer": 4,
+  "target_rows": 19,
+  "visual_tokens_per_frame": 336
+ },
  "artifact_id": "regime-a-prime-stage2-decision-authority-v0.4",
  "artifacts": {
   "decision_artifact_id": "regime-a-prime-stage2-decision-v0.4",
@@ -38,6 +51,16 @@
   "draw": "numpy.random.default_rng(seed).choice(values, size=(resamples, n), replace=True)",
   "function": "scripts.regime_a_prime_qualification_v0_2.stage2_backend.summary",
   "interval": "numpy.quantile at 0.025 and 0.975",
+  "recorded_configuration_contract": {
+   "confidence_bound_definition": "two_sided_95_numpy_quantile_0.025_0.975",
+   "generator": "numpy.random.default_rng.choice(replace=True)",
+   "resample_population": "per_trajectory_macro_r2_sorted_by_trajectory_id",
+   "resample_population_size": 25,
+   "resamples": 10000,
+   "seed": 2026081503,
+   "statistic": "mean_of_resampled_per_trajectory_r2",
+   "unit": "WHOLE_TRAJECTORY"
+  },
   "resample_population": "the per-trajectory R-squared values, ordered by trajectory identity ascending",
   "resamples_source": "authority_parameters.json stage2_policy.readout.bootstrap_resamples",
   "seed_is_reused_per_summary_call": true,
@@ -128,6 +151,57 @@
  "terminal": {
   "claim_boundary_scope": "authority_parameters.json scientific_claim_boundary describes the Stage-1 apparatus-qualification rung, whose PASS tests no model activation. This block describes the Stage-2 decoding rung, which does read layer-4 activations. The two are different rungs and neither statement weakens the other.",
   "completed_scientific_fail_is_terminal": true,
+  "independent_verification_required": {
+   "activation_metadata": {
+    "activation_shape_must_equal_the_activation_contract": true,
+    "episode_id_must_equal_the_manifest_unit": true,
+    "target_row_count_must_equal_authority": true,
+    "unit_id_and_scene_must_equal_the_manifest_unit": true
+   },
+   "bootstrap_configuration": {
+    "authority_compared_against_itself_is_not_verification": true,
+    "evaluator_compares_producer_record_to_frozen_authority": true,
+    "producer_must_record_actual_configuration": true
+   },
+   "fold_and_model_selection": {
+    "evidence_must_carry": [
+     "training_trajectory_ids",
+     "test_trajectory_ids",
+     "inner_fold_assignment",
+     "selected_alpha",
+     "selected_k",
+     "selection_training_tau_maximum",
+     "predicted_row_count",
+     "predicted_row_keys_sha256"
+    ],
+    "properties": [
+     "outer_fold_count_equals_authority",
+     "frozen_identity_inventory_is_partitioned_by_each_fold",
+     "held_out_identities_are_the_frozen_outer_fold",
+     "held_out_identity_sets_are_pairwise_disjoint",
+     "union_of_held_out_identities_is_the_complete_inventory",
+     "training_and_test_identity_sets_are_disjoint",
+     "training_identity_count_equals_authority",
+     "no_unknown_trajectory_identity_appears",
+     "no_identity_is_held_out_more_than_once",
+     "inner_fold_assignment_re_derives_from_the_frozen_rule",
+     "inner_fold_membership_covers_exactly_the_training_identities",
+     "selected_k_is_in_the_frozen_k_grid",
+     "selected_alpha_is_in_the_frozen_alpha_grid",
+     "selection_training_tau_maximum_equals_authority",
+     "outer_test_identities_never_enter_model_selection",
+     "each_row_predicted_exactly_once",
+     "no_duplicate_or_missing_held_out_row_prediction"
+    ],
+    "self_reported_fold_validity_booleans_are_not_trusted": true,
+    "verifier": "mineocclude.prospective.fold_discipline.verify_selection_discipline"
+   },
+   "readout_self_grade": {
+    "claimed_status_must_agree_with_re_derived_status": true,
+    "disagreement_is_blocked_not_resolved": true,
+    "self_grade_never_controls_the_verdict": true
+   }
+  },
   "leading_readout": "BEST_K",
   "operational_failure_may_not_become_scientific_fail": true,
   "pass_authorizes": {
@@ -142,9 +216,13 @@
    "causal_use",
    "uncertainty_representation",
    "general_world_model_competence",
-   "behavioral_reliance_on_the_representation"
+   "behavioral_reliance_on_the_representation",
+   "independent_victory_over_a_time_or_motion_baseline",
+   "exclusion_of_a_constant_velocity_explanation",
+   "exclusion_of_a_last_seen_position_explanation",
+   "exclusion_of_motion_based_explanations_generally"
   ],
-  "pass_meaning": "The frozen DEVELOPMENT_ONLY Stage-2 hidden-position decoding experiment satisfied its prospectively frozen Stage-2 decoding criteria. It may support the bounded statement that layer-4 activations contain decodable information according to those criteria, on this apparatus, at these paths.",
+  "pass_meaning": "The frozen DEVELOPMENT_ONLY Stage-2 hidden-position decoding experiment satisfied its prospectively frozen Stage-2 decoding criteria, against the matched visible control. It may support the bounded statement that layer-4 activations contain decodable information according to those criteria, on this apparatus, at these paths.",
   "precomputed_qualification_booleans_are_not_trusted": true,
   "state_semantics": {
    "BLOCKED": "an operational, provenance, binding, or completeness failure. Never a scientific verdict",
@@ -156,7 +234,21 @@
    "FAIL",
    "BLOCKED"
   ],
-  "terminal_status_is_re_derived_not_copied": true
+  "terminal_status_is_re_derived_not_copied": true,
+  "time_baseline_gate_bindingness": {
+   "derivation": "best_k_each_scene_rmse_maximum_blocks is 0.15560477763641264 blocks, while the training-only time baseline's trajectory-aggregated RMSE on this design is approximately 0.41360 blocks; any readout clearing WALL_rmse therefore also clears WALL_beats_training_time_baseline. The tau 1-15 time baseline's trajectory-equal macro R2 is approximately -0.18186, already below the 0.1 confound ceiling before any activation is read, so WALL_time_confound_gate is satisfied by the design rather than by the result.",
+   "forbidden_claim": "the decoder independently beat a time or motion baseline",
+   "gates_can_bind_independently": false,
+   "gates_remain_controlling": true,
+   "gates_unchanged": true,
+   "motion_baseline_questions_deferred_to_their_own_rung": [
+    "constant_velocity",
+    "last_seen_position",
+    "other_motion_based_alternative_explanations"
+   ],
+   "motion_baselines_tested_by_this_stage": [],
+   "permitted_claim": "the frozen time-baseline checks were satisfied"
+  }
  },
  "time_baseline_procedure": {
   "design_matrix": [

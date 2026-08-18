@@ -21,7 +21,28 @@ from mineocclude.regime_a_first25_analysis import (
     rank_tokens_cuda,
     scalar_metrics,
 )
+from mineocclude.prospective.fold_discipline import row_key_digest
+
 from p2_common import OUT, REPO, WORK, p2_run_id, read_jsonl, sha256_file, source_specs, write_json
+
+
+def fold_discipline_record(rows: list[dict[str, Any]], test_indices: list[int],
+                           inner: dict[str, int]) -> dict[str, Any]:
+    """The evidence a terminal needs to verify this fold rather than believe it.
+
+    ``inner`` is the assignment the fold actually used, recorded so an
+    independent evaluator can re-derive it from the training identities and
+    refuse a mismatch. The row digest is over the ``(trajectory_id, tau)`` keys
+    this fold really predicted, so a fold that predicted the wrong rows, the same
+    row twice, or somebody else's rows cannot be mistaken for a correct one.
+    """
+    return {
+        "inner_fold_assignment": {identity: int(fold) for identity, fold in sorted(inner.items())},
+        "predicted_row_count": len(test_indices),
+        "predicted_row_keys_sha256": row_key_digest(
+            [(rows[index]["trajectory_id"], int(rows[index]["tau"])) for index in test_indices]),
+        "selection_training_tau_maximum": SELECTION_TRAINING_TAU_MAXIMUM,
+    }
 
 ACT = WORK / "activations"
 AUTHORITY_RESULT = (
@@ -31,6 +52,12 @@ AUTHORITY_RESULT = (
 AUTHORITY_SHA256 = "11d5d2f0527feb31a27a18a19ac76d342f5c72ca3326bee1863b75187dfc4427"
 BOOTSTRAP_SEED = 20260815
 BOOTSTRAP_RESAMPLES = 10000
+
+#: The tau ceiling on rows that may enter model selection and the final fit.
+#: Previously a bare ``15`` inside :func:`indices`; named here so the readout can
+#: record the value it actually applied and a terminal can check it against the
+#: frozen selection rule rather than assume it.
+SELECTION_TRAINING_TAU_MAXIMUM = 15
 
 
 def load() -> tuple[np.ndarray, np.ndarray, list[dict[str, Any]], list[str], dict[str, int], dict[str, str]]:
@@ -82,7 +109,8 @@ def load() -> tuple[np.ndarray, np.ndarray, list[dict[str, Any]], list[str], dic
 def indices(rows: list[dict[str, Any]], identities: list[str], primary_only: bool) -> list[int]:
     selected = set(identities)
     return [i for i, row in enumerate(rows)
-            if row["trajectory_id"] in selected and (not primary_only or row["tau"] <= 15)]
+            if row["trajectory_id"] in selected
+            and (not primary_only or row["tau"] <= SELECTION_TRAINING_TAU_MAXIMUM)]
 
 
 def full_readout(features: np.ndarray, target: np.ndarray, rows: list[dict[str, Any]],
@@ -121,6 +149,7 @@ def full_readout(features: np.ndarray, target: np.ndarray, rows: list[dict[str, 
             "inner_macro_r2_by_alpha": scores,
             "training_trajectory_ids": train_ids,
             "test_trajectory_ids": test_ids,
+            **fold_discipline_record(rows, test, inner),
         }
         print(f"FULL outer={outer} alpha={selected_alpha}", flush=True)
     return oof, selections, gpu_seconds
@@ -178,6 +207,7 @@ def best_k_readout(features: np.ndarray, target: np.ndarray, rows: list[dict[str
             "training_trajectory_ids": train_ids,
             "test_trajectory_ids": test_ids,
             "inner_macro_r2_by_candidate": scores,
+            **fold_discipline_record(rows, test, inner),
         }
         print(f"BEST_K outer={outer} K={selected_k} alpha={selected_alpha}", flush=True)
     return oof, selections, gpu_seconds

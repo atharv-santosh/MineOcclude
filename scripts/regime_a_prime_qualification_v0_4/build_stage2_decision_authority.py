@@ -75,12 +75,22 @@ def _implementation() -> dict:
     from mineocclude.regime_a_first25_analysis import (
         ALPHAS, K_GRID, inner_fold_assignment,
     )
+    from scripts.regime_a_prime_qualification_v0_1.p2e_analyze import (
+        SELECTION_TRAINING_TAU_MAXIMUM,
+    )
     from scripts.regime_a_prime_qualification_v0_2.stage2_backend import (
-        best_k_qualification_checks,
+        BOOTSTRAP_CONFIDENCE_BOUND, BOOTSTRAP_GENERATOR, BOOTSTRAP_STATISTIC,
+        LAYER4_ACTIVATION_DTYPE, LAYER4_HIDDEN_SIZE, best_k_qualification_checks,
     )
     return {"K_GRID": list(K_GRID), "ALPHAS": list(ALPHAS),
             "inner_fold_assignment": inner_fold_assignment,
-            "best_k_qualification_checks": best_k_qualification_checks}
+            "best_k_qualification_checks": best_k_qualification_checks,
+            "SELECTION_TRAINING_TAU_MAXIMUM": int(SELECTION_TRAINING_TAU_MAXIMUM),
+            "BOOTSTRAP_CONFIDENCE_BOUND": BOOTSTRAP_CONFIDENCE_BOUND,
+            "BOOTSTRAP_STATISTIC": BOOTSTRAP_STATISTIC,
+            "BOOTSTRAP_GENERATOR": BOOTSTRAP_GENERATOR,
+            "LAYER4_HIDDEN_SIZE": int(LAYER4_HIDDEN_SIZE),
+            "LAYER4_ACTIVATION_DTYPE": LAYER4_ACTIVATION_DTYPE}
 
 
 def observed_best_k_gate_names(best_k_qualification_checks, policy: dict) -> list[str]:
@@ -230,8 +240,13 @@ def build(authority: dict, authority_sha256: str, *, artifact_id: str,
                 "objective": "maximum inner trajectory-equal macro R2",
                 "best_k_tie_break": "smaller K, then smaller alpha",
                 "full_tie_break": "smaller alpha",
-                "selection_training_tau_maximum": 15,
-                "final_fit_training_tau_maximum": 15,
+                # Read from p2e_analyze.SELECTION_TRAINING_TAU_MAXIMUM, which is
+                # the value the selection code applies, rather than typed. Both
+                # the inner selection folds and the final per-fold fit use it.
+                "selection_training_tau_maximum":
+                    implementation["SELECTION_TRAINING_TAU_MAXIMUM"],
+                "final_fit_training_tau_maximum":
+                    implementation["SELECTION_TRAINING_TAU_MAXIMUM"],
                 "evaluation_tau_scope": "every qualified target row, tau 1..19",
             },
             "outer_fold_aggregation": {
@@ -260,6 +275,43 @@ def build(authority: dict, authority_sha256: str, *, artifact_id: str,
             "resamples_source": "authority_parameters.json stage2_policy.readout.bootstrap_resamples",
             "unit_source": "authority_parameters.json stage2_policy.readout.bootstrap_unit",
             "seed_is_reused_per_summary_call": True,
+            # B004: the exact tokens the readout records having applied. The
+            # evaluator compares the readout's own record against these, instead
+            # of comparing the authority to itself, which is what made the old
+            # bootstrap verification tautological. Read from stage2_backend's
+            # constants rather than typed.
+            "recorded_configuration_contract": {
+                "unit": readout_policy["bootstrap_unit"],
+                "resamples": readout_policy["bootstrap_resamples"],
+                "seed": readout_policy["bootstrap_seed"],
+                "resample_population":
+                    "per_trajectory_macro_r2_sorted_by_trajectory_id",
+                "resample_population_size": authority["stage2_policy"][
+                    "paired_trajectory_identities"],
+                "statistic": implementation["BOOTSTRAP_STATISTIC"],
+                "confidence_bound_definition": implementation["BOOTSTRAP_CONFIDENCE_BOUND"],
+                "generator": implementation["BOOTSTRAP_GENERATOR"],
+            },
+        },
+        # B008: the layer-4 activation shape/dtype a terminal must be able to
+        # check a recorded activation against. The row and token dimensions are
+        # derived from the authority this document extends, so the contract
+        # cannot drift from it; the hidden size and dtype are read from the
+        # extraction implementation.
+        "activation_contract": {
+            "layer": 4,
+            "target_rows": authority["stage2_policy"]["required_target_rows_per_capture"],
+            "visual_tokens_per_frame": (authority["apparatus"]["visual_token_grid"][0]
+                                        * authority["apparatus"]["visual_token_grid"][1]),
+            "hidden_size": implementation["LAYER4_HIDDEN_SIZE"],
+            "dtype": implementation["LAYER4_ACTIVATION_DTYPE"],
+            "expected_shape": [
+                authority["stage2_policy"]["required_target_rows_per_capture"],
+                authority["apparatus"]["visual_token_grid"][0]
+                * authority["apparatus"]["visual_token_grid"][1],
+                implementation["LAYER4_HIDDEN_SIZE"]],
+            "all_layer_extraction_forbidden":
+                authority["stage2_policy"]["extraction"]["all_layer_extraction_forbidden"],
         },
         "time_baseline_procedure": {
             "function": ("scripts.regime_a_prime_qualification_v0_2.stage2_backend."
@@ -315,17 +367,106 @@ def build(authority: dict, authority_sha256: str, *, artifact_id: str,
             "leading_readout": "BEST_K",
             "terminal_status_is_re_derived_not_copied": True,
             "precomputed_qualification_booleans_are_not_trusted": True,
+            # B001/B004/B007/B008. The procedure above was already what the
+            # honest implementation did; what was missing is the requirement
+            # that the TERMINAL be able to establish it independently, from
+            # evidence, rather than accept the readout's word. No scientific
+            # value moves here: this clause adds verification obligations only.
+            "independent_verification_required": {
+                "fold_and_model_selection": {
+                    "verifier": ("mineocclude.prospective.fold_discipline."
+                                 "verify_selection_discipline"),
+                    "properties": [
+                        "outer_fold_count_equals_authority",
+                        "frozen_identity_inventory_is_partitioned_by_each_fold",
+                        "held_out_identities_are_the_frozen_outer_fold",
+                        "held_out_identity_sets_are_pairwise_disjoint",
+                        "union_of_held_out_identities_is_the_complete_inventory",
+                        "training_and_test_identity_sets_are_disjoint",
+                        "training_identity_count_equals_authority",
+                        "no_unknown_trajectory_identity_appears",
+                        "no_identity_is_held_out_more_than_once",
+                        "inner_fold_assignment_re_derives_from_the_frozen_rule",
+                        "inner_fold_membership_covers_exactly_the_training_identities",
+                        "selected_k_is_in_the_frozen_k_grid",
+                        "selected_alpha_is_in_the_frozen_alpha_grid",
+                        "selection_training_tau_maximum_equals_authority",
+                        "outer_test_identities_never_enter_model_selection",
+                        "each_row_predicted_exactly_once",
+                        "no_duplicate_or_missing_held_out_row_prediction",
+                    ],
+                    "evidence_must_carry": [
+                        "training_trajectory_ids", "test_trajectory_ids",
+                        "inner_fold_assignment", "selected_alpha", "selected_k",
+                        "selection_training_tau_maximum", "predicted_row_count",
+                        "predicted_row_keys_sha256",
+                    ],
+                    "self_reported_fold_validity_booleans_are_not_trusted": True,
+                },
+                "bootstrap_configuration": {
+                    "producer_must_record_actual_configuration": True,
+                    "evaluator_compares_producer_record_to_frozen_authority": True,
+                    "authority_compared_against_itself_is_not_verification": True,
+                },
+                "readout_self_grade": {
+                    "claimed_status_must_agree_with_re_derived_status": True,
+                    "disagreement_is_blocked_not_resolved": True,
+                    "self_grade_never_controls_the_verdict": True,
+                },
+                "activation_metadata": {
+                    "activation_shape_must_equal_the_activation_contract": True,
+                    "episode_id_must_equal_the_manifest_unit": True,
+                    "unit_id_and_scene_must_equal_the_manifest_unit": True,
+                    "target_row_count_must_equal_authority": True,
+                },
+            },
             "pass_meaning": (
                 "The frozen DEVELOPMENT_ONLY Stage-2 hidden-position decoding "
                 "experiment satisfied its prospectively frozen Stage-2 decoding "
-                "criteria. It may support the bounded statement that layer-4 "
-                "activations contain decodable information according to those "
-                "criteria, on this apparatus, at these paths."),
+                "criteria, against the matched visible control. It may support "
+                "the bounded statement that layer-4 activations contain "
+                "decodable information according to those criteria, on this "
+                "apparatus, at these paths."),
             "pass_does_not_establish": [
                 "object_permanence", "belief", "causal_use",
                 "uncertainty_representation", "general_world_model_competence",
                 "behavioral_reliance_on_the_representation",
+                # B005. Both time-baseline gates are real, frozen, and unchanged;
+                # what changes here is only what a PASS may be SAID to show.
+                "independent_victory_over_a_time_or_motion_baseline",
+                "exclusion_of_a_constant_velocity_explanation",
+                "exclusion_of_a_last_seen_position_explanation",
+                "exclusion_of_motion_based_explanations_generally",
             ],
+            # B005: claim precision, not a rule change. Under the frozen
+            # thresholds the two time-baseline gates cannot bind independently of
+            # the RMSE ceiling, so a PASS that clears the ceiling clears them by
+            # construction. Stated here so the gates stay exactly as frozen while
+            # the claim language stops implying an achievement they cannot carry.
+            "time_baseline_gate_bindingness": {
+                "gates_unchanged": True,
+                "gates_remain_controlling": True,
+                "gates_can_bind_independently": False,
+                "derivation": (
+                    "best_k_each_scene_rmse_maximum_blocks is 0.15560477763641264 "
+                    "blocks, while the training-only time baseline's trajectory-"
+                    "aggregated RMSE on this design is approximately 0.41360 "
+                    "blocks; any readout clearing WALL_rmse therefore also clears "
+                    "WALL_beats_training_time_baseline. The tau 1-15 time "
+                    "baseline's trajectory-equal macro R2 is approximately "
+                    "-0.18186, already below the 0.1 confound ceiling before any "
+                    "activation is read, so WALL_time_confound_gate is satisfied "
+                    "by the design rather than by the result."),
+                "permitted_claim": (
+                    "the frozen time-baseline checks were satisfied"),
+                "forbidden_claim": (
+                    "the decoder independently beat a time or motion baseline"),
+                "motion_baselines_tested_by_this_stage": [],
+                "motion_baseline_questions_deferred_to_their_own_rung": [
+                    "constant_velocity", "last_seen_position",
+                    "other_motion_based_alternative_explanations",
+                ],
+            },
             "pass_authorizes": {
                 "confirmatory_collection": False,
                 "causal_intervention": False,
@@ -386,6 +527,39 @@ def require_promotion_matches_implementation(document: dict) -> None:
             f"BEST-K gate enumeration is not the six the implementation emits: {gates}")
     if document["promotion"]["outcome_adaptive_change"] is not False:
         raise RuntimeError("a promotion may never be outcome-adaptive")
+    from scripts.regime_a_prime_qualification_v0_1.p2e_analyze import (
+        SELECTION_TRAINING_TAU_MAXIMUM,
+    )
+    from scripts.regime_a_prime_qualification_v0_2.stage2_backend import (
+        BOOTSTRAP_CONFIDENCE_BOUND, BOOTSTRAP_GENERATOR, BOOTSTRAP_STATISTIC,
+        LAYER4_ACTIVATION_DTYPE, LAYER4_HIDDEN_SIZE,
+    )
+    selection = readout["selection_rule"]
+    if (selection["selection_training_tau_maximum"] != int(SELECTION_TRAINING_TAU_MAXIMUM)
+            or selection["final_fit_training_tau_maximum"] != int(SELECTION_TRAINING_TAU_MAXIMUM)):
+        raise RuntimeError(
+            f"promoted selection tau maximum != implementation {SELECTION_TRAINING_TAU_MAXIMUM}")
+    contract = document["bootstrap_procedure"]["recorded_configuration_contract"]
+    for field, value in (("statistic", BOOTSTRAP_STATISTIC),
+                         ("confidence_bound_definition", BOOTSTRAP_CONFIDENCE_BOUND),
+                         ("generator", BOOTSTRAP_GENERATOR)):
+        if contract[field] != value:
+            raise RuntimeError(f"promoted bootstrap {field} != implementation {value!r}")
+    activation = document["activation_contract"]
+    if (activation["hidden_size"] != int(LAYER4_HIDDEN_SIZE)
+            or activation["dtype"] != LAYER4_ACTIVATION_DTYPE
+            or activation["expected_shape"] != [activation["target_rows"],
+                                                activation["visual_tokens_per_frame"],
+                                                activation["hidden_size"]]
+            or activation["layer"] != 4):
+        raise RuntimeError(
+            f"promoted layer-4 activation contract != implementation: {activation}")
+    verification = document["terminal"]["independent_verification_required"]
+    if verification["fold_and_model_selection"][
+            "self_reported_fold_validity_booleans_are_not_trusted"] is not True:
+        raise RuntimeError("the terminal must not trust a self-reported fold validity boolean")
+    if verification["readout_self_grade"]["self_grade_never_controls_the_verdict"] is not True:
+        raise RuntimeError("a readout self-grade may never control the scientific verdict")
 
 
 def write(path: Path, value: dict) -> str:
