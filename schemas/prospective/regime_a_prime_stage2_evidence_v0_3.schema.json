@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mineocclude://schemas/regime_a_prime_stage2_evidence_v0_3.schema.json",
+  "title": "Regime A-prime v0.3 Stage-2 hidden-position decoding evidence",
+  "description": "Closed, digest-bound Stage-2 evidence. Every binding needed to reproduce the terminal decision is carried by digest, so no field depends on mutable live-tree state after the document is written. The evidence builder never asserts a scientific status; evidence_builder_asserted_scientific_status is pinned false for exactly that reason.",
+  "type": "object",
+  "required": ["schema_version", "artifact_id", "classification", "confirmatory_reuse_forbidden", "development_only", "scientific_run_id", "source_commit_sha", "authority_sha256", "stage2_decision_authority_sha256", "stage2_manifest_sha256", "stage1_manifest_sha256", "stage1_evidence_sha256", "stage1_decision_sha256", "stage2_authorization_sha256", "preoutcome_provenance_sha256", "stage1_preoutcome_provenance_sha256", "physical_gate", "model_runtime_identity", "main_checkpoint_sha256", "vae_checkpoint_sha256", "capture_inventory", "capture_count", "trajectory_identity_count", "required_target_rows_per_capture", "layer", "all_layer_extraction_performed", "bootstrap_configuration", "readouts", "evidence_builder_asserted_scientific_status", "evidence_payload_sha256"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "artifact_id": {"const": "regime-a-prime-stage2-evidence-v0.3"},
+    "classification": {"const": "DEVELOPMENT_ONLY"},
+    "confirmatory_reuse_forbidden": {"const": true},
+    "development_only": {"const": true},
+    "scientific_run_id": {"type": "string", "minLength": 1},
+    "source_commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "authority_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage2_decision_authority_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage2_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage1_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage1_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage1_decision_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage2_authorization_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "preoutcome_provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage1_preoutcome_provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "physical_gate": {
+      "type": "object",
+      "required": ["unit_id", "status", "receipt_sha256"],
+      "properties": {
+        "unit_id": {"type": "string", "minLength": 1},
+        "status": {"const": "PASS"},
+        "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "model_runtime_identity": {
+      "type": "object",
+      "required": ["main_checkpoint_sha256", "vae_checkpoint_sha256", "model_config_sha256", "vae_config_sha256", "environment_report_sha256", "runtime_id", "preprocessing_identity", "action_conversion_identity"],
+      "properties": {
+        "main_checkpoint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "vae_checkpoint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "model_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "vae_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "environment_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "runtime_id": {"type": "string", "minLength": 1},
+        "preprocessing_identity": {"type": "string", "minLength": 1},
+        "action_conversion_identity": {"type": "string", "minLength": 1}
+      }
+    },
+    "main_checkpoint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "vae_checkpoint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "capture_inventory": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["unit_id", "trajectory_id", "scene", "direction", "outer_fold", "phase_frames", "capture_receipt_sha256", "extraction_unit_id", "extraction_receipt_sha256", "activation_sha256", "target_model_frame_indices", "aligned_target_world_x_blocks", "target_rows_authority_bound"],
+        "properties": {
+          "unit_id": {"type": "string", "minLength": 1},
+          "trajectory_id": {"type": "string", "minLength": 1},
+          "scene": {"enum": ["WALL", "NO_WALL"]},
+          "direction": {"enum": ["LEFT_TO_RIGHT", "RIGHT_TO_LEFT"]},
+          "outer_fold": {"type": "integer", "minimum": 0, "maximum": 4},
+          "phase_frames": {"enum": [0, 3, 6, 9, 12]},
+          "capture_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "extraction_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "activation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "target_model_frame_indices": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"type": "integer"}},
+          "aligned_target_world_x_blocks": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"type": "number"}},
+          "target_rows_authority_bound": {"const": true}
+        }
+      }
+    },
+    "capture_count": {"const": 50},
+    "trajectory_identity_count": {"const": 25},
+    "required_target_rows_per_capture": {"const": 19},
+    "layer": {"const": 4},
+    "all_layer_extraction_performed": {"const": false},
+    "bootstrap_configuration": {
+      "type": "object",
+      "required": ["unit", "resamples", "seed"],
+      "properties": {
+        "unit": {"const": "WHOLE_TRAJECTORY"},
+        "resamples": {"type": "integer", "minimum": 1},
+        "seed": {"type": "integer"}
+      }
+    },
+    "readouts": {
+      "type": "object",
+      "required": ["best_k", "full"],
+      "properties": {
+        "best_k": {"$ref": "#/$defs/readout"},
+        "full": {"$ref": "#/$defs/readout"}
+      }
+    },
+    "evidence_builder_asserted_scientific_status": {"const": false},
+    "evidence_payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "metrics": {
+      "type": "object",
+      "required": ["rmse_blocks", "mae_blocks", "macro_r2", "bootstrap95_macro_r2"],
+      "properties": {
+        "rmse_blocks": {"type": "number"},
+        "mae_blocks": {"type": "number"},
+        "macro_r2": {"type": "number"},
+        "bootstrap95_macro_r2": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}
+      }
+    },
+    "readout": {
+      "type": "object",
+      "required": ["readout", "receipt_sha256", "scenes"],
+      "properties": {
+        "readout": {"enum": ["BEST_K", "FULL"]},
+        "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "scenes": {
+          "type": "object",
+          "required": ["WALL", "NO_WALL"],
+          "additionalProperties": {
+            "type": "object",
+            "required": ["metrics", "training_time_baseline", "training_time_baseline_tau1_15", "selection_by_outer_fold"],
+            "properties": {
+              "metrics": {"$ref": "#/$defs/metrics"},
+              "training_time_baseline": {"$ref": "#/$defs/metrics"},
+              "training_time_baseline_tau1_15": {"$ref": "#/$defs/metrics"},
+              "selection_by_outer_fold": {"type": "object", "minProperties": 5, "maxProperties": 5}
+            }
+          }
+        }
+      }
+    }
+  }
+}

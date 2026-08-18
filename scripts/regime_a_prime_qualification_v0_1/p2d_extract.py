@@ -22,6 +22,18 @@ from typing import Any
 import numpy as np
 from PIL import Image
 
+# ``Layer4Extractor.__init__`` used to be the first thing that put the source
+# tree on the path, which is too late for a module-level import of the governed
+# activation-binding module. Doing it here keeps the two NEW-B001/NEW-B002
+# primitives resolvable no matter which entrypoint imports this file.
+sys.path[:0] = [str(Path(__file__).resolve().parents[2]),
+                str(Path(__file__).resolve().parents[2] / "src")]
+
+from mineocclude.prospective.activation_binding import (
+    TARGET_ROWS_NOT_AUTHORITY_BOUND,
+    model_runtime_identity_binding,
+    resolve_authority_bound_target_rows,
+)
 from p2_common import (
     LAYER,
     OUT,
@@ -115,11 +127,27 @@ class Layer4Extractor:
         self.adapter = production._RUNTIME.adapter
         self.runtime = production._RUNTIME.runtime_identity
 
-    def extract(self, run_id: str, source: Path, destination: Path) -> dict[str, Any]:
+    def extract(self, run_id: str, source: Path, destination: Path, *,
+                expected_target_model_frame_indices) -> dict[str, Any]:
+        """Extract layer-4 activations for one capture.
+
+        ``expected_target_model_frame_indices`` is keyword-only and has no
+        default on purpose. Before the NEW-B002 repair this method inferred its
+        scientific rows from ``visibility.tau`` alone and no caller could state
+        which rows the authority had qualified; a default would reopen exactly
+        that hole. Scientific callers pass the frozen manifest's
+        ``target_model_frame_indices``; the two completed historical pilot
+        entrypoints pass ``TARGET_ROWS_NOT_AUTHORITY_BOUND`` explicitly, and the
+        record they produce is refused by every Stage-2 consumer.
+        """
         from mineocclude.contracts.identity import SCHEMA_VERSION
         from mineocclude.models import mineworld_adapter as api
 
         adapter, runtime, production = self.adapter, self.runtime, self.production
+        # Bound before any work: an unidentifiable runtime must not be able to
+        # produce activations at all, let alone activations whose receipt is
+        # written afterwards.
+        identity = model_runtime_identity_binding(runtime)
         package_bytes = (source / "capture_package_v0_1.json").read_bytes()
         package_hash = hashlib.sha256(package_bytes).hexdigest()
         document = json.loads(package_bytes)
@@ -130,10 +158,14 @@ class Layer4Extractor:
             document=document,
         ))
         visibility = read_jsonl(source / "raw/visibility.jsonl")
-        targets = [int(r["model_frame_idx"]) for r in visibility
-                   if r.get("tau") in range(1, 20)]
-        if len(targets) != 19 or targets != sorted(targets):
-            raise RuntimeError(f"{run_id}: frozen target rows malformed")
+        # NEW-B002: the tau lookup is kept -- it reads the rows the capture
+        # itself labelled -- but it is now proved equal to the authority's
+        # ``target_model_frame_indices`` before a single frame is opened. On any
+        # disagreement the resolver raises and neither source is preferred.
+        targets = resolve_authority_bound_target_rows(
+            visibility, expected=expected_target_model_frame_indices,
+            required_count=19, trajectory_id=document["trajectory_id"], label=run_id)
+        authority_bound = expected_target_model_frame_indices is not TARGET_ROWS_NOT_AUTHORITY_BOUND
 
         required = range(targets[0] - 15, targets[-1] + 1)
         identities = {i.model_frame_idx: i for i in validated.frame_identities}
@@ -203,8 +235,16 @@ class Layer4Extractor:
             "activation_sha256": sha256_file(path),
             "byte_size": path.stat().st_size,
             "capture_package_sha256": package_hash,
-            "checkpoint_sha256": getattr(runtime, "checkpoint_sha256", None)
-            or str(getattr(runtime, "checkpoint_identity", "")),
+            # NEW-B001: the superseded ``checkpoint_sha256`` read two attributes
+            # MineWorldRuntimeIdentity has never had, so it emitted "" on every
+            # real runtime and the receipt bound no checkpoint at all. The
+            # runtime carries two genuinely distinct frozen artifacts; both are
+            # recorded, and ``model_runtime_identity_binding`` refuses to return
+            # anything if either digest is missing, blank, or malformed.
+            "model_runtime_identity": identity,
+            "main_checkpoint_sha256": identity["main_checkpoint_sha256"],
+            "vae_checkpoint_sha256": identity["vae_checkpoint_sha256"],
+            "target_rows_authority_bound": authority_bound,
             "preprocessing_identity": str(runtime.preprocessing_identity),
         }
 
@@ -247,7 +287,14 @@ def main() -> int:
             continue
         progress(run_id, "RUNNING")
         try:
-            record = extractor.extract(run_id, CAPTURES / run_id, ACT)
+            # The completed P2 twenty-five-run diagnostic predates the
+            # Stage-2 manifest and has no authority-selected row set to check
+            # against. It says so explicitly; the record it produces carries
+            # ``target_rows_authority_bound: false`` and every Stage-2 consumer
+            # refuses it.
+            record = extractor.extract(
+                run_id, CAPTURES / run_id, ACT,
+                expected_target_model_frame_indices=TARGET_ROWS_NOT_AUTHORITY_BOUND)
         except Exception as exc:  # identity/model failures are not retryable here
             error = f"{type(exc).__name__}: {exc}"[:400]
             append_ledger({"p2_no_wall_run_id": run_id, "status": "FAILED_HARD",

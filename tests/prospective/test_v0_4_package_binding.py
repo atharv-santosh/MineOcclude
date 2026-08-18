@@ -215,7 +215,10 @@ def test_the_failed_trajectory_is_not_mentioned_or_excluded(v0_4):
 
 
 def test_the_v0_4_execution_surface_exists_and_is_closure_bound():
-    assert len(V0_4_ENTRYPOINTS) == 6
+    # Seven since the B009 promotion: the six original entrypoints plus
+    # build_stage2_decision_authority.py, which writes the frozen Stage-2
+    # decision contract and proves its values against the implementation.
+    assert len(V0_4_ENTRYPOINTS) == 7
     for relative in V0_4_ENTRYPOINTS:
         assert (ROOT / relative).is_file(), relative
 

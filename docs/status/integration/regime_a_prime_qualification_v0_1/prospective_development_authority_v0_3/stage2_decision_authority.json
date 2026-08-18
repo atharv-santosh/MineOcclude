@@ -1,0 +1,178 @@
+{
+ "STAGE_2_COLLECTION_AUTHORIZED": false,
+ "artifact_id": "regime-a-prime-stage2-decision-authority-v0.3",
+ "artifacts": {
+  "decision_artifact_id": "regime-a-prime-stage2-decision-v0.3",
+  "decision_schema": "schemas/prospective/regime_a_prime_stage2_decision_v0_3.schema.json",
+  "evaluator": "mineocclude.prospective.stage2_decision.Stage2Evaluator",
+  "evidence_artifact_id": "regime-a-prime-stage2-evidence-v0.3",
+  "evidence_builder": "mineocclude.prospective.stage2_evidence.build_stage2_evidence",
+  "evidence_builder_may_assert_scientific_status": false,
+  "evidence_schema": "schemas/prospective/regime_a_prime_stage2_evidence_v0_3.schema.json",
+  "reproduction_verifier": "mineocclude.prospective.stage2_decision.require_stage2_decision_reproduction"
+ },
+ "best_k_gates": {
+  "all_must_pass": true,
+  "count": 6,
+  "definitions": {
+   "NO_WALL_r2": "NO_WALL macro_r2 > 0 and NO_WALL bootstrap95 lower bound > 0",
+   "NO_WALL_rmse": "NO_WALL rmse_blocks <= stage2_policy.readout.best_k_each_scene_rmse_maximum_blocks",
+   "WALL_beats_training_time_baseline": "WALL rmse_blocks < WALL training-time-baseline rmse_blocks",
+   "WALL_r2": "WALL macro_r2 > 0 and WALL bootstrap95 lower bound > 0",
+   "WALL_rmse": "WALL rmse_blocks <= stage2_policy.readout.best_k_each_scene_rmse_maximum_blocks",
+   "WALL_time_confound_gate": "WALL training-time-baseline macro_r2 restricted to tau 1..15 <= stage2_policy.readout.training_only_time_baseline_macro_r2_tau_1_to_15_maximum"
+  },
+  "derivation": "Obtained by executing stage2_backend.best_k_qualification_checks. The four authority booleans expand to six gates because the two per-scene rules are applied to WALL and NO_WALL separately.",
+  "full_may_not_rescue_best_k_failure": true,
+  "full_readout_is_evaluated_but_never_gating": true,
+  "names": [
+   "NO_WALL_r2",
+   "NO_WALL_rmse",
+   "WALL_beats_training_time_baseline",
+   "WALL_r2",
+   "WALL_rmse",
+   "WALL_time_confound_gate"
+  ]
+ },
+ "bootstrap_procedure": {
+  "draw": "numpy.random.default_rng(seed).choice(values, size=(resamples, n), replace=True)",
+  "function": "scripts.regime_a_prime_qualification_v0_2.stage2_backend.summary",
+  "interval": "numpy.quantile at 0.025 and 0.975",
+  "resample_population": "the per-trajectory R-squared values, ordered by trajectory identity ascending",
+  "resamples_source": "authority_parameters.json stage2_policy.readout.bootstrap_resamples",
+  "seed_is_reused_per_summary_call": true,
+  "seed_source": "authority_parameters.json stage2_policy.readout.bootstrap_seed",
+  "statistic": "mean of each resampled set",
+  "unit_source": "authority_parameters.json stage2_policy.readout.bootstrap_unit"
+ },
+ "classification": "DEVELOPMENT_ONLY",
+ "confirmatory_collection_authorized": false,
+ "estimands": {
+  "descriptive_only": [
+   "trajectory_aggregated_mae_blocks",
+   "pooled_row_r2_secondary",
+   "pooled_rmse_secondary"
+  ],
+  "error": "trajectory_aggregated_rmse_blocks",
+  "error_derivation": "scalar_metrics: the unweighted mean of per-trajectory RMSE in world blocks. Reported by stage2_backend.summary as rmse_blocks.",
+  "interval": "whole_trajectory_bootstrap95_macro_r2",
+  "pooled_metrics_are_never_gating": true,
+  "primary": "trajectory_equal_macro_r2",
+  "primary_derivation": "regime_a_first25_analysis.scalar_metrics: the unweighted mean of per-trajectory R-squared, each computed against that trajectory's own mean. Trajectory-equal, never row-pooled."
+ },
+ "extends_authority": {
+  "artifact_id": "regime-a-prime-prospective-development-authority-v0.3",
+  "path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_3/authority_parameters.json",
+  "sha256": "495af6d19b73f35a4927e48d7def4ded587ddf4d7900a8d6827ffec3ad7e982f"
+ },
+ "promotion": {
+  "authority_parameters_json_modified": false,
+  "derivation": "Every rule below already governed the Stage-2 readout at c9aad3e324c03c94a08222f4705c18b1a80e3a63; none of them was reachable from frozen authority, so a completed Stage-2 decision could not have been reproduced without reading source. K_GRID and ALPHAS are imported from mineocclude.regime_a_first25_analysis rather than typed; the six BEST-K gate names are obtained by executing stage2_backend.best_k_qualification_checks; the inner-fold shape is obtained by executing regime_a_first25_analysis.inner_fold_assignment. No numeric value is chosen here.",
+  "kind": "EXPLICIT_PROMOTION_OF_EXISTING_STAGE2_IMPLEMENTATION",
+  "new_scientific_values_invented": false,
+  "outcome_adaptive_change": false,
+  "promoted_from_freeze": "c9aad3e324c03c94a08222f4705c18b1a80e3a63",
+  "scientific_outcomes_observed": false,
+  "why_not_in_authority_parameters_json": "The completed v0.4 Stage-1 decision d00d7730 binds the bytes of authority_parameters.json (52b9590b), the historical re-derivation compares against that same file, and require_stage2_authorization refuses a Stage-1 decision whose authority digest is not the live one. Editing those bytes would have made the frozen Stage-1 PASS both irreproducible and unusable as the predicate for Stage-2 authorization. This document is bound by the Stage-2 locked manifest instead, which nothing frozen binds yet."
+ },
+ "readout_procedure": {
+  "alpha_grid": [
+   0.1,
+   1.0,
+   10.0,
+   100.0
+  ],
+  "feature_standardization": "fit on each training split only",
+  "inner_fold_rule": {
+   "construction": "five deterministic direction-stratified folds. Identities are ordered by SHA256 of 'REGIME_A_INNER_FOLD_V1|outer={outer}|{identity}' within each direction, round-robin assigned, with the second direction offset by one fold. A partition whose direction balance prevents five equal folds is rebalanced by one identity, chosen by SHA256 of 'REGIME_A_INNER_REBALANCE_V1|outer={outer}|{identity}'.",
+   "function": "mineocclude.regime_a_first25_analysis.inner_fold_assignment",
+   "identities_per_inner_fold": 4,
+   "inner_fold_count": 5,
+   "ordering_is_outcome_independent": true,
+   "training_identities_required": 20
+  },
+  "k_grid": [
+   1,
+   4,
+   8,
+   16,
+   32,
+   64,
+   128
+  ],
+  "kernel": "standardized summed-token kernel ridge",
+  "outer_fold_aggregation": {
+   "derivation": "Each of the five outer folds contributes out-of-fold predictions for its own held-out trajectories; the five prediction sets are pooled to cover each row exactly once, and the terminal point estimate is then computed over all 25 trajectories by scalar_metrics. Per-fold metrics are never averaged, and no fold is weighted.",
+   "each_row_predicted_exactly_once": true,
+   "per_fold_metrics_are_not_averaged": true,
+   "rule": "POOLED_OUT_OF_FOLD_THEN_TRAJECTORY_EQUAL"
+  },
+  "ranking_scope": "training rows only, inside every inner and final fold",
+  "readouts": {
+   "leading": "BEST_K",
+   "secondary_non_rescuing": "FULL"
+  },
+  "selection_rule": {
+   "best_k_tie_break": "smaller K, then smaller alpha",
+   "evaluation_tau_scope": "every qualified target row, tau 1..19",
+   "final_fit_training_tau_maximum": 15,
+   "full_tie_break": "smaller alpha",
+   "objective": "maximum inner trajectory-equal macro R2",
+   "selection_training_tau_maximum": 15
+  },
+  "target_handling": "training-target centering inside the kernel ridge; no target standardization",
+  "token_ranking": "absolute maximum hidden-dimension training correlation"
+ },
+ "schema_version": "1.0",
+ "status": "DRAFT_PROSPECTIVE_UNFROZEN_NOT_AUTHORIZED",
+ "terminal": {
+  "claim_boundary_scope": "authority_parameters.json scientific_claim_boundary describes the Stage-1 apparatus-qualification rung, whose PASS tests no model activation. This block describes the Stage-2 decoding rung, which does read layer-4 activations. The two are different rungs and neither statement weakens the other.",
+  "completed_scientific_fail_is_terminal": true,
+  "leading_readout": "BEST_K",
+  "operational_failure_may_not_become_scientific_fail": true,
+  "pass_authorizes": {
+   "causal_intervention": false,
+   "confirmatory_collection": false,
+   "derivation": "authority_parameters.json stage2_policy.post_stage2.may_authorize_confirmatory_collection is false and remains binding. A PASS completes this DEVELOPMENT_ONLY rung and nothing else; any later experiment requires its own separate prospective design and authorization.",
+   "next_rung": false
+  },
+  "pass_does_not_establish": [
+   "object_permanence",
+   "belief",
+   "causal_use",
+   "uncertainty_representation",
+   "general_world_model_competence",
+   "behavioral_reliance_on_the_representation"
+  ],
+  "pass_meaning": "The frozen DEVELOPMENT_ONLY Stage-2 hidden-position decoding experiment satisfied its prospectively frozen Stage-2 decoding criteria. It may support the bounded statement that layer-4 activations contain decodable information according to those criteria, on this apparatus, at these paths.",
+  "precomputed_qualification_booleans_are_not_trusted": true,
+  "state_semantics": {
+   "BLOCKED": "an operational, provenance, binding, or completeness failure. Never a scientific verdict",
+   "FAIL": "a legitimately completed Stage-2 analysis in which at least one re-derived BEST-K gate does not hold",
+   "PASS": "a legitimately completed Stage-2 analysis in which every BEST-K gate, re-derived from bound evidence, holds"
+  },
+  "states": [
+   "PASS",
+   "FAIL",
+   "BLOCKED"
+  ],
+  "terminal_status_is_re_derived_not_copied": true
+ },
+ "time_baseline_procedure": {
+  "design_matrix": [
+   "1",
+   "direction",
+   "tau",
+   "tau*direction"
+  ],
+  "direction_encoding": {
+   "LEFT_TO_RIGHT": 1.0,
+   "RIGHT_TO_LEFT": -1.0
+  },
+  "fitting_scope": "rows of the outer-training folds whose tau is at or below training_only_time_baseline_training_tau_maximum",
+  "function": "scripts.regime_a_prime_qualification_v0_2.stage2_backend.training_time_baseline",
+  "prediction_scope": "every row of the held-out outer fold",
+  "solver": "numpy.linalg.lstsq(rcond=None)",
+  "tau_maximum_source": "authority_parameters.json stage2_policy.readout.training_only_time_baseline_training_tau_maximum"
+ }
+}

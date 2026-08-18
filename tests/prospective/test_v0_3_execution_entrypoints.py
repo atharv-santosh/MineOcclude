@@ -179,7 +179,7 @@ def test_v0_3_binding_refuses_a_package_whose_bytes_are_v0_2(tmp_path):
     target.mkdir(parents=True)
     source = package_directory("v0.2", ROOT)
     for name in ("authority_parameters.json", "stage1_manifest.json",
-                 "stage2_locked_manifest.json"):
+                 "stage2_locked_manifest.json", "stage2_decision_authority.json"):
         (target / name).write_bytes((source / name).read_bytes())
     with pytest.raises(PackageBindingError, match="v0.2"):
         resolve_package_binding("v0.3", fake_repository)
@@ -233,7 +233,7 @@ def test_binding_refuses_an_authority_the_manifest_does_not_digest(tmp_path):
     target.mkdir(parents=True)
     source = package_directory("v0.3", ROOT)
     for name in ("authority_parameters.json", "stage1_manifest.json",
-                 "stage2_locked_manifest.json"):
+                 "stage2_locked_manifest.json", "stage2_decision_authority.json"):
         (target / name).write_bytes((source / name).read_bytes())
     authority = json.loads((target / "authority_parameters.json").read_text())
     authority["_perturbed"] = True
@@ -422,10 +422,20 @@ def test_v0_3_stage1_manifest_digest_is_the_frozen_one(v0_3):
     no identity, window, fold, phase, seed or episode moved. The authority and
     Stage-1 manifest digests below are unchanged, which is itself the check that
     the repair stayed inside the Stage-2 template.
+
+    The Stage-2 digest was rebound a third time by the B009 terminal-authority
+    closure. Every package in this family carries a Stage-2 locked manifest, so
+    every one of them now also carries the promoted Stage-2 decision contract and
+    binds it by digest -- a manifest that describes a terminal decision it cannot
+    reproduce from frozen rules is the defect B009 names, and that is as true of a
+    closed predecessor as of the package about to run. The delta is exactly one
+    added ``stage2_decision_authority_binding`` key and nothing else, and the
+    authority and Stage-1 digests below are again unchanged, which is the check
+    that it stayed inside the template.
     """
     assert sha256_file(v0_3.stage1_manifest_path) == (
         "424b583f93a2fd77886e534543872dd3120f0470e5f3f341ee445443c64039a3")
     assert sha256_file(v0_3.authority_path) == (
         "495af6d19b73f35a4927e48d7def4ded587ddf4d7900a8d6827ffec3ad7e982f")
     assert sha256_file(v0_3.stage2_manifest_path) == (
-        "d8a80d17e7974b76d32499e75e9eda9d45e4223b53f824e253eccf32fc610bb3")
+        "ad718685b33030a0c0de405cd9d3abb737c3f3e9d087ad7c78768fe151855eb8")

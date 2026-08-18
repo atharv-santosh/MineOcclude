@@ -64,6 +64,22 @@ _PROVENANCE_ARTIFACT_ID = "regime-a-prime-prospective-pre-outcome-provenance-{ta
 #: authorized, but it is repaired prospectively for exactly that reason.
 _STAGE1_DECISION_ARTIFACT_ID = "regime-a-prime-stage1-decision-{tag}"
 
+#: The Stage-2 terminal chain's three identities. They follow the Stage-1
+#: spelling exactly -- ``...-stage1-evidence-v0.4`` becomes
+#: ``...-stage2-evidence-v0.4`` -- because the two stages produce the same kind
+#: of artifact and an auditor should not have to learn a second convention. Like
+#: the Stage-1 decision identity above, they are constructed here once rather
+#: than spelled as literals at each producer and consumer, so a Stage-2 decision
+#: cannot be written under one version's identity and accepted by another's.
+_STAGE2_EVIDENCE_ARTIFACT_ID = "regime-a-prime-stage2-evidence-{tag}"
+_STAGE2_DECISION_ARTIFACT_ID = "regime-a-prime-stage2-decision-{tag}"
+
+#: The promoted Stage-2 decision rules (B009). A package artifact in its own
+#: right, sitting beside the authority rather than inside it: the completed
+#: Stage-1 decision binds the authority's bytes, so the Stage-2 decision contract
+#: could not be added there without making that PASS irreproducible and unusable.
+_STAGE2_DECISION_AUTHORITY_ARTIFACT_ID = "regime-a-prime-stage2-decision-authority-{tag}"
+
 #: Repository root, resolved from this file's location (src/mineocclude/prospective).
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
@@ -86,9 +102,13 @@ class PackageBinding:
     authority_path: Path
     stage1_manifest_path: Path
     stage2_manifest_path: Path
+    stage2_decision_authority_path: Path
     authority_artifact_id: str
     stage1_manifest_artifact_id: str
     stage2_manifest_artifact_id: str
+    stage2_decision_authority_artifact_id: str
+    stage2_evidence_artifact_id: str
+    stage2_decision_artifact_id: str
     authorization_artifact_id: str
     provenance_artifact_id: str
     run_namespace: str
@@ -159,6 +179,50 @@ def stage1_decision_artifact_id_for(version_tag: str) -> str:
     return _STAGE1_DECISION_ARTIFACT_ID.format(tag=version_tag)
 
 
+def stage2_evidence_artifact_id_for(version_tag: str) -> str:
+    """The Stage-2 evidence identity a package version's builder emits."""
+    if _VERSION_TAG.match(version_tag) is None:
+        raise PackageBindingError(f"malformed package version tag: {version_tag!r}")
+    return _STAGE2_EVIDENCE_ARTIFACT_ID.format(tag=version_tag)
+
+
+def stage2_decision_artifact_id_for(version_tag: str) -> str:
+    """The Stage-2 decision identity a package version's terminal unit emits."""
+    if _VERSION_TAG.match(version_tag) is None:
+        raise PackageBindingError(f"malformed package version tag: {version_tag!r}")
+    return _STAGE2_DECISION_ARTIFACT_ID.format(tag=version_tag)
+
+
+def stage2_decision_authority_artifact_id_for(version_tag: str) -> str:
+    """The identity of the package version's promoted Stage-2 decision rules."""
+    if _VERSION_TAG.match(version_tag) is None:
+        raise PackageBindingError(f"malformed package version tag: {version_tag!r}")
+    return _STAGE2_DECISION_AUTHORITY_ARTIFACT_ID.format(tag=version_tag)
+
+
+def stage2_evidence_artifact_id(manifest: Mapping[str, Any]) -> str:
+    """The evidence identity implied by the Stage-2 manifest actually processed.
+
+    Recovered from the manifest's own ``artifact_id``, exactly as the Stage-1
+    equivalents are, so the evidence, the decision and the manifest cannot
+    disagree about which experiment produced them.
+    """
+    return stage2_evidence_artifact_id_for(
+        artifact_version_tag((manifest or {}).get("artifact_id")))
+
+
+def stage2_decision_artifact_id(manifest: Mapping[str, Any]) -> str:
+    """The decision identity implied by the Stage-2 manifest actually processed."""
+    return stage2_decision_artifact_id_for(
+        artifact_version_tag((manifest or {}).get("artifact_id")))
+
+
+def stage2_decision_authority_artifact_id(manifest: Mapping[str, Any]) -> str:
+    """The decision-authority identity the Stage-2 manifest must be bound to."""
+    return stage2_decision_authority_artifact_id_for(
+        artifact_version_tag((manifest or {}).get("artifact_id")))
+
+
 def stage1_decision_artifact_id(manifest: Mapping[str, Any]) -> str:
     """The decision identity implied by the Stage-1 manifest actually evaluated.
 
@@ -191,7 +255,8 @@ def resolve_package_binding(version_tag: str,
     authority_path = package / "authority_parameters.json"
     stage1_path = package / "stage1_manifest.json"
     stage2_path = package / "stage2_locked_manifest.json"
-    for path in (authority_path, stage1_path, stage2_path):
+    decision_authority_path = package / "stage2_decision_authority.json"
+    for path in (authority_path, stage1_path, stage2_path, decision_authority_path):
         if not path.is_file():
             raise PackageBindingError(f"package artifact is absent: {path}")
 
@@ -219,6 +284,43 @@ def resolve_package_binding(version_tag: str,
     if declared.get("sha256") != observed:
         raise PackageBindingError(
             f"{version_tag} Stage-1 manifest authority digest does not match the authority bytes")
+
+    # 2b. The promoted Stage-2 decision rules (B009). Every package in this
+    #     family has a Stage-2 locked manifest, so every one of them carries a
+    #     decision contract: a manifest that describes a terminal decision it
+    #     cannot reproduce from frozen rules is precisely the defect B009 names,
+    #     and that is true of a closed predecessor package as much as of the one
+    #     about to run. The binding is checked in both directions -- the document
+    #     must extend this authority's bytes, and the manifest must name this
+    #     document's bytes -- so neither can be swapped for another package's.
+    decision_authority = _load(decision_authority_path)
+    _require_identity(decision_authority, _STAGE2_DECISION_AUTHORITY_ARTIFACT_ID,
+                      version_tag, "Stage-2 decision authority")
+    extends = decision_authority.get("extends_authority")
+    if not isinstance(extends, Mapping):
+        raise PackageBindingError(
+            f"{version_tag} Stage-2 decision authority extends no authority")
+    if extends.get("path") != expected_relative or extends.get("sha256") != observed:
+        raise PackageBindingError(
+            f"{version_tag} Stage-2 decision authority is bound to different authority bytes")
+    for field in ("STAGE_2_COLLECTION_AUTHORIZED", "confirmatory_collection_authorized"):
+        if decision_authority.get(field) is not False:
+            raise PackageBindingError(
+                f"{version_tag} Stage-2 decision authority does not carry the "
+                f"unauthorized baseline: {field}")
+    declared_decision_authority = stage2.get("stage2_decision_authority_binding")
+    if not isinstance(declared_decision_authority, Mapping):
+        raise PackageBindingError(
+            f"{version_tag} Stage-2 manifest binds no Stage-2 decision authority")
+    decision_authority_relative = decision_authority_path.relative_to(repository).as_posix()
+    decision_authority_sha = hashlib.sha256(decision_authority_path.read_bytes()).hexdigest()
+    if (declared_decision_authority.get("path") != decision_authority_relative
+            or declared_decision_authority.get("sha256") != decision_authority_sha
+            or declared_decision_authority.get("artifact_id")
+               != decision_authority["artifact_id"]):
+        raise PackageBindingError(
+            f"{version_tag} Stage-2 manifest decision-authority binding does not match "
+            f"the decision-authority bytes")
 
     # 3. The authority's own stage table agrees, and supplies the authorization
     #    identity so no runner re-spells it as a literal.
@@ -255,9 +357,13 @@ def resolve_package_binding(version_tag: str,
         authority_path=authority_path,
         stage1_manifest_path=stage1_path,
         stage2_manifest_path=stage2_path,
+        stage2_decision_authority_path=decision_authority_path,
         authority_artifact_id=str(authority["artifact_id"]),
         stage1_manifest_artifact_id=str(stage1["artifact_id"]),
         stage2_manifest_artifact_id=str(stage2["artifact_id"]),
+        stage2_decision_authority_artifact_id=str(decision_authority["artifact_id"]),
+        stage2_evidence_artifact_id=stage2_evidence_artifact_id_for(version_tag),
+        stage2_decision_artifact_id=stage2_decision_artifact_id_for(version_tag),
         authorization_artifact_id=str(authorization_artifact_id),
         provenance_artifact_id=provenance_artifact_id_for(version_tag),
         run_namespace=str(stage1["run_namespace"]),

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mineocclude://schemas/regime_a_prime_stage2_decision_v0_2.schema.json",
+  "title": "Regime A-prime v0.2 Stage-2 hidden-position decoding terminal decision",
+  "description": "One decision schema per package version, pinning that version's decision identity as a const. A single schema with a loosened artifact_id pattern would accept the cross-version substitution the Stage-2 gate refuses. BLOCKED is admitted alongside PASS/FAIL because an operational failure must be expressible without being recorded as a scientific verdict.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_id", "classification", "status", "authority_sha256", "stage2_decision_authority_sha256", "stage2_manifest_sha256", "stage2_evidence_sha256", "scientific_run_id", "gates", "estimands", "reasons", "leading_readout", "full_readout_is_never_gating", "full_may_not_rescue_best_k_failure", "interpretation", "establishes_object_permanence", "establishes_belief", "establishes_causal_use", "establishes_uncertainty_representation", "establishes_general_world_model_competence", "establishes_behavioral_reliance", "may_authorize_confirmatory_collection", "may_authorize_causal_intervention", "may_authorize_next_rung", "confirmatory_reuse_forbidden", "confirmatory_interpretation_authorized", "decision_payload_sha256"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "artifact_id": {"const": "regime-a-prime-stage2-decision-v0.2"},
+    "classification": {"const": "DEVELOPMENT_ONLY"},
+    "status": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+    "authority_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage2_decision_authority_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage2_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stage2_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "scientific_run_id": {"type": "string", "minLength": 1},
+    "gates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status"],
+        "properties": {"status": {"enum": ["PASS", "FAIL"]}}
+      }
+    },
+    "estimands": {"type": "object"},
+    "reasons": {"type": "array", "items": {"type": "string"}},
+    "leading_readout": {"const": "BEST_K"},
+    "full_readout_is_never_gating": {"const": true},
+    "full_may_not_rescue_best_k_failure": {"const": true},
+    "interpretation": {"type": "string", "minLength": 1},
+    "establishes_object_permanence": {"const": false},
+    "establishes_belief": {"const": false},
+    "establishes_causal_use": {"const": false},
+    "establishes_uncertainty_representation": {"const": false},
+    "establishes_general_world_model_competence": {"const": false},
+    "establishes_behavioral_reliance": {"const": false},
+    "may_authorize_confirmatory_collection": {"const": false},
+    "may_authorize_causal_intervention": {"const": false},
+    "may_authorize_next_rung": {"const": false},
+    "confirmatory_reuse_forbidden": {"const": true},
+    "confirmatory_interpretation_authorized": {"const": false},
+    "decision_payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

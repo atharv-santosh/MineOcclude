@@ -115,6 +115,34 @@ def main() -> None:
                    for value in stage1_bindings), "materialized Stage-2 names no Stage-1 outcome"
     else:
         assert stage1_bindings == (None, None), "draft Stage-2 names a Stage-1 outcome"
+    # B009: the promoted Stage-2 decision contract. Every package in this family
+    # has a Stage-2 locked manifest and therefore carries one. resolve_package_binding
+    # already proved the two-way digest binding above; this re-states the
+    # scientific content the document must declare, so a contract that bound
+    # correctly but promised nothing cannot pass.
+    if True:
+        contract = json.loads(binding.stage2_decision_authority_path.read_text())
+        assert contract["classification"] == "DEVELOPMENT_ONLY"
+        assert contract["promotion"]["outcome_adaptive_change"] is False
+        assert contract["promotion"]["scientific_outcomes_observed"] is False
+        assert contract["promotion"]["new_scientific_values_invented"] is False
+        assert contract["terminal"]["states"] == ["PASS", "FAIL", "BLOCKED"]
+        assert contract["terminal"]["leading_readout"] == "BEST_K"
+        assert contract["terminal"]["terminal_status_is_re_derived_not_copied"] is True
+        assert contract["terminal"]["pass_authorizes"] == {
+            **contract["terminal"]["pass_authorizes"],
+            "confirmatory_collection": False, "causal_intervention": False,
+            "next_rung": False}
+        assert contract["best_k_gates"]["count"] == 6
+        assert sorted(contract["best_k_gates"]["definitions"]) == contract["best_k_gates"]["names"]
+        assert contract["readout_procedure"]["k_grid"] == [1, 4, 8, 16, 32, 64, 128]
+        assert contract["readout_procedure"]["alpha_grid"] == [0.1, 1.0, 10.0, 100.0]
+        assert contract["readout_procedure"]["outer_fold_aggregation"]["rule"] == (
+            "POOLED_OUT_OF_FOLD_THEN_TRAJECTORY_EQUAL")
+        assert contract["artifacts"]["evidence_builder_may_assert_scientific_status"] is False
+        # The promotion may not have moved a Stage-2 design parameter. Those
+        # still live in authority_parameters.json and are read from there.
+        assert "stage2_policy" not in contract
     assert all(value != "UNJUSTIFIED" for value in _walk(authority))
     base = authority["immutable_software_forensic_base_sha"]
     ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", base, "HEAD"], cwd=ROOT,
@@ -135,7 +163,21 @@ def main() -> None:
                          # the acquisition, so the correction is recorded here
                          # rather than the check being relaxed to hide it.
                          "scripts/regime_a_prime_qualification_v0_1/p2_common.py",
-                         "scripts/run_large_scale_no_wall_campaign.py")
+                         "scripts/run_large_scale_no_wall_campaign.py",
+                         # NEW-B001 / NEW-B002. The extractor recorded
+                         # checkpoint_sha256 from two attributes
+                         # MineWorldRuntimeIdentity has never had, so every real
+                         # receipt bound "" and failed OPEN on checkpoint
+                         # identity; and it inferred its scientific rows from
+                         # visibility.tau without ever proving them equal to the
+                         # manifest's target_model_frame_indices. Both are
+                         # repaired in place. p3_run_sequential is touched only
+                         # to pass the new required keyword explicitly -- the
+                         # completed P3 campaign has no authority row set and
+                         # says so rather than passing its own derivation off as
+                         # one.
+                         "scripts/regime_a_prime_qualification_v0_1/p2d_extract.py",
+                         "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py")
     allowed = ("docs/status/integration/regime_a_prime_qualification_v0_1/"
                "prospective_development_authority_v0_2/", "schemas/prospective/",
                "scripts/regime_a_prime_qualification_v0_2/",
@@ -199,6 +241,19 @@ def main() -> None:
                # scientific outcome and can change no scientific parameter.
                "src/mineocclude/prospective/unit1_checkpoint.py",
                "tests/prospective/test_stage2_execution_path_repair.py",
+               # The Stage-2 terminal authority and binding closure (B009 plus
+               # NEW-B001/NEW-B002). Terminal used to copy the BEST-K readout's
+               # own qualification_status, so no independent component ever
+               # re-derived a gate and no completed Stage-2 decision could have
+               # been reproduced from frozen rules. These are the evidence
+               # builder, the independent evaluator and reproduction verifier,
+               # the checkpoint/target-row binding both defects live in, and
+               # their suite. Enumerated one path at a time like every entry
+               # above.
+               "src/mineocclude/prospective/stage2_evidence.py",
+               "src/mineocclude/prospective/stage2_decision.py",
+               "src/mineocclude/prospective/activation_binding.py",
+               "tests/prospective/test_stage2_terminal_authority.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

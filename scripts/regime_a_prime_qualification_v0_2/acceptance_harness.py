@@ -74,7 +74,14 @@ SUITES = {
              "tests/prospective/test_v0_3_scientific_non_change_audit.py",
              # That the v0.4 entrypoints exist, resolve the a1y_*/85xxx
              # inventory, and refuse every closed predecessor substitution.
-             "tests/prospective/test_v0_4_package_binding.py"),
+             "tests/prospective/test_v0_4_package_binding.py",
+             # The Stage-2 terminal chain this package now carries: the promoted
+             # decision rules proved equal to the implementation, the evidence
+             # builder and independent evaluator driven to PASS/FAIL/BLOCKED over
+             # fixtures, byte-identical decision reproduction under mutation, and
+             # the two rehearsal defects -- an activation receipt that bound no
+             # checkpoint, and target rows that were inferred rather than proved.
+             "tests/prospective/test_stage2_terminal_authority.py"),
 }
 ENTRYPOINT_DIRECTORY = {"v0.2": "scripts/regime_a_prime_qualification_v0_2",
                         "v0.3": "scripts/regime_a_prime_qualification_v0_3",

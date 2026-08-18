@@ -15,6 +15,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 PACKAGE = ROOT / "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_2"
 AUTHORITY = PACKAGE / "authority_parameters.json"
+#: The promoted Stage-2 decision rules (B009). Every package with a Stage-2
+#: locked manifest carries one: a manifest that describes a terminal decision it
+#: cannot reproduce from frozen rules is the defect B009 names. Bound by digest
+#: here rather than folded into ``authority_parameters.json``, whose bytes a
+#: completed Stage-1 decision already binds.
+STAGE2_DECISION_AUTHORITY = PACKAGE / "stage2_decision_authority.json"
 DRIVER = ROOT / "scripts/regime_a_prime_qualification_v0_2/stage_unit_driver.py"
 PYTHON = "/home/sagemaker-user/.conda/envs/mineworld/bin/python"
 RUNTIME_SOURCE_BINDING = "BOUND_AT_LAUNCH_BY_PREOUTCOME_PROVENANCE_RECEIPT"
@@ -120,6 +126,19 @@ def build_stage1(authority_sha: str, authority: dict) -> dict:
         "durable_prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/regime_a_prime_qualification_v0_1/prospective_development_v0_2/stage1"}
 
 
+def stage2_decision_authority_binding() -> dict:
+    """Bind the promoted Stage-2 decision rules by identity, path, and digest.
+
+    Read from the file rather than restated here, so the manifest cannot claim a
+    decision contract whose bytes it has not seen. ``resolve_package_binding``
+    re-checks all three fields against the file on every entrypoint resolution.
+    """
+    document = json.loads(STAGE2_DECISION_AUTHORITY.read_text())
+    return {"artifact_id": document["artifact_id"],
+            "path": str(STAGE2_DECISION_AUTHORITY.relative_to(ROOT)),
+            "sha256": hashlib.sha256(STAGE2_DECISION_AUTHORITY.read_bytes()).hexdigest()}
+
+
 def build_stage2_template(authority_sha: str, stage1_sha: str, authority: dict) -> dict:
     stage2_path = PACKAGE / "stage2_locked_manifest.json"
     policy = authority["stage2_policy"]
@@ -178,6 +197,7 @@ def build_stage2_template(authority_sha: str, stage1_sha: str, authority: dict) 
         "status": "DRAFT_TEMPLATE_AWAITING_STAGE1_TARGET_MATERIALIZATION",
         "classification": "DEVELOPMENT_ONLY",
         "authority_binding": {"path": str(AUTHORITY.relative_to(ROOT)), "sha256": authority_sha},
+        "stage2_decision_authority_binding": stage2_decision_authority_binding(),
         "stage1_manifest_binding": stage1_sha,
         "source_commit_binding": RUNTIME_SOURCE_BINDING,
         "run_namespace": "mineocclude-regime-a-prime-development-v0-2-stage2",

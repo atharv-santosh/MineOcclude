@@ -28,6 +28,7 @@ from mineocclude.prospective.package_binding import (
     artifact_version_tag,
     provenance_artifact_id_for,
     stage1_decision_artifact_id,
+    stage2_decision_authority_artifact_id,
 )
 from mineocclude.prospective.source_provenance import CriticalSource, verify_sources
 from mineocclude.prospective.temporal_alignment import (
@@ -176,6 +177,35 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     # The operational unit-1 processability gate. It can STOP a scientific
     # collection, so its bytes govern whether units 2-50 run at all.
     "src/mineocclude/prospective/unit1_checkpoint.py",
+    # The Stage-2 terminal decision chain (B009). Terminal no longer copies a
+    # readout's self-assigned qualification_status; it builds evidence, evaluates
+    # it independently against frozen authority, and proves the decision
+    # re-derives. Those three modules therefore determine a scientific verdict
+    # and are as runtime-critical as the readout that feeds them.
+    "src/mineocclude/prospective/stage2_evidence.py",
+    "src/mineocclude/prospective/stage2_decision.py",
+    # Checkpoint and target-row binding for every activation (NEW-B001/NEW-B002).
+    # It decides whether an activation may contribute to a decision at all.
+    "src/mineocclude/prospective/activation_binding.py",
+    # The promoted Stage-2 decision rules and their builder. The document is the
+    # scientific contract the evaluator reads; the builder is what proves the
+    # promoted values are the ones the implementation actually uses.
+    "docs/status/integration/regime_a_prime_qualification_v0_1/"
+    "prospective_development_authority_v0_2/stage2_decision_authority.json",
+    "docs/status/integration/regime_a_prime_qualification_v0_1/"
+    "prospective_development_authority_v0_3/stage2_decision_authority.json",
+    "docs/status/integration/regime_a_prime_qualification_v0_1/"
+    "prospective_development_authority_v0_4/stage2_decision_authority.json",
+    "scripts/regime_a_prime_qualification_v0_4/build_stage2_decision_authority.py",
+    # One schema per package version for the Stage-2 chain too, exactly as for
+    # the Stage-1 decision, pinning each version's evidence and decision
+    # identities as consts so no cross-version artifact can validate.
+    "schemas/prospective/regime_a_prime_stage2_evidence_v0_2.schema.json",
+    "schemas/prospective/regime_a_prime_stage2_decision_v0_2.schema.json",
+    "schemas/prospective/regime_a_prime_stage2_evidence_v0_3.schema.json",
+    "schemas/prospective/regime_a_prime_stage2_decision_v0_3.schema.json",
+    "schemas/prospective/regime_a_prime_stage2_evidence_v0_4.schema.json",
+    "schemas/prospective/regime_a_prime_stage2_decision_v0_4.schema.json",
 )
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
@@ -676,6 +706,28 @@ def validate_stage2_manifest_design(authority: Mapping[str, Any], manifest: Mapp
                        else STAGE2_DRAFT_STATUS)
     if manifest.get("status") != expected_status:
         raise EvidenceError("Stage-2 manifest materialization state is invalid")
+    # B009: the promoted Stage-2 decision rules are a package artifact of their
+    # own, bound here by identity and digest. They are not folded into
+    # ``authority_parameters.json`` because the completed Stage-1 decision binds
+    # that file's bytes, and editing them would have made a genuine Stage-1 PASS
+    # both irreproducible and unusable as the Stage-2 predicate. A manifest that
+    # names no decision contract cannot reach a reproducible terminal decision,
+    # so its absence is a design violation rather than a missing nicety.
+    decision_authority = manifest.get("stage2_decision_authority_binding")
+    if not isinstance(decision_authority, Mapping):
+        raise EvidenceError("Stage-2 manifest binds no Stage-2 decision authority")
+    try:
+        expected_decision_authority_id = stage2_decision_authority_artifact_id(manifest)
+    except PackageBindingError as exc:
+        raise EvidenceError("Stage-2 manifest carries no versioned identity") from exc
+    if decision_authority.get("artifact_id") != expected_decision_authority_id:
+        raise EvidenceError(
+            f"Stage-2 decision authority identity is "
+            f"{decision_authority.get('artifact_id')!r}, expected "
+            f"{expected_decision_authority_id!r}")
+    _sha(decision_authority.get("sha256"), "Stage-2 decision authority SHA")
+    if not isinstance(decision_authority.get("path"), str) or not decision_authority["path"]:
+        raise EvidenceError("Stage-2 decision authority declares no path")
     if (manifest.get("trajectory_identity_count") != policy["paired_trajectory_identities"]
             or manifest.get("scientific_capture_count") != policy["scientific_capture_count"]
             or manifest.get("required_target_rows_per_capture")
@@ -3585,6 +3637,27 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
             raise PermissionError(f"Stage-2 authorization binding mismatch: {key}")
     if manifest.get("authority_binding", {}).get("sha256") != bindings["authority_sha256"]:
         raise PermissionError("Stage-2 manifest authority mismatch")
+    # The promoted Stage-2 decision rules must be on disk, unmodified, and bound
+    # to the authority that is about to govern the run. Verified here as well as
+    # in resolve_package_binding because the backend can be invoked directly.
+    decision_authority_binding = manifest.get("stage2_decision_authority_binding")
+    if not isinstance(decision_authority_binding, Mapping):
+        raise PermissionError(
+            "Stage-2 authorization requires a frozen Stage-2 decision authority; this "
+            "manifest binds none, so its terminal decision could not be reproduced "
+            "from frozen rules")
+    decision_authority_path = REPOSITORY_ROOT / decision_authority_binding["path"]
+    if not decision_authority_path.is_file():
+        raise PermissionError("Stage-2 decision authority artifact is absent")
+    if sha256_file(decision_authority_path) != decision_authority_binding["sha256"]:
+        raise PermissionError("Stage-2 decision authority digest mismatch")
+    decision_authority = load_json(decision_authority_path)
+    if (decision_authority.get("artifact_id") != decision_authority_binding["artifact_id"]
+            or (decision_authority.get("extends_authority") or {}).get("sha256")
+               != bindings["authority_sha256"]
+            or decision_authority.get("STAGE_2_COLLECTION_AUTHORIZED") is not False
+            or decision_authority.get("confirmatory_collection_authorized") is not False):
+        raise PermissionError("Stage-2 decision authority binding is invalid")
     if manifest.get("stage1_manifest_binding") != bindings["stage1_manifest_sha256"]:
         raise PermissionError("Stage-2 manifest Stage-1 manifest mismatch")
     if manifest.get("stage1_decision_sha256") != bindings["stage1_decision_sha256"]:

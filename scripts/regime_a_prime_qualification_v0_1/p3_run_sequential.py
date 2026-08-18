@@ -49,6 +49,9 @@ from p2_common import (  # noqa: E402
 )
 from p2c_capture import package as package_capture  # noqa: E402
 from p2c_capture import verify_renderer_identity  # noqa: E402
+from mineocclude.prospective.activation_binding import (  # noqa: E402
+    TARGET_ROWS_NOT_AUTHORITY_BOUND,
+)
 from p2d_extract import Layer4Extractor  # noqa: E402
 from p2e_analyze import best_k_readout, full_readout  # noqa: E402
 
@@ -629,7 +632,15 @@ def extract_candidate(state: State, candidate: dict[str, Any]) -> dict[str, Any]
                          candidate_extraction_complete=len(complete))
             append_event(cid, "extraction", "unit_started", "RUNNING", run_id=run_id, layer=4)
             try:
-                record = extractor.extract(run_id, CAPTURES / cid / run_id, ACTIVATIONS / cid)
+                # The completed P3 sequential campaign predates the Stage-2
+                # manifest and has no authority-selected row set to prove its
+                # tau lookup against; it declares that rather than passing its
+                # own derivation off as an authority. Records produced this way
+                # carry ``target_rows_authority_bound: false`` and are refused
+                # by every Stage-2 consumer.
+                record = extractor.extract(
+                    run_id, CAPTURES / cid / run_id, ACTIVATIONS / cid,
+                    expected_target_model_frame_indices=TARGET_ROWS_NOT_AUTHORITY_BOUND)
                 record.pop("p2_no_wall_run_id", None)
                 if record["shape"] != [19, 336, 2048] or record["layer"] != 4:
                     raise RuntimeError("ACTIVATION_IDENTITY_MISMATCH")

@@ -24,6 +24,14 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
     verify_probe_execution, verify_receipt_payload_digest, verify_runtime_identity,
     verify_runtime_source_hashes,
 )
+from mineocclude.prospective.activation_binding import (  # noqa: E402
+    require_activation_identity, require_target_rows_authority_bound,
+    verify_activation_checkpoint_binding,
+)
+from mineocclude.prospective.stage2_decision import (  # noqa: E402
+    evaluate_stage2, require_stage2_decision_reproduction,
+)
+from mineocclude.prospective.stage2_evidence import build_stage2_evidence  # noqa: E402
 from mineocclude.regime_a_first25_analysis import scalar_metrics  # noqa: E402
 from p2d_extract import Layer4Extractor  # noqa: E402
 from p2e_analyze import best_k_readout, full_readout  # noqa: E402
@@ -336,15 +344,33 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     token_rows, token_cols = authority["apparatus"]["visual_token_grid"]
     expected_shape = [target_rows, token_rows * token_cols, 2048]
     output_root = receipt_path().parent.parent.parent / "activations"
-    record = Layer4Extractor().extract(source["unit_id"], capture_root, output_root)
+    # NEW-B002: the authority's own row set is handed to the extractor, which
+    # proves its tau lookup equals it before opening a frame. Neither source is
+    # preferred on disagreement; extraction refuses.
+    expected_rows = source.get("target_model_frame_indices")
+    if not isinstance(expected_rows, list) or len(expected_rows) != target_rows:
+        raise RuntimeError(
+            f"Stage-2 extraction requires {target_rows} authority-selected target rows")
+    record = Layer4Extractor().extract(
+        source["unit_id"], capture_root, output_root,
+        expected_target_model_frame_indices=expected_rows)
     if record.get("layer") != 4 or record.get("shape") != expected_shape:
         raise RuntimeError("layer-4 extraction identity mismatch")
+    # NEW-B001: refuse to persist activations whose producing model cannot be
+    # named. The superseded receipt emitted checkpoint_sha256="" and failed open.
+    identity = require_activation_identity(record, label=unit_id)
+    require_target_rows_authority_bound(record, expected_rows, label=unit_id)
     activation = Path(record["activation_path"])
     relative_activation = f"activation/{activation.name}"
     uri = manifest["durable_prefix"].rstrip("/") + f"/derived/{unit_id}/{relative_activation}"
     complete(manifest, manifest_path, unit_id, {"source_capture_unit_id": source["unit_id"], "layer": 4,
         "shape": expected_shape, "activation_path": str(activation),
-        "activation_sha256": sha256_file(activation), "durable_activation_uri": uri},
+        "activation_sha256": sha256_file(activation), "durable_activation_uri": uri,
+        "model_runtime_identity": identity,
+        "main_checkpoint_sha256": identity["main_checkpoint_sha256"],
+        "vae_checkpoint_sha256": identity["vae_checkpoint_sha256"],
+        "targets": list(record["targets"]),
+        "target_rows_authority_bound": True},
         additional_files={relative_activation: activation})
 
 
@@ -380,6 +406,7 @@ def load_scene(manifest: dict, scene: str):
     token_rows, token_cols = authority["apparatus"]["visual_token_grid"]
     expected_shape = (target_rows, token_rows * token_cols, 2048)
     arrays, rows, identities, outer, directions = [], [], [], {}, {}
+    reference_identity = None
     for identity in manifest["trajectory_identities"]:
         capture_id = f"{identity['trajectory_id']}_{scene.lower()}"
         capture_unit = next(item for item in manifest["capture_units"] if item["unit_id"] == capture_id)
@@ -390,6 +417,16 @@ def load_scene(manifest: dict, scene: str):
         receipt = load_json(Path(unit["receipt_path"])); activation = Path(receipt["activation_path"])
         if sha256_file(activation) != receipt["activation_sha256"]:
             raise RuntimeError(f"activation checksum mismatch: {capture_id}")
+        # Re-checked at the point of scientific consumption, not only at the
+        # point of production: a readout must never load an activation whose
+        # checkpoint is unnamed, whose model differs from the cohort's, or whose
+        # rows were never proved against the authority.
+        observed_identity = require_activation_identity(receipt, label=capture_id)
+        require_target_rows_authority_bound(receipt, ticks, label=capture_id)
+        if reference_identity is None:
+            reference_identity = observed_identity
+        else:
+            verify_activation_checkpoint_binding(receipt, reference_identity, label=capture_id)
         relative_activation = f"activation/{activation.name}"
         if receipt.get("durable_objects", {}).get(relative_activation) != receipt["activation_sha256"]:
             raise RuntimeError(f"activation durable inventory mismatch: {capture_id}")
@@ -495,6 +532,18 @@ def readout(manifest: dict, manifest_path: Path, unit_id: str, kind: str) -> Non
 
 
 def terminal(manifest: dict, manifest_path: Path, unit_id: str) -> None:
+    """Run the evidence-builder and evaluator chain; consume its decision.
+
+    This used to copy ``best["qualification_status"]`` into a receipt, which is
+    not an evaluation: the component that computed the metrics also graded them,
+    and nothing independent ever re-derived a gate. B009 replaces that with the
+    same three-part chain Stage-1 has -- deterministic evidence, an independent
+    evaluator reading only frozen authority, and a decision artifact that must
+    re-derive byte-identically from what it binds.
+
+    No scientific logic is duplicated here. Terminal assembles the inputs,
+    delegates, and then *verifies the reproduction* before persisting anything.
+    """
     head = campaign_commit()
     best_unit = next(unit for unit in manifest["readout_and_terminal_units"]
                      if unit["pipeline_stage"] == "best_k")
@@ -505,11 +554,57 @@ def terminal(manifest: dict, manifest_path: Path, unit_id: str) -> None:
                                  current_source_commit=head)
     require_durable_unit_receipt(manifest, manifest_path, full_unit, full,
                                  current_source_commit=head)
-    if best.get("qualification_status") not in {"PASS", "FAIL"} or full.get("readout") != "FULL":
+    if full.get("readout") != "FULL" or best.get("readout") != "BEST_K":
         raise RuntimeError("readout receipts incomplete")
-    complete(manifest, manifest_path, unit_id, {"development_qualification": best["qualification_status"],
+
+    authority_path = ROOT / manifest["authority_binding"]["path"]
+    decision_authority_path = ROOT / manifest["stage2_decision_authority_binding"]["path"]
+    evidence = build_stage2_evidence(
+        manifest, manifest_path=manifest_path, authority_path=authority_path,
+        stage2_decision_authority_path=decision_authority_path,
+        stage1_manifest_path=Path(os.environ["MINEOCCLUDE_STAGE1_MANIFEST_PATH"]),
+        stage1_evidence_path=Path(os.environ["MINEOCCLUDE_STAGE1_EVIDENCE_PATH"]),
+        stage1_decision_path=Path(os.environ["MINEOCCLUDE_STAGE1_DECISION_PATH"]),
+        stage2_authorization_path=Path(os.environ["MINEOCCLUDE_STAGE2_AUTHORIZATION_PATH"]),
+        preoutcome_provenance_path=Path(os.environ["MINEOCCLUDE_PREOUTCOME_PROVENANCE_PATH"]),
+        stage1_preoutcome_provenance_path=Path(
+            os.environ["MINEOCCLUDE_STAGE1_PREOUTCOME_PROVENANCE_PATH"]),
+        source_commit_sha=head)
+
+    bundle = receipt_path().parent / "terminal"
+    bundle.mkdir(parents=True, exist_ok=True)
+    evidence_path = bundle / "stage2_evidence.json"
+    atomic_write_json(evidence_path, evidence)
+    decision = evaluate_stage2(
+        evidence, authority=load_json(authority_path),
+        decision_authority=load_json(decision_authority_path), manifest=manifest,
+        authority_sha256=sha256_file(authority_path),
+        decision_authority_sha256=sha256_file(decision_authority_path),
+        manifest_sha256=sha256_file(manifest_path),
+        evidence_sha256=sha256_file(evidence_path))
+    decision_path = bundle / "stage2_decision.json"
+    atomic_write_json(decision_path, decision)
+    # The decision is persisted only after it has been proved to re-derive from
+    # its own bound evidence and the frozen authority.
+    require_stage2_decision_reproduction(
+        decision, evidence_path=evidence_path, authority_path=authority_path,
+        stage2_decision_authority_path=decision_authority_path,
+        manifest_path=manifest_path, decision_path=decision_path)
+
+    complete(manifest, manifest_path, unit_id, {
+        "development_qualification": decision["status"],
+        "stage2_decision_artifact_id": decision["artifact_id"],
+        "stage2_decision_sha256": sha256_file(decision_path),
+        "stage2_evidence_sha256": sha256_file(evidence_path),
+        "stage2_decision_reproduced_from_bound_evidence": True,
+        "stage2_decision_status_was_re_derived_not_copied": True,
         "BEST_K_controls": True, "FULL_may_rescue": False,
-        "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO", "confirmatory_collection_authorized": False})
+        "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
+        "confirmatory_collection_authorized": False,
+        "may_authorize_confirmatory_collection": False,
+        "may_authorize_next_rung": False},
+        additional_files={"stage2_evidence.json": evidence_path,
+                          "stage2_decision.json": decision_path})
 
 
 def main() -> None:
