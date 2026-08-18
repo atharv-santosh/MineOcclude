@@ -34,6 +34,7 @@ from mineocclude.prospective.package_binding import (
 from mineocclude.prospective.source_provenance import CriticalSource, verify_sources
 from mineocclude.prospective.temporal_alignment import (
     PURE_DELAY_OFF_PEAK_MASS_TOLERANCE,
+    canonical_fir_sum,
     kernel_group_delay_ticks,
     kernel_is_effectively_pure_delay,
     kernel_mode_lag,
@@ -874,7 +875,15 @@ def causal_fir_targets(server_positions: Sequence[float], model_frame_indices: S
         index = _integer(raw_index, "model frame index", minimum=0)
         if index >= len(positions) or index - len(taps) + 1 < 0:
             raise EvidenceError("model frame lacks complete causal FIR state history")
-        targets.append(sum(tap * positions[index - lag] for lag, tap in enumerate(taps)))
+        # canonical_fir_sum, never the built-in sum(): this label is
+        # materialized into the frozen Stage-2 manifest by the builder and then
+        # re-derived exactly at capture time under the pinned mineworld
+        # interpreter. Built-in sum() is naive left-to-right before CPython 3.12
+        # and Neumaier-compensated from 3.12, so it made those two derivations
+        # of the same frozen trajectory disagree by 1-2 ULP on 434 of 950 rows
+        # and no unit could ever satisfy the exact label check.
+        targets.append(canonical_fir_sum(
+            tap * positions[index - lag] for lag, tap in enumerate(taps)))
     return targets
 
 
@@ -3234,8 +3243,13 @@ class Stage1Evaluator:
                 if normalized_kernels and kernel_evidence_ok:
                     reconstructed_kernel = [statistics.fmean(values) for values in zip(
                         *normalized_kernels, strict=True)]
-                    reconstructed_kernel = [value / sum(reconstructed_kernel)
-                                            for value in reconstructed_kernel]
+                    # Renormalized through the canonical kernel helper, whose
+                    # reduction is the same exactly-rounded rule the rest of the
+                    # FIR path uses. The built-in sum() here was the second and
+                    # last interpreter-dependent float reduction in the closure;
+                    # it is compared below at abs_tol=1e-12, far above the ~1e-16
+                    # divergence, so no verdict ever turned on it.
+                    reconstructed_kernel = normalized_kernel(reconstructed_kernel)
                     kernel_evidence_ok &= all(math.isclose(_number(observed_tap, "aggregate FIR tap"),
                                                            expected_tap, rel_tol=0, abs_tol=1e-12)
                                               for observed_tap, expected_tap in zip(

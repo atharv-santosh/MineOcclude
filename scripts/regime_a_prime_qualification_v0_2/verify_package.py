@@ -283,6 +283,20 @@ def main() -> None:
                "src/mineocclude/prospective/stage2_processability.py",
                "tests/prospective/test_stage2_fold_and_terminal_verification.py",
                "tests/prospective/test_stage2_operational_closure.py",
+               # The canonical Stage-2 trajectory arithmetic closure. Built-in
+               # sum() is naive left-to-right accumulation before CPython 3.12
+               # and Neumaier-compensated from 3.12, so causal_fir_targets
+               # produced different binary64 labels on the interpreter that
+               # materialized the frozen Stage-2 manifest and the pinned
+               # mineworld interpreter that re-derives them at capture time; all
+               # 50 units failed the exact label check and no scientific capture
+               # was reachable. The reduction is now the exactly-rounded rule
+               # temporal_alignment.py already applied to every other FIR
+               # quantity, which is interpreter-independent and leaves the
+               # frozen manifest byte-identical. Only the suite is enumerated
+               # here: the two implementation files are already corrected
+               # sources.
+               "tests/prospective/test_canonical_fir_arithmetic.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 from numbers import Real
-from typing import Sequence
+from typing import Iterable, Sequence
 
 import numpy as np
 
@@ -19,6 +19,7 @@ __all__ = [
     "estimate_alignment",
     "EvidenceScope",
     "PURE_DELAY_OFF_PEAK_MASS_TOLERANCE",
+    "canonical_fir_sum",
     "normalized_kernel",
     "kernel_off_peak_mass",
     "kernel_group_delay_ticks",
@@ -40,6 +41,28 @@ VALID_DIRECTIONS = frozenset({"LEFT_TO_RIGHT", "RIGHT_TO_LEFT"})
 PURE_DELAY_OFF_PEAK_MASS_TOLERANCE = 1e-9
 
 
+def canonical_fir_sum(terms: Iterable[float]) -> float:
+    """The canonical binary64 reduction for every causal-FIR quantity.
+
+    Exactly-rounded (correctly-rounded) summation: the returned double is the
+    nearest binary64 to the exact real sum of ``terms``, independently of the
+    order the terms arrive in and -- critically -- independently of the CPython
+    version executing it.
+
+    The built-in ``sum()`` is NOT a substitute. It is naive left-to-right
+    accumulation through CPython 3.11 and Neumaier-compensated from 3.12
+    onwards, so the same frozen inputs produce different binary64 outputs on
+    different qualified interpreters. Stage-2 materializes trajectory labels
+    once and re-derives them at capture time under the pinned mineworld
+    interpreter; an interpreter-dependent reduction makes that exact
+    re-derivation unsatisfiable by construction. Every FIR reduction in this
+    module already used ``math.fsum``; this function names that rule so the
+    materializer and the capture-side verifier can be shown to share one
+    arithmetic, rather than two implementations that happen to agree.
+    """
+    return math.fsum(terms)
+
+
 def normalized_kernel(taps: Sequence[float]) -> list[float]:
     """Return a nonnegative causal kernel rescaled to unit mass."""
     values = [_finite(tap, "FIR coefficient") for tap in taps]
@@ -47,7 +70,7 @@ def normalized_kernel(taps: Sequence[float]) -> list[float]:
         raise ValueError("a causal FIR kernel requires at least two taps")
     if any(value < 0 for value in values):
         raise ValueError("a causal FIR kernel must be nonnegative")
-    total = math.fsum(values)
+    total = canonical_fir_sum(values)
     if not total > 0 or not math.isfinite(total):
         raise ValueError("a causal FIR kernel must carry positive mass")
     return [value / total for value in values]
@@ -62,7 +85,7 @@ def kernel_off_peak_mass(taps: Sequence[float]) -> float:
 def kernel_group_delay_ticks(taps: Sequence[float]) -> float:
     """First moment of the normalized kernel, in ticks."""
     kernel = normalized_kernel(taps)
-    return math.fsum(lag * tap for lag, tap in enumerate(kernel))
+    return canonical_fir_sum(lag * tap for lag, tap in enumerate(kernel))
 
 
 def kernel_mode_lag(taps: Sequence[float]) -> int:
