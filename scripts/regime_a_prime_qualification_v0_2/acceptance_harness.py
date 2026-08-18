@@ -89,7 +89,15 @@ SUITES = {
              # structural probe, durable capture receipts and the explicit
              # historical/current-source evaluation modes.
              "tests/prospective/test_stage2_fold_and_terminal_verification.py",
-             "tests/prospective/test_stage2_operational_closure.py"),
+             "tests/prospective/test_stage2_operational_closure.py",
+             # The authorized capture/processing provenance split: that the
+             # capture-critical closure is derived rather than enumerated and is
+             # sensitive at definition granularity, that the predecessor and
+             # successor capture apparatus are proved equal while the processing
+             # closure moves, that both typed trajectory identities are checked in
+             # their own namespaces, and that laundering and a mixed-apparatus
+             # cohort are refused.
+             "tests/prospective/test_stage2_capture_processing_provenance_split.py"),
 }
 ENTRYPOINT_DIRECTORY = {"v0.2": "scripts/regime_a_prime_qualification_v0_2",
                         "v0.3": "scripts/regime_a_prime_qualification_v0_3",

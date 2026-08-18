@@ -638,9 +638,21 @@ def extract_candidate(state: State, candidate: dict[str, Any]) -> dict[str, Any]
                 # own derivation off as an authority. Records produced this way
                 # carry ``target_rows_authority_bound: false`` and are refused
                 # by every Stage-2 consumer.
+                # Imported here rather than at module scope on purpose: this
+                # file's ``derive_artifacts`` is inside the capture-critical
+                # closure, so its module prologue must stay byte-identical for a
+                # completed capture to remain admissible. A local import in this
+                # closed historical pilot path cannot change a captured frame.
+                from mineocclude.prospective.activation_binding import (
+                    SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
+                from mineocclude.prospective.capture_admission import (
+                    LEGACY_CAPTURE_TRAJECTORY_NOT_AUTHORITY_BOUND)
                 record = extractor.extract(
                     run_id, CAPTURES / cid / run_id, ACTIVATIONS / cid,
-                    expected_target_model_frame_indices=TARGET_ROWS_NOT_AUTHORITY_BOUND)
+                    expected_target_model_frame_indices=TARGET_ROWS_NOT_AUTHORITY_BOUND,
+                    scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND,
+                    expected_legacy_capture_trajectory_id=(
+                        LEGACY_CAPTURE_TRAJECTORY_NOT_AUTHORITY_BOUND))
                 record.pop("p2_no_wall_run_id", None)
                 if record["shape"] != [19, 336, 2048] or record["layer"] != 4:
                     raise RuntimeError("ACTIVATION_IDENTITY_MISMATCH")

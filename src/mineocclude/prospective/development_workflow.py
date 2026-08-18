@@ -217,6 +217,19 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     "schemas/prospective/regime_a_prime_stage2_decision_v0_3.schema.json",
     "schemas/prospective/regime_a_prime_stage2_evidence_v0_4.schema.json",
     "schemas/prospective/regime_a_prime_stage2_decision_v0_4.schema.json",
+    # The capture/processing provenance split. capture_closure derives which
+    # components can change a raw capture and capture_admission decides whether a
+    # completed capture may be processed here -- together they can stop a campaign
+    # and can admit or refuse scientific evidence, so their bytes govern a run
+    # exactly as the terminal evaluator's do. The authority document is the frozen
+    # rule they implement, and its builder is what proves the derived closure it
+    # records is the one the implementation actually computes.
+    "src/mineocclude/prospective/capture_closure.py",
+    "src/mineocclude/prospective/capture_admission.py",
+    "scripts/regime_a_prime_qualification_v0_4/build_stage2_capture_provenance_authority.py",
+    "docs/status/integration/regime_a_prime_qualification_v0_1/"
+    "prospective_development_authority_v0_4/"
+    "stage2_capture_processing_provenance_authority.json",
 )
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
@@ -3598,11 +3611,17 @@ class DurableController:
                  source_commit_sha: str | None = None, run_namespace: str | None = None,
                  maximum_attempts: int = 3, stage_role: str | None = None,
                  durable_verifier: DurableVerifier = verify_remote_durable_objects,
+                 capture_admission: Any | None = None,
                  unit1_checkpoint: Callable[[Mapping[str, Any]], Any] | None = None,
                  capture_unit_probe: Callable[[Mapping[str, Any]], Any] | None = None):
         self.manifest = manifest; self.state_dir = state_dir; self.event_log = event_log
         self.manifest_sha256 = manifest_sha256; self.authority_sha256 = authority_sha256
         self.source_commit_sha = source_commit_sha; self.run_namespace = run_namespace
+        # A ``CaptureAdmissionContext`` when this campaign may process captures
+        # taken under a predecessor freeze; None restores the plain
+        # commit-equality reuse test, which is correct for a campaign whose
+        # captures were all taken under the commit now executing.
+        self.capture_admission = capture_admission
         # A6 on the restart/resume path. Durable state is keyed by unit_id, so a
         # state directory carried over from the other stage could otherwise mark
         # a unit "already complete" and skip it, or drive units the caller never
@@ -3660,6 +3679,18 @@ class DurableController:
         return self.state_dir / f"{unit_id}.json"
 
     def _valid_receipt(self, unit: Mapping[str, Any], receipt_path: Path) -> bool:
+        """Is this unit already validly complete, so that it must not be re-run?
+
+        Split by provenance category. For a DERIVED unit the receipt must bind the
+        commit executing now, because that software produced it. For a RAW CAPTURE
+        unit it must not: the capture already physically happened, and comparing its
+        historical ``source_commit_sha`` to successor HEAD is what would declare a
+        valid, durable, irreproducible measurement incomplete -- whereupon this
+        controller's response is to capture it again, destroying the reuse the
+        authority decision exists to permit. A capture unit is instead admitted
+        against its own frozen capture provenance plus capture-critical closure
+        equality; every other binding is still required, unchanged.
+        """
         if not receipt_path.is_file():
             return False
         try:
@@ -3675,6 +3706,22 @@ class DurableController:
                     "manifest_sha256": self.manifest_sha256, "authority_sha256": self.authority_sha256,
                     "source_commit_sha": self.source_commit_sha, "scientific_run_id": self.run_namespace,
                     "durable_uri": self.expected_durable_uri(unit["unit_id"])}
+        if self.capture_admission is not None and self._is_capture_unit(unit):
+            # Imported here rather than at module scope: this module's capture-spec
+            # derivation is inside the capture-critical closure, so its import
+            # prologue must stay byte-identical for completed captures to remain
+            # admissible at all.
+            from mineocclude.prospective.capture_admission import CaptureAdmissionError
+
+            del expected["source_commit_sha"]
+            if not all(receipt.get(key) == value and value is not None
+                       for key, value in expected.items()):
+                return False
+            try:
+                self.capture_admission.admit(unit, receipt)
+            except CaptureAdmissionError:
+                return False
+            return bool(self.durable_verifier(unit, receipt))
         return (all(receipt.get(k) == v and v is not None for k, v in expected.items())
                 and self.durable_verifier(unit, receipt))
 
@@ -3688,11 +3735,21 @@ class DurableController:
         except EvidenceError:
             return False
         receipt_path = Path(state.get("receipt_path", ""))
+        # The unit-state record is this controller's own bookkeeping, written by
+        # whichever campaign ran the unit -- not capture provenance. For a raw
+        # capture unit its ``source_commit_sha`` is therefore the PREDECESSOR's, and
+        # requiring it to equal successor HEAD would discard a valid completed
+        # capture on the strength of a cache field. Capture provenance lives in the
+        # receipt and is checked there, by admission; the state record is refreshed
+        # to current processing provenance on the reuse path.
+        bookkeeping_commit_must_match = not (
+            self.capture_admission is not None and self._is_capture_unit(unit))
         return (state.get("status") == self.TERMINAL
                 and state.get("receipt_sha256") == (sha256_file(receipt_path) if receipt_path.is_file() else None)
                 and state.get("manifest_sha256") == self.manifest_sha256
                 and state.get("authority_sha256") == self.authority_sha256
-                and state.get("source_commit_sha") == self.source_commit_sha
+                and (state.get("source_commit_sha") == self.source_commit_sha
+                     or not bookkeeping_commit_must_match)
                 and state.get("scientific_run_id") == self.run_namespace
                 and self._valid_receipt(unit, receipt_path))
 
@@ -3702,6 +3759,26 @@ class DurableController:
             return unit.get("unit_id") in {item.get("unit_id") for item in roster
                                            if isinstance(item, Mapping)}
         return True
+
+    def _capture_reuse_provenance(self, unit: Mapping[str, Any]) -> dict[str, Any]:
+        """The provenance split, recorded on every reuse event.
+
+        States the capture's own commit and this campaign's processing commit as two
+        separate facts, so the event log shows a reused predecessor capture for what
+        it is instead of implying it was taken by the software now running.
+        """
+        if self.capture_admission is None or not self._is_capture_unit(unit):
+            return {}
+        try:
+            receipt = load_json(Path(unit["receipt_path"]))
+        except (EvidenceError, OSError, KeyError):
+            return {}
+        capture_commit = receipt.get("source_commit_sha")
+        return {"capture_source_commit": capture_commit,
+                "processing_source_commit": self.source_commit_sha,
+                "capture_taken_under_processing_commit":
+                    capture_commit == self.source_commit_sha,
+                "recaptured": False}
 
     def _apply_capture_unit_probe(self, unit: Mapping[str, Any]) -> None:
         """Probe one completed capture unit for structural processability.
@@ -3762,7 +3839,8 @@ class DurableController:
                     f"unit {unit_id!r} declares stage {declared!r}, which is not a "
                     f"{self.stage_role!r} stage")
             if self.completed(unit_id):
-                self._events({"event": "unit_reused", "unit_id": unit_id})
+                self._events({"event": "unit_reused", "unit_id": unit_id,
+                              **self._capture_reuse_provenance(unit)})
                 self._apply_capture_unit_probe(unit)
                 checkpoint_pending = self._apply_unit1_checkpoint(unit, checkpoint_pending)
                 continue

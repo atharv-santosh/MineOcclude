@@ -28,6 +28,11 @@ from mineocclude.prospective.activation_binding import (  # noqa: E402
     require_activation_identity, require_target_rows_authority_bound,
     verify_activation_checkpoint_binding,
 )
+from mineocclude.prospective.capture_admission import (  # noqa: E402
+    CaptureAdmissionError, build_capture_admission_context,
+    load_capture_provenance_authority, require_homogeneous_capture_closure,
+    resolve_typed_capture_identity,
+)
 from mineocclude.prospective.stage2_decision import (  # noqa: E402
     evaluate_stage2, require_stage2_decision_reproduction,
 )
@@ -50,6 +55,57 @@ PHYSICAL_CHECKS = {"clock_alignment", "stable_visibility", "hidden_row_validity"
 #: ``visual_token_grid``, and are read from it at every use.
 LAYER4_HIDDEN_SIZE = 2048
 LAYER4_ACTIVATION_DTYPE = "float16"
+
+
+def backend_capture_admission(manifest: dict, manifest_path: Path, *,
+                              current_source_commit: str):
+    """The campaign's capture-admission context, built once per backend stage.
+
+    One construction path shared by the physical gate, the extraction stage and the
+    terminal evidence builder, so no stage can end up applying a slightly different
+    admission rule than another.
+    """
+    from mineocclude.prospective.package_binding import (
+        artifact_version_tag, package_directory,
+    )
+
+    version_tag = artifact_version_tag(manifest["artifact_id"])
+    package = package_directory(version_tag, ROOT)
+    authority_path = ROOT / manifest["authority_binding"]["path"]
+    _document, authority_sha = load_capture_provenance_authority(
+        package, version_tag=version_tag, authority_path=authority_path, repository=ROOT)
+    return build_capture_admission_context(
+        authority=load_json(authority_path), manifest=manifest,
+        manifest_sha256=sha256_file(manifest_path),
+        authority_sha256=sha256_file(authority_path),
+        scientific_run_id=manifest["run_namespace"],
+        processing_source_commit_sha=current_source_commit,
+        capture_provenance_authority_sha256=authority_sha,
+        repository=ROOT)
+
+
+def require_admitted_capture_receipt(manifest: dict, unit: dict, receipt: dict, *,
+                                     capture_admission,
+                                     durable_verifier=verify_remote_durable_objects) -> dict:
+    """Revalidate one RAW CAPTURE unit against its own frozen capture provenance.
+
+    The capture counterpart to :func:`require_durable_unit_receipt`. That function
+    stays exactly as it is for derived units -- the physical gate, the extractions,
+    the readouts, the terminal -- because those artifacts are produced by the
+    software running now and must bind its commit. A raw capture already physically
+    happened, so it is admitted on capture-critical closure equality instead, and
+    its historical commit is never compared to successor HEAD.
+    """
+    prefix = manifest.get("durable_prefix")
+    if not isinstance(prefix, str) or not prefix.startswith("s3://"):
+        raise RuntimeError("Stage-2 durable prefix is missing")
+    try:
+        record = capture_admission.admit(unit, receipt)
+    except CaptureAdmissionError as exc:
+        raise RuntimeError(f"capture admission refused: {unit.get('unit_id')}: {exc}") from exc
+    if not durable_verifier(unit, receipt):
+        raise RuntimeError(f"predecessor remote durability failed: {unit.get('unit_id')}")
+    return record
 
 
 def require_durable_unit_receipt(manifest: dict, manifest_path: Path, unit: dict,
@@ -210,8 +266,19 @@ def complete(manifest: dict, manifest_path: Path, unit_id: str, payload: dict, *
 
 
 def validate_physical_gate_receipts(manifest: dict, receipts: dict[str, dict], *,
-                                    manifest_sha256: str, current_source_commit: str) -> dict:
-    """Validate all physical, coverage, pair, and provenance conditions before extraction."""
+                                    manifest_sha256: str, current_source_commit: str,
+                                    capture_admission) -> dict:
+    """Validate all physical, coverage, pair, and provenance conditions before extraction.
+
+    The provenance condition is the repaired one. This gate used to require every
+    capture receipt's ``source_commit_sha`` to equal the campaign commit, which is a
+    source-homogeneity proxy: correct while one freeze takes all fifty captures, and
+    a correctness bug the moment a downstream defect forces a successor freeze,
+    because it then rejects valid durable captures and the pipeline's response is to
+    recollect them. Each capture is now admitted against its own frozen capture
+    provenance plus capture-critical closure equality, and the cohort must resolve to
+    exactly one closure. Full-repository commits may differ; the apparatus may not.
+    """
     authority_path = ROOT / manifest["authority_binding"]["path"]
     authority = load_json(authority_path)
     if sha256_file(authority_path) != manifest["authority_binding"]["sha256"]:
@@ -223,6 +290,7 @@ def validate_physical_gate_receipts(manifest: dict, receipts: dict[str, dict], *
     if set(receipts) != set(expected):
         failures["coverage"] = ["capture unit identity set mismatch"]
     by_trajectory: dict[str, dict[str, tuple[dict, dict]]] = {}
+    admitted: dict[str, dict] = {}
     for unit_id, unit in expected.items():
         receipt = receipts.get(unit_id, {})
         reasons: list[str] = []
@@ -230,7 +298,10 @@ def validate_physical_gate_receipts(manifest: dict, receipts: dict[str, dict], *
         if receipt.get("unit_id") != unit_id: reasons.append("identity")
         if receipt.get("authority_sha256") != manifest["authority_binding"]["sha256"]: reasons.append("authority_provenance")
         if receipt.get("manifest_sha256") != manifest_sha256: reasons.append("manifest_provenance")
-        if receipt.get("source_commit_sha") != current_source_commit: reasons.append("source_provenance")
+        try:
+            admitted[unit_id] = capture_admission.admit(unit, receipt)
+        except CaptureAdmissionError as exc:
+            reasons.append(f"capture_admission:{exc}"[:200])
         if receipt.get("stage1_decision_sha256") != manifest.get("stage1_decision_sha256"): reasons.append("stage1_decision_provenance")
         if receipt.get("scientific_run_id") != manifest["run_namespace"]: reasons.append("run_namespace")
         for name in ("runtime_provenance_receipt", "path_state_receipt", "durability_receipt"):
@@ -308,8 +379,24 @@ def validate_physical_gate_receipts(manifest: dict, receipts: dict[str, dict], *
             failures.setdefault(trajectory, []).append("pair_target_window")
     if failures:
         raise RuntimeError(f"Stage-2 physical gates failed closed: {failures}")
+    # One apparatus, however many commits took it. Stated directly rather than
+    # proxied by commit equality, and the per-unit capture commits are retained so a
+    # mixed-commit cohort is visible in the gate result instead of normalized away.
+    try:
+        cohort_closure = require_homogeneous_capture_closure(list(admitted.values()))
+    except CaptureAdmissionError as exc:
+        raise RuntimeError(f"Stage-2 capture cohort failed closed: {exc}") from exc
     return {"status": "PASS", "capture_units": len(expected), "paired_trajectories": len(by_trajectory),
-            "required_checks": sorted(PHYSICAL_CHECKS | {"path_state", "durability", "runtime_provenance", "pair_coverage"})}
+            "required_checks": sorted(PHYSICAL_CHECKS | {"path_state", "durability", "runtime_provenance", "pair_coverage", "capture_admission"}),
+            "capture_provenance_split": {
+                "cohort_capture_critical_closure_sha256": cohort_closure,
+                "processing_source_commit": current_source_commit,
+                "capture_source_commit_by_unit": {
+                    unit_id: record["capture_source_commit"]
+                    for unit_id, record in sorted(admitted.items())},
+                "distinct_capture_source_commits": sorted(
+                    {record["capture_source_commit"] for record in admitted.values()}),
+                "all_admitted_capture_closures_equal": True}}
 
 
 def capture_receipt(manifest: dict, unit_id: str) -> dict:
@@ -339,16 +426,21 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
         raise RuntimeError("physical-gate PASS is required before extraction")
     receipts = {unit["unit_id"]: capture_receipt(manifest, unit["unit_id"])
                 for unit in manifest["capture_units"]}
+    capture_admission = backend_capture_admission(manifest, manifest_path,
+                                                  current_source_commit=head)
     validate_physical_gate_receipts(manifest, receipts, manifest_sha256=sha256_file(manifest_path),
-                                    current_source_commit=head)
+                                    current_source_commit=head,
+                                    capture_admission=capture_admission)
     unit = next(unit for unit in manifest["extraction_units"] if unit["unit_id"] == unit_id)
     source = next(item for item in manifest["capture_units"] if item["unit_id"] == unit["source_capture_unit_id"])
     source_receipt = capture_receipt(manifest, source["unit_id"])
     # Revalidate the exact source immediately before scientific extraction.
     # A durable physical-gate PASS from an earlier step cannot rescue a frame or
     # package changed locally after that gate was written.
-    require_durable_unit_receipt(manifest, manifest_path, source, source_receipt,
-                                 current_source_commit=head)
+    # A CAPTURE unit: admitted against its own frozen capture provenance, never
+    # against successor HEAD.
+    source_admission = require_admitted_capture_receipt(
+        manifest, source, source_receipt, capture_admission=capture_admission)
     capture_root = verify_local_capture_inventory(source, source_receipt)
     authority = load_json(ROOT / manifest["authority_binding"]["path"])
     target_rows = authority["stage2_policy"]["required_target_rows_per_capture"]
@@ -362,9 +454,16 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     if not isinstance(expected_rows, list) or len(expected_rows) != target_rows:
         raise RuntimeError(
             f"Stage-2 extraction requires {target_rows} authority-selected target rows")
+    # The two typed identities, both derived from frozen authority rather than
+    # from the bytes they validate: the legacy identity from the authority's
+    # layout_id plus this unit's episode, and the Stage-2 identity from the
+    # manifest unit itself.
+    identity = resolve_typed_capture_identity(authority, source)
     record = Layer4Extractor().extract(
         source["unit_id"], capture_root, output_root,
-        expected_target_model_frame_indices=expected_rows)
+        expected_target_model_frame_indices=expected_rows,
+        scientific_trajectory_id=identity.scientific_trajectory_id,
+        expected_legacy_capture_trajectory_id=identity.legacy_capture_trajectory_id)
     if record.get("layer") != 4 or record.get("shape") != expected_shape:
         raise RuntimeError("layer-4 extraction identity mismatch")
     # NEW-B001: refuse to persist activations whose producing model cannot be
@@ -381,7 +480,20 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
         "main_checkpoint_sha256": identity["main_checkpoint_sha256"],
         "vae_checkpoint_sha256": identity["vae_checkpoint_sha256"],
         "targets": list(record["targets"]),
-        "target_rows_authority_bound": True},
+        "target_rows_authority_bound": True,
+        # The provenance split, on the derived artifact: this activation was
+        # PRODUCED by the successor source, from a capture TAKEN under whatever
+        # commit actually took it. Both are stated; neither is inferred.
+        "processing_source_commit": head,
+        "source_capture_unit_id": source["unit_id"],
+        "source_capture_receipt_sha256": sha256_file(Path(source["receipt_path"])),
+        "source_capture_source_commit": source_admission["capture_source_commit"],
+        "source_capture_capture_critical_closure_sha256":
+            source_admission["capture_critical_closure_sha256"],
+        "capture_taken_under_processing_commit":
+            source_admission["capture_taken_under_processing_commit"],
+        "legacy_capture_trajectory_id": identity.legacy_capture_trajectory_id,
+        "scientific_trajectory_id": identity.scientific_trajectory_id},
         additional_files={relative_activation: activation})
 
 
@@ -630,7 +742,9 @@ def terminal(manifest: dict, manifest_path: Path, unit_id: str) -> None:
         preoutcome_provenance_path=Path(os.environ["MINEOCCLUDE_PREOUTCOME_PROVENANCE_PATH"]),
         stage1_preoutcome_provenance_path=Path(
             os.environ["MINEOCCLUDE_STAGE1_PREOUTCOME_PROVENANCE_PATH"]),
-        source_commit_sha=head)
+        source_commit_sha=head,
+        capture_admission=backend_capture_admission(manifest, manifest_path,
+                                                    current_source_commit=head))
 
     bundle = receipt_path().parent / "terminal"
     bundle.mkdir(parents=True, exist_ok=True)

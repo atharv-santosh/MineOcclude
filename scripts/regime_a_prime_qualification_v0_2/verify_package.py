@@ -297,6 +297,20 @@ def main() -> None:
                # here: the two implementation files are already corrected
                # sources.
                "tests/prospective/test_canonical_fir_arithmetic.py",
+               # The authorized Stage-2 capture/processing provenance split. Five
+               # checks required a capture receipt's source_commit_sha to equal the
+               # campaign commit -- a source-homogeneity proxy that turns a valid,
+               # durable, physically irreproducible capture into an invalid one the
+               # moment a downstream defect forces a successor freeze, whereupon the
+               # controller recaptures it. capture_closure derives which components
+               # can actually change a raw capture (call-graph reachability at
+               # definition granularity, seeded at the capture driver);
+               # capture_admission decides admission on closure equality rather than
+               # commit equality. The frozen governance document and its builder are
+               # registered under the package/scripts prefixes above.
+               "src/mineocclude/prospective/capture_closure.py",
+               "src/mineocclude/prospective/capture_admission.py",
+               "tests/prospective/test_stage2_capture_processing_provenance_split.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

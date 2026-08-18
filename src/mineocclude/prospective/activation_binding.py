@@ -119,6 +119,16 @@ class _Unbound:
 #: See :class:`_Unbound`. Grep for this name to find every unbound extraction.
 TARGET_ROWS_NOT_AUTHORITY_BOUND = _Unbound()
 
+#: Explicit marker for a caller with no Stage-2 *scientific* trajectory identity.
+#:
+#: The two completed historical pilot entrypoints predate Stage-2 and their
+#: visibility rows carry the legacy capture identity, not an ``a2y_t*``. They say
+#: so with this sentinel rather than by passing ``None``, which a missing key or a
+#: JSON round trip could have produced silently. Spelling it out is what stops the
+#: repaired identity check from being skippable by accident: a Stage-2 caller that
+#: forgot to supply the identity gets a refusal, not an unchecked pass.
+SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND = _Unbound()
+
 
 def _digest(value: Any, name: str) -> str:
     if not isinstance(value, str) or len(value) != 64 or any(
@@ -221,21 +231,40 @@ def resolve_authority_bound_target_rows(
         visibility_rows: Sequence[Mapping[str, Any]], *,
         expected: Sequence[int] | _Unbound,
         required_count: int,
-        trajectory_id: str | None = None,
+        scientific_trajectory_id: str | _Unbound,
         label: str = "extraction unit") -> list[int]:
     """Resolve the scientific target rows and prove they are the authority's.
 
     The tau lookup is preserved: the rows returned are the ones the capture
     itself labelled ``tau = 1..required_count``, in tau order, which is what the
-    extractor must actually index. What is new is that they are then compared to
-    ``expected`` -- the frozen manifest's ``target_model_frame_indices`` -- for
-    exact ordered equality before anything downstream is allowed to read a frame.
+    extractor must actually index. They are then compared to ``expected`` -- the
+    frozen manifest's ``target_model_frame_indices`` -- for exact ordered equality
+    before anything downstream is allowed to read a frame.
+
+    ``scientific_trajectory_id`` is the Stage-2 identity (``a2y_t01``), and it is
+    keyword-only with no default on purpose. The rows this function validates are
+    Stage-2 artifacts and carry the Stage-2 identity; the superseded parameter was
+    spelled ``trajectory_id``, and the production caller filled it from the raw
+    capture package's ``document["trajectory_id"]``, which is the *legacy* identity
+    ``layout_01_ep86001``. The comparison was therefore across two different
+    namespaces and refused every real unit with "tau 1 is bound to trajectory
+    'a2y_t01', not 'layout_01_ep86001'". Naming the parameter for the type it
+    requires is what stops the two from being interchanged again; the legacy
+    identity is checked separately, by the capture-package adapter, and neither
+    check replaces the other.
 
     Refuses on: wrong count, a duplicated tau, a missing tau, a duplicated frame
-    index, non-monotonic frames, a row bound to a different trajectory, a row
-    whose temporal identity is internally inconsistent, and -- last, so the more
-    specific diagnoses fire first -- any inequality with ``expected``.
+    index, non-monotonic frames, a row carrying no scientific identity at all, a
+    row bound to a different scientific trajectory, a row whose temporal identity
+    is internally inconsistent, and -- last, so the more specific diagnoses fire
+    first -- any inequality with ``expected``.
     """
+    if not isinstance(scientific_trajectory_id, (str, _Unbound)):
+        raise EvidenceError(
+            f"{label}: scientific trajectory identity must be a string or the "
+            f"explicit unbound sentinel, not {scientific_trajectory_id!r}")
+    if isinstance(scientific_trajectory_id, str) and not scientific_trajectory_id.strip():
+        raise EvidenceError(f"{label}: scientific trajectory identity is blank")
     if not isinstance(visibility_rows, Sequence) or isinstance(visibility_rows, (str, bytes)):
         raise EvidenceError(f"{label}: visibility evidence is not a sequence of rows")
     wanted = list(range(1, required_count + 1))
@@ -268,11 +297,19 @@ def resolve_authority_bound_target_rows(
                 raise EvidenceError(
                     f"{label}: tau {tau} temporal binding is inconsistent "
                     f"({column}={row.get(column)!r}, model_frame_idx={frame!r})")
-        if trajectory_id is not None and "trajectory_id" in row \
-                and row.get("trajectory_id") != trajectory_id:
-            raise EvidenceError(
-                f"{label}: tau {tau} is bound to trajectory {row.get('trajectory_id')!r}, "
-                f"not {trajectory_id!r}")
+        if not isinstance(scientific_trajectory_id, _Unbound):
+            # A row with no identity at all used to pass this check, because the
+            # superseded form only compared when the key happened to be present.
+            # An unidentified row cannot be shown to belong to this trajectory, so
+            # it is refused rather than accepted by omission.
+            if "trajectory_id" not in row:
+                raise EvidenceError(
+                    f"{label}: tau {tau} carries no scientific trajectory identity, so "
+                    f"it cannot be shown to belong to {scientific_trajectory_id!r}")
+            if row.get("trajectory_id") != scientific_trajectory_id:
+                raise EvidenceError(
+                    f"{label}: tau {tau} is bound to scientific trajectory "
+                    f"{row.get('trajectory_id')!r}, not {scientific_trajectory_id!r}")
         resolved.append(frame)
 
     if len(set(resolved)) != len(resolved):

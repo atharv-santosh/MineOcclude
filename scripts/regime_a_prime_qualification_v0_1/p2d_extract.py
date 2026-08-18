@@ -30,9 +30,14 @@ sys.path[:0] = [str(Path(__file__).resolve().parents[2]),
                 str(Path(__file__).resolve().parents[2] / "src")]
 
 from mineocclude.prospective.activation_binding import (
+    SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND,
     TARGET_ROWS_NOT_AUTHORITY_BOUND,
     model_runtime_identity_binding,
     resolve_authority_bound_target_rows,
+)
+from mineocclude.prospective.capture_admission import (
+    LEGACY_CAPTURE_TRAJECTORY_NOT_AUTHORITY_BOUND,
+    CaptureAdmissionError,
 )
 from p2_common import (
     LAYER,
@@ -46,6 +51,11 @@ from p2_common import (
     p2_run_id,
     write_json,
 )
+
+#: The sentinel type shared by the unbound markers, so an explicit opt-out is
+#: distinguishable from a real identity by type rather than by value.
+_UNBOUND_KINDS = (type(TARGET_ROWS_NOT_AUTHORITY_BOUND),
+                  type(LEGACY_CAPTURE_TRAJECTORY_NOT_AUTHORITY_BOUND))
 
 CAPTURES = WORK / "captures"
 ACT = WORK / "activations"
@@ -128,17 +138,34 @@ class Layer4Extractor:
         self.runtime = production._RUNTIME.runtime_identity
 
     def extract(self, run_id: str, source: Path, destination: Path, *,
-                expected_target_model_frame_indices) -> dict[str, Any]:
+                expected_target_model_frame_indices,
+                scientific_trajectory_id,
+                expected_legacy_capture_trajectory_id) -> dict[str, Any]:
         """Extract layer-4 activations for one capture.
 
-        ``expected_target_model_frame_indices`` is keyword-only and has no
-        default on purpose. Before the NEW-B002 repair this method inferred its
-        scientific rows from ``visibility.tau`` alone and no caller could state
-        which rows the authority had qualified; a default would reopen exactly
-        that hole. Scientific callers pass the frozen manifest's
-        ``target_model_frame_indices``; the two completed historical pilot
-        entrypoints pass ``TARGET_ROWS_NOT_AUTHORITY_BOUND`` explicitly, and the
-        record they produce is refused by every Stage-2 consumer.
+        Three keyword-only parameters, none with a default, on purpose.
+
+        ``expected_target_model_frame_indices``: before the NEW-B002 repair this
+        method inferred its scientific rows from ``visibility.tau`` alone and no
+        caller could state which rows the authority had qualified; a default would
+        reopen that hole.
+
+        ``scientific_trajectory_id`` and ``expected_legacy_capture_trajectory_id``
+        are the two *typed* identities this unit carries, and they are separate
+        parameters because they are separate namespaces. The superseded code had
+        one value and used it in both roles: it validated the capture package with
+        ``document["trajectory_id"]`` -- correct, that is the legacy identity
+        ``layout_01_ep86001`` -- and then passed the same string into the Stage-2
+        visibility-row resolver, whose rows carry ``a2y_t01``. Every real unit was
+        therefore refused for a cross-namespace mismatch. Both identities are now
+        supplied by the authority and both are checked, and neither is taken from
+        the bytes it is meant to validate.
+
+        Scientific callers pass the frozen manifest's rows, the unit's
+        ``trajectory_id``, and the authority-derived legacy identity. The completed
+        historical pilot entrypoints predate Stage-2 and pass the explicit unbound
+        sentinels; the record they produce carries
+        ``target_rows_authority_bound: false`` and every Stage-2 consumer refuses it.
         """
         from mineocclude.contracts.identity import SCHEMA_VERSION
         from mineocclude.models import mineworld_adapter as api
@@ -151,9 +178,20 @@ class Layer4Extractor:
         package_bytes = (source / "capture_package_v0_1.json").read_bytes()
         package_hash = hashlib.sha256(package_bytes).hexdigest()
         document = json.loads(package_bytes)
+        # The legacy capture identity is checked against the authority-derived
+        # expectation BEFORE the adapter is handed the package, so a capture
+        # package from another episode cannot authenticate itself merely by
+        # declaring its own identity self-consistently.
+        legacy_capture_trajectory_id = document["trajectory_id"]
+        if not isinstance(expected_legacy_capture_trajectory_id, _UNBOUND_KINDS) \
+                and legacy_capture_trajectory_id != expected_legacy_capture_trajectory_id:
+            raise CaptureAdmissionError(
+                f"{run_id}: capture package legacy trajectory identity is "
+                f"{legacy_capture_trajectory_id!r}, not the authority-derived "
+                f"{expected_legacy_capture_trajectory_id!r}")
         validated = adapter.validate_trajectory(api.AcceptedTrajectoryInput(
             schema_version=SCHEMA_VERSION,
-            trajectory_id=document["trajectory_id"],
+            trajectory_id=legacy_capture_trajectory_id,
             accepted_manifest_sha256=package_hash,
             document=document,
         ))
@@ -162,9 +200,13 @@ class Layer4Extractor:
         # itself labelled -- but it is now proved equal to the authority's
         # ``target_model_frame_indices`` before a single frame is opened. On any
         # disagreement the resolver raises and neither source is preferred.
+        # The Stage-2 resolver receives the Stage-2 identity. This is the repaired
+        # boundary: the legacy identity above validated the raw capture package;
+        # this one validates the Stage-2 visibility rows.
         targets = resolve_authority_bound_target_rows(
             visibility, expected=expected_target_model_frame_indices,
-            required_count=19, trajectory_id=document["trajectory_id"], label=run_id)
+            required_count=19, scientific_trajectory_id=scientific_trajectory_id,
+            label=run_id)
         authority_bound = expected_target_model_frame_indices is not TARGET_ROWS_NOT_AUTHORITY_BOUND
 
         required = range(targets[0] - 15, targets[-1] + 1)
@@ -235,6 +277,12 @@ class Layer4Extractor:
             "activation_sha256": sha256_file(path),
             "byte_size": path.stat().st_size,
             "capture_package_sha256": package_hash,
+            # Both typed identities, recorded separately and never collapsed, so a
+            # consumer can see which namespace each one was checked in.
+            "legacy_capture_trajectory_id": legacy_capture_trajectory_id,
+            "scientific_trajectory_id": (
+                None if isinstance(scientific_trajectory_id, _UNBOUND_KINDS)
+                else scientific_trajectory_id),
             # NEW-B001: the superseded ``checkpoint_sha256`` read two attributes
             # MineWorldRuntimeIdentity has never had, so it emitted "" on every
             # real runtime and the receipt bound no checkpoint at all. The
@@ -294,7 +342,10 @@ def main() -> int:
             # refuses it.
             record = extractor.extract(
                 run_id, CAPTURES / run_id, ACT,
-                expected_target_model_frame_indices=TARGET_ROWS_NOT_AUTHORITY_BOUND)
+                expected_target_model_frame_indices=TARGET_ROWS_NOT_AUTHORITY_BOUND,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND,
+                expected_legacy_capture_trajectory_id=(
+                    LEGACY_CAPTURE_TRAJECTORY_NOT_AUTHORITY_BOUND))
         except Exception as exc:  # identity/model failures are not retryable here
             error = f"{type(exc).__name__}: {exc}"[:400]
             append_ledger({"p2_no_wall_run_id": run_id, "status": "FAILED_HARD",

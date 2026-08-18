@@ -76,6 +76,9 @@ import numpy as np
 from mineocclude.prospective.activation_binding import (
     require_activation_identity, require_target_rows_authority_bound,
 )
+from mineocclude.prospective.capture_admission import (
+    CaptureAdmissionContext, CaptureAdmissionError, resolve_typed_capture_identity,
+)
 from mineocclude.prospective.development_workflow import (
     EvidenceError, causal_fir_targets, durable_unit_uri, load_json, sha256_file,
     verify_remote_durable_objects,
@@ -148,21 +151,49 @@ def _structural_facts(unit: Mapping[str, Any], receipt: Mapping[str, Any], *,
                       scientific_run_id: str, required_target_rows: int,
                       stage1_decision: Mapping[str, Any],
                       durable_verifier: Callable[..., bool],
+                      capture_admission: CaptureAdmissionContext,
                       ) -> tuple[dict[str, bool], dict[str, Any]]:
-    """Establish the model-free half of processability. Never raises for a check."""
+    """Establish the model-free half of processability. Never raises for a check.
+
+    ``CAPTURE_RECEIPT_VALID`` is a CAPTURE-provenance check, and that is the whole
+    of the repair here. It used to require the receipt's ``source_commit_sha`` to
+    equal the *currently executing* campaign's commit -- a homogeneity proxy that
+    silently reclassifies a valid, durable, physically irreproducible capture as
+    invalid the moment a downstream defect forces a successor freeze. It now
+    verifies the capture against its OWN frozen capture provenance and separately
+    requires its capture-critical closure to equal the cohort's authorized one, so
+    a full-repository commit may differ only where the capture-determining
+    apparatus provably did not.
+
+    ``source_commit_sha`` is still a parameter, and is still the successor's: the
+    checkpoint RECEIPT this probe feeds is a derived processing artifact and binds
+    current processing provenance. The two are kept apart deliberately.
+    """
     unit_id = str(unit.get("unit_id"))
     checks = {name: False for name in STRUCTURAL_CHECKS}
     facts: dict[str, Any] = {"unit_id": unit_id, "probe_kind": "STRUCTURAL_ONLY"}
 
-    bindings = {"unit_id": unit_id, "status": "COMPLETE_VALIDATED_DURABLE",
-                "classification": "DEVELOPMENT_ONLY", "confirmatory_membership": False,
-                "manifest_sha256": manifest_sha256, "authority_sha256": authority_sha256,
-                "source_commit_sha": source_commit_sha,
-                "scientific_run_id": scientific_run_id,
-                "durable_uri": durable_unit_uri(manifest, unit_id)}
-    mismatched = sorted(key for key, value in bindings.items() if receipt.get(key) != value)
-    checks["CAPTURE_RECEIPT_VALID"] = not mismatched
-    facts["receipt_binding_mismatches"] = mismatched
+    try:
+        admission = capture_admission.admit(unit, receipt)
+        checks["CAPTURE_RECEIPT_VALID"] = True
+        facts["capture_admission"] = {
+            key: value for key, value in admission.items()
+            if key in ("capture_source_commit", "capture_critical_closure_sha256",
+                       "capture_compatibility", "durable_object_count",
+                       "durable_object_inventory_sha256", "typed_capture_identity",
+                       "capture_and_processing_commits_equal")}
+        # Recorded so a mixed-commit cohort stays VISIBLE rather than hidden behind
+        # a boolean: the per-unit capture commit is retained even when it differs
+        # from the processing commit.
+        facts["capture_source_commit"] = admission["capture_source_commit"]
+        facts["capture_critical_closure_sha256"] = (
+            admission["capture_critical_closure_sha256"])
+        facts["processing_source_commit"] = source_commit_sha
+    except CaptureAdmissionError as exc:
+        checks["CAPTURE_RECEIPT_VALID"] = False
+        # Named to avoid the forbidden outcome substrings screened by
+        # ``refuse_outcome_fields``; "error" is one of them.
+        facts["capture_admission_refusal"] = f"{type(exc).__name__}: {exc}"
 
     if checks["CAPTURE_RECEIPT_VALID"]:
         checks["DURABILITY_VALID"] = bool(durable_verifier(unit, receipt))
@@ -188,6 +219,27 @@ def _structural_facts(unit: Mapping[str, Any], receipt: Mapping[str, Any], *,
     checks["EXPECTED_FILES_PRESENT"] = not absent and not divergent
     facts["absent_capture_files"] = sorted(absent)
     facts["capture_files_diverging_from_durable_inventory"] = sorted(divergent)
+
+    # The typed identity boundary, established per unit rather than only inside the
+    # extractor: the raw capture package must carry the authority-derived LEGACY
+    # identity and the Stage-2 visibility rows must carry the SCIENTIFIC one.
+    try:
+        from mineocclude.prospective.capture_admission import (
+            verify_capture_package_identity, verify_visibility_rows_scientific_identity,
+        )
+        identity = resolve_typed_capture_identity(capture_admission.authority, unit)
+        package = json.loads((root / "capture_package_v0_1.json").read_text())
+        verify_capture_package_identity(package, identity)
+        rows = [json.loads(line) for line
+                in (root / "raw/visibility.jsonl").read_text().splitlines() if line]
+        verify_visibility_rows_scientific_identity(rows, identity)
+        facts["typed_identity_binding"] = "VERIFIED_BOTH_NAMESPACES"
+        facts["legacy_capture_trajectory_id"] = identity.legacy_capture_trajectory_id
+        facts["scientific_trajectory_id"] = identity.scientific_trajectory_id
+    except Exception as exc:                        # noqa: BLE001 -- any fault blocks
+        facts["typed_identity_binding"] = "REFUSED"
+        facts["typed_identity_refusal"] = f"{type(exc).__name__}: {exc}"
+        checks["CAPTURE_RECEIPT_VALID"] = False
 
     physical = receipt.get("stage2_physical_evidence")
     rows = physical.get("target_model_frame_indices") if isinstance(physical, Mapping) else None
@@ -224,6 +276,7 @@ def capture_unit_structural_probe(
         *, manifest: Mapping[str, Any], manifest_sha256: str, authority_sha256: str,
         source_commit_sha: str, scientific_run_id: str, required_target_rows: int,
         stage1_decision: Mapping[str, Any],
+        capture_admission: CaptureAdmissionContext,
         durable_verifier: Callable[..., bool] = verify_remote_durable_objects,
         ) -> Callable[[Mapping[str, Any]], dict[str, Any]]:
     """Build the per-capture-unit structural probe the controller runs each time.
@@ -243,7 +296,8 @@ def capture_unit_structural_probe(
             unit, receipt, manifest=manifest, manifest_sha256=manifest_sha256,
             authority_sha256=authority_sha256, source_commit_sha=source_commit_sha,
             scientific_run_id=scientific_run_id, required_target_rows=required_target_rows,
-            stage1_decision=stage1_decision, durable_verifier=durable_verifier)
+            stage1_decision=stage1_decision, durable_verifier=durable_verifier,
+            capture_admission=capture_admission)
         refuse_outcome_fields({"structural_facts": facts}, "capture unit structural probe")
         failing = sorted(name for name, ok in checks.items() if not ok)
         if failing:
@@ -262,6 +316,7 @@ def production_unit1_prober(
         source_commit_sha: str, scientific_run_id: str, required_target_rows: int,
         expected_activation_shape: list[int], expected_activation_dtype: str,
         stage1_decision: Mapping[str, Any], workspace: Path,
+        capture_admission: CaptureAdmissionContext,
         durable_verifier: Callable[..., bool] = verify_remote_durable_objects,
         extractor_factory: Callable[[], Any] | None = None,
         ):
@@ -276,7 +331,8 @@ def production_unit1_prober(
             unit, receipt, manifest=manifest, manifest_sha256=manifest_sha256,
             authority_sha256=authority_sha256, source_commit_sha=source_commit_sha,
             scientific_run_id=scientific_run_id, required_target_rows=required_target_rows,
-            stage1_decision=stage1_decision, durable_verifier=durable_verifier)
+            stage1_decision=stage1_decision, durable_verifier=durable_verifier,
+            capture_admission=capture_admission)
         checks.update({name: False for name in EXTRACTION_CHECKS})
         facts["probe_kind"] = "STRUCTURAL_AND_LAYER4_EXTRACTION"
         facts["operational_workspace"] = str(workspace)
@@ -296,9 +352,12 @@ def production_unit1_prober(
                 return extractor
 
         workspace.mkdir(parents=True, exist_ok=True)
+        identity = resolve_typed_capture_identity(capture_admission.authority, unit)
         record = factory().extract(
             str(unit["unit_id"]), capture_root_for(unit), workspace,
-            expected_target_model_frame_indices=list(unit["target_model_frame_indices"]))
+            expected_target_model_frame_indices=list(unit["target_model_frame_indices"]),
+            scientific_trajectory_id=identity.scientific_trajectory_id,
+            expected_legacy_capture_trajectory_id=identity.legacy_capture_trajectory_id)
         checks["LAYER4_HOOK_RESOLVES"] = record.get("layer") == 4
         checks["ACTIVATION_SHAPE_VALID"] = list(record.get("shape") or []) == list(
             expected_activation_shape)
@@ -336,6 +395,7 @@ def make_unit1_checkpoint(
         source_commit_sha: str, scientific_run_id: str, required_target_rows: int,
         expected_activation_shape: list[int], expected_activation_dtype: str,
         stage1_decision: Mapping[str, Any], receipts_root: Path,
+        capture_admission: CaptureAdmissionContext,
         durable_verifier: Callable[..., bool] = verify_remote_durable_objects,
         extractor_factory: Callable[[], Any] | None = None,
         ) -> Callable[[Mapping[str, Any]], dict[str, Any]]:
@@ -353,6 +413,7 @@ def make_unit1_checkpoint(
         expected_activation_shape=expected_activation_shape,
         expected_activation_dtype=expected_activation_dtype,
         stage1_decision=stage1_decision, workspace=workspace / "activation",
+        capture_admission=capture_admission,
         durable_verifier=durable_verifier, extractor_factory=extractor_factory)
 
     def checkpoint(unit: Mapping[str, Any]) -> dict[str, Any]:

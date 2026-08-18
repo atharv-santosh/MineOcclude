@@ -50,6 +50,9 @@ from mineocclude.prospective.development_workflow import (
     EvidenceError, canonical_payload_sha256, load_json,
     refuse_operational_smoke_as_evidence, sha256_file,
 )
+from mineocclude.prospective.capture_admission import (
+    CaptureAdmissionContext, CaptureAdmissionError, require_homogeneous_capture_closure,
+)
 from mineocclude.prospective.package_binding import (
     PackageBindingError, stage2_evidence_artifact_id,
 )
@@ -101,10 +104,20 @@ def _metrics(block: Any, label: str) -> dict[str, Any]:
             "bootstrap95_macro_r2": [lower, upper]}
 
 
-def _require_unit_binding(receipt: Mapping[str, Any], unit: Mapping[str, Any], *,
-                          manifest: Mapping[str, Any], manifest_sha256: str,
-                          source_commit_sha: str, label: str) -> None:
-    """Every completed unit must be bound to this campaign, and to no other."""
+def _require_processing_unit_binding(receipt: Mapping[str, Any], unit: Mapping[str, Any], *,
+                                    manifest: Mapping[str, Any], manifest_sha256: str,
+                                    source_commit_sha: str, label: str) -> None:
+    """Every DERIVED unit must be bound to this campaign's processing source.
+
+    Applies to the physical gate, the fifty extraction units and the readout and
+    terminal units. Each of those artifacts is *produced* by the software running
+    now, so requiring ``source_commit_sha`` to equal the current processing commit
+    is exactly right for them, and it stays.
+
+    It is deliberately no longer applied to raw capture units. A capture is a
+    physical measurement that already happened; see
+    :func:`_require_capture_unit_admission`.
+    """
     refuse_operational_smoke_as_evidence(receipt, label)
     expected = {
         "unit_id": unit.get("unit_id"),
@@ -130,6 +143,41 @@ def _require_unit_binding(receipt: Mapping[str, Any], unit: Mapping[str, Any], *
         raise EvidenceError(f"{label}: receipt declares no durable location")
 
 
+def _require_capture_unit_admission(receipt: Mapping[str, Any], unit: Mapping[str, Any], *,
+                                    admission: CaptureAdmissionContext,
+                                    label: str) -> dict[str, Any]:
+    """Admit one raw capture into this cohort on capture-provenance grounds.
+
+    The cohort physical gate used to require every capture receipt's
+    ``source_commit_sha`` to equal the campaign commit. That is a source-homogeneity
+    proxy, and it is the check that conflicts with any downstream repair: it would
+    have declared a valid, durable capture inadmissible and forced its recollection.
+
+    What replaces it is stricter about the thing that matters and silent about the
+    thing that does not. Every one of the fifty captures must still prove its own
+    capture provenance, its own receipt integrity, its manifest/authority/unit
+    identity, its runtime and apparatus identity and its durability -- and must
+    additionally prove that its capture-critical closure equals the cohort's
+    authorized one. Only the *full-repository* commit is allowed to differ, and only
+    where closure equality shows the capture-determining apparatus did not.
+
+    This is not a permitted-commit list and not a lineage allowance: no commit is
+    enumerated anywhere, and belonging to a lineage grants nothing.
+    """
+    refuse_operational_smoke_as_evidence(receipt, label)
+    try:
+        record = admission.admit(unit, receipt)
+    except CaptureAdmissionError as exc:
+        raise EvidenceError(f"{label}: {exc}") from exc
+    objects = receipt.get("durable_objects")
+    if not isinstance(objects, Mapping) or not objects:
+        raise EvidenceError(f"{label}: receipt declares no durable objects")
+    if not isinstance(receipt.get("durable_uri"), str) \
+            or not receipt["durable_uri"].startswith("s3://"):
+        raise EvidenceError(f"{label}: receipt declares no durable location")
+    return record
+
+
 def build_stage2_evidence(
         manifest: Mapping[str, Any], *,
         manifest_path: Path,
@@ -142,6 +190,7 @@ def build_stage2_evidence(
         preoutcome_provenance_path: Path,
         stage1_preoutcome_provenance_path: Path,
         source_commit_sha: str,
+        capture_admission: CaptureAdmissionContext,
         reader: Callable[[Path], dict[str, Any]] = load_json,
         digest: Callable[[Path], str] = sha256_file) -> dict[str, Any]:
     """Assemble closed, digest-bound Stage-2 evidence. Reaches no verdict.
@@ -191,10 +240,10 @@ def build_stage2_evidence(
     # ---- physical gate ------------------------------------------------------
     gate_unit = _mapping(manifest.get("physical_gate_unit"), "Stage-2 physical gate unit")
     gate_receipt = reader(Path(gate_unit["receipt_path"]))
-    _require_unit_binding(gate_receipt, gate_unit, manifest=manifest,
-                          manifest_sha256=manifest_sha256,
-                          source_commit_sha=source_commit_sha,
-                          label="Stage-2 physical gate")
+    _require_processing_unit_binding(gate_receipt, gate_unit, manifest=manifest,
+                                    manifest_sha256=manifest_sha256,
+                                    source_commit_sha=source_commit_sha,
+                                    label="Stage-2 physical gate")
     gate_status = _mapping(gate_receipt.get("physical_gates"),
                            "Stage-2 physical gate result").get("status")
     if gate_status != "PASS":
@@ -210,6 +259,7 @@ def build_stage2_evidence(
 
     reference_identity: dict[str, Any] | None = None
     capture_records: list[dict[str, Any]] = []
+    admission_records: list[dict[str, Any]] = []
     for unit in sorted(captures, key=lambda item: str(item.get("unit_id"))):
         unit_id = str(unit.get("unit_id"))
         trajectory = unit.get("trajectory_id")
@@ -220,9 +270,9 @@ def build_stage2_evidence(
             raise EvidenceError(f"{unit_id}: capture scene is outside the frozen design")
 
         receipt = reader(Path(unit["receipt_path"]))
-        _require_unit_binding(receipt, unit, manifest=manifest,
-                              manifest_sha256=manifest_sha256,
-                              source_commit_sha=source_commit_sha, label=unit_id)
+        admission_record = _require_capture_unit_admission(
+            receipt, unit, admission=capture_admission, label=unit_id)
+        admission_records.append(admission_record)
         physical = _mapping(receipt.get("stage2_physical_evidence"),
                             f"{unit_id} Stage-2 physical evidence")
         ticks = physical.get("target_model_frame_indices")
@@ -240,10 +290,10 @@ def build_stage2_evidence(
         if extraction_unit is None:
             raise EvidenceError(f"{unit_id}: no extraction unit is bound to this capture")
         extraction = reader(Path(extraction_unit["receipt_path"]))
-        _require_unit_binding(extraction, extraction_unit, manifest=manifest,
-                              manifest_sha256=manifest_sha256,
-                              source_commit_sha=source_commit_sha,
-                              label=str(extraction_unit.get("unit_id")))
+        _require_processing_unit_binding(extraction, extraction_unit, manifest=manifest,
+                                        manifest_sha256=manifest_sha256,
+                                        source_commit_sha=source_commit_sha,
+                                        label=str(extraction_unit.get("unit_id")))
         if extraction.get("source_capture_unit_id") != unit_id:
             raise EvidenceError(f"{unit_id}: extraction is bound to a different capture")
         if extraction.get("layer") != 4:
@@ -281,10 +331,29 @@ def build_stage2_evidence(
             "target_rows_authority_bound": True,
             "server_state_sha256": receipt.get("server_state_sha256"),
             "durable_uri": receipt.get("durable_uri"),
+            # The actual per-unit capture provenance, retained rather than
+            # normalized away: a cohort whose captures were taken under different
+            # full-repository commits must be VISIBLE in the evidence, with the
+            # scientific compatibility fact carried separately by the single
+            # cohort capture-critical closure below.
+            "capture_source_commit": admission_record["capture_source_commit"],
+            "capture_critical_closure_sha256":
+                admission_record["capture_critical_closure_sha256"],
+            "capture_taken_under_processing_commit":
+                admission_record["capture_taken_under_processing_commit"],
+            "legacy_capture_trajectory_id":
+                admission_record["typed_capture_identity"][
+                    "legacy_capture_trajectory_id"],
         })
 
     if len(capture_records) != expected_captures:
         raise EvidenceError("Stage-2 capture inventory is incomplete after validation")
+    # One apparatus, however many commits took it. This is the cohort rule the
+    # superseded commit-equality check was a proxy for, stated directly.
+    try:
+        cohort_closure = require_homogeneous_capture_closure(admission_records)
+    except CaptureAdmissionError as exc:
+        raise EvidenceError(f"Stage-2 capture cohort: {exc}") from exc
     if reference_identity is None:
         raise EvidenceError("Stage-2 evidence carries no model runtime identity")
 
@@ -298,10 +367,10 @@ def build_stage2_evidence(
         if unit is None:
             raise EvidenceError(f"Stage-2 manifest declares no {stage} readout unit")
         receipt = reader(Path(unit["receipt_path"]))
-        _require_unit_binding(receipt, unit, manifest=manifest,
-                              manifest_sha256=manifest_sha256,
-                              source_commit_sha=source_commit_sha,
-                              label=str(unit.get("unit_id")))
+        _require_processing_unit_binding(receipt, unit, manifest=manifest,
+                                        manifest_sha256=manifest_sha256,
+                                        source_commit_sha=source_commit_sha,
+                                        label=str(unit.get("unit_id")))
         expected_kind = "BEST_K" if stage == "best_k" else "FULL"
         if receipt.get("readout") != expected_kind:
             raise EvidenceError(
@@ -376,6 +445,18 @@ def build_stage2_evidence(
         "vae_checkpoint_sha256": reference_identity["vae_checkpoint_sha256"],
         "capture_inventory": capture_records,
         "capture_count": len(capture_records),
+        # The split, stated at the top level of the evidence so a reader never has
+        # to infer it: raw captures carry historical capture provenance, everything
+        # derived carries this campaign's processing provenance.
+        "capture_processing_provenance_split": {
+            "cohort_capture_critical_closure_sha256": cohort_closure,
+            "processing_source_commit": source_commit_sha,
+            "distinct_capture_source_commits": sorted(
+                {record["capture_source_commit"] for record in admission_records}),
+            "all_admitted_capture_closures_equal": True,
+            "capture_provenance_authority_sha256":
+                capture_admission.capture_provenance_authority_sha256,
+        },
         "trajectory_identity_count": len(identities),
         "required_target_rows_per_capture": required_rows,
         "layer": 4,

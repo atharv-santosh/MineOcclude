@@ -42,6 +42,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from mineocclude.prospective.capture_admission import (
+    CaptureAdmissionError, resolve_typed_capture_identity,
+)
 from mineocclude.prospective.development_workflow import (
     CAPTURE_RECEIPT_OBJECT, UNIT_STATE_OBJECT, DurableController, DurableStateError,
     EvidenceError, atomic_write_json, build_unit_state, canonical_payload_sha256,
@@ -159,11 +162,19 @@ class Campaign:
         (root / "raw").mkdir(parents=True, exist_ok=True)
         (root / "raw/server_state.jsonl").write_text(
             "".join(json.dumps({"sheep_x": value}) + "\n" for value in self.positions))
+        # Two namespaces, written the way a real capture writes them: the Stage-2
+        # visibility rows carry the SCIENTIFIC trajectory identity and the raw capture
+        # package carries the LEGACY one. The superseded fixture put the scientific id
+        # in the package, which no real capture does.
+        identity = resolve_typed_capture_identity(REAL_AUTHORITY, unit)
         (root / "raw/visibility.jsonl").write_text(
-            "".join(json.dumps({"model_frame_idx": tick, "tau": index + 1}) + "\n"
+            "".join(json.dumps({"model_frame_idx": tick, "tau": index + 1,
+                                "trajectory_id": identity.scientific_trajectory_id}) + "\n"
                     for index, tick in enumerate(self.ticks)))
         (root / "capture_package_v0_1.json").write_text(
-            json.dumps({"trajectory_id": unit["trajectory_id"]}))
+            json.dumps({"trajectory_id": identity.legacy_capture_trajectory_id,
+                        "episode_id": identity.episode_id,
+                        "layout_id": identity.layout_id}))
         objects = {path.relative_to(root).as_posix(): sha256_file(path)
                    for path in sorted(root.rglob("*")) if path.is_file()}
         for relative, digest in objects.items():
@@ -202,7 +213,8 @@ class Campaign:
         return {"manifest": self.manifest, "manifest_sha256": MANIFEST_SHA,
                 "authority_sha256": AUTHORITY_SHA, "source_commit_sha": COMMIT,
                 "scientific_run_id": NAMESPACE, "required_target_rows": ROWS,
-                "stage1_decision": stage1_decision_document()}
+                "stage1_decision": stage1_decision_document(),
+                "capture_admission": StubCaptureAdmission(self.manifest)}
 
     def structural_probe(self):
         return capture_unit_structural_probe(
@@ -217,6 +229,69 @@ class Campaign:
             extractor_factory=extractor_factory)
 
 
+
+#: The real frozen authority, used only for its ``apparatus.layout_id`` so the
+#: fixture's legacy capture identities compose by the same frozen rule production
+#: uses rather than by a second spelling invented here.
+REAL_AUTHORITY = load_json(
+    ROOT / "docs/status/integration/regime_a_prime_qualification_v0_1"
+    / "prospective_development_authority_v0_4/authority_parameters.json")
+
+
+class StubCaptureAdmission:
+    """Admits captures on their scientific DESIGN bindings only.
+
+    The real context additionally derives each capture's capture-critical closure
+    from committed bytes and compares the physical apparatus to frozen authority;
+    that has its own adversarial suite in
+    ``test_stage2_capture_processing_provenance_split.py`` and needs a real commit,
+    which this synthetic rehearsal campaign has none of. What is kept is the part
+    these tests exercise -- the design bindings, including the mis-bound-receipt
+    mutations below.
+
+    ``source_commit_sha`` is deliberately still compared here. This fixture's
+    captures are all taken by the commit under test, so for THIS cohort capture and
+    processing provenance coincide, and the mis-bound-receipt case for that field is
+    still a genuine refusal.
+    """
+
+    capture_provenance_authority_sha256 = "e" * 64
+    authority = REAL_AUTHORITY
+
+    def __init__(self, manifest, *, closure="a" * 64):
+        self.manifest = manifest
+        self.closure = closure
+
+    def admit(self, unit, receipt):
+        unit_id = str(unit.get("unit_id"))
+        expected = {
+            "unit_id": unit.get("unit_id"),
+            "status": DurableController.TERMINAL,
+            "classification": "DEVELOPMENT_ONLY",
+            "confirmatory_membership": False,
+            "manifest_sha256": MANIFEST_SHA,
+            "authority_sha256": AUTHORITY_SHA,
+            "source_commit_sha": COMMIT,
+            "scientific_run_id": NAMESPACE,
+            "durable_uri": durable_unit_uri(self.manifest, unit_id),
+        }
+        for key, value in expected.items():
+            if receipt.get(key) != value:
+                raise CaptureAdmissionError(
+                    f"receipt binding mismatch on {key!r} "
+                    f"({receipt.get(key)!r} != {value!r})")
+        return {"unit_id": unit_id, "capture_compatibility": "PASS",
+                "capture_source_commit": COMMIT,
+                "capture_critical_closure_sha256": self.closure,
+                "processing_source_commit": COMMIT,
+                "capture_and_processing_commits_equal": True,
+                "capture_taken_under_processing_commit": True,
+                "durable_object_count": len(receipt.get("durable_objects") or {}),
+                "durable_object_inventory_sha256": "c" * 64,
+                "typed_capture_identity":
+                    resolve_typed_capture_identity(REAL_AUTHORITY, unit).to_dict()}
+
+
 class FakeExtractor:
     """Writes a real activation file with the shape and dtype under test."""
 
@@ -226,8 +301,19 @@ class FakeExtractor:
         self.identity, self.targets, self.layer = identity, targets, layer
         self.calls = 0
 
-    def extract(self, run_id, source, destination, *, expected_target_model_frame_indices):
+    def extract(self, run_id, source, destination, *, expected_target_model_frame_indices,
+                scientific_trajectory_id, expected_legacy_capture_trajectory_id):
         self.calls += 1
+        # Both typed identities must arrive, and must arrive in the right roles. The
+        # defect under repair passed the raw capture package's legacy identity into
+        # the Stage-2 slot, so a fake that accepted either interchangeably would let
+        # that regress unnoticed.
+        assert scientific_trajectory_id.startswith("reh_t"), scientific_trajectory_id
+        assert expected_legacy_capture_trajectory_id.startswith("layout_"), (
+            expected_legacy_capture_trajectory_id)
+        assert "_ep" in expected_legacy_capture_trajectory_id
+        self.identities = (scientific_trajectory_id,
+                           expected_legacy_capture_trajectory_id)
         destination.mkdir(parents=True, exist_ok=True)
         path = destination / f"{run_id}.layer_04.npy"
         array = np.zeros(tuple(self.shape), dtype=np.dtype(self.dtype))

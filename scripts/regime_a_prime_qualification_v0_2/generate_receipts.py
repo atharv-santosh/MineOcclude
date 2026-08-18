@@ -955,11 +955,64 @@ def build_stage2_provenance(probe_evidence_path: Path, output: Path, *,
     """
     bindings = {**stage1_pass_bindings(stage1_decision_path, stage1_evidence_path,
                                        stage1_provenance_path),
-                **stage2_manifest_bindings()}
+                **stage2_manifest_bindings(),
+                **capture_processing_provenance_bindings()}
     return build_provenance(probe_evidence_path, output, freeze_commit=freeze_commit,
                             durable_probe=durable_probe, smoke_path=smoke_path,
                             stage="stage2-capture", manifest_path=STAGE2_MANIFEST_PATH,
                             extra_bindings=bindings)
+
+
+def capture_processing_provenance_bindings() -> dict:
+    """Bind the capture/processing provenance split into Stage-2 provenance.
+
+    This is where the new authority document attaches to the running campaign. It
+    is bound here, in the receipt minted at launch, rather than into
+    ``stage2_locked_manifest.json`` -- which is how the frozen scientific manifest
+    stays byte-identical and its scientific inventory untouched while an
+    operational governance rule is added.
+
+    Both closures are recorded, and they are deliberately different values:
+    ``runtime_critical_source_closure_sha256`` (written by ``build_provenance``) is
+    the PROCESSING apparatus about to run, and the capture-critical closure below is
+    the CAPTURE apparatus this campaign will admit captures from. Conflating them is
+    the category error the whole split exists to prevent, so a reader of this receipt
+    can see them side by side and see that they are not the same thing.
+    """
+    from mineocclude.prospective.capture_admission import (
+        capture_provenance_authority_path, load_capture_provenance_authority,
+    )
+    from mineocclude.prospective.capture_closure import (
+        capture_critical_closure_at, capture_critical_paths,
+        derive_capture_critical_symbols, worktree_reader,
+    )
+
+    package = BINDING.package
+    document, authority_sha256 = load_capture_provenance_authority(
+        package, version_tag=BINDING.version_tag,
+        authority_path=BINDING.authority_path, repository=ROOT)
+    closure_sha256, digests = capture_critical_closure_at(worktree_reader(ROOT),
+                                                          repository=ROOT)
+    symbols = derive_capture_critical_symbols(repository=ROOT)
+    recorded = document["capture_critical_closure"]["closure_sha256_at_generation"]
+    if recorded != closure_sha256:
+        # The frozen authority records the closure it was generated against. If the
+        # live derivation disagrees, the document is stale with respect to the
+        # capture apparatus it governs and must not authorize anything.
+        raise EvidenceError(
+            "capture/processing provenance authority records capture-critical "
+            f"closure {recorded}, but the source derives {closure_sha256}")
+    return {
+        "capture_processing_provenance_authority_artifact_id": document["artifact_id"],
+        "capture_processing_provenance_authority_sha256": authority_sha256,
+        "capture_processing_provenance_authority_path":
+            capture_provenance_authority_path(package).relative_to(ROOT).as_posix(),
+        "authorized_capture_critical_closure_sha256": closure_sha256,
+        "capture_critical_component_count": len(digests),
+        "capture_critical_source_path_count": len(capture_critical_paths(symbols)),
+        "capture_critical_source_paths": capture_critical_paths(symbols),
+        "capture_and_processing_closures_are_distinct_by_design": True,
+    }
 
 
 def build_stage2_authorization(provenance_path: Path, output: Path, *,

@@ -36,10 +36,14 @@ import pytest
 
 from mineocclude.models.mineworld_adapter import MineWorldRuntimeIdentity
 from mineocclude.prospective.activation_binding import (
+    SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND,
     TARGET_ROWS_NOT_AUTHORITY_BOUND, ACTIVATION_IDENTITY_FIELDS,
     model_runtime_identity_binding, require_activation_identity,
     require_target_rows_authority_bound, resolve_authority_bound_target_rows,
     verify_activation_checkpoint_binding,
+)
+from mineocclude.prospective.capture_admission import (
+    CaptureAdmissionError, resolve_typed_capture_identity,
 )
 from mineocclude.prospective.development_workflow import (
     EvidenceError, canonical_payload_sha256, load_json,
@@ -227,12 +231,81 @@ class TestCheckpointBinding:
 # ======================================================================
 
 
+
+class StubCaptureAdmission:
+    """Admits raw captures on their scientific DESIGN bindings only.
+
+    The real :class:`~mineocclude.prospective.capture_admission.CaptureAdmissionContext`
+    additionally derives each capture's capture-critical closure from Git and compares
+    the physical apparatus against frozen authority. That machinery has its own
+    adversarial suite in ``test_stage2_capture_processing_provenance_split.py`` and
+    needs real committed bytes, which a synthetic campaign does not have.
+
+    This file is about the terminal decision chain, so the stub keeps exactly the part
+    those tests do exercise -- the design bindings every admitted capture must satisfy,
+    which is what the mutation tests below poke at -- and reports one fixed closure so
+    the cohort homogeneity gate has something to agree on. It deliberately does NOT
+    keep the superseded ``source_commit_sha == campaign commit`` check: that check is
+    the category error under repair, and a capture is admitted on closure equality.
+    """
+
+    capture_provenance_authority_sha256 = "e" * 64
+
+    def __init__(self, manifest, manifest_sha256, *, closure="a" * 64,
+                 closure_by_unit=None):
+        self.manifest = manifest
+        self.manifest_sha256 = manifest_sha256
+        self.closure = closure
+        self.closure_by_unit = dict(closure_by_unit or {})
+
+    def admit(self, unit, receipt):
+        unit_id = str(unit.get("unit_id"))
+        expected = {
+            "unit_id": unit.get("unit_id"),
+            "status": "COMPLETE_VALIDATED_DURABLE",
+            "classification": "DEVELOPMENT_ONLY",
+            "confirmatory_membership": False,
+            "manifest_sha256": self.manifest_sha256,
+            "authority_sha256": self.manifest.get(
+                "authority_binding", {}).get("sha256"),
+            "scientific_run_id": self.manifest.get("run_namespace"),
+            # durable_uri is deliberately absent here: this synthetic campaign uses a
+            # stub prefix, and the superseded binding did not compare it either. The
+            # real context does bind it, and that is covered by
+            # test_stage2_capture_processing_provenance_split.
+        }
+        for key, value in expected.items():
+            if receipt.get(key) != value:
+                # Same wording the derived-unit binding uses, so a mutation test
+                # reads the same diagnosis whichever category the unit is in.
+                raise CaptureAdmissionError(
+                    f"receipt binding mismatch on {key!r} "
+                    f"({receipt.get(key)!r} != {value!r})")
+        capture_commit = receipt.get("source_commit_sha")
+        if not isinstance(capture_commit, str) or len(capture_commit) != 40:
+            raise CaptureAdmissionError(
+                f"{unit_id}: capture receipt declares no valid capture source commit")
+        identity = resolve_typed_capture_identity(
+            load_json(AUTHORITY_PATH), unit)
+        return {
+            "unit_id": unit_id,
+            "capture_compatibility": "PASS",
+            "capture_source_commit": capture_commit,
+            "capture_critical_closure_sha256":
+                self.closure_by_unit.get(unit_id, self.closure),
+            "processing_source_commit": COMMIT,
+            "capture_and_processing_commits_equal": capture_commit == COMMIT,
+            "capture_taken_under_processing_commit": capture_commit == COMMIT,
+            "typed_capture_identity": identity.to_dict(),
+        }
+
+
 AUTHORITY_ROWS = list(range(48, 67))
 
 
-def visibility(rows=None, trajectory_id="a2y_t01"):
+def visibility(rows=None, scientific_trajectory_id="a2y_t01"):
     rows = AUTHORITY_ROWS if rows is None else rows
-    return [{"trajectory_id": trajectory_id, "model_frame_idx": frame,
+    return [{"trajectory_id": scientific_trajectory_id, "model_frame_idx": frame,
              "server_tick": frame, "render_frame_idx": frame, "tau": index + 1}
             for index, frame in enumerate(rows)]
 
@@ -241,7 +314,7 @@ class TestTargetRowCrossCheck:
     def test_agreeing_sources_resolve_to_the_nineteen_authority_rows(self):
         resolved = resolve_authority_bound_target_rows(
             visibility(), expected=AUTHORITY_ROWS, required_count=19,
-            trajectory_id="a2y_t01")
+            scientific_trajectory_id="a2y_t01")
         assert resolved == AUTHORITY_ROWS
         assert len(resolved) == 19 == len(set(resolved))
 
@@ -261,21 +334,24 @@ class TestTargetRowCrossCheck:
         shifted = [AUTHORITY_ROWS[0] - 1] + AUTHORITY_ROWS[1:]
         with pytest.raises(EvidenceError, match="do not equal the authority"):
             resolve_authority_bound_target_rows(
-                visibility(shifted), expected=AUTHORITY_ROWS, required_count=19)
+                visibility(shifted), expected=AUTHORITY_ROWS, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_a_missing_tau_is_refused(self):
         rows = visibility()
         del rows[7]
         with pytest.raises(EvidenceError, match="missing target rows"):
             resolve_authority_bound_target_rows(
-                rows, expected=AUTHORITY_ROWS, required_count=19)
+                rows, expected=AUTHORITY_ROWS, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_a_duplicated_tau_is_refused(self):
         rows = visibility()
         rows.append(dict(rows[3]))
         with pytest.raises(EvidenceError, match="claimed by more than one"):
             resolve_authority_bound_target_rows(
-                rows, expected=AUTHORITY_ROWS, required_count=19)
+                rows, expected=AUTHORITY_ROWS, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_a_duplicated_frame_index_is_refused(self):
         rows = visibility()
@@ -283,32 +359,36 @@ class TestTargetRowCrossCheck:
         rows[4]["server_tick"] = rows[4]["render_frame_idx"] = rows[3]["model_frame_idx"]
         with pytest.raises(EvidenceError, match="duplicated model frame index"):
             resolve_authority_bound_target_rows(
-                rows, expected=AUTHORITY_ROWS, required_count=19)
+                rows, expected=AUTHORITY_ROWS, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_an_extra_authority_row_is_refused(self):
         with pytest.raises(EvidenceError, match="authority declares 20 target rows"):
             resolve_authority_bound_target_rows(
-                visibility(), expected=AUTHORITY_ROWS + [67], required_count=19)
+                visibility(), expected=AUTHORITY_ROWS + [67], required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_a_short_authority_row_set_is_refused(self):
         with pytest.raises(EvidenceError, match="authority declares 18 target rows"):
             resolve_authority_bound_target_rows(
-                visibility(), expected=AUTHORITY_ROWS[:-1], required_count=19)
+                visibility(), expected=AUTHORITY_ROWS[:-1], required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_reordered_rows_are_refused(self):
         rows = visibility()
         rows[0]["tau"], rows[1]["tau"] = rows[1]["tau"], rows[0]["tau"]
         with pytest.raises(EvidenceError, match="ascending frame order"):
             resolve_authority_bound_target_rows(
-                rows, expected=AUTHORITY_ROWS, required_count=19)
+                rows, expected=AUTHORITY_ROWS, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_a_row_from_another_trajectory_is_refused(self):
         rows = visibility()
         rows[9]["trajectory_id"] = "a2y_t02"
-        with pytest.raises(EvidenceError, match="bound to trajectory"):
+        with pytest.raises(EvidenceError, match="bound to scientific trajectory"):
             resolve_authority_bound_target_rows(
                 rows, expected=AUTHORITY_ROWS, required_count=19,
-                trajectory_id="a2y_t01")
+                scientific_trajectory_id="a2y_t01")
 
     @pytest.mark.parametrize("column", ["server_tick", "render_frame_idx"])
     def test_an_inconsistent_temporal_binding_is_refused(self, column):
@@ -316,22 +396,26 @@ class TestTargetRowCrossCheck:
         rows[2][column] = rows[2]["model_frame_idx"] + 3
         with pytest.raises(EvidenceError, match="temporal binding is inconsistent"):
             resolve_authority_bound_target_rows(
-                rows, expected=AUTHORITY_ROWS, required_count=19)
+                rows, expected=AUTHORITY_ROWS, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_drift_is_refused_in_both_directions(self):
         """Neither source is preferred: whichever moved, extraction stops."""
         moved_capture = AUTHORITY_ROWS[:-1] + [AUTHORITY_ROWS[-1] + 4]
         with pytest.raises(EvidenceError, match="do not equal the authority"):
             resolve_authority_bound_target_rows(
-                visibility(moved_capture), expected=AUTHORITY_ROWS, required_count=19)
+                visibility(moved_capture), expected=AUTHORITY_ROWS, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
         with pytest.raises(EvidenceError, match="do not equal the authority"):
             resolve_authority_bound_target_rows(
-                visibility(), expected=moved_capture, required_count=19)
+                visibility(), expected=moved_capture, required_count=19,
+                scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
 
     def test_the_unbound_sentinel_marks_the_record_and_is_refused_downstream(self):
         """The historical pilots opt out explicitly; Stage-2 refuses what they make."""
         resolved = resolve_authority_bound_target_rows(
-            visibility(), expected=TARGET_ROWS_NOT_AUTHORITY_BOUND, required_count=19)
+            visibility(), expected=TARGET_ROWS_NOT_AUTHORITY_BOUND, required_count=19,
+            scientific_trajectory_id=SCIENTIFIC_TRAJECTORY_NOT_AUTHORITY_BOUND)
         assert resolved == AUTHORITY_ROWS
         unbound = activation_record(target_rows_authority_bound=False)
         with pytest.raises(EvidenceError, match="without an authority-bound target row set"):
@@ -348,8 +432,13 @@ class TestTargetRowCrossCheck:
         import sys
         sys.path.insert(0, str(ROOT / "scripts/regime_a_prime_qualification_v0_1"))
         source = (ROOT / "scripts/regime_a_prime_qualification_v0_1/p2d_extract.py").read_text()
-        assert "expected_target_model_frame_indices) -> dict" in source
+        assert "expected_legacy_capture_trajectory_id) -> dict" in source
         assert "expected_target_model_frame_indices=None" not in source
+        assert "scientific_trajectory_id=None" not in source
+        assert "expected_legacy_capture_trajectory_id=None" not in source
+        # The repaired boundary: the Stage-2 resolver must never again be handed the
+        # raw capture package's legacy identity.
+        assert 'trajectory_id=document["trajectory_id"]' not in source
         assert "checkpoint_identity" not in source
 
 
@@ -389,6 +478,11 @@ class Campaign:
         self.decision_authority = decision_authority
         self.documents: dict[str, dict] = {}
         self.identity = model_runtime_identity_binding(runtime_fixture())
+        # The capture-admission context the evidence builder consumes. Design
+        # bindings are enforced for real; capture-critical closure derivation has its
+        # own suite against committed bytes.
+        self.capture_admission = StubCaptureAdmission(
+            self.manifest, hashlib.sha256(STAGE2_PATH.read_bytes()).hexdigest())
         self._build()
 
     # -- helpers ----------------------------------------------------------
@@ -539,7 +633,8 @@ class Campaign:
             stage2_authorization_path=self.path("stage2_authorization"),
             preoutcome_provenance_path=self.path("provenance"),
             stage1_preoutcome_provenance_path=self.path("stage1_provenance"),
-            source_commit_sha=COMMIT, reader=self.read, digest=self.digest)
+            source_commit_sha=COMMIT, reader=self.read, digest=self.digest,
+            capture_admission=self.capture_admission)
 
     def decide(self, evidence=None):
         evidence = self.evidence() if evidence is None else evidence
@@ -731,8 +826,39 @@ class TestTerminalBlocked:
         with pytest.raises(EvidenceError, match="binding mismatch on 'scientific_run_id'"):
             campaign.evidence()
 
-    def test_a_receipt_from_another_source_freeze_blocks(self, campaign):
+    def test_a_raw_capture_from_another_freeze_is_admitted_at_equal_apparatus(
+            self, campaign):
+        """The repaired rule, in the direction that used to fail.
+
+        A capture taken under a different full-repository commit is no longer refused
+        for that reason alone. Refusing it is what would have forced recollection of a
+        valid, durable, physically irreproducible measurement after a downstream-only
+        repair. What must still hold is closure equality, which the cohort gate checks.
+        """
         unit = campaign.manifest["capture_units"][3]
+        campaign.documents[unit["receipt_path"]]["source_commit_sha"] = "d" * 40
+        evidence = campaign.evidence()
+        split = evidence["capture_processing_provenance_split"]
+        assert sorted(split["distinct_capture_source_commits"]) == sorted(
+            {COMMIT, "d" * 40})
+        assert split["all_admitted_capture_closures_equal"] is True
+        assert split["processing_source_commit"] == COMMIT
+        # The mixed cohort stays VISIBLE per unit rather than being normalized away.
+        record = next(item for item in evidence["capture_inventory"]
+                      if item["unit_id"] == unit["unit_id"])
+        assert record["capture_source_commit"] == "d" * 40
+        assert record["capture_taken_under_processing_commit"] is False
+
+    def test_a_cohort_spanning_two_capture_apparatuses_blocks(self, campaign):
+        """Closure equality is the real rule, and it is not satisfiable by lineage."""
+        unit = campaign.manifest["capture_units"][3]
+        campaign.capture_admission.closure_by_unit[unit["unit_id"]] = "b" * 64
+        with pytest.raises(EvidenceError, match="more than one capture-critical closure"):
+            campaign.evidence()
+
+    def test_a_derived_receipt_from_another_source_freeze_still_blocks(self, campaign):
+        """Processing provenance is unchanged: derived artifacts bind current source."""
+        unit = campaign.manifest["extraction_units"][3]
         campaign.documents[unit["receipt_path"]]["source_commit_sha"] = "d" * 40
         with pytest.raises(EvidenceError, match="binding mismatch on 'source_commit_sha'"):
             campaign.evidence()

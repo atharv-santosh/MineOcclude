@@ -1052,6 +1052,31 @@ PHYSICAL_NAMES = {"clock_alignment", "stable_visibility", "hidden_row_validity",
                   "physical_support", "zero_target_row_contamination"}
 
 
+
+class _GateAdmission:
+    """Admits every capture on a fixed apparatus, for gate-shape tests only.
+
+    These two tests are about the physical gate's CHECK coverage and pair coherence,
+    not about capture provenance. Capture admission and the cohort closure rule have
+    their own adversarial suite in
+    ``test_stage2_capture_processing_provenance_split.py``.
+    """
+
+    capture_provenance_authority_sha256 = "e" * 64
+
+    def __init__(self, manifest):
+        self.manifest = manifest
+        self.authority = None
+
+    def admit(self, unit, receipt):
+        return {"unit_id": str(unit.get("unit_id")), "capture_compatibility": "PASS",
+                "capture_source_commit": "c" * 40,
+                "capture_critical_closure_sha256": "a" * 64,
+                "processing_source_commit": "c" * 40,
+                "capture_and_processing_commits_equal": True,
+                "capture_taken_under_processing_commit": True}
+
+
 def test_stage2_physical_gate_requires_every_check_and_pair():
     manifest = load_json(STAGE2_PATH)
     manifest["status"] = "POST_STAGE1_MATERIALIZED_AWAITING_SEPARATE_FREEZE_AND_AUTHORIZATION"
@@ -1061,12 +1086,14 @@ def test_stage2_physical_gate_requires_every_check_and_pair():
         unit["target_model_frame_indices"] = list(range(20, 39))
         unit["expected_causal_fir_target_world_x_blocks"] = [float(i) for i in range(19)]
     receipts = valid_capture_receipts(manifest, "m" * 64)
-    assert validate_physical_gate_receipts(manifest, receipts, manifest_sha256="m" * 64,
-                                           current_source_commit="c" * 40)["status"] == "PASS"
+    assert validate_physical_gate_receipts(
+        manifest, receipts, manifest_sha256="m" * 64, current_source_commit="c" * 40,
+        capture_admission=_GateAdmission(manifest))["status"] == "PASS"
     receipts[manifest["capture_units"][0]["unit_id"]]["stage2_physical_evidence"]["checks"].pop("clock_alignment")
     with pytest.raises(RuntimeError):
-        validate_physical_gate_receipts(manifest, receipts, manifest_sha256="m" * 64,
-                                        current_source_commit="c" * 40)
+        validate_physical_gate_receipts(
+            manifest, receipts, manifest_sha256="m" * 64, current_source_commit="c" * 40,
+            capture_admission=_GateAdmission(manifest))
 
 
 def test_stage2_physical_gate_rejects_stale_target_summary():
@@ -1080,8 +1107,9 @@ def test_stage2_physical_gate_rejects_stale_target_summary():
     receipts[manifest["capture_units"][0]["unit_id"]]["stage2_physical_evidence"][
         "target_model_frame_indices"][0] = 19
     with pytest.raises(RuntimeError):
-        validate_physical_gate_receipts(manifest, receipts, manifest_sha256="m" * 64,
-                                        current_source_commit="c" * 40)
+        validate_physical_gate_receipts(
+            manifest, receipts, manifest_sha256="m" * 64, current_source_commit="c" * 40,
+            capture_admission=_GateAdmission(manifest))
 
 
 def test_numeric_cleanup_and_minimal_stage1_design(authority, stage1):

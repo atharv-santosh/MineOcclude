@@ -1,0 +1,179 @@
+{
+ "STAGE_2_COLLECTION_AUTHORIZED": false,
+ "artifact_id": "regime-a-prime-stage2-capture-processing-provenance-authority-v0.4",
+ "authorized_option": "OPTION_3_SPLIT_CAPTURE_PROVENANCE_FROM_PROCESSING_PROVENANCE",
+ "capture_compatibility": {
+  "capture_critical_closure_must_be_equal": true,
+  "full_repository_commit_may_differ": true,
+  "lineage_is_not_evidence": "Capture compatibility is NOT established by two commits belonging to a declared lineage, by a permitted-commit list, or by any ancestry relation. No commit is enumerated by this document.",
+  "principle": "A raw capture produced under predecessor full commit P may participate in a successor processing campaign S only if its capture-critical closure is EQUAL to the cohort's authorized closure. Full repository source-commit equality is NOT required, and is NOT sufficient on its own either.",
+  "required_conditions": [
+   "same scientific manifest identity and inventory",
+   "same authority identity required for capture",
+   "same scientific capture unit identity",
+   "same scientific trajectory identity",
+   "same scene",
+   "same seed and noise seed",
+   "same episode",
+   "same target rows and path identity",
+   "same capture-critical closure",
+   "same capture runtime and apparatus identities",
+   "original capture receipt verifies independently",
+   "capture-time recorded source digests agree with the capture commit",
+   "raw durable bytes verify exactly"
+  ]
+ },
+ "capture_critical_closure": {
+  "apparatus_files": [
+   "detector_config",
+   "fabric_server_launcher_jar",
+   "installed_mod",
+   "minecraft_server_jar",
+   "mod_source"
+  ],
+  "apparatus_observations": [
+   "camera_authority",
+   "camera_eye_world_xyz",
+   "camera_feet_world_xyz",
+   "canonical_frame_pixels",
+   "fov_degrees",
+   "layout_id",
+   "wall_authority",
+   "yaw_pitch_degrees"
+  ],
+  "apparatus_reference_is_frozen_authority_not_a_peer_capture": true,
+  "closure_is_derived_not_enumerated_here": true,
+  "closure_sha256_at_generation": "b64bc70071d2efbbd90e04ca31f4fdaf508498eb51e36c69b584c3602284fa68",
+  "component_count": 406,
+  "derivation": "Call-graph reachability over first-party definitions, seeded at the Stage-2 capture DRIVER entrypoints, digesting the exact source text of each reachable definition plus each capture-critical file's executable module prologue.",
+  "entrypoints": [
+   "scripts/regime_a_prime_qualification_v0_2/stage_unit_driver.py::main",
+   "scripts/regime_a_prime_qualification_v0_2/stage_unit_driver.py::capture"
+  ],
+  "governance_scope_components": [
+   "src/mineocclude/prospective/development_workflow.py::RUNTIME_CRITICAL_SOURCE_PATHS"
+  ],
+  "governance_scope_projection": "A reachable component whose only capture-time effect is to say WHICH source paths pre-outcome provenance must already have verified is digested by its capture-relevant PROJECTION -- the subset naming capture-critical paths -- not by its literal bytes. Lengthening the governed list strengthens verification of files that cannot change a frame; dropping a capture-critical path from it changes the projection and blocks.",
+  "import_time_side_effect_soundness": "Every file that is import-reachable but not call-reachable is asserted by test to have a definition-only module body, so a module doing real work at import time is forced into governance rather than pruned.",
+  "module_prologue_pseudo_symbol": "__module_prologue__",
+  "non_source_runtime_identities": [
+   "minecraft_version",
+   "java",
+   "mesa",
+   "xvfb",
+   "detector_config_id"
+  ],
+  "source_path_count": 26,
+  "source_paths": [
+   "scripts/regime_a_prime_qualification_v0_1/p2_common.py",
+   "scripts/regime_a_prime_qualification_v0_1/p2c_capture.py",
+   "scripts/regime_a_prime_qualification_v0_1/p3_run_sequential.py",
+   "scripts/regime_a_prime_qualification_v0_2/stage_unit_driver.py",
+   "scripts/run_large_scale_no_wall_campaign.py",
+   "scripts/run_regime_a.py",
+   "src/mineocclude/contracts/identity.py",
+   "src/mineocclude/contracts/trajectory.py",
+   "src/mineocclude/data/align.py",
+   "src/mineocclude/data/build_dataset.py",
+   "src/mineocclude/data/capture_contract.py",
+   "src/mineocclude/data/convert_mineworld.py",
+   "src/mineocclude/data/fsretry.py",
+   "src/mineocclude/data/impulse.py",
+   "src/mineocclude/data/noise_schedule.py",
+   "src/mineocclude/data/package_episode.py",
+   "src/mineocclude/data/preprocess.py",
+   "src/mineocclude/data/qa_report.py",
+   "src/mineocclude/data/visibility.py",
+   "src/mineocclude/prospective/development_workflow.py",
+   "src/mineocclude/prospective/extent_geometry.py",
+   "src/mineocclude/prospective/package_binding.py",
+   "src/mineocclude/prospective/source_provenance.py",
+   "src/mineocclude/prospective/temporal_alignment.py",
+   "src/mineocclude/regime_a.py",
+   "src/mineocclude/vision/magenta.py"
+  ],
+  "unbounded_module_handle_rule": "A module the capture path holds as a module OBJECT rather than by an imported name contributes ALL of its definitions, because name resolution cannot bound which of them execute. This is why the live campaign runtime -- reached as a returned module from p2_common.load_live and stored on CaptureSession.live -- is governed in full. The escalation is conservative: it can only add components.",
+  "why_definitions_not_files": "development_workflow holds both derive_effective_capture_spec, which decides the seed, frame count, speed and start position a capture runs under, and DurableController, which cannot touch a captured byte. Digesting whole files would make an edit to the second indistinguishable from an edit to the first and report a changed capture apparatus when no capture-determining component had changed -- a false BLOCKED that would force recollection of valid measurements.",
+  "why_not_module_import_closure": "The transitive module-import closure of the capture entrypoint is 60 files and contains p2d_extract, p2e_analyze, the model adapter, the activation hooks and the ridge implementation, because p3_run_sequential binds those names at module scope while the capture path uses only derive_artifacts from it. Adopting it would make the capture and processing closures nearly identical and every downstream repair would fail capture compatibility -- not because a frame could change, but because Python binds names at module scope.",
+  "why_the_driver_and_not_the_launcher": "The capture is produced by stage_unit_driver in its own process. The launching controller decides only WHETHER a unit runs; the driver re-derives and re-verifies its authority, manifest, stage binding, authorization, provenance and unit identity through require_capture_authorization before capturing anything, and refuses on any disagreement. A launcher therefore cannot change what a capture records or the identity it records itself under."
+ },
+ "classification": "DEVELOPMENT_ONLY",
+ "cohort_reporting": {
+  "mixed_full_commit_cohort_must_be_visible_not_hidden": true,
+  "per_unit_capture_source_commit_retained_in_evidence": true,
+  "scientific_compatibility_fact": "all admitted capture-critical closures are equal to one value"
+ },
+ "confirmatory_collection_authorized": false,
+ "decision_is_prospective_with_respect_to_stage2_outcomes": true,
+ "depends_on_scientific_outcome": false,
+ "extends_authority": {
+  "path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/authority_parameters.json",
+  "sha256": "52b9590bc1695658b30304b557a4df65d38928ab15281ffd9800e014e839e728"
+ },
+ "generated_by": "scripts/regime_a_prime_qualification_v0_4/build_stage2_capture_provenance_authority.py",
+ "historical_stage1_authority_modified": false,
+ "immutable_capture_evidence": {
+  "fields_never_rewritten_to_successor_values": [
+   "capture_source_commit",
+   "capture_critical_closure_sha256",
+   "capture_preoutcome_provenance_sha256",
+   "capture_authorization_sha256",
+   "capture_manifest_sha256",
+   "capture_authority_sha256",
+   "capture_receipt_sha256",
+   "durable_object_inventory",
+   "remote_checksum_manifest_sha256",
+   "runtime_provenance_receipt",
+   "captured_apparatus_receipt",
+   "unit_id",
+   "episode_id",
+   "trajectory_id",
+   "scene",
+   "seed",
+   "noise_seed",
+   "expected_path_sha256",
+   "path_state_receipt"
+  ],
+  "principle": "A completed raw capture remains permanently bound to the exact source, runtime, manifest, authorization and provenance under which it was actually captured. A later downstream software repair MUST NOT rewrite it.",
+  "receipt_is_read_only_to_every_consumer": true
+ },
+ "no_provenance_laundering": {
+  "enforcement": "Both commits are recorded as separate fields and the equality claim is recomputed from them, so a hand-set boolean cannot carry it.",
+  "principle": "A downstream processor MUST NOT claim capture_source_commit == processing_source_commit unless they actually are equal."
+ },
+ "payload_sha256": "9340c95b08006a0286c6662eb7342a6361ca0009d91ab55840401904a8bc438f",
+ "predecessor_capture_freeze_at_decision_time": "49f0cca9d0ec6d204444bf3c0d1fa5fc7e263936",
+ "processing_provenance": {
+  "derived_units_still_require_processing_commit_equality": [
+   "physical_gates",
+   "layer4_extraction",
+   "best_k",
+   "full",
+   "terminal"
+  ],
+  "every_derived_artifact_records": [
+   "processing_source_commit",
+   "processing_runtime_critical_source_closure_sha256",
+   "processing_provenance_sha256",
+   "processing_authorization_sha256",
+   "source_capture_unit_id",
+   "source_capture_receipt_sha256",
+   "source_capture_provenance_sha256",
+   "source_capture_source_commit",
+   "source_capture_capture_critical_closure_sha256"
+  ],
+  "principle": "Processing provenance is bound separately, to the exact successor source and runtime that produce activations, readouts and derived evidence."
+ },
+ "reason_for_decision": "A frozen DOWNSTREAM identity defect requires a successor processing freeze after a valid raw source capture already exists. No Stage-2 decoder outcome has been computed, exposed or consulted.",
+ "recollection": {
+  "a_valid_capture_must_not_be_recollected_because_processing_changed": true,
+  "automatic_recollection_authorized": false,
+  "if_capture_critical_closure_differs": "Reuse is FORBIDDEN and the pipeline STOPS for authority review. Automatic recollection is forbidden, because recapturing would destroy the evidence that the apparatus had changed."
+ },
+ "schema_version": "1.0",
+ "scientific_design_modified": false,
+ "scope": "STAGE_2_ONLY",
+ "stage2_locked_manifest_modified": false,
+ "stage2_scientific_decision_authority_modified": false,
+ "status": "FROZEN_PROSPECTIVE_GOVERNANCE"
+}

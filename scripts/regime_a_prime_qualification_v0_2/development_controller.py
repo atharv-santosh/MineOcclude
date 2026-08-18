@@ -27,6 +27,10 @@ from mineocclude.prospective.package_binding import (  # noqa: E402
     PackageBinding, artifact_version_tag, provenance_artifact_id_for,
     resolve_package_binding, stage1_decision_artifact_id,
 )
+from mineocclude.prospective.capture_admission import (  # noqa: E402
+    build_capture_admission_context, load_capture_provenance_authority,
+    verify_processing_provenance_binding,
+)
 from mineocclude.prospective.stage2_processability import (  # noqa: E402
     capture_root_for, capture_unit_structural_probe, make_unit1_checkpoint,
 )
@@ -288,13 +292,46 @@ def main() -> int:
     decision_authority = load_json(bound.stage2_decision_authority_path)
     activation_contract = decision_authority["activation_contract"]
     stage1_decision_document = load_json(args.stage1_decision)
+    # The authorized capture/processing provenance split. Loaded and verified in
+    # both directions against the authority bytes on disk before it can govern
+    # anything, then bound into every consumer through one shared admission
+    # context -- so the per-unit probe, the unit-1 checkpoint, the controller's
+    # reuse test and the cohort evidence builder cannot drift into four slightly
+    # different admission rules, which is how the superseded commit-equality proxy
+    # came to be duplicated in five places.
+    capture_provenance_authority, capture_provenance_authority_sha256 = (
+        load_capture_provenance_authority(
+            bound.package, version_tag=bound.version_tag,
+            authority_path=authority_path, repository=args.repo.resolve()))
+    # Independent consumer verification of the binding minted into the receipt.
+    provenance_binding = verify_processing_provenance_binding(
+        load_json(args.provenance), package=bound.package, version_tag=bound.version_tag,
+        authority_path=authority_path, repository=args.repo.resolve())
+    capture_admission = build_capture_admission_context(
+        authority=authority, manifest=manifest,
+        manifest_sha256=sha256_file(stage2_path),
+        authority_sha256=sha256_file(authority_path),
+        scientific_run_id=stage2_binding["run_namespace"],
+        processing_source_commit_sha=head,
+        capture_provenance_authority_sha256=capture_provenance_authority_sha256,
+        repository=args.repo.resolve())
     processability = {
         "manifest": manifest, "manifest_sha256": sha256_file(stage2_path),
         "authority_sha256": sha256_file(authority_path), "source_commit_sha": head,
         "scientific_run_id": stage2_binding["run_namespace"],
         "required_target_rows": manifest["required_target_rows_per_capture"],
         "stage1_decision": stage1_decision_document,
+        "capture_admission": capture_admission,
     }
+    print("CAPTURE_PROCESSING_PROVENANCE_AUTHORITY_SHA256="
+          f"{capture_provenance_authority_sha256}")
+    print("AUTHORIZED_CAPTURE_CRITICAL_CLOSURE_SHA256="
+          f"{capture_admission.expected_capture_critical_closure_sha256}")
+    print(f"PROCESSING_SOURCE_COMMIT={head}")
+    print("PROCESSING_RUNTIME_CLOSURE_SHA256="
+          f"{provenance_binding['processing_runtime_critical_closure_sha256']}")
+    print(f"CAPTURE_AND_PROCESSING_CLOSURES_DISTINCT="
+          f"{provenance_binding['closures_are_distinct']}")
     environment = {"MINEOCCLUDE_STAGE1_EVIDENCE_PATH": str(args.stage1_evidence),
                    "MINEOCCLUDE_STAGE1_DECISION_PATH": str(args.stage1_decision),
                    "MINEOCCLUDE_STAGE2_AUTHORIZATION_PATH": str(args.authorization),
@@ -321,6 +358,7 @@ def main() -> int:
         # to the number; no new retry policy is chosen here, and no scientific
         # subtree is touched.
         maximum_attempts=authority["restart_resume"]["maximum_identical_attempts"],
+        capture_admission=capture_admission,
         capture_unit_probe=capture_unit_structural_probe(**processability),
         unit1_checkpoint=make_unit1_checkpoint(
             **processability,
