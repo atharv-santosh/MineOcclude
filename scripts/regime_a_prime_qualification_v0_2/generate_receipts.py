@@ -414,6 +414,47 @@ def qualified_java_identity(authority: dict) -> dict:
             if (version.stderr or version.stdout) else None}
 
 
+#: The design condition the operational smoke launches. The smoke starts a
+#: ``CaptureSession("normal")``, which is the WALL condition's runtime layout,
+#: so its shape-donor unit must declare the WALL condition or the two disagree.
+SMOKE_DESIGN_CONDITION = "WALL"
+
+
+def select_smoke_source_unit(manifest: dict) -> dict:
+    """Choose the smoke's shape-donor unit by declared role, never by position.
+
+    The smoke used ``manifest["units"][0]`` while separately hard-coding the
+    ``"normal"`` capture layout. That pair is correct only while the first entry
+    of the roster happens to be a WALL capture. Nothing enforced the ordering:
+    the Stage-2 roster is ``captures + [gate] + extractions + tails``, so any
+    builder change that reordered it -- or a roster whose first capture is the
+    NO_WALL control -- would have smoke-tested a different condition than the one
+    it launched, or handed a non-capture unit (the physical-gate or a readout
+    unit, which have no scene, seed or episode at all) to a capture session.
+
+    Selection is explicit, deterministic and fail-closed: among units that
+    declare the capture role, take the one whose design condition matches what
+    the smoke launches, and break ties on unit identity rather than on position.
+    Reordering the roster therefore yields the *same* logical unit, which is the
+    property the old code lacked and the reason a reordered fixture is part of
+    the regression suite.
+    """
+    units = manifest.get("units")
+    if not isinstance(units, list) or not units:
+        raise EvidenceError("manifest declares no units for operational smoke")
+    capture_ids = {item.get("unit_id") for item in manifest.get("capture_units", [])
+                   if isinstance(item, dict)}
+    eligible = [unit for unit in units if isinstance(unit, dict)
+                and unit.get("scene") is not None
+                and unit.get("pipeline_stage") in (None, "capture_and_durability")
+                and (not capture_ids or unit.get("unit_id") in capture_ids)]
+    chosen = [unit for unit in eligible if unit.get("scene") == SMOKE_DESIGN_CONDITION]
+    if not chosen:
+        raise EvidenceError(
+            f"manifest declares no {SMOKE_DESIGN_CONDITION} capture unit for operational smoke")
+    return min(chosen, key=lambda unit: str(unit.get("unit_id")))
+
+
 def operational_startup_smoke(output: Path, *, stage: str = "stage1-capture",
                               manifest_path: Path | None = None) -> int:
     """Start the real apparatus, cross the capture contract, tear it down.
@@ -449,7 +490,7 @@ def operational_startup_smoke(output: Path, *, stage: str = "stage1-capture",
 
     # Unit-shaped, never a unit: the identity is rewritten into the smoke
     # namespace so this spec cannot collide with, or stand in for, a real unit.
-    template = dict(manifest["units"][0])
+    template = dict(select_smoke_source_unit(manifest))
     template["unit_id"] = f"smoke_{template['unit_id']}"
     template["scientific_run_id"] = namespace
     template["episode_id"] = int(authority["apparatus"].get(

@@ -158,16 +158,19 @@ def build_stage2_template(authority_sha: str, stage1_sha: str, authority: dict) 
             extract_receipt = Path(
                 f"/mnt/sagemaker-nvme/regime_a_prime_a2x_v0_3/receipts/extraction/{extract_id}.json")
             extractions.append({"unit_id": extract_id, "source_capture_unit_id": unit_id,
+                "scientific_run_id": STAGE2_NAMESPACE,
                 "layer": 4, "receipt_path": str(extract_receipt), "pipeline_stage": "layer4_extraction",
                 "command": command("stage2-extract", extract_id, stage2_path, extract_receipt)})
     gate_receipt = Path("/mnt/sagemaker-nvme/regime_a_prime_a2x_v0_3/receipts/physical_gates.json")
     gate = {"unit_id": "stage2_physical_gates", "pipeline_stage": "physical_gates",
+            "scientific_run_id": STAGE2_NAMESPACE,
             "receipt_path": str(gate_receipt),
             "command": command("stage2-gates", "stage2_physical_gates", stage2_path, gate_receipt)}
     tails = []
     for stage in ("best_k", "full", "terminal"):
         receipt = Path(f"/mnt/sagemaker-nvme/regime_a_prime_a2x_v0_3/receipts/{stage}.json")
         tails.append({"unit_id": f"stage2_{stage}", "pipeline_stage": stage,
+            "scientific_run_id": STAGE2_NAMESPACE,
             "receipt_path": str(receipt),
             "command": command(f"stage2-{stage.replace('_', '-')}", f"stage2_{stage}", stage2_path, receipt)})
     return {"schema_version": "1.1", "artifact_id": "regime-a-prime-stage2-locked-manifest-v0.3",

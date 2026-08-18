@@ -219,7 +219,16 @@ def test_current_mode_still_rehashes_the_working_tree(evidence):
     and a stale receipt could authorize an edited apparatus.
     """
     pins = evidence["runs"][0]["runtime_provenance_receipt"]["runtime_source_sha256"]
-    with pytest.raises(EvidenceError, match="runtime source bytes mismatch"):
+    # The requirement is the REFUSAL, not any particular wording. Which control
+    # fires depends on how the closure has moved since that campaign: while the
+    # path set is unchanged the pins differ byte-for-byte ("bytes mismatch"),
+    # and once the closure legitimately grows -- as it did when the Stage-2
+    # extraction and acceptance implementations were brought under governance --
+    # the historical pin set no longer covers it ("coverage is incomplete").
+    # Both are correct current-mode refusals of a historical pin set; asserting
+    # on one of them made a legitimate closure repair look like a regression.
+    with pytest.raises(EvidenceError,
+                       match="runtime source (bytes mismatch|hash coverage is incomplete)"):
         verify_runtime_source_hashes(pins)
 
 

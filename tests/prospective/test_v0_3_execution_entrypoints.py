@@ -410,10 +410,22 @@ def test_v0_3_stage1_manifest_digest_is_the_frozen_one(v0_3):
     the delta is three probe-producer strings and the binding digests that
     deterministically follow. See
     ``test_v0_3_probe_producer_authority.py`` for the producer contract itself.
+
+    The Stage-2 digest was rebound a second time by the Stage-2 execution-path
+    repair. 54 of the 104 Stage-2 units carried no ``scientific_run_id`` -- the
+    physical-gate unit, all 50 extraction units, and the three readout/terminal
+    units -- and ``DurableController.run`` refuses a unit without one, so the
+    pipeline could finish capturing and only then refuse to process. The builder
+    now stamps every unit of the Stage-2 workflow with its own campaign
+    namespace, and the manifests were regenerated deterministically through it.
+    The delta is exactly 108 added ``scientific_run_id`` lines and nothing else:
+    no identity, window, fold, phase, seed or episode moved. The authority and
+    Stage-1 manifest digests below are unchanged, which is itself the check that
+    the repair stayed inside the Stage-2 template.
     """
     assert sha256_file(v0_3.stage1_manifest_path) == (
         "424b583f93a2fd77886e534543872dd3120f0470e5f3f341ee445443c64039a3")
     assert sha256_file(v0_3.authority_path) == (
         "495af6d19b73f35a4927e48d7def4ded587ddf4d7900a8d6827ffec3ad7e982f")
     assert sha256_file(v0_3.stage2_manifest_path) == (
-        "aaf801b9007a9254ade2ba86a7b2579a11d366fa371478b4f9e97848560290da")
+        "d8a80d17e7974b76d32499e75e9eda9d45e4223b53f824e253eccf32fc610bb3")

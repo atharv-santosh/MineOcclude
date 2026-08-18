@@ -25,8 +25,10 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(LEGACY)]
 from mineocclude.prospective.development_workflow import (  # noqa: E402
     RUNTIME_CRITICAL_SOURCE_PATHS, atomic_write_json, canonical_payload_sha256,
     causal_fir_targets, derive_effective_capture_spec, load_json, probe_evidence_digest,
-    require_capture_spec_contract,
+    capture_layout_value, require_capture_spec_contract,
     require_preoutcome_provenance, require_stage2_authorization,
+    runtime_scene_value, stage1_transition_measurement,
+    transition_band_intervals, transition_occluded_interval,
     require_stage_manifest_binding, resolve_qualified_runtime,
     runtime_critical_source_closure_sha256, runtime_probe_identity_tokens,
     sha256_file, stage_run_inventory_sha256,
@@ -298,12 +300,19 @@ def verify_captured_apparatus(authority: dict, unit: dict, artifacts: dict,
 
 
 def transition_regime(x: float, scene: str, transition: dict, point_visible: bool) -> str:
+    """Classify one aligned world-x against the frozen Stage-1 transition bands.
+
+    ``scene`` is the DESIGN CONDITION, not the runtime scene string. The
+    interval accessors are the shared ones, so this reads whichever key names
+    the decision's own package generation wrote instead of the v0.2 names that
+    the v0.3 extent repair removed.
+    """
     if scene == "NO_WALL":
         return "stable_visible" if point_visible else "unresolved"
-    low, high = transition["stable_occluded_world_x_interval"]
+    low, high = transition_occluded_interval(transition)
     if low <= x <= high:
         return "stable_occluded"
-    if any(a < x < b for a, b in transition["partial_transition_world_x_intervals"]):
+    if any(a < x < b for a, b in transition_band_intervals(transition)):
         return "partial_transition"
     return "stable_visible" if point_visible else "unresolved"
 
@@ -317,6 +326,10 @@ def stage2_physical_evidence(unit: dict, artifacts: dict, observed: np.ndarray,
     direction = unit["direction"]
     detail = decision["gates"]["render_server_temporal_alignment"]["detail"][direction]
     fir = next(method for method in detail["methods"] if method["method_id"] == "causal_fir_group_delay")
+    # The RUNTIME scene value this design condition's capture actually writes.
+    # Comparing raw rows to unit["scene"] compared a design name to a runtime
+    # name and rejected every row of every WALL unit.
+    expected_scene = runtime_scene_value(unit["scene"])
     ticks = unit.get("target_model_frame_indices")
     required_rows = authority["stage2_policy"]["required_target_rows_per_capture"]
     if not isinstance(ticks, list) or len(ticks) != required_rows:
@@ -331,16 +344,16 @@ def stage2_physical_evidence(unit: dict, artifacts: dict, observed: np.ndarray,
     visibility_by_tick = {row.get("server_tick"): row for row in visibility_rows}
     if len(visibility_by_tick) != len(visibility_rows):
         raise RuntimeError("Stage-2 visibility tick identities are duplicate")
-    transition = decision["gates"]["prospective_transition_measurement"]["detail"][direction]
+    transition = stage1_transition_measurement(decision, direction)
     lane_low, lane_high = authority["apparatus"]["lane_world_x_blocks"]
     contamination = []
     for tick, x in zip(ticks, labels, strict=True):
         row = visibility_by_tick.get(tick)
         if (row is None or row.get("model_frame_idx") != tick
-                or row.get("render_frame_idx") != tick or row.get("scene") != unit["scene"]):
+                or row.get("render_frame_idx") != tick or row.get("scene") != expected_scene):
             contamination.append({"tick": tick, "classes": ["malformed_or_missing"]}); continue
         if unit["scene"] == "WALL":
-            point_low, point_high = transition["geometric_point_hidden_world_x_interval"]
+            point_low, point_high = transition_occluded_interval(transition)
             point_visible = not (point_low <= x <= point_high)
         else:
             point_visible = row.get("geometric_status") == "visible"
@@ -399,9 +412,9 @@ def capture(stage: str, unit: dict, manifest: dict, manifest_path: Path, receipt
         destination.rename(quarantine)
     destination.mkdir(parents=True)
     scene = unit["scene"]
-    with CaptureSession("normal" if scene == "WALL" else "nowall") as session:
+    with CaptureSession(capture_layout_value(scene)) as session:
         info = session.capture(spec, int(unit["episode_id"]), destination)
-        artifacts = derive_artifacts(spec, destination, "NORMAL" if scene == "WALL" else "NO_WALL",
+        artifacts = derive_artifacts(spec, destination, runtime_scene_value(scene),
                                      unit.get("target_model_frame_indices"))
         package_capture(spec, destination, int(unit["episode_id"]), session.live)
         observed = np.asarray([float(row["sheep_x"]) for row in artifacts["state"]], dtype="<f8")

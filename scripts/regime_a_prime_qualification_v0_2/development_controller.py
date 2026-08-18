@@ -184,7 +184,21 @@ def main() -> int:
         manifest_sha256=sha256_file(stage2_path), authority_sha256=sha256_file(authority_path),
         source_commit_sha=head, run_namespace=stage2_binding["run_namespace"],
         stage_role=stage2_binding["stage_role"],
-        maximum_attempts=authority["stage1_policy"]["stop_rules"]["retry_same_unit_maximum_attempts"]
+        # Stage 2 reads the authority's stage-neutral OPERATIONAL restart policy,
+        # not Stage 1's scientific stop_rules. It used to read
+        # ``stage1_policy.stop_rules.retry_same_unit_maximum_attempts``, which
+        # made Stage-2 execution depend on another stage's policy block: editing
+        # a Stage-1 rule would have silently changed Stage-2 retry behaviour, and
+        # Stage 2 had no field of its own to state its intent in.
+        #
+        # ``restart_resume`` is the right home and already existed. It is
+        # explicitly stage-neutral -- its own durable_atomic_unit names "one run
+        # for Stage 1; one scene/trajectory capture or one extraction unit for
+        # Stage 2" -- and its ``maximum_identical_attempts`` is 3, the identical
+        # value Stage 2 was already inheriting. Behaviour is therefore unchanged
+        # to the number; no new retry policy is chosen here, and no scientific
+        # subtree is touched.
+        maximum_attempts=authority["restart_resume"]["maximum_identical_attempts"]
     ).run(authorized=True, stop_after_stage1=False, environment=environment)
     return 0
 

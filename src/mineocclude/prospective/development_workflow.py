@@ -127,6 +127,55 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     "scripts/regime_a_prime_qualification_v0_4/generate_receipts.py",
     "scripts/regime_a_prime_qualification_v0_4/verify_package.py",
     "scripts/regime_a_prime_qualification_v0_4/acceptance_harness.py",
+    # The Stage-2 extraction implementation closure. p2d_extract is inside the
+    # closure, but it *delegates* -- the checkpoint load, the preprocessing and
+    # tokenization, the teacher capture and the layer-4 hook all live in the
+    # modules below, reached transitively from p2d_extract and stage2_backend.
+    # Their bytes therefore determine activation values while sitting outside
+    # the digest that authorizes a run, which is precisely the hole a thin
+    # wrapper opens: the governed file is the one that cannot change the
+    # numbers, and the file that can was ungoverned.
+    #
+    # This list is the transitive import closure of the extraction entrypoints,
+    # not a hand-picked subset of it. Two names were already known
+    # (run_person_a_66_cell_production_extraction, mineworld_adapter); tracing
+    # the graph found twenty-two more, including the four adapter wave modules
+    # and the activation hook/store implementations. A test re-derives this
+    # graph and fails if anything reachable is missing, so the next delegation
+    # cannot silently escape governance.
+    "scripts/run_person_a_66_cell_production_extraction.py",
+    "src/mineocclude/activations/__init__.py",
+    "src/mineocclude/activations/hooks.py",
+    "src/mineocclude/activations/pool.py",
+    "src/mineocclude/activations/store.py",
+    "src/mineocclude/activations/store_v2.py",
+    "src/mineocclude/analysis/config.py",
+    "src/mineocclude/analysis/coordinates.py",
+    "src/mineocclude/analysis/filters.py",
+    "src/mineocclude/analysis/manifests.py",
+    "src/mineocclude/contracts/activation.py",
+    "src/mineocclude/contracts/analysis_inputs.py",
+    "src/mineocclude/contracts/baseline_family_inputs.py",
+    "src/mineocclude/contracts/intervention_request.py",
+    "src/mineocclude/contracts/rollout_registry.py",
+    "src/mineocclude/experiments/extraction_queue.py",
+    "src/mineocclude/models/_mineworld_adapter_wave2.py",
+    "src/mineocclude/models/_mineworld_adapter_wave3.py",
+    "src/mineocclude/models/_mineworld_adapter_wave4.py",
+    "src/mineocclude/models/_mineworld_adapter_wave5.py",
+    "src/mineocclude/models/mineworld_adapter.py",
+    "src/mineocclude/models/phase2_aws.py",
+    "src/mineocclude/models/phase2_evidence.py",
+    "src/mineocclude/oracle/schema.py",
+    # The acceptance *implementation*. The v0.2/v0.3/v0.4 acceptance harnesses
+    # are three thin wrappers, and all three were inside the closure while the
+    # module holding every acceptance assertion was outside it -- the same
+    # wrapper-included/implementation-excluded shape the probe-producer repair
+    # closed for the probe path.
+    "scripts/regime_a_prime_qualification_v0_2/acceptance_harness.py",
+    # The operational unit-1 processability gate. It can STOP a scientific
+    # collection, so its bytes govern whether units 2-50 run at all.
+    "src/mineocclude/prospective/unit1_checkpoint.py",
 )
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
@@ -304,6 +353,275 @@ STAGE2_MATERIALIZED_STATUS = (
     "POST_STAGE1_MATERIALIZED_AWAITING_SEPARATE_FREEZE_AND_AUTHORIZATION")
 
 
+#: The experimental DESIGN CONDITION vocabulary, as the authority and every
+#: manifest unit spell it, mapped to the RUNTIME SCENE VALUE the qualified
+#: capture apparatus actually writes into ``visibility.jsonl``.
+#:
+#: These two vocabularies were conflated, and the conflation was invisible for
+#: as long as nothing consumed a captured row against a unit's declared scene.
+#: The wall condition is named "WALL" by the design and emitted as "NORMAL" by
+#: the runtime -- "NORMAL" being the apparatus's name for its core layout, which
+#: has the occluder in it -- while the no-wall control happens to share one name
+#: across both vocabularies. A consumer comparing ``row["scene"]`` to
+#: ``unit["scene"]`` therefore silently rejected every row of every WALL unit,
+#: and only every WALL unit, which reads as data corruption rather than as a
+#: vocabulary error.
+#:
+#: This table is the single place the two vocabularies meet. The capture path
+#: writes through it and the evidence consumers read through it, so they cannot
+#: drift apart again, and an unknown design condition fails closed rather than
+#: falling through to itself.
+DESIGN_CONDITION_RUNTIME_SCENE = {"WALL": "NORMAL", "NO_WALL": "NO_WALL"}
+
+#: The capture-session layout selector for each design condition. Same split,
+#: same reason: ``CaptureSession`` takes the apparatus's own layout name.
+DESIGN_CONDITION_CAPTURE_LAYOUT = {"WALL": "normal", "NO_WALL": "nowall"}
+
+
+def runtime_scene_value(design_condition: Any) -> str:
+    """The scene string the runtime writes for a design condition.
+
+    Fail-closed: an unrecognised condition raises rather than being passed
+    through, so a typo cannot quietly become its own expected runtime value.
+    """
+    try:
+        return DESIGN_CONDITION_RUNTIME_SCENE[design_condition]
+    except (KeyError, TypeError):
+        raise EvidenceError(
+            f"unknown experimental design condition: {design_condition!r}") from None
+
+
+def capture_layout_value(design_condition: Any) -> str:
+    """The capture-session layout name for a design condition. Fail-closed."""
+    try:
+        return DESIGN_CONDITION_CAPTURE_LAYOUT[design_condition]
+    except (KeyError, TypeError):
+        raise EvidenceError(
+            f"unknown experimental design condition: {design_condition!r}") from None
+
+
+def durable_unit_uri(manifest: Mapping[str, Any], unit_id: str) -> str:
+    """The one canonical durable destination for a unit of this manifest.
+
+    Three components independently reconstructed this string and two of them
+    disagreed. The Stage-2 backend writes derived (non-capture) artifacts under
+    a ``/derived`` namespace and its receipt verifier expected them there, while
+    the controller's own resume check expected ``{prefix}/{unit_id}`` for every
+    unit. A derived unit therefore ran, wrote a correct receipt, failed the
+    controller's validation of that very receipt, ran again, and finally
+    exhausted its attempts -- an infinite-looking retry whose cause was a string
+    convention, not a storage or evidence fault.
+
+    Capture units keep the flat namespace, because that is where the completed
+    Stage-1 evidence already lives and historical URIs are not rewritable.
+    Derived units are namespaced, because they are produced by processing rather
+    than by the apparatus and must never be mistaken for raw capture evidence.
+
+    A manifest that declares no ``capture_units`` roster -- Stage-1, whose units
+    are all captures -- is flat throughout. The distinction is read from the
+    manifest rather than guessed from the unit id, so a capture unit whose name
+    happens to start with "extract_" is still resolved by its declared role.
+    """
+    prefix = manifest.get("durable_prefix")
+    if not isinstance(prefix, str) or not prefix.startswith("s3://"):
+        raise EvidenceError("durable manifest prefix is missing or malformed")
+    roster = manifest.get("capture_units")
+    if roster is None:
+        return f"{prefix.rstrip('/')}/{unit_id}"
+    if not isinstance(roster, list):
+        raise EvidenceError("durable manifest capture roster is malformed")
+    capture_ids = {item.get("unit_id") for item in roster if isinstance(item, Mapping)}
+    role = "" if unit_id in capture_ids else "/derived"
+    return f"{prefix.rstrip('/')}{role}/{unit_id}"
+
+
+#: The Stage-1 transition measurement key that carries the stable fully-hidden
+#: world-x interval, per package generation. v0.3 moved held-out truth from a
+#: detector-fitted point interval to the geometric extent transition, which
+#: renamed the interval; both names are read here so a legitimately archived
+#: v0.2 decision still replays, and neither is defaulted to the other.
+TRANSITION_OCCLUDED_KEYS = ("extent_fully_occluded_world_x_interval",
+                            "stable_occluded_world_x_interval")
+#: The matching partial/ambiguous transition bands, in the same key order.
+TRANSITION_BAND_KEYS = ("geometric_extent_transition_world_x_intervals",
+                        "partial_transition_world_x_intervals")
+
+
+def campaign_source_commit(provenance: Mapping[str, Any]) -> str:
+    """The source freeze a campaign's own pre-outcome provenance records.
+
+    Stage-2 processing used to bind every completed artifact to
+    ``git rev-parse HEAD`` at the moment of processing. That is the same
+    category error the historical source/executable repairs corrected one layer
+    up: it asks the working tree a question only the campaign's frozen record
+    can answer. A capture receipt written under freeze X stops validating the
+    instant HEAD moves to Y -- so a durable scientific artifact silently
+    depended on the operator never checking out anything else, and a legitimate
+    successor freeze would invalidate evidence it did not touch.
+
+    The pre-outcome provenance receipt is the artifact that records which source
+    a campaign was authorized to run, it is frozen before any outcome is
+    observed, and it is verified end to end by ``require_preoutcome_provenance``
+    before this value is consulted. Reading the commit from there binds each
+    artifact to *its own* campaign rather than to the present checkout.
+
+    This is not a relaxation. The returned commit is still required to match the
+    receipt's ``source_commit_sha`` exactly, and the provenance receipt that
+    supplies it is itself bound to this package's authority, manifest, run
+    namespace and runtime-critical closure. What is removed is only the
+    requirement that the answer be whatever is checked out today.
+    """
+    if not isinstance(provenance, Mapping):
+        raise EvidenceError("pre-outcome provenance receipt is missing")
+    commit = provenance.get("source_commit")
+    if not isinstance(commit, str) or len(commit) != 40 or not all(
+            character in "0123456789abcdef" for character in commit):
+        raise EvidenceError("pre-outcome provenance records no concrete source freeze")
+    # Exactly the source-freeze invariants ``bind_historical_source_closure``
+    # requires, so the two readers of a frozen provenance receipt cannot come to
+    # different conclusions about whether its commit is usable.
+    freeze = {"status": "FROZEN_VERIFIED",
+              "source_commit_binding_state": "BOUND_TO_FROZEN_COMMIT",
+              "committed_bytes_equal_reviewed_bytes": True,
+              "repository_clean_at_post_freeze_verification": True,
+              "scientific_outcomes_observed": False}
+    for key, value in freeze.items():
+        if provenance.get(key) != value:
+            raise EvidenceError(f"pre-outcome provenance source freeze rejects {key}")
+    return commit
+
+
+def stage1_transition_measurement(decision: Mapping[str, Any], direction: str) -> dict[str, Any]:
+    """The one canonical read of a Stage-1 transition measurement for a direction.
+
+    The transition gate's ``detail`` was ``{direction: measurement}`` only in the
+    package generation that first wrote it. Since the ``046b34a`` builder
+    synchronization it is ``{"reported": {...}, "derived_from_rows": {...}}``:
+    the summary the units reported, and the same quantities recomputed by the
+    evaluator from the admitted rows. Consumers that kept the flat read raise
+    ``KeyError: 'LEFT_TO_RIGHT'`` on every current decision.
+
+    The row-derived measurement is what is returned, because it is the one this
+    repository recomputed rather than accepted. The reported summary must still
+    agree with it exactly -- that equality is already a precondition of the
+    gate's PASS, and re-checking it here means a hand-edited decision cannot
+    move a downstream window by rewriting only one of the two copies.
+    """
+    gates = decision.get("gates")
+    if not isinstance(gates, Mapping):
+        raise EvidenceError("Stage-1 decision carries no gates")
+    gate = gates.get("prospective_transition_measurement")
+    if not isinstance(gate, Mapping):
+        raise EvidenceError("Stage-1 decision carries no transition measurement gate")
+    detail = gate.get("detail")
+    if not isinstance(detail, Mapping):
+        raise EvidenceError("Stage-1 transition gate carries no detail")
+    derived = detail.get("derived_from_rows")
+    reported = detail.get("reported")
+    if not isinstance(derived, Mapping) or not isinstance(reported, Mapping):
+        raise EvidenceError(
+            "Stage-1 transition detail carries no reported/derived measurement pair")
+    measurement = derived.get(direction)
+    if not isinstance(measurement, Mapping):
+        raise EvidenceError(
+            f"Stage-1 transition detail has no row-derived measurement for {direction!r}")
+    # Exactly the equality the transition gate itself requires for PASS: the
+    # reported summary must agree with the row-derived block on every key the
+    # derivation produces. The reported side additionally carries provenance
+    # fields the derivation does not emit -- direction, measurement_unit_ids,
+    # status -- so demanding whole-dict equality here would be a *stricter*
+    # rule than the frozen gate applied, and would reject the very decisions
+    # that legitimately passed it.
+    summary = reported.get(direction)
+    if not isinstance(summary, Mapping):
+        raise EvidenceError(
+            f"Stage-1 transition detail has no reported measurement for {direction!r}")
+    disagreeing = sorted(key for key, value in measurement.items() if summary.get(key) != value)
+    if disagreeing:
+        raise EvidenceError(
+            f"Stage-1 reported and row-derived transition measurements disagree "
+            f"for {direction!r} on {disagreeing}")
+    return dict(measurement)
+
+
+def _transition_field(measurement: Mapping[str, Any], keys: Sequence[str], label: str) -> Any:
+    present = [key for key in keys if key in measurement]
+    if len(present) != 1:
+        raise EvidenceError(
+            f"Stage-1 transition measurement declares {len(present)} of the "
+            f"{label} keys {list(keys)}; exactly one is required")
+    return measurement[present[0]]
+
+
+def transition_occluded_interval(measurement: Mapping[str, Any]) -> tuple[float, float]:
+    """The stable fully-hidden world-x interval, whichever generation named it."""
+    interval = _transition_field(measurement, TRANSITION_OCCLUDED_KEYS, "occluded-interval")
+    if not isinstance(interval, list) or len(interval) != 2:
+        raise EvidenceError("Stage-1 occluded interval is malformed")
+    low, high = (_number(value, "occluded interval bound") for value in interval)
+    if low > high:
+        raise EvidenceError("Stage-1 occluded interval is inverted")
+    return low, high
+
+
+def transition_band_intervals(measurement: Mapping[str, Any]) -> list[tuple[float, float]]:
+    """The partial/ambiguous transition bands, whichever generation named them."""
+    bands = _transition_field(measurement, TRANSITION_BAND_KEYS, "transition-band")
+    if not isinstance(bands, list):
+        raise EvidenceError("Stage-1 transition bands are malformed")
+    resolved = []
+    for band in bands:
+        if not isinstance(band, list) or len(band) != 2:
+            raise EvidenceError("Stage-1 transition band is malformed")
+        resolved.append(tuple(_number(value, "transition band bound") for value in band))
+    return resolved
+
+
+#: The Stage-2 manifest lifecycle, as the authority declares it prospectively
+#: mapped to the manifest statuses that declaration admits.
+#:
+#: The authority's ``stage2_policy.manifest_state`` and the manifest's own
+#: ``status`` describe the same lifecycle from opposite ends: the authority says
+#: what is *to be* done ("target windows to be materialized and separately
+#: frozen"), the manifest says what *has* been done ("materialized, awaiting
+#: separate freeze and authorization"). Read as a current-state mirror the two
+#: look contradictory, and that reading is what made this look like drift.
+#:
+#: They are not rewritten to match, because the authority string is scientific
+#: content and the manifest string is a true statement about the bytes. They are
+#: bound instead: an authority lifecycle this repository does not recognise, or
+#: a manifest status that lifecycle does not admit, fails closed here rather
+#: than being defaulted to either phase.
+STAGE2_AUTHORITY_LIFECYCLE = {
+    "POST_STAGE1_TARGET_WINDOWS_TO_BE_MATERIALIZED_AND_SEPARATELY_FROZEN":
+        (STAGE2_DRAFT_STATUS, STAGE2_MATERIALIZED_STATUS),
+}
+
+
+def require_stage2_lifecycle_coherence(authority: Mapping[str, Any],
+                                       manifest: Mapping[str, Any]) -> str:
+    """Bind the authority's declared Stage-2 lifecycle to the manifest's state.
+
+    Returns the declared authority lifecycle. Fail-closed on an unrecognised
+    lifecycle and on a manifest status that lifecycle does not admit, so neither
+    artifact can drift into a state the other never contemplated.
+    """
+    policy = authority.get("stage2_policy")
+    if not isinstance(policy, Mapping):
+        raise EvidenceError("authority declares no Stage-2 policy")
+    declared = policy.get("manifest_state")
+    admitted = STAGE2_AUTHORITY_LIFECYCLE.get(declared)
+    if admitted is None:
+        raise EvidenceError(
+            f"authority declares an unrecognised Stage-2 manifest lifecycle: {declared!r}")
+    status = manifest.get("status")
+    if status not in admitted:
+        raise EvidenceError(
+            f"Stage-2 manifest status {status!r} is not admitted by the authority "
+            f"lifecycle {declared!r}")
+    return str(declared)
+
+
 def stage2_materialization_phase(manifest: Mapping[str, Any]) -> bool:
     """Which lifecycle phase a Stage-2 locked manifest declares itself to be in.
 
@@ -336,6 +654,7 @@ def stage2_materialization_phase(manifest: Mapping[str, Any]) -> bool:
 def validate_stage2_manifest_design(authority: Mapping[str, Any], manifest: Mapping[str, Any], *,
                                     require_materialized: bool) -> None:
     """Bind the complete Stage-2 fold/phase/pair/pipeline design to authority."""
+    require_stage2_lifecycle_coherence(authority, manifest)
     policy = authority["stage2_policy"]
     fixed = authority["fixed_development_configuration"]
     # Read out of the authority's own stage binding table rather than spelled as
@@ -1746,10 +2065,35 @@ def verify_probe_execution(receipt: Mapping[str, Any], name: str, *,
                 f"{name} invocation {command_id} does not resolve argv[0] to an absolute executable")
         declared_executable = _sha(invocation.get("executable_sha256"),
                                    f"{command_id} executable SHA")
-        executable_path = Path(executable)
-        if not executable_path.is_file() or sha256_file(executable_path) != declared_executable:
-            raise EvidenceError(
-                f"{name} invocation {command_id} executable bytes differ from the probed runtime")
+        if expected_source_pins is None:
+            # Current mode: the executable about to run is on this host, so its
+            # bytes are rehashed and must match what the record claims.
+            executable_path = Path(executable)
+            if not executable_path.is_file() or sha256_file(executable_path) != declared_executable:
+                raise EvidenceError(
+                    f"{name} invocation {command_id} executable bytes differ from the probed runtime")
+        # Historical mode rehashes nothing here, and this is the *correct*
+        # reading rather than a relaxation. The question a completed campaign
+        # poses is "which executable ran then", and the only authority on that
+        # is the campaign's own frozen record. Rehashing today's binary at the
+        # same absolute path answers a different question, and answers it
+        # wrongly in both directions: a Space rebuild that reinstalls a
+        # different Corretto patch level would condemn a valid frozen PASS,
+        # while a host that happens to carry the right bytes would "confirm" a
+        # receipt it has no evidence about. The authority pins no executable
+        # digests, so there is no immutable hash to compare against and none is
+        # invented here.
+        #
+        # What still holds the historical executable identity, none of it
+        # host-dependent: the digest chain -- executable_sha256 is inside
+        # probe_execution, which is covered by probe_evidence_sha256, which is
+        # covered by the receipt payload digest, which is bound into the
+        # campaign's verified pre-outcome provenance -- so the value cannot have
+        # been edited after freezing; the pinned absolute path check below; and,
+        # decisively, control D, which requires the recorded output to contain
+        # the authority's own identity tokens ("Corretto-17.0.20.8.1",
+        # "llvmpipe LLVM 20.1.2", "25.2.8", "21.1.12"). A different executable
+        # does not emit those strings.
         if command_id == "java_version":
             # The JDK must be the pinned one, invoked by absolute path. A `java`
             # resolved from an inherited PATH is an unpinned runtime, and this
@@ -1786,8 +2130,17 @@ def verify_probe_execution(receipt: Mapping[str, Any], name: str, *,
     if not isinstance(measured, Mapping) or set(measured) != set(pins):
         raise EvidenceError(f"{name} apparatus hash coverage is incomplete")
     for key, pinned in pins.items():
+        # Time-invariant in BOTH modes: the expectation is the authority's own
+        # frozen pin, not anything read off this host.
         if measured.get(key) != pinned:
             raise EvidenceError(f"{name} apparatus pin mismatch: {key}")
+        if expected_source_pins is not None:
+            continue
+        # Current mode only: the artefacts about to be used must also be on
+        # disk with those bytes. A completed campaign's apparatus is not
+        # required to still exist -- several of these are overlay installs that
+        # a Space rebuild removes -- and its identity is already established
+        # against the immutable pin above.
         location = Path(str(paths[key]))
         located = location if location.is_absolute() else repository / location
         if not located.is_file() or sha256_file(located) != pinned:
@@ -1804,7 +2157,14 @@ def verify_probe_execution(receipt: Mapping[str, Any], name: str, *,
             raise EvidenceError(f"{name} probe record and receipt disagree on {key}")
     return {"status": "PASS", "producer": producer,
             "probe_evidence_sha256": claimed,
-            "invocations_verified": sorted(required_ids)}
+            "invocations_verified": sorted(required_ids),
+            # Names the basis of the verdict rather than leaving it implicit.
+            "executable_identity_basis": ("REHASHED_FROM_CURRENT_HOST"
+                                          if expected_source_pins is None
+                                          else "HISTORICALLY_BOUND_NOT_REHASHED"),
+            "apparatus_identity_basis": ("AUTHORITY_PIN_AND_CURRENT_HOST_BYTES"
+                                         if expected_source_pins is None
+                                         else "AUTHORITY_PIN_ONLY")}
 
 
 @dataclass(frozen=True)
@@ -2902,7 +3262,8 @@ class DurableController:
                  manifest_sha256: str | None = None, authority_sha256: str | None = None,
                  source_commit_sha: str | None = None, run_namespace: str | None = None,
                  maximum_attempts: int = 3, stage_role: str | None = None,
-                 durable_verifier: DurableVerifier = verify_remote_durable_objects):
+                 durable_verifier: DurableVerifier = verify_remote_durable_objects,
+                 unit1_checkpoint: Callable[[Mapping[str, Any]], Any] | None = None):
         self.manifest = manifest; self.state_dir = state_dir; self.event_log = event_log
         self.manifest_sha256 = manifest_sha256; self.authority_sha256 = authority_sha256
         self.source_commit_sha = source_commit_sha; self.run_namespace = run_namespace
@@ -2912,6 +3273,12 @@ class DurableController:
         # authorized. Every unit is checked against the stage the caller is
         # authorized for before it is run OR reused.
         self.stage_role = stage_role
+        # Operational unit-1 processability gate. When supplied, it is invoked
+        # once, immediately after the FIRST capture-role unit of this manifest is
+        # complete and durable, and the remaining units do not start until it
+        # passes. It receives that unit and is expected to raise on a block. It
+        # is never consulted for a derived unit, and never more than once.
+        self.unit1_checkpoint = unit1_checkpoint
         self.maximum_attempts = _integer(maximum_attempts, "maximum_attempts", minimum=1)
         self.durable_verifier = durable_verifier
         units = manifest.get("units")
@@ -2927,7 +3294,13 @@ class DurableController:
         self.durable_prefix = prefix.rstrip("/")
 
     def expected_durable_uri(self, unit_id: str) -> str:
-        return f"{self.durable_prefix}/{unit_id}"
+        """Delegated to the canonical resolver; never reconstructed here.
+
+        This method used to reconstruct the URI itself, flat for every unit,
+        which disagreed with the backend that writes derived units under
+        ``/derived`` and with the verifier that reads them back from there.
+        """
+        return durable_unit_uri(self.manifest, unit_id)
 
     def _events(self, event: Mapping[str, Any]) -> None:
         self.event_log.parent.mkdir(parents=True, exist_ok=True)
@@ -2975,6 +3348,28 @@ class DurableController:
                 and state.get("scientific_run_id") == self.run_namespace
                 and self._valid_receipt(unit, receipt_path))
 
+    def _is_capture_unit(self, unit: Mapping[str, Any]) -> bool:
+        roster = self.manifest.get("capture_units")
+        if isinstance(roster, list):
+            return unit.get("unit_id") in {item.get("unit_id") for item in roster
+                                           if isinstance(item, Mapping)}
+        return True
+
+    def _apply_unit1_checkpoint(self, unit: Mapping[str, Any], pending: bool) -> bool:
+        """Gate the remaining collection on the first capture unit, once.
+
+        Returns the still-pending flag. Anything the checkpoint raises propagates
+        unchanged -- in particular ``OperationalCheckpointBlocked`` -- so the
+        controller stops with the remaining units uncollected rather than
+        converting an operational block into a scientific outcome.
+        """
+        if not pending or self.unit1_checkpoint is None or not self._is_capture_unit(unit):
+            return pending
+        self._events({"event": "unit1_checkpoint_started", "unit_id": unit.get("unit_id")})
+        self.unit1_checkpoint(unit)
+        self._events({"event": "unit1_checkpoint_passed", "unit_id": unit.get("unit_id")})
+        return False
+
     def run(self, *, authorized: bool, stop_after_stage1: bool = True,
             environment: Mapping[str, str] | None = None) -> None:
         if not authorized:
@@ -2984,6 +3379,10 @@ class DurableController:
         if self.stage_role is None:
             raise EvidenceError("controller stage role binding is required")
         self.state_dir.mkdir(parents=True, exist_ok=True)
+        # Armed until the first capture-role unit has cleared the gate. Applied
+        # on the reuse path too, so a restart cannot walk past an unproven unit 1
+        # simply because it was already collected.
+        checkpoint_pending = self.unit1_checkpoint is not None
         for unit in self.manifest["units"]:
             unit_id = unit["unit_id"]
             # Cross-stage restart/resume refusal, applied before reuse as well
@@ -3001,7 +3400,9 @@ class DurableController:
                     f"unit {unit_id!r} declares stage {declared!r}, which is not a "
                     f"{self.stage_role!r} stage")
             if self.completed(unit_id):
-                self._events({"event": "unit_reused", "unit_id": unit_id}); continue
+                self._events({"event": "unit_reused", "unit_id": unit_id})
+                checkpoint_pending = self._apply_unit1_checkpoint(unit, checkpoint_pending)
+                continue
             if not isinstance(command, list) or not command or not all(isinstance(part, str) and part for part in command):
                 raise EvidenceError(f"unit {unit_id} has invalid command")
             receipt_path = Path(unit["receipt_path"])
@@ -3020,6 +3421,7 @@ class DurableController:
                 "manifest_sha256": self.manifest_sha256, "authority_sha256": self.authority_sha256,
                 "source_commit_sha": self.source_commit_sha, "scientific_run_id": self.run_namespace})
             self._events({"event": "unit_completed", "unit_id": unit_id})
+            checkpoint_pending = self._apply_unit1_checkpoint(unit, checkpoint_pending)
         if stop_after_stage1:
             self._events({"event": "stage1_units_complete", "automatic_stage2_start": False})
 

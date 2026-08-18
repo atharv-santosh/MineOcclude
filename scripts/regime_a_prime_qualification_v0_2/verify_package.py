@@ -183,6 +183,22 @@ def main() -> None:
                # unblocks. Enumerated one path at a time like every entry above.
                "tests/prospective/test_historical_source_verification.py",
                "tests/prospective/test_v0_4_stage2_preparation.py",
+               # The Stage-2 execution-path repair. The Stage-2 pipeline had
+               # never met real bytes, so its consumer-side defects -- the stale
+               # transition schema, the design-vs-runtime scene vocabulary, the
+               # missing scientific_run_id on 54 units, the derived durable URI,
+               # and the live-HEAD coupling of completed artifacts -- were all
+               # latent. The repairs are edits to already-enumerated sources; the
+               # two paths below are new files and are enumerated one at a time
+               # like every entry above.
+               #
+               # unit1_checkpoint.py is the OPERATIONAL processability gate that
+               # stops a Stage-2 collection if the FIRST authorized capture is
+               # not structurally consumable, so the remaining 49 are never spent
+               # on bytes the frozen pipeline cannot read. It observes no
+               # scientific outcome and can change no scientific parameter.
+               "src/mineocclude/prospective/unit1_checkpoint.py",
+               "tests/prospective/test_stage2_execution_path_repair.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

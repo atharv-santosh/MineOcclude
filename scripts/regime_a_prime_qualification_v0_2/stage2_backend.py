@@ -18,7 +18,8 @@ LEGACY = ROOT / "scripts/regime_a_prime_qualification_v0_1"
 sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(LEGACY)]
 
 from mineocclude.prospective.development_workflow import (  # noqa: E402
-    atomic_write_json, causal_fir_targets, load_json, require_stage2_authorization, sha256_file,
+    atomic_write_json, campaign_source_commit, causal_fir_targets, durable_unit_uri, load_json,
+    require_stage2_authorization, sha256_file,
     RUNTIME_CRITICAL_SOURCE_PATHS, verify_remote_durable_objects,
     verify_probe_execution, verify_receipt_payload_digest, verify_runtime_identity,
     verify_runtime_source_hashes,
@@ -39,10 +40,7 @@ def require_durable_unit_receipt(manifest: dict, manifest_path: Path, unit: dict
     prefix = manifest.get("durable_prefix")
     if not isinstance(prefix, str) or not prefix.startswith("s3://"):
         raise RuntimeError("Stage-2 durable prefix is missing")
-    capture_ids = {item.get("unit_id") for item in manifest.get("capture_units", [])
-                   if isinstance(item, dict)}
-    durable_role = "" if unit.get("unit_id") in capture_ids else "/derived"
-    expected_uri = f"{prefix.rstrip('/')}{durable_role}/{unit.get('unit_id')}"
+    expected_uri = durable_unit_uri(manifest, unit.get("unit_id"))
     expected = {"unit_id": unit.get("unit_id"), "status": "COMPLETE_VALIDATED_DURABLE",
         "authority_sha256": manifest.get("authority_binding", {}).get("sha256"),
         "manifest_sha256": sha256_file(manifest_path),
@@ -109,6 +107,20 @@ def verify_bound_stage2_physical_evidence(unit: dict, receipt: dict, authority: 
         raise RuntimeError("Stage-2 physical summary disagrees with bound raw evidence")
 
 
+def campaign_commit() -> str:
+    """The source freeze THIS Stage-2 campaign was authorized under.
+
+    Replaces ``git rev-parse HEAD`` at every processing site. The provenance
+    receipt this reads is the same artifact ``require_backend_authorization``
+    has already verified end to end, so the value is bound to the campaign
+    rather than to whatever happens to be checked out when a later stage runs.
+    """
+    provenance_path = Path(os.environ.get("MINEOCCLUDE_PREOUTCOME_PROVENANCE_PATH", ""))
+    if not provenance_path.is_file():
+        raise RuntimeError("Stage-2 processing requires the bound pre-outcome provenance receipt")
+    return campaign_source_commit(load_json(provenance_path))
+
+
 def receipt_path() -> Path:
     value = os.environ.get("MINEOCCLUDE_RECEIPT_PATH")
     if not value:
@@ -130,8 +142,7 @@ def require_backend_authorization(manifest: dict, manifest_path: Path) -> None:
                                            stage1_manifest_path, provenance_path,
                                            stage1_provenance_path)):
         raise PermissionError("direct Stage-2 backend invocation lacks authorization artifacts")
-    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-                          capture_output=True, check=True).stdout.strip()
+    head = campaign_commit()
     require_stage2_authorization(manifest, load_json(authorization_path),
         authorization_receipt_path=authorization_path,
         stage1_decision=load_json(decision_path), authority_path=authority_path,
@@ -158,14 +169,13 @@ def complete(manifest: dict, manifest_path: Path, unit_id: str, payload: dict, *
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
         objects[relative] = sha256_file(destination)
-    source_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-                                   capture_output=True, check=True).stdout.strip()
+    source_commit = campaign_commit()
     checksum_path = bundle / "sha256_manifest.json"
     atomic_write_json(checksum_path, {"unit_id": unit_id,
         "authority_sha256": manifest["authority_binding"]["sha256"],
         "manifest_sha256": sha256_file(manifest_path), "source_commit_sha": source_commit,
         "scientific_run_id": manifest["run_namespace"], "files": objects})
-    uri = manifest["durable_prefix"].rstrip("/") + f"/derived/{unit_id}"
+    uri = durable_unit_uri(manifest, unit_id)
     subprocess.run(["aws", "s3", "sync", str(bundle), uri, "--only-show-errors"], check=True)
     readback = subprocess.run(["aws", "s3", "cp", uri + "/sha256_manifest.json", "-", "--only-show-errors"],
                               capture_output=True, check=True).stdout
@@ -291,8 +301,7 @@ def capture_receipt(manifest: dict, unit_id: str) -> dict:
 def gates(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     receipts = {unit["unit_id"]: capture_receipt(manifest, unit["unit_id"])
                 for unit in manifest["capture_units"]}
-    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-                          capture_output=True, check=True).stdout.strip()
+    head = campaign_commit()
     for unit in manifest["capture_units"]:
         require_durable_unit_receipt(manifest, manifest_path, unit, receipts[unit["unit_id"]],
                                      current_source_commit=head)
@@ -304,8 +313,7 @@ def gates(manifest: dict, manifest_path: Path, unit_id: str) -> None:
 
 def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     gate = load_json(Path(manifest["physical_gate_unit"]["receipt_path"]))
-    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-                          capture_output=True, check=True).stdout.strip()
+    head = campaign_commit()
     require_durable_unit_receipt(manifest, manifest_path, manifest["physical_gate_unit"], gate,
                                  current_source_commit=head)
     if gate.get("physical_gates", {}).get("status") != "PASS":
@@ -443,8 +451,7 @@ def best_k_qualification_checks(scene_outputs: dict, policy: dict) -> dict[str, 
 
 def readout(manifest: dict, manifest_path: Path, unit_id: str, kind: str) -> None:
     policy = load_json(ROOT / manifest["authority_binding"]["path"])["stage2_policy"]["readout"]
-    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-                          capture_output=True, check=True).stdout.strip()
+    head = campaign_commit()
     gate = load_json(Path(manifest["physical_gate_unit"]["receipt_path"]))
     require_durable_unit_receipt(manifest, manifest_path, manifest["physical_gate_unit"], gate,
                                  current_source_commit=head)
@@ -488,8 +495,7 @@ def readout(manifest: dict, manifest_path: Path, unit_id: str, kind: str) -> Non
 
 
 def terminal(manifest: dict, manifest_path: Path, unit_id: str) -> None:
-    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-                          capture_output=True, check=True).stdout.strip()
+    head = campaign_commit()
     best_unit = next(unit for unit in manifest["readout_and_terminal_units"]
                      if unit["pipeline_stage"] == "best_k")
     full_unit = next(unit for unit in manifest["readout_and_terminal_units"]
