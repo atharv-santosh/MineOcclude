@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator
 
 from mineocclude.prospective.development_workflow import (
     RUNTIME_CRITICAL_SOURCE_PATHS, DurableController, EvidenceError, Stage1Evaluator,
-    canonical_payload_sha256,
+    canonical_json_bytes, canonical_payload_sha256,
     causal_fir_targets, derive_projection_validity, load_json, probe_evidence_digest,
     require_stage2_authorization, require_stage_manifest_binding,
     runtime_probe_identity_tokens, sha256_file,
@@ -20,7 +20,9 @@ from mineocclude.prospective.development_workflow import (
     verify_receipt_payload_digest, verify_runtime_identity,
     verify_remote_durable_objects, verify_runtime_source_hashes,
 )
-from mineocclude.prospective.package_binding import stage1_decision_artifact_id
+from mineocclude.prospective.package_binding import (
+    artifact_version_tag, provenance_artifact_id_for, stage1_decision_artifact_id,
+)
 from scripts.regime_a_prime_qualification_v0_2.stage2_backend import (
     best_k_qualification_checks, bound_capture_artifact, require_backend_authorization,
     require_durable_unit_receipt,
@@ -34,6 +36,12 @@ PACKAGE = ROOT / "docs/status/integration/regime_a_prime_qualification_v0_1/pros
 AUTHORITY_PATH = PACKAGE / "authority_parameters.json"
 STAGE1_PATH = PACKAGE / "stage1_manifest.json"
 STAGE2_PATH = PACKAGE / "stage2_locked_manifest.json"
+
+#: The source freeze this fixture's synthetic v0.2 Stage-1 campaign ran under.
+#: Deliberately not the ``"c" * 40`` the Stage-2 side binds as its *current*
+#: commit: the barrier now checks two distinct source identities, and a fixture
+#: that spelled them with one value could not tell them apart.
+CAMPAIGN_COMMIT = "b" * 40
 
 
 @pytest.fixture
@@ -94,7 +102,8 @@ def probe_execution_record(authority: dict) -> dict:
                                       for path in RUNTIME_CRITICAL_SOURCE_PATHS}}
 
 
-def valid_unit_probes(authority: dict, manifest: dict, unit: dict) -> tuple[dict, dict, dict]:
+def valid_unit_probes(authority: dict, manifest: dict, unit: dict,
+                      head: str | None = None) -> tuple[dict, dict, dict]:
     apparatus_policy = authority["apparatus_observation_policy"]
     apparatus = signed_probe(camera_feet_world_xyz=apparatus_policy["camera_feet_world_xyz"],
         camera_eye_world_xyz=apparatus_policy["camera_eye_world_xyz"],
@@ -109,6 +118,7 @@ def valid_unit_probes(authority: dict, manifest: dict, unit: dict) -> tuple[dict
     execution = probe_execution_record(authority)
     by_id = {item["command_id"]: item for item in execution["invocations"]}
     runtime = signed_probe(**runtime_fields,
+        **({} if head is None else {"head": head}),
         critical_file_sha256=authority["runtime_identity_policy"]["critical_file_sha256"],
         java_version_probe_sha256=by_id["java_version"]["normalized_output_sha256"],
         renderer_probe_sha256=by_id["renderer"]["normalized_output_sha256"],
@@ -127,7 +137,7 @@ def valid_unit_probes(authority: dict, manifest: dict, unit: dict) -> tuple[dict
     return runtime, path, durability
 
 
-def valid_evidence(authority: dict, manifest: dict) -> dict:
+def valid_evidence(authority: dict, manifest: dict, head: str | None = None) -> dict:
     # The causal FIR warmup prefix is authority-derived, never a chosen budget:
     # a model frame earlier than maximum_lag_ticks_for_estimation has no
     # complete causal state history, so its clock cannot be resolved.
@@ -152,7 +162,8 @@ def valid_evidence(authority: dict, manifest: dict) -> dict:
     runs = []
     prohibited = {name: 0 for name in Stage1Evaluator.PROHIBITED}
     for unit in manifest["units"]:
-        runtime_probe, path_probe, durability_probe = valid_unit_probes(authority, manifest, unit)
+        runtime_probe, path_probe, durability_probe = valid_unit_probes(
+            authority, manifest, unit, head=head)
         xs = [-8.0 + 16.0 * index / 179 for index in range(180)]
         if unit["direction"] == "RIGHT_TO_LEFT":
             xs.reverse()
@@ -497,6 +508,57 @@ def test_designated_hidden_row_identities_are_exact(authority, stage1):
     assert evaluator(authority, stage1).evaluate(evidence).status == "FAIL"
 
 
+def historical_stage1_provenance(tmp_path: Path, authority: Path, stage1_manifest: Path,
+                                 execution: dict) -> Path:
+    """The frozen pre-outcome receipt this fixture's Stage-1 campaign ran under.
+
+    The barrier re-derives the Stage-1 PASS in *historical* mode, so it no
+    longer asks the working tree what the campaign ran; it asks the campaign's
+    own frozen provenance. That receipt is therefore now part of the fixture,
+    and it has to be a genuine one -- ``bind_historical_source_closure``
+    reproduces the payload digest, the package bindings, the source freeze, the
+    itemized inventory, the closure digest and the embedded probe evidence
+    before it will hand out a single pin.
+
+    The pins are the *current* tree's, because this fixture's evidence is
+    synthesized against the current tree: the receipt records what this
+    synthetic campaign ran, which is exactly the premise historical mode
+    verifies. Only ``status`` and the freeze-state booleans are asserted rather
+    than derived, for the same reason the sibling v0.4 fixtures assert them --
+    the surrounding freeze ceremony cannot be performed from inside a test.
+    """
+    pins = {path: sha256_file(ROOT / path) for path in RUNTIME_CRITICAL_SOURCE_PATHS}
+    closure = hashlib.sha256(canonical_json_bytes(pins)).hexdigest()
+    receipt = {"schema_version": "1.1",
+        "artifact_id": provenance_artifact_id_for(
+            artifact_version_tag(load_json(stage1_manifest).get("artifact_id"))),
+        "classification": "DEVELOPMENT_ONLY", "status": "FROZEN_VERIFIED",
+        "authority_sha256": sha256_file(authority),
+        "manifest_sha256": sha256_file(stage1_manifest),
+        "stage": "stage1-capture", "stage_role": "stage1",
+        "source_commit": CAMPAIGN_COMMIT,
+        "source_commit_binding_state": "BOUND_TO_FROZEN_COMMIT",
+        "committed_bytes_equal_reviewed_bytes": True,
+        "repository_clean_at_post_freeze_verification": True,
+        "source_paths_verified_bytes_and_modes": True,
+        "source_bindings": {path: {"git_mode": "100644", "sha256": value}
+                            for path, value in pins.items()},
+        "runtime_critical_source_closure_sha256": closure,
+        "reviewed_runtime_critical_source_closure_sha256": closure,
+        "runtime_identity_verified": True, "apparatus_identity_verified": True,
+        "renderer_identity_verified": True,
+        "probe_evidence_sha256": probe_evidence_digest(execution),
+        "probe_evidence": {"runtime_source_sha256": dict(pins),
+                           "probe_execution": execution},
+        "scientific_outcomes_observed": False,
+        "confirmatory_collection_authorized": False,
+        "independently_derived": True}
+    receipt["payload_sha256"] = canonical_payload_sha256(receipt)
+    path = tmp_path / "stage1_provenance.json"
+    path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+    return path
+
+
 def bound_stage2(tmp_path: Path):
     authority = tmp_path / "authority.json"; authority.write_bytes(AUTHORITY_PATH.read_bytes())
     provenance = tmp_path / "provenance.json"; provenance.write_text("{}\n")
@@ -504,8 +566,14 @@ def bound_stage2(tmp_path: Path):
     authority_value = load_json(authority)
     stage1_value = load_json(stage1_manifest)
     evidence_path = tmp_path / "evidence.json"
-    evidence_path.write_text(json.dumps(valid_evidence(authority_value, stage1_value),
-                                        sort_keys=True) + "\n")
+    evidence_path.write_text(json.dumps(
+        valid_evidence(authority_value, stage1_value, head=CAMPAIGN_COMMIT),
+        sort_keys=True) + "\n")
+    # The campaign's own frozen record of the source it ran. Historical
+    # re-derivation reads its closure from here, never from the working tree.
+    stage1_provenance = historical_stage1_provenance(
+        tmp_path, authority, stage1_manifest,
+        load_json(evidence_path)["runs"][0]["runtime_provenance_receipt"]["probe_execution"])
     decision_path = tmp_path / "decision.json"
     evaluated = Stage1Evaluator(authority_value, stage1_value,
         authority_sha256=sha256_file(authority),
@@ -541,15 +609,16 @@ def bound_stage2(tmp_path: Path):
         "stage1_status": "PASS",
         "stage2_manifest_sha256": sha256_file(manifest_path), "source_commit_sha": "c" * 40,
         "expected_run_namespace": manifest["run_namespace"],
-        "preoutcome_provenance_receipt_sha256": sha256_file(provenance)}
+        "preoutcome_provenance_receipt_sha256": sha256_file(provenance),
+        "stage1_preoutcome_provenance_receipt_sha256": sha256_file(stage1_provenance)}
     receipt["authorization_payload_sha256"] = canonical_payload_sha256(receipt)
     return (authority, provenance, stage1_manifest, evidence_path, decision_path, decision,
-            manifest_path, manifest, receipt)
+            manifest_path, manifest, receipt, stage1_provenance)
 
 
 def authorize(bundle, *, decision=None, receipt=None):
     (authority, provenance, stage1_manifest, evidence_path, decision_path, actual_decision,
-     manifest_path, manifest, actual_receipt) = bundle
+     manifest_path, manifest, actual_receipt, stage1_provenance) = bundle
     supplied_receipt = actual_receipt if receipt is None else receipt
     authorization_path = authority.parent / "authorization.json"
     authorization_path.write_text(json.dumps(supplied_receipt, sort_keys=True) + "\n")
@@ -559,7 +628,8 @@ def authorize(bundle, *, decision=None, receipt=None):
         manifest_path=manifest_path, stage1_manifest_path=stage1_manifest,
         stage1_evidence_path=evidence_path, stage1_decision_path=decision_path,
         current_source_commit="c" * 40,
-        preoutcome_provenance_path=provenance)
+        preoutcome_provenance_path=provenance,
+        stage1_preoutcome_provenance_path=stage1_provenance)
 
 
 def test_exact_separate_stage2_authorization_passes(tmp_path):
@@ -683,15 +753,16 @@ def test_generic_signed_runtime_pass_is_insufficient(authority, stage1):
 
 @pytest.mark.parametrize("field", ["authority_sha256", "stage1_manifest_sha256", "stage1_decision_sha256",
                                     "stage1_evidence_sha256", "stage2_manifest_sha256", "source_commit_sha", "expected_run_namespace",
-                                    "preoutcome_provenance_receipt_sha256"])
+                                    "preoutcome_provenance_receipt_sha256",
+                                    "stage1_preoutcome_provenance_receipt_sha256"])
 def test_stale_or_wrong_stage2_authorization_bindings_fail(tmp_path, field):
-    bundle = bound_stage2(tmp_path); receipt = deepcopy(bundle[-1]); receipt[field] = "wrong"
+    bundle = bound_stage2(tmp_path); receipt = deepcopy(bundle[8]); receipt[field] = "wrong"
     receipt["authorization_payload_sha256"] = canonical_payload_sha256(receipt, omit="authorization_payload_sha256")
     with pytest.raises(PermissionError): authorize(bundle, receipt=receipt)
 
 
 def test_edited_authorization_payload_hash_fails(tmp_path):
-    bundle = bound_stage2(tmp_path); receipt = deepcopy(bundle[-1]); receipt["expected_run_namespace"] = "copied"
+    bundle = bound_stage2(tmp_path); receipt = deepcopy(bundle[8]); receipt["expected_run_namespace"] = "copied"
     with pytest.raises(PermissionError): authorize(bundle, receipt=receipt)
 
 

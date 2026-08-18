@@ -34,7 +34,9 @@ def package() -> Path:
 
 
 def main() -> None:
-    from mineocclude.prospective.development_workflow import bind_manifest, validate_stage2_manifest_design
+    from mineocclude.prospective.development_workflow import (
+        bind_manifest, stage2_materialization_phase, superseded_half_extent_present,
+        validate_stage2_manifest_design)
     from mineocclude.prospective.package_binding import resolve_package_binding
 
     PACKAGE = package()
@@ -46,7 +48,16 @@ def main() -> None:
     authority = load("authority_parameters.json")
     stage1, stage2 = load("stage1_manifest.json"), load("stage2_locked_manifest.json")
     bind_manifest(authority_path, stage1); bind_manifest(authority_path, stage2)
-    validate_stage2_manifest_design(authority, stage2, require_materialized=False)
+    # This audit certifies committed package bytes, and a package has two
+    # legitimate committed states: the draft template it is built in, and the
+    # post-Stage-1 materialized form the builder's ``--stage1-decision`` mode
+    # rewrites it into. Requiring the draft state unconditionally meant the audit
+    # failed on the successful outcome of the repository's own materialization
+    # step -- not on any defect. The phase is read from the manifest and the
+    # matching rule set is applied in full; an unknown status fails closed, and
+    # neither phase is an authorization.
+    materialized = stage2_materialization_phase(stage2)
+    validate_stage2_manifest_design(authority, stage2, require_materialized=materialized)
     assert authority["status"] == AUTHORITY_STATUS[VERSION_TAG]
     assert authority["STAGE_1_COLLECTION_AUTHORIZED"] is False
     assert authority["STAGE_2_COLLECTION_AUTHORIZED"] is False
@@ -81,12 +92,29 @@ def main() -> None:
     readout = authority["stage2_policy"]["readout"]
     assert readout["corrected_p2_best_k_visible_rmse_reference_blocks"] == p2["BEST_K"]["rmse_blocks"]
     assert readout["best_k_each_scene_rmse_maximum_blocks"] == 2 * p2["BEST_K"]["rmse_blocks"]
-    serialized = json.dumps({"authority": authority, "stage1": stage1, "stage2": stage2})
+    package_documents = {"authority": authority, "stage1": stage1, "stage2": stage2}
+    serialized = json.dumps(package_documents)
     assert "HIDDEN_BOUNDS" not in serialized and "0.1660274234445584" not in serialized
-    assert "0.52" not in serialized and "0.4374893206596274" not in serialized
+    assert "0.4374893206596274" not in serialized
     assert "independent_method_count" not in serialized
-    assert all(item["target_window_status"] == "TO_BE_MATERIALIZED_FROM_FROZEN_STAGE1_DECISION"
+    assert not superseded_half_extent_present(package_documents)
+    # The phase must be declared consistently by every field that depends on it,
+    # so a status flipped by hand does not by itself select the weaker rule set.
+    # A draft names no Stage-1 outcome because none exists yet; a materialized
+    # manifest must name the exact frozen decision and evidence its windows came
+    # from. Whether that Stage-1 pair is a genuine PASS is re-derived at the
+    # Stage-2 barrier, which is the only place that question can be answered.
+    expected_window = ("MATERIALIZED_FROM_STAGE1" if materialized
+                       else "TO_BE_MATERIALIZED_FROM_FROZEN_STAGE1_DECISION")
+    assert all(item["target_window_status"] == expected_window
                for item in stage2["trajectory_identities"])
+    stage1_bindings = (stage2.get("stage1_decision_sha256"), stage2.get("stage1_evidence_sha256"))
+    if materialized:
+        assert all(isinstance(value, str) and len(value) == 64
+                   and all(character in "0123456789abcdef" for character in value)
+                   for value in stage1_bindings), "materialized Stage-2 names no Stage-1 outcome"
+    else:
+        assert stage1_bindings == (None, None), "draft Stage-2 names a Stage-1 outcome"
     assert all(value != "UNJUSTIFIED" for value in _walk(authority))
     base = authority["immutable_software_forensic_base_sha"]
     ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", base, "HEAD"], cwd=ROOT,
@@ -150,6 +178,11 @@ def main() -> None:
                "prospective_development_authority_v0_4/",
                "scripts/regime_a_prime_qualification_v0_4/",
                "tests/prospective/test_v0_4_package_binding.py",
+               # The v0.4 Stage-2-preparation successor: time-invariant historical
+               # source verification, and the Stage-2 producer/barrier surface it
+               # unblocks. Enumerated one path at a time like every entry above.
+               "tests/prospective/test_historical_source_verification.py",
+               "tests/prospective/test_v0_4_stage2_preparation.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

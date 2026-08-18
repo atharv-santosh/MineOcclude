@@ -98,6 +98,7 @@ def load(name: str) -> dict:
 
 
 def audit_documents() -> None:
+    from mineocclude.prospective.development_workflow import superseded_half_extent_present
     from mineocclude.prospective.package_binding import resolve_package_binding
 
     PACKAGE = package()
@@ -129,8 +130,9 @@ def audit_documents() -> None:
     assert all(sorted(item["phase_frames"] for item in identities if item["outer_fold"] == fold)
                == sorted(phases) for fold in range(folds))
     assert sum(item["direction"] == "LEFT_TO_RIGHT" for item in identities) == 13
-    serialized = json.dumps({"authority": authority, "stage1": stage1, "stage2": stage2})
-    assert "0.52" not in serialized and "0.4374893206596274" not in serialized
+    documents = {"authority": authority, "stage1": stage1, "stage2": stage2}
+    assert "0.4374893206596274" not in json.dumps(documents)
+    assert not superseded_half_extent_present(documents)
     assert authority["STAGE_1_COLLECTION_AUTHORIZED"] is False
     assert authority["STAGE_2_COLLECTION_AUTHORIZED"] is False
     assert stage1["STAGE_2_COLLECTION_AUTHORIZED"] is False

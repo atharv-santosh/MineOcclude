@@ -195,17 +195,26 @@ def build_stage2_template(authority_sha: str, stage1_sha: str, authority: dict) 
         "durable_prefix": f"{DURABLE_ROOT}/stage2"}
 
 
-def materialize_stage2(template: dict, decision: dict) -> dict:
+def materialize_stage2(template: dict, decision: dict, *, authority: dict) -> dict:
     """Materialize target windows only from a frozen Stage-1 physical decision.
 
-    Shared with v0.3 unchanged: the stable-occluded interval comes from the
-    *geometric* extent transition gate, not from a detector edge, so the Stage-2
-    target windows inherit the same detector-independent truth the Stage-1 gate
-    used.
+    The predicate is shared with v0.3 unchanged -- the stable-occluded interval
+    comes from the *geometric* extent transition gate, not from a detector edge,
+    so the Stage-2 target windows inherit the same detector-independent truth the
+    Stage-1 gate used -- and the implementation is therefore shared rather than
+    forked.
+
+    What is *not* shared is which authority the shared implementation reads. It
+    used to read v0.3's, because that constant was baked into the function; the
+    v0.4 authority is passed explicitly here instead. The two authorities'
+    materialization inputs are currently byte-identical, so this changes no
+    materialized byte today -- it removes the path by which a future v0.4-only
+    ``stage2_policy`` edit would have been silently ignored in favour of the
+    predecessor's frozen numbers.
     """
     from scripts.regime_a_prime_qualification_v0_3.build_manifests import (
         materialize_stage2 as _materialize)
-    return _materialize(template, decision)
+    return _materialize(template, decision, authority=authority)
 
 
 def main() -> None:
@@ -219,7 +228,8 @@ def main() -> None:
     stage2 = build_stage2_template(
         authority_sha, hashlib.sha256(stage1_path.read_bytes()).hexdigest(), authority)
     if args.stage1_decision:
-        stage2 = materialize_stage2(stage2, json.loads(args.stage1_decision.read_text()))
+        stage2 = materialize_stage2(stage2, json.loads(args.stage1_decision.read_text()),
+                                    authority=authority)
     stage2_path = PACKAGE / "stage2_locked_manifest.json"
     write(stage2_path, stage2)
     for path in (AUTHORITY, stage1_path, stage2_path):

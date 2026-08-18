@@ -105,7 +105,7 @@ def _rebind(bundle, decision):
     refusal therefore proves the identity gate fired, not a stale hash.
     """
     (authority, provenance, stage1_manifest, evidence_path, decision_path, _,
-     manifest_path, manifest, _) = bundle
+     manifest_path, manifest, _, stage1_provenance) = bundle
     decision_path.write_text(json.dumps(decision, sort_keys=True) + "\n")
     manifest = deepcopy(manifest)
     manifest["stage1_decision_sha256"] = sha256_file(decision_path)
@@ -120,10 +120,13 @@ def _rebind(bundle, decision):
         "stage1_status": "PASS",
         "stage2_manifest_sha256": sha256_file(manifest_path), "source_commit_sha": "c" * 40,
         "expected_run_namespace": manifest["run_namespace"],
-        "preoutcome_provenance_receipt_sha256": sha256_file(provenance)}
+        "preoutcome_provenance_receipt_sha256": sha256_file(provenance),
+        # The historical Stage-1 campaign identity is rebound too, so a refusal
+        # below is the decision-identity gate firing rather than a stale binding.
+        "stage1_preoutcome_provenance_receipt_sha256": sha256_file(stage1_provenance)}
     receipt["authorization_payload_sha256"] = canonical_payload_sha256(receipt)
     return (authority, provenance, stage1_manifest, evidence_path, decision_path, decision,
-            manifest_path, manifest, receipt)
+            manifest_path, manifest, receipt, stage1_provenance)
 
 
 def test_the_stage2_gate_refuses_a_decision_from_another_package_version(tmp_path):

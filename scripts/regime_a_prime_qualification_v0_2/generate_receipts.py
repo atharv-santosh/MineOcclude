@@ -26,6 +26,17 @@ Commands
     Re-verify the provenance receipt and every controlling precondition, then
     write the Stage-1 authorization receipt. Stage 2 stays unauthorized.
 
+``stage2-provenance``
+    The same controls as ``provenance``, bound to the materialized Stage-2
+    manifest and namespace, plus the frozen Stage-1 PASS re-derived from its own
+    evidence. Authorizes nothing.
+
+``stage2-authorization``
+    Re-verify that Stage-2 provenance, the frozen Stage-1 PASS and the
+    materialized Stage-2 design, write the post-Stage-1 authorization, and then
+    run the real ``require_stage2_authorization`` barrier over the result. A
+    document the barrier would refuse is deleted instead of returned.
+
 Source-commit binding is two-step, because a receipt cannot contain the hash of
 a commit that does not exist until the receipt is committed:
 
@@ -60,18 +71,21 @@ from mineocclude.prospective.development_workflow import (  # noqa: E402
     OPERATIONAL_SMOKE_ARTIFACT_ID, OPERATIONAL_SMOKE_CLASSIFICATION,
     OPERATIONAL_SMOKE_DISPLAY_GEOMETRY as CAPTURE_DISPLAY_GEOMETRY,
     OPERATIONAL_SMOKE_HANDSHAKE_SCHEMA, OPERATIONAL_SMOKE_SCHEMA,
-    RUNTIME_CRITICAL_SOURCE_PATHS, EvidenceError, atomic_write_json,
+    RUNTIME_CRITICAL_SOURCE_PATHS, EvidenceError, Stage1Evaluator, atomic_write_json,
+    bind_historical_source_closure,
     canonical_json_bytes, canonical_payload_sha256, capture_contract_preflight,
     capture_toolchain_evidence, derive_effective_capture_spec, load_json,
     operational_smoke_namespace, require_capture_spec_contract,
     require_capture_toolchain, require_operational_smoke,
-    require_stage_manifest_binding, resolve_qualified_runtime,
+    require_stage2_authorization, require_stage_manifest_binding, resolve_qualified_runtime,
     runtime_critical_source_closure_sha256, sha256_file, stage_run_inventory_sha256,
-    verify_probe_execution, verify_runtime_identity, verify_runtime_source_hashes,
+    validate_stage2_manifest_design, verify_probe_execution, verify_runtime_identity,
+    verify_runtime_source_hashes,
 )
 from mineocclude.prospective.source_provenance import CriticalSource, verify_sources  # noqa: E402
 from mineocclude.prospective.package_binding import (  # noqa: E402
-    PackageBinding, resolve_package_binding,
+    PackageBinding, artifact_version_tag, provenance_artifact_id_for,
+    resolve_package_binding, stage1_decision_artifact_id,
 )
 
 SCHEMA_VERSION = "1.1"
@@ -85,6 +99,7 @@ BINDING: PackageBinding
 PACKAGE: Path
 AUTHORITY_PATH: Path
 STAGE1_MANIFEST_PATH: Path
+STAGE2_MANIFEST_PATH: Path
 PROVENANCE_ARTIFACT_ID: str
 AUTHORIZATION_ARTIFACT_ID: str
 GENERATED_BY: str
@@ -98,12 +113,13 @@ def bind_package(version_tag: str, *, entrypoint: str) -> PackageBinding:
     was not actually built against. ``entrypoint`` is recorded verbatim in every
     artifact's ``generated_by``, so the receipt names the command that made it.
     """
-    global BINDING, PACKAGE, AUTHORITY_PATH, STAGE1_MANIFEST_PATH
+    global BINDING, PACKAGE, AUTHORITY_PATH, STAGE1_MANIFEST_PATH, STAGE2_MANIFEST_PATH
     global PROVENANCE_ARTIFACT_ID, AUTHORIZATION_ARTIFACT_ID, GENERATED_BY
     BINDING = resolve_package_binding(version_tag, ROOT)
     PACKAGE = BINDING.package
     AUTHORITY_PATH = BINDING.authority_path
     STAGE1_MANIFEST_PATH = BINDING.stage1_manifest_path
+    STAGE2_MANIFEST_PATH = BINDING.stage2_manifest_path
     PROVENANCE_ARTIFACT_ID = BINDING.provenance_artifact_id
     AUTHORIZATION_ARTIFACT_ID = BINDING.authorization_artifact_id
     GENERATED_BY = entrypoint
@@ -398,7 +414,8 @@ def qualified_java_identity(authority: dict) -> dict:
             if (version.stderr or version.stdout) else None}
 
 
-def operational_startup_smoke(output: Path) -> int:
+def operational_startup_smoke(output: Path, *, stage: str = "stage1-capture",
+                              manifest_path: Path | None = None) -> int:
     """Start the real apparatus, cross the capture contract, tear it down.
 
     Deliberately captures no frame, and now goes as far as the server: the
@@ -414,8 +431,16 @@ def operational_startup_smoke(output: Path) -> int:
     then stop. Arming is strictly before ``beginCapture()``, so no pixel is ever
     read; the handshake record asserts that absence rather than assuming it.
     """
+    # Which stage's units this smoke exercises. Stage 2 runs its own captures
+    # under its own namespace, and ``require_preoutcome_provenance`` checks the
+    # embedded smoke against the namespace of whichever manifest is being
+    # authorized -- so a Stage-1 smoke cannot stand in for a Stage-2 one, and
+    # the smoke has to be able to name the stage it ran for.
+    manifest_path = STAGE1_MANIFEST_PATH if manifest_path is None else manifest_path
     authority = load_json(AUTHORITY_PATH)
-    manifest = load_json(STAGE1_MANIFEST_PATH)
+    manifest = load_json(manifest_path)
+    require_stage_manifest_binding(stage, manifest, manifest_path=manifest_path,
+                                   authority=authority)
     namespace = operational_smoke_namespace(str(manifest["run_namespace"]))
 
     toolchain = capture_toolchain_evidence()
@@ -515,6 +540,8 @@ def operational_startup_smoke(output: Path) -> int:
         "artifact_id": OPERATIONAL_SMOKE_ARTIFACT_ID,
         "classification": OPERATIONAL_SMOKE_CLASSIFICATION,
         "run_namespace": namespace,
+        "smoke_for_stage": stage,
+        "smoke_for_manifest_sha256": sha256_file(manifest_path),
         "scientific_evidence": False,
         "counts_toward_stage1_units": False,
         "generated_at_utc": generation_time(),
@@ -578,11 +605,25 @@ def operational_startup_smoke(output: Path) -> int:
 
 def build_provenance(probe_evidence_path: Path, output: Path, *,
                      freeze_commit: str | None, durable_probe: bool,
-                     smoke_path: Path) -> int:
+                     smoke_path: Path, stage: str = "stage1-capture",
+                     manifest_path: Path | None = None,
+                     extra_bindings: dict | None = None) -> int:
+    """Write the pre-outcome provenance receipt for one stage of this package.
+
+    ``stage`` and ``manifest_path`` default to Stage 1, which is the only stage
+    that existed when this generator was written. Stage 2 reuses every control
+    here unchanged -- the runtime and apparatus identity probes, the source
+    closure, the two-step commit binding, the capture toolchain, the capture
+    contract preflight and the operational smoke -- and differs only in which
+    manifest those controls are applied to. Parameterising is therefore what
+    keeps the Stage-2 receipt as strong as the Stage-1 one instead of a second,
+    weaker generator that happens to emit the same field names.
+    """
+    manifest_path = STAGE1_MANIFEST_PATH if manifest_path is None else manifest_path
     authority = load_json(AUTHORITY_PATH)
-    manifest = load_json(STAGE1_MANIFEST_PATH)
-    binding = require_stage_manifest_binding("stage1-capture", manifest,
-        manifest_path=STAGE1_MANIFEST_PATH, authority=authority)
+    manifest = load_json(manifest_path)
+    binding = require_stage_manifest_binding(stage, manifest,
+        manifest_path=manifest_path, authority=authority)
     if (authority.get("prospective_source_commit_binding") != RUNTIME_POLICY
             or manifest.get("source_commit_binding") != RUNTIME_POLICY):
         raise EvidenceError("authority/manifest runtime source-commit policy mismatch")
@@ -657,7 +698,11 @@ def build_provenance(probe_evidence_path: Path, output: Path, *,
         "generated_at_utc": generation_time(),
         "generated_by": GENERATED_BY,
         "authority_sha256": sha256_file(AUTHORITY_PATH),
-        "manifest_sha256": sha256_file(STAGE1_MANIFEST_PATH),
+        # ``manifest_sha256`` is the manifest this receipt authorizes -- Stage 1's
+        # or Stage 2's. ``stage1_manifest_sha256`` always names the Stage-1
+        # manifest, so a Stage-2 receipt still carries the identity of the
+        # qualification that preceded it.
+        "manifest_sha256": sha256_file(manifest_path),
         "stage1_manifest_sha256": sha256_file(STAGE1_MANIFEST_PATH),
         "stage": binding["stage"], "stage_role": binding["stage_role"],
         "run_namespace": binding["run_namespace"],
@@ -703,6 +748,7 @@ def build_provenance(probe_evidence_path: Path, output: Path, *,
         "REGIME_A_PRIME_COLLECTION_AUTHORIZED": "NO",
         "confirmatory_collection_authorized": False,
         "confirmatory_interpretation_authorized": False,
+        **(extra_bindings or {}),
         **commit_state,
     }
     provenance["payload_sha256"] = canonical_payload_sha256(provenance)
@@ -710,6 +756,322 @@ def build_provenance(probe_evidence_path: Path, output: Path, *,
     print(f"PROVENANCE_RECEIPT_STATUS={status}")
     print(f"PROVENANCE_RECEIPT_SHA256={sha256_file(output)}")
     print(f"DURABLE_PROBE_VERIFIED={durable['verified']}")
+    return 0
+
+
+# ---------------------------------------------------------------- Stage 2
+#
+# Stage 2 is the first rung that reads model activations, and it is reachable
+# only through ``require_stage2_authorization``. That barrier already existed;
+# what did not exist was any legitimate way to produce an artifact it accepts,
+# so the only route to a Stage-2 launch was hand-authoring the receipt -- which
+# is exactly the failure mode every other receipt in this module was written to
+# remove. The two generators below close that gap without touching the barrier.
+#
+# Neither one authorizes anything by itself. ``stage2-provenance`` runs the same
+# controls Stage 1 runs, against the Stage-2 manifest. ``stage2-authorization``
+# consumes that receipt plus the frozen Stage-1 PASS, and its last act is to run
+# the real barrier over what it just wrote: if the barrier refuses, the file is
+# removed and nothing is authorized.
+
+
+def stage1_pass_bindings(stage1_decision_path: Path, stage1_evidence_path: Path,
+                         stage1_provenance_path: Path) -> dict:
+    """Verify the frozen Stage-1 PASS and return what a Stage-2 receipt binds to it.
+
+    The decision is not read for its ``status`` field. It is *re-derived*: the
+    bound evidence is re-evaluated through ``Stage1Evaluator`` and the result
+    must equal the decision byte for byte, which is the same reproduction the
+    Stage-2 barrier performs. A decision with a gate flipped to PASS, a wrong
+    evidence digest, a wrong artifact identity or a foreign version therefore
+    fails here, at production time, rather than surviving into a receipt that
+    the barrier then rejects at launch.
+
+    ``stage1_provenance_path`` is that completed campaign's own frozen
+    pre-outcome provenance receipt, and it is what the re-derivation verifies
+    the evidence's source pins against. The Stage-1 campaign ran at its own
+    freeze; by the time Stage 2 is being prepared the working tree has
+    necessarily moved on -- Stage-2 preparation edits the runtime-critical
+    closure itself -- so the tree can neither confirm nor refute what Stage 1
+    ran. The campaign's frozen receipt can, and is the only artifact that may.
+    The Stage-2 source is a separate binding, verified against the live closure
+    where this generator's own provenance is produced and checked.
+    """
+    authority = load_json(AUTHORITY_PATH)
+    stage1_manifest = load_json(STAGE1_MANIFEST_PATH)
+    decision = load_json(stage1_decision_path)
+    decision_sha = sha256_file(stage1_decision_path)
+    evidence_sha = sha256_file(stage1_evidence_path)
+    provenance_sha = sha256_file(stage1_provenance_path)
+
+    # The historical source authority. Its identity is resolved from the
+    # Stage-1 manifest's own version tag, so a predecessor package's receipt --
+    # frozen, valid, and about a different experiment -- cannot supply it.
+    historical_closure = bind_historical_source_closure(
+        load_json(stage1_provenance_path), provenance_sha256=provenance_sha,
+        expected_artifact_id=provenance_artifact_id_for(
+            artifact_version_tag(stage1_manifest.get("artifact_id"))),
+        authority_sha256=sha256_file(AUTHORITY_PATH),
+        manifest_sha256=sha256_file(STAGE1_MANIFEST_PATH))
+
+    expected_decision_id = stage1_decision_artifact_id(stage1_manifest)
+    if decision.get("artifact_id") != expected_decision_id:
+        raise EvidenceError(
+            f"Stage-1 decision is {decision.get('artifact_id')!r}, "
+            f"but this package requires {expected_decision_id!r}")
+    if decision.get("status") != "PASS":
+        raise EvidenceError("Stage-2 requires a Stage-1 PASS decision")
+    if decision.get("stage1_evidence_sha256") != evidence_sha:
+        raise EvidenceError("Stage-1 decision does not bind the supplied evidence")
+    authority_sha = sha256_file(AUTHORITY_PATH)
+    stage1_manifest_sha = sha256_file(STAGE1_MANIFEST_PATH)
+    if (decision.get("authority_sha256") != authority_sha
+            or decision.get("stage1_manifest_sha256") != stage1_manifest_sha):
+        raise EvidenceError("Stage-1 decision binding mismatch")
+    try:
+        reproduced = Stage1Evaluator(
+            authority, stage1_manifest, authority_sha256=authority_sha,
+            manifest_sha256=stage1_manifest_sha,
+            historical_source_closure=historical_closure).evaluate(
+                load_json(stage1_evidence_path)).to_dict(
+                    authority_sha256=authority_sha, manifest_sha256=stage1_manifest_sha,
+                    evidence_sha256=evidence_sha, artifact_id=expected_decision_id)
+    except (EvidenceError, KeyError, TypeError, ValueError) as exc:
+        raise EvidenceError("Stage-1 evidence cannot reproduce its decision") from exc
+    if reproduced != decision:
+        raise EvidenceError("Stage-1 decision is not reproduced from its bound evidence")
+    return {"stage1_decision_sha256": decision_sha,
+            "stage1_evidence_sha256": evidence_sha,
+            "stage1_decision_artifact_id": expected_decision_id,
+            "stage1_status": "PASS",
+            "stage1_decision_reproduced_from_evidence": True,
+            "stage1_preoutcome_provenance_receipt_sha256": provenance_sha,
+            "stage1_source_commit": historical_closure.source_commit,
+            "stage1_runtime_critical_source_closure_sha256": historical_closure.closure_sha256}
+
+
+def stage2_manifest_bindings() -> dict:
+    """The materialized Stage-2 design, re-derived rather than restated.
+
+    Every value returned is read out of the frozen authority or the materialized
+    manifest and checked against the other, so a receipt cannot claim a design
+    the package does not actually carry -- a different layer, an extra capture,
+    an escalated classification.
+    """
+    authority = load_json(AUTHORITY_PATH)
+    manifest = load_json(STAGE2_MANIFEST_PATH)
+    policy = authority["stage2_policy"]
+    if manifest.get("status") != "POST_STAGE1_MATERIALIZED_AWAITING_SEPARATE_FREEZE_AND_AUTHORIZATION":
+        raise EvidenceError(
+            f"Stage-2 manifest is not materialized: {manifest.get('status')!r}")
+    validate_stage2_manifest_design(authority, manifest, require_materialized=True)
+
+    layers = sorted({unit["layer"] for unit in manifest["extraction_units"]})
+    if layers != list(policy["extraction"]["layers"]) or layers != [4]:
+        raise EvidenceError(f"Stage-2 extraction layers are {layers}, not the frozen [4]")
+    if policy["extraction"].get("all_layer_extraction_forbidden") is not True:
+        raise EvidenceError("frozen authority does not forbid all-layer extraction")
+    if policy["post_stage2"].get("confirmatory_reuse_forbidden") is not True:
+        raise EvidenceError("frozen authority does not forbid confirmatory reuse")
+    if (manifest.get("classification") != "DEVELOPMENT_ONLY"
+            or manifest.get("STAGE_2_COLLECTION_AUTHORIZED") is not False
+            or manifest.get("confirmatory_collection_authorized") is not False):
+        raise EvidenceError("Stage-2 manifest does not carry the development-only baseline")
+    return {
+        "stage2_manifest_sha256": sha256_file(STAGE2_MANIFEST_PATH),
+        "stage2_manifest_artifact_id": manifest["artifact_id"],
+        "stage2_run_inventory_sha256": stage_run_inventory_sha256(manifest),
+        "stage2_run_namespace": manifest["run_namespace"],
+        "stage2_durable_prefix": manifest["durable_prefix"],
+        "stage2_scientific_capture_count": len(manifest["capture_units"]),
+        "stage2_trajectory_identity_count": len(manifest["trajectory_identities"]),
+        "stage2_target_rows_per_capture": policy["required_target_rows_per_capture"],
+        "stage2_outer_folds": policy["outer_folds"],
+        "stage2_phase_offsets_frames": list(policy["phase_offsets_frames"]),
+        "stage2_extraction_layers": layers,
+        "stage2_capture_unit_ids": sorted(
+            str(unit["unit_id"]) for unit in manifest["capture_units"]),
+        "stage2_temporal_label_source": policy["temporal_labels"]["source"],
+        "all_layer_extraction_forbidden": True,
+        "confirmatory_reuse_forbidden": True,
+        "development_qualification_only": True,
+    }
+
+
+def build_stage2_provenance(probe_evidence_path: Path, output: Path, *,
+                            freeze_commit: str | None, durable_probe: bool,
+                            smoke_path: Path, stage1_decision_path: Path,
+                            stage1_evidence_path: Path,
+                            stage1_provenance_path: Path) -> int:
+    """Pre-outcome provenance for Stage 2: Stage-1's controls, Stage-2's manifest.
+
+    Two source identities are recorded and neither substitutes for the other.
+    ``build_provenance`` verifies and pins the *current* runtime-critical
+    closure -- the Stage-2 apparatus about to run, rehashed from the working
+    tree. ``stage1_pass_bindings`` verifies and pins the *historical* closure
+    the reused Stage-1 PASS was collected under, taken from that campaign's own
+    frozen receipt.
+    """
+    bindings = {**stage1_pass_bindings(stage1_decision_path, stage1_evidence_path,
+                                       stage1_provenance_path),
+                **stage2_manifest_bindings()}
+    return build_provenance(probe_evidence_path, output, freeze_commit=freeze_commit,
+                            durable_probe=durable_probe, smoke_path=smoke_path,
+                            stage="stage2-capture", manifest_path=STAGE2_MANIFEST_PATH,
+                            extra_bindings=bindings)
+
+
+def build_stage2_authorization(provenance_path: Path, output: Path, *,
+                               stage1_decision_path: Path,
+                               stage1_evidence_path: Path,
+                               stage1_provenance_path: Path) -> int:
+    """Derive the post-Stage-1 Stage-2 authorization from verified prerequisites only.
+
+    The field set is not invented here. ``require_stage2_authorization`` names
+    every binding it compares, and this generator computes exactly those from
+    the artifacts they name. The last step runs that barrier over the finished
+    document: an artifact this generator cannot get past the real gate is
+    deleted rather than written, so the generator can never be the reason a
+    launch succeeds.
+    """
+    authority = load_json(AUTHORITY_PATH)
+    manifest = load_json(STAGE2_MANIFEST_PATH)
+    binding = require_stage_manifest_binding("stage2-capture", manifest,
+        manifest_path=STAGE2_MANIFEST_PATH, authority=authority)
+    stage1 = stage1_pass_bindings(stage1_decision_path, stage1_evidence_path,
+                                  stage1_provenance_path)
+    design = stage2_manifest_bindings()
+    provenance = load_json(provenance_path)
+    head = git("rev-parse", "HEAD")
+
+    # The controlling preconditions, reproduced rather than assumed -- the same
+    # treatment ``build_stage1_authorization`` gives its own provenance, applied
+    # to the Stage-2 manifest and namespace.
+    required = {
+        "artifact_id": PROVENANCE_ARTIFACT_ID,
+        "status": "FROZEN_VERIFIED",
+        "authority_sha256": sha256_file(AUTHORITY_PATH),
+        "manifest_sha256": design["stage2_manifest_sha256"],
+        "stage1_manifest_sha256": sha256_file(STAGE1_MANIFEST_PATH),
+        "stage": binding["stage"],
+        "stage_role": binding["stage_role"],
+        "run_namespace": binding["run_namespace"],
+        "run_inventory_sha256": design["stage2_run_inventory_sha256"],
+        "runtime_critical_source_closure_sha256": runtime_critical_source_closure_sha256(),
+        "runtime_identity_verified": True,
+        "apparatus_identity_verified": True,
+        "renderer_identity_verified": True,
+        "source_paths_verified_bytes_and_modes": True,
+        "remote_durable_prefix_read_write_probe_verified": True,
+        "scientific_outcomes_observed": False,
+        "confirmatory_collection_authorized": False,
+        "source_commit_binding_state": "BOUND_TO_FROZEN_COMMIT",
+        "source_commit": head,
+        "repository_clean_at_post_freeze_verification": True,
+        # The Stage-2 receipt must be the Stage-2 receipt: a Stage-1 provenance
+        # carries the Stage-1 manifest digest and namespace above, and is refused
+        # there, but these make the substitution explicit rather than incidental.
+        "stage1_decision_sha256": stage1["stage1_decision_sha256"],
+        "stage1_evidence_sha256": stage1["stage1_evidence_sha256"],
+        "stage2_manifest_sha256": design["stage2_manifest_sha256"],
+        "stage2_run_inventory_sha256": design["stage2_run_inventory_sha256"],
+        # The Stage-2 provenance must name the same Stage-1 campaign this
+        # authorization reuses, so the historical source authority cannot be
+        # swapped between the two receipts.
+        "stage1_preoutcome_provenance_receipt_sha256":
+            stage1["stage1_preoutcome_provenance_receipt_sha256"],
+        "all_layer_extraction_forbidden": True,
+    }
+    unmet = {key: {"required": value, "observed": provenance.get(key)}
+             for key, value in required.items() if provenance.get(key) != value}
+    if unmet:
+        raise EvidenceError(f"Stage-2 authorization prerequisites are unmet: {unmet}")
+    if provenance.get("payload_sha256") != canonical_payload_sha256(
+            provenance, omit="payload_sha256"):
+        raise EvidenceError("pre-outcome provenance payload digest mismatch")
+    probe_evidence = provenance.get("probe_evidence")
+    if not isinstance(probe_evidence, dict):
+        raise EvidenceError("pre-outcome provenance has no concrete probe evidence")
+    runtime_result = verify_runtime_identity(
+        authority["runtime_identity_policy"], probe_evidence)
+    probe_result = verify_probe_execution(
+        probe_evidence, "embedded pre-outcome probe evidence", authority=authority)
+    embedded_file_sha = hashlib.sha256(canonical_json_bytes(probe_evidence)).hexdigest()
+    if (runtime_result.get("status") != "PASS"
+            or probe_result.get("probe_evidence_sha256") != provenance.get("probe_evidence_sha256")
+            or embedded_file_sha != provenance.get("probe_evidence_path_sha256")):
+        raise EvidenceError("pre-outcome concrete probe binding mismatch")
+    if git("status", "--porcelain=v1", "--untracked-files=all"):
+        raise EvidenceError("Stage-2 authorization requires a clean frozen repository")
+    if authority.get("STAGE_2_COLLECTION_AUTHORIZED") is not False:
+        raise EvidenceError("frozen authority does not carry the unauthorized collection baseline")
+
+    authorization = {
+        "schema_version": SCHEMA_VERSION,
+        "artifact_id": binding["authorization_artifact_id"],
+        "classification": "DEVELOPMENT_ONLY",
+        "status": "FROZEN_AUTHORIZED",
+        "generated_at_utc": generation_time(),
+        "generated_by": GENERATED_BY,
+        "authority_sha256": required["authority_sha256"],
+        "stage1_manifest_sha256": required["stage1_manifest_sha256"],
+        "stage1_decision_sha256": stage1["stage1_decision_sha256"],
+        "stage1_evidence_sha256": stage1["stage1_evidence_sha256"],
+        "stage1_decision_artifact_id": stage1["stage1_decision_artifact_id"],
+        "stage1_status": "PASS",
+        "stage2_manifest_sha256": design["stage2_manifest_sha256"],
+        "authorized_stage": binding["stage"],
+        "stage_role": binding["stage_role"],
+        "expected_run_namespace": binding["run_namespace"],
+        "runtime_critical_source_closure_sha256":
+            required["runtime_critical_source_closure_sha256"],
+        "preoutcome_provenance_receipt_sha256": sha256_file(provenance_path),
+        # The historical Stage-1 source authority, kept distinct from the
+        # current Stage-2 closure pinned above.
+        "stage1_preoutcome_provenance_receipt_sha256":
+            stage1["stage1_preoutcome_provenance_receipt_sha256"],
+        "stage1_source_commit": stage1["stage1_source_commit"],
+        "stage1_runtime_critical_source_closure_sha256":
+            stage1["stage1_runtime_critical_source_closure_sha256"],
+        "probe_evidence_sha256": provenance["probe_evidence_sha256"],
+        "source_commit_sha": head,
+        "STAGE_1_COLLECTION_AUTHORIZED": False,
+        "STAGE_2_COLLECTION_AUTHORIZED": True,
+        "confirmatory_collection_authorized": False,
+        "confirmatory_interpretation_authorized": False,
+        **{key: design[key] for key in (
+            "stage2_manifest_artifact_id", "stage2_run_inventory_sha256",
+            "stage2_scientific_capture_count", "stage2_trajectory_identity_count",
+            "stage2_target_rows_per_capture", "stage2_outer_folds",
+            "stage2_phase_offsets_frames", "stage2_extraction_layers",
+            "stage2_capture_unit_ids", "stage2_temporal_label_source",
+            "stage2_durable_prefix", "all_layer_extraction_forbidden",
+            "confirmatory_reuse_forbidden", "development_qualification_only")},
+    }
+    authorization["authorization_payload_sha256"] = canonical_payload_sha256(authorization)
+    atomic_write_json(output, authorization)
+
+    # Self-check against the real barrier, not a copy of it. Anything this
+    # generator produces that the launch gate would refuse is removed here.
+    try:
+        require_stage2_authorization(
+            manifest, authorization, authorization_receipt_path=output,
+            stage1_decision=load_json(stage1_decision_path),
+            authority_path=AUTHORITY_PATH, manifest_path=STAGE2_MANIFEST_PATH,
+            stage1_manifest_path=STAGE1_MANIFEST_PATH,
+            stage1_decision_path=stage1_decision_path,
+            stage1_evidence_path=stage1_evidence_path,
+            current_source_commit=head, preoutcome_provenance_path=provenance_path,
+            stage1_preoutcome_provenance_path=stage1_provenance_path)
+    except PermissionError as exc:
+        output.unlink(missing_ok=True)
+        raise EvidenceError(f"generated Stage-2 authorization does not satisfy the barrier: {exc}") from exc
+
+    print("STAGE2_AUTHORIZATION_STATUS=FROZEN_AUTHORIZED")
+    print(f"STAGE2_AUTHORIZATION_SHA256={sha256_file(output)}")
+    print(f"STAGE2_AUTHORIZATION_ARTIFACT_ID={authorization['artifact_id']}")
+    print("STAGE_2_COLLECTION_AUTHORIZED=true")
+    print("confirmatory_collection_authorized=false")
     return 0
 
 
@@ -816,6 +1178,9 @@ def main(argv: list[str] | None = None) -> int:
     smoke = sub.add_parser("operational-smoke",
                            help="non-scientific apparatus startup smoke; captures no frame")
     smoke.add_argument("--output", type=Path, required=True)
+    smoke.add_argument("--stage", default="stage1-capture",
+                       choices=("stage1-capture", "stage2-capture"),
+                       help="which stage's manifest and namespace the smoke runs for")
     provenance = sub.add_parser("provenance")
     provenance.add_argument("--probe-evidence", type=Path, required=True)
     provenance.add_argument("--output", type=Path, required=True)
@@ -827,16 +1192,59 @@ def main(argv: list[str] | None = None) -> int:
     authorize = sub.add_parser("stage1-authorization")
     authorize.add_argument("--provenance", type=Path, required=True)
     authorize.add_argument("--output", type=Path, required=True)
+    stage2_provenance = sub.add_parser(
+        "stage2-provenance",
+        help="pre-outcome provenance bound to the materialized Stage-2 manifest")
+    stage2_provenance.add_argument("--probe-evidence", type=Path, required=True)
+    stage2_provenance.add_argument("--output", type=Path, required=True)
+    stage2_provenance.add_argument("--freeze-commit")
+    stage2_provenance.add_argument("--durable-probe", action="store_true",
+                                   help="execute the real durable-prefix round trip")
+    stage2_provenance.add_argument("--operational-smoke", type=Path, required=True,
+                                   help="passing Stage-2 NON_SCIENTIFIC_OPERATIONAL_SMOKE artifact")
+    stage2_provenance.add_argument("--stage1-decision", type=Path, required=True)
+    stage2_provenance.add_argument("--stage1-evidence", type=Path, required=True)
+    stage2_provenance.add_argument(
+        "--stage1-provenance", type=Path, required=True,
+        help="the Stage-1 campaign's own frozen pre-outcome provenance receipt, "
+             "which is the authority for the source that campaign ran")
+    stage2_authorize = sub.add_parser(
+        "stage2-authorization",
+        help="post-Stage-1 Stage-2 authorization; refused unless the real barrier accepts it")
+    stage2_authorize.add_argument("--provenance", type=Path, required=True)
+    stage2_authorize.add_argument("--stage1-decision", type=Path, required=True)
+    stage2_authorize.add_argument("--stage1-evidence", type=Path, required=True)
+    stage2_authorize.add_argument(
+        "--stage1-provenance", type=Path, required=True,
+        help="the Stage-1 campaign's own frozen pre-outcome provenance receipt, "
+             "which is the authority for the source that campaign ran")
+    stage2_authorize.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "runtime-preflight":
         return runtime_preflight(args.output)
     if args.command == "operational-smoke":
-        return operational_startup_smoke(args.output)
+        manifest_path = (STAGE2_MANIFEST_PATH if args.stage == "stage2-capture"
+                         else STAGE1_MANIFEST_PATH)
+        return operational_startup_smoke(args.output, stage=args.stage,
+                                         manifest_path=manifest_path)
     if args.command == "provenance":
         return build_provenance(args.probe_evidence, args.output,
                                 freeze_commit=args.freeze_commit,
                                 durable_probe=args.durable_probe,
                                 smoke_path=args.operational_smoke)
+    if args.command == "stage2-provenance":
+        return build_stage2_provenance(args.probe_evidence, args.output,
+                                       freeze_commit=args.freeze_commit,
+                                       durable_probe=args.durable_probe,
+                                       smoke_path=args.operational_smoke,
+                                       stage1_decision_path=args.stage1_decision,
+                                       stage1_evidence_path=args.stage1_evidence,
+                                       stage1_provenance_path=args.stage1_provenance)
+    if args.command == "stage2-authorization":
+        return build_stage2_authorization(args.provenance, args.output,
+                                          stage1_decision_path=args.stage1_decision,
+                                          stage1_evidence_path=args.stage1_evidence,
+                                          stage1_provenance_path=args.stage1_provenance)
     return build_stage1_authorization(args.provenance, args.output)
 
 

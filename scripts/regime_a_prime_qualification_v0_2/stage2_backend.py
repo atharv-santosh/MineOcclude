@@ -124,8 +124,11 @@ def require_backend_authorization(manifest: dict, manifest_path: Path) -> None:
     decision_path = Path(os.environ.get("MINEOCCLUDE_STAGE1_DECISION_PATH", ""))
     stage1_manifest_path = Path(os.environ.get("MINEOCCLUDE_STAGE1_MANIFEST_PATH", ""))
     provenance_path = Path(os.environ.get("MINEOCCLUDE_PREOUTCOME_PROVENANCE_PATH", ""))
+    stage1_provenance_path = Path(
+        os.environ.get("MINEOCCLUDE_STAGE1_PREOUTCOME_PROVENANCE_PATH", ""))
     if not all(path.is_file() for path in (authorization_path, evidence_path, decision_path,
-                                           stage1_manifest_path, provenance_path)):
+                                           stage1_manifest_path, provenance_path,
+                                           stage1_provenance_path)):
         raise PermissionError("direct Stage-2 backend invocation lacks authorization artifacts")
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
                           capture_output=True, check=True).stdout.strip()
@@ -135,7 +138,8 @@ def require_backend_authorization(manifest: dict, manifest_path: Path) -> None:
         manifest_path=manifest_path, stage1_manifest_path=stage1_manifest_path,
         stage1_evidence_path=evidence_path, stage1_decision_path=decision_path,
         current_source_commit=head,
-        preoutcome_provenance_path=provenance_path)
+        preoutcome_provenance_path=provenance_path,
+        stage1_preoutcome_provenance_path=stage1_provenance_path)
 
 
 def complete(manifest: dict, manifest_path: Path, unit_id: str, payload: dict, *,

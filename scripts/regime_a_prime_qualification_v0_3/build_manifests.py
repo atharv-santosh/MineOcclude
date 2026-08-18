@@ -198,23 +198,73 @@ def build_stage2_template(authority_sha: str, stage1_sha: str, authority: dict) 
         "durable_prefix": f"{DURABLE_ROOT}/stage2"}
 
 
-def materialize_stage2(template: dict, decision: dict) -> dict:
+def _transition_intervals(decision: dict) -> dict[str, tuple[float, float]]:
+    """The measured stable-hidden world-x interval per direction, row-derived.
+
+    The Stage-1 transition gate's detail used to be ``{direction: measurement}``.
+    Since the 046b34a builder synchronization it is
+    ``{"reported": {...}, "derived_from_rows": {...}}``: the summary the units
+    reported, and the same quantities recomputed here from the admitted rows.
+    The gate only passes when the two agree on every derived key, so a PASS
+    decision carries one interval under two names -- but the flat read this
+    function replaces would now raise ``KeyError`` on any current decision, and
+    Stage-2 materialization has never run against one.
+
+    The row-derived measurement is what is returned, because it is the one this
+    repository recomputed rather than accepted. The reported summary is still
+    required to match it: the equality is already a PASS precondition, and
+    re-checking it here means a hand-edited decision cannot move the target
+    window by rewriting only one of the two copies.
+    """
+    detail = decision["gates"]["prospective_transition_measurement"]["detail"]
+    derived = detail.get("derived_from_rows")
+    reported = detail.get("reported")
+    if not isinstance(derived, dict) or not isinstance(reported, dict):
+        raise RuntimeError(
+            "Stage-1 transition detail carries no reported/derived measurement pair")
+    intervals = {}
+    key = "extent_fully_occluded_world_x_interval"
+    for direction, measurement in derived.items():
+        interval = measurement.get(key)
+        if (not isinstance(interval, list) or len(interval) != 2
+                or (reported.get(direction) or {}).get(key) != interval):
+            raise RuntimeError(
+                f"Stage-1 {key} is absent or disagrees with the reported "
+                f"summary for {direction}")
+        intervals[direction] = (float(interval[0]), float(interval[1]))
+    return intervals
+
+
+def materialize_stage2(template: dict, decision: dict, *, authority: dict) -> dict:
     """Materialize target windows only from a frozen Stage-1 physical decision.
 
-    Under v0.3 the stable-occluded interval comes from the *geometric* extent
-    transition gate, not from a detector edge, so the Stage-2 target windows
-    inherit the same detector-independent truth the Stage-1 gate used.
+    From v0.3 onward the stable-occluded interval comes from the *geometric*
+    extent transition gate, not from a detector edge, so the Stage-2 target
+    windows inherit the same detector-independent truth the Stage-1 gate used.
+    That predicate is shared by every successor package, so this function is the
+    shared implementation and v0.4 calls it rather than forking it.
+
+    ``authority`` is supplied by the caller and has no default. This module used
+    to read the v0.3 ``AUTHORITY`` constant here, which made the *implementation*
+    and the *experiment* one object again: v0.4 delegating to this function
+    silently materialized its own Stage-2 template against the predecessor's
+    authority. Every field consumed below -- the apparatus tick and lane bounds
+    ``path_for`` reads, ``required_target_rows_per_capture``, and the frozen
+    headroom bounds -- happened to be byte-identical between v0.3 and v0.4, so
+    no historical artifact was corrupted; a later v0.4-only ``stage2_policy``
+    change would have been. Making the parameter required, rather than
+    defaulting it, is what removes the silent fallback: there is no call that
+    materializes against an authority the caller did not name.
     """
-    authority = json.loads(AUTHORITY.read_text())
     if decision.get("status") != "PASS":
         raise RuntimeError("Stage-2 target materialization requires Stage-1 PASS")
-    transition = decision["gates"]["prospective_transition_measurement"]["detail"]
+    transition = _transition_intervals(decision)
     alignment = decision["gates"]["render_server_temporal_alignment"]["detail"]
     identities = []
     target_count = authority["stage2_policy"]["required_target_rows_per_capture"]
     for identity in template["trajectory_identities"]:
         item = dict(identity); path = path_for(item, authority); direction = item["direction"]
-        hidden_low, hidden_high = transition[direction]["extent_fully_occluded_world_x_interval"]
+        hidden_low, hidden_high = transition[direction]
         fir = next(m for m in alignment[direction]["methods"] if m["method_id"] == "causal_fir_group_delay")
         first_valid = len(fir["kernel"]) - 1
         candidate_ticks = list(range(first_valid, len(path)))
@@ -260,7 +310,8 @@ def main() -> None:
     stage2 = build_stage2_template(
         authority_sha, hashlib.sha256(stage1_path.read_bytes()).hexdigest(), authority)
     if args.stage1_decision:
-        stage2 = materialize_stage2(stage2, json.loads(args.stage1_decision.read_text()))
+        stage2 = materialize_stage2(stage2, json.loads(args.stage1_decision.read_text()),
+                                    authority=authority)
     stage2_path = PACKAGE / "stage2_locked_manifest.json"
     write(stage2_path, stage2)
     for path in (AUTHORITY, stage1_path, stage2_path):

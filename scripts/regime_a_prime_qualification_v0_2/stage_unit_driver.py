@@ -110,8 +110,11 @@ def require_capture_authorization(stage: str, manifest: dict, manifest_path: Pat
         evidence_path = Path(os.environ.get("MINEOCCLUDE_STAGE1_EVIDENCE_PATH", ""))
         decision_path = Path(os.environ.get("MINEOCCLUDE_STAGE1_DECISION_PATH", ""))
         stage1_manifest_path = Path(os.environ.get("MINEOCCLUDE_STAGE1_MANIFEST_PATH", ""))
+        stage1_provenance_path = Path(
+            os.environ.get("MINEOCCLUDE_STAGE1_PREOUTCOME_PROVENANCE_PATH", ""))
         if (not authorization_path.is_file() or not evidence_path.is_file()
-                or not decision_path.is_file() or not stage1_manifest_path.is_file()):
+                or not decision_path.is_file() or not stage1_manifest_path.is_file()
+                or not stage1_provenance_path.is_file()):
             raise PermissionError("complete Stage-2 authorization artifacts are required")
         require_stage2_authorization(manifest, load_json(authorization_path),
             authorization_receipt_path=authorization_path,
@@ -119,7 +122,8 @@ def require_capture_authorization(stage: str, manifest: dict, manifest_path: Pat
             manifest_path=manifest_path, stage1_manifest_path=stage1_manifest_path,
             stage1_evidence_path=evidence_path, stage1_decision_path=decision_path,
             current_source_commit=head,
-            preoutcome_provenance_path=provenance_path)
+            preoutcome_provenance_path=provenance_path,
+            stage1_preoutcome_provenance_path=stage1_provenance_path)
     else:
         raise PermissionError(f"unknown capture stage: {stage}")
     return head

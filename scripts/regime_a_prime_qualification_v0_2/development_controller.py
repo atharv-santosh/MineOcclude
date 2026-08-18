@@ -71,6 +71,10 @@ def main() -> int:
     run2 = sub.add_parser("run-stage2")
     run2.add_argument("--stage1-evidence", type=Path, required=True)
     run2.add_argument("--stage1-decision", type=Path, required=True)
+    # The Stage-1 campaign's own frozen pre-outcome provenance. Distinct from
+    # --provenance, which is Stage-2's: that one binds the source about to run,
+    # this one binds the source the reused Stage-1 PASS was collected under.
+    run2.add_argument("--stage1-provenance", type=Path, required=True)
     run2.add_argument("--authorization", type=Path, required=True)
     run2.add_argument("--provenance", type=Path, required=True)
     run2.add_argument("--state-dir", type=Path, required=True)
@@ -167,12 +171,15 @@ def main() -> int:
         authority_path=authority_path, manifest_path=stage2_path,
         stage1_manifest_path=stage1_path, stage1_decision_path=args.stage1_decision,
         stage1_evidence_path=args.stage1_evidence,
-        current_source_commit=head, preoutcome_provenance_path=args.provenance)
+        current_source_commit=head, preoutcome_provenance_path=args.provenance,
+        stage1_preoutcome_provenance_path=args.stage1_provenance)
     environment = {"MINEOCCLUDE_STAGE1_EVIDENCE_PATH": str(args.stage1_evidence),
                    "MINEOCCLUDE_STAGE1_DECISION_PATH": str(args.stage1_decision),
                    "MINEOCCLUDE_STAGE2_AUTHORIZATION_PATH": str(args.authorization),
                    "MINEOCCLUDE_STAGE1_MANIFEST_PATH": str(stage1_path),
-                   "MINEOCCLUDE_PREOUTCOME_PROVENANCE_PATH": str(args.provenance)}
+                   "MINEOCCLUDE_PREOUTCOME_PROVENANCE_PATH": str(args.provenance),
+                   "MINEOCCLUDE_STAGE1_PREOUTCOME_PROVENANCE_PATH":
+                       str(args.stage1_provenance)}
     DurableController(manifest, args.state_dir, args.events,
         manifest_sha256=sha256_file(stage2_path), authority_sha256=sha256_file(authority_path),
         source_commit_sha=head, run_namespace=stage2_binding["run_namespace"],

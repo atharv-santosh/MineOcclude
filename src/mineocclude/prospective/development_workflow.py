@@ -266,6 +266,73 @@ def bind_manifest(authority_path: Path, manifest: Mapping[str, Any]) -> None:
         raise EvidenceError(f"authority binding mismatch: expected {expected}, got {actual}")
 
 
+def superseded_half_extent_present(documents: Any) -> bool:
+    """Whether the unsupported 0.52 silhouette half-extent appears in a package.
+
+    Checked as the *value* it is rather than as three characters of a
+    serialization. A materialized Stage-2 manifest carries full-precision target
+    world-x labels, and one of v0.4's -- ``-0.5278246498280477`` -- contains the
+    characters ``0.52`` while containing no such constant. Matching the number
+    keeps every real occurrence in scope, including one spelled ``0.520`` that
+    the substring form missed; strings in these documents are identities and
+    paths rather than derived magnitudes, so they keep the substring form.
+
+    Lives here because the package audit and the acceptance harness both apply
+    it to the same three documents, and both carried the same collision.
+    """
+    def walk(value: Any):
+        if isinstance(value, Mapping):
+            for key, item in value.items():
+                yield key
+                yield from walk(item)
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                yield from walk(item)
+        else:
+            yield value
+
+    return any(value == 0.52 or (isinstance(value, str) and "0.52" in value)
+               for value in walk(documents))
+
+
+#: The two states a Stage-2 locked manifest may declare, in lifecycle order.
+#: A package is built in the first, and the builder's ``--stage1-decision`` mode
+#: rewrites it into the second from a frozen Stage-1 PASS. Both are legitimate
+#: committed package states; neither authorizes anything.
+STAGE2_DRAFT_STATUS = "DRAFT_TEMPLATE_AWAITING_STAGE1_TARGET_MATERIALIZATION"
+STAGE2_MATERIALIZED_STATUS = (
+    "POST_STAGE1_MATERIALIZED_AWAITING_SEPARATE_FREEZE_AND_AUTHORIZATION")
+
+
+def stage2_materialization_phase(manifest: Mapping[str, Any]) -> bool:
+    """Which lifecycle phase a Stage-2 locked manifest declares itself to be in.
+
+    Callers that know the phase they require -- the Stage-2 barrier requires the
+    materialized one, and nothing else will do -- must keep passing that
+    requirement explicitly. This exists for the one caller that legitimately does
+    not know: the construction-time package audit, which runs over v0.2, v0.3 and
+    v0.4, and which has to certify whichever phase the committed bytes are in.
+    Hard-coding the draft phase there made the audit fail on the *successful*
+    outcome of the repository's own materialization step.
+
+    Reading the declared status is not the same as trusting it. It selects which
+    of two exhaustive rule sets :func:`validate_stage2_manifest_design` applies,
+    and both are strict: the draft phase requires unmaterialized target windows
+    throughout, and the materialized phase requires a complete target window on
+    every identity and every capture unit. An unknown status is refused rather
+    than defaulted, so a manifest cannot escape both rule sets by declaring
+    neither. What a status can never do is authorize collection -- that is
+    :func:`require_stage2_authorization`'s question, and it re-derives the whole
+    Stage-1 PASS before answering it.
+    """
+    status = manifest.get("status")
+    if status == STAGE2_MATERIALIZED_STATUS:
+        return True
+    if status == STAGE2_DRAFT_STATUS:
+        return False
+    raise EvidenceError(f"Stage-2 manifest declares no known lifecycle state: {status!r}")
+
+
 def validate_stage2_manifest_design(authority: Mapping[str, Any], manifest: Mapping[str, Any], *,
                                     require_materialized: bool) -> None:
     """Bind the complete Stage-2 fold/phase/pair/pipeline design to authority."""
@@ -286,9 +353,8 @@ def validate_stage2_manifest_design(authority: Mapping[str, Any], manifest: Mapp
             or manifest.get("source_commit_binding")
                != "BOUND_AT_LAUNCH_BY_PREOUTCOME_PROVENANCE_RECEIPT"):
         raise EvidenceError("Stage-2 manifest authority boundary is invalid")
-    expected_status = ("POST_STAGE1_MATERIALIZED_AWAITING_SEPARATE_FREEZE_AND_AUTHORIZATION"
-                       if require_materialized
-                       else "DRAFT_TEMPLATE_AWAITING_STAGE1_TARGET_MATERIALIZATION")
+    expected_status = (STAGE2_MATERIALIZED_STATUS if require_materialized
+                       else STAGE2_DRAFT_STATUS)
     if manifest.get("status") != expected_status:
         raise EvidenceError("Stage-2 manifest materialization state is invalid")
     if (manifest.get("trajectory_identity_count") != policy["paired_trajectory_identities"]
@@ -453,14 +519,59 @@ def verify_runtime_identity(expected: Mapping[str, Any], observed: Mapping[str, 
 
 
 def verify_runtime_source_hashes(source_hashes: Mapping[str, Any], *,
-                                 repository: Path = REPOSITORY_ROOT) -> None:
-    """Rehash every apparatus-critical runtime source instead of trusting its summary."""
-    if not isinstance(source_hashes, dict) or set(source_hashes) != set(RUNTIME_CRITICAL_SOURCE_PATHS):
+                                 repository: Path = REPOSITORY_ROOT,
+                                 expected_source_pins: Mapping[str, str] | None = None) -> None:
+    """Verify recorded runtime-source pins against the closure that must have run.
+
+    One rule in both modes: the recorded pins must cover the expected closure
+    exactly -- no missing path, no extra path -- and agree with it hash for
+    hash. Only the *authority for what was expected* differs, and the caller
+    states which one applies rather than this function guessing.
+
+    ``expected_source_pins=None`` -- **current-source mode**, unchanged. The
+    expected closure is the working tree: the paths are
+    ``RUNTIME_CRITICAL_SOURCE_PATHS`` and every expected hash is rehashed from
+    disk here. This is the mode every *new* campaign uses -- its pre-outcome
+    provenance, its authorization, its per-unit probe verification -- and it is
+    what proves the source now on disk is the source about to run.
+
+    ``expected_source_pins`` supplied -- **historical mode**. The expected
+    closure is the one a *completed* campaign's own frozen pre-outcome
+    provenance receipt recorded, supplied by
+    :func:`bind_historical_source_closure` after that receipt has been verified
+    end to end. Nothing is rehashed from the working tree, because the working
+    tree is not evidence about a campaign that already ran.
+
+    Historical mode exists because the current-source mode encodes a premise --
+    "the source that produced this capture is the source present now" -- that is
+    true only until the next legitimate commit. Re-deriving a completed Stage-1
+    decision at a later authorization barrier under that premise made a frozen
+    scientific PASS unverifiable the moment HEAD moved, and made *adding* a path
+    to the closure fatal by itself through the coverage check. That is a defect
+    in the verifier's notion of time, not evidence of a corrupted campaign.
+
+    Neither mode is weaker than the other. Historical mode still demands exact
+    equality against a fully verified, independently frozen record of what ran;
+    it simply asks the right record. Substituting the current tree's closure for
+    a historical campaign's closure -- in either direction -- is the error this
+    signature exists to make impossible to commit by accident.
+    """
+    if expected_source_pins is None:
+        expected = {}
+        for relative in RUNTIME_CRITICAL_SOURCE_PATHS:
+            path = repository / relative
+            # An absent file yields no hash, so it can never match a recorded
+            # pin and is reported as the byte mismatch it is.
+            expected[relative] = sha256_file(path) if path.is_file() else None
+    else:
+        expected = dict(expected_source_pins)
+        if not expected:
+            raise EvidenceError("historical runtime source closure is empty")
+    if not isinstance(source_hashes, dict) or set(source_hashes) != set(expected):
         raise EvidenceError("runtime source hash coverage is incomplete")
-    for relative in RUNTIME_CRITICAL_SOURCE_PATHS:
-        expected = _sha(source_hashes.get(relative), f"runtime source SHA {relative}")
-        path = repository / relative
-        if not path.is_file() or sha256_file(path) != expected:
+    for relative in sorted(expected):
+        recorded = _sha(source_hashes.get(relative), f"runtime source SHA {relative}")
+        if expected[relative] != recorded:
             raise EvidenceError(f"runtime source bytes mismatch: {relative}")
 
 
@@ -717,6 +828,20 @@ def require_capture_toolchain(evidence: Mapping[str, Any]) -> None:
         raise EvidenceError(f"capture-path executables cannot resolve libraries: {unlinkable}")
 
 
+def _declares_capture_stage(unit: Mapping[str, Any]) -> bool:
+    """Whether a unit's own locked command runs a capture stage.
+
+    Read out of the unit's frozen ``command`` rather than inferred from which
+    manifest collection it was found in, so a unit cannot be preflighted -- or
+    skipped -- on the strength of where a caller happened to look for it.
+    """
+    command = unit.get("command")
+    if not isinstance(command, list) or "--stage" not in command:
+        return False
+    index = command.index("--stage") + 1
+    return index < len(command) and str(command[index]).endswith("-capture")
+
+
 def capture_contract_preflight(manifest: Mapping[str, Any],
                                authority: Mapping[str, Any]) -> dict[str, Any]:
     """Statically prove every unit builds a spec the v0.1 interface accepts.
@@ -728,8 +853,20 @@ def capture_contract_preflight(manifest: Mapping[str, Any],
     units = manifest.get("units")
     if not isinstance(units, list) or not units:
         raise EvidenceError("manifest declares no units to preflight")
+    # Only units that actually capture have a capture spec to preflight. Every
+    # Stage-1 unit does, so this selection is a no-op there and the frozen
+    # Stage-1 receipts keep the same per-unit digests. A Stage-2 manifest also
+    # carries the physical-gate, layer-4 extraction and readout/terminal units,
+    # which describe no trajectory and no frame budget -- deriving a capture
+    # spec for them raised KeyError, which meant the Stage-2 pre-outcome
+    # provenance gate could not be satisfied by any receipt at all. Selecting by
+    # the unit's own locked ``--stage`` is the same authority the stage binding
+    # table uses to decide what a unit is, so nothing here is self-declared.
+    capture_units = [unit for unit in units if _declares_capture_stage(unit)]
+    if not capture_units:
+        raise EvidenceError("manifest declares no capture units to preflight")
     checked = {}
-    for unit in units:
+    for unit in capture_units:
         spec = derive_effective_capture_spec(unit, authority)
         require_capture_spec_contract(spec)
         checked[str(unit.get("unit_id"))] = spec["spec_hash"]
@@ -1199,6 +1336,138 @@ def runtime_critical_source_closure_sha256(repository: Path = REPOSITORY_ROOT) -
     return hashlib.sha256(canonical_json_bytes(closure)).hexdigest()
 
 
+@dataclass(frozen=True)
+class HistoricalSourceClosure:
+    """The source closure a completed campaign actually ran.
+
+    Read out of that campaign's own frozen pre-outcome provenance receipt -- the
+    only artifact that records what the apparatus was at the moment collection
+    was authorized, and the only authority a later verifier may consult about
+    it. Constructed exclusively by :func:`bind_historical_source_closure`, which
+    refuses unless the whole record reproduces, so possessing an instance is
+    itself evidence the receipt was verified.
+    """
+
+    provenance_sha256: str
+    artifact_id: str
+    source_commit: str
+    closure_sha256: str
+    source_pins: Mapping[str, str]
+
+
+def bind_historical_source_closure(
+        receipt: Mapping[str, Any], *, provenance_sha256: str,
+        expected_artifact_id: str, authority_sha256: str,
+        manifest_sha256: str) -> HistoricalSourceClosure:
+    """Verify a completed campaign's frozen provenance and bind the closure it ran.
+
+    This is the historical counterpart to :func:`require_preoutcome_provenance`.
+    That gate runs *before* a campaign, so it may -- and must -- rehash the
+    working tree, because the tree is about to become the apparatus. This one
+    runs *after*, when the question is no longer "is the source correct now" but
+    "what source ran then". The two must never be swapped: the current tree is
+    not evidence about a campaign that already completed, and a frozen receipt
+    is not permission to launch a new one.
+
+    Fail-closed on every one of the following; nothing here is taken on the
+    receipt's own word:
+
+    1. the receipt reproduces its own payload digest, so no field was edited
+       after freezing, and it is a ``FROZEN_VERIFIED`` pre-outcome record whose
+       campaign had observed no scientific outcome and held no authorization;
+    2. its artifact identity is exactly the one this package requires, which is
+       what stops a v0.2 or v0.3 receipt -- whose closures are real, frozen and
+       entirely different -- from standing in for the v0.4 record;
+    3. it is bound to this package: the same authority bytes and the same
+       Stage-1 manifest bytes the decision under reproduction was judged against;
+    4. its source freeze binding is complete -- a concrete frozen commit, a
+       clean repository at post-freeze verification, and reviewed bytes equal to
+       committed bytes -- so the closure it names was actually committed;
+    5. its recorded source-path inventory is complete and well formed, every
+       entry carrying a git mode and a syntactically valid digest;
+    6. the canonical closure SHA recomputes from that inventory and matches both
+       the reviewed and the runtime-critical closure fields, so the summary
+       digest and the itemized inventory cannot disagree;
+    7. the embedded probe evidence pins the identical closure, so the receipt's
+       two independent records of what ran agree.
+
+    Returns the bound closure. The caller supplies it to
+    :func:`verify_runtime_source_hashes` and :func:`verify_probe_execution` as
+    ``expected_source_pins``; it never reaches any producer of new artifacts.
+    """
+    if not isinstance(receipt, Mapping):
+        raise EvidenceError("historical pre-outcome provenance receipt is missing")
+    digest = _sha(provenance_sha256, "historical provenance SHA")
+
+    # 1. The document's own integrity, and that it is a pre-outcome record.
+    if receipt.get("payload_sha256") != canonical_payload_sha256(receipt, omit="payload_sha256"):
+        raise EvidenceError("historical provenance payload digest does not reproduce")
+    invariants = {"status": "FROZEN_VERIFIED", "scientific_outcomes_observed": False,
+                  "confirmatory_collection_authorized": False, "independently_derived": True,
+                  "source_paths_verified_bytes_and_modes": True}
+    for key, value in invariants.items():
+        if receipt.get(key) != value:
+            raise EvidenceError(f"historical provenance rejects {key}")
+
+    # 2. Artifact identity. A predecessor package's receipt is refused here.
+    if receipt.get("artifact_id") != expected_artifact_id:
+        raise EvidenceError(
+            f"historical provenance is {receipt.get('artifact_id')!r}, "
+            f"but {expected_artifact_id!r} was required")
+
+    # 3. Bound to the same package the decision under reproduction was judged
+    #    against, so a sibling campaign's receipt cannot supply the closure.
+    if receipt.get("authority_sha256") != _sha(authority_sha256, "authority SHA"):
+        raise EvidenceError("historical provenance authority binding mismatch")
+    recorded_manifest = _sha(manifest_sha256, "Stage-1 manifest SHA")
+    if receipt.get("manifest_sha256") != recorded_manifest:
+        raise EvidenceError("historical provenance manifest binding mismatch")
+
+    # 4. Source freeze binding.
+    commit = receipt.get("source_commit")
+    if (not isinstance(commit, str) or len(commit) != 40
+            or any(character not in "0123456789abcdef" for character in commit)):
+        raise EvidenceError("historical provenance names no frozen source commit")
+    freeze = {"source_commit_binding_state": "BOUND_TO_FROZEN_COMMIT",
+              "committed_bytes_equal_reviewed_bytes": True,
+              "repository_clean_at_post_freeze_verification": True}
+    for key, value in freeze.items():
+        if receipt.get(key) != value:
+            raise EvidenceError(f"historical provenance source freeze rejects {key}")
+
+    # 5. The itemized source inventory.
+    bindings = receipt.get("source_bindings")
+    if not isinstance(bindings, Mapping) or not bindings:
+        raise EvidenceError("historical provenance records no source inventory")
+    pins: dict[str, str] = {}
+    for relative in sorted(bindings):
+        entry = bindings[relative]
+        if not isinstance(relative, str) or not relative:
+            raise EvidenceError("historical provenance source path is malformed")
+        if not isinstance(entry, Mapping) or not isinstance(entry.get("git_mode"), str):
+            raise EvidenceError(f"historical provenance source binding is malformed: {relative}")
+        pins[relative] = _sha(entry.get("sha256"), f"historical source SHA {relative}")
+
+    # 6. The summary digest must recompute from the inventory, and both recorded
+    #    closure fields must be that digest.
+    closure = hashlib.sha256(canonical_json_bytes(pins)).hexdigest()
+    for key in ("runtime_critical_source_closure_sha256",
+                "reviewed_runtime_critical_source_closure_sha256"):
+        if receipt.get(key) != closure:
+            raise EvidenceError(f"historical provenance {key} does not reproduce from its inventory")
+
+    # 7. The embedded probe evidence must pin the identical closure.
+    probe = receipt.get("probe_evidence")
+    if not isinstance(probe, Mapping):
+        raise EvidenceError("historical provenance has no embedded probe evidence")
+    if probe.get("runtime_source_sha256") != pins:
+        raise EvidenceError("historical provenance probe evidence pins a different source closure")
+
+    return HistoricalSourceClosure(
+        provenance_sha256=digest, artifact_id=str(expected_artifact_id),
+        source_commit=commit, closure_sha256=closure, source_pins=pins)
+
+
 def require_stage_manifest_binding(stage: str, manifest: Mapping[str, Any], *,
                                    manifest_path: Path, authority: Mapping[str, Any],
                                    unit: Mapping[str, Any] | None = None,
@@ -1366,7 +1635,9 @@ def probe_evidence_digest(execution: Mapping[str, Any]) -> str:
 
 def verify_probe_execution(receipt: Mapping[str, Any], name: str, *,
                            authority: Mapping[str, Any],
-                           repository: Path = REPOSITORY_ROOT) -> dict[str, Any]:
+                           repository: Path = REPOSITORY_ROOT,
+                           expected_source_pins: Mapping[str, str] | None = None
+                           ) -> dict[str, Any]:
     """Require concrete evidence that an independent probe process actually ran.
 
     The superseded ``verify_signed_probe`` accepted any document carrying
@@ -1397,6 +1668,15 @@ def verify_probe_execution(receipt: Mapping[str, Any], name: str, *,
 
     The digest is named for what it is. It is a deterministic cryptographic
     digest over independently generated probe evidence, not a signature.
+
+    A and G are the two source-identity controls, and they take their expected
+    closure from ``expected_source_pins`` exactly as
+    :func:`verify_runtime_source_hashes` documents: ``None`` rehashes the
+    working tree for a probe being verified now, and a bound historical closure
+    supplies the pins a completed campaign's frozen provenance recorded. The
+    remaining controls are unaffected -- B-F verify executables and apparatus
+    artefacts, which the frozen authority pins directly and which are therefore
+    already checked against an immutable expectation rather than against HEAD.
     """
     verify_receipt_payload_digest(receipt, name)
     policy = authority.get("runtime_identity_policy")
@@ -1428,12 +1708,19 @@ def verify_probe_execution(receipt: Mapping[str, Any], name: str, *,
     if producer not in producers or producer in forbidden:
         raise EvidenceError(f"{name} was not produced by an independent probe: {producer!r}")
     source_relative = execution.get("probe_source_path")
-    if source_relative not in RUNTIME_CRITICAL_SOURCE_PATHS:
+    closure = (RUNTIME_CRITICAL_SOURCE_PATHS if expected_source_pins is None
+               else expected_source_pins)
+    if source_relative not in closure:
         raise EvidenceError(f"{name} probe source is not a runtime-critical source")
-    source_path = repository / str(source_relative)
     declared_source = _sha(execution.get("probe_source_sha256"), "probe source SHA")
-    if not source_path.is_file() or sha256_file(source_path) != declared_source:
-        raise EvidenceError(f"{name} probe source bytes differ from the verified tree")
+    if expected_source_pins is None:
+        source_path = repository / str(source_relative)
+        if not source_path.is_file() or sha256_file(source_path) != declared_source:
+            raise EvidenceError(f"{name} probe source bytes differ from the verified tree")
+    elif expected_source_pins[str(source_relative)] != declared_source:
+        # Historical mode: the probe that ran must be the probe the campaign's
+        # own frozen provenance recorded, not whatever occupies that path today.
+        raise EvidenceError(f"{name} probe source bytes differ from the frozen campaign closure")
 
     # B-E. Every required invocation, its exit status, its executable, and its
     # normalized output.
@@ -1506,8 +1793,10 @@ def verify_probe_execution(receipt: Mapping[str, Any], name: str, *,
         if not located.is_file() or sha256_file(located) != pinned:
             raise EvidenceError(f"{name} apparatus bytes differ from the pinned artefact: {key}")
 
-    # G. Independent byte-level runtime source control, retained unchanged.
-    verify_runtime_source_hashes(execution.get("runtime_source_sha256"), repository=repository)
+    # G. Independent byte-level runtime source control, against whichever
+    # closure the caller established as authoritative for this probe.
+    verify_runtime_source_hashes(execution.get("runtime_source_sha256"), repository=repository,
+                                 expected_source_pins=expected_source_pins)
 
     # H. The record must describe the same runtime the receipt reports.
     for key in sorted(fields):
@@ -1559,13 +1848,29 @@ class Stage1Evaluator:
     )
 
     def __init__(self, authority: Mapping[str, Any], manifest: Mapping[str, Any], *,
-                 authority_sha256: str, manifest_sha256: str):
+                 authority_sha256: str, manifest_sha256: str,
+                 historical_source_closure: HistoricalSourceClosure | None = None):
         self.authority = authority
         self.manifest = manifest
         self.policy = authority["stage1_policy"]
         self.authority_sha256 = _sha(authority_sha256, "authority SHA")
         self.manifest_sha256 = _sha(manifest_sha256, "Stage-1 manifest SHA")
         self.extent_truth = self._extent_truth_binding()
+        # Which source closure this evaluation is entitled to verify against.
+        #
+        # ``None`` -- the evidence describes a campaign running *now*, so its
+        # runtime pins are checked against the working tree. That is the mode
+        # the controller, the evidence builder and the acceptance harness use,
+        # and it is the mode that qualified 046b34a in the first place.
+        #
+        # A bound closure -- the evidence describes a campaign that has already
+        # completed, and the expected pins come from that campaign's own frozen
+        # pre-outcome provenance receipt. Identical scientific evaluation; the
+        # only difference is which record answers "what source ran". Every gate,
+        # threshold and predicate below is untouched by this choice.
+        self.historical_source_closure = historical_source_closure
+        self.expected_source_pins = (None if historical_source_closure is None
+                                     else historical_source_closure.source_pins)
 
     def _extent_truth_binding(self) -> dict[str, Any] | None:
         """Bind the v0.3 extent truth predicate, or ``None`` under v0.2.
@@ -2044,12 +2349,24 @@ class Stage1Evaluator:
                         # Concrete proof that an independent probe process ran:
                         # source identity, argv, exit status, normalized output,
                         # executable bytes, apparatus pins, source closure.
-                        verify_probe_execution(receipt, receipt_name, authority=self.authority)
+                        verify_probe_execution(
+                            receipt, receipt_name, authority=self.authority,
+                            expected_source_pins=self.expected_source_pins)
                         for probe_hash in ("java_version_probe_sha256", "renderer_probe_sha256",
                                            "xvfb_probe_sha256"):
                             _sha(receipt.get(probe_hash), probe_hash)
+                        if self.historical_source_closure is not None:
+                            # The unit's own evidence must name the very commit
+                            # its campaign froze. Without this, a receipt from a
+                            # different campaign could be verified against these
+                            # pins simply because it happened to agree on them.
+                            if receipt.get("head") != self.historical_source_closure.source_commit:
+                                raise EvidenceError(
+                                    "unit runtime provenance names a different source commit "
+                                    "than the campaign's frozen provenance receipt")
                         source_hashes = receipt.get("runtime_source_sha256")
-                        verify_runtime_source_hashes(source_hashes)
+                        verify_runtime_source_hashes(
+                            source_hashes, expected_source_pins=self.expected_source_pins)
                         apparatus = receipt.get("captured_apparatus_receipt")
                         if not isinstance(apparatus, dict):
                             raise EvidenceError("captured apparatus receipt is missing")
@@ -2714,8 +3031,31 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
                                  manifest_path: Path, stage1_manifest_path: Path,
                                  stage1_evidence_path: Path, stage1_decision_path: Path,
                                  current_source_commit: str,
-                                 preoutcome_provenance_path: Path) -> None:
-    """Require a separate, exact, hash-bound post-Stage-1 authorization."""
+                                 preoutcome_provenance_path: Path,
+                                 stage1_preoutcome_provenance_path: Path) -> None:
+    """Require a separate, exact, hash-bound post-Stage-1 authorization.
+
+    Two source identities are checked here, and they are different bindings that
+    must not be conflated:
+
+    * the **historical** Stage-1 identity -- what source produced the completed
+      campaign whose PASS is being reused. Its authority is
+      ``stage1_preoutcome_provenance_path``, that campaign's own frozen
+      pre-outcome provenance receipt, bound through
+      :func:`bind_historical_source_closure` and supplied to the re-derivation
+      below. The working tree has no standing to answer this question, and
+      consulting it made a frozen PASS unverifiable as soon as HEAD moved;
+
+    * the **current** Stage-2 identity -- what source is about to run. Its
+      authority is the live tree, verified where the Stage-2 pre-outcome
+      provenance at ``preoutcome_provenance_path`` is produced and accepted by
+      :func:`require_preoutcome_provenance`, which rehashes the working tree
+      exactly as before.
+
+    Both are mandatory. A frozen Stage-1 closure never excuses the Stage-2
+    source from verification, and the Stage-2 source never stands in for what
+    Stage-1 actually ran.
+    """
     if manifest.get("STAGE_2_COLLECTION_AUTHORIZED") is not False:
         raise PermissionError("locked Stage-2 manifest is malformed")
     if manifest.get("status") != "POST_STAGE1_MATERIALIZED_AWAITING_SEPARATE_FREEZE_AND_AUTHORIZATION":
@@ -2755,12 +3095,19 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
         raise PermissionError("separate post-Stage-1 authorization is invalid")
     if not preoutcome_provenance_path.is_file():
         raise PermissionError("Stage-2 pre-outcome provenance artifact is required")
+    if not stage1_preoutcome_provenance_path.is_file():
+        raise PermissionError("Stage-1 campaign pre-outcome provenance artifact is required")
     bindings = {"authority_sha256": sha256_file(authority_path),
                 "stage1_manifest_sha256": sha256_file(stage1_manifest_path),
                 "stage1_decision_sha256": sha256_file(stage1_decision_path), "stage1_status": "PASS",
                 "stage2_manifest_sha256": sha256_file(manifest_path), "source_commit_sha": current_source_commit,
                 "expected_run_namespace": manifest.get("run_namespace"),
-                "preoutcome_provenance_receipt_sha256": sha256_file(preoutcome_provenance_path)}
+                "preoutcome_provenance_receipt_sha256": sha256_file(preoutcome_provenance_path),
+                # The campaign whose PASS is being reused names its own source
+                # authority, so an authorization cannot silently swap in a
+                # different campaign's provenance after the fact.
+                "stage1_preoutcome_provenance_receipt_sha256":
+                    sha256_file(stage1_preoutcome_provenance_path)}
     required_gates = {"unit_completeness", "prospective_transition_measurement",
         "unit_identity_runtime_path_durability", "calibration_world_and_wall_relative_support",
         "hidden_row_contamination", "stable_visibility_base_rate_robust",
@@ -2793,12 +3140,31 @@ def require_stage2_authorization(manifest: Mapping[str, Any],
         raise PermissionError("Stage-1 decision evidence binding is missing") from exc
     if sha256_file(stage1_evidence_path) != evidence_sha:
         raise PermissionError("on-disk Stage-1 evidence binding mismatch")
+    stage1_authority = load_json(authority_path)
+    stage1_manifest = load_json(stage1_manifest_path)
+    # The historical source authority, resolved to this package's own version
+    # from the Stage-1 manifest that was actually evaluated. A v0.2 or v0.3
+    # provenance receipt carries a predecessor identity and is refused.
     try:
-        stage1_authority = load_json(authority_path)
-        stage1_manifest = load_json(stage1_manifest_path)
+        historical_provenance_id = provenance_artifact_id_for(
+            artifact_version_tag(stage1_manifest.get("artifact_id")))
+    except PackageBindingError as exc:
+        raise PermissionError("Stage-1 provenance identity is unresolvable") from exc
+    try:
+        historical_closure = bind_historical_source_closure(
+            load_json(stage1_preoutcome_provenance_path),
+            provenance_sha256=bindings["stage1_preoutcome_provenance_receipt_sha256"],
+            expected_artifact_id=historical_provenance_id,
+            authority_sha256=bindings["authority_sha256"],
+            manifest_sha256=bindings["stage1_manifest_sha256"])
+    except (EvidenceError, KeyError, TypeError, ValueError) as exc:
+        raise PermissionError(
+            "Stage-1 campaign provenance does not establish the source that ran") from exc
+    try:
         reproduced = Stage1Evaluator(stage1_authority, stage1_manifest,
             authority_sha256=bindings["authority_sha256"],
-            manifest_sha256=bindings["stage1_manifest_sha256"]).evaluate(
+            manifest_sha256=bindings["stage1_manifest_sha256"],
+            historical_source_closure=historical_closure).evaluate(
                 load_json(stage1_evidence_path)).to_dict(
                     authority_sha256=bindings["authority_sha256"],
                     manifest_sha256=bindings["stage1_manifest_sha256"],

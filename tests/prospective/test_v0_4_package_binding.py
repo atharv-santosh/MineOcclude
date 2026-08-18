@@ -26,8 +26,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from mineocclude.prospective.development_workflow import (  # noqa: E402
-    RUNTIME_CRITICAL_SOURCE_PATHS, bind_manifest, load_json,
-    require_stage_manifest_binding,
+    RUNTIME_CRITICAL_SOURCE_PATHS, STAGE2_DRAFT_STATUS, STAGE2_MATERIALIZED_STATUS,
+    bind_manifest, load_json, require_stage_manifest_binding,
+    stage2_materialization_phase,
 )
 from mineocclude.prospective.package_binding import (  # noqa: E402
     PackageBindingError, provenance_artifact_id_for, resolve_package_binding,
@@ -281,7 +282,16 @@ def test_stage2_is_not_preauthorized_by_this_package(v0_4):
     assert stage1["STAGE_1_COLLECTION_AUTHORIZED"] is False
     assert stage1["STAGE_2_COLLECTION_AUTHORIZED"] is False
     assert stage2["STAGE_2_COLLECTION_AUTHORIZED"] is False
-    assert stage2["status"] == "DRAFT_TEMPLATE_AWAITING_STAGE1_TARGET_MATERIALIZATION"
+    # Materialization is not authorization. The package was built in the draft
+    # phase and its Stage-1 PASS has since rewritten it into the materialized
+    # one, which is a normal committed package state and still authorizes
+    # nothing -- so this asserts the phase is one of the two declared lifecycle
+    # states and that the whole manifest agrees on which, rather than pinning the
+    # phase the package happened to be in when this test was written.
+    materialized = stage2_materialization_phase(stage2)
+    assert stage2["status"] == (STAGE2_MATERIALIZED_STATUS if materialized
+                                else STAGE2_DRAFT_STATUS)
     assert all(identity["target_window_status"]
-               == "TO_BE_MATERIALIZED_FROM_FROZEN_STAGE1_DECISION"
+               == ("MATERIALIZED_FROM_STAGE1" if materialized
+                   else "TO_BE_MATERIALIZED_FROM_FROZEN_STAGE1_DECISION")
                for identity in stage2["trajectory_identities"])
