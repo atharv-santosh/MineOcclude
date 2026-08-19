@@ -318,6 +318,15 @@ def main() -> None:
                # the predecessor freeze.
                "src/mineocclude/prospective/physical_gate_admission.py",
                "tests/prospective/test_stage2_c1_extraction_and_gate_admission.py",
+               # C4, the identity namespace collision the T1 canary exposed after
+               # C1 and C3 were cleared. extraction() bound the typed capture
+               # identity and the model runtime identity to one name; the second
+               # shadowed the first, and the receipt asked a mapping of checkpoint
+               # digests for a trajectory identity once the activation was already
+               # written. Only the suite is enumerated here: the scientific
+               # backend and the operational prober it repairs are both already
+               # registered above.
+               "tests/prospective/test_stage2_c4_identity_namespace_binding.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

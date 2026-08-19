@@ -543,7 +543,7 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     # from the bytes they validate: the legacy identity from the authority's
     # layout_id plus this unit's episode, and the Stage-2 identity from the
     # manifest unit itself.
-    identity = resolve_typed_capture_identity(authority, source)
+    capture_identity = resolve_typed_capture_identity(authority, source)
     # C1: ``Layer4Extractor.__init__`` binds nothing but bookkeeping. The model
     # stack, the adapter and the runtime identity are established by
     # ``ensure_loaded()``, and ``extract()`` refuses without them. The
@@ -555,13 +555,20 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     record = extractor.extract(
         source["unit_id"], capture_root, output_root,
         expected_target_model_frame_indices=expected_rows,
-        scientific_trajectory_id=identity.scientific_trajectory_id,
-        expected_legacy_capture_trajectory_id=identity.legacy_capture_trajectory_id)
+        scientific_trajectory_id=capture_identity.scientific_trajectory_id,
+        expected_legacy_capture_trajectory_id=(
+            capture_identity.legacy_capture_trajectory_id))
     if record.get("layer") != 4 or record.get("shape") != expected_shape:
         raise RuntimeError("layer-4 extraction identity mismatch")
     # NEW-B001: refuse to persist activations whose producing model cannot be
     # named. The superseded receipt emitted checkpoint_sha256="" and failed open.
-    identity = require_activation_identity(record, label=unit_id)
+    # C4: this is the MODEL RUNTIME identity -- a plain mapping of checkpoint
+    # digests, read with ``[]``. It is a different type in a different namespace
+    # from the typed capture identity above, which is read with ``.``. Binding
+    # both to one name shadowed the typed one, and the receipt below then asked a
+    # dict for ``.legacy_capture_trajectory_id`` after fifty minutes of model load
+    # and extraction. Two namespaces, two names; never reuse one.
+    runtime_identity = require_activation_identity(record, label=unit_id)
     require_target_rows_authority_bound(record, expected_rows, label=unit_id)
     activation = Path(record["activation_path"])
     relative_activation = f"activation/{activation.name}"
@@ -569,9 +576,9 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     complete(manifest, manifest_path, unit_id, {"source_capture_unit_id": source["unit_id"], "layer": 4,
         "shape": expected_shape, "activation_path": str(activation),
         "activation_sha256": sha256_file(activation), "durable_activation_uri": uri,
-        "model_runtime_identity": identity,
-        "main_checkpoint_sha256": identity["main_checkpoint_sha256"],
-        "vae_checkpoint_sha256": identity["vae_checkpoint_sha256"],
+        "model_runtime_identity": runtime_identity,
+        "main_checkpoint_sha256": runtime_identity["main_checkpoint_sha256"],
+        "vae_checkpoint_sha256": runtime_identity["vae_checkpoint_sha256"],
         "targets": list(record["targets"]),
         "target_rows_authority_bound": True,
         # The provenance split, on the derived artifact: this activation was
@@ -590,8 +597,9 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
             source_admission["capture_critical_closure_sha256"],
         "capture_taken_under_processing_commit":
             source_admission["capture_taken_under_processing_commit"],
-        "legacy_capture_trajectory_id": identity.legacy_capture_trajectory_id,
-        "scientific_trajectory_id": identity.scientific_trajectory_id},
+        "legacy_capture_trajectory_id": (
+            capture_identity.legacy_capture_trajectory_id),
+        "scientific_trajectory_id": capture_identity.scientific_trajectory_id},
         additional_files={relative_activation: activation})
 
 

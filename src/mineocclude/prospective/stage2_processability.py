@@ -352,12 +352,14 @@ def production_unit1_prober(
                 return extractor
 
         workspace.mkdir(parents=True, exist_ok=True)
-        identity = resolve_typed_capture_identity(capture_admission.authority, unit)
+        capture_identity = resolve_typed_capture_identity(
+            capture_admission.authority, unit)
         record = factory().extract(
             str(unit["unit_id"]), capture_root_for(unit), workspace,
             expected_target_model_frame_indices=list(unit["target_model_frame_indices"]),
-            scientific_trajectory_id=identity.scientific_trajectory_id,
-            expected_legacy_capture_trajectory_id=identity.legacy_capture_trajectory_id)
+            scientific_trajectory_id=capture_identity.scientific_trajectory_id,
+            expected_legacy_capture_trajectory_id=(
+                capture_identity.legacy_capture_trajectory_id))
         checks["LAYER4_HOOK_RESOLVES"] = record.get("layer") == 4
         checks["ACTIVATION_SHAPE_VALID"] = list(record.get("shape") or []) == list(
             expected_activation_shape)
@@ -366,12 +368,18 @@ def production_unit1_prober(
         facts["observed_activation_dtype"] = record.get("dtype")
 
         try:
-            identity = require_activation_identity(record, label=str(unit["unit_id"]))
+            # C4: the model runtime identity is a mapping and the typed capture
+            # identity is a frozen dataclass. The scientific backend bound both to
+            # one name and died reading ``.legacy_capture_trajectory_id`` off the
+            # mapping; this probe survived only because it never read the typed
+            # one back. Kept distinct here so the shadow cannot reappear.
+            runtime_identity = require_activation_identity(
+                record, label=str(unit["unit_id"]))
             require_target_rows_authority_bound(
                 record, list(unit["target_model_frame_indices"]),
                 label=str(unit["unit_id"]))
-            checks["ACTIVATION_IDENTITY_VALID"] = bool(identity)
-            facts["model_runtime_id"] = identity.get("runtime_id")
+            checks["ACTIVATION_IDENTITY_VALID"] = bool(runtime_identity)
+            facts["model_runtime_id"] = runtime_identity.get("runtime_id")
         except EvidenceError as exc:
             facts["activation_identity_fault"] = f"{type(exc).__name__}: {exc}"
 
