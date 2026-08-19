@@ -408,13 +408,23 @@ def gates(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     receipts = {unit["unit_id"]: capture_receipt(manifest, unit["unit_id"])
                 for unit in manifest["capture_units"]}
     head = campaign_commit()
+    capture_admission = backend_capture_admission(manifest, manifest_path,
+                                                  current_source_commit=head)
     for unit in manifest["capture_units"]:
-        require_durable_unit_receipt(manifest, manifest_path, unit, receipts[unit["unit_id"]],
-                                     current_source_commit=head)
+        # A CAPTURE unit, so it is admitted against its own frozen capture
+        # provenance and capture-critical closure equality -- never against
+        # successor HEAD. Requiring commit equality here was the last surviving
+        # instance of the source-homogeneity proxy: the physical gate IS a derived
+        # unit and its own receipt still binds HEAD in complete() below, but the
+        # fifty raw captures it reads are historical evidence, and a successor
+        # freeze does not make a durable capture invalid.
+        require_admitted_capture_receipt(manifest, unit, receipts[unit["unit_id"]],
+                                         capture_admission=capture_admission)
         verify_bound_stage2_physical_evidence(unit, receipts[unit["unit_id"]],
                                               load_json(ROOT / manifest["authority_binding"]["path"]))
     complete(manifest, manifest_path, unit_id, {"physical_gates": validate_physical_gate_receipts(
-        manifest, receipts, manifest_sha256=sha256_file(manifest_path), current_source_commit=head)})
+        manifest, receipts, manifest_sha256=sha256_file(manifest_path), current_source_commit=head,
+        capture_admission=capture_admission)})
 
 
 def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:

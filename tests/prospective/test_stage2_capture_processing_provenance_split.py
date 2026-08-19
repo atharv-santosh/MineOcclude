@@ -821,3 +821,119 @@ class TestCohortClosureGate:
              "capture_critical_closure_sha256": "a" * 64}]
         assert require_homogeneous_capture_closure(records) == "a" * 64
         assert len({record["capture_source_commit"] for record in records}) == 2
+
+
+# ======================================================================
+# F. The physical gate itself, on a mixed-commit cohort
+# ======================================================================
+
+class TestThePhysicalGateAdmitsAMixedCommitCohort:
+    """The gate that actually ran the real campaign, on the cohort it rejected.
+
+    The v0.4 split repaired five source-homogeneity checks, but ``gates()`` kept a
+    sixth: it validated the fifty RAW CAPTURE units with
+    ``require_durable_unit_receipt``, whose contract is derived units and which
+    therefore demands ``source_commit_sha == HEAD``. Every unit-level test above
+    passed while the real campaign failed closed on ``a2y_t01_wall`` -- captured
+    legitimately under the predecessor -- because nothing exercised ``gates()``.
+
+    These tests drive the real ``gates()``, the real
+    ``backend_capture_admission`` and the real capture-critical closure derivation
+    at a real predecessor commit. Only S3 durability, the physical-evidence reader
+    and receipt writing are stubbed: none of them is the defect.
+    """
+
+    SUCCESSOR = "c" * 40
+
+    @pytest.fixture
+    def gate_harness(self, monkeypatch, manifest, synthetic_receipt):
+        import functools
+
+        from scripts.regime_a_prime_qualification_v0_2 import stage2_backend as backend
+
+        manifest_path = PACKAGE / "stage2_locked_manifest.json"
+        unit = copy.deepcopy(manifest["capture_units"][0])
+        trimmed = dict(manifest, capture_units=[unit])
+        receipts = {unit["unit_id"]: copy.deepcopy(synthetic_receipt)}
+        recorded: dict = {}
+
+        monkeypatch.setattr(backend, "campaign_commit", lambda: self.SUCCESSOR)
+        monkeypatch.setattr(backend, "capture_receipt",
+                            lambda _manifest, unit_id: receipts[unit_id])
+        monkeypatch.setattr(backend, "verify_bound_stage2_physical_evidence",
+                            lambda *_args, **_kwargs: None)
+        # The real admission logic, with only the S3 round trip stubbed. The
+        # verifier is a default argument bound at definition, so it cannot be
+        # replaced by patching the module attribute it was read from.
+        monkeypatch.setattr(backend, "require_admitted_capture_receipt",
+                            functools.partial(backend.require_admitted_capture_receipt,
+                                              durable_verifier=lambda *_: True))
+
+        def fake_validate(_manifest, _receipts, **kwargs):
+            recorded["validate_kwargs"] = kwargs
+            return {"status": "PASS"}
+
+        def fake_complete(_manifest, _manifest_path, unit_id, payload, **_kwargs):
+            recorded["completed"] = (unit_id, payload)
+
+        monkeypatch.setattr(backend, "validate_physical_gate_receipts", fake_validate)
+        monkeypatch.setattr(backend, "complete", fake_complete)
+        return backend, trimmed, manifest_path, receipts, recorded
+
+    def test_a_capture_taken_under_the_predecessor_does_not_fail_the_gate(
+            self, gate_harness):
+        """The exact campaign failure: RuntimeError on a valid durable capture."""
+        backend, trimmed, manifest_path, _receipts, recorded = gate_harness
+
+        backend.gates(trimmed, manifest_path, "stage2_physical_gates")
+
+        assert recorded["completed"][0] == "stage2_physical_gates"
+        assert recorded["completed"][1]["physical_gates"]["status"] == "PASS"
+
+    def test_the_gate_hands_its_admission_context_to_the_cohort_validator(
+            self, gate_harness):
+        """The second, latent defect: the validator's required kwarg was omitted."""
+        backend, trimmed, manifest_path, _receipts, recorded = gate_harness
+
+        backend.gates(trimmed, manifest_path, "stage2_physical_gates")
+
+        kwargs = recorded["validate_kwargs"]
+        assert kwargs["capture_admission"] is not None
+        assert kwargs["current_source_commit"] == self.SUCCESSOR
+        assert kwargs["capture_admission"].processing_source_commit_sha == self.SUCCESSOR
+
+    def test_the_gate_binds_the_capture_and_processing_commits_separately(
+            self, gate_harness):
+        """Admission must not launder the predecessor capture into the successor."""
+        backend, trimmed, manifest_path, receipts, _recorded = gate_harness
+        admission = backend.backend_capture_admission(
+            trimmed, manifest_path, current_source_commit=self.SUCCESSOR)
+
+        unit = trimmed["capture_units"][0]
+        record = admission.admit(unit, receipts[unit["unit_id"]])
+
+        assert record["capture_source_commit"] == PREDECESSOR
+        assert record["processing_source_commit"] == self.SUCCESSOR
+        assert record["capture_and_processing_commits_equal"] is False
+        assert record["capture_critical_closure_sha256"] == (
+            cc.capture_critical_closure_at(cc.worktree_reader(ROOT), repository=ROOT)[0])
+
+    def test_the_gate_still_fails_closed_on_a_capture_it_must_refuse(
+            self, gate_harness):
+        """Admission replaced commit equality; it did not relax the gate."""
+        backend, trimmed, manifest_path, receipts, _recorded = gate_harness
+        unit_id = trimmed["capture_units"][0]["unit_id"]
+        receipts[unit_id]["manifest_sha256"] = "0" * 64
+
+        with pytest.raises(RuntimeError, match="capture admission refused"):
+            backend.gates(trimmed, manifest_path, "stage2_physical_gates")
+
+    def test_a_capture_whose_apparatus_differs_is_still_refused_by_the_gate(
+            self, gate_harness):
+        """Closure equality is the admission rule, and the gate enforces it."""
+        backend, trimmed, manifest_path, receipts, _recorded = gate_harness
+        unit_id = trimmed["capture_units"][0]["unit_id"]
+        receipts[unit_id]["runtime_provenance_receipt"]["minecraft_version"] = "1.0.0"
+
+        with pytest.raises(RuntimeError, match="capture admission refused"):
+            backend.gates(trimmed, manifest_path, "stage2_physical_gates")
