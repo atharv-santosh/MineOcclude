@@ -33,6 +33,9 @@ from mineocclude.prospective.capture_admission import (  # noqa: E402
     load_capture_provenance_authority, require_homogeneous_capture_closure,
     resolve_typed_capture_identity,
 )
+from mineocclude.prospective.capture_closure import (  # noqa: E402
+    CaptureClosureError, historical_runtime_source_pins,
+)
 from mineocclude.prospective.stage2_decision import (  # noqa: E402
     evaluate_stage2, require_stage2_decision_reproduction,
 )
@@ -304,6 +307,21 @@ def validate_physical_gate_receipts(manifest: dict, receipts: dict[str, dict], *
             reasons.append(f"capture_admission:{exc}"[:200])
         if receipt.get("stage1_decision_sha256") != manifest.get("stage1_decision_sha256"): reasons.append("stage1_decision_provenance")
         if receipt.get("scientific_run_id") != manifest["run_namespace"]: reasons.append("run_namespace")
+        # A capture's runtime provenance is HISTORICAL evidence, so the closure it
+        # is checked against is the one that actually produced it -- the capture's
+        # own commit -- not the successor working tree. Both verifiers already take
+        # the expectation as a parameter for exactly this reason; defaulting it
+        # rehashes the tree, which asserts "the source that produced this capture is
+        # the source present now" and is false the moment a successor freeze lands.
+        # Admission, above, has already proved this receipt's recorded bytes agree
+        # with that commit, which is what licenses reading the closure from Git.
+        capture_pins = None
+        if unit_id in admitted:
+            try:
+                capture_pins = historical_runtime_source_pins(
+                    admitted[unit_id]["capture_source_commit"])
+            except CaptureClosureError:
+                reasons.append("historical_runtime_closure")
         for name in ("runtime_provenance_receipt", "path_state_receipt", "durability_receipt"):
             item = receipt.get(name, {})
             try:
@@ -313,7 +331,13 @@ def validate_physical_gate_receipts(manifest: dict, receipts: dict[str, dict], *
                     raise ValueError(f"{name} does not declare independent derivation")
                 if name == "runtime_provenance_receipt":
                     # Concrete probe-execution evidence, not a self-asserted PASS.
-                    verify_probe_execution(item, name, authority=authority)
+                    # Never falls back to worktree mode: an unbindable historical
+                    # closure fails the receipt rather than checking it against HEAD.
+                    if capture_pins is None:
+                        raise ValueError(
+                            f"{name} has no bound historical capture source closure")
+                    verify_probe_execution(item, name, authority=authority,
+                                           expected_source_pins=capture_pins)
             except (ValueError, TypeError):
                 reasons.append(name)
         runtime = receipt.get("runtime_provenance_receipt", {})
@@ -323,7 +347,9 @@ def validate_physical_gate_receipts(manifest: dict, receipts: dict[str, dict], *
             reasons.append("runtime_identity")
         source_hashes = runtime.get("runtime_source_sha256")
         try:
-            verify_runtime_source_hashes(source_hashes)
+            if capture_pins is None:
+                raise ValueError("no bound historical capture source closure")
+            verify_runtime_source_hashes(source_hashes, expected_source_pins=capture_pins)
         except (ValueError, TypeError):
             reasons.append("runtime_source_coverage")
         apparatus = runtime.get("captured_apparatus_receipt", {})

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import sys
 from copy import deepcopy
 from pathlib import Path
@@ -61,7 +62,8 @@ def signed_probe(**fields) -> dict:
     return value
 
 
-def probe_execution_record(authority: dict) -> dict:
+def probe_execution_record(authority: dict,
+                           source_pins: dict[str, str] | None = None) -> dict:
     """A structurally genuine probe-execution record for the current tree.
 
     The verifier rehashes the probe source, each probed executable, and each
@@ -91,19 +93,26 @@ def probe_execution_record(authority: dict) -> dict:
             "normalized_output": output,
             "normalized_output_sha256": hashlib.sha256(output.encode()).hexdigest()})
     fields = policy["required_fields"]
+    # The two source-identity controls, A and G. Both take the working tree by
+    # default -- a probe running now -- and both take the historical closure when
+    # the record stands for a probe that ran at a past commit. Splitting them would
+    # let a fixture satisfy one control from Git and the other from disk.
+    probe_source = "scripts/regime_a_prime_qualification_v0_2/stage_unit_driver.py"
+    runtime_sources = (source_pins if source_pins is not None else
+                       {path: sha256_file(ROOT / path)
+                        for path in RUNTIME_CRITICAL_SOURCE_PATHS})
     return {"producer": policy["probe_evidence_policy"]["independent_probe_producers"][0],
-            "probe_source_path": "scripts/regime_a_prime_qualification_v0_2/stage_unit_driver.py",
-            "probe_source_sha256": sha256_file(
-                ROOT / "scripts/regime_a_prime_qualification_v0_2/stage_unit_driver.py"),
+            "probe_source_path": probe_source,
+            "probe_source_sha256": runtime_sources[probe_source],
             "java_home": reconstruction["java_home"], "display": reconstruction["display"],
             "invocations": invocations, "measurements": dict(fields),
             "apparatus_file_sha256": dict(policy["critical_file_sha256"]),
-            "runtime_source_sha256": {path: sha256_file(ROOT / path)
-                                      for path in RUNTIME_CRITICAL_SOURCE_PATHS}}
+            "runtime_source_sha256": dict(runtime_sources)}
 
 
 def valid_unit_probes(authority: dict, manifest: dict, unit: dict,
-                      head: str | None = None) -> tuple[dict, dict, dict]:
+                      head: str | None = None,
+                      source_pins: dict[str, str] | None = None) -> tuple[dict, dict, dict]:
     apparatus_policy = authority["apparatus_observation_policy"]
     apparatus = signed_probe(camera_feet_world_xyz=apparatus_policy["camera_feet_world_xyz"],
         camera_eye_world_xyz=apparatus_policy["camera_eye_world_xyz"],
@@ -115,7 +124,7 @@ def valid_unit_probes(authority: dict, manifest: dict, unit: dict,
         camera_authority=authority["apparatus"]["camera_authority"],
         wall_authority=authority["apparatus"]["wall_authority"])
     runtime_fields = authority["runtime_identity_policy"]["required_fields"]
-    execution = probe_execution_record(authority)
+    execution = probe_execution_record(authority, source_pins=source_pins)
     by_id = {item["command_id"]: item for item in execution["invocations"]}
     runtime = signed_probe(**runtime_fields,
         **({} if head is None else {"head": head}),
@@ -123,8 +132,13 @@ def valid_unit_probes(authority: dict, manifest: dict, unit: dict,
         java_version_probe_sha256=by_id["java_version"]["normalized_output_sha256"],
         renderer_probe_sha256=by_id["renderer"]["normalized_output_sha256"],
         xvfb_probe_sha256=by_id["xvfb"]["normalized_output_sha256"],
-        runtime_source_sha256={path: sha256_file(ROOT / path)
-                               for path in RUNTIME_CRITICAL_SOURCE_PATHS},
+        # Default: the working tree, which is what a probe running NOW records.
+        # ``source_pins`` supplies a completed capture's historical closure, so a
+        # gate-shape fixture can present a receipt bound to a real commit rather
+        # than to whatever happens to be checked out.
+        runtime_source_sha256=(source_pins if source_pins is not None else
+                               {path: sha256_file(ROOT / path)
+                                for path in RUNTIME_CRITICAL_SOURCE_PATHS}),
         probe_execution=execution,
         probe_evidence_sha256=probe_evidence_digest(execution),
         captured_apparatus_receipt=apparatus)
@@ -1023,7 +1037,8 @@ def test_copied_remote_durable_manifest_identity_fails(monkeypatch):
 
 
 def valid_capture_receipts(manifest: dict, manifest_sha256: str,
-                           source_commit: str = "c" * 40) -> dict[str, dict]:
+                           source_commit: str = "c" * 40,
+                           source_pins: dict[str, str] | None = None) -> dict[str, dict]:
     receipts = {}
     by_trajectory = {}
     authority = load_json(AUTHORITY_PATH)
@@ -1033,7 +1048,8 @@ def valid_capture_receipts(manifest: dict, manifest_sha256: str,
                     "target_row_count": 19, "contamination_rows": [],
                     "target_model_frame_indices": unit["target_model_frame_indices"],
                     "aligned_target_world_x_blocks": unit["expected_causal_fir_target_world_x_blocks"]}
-        runtime, path_probe, durability = valid_unit_probes(authority, manifest, unit)
+        runtime, path_probe, durability = valid_unit_probes(
+            authority, manifest, unit, source_pins=source_pins)
         path_probe = signed_probe(**{key: value for key, value in path_probe.items()
                                      if key not in {"payload_sha256", "captured_path_sha256", "expected_path_sha256"}},
                                   captured_path_sha256=path_hash, expected_path_sha256=path_hash)
@@ -1053,6 +1069,19 @@ PHYSICAL_NAMES = {"clock_alignment", "stable_visibility", "hidden_row_validity",
 
 
 
+def _historical_gate_fixture() -> tuple[str, dict[str, str]]:
+    """A real commit and the runtime-source closure it actually carries.
+
+    Taken from Git, not the working tree, so the fixture is stable while the tree
+    is dirty: the gate derives its expectation the same way, from the same commit.
+    """
+    from mineocclude.prospective.capture_closure import historical_runtime_source_pins
+
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
+                            capture_output=True, check=True).stdout.strip()
+    return commit, historical_runtime_source_pins(commit, repository=ROOT)
+
+
 class _GateAdmission:
     """Admits every capture on a fixed apparatus, for gate-shape tests only.
 
@@ -1060,17 +1089,23 @@ class _GateAdmission:
     not about capture provenance. Capture admission and the cohort closure rule have
     their own adversarial suite in
     ``test_stage2_capture_processing_provenance_split.py``.
+
+    The admitted commit must nevertheless be a REAL one, because the gate binds each
+    capture's historical runtime closure from Git at the commit admission reports.
+    A synthetic ``"c" * 40`` cannot be resolved, and the gate refuses rather than
+    falling back to comparing a completed capture against the working tree.
     """
 
     capture_provenance_authority_sha256 = "e" * 64
 
-    def __init__(self, manifest):
+    def __init__(self, manifest, capture_commit=None):
         self.manifest = manifest
         self.authority = None
+        self.capture_commit = capture_commit or "c" * 40
 
     def admit(self, unit, receipt):
         return {"unit_id": str(unit.get("unit_id")), "capture_compatibility": "PASS",
-                "capture_source_commit": "c" * 40,
+                "capture_source_commit": self.capture_commit,
                 "capture_critical_closure_sha256": "a" * 64,
                 "processing_source_commit": "c" * 40,
                 "capture_and_processing_commits_equal": True,
@@ -1085,15 +1120,18 @@ def test_stage2_physical_gate_requires_every_check_and_pair():
     for unit in manifest["capture_units"]:
         unit["target_model_frame_indices"] = list(range(20, 39))
         unit["expected_causal_fir_target_world_x_blocks"] = [float(i) for i in range(19)]
-    receipts = valid_capture_receipts(manifest, "m" * 64)
+    commit, pins = _historical_gate_fixture()
+    receipts = valid_capture_receipts(manifest, "m" * 64, source_commit=commit,
+                                      source_pins=pins)
+    admission = _GateAdmission(manifest, capture_commit=commit)
     assert validate_physical_gate_receipts(
         manifest, receipts, manifest_sha256="m" * 64, current_source_commit="c" * 40,
-        capture_admission=_GateAdmission(manifest))["status"] == "PASS"
+        capture_admission=admission)["status"] == "PASS"
     receipts[manifest["capture_units"][0]["unit_id"]]["stage2_physical_evidence"]["checks"].pop("clock_alignment")
     with pytest.raises(RuntimeError):
         validate_physical_gate_receipts(
             manifest, receipts, manifest_sha256="m" * 64, current_source_commit="c" * 40,
-            capture_admission=_GateAdmission(manifest))
+            capture_admission=admission)
 
 
 def test_stage2_physical_gate_rejects_stale_target_summary():

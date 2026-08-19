@@ -34,7 +34,22 @@ from mineocclude.prospective.package_binding import package_directory
 
 ROOT = Path(__file__).resolve().parents[2]
 PREDECESSOR = "49f0cca9d0ec6d204444bf3c0d1fa5fc7e263936"
+#: The freeze that took 49 of the 50 captures, and the one whose runtime-critical
+#: bytes the first physical-gate repair changed.
+SUCCESSOR_SPLIT = "cb16335c936659b8105173db15f5a95d2be230d2"
 PACKAGE = package_directory("v0.4", ROOT)
+#: The live campaign's frozen capture receipts, when this host still carries them.
+CAMPAIGN_RECEIPTS = Path("/mnt/sagemaker-nvme/regime_a_prime_a2y_v0_4/receipts/capture")
+
+
+def _frozen_capture_receipt(unit_id: str = "a2y_t01_wall") -> dict | None:
+    """One real, immutable capture receipt, or None where the campaign is absent.
+
+    Read-only and never mutated: these tests assert against frozen evidence, so a
+    host without the campaign tree skips rather than inventing a substitute.
+    """
+    path = CAMPAIGN_RECEIPTS / f"{unit_id}.json"
+    return json.loads(path.read_bytes()) if path.is_file() else None
 
 
 # ======================================================================
@@ -937,3 +952,152 @@ class TestThePhysicalGateAdmitsAMixedCommitCohort:
 
         with pytest.raises(RuntimeError, match="capture admission refused"):
             backend.gates(trimmed, manifest_path, "stage2_physical_gates")
+
+
+# ======================================================================
+# G. Cohort runtime provenance across a successor freeze
+# ======================================================================
+
+class TestHistoricalRuntimeSourceClosure:
+    """The cohort validator's runtime checks, in the domain they belong to.
+
+    The physical gate verified every capture's ``runtime_source_sha256`` with
+    ``verify_runtime_source_hashes(source_hashes)`` -- no expected pins, which is
+    *current-source* mode and rehashes the working tree. That encodes "the source
+    that produced this capture is the source present now", which the first
+    physical-gate repair falsified by editing a runtime-critical file. All fifty
+    units then failed uniformly on ``runtime_provenance_receipt`` and
+    ``runtime_source_coverage`` after a 2h16m run in which every one of them had
+    already passed admission, S3 byte verification and physical evidence.
+
+    Both verifiers already took the expected closure as a parameter. These tests
+    pin the domain: historical captures are checked against their own commit's Git
+    objects, and every forgery route stays closed.
+    """
+
+    def test_the_governed_path_list_is_read_at_the_capture_commit(self):
+        """It grew 97 -> 101; using today's list on a predecessor invents gaps."""
+        predecessor = cc.historical_runtime_source_pins(PREDECESSOR, repository=ROOT)
+        successor = cc.historical_runtime_source_pins(SUCCESSOR_SPLIT, repository=ROOT)
+        assert len(predecessor) < len(successor)
+        assert set(predecessor) < set(successor)
+
+    def test_pins_come_from_git_not_the_worktree(self):
+        """Time-invariance: the answer cannot move when the tree does."""
+        from mineocclude.prospective.development_workflow import (
+            RUNTIME_CRITICAL_SOURCE_PATHS, sha256_file,
+        )
+        pins = cc.historical_runtime_source_pins(SUCCESSOR_SPLIT, repository=ROOT)
+        edited = "scripts/regime_a_prime_qualification_v0_2/stage2_backend.py"
+        assert edited in RUNTIME_CRITICAL_SOURCE_PATHS
+        # The live tree carries the repair; the predecessor commit does not.
+        assert pins[edited] != sha256_file(ROOT / edited)
+
+    def test_a_real_capture_receipt_verifies_against_its_own_commit(self):
+        """Both flagged checks pass in historical mode, on real frozen evidence."""
+        from mineocclude.prospective.development_workflow import (
+            verify_probe_execution, verify_runtime_source_hashes,
+        )
+        receipt = _frozen_capture_receipt()
+        if receipt is None:
+            pytest.skip("campaign capture receipts are not present on this host")
+        runtime = receipt["runtime_provenance_receipt"]
+        pins = cc.historical_runtime_source_pins(receipt["source_commit_sha"],
+                                                 repository=ROOT)
+        authority = json.loads((PACKAGE / "authority_parameters.json").read_bytes())
+        verify_runtime_source_hashes(runtime["runtime_source_sha256"],
+                                     expected_source_pins=pins)
+        verify_probe_execution(runtime, "runtime_provenance_receipt",
+                               authority=authority, expected_source_pins=pins)
+
+    def test_current_source_mode_is_what_failed_the_campaign(self):
+        """Regression anchor: the old call still fails on the same evidence."""
+        from mineocclude.prospective.development_workflow import (
+            EvidenceError, verify_runtime_source_hashes,
+        )
+        receipt = _frozen_capture_receipt()
+        if receipt is None:
+            pytest.skip("campaign capture receipts are not present on this host")
+        with pytest.raises(EvidenceError):
+            verify_runtime_source_hashes(
+                receipt["runtime_provenance_receipt"]["runtime_source_sha256"])
+
+    def test_forged_source_digests_are_still_refused(self):
+        """Historical mode is not a weaker mode."""
+        from mineocclude.prospective.development_workflow import (
+            EvidenceError, verify_runtime_source_hashes,
+        )
+        pins = cc.historical_runtime_source_pins(SUCCESSOR_SPLIT, repository=ROOT)
+        forged = dict(pins)
+        forged[sorted(forged)[0]] = "0" * 64
+        with pytest.raises(EvidenceError, match="runtime source bytes mismatch"):
+            verify_runtime_source_hashes(forged, expected_source_pins=pins)
+
+    def test_arbitrary_coverage_cannot_pass(self):
+        """A receipt may not choose which governed paths it accounts for."""
+        from mineocclude.prospective.development_workflow import (
+            EvidenceError, verify_runtime_source_hashes,
+        )
+        pins = cc.historical_runtime_source_pins(SUCCESSOR_SPLIT, repository=ROOT)
+        thinned = dict(pins); thinned.pop(sorted(thinned)[0])
+        with pytest.raises(EvidenceError, match="coverage is incomplete"):
+            verify_runtime_source_hashes(thinned, expected_source_pins=pins)
+        padded = dict(pins); padded["src/not/governed.py"] = "0" * 64
+        with pytest.raises(EvidenceError, match="coverage is incomplete"):
+            verify_runtime_source_hashes(padded, expected_source_pins=pins)
+
+    def test_the_expectation_is_never_the_receipt_itself(self):
+        """Non-circularity: pins are derived without reading any receipt."""
+        import inspect
+        source = inspect.getsource(cc.historical_runtime_source_pins)
+        assert "receipt" not in source.split('"""')[2]
+        pins = cc.historical_runtime_source_pins(SUCCESSOR_SPLIT, repository=ROOT)
+        assert len(pins) > 50 and all(len(v) == 64 for v in pins.values())
+
+    def test_an_unknown_commit_is_refused_rather_than_defaulted(self):
+        with pytest.raises(cc.CaptureClosureError):
+            cc.historical_runtime_source_pins("0" * 40, repository=ROOT)
+
+
+class TestCohortValidatorRuntimeDomain:
+    """The production cohort validator, on a mixed-commit cohort."""
+
+    def _gate_inputs(self, monkeypatch):
+        import functools
+
+        from scripts.regime_a_prime_qualification_v0_2 import stage2_backend as backend
+        monkeypatch.setattr(backend, "campaign_commit", lambda: "c" * 40)
+        return backend, functools
+
+    def test_the_validator_binds_pins_from_the_admitted_capture_commit(
+            self, monkeypatch):
+        """It must ask the admitted record, not the raw receipt, for the commit."""
+        import inspect
+
+        from scripts.regime_a_prime_qualification_v0_2 import stage2_backend as backend
+        source = inspect.getsource(backend.validate_physical_gate_receipts)
+        assert 'historical_runtime_source_pins(' in source
+        assert 'admitted[unit_id]["capture_source_commit"]' in source
+        # and it must never silently fall back to worktree mode
+        assert "expected_source_pins=capture_pins" in source
+        assert source.count("verify_runtime_source_hashes(source_hashes)") == 0
+
+    def test_an_unbindable_closure_fails_the_receipt_closed(self, monkeypatch):
+        """No historical closure => refusal, never a HEAD comparison."""
+        from scripts.regime_a_prime_qualification_v0_2 import stage2_backend as backend
+
+        def refuse(_commit, **_kwargs):
+            raise backend.CaptureClosureError("unbindable")
+        monkeypatch.setattr(backend, "historical_runtime_source_pins", refuse)
+
+        class _Admission:
+            def admit(self, unit, receipt):
+                return {"capture_source_commit": PREDECESSOR,
+                        "capture_critical_closure_sha256": "a" * 64}
+        manifest = json.loads((PACKAGE / "stage2_locked_manifest.json").read_bytes())
+        receipts = {u["unit_id"]: {} for u in manifest["capture_units"]}
+        with pytest.raises(RuntimeError, match="failed closed"):
+            backend.validate_physical_gate_receipts(
+                manifest, receipts,
+                manifest_sha256=_sha(PACKAGE / "stage2_locked_manifest.json"),
+                current_source_commit="c" * 40, capture_admission=_Admission())

@@ -554,6 +554,69 @@ def compare_capture_critical_closures(predecessor: str | SourceReader,
     }
 
 
+def historical_runtime_source_pins(commit: str, *,
+                                   repository: Path = REPOSITORY_ROOT) -> dict[str, str]:
+    """The runtime-critical source closure a completed capture actually ran under.
+
+    The counterpart, for a raw capture, of the closure
+    :func:`~mineocclude.prospective.development_workflow.bind_historical_source_closure`
+    recovers for a completed *campaign* from its frozen pre-outcome provenance
+    receipt. A capture receipt names no such document, but it does name its own
+    commit, and admission has already proved -- via
+    :func:`cross_check_recorded_file_digests` -- that the Git bytes at that commit
+    are the bytes the capture measured. That agreement is exactly what licenses
+    deriving the closure from Git here rather than from the worktree.
+
+    Two things are read at ``commit``, never from the live tree:
+
+    1. the governed path list itself, because it is versioned like any other
+       source. It stood at 97 paths under one predecessor and 101 under its
+       successor, so checking a predecessor capture's coverage against today's
+       list reports four "missing" pins for files that were not governed when
+       that capture ran -- a coverage failure manufactured entirely by the
+       verifier's notion of time;
+    2. each governed path's bytes at that same commit.
+
+    The result is fed to
+    :func:`~mineocclude.prospective.development_workflow.verify_runtime_source_hashes`
+    and :func:`~mineocclude.prospective.development_workflow.verify_probe_execution`
+    as ``expected_source_pins``. Nothing is taken from the receipt under
+    verification, so this cannot degrade into checking a receipt against itself:
+    the expectation comes from immutable Git objects, and a receipt whose digests
+    disagree with its own commit is still refused.
+
+    Fail-closed: a governed path absent at the commit that governed it is a
+    refusal, not a skipped pin.
+    """
+    read = git_reader(commit, repository)
+    governed, symbol = GOVERNANCE_SCOPE_COMPONENTS[0]
+    source = read(governed)
+    if source is None:
+        raise CaptureClosureError(
+            f"the governed source-path list {governed} is absent at commit {commit}")
+    literal = None
+    for node in ast.parse(source).body:
+        if isinstance(node, ast.Assign) and any(
+                isinstance(target, ast.Name) and target.id == symbol
+                for target in node.targets):
+            try:
+                literal = ast.literal_eval(node.value)
+            except (ValueError, SyntaxError) as exc:
+                raise CaptureClosureError(
+                    f"{governed}::{symbol} is not a literal collection at {commit}") from exc
+    if not literal or not all(isinstance(item, str) and item for item in literal):
+        raise CaptureClosureError(
+            f"{governed}::{symbol} is absent or malformed at commit {commit}")
+    pins: dict[str, str] = {}
+    for relative in literal:
+        blob = read(relative)
+        if blob is None:
+            raise CaptureClosureError(
+                f"governed runtime-critical path {relative} is absent at commit {commit}")
+        pins[relative] = hashlib.sha256(blob.encode("utf-8")).hexdigest()
+    return pins
+
+
 def cross_check_recorded_file_digests(recorded: Mapping[str, str], commit: str, *,
                                       paths: list[str],
                                       repository: Path = REPOSITORY_ROOT) -> dict:
