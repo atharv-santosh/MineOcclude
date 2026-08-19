@@ -134,6 +134,86 @@ def backend_physical_gate_admission(manifest: dict, manifest_path: Path, gate: d
         repository=ROOT, durable_verifier=durable_verifier)
 
 
+def backend_durable_gate_payload_admission(manifest: dict, manifest_path: Path, *,
+                                           capture_admission, current_source_commit: str,
+                                           transport=None) -> dict:
+    """Admit the SURVIVING DURABLE PAYLOAD when the local gate wrapper was destroyed.
+
+    R2. A host rebuild wiped the local NVMe tree, taking with it the physical-gate
+    receipt wrapper. The gate's own durable objects -- ``payload.json`` and
+    ``sha256_manifest.json`` -- were untouched, because they live in the campaign's
+    S3 namespace. The wrapper was a serialization; the verdict is the payload.
+
+    This never reconstructs the wrapper and never writes one. It reads the two
+    surviving objects and puts them through
+    :func:`admit_historical_durable_gate_payload`, which requires the same
+    load-bearing condition wrapper admission does -- gate-critical closure equality
+    -- plus digest pins, independent cross-vouching between the two objects, exact
+    cohort identity, the authorized capture apparatus, and PASS.
+    """
+    # Function-body imports, exactly as ``backend_physical_gate_admission`` does and
+    # for the same reason: this file's module prologue is GATE-CRITICAL, so a new
+    # import there would move the gate-critical closure and refuse the very
+    # evidence this function exists to admit.
+    from mineocclude.prospective.development_workflow import AwsCliTransport
+    from mineocclude.prospective.package_binding import (
+        artifact_version_tag, package_directory,
+    )
+    from mineocclude.prospective.physical_gate_admission import (
+        admit_historical_durable_gate_payload, load_durable_payload_admission_authority,
+    )
+
+    package = package_directory(artifact_version_tag(manifest["artifact_id"]), ROOT)
+    payload_authority, _sha = load_durable_payload_admission_authority(package)
+    admitted = payload_authority.get("admitted_historical_durable_gate_payload") or {}
+    uri = durable_unit_uri(manifest, manifest["physical_gate_unit"]["unit_id"])
+    transport = AwsCliTransport() if transport is None else transport
+    authority_path = ROOT / manifest["authority_binding"]["path"]
+    return admit_historical_durable_gate_payload(
+        manifest,
+        payload_bytes=transport.download(f"{uri}/{admitted['durable_payload_object']}"),
+        checksum_manifest_bytes=transport.download(
+            f"{uri}/{admitted['durable_checksum_manifest_object']}"),
+        authority=load_json(authority_path),
+        payload_authority=payload_authority,
+        authority_sha256=sha256_file(authority_path),
+        manifest_sha256=sha256_file(manifest_path),
+        processing_source_commit=current_source_commit,
+        expected_required_checks=sorted(
+            PHYSICAL_CHECKS | {"path_state", "durability", "runtime_provenance",
+                               "pair_coverage", "capture_admission"}),
+        authorized_capture_critical_closure=(
+            capture_admission.expected_capture_critical_closure_sha256),
+        repository=ROOT)
+
+
+def resolve_physical_gate_admission(manifest: dict, manifest_path: Path, *,
+                                    capture_admission, current_source_commit: str) -> dict:
+    """The gate admission for this extraction: local wrapper if present, else durable payload.
+
+    Two routes, and which one applies is decided by a fact on disk rather than by a
+    preference. When the local wrapper receipt exists it is used and nothing about
+    the previous behaviour changes. When it does not -- the disaster-recovery case --
+    the surviving durable payload is admitted instead, and ONLY if this package ships
+    the sibling authority that declares the wrapper unrecoverable.
+
+    There is deliberately no third route. A missing wrapper with no durable-payload
+    authority is a blocker, not a licence to synthesize one: nothing here writes a
+    ``physical_gates.json``, and the record the payload route returns names a regime
+    that no wrapper path can emit, so a downstream artifact always states which
+    evidence actually admitted it.
+    """
+    receipt_path = Path(manifest["physical_gate_unit"]["receipt_path"])
+    if receipt_path.is_file():
+        return backend_physical_gate_admission(
+            manifest, manifest_path, load_json(receipt_path),
+            capture_admission=capture_admission,
+            current_source_commit=current_source_commit)
+    return backend_durable_gate_payload_admission(
+        manifest, manifest_path, capture_admission=capture_admission,
+        current_source_commit=current_source_commit)
+
+
 def require_admitted_capture_receipt(manifest: dict, unit: dict, receipt: dict, *,
                                      capture_admission,
                                      durable_verifier=verify_remote_durable_objects) -> dict:
@@ -501,7 +581,6 @@ def gates(manifest: dict, manifest_path: Path, unit_id: str) -> None:
 
 
 def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
-    gate = load_json(Path(manifest["physical_gate_unit"]["receipt_path"]))
     head = campaign_commit()
     receipts = {unit["unit_id"]: capture_receipt(manifest, unit["unit_id"])
                 for unit in manifest["capture_units"]}
@@ -510,8 +589,11 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     # C2: the gate PASS is immutable derived evidence, admitted on closure equality
     # rather than on commit equality. PASS is required inside the admission rule, so
     # a FAIL or incomplete gate can never reach extraction under any commit.
-    gate_admission = backend_physical_gate_admission(
-        manifest, manifest_path, gate, capture_admission=capture_admission,
+    # R2: and the gate evidence itself is resolved rather than assumed local. The
+    # host rebuild destroyed the wrapper receipt this line used to load directly,
+    # which turned a recoverable serialization loss into an unrecoverable one.
+    gate_admission = resolve_physical_gate_admission(
+        manifest, manifest_path, capture_admission=capture_admission,
         current_source_commit=head)
     validate_physical_gate_receipts(manifest, receipts, manifest_sha256=sha256_file(manifest_path),
                                     current_source_commit=head,

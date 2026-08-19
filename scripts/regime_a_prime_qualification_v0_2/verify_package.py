@@ -327,6 +327,16 @@ def main() -> None:
                # backend and the operational prober it repairs are both already
                # registered above.
                "tests/prospective/test_stage2_c4_identity_namespace_binding.py",
+               # The disaster-recovery repairs, R1 and R2. R1: restore-unit derived
+               # the CAPTURE commit from the PROCESSING provenance receipt, which is
+               # pinned to live HEAD, so a legitimately mixed-freeze cohort could not
+               # be restored from durable evidence that was completely intact. R2:
+               # the physical-gate receipt WRAPPER was local-only and was destroyed
+               # with the host, while its durable payload and checksum manifest
+               # survived; the successor admits that surviving evidence on
+               # gate-critical closure equality and never reconstructs the wrapper.
+               # The governance document is registered under the package prefix.
+               "tests/prospective/test_stage2_disaster_recovery_r1_r2.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

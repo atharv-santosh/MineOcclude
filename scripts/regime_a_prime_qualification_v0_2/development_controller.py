@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from mineocclude.prospective.development_workflow import (  # noqa: E402
     Decision, DurableController, EvidenceError, Stage1Evaluator, atomic_write_json,
     bind_manifest, bind_historical_source_closure, campaign_source_commit,
+    durable_capture_source_commit,
     RUNTIME_CRITICAL_SOURCE_PATHS, canonical_payload_sha256, evidence_source_drift,
     load_json, require_preoutcome_provenance,
     require_stage2_authorization, require_stage_manifest_binding,
@@ -28,8 +29,8 @@ from mineocclude.prospective.package_binding import (  # noqa: E402
     resolve_package_binding, stage1_decision_artifact_id,
 )
 from mineocclude.prospective.capture_admission import (  # noqa: E402
-    build_capture_admission_context, load_capture_provenance_authority,
-    verify_processing_provenance_binding,
+    build_capture_admission_context, CaptureAdmissionError,
+    load_capture_provenance_authority, verify_processing_provenance_binding,
 )
 from mineocclude.prospective.stage2_processability import (  # noqa: E402
     capture_root_for, capture_unit_structural_probe, make_unit1_checkpoint,
@@ -191,22 +192,72 @@ def main() -> int:
             print(f"RESTORE_STATUS=BLOCKED\nREASON=unknown unit {args.unit_id!r}",
                   file=sys.stderr)
             return BLOCKED_EXIT
+        # R1. The capture freeze is read from the unit's OWN durable state
+        # record, never from the processing provenance receipt. Those are two
+        # different facts, and this campaign is mixed-freeze by design -- T1 was
+        # reused from 49f0cca while the other forty-nine were taken under
+        # cb16335 -- so no single HEAD equals both. Deriving the capture commit
+        # from ``campaign_source_commit(--provenance)`` forced it to equal the
+        # commit checked out now, which made a legitimate cross-freeze cohort
+        # unrestorable from durable evidence that was completely intact. The
+        # ``--provenance`` receipt is still required and still fully verified
+        # above: it establishes that the SOURCE ABOUT TO PROCESS is qualified,
+        # which is exactly what a pre-outcome receipt is evidence of.
         try:
+            historical = durable_capture_source_commit(manifest, unit,
+                manifest_sha256=sha256_file(manifest_path),
+                authority_sha256=sha256_file(authority_path),
+                run_namespace=binding["run_namespace"])
             receipt = restore_durable_unit_state(manifest, unit,
                 receipt_path=Path(unit["receipt_path"]),
                 manifest_sha256=sha256_file(manifest_path),
                 authority_sha256=sha256_file(authority_path),
-                source_commit_sha=campaign_source_commit(load_json(args.provenance)),
+                source_commit_sha=historical,
                 run_namespace=binding["run_namespace"], overwrite=args.overwrite)
+            # Knowing WHICH freeze took the capture is not permission to process
+            # it. Admission re-derives the capture-critical closure AT that
+            # commit and refuses unless it equals this campaign's authorized
+            # apparatus, cross-checks the receipt's own recorded per-path digests
+            # against that commit's Git bytes, and refuses provenance laundering.
+            # Without this, a durable state record naming any commit at all would
+            # be enough; with it, the commit must be one whose apparatus this
+            # campaign is authorized to process.
+            _document, capture_authority_sha = load_capture_provenance_authority(
+                bound.package, version_tag=bound.version_tag,
+                authority_path=authority_path, repository=args.repo.resolve())
+            admission = build_capture_admission_context(
+                authority=authority, manifest=manifest,
+                manifest_sha256=sha256_file(manifest_path),
+                authority_sha256=sha256_file(authority_path),
+                scientific_run_id=binding["run_namespace"],
+                processing_source_commit_sha=head,
+                capture_provenance_authority_sha256=capture_authority_sha,
+                repository=args.repo.resolve()).admit(unit, receipt)
+            # The durable state record and the capture receipt are two
+            # independently written documents. Both name a capture commit, and a
+            # restore that let them disagree would be restoring a receipt the
+            # state record does not describe.
+            if admission["capture_source_commit"] != historical:
+                raise EvidenceError(
+                    f"restored capture receipt names {admission['capture_source_commit']}, "
+                    f"but the durable state record names {historical}")
             restored = (restore_durable_capture_tree(manifest, unit, receipt=receipt,
                             destination=capture_root_for(unit))
                         if args.restore_capture_tree else {})
-        except (EvidenceError, KeyError, TypeError, ValueError) as exc:
+        except (EvidenceError, CaptureAdmissionError, KeyError, TypeError, ValueError) as exc:
             print(f"RESTORE_STATUS=BLOCKED\nREASON={exc}", file=sys.stderr)
             return BLOCKED_EXIT
         print(f"RESTORE_STATUS=RESTORED\nUNIT_ID={args.unit_id}")
         print(f"CAPTURE_RECEIPT_SHA256={sha256_file(Path(unit['receipt_path']))}")
         print(f"RESTORED_CAPTURE_OBJECTS={len(restored)}")
+        # Stated separately and never normalized to one another: the freeze that
+        # physically took the capture, and the freeze restoring it now.
+        print(f"CAPTURE_SOURCE_COMMIT={historical}")
+        print(f"PROCESSING_SOURCE_COMMIT={head}")
+        print(f"CAPTURE_CRITICAL_CLOSURE_SHA256="
+              f"{admission['capture_critical_closure_sha256']}")
+        print(f"CAPTURE_TAKEN_UNDER_PROCESSING_COMMIT="
+              f"{str(admission['capture_taken_under_processing_commit']).lower()}")
         print("RECAPTURE_REQUIRED=false")
         return 0
     if args.action == "run-stage1":

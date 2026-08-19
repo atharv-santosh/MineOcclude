@@ -234,6 +234,14 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     "docs/status/integration/regime_a_prime_qualification_v0_1/"
     "prospective_development_authority_v0_4/"
     "stage2_physical_gate_admission_authority.json",
+    # R2, the disaster-recovery half of the same rule: whether a successor may
+    # admit the SURVIVING DURABLE PAYLOAD of a physical-gate PASS whose local
+    # wrapper receipt was destroyed with the host. It can refuse to start a
+    # campaign, and a successor that does not ship it admits no payload at all,
+    # so its bytes govern a run exactly as its wrapper sibling's do.
+    "docs/status/integration/regime_a_prime_qualification_v0_1/"
+    "prospective_development_authority_v0_4/"
+    "stage2_historical_durable_gate_payload_admission_authority.json",
     "scripts/regime_a_prime_qualification_v0_4/build_stage2_capture_provenance_authority.py",
     "docs/status/integration/regime_a_prime_qualification_v0_1/"
     "prospective_development_authority_v0_4/"
@@ -3577,6 +3585,81 @@ def restore_durable_unit_state(manifest: Mapping[str, Any], unit: Mapping[str, A
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
     receipt_path.write_bytes(raw)
     return receipt
+
+
+def durable_capture_source_commit(manifest: Mapping[str, Any], unit: Mapping[str, Any], *,
+                                  manifest_sha256: str, authority_sha256: str,
+                                  run_namespace: str, transport: Any = None) -> str:
+    """The capture freeze a unit's OWN durable state record names.
+
+    R1. ``restore-unit`` used to obtain this value from
+    :func:`campaign_source_commit`, reading it out of the ``--provenance``
+    receipt. That receipt is first verified by
+    :func:`require_preoutcome_provenance`, which -- correctly, because it is a
+    pre-launch gate -- requires the receipt to name the LIVE ``git HEAD``. The
+    composition of those two correct rules silently produced a third, incorrect
+    one: *the commit that took a capture must be the commit checked out now*.
+
+    That is the same source-homogeneity proxy
+    :mod:`~mineocclude.prospective.capture_admission` removed from the capture
+    side, surviving on the RECOVERY path. It is unsatisfiable for this campaign
+    by construction, because the cohort is deliberately mixed-freeze: T1 was
+    reused from ``49f0cca`` while the other forty-nine were taken under
+    ``cb16335``, and no single value of ``HEAD`` equals both. A disaster that
+    destroyed the local trees therefore could not be recovered from durable
+    evidence that was completely intact.
+
+    The truthful answer to "which source took this capture" is recorded in the
+    capture's own durable state record, which is immutable evidence written when
+    the capture completed. That is what this reads. Everything the record says
+    about itself is verified first -- its payload digest reproduces, and its
+    campaign identity, unit identity, terminal status, manifest bytes, authority
+    bytes, run namespace and durable URI all equal this campaign's -- so a
+    record belonging to another unit, another manifest revision, another
+    authority or another campaign cannot supply a commit. The single field NOT
+    required to equal a caller-supplied value is the commit itself, because that
+    is the question being asked.
+
+    This is strictly narrower than trusting a caller: no argument of this
+    function can name a commit, so a forged ``--source-commit`` flag does not
+    exist to be passed. And it is not sufficient on its own -- the caller must
+    still put the restored receipt through
+    :meth:`CaptureAdmissionContext.admit`, which re-derives the capture-critical
+    closure AT the returned commit and refuses unless it equals the cohort's
+    authorized apparatus. Reading the commit here answers *which* freeze; that
+    admission answers whether that freeze's apparatus is the one this campaign
+    is allowed to process.
+    """
+    transport = AwsCliTransport() if transport is None else transport
+    unit_id = str(unit.get("unit_id"))
+    uri = durable_unit_state_uri(manifest, unit_id)
+    try:
+        state = json.loads(transport.download(f"{uri}/{UNIT_STATE_OBJECT}"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise DurableStateError(f"durable unit state is unreadable: {unit_id}") from exc
+    if not isinstance(state, dict):
+        raise DurableStateError(f"durable unit state is malformed: {unit_id}")
+    if state.get("payload_sha256") != canonical_payload_sha256(state, omit="payload_sha256"):
+        raise DurableStateError(f"durable unit state digest does not reproduce: {unit_id}")
+    # Every binding restore_durable_unit_state requires, except the commit. A
+    # record that is not this unit's, this manifest's, this authority's and this
+    # campaign's is not evidence about which freeze took this capture.
+    expected = {"artifact_id": UNIT_STATE_ARTIFACT_ID, "unit_id": unit_id,
+                "status": DurableController.TERMINAL, "manifest_sha256": manifest_sha256,
+                "authority_sha256": authority_sha256, "scientific_run_id": run_namespace,
+                "durable_uri": durable_unit_uri(manifest, unit_id)}
+    for key, value in expected.items():
+        if state.get(key) != value:
+            raise DurableStateError(
+                f"durable unit state binding mismatch on {key!r} "
+                f"({state.get(key)!r} != {value!r})")
+    commit = state.get("source_commit_sha")
+    if (not isinstance(commit, str) or len(commit) != 40
+            or any(character not in "0123456789abcdef" for character in commit)):
+        raise DurableStateError(
+            f"durable unit state names no valid capture source commit: {unit_id} "
+            f"({commit!r})")
+    return commit
 
 
 def restore_durable_capture_tree(manifest: Mapping[str, Any], unit: Mapping[str, Any], *,

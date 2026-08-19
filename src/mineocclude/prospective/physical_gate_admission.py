@@ -274,3 +274,219 @@ def admit_physical_gate_receipt(manifest: dict, gate: dict, *, authority: dict,
             "paired_trajectories": gates.get("paired_trajectories"),
             "cohort_capture_critical_closure_sha256":
                 split.get("cohort_capture_critical_closure_sha256")}
+
+
+#: The sibling authority governing admission of a SURVIVING DURABLE PAYLOAD after
+#: the local wrapper receipt was destroyed. Separate document, separate identity,
+#: separate regime: a successor that does not ship this file cannot reach the
+#: payload path at all.
+DURABLE_PAYLOAD_AUTHORITY_FILENAME = (
+    "stage2_historical_durable_gate_payload_admission_authority.json")
+
+#: The admission regime this path emits. Deliberately distinct from both
+#: ``SAME_FREEZE`` and ``HISTORICAL_ADMITTED`` so no downstream artifact can
+#: record a wrapper admission it did not receive.
+DURABLE_PAYLOAD_REGIME = "HISTORICAL_DURABLE_GATE_PAYLOAD_ADMITTED"
+
+
+def load_durable_payload_admission_authority(package: Path) -> tuple[dict, str]:
+    """The durable-payload admission authority document and its sha256."""
+    path = package / DURABLE_PAYLOAD_AUTHORITY_FILENAME
+    if not path.is_file():
+        raise PhysicalGateAdmissionError(
+            "historical durable gate-payload admission authority is absent: "
+            f"{path}. Without it this successor admits no durable payload, and a "
+            "lost wrapper receipt is simply a blocker.")
+    import hashlib
+    payload = path.read_bytes()
+    return json.loads(payload), hashlib.sha256(payload).hexdigest()
+
+
+def admit_historical_durable_gate_payload(
+        manifest: dict, *, payload_bytes: bytes, checksum_manifest_bytes: bytes,
+        authority: dict, payload_authority: dict, authority_sha256: str,
+        manifest_sha256: str, processing_source_commit: str,
+        expected_required_checks: Sequence[str],
+        authorized_capture_critical_closure: str,
+        repository: Path = REPOSITORY_ROOT,
+        closure_at=gate_critical_closure_at) -> dict:
+    """Admit the SURVIVING DURABLE PAYLOAD of a physical-gate PASS whose wrapper was lost.
+
+    What this is, and what it is not
+    ================================
+
+    It is NOT a new physical gate: nothing is measured. It is NOT a replay:
+    nothing is re-executed over the cohort. It is NOT receipt reconstruction:
+    no wrapper is built, written, or named as the original. It is an ADMISSION
+    VERIFIER over two immutable durable objects that a host rebuild could not
+    reach -- the gate's own ``payload.json`` and its ``sha256_manifest.json``.
+
+    Why the loss of the wrapper does not lose the result
+    ====================================================
+
+    :func:`admit_physical_gate_receipt` reads eight fields off the wrapper:
+    ``status``, ``unit_id``, ``authority_sha256``, ``manifest_sha256``,
+    ``scientific_run_id``, ``durable_uri``, ``source_commit_sha`` and
+    ``physical_gates``. Six of those are independently recorded in the surviving
+    checksum manifest, which is a separately written document; ``physical_gates``
+    IS the surviving payload; and ``durable_uri`` is re-derived here from the
+    manifest rather than read from anywhere. The one field with no surviving
+    counterpart is the wrapper's ``status``, and the honest response is to not
+    assert it: this function never claims the wrapper was
+    ``COMPLETE_VALIDATED_DURABLE``, and the record it returns says so by naming a
+    regime that no wrapper path can produce.
+
+    What is actually load-bearing is unchanged from the wrapper rule, because it
+    was never the wrapper: GATE-CRITICAL CLOSURE EQUALITY at the gate's source
+    commit and at the source consuming it now. Equality means this source, run on
+    the same immutable cohort, computes the same verdict -- so the verdict is
+    reproducible in principle and re-running it could only reproduce it.
+    Inequality means the successor genuinely changed how the gate decides, and
+    the payload is refused exactly as a wrapper would be.
+
+    Fail-closed, in the strict direction
+    ====================================
+
+    Both durable objects must reproduce the digests the governing authority pins;
+    the checksum manifest must vouch for the payload independently; every campaign
+    binding must equal the LIVE authority and manifest bytes rather than anything
+    the payload asserts about itself; the cohort must be this manifest's exact
+    capture-unit identity set; the apparatus closure must be the authorized one;
+    the check vocabulary must be this implementation's own; and the result must be
+    PASS. A FAIL, a BLOCKED, an incomplete payload, a short or long cohort, or a
+    payload and manifest that disagree are all refusals.
+
+    Finally, this path refuses to operate at the gate's own commit. Admitting a
+    payload in place of a wrapper is a recovery measure for evidence that has
+    genuinely become unreachable; at the gate's own freeze the wrapper question
+    does not arise, and allowing it there would create a second, looser route to
+    the same conclusion.
+    """
+    unit = manifest.get("physical_gate_unit") or {}
+    policy = authority["stage2_policy"]
+    admitted = payload_authority.get("admitted_historical_durable_gate_payload") or {}
+
+    # ---- 1. the governing authority must actually authorize this ------------
+    _require(payload_authority.get("status") == "FROZEN",
+             "durable gate-payload admission authority is not FROZEN")
+    _require(payload_authority.get("authorized_option")
+             == "OPTION_4_ADMIT_SURVIVING_DURABLE_GATE_PAYLOAD_AFTER_WRAPPER_LOSS",
+             "durable gate-payload admission authority authorizes a different option")
+    lost = payload_authority.get("lost_wrapper") or {}
+    _require(lost.get("recoverable") is False,
+             "durable gate-payload admission requires the authority to record the "
+             "wrapper as unrecoverable; it does not")
+    named_source = admitted.get("gate_source_commit")
+    _require(isinstance(named_source, str) and len(named_source) == 40,
+             "durable gate-payload admission authority names no gate source commit")
+
+    # ---- 2. both durable objects reproduce their pinned digests -------------
+    import hashlib
+
+    payload_digest = hashlib.sha256(payload_bytes).hexdigest()
+    checksum_digest = hashlib.sha256(checksum_manifest_bytes).hexdigest()
+    _require(checksum_digest == admitted.get("durable_checksum_manifest_sha256"),
+             f"durable gate checksum manifest digest is {checksum_digest}, not the "
+             f"authorized {admitted.get('durable_checksum_manifest_sha256')}")
+    _require(payload_digest == admitted.get("durable_payload_sha256"),
+             f"durable gate payload digest is {payload_digest}, not the authorized "
+             f"{admitted.get('durable_payload_sha256')}")
+
+    try:
+        checksum_manifest = json.loads(checksum_manifest_bytes)
+        payload = json.loads(payload_bytes)
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise PhysicalGateAdmissionError(
+            "durable gate evidence is not readable JSON") from exc
+    _require(isinstance(checksum_manifest, dict) and isinstance(payload, dict),
+             "durable gate evidence is malformed")
+
+    # ---- 3. the checksum manifest vouches for the payload independently -----
+    files = checksum_manifest.get("files")
+    _require(isinstance(files, dict), "durable gate checksum manifest lists no files")
+    recorded_payload = files.get(admitted.get("durable_payload_object"))
+    _require(recorded_payload == payload_digest,
+             "durable gate checksum manifest and payload disagree: the manifest "
+             f"records {recorded_payload!r} for the payload object, the payload "
+             f"hashes to {payload_digest}")
+
+    # ---- 4. campaign bindings, against the LIVE bytes ------------------------
+    _require(checksum_manifest.get("authority_sha256") == authority_sha256,
+             "durable gate evidence authority binding mismatch")
+    _require(checksum_manifest.get("manifest_sha256") == manifest_sha256,
+             "durable gate evidence manifest binding mismatch")
+    _require(checksum_manifest.get("scientific_run_id") == manifest.get("run_namespace"),
+             "durable gate evidence run-namespace mismatch")
+    _require(checksum_manifest.get("unit_id") == unit.get("unit_id"),
+             f"durable gate evidence unit identity mismatch: "
+             f"{checksum_manifest.get('unit_id')!r}")
+    recorded_source = checksum_manifest.get("source_commit_sha")
+    _require(recorded_source == named_source,
+             f"durable gate evidence was produced under {recorded_source!r}, which "
+             f"this successor's authority does not name as its admitted gate source "
+             f"({named_source!r})")
+
+    # ---- 5. the gate result, and the semantics that produced it -------------
+    gates = payload.get("physical_gates")
+    _require(isinstance(gates, dict), "durable gate payload carries no gate result")
+    _require(gates.get("status") == "PASS",
+             f"durable gate result is not PASS: {gates.get('status')!r}")
+    _require(list(gates.get("required_checks") or []) == sorted(expected_required_checks),
+             "durable gate check vocabulary differs from this implementation's")
+    _require(gates.get("capture_units") == policy["scientific_capture_count"],
+             "durable gate cohort size differs from the authorized capture count")
+    identities = policy["paired_trajectory_identities"]
+    expected_pairs = identities if isinstance(identities, int) else len(identities)
+    _require(gates.get("paired_trajectories") == expected_pairs,
+             "durable gate pair count differs from the authorized identity count")
+
+    # ---- 6. exact cohort identity, not merely cohort size --------------------
+    split = gates.get("capture_provenance_split") or {}
+    by_unit = split.get("capture_source_commit_by_unit")
+    _require(isinstance(by_unit, dict), "durable gate payload carries no per-unit cohort")
+    _require(sorted(by_unit) == sorted(u["unit_id"] for u in manifest["capture_units"]),
+             "durable gate cohort identity differs from the manifest capture units")
+    _require(split.get("cohort_capture_critical_closure_sha256")
+             == authorized_capture_critical_closure,
+             "durable gate cohort apparatus closure is not the authorized closure")
+    _require(split.get("all_admitted_capture_closures_equal") is True,
+             "durable gate cohort did not resolve to one capture apparatus")
+
+    # ---- 7. anti-laundering: the payload must agree with the manifest -------
+    _require(split.get("processing_source_commit") == recorded_source,
+             "durable gate payload processing commit disagrees with the checksum "
+             "manifest's source commit; the two durable objects do not describe "
+             "the same gate execution")
+
+    # ---- 8. this is the HISTORICAL regime, and only the historical regime ---
+    _require(recorded_source != processing_source_commit,
+             "the durable-payload path is a recovery measure for a lost wrapper "
+             "under a SUCCESSOR freeze; at the gate's own commit the wrapper "
+             "question does not arise and this path is refused")
+
+    # ---- 9. the load-bearing condition -------------------------------------
+    historical, _ = closure_at(recorded_source, repository=repository)
+    current, _ = closure_at(worktree_reader(repository), repository=repository)
+    _require(historical == current,
+             f"gate-critical closure changed between {recorded_source[:7]} and this "
+             f"successor ({historical[:16]} vs {current[:16]}); the historical "
+             f"verdict no longer represents what this source would compute")
+
+    return {"admission_regime": DURABLE_PAYLOAD_REGIME,
+            "gate_source_commit": recorded_source,
+            "processing_source_commit": processing_source_commit,
+            "gate_result": "PASS",
+            "capture_units": gates.get("capture_units"),
+            "paired_trajectories": gates.get("paired_trajectories"),
+            "cohort_capture_critical_closure_sha256":
+                split.get("cohort_capture_critical_closure_sha256"),
+            "gate_critical_closure_sha256": current,
+            "durable_payload_sha256": payload_digest,
+            "durable_checksum_manifest_sha256": checksum_digest,
+            # Stated as facts, never as claims of success. Downstream artifacts
+            # record these verbatim, so an activation produced this way can never
+            # be read as one produced under a surviving wrapper.
+            "physical_gate_wrapper_receipt_recovered": False,
+            "physical_gate_wrapper_receipt_regenerated": False,
+            "physical_gate_replay_performed": False,
+            "lost_wrapper_receipt_sha256": lost.get("receipt_sha256")}

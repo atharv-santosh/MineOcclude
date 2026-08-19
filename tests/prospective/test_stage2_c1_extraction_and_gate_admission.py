@@ -173,6 +173,11 @@ class TestScientificExtractionPathInitialisesTheExtractor:
         monkeypatch.setattr(backend, "backend_capture_admission", lambda *_a, **_k: object())
         monkeypatch.setattr(backend, "backend_physical_gate_admission",
                             lambda *_a, **_k: {"admission_regime": "HISTORICAL_ADMITTED"})
+        # R2 moved the call site: ``extraction`` now asks a resolver which gate
+        # evidence exists rather than opening the local wrapper by path. Both are
+        # stubbed so this class keeps testing extractor initialisation only.
+        monkeypatch.setattr(backend, "resolve_physical_gate_admission",
+                            lambda *_a, **_k: {"admission_regime": "HISTORICAL_ADMITTED"})
         monkeypatch.setattr(backend, "validate_physical_gate_receipts",
                             lambda *_a, **_k: {"status": "PASS"})
         monkeypatch.setattr(backend, "require_admitted_capture_receipt",
@@ -218,6 +223,7 @@ class TestScientificExtractionPathInitialisesTheExtractor:
         monkeypatch.setattr(backend, "capture_receipt", lambda *_a, **_k: {})
         monkeypatch.setattr(backend, "backend_capture_admission", lambda *_a, **_k: object())
         monkeypatch.setattr(backend, "backend_physical_gate_admission", lambda *_a, **_k: {})
+        monkeypatch.setattr(backend, "resolve_physical_gate_admission", lambda *_a, **_k: {})
         monkeypatch.setattr(backend, "validate_physical_gate_receipts",
                             lambda *_a, **_k: {"status": "PASS"})
         monkeypatch.setattr(backend, "require_admitted_capture_receipt",

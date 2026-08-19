@@ -1,0 +1,65 @@
+{
+    "STAGE_2_COLLECTION_AUTHORIZED": false,
+    "admitted_historical_durable_gate_payload": {
+        "capture_units": 50,
+        "cohort_capture_critical_closure_sha256": "b64bc70071d2efbbd90e04ca31f4fdaf508498eb51e36c69b584c3602284fa68",
+        "digest_pins_are_an_additional_bind_not_the_basis_of_trust": "The payload is independently cross-checked against the live authority bytes, the live manifest bytes, the manifest's own capture-unit identity set, the authorized capture-critical closure and the re-derived gate-critical closures. Pinning the two durable digests here makes admission strictly stricter; it does not replace any of those checks.",
+        "durable_checksum_manifest_object": "sha256_manifest.json",
+        "durable_checksum_manifest_sha256": "3fb66617186a4930a3891a7173073846c77f00d48109b085bf941f0377ec57e3",
+        "durable_payload_object": "payload.json",
+        "durable_payload_sha256": "84fc5d24123d9bfa6c6f39f037babcec9b2b746baaaab2e0578e6ee0bf5890f4",
+        "gate_result": "PASS",
+        "gate_source_commit": "76098ae8f4dcb9103ad8661cc0e0408de06d627a",
+        "paired_trajectories": 25,
+        "unit_id": "stage2_physical_gates"
+    },
+    "anti_laundering": [
+        "The admission record names admission_regime HISTORICAL_DURABLE_GATE_PAYLOAD_ADMITTED, which is distinct from both SAME_FREEZE and HISTORICAL_ADMITTED and cannot be produced by either wrapper path.",
+        "The record states the historical gate source and the current processing source separately and never normalizes one to the other.",
+        "The record states physical_gate_wrapper_receipt_recovered=false and physical_gate_wrapper_receipt_regenerated=false as facts, not as claims of success."
+    ],
+    "artifact_id": "regime-a-prime-stage2-historical-durable-gate-payload-admission-authority-v0.4",
+    "authorized_option": "OPTION_4_ADMIT_SURVIVING_DURABLE_GATE_PAYLOAD_AFTER_WRAPPER_LOSS",
+    "classification": "DEVELOPMENT_ONLY",
+    "does_not_authorize": [
+        "re-running the physical gate to obtain a different result",
+        "reconstructing, regenerating or writing any physical-gate receipt wrapper",
+        "claiming the original wrapper survived, or claiming this successor produced the gate",
+        "admitting a gate over a different cohort, manifest, or authority",
+        "admitting a FAIL, BLOCKED or incomplete gate under any commit",
+        "any change to raw captures, capture receipts, or the frozen scientific design"
+    ],
+    "lost_wrapper": {
+        "destroyed_by": "SageMaker Space host rebuild wiped /mnt/sagemaker-nvme in full",
+        "exhaustive_search": "No object matching this digest exists anywhere under the campaign durable prefix, and no physical_gates*.json exists anywhere on persistent local storage. The derived namespace stores payload plus checksum manifest and never stored the wrapper; there is no unit_state record for stage2_physical_gates.",
+        "must_never_be_regenerated": "Rebuilding a wrapper around the surviving payload and calling it the original receipt is FORBIDDEN. This authority admits the payload AS a payload. Nothing may claim the wrapper survived, and nothing may write a local physical_gates.json.",
+        "receipt_sha256": "639f37d129f30e1dddc13e343052e0fbe7ddd4632a97787857ccde9b2603a8a2",
+        "recoverable": false
+    },
+    "predecessor_authority": "regime-a-prime-stage2-physical-gate-admission-authority-v0.4",
+    "principle": "The wrapper is a SERIALIZATION. The gate RESULT is the payload. Every condition the wrapper admission rule tests is either carried by the surviving payload, carried by the surviving checksum manifest, or re-derived from source -- except the wrapper's own digest, which is exactly the thing that was lost and is therefore never asserted. Admission is granted on the same load-bearing condition as wrapper admission: GATE-CRITICAL CLOSURE EQUALITY at the gate's source commit and at the current processing source. It is refused on anything else.",
+    "question": "The local physical-gate receipt WRAPPER was destroyed by a host rebuild. Its durable PAYLOAD and checksum manifest survived, immutable, in the campaign's own durable namespace. May a Stage-2 processing successor admit that surviving durable evidence instead of the lost wrapper, WITHOUT re-executing the physical gate and WITHOUT reconstructing the wrapper?",
+    "required_conditions": [
+        "the durable checksum manifest reproduces its pinned digest",
+        "the durable payload reproduces its pinned digest",
+        "the checksum manifest's own files entry for payload.json equals the payload digest",
+        "the checksum manifest authority sha256 equals the live authority bytes",
+        "the checksum manifest manifest sha256 equals the live manifest bytes",
+        "the checksum manifest scientific run id equals the manifest run namespace",
+        "the checksum manifest unit id equals the manifest physical-gate unit",
+        "the checksum manifest source commit equals the named gate source commit",
+        "physical_gates.status is PASS",
+        "physical_gates.required_checks equals the gate implementation's own check vocabulary",
+        "physical_gates.capture_units equals the authority scientific capture count",
+        "physical_gates.paired_trajectories equals the authority trajectory identity count",
+        "the payload per-unit cohort identity equals the manifest capture unit identity set exactly",
+        "the payload cohort capture-critical closure equals the authorized capture-critical closure",
+        "all admitted capture closures were equal when the gate ran",
+        "the payload's recorded processing_source_commit equals the checksum manifest source commit",
+        "the gate source commit resolves in this repository's Git history",
+        "the gate-critical closure at the gate source commit equals the gate-critical closure at the current processing source",
+        "the current processing source is not the gate source commit, which is what makes this the historical regime"
+    ],
+    "schema_version": "1.0",
+    "status": "FROZEN"
+}
