@@ -226,6 +226,14 @@ RUNTIME_CRITICAL_SOURCE_PATHS = (
     # records is the one the implementation actually computes.
     "src/mineocclude/prospective/capture_closure.py",
     "src/mineocclude/prospective/capture_admission.py",
+    # C2, the same split on the DERIVED side: whether a successor processing freeze
+    # may consume the physical-gate PASS a predecessor produced. It decides on
+    # gate-critical closure equality -- would this source compute the same verdict --
+    # and it can refuse to start a campaign, so its bytes govern a run.
+    "src/mineocclude/prospective/physical_gate_admission.py",
+    "docs/status/integration/regime_a_prime_qualification_v0_1/"
+    "prospective_development_authority_v0_4/"
+    "stage2_physical_gate_admission_authority.json",
     "scripts/regime_a_prime_qualification_v0_4/build_stage2_capture_provenance_authority.py",
     "docs/status/integration/regime_a_prime_qualification_v0_1/"
     "prospective_development_authority_v0_4/"

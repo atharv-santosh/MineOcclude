@@ -1,0 +1,63 @@
+{
+ "STAGE_2_COLLECTION_AUTHORIZED": false,
+ "admitted_historical_physical_gate": {
+  "admission_is_explicit_not_automatic": "A successor that does not name a predecessor here admits no historical gate at all and falls back to requiring the gate under its own commit.",
+  "capture_units": 50,
+  "cohort_capture_critical_closure_sha256": "b64bc70071d2efbbd90e04ca31f4fdaf508498eb51e36c69b584c3602284fa68",
+  "gate_result": "PASS",
+  "paired_trajectories": 25,
+  "predecessor_processing_source_commit": "76098ae8f4dcb9103ad8661cc0e0408de06d627a",
+  "receipt_sha256": "639f37d129f30e1dddc13e343052e0fbe7ddd4632a97787857ccde9b2603a8a2"
+ },
+ "anti_laundering": [
+  "The receipt is never rewritten, and the successor never claims to have produced it.",
+  "A receipt asserting the successor commit while carrying predecessor bytes fails the self-consistency binding between source_commit_sha and processing_source_commit.",
+  "A FAIL or incomplete gate is never admitted, under any commit."
+ ],
+ "artifact_id": "regime-a-prime-stage2-physical-gate-admission-authority-v0.4",
+ "authorized_option": "OPTION_2_ADMIT_IMMUTABLE_HISTORICAL_DERIVED_GATE_EVIDENCE",
+ "classification": "DEVELOPMENT_ONLY",
+ "does_not_authorize": [
+  "re-running the physical gate to obtain a different result",
+  "admitting a gate over a different cohort, manifest, or authority",
+  "admitting a gate whose ten physical checks are not all present and PASS",
+  "any change to raw captures, capture receipts, or the frozen scientific design"
+ ],
+ "gate_critical_closure": {
+  "closure_is_derived_not_enumerated_here": true,
+  "closure_sha256_at_generation": "199ae4dd4a29d2dad9ee47984268171a5a667ab7f3adee48323f178dc946fa89",
+  "component_count_at_generation": 110,
+  "derivation": "Call-graph reachability over first-party definitions seeded at the gate verdict definition, digesting the exact source text of each reachable definition plus each contributing file's executable module prologue. Identical machinery to the capture-critical closure, seeded differently.",
+  "entrypoints": [
+   "scripts/regime_a_prime_qualification_v0_2/stage2_backend.py::gates"
+  ]
+ },
+ "lineage_is_not_evidence": "Admission is NOT established by two commits belonging to a declared lineage, by an ancestry relation, or by a permitted-commit list. The admitted predecessor commit is named explicitly below and the closure equality is re-derived, not asserted.",
+ "predecessor_authority": "regime-a-prime-stage2-capture-processing-provenance-authority-v0.4",
+ "principle": "A physical-gate PASS receipt produced under predecessor processing commit P may be consumed by successor processing campaign S if and only if the GATE-CRITICAL CLOSURE is EQUAL at P and S. The gate-critical closure is the call-graph reachable, definition-granular closure seeded at the definition that computes the gate verdict. Equality means the successor's own code, run on the same immutable cohort, would compute the same verdict -- so re-executing it could only reproduce it. Full repository commit equality is NOT required and is NOT sufficient on its own.",
+ "question": "May a Stage-2 processing successor consume the physical-gate PASS receipt that a PREDECESSOR processing freeze produced, without re-executing the physical gate?",
+ "required_conditions": [
+  "receipt status is COMPLETE_VALIDATED_DURABLE",
+  "receipt unit identity equals the manifest physical-gate unit",
+  "receipt authority sha256 equals the manifest authority binding",
+  "receipt manifest sha256 equals the live manifest bytes",
+  "receipt scientific run id equals the manifest run namespace",
+  "receipt durable uri equals the manifest-derived derived-namespace uri",
+  "physical_gates.status is PASS",
+  "physical_gates.required_checks equals the gate implementation's own check vocabulary",
+  "physical_gates.capture_units equals the authority scientific capture count",
+  "physical_gates.paired_trajectories equals the authority trajectory identity count",
+  "the gate's per-unit cohort identity equals the manifest capture unit identity set exactly",
+  "the gate's cohort capture-critical closure equals the authorized capture-critical closure",
+  "all admitted capture closures were equal when the gate ran",
+  "the gate's recorded processing_source_commit equals the receipt source_commit_sha",
+  "the receipt source commit is either the current processing commit, or exactly the predecessor commit named above",
+  "the gate-critical closure at the receipt's source commit equals the gate-critical closure at the current processing source",
+  "durable remote objects verify"
+ ],
+ "schema_version": "1.0",
+ "status": "FROZEN",
+ "why_this_document_exists": [
+  "OPTION_3_SPLIT_CAPTURE_PROVENANCE_FROM_PROCESSING_PROVENANCE resolved the same conflation for RAW CAPTURES: a capture is a physical measurement and a later processing edit cannot retroactively change what the camera saw. It was scoped to captures and says nothing about DERIVED evidence. The physical gate is derived: it is computed BY processing source. So the capture rule does not transfer by analogy, and the residual rule in the extraction stage -- require_durable_unit_receipt, whose contract is derived units and which therefore demands source_commit_sha == the processing commit -- refused the gate receipt the moment a downstream execution defect forced a successor freeze. That refusal is not a scientific control. It is the last surviving instance of the source-homogeneity proxy, on the derived side."
+ ]
+}

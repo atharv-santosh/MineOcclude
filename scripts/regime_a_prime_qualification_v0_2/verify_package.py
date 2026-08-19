@@ -311,6 +311,13 @@ def main() -> None:
                "src/mineocclude/prospective/capture_closure.py",
                "src/mineocclude/prospective/capture_admission.py",
                "tests/prospective/test_stage2_capture_processing_provenance_split.py",
+               # The Part-2 execution repairs: C1, the scientific extraction path
+               # that constructed a Layer4Extractor and called extract() without
+               # ensure_loaded(); and C2, the same commit-equality proxy surviving on
+               # the derived side, where it refused the physical-gate PASS produced by
+               # the predecessor freeze.
+               "src/mineocclude/prospective/physical_gate_admission.py",
+               "tests/prospective/test_stage2_c1_extraction_and_gate_admission.py",
                *corrected_sources)
     changed = subprocess.run(["git", "diff", "--name-only", base, "--"], cwd=ROOT, text=True,
                              capture_output=True, check=True).stdout.splitlines()

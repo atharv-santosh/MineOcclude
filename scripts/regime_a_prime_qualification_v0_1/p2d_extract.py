@@ -117,6 +117,23 @@ def persist_activation(record: dict[str, Any]) -> dict[str, Any]:
     return durable
 
 
+class ExtractorNotLoadedError(RuntimeError):
+    """``extract()`` was reached on an extractor that never ran ``ensure_loaded()``.
+
+    C1: ``__init__`` establishes bookkeeping only -- it deliberately does NOT
+    touch the model stack, so constructing an extractor is free and cannot load
+    a checkpoint as a side effect. ``ensure_loaded()`` is what binds the
+    production module, the adapter and the runtime identity. A caller that
+    skipped it used to die on a bare ``AttributeError: 'Layer4Extractor' object
+    has no attribute 'production'`` from the middle of ``extract()``, which
+    reads as a code-level accident rather than the operational precondition
+    failure it is. This names the precondition instead. It is deliberately NOT
+    repaired by having ``extract()`` call ``ensure_loaded()`` itself: a lazy
+    load would let a mis-sequenced caller silently acquire a checkpoint nobody
+    authorized, and the point of the split is that the load is explicit.
+    """
+
+
 class Layer4Extractor:
     """One checkpoint load; independent teacher-forced window calls."""
 
@@ -126,6 +143,9 @@ class Layer4Extractor:
         self.load_count = 0
         self.runtime = None
         self.adapter = None
+        # Declared here so an unloaded extractor is an *absent binding* rather
+        # than a missing attribute; ``extract()`` refuses on it explicitly.
+        self.production = None
 
     def ensure_loaded(self) -> None:
         from scripts import run_person_a_66_cell_production_extraction as production
@@ -170,6 +190,13 @@ class Layer4Extractor:
         from mineocclude.contracts.identity import SCHEMA_VERSION
         from mineocclude.models import mineworld_adapter as api
 
+        # C1 guard. Refuse before any capture byte is opened and before any
+        # activation path is touched, so a mis-sequenced caller can never leave
+        # a partial artifact behind.
+        if self.production is None or self.adapter is None or self.runtime is None:
+            raise ExtractorNotLoadedError(
+                f"{run_id}: Layer4Extractor.ensure_loaded() must run before extract(); "
+                "the adapter, runtime identity and production module are unbound")
         adapter, runtime, production = self.adapter, self.runtime, self.production
         # Bound before any work: an unidentifiable runtime must not be able to
         # produce activations at all, let alone activations whose receipt is

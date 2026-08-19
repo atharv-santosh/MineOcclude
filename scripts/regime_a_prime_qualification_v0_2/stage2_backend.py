@@ -87,6 +87,53 @@ def backend_capture_admission(manifest: dict, manifest_path: Path, *,
         repository=ROOT)
 
 
+def backend_physical_gate_admission(manifest: dict, manifest_path: Path, gate: dict, *,
+                                    capture_admission, current_source_commit: str,
+                                    durable_verifier=verify_remote_durable_objects) -> dict:
+    """Admit the physical-gate PASS receipt: same freeze, or admitted predecessor.
+
+    C2. The physical gate is a DERIVED unit, so it used to be validated by
+    ``require_durable_unit_receipt``, which requires the receipt's source commit to
+    equal the processing commit. That is right for an activation this campaign is
+    producing and wrong for the gate the moment a downstream execution defect forces
+    a successor freeze: it refuses a 2h21m, 50/50, durably-verified PASS over an
+    immutable cohort because an unrelated extraction module was repaired. The
+    replacement admits the receipt on what actually makes it sound -- gate-critical
+    closure equality, so this source would compute the same verdict -- plus receipt
+    integrity, exact cohort identity, the authorized capture apparatus, the gate's
+    own check vocabulary, and self-consistency against laundering. It is a strictly
+    LARGER set of conditions than the commit-equality proxy it replaces; only the
+    proxy itself is gone.
+    """
+    # Imported in the function body, like ``backend_capture_admission`` above. The
+    # module prologue of this file is GATE-CRITICAL -- an import swapped there changes
+    # what ``gates()`` resolves to -- so adding a module-level import for a rule that
+    # only ``extraction()`` uses would move the gate-critical closure and refuse the
+    # very receipt this function exists to admit.
+    from mineocclude.prospective.package_binding import (
+        artifact_version_tag, package_directory,
+    )
+    from mineocclude.prospective.physical_gate_admission import (
+        admit_physical_gate_receipt, load_gate_admission_authority,
+    )
+
+    package = package_directory(artifact_version_tag(manifest["artifact_id"]), ROOT)
+    admission_authority, _sha = load_gate_admission_authority(package)
+    return admit_physical_gate_receipt(
+        manifest, gate,
+        authority=load_json(ROOT / manifest["authority_binding"]["path"]),
+        admission_authority=admission_authority,
+        manifest_sha256=sha256_file(manifest_path),
+        processing_source_commit=current_source_commit,
+        expected_durable_uri=durable_unit_uri(manifest, manifest["physical_gate_unit"]["unit_id"]),
+        expected_required_checks=sorted(
+            PHYSICAL_CHECKS | {"path_state", "durability", "runtime_provenance",
+                               "pair_coverage", "capture_admission"}),
+        authorized_capture_critical_closure=(
+            capture_admission.expected_capture_critical_closure_sha256),
+        repository=ROOT, durable_verifier=durable_verifier)
+
+
 def require_admitted_capture_receipt(manifest: dict, unit: dict, receipt: dict, *,
                                      capture_admission,
                                      durable_verifier=verify_remote_durable_objects) -> dict:
@@ -456,14 +503,16 @@ def gates(manifest: dict, manifest_path: Path, unit_id: str) -> None:
 def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     gate = load_json(Path(manifest["physical_gate_unit"]["receipt_path"]))
     head = campaign_commit()
-    require_durable_unit_receipt(manifest, manifest_path, manifest["physical_gate_unit"], gate,
-                                 current_source_commit=head)
-    if gate.get("physical_gates", {}).get("status") != "PASS":
-        raise RuntimeError("physical-gate PASS is required before extraction")
     receipts = {unit["unit_id"]: capture_receipt(manifest, unit["unit_id"])
                 for unit in manifest["capture_units"]}
     capture_admission = backend_capture_admission(manifest, manifest_path,
                                                   current_source_commit=head)
+    # C2: the gate PASS is immutable derived evidence, admitted on closure equality
+    # rather than on commit equality. PASS is required inside the admission rule, so
+    # a FAIL or incomplete gate can never reach extraction under any commit.
+    gate_admission = backend_physical_gate_admission(
+        manifest, manifest_path, gate, capture_admission=capture_admission,
+        current_source_commit=head)
     validate_physical_gate_receipts(manifest, receipts, manifest_sha256=sha256_file(manifest_path),
                                     current_source_commit=head,
                                     capture_admission=capture_admission)
@@ -495,7 +544,15 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
     # layout_id plus this unit's episode, and the Stage-2 identity from the
     # manifest unit itself.
     identity = resolve_typed_capture_identity(authority, source)
-    record = Layer4Extractor().extract(
+    # C1: ``Layer4Extractor.__init__`` binds nothing but bookkeeping. The model
+    # stack, the adapter and the runtime identity are established by
+    # ``ensure_loaded()``, and ``extract()`` refuses without them. The
+    # operational processability probe always ran the two-step sequence; this
+    # canonical scientific path constructed and extracted in one expression and
+    # so could never have produced an activation.
+    extractor = Layer4Extractor()
+    extractor.ensure_loaded()
+    record = extractor.extract(
         source["unit_id"], capture_root, output_root,
         expected_target_model_frame_indices=expected_rows,
         scientific_trajectory_id=identity.scientific_trajectory_id,
@@ -521,6 +578,11 @@ def extraction(manifest: dict, manifest_path: Path, unit_id: str) -> None:
         # PRODUCED by the successor source, from a capture TAKEN under whatever
         # commit actually took it. Both are stated; neither is inferred.
         "processing_source_commit": head,
+        # C2: and the third source in this activation's lineage -- the freeze that
+        # produced the physical gate admitting the cohort. Recorded rather than
+        # normalized to ``head``, so the activation states the historical commit it
+        # actually depended on and which admission regime let it through.
+        "physical_gate_admission": gate_admission,
         "source_capture_unit_id": source["unit_id"],
         "source_capture_receipt_sha256": sha256_file(Path(source["receipt_path"])),
         "source_capture_source_commit": source_admission["capture_source_commit"],

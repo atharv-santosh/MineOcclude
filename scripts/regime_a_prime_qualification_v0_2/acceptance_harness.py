@@ -97,7 +97,14 @@ SUITES = {
              # closure moves, that both typed trajectory identities are checked in
              # their own namespaces, and that laundering and a mixed-apparatus
              # cohort are refused.
-             "tests/prospective/test_stage2_capture_processing_provenance_split.py"),
+             "tests/prospective/test_stage2_capture_processing_provenance_split.py",
+             # The Part-2 execution repairs: that the scientific extraction path
+             # initialises the extractor it uses (C1), that a mis-sequenced caller
+             # fails closed before touching a capture byte, and that an immutable
+             # historical physical-gate PASS is admitted on gate-critical closure
+             # equality while every tampered, wrong-cohort or forged variant is
+             # refused (C2).
+             "tests/prospective/test_stage2_c1_extraction_and_gate_admission.py"),
 }
 ENTRYPOINT_DIRECTORY = {"v0.2": "scripts/regime_a_prime_qualification_v0_2",
                         "v0.3": "scripts/regime_a_prime_qualification_v0_3",
