@@ -1,0 +1,2379 @@
+{
+  "schema_version": "mineocclude-experiment-iii-lifecycle-v1",
+  "authority": "docs/experiment_iii/final_authorities/EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md",
+  "authority_section": "6",
+  "state_count": 29,
+  "required_fields_per_state": [
+    "id",
+    "name",
+    "purpose",
+    "entry_conditions",
+    "controlling_inputs",
+    "exact_operations",
+    "source_files_entrypoints",
+    "unit_of_work",
+    "expected_counts",
+    "expected_outputs",
+    "required_evidence",
+    "pass_conditions",
+    "fail_conditions",
+    "blocker_codes",
+    "allowed_repairs",
+    "forbidden_repairs",
+    "retry_rules",
+    "resume_rules",
+    "invalidation_scope",
+    "exit_conditions",
+    "next_authorized_state"
+  ],
+  "global_rules": [
+    "NO_STATE_ENTERED_UNTIL_ITS_PREDECESSOR_EXIT_CONDITION_IS_SATISFIED_AND_ITS_EVIDENCE_HASHES",
+    "NO_STATE_DECLARED_PASS_ON_LOOKS_CORRECT",
+    "A_BLOCKER_HALTS_ITS_STAGE_AND_NEVER_SILENTLY_DOWNGRADES_SCOPE",
+    "COMPLETED_VALIDATED_HASH_BOUND_WORK_IS_PRESERVED_ACROSS_FAILURES",
+    "EVERY_ARTIFACT_RECORDS_THE_AUTHORITY_SHA256_IT_WAS_PRODUCED_UNDER"
+  ],
+  "gate_opening_states": {
+    "IMPLEMENTATION_AUTHORIZED": "A0_EXIT_PLUS_EXPLICIT_OPERATOR_DECISION",
+    "P0_AUTHORIZED": "A3_EXIT_PLUS_EXPLICIT_OPERATOR_DECISION",
+    "P1_AUTHORIZED": "A4_EXIT_P0_PASS_PLUS_EXPLICIT_OPERATOR_DECISION",
+    "PRODUCTION_AUTHORIZED": "A6_EXIT_ONLY",
+    "MODEL_INFERENCE_AUTHORIZED": "A6_EXIT_ONLY",
+    "EXPERIMENT_III_COMPLETE": "A19_EXIT_ONLY",
+    "III_B_LAUNCH": "B-GATE_ONLY_FROM_TIME_TECHNICAL_AND_RESOURCE_INPUTS"
+  },
+  "states": [
+    {
+      "id": "A0",
+      "name": "AUTHORITY_IDENTITY",
+      "purpose": "Establish and hash-bind the authority so every later artifact can name the exact authority it was produced under.",
+      "entry_conditions": [
+        "PHASE0_ADJUDICATION_COMPLETE",
+        "AUTHORITY_CREATION_READY == true"
+      ],
+      "controlling_inputs": [
+        "PHASE0_ADJUDICATED_DESIGN_MD",
+        "PHASE0_ADJUDICATED_DESIGN_DOCX",
+        "PHASE0_DECISION_MEMO",
+        "PHASE0_DECISION_MATRIX",
+        "PREAUTHORITY_INPUT_MANIFEST",
+        "LIVE_REPOSITORY_STATE"
+      ],
+      "exact_operations": [
+        "BIND_REPOSITORY_IDENTITY",
+        "HASH_FIVE_PHASE0_INPUTS",
+        "COMPUTE_SOURCE_CLOSURE",
+        "WRITE_AUTHORITY_PACKAGE",
+        "RUN_INTERNAL_AUDIT",
+        "RUN_SELF_CONTAINMENT_AUDIT"
+      ],
+      "source_files_entrypoints": [
+        "docs/experiment_iii/final_authorities/ (no code)"
+      ],
+      "unit_of_work": "AUTHORITY_PACKAGE",
+      "expected_counts": {
+        "required_authority_artifacts": 11,
+        "supplementary_artifacts": 1
+      },
+      "expected_outputs": [
+        "docs/experiment_iii/final_authorities/*"
+      ],
+      "required_evidence": [
+        "AUTHORITY_VALIDATION_REPORT.md",
+        "AUTHORITY_SHA256"
+      ],
+      "pass_conditions": [
+        "ALL_REQUIRED_ARTIFACTS_EXIST",
+        "ALL_JSON_PARSES",
+        "MACHINE_AUTHORITY_AGREES_WITH_MARKDOWN_ON_EVERY_FROZEN_VALUE",
+        "INTERNAL_AUDIT_PASS",
+        "SELF_CONTAINMENT_AUDIT_PASS"
+      ],
+      "fail_conditions": [
+        "MISSING_ARTIFACT",
+        "JSON_PARSE_FAILURE",
+        "CROSS_FILE_DISAGREEMENT",
+        "UNRESOLVED_PHASE0_CONTRADICTION"
+      ],
+      "blocker_codes": [
+        "AUTHORITY_INCOMPLETE",
+        "AUTHORITY_INTERNAL_INCONSISTENCY",
+        "AUTHORITY_PHASE0_CONTRADICTION",
+        "AUTHORITY_NOT_SELF_CONTAINED"
+      ],
+      "allowed_repairs": [
+        "EDIT_AUTHORITY_BEFORE_IMPLEMENTATION_BEGINS"
+      ],
+      "forbidden_repairs": [
+        "CHANGE_A_SETTLED_PHASE0_SCIENTIFIC_DECISION"
+      ],
+      "retry_rules": "UNLIMITED_BEFORE_A1_STARTS",
+      "resume_rules": "REWRITE_THE_AUTHORITY_PACKAGE",
+      "invalidation_scope": "If the authority changes after A1 has begun, every downstream artifact bound to the old AUTHORITY_SHA256 is invalidated and must be revalidated.",
+      "exit_conditions": [
+        "AUTHORITY_INTERNAL_VALIDATION == PASS"
+      ],
+      "next_authorized_state": "A1"
+    },
+    {
+      "id": "A1",
+      "name": "IMPLEMENTATION",
+      "purpose": "Build every Experiment III module named in the change matrix. No execution.",
+      "entry_conditions": [
+        "A0 == PASS",
+        "IMPLEMENTATION_AUTHORIZED == true"
+      ],
+      "controlling_inputs": [
+        "AUTHORITY",
+        "IMPLEMENTATION_CHANGE_MATRIX.json",
+        "IMPLEMENTATION_TASK_GRAPH.json",
+        "SOURCE_TREE",
+        "APRIME_PORT_SOURCES_AT_a5d763a",
+        "APRIME_V0_4_STAGE2_MANIFEST_AT_f2bc2c8"
+      ],
+      "exact_operations": [
+        "EXECUTE_TASKS_I01_THROUGH_I18_IN_DEPENDENCY_ORDER",
+        "EXECUTE_SHARED_PATH_TASKS_IB02_AND_IB03_BEFORE_I02",
+        "MATERIALIZE_FRESH_COHORT_UNDER_ALL_TWELVE_QUALIFICATION_GATES",
+        "PERFORM_APRIME_PORT",
+        "PERFORM_FIR_KERNEL_RECOVERY_WITH_FSUM_NORMALIZATION",
+        "WRITE_UNIT_TESTS"
+      ],
+      "source_files_entrypoints": [
+        "src/mineocclude/experiment_iii/",
+        "scripts/experiment_iii/",
+        "fabric/mineocclude-mod/ (bounded edits C05-C08)"
+      ],
+      "unit_of_work": "TASK_GRAPH_TASK",
+      "expected_counts": {
+        "tasks": 20,
+        "iii_a_tasks": 18,
+        "iii_b_shared_path_tasks": 2,
+        "change_matrix_items": 32,
+        "qualification_gates": 12,
+        "production_identities": 25,
+        "pilot_identities": 2,
+        "fir_kernels": 2
+      },
+      "expected_outputs": [
+        "SOURCE_MODULES",
+        "production_identity_manifest.jsonl",
+        "pilot_identity_manifest.jsonl",
+        "folds.json",
+        "identity_priority_order.json",
+        "historical_seed_exclusion_set.json",
+        "cohort_qualification_receipt.json",
+        "aprime_port_receipt.json",
+        "fir_kernel_recovery_receipt.json",
+        "UNIT_TESTS",
+        "cohort_all_q_qualification_receipt.json"
+      ],
+      "required_evidence": [
+        "implementation_completion_receipt.json"
+      ],
+      "pass_conditions": [
+        "EVERY_CHANGE_MATRIX_ITEM_COMPLETE_WITH_PASSING_TESTS",
+        "IB02_AND_IB03_COMPLETE_AND_GREEN_BEFORE_I02_RUNS",
+        "COHORT_MANIFESTS_HASH_CORRECTLY",
+        "ALL_TWELVE_QUALIFICATION_GATES_SATISFIED",
+        "ALL_Q_QUALIFICATION_GATE_EVALUATED_BEFORE_COHORT_MATERIALIZATION_AND_FREEZE",
+        "FIR_RECOVERY_SATISFIES_ALL_FIVE_ACCEPTANCE_GATES_WITH_FSUM_NORMALIZED_TAPS"
+      ],
+      "fail_conditions": [
+        "ITEM_INCOMPLETE",
+        "COHORT_GATE_FAILURE",
+        "ALL_Q_GATE_FAILURE",
+        "ALL_Q_PRIMITIVE_MISSING_AT_I02",
+        "FIR_RECOVERY_FAILURE"
+      ],
+      "blocker_codes": [
+        "SOURCE_CHANGE_INCOMPLETE",
+        "COHORT_QUALIFICATION_INFEASIBLE",
+        "COHORT_RNG_STREAM_DRIFT",
+        "COHORT_SPEED_VIOLATION",
+        "COHORT_SEED_COLLISION",
+        "FIR_KERNEL_RECOVERY_FAILED",
+        "APRIME_PORT_SOURCE_UNAVAILABLE",
+        "COHORT_ALL_Q_QUALIFICATION_INFEASIBLE",
+        "COHORT_ALL_Q_PRIMITIVE_MISSING",
+        "FIR_KERNEL_NOT_NORMALIZED"
+      ],
+      "allowed_repairs": [
+        "ANY_CODE_REPAIR",
+        "REGENERATE_COHORT_ONLY_WHILE_NO_CAPTURE_EXISTS"
+      ],
+      "forbidden_repairs": [
+        "CHANGE_ANY_FROZEN_SCIENTIFIC_VALUE",
+        "LOOSEN_A_QUALIFICATION_GATE_TO_ADMIT_A_CANDIDATE",
+        "REFIT_FIR_FROM_EXPERIMENT_III_DATA",
+        "MATERIALIZE_THE_COHORT_WITHOUT_EVALUATING_GATE_12",
+        "REGENERATE_THE_COHORT_ON_THE_BASIS_OF_ANY_OUTCOME"
+      ],
+      "retry_rules": "UNLIMITED",
+      "resume_rules": "PER_TASK; completed tasks with passing tests are not redone",
+      "invalidation_scope": "Cohort regeneration invalidates only A1 artifacts while no capture exists. Once any capture exists, cohort regeneration is forbidden and becomes a section 9 amendment.",
+      "exit_conditions": [
+        "implementation_completion_receipt.json == PASS"
+      ],
+      "next_authorized_state": "A2",
+      "tasks_in_this_state": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06",
+        "I07",
+        "I08",
+        "I09",
+        "I10",
+        "I11",
+        "I12",
+        "I13",
+        "I14",
+        "I15",
+        "I16",
+        "I17",
+        "I18",
+        "IB02",
+        "IB03"
+      ],
+      "tasks_NOT_in_this_state": [
+        "I19",
+        "I20"
+      ],
+      "i19_i20_stage_binding_note": "I19 (static unit tests) and I20 (CPU integration tests) EXECUTE the suites and are bound to A2, not A1. The superseded phrase 'EXECUTE_TASKS_I01_THROUGH_I20' conflicted with their own lifecycle_stage field in IMPLEMENTATION_TASK_GRAPH.json. A1 WRITES the tests; A2 RUNS them.",
+      "iii_b_tasks_in_a1_rationale": "IB02 and IB03 are III-B-authored but III-A-shared: IB02 supplies the q-generalized qualification primitive that gate 12 requires, and IB03 is the bit-identity regression guard that stops a q-generalization defect from silently altering the III-A cohort. Both are prerequisites of I02. They are IMPLEMENTATION tasks, not III-B runtime stages, so they do not violate the III-A invariant.",
+      "cohort_identical_whether_iii_b_runs_or_clean_skips": true,
+      "phase2_start_semantics": "A1 begins at PHASE2_START = the instant the independent final audit returns PASS with IMPLEMENTATION_GO = true AND the authority package is committed and frozen. It does NOT wait for any fixed calendar date.",
+      "implementation_time_model": "EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json resources.implementation_time_model",
+      "serial_build_order": [
+        "I01",
+        "I05",
+        "I06",
+        "IB02",
+        "IB03",
+        "I02",
+        "I03",
+        "I04",
+        "I09",
+        "I10",
+        "I11",
+        "I12",
+        "I15",
+        "I13",
+        "I14",
+        "I16",
+        "I07",
+        "I08",
+        "I17",
+        "I18",
+        "I19",
+        "I20"
+      ],
+      "iii_b_only_tasks_deferrable_under_lag": true,
+      "iii_b_shared_tasks_never_deferrable": [
+        "IB02",
+        "IB03"
+      ],
+      "deferral_checkpoint": "CP0 at 2026-08-31T20:00 local, milestone I10 COMPLETE"
+    },
+    {
+      "id": "A2",
+      "name": "STATIC_VALIDATION",
+      "purpose": "Prove the implementation correct on CPU, with no Minecraft and no model.",
+      "entry_conditions": [
+        "A1 == PASS"
+      ],
+      "controlling_inputs": [
+        "SOURCE_TREE",
+        "EXPERIMENT_III_TEST_PLAN.md",
+        "FROZEN_FIXTURES"
+      ],
+      "exact_operations": [
+        "RUN_TEST_PLAN_GROUP_A_STATIC_UNIT",
+        "RUN_TEST_PLAN_GROUP_B_CPU_INTEGRATION",
+        "RUN_TEST_PLAN_GROUP_D_III_B_STATIC_AND_CPU"
+      ],
+      "source_files_entrypoints": [
+        "pytest tests/experiment_iii/"
+      ],
+      "unit_of_work": "TEST",
+      "expected_counts": {
+        "group_a_checks": 30,
+        "group_a_skips_allowed": 0,
+        "group_b_checks": 13,
+        "group_d_checks": 33,
+        "group_d_skips_allowed": 0,
+        "total_named_static_and_cpu_checks": 76
+      },
+      "expected_outputs": [
+        "TEST_REPORT"
+      ],
+      "required_evidence": [
+        "static_validation_receipt.json"
+      ],
+      "pass_conditions": [
+        "ZERO_FAILURES",
+        "ZERO_ERRORS",
+        "ZERO_GROUP_A_SKIPS",
+        "ZERO_GROUP_D_SKIPS",
+        "SOURCE_CLOSURE_RECORDED"
+      ],
+      "fail_conditions": [
+        "ANY_FAILURE",
+        "ANY_ERROR",
+        "ANY_GROUP_A_SKIP",
+        "ANY_GROUP_D_SKIP"
+      ],
+      "blocker_codes": [
+        "SOURCE_STATIC_TEST_FAILURE",
+        "SOURCE_CLOSURE_DRIFT"
+      ],
+      "allowed_repairs": [
+        "FIX_CODE_OR_FIXTURES_AND_RERUN"
+      ],
+      "forbidden_repairs": [
+        "DELETE_SKIP_OR_WEAKEN_A_TEST_TO_MAKE_IT_PASS",
+        "MARK_A_FAILING_SCIENTIFIC_FIXTURE_XFAIL"
+      ],
+      "retry_rules": "UNLIMITED",
+      "resume_rules": "RERUN_THE_FULL_SUITE; a partial suite run is not evidence",
+      "invalidation_scope": "Any source change invalidates this receipt.",
+      "exit_conditions": [
+        "ALL_TESTS_PASS_AT_THE_RECORDED_SOURCE_CLOSURE"
+      ],
+      "next_authorized_state": "A3",
+      "tasks_in_this_state": [
+        "I19",
+        "I20"
+      ],
+      "group_d_stage_binding_note": "Group D is a III-B test suite but runs at A2, alongside groups A and B, on CPU with no Minecraft and no model. Two group-D checks - D.2 (q=0.05 bit-identity regression) and D.4 (all-q qualification, gate 12) - are ADDITIONALLY task-completion gates inside A1 for IB03 and I02 respectively, because gate 12 cannot be evaluated without them. Running them twice is intentional: once as an A1 task gate, once as part of the A2 suite of record.",
+      "group_d_failure_does_not_block_iii_a": "A group-D failure OUTSIDE D.2, D.4 and D.31 is a III-B blocker and does not block III-A closure; III-B proceeds to CLEAN_SKIP if it cannot be repaired in time. D.2, D.4 and D.31 are the exception: they guard the III-A cohort and must pass.",
+      "group_d_checks_that_guard_iii_a": [
+        "D.2",
+        "D.4",
+        "D.31"
+      ],
+      "deadline_checkpoint_triggers": [
+        "CP1_DROP_BELOW_NORMAL at 2026-09-01T13:00 local -> SELECT_PLAN_10_2",
+        "CP2_DROP_BELOW_10_2 at 2026-09-01T20:36 local -> SELECT_PLAN_10_3",
+        "CP3_DISASTER at 2026-09-02T00:48 local -> SELECT_PLAN_10_4_DISASTER"
+      ],
+      "checkpoint_instants_are_derived": "each is ABSOLUTE_EXPERIMENT_DEADLINE minus that plan's CONSERVATIVE post-A2 tail; they do not move with PHASE2_START",
+      "checkpoint_authority": "EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json deadline_fallbacks.implementation_checkpoints"
+    },
+    {
+      "id": "A3",
+      "name": "ENVIRONMENT_PREFLIGHT",
+      "purpose": "Prove the execution host can actually run the experiment before anything expensive starts.",
+      "entry_conditions": [
+        "A2 == PASS"
+      ],
+      "controlling_inputs": [
+        "HOST",
+        "MINECRAFT_FABRIC_BUILD",
+        "MINEWORLD_CHECKPOINT_AND_VAE",
+        "STORAGE",
+        "DURABLE_STORE"
+      ],
+      "exact_operations": [
+        "RECORD_OS_PYTHON_NUMPY_TORCH_CUDA_GPU",
+        "VERIFY_MINECRAFT_1_16_5_FABRIC_0_15_11_API_0_42_0_YARN_1_16_5_BUILD_10",
+        "VERIFY_MOD_JAR_HASH",
+        "VERIFY_FRAMEBUFFER_640x360",
+        "VERIFY_DISPLAY_AVAILABILITY",
+        "VERIFY_CHECKPOINT_SHA256_a92c311b",
+        "VERIFY_VAE_SHA256_370d06be",
+        "VERIFY_PREPROCESSING_AND_ACTION_CONVERSION_IDENTITY",
+        "RESOLVE_AND_RECORD_THE_DEVICE_ID_OF_POOL_WORKING_POOL_DURABLE_AND_POOL_SCRATCH",
+        "RECORD_THE_DURABILITY_MODE_AND_WHETHER_A_LOCAL_MIRROR_IS_ENABLED",
+        "VERIFY_FREE_BYTES_AGAINST_THE_COMBINED_PROGRAM_STORAGE_GATE_IN_BYTES",
+        "VERIFY_NO_TWO_GATED_CATEGORIES_SHARE_A_DEVICE_ID",
+        "VERIFY_DURABLE_ROUND_TRIP",
+        "RUN_RNG_STREAM_FIXTURE"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/preflight.py"
+      ],
+      "unit_of_work": "PREFLIGHT_CHECK",
+      "expected_counts": {
+        "checks_present_and_passing": "ALL"
+      },
+      "expected_outputs": [
+        "environment_receipt.json"
+      ],
+      "required_evidence": [
+        "environment_receipt.json naming the stages this host authorizes"
+      ],
+      "pass_conditions": [
+        "ALL_PINS_MATCH",
+        "POOL_WORKING_FREE_BYTES_GE_THE_APPLICABLE_COMBINED_PROGRAM_GATE",
+        "EVERY_GATED_PATH_DEVICE_ID_RECORDED_AND_NO_POOL_DOUBLE_COUNTED",
+        "DURABILITY_MODE_RECORDED",
+        "DURABLE_ROUND_TRIP_VERIFIED",
+        "GPU_PRESENT_AND_SUFFICIENT_FOR_A9_IF_THIS_HOST_RUNS_A9"
+      ],
+      "fail_conditions": [
+        "ANY_PIN_MISMATCH",
+        "INSUFFICIENT_RESOURCE"
+      ],
+      "blocker_codes": [
+        "ENV_CHECKPOINT_HASH_MISMATCH",
+        "ENV_VAE_HASH_MISMATCH",
+        "ENV_RUNTIME_VERSION_MISMATCH",
+        "ENV_FRAMEBUFFER_SIZE_MISMATCH",
+        "ENV_GPU_UNAVAILABLE",
+        "ENV_DISPLAY_UNAVAILABLE",
+        "ENV_PREPROCESSING_IDENTITY_MISMATCH",
+        "STORAGE_INSUFFICIENT",
+        "DURABILITY_STORE_UNREACHABLE",
+        "STORAGE_POOL_DOUBLE_COUNTED"
+      ],
+      "allowed_repairs": [
+        "FIX_ENVIRONMENT",
+        "FREE_DISK",
+        "REPIN_VERSIONS",
+        "RERUN"
+      ],
+      "forbidden_repairs": [
+        "PROCEED_WITH_MISMATCHED_CHECKPOINT_OR_VAE",
+        "LOWER_THE_DISK_THRESHOLD",
+        "SUBSTITUTE_A_DIFFERENT_CHECKPOINT",
+        "TREAT_TWO_LOGICAL_CATEGORIES_ON_ONE_FILESYSTEM_AS_TWO_POOLS",
+        "COMPARE_DECIMAL_GB_FREE_SPACE_AGAINST_A_BINARY_GIB_THRESHOLD"
+      ],
+      "retry_rules": "UNLIMITED",
+      "resume_rules": "RERUN_THE_FULL_PREFLIGHT",
+      "invalidation_scope": "Any environment change invalidates this receipt and every later receipt bound to it.",
+      "exit_conditions": [
+        "environment_receipt.json PASS for the stages this host will run"
+      ],
+      "next_authorized_state": "A4",
+      "storage_gate": {
+        "units": "GIB_BINARY",
+        "GiB_bytes": 1073741824,
+        "definitions": "EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json resources.storage",
+        "uses_combined_program_gate": true,
+        "why_combined": "III-B is PROSPECTIVELY_AUTHORIZED_OPTIONAL and A3 always precedes B-GATE, so III-B can never be terminally skipped before A3 runs. The combined gate is therefore always the applicable one.",
+        "POOL_WORKING_free_gate_with_local_mirror_bytes": 68719476736,
+        "POOL_WORKING_free_gate_with_local_mirror_gib": 64,
+        "POOL_WORKING_free_gate_no_local_mirror_bytes": 42949672960,
+        "POOL_WORKING_free_gate_no_local_mirror_gib": 40,
+        "POOL_DURABLE_free_gate_if_distinct_local_filesystem_bytes": 30064771072,
+        "POOL_DURABLE_remote_object_store_has_no_local_free_space_gate": true,
+        "POOL_SCRATCH_is_a_separate_pool_only_if_its_device_id_differs": true,
+        "double_counting_forbidden": true,
+        "derived_peak_with_mirror_gib": 59.304,
+        "derived_peak_no_mirror_gib": 35.682,
+        "margin_with_mirror_gib": 4.696,
+        "superseded_iii_a_only_thresholds_gib": [
+          45,
+          30
+        ],
+        "gate_coherence_invariant_holds": true,
+        "structural_headroom_for_the_b_gate_gib": 15.204
+      }
+    },
+    {
+      "id": "A4",
+      "name": "P0_VISIBILITY_CALIBRATION",
+      "purpose": "Select L1/L2/L3 by an outcome-blind, image-only measurement, before any Experiment III model inference.",
+      "entry_conditions": [
+        "A2 == PASS",
+        "A3 == PASS on the capture host",
+        "P0_AUTHORIZED == true"
+      ],
+      "controlling_inputs": [
+        "AUTHORITY_SECTION_7",
+        "TWELVE_CANDIDATE_ROSTER",
+        "L0",
+        "MINECRAFT_STONE",
+        "NINE_FROZEN_PLACEMENTS"
+      ],
+      "exact_operations": [
+        "CAPTURE_ABBA_PRESENT_ABSENT_BLOCKS",
+        "LINEARIZE_SRGB_TO_LINEAR_FLOAT64",
+        "COORDINATE_WISE_MEDIAN",
+        "DERIVE_SHARED_L0_SUPPORT_MASK_DILATED_2PX",
+        "COMPUTE_MASKED_SQUARED_RESIDUAL_ENERGY",
+        "COMPUTE_SPLIT_HALF_ABSENT_NOISE",
+        "COMPUTE_EXCESS_ENERGY",
+        "NORMALIZE_TO_L0_SAME_PLACEMENT",
+        "AGGREGATE_MEDIANS",
+        "RUN_10000_PLACEMENT_BOOTSTRAP",
+        "EVALUATE_NINE_VALIDITY_RULES",
+        "DETERMINISTIC_TRIPLE_SEARCH_WITH_LEXICOGRAPHIC_TIEBREAK"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_p0_rve_calibration.py",
+        "src/mineocclude/experiment_iii/rve.py"
+      ],
+      "unit_of_work": "CONDITION_x_PLACEMENT_x_REPLICATE_BLOCK",
+      "expected_counts": {
+        "conditions": 14,
+        "placements": 9,
+        "abba_blocks": 2,
+        "states": 2,
+        "min_settled_frames_per_state_per_block": 8,
+        "min_total_settled_frames": 4032,
+        "condition_placement_cells": 126,
+        "masks": 9
+      },
+      "expected_outputs": [
+        "P0_MANIFEST",
+        "P0_IMAGE_INVENTORY",
+        "P0_RVE_TABLE",
+        "P0_BOOTSTRAP_RESULTS",
+        "P0_MASK_INVENTORY",
+        "P0_SELECTED_LADDER",
+        "P0_SELECTION_RECEIPT",
+        "P0_SENTINEL_ENVELOPE"
+      ],
+      "required_evidence": [
+        "P0_SELECTION_RECEIPT"
+      ],
+      "pass_conditions": [
+        "A_VALID_TRIPLE_EXISTS_UNDER_EVERY_RULE_OF_7_5",
+        "SELECTED_BY_THE_DETERMINISTIC_RULE_OF_7_6",
+        "P0_RESULT == P0_PASS"
+      ],
+      "fail_conditions": [
+        "P0_NO_VALID_LADDER",
+        "P0_TECHNICAL_FAIL"
+      ],
+      "blocker_codes": [
+        "P0_TECHNICAL_FAIL",
+        "P0_NO_VALID_LADDER",
+        "RVE_MASK_DEGENERATE",
+        "RVE_BACKGROUND_TOLERANCE_EXCEEDED",
+        "RVE_REPLICATE_CV_EXCEEDED",
+        "RVE_SNR_INSUFFICIENT",
+        "RVE_ORDER_UNSTABLE",
+        "RVE_BOOTSTRAP_LOWER_BOUND_NOT_POSITIVE",
+        "P0_CANDIDATE_ID_UNSUPPORTED",
+        "P0_PLACEMENT_GROSS_ERROR"
+      ],
+      "allowed_repairs": [
+        "FIX_CAPTURE_SETTLING_OR_LIGHTING_DEFECT_AND_REMEASURE_AFFECTED_UNITS_UNDER_THE_IDENTICAL_FROZEN_PROCEDURE"
+      ],
+      "forbidden_repairs": [
+        "WIDEN_AN_RVE_ZONE",
+        "LOWER_A_SEPARATION_SNR_CV_OR_BACKGROUND_THRESHOLD",
+        "ADD_A_CANDIDATE_OUTSIDE_THE_TWELVE_BLOCK_ROSTER",
+        "USE_CLEAR_GLASS_PANES_OR_MULTIPLE_LAYERS",
+        "RERUN_UNTIL_A_LADDER_APPEARS",
+        "SELECT_ON_ANYTHING_BUT_RVE_AND_IMAGE_QA",
+        "USE_PER_CANDIDATE_MASKS",
+        "SUBSTITUTE_ANOTHER_WALL_GEOMETRY_ON_NO_VALID_LADDER"
+      ],
+      "retry_rules": "SAME_FROZEN_UNIT_ONLY; all attempts retained",
+      "resume_rules": "PER_(CONDITION, PLACEMENT, BLOCK); completed verified units are not re-measured",
+      "invalidation_scope": "A mask change invalidates every candidate at that placement. A candidate re-measure invalidates only that candidate's placement scores and the selection.",
+      "exit_conditions": [
+        "P0_SELECTION_RECEIPT with P0_RESULT == P0_PASS and a hash-bound selected triple"
+      ],
+      "next_authorized_state": "A5"
+    },
+    {
+      "id": "A5",
+      "name": "P1_ENGINEERING_PILOT",
+      "purpose": "Prove the whole pipeline end to end on sacrificial identities, so no production identity is ever spent on debugging.",
+      "entry_conditions": [
+        "A4 == P0_PASS",
+        "A3 == PASS on capture and extraction hosts",
+        "P1_AUTHORIZED == true"
+      ],
+      "controlling_inputs": [
+        "e3_p90",
+        "e3_p91",
+        "P0_SELECTED_LADDER",
+        "FULL_PIPELINE"
+      ],
+      "exact_operations": [
+        "RUN_THE_SECTION_6A_VERIFICATION_LIST_END_TO_END",
+        "CAPTURE_10_PILOT_UNITS",
+        "EXTRACT_190_FORWARDS",
+        "BUILD_FEATURES",
+        "RUN_ANALYSIS_SMOKE",
+        "DELIBERATELY_KILL_AND_RESTART_TO_PROVE_RESUME"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_p1_pilot.py"
+      ],
+      "unit_of_work": "PILOT_IDENTITY_x_CONDITION_CAPTURE_THEN_EXTRACTION_UNIT",
+      "expected_counts": {
+        "captures": 10,
+        "target_rows": 190,
+        "forwards": 190,
+        "logical_row_tensors": 1140,
+        "serialized_npy_arrays": 60,
+        "activation_bytes": 1568939520
+      },
+      "expected_outputs": [
+        "PILOT_CAPTURES",
+        "PILOT_ACTIVATIONS",
+        "PILOT_FEATURES",
+        "PILOT_ANALYSIS_SMOKE"
+      ],
+      "required_evidence": [
+        "p1_pilot_receipt.json"
+      ],
+      "pass_conditions": [
+        "EVERY_VERIFICATION_ITEM_PROVEN_WITH_ITS_OBSERVED_VALUE",
+        "COUNTS_EXACT",
+        "MID_RUN_KILL_AND_RESTART_RESUMES_SAME_SPEC_WITHOUT_RECOMPUTING_VERIFIED_UNITS"
+      ],
+      "fail_conditions": [
+        "ANY_VERIFICATION_ITEM_UNPROVEN",
+        "ANY_COUNT_MISMATCH"
+      ],
+      "blocker_codes": [
+        "P1_INCOMPLETE",
+        "P1_RESUME_UNPROVEN",
+        "CAPTURE_*",
+        "WALL_*",
+        "CAMERA_*",
+        "TARGET_*",
+        "TIMING_*",
+        "FIR_*",
+        "EXTRACTION_*",
+        "HOOK_*",
+        "TOKEN_*",
+        "TENSOR_*",
+        "FEATURE_*"
+      ],
+      "allowed_repairs": [
+        "FIX_THE_ENGINEERING_DEFECT_RERUN_THE_AFFECTED_TEST_AND_REPEAT_THE_PILOT_UNIT",
+        "REPEAT_THE_WHOLE_PILOT_IF_THE_DEFECT_COULD_HAVE_AFFECTED_EARLIER_UNITS"
+      ],
+      "forbidden_repairs": [
+        "ANY_SCIENTIFIC_REDESIGN",
+        "TUNE_MATERIALS",
+        "TUNE_RVE_RULES",
+        "TUNE_COHORT",
+        "TUNE_PRIMARY_READOUT",
+        "TUNE_ALPHA_GRID",
+        "TUNE_REPRESENTATIONS",
+        "TUNE_ESTIMANDS",
+        "TUNE_THRESHOLDS",
+        "TUNE_ANALYSIS_FAMILIES",
+        "TUNE_TARGET_ROWS",
+        "TUNE_FOLDS",
+        "PROMOTE_A_PILOT_IDENTITY_INTO_PRODUCTION",
+        "PROCEED_TO_PRODUCTION_ON_A_FAILED_PILOT"
+      ],
+      "retry_rules": "UNLIMITED_ON_PILOT_UNITS",
+      "resume_rules": "PER_PILOT_CAPTURE_OR_EXTRACTION_UNIT",
+      "invalidation_scope": "A pipeline change invalidates the pilot receipt; re-pilot the affected span.",
+      "exit_conditions": [
+        "p1_pilot_receipt.json == PASS"
+      ],
+      "next_authorized_state": "A6"
+    },
+    {
+      "id": "A6",
+      "name": "P2_PROSPECTIVE_FREEZE",
+      "purpose": "The final scientific freeze. After this, nothing scientific may change.",
+      "entry_conditions": [
+        "A0 == PASS",
+        "A1 == PASS",
+        "A2 == PASS",
+        "A3 == PASS",
+        "A4 == PASS",
+        "A5 == PASS"
+      ],
+      "controlling_inputs": [
+        "ALL_PRIOR_STAGE_RECEIPTS",
+        "AUTHORITY",
+        "LIVE_ARTIFACTS"
+      ],
+      "exact_operations": [
+        "BIND_EVERY_FREEZE_ITEM_BY_EXACT_VALUE_OR_HASH",
+        "VERIFY_EACH_BINDING_AGAINST_THE_LIVE_ARTIFACT",
+        "HASH_THE_PACKAGE"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/build_p2_freeze.py"
+      ],
+      "unit_of_work": "FREEZE_PACKAGE",
+      "expected_counts": {
+        "binding_groups": 7,
+        "groups": [
+          "AUTHORITY_AND_CODE",
+          "ENVIRONMENT",
+          "COHORT",
+          "CONDITIONS_AND_EVIDENCE",
+          "APPARATUS",
+          "MEASUREMENT",
+          "EXTRACTION_ANALYSIS_AND_OPERATIONS"
+        ]
+      },
+      "expected_outputs": [
+        "P2_FREEZE_PACKAGE.json",
+        "P2_FREEZE_PACKAGE.sha256"
+      ],
+      "required_evidence": [
+        "P2_FREEZE_PACKAGE.json"
+      ],
+      "pass_conditions": [
+        "EVERY_BINDING_PRESENT_NON_NULL_AND_VERIFIED_AGAINST_THE_LIVE_ARTIFACT",
+        "PACKAGE_HASHES",
+        "EVERY_PREREQUISITE_STAGE_RECEIPT_IS_PASS"
+      ],
+      "fail_conditions": [
+        "MISSING_BINDING",
+        "NULL_BINDING",
+        "UNVERIFIED_BINDING"
+      ],
+      "blocker_codes": [
+        "P2_BINDING_INCOMPLETE",
+        "P2_BINDING_MISMATCH",
+        "P2_PREREQUISITE_NOT_PASSED"
+      ],
+      "allowed_repairs": [
+        "COMPLETE_A_MISSING_BINDING",
+        "FIX_THE_ARTIFACT_THEN_REFREEZE"
+      ],
+      "forbidden_repairs": [
+        "FREEZE_WITH_A_PLACEHOLDER_NULL_OR_TO_BE_DETERMINED",
+        "FREEZE_BEFORE_A4_AND_A5_PASS"
+      ],
+      "retry_rules": "UNLIMITED_BEFORE_PRODUCTION_LAUNCH",
+      "resume_rules": "REBUILD_THE_PACKAGE",
+      "invalidation_scope": "Re-freezing after production has begun invalidates every capture bound to the superseded package.",
+      "exit_conditions": [
+        "P2_FREEZE_PACKAGE.json verified",
+        "EMIT PRODUCTION_AUTHORIZED = true",
+        "EMIT MODEL_INFERENCE_AUTHORIZED = true"
+      ],
+      "next_authorized_state": "A7"
+    },
+    {
+      "id": "A7",
+      "name": "PRODUCTION_CAPTURE",
+      "purpose": "Capture the frozen 125-unit production matrix.",
+      "entry_conditions": [
+        "A6 == PASS",
+        "PRODUCTION_AUTHORIZED == true",
+        "A3 == PASS on the capture host"
+      ],
+      "controlling_inputs": [
+        "P2_FREEZE_PACKAGE",
+        "production_identity_manifest.jsonl",
+        "P0_SELECTED_LADDER",
+        "FROZEN_CAPTURE_ORDER"
+      ],
+      "exact_operations": [
+        "EXECUTE_THE_FROZEN_LATIN_CAPTURE_ORDER",
+        "FORCE_ARENA_REBUILD_AND_BLOCK_RECEIPT_ON_EVERY_MATERIAL_TRANSITION",
+        "RUN_RVE_SENTINELS_BEFORE_AND_AFTER_EACH_CONDITION_BATCH",
+        "VALIDATE_EACH_UNIT_AGAINST_ALL_SEVEN_RECEIPTS",
+        "PUBLISH_DURABLY_AND_READ_BACK_BY_HASH"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_production_capture.py"
+      ],
+      "unit_of_work": "IDENTITY_x_CONDITION_CAPTURE_UNIT",
+      "expected_counts": {
+        "captures": 125,
+        "frames": 22500,
+        "target_rows": 2375,
+        "wall_material_transitions_approx": 25,
+        "condition_batches": 25
+      },
+      "expected_outputs": [
+        "PER_UNIT_RAW_STREAMS_AND_FRAMES",
+        "wall_receipt.json",
+        "camera_receipt.json",
+        "target_receipt.json",
+        "condition_receipt.json",
+        "capture_completion.json",
+        "durable_receipt.json",
+        "capture_matrix.json",
+        "sentinel_receipt.json"
+      ],
+      "required_evidence": [
+        "capture_matrix.json",
+        "PER_UNIT_COMPLETION_AND_DURABLE_RECEIPTS",
+        "SENTINEL_RECEIPTS",
+        "HASH_CHAIN_LEDGER"
+      ],
+      "pass_conditions": [
+        "EVERY_RECEIPT_OF_SECTION_3_3_PASSES_PER_UNIT",
+        "THE_19_FROZEN_TARGET_ROWS_ARE_PRESENT_AND_IDENTICAL_TO_THE_MANIFEST",
+        "UNIT_DURABLY_PUBLISHED_AND_READ_BACK_BY_HASH"
+      ],
+      "fail_conditions": [
+        "ANY_RECEIPT_FAILURE"
+      ],
+      "blocker_codes": [
+        "CAPTURE_PATH_HASH_MISMATCH",
+        "CAPTURE_NOISE_MISMATCH",
+        "CAPTURE_MISSING_FRAME",
+        "CAPTURE_MISSING_ACTION",
+        "CAPTURE_MISSING_STATE",
+        "TIMING_CARDINALITY_MISMATCH",
+        "TIMING_LOCKSTEP_MISMATCH",
+        "WALL_MATERIAL_MISMATCH",
+        "WALL_CELL_MISMATCH",
+        "WALL_CACHE_KEY_STALE",
+        "WALL_CONDITION_SCENE_MISMATCH",
+        "WALL_RECEIPT_MISMATCH",
+        "CAMERA_POSE_DRIFT",
+        "TARGET_IDENTITY_FAILURE",
+        "TARGET_RESPAWN_DETECTED",
+        "TARGET_ROW_MISMATCH",
+        "CAPTURE_STALE_FRAME",
+        "CAPTURE_LANE_CLAMP_ENGAGED",
+        "CAPTURE_ORDER_VIOLATION",
+        "SENTINEL_ORDER_VIOLATION",
+        "SENTINEL_ENVELOPE_VIOLATION",
+        "DURABILITY_READBACK_MISMATCH",
+        "STORAGE_EXHAUSTED"
+      ],
+      "allowed_repairs": [
+        "SAME_FROZEN_UNIT_RETRY",
+        "FIX_AN_APPARATUS_OR_SOFTWARE_DEFECT_AND_RETRY_THE_AFFECTED_UNITS",
+        "REBUILD_THE_ARENA"
+      ],
+      "forbidden_repairs": [
+        "CHANGE_SEED",
+        "CHANGE_PATH",
+        "CHANGE_DIRECTION",
+        "CHANGE_CONDITION",
+        "CHANGE_WALL_MATERIAL",
+        "CHANGE_TARGET_ROWS",
+        "CHANGE_TARGET_LABELS",
+        "CHANGE_CAMERA",
+        "CHANGE_TIMING_POLICY",
+        "CHANGE_SCIENTIFIC_IDENTITY",
+        "REPLACE_AN_IDENTITY",
+        "DROP_A_CONDITION",
+        "IMPUTE_A_MISSING_CELL"
+      ],
+      "retry_rules": "SAME_FROZEN_UNIT_ONLY; all failed attempts retained with provenance; the FIRST technically valid attempt is kept; bounded by the frozen attempt cap in P2",
+      "resume_rules": "PER_CAPTURE_UNIT_VIA_THE_LEDGER: PLANNED -> RUNNING -> CAPTURED -> VALIDATED -> DURABLE -> COMPLETE_VALIDATED_DURABLE; units already COMPLETE are skipped",
+      "invalidation_scope": "A sentinel failure invalidates only the affected as-yet-unmodeled capture batch. A per-unit failure invalidates only that unit.",
+      "exit_conditions": [
+        "EVERY_PLANNED_UNIT_COMPLETE_VALIDATED_DURABLE_OR_THE_A8_ATTRITION_RULE_IS_MET"
+      ],
+      "next_authorized_state": "A8"
+    },
+    {
+      "id": "A8",
+      "name": "CAPTURE_COHORT_VALIDATION",
+      "purpose": "Close the cohort and decide, without outcomes, what population the analysis has.",
+      "entry_conditions": [
+        "A7_FINISHED_OR_HALTED"
+      ],
+      "controlling_inputs": [
+        "HASH_CHAIN_LEDGER",
+        "PER_UNIT_RECEIPTS",
+        "production_identity_manifest.jsonl"
+      ],
+      "exact_operations": [
+        "BUILD_THE_FULL_IDENTITY_x_CONDITION_MATRIX",
+        "IDENTIFY_COMPLETE_FIVE_WAY_PAIRED_IDENTITIES",
+        "APPLY_THE_FROZEN_ATTRITION_RULE"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/validate_capture_cohort.py"
+      ],
+      "unit_of_work": "COHORT",
+      "expected_counts": {
+        "normal_complete_identities": 25,
+        "normal_units": 125,
+        "normal_rows": 2375,
+        "minimum_for_graded_inference": 15
+      },
+      "expected_outputs": [
+        "cohort_closure_receipt.json",
+        "capture_matrix.json"
+      ],
+      "required_evidence": [
+        "cohort_closure_receipt.json"
+      ],
+      "pass_conditions": [
+        "N_COMPLETE >= 15",
+        "MATRIX_INTERNALLY_CONSISTENT",
+        "NO_PILOT_IDENTITY_PRESENT"
+      ],
+      "fail_conditions": [
+        "N_COMPLETE < 15"
+      ],
+      "blocker_codes": [
+        "COHORT_INSUFFICIENT_COMPLETE_IDENTITIES",
+        "COHORT_MATRIX_INCONSISTENT",
+        "COHORT_PILOT_CONTAMINATION"
+      ],
+      "allowed_repairs": [
+        "RETURN_TO_A7_AND_RETRY_INCOMPLETE_UNITS_WHILE_THE_DEADLINE_ALLOWS"
+      ],
+      "forbidden_repairs": [
+        "MISSING_CELL_IMPUTATION",
+        "REACTIVE_CONDITION_DROPPING",
+        "OUTCOME_BASED_IDENTITY_REPLACEMENT",
+        "MIXING_HISTORICAL_IDENTITIES_INTO_THE_COHORT",
+        "SUBSTITUTING_A_PILOT",
+        "PARTIALLY_USING_AN_INCOMPLETE_IDENTITY"
+      ],
+      "retry_rules": "RECOMPUTE_THE_CLOSURE_AFTER_FURTHER_CAPTURE",
+      "resume_rules": "RECOMPUTE_FROM_THE_LEDGER",
+      "invalidation_scope": "None backwards; this stage only reads.",
+      "exit_conditions": [
+        "cohort_closure_receipt.json with N_complete and the selected attrition branch"
+      ],
+      "next_authorized_state": "A9"
+    },
+    {
+      "id": "A9",
+      "name": "ACTIVATION_EXTRACTION",
+      "purpose": "Produce the frozen activation tensors from exactly one forward per target row.",
+      "entry_conditions": [
+        "A8 == PASS",
+        "A3 == PASS on the GPU host",
+        "A6_FREEZE_BOUND",
+        "MODEL_INFERENCE_AUTHORIZED == true"
+      ],
+      "controlling_inputs": [
+        "VALIDATED_CAPTURES",
+        "P2_FREEZE_PACKAGE",
+        "MINEWORLD_CHECKPOINT_AND_VAE",
+        "FROZEN_TOKEN_SLICES"
+      ],
+      "exact_operations": [
+        "BUILD_16_PAIR_CONTEXT_PER_TARGET_ROW",
+        "ONE_TEACHER_FORCED_FORWARD_PER_TARGET_ROW",
+        "REGISTER_20_DECODER_HOOKS_TRANSIENTLY",
+        "ASSERT_ALL_FIVE_SEMANTIC_TOKEN_CONDITIONS",
+        "SELECT_SPANS_MINUS_2_AND_MINUS_1",
+        "SERIALIZE_LAYERS_4_10_19_x_PREVIOUS_CURRENT",
+        "VALIDATE_AND_PUBLISH_DURABLY"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_extraction.py",
+        "src/mineocclude/experiment_iii/extraction.py"
+      ],
+      "unit_of_work": "CAPTURE_UNIT_x_LAYER_x_TEMPORAL_SLICE_PERSISTED_ARRAY",
+      "expected_counts": {
+        "captures": 125,
+        "forwards": 2375,
+        "logical_row_tensors": 14250,
+        "serialized_npy_arrays": 750,
+        "activation_bytes": 19611744000,
+        "units_per_capture": 6,
+        "shared_forwards_per_capture": 19
+      },
+      "expected_outputs": [
+        "750 [19,336,2048] little-endian float16 .npy arrays",
+        "extraction_inventory.json"
+      ],
+      "required_evidence": [
+        "PER_UNIT_COMPLETION_RECEIPTS",
+        "extraction_inventory.json"
+      ],
+      "pass_conditions": [
+        "EVERY_PLANNED_ARRAY_DURABLE",
+        "EVERY_SECTION_8_5_VALIDATION_PASSES",
+        "FORWARD_COUNT_EXACTLY_2375"
+      ],
+      "fail_conditions": [
+        "ANY_VALIDATION_FAILURE",
+        "FORWARD_COUNT_EXCESS"
+      ],
+      "blocker_codes": [
+        "EXTRACTION_FORWARD_COUNT_EXCESS",
+        "EXTRACTION_TEMPORAL_INDEX_MISMATCH",
+        "HOOK_REGISTRATION_INCOMPLETE",
+        "HOOK_LAYER_MISSING",
+        "TOKEN_SPAN_MISMATCH",
+        "TOKEN_ACTION_CONTAMINATION",
+        "TOKEN_FRAME_IDENTITY_MISMATCH",
+        "TOKEN_CONTEXT_AGE_UNVERIFIED",
+        "TOKEN_SEQUENCE_LENGTH_MISMATCH",
+        "TENSOR_SHAPE_MISMATCH",
+        "TENSOR_DTYPE_MISMATCH",
+        "TENSOR_BYTE_SIZE_MISMATCH",
+        "TENSOR_NONFINITE",
+        "TENSOR_HASH_MISMATCH",
+        "EXTRACTION_SOURCE_CAPTURE_DRIFT",
+        "EXTRACTION_SPEC_DRIFT",
+        "STORAGE_EXHAUSTED"
+      ],
+      "allowed_repairs": [
+        "RE_EXTRACT_AN_AFFECTED_UNIT_FROM_THE_UNCHANGED_SOURCE_CAPTURE_UNDER_THE_IDENTICAL_EXTRACTION_SPEC"
+      ],
+      "forbidden_repairs": [
+        "RERUN_WITH_A_CHANGED_SOURCE_CAPTURE",
+        "CHANGE_PREPROCESSING",
+        "CHANGE_CHECKPOINT",
+        "CHANGE_TOKEN_SLICE",
+        "CHANGE_LAYER_SET",
+        "FIX_THE_HISTORICAL_RGB_BGR_PREPROCESSING_BEHAVIOR",
+        "ADD_A_FORWARD"
+      ],
+      "retry_rules": "SAME_SPEC_ONLY",
+      "resume_rules": "PER_UNIT: PLANNED -> RUNNING -> EXTRACTED -> VALIDATED -> DURABLE -> COMPLETE; COMPLETE units are skipped without reading bytes; DURABLE units are re-sealed; EXTRACTED units are re-validated rather than re-extracted",
+      "invalidation_scope": "A source-capture change invalidates every array derived from it. An extraction-spec change invalidates ALL arrays.",
+      "exit_conditions": [
+        "ALL_PLANNED_ARRAYS_DURABLE"
+      ],
+      "next_authorized_state": "A10"
+    },
+    {
+      "id": "A10",
+      "name": "EXTRACTION_VALIDATION",
+      "purpose": "Independently verify the extraction inventory.",
+      "entry_conditions": [
+        "A9_COMPLETE"
+      ],
+      "controlling_inputs": [
+        "extraction_inventory.json",
+        "P2_FREEZE_PACKAGE",
+        "cohort_closure_receipt.json"
+      ],
+      "exact_operations": [
+        "RECOMPUTE_EXPECTED_INVENTORY_FROM_COHORT_AND_FREEZE",
+        "COMPARE_AGAINST_WHAT_EXISTS",
+        "REHASH_EVERY_ARRAY",
+        "VERIFY_EVERY_BOUND_METADATA_FIELD"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/validate_extraction.py"
+      ],
+      "unit_of_work": "PERSISTED_ARRAY",
+      "expected_counts": {
+        "arrays": 750,
+        "logical_row_tensors": 14250,
+        "bytes": 19611744000,
+        "bytes_per_array": 26148992
+      },
+      "expected_outputs": [
+        "extraction_validation_receipt.json"
+      ],
+      "required_evidence": [
+        "extraction_validation_receipt.json"
+      ],
+      "pass_conditions": [
+        "COUNTS_EXACT",
+        "ALL_FINITE",
+        "ALL_NONEMPTY",
+        "SHAPE_19_336_2048",
+        "DTYPE_LITTLE_ENDIAN_FLOAT16",
+        "BYTES_EXACTLY_26148992",
+        "SHA256_MATCHES",
+        "BOUND_TO_CORRECT_IDENTITY_CONDITION_LAYER_SLICE_TARGET_ORDER_HOOK_TOKEN_HASH_PREPROCESSING_CHECKPOINT"
+      ],
+      "fail_conditions": [
+        "ANY_MISMATCH"
+      ],
+      "blocker_codes": [
+        "EXTRACTION_INVENTORY_INCOMPLETE",
+        "TENSOR_SHAPE_MISMATCH",
+        "TENSOR_DTYPE_MISMATCH",
+        "TENSOR_BYTE_SIZE_MISMATCH",
+        "TENSOR_NONFINITE",
+        "TENSOR_HASH_MISMATCH",
+        "PROVENANCE_BINDING_MISSING"
+      ],
+      "allowed_repairs": [
+        "RE_EXTRACT_THE_AFFECTED_UNIT_VIA_A9"
+      ],
+      "forbidden_repairs": [
+        "ACCEPT_A_SHAPE_BYTE_OR_HASH_MISMATCH",
+        "REGENERATE_THE_INVENTORY_TO_MATCH_WHATEVER_EXISTS"
+      ],
+      "retry_rules": "REVALIDATE_AFTER_RE_EXTRACTION",
+      "resume_rules": "PER_ARRAY",
+      "invalidation_scope": "None backwards; this stage only reads and re-hashes.",
+      "exit_conditions": [
+        "extraction_validation_receipt.json == PASS"
+      ],
+      "next_authorized_state": "A11"
+    },
+    {
+      "id": "A11",
+      "name": "FEATURE_CONSTRUCTION",
+      "purpose": "Build the three frozen representations and the pixel-baseline features.",
+      "entry_conditions": [
+        "A10 == PASS"
+      ],
+      "controlling_inputs": [
+        "VALIDATED_ACTIVATION_ARRAYS",
+        "RAW_TARGET_FRAMES",
+        "P2_FREEZE_PACKAGE"
+      ],
+      "exact_operations": [
+        "COARSE_2X6_POOL_14x24_TO_2x6_CELLS_OF_7x4",
+        "COMPUTE_CURRENT",
+        "COMPUTE_CURRENT_MINUS_PREVIOUS",
+        "COMPUTE_TWO_FRAME_CONCAT_PREVIOUS_FIRST",
+        "BUILD_48x28_PIXEL_FEATURES_WITH_FROZEN_AREA_INTERPOLATION"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/build_features.py",
+        "src/mineocclude/experiment_iii/representations.py"
+      ],
+      "unit_of_work": "CAPTURE_UNIT_x_REPRESENTATION_FEATURE_BLOCK",
+      "expected_counts": {
+        "CURRENT_dim": 24576,
+        "CURRENT_MINUS_PREVIOUS_dim": 24576,
+        "TWO_FRAME_CONCAT_dim": 49152,
+        "pixel_baseline_dim": 4032,
+        "rows_per_representation": 2375
+      },
+      "expected_outputs": [
+        "feature_config.json",
+        "HASHED_FEATURE_BLOCKS"
+      ],
+      "required_evidence": [
+        "feature_config.json with fixture hashes"
+      ],
+      "pass_conditions": [
+        "EXACT_DIMENSIONS",
+        "ALL_FINITE",
+        "ROW_ORDER_EQUALS_THE_FROZEN_TARGET_ROW_ORDER",
+        "FIXTURES_REPRODUCE_BYTE_IDENTICALLY"
+      ],
+      "fail_conditions": [
+        "DIMENSION_MISMATCH",
+        "ROW_ORDER_MISMATCH",
+        "FIXTURE_MISMATCH"
+      ],
+      "blocker_codes": [
+        "FEATURE_DIMENSION_MISMATCH",
+        "FEATURE_ROW_ORDER_MISMATCH",
+        "FEATURE_POOLING_GRID_TRANSPOSED",
+        "FEATURE_NONFINITE",
+        "FEATURE_SLICE_SWAPPED"
+      ],
+      "allowed_repairs": [
+        "FIX_A_MECHANICAL_DEFECT_AND_REBUILD_THE_AFFECTED_FEATURE_BLOCK"
+      ],
+      "forbidden_repairs": [
+        "CHANGE_THE_POOLING_GRID",
+        "CHANGE_THE_CONCATENATION_ORDER",
+        "CHANGE_THE_FEATURE_DIMENSION",
+        "ADD_A_REPRESENTATION",
+        "SUBSTITUTE_GLOBAL_MEAN_POOLING"
+      ],
+      "retry_rules": "UNLIMITED_BEFORE_THE_PREDICTION_LOCK",
+      "resume_rules": "PER_CAPTURE_UNIT_x_REPRESENTATION_BLOCK",
+      "invalidation_scope": "A representation change invalidates every downstream fit and the prediction lock.",
+      "exit_conditions": [
+        "feature_config.json plus hashed feature blocks"
+      ],
+      "next_authorized_state": "A12"
+    },
+    {
+      "id": "A12",
+      "name": "PREDICTION_LOCK",
+      "purpose": "Emit and hash-lock every held-out prediction before any summary statistic is computed or viewed.",
+      "entry_conditions": [
+        "A11 == PASS"
+      ],
+      "controlling_inputs": [
+        "FEATURE_BLOCKS",
+        "folds.json",
+        "P2_FREEZE_PACKAGE"
+      ],
+      "exact_operations": [
+        "FIT_GROUPED_NESTED_RIDGE_ON_FROZEN_FOLDS",
+        "SELECT_ALPHA_INSIDE_OUTER_TRAINING_ONLY_WITH_SMALLEST_ALPHA_TIEBREAK",
+        "FIT_EVERY_BASELINE",
+        "EMIT_HELD_OUT_PREDICTIONS_FOR_EVERY_IDENTITY_CONDITION_ROW_MODEL_CELL",
+        "HASH_AND_SEAL_BEFORE_ANY_STATISTIC"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/lock_predictions.py"
+      ],
+      "unit_of_work": "OUTER_FOLD_x_CONDITION_x_MODEL_PREDICTION_BLOCK",
+      "expected_counts": {
+        "predictions_per_cell": 1,
+        "outer_folds": 5,
+        "conditions": 5,
+        "alpha_grid_size": 5,
+        "inner_rotations": 4
+      },
+      "expected_outputs": [
+        "PREDICTION_LOCK.json",
+        "PREDICTION_LOCK.sha256"
+      ],
+      "required_evidence": [
+        "PREDICTION_LOCK.json",
+        "PREDICTION_LOCK.sha256"
+      ],
+      "pass_conditions": [
+        "EVERY_CELL_HAS_EXACTLY_ONE_HELD_OUT_PREDICTION",
+        "NO_IDENTITY_APPEARS_IN_ITS_OWN_TRAINING_SET",
+        "EVERY_SCALER_AND_ALPHA_SELECTED_INSIDE_THE_OUTER_TRAINING_SET_ONLY",
+        "LOCK_WRITTEN_AND_HASHED_BEFORE_ANY_STATISTIC_IS_COMPUTED"
+      ],
+      "fail_conditions": [
+        "MISSING_PREDICTION",
+        "DUPLICATE_PREDICTION",
+        "LEAKAGE",
+        "STATISTIC_COMPUTED_FIRST"
+      ],
+      "blocker_codes": [
+        "PREDICTION_LOCK_MISSING",
+        "PREDICTION_LOCK_AFTER_STATISTICS",
+        "FOLD_LEAKAGE_DETECTED",
+        "PREDICTION_DUPLICATE_CELL",
+        "PREDICTION_NONFINITE",
+        "PREDICTION_ALPHA_SELECTED_ON_HELDOUT"
+      ],
+      "allowed_repairs": [
+        "BEFORE_THE_LOCK: FIX_AND_RERUN"
+      ],
+      "forbidden_repairs": [
+        "AFTER_THE_LOCK: ANY_CHANGE_TO_FEATURES_FOLDS_ALPHA_GRID_REPRESENTATIONS_BASELINES_OR_MODELS_WITHOUT_A_SECTION_9_AMENDMENT"
+      ],
+      "retry_rules": "UNLIMITED_BEFORE_THE_LOCK_IS_WRITTEN",
+      "resume_rules": "PER_OUTER_FOLD_x_CONDITION_x_MODEL_BLOCK",
+      "invalidation_scope": "Any feature or fold change invalidates the whole lock.",
+      "exit_conditions": [
+        "PREDICTION_LOCK.json and PREDICTION_LOCK.sha256 written"
+      ],
+      "next_authorized_state": "A13"
+    },
+    {
+      "id": "A13",
+      "name": "BASELINES_CONTROLS",
+      "purpose": "Produce the five baselines and the L0 interpretability control.",
+      "entry_conditions": [
+        "A12 == PASS"
+      ],
+      "controlling_inputs": [
+        "PREDICTION_LOCK.json",
+        "P2_FREEZE_PACKAGE"
+      ],
+      "exact_operations": [
+        "EVALUATE_LINEAR_CURRENT_FRAME_PIXEL_BASELINE",
+        "EVALUATE_LAST_SEEN",
+        "EVALUATE_CONSTANT_VELOCITY_LAST_10",
+        "EVALUATE_TRAINING_MEAN",
+        "EVALUATE_TIME_ONLY",
+        "COMPUTE_L0_INTERPRETABILITY_CONTROL"
+      ],
+      "source_files_entrypoints": [
+        "src/mineocclude/experiment_iii/baselines_pixel.py",
+        "src/mineocclude/experiment_iii/baselines_motion.py"
+      ],
+      "unit_of_work": "BASELINE",
+      "expected_counts": {
+        "baselines": 5,
+        "l0_control_statistics": 1
+      },
+      "expected_outputs": [
+        "baselines_receipt.json"
+      ],
+      "required_evidence": [
+        "baselines_receipt.json"
+      ],
+      "pass_conditions": [
+        "ALL_FIVE_BASELINES_PRESENT_WITH_LOCKED_PREDICTIONS",
+        "LEAKAGE_TESTS_PASS",
+        "L0_CONTROL_COMPUTED_FROM_LOCKED_PREDICTIONS"
+      ],
+      "fail_conditions": [
+        "ANY_BASELINE_MISSING",
+        "ANY_LEAKAGE"
+      ],
+      "blocker_codes": [
+        "BASELINE_MISSING",
+        "BASELINE_LEAKAGE",
+        "BASELINE_FORMULA_MISMATCH",
+        "BASELINE_ORACLE_USED_AS_MODEL_INPUT"
+      ],
+      "allowed_repairs": [
+        "FIX_A_MECHANICAL_DEFECT_BEFORE_THE_LOCK"
+      ],
+      "forbidden_repairs": [
+        "FEED_LAST_SEEN_OR_CONSTANT_VELOCITY_ORACLE_STATE_INTO_ANY_MODEL_FEATURE",
+        "RETUNE_A_BASELINE_AFTER_SEEING_ITS_RESULT"
+      ],
+      "retry_rules": "FROM_THE_LOCK_ONLY",
+      "resume_rules": "PER_BASELINE",
+      "invalidation_scope": "None backwards.",
+      "exit_conditions": [
+        "baselines_receipt.json"
+      ],
+      "next_authorized_state": "A14"
+    },
+    {
+      "id": "A14",
+      "name": "PRIMARY_ANALYSIS",
+      "purpose": "Compute the three frozen primary estimands. Nothing else.",
+      "entry_conditions": [
+        "A12 == PASS",
+        "A13 == PASS"
+      ],
+      "controlling_inputs": [
+        "PREDICTION_LOCK.json",
+        "FROZEN_V_C",
+        "P2_FREEZE_PACKAGE"
+      ],
+      "exact_operations": [
+        "COMPUTE_PER_IDENTITY_PER_CONDITION_RMSE_MAE_R2",
+        "COMPUTE_S_I_OLS_SLOPE_OF_RMSE_ON_O_C",
+        "COMPUTE_DPARTIAL_I",
+        "COMPUTE_DOPAQUE_I",
+        "ONE_SIDED_IDENTITY_LEVEL_T_TESTS",
+        "HOLM_ACROSS_EXACTLY_THREE",
+        "TWO_SIDED_95_WHOLE_IDENTITY_BOOTSTRAP_B_10000"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_primary_analysis.py"
+      ],
+      "unit_of_work": "ESTIMAND",
+      "expected_counts": {
+        "primary_estimands": 3,
+        "holm_family_size": 3,
+        "bootstrap_replicates": 10000
+      },
+      "expected_outputs": [
+        "primary_results.json"
+      ],
+      "required_evidence": [
+        "primary_results.json"
+      ],
+      "pass_conditions": [
+        "ALL_THREE_COMPUTED_FROM_LOCKED_PREDICTIONS",
+        "HOLM_APPLIED_ACROSS_EXACTLY_THREE",
+        "BOOTSTRAP_RESAMPLES_WHOLE_IDENTITIES_WITH_ALL_CONDITIONS_ROWS_AND_REPRESENTATIONS_TOGETHER",
+        "SEED_MATCHES_THE_FREEZE_PACKAGE",
+        "NO_OVERALL_SUCCESS_GATE_EMITTED"
+      ],
+      "fail_conditions": [
+        "ESTIMAND_ADDED_REMOVED_OR_SUBSTITUTED",
+        "ROW_LEVEL_RESAMPLING"
+      ],
+      "blocker_codes": [
+        "ANALYSIS_FAMILY_ALTERED",
+        "STATS_MULTIPLICITY_FAMILY_MISMATCH",
+        "STATS_BOOTSTRAP_UNIT_VIOLATION",
+        "STATS_SEED_MISMATCH",
+        "ANALYSIS_INPUT_NOT_LOCKED",
+        "STATS_ZERO_TSS",
+        "ANALYSIS_SUCCESS_GATE_REINTRODUCED"
+      ],
+      "allowed_repairs": [
+        "REPAIR_A_MECHANICAL_DEFECT_FROM_THE_SAME_LOCKED_PREDICTIONS_AND_SEED"
+      ],
+      "forbidden_repairs": [
+        "ADD_AN_ESTIMAND_AFTER_SEEING_RESULTS",
+        "CHANGE_THE_HYPOTHESIS_DIRECTION",
+        "RERUN_WITH_A_DIFFERENT_SEED",
+        "PROMOTE_A_SECONDARY_RESULT_TO_PRIMARY"
+      ],
+      "retry_rules": "MECHANICAL_DEFECT_ONLY_FROM_THE_SAME_LOCK_AND_SEED",
+      "resume_rules": "RECOMPUTE_FROM_THE_LOCK; the lock is never regenerated",
+      "invalidation_scope": "None backwards.",
+      "exit_conditions": [
+        "primary_results.json"
+      ],
+      "next_authorized_state": "A15"
+    },
+    {
+      "id": "A15",
+      "name": "TEMPORAL_ANALYSIS",
+      "purpose": "The two predeclared temporal-rescue contrasts.",
+      "entry_conditions": [
+        "A14_COMPLETE"
+      ],
+      "controlling_inputs": [
+        "PREDICTION_LOCK.json",
+        "P2_FREEZE_PACKAGE"
+      ],
+      "exact_operations": [
+        "AVERAGE_OVER_L1_L4_THE_RMSE_REDUCTION_OF_CURRENT_MINUS_PREVIOUS_VS_CURRENT",
+        "AVERAGE_OVER_L1_L4_THE_RMSE_REDUCTION_OF_TWO_FRAME_CONCAT_VS_CURRENT",
+        "TWO_ONE_SIDED_PAIRED_T_TESTS",
+        "HOLM_ACROSS_EXACTLY_TWO",
+        "TWO_SIDED_95_IDENTITY_BOOTSTRAP"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_primary_analysis.py (temporal stage)"
+      ],
+      "unit_of_work": "CONTRAST",
+      "expected_counts": {
+        "contrasts": 2,
+        "holm_family_size": 2
+      },
+      "expected_outputs": [
+        "temporal_results.json"
+      ],
+      "required_evidence": [
+        "temporal_results.json"
+      ],
+      "pass_conditions": [
+        "BOTH_COMPUTED_FROM_LOCKED_PREDICTIONS",
+        "HOLM_2_APPLIED",
+        "INTERVALS_REPORTED"
+      ],
+      "fail_conditions": [
+        "CONTRAST_ADDED_REMOVED_OR_SUBSTITUTED"
+      ],
+      "blocker_codes": [
+        "ANALYSIS_FAMILY_ALTERED",
+        "STATS_MULTIPLICITY_FAMILY_MISMATCH",
+        "ANALYSIS_INPUT_NOT_LOCKED"
+      ],
+      "allowed_repairs": [
+        "REPAIR_A_MECHANICAL_DEFECT_FROM_THE_SAME_LOCKED_PREDICTIONS"
+      ],
+      "forbidden_repairs": [
+        "LET_A_TEMPORAL_REPRESENTATION_REPLACE_OR_RESCUE_THE_PRIMARY_READOUT"
+      ],
+      "retry_rules": "FROM_THE_LOCK_ONLY",
+      "resume_rules": "RECOMPUTE_FROM_THE_LOCK",
+      "invalidation_scope": "None backwards.",
+      "exit_conditions": [
+        "temporal_results.json"
+      ],
+      "next_authorized_state": "A16"
+    },
+    {
+      "id": "A16",
+      "name": "CONTEXT_AGE_ANALYSIS",
+      "purpose": "The descriptive context-age boundary evidence.",
+      "entry_conditions": [
+        "A14_COMPLETE"
+      ],
+      "controlling_inputs": [
+        "PREDICTION_LOCK.json",
+        "VERIFIED_FRAME_IDENTITIES",
+        "P2_FREEZE_PACKAGE"
+      ],
+      "exact_operations": [
+        "REPORT_RMSE_IN_BINS_1_5_6_10_11_15_16_19",
+        "COMPUTE_THE_SINGLE_PRESPECIFIED_BOUNDARY_INTERACTION_ON_WINDOWS_12_15_AND_16_19",
+        "TWO_SIDED_95_IDENTITY_BOOTSTRAP_INTERVAL"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_primary_analysis.py (context stage)"
+      ],
+      "unit_of_work": "AGE_BIN_OR_THE_SINGLE_BOUNDARY_INTERACTION",
+      "expected_counts": {
+        "reporting_bins": 4,
+        "boundary_interactions": 1
+      },
+      "expected_outputs": [
+        "context_age_results.json"
+      ],
+      "required_evidence": [
+        "context_age_results.json"
+      ],
+      "pass_conditions": [
+        "BINS_EXACTLY_AS_FROZEN",
+        "INTERACTION_COMPUTED_ON_THE_ADJACENT_12_15_AND_16_19_WINDOWS",
+        "FRAME_IDENTITY_VERIFICATION_PASSED_AT_EXTRACTION"
+      ],
+      "fail_conditions": [
+        "REBINNED",
+        "FRAME_IDENTITY_VERIFICATION_NEVER_RAN"
+      ],
+      "blocker_codes": [
+        "ANALYSIS_CONTEXT_BIN_MISMATCH",
+        "TOKEN_CONTEXT_AGE_UNVERIFIED",
+        "ANALYSIS_INPUT_NOT_LOCKED"
+      ],
+      "allowed_repairs": [
+        "REPAIR_A_MECHANICAL_DEFECT_FROM_THE_SAME_LOCKED_PREDICTIONS"
+      ],
+      "forbidden_repairs": [
+        "ANY_CAUSAL_FORGETTING_CLAIM",
+        "REBIN_AFTER_SEEING_RESULTS"
+      ],
+      "retry_rules": "FROM_THE_LOCK_ONLY",
+      "resume_rules": "RECOMPUTE_FROM_THE_LOCK",
+      "invalidation_scope": "None backwards.",
+      "exit_conditions": [
+        "context_age_results.json"
+      ],
+      "next_authorized_state": "A17"
+    },
+    {
+      "id": "A17",
+      "name": "STATISTICAL_ADJUDICATION",
+      "purpose": "Map computed results onto the pre-registered adjudication matrix and fix the permitted wording.",
+      "entry_conditions": [
+        "A14_COMPLETE",
+        "A15_COMPLETE",
+        "A16_COMPLETE"
+      ],
+      "controlling_inputs": [
+        "primary_results.json",
+        "temporal_results.json",
+        "context_age_results.json",
+        "baselines_receipt.json",
+        "AUTHORITY_SECTION_14"
+      ],
+      "exact_operations": [
+        "FOR_EACH_OBTAINING_OUTCOME_ROW_RECORD_PERMITTED_AND_PROHIBITED_INTERPRETATION_PAPER_VALUE_USABILITY_AND_CLOSURE_ELIGIBILITY",
+        "VERIFY_EVERY_REPORTED_CLAIM_MAPS_TO_A_PERMITTED_INTERPRETATION"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/build_scientific_package.py (adjudication stage)"
+      ],
+      "unit_of_work": "ADJUDICATION_ROW",
+      "expected_counts": {
+        "adjudication_matrix_rows": 17
+      },
+      "expected_outputs": [
+        "adjudication_receipt.json"
+      ],
+      "required_evidence": [
+        "adjudication_receipt.json"
+      ],
+      "pass_conditions": [
+        "EVERY_REPORTED_CLAIM_MAPS_TO_A_PERMITTED_INTERPRETATION",
+        "NO_PROHIBITED_CLAIM_APPEARS"
+      ],
+      "fail_conditions": [
+        "A_CLAIM_WITH_NO_MATCHING_ROW",
+        "A_PROHIBITED_CLAIM"
+      ],
+      "blocker_codes": [
+        "ANALYSIS_CLAIM_OUT_OF_SCOPE",
+        "ANALYSIS_ADJUDICATION_MISSING"
+      ],
+      "allowed_repairs": [
+        "REWORD_A_CLAIM_TO_FALL_INSIDE_A_PERMITTED_INTERPRETATION"
+      ],
+      "forbidden_repairs": [
+        "WRITE_A_NEW_ADJUDICATION_ROW_AFTER_SEEING_RESULTS"
+      ],
+      "retry_rules": "UNLIMITED; the underlying numbers never change",
+      "resume_rules": "RECOMPUTE_FROM_THE_RESULTS_FILES",
+      "invalidation_scope": "None backwards.",
+      "exit_conditions": [
+        "adjudication_receipt.json"
+      ],
+      "next_authorized_state": "A18"
+    },
+    {
+      "id": "A18",
+      "name": "SCIENTIFIC_PACKAGE",
+      "purpose": "Assemble the terminal evidence package.",
+      "entry_conditions": [
+        "A17 == PASS"
+      ],
+      "controlling_inputs": [
+        "ALL_STAGE_RECEIPTS",
+        "ALL_RESULTS_FILES",
+        "EXPECTED_ARTIFACT_INVENTORY.json"
+      ],
+      "exact_operations": [
+        "ASSEMBLE_EVERY_ROW_OF_THE_SECTION_15_1_INVENTORY",
+        "HASH_EVERY_ARTIFACT",
+        "VERIFY_EVERY_FIGURE_AND_TABLE_TRACES_TO_A_LOCKED_PREDICTION_OR_A_RECEIPT"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/build_scientific_package.py"
+      ],
+      "unit_of_work": "PACKAGE_ARTIFACT",
+      "expected_counts": {
+        "inventory_rows": "ALL_PRESENT"
+      },
+      "expected_outputs": [
+        "scientific_package_manifest.json",
+        "FIGURES",
+        "TABLES",
+        "STATISTICAL_REPORT"
+      ],
+      "required_evidence": [
+        "scientific_package_manifest.json"
+      ],
+      "pass_conditions": [
+        "EVERY_ITEM_PRESENT_HASHED_AND_INTERNALLY_CONSISTENT",
+        "EVERY_FIGURE_AND_TABLE_TRACEABLE"
+      ],
+      "fail_conditions": [
+        "MISSING_ARTIFACT",
+        "HASH_MISMATCH",
+        "UNTRACEABLE_FIGURE"
+      ],
+      "blocker_codes": [
+        "PACKAGE_ARTIFACT_MISSING",
+        "PACKAGE_HASH_MISMATCH",
+        "PACKAGE_FIGURE_UNTRACEABLE"
+      ],
+      "allowed_repairs": [
+        "REGENERATE_A_FIGURE_OR_TABLE_FROM_LOCKED_PREDICTIONS",
+        "SUPPLY_A_MISSING_RECEIPT"
+      ],
+      "forbidden_repairs": [
+        "PRODUCE_A_FIGURE_FROM_ANYTHING_OTHER_THAN_LOCKED_PREDICTIONS_OR_RECEIPTS"
+      ],
+      "retry_rules": "UNLIMITED",
+      "resume_rules": "PER_PACKAGE_ARTIFACT",
+      "invalidation_scope": "None backwards.",
+      "exit_conditions": [
+        "scientific_package_manifest.json"
+      ],
+      "next_authorized_state": "A19"
+    },
+    {
+      "id": "A19",
+      "name": "FINAL_CLOSURE",
+      "purpose": "Declare Experiment III scientifically complete.",
+      "entry_conditions": [
+        "A18 == PASS"
+      ],
+      "controlling_inputs": [
+        "ALL_STAGE_RECEIPTS",
+        "P2_FREEZE_PACKAGE",
+        "cohort_closure_receipt.json",
+        "PREDICTION_LOCK.json",
+        "adjudication_receipt.json",
+        "scientific_package_manifest.json"
+      ],
+      "exact_operations": [
+        "EVALUATE_THE_EIGHT_CLOSURE_CONDITIONS",
+        "EMIT_THE_CLOSURE_RECEIPT_AND_FINAL_SUMMARY"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/build_scientific_package.py (closure stage)"
+      ],
+      "unit_of_work": "EXPERIMENT",
+      "expected_counts": {
+        "closure_conditions": 8
+      },
+      "expected_outputs": [
+        "EXPERIMENT_III_CLOSURE_RECEIPT.json",
+        "FINAL_SCIENTIFIC_SUMMARY.md"
+      ],
+      "required_evidence": [
+        "EXPERIMENT_III_CLOSURE_RECEIPT.json"
+      ],
+      "pass_conditions": [
+        "A0_THROUGH_A18_PASS_RECEIPTS_BOUND_TO_SAME_AUTHORITY_SHA256",
+        "P2_FREEZE_PACKAGE_VERIFIES_AGAINST_EVERY_DOWNSTREAM_ARTIFACT",
+        "COHORT_CLOSURE_N_COMPLETE_GE_15_WITH_NAMED_BRANCH_OR_EXPLICIT_NO_CLAIM_CLOSURE",
+        "PREDICTION_LOCK_WRITTEN_BEFORE_ANY_STATISTIC_AND_ALL_NUMBERS_DERIVE_FROM_IT",
+        "PRIMARY_SECONDARY_AND_L0_CONTROL_REPORTED_WITH_FROZEN_MULTIPLICITY_AND_INTERVALS",
+        "EVERY_CLAIM_MAPS_TO_A_PERMITTED_ADJUDICATION_INTERPRETATION",
+        "SCIENTIFIC_PACKAGE_COMPLETE_AND_HASH_CONSISTENT",
+        "ALL_OPEN_BLOCKERS_RESOLVED_OR_DISCLOSED_AS_LIMITATIONS"
+      ],
+      "fail_conditions": [
+        "ANY_CLOSURE_CONDITION_UNMET"
+      ],
+      "blocker_codes": [
+        "CLOSURE_CONDITION_UNMET",
+        "PROVENANCE_AUTHORITY_DRIFT"
+      ],
+      "allowed_repairs": [
+        "RESOLVE_OR_EXPLICITLY_DISCLOSE_AN_OPEN_BLOCKER",
+        "COMPLETE_A_MISSING_PACKAGE_ARTIFACT"
+      ],
+      "forbidden_repairs": [
+        "DECLARE_COMPLETION_ON_THE_BASIS_OF_A_FAVORABLE_RESULT",
+        "WITHHOLD_CLOSURE_ON_THE_BASIS_OF_AN_UNFAVORABLE_RESULT"
+      ],
+      "retry_rules": "UNLIMITED_UNTIL_THE_EIGHT_CONDITIONS_ARE_MET_OR_A_NO_CLAIM_CLOSURE_IS_DECLARED",
+      "resume_rules": "RE_EVALUATE_THE_EIGHT_CONDITIONS",
+      "invalidation_scope": "None; terminal.",
+      "exit_conditions": [
+        "EXPERIMENT_III_COMPLETE = true, or an explicit disclosed no-claim closure"
+      ],
+      "next_authorized_state": null
+    },
+    {
+      "id": "B-GEN",
+      "name": "III_B_MANIFEST_GENERATION",
+      "purpose": "Materialize the III-B q cells from the frozen III-A cohort.",
+      "entry_conditions": [
+        "A1 == PASS",
+        "PHASE0_AMENDMENT_1 hash-bound",
+        "IB02 and IB03 PASS (they are A1 tasks and gate I02; by the time A1 is PASS they are green)"
+      ],
+      "controlling_inputs": [
+        "production_identity_manifest.jsonl",
+        "PHASE0_AMENDMENT_1",
+        "authority sections 19-20"
+      ],
+      "exact_operations": [
+        "EXPAND_EACH_IDENTITY_INTO_ITS_Q_CELLS",
+        "DERIVE_EACH_CELL_OWN_19_ROW_TARGET_WINDOW_FROM_ITS_OWN_PATH",
+        "DERIVE_EACH_CELL_OWN_VIS6_WINDOW",
+        "INHERIT_III_A_FOLD_MEMBERSHIP",
+        "ASSIGN_EPISODE_IDS_IN_87001_87999",
+        "HASH_THE_MANIFESTS"
+      ],
+      "source_files_entrypoints": [
+        "src/mineocclude/experiment_iii/iii_b_manifest.py"
+      ],
+      "unit_of_work": "IDENTITY_x_Q_CELL",
+      "expected_counts": {
+        "cells": 75,
+        "new_capture_cells": 50,
+        "reused_q_mid_cells": 25
+      },
+      "expected_outputs": [
+        "iii_b_q_manifests.jsonl",
+        "iii_b_vis_inventory.json"
+      ],
+      "required_evidence": [
+        "iii_b_q_manifests.sha256"
+      ],
+      "pass_conditions": [
+        "EVERY_CELL_QUALIFIES_UNDER_THE_FROZEN_III_A_GATES_ON_ITS_OWN_PATH",
+        "ALL_Q_VARIANTS_OF_AN_IDENTITY_SHARE_ITS_FOLD",
+        "TAU_ALIGNMENT_IS_BY_OCCLUSION_AGE_NOT_FRAME_INDEX"
+      ],
+      "fail_conditions": [
+        "A_CELL_FAILS_QUALIFICATION_AT_A_BINDING_Q",
+        "CROSS_Q_FOLD_DIVERGENCE"
+      ],
+      "blocker_codes": [
+        "B_Q_PAIRING_MISMATCH",
+        "B_CROSS_Q_FOLD_LEAKAGE",
+        "B_TAU_ALIGNMENT_ERROR"
+      ],
+      "allowed_repairs": [
+        "FIX_THE_GENERATOR_AND_REGENERATE_WHILE_NO_III_B_CAPTURE_EXISTS"
+      ],
+      "forbidden_repairs": [
+        "CHANGE_A_FROZEN_Q_VALUE",
+        "CHANGE_III_A_COHORT",
+        "ADD_IDENTITIES",
+        "RELAX_A_QUALIFICATION_GATE",
+        "REGENERATE_THE_III_A_COHORT_FOR_A_III_B_QUALIFICATION_FAILURE"
+      ],
+      "retry_rules": "UNLIMITED_WHILE_NO_III_B_CAPTURE_EXISTS",
+      "resume_rules": "REGENERATE_THE_MANIFESTS",
+      "invalidation_scope": "III-B only. III-A is untouched.",
+      "exit_conditions": [
+        "iii_b_q_manifests.jsonl hashed and complete"
+      ],
+      "next_authorized_state": "B-PILOT",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false,
+      "all_q_gate_already_enforced_at_a1": true,
+      "all_q_gate_note": "Every admitted III-A identity has ALREADY been proven, at A1, to qualify at all three frozen q. B-GEN therefore RE-VERIFIES rather than discovers. A B-GEN qualification failure at a binding q is an implementation defect (the two evaluations disagree), not a cohort problem, and never regenerates the III-A cohort.",
+      "q_high_fallback_note": "If the B-PILOT technical gate forces the q_high fallback to 0.15, cells at 0.15 were NOT covered by binding gate 12 and some may fail qualification. That is III-B-local attrition handled by the drop ladder (LEVEL_3, first >=15 complete triples in frozen priority order). It NEVER regenerates or alters the III-A cohort."
+    },
+    {
+      "id": "B-PILOT",
+      "name": "III_B_ENGINEERING_PILOT",
+      "purpose": "Prove the III-B path end to end on sacrificial identities and qualify q_high technically.",
+      "entry_conditions": [
+        "B-GEN == PASS",
+        "A5 (III-A P1) == PASS",
+        "A3 == PASS on capture and GPU hosts"
+      ],
+      "controlling_inputs": [
+        "e3_p90",
+        "e3_p91",
+        "iii_b_q_manifests.jsonl",
+        "III_B_ORACLE_SPECIFICATION.json"
+      ],
+      "exact_operations": [
+        "CAPTURE_4_PILOT_UNITS",
+        "EXTRACT_100_FORWARDS",
+        "VERIFY_Q_PARAMETERIZATION_AND_INNOVATION_PAIRING",
+        "VERIFY_PATH_REPLAY",
+        "VERIFY_AT_LEAST_19_STABLE_OCCLUDED_ROWS",
+        "VERIFY_VIS6_SUPPORT",
+        "RUN_THE_FROZEN_FIR_COHERENCE_CHECK",
+        "GENERATE_ORACLE_TARGETS"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_iii_b_pilot.py"
+      ],
+      "unit_of_work": "PILOT_CAPTURE",
+      "expected_counts": {
+        "captures": 4,
+        "forwards": 100,
+        "occluded_rows": 76,
+        "vis_rows": 24
+      },
+      "expected_outputs": [
+        "pilot captures",
+        "pilot activations",
+        "pilot oracle targets"
+      ],
+      "required_evidence": [
+        "iii_b_pilot_receipt.json"
+      ],
+      "pass_conditions": [
+        "EVERY_VERIFICATION_ITEM_PROVEN",
+        "FIR_COHERENCE_CHECK_PASSES_AT_EACH_NEW_Q",
+        "Q_HIGH_TECHNICAL_WINDOW_GATE_PASSES"
+      ],
+      "fail_conditions": [
+        "ANY_VERIFICATION_ITEM_UNPROVEN",
+        "Q_HIGH_TECHNICAL_GATE_FAILS"
+      ],
+      "blocker_codes": [
+        "B_Q_HIGH_PILOT_FAIL",
+        "B_ORACLE_MISMATCH",
+        "B_Q_PAIRING_MISMATCH",
+        "B_VIS_UNAVAILABLE",
+        "B_Q_FALLBACK_OUTCOME_DRIVEN"
+      ],
+      "allowed_repairs": [
+        "FIX_AN_ENGINEERING_DEFECT_AND_REPEAT_THE_PILOT",
+        "EXACTLY_ONE_FALLBACK_RE_PILOT_AT_Q_0_15_ON_TECHNICAL_GATE_FAILURE_ONLY"
+      ],
+      "forbidden_repairs": [
+        "SELECT_THE_Q_FALLBACK_FOR_ANY_OUTCOME_RELATED_REASON",
+        "SEARCH_FURTHER_Q_VALUES",
+        "PROMOTE_A_PILOT_IDENTITY_INTO_PRODUCTION",
+        "TUNE_ANY_III_B_SCIENTIFIC_VALUE"
+      ],
+      "retry_rules": "UNLIMITED_ON_PILOT_UNITS; exactly ONE q=0.15 fallback re-pilot",
+      "resume_rules": "PER_PILOT_CAPTURE",
+      "invalidation_scope": "III-B only, unless a shared III-A defect is proven, in which case section 9 applies.",
+      "exit_conditions": [
+        "iii_b_pilot_receipt.json PASS, or III_B = SKIPPED if the fallback also fails"
+      ],
+      "next_authorized_state": "B-GATE",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false
+    },
+    {
+      "id": "B-GATE",
+      "name": "III_B_LAUNCH_GATE",
+      "purpose": "Decide whether to launch III-B, using time, technical state and resources ONLY.",
+      "entry_conditions": [
+        "B-PILOT == PASS"
+      ],
+      "controlling_inputs": [
+        "wall-clock time",
+        "III-A stage receipts",
+        "free disk",
+        "III-B test and pilot receipts"
+      ],
+      "exact_operations": [
+        "EVALUATE_THE_EIGHT_REQUIREMENTS_AT_2026_09_02T12_00",
+        "IF_NO_GO_RE_EVALUATE_ONCE_AT_2026_09_02T17_00",
+        "EMIT_THE_GATE_RECEIPT"
+      ],
+      "source_files_entrypoints": [
+        "src/mineocclude/experiment_iii/launch_gate.py"
+      ],
+      "unit_of_work": "THE_DECISION",
+      "expected_counts": {
+        "requirements": 8,
+        "evaluations_max": 2
+      },
+      "expected_outputs": [
+        "iii_b_launch_gate_receipt.json"
+      ],
+      "required_evidence": [
+        "iii_b_launch_gate_receipt.json recording every input and the verdict"
+      ],
+      "pass_conditions": [
+        "ALL_EIGHT_REQUIREMENTS_PASS_AT_AN_EVALUATION",
+        "NO_SCIENTIFIC_OUTCOME_WAS_CONSULTED"
+      ],
+      "fail_conditions": [
+        "ANY_REQUIREMENT_FAILS_AT_BOTH_EVALUATIONS"
+      ],
+      "blocker_codes": [
+        "B_GATE_NOT_MET",
+        "B_DEADLINE_DROP"
+      ],
+      "allowed_repairs": [
+        "FREE_RESOURCES_BEFORE_THE_SECOND_EVALUATION",
+        "COMPLETE_A_MISSING_TEST_OR_PILOT"
+      ],
+      "forbidden_repairs": [
+        "A_THIRD_RECONSIDERATION",
+        "A_FRIDAY_LAUNCH",
+        "CONSULTING_ANY_SCIENTIFIC_OUTCOME",
+        "LAUNCHING_WHEN_IT_THREATENS_THE_III_A_RESULT_LOCK"
+      ],
+      "retry_rules": "EXACTLY_ONE_RE_EVALUATION_AT_17_00",
+      "resume_rules": "NOT_RESUMABLE; the decision is made at most twice",
+      "invalidation_scope": "None. A NO-GO is a CLEAN_SKIP, not a failure.",
+      "exit_conditions": [
+        "GO -> B-CAP",
+        "second NO-GO -> III_B = CLEAN_SKIP, terminal"
+      ],
+      "next_authorized_state": "B-CAP",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false,
+      "storage_requirements": {
+        "units": "GIB_BINARY",
+        "POOL_WORKING_free_gate_bytes": 16106127360,
+        "POOL_WORKING_free_gate_gib": 15,
+        "POOL_DURABLE_free_gate_if_distinct_local_filesystem_gib": 5,
+        "iii_b_incremental_peak_with_mirror_gib": 10.508,
+        "superseded": [
+          "DURABLE_FREE_GE_60_GB",
+          "SCRATCH_FREE_GE_40_GB",
+          "POOL_WORKING_FREE_GE_20_GIB"
+        ],
+        "superseded_reason": "mixed GB/GiB, applied whole-program totals to an incremental decision, and double counted one filesystem as two pools",
+        "coherence_invariant": "A3_PASS_GIB (64) - MAX_III_A_STORAGE_SHARE_AT_B_GATE_GIB (48.796) = 15.204 GiB >= III_B_INCREMENTAL_LAUNCH_GATE_GIB (15)"
+      },
+      "outcome_independent": true,
+      "re_evaluated_against_revised_schedule": true,
+      "timing_unchanged": true
+    },
+    {
+      "id": "B-CAP",
+      "name": "III_B_PRODUCTION_CAPTURE",
+      "purpose": "Capture the 50 new III-B production units.",
+      "entry_conditions": [
+        "B-GATE == GO",
+        "PRODUCTION_AUTHORIZED == true"
+      ],
+      "controlling_inputs": [
+        "iii_b_q_manifests.jsonl",
+        "P2_FREEZE_PACKAGE.json",
+        "the selected drop level"
+      ],
+      "exact_operations": [
+        "CAPTURE_EACH_IDENTITY_Q_UNIT_AT_L4_THROUGH_THE_FROZEN_III_A_CAPTURE_PATH",
+        "APPLY_ALL_SEVEN_III_A_RECEIPTS",
+        "RUN_SENTINELS_AT_BATCH_BOUNDARIES",
+        "PUBLISH_DURABLY_AND_READ_BACK_BY_HASH"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_iii_b_capture.py"
+      ],
+      "unit_of_work": "IDENTITY_x_Q_CAPTURE_UNIT",
+      "expected_counts": {
+        "captures": 50,
+        "frames": 9000,
+        "occluded_target_rows": 950,
+        "vis_rows": 300
+      },
+      "expected_outputs": [
+        "per-unit raw streams, frames, receipts and durable receipts",
+        "iii_b_capture_matrix.json"
+      ],
+      "required_evidence": [
+        "iii_b_capture_matrix.json",
+        "per-unit completion and durable receipts"
+      ],
+      "pass_conditions": [
+        "EVERY_III_A_RECEIPT_PASSES_PER_UNIT",
+        "THE_CELL_OWN_19_TARGET_ROWS_MATCH_ITS_MANIFEST",
+        "UNIT_DURABLY_PUBLISHED_AND_READ_BACK_BY_HASH"
+      ],
+      "fail_conditions": [
+        "ANY_RECEIPT_FAILURE"
+      ],
+      "blocker_codes": [
+        "B_CAPTURE_ATTRITION",
+        "B_DEADLINE_DROP",
+        "CAPTURE_PATH_HASH_MISMATCH",
+        "WALL_RECEIPT_MISMATCH",
+        "TARGET_ROW_MISMATCH",
+        "STORAGE_EXHAUSTED"
+      ],
+      "allowed_repairs": [
+        "SAME_FROZEN_UNIT_RETRY",
+        "APPLY_A_DROP_LEVEL_ON_TIME_PRESSURE"
+      ],
+      "forbidden_repairs": [
+        "CHANGE_A_Q_VALUE",
+        "REPLACE_AN_IDENTITY",
+        "RECAPTURE_THE_III_A_Q_MID_CELL",
+        "DELAY_III_A_CLOSURE"
+      ],
+      "retry_rules": "SAME_FROZEN_UNIT_ONLY; first technically valid attempt is kept",
+      "resume_rules": "PER_CAPTURE_UNIT_VIA_THE_LEDGER, identical to III-A A7",
+      "invalidation_scope": "III-B only.",
+      "exit_conditions": [
+        "all planned units COMPLETE_VALIDATED_DURABLE, or a drop level is applied"
+      ],
+      "next_authorized_state": "B-EXT",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false
+    },
+    {
+      "id": "B-EXT",
+      "name": "III_B_EXTRACTION",
+      "purpose": "Extract L19 PREVIOUS+CURRENT over the occluded and VIS rows.",
+      "entry_conditions": [
+        "B-CAP complete or dropped",
+        "A9 (III-A extraction) complete",
+        "MODEL_INFERENCE_AUTHORIZED == true"
+      ],
+      "controlling_inputs": [
+        "III-B captures",
+        "the existing III-A L4 q=0.05 captures",
+        "P2_FREEZE_PACKAGE.json"
+      ],
+      "exact_operations": [
+        "ONE_FORWARD_PER_TARGET_ROW_AND_PER_VIS_ROW",
+        "SERIALIZE_L19_x_PREVIOUS_CURRENT",
+        "RE_INFER_VIS_ROWS_ON_THE_EXISTING_III_A_Q_MID_CAPTURES_WITHOUT_RECAPTURE",
+        "VALIDATE_AND_PUBLISH_DURABLY"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/run_iii_b_extraction.py"
+      ],
+      "unit_of_work": "CAPTURE_UNIT_x_LAYER_x_SLICE_ARRAY",
+      "expected_counts": {
+        "production_forwards": 1400,
+        "production_arrays": 250,
+        "production_bytes": 3853548800,
+        "array_shapes": [
+          "[19,336,2048]",
+          "[6,336,2048]"
+        ]
+      },
+      "expected_outputs": [
+        "250 production .npy arrays",
+        "iii_b_extraction_inventory.json"
+      ],
+      "required_evidence": [
+        "iii_b_extraction_inventory.json"
+      ],
+      "pass_conditions": [
+        "EVERY_ARRAY_DURABLE",
+        "SHAPES_DTYPES_AND_BYTE_SIZES_EXACT",
+        "FORWARD_COUNT_EXACTLY_AS_PLANNED"
+      ],
+      "fail_conditions": [
+        "ANY_VALIDATION_FAILURE",
+        "FORWARD_COUNT_EXCESS"
+      ],
+      "blocker_codes": [
+        "B_EXTRACTION_FAIL",
+        "TENSOR_SHAPE_MISMATCH",
+        "TENSOR_BYTE_SIZE_MISMATCH",
+        "EXTRACTION_SPEC_DRIFT",
+        "STORAGE_EXHAUSTED"
+      ],
+      "allowed_repairs": [
+        "RE_EXTRACT_AN_AFFECTED_UNIT_SAME_SPEC_FROM_THE_UNCHANGED_CAPTURE"
+      ],
+      "forbidden_repairs": [
+        "CHANGE_THE_LAYER_SET",
+        "CHANGE_THE_TOKEN_SLICES",
+        "CHANGE_PREPROCESSING",
+        "RECAPTURE_THE_Q_MID_CELL"
+      ],
+      "retry_rules": "SAME_SPEC_ONLY",
+      "resume_rules": "PER_ARRAY_UNIT, identical to III-A A9",
+      "invalidation_scope": "III-B only. III-A activations are never invalidated by a III-B extraction failure.",
+      "exit_conditions": [
+        "all planned III-B arrays DURABLE"
+      ],
+      "next_authorized_state": "B-ORC",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false
+    },
+    {
+      "id": "B-ORC",
+      "name": "III_B_ORACLE_LEDGER",
+      "purpose": "Generate and validate the oracle sigma ledger.",
+      "entry_conditions": [
+        "B-GEN == PASS"
+      ],
+      "controlling_inputs": [
+        "III_B_ORACLE_SPECIFICATION.json",
+        "iii_b_q_manifests.jsonl",
+        "the frozen FIR kernels"
+      ],
+      "exact_operations": [
+        "COMPUTE_MU_TAU_AND_SIGMA_TAU_FOR_EVERY_IDENTITY_Q_TAU_CELL_USING_THE_EXACT_FORM",
+        "VERIFY_S_TAU_AGAINST_THE_FROZEN_TABLE",
+        "VERIFY_CROSS_Q_RATIOS",
+        "HASH_THE_LEDGER"
+      ],
+      "source_files_entrypoints": [
+        "src/mineocclude/experiment_iii/oracle.py",
+        "src/mineocclude/experiment_iii/sigma_ledger.py"
+      ],
+      "unit_of_work": "IDENTITY_x_Q_x_TAU_CELL",
+      "expected_counts": {
+        "cells_normal": 1425
+      },
+      "expected_outputs": [
+        "iii_b_sigma_target_ledger.jsonl"
+      ],
+      "required_evidence": [
+        "iii_b_oracle_validation_receipt.json"
+      ],
+      "pass_conditions": [
+        "EXACT_FORM_IMPLEMENTED_NOT_THE_AFFINE_ONE",
+        "S_TAU_MATCHES_THE_FROZEN_TABLE_TO_1E_12",
+        "SIGMA_TAU_STRICTLY_POSITIVE_FOR_ALL_TAU_1_TO_19_AT_EVERY_Q",
+        "CROSS_Q_RATIO_EQUALS_SQRT_Q_RATIO_TO_1E_12",
+        "NO_DEPENDENCE_ON_ANY_ACTIVATION_PREDICTION_OR_FITTED_PARAMETER"
+      ],
+      "fail_conditions": [
+        "AFFINE_FORM_DETECTED",
+        "NEGATIVE_OR_ZERO_SIGMA",
+        "TABLE_MISMATCH"
+      ],
+      "blocker_codes": [
+        "B_ORACLE_MISMATCH"
+      ],
+      "allowed_repairs": [
+        "FIX_THE_ORACLE_IMPLEMENTATION_AND_REGENERATE"
+      ],
+      "forbidden_repairs": [
+        "FIT_ANY_ORACLE_PARAMETER",
+        "FIT_Q",
+        "USE_A_MODEL_OUTPUT",
+        "USE_THE_AFFINE_FORM_BELOW_TAU_8"
+      ],
+      "retry_rules": "UNLIMITED; the oracle is deterministic and cheap",
+      "resume_rules": "REGENERATE_THE_LEDGER",
+      "invalidation_scope": "III-B analysis only.",
+      "exit_conditions": [
+        "iii_b_oracle_validation_receipt.json PASS"
+      ],
+      "next_authorized_state": "B-U2",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false
+    },
+    {
+      "id": "B-U2",
+      "name": "III_B_U2_ANALYSIS",
+      "purpose": "Fit the U2 probe, lock predictions, and compute the three U2 statistics with all controls.",
+      "entry_conditions": [
+        "B-EXT complete",
+        "B-ORC == PASS"
+      ],
+      "controlling_inputs": [
+        "III-B activations",
+        "iii_b_sigma_target_ledger.jsonl",
+        "the frozen III-A folds"
+      ],
+      "exact_operations": [
+        "FIT_THE_POOLED_ACROSS_Q_RIDGE_ON_TAU_1_TO_15",
+        "EMIT_AND_HASH_LOCK_HELD_OUT_PREDICTIONS_BEFORE_ANY_STATISTIC",
+        "COMPUTE_U2_S1_S2_S3",
+        "RUN_THE_WITHIN_IDENTITY_Q_PERMUTATION_NULL_B_9999",
+        "RUN_ALL_EIGHT_CONFOUND_CONTROLS",
+        "APPLY_HOLM_ACROSS_EXACTLY_3"
+      ],
+      "source_files_entrypoints": [
+        "src/mineocclude/experiment_iii/u2.py",
+        "src/mineocclude/experiment_iii/controls_u2.py"
+      ],
+      "unit_of_work": "STATISTIC",
+      "expected_counts": {
+        "u2_statistics": 3,
+        "holm_family": 3,
+        "bootstrap_B": 10000,
+        "permutation_B": 9999,
+        "controls": 8
+      },
+      "expected_outputs": [
+        "iii_b_u2_prediction_lock.json",
+        "iii_b_u2_results.json",
+        "iii_b_controls_report.json",
+        "iii_b_u2_bootstrap_and_null.json"
+      ],
+      "required_evidence": [
+        "iii_b_u2_prediction_lock.sha256"
+      ],
+      "pass_conditions": [
+        "PREDICTIONS_LOCKED_BEFORE_ANY_STATISTIC",
+        "NO_CROSS_Q_FOLD_LEAKAGE",
+        "MATCHED_TAU_EVALUATION_USED",
+        "HOLM_ACROSS_EXACTLY_THREE",
+        "ALL_EIGHT_CONTROLS_COMPUTED"
+      ],
+      "fail_conditions": [
+        "FAMILY_ALTERED",
+        "LEAKAGE",
+        "STATISTIC_BEFORE_LOCK",
+        "A_CONTROL_MISSING"
+      ],
+      "blocker_codes": [
+        "B_U2_ANALYSIS_FAIL",
+        "B_U2_FAMILY_ALTERED",
+        "B_CROSS_Q_FOLD_LEAKAGE",
+        "B_TAU_ALIGNMENT_ERROR"
+      ],
+      "allowed_repairs": [
+        "REPAIR_A_MECHANICAL_DEFECT_FROM_THE_SAME_LOCKED_PREDICTIONS"
+      ],
+      "forbidden_repairs": [
+        "ADD_OR_REMOVE_A_U2_STATISTIC_AFTER_RESULTS",
+        "SWITCH_TO_LOG_SIGMA",
+        "CHANGE_THE_PRIMARY_TARGET",
+        "DROP_A_CONFOUND_CONTROL"
+      ],
+      "retry_rules": "FROM_THE_LOCK_ONLY",
+      "resume_rules": "RECOMPUTE_FROM_THE_LOCK",
+      "invalidation_scope": "III-B analysis only. A SCIENTIFIC_NULL here is a result, not a blocker.",
+      "exit_conditions": [
+        "iii_b_u2_results.json emitted with the conjunction adjudicated"
+      ],
+      "next_authorized_state": "B-U3",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false
+    },
+    {
+      "id": "B-U3",
+      "name": "III_B_U3_AND_CALIBRATION",
+      "purpose": "Compute the U3 dynamics and the calibration battery.",
+      "entry_conditions": [
+        "B-U2 complete"
+      ],
+      "controlling_inputs": [
+        "iii_b_u2_prediction_lock.json",
+        "iii_b_sigma_target_ledger.jsonl"
+      ],
+      "exact_operations": [
+        "COMPUTE_U3_S1_PER_IDENTITY_SLOPES",
+        "COMPUTE_U3_S2_SLOPE_INTERACTION",
+        "COMPUTE_U3_S3_DESCRIPTIVE_RATIOS",
+        "APPLY_HOLM_ACROSS_EXACTLY_2",
+        "RUN_SCALE_AGREEMENT_MONOTONICITY_CONDITIONAL_COVERAGE_AND_BOTH_NLL_VARIANTS",
+        "COMPUTE_THE_TAU_16_TO_19_BOUNDARY_SECONDARY"
+      ],
+      "source_files_entrypoints": [
+        "src/mineocclude/experiment_iii/u3.py",
+        "src/mineocclude/experiment_iii/calibration.py"
+      ],
+      "unit_of_work": "STATISTIC",
+      "expected_counts": {
+        "u3_inferential_statistics": 2,
+        "holm_family": 2,
+        "calibration_components": 4
+      },
+      "expected_outputs": [
+        "iii_b_u3_results.json",
+        "iii_b_calibration_report.json",
+        "iii_b_boundary_secondary.json"
+      ],
+      "required_evidence": [
+        "iii_b_u3_results.json",
+        "iii_b_calibration_report.json"
+      ],
+      "pass_conditions": [
+        "U3_HIERARCHY_RESPECTED",
+        "HOLM_ACROSS_EXACTLY_TWO",
+        "COVERAGE_REPORTED_CONDITIONALLY_ON_THE_MEAN_GATE",
+        "HYBRID_NLL_COMPUTED"
+      ],
+      "fail_conditions": [
+        "FAMILY_ALTERED",
+        "COVERAGE_REPORTED_AS_CALIBRATION_FAILURE_WHEN_THE_MEAN_GATE_FAILED"
+      ],
+      "blocker_codes": [
+        "B_U3_ANALYSIS_FAIL",
+        "B_U2_FAMILY_ALTERED"
+      ],
+      "allowed_repairs": [
+        "REPAIR_A_MECHANICAL_DEFECT_FROM_THE_SAME_LOCKED_PREDICTIONS"
+      ],
+      "forbidden_repairs": [
+        "MAKE_U3_SCIENTIFIC_CLAIMS_WHEN_U2_DID_NOT_PASS",
+        "MODIFY_THE_EXPERIMENT_BECAUSE_THE_BOUNDARY_PREDICTION_FAILED"
+      ],
+      "retry_rules": "FROM_THE_LOCK_ONLY",
+      "resume_rules": "RECOMPUTE_FROM_THE_LOCK",
+      "invalidation_scope": "III-B analysis only.",
+      "exit_conditions": [
+        "iii_b_u3_results.json and iii_b_calibration_report.json emitted"
+      ],
+      "next_authorized_state": "B-LOCK",
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false
+    },
+    {
+      "id": "B-LOCK",
+      "name": "III_B_RESULT_LOCK_AND_CLOSURE",
+      "purpose": "Adjudicate the belief-state ladder and close III-B.",
+      "entry_conditions": [
+        "B-U3 complete"
+      ],
+      "controlling_inputs": [
+        "all III-B results",
+        "authority section 28"
+      ],
+      "exact_operations": [
+        "MAP_THE_RESULT_PATTERN_ONTO_EXACTLY_ONE_LADDER_RUNG",
+        "FIX_THE_PERMITTED_WORDING",
+        "EMIT_THE_CLOSURE_RECEIPT"
+      ],
+      "source_files_entrypoints": [
+        "scripts/experiment_iii/build_iii_b_package.py"
+      ],
+      "unit_of_work": "THE_MODULE",
+      "expected_counts": {
+        "ladder_rungs": 7,
+        "rung_selected": 1
+      },
+      "expected_outputs": [
+        "iii_b_belief_state_adjudication.json",
+        "iii_b_closure_receipt.json"
+      ],
+      "required_evidence": [
+        "iii_b_closure_receipt.json"
+      ],
+      "pass_conditions": [
+        "EXACTLY_ONE_LADDER_RUNG_SELECTED",
+        "EVERY_CLAIM_MAPS_TO_THAT_RUNG",
+        "NO_U4_OR_CAUSAL_USE_CLAIM_APPEARS",
+        "CALIBRATED_BELIEF_STATE_WORDING_USED_ONLY_AT_RUNG_4",
+        "III_A_CLOSURE_UNAFFECTED"
+      ],
+      "fail_conditions": [
+        "A_CLAIM_OUTSIDE_THE_SELECTED_RUNG",
+        "A_PROHIBITED_CLAIM"
+      ],
+      "blocker_codes": [
+        "B_III_A_DEPENDENCY_DETECTED",
+        "ANALYSIS_CLAIM_OUT_OF_SCOPE"
+      ],
+      "allowed_repairs": [
+        "REWORD_A_CLAIM_TO_FALL_INSIDE_THE_SELECTED_RUNG"
+      ],
+      "forbidden_repairs": [
+        "ADD_A_LADDER_RUNG_AFTER_RESULTS",
+        "CLAIM_U4_OR_CAUSAL_USE",
+        "DELAY_III_A_CLOSURE"
+      ],
+      "retry_rules": "UNLIMITED; the underlying numbers never change",
+      "resume_rules": "RECOMPUTE_FROM_THE_RESULTS_FILES",
+      "invalidation_scope": "None. Terminal for III-B.",
+      "exit_conditions": [
+        "iii_b_closure_receipt.json emitted with RESULT_LOCKED, CLEAN_SKIP, or TERMINALLY_ADJUDICATED"
+      ],
+      "next_authorized_state": null,
+      "module": "III-B",
+      "optional": true,
+      "is_precondition_of_any_iii_a_state": false
+    }
+  ],
+  "module_state_counts": {
+    "III_A": 20,
+    "III_B": 9
+  },
+  "amendment": "PHASE1_AMENDMENT_1_BAYESIAN_MODULE_III_B",
+  "III_A_INVARIANT": {
+    "no_iii_b_stage_is_a_precondition_of_any_iii_a_completion_stage": true,
+    "iii_a_closes_identically_whether_iii_b_runs_skips_fails_or_is_dropped": true,
+    "violation_blocker": "B_III_A_DEPENDENCY_DETECTED"
+  },
+  "iii_b_chain": [
+    "B-GEN",
+    "B-PILOT",
+    "B-GATE",
+    "B-CAP",
+    "B-EXT",
+    "B-ORC",
+    "B-U2",
+    "B-U3",
+    "B-LOCK"
+  ],
+  "amended_by": "FINAL_AUTHORITY_REPAIR_PASS_2"
+}

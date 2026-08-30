@@ -1,0 +1,396 @@
+{
+  "schema_version": "mineocclude-experiment-iii-live-status-contract-v1",
+  "authority": "docs/experiment_iii/final_authorities/EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md",
+  "purpose": "Give an operator a compact, machine-readable view of a long-running stage without opening logs or inspecting scientific outputs.",
+  "cardinal_rule": "The status document is OBSERVATIONAL ONLY. No code may read it to decide what to do next. Control flow is driven exclusively by the hash-chain ledger and the stage receipts. A status document that influences scientific behavior is a defect.",
+  "additional_rules": [
+    "The status document must never contain a target value, a prediction, a metric, an RVE score, or any other scientific outcome.",
+    "It may contain counts, identifiers, timings, byte totals, error counts, and blocker codes.",
+    "It is written atomically: write to <name>.tmp then rename, so a reader never sees a partial document.",
+    "It is rewritten in full on every update; it is not appended to.",
+    "Losing or deleting the status document must never affect resume, validation, or results.",
+    "Update cadence is at least once per completed unit and at least once every 60 seconds while running.",
+    "No status field may influence science except through the prospectively frozen time and resource gates (the launch gate and the drop ladder).",
+    "III_A_STATUS is never a function of III_B_STATUS. A III-B blocker or CLEAN_SKIP must not alter any III-A field.",
+    "III_B_STATUS = CLEAN_SKIP is an honourable pre-registered outcome and must not be rendered as an error state.",
+    "HOURS_TO_ABSOLUTE_DEADLINE is advisory for operators; only the launch gate and drop ladder may act on time, and only through their frozen rules.",
+    "Free-space fields are BYTES and are pool-qualified. Two logical categories that resolve to the same device id are ONE pool and are reported once; POOL_DURABLE_FREE_BYTES is null whenever POOL_DURABLE is not a distinct local filesystem.",
+    "III_B_STATUS = CLEAN_SKIP may be the modal schedule outcome. It is a pre-registered honourable result and is never rendered as an error, a warning, or a degraded state."
+  ],
+  "path_pattern": "docs/experiment_iii/status/<stage>_status.json",
+  "stages_requiring_status": [
+    "A4",
+    "A5",
+    "A7",
+    "A9",
+    "A11",
+    "A12",
+    "B-PILOT",
+    "B-CAP",
+    "B-EXT",
+    "B-U2",
+    "B-U3"
+  ],
+  "required_fields": {
+    "PROCESS_ALIVE": {
+      "type": "boolean",
+      "description": "True while the owning process holds the status file lock and has updated within the staleness window.",
+      "staleness_window_seconds": 120
+    },
+    "STAGE": {
+      "type": "string",
+      "domain": [
+        "A4",
+        "A5",
+        "A7",
+        "A9",
+        "A11",
+        "A12",
+        "B-PILOT",
+        "B-CAP",
+        "B-EXT",
+        "B-U2",
+        "B-U3"
+      ],
+      "description": "The lifecycle state this process is executing."
+    },
+    "STAGE_STATUS": {
+      "type": "string",
+      "domain": [
+        "NOT_STARTED",
+        "RUNNING",
+        "PAUSED",
+        "BLOCKED",
+        "COMPLETE",
+        "FAILED"
+      ],
+      "description": "Coarse stage state. BLOCKED means CURRENT_BLOCKER is set."
+    },
+    "TOTAL_UNITS": {
+      "type": "integer",
+      "description": "Planned unit count for this stage, from the frozen plan.",
+      "examples": {
+        "A4": 252,
+        "A5": 10,
+        "A7": 125,
+        "A9": 750,
+        "B-PILOT": 4,
+        "B-CAP": 50,
+        "B-EXT": 250
+      }
+    },
+    "COMPLETED_UNITS": {
+      "type": "integer",
+      "description": "Units at the stage's terminal state."
+    },
+    "REMAINING_UNITS": {
+      "type": "integer",
+      "description": "TOTAL_UNITS minus COMPLETED_UNITS."
+    },
+    "CURRENT_UNIT": {
+      "type": "string_or_null",
+      "description": "Identifier of the in-flight unit, for example e3_t07__L2 or e3_t07__L2/layer_19/CURRENT."
+    },
+    "LAST_COMPLETED_UNIT": {
+      "type": "string_or_null",
+      "description": "Identifier of the most recently completed unit."
+    },
+    "ELAPSED_TIME": {
+      "type": "number",
+      "unit": "seconds",
+      "description": "Wall-clock seconds since this stage process started."
+    },
+    "LAST_MESSAGE_AT": {
+      "type": "string",
+      "format": "ISO-8601",
+      "description": "Timestamp of the last status update."
+    },
+    "LAST_MESSAGE": {
+      "type": "string",
+      "max_length": 512,
+      "description": "Short human-readable note. Never a scientific value."
+    },
+    "ERRORS_SEEN": {
+      "type": "integer",
+      "description": "Count of unit-level errors encountered in this process lifetime."
+    },
+    "CURRENT_BLOCKER": {
+      "type": "string_or_null",
+      "description": "A code from BLOCKER_TAXONOMY.json, or null. Any non-null value must be a valid taxonomy code."
+    },
+    "RETRY_COUNT": {
+      "type": "integer",
+      "description": "Retries attempted for CURRENT_UNIT under the same frozen spec."
+    },
+    "POST_STAGE_VALIDATOR_STATUS": {
+      "type": "string",
+      "domain": [
+        "NOT_RUN",
+        "RUNNING",
+        "PASS",
+        "FAIL"
+      ],
+      "description": "State of the validator that gates this stage's exit."
+    },
+    "NEXT_STAGE": {
+      "type": "string_or_null",
+      "description": "The next authorized lifecycle state, from EXPERIMENT_III_LIFECYCLE.json."
+    },
+    "PROGRAM_STAGE": {
+      "type": "string",
+      "domain": [
+        "III_A",
+        "III_B",
+        "BOTH",
+        "PACKAGING"
+      ],
+      "description": "Which part of the program this process is advancing."
+    },
+    "III_A_STATUS": {
+      "type": "string",
+      "domain": [
+        "NOT_STARTED",
+        "RUNNING",
+        "BLOCKED",
+        "RESULT_LOCKED",
+        "TERMINALLY_ADJUDICATED"
+      ],
+      "description": "III-A module state. Never influenced by III-B."
+    },
+    "III_B_STATUS": {
+      "type": "string",
+      "domain": [
+        "NOT_STARTED",
+        "PENDING_GATE",
+        "RUNNING",
+        "BLOCKED",
+        "RESULT_LOCKED",
+        "CLEAN_SKIP",
+        "TERMINALLY_ADJUDICATED"
+      ],
+      "description": "III-B module state. CLEAN_SKIP is an honourable pre-registered outcome."
+    }
+  },
+  "recommended_fields": {
+    "VALID_UNITS": {
+      "type": "integer",
+      "description": "Units that passed their per-unit validation."
+    },
+    "INVALID_UNITS": {
+      "type": "integer",
+      "description": "Units that failed validation and were not superseded by a valid retry."
+    },
+    "DURABLE_UNITS": {
+      "type": "integer",
+      "description": "Units published and read back by hash from the durable store."
+    },
+    "BYTES_WRITTEN": {
+      "type": "integer",
+      "unit": "bytes",
+      "description": "Bytes written by this stage so far."
+    },
+    "EXPECTED_BYTES": {
+      "type": "integer",
+      "unit": "bytes",
+      "description": "Frozen expected byte total for this stage.",
+      "examples": {
+        "A9_normal_production": 19611744000,
+        "A5_pilot": 1568939520,
+        "B-EXT_normal_production": 3853548800
+      }
+    },
+    "ESTIMATED_TIME_REMAINING": {
+      "type": "number_or_null",
+      "unit": "seconds",
+      "description": "Naive projection from COMPLETED_UNITS and ELAPSED_TIME. Advisory only; never a control input."
+    },
+    "FREE_DISK_BYTES": {
+      "type": "integer",
+      "unit": "bytes",
+      "description": "Free bytes on POOL_WORKING, the filesystem holding data/experiment_iii/. Always bytes; never decimal GB, never binary GiB, in this field.",
+      "pool": "POOL_WORKING"
+    },
+    "POOL_WORKING_DEVICE_ID": {
+      "type": "string",
+      "description": "Device/volume id of POOL_WORKING, as recorded by A3."
+    },
+    "POOL_DURABLE_MODE": {
+      "type": "string",
+      "domain": [
+        "LOCAL_MIRROR_SAME_POOL",
+        "LOCAL_MIRROR_DISTINCT_POOL",
+        "REMOTE_OBJECT_STORE"
+      ],
+      "description": "Durability mode recorded at A3. Determines whether POOL_DURABLE_FREE_BYTES is meaningful."
+    },
+    "POOL_DURABLE_FREE_BYTES": {
+      "type": "integer_or_null",
+      "unit": "bytes",
+      "description": "Free bytes on POOL_DURABLE when it is a DISTINCT local filesystem; null when the mode is LOCAL_MIRROR_SAME_POOL (the value would duplicate FREE_DISK_BYTES) or REMOTE_OBJECT_STORE (no meaningful local bound).",
+      "never_double_counts_POOL_WORKING": true
+    },
+    "POOL_SCRATCH_IS_DISTINCT_POOL": {
+      "type": "boolean",
+      "description": "True only when the scratch path resolves to a different device/volume id than POOL_WORKING, proven at A3."
+    },
+    "AUTHORITY_SHA256": {
+      "type": "string",
+      "description": "The authority this process is bound to."
+    },
+    "SOURCE_CLOSURE": {
+      "type": "string",
+      "description": "The source closure digest this process is running."
+    },
+    "P2_FREEZE_SHA256": {
+      "type": "string_or_null",
+      "description": "The freeze package this process is bound to, where applicable."
+    },
+    "CURRENT_CONDITION_BATCH": {
+      "type": "string_or_null",
+      "description": "A7 only: the condition batch in progress, for example block=2 period=4 condition=L1."
+    },
+    "III_B_GATE_STATUS": {
+      "type": "string",
+      "domain": [
+        "NOT_EVALUATED",
+        "GO",
+        "NO_GO_FIRST",
+        "NO_GO_FINAL"
+      ],
+      "description": "Launch-gate verdict. Derived from time, technical state and resources only."
+    },
+    "III_B_GATE_NEXT_EVALUATION": {
+      "type": "string_or_null",
+      "format": "ISO-8601",
+      "description": "2026-09-02T12:00 local, then once at 17:00. Null after the final verdict."
+    },
+    "III_B_SELECTED_Q_SET": {
+      "type": "array",
+      "description": "The q levels actually in scope, e.g. [0.0125, 0.05, 0.2] or [0.05, 0.2] at drop LEVEL_1."
+    },
+    "III_B_COMPLETED_TRIPLES": {
+      "type": "integer",
+      "description": "Identities with all in-scope q cells complete."
+    },
+    "III_B_REQUIRED_TRIPLES": {
+      "type": "integer",
+      "description": "Triples required by the selected drop level."
+    },
+    "III_B_CURRENT_UNIT": {
+      "type": "string_or_null",
+      "description": "e.g. e3_t07__L4__q0.2000"
+    },
+    "III_B_BLOCKER": {
+      "type": "string_or_null",
+      "description": "A B_* code from BLOCKER_TAXONOMY.json, or null."
+    },
+    "III_B_DROP_LEVEL": {
+      "type": "string",
+      "domain": [
+        "NORMAL",
+        "LEVEL_1",
+        "LEVEL_2",
+        "LEVEL_3",
+        "LEVEL_4"
+      ],
+      "description": "Selected from time, technical completion and resources ONLY."
+    },
+    "HOURS_TO_ABSOLUTE_DEADLINE": {
+      "type": "number",
+      "description": "Hours until 2026-09-03T20:00 local, computed from authority-controlled time. May go negative.",
+      "computed_from": "ABSOLUTE_EXPERIMENT_DEADLINE in the machine authority"
+    },
+    "PHASE2_START": {
+      "type": "string",
+      "format": "ISO-8601",
+      "description": "The instant Phase 2 was authorized and the authority frozen. Advisory; the absolute deadline and the derived checkpoints do not move with it."
+    },
+    "SELECTED_DEADLINE_PLAN": {
+      "type": "string",
+      "domain": [
+        "NORMAL",
+        "ONE_DAY_BEHIND",
+        "TWO_DAYS_BEHIND",
+        "DISASTER"
+      ],
+      "description": "Frozen plan currently selected. Escalates monotonically. Derived from time, implementation completion, technical state and resources ONLY."
+    },
+    "NEXT_IMPLEMENTATION_CHECKPOINT": {
+      "type": "string_or_null",
+      "format": "ISO-8601",
+      "description": "Next instant from deadline_fallbacks.implementation_checkpoints, or null once all have been evaluated."
+    }
+  },
+  "example": {
+    "PROCESS_ALIVE": true,
+    "STAGE": "A7",
+    "STAGE_STATUS": "RUNNING",
+    "TOTAL_UNITS": 125,
+    "COMPLETED_UNITS": 61,
+    "REMAINING_UNITS": 64,
+    "CURRENT_UNIT": "e3_t12__L3",
+    "LAST_COMPLETED_UNIT": "e3_t11__L3",
+    "ELAPSED_TIME": 17284.5,
+    "LAST_MESSAGE_AT": "2026-09-02T03:14:07Z",
+    "LAST_MESSAGE": "capture running; wall receipt clean; sentinel pre-batch PASS",
+    "ERRORS_SEEN": 2,
+    "CURRENT_BLOCKER": null,
+    "RETRY_COUNT": 0,
+    "POST_STAGE_VALIDATOR_STATUS": "NOT_RUN",
+    "NEXT_STAGE": "A8",
+    "VALID_UNITS": 61,
+    "INVALID_UNITS": 0,
+    "DURABLE_UNITS": 61,
+    "BYTES_WRITTEN": 41203847168,
+    "EXPECTED_BYTES": null,
+    "ESTIMATED_TIME_REMAINING": 18130.0,
+    "FREE_DISK_BYTES": 52428800000,
+    "AUTHORITY_SHA256": "<authority sha256>",
+    "SOURCE_CLOSURE": "077236e70fec4e312adae00b3c57ea4c2f131293bbcc37364044a9533c06c887",
+    "P2_FREEZE_SHA256": "<freeze package sha256>",
+    "CURRENT_CONDITION_BATCH": "block=2 period=4 condition=L3",
+    "PROGRAM_STAGE": "III_A",
+    "III_A_STATUS": "RUNNING",
+    "III_B_STATUS": "PENDING_GATE",
+    "III_B_GATE_STATUS": "NOT_EVALUATED",
+    "III_B_GATE_NEXT_EVALUATION": "2026-09-02T12:00",
+    "III_B_SELECTED_Q_SET": [
+      0.0125,
+      0.05,
+      0.2
+    ],
+    "III_B_COMPLETED_TRIPLES": 0,
+    "III_B_REQUIRED_TRIPLES": 25,
+    "III_B_CURRENT_UNIT": null,
+    "III_B_BLOCKER": null,
+    "III_B_DROP_LEVEL": "NORMAL",
+    "HOURS_TO_ABSOLUTE_DEADLINE": 40.8,
+    "POOL_WORKING_DEVICE_ID": "<device id>",
+    "POOL_DURABLE_MODE": "LOCAL_MIRROR_SAME_POOL",
+    "POOL_DURABLE_FREE_BYTES": null,
+    "POOL_SCRATCH_IS_DISTINCT_POOL": false,
+    "PHASE2_START": "2026-08-30T20:00",
+    "SELECTED_DEADLINE_PLAN": "NORMAL",
+    "NEXT_IMPLEMENTATION_CHECKPOINT": "2026-09-01T13:00"
+  },
+  "validation": {
+    "CURRENT_BLOCKER_must_be_a_taxonomy_code": true,
+    "COMPLETED_UNITS_plus_REMAINING_UNITS_equals_TOTAL_UNITS": true,
+    "STAGE_STATUS_BLOCKED_requires_non_null_CURRENT_BLOCKER": true,
+    "NEXT_STAGE_must_match_EXPERIMENT_III_LIFECYCLE_json": true,
+    "no_scientific_outcome_fields_permitted": true,
+    "III_B_BLOCKER_must_be_a_taxonomy_code": true,
+    "III_A_STATUS_independent_of_III_B_STATUS": true,
+    "III_B_COMPLETED_TRIPLES_le_III_B_REQUIRED_TRIPLES_or_equal": true,
+    "drop_level_and_gate_fields_derive_only_from_time_technical_and_resource_inputs": true,
+    "free_space_fields_are_bytes_and_pool_qualified": true,
+    "POOL_DURABLE_FREE_BYTES_is_null_unless_a_distinct_local_filesystem": true,
+    "deadline_plan_escalates_monotonically": true
+  },
+  "blockers": [
+    "STATUS_DOCUMENT_MALFORMED",
+    "STATUS_BLOCKER_CODE_UNKNOWN"
+  ],
+  "amendment": "PHASE1_AMENDMENT_1_BAYESIAN_MODULE_III_B",
+  "amended_by": "FINAL_AUTHORITY_REPAIR_PASS_2"
+}

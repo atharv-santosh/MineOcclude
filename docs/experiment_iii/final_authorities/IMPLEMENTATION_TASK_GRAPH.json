@@ -1,0 +1,1272 @@
+{
+  "schema_version": "mineocclude-experiment-iii-implementation-task-graph-v1",
+  "authority": "docs/experiment_iii/final_authorities/EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md",
+  "implementation_authorized": false,
+  "task_count": 44,
+  "implementation_tasks": [
+    "I01",
+    "I02",
+    "I03",
+    "I04",
+    "I05",
+    "I06",
+    "I07",
+    "I08",
+    "I09",
+    "I10",
+    "I11",
+    "I12",
+    "I13",
+    "I14",
+    "I15",
+    "I16",
+    "I17",
+    "I18"
+  ],
+  "validation_tasks": [
+    "I19",
+    "I20"
+  ],
+  "execution_tasks": [
+    "I21",
+    "I22",
+    "I23",
+    "I24"
+  ],
+  "critical_path_note": "I01 -> I05 -> I06 -> IB02 -> IB03 -> I02 gates the cohort; I03 -> I04 gates capture correctness; I09 -> I10 -> I11 -> I12 -> I15 gates analysis. I05/I06 and I03/I04 can proceed in parallel. IB02 and IB03 are now ON the cohort critical path, BEFORE I02, because qualification gate 12 cannot be evaluated without them.",
+  "tasks": [
+    {
+      "id": "I01",
+      "name": "Experiment III namespace and schema",
+      "dependencies": [],
+      "change_matrix_items": [],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/__init__.py",
+        "src/mineocclude/experiment_iii/schema.py",
+        "scripts/experiment_iii/__init__.py",
+        "tests/experiment_iii/__init__.py"
+      ],
+      "tests": [
+        "namespace isolation test (no write outside experiment_iii roots)",
+        "row schema field-set test (authority 4.4)"
+      ],
+      "completion_condition": "Package importable; row schema and condition enum defined; namespace guard rejects writes to historical experiment paths.",
+      "authority_section": "0.4, 4.4",
+      "lifecycle_stage": "A1",
+      "notes": "Establish e3_* identity namespace, episode block 86001-86999, and the PROVENANCE_NAMESPACE_VIOLATION guard first, so every later task writes in the right place.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I02",
+      "name": "Fresh cohort generator and folds",
+      "dependencies": [
+        "I01",
+        "I05",
+        "I06",
+        "IB02",
+        "IB03"
+      ],
+      "change_matrix_items": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "CB02",
+        "CB03"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/cohort.py",
+        "src/mineocclude/experiment_iii/qualification.py",
+        "src/mineocclude/experiment_iii/folds.py",
+        "scripts/experiment_iii/build_cohort.py"
+      ],
+      "tests": [
+        "A.1",
+        "A.2",
+        "A.3",
+        "A.4",
+        "A.5",
+        "A.6",
+        "A.19",
+        "D.2",
+        "D.4",
+        "D.31",
+        "inner-rotation determinism",
+        "rejection logging"
+      ],
+      "completion_condition": "25 production + 2 pilot identities materialized; ALL TWELVE gates of authority 2.4 enforced, with gate 12 (all-q qualification) evaluated BEFORE materialization and freeze; cohort_all_q_qualification_receipt.json, folds.json and identity_priority_order.json written and hashed. Fails CLOSED with COHORT_ALL_Q_PRIMITIVE_MISSING if IB02/IB03 are not green.",
+      "authority_section": "2.2-2.7",
+      "lifecycle_stage": "A1",
+      "notes": "Depends on I05/I06 because gate 6 needs counterfactual extent and gate 5 needs the FIR kernel length; depends on IB02/IB03 because gate 12 needs the q-generalized qualification primitive and its bit-identity regression guard. Gate 12 is a III-A admission constraint evaluated from seeds, geometry and timing only - it reads no rendered frame, no activation and no MineWorld output, and it makes III-A depend on no III-B STAGE.",
+      "status": "NOT_STARTED",
+      "gate_12_evaluated_before_materialization": true
+    },
+    {
+      "id": "I03",
+      "name": "Wall condition parameterization",
+      "dependencies": [
+        "I01"
+      ],
+      "change_matrix_items": [
+        "C05",
+        "C06"
+      ],
+      "files_expected_to_change": [
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ArenaBuilder.java",
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeConfig.java",
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java",
+        "src/mineocclude/experiment_iii/conditions.py"
+      ],
+      "tests": [
+        "A.8",
+        "A.9",
+        "unsupported registry ID refusal",
+        "condition->scene mapping"
+      ],
+      "completion_condition": "All five conditions expressible through startspec; L0 reaches Scene.NO_WALL; an unsupported material refuses the episode rather than defaulting to stone.",
+      "authority_section": "4.1",
+      "lifecycle_stage": "A1",
+      "notes": "The material seam spans builder, config, command, receipt, validator, and cache key. Change them together or the apparatus fails silently.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I04",
+      "name": "Wall receipts, cache key, and capture schedule",
+      "dependencies": [
+        "I03"
+      ],
+      "change_matrix_items": [
+        "C07",
+        "C08",
+        "C16"
+      ],
+      "files_expected_to_change": [
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java",
+        "src/mineocclude/experiment_iii/capture_schedule.py",
+        "scripts/experiment_iii/run_production_capture.py"
+      ],
+      "tests": [
+        "cache key includes condition_id and wall_block_id",
+        "material switch forces rebuild",
+        "wall receipt zero-mismatch",
+        "Latin square balance",
+        "capture order determinism"
+      ],
+      "completion_condition": "Arena cache key includes material; every transition rebuilds; wall receipt carries the exact registry ID; the frozen Latin capture order is reproducible.",
+      "authority_section": "3.3, 8.1",
+      "lifecycle_stage": "A1",
+      "notes": "C07 is the highest-severity latent defect in the apparatus: without it a whole batch can be captured under a stale wall with no error.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I05",
+      "name": "Counterfactual extent logic (A-prime port)",
+      "dependencies": [
+        "I01"
+      ],
+      "change_matrix_items": [
+        "C13"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/extent_geometry.py",
+        "tests/experiment_iii/fixtures/aprime_extent/"
+      ],
+      "tests": [
+        "A.10",
+        "A.11",
+        "TARGET_EXTENT_HALF_BLOCKS constant",
+        "segment_hits_wall reference agreement"
+      ],
+      "completion_condition": "Ported module reproduces 0.8727621336620037 and classifies 475/475 A-prime WALL target labels as EXTENT_FULLY_OCCLUDED; the L0 counterfactual uses present=True.",
+      "authority_section": "4.5, 5.1",
+      "lifecycle_stage": "A1",
+      "notes": "Retrieve with `git show a5d763a:src/mineocclude/prospective/extent_geometry.py` and record blob SHA-1 45889b6bc9ed07129f5fd2f15167b694206eab31.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I06",
+      "name": "FIR kernel recovery and target manifest",
+      "dependencies": [
+        "I05"
+      ],
+      "change_matrix_items": [
+        "C14",
+        "C15"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/fir.py",
+        "src/mineocclude/experiment_iii/target_manifest.py",
+        "scripts/experiment_iii/recover_fir_kernels.py"
+      ],
+      "tests": [
+        "A.12",
+        "kernel recovery path-hash verification (50/50)",
+        "kernel recovery label verification (950/950)",
+        "A.7"
+      ],
+      "completion_condition": "Both 9-tap direction kernels recovered and verified under all five acceptance gates; 19 target indices and labels materialized per identity and identical across all five conditions.",
+      "authority_section": "5.2, 5.3, 4.6",
+      "lifecycle_stage": "A1",
+      "notes": "Recovery source is f2bc2c8 stage2_locked_manifest.json. This is a blocking prerequisite: without verified kernels the frozen label definition is unimplementable.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I07",
+      "name": "RVE and P0 machinery",
+      "dependencies": [
+        "I03"
+      ],
+      "change_matrix_items": [
+        "C09",
+        "C10",
+        "C11"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/rve.py",
+        "scripts/experiment_iii/run_p0_rve_calibration.py"
+      ],
+      "tests": [
+        "A.14",
+        "A.15",
+        "split-half noise determinism",
+        "background tolerance gate",
+        "P0 tie-break"
+      ],
+      "completion_condition": "RVE computable end to end on fixtures; the ABBA capture routine, shared L0 mask, and deterministic triple search are implemented with all nine validity rules.",
+      "authority_section": "7.1-7.8",
+      "lifecycle_stage": "A1",
+      "notes": "Source RGB only. Never couple to model preprocessing. One mask per placement, shared by every candidate.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I08",
+      "name": "Sentinel machinery",
+      "dependencies": [
+        "I07"
+      ],
+      "change_matrix_items": [
+        "C12"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/sentinels.py"
+      ],
+      "tests": [
+        "envelope violation detection",
+        "order violation detection",
+        "batch-scoped invalidation"
+      ],
+      "completion_condition": "Three frozen sentinel placements measured at every condition-batch boundary against the frozen repeatability envelope; failure invalidates only the affected unmodeled batch.",
+      "authority_section": "7.9",
+      "lifecycle_stage": "A1",
+      "notes": "",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I09",
+      "name": "Multi-layer temporal extraction",
+      "dependencies": [
+        "I01"
+      ],
+      "change_matrix_items": [
+        "C17",
+        "C18"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/slices.py",
+        "src/mineocclude/experiment_iii/extraction.py",
+        "scripts/experiment_iii/run_extraction.py"
+      ],
+      "tests": [
+        "token-slice numeric fixture",
+        "PREVIOUS semantic frame fixture",
+        "CURRENT semantic frame fixture",
+        "A.13",
+        "A.16",
+        "action-token contamination detection"
+      ],
+      "completion_condition": "One forward per target row yields layers {4,10,19} x {PREVIOUS, CURRENT}; all five semantic assertions of authority 8.4 enforced including frame identity.",
+      "authority_section": "8.4",
+      "lifecycle_stage": "A1",
+      "notes": "Reuse the existing 20-layer ScopedHookManager and the pool.py full-sequence coverage validator. Serialize only three layers. No extra forwards.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I10",
+      "name": "Tensor serialization, inventory, and validator",
+      "dependencies": [
+        "I09"
+      ],
+      "change_matrix_items": [
+        "C19",
+        "C20"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/activation_store.py",
+        "scripts/experiment_iii/validate_extraction.py"
+      ],
+      "tests": [
+        "A.17",
+        "A.18",
+        "A.28",
+        "little-endian dtype assertion",
+        "provenance binding completeness"
+      ],
+      "completion_condition": "Six [19,336,2048] little-endian float16 arrays per capture, each exactly 26,148,992 bytes, fully bound and independently revalidated.",
+      "authority_section": "8.5",
+      "lifecycle_stage": "A1",
+      "notes": "Generalizes the legacy 20-layer inventory validator at regime_a_execution.py:62-97 to 3 layers x 2 slices.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I11",
+      "name": "Coarse representation",
+      "dependencies": [
+        "I10"
+      ],
+      "change_matrix_items": [
+        "C21"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/representations.py",
+        "tests/experiment_iii/fixtures/coarse_pooling/"
+      ],
+      "tests": [
+        "A.20",
+        "A.21",
+        "cell membership exhaustiveness"
+      ],
+      "completion_condition": "COARSE_2X6_CONCAT reproduces the identity-encoding fixture byte-for-byte at dimension 24,576 with a provably non-transposed 14x24 grid.",
+      "authority_section": "8.7",
+      "lifecycle_stage": "A1",
+      "notes": "Implemented from specification; the Experiment II source commit is not in this object database, so no literal-port claim may be made.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I12",
+      "name": "Temporal representations",
+      "dependencies": [
+        "I11"
+      ],
+      "change_matrix_items": [
+        "C22"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/representations.py"
+      ],
+      "tests": [
+        "A.22",
+        "A.23",
+        "slice-swap detection"
+      ],
+      "completion_condition": "CURRENT_MINUS_PREVIOUS at 24,576 and TWO_FRAME_CONCAT at 49,152 with PREVIOUS first, both fixture-verified.",
+      "authority_section": "8.7",
+      "lifecycle_stage": "A1",
+      "notes": "",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I13",
+      "name": "Current-frame pixel baseline",
+      "dependencies": [
+        "I15"
+      ],
+      "change_matrix_items": [
+        "C23"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/baselines_pixel.py"
+      ],
+      "tests": [
+        "A.24",
+        "resize determinism",
+        "A.25"
+      ],
+      "completion_condition": "48x28x3 = 4,032 features from source RGB with frozen area interpolation, fit under the same grouped nested ridge recipe.",
+      "authority_section": "8.9.1",
+      "lifecycle_stage": "A1",
+      "notes": "All reporting must use the exact phrase 'linear current-frame pixel baseline'.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I14",
+      "name": "Motion and clock baselines",
+      "dependencies": [
+        "I06"
+      ],
+      "change_matrix_items": [
+        "C24"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/baselines_motion.py"
+      ],
+      "tests": [
+        "constant-velocity window is exactly 10",
+        "time-only design matrix",
+        "oracle-not-a-model-input",
+        "A.25"
+      ],
+      "completion_condition": "Last-seen, constant-velocity (last 10), training-mean, and time-only implemented; oracle inputs provably absent from every model feature.",
+      "authority_section": "8.9",
+      "lifecycle_stage": "A1",
+      "notes": "The legacy constant-velocity baseline uses a 15-sample window and must not be reused unmodified.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I15",
+      "name": "Grouped ridge and prediction lock",
+      "dependencies": [
+        "I11",
+        "I12",
+        "I03"
+      ],
+      "change_matrix_items": [
+        "C25",
+        "C26"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/readout.py",
+        "src/mineocclude/experiment_iii/prediction_lock.py",
+        "scripts/experiment_iii/lock_predictions.py"
+      ],
+      "tests": [
+        "alpha grid has five values",
+        "alpha selected inside outer training only",
+        "smallest-alpha tie-break",
+        "A.25",
+        "A.27"
+      ],
+      "completion_condition": "Held-out predictions emitted once for every (identity, condition, row, model) cell and hash-sealed before any statistic is computed.",
+      "authority_section": "8.8",
+      "lifecycle_stage": "A1",
+      "notes": "Reuse probes/ridge.py:192-223 fit_ridge unchanged. The legacy four-value ALPHAS tuple must not be reused.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I16",
+      "name": "Statistics and result packaging",
+      "dependencies": [
+        "I13",
+        "I14",
+        "I15"
+      ],
+      "change_matrix_items": [
+        "C27",
+        "C28"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/statistics.py",
+        "scripts/experiment_iii/run_primary_analysis.py",
+        "scripts/experiment_iii/build_scientific_package.py"
+      ],
+      "tests": [
+        "A.26",
+        "Holm family sizes 3 and 2",
+        "no success gate emitted",
+        "zero-TSS refusal",
+        "figure traceability"
+      ],
+      "completion_condition": "Three primary estimands with Holm-3, five secondary families with Holm-2 on temporal, the L0 control, and a complete traceable evidence package.",
+      "authority_section": "8.10-8.12, 15.1",
+      "lifecycle_stage": "A1",
+      "notes": "Do not port the B=49 derangement null. Emit no overall pass/fail verdict.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I17",
+      "name": "Status and blocker framework",
+      "dependencies": [
+        "I01"
+      ],
+      "change_matrix_items": [
+        "C29"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/status.py",
+        "src/mineocclude/experiment_iii/blockers.py"
+      ],
+      "tests": [
+        "status document schema",
+        "status is observational only",
+        "blocker code validity against the taxonomy"
+      ],
+      "completion_condition": "Every long-running stage emits the LIVE_STATUS_CONTRACT document; every raised blocker is a code from BLOCKER_TAXONOMY.json.",
+      "authority_section": "LIVE_STATUS_CONTRACT.json, BLOCKER_TAXONOMY.json",
+      "lifecycle_stage": "A1",
+      "notes": "Status must never influence scientific behavior.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I18",
+      "name": "Resume and recovery",
+      "dependencies": [
+        "I04",
+        "I10",
+        "I17"
+      ],
+      "change_matrix_items": [
+        "C30"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/execution.py"
+      ],
+      "tests": [
+        "A.29",
+        "A.30",
+        "kill-and-restart recomputes nothing already DURABLE"
+      ],
+      "completion_condition": "Capture unit = (identity x condition); extraction unit = (capture x layer x slice); both resume same-spec only, with a hash-chain ledger.",
+      "authority_section": "8.3, 8.6",
+      "lifecycle_stage": "A1",
+      "notes": "Reuse the ledger and atomic store from regime_a_execution.py but separate extraction from the capture loop.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I19",
+      "name": "Static unit tests",
+      "dependencies": [
+        "I02",
+        "I06",
+        "I07",
+        "I12",
+        "I16",
+        "I18"
+      ],
+      "change_matrix_items": [],
+      "files_expected_to_change": [
+        "tests/experiment_iii/test_*.py",
+        "tests/experiment_iii/fixtures/"
+      ],
+      "tests": [
+        "all 30 group-A checks"
+      ],
+      "completion_condition": "All 30 group-A checks pass with zero skips at the recorded source closure. Executes at A2, not A1.",
+      "authority_section": "11",
+      "lifecycle_stage": "A2",
+      "notes": "A failing scientific fixture may never be skipped or marked xfail.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I20",
+      "name": "CPU integration tests",
+      "dependencies": [
+        "I19"
+      ],
+      "change_matrix_items": [],
+      "files_expected_to_change": [
+        "tests/experiment_iii/integration/"
+      ],
+      "tests": [
+        "group B: complete manifests and synthetic fixtures, no GPU, no model (12 checks)"
+      ],
+      "completion_condition": "Full CPU pipeline runs end to end on synthetic activations and frozen manifests; all 12 group-B checks. Executes at A2, not A1.",
+      "authority_section": "11",
+      "lifecycle_stage": "A2",
+      "notes": "",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I21",
+      "name": "P0 execution",
+      "dependencies": [
+        "I20"
+      ],
+      "change_matrix_items": [],
+      "files_expected_to_change": [
+        "docs/experiment_iii/p0/"
+      ],
+      "tests": [
+        "P0 artifact completeness",
+        "selection determinism"
+      ],
+      "completion_condition": "P0_SELECTION_RECEIPT emitted with P0_RESULT in {P0_PASS, P0_NO_VALID_LADDER, P0_TECHNICAL_FAIL}; on P0_PASS a hash-bound ladder exists.",
+      "authority_section": "7",
+      "lifecycle_stage": "A4",
+      "notes": "Requires P0_AUTHORIZED. NO_VALID_LADDER stops the experiment; it does not authorize a substitute geometry.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I22",
+      "name": "P1 engineering pilot",
+      "dependencies": [
+        "I21"
+      ],
+      "change_matrix_items": [],
+      "files_expected_to_change": [
+        "docs/experiment_iii/p1/"
+      ],
+      "tests": [
+        "group C: the full 6A verification list on e3_p90 and e3_p91 only"
+      ],
+      "completion_condition": "p1_pilot_receipt.json PASS with 10 captures, 190 forwards, 60 arrays, and a demonstrated same-spec resume.",
+      "authority_section": "6A",
+      "lifecycle_stage": "A5",
+      "notes": "Requires P1_AUTHORIZED. No production identity may be used to debug the implementation.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I23",
+      "name": "P2 prospective freeze",
+      "dependencies": [
+        "I22"
+      ],
+      "change_matrix_items": [],
+      "files_expected_to_change": [
+        "docs/experiment_iii/p2/P2_FREEZE_PACKAGE.json"
+      ],
+      "tests": [
+        "every binding present, non-null, and verified against the live artifact"
+      ],
+      "completion_condition": "P2_FREEZE_PACKAGE.json verified and hashed; only then may PRODUCTION_AUTHORIZED and MODEL_INFERENCE_AUTHORIZED be emitted.",
+      "authority_section": "6/A6",
+      "lifecycle_stage": "A6",
+      "notes": "Freezing with a placeholder or a null is forbidden.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "I24",
+      "name": "Production execution",
+      "dependencies": [
+        "I23"
+      ],
+      "change_matrix_items": [],
+      "files_expected_to_change": [
+        "data/experiment_iii/production/"
+      ],
+      "tests": [
+        "per-unit capture validation",
+        "extraction validation",
+        "cohort closure"
+      ],
+      "completion_condition": "125 captures COMPLETE_VALIDATED_DURABLE (or the attrition branch), 750 arrays DURABLE, cohort closure emitted.",
+      "authority_section": "8.1-8.6",
+      "lifecycle_stage": "A7-A10",
+      "notes": "Requires PRODUCTION_AUTHORIZED. Same-frozen-unit retries only; no identity replacement.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB01",
+      "name": "Phase 0 Amendment 1",
+      "module": "III-B",
+      "dependencies": [],
+      "change_matrix_items": [
+        "CB01"
+      ],
+      "files_expected_to_change": [
+        "docs/experiment_iii/final_authorities/PHASE0_AMENDMENT_1_BAYESIAN_MODULE_III_B.{md,json}"
+      ],
+      "tests": [
+        "D.1"
+      ],
+      "completion_condition": "Amendment written and hash-bound into the machine authority.",
+      "authority_section": "17",
+      "lifecycle_stage": "B-GEN",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "COMPLETE at amendment time. Must precede any III-B implementation.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB02",
+      "name": "q-generalized path and qualification primitive (SHARED, gates I02)",
+      "module": "III-B",
+      "dependencies": [
+        "I01",
+        "I05",
+        "I06"
+      ],
+      "change_matrix_items": [
+        "CB02"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/cohort.py",
+        "src/mineocclude/experiment_iii/qualification.py"
+      ],
+      "tests": [
+        "D.2",
+        "D.3",
+        "D.4",
+        "D.31"
+      ],
+      "completion_condition": "generate_path(identity_seed, q) and qualifies(candidate, q) are implemented for arbitrary q with the frozen drift-before-noise arithmetic, and qualifies_at_all_q(candidate, {0.0125, 0.05, 0.2}) evaluates gates 1-11 on each cell's OWN regenerated path. This is the PRIMITIVE only; the III-B q-cell manifest expansion is IB09.",
+      "authority_section": "19.4",
+      "lifecycle_stage": "A1",
+      "parallel_with_iii_a": false,
+      "on_iii_a_critical_path": true,
+      "notes": "REORDERED BY FINAL_AUTHORITY_REPAIR_PASS_1 (defect B1). It previously depended on I02, which was backwards: I02 cannot evaluate qualification gate 12 without this primitive. It now depends on I01/I05/I06 and is a PREREQUISITE of I02. It is repository-exclusive and serial with III-A implementation, so parallel_with_iii_a is false.",
+      "status": "NOT_STARTED",
+      "prerequisite_of": [
+        "I02"
+      ],
+      "superseded_dependencies": [
+        "I01",
+        "I02"
+      ]
+    },
+    {
+      "id": "IB03",
+      "name": "q=0.05 regression fixture",
+      "module": "III-B",
+      "dependencies": [
+        "IB02"
+      ],
+      "change_matrix_items": [
+        "CB03"
+      ],
+      "files_expected_to_change": [
+        "tests/experiment_iii/test_q_regression.py"
+      ],
+      "tests": [
+        "D.2"
+      ],
+      "completion_condition": "The generalized generator at q = 0.05 reproduces frozen III-A behavior bit-identically, including the real A-prime path hash b5803943e515ea633cc4dd80ddeaf349db5cb99d11980febdc3f13d7f84a56b7, with both negative controls (perturb q by 1e-12; swap the recurrence operand order) changing the hash. MUST be green before I02 materializes the cohort.",
+      "authority_section": "18.2",
+      "lifecycle_stage": "A1",
+      "parallel_with_iii_a": false,
+      "on_iii_a_critical_path": true,
+      "notes": "REORDERED BY FINAL_AUTHORITY_REPAIR_PASS_1 (defect B1). Mandatory before I02, not merely before III-A P1: without it a q-generalization defect could silently alter the III-A cohort at the moment gate 12 is evaluated.",
+      "status": "NOT_STARTED",
+      "prerequisite_of": [
+        "I02"
+      ]
+    },
+    {
+      "id": "IB04",
+      "name": "Innovation-pairing fixture",
+      "module": "III-B",
+      "dependencies": [
+        "IB02"
+      ],
+      "change_matrix_items": [
+        "CB04"
+      ],
+      "files_expected_to_change": [
+        "tests/experiment_iii/test_innovation_pairing.py"
+      ],
+      "tests": [
+        "D.3"
+      ],
+      "completion_condition": "Standard normals identical across q; noise_draw == z*sqrt(q*dt) exactly.",
+      "authority_section": "18.2",
+      "lifecycle_stage": "B-GEN",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB05",
+      "name": "Oracle implementation",
+      "module": "III-B",
+      "dependencies": [
+        "I05",
+        "I06"
+      ],
+      "change_matrix_items": [
+        "CB05"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/oracle.py"
+      ],
+      "tests": [
+        "D.6",
+        "D.7",
+        "D.8"
+      ],
+      "completion_condition": "Exact posterior implemented; the affine form is rejected below tau=8.",
+      "authority_section": "20",
+      "lifecycle_stage": "B-ORC",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "The affine form returns NEGATIVE variance for tau<=4. The exact cumulative-mass form is mandatory.",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB06",
+      "name": "Oracle fixtures",
+      "module": "III-B",
+      "dependencies": [
+        "IB05"
+      ],
+      "change_matrix_items": [
+        "CB06"
+      ],
+      "files_expected_to_change": [
+        "tests/experiment_iii/test_oracle.py"
+      ],
+      "tests": [
+        "D.6",
+        "D.7",
+        "D.8"
+      ],
+      "completion_condition": "S(tau) matches the frozen table to 1e-12; sigma>0 everywhere; cross-q ratio exact.",
+      "authority_section": "20.6",
+      "lifecycle_stage": "B-ORC",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB07",
+      "name": "sigma-target ledger",
+      "module": "III-B",
+      "dependencies": [
+        "IB05",
+        "IB09"
+      ],
+      "change_matrix_items": [
+        "CB07"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/sigma_ledger.py"
+      ],
+      "tests": [
+        "D.6"
+      ],
+      "completion_condition": "One oracle sigma per (identity, q, tau), hash-bound.",
+      "authority_section": "20",
+      "lifecycle_stage": "B-ORC",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB08",
+      "name": "VIS6 selector",
+      "module": "III-B",
+      "dependencies": [
+        "I05"
+      ],
+      "change_matrix_items": [
+        "CB08"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/vis_rows.py"
+      ],
+      "tests": [
+        "D.9",
+        "D.10"
+      ],
+      "completion_condition": "Post-occlusion, clamp-free, full-context 6-row window selected; coverage reported.",
+      "authority_section": "24",
+      "lifecycle_stage": "B-GEN",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "A pre-occlusion window is infeasible (needs t>=15); a clamped tail window is scientifically void.",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB09",
+      "name": "III-B manifests",
+      "module": "III-B",
+      "dependencies": [
+        "IB02",
+        "IB08"
+      ],
+      "change_matrix_items": [
+        "CB09"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/iii_b_manifest.py"
+      ],
+      "tests": [
+        "D.4",
+        "D.5"
+      ],
+      "completion_condition": "Per-(identity,q) cells with own target and VIS windows, inherited folds, hashed.",
+      "authority_section": "19",
+      "lifecycle_stage": "B-GEN",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "Owns the III-B q-cell manifest expansion that IB02 previously carried. IB02 now supplies only the shared primitive.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB10",
+      "name": "III-B pilot",
+      "module": "III-B",
+      "dependencies": [
+        "IB09",
+        "IB05",
+        "I22"
+      ],
+      "change_matrix_items": [
+        "CB10"
+      ],
+      "files_expected_to_change": [
+        "scripts/experiment_iii/run_iii_b_pilot.py"
+      ],
+      "tests": [
+        "group E"
+      ],
+      "completion_condition": "iii_b_pilot_receipt.json PASS on 4 captures / 100 forwards.",
+      "authority_section": "29.4",
+      "lifecycle_stage": "B-PILOT",
+      "parallel_with_iii_a": false,
+      "on_iii_a_critical_path": false,
+      "notes": "Runs AFTER III-A P1 proves shared-rig correctness. One q=0.15 fallback re-pilot on TECHNICAL failure only.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB11",
+      "name": "U2 probe machinery",
+      "module": "III-B",
+      "dependencies": [
+        "IB07",
+        "I15"
+      ],
+      "change_matrix_items": [
+        "CB11"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/u2.py"
+      ],
+      "tests": [
+        "D.11",
+        "D.12",
+        "D.13"
+      ],
+      "completion_condition": "Three U2 statistics, permutation null B=9999, Holm across exactly 3.",
+      "authority_section": "22",
+      "lifecycle_stage": "B-U2",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB12",
+      "name": "Clock and category controls",
+      "module": "III-B",
+      "dependencies": [
+        "IB11"
+      ],
+      "change_matrix_items": [
+        "CB12"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/controls_u2.py"
+      ],
+      "tests": [
+        "D.14",
+        "D.15"
+      ],
+      "completion_condition": "All eight frozen controls implemented and reported.",
+      "authority_section": "23",
+      "lifecycle_stage": "B-U2",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "Without these a clock or category effect is indistinguishable from uncertainty representation.",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB13",
+      "name": "U3 dynamics",
+      "module": "III-B",
+      "dependencies": [
+        "IB11"
+      ],
+      "change_matrix_items": [
+        "CB13"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/u3.py"
+      ],
+      "tests": [
+        "D.16",
+        "D.17"
+      ],
+      "completion_condition": "U3-S1/S2 with Holm-2, descriptive S3, hierarchical on U2.",
+      "authority_section": "26",
+      "lifecycle_stage": "B-U3",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB14",
+      "name": "Calibration battery",
+      "module": "III-B",
+      "dependencies": [
+        "IB11",
+        "I14"
+      ],
+      "change_matrix_items": [
+        "CB14"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/calibration.py"
+      ],
+      "tests": [
+        "D.18",
+        "D.19",
+        "D.20"
+      ],
+      "completion_condition": "Scale agreement, monotonicity, conditional coverage, both NLL variants.",
+      "authority_section": "27",
+      "lifecycle_stage": "B-U3",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED",
+      "group_d_suite_runs_at": "A2"
+    },
+    {
+      "id": "IB15",
+      "name": "III-B blocker and status integration",
+      "module": "III-B",
+      "dependencies": [
+        "I17"
+      ],
+      "change_matrix_items": [
+        "CB15"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/blockers.py",
+        "src/mineocclude/experiment_iii/status.py"
+      ],
+      "tests": [
+        "D.21",
+        "D.22"
+      ],
+      "completion_condition": "B_* codes registered; III-A/III-B status fields emitted; three outcomes distinguished.",
+      "authority_section": "29.9",
+      "lifecycle_stage": "B-GEN",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB16",
+      "name": "III-B capture runner integration",
+      "module": "III-B",
+      "dependencies": [
+        "IB09",
+        "I18"
+      ],
+      "change_matrix_items": [
+        "CB16"
+      ],
+      "files_expected_to_change": [
+        "scripts/experiment_iii/run_iii_b_capture.py"
+      ],
+      "tests": [
+        "D.23"
+      ],
+      "completion_condition": "50 (identity,q) L4 units captured through the III-A path with full receipts and resume.",
+      "authority_section": "29",
+      "lifecycle_stage": "B-CAP",
+      "parallel_with_iii_a": false,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB17",
+      "name": "III-B extraction",
+      "module": "III-B",
+      "dependencies": [
+        "IB16",
+        "I10"
+      ],
+      "change_matrix_items": [
+        "CB17"
+      ],
+      "files_expected_to_change": [
+        "scripts/experiment_iii/run_iii_b_extraction.py"
+      ],
+      "tests": [
+        "D.24"
+      ],
+      "completion_condition": "L19 x {PREVIOUS,CURRENT} over occluded and VIS rows; 250 production arrays DURABLE.",
+      "authority_section": "29.1",
+      "lifecycle_stage": "B-EXT",
+      "parallel_with_iii_a": false,
+      "on_iii_a_critical_path": false,
+      "notes": "Includes VIS re-inference on the existing III-A L4 q=0.05 captures. No recapture.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB18",
+      "name": "III-B result packaging",
+      "module": "III-B",
+      "dependencies": [
+        "IB13",
+        "IB14"
+      ],
+      "change_matrix_items": [
+        "CB18"
+      ],
+      "files_expected_to_change": [
+        "scripts/experiment_iii/build_iii_b_package.py"
+      ],
+      "tests": [
+        "D.25",
+        "D.26"
+      ],
+      "completion_condition": "Belief-state ladder adjudicated; iii_b_closure_receipt.json emitted.",
+      "authority_section": "28",
+      "lifecycle_stage": "B-LOCK",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB19",
+      "name": "Launch-gate evaluator",
+      "module": "III-B",
+      "dependencies": [
+        "IB15"
+      ],
+      "change_matrix_items": [
+        "CB19"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/launch_gate.py"
+      ],
+      "tests": [
+        "D.27",
+        "D.28"
+      ],
+      "completion_condition": "Eight requirements evaluated from time/technical/resource inputs only; receipt emitted.",
+      "authority_section": "29.5",
+      "lifecycle_stage": "B-GATE",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "Refuses any scientific-outcome input. Two evaluations only: 12:00 then once at 17:00.",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "IB20",
+      "name": "Drop and deadline evaluator",
+      "module": "III-B",
+      "dependencies": [
+        "IB19"
+      ],
+      "change_matrix_items": [
+        "CB20"
+      ],
+      "files_expected_to_change": [
+        "src/mineocclude/experiment_iii/drop_ladder.py"
+      ],
+      "tests": [
+        "D.29",
+        "D.30"
+      ],
+      "completion_condition": "Drop level selected from time/technical/resources only; Thursday 20:00 absolute stop enforced.",
+      "authority_section": "29.6",
+      "lifecycle_stage": "B-GATE",
+      "parallel_with_iii_a": true,
+      "on_iii_a_critical_path": false,
+      "notes": "",
+      "status": "NOT_STARTED"
+    }
+  ],
+  "module_task_counts": {
+    "III_A": 24,
+    "III_B": 20
+  },
+  "amendment": "PHASE1_AMENDMENT_1_BAYESIAN_MODULE_III_B",
+  "iii_b_tasks_on_iii_a_critical_path": [
+    "IB02",
+    "IB03"
+  ],
+  "iii_b_critical_path_note": "Only IB02 (q-generalized path and qualification primitive) and IB03 (q=0.05 bit-identity regression fixture) touch III-A code. Both are A1 tasks and both MUST land BEFORE I02 - not merely before III-A P1 - because III-A qualification gate 12 depends on them. Everything else in III-B (IB01, IB04-IB20) is off the III-A critical path and may proceed in parallel or be abandoned at any drop level without touching III-A.",
+  "iii_a_tasks_depending_on_iii_b": [],
+  "iii_a_tasks_depending_on_a_iii_b_runtime_stage": [],
+  "iii_a_tasks_depending_on_a_iii_b_implementation_task": [
+    "I02"
+  ],
+  "dependency_ordering_note": "I02 depends on the III-B-authored IMPLEMENTATION tasks IB02 and IB03. It depends on no III-B RUNTIME STAGE (no B-GEN, B-PILOT, B-GATE, B-CAP, B-EXT, B-ORC, B-U2, B-U3 or B-LOCK artifact). The III-A invariant forbids the latter, not the former: gate 12 is evaluated entirely inside A1 from seeds, geometry and timing, and the resulting III-A cohort is identical whether III-B later runs, skips, fails or is dropped.",
+  "stage_binding": {
+    "A1": [
+      "I01",
+      "I02",
+      "I03",
+      "I04",
+      "I05",
+      "I06",
+      "I07",
+      "I08",
+      "I09",
+      "I10",
+      "I11",
+      "I12",
+      "I13",
+      "I14",
+      "I15",
+      "I16",
+      "I17",
+      "I18",
+      "IB02",
+      "IB03"
+    ],
+    "A2": [
+      "I19",
+      "I20"
+    ],
+    "A4": [
+      "I21"
+    ],
+    "A5": [
+      "I22"
+    ],
+    "A6": [
+      "I23"
+    ],
+    "A7-A10": [
+      "I24"
+    ],
+    "B-GEN": [
+      "IB01",
+      "IB04",
+      "IB08",
+      "IB09"
+    ],
+    "B-PILOT": [
+      "IB10"
+    ],
+    "B-GATE": [
+      "IB19",
+      "IB20"
+    ],
+    "B-ORC": [
+      "IB05",
+      "IB06",
+      "IB07"
+    ],
+    "B-U2": [
+      "IB11",
+      "IB12"
+    ],
+    "B-U3": [
+      "IB13",
+      "IB14"
+    ],
+    "B-CAP": [
+      "IB16"
+    ],
+    "B-EXT": [
+      "IB17"
+    ],
+    "B-LOCK": [
+      "IB18"
+    ],
+    "cross": [
+      "IB15"
+    ]
+  },
+  "amended_by": "FINAL_AUTHORITY_REPAIR_PASS_1"
+}

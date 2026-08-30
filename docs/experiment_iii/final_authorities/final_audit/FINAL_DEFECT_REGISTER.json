@@ -1,0 +1,159 @@
+{
+  "schema_version": "mineocclude-experiment-iii-final-defect-register-v1",
+  "open_blocking_defects": [],
+  "open_non_blocking_defects": [],
+  "closed": [
+    {
+      "id": "B1",
+      "area": "cohort",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "all-q qualification was an unwritten twelfth gate ordered after cohort materialization",
+      "verification": "gate 12 in section 2.4; IB02/IB03 are prerequisites of I02; D.31"
+    },
+    {
+      "id": "B2",
+      "area": "oracle",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "affine negativity thresholds contradicted the oracle; D.7 demanded negativity at tau=4 in both directions",
+      "verification": "LTR 4 / RTL 3 re-derived from c_direction; D.7 rewritten"
+    },
+    {
+      "id": "B3",
+      "area": "calibration",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "negative sigma_hat handling undefined",
+      "verification": "EPS = 1e-4 calibration-only guard; D.32"
+    },
+    {
+      "id": "B4",
+      "area": "statistics",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "'Holm-adjusted CI' named no executable procedure",
+      "verification": "section 22.0; D.33"
+    },
+    {
+      "id": "B5",
+      "area": "statistics",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "U2-S2 conditioned on tau only, admitting a direction confound",
+      "verification": "tau x direction 30-cell conditioning; D.11"
+    },
+    {
+      "id": "B6",
+      "area": "provenance",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "three stale controlling hashes",
+      "verification": "all hashes recomputed; 0 stale"
+    },
+    {
+      "id": "B7",
+      "area": "storage",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "storage units mixed GB/GiB and double counted one filesystem as two pools",
+      "verification": "physical pools by device id; B.12"
+    },
+    {
+      "id": "B8",
+      "area": "schedule",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 1",
+      "summary": "A1 implementation workload never estimated",
+      "verification": "superseded and re-derived by R1"
+    },
+    {
+      "id": "R1",
+      "area": "schedule",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 2",
+      "summary": "schedule, envelope and feasibility verdict were mutually impossible (effort compared against wall clock)",
+      "verification": "four time quantities separated; feasibility matrix closes arithmetically"
+    },
+    {
+      "id": "R2",
+      "area": "storage",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 2",
+      "summary": "A3 64 GiB gate and 20 GiB III-B launch gate were mutually incoherent",
+      "verification": "launch gate lowered to 15 GiB; invariant 64-48.796=15.204>=15; B.13"
+    },
+    {
+      "id": "R3",
+      "area": "statistics",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 2",
+      "summary": "D.11 negative control was false - a direction-only decoder gives rho|tau = -0.067",
+      "verification": "fixture replaced by the q-averaged oracle over (tau, direction)"
+    },
+    {
+      "id": "R4",
+      "area": "provenance",
+      "severity": "BLOCKING",
+      "closed_in": "repair pass 2",
+      "summary": "D.2 reference hash had no provenance and is absent from the bound v0.4 manifest",
+      "verification": "bound to commit f2bc2c8, v0_3 manifest ad718685, unit a2x_t01_wall; regenerated from git"
+    },
+    {
+      "id": "A1",
+      "area": "schedule",
+      "severity": "BLOCKING",
+      "closed_in": "ultimate closure pass",
+      "summary": "implementation-time envelope was not reproducible: per-task hours existed nowhere in the package",
+      "verification": "22 task rows + 3 named buckets + 18 III-B-only rows; totals resum exactly in all three bands; no anonymous residual"
+    },
+    {
+      "id": "A2",
+      "area": "statistics",
+      "severity": "BLOCKING",
+      "closed_in": "ultimate closure pass",
+      "summary": "U2-S2 was undefined when a residual vector has zero variance; D.11 passed only via NaN comparison semantics",
+      "verification": "zero-variance rule maps rho := 0.0 and p := 1.0 at TOL = 1e-15 x Var(unresidualized ranks); D.11 asserts the branch fires"
+    },
+    {
+      "id": "C1",
+      "area": "statistics",
+      "severity": "LOW",
+      "closed_in": "ultimate closure pass",
+      "summary": "D.11 reference rho was off-centre (+0.063 from a noise-perturbed variant)",
+      "verification": "recentred to the deterministic +0.0905724833 +/- 0.002"
+    },
+    {
+      "id": "C2",
+      "area": "documentation",
+      "severity": "LOW",
+      "closed_in": "ultimate closure pass",
+      "summary": "section 30.1 offsets were non-monotone",
+      "verification": "rows reordered; monotone"
+    },
+    {
+      "id": "C3",
+      "area": "documentation",
+      "severity": "LOW",
+      "closed_in": "ultimate closure pass",
+      "summary": "the 2.0 h window allowance was hidden inside the packaging row",
+      "verification": "now its own named row"
+    },
+    {
+      "id": "C4",
+      "area": "documentation",
+      "severity": "LOW",
+      "closed_in": "ultimate closure pass",
+      "summary": "section 29.11 preceded 29.8",
+      "verification": "moved after 29.10"
+    }
+  ],
+  "totals": {
+    "blocking_open": 0,
+    "critical_open": 0,
+    "high_open": 0,
+    "medium_open": 0,
+    "low_open": 0,
+    "closed": 18
+  }
+}

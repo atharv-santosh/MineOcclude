@@ -1,0 +1,156 @@
+{
+  "schema_version": "mineocclude-experiment-iii-final-requirement-traceability-v1",
+  "rows": [
+    {
+      "requirement": "all-q qualification is cohort gate 12, before freeze",
+      "authority": "section 2.4; cohort.all_q_qualification_gate",
+      "test": "D.4, D.31",
+      "blocker": "COHORT_ALL_Q_QUALIFICATION_INFEASIBLE"
+    },
+    {
+      "requirement": "candidate index bound 200/direction",
+      "authority": "cohort.candidate_index_bound_per_direction",
+      "test": "B.1",
+      "blocker": "COHORT_QUALIFICATION_INFEASIBLE"
+    },
+    {
+      "requirement": "q=0.05 bit-identity regression on the shared generator",
+      "authority": "fir.d2_regression_reference",
+      "test": "D.2",
+      "blocker": "B_Q_PAIRING_MISMATCH"
+    },
+    {
+      "requirement": "innovation pairing generator-native",
+      "authority": "18.2",
+      "test": "D.3",
+      "blocker": "B_Q_PAIRING_MISMATCH"
+    },
+    {
+      "requirement": "wall material cache-key correctness",
+      "authority": "C07",
+      "test": "A.8, A.9",
+      "blocker": "WALL_CACHE_KEY_STALE"
+    },
+    {
+      "requirement": "L0 reaches the no-wall scene",
+      "authority": "C06",
+      "test": "A.10",
+      "blocker": "WALL_CONDITION_SCENE_MISMATCH"
+    },
+    {
+      "requirement": "FIR taps fsum-normalized before use",
+      "authority": "5.3",
+      "test": "A.12, D.6",
+      "blocker": "FIR_KERNEL_NOT_NORMALIZED"
+    },
+    {
+      "requirement": "oracle exact cumulative-mass form; affine forbidden below tau 8",
+      "authority": "20.2",
+      "test": "D.6, D.7",
+      "blocker": "B_ORACLE_MISMATCH"
+    },
+    {
+      "requirement": "affine boundary LTR 4 / RTL 3",
+      "authority": "oracle.affine_last_negative_tau",
+      "test": "D.7",
+      "blocker": "B_ORACLE_MISMATCH"
+    },
+    {
+      "requirement": "U2-S2 conditions on tau x direction",
+      "authority": "22.2",
+      "test": "D.11",
+      "blocker": "B_U2_S2_CONDITIONING_MISMATCH"
+    },
+    {
+      "requirement": "zero-variance residual maps to rho 0.0, p 1.0",
+      "authority": "u2_family.S2.zero_variance_rule",
+      "test": "D.11",
+      "blocker": "B_U2_S2_CONDITIONING_MISMATCH"
+    },
+    {
+      "requirement": "calibration positivity guard EPS=1e-4, U2/U3 raw",
+      "authority": "27.0",
+      "test": "D.32",
+      "blocker": "B_CALIBRATION_POSITIVITY_RULE_ALTERED"
+    },
+    {
+      "requirement": "Holm decides, intervals report",
+      "authority": "22.0",
+      "test": "D.13, D.33",
+      "blocker": "B_INFERENCE_PROCEDURE_MISMATCH"
+    },
+    {
+      "requirement": "token slices CURRENT/PREVIOUS, 336 visual tokens",
+      "authority": "C17",
+      "test": "A.16",
+      "blocker": "TOKEN_SPAN_MISMATCH"
+    },
+    {
+      "requirement": "COARSE_2X6_CONCAT = 24,576 dims",
+      "authority": "C21",
+      "test": "A.20, A.21",
+      "blocker": "FEATURE_POOLING_GRID_TRANSPOSED"
+    },
+    {
+      "requirement": "identity-level folds, no cross-q leakage",
+      "authority": "19.5",
+      "test": "A.25, D.5",
+      "blocker": "B_CROSS_Q_FOLD_LEAKAGE"
+    },
+    {
+      "requirement": "storage pools physical, no double counting",
+      "authority": "13.2",
+      "test": "B.12",
+      "blocker": "STORAGE_POOL_DOUBLE_COUNTED"
+    },
+    {
+      "requirement": "A3 and III-B gates coherent",
+      "authority": "storage.gate_coherence_invariant",
+      "test": "B.13",
+      "blocker": "STORAGE_INSUFFICIENT"
+    },
+    {
+      "requirement": "implementation totals resum from per-task rows",
+      "authority": "implementation_time_model.per_task_elapsed_model",
+      "test": "machine suite group a1_per_task_model",
+      "blocker": "IMPLEMENTATION_CHECKPOINT_MISSED"
+    },
+    {
+      "requirement": "checkpoints derived as deadline minus conservative tail",
+      "authority": "10.5",
+      "test": "machine suite group r1_checkpoints",
+      "blocker": "IMPLEMENTATION_CHECKPOINT_MISSED"
+    },
+    {
+      "requirement": "III-B launch gate reads no scientific outcome",
+      "authority": "29.5",
+      "test": "D.27, D.28",
+      "blocker": "B_GATE_NOT_MET"
+    },
+    {
+      "requirement": "drop ladder outcome independent",
+      "authority": "29.6",
+      "test": "D.29",
+      "blocker": "B_DEADLINE_DROP"
+    },
+    {
+      "requirement": "Thursday 20:00 absolute stop",
+      "authority": "29.7",
+      "test": "D.30",
+      "blocker": "B_DEADLINE_DROP"
+    },
+    {
+      "requirement": "resume is same-spec and evidence-based",
+      "authority": "runbook",
+      "test": "A.29",
+      "blocker": "P1_RESUME_UNPROVEN"
+    },
+    {
+      "requirement": "scientific null is a valid closure",
+      "authority": "closure",
+      "test": "B.11",
+      "blocker": "CLOSURE_CONDITION_UNMET"
+    }
+  ],
+  "row_count": 25
+}

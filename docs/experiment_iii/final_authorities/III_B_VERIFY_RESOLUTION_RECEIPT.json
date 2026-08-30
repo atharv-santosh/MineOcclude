@@ -1,0 +1,551 @@
+{
+  "schema_version": "mineocclude-experiment-iii-b-verify-resolution-v1",
+  "produced_by": "PHASE1_AMENDMENT_1_AUTHORITY_CONSTRUCTION",
+  "date": "2026-08-30",
+  "purpose": "Resolve every III-B VERIFY hook against the actual repository before the Bayesian module becomes authoritative.",
+  "VERIFY_1_NOISE_MODEL": {
+    "question": "How does the generator apply q? Position-level random walk, or velocity/acceleration?",
+    "result": "RESOLVED_POSITION_LEVEL_RANDOM_WALK",
+    "law": "x[t+1] = clamp(x[t] + s*v*dt + w[t]),  w[t] ~ N(0, q*dt), i.i.d.",
+    "source_evidence": [
+      "src/mineocclude/data/noise_schedule.py generate_noise_schedule: std = sqrt(q*dt); draws = Generator(PCG64(seed)).standard_normal(n); noise_draw = z*std",
+      "fabric/.../server/SheepController.java step(): proposed = axisPos + commandedVelocity*dt + eta; eta = schedule.nextNoiseDraw()",
+      "fabric/.../server/NoiseSchedule.java load(): verifies per-row sqrt(q*dt) scaling and header q",
+      "fabric/.../server/MineOccludeServer.java: startspec already accepts q as a command argument"
+    ],
+    "noise_perturbs": "POSITION_ONLY",
+    "velocity_or_acceleration_noise": false,
+    "fable_assumed_law_supported": true,
+    "consequence": "The scalar Gaussian propagation oracle is valid and is frozen."
+  },
+  "VERIFY_2_INNOVATION_PAIRING": {
+    "question": "Can the same standard-normal innovations be reused across q, scaled by sqrt(q*dt)?",
+    "result": "RESOLVED_GENERATOR_NATIVE_PAIRING",
+    "standard_normals_identical_across_q": true,
+    "reason": "generator.standard_normal(n) depends only on (seed, n); q enters only through the scalar std = sqrt(q*dt)",
+    "noise_draw_equals_z_times_sqrt_q_dt_exactly": true,
+    "schedule_row_already_stores_standard_normal_draw_separately": true,
+    "q_already_a_first_class_parameter_of_generate_noise_schedule": true,
+    "q_05_regression_reproduces_frozen_aprime_path_hash": true,
+    "regression_reference_hash": "b5803943e515ea633cc4dd80ddeaf349db5cb99d11980febdc3f13d7f84a56b7",
+    "consequence": "q-generalization requires no new mechanism. At q=0.05 the generalized path is bit-identical to the frozen III-A behavior.",
+    "operand_order_finding": "binary64 addition is not associative. (x + drift) + noise reproduces the frozen A-prime hash; (x + noise) + drift does not - the two diverge by one ULP (8.88e-16) from tick 40 and yield completely different SHA-256 values. The drift-first order is frozen in authority section 2.2 as FIX-3."
+  },
+  "VERIFY_3_FOLDS": {
+    "question": "Do all q variants of one identity stay in the same outer/inner fold?",
+    "result": "RESOLVED_BY_CONSTRUCTION",
+    "rule": "III-B reuses the III-A cohort. Fold membership is a property of the IDENTITY, assigned by (seed, identity_id) within direction. q is a within-identity factor and never enters fold assignment.",
+    "cross_q_identity_leakage_possible": false,
+    "test": "D.5 cross-q fold-membership identity test"
+  },
+  "VERIFY_4_VIS_AVAILABILITY": {
+    "question": "Does III-A already extract stable-visible rows? If not, are pre-occlusion VIS8 rows feasible?",
+    "result": "RESOLVED_NEW_FORWARDS_REQUIRED_AND_WINDOW_RELOCATED",
+    "iii_a_extracts_visible_rows": false,
+    "iii_a_extraction_scope": "the 19 counterfactually fully-occluded target rows only",
+    "pre_occlusion_window_feasible_with_full_16_pair_context": false,
+    "pre_occlusion_evidence": {
+      "note": "rows before occlusion onset that are stable-visible AND have a complete 16-pair context",
+      "0.0125": {
+        "aprime_units": 25,
+        "with_pre_occlusion_visible_run_ge_6_and_full_context": 0,
+        "median_last_pre_occlusion_visible_frame_index": 13.0
+      },
+      "0.05": {
+        "aprime_units": 25,
+        "with_pre_occlusion_visible_run_ge_6_and_full_context": 0,
+        "median_last_pre_occlusion_visible_frame_index": 12.0
+      },
+      "0.2": {
+        "aprime_units": 25,
+        "with_pre_occlusion_visible_run_ge_6_and_full_context": 3,
+        "median_last_pre_occlusion_visible_frame_index": 12.0
+      }
+    },
+    "why_infeasible": "A model forward requires a complete 16-pair context, so the row index must be >= 15. The pre-occlusion stable-visible span ends at median frame index ~12-13, because the left visible band ends at x = -6.1163518773 and the sheep starts near -7.8 travelling at 0.1 blocks/tick. There are therefore ~13 pre-occlusion visible rows, essentially none of which carry a complete context.",
+    "resolution": "VISIBLE CONTROL ROWS ARE TAKEN POST-OCCLUSION",
+    "frozen_visible_row_definition": "the last VIS_ROWS consecutive model frames of the capture that are counterfactually EXTENT_FULLY_VISIBLE, are clamp-free, and have a complete 16-pair context",
+    "clamp_free_requirement_reason": "the trajectory tail is pinned at the lane bound for ~20-25 ticks; a pinned sheep has no motion and no positional variance, which would void the position positive control and the q-perception diagnostic",
+    "VIS_ROWS_frozen": 6,
+    "VIS_ROWS_provisional_superseded": 8,
+    "why_6_not_8": "the clamp-free visible re-entry band is |x| in [7.1163518773, 8.0] = 0.8836 blocks = 8.8 ticks on the LEFT_TO_RIGHT side, so 8 rows is marginal there (62-82% of candidates) while 6 rows is comfortable (87.5-100%). The visible rows serve descriptive controls only and never enter the primary U2/U3 estimands.",
+    "aprime_25_identity_evidence": {
+      "0.0125": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 8,
+        "visible_run_median": 10.0,
+        "cells_with_visible_run_ge_6": 25,
+        "cells_with_visible_run_ge_8": 25
+      },
+      "0.05": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 7,
+        "visible_run_median": 10.0,
+        "cells_with_visible_run_ge_6": 25,
+        "cells_with_visible_run_ge_8": 21
+      },
+      "0.2": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 5,
+        "visible_run_median": 12.0,
+        "cells_with_visible_run_ge_6": 22,
+        "cells_with_visible_run_ge_8": 15
+      },
+      "0.15": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 5,
+        "visible_run_median": 12.0,
+        "cells_with_visible_run_ge_6": 23,
+        "cells_with_visible_run_ge_8": 16
+      }
+    },
+    "availability_is_a_qualification_gate": false,
+    "availability_policy": "BEST_EFFORT_WITH_REPORTED_COVERAGE"
+  },
+  "VERIFY_5_Q_HIGH_SUPPORT": {
+    "question": "Is q=0.2 feasible for the frozen target-window and lane requirements?",
+    "result": "RESOLVED_FEASIBLE",
+    "fresh_candidate_study": {
+      "0.0125": {
+        "LEFT_TO_RIGHT": {
+          "n": 400,
+          "qualify_rate": 1.0,
+          "visible_ge_6_rate_given_qualified": 1.0,
+          "visible_ge_8_rate_given_qualified": 0.9725
+        },
+        "RIGHT_TO_LEFT": {
+          "n": 400,
+          "qualify_rate": 1.0,
+          "visible_ge_6_rate_given_qualified": 1.0,
+          "visible_ge_8_rate_given_qualified": 1.0
+        }
+      },
+      "0.05": {
+        "LEFT_TO_RIGHT": {
+          "n": 400,
+          "qualify_rate": 0.9975,
+          "visible_ge_6_rate_given_qualified": 0.9924812030075187,
+          "visible_ge_8_rate_given_qualified": 0.8170426065162907
+        },
+        "RIGHT_TO_LEFT": {
+          "n": 400,
+          "qualify_rate": 0.9975,
+          "visible_ge_6_rate_given_qualified": 1.0,
+          "visible_ge_8_rate_given_qualified": 1.0
+        }
+      },
+      "0.2": {
+        "LEFT_TO_RIGHT": {
+          "n": 400,
+          "qualify_rate": 0.9725,
+          "visible_ge_6_rate_given_qualified": 0.87146529562982,
+          "visible_ge_8_rate_given_qualified": 0.6195372750642674
+        },
+        "RIGHT_TO_LEFT": {
+          "n": 400,
+          "qualify_rate": 0.9425,
+          "visible_ge_6_rate_given_qualified": 0.9973474801061007,
+          "visible_ge_8_rate_given_qualified": 0.9973474801061007
+        }
+      },
+      "0.15": {
+        "LEFT_TO_RIGHT": {
+          "n": 400,
+          "qualify_rate": 0.985,
+          "visible_ge_6_rate_given_qualified": 0.9035532994923858,
+          "visible_ge_8_rate_given_qualified": 0.6700507614213198
+        },
+        "RIGHT_TO_LEFT": {
+          "n": 400,
+          "qualify_rate": 0.96,
+          "visible_ge_6_rate_given_qualified": 0.9973958333333334,
+          "visible_ge_8_rate_given_qualified": 0.9973958333333334
+        }
+      }
+    },
+    "joint_all_q_study": {
+      "primary": {
+        "q_set": [
+          0.0125,
+          0.05,
+          0.2
+        ],
+        "candidates": 800,
+        "qualify_all_q_rate": 0.9575,
+        "visible_ge_6_all_q_rate_given_qualified": 0.9321148825065274
+      },
+      "fallback": {
+        "q_set": [
+          0.0125,
+          0.05,
+          0.15
+        ],
+        "candidates": 800,
+        "qualify_all_q_rate": 0.9725,
+        "visible_ge_6_all_q_rate_given_qualified": 0.9485861182519281
+      }
+    },
+    "aprime_25_identity_study": {
+      "0.0125": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 8,
+        "visible_run_median": 10.0,
+        "cells_with_visible_run_ge_6": 25,
+        "cells_with_visible_run_ge_8": 25
+      },
+      "0.05": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 7,
+        "visible_run_median": 10.0,
+        "cells_with_visible_run_ge_6": 25,
+        "cells_with_visible_run_ge_8": 21
+      },
+      "0.2": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 5,
+        "visible_run_median": 12.0,
+        "cells_with_visible_run_ge_6": 22,
+        "cells_with_visible_run_ge_8": 15
+      },
+      "0.15": {
+        "qualified": 25,
+        "of": 25,
+        "visible_run_min": 5,
+        "visible_run_median": 12.0,
+        "cells_with_visible_run_ge_6": 23,
+        "cells_with_visible_run_ge_8": 16
+      }
+    },
+    "interpretation": "At q=0.2 the fresh-candidate qualification rate is 93.8-97.0% per direction and 95.4% of candidates qualify simultaneously at all three q. All 25 real A-prime speed-2.0 identities qualify at every q under the corrected gates. q=0.2 is feasible with wide margin.",
+    "dominant_rejection_reason_at_q_high": "LANE_CLAMP_IN_PROTECTED_PREFIX",
+    "live_pilot_gate_still_required": true
+  },
+  "VERIFY_6_FIR_AT_NEW_Q": {
+    "question": "Do the recovered direction-specific FIR kernels remain authoritative at new q?",
+    "result": "RESOLVED_KERNELS_REMAIN_AUTHORITATIVE",
+    "rationale": "The FIR is a state-to-render temporal alignment calibration of the capture pipeline. It is a property of server tick -> client render timing, not of the motion statistics. q rescales the innovation magnitude; it changes neither the tick cadence, the render pipeline, nor the alignment delay. Speed, dt, layout, camera, and the client are all unchanged.",
+    "kernels_unchanged": true,
+    "refit_at_new_q_allowed": false,
+    "predeclared_coherence_check": {
+      "when": "III-B pilot (B-PILOT), per direction, per new q",
+      "checks": [
+        "normalized_kernel accepts the frozen taps unchanged (nonnegative, unit mass, not pure delay)",
+        "every III-B target row satisfies t >= 8 so the 9-tap kernel has complete causal history",
+        "FIR-aligned labels recomputed from the replayed path reproduce the manifest labels to <= 1e-9 blocks",
+        "the kernel mode lag precedes its first moment, as in the A-prime frozen forensic reference",
+        "the causal FIR beats the best pure integer-tick delay on the pilot trajectory, per direction"
+      ],
+      "failure_blocker": "B_ORACLE_MISMATCH"
+    }
+  },
+  "VERIFY_7_RVE_INDEPENDENCE": {
+    "question": "Does III-B require new P0/RVE calibration?",
+    "result": "RESOLVED_NO_NEW_P0",
+    "III_B_REQUIRES_NEW_P0": false,
+    "reason": "III-B varies only q, at condition L4 (minecraft:stone) exclusively. No glass material is introduced, removed, or changed. RVE is a condition-level image-evidence coordinate over the wall material family; it is invariant to q, which alters only the target trajectory.",
+    "glass_materials_touched": [],
+    "condition_set": [
+      "L4"
+    ],
+    "wall_block_id": "minecraft:stone",
+    "p0_selected_ladder_reused_unchanged": true,
+    "sentinel_policy": "III-B capture batches remain subject to the existing sentinel machinery, which is cheap and reuses frozen placements. No new calibration, no new envelope."
+  },
+  "ORACLE_DERIVATION": {
+    "transition": "x[t+1] = x[t] + s*v*dt + w[t], w ~ N(0, q*dt)",
+    "fir_label": "y[t] = sum_{k=0..8} h_k x[t-k]",
+    "t0": "the last counterfactually not-fully-occluded row; the oracle treats the state as known there",
+    "tau": "occlusion age, 1..19, measured from t0",
+    "mean": "mu_tau = x[t0] + s*v*dt*(tau - gbar), gbar = sum_k k*h_k (the frozen FIR group delay)",
+    "variance_exact": "sigma2_tau = q*dt * sum_{m=0}^{tau-1} H(m)^2,  H(m) = sum_{k<=m} h_k, H(m)=1 for m>=8",
+    "variance_affine_reduction": "for tau >= 8: sigma2_tau = q*dt*(tau + c_direction), c_direction = sum_{m=0}^{7} H(m)^2 - 8",
+    "CRITICAL_FINDING": "The affine form is NOT valid for tau < 8. c_direction is negative in both directions (-4.3555 LTR, -3.3959 RTL), so the affine expression returns a NEGATIVE variance for tau <= 4 and is wrong by up to 1.1e5 percent at tau=1. Since the primary U2 support is tau = 1..15, the EXACT cumulative-mass form is mandatory and is what this authority freezes. Using the affine form over the primary support would be a silent, fatal error.",
+    "per_direction": {
+      "LEFT_TO_RIGHT": {
+        "fir_group_delay_ticks_gbar": 3.339950418233995,
+        "cumulative_kernel_mass_H_0_to_8": [
+          0.0552210582055221,
+          0.15077583841507758,
+          0.3236791991323679,
+          0.5799169021579917,
+          0.7525114794752512,
+          0.9028070581902807,
+          0.9311876351931188,
+          0.963950410996395,
+          1.0
+        ],
+        "S_tau_exact_tau_0_to_19": [
+          0.0,
+          0.00304936526933766,
+          0.025782718719107242,
+          0.13055094267007833,
+          0.4668545560786001,
+          1.0331280828206315,
+          1.8481886671388206,
+          2.7152990790753733,
+          3.6444994739354923,
+          4.644499473935492,
+          5.644499473935492,
+          6.644499473935492,
+          7.644499473935492,
+          8.644499473935491,
+          9.644499473935491,
+          10.644499473935491,
+          11.644499473935491,
+          12.644499473935491,
+          13.644499473935491,
+          14.644499473935491
+        ],
+        "c_direction_asymptotic": -4.355500526064508,
+        "affine_form_exact_for_tau_ge": 8
+      },
+      "RIGHT_TO_LEFT": {
+        "fir_group_delay_ticks_gbar": 2.6704961914,
+        "cumulative_kernel_mass_H_0_to_8": [
+          0.0155128136,
+          0.15761148530000002,
+          0.5396064576,
+          0.792598451,
+          0.9239990568,
+          0.9332575952000001,
+          0.9669179491000001,
+          1.0,
+          1.0
+        ],
+        "S_tau_exact_tau_0_to_19": [
+          0.0,
+          0.00024064738578834496,
+          0.025082027684260468,
+          0.31625715676788113,
+          0.9444694612954806,
+          1.7982437182627702,
+          2.6692134572612574,
+          3.604143777553008,
+          4.604143777553007,
+          5.604143777553007,
+          6.604143777553007,
+          7.604143777553007,
+          8.604143777553007,
+          9.604143777553007,
+          10.604143777553007,
+          11.604143777553007,
+          12.604143777553007,
+          13.604143777553007,
+          14.604143777553007,
+          15.604143777553007
+        ],
+        "c_direction_asymptotic": -3.3958562224469926,
+        "affine_form_exact_for_tau_ge": 8
+      }
+    },
+    "sigma_tau_blocks_by_q": {
+      "LEFT_TO_RIGHT": {
+        "0.0125": [
+          0.0,
+          0.0013805264551380527,
+          0.004014249518831886,
+          0.00903295849480108,
+          0.017081688954817237,
+          0.02541072710024046,
+          0.03398702571514258,
+          0.04119541144863234,
+          0.04772643053078329,
+          0.0538777520987066,
+          0.059395388467537474,
+          0.06444231661889324,
+          0.06912171996709633,
+          0.07350382419445728,
+          0.07763898615521511,
+          0.08156477285697351,
+          0.08531009419294813,
+          0.08889776246458447,
+          0.09234615406831886,
+          0.09567033067367167
+        ],
+        "0.05": [
+          0.0,
+          0.0027610529102761053,
+          0.008028499037663773,
+          0.01806591698960216,
+          0.034163377909634474,
+          0.05082145420048092,
+          0.06797405143028516,
+          0.08239082289726468,
+          0.09545286106156659,
+          0.1077555041974132,
+          0.11879077693507495,
+          0.12888463323778648,
+          0.13824343993419266,
+          0.14700764838891456,
+          0.15527797231043022,
+          0.16312954571394703,
+          0.17062018838589627,
+          0.17779552492916895,
+          0.18469230813663773,
+          0.19134066134734334
+        ],
+        "0.2": [
+          0.0,
+          0.005522105820552211,
+          0.016056998075327546,
+          0.03613183397920432,
+          0.06832675581926895,
+          0.10164290840096184,
+          0.13594810286057032,
+          0.16478164579452936,
+          0.19090572212313317,
+          0.2155110083948264,
+          0.2375815538701499,
+          0.25776926647557297,
+          0.2764868798683853,
+          0.2940152967778291,
+          0.31055594462086045,
+          0.32625909142789405,
+          0.34124037677179253,
+          0.3555910498583379,
+          0.36938461627327546,
+          0.3826813226946867
+        ]
+      },
+      "RIGHT_TO_LEFT": {
+        "0.0125": [
+          0.0,
+          0.00038782034000000003,
+          0.003959326622376941,
+          0.014059186426672268,
+          0.02429595466964975,
+          0.03352465248014111,
+          0.0408443191984918,
+          0.04746145658290136,
+          0.05364317161550602,
+          0.05918268210355653,
+          0.06424632176997086,
+          0.06893903002632566,
+          0.07333205207118257,
+          0.07747638260122004,
+          0.08141001081544352,
+          0.08516213865897586,
+          0.08875578776040823,
+          0.09220948899636432,
+          0.09553842086286873,
+          0.09875520169069897
+        ],
+        "0.05": [
+          0.0,
+          0.0007756406800000001,
+          0.007918653244753882,
+          0.028118372853344537,
+          0.0485919093392995,
+          0.06704930496028222,
+          0.0816886383969836,
+          0.09492291316580272,
+          0.10728634323101204,
+          0.11836536420711306,
+          0.12849264353994172,
+          0.13787806005265132,
+          0.14666410414236514,
+          0.15495276520244008,
+          0.16282002163088705,
+          0.17032427731795172,
+          0.17751157552081645,
+          0.18441897799272863,
+          0.19107684172573747,
+          0.19751040338139794
+        ],
+        "0.2": [
+          0.0,
+          0.0015512813600000001,
+          0.015837306489507763,
+          0.05623674570668907,
+          0.097183818678599,
+          0.13409860992056444,
+          0.1633772767939672,
+          0.18984582633160543,
+          0.21457268646202407,
+          0.23673072841422613,
+          0.25698528707988344,
+          0.27575612010530265,
+          0.2933282082847303,
+          0.30990553040488017,
+          0.3256400432617741,
+          0.34064855463590343,
+          0.3550231510416329,
+          0.36883795598545727,
+          0.38215368345147493,
+          0.3950208067627959
+        ]
+      }
+    },
+    "sigma_ratio_across_q_is_tau_independent": true,
+    "sigma_ratio_q_high_over_q_low": 4.0,
+    "sigma_ratio_q_high_over_q_mid": 2.0,
+    "sigma_ratio_q_mid_over_q_low": 2.0,
+    "why_linear_sigma_is_the_primary_scale": "sigma_tau = sqrt(q*dt*S(tau)) factorizes as sqrt(q) * sqrt(dt*S(tau)). On the LINEAR scale the matched-tau separation is sigma_high - sigma_low = (sqrt(q_high)-sqrt(q_low))*sqrt(dt*S(tau)), which GROWS with tau and therefore carries the q-dependent uncertainty-growth interaction that U3 tests. On the log scale the separation is the constant 0.5*log(q_high/q_low), which destroys exactly that interaction. log sigma is descriptive only.",
+    "dynamic_range_note": "sigma_tau spans about 0.0014 blocks at tau=1, q_low to about 0.383 blocks at tau=19, q_high. This is a fine-grained target relative to the III-A occluded position RMSE of about 2.07 blocks, and the authority records it as a power caveat, not a gate."
+  },
+  "WORKLOAD_RECOMPUTED_FROM_RESOLVED_SEMANTICS": {
+    "VIS_ROWS": 6,
+    "OCC_ROWS": 19,
+    "new_production_captures": 50,
+    "new_pilot_captures": 4,
+    "occluded_forwards": 950,
+    "visible_forwards_new_q": 300,
+    "visible_reinference_on_existing_q_mid_captures": 150,
+    "pilot_forwards": 100,
+    "production_forwards": 1400,
+    "all_new_forwards": 1500,
+    "production_logical_row_tensors": 2800,
+    "all_logical_row_tensors": 3000,
+    "production_npy_arrays": 250,
+    "pilot_npy_arrays": 16,
+    "production_activation_bytes": 3853548800,
+    "pilot_activation_bytes": 275253248,
+    "total_activation_bytes_incl_pilot": 4128802048,
+    "bytes_per_npy_19_rows": 26148992,
+    "bytes_per_npy_6_rows": 8257664,
+    "note": "L19 only, PREVIOUS + CURRENT. q_mid occluded rows are NOT recaptured or re-extracted; only visible rows are newly inferred on the existing III-A L4 captures."
+  },
+  "AUTHORITY_CORRECTIONS_TRIGGERED": [
+    {
+      "id": "FIX-1",
+      "target": "III-A qualification gate 3 (no lane clamp)",
+      "defect": "The III-A authority required -8.0 < x[t] < 8.0 for every t in [0,179]. A 180-frame traversal at speed 2.0 covers 18.0 blocks across a 16-block lane, so touching a bound is geometrically unavoidable: all 25 real qualified A-prime identities touch a bound near tick 153. As written the gate admits nothing and would have fired COHORT_QUALIFICATION_INFEASIBLE at A1.",
+      "correction": "The clamp must not bind at any index in [0, last_target_row]. That covers every scored row and its complete causal FIR history. Tail clamping after the target window is expected and harmless, and is recorded as a diagnostic.",
+      "evidence": "0/25 A-prime WALL units clamp at or before their last target row; 25/25 clamp in the tail.",
+      "classification": "PHASE_1_OPERATIONALIZATION_DEFECT_NOT_A_PHASE_0_CHANGE"
+    },
+    {
+      "id": "FIX-2",
+      "target": "III-A blocker CAPTURE_LANE_CLAMP_ENGAGED",
+      "defect": "Detection rule fired on any clamp engagement anywhere in the capture.",
+      "correction": "Fires only when the clamp binds within [0, last_target_row].",
+      "evidence": "same as FIX-1",
+      "classification": "PHASE_1_OPERATIONALIZATION_DEFECT_NOT_A_PHASE_0_CHANGE"
+    },
+    {
+      "id": "FIX-3",
+      "target": "III-A position recurrence operand order (authority 2.2)",
+      "defect": "The authority required an iterative binary64 recurrence but did not freeze the ADDITION ORDER. Binary64 addition is not associative, so (x + drift) + noise and (x + noise) + drift diverge by one ULP and produce completely different path SHA-256 values.",
+      "correction": "The drift term is added before the noise term: (x + s*v*dt) + w. Never (x + w) + s*v*dt.",
+      "evidence": "verified at amendment time: drift-first reproduces the frozen A-prime hash b5803943e515ea633cc4dd80ddeaf349db5cb99d11980febdc3f13d7f84a56b7; noise-first does not; max divergence 8.881784197001252e-16 first appearing at tick 40",
+      "classification": "PHASE_1_OPERATIONALIZATION_DEFECT_NOT_A_PHASE_0_CHANGE"
+    }
+  ],
+  "extent_class_boundaries_verified": {
+    "fully_visible_below": -6.1163518772517484,
+    "partial_to_occluded_at": -3.4968030837293016,
+    "occluded_to_partial_at": 4.496803083729301,
+    "fully_visible_above": 7.1163518772517484,
+    "occluded_width_blocks": 7.993606167458602,
+    "occluded_width_ticks_at_speed_2": 79.93606167458601,
+    "clamp_free_visible_band_width_blocks": 0.8836481227482516,
+    "note": "boundaries bisected to 1e-24 against the ported A-prime classify_extent; 0/400 random-x mismatches"
+  }
+}

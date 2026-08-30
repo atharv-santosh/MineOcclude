@@ -1,0 +1,135 @@
+{
+  "schema_version": "mineocclude-experiment-iii-phase0-amendment-v1",
+  "amendment_id": "PHASE0_AMENDMENT_1_BAYESIAN_MODULE_III_B",
+  "amendment_version": "v1.0",
+  "status": "PROSPECTIVE_ADDITIVE_AMENDMENT",
+  "date": "2026-08-30",
+  "human_readable": "docs/experiment_iii/final_authorities/PHASE0_AMENDMENT_1_BAYESIAN_MODULE_III_B.md",
+  "human_readable_sha256": "da32ff953f0734b6de09b3733d54ad72d2fd22266ec51d0eeefe714fee231554",
+  "amends": {
+    "path": "docs/experiment_iii/experiment_3_authorities/authority_baseplate/MineOcclude_Experiment_III_Phase0_Adjudicated_Design.md",
+    "sha256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+    "original_overwritten": false
+  },
+  "prospectivity": {
+    "implementation_started": false,
+    "scientific_execution_started": false,
+    "production_outcomes_observed": "NONE",
+    "gpu_execution_authorized": false
+  },
+  "rationale": {
+    "original_exclusion_remains_correct_for": "GLASS_VISIBILITY_AXIS",
+    "why": "graded glass visibility != Bayesian uncertainty; stained glass changes the observation channel, not the generative process, so posterior spread is identical across L0..L4",
+    "new_independent_manipulation": "PROCESS_NOISE_Q",
+    "why_admissible": "varying q changes the generative process, so oracle posterior sigma differs objectively at matched occlusion age by the known factor sqrt(q_a/q_b), with image evidence, condition, wall material, camera, layout, speed and readout all identical",
+    "exclusion_lifted_scope": "U2_AND_BOUNDED_U3_ON_THE_Q_AXIS_AT_L4_ONLY",
+    "exclusion_retained_scope": [
+      "GLASS_VISIBILITY_AXIS_U2_U3",
+      "U4",
+      "CAUSAL_INTERVENTION",
+      "STEERING",
+      "CAUSAL_OBJECT_PERMANENCE",
+      "GENERAL_PROCESS_NOISE_GRID",
+      "OTHER_SPEED",
+      "OTHER_LAYOUT",
+      "OTHER_CHECKPOINT",
+      "REPRESENTATION_SEARCH"
+    ]
+  },
+  "design": {
+    "namespace": "r73-grado-v1-b",
+    "condition": "L4",
+    "wall_block_id": "minecraft:stone",
+    "q_low": 0.0125,
+    "q_mid": 0.05,
+    "q_high": 0.2,
+    "q_high_fallback": 0.15,
+    "q_mid_reused_from_iii_a": true,
+    "q_mid_recaptured": false,
+    "identities": "THE_SAME_25_III_A_PRODUCTION_IDENTITIES",
+    "new_identities": 0,
+    "new_production_captures": 50,
+    "new_pilot_captures": 4,
+    "combined_production_captures": 175,
+    "layers": [
+      19
+    ],
+    "temporal_slices": [
+      "PREVIOUS",
+      "CURRENT"
+    ],
+    "status": "OPTIONAL"
+  },
+  "q_mid_reuse_declaration": {
+    "declared_before_any_iii_a_outcome_existed": true,
+    "statement": "III-B reuses the III-A L4 q=0.05 cell as its middle dose. This reuse is declared prospectively, before any III-A capture, activation, prediction, metric or result exists. It is a pre-registered design economy, not a post-hoc selection.",
+    "iii_a_occluded_rows_reused_as_extracted": true,
+    "visible_control_rows_require_new_inference_on_existing_captures": true,
+    "recapture_required": false,
+    "must_be_restated_in_final_scientific_package": true
+  },
+  "iii_a_invariant": {
+    "no_iii_b_stage_is_a_precondition_of_any_iii_a_completion_stage": true,
+    "iii_a_closes_identically_whether_iii_b_runs_skips_fails_or_is_dropped": true,
+    "consequences": [
+      "NO_III_A_LIFECYCLE_STATE_LISTS_A_III_B_STATE_IN_ITS_ENTRY_CONDITIONS",
+      "NO_III_A_ARTIFACT_REQUIRES_A_III_B_ARTIFACT_TO_VALIDATE",
+      "NO_III_A_ESTIMAND_FOLD_PREDICTION_OR_STATISTIC_DEPENDS_ON_A_III_B_CELL",
+      "III_A_COHORT_TARGET_ROWS_FOLDS_READOUT_BASELINES_AND_ANALYSIS_FAMILIES_UNCHANGED",
+      "NEVER_DELAY_III_A_CLOSURE_TO_SAVE_III_B"
+    ]
+  },
+  "optionality": {
+    "launch_decision_inputs": "TIME_TECHNICAL_STATE_AND_RESOURCES_ONLY",
+    "scientific_outcome_may_be_consulted": false,
+    "first_gate": "2026-09-02T12:00 local",
+    "second_gate": "2026-09-02T17:00 local",
+    "absolute_stop": "2026-09-03T20:00 local",
+    "clean_skip_is_an_honourable_pre_registered_outcome": true
+  },
+  "claim_restrictions": {
+    "u4_remains_excluded": true,
+    "positive_u2_permitted_wording": [
+      "uncertainty-relevant information tracking oracle posterior spread",
+      "a partial belief-state signature"
+    ],
+    "calibrated_gaussian_belief_state_requires": "THE_STRONGEST_PROSPECTIVELY_FROZEN_RESULT_CONJUNCTION_INCLUDING_SCALE_CALIBRATION",
+    "may_not_claim_the_model_uses_its_uncertainty": true,
+    "must_survive_clock_and_q_category_confound_controls": true,
+    "scope_limits": [
+      "ONE_LAYOUT",
+      "ONE_SPEED",
+      "ONE_CHECKPOINT",
+      "CONDITION_L4_ONLY",
+      "THREE_FROZEN_Q_LEVELS",
+      "LINEAR_PROBES",
+      "THE_SELECTED_REPRESENTATION"
+    ]
+  },
+  "deliberately_not_added": [
+    "NEW_GLASS_MATERIAL",
+    "NEW_P0_OR_RVE_CALIBRATION",
+    "NEW_CONDITION_BEYOND_L4",
+    "NEW_SPEED",
+    "NEW_LAYOUT",
+    "NEW_CHECKPOINT",
+    "REPRESENTATION_SEARCH",
+    "LAYERS_4_AND_10",
+    "BEST_K",
+    "ALTERNATIVE_POOLING",
+    "PCA",
+    "MLP",
+    "NONLINEAR_RESCUE",
+    "FURTHER_Q_SEARCH",
+    "NEW_IDENTITIES"
+  ],
+  "III_B_REQUIRES_NEW_P0": false,
+  "status_flags": {
+    "AMENDMENT_TYPE": "ADDITIVE_PROSPECTIVE",
+    "ORIGINAL_PHASE0_DESIGN_MODIFIED": false,
+    "III_A_DECISIONS_REOPENED": false,
+    "III_A_CRITICAL_PATH_CHANGED": false,
+    "U4_EXCLUSION": "RETAINED",
+    "III_B_STATUS": "OPTIONAL"
+  }
+}

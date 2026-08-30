@@ -491,4 +491,4 @@ Normalized source-to-DOCX comparison found exact equivalence across all 407 scie
 
 ## Readiness conclusion
 
-`AUTHORITY_CREATION_READY=true`. The design decisions are complete. P0's empirical material result is intentionally not known; the Phase-1 authority can prospectively bind its exact selection and `NO_VALID_LADDER` stop. Phase 1 must treat `MineOcclude_Experiment_III_Phase0_Adjudicated_Design.md` and its materially equivalent DOCX as the controlling design input. `IMPLEMENTATION_AUTHORIZED=false`.
+`AUTHORITY_CREATION_READY=true`. The design decisions are complete. P0's empirical material result is intentionally not known; the Phase-1 authority can prospectively bind its exact selection and `NO_VALID_LADDER` stop. Phase 1 must treat `docs/experiment_iii/experiment_3_authorities/authority_baseplate/MineOcclude_Experiment_III_Phase0_Adjudicated_Design.md` and its materially equivalent DOCX companion as the controlling authority-baseplate input. `IMPLEMENTATION_AUTHORIZED=false`.

@@ -1,0 +1,1321 @@
+{
+  "schema_version": "mineocclude-experiment-iii-implementation-change-matrix-v1",
+  "authority": "docs/experiment_iii/final_authorities/EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md",
+  "implementation_authorized": false,
+  "decision_vocabulary": [
+    "REUSE_UNCHANGED",
+    "PARAMETERIZE",
+    "PORT",
+    "REIMPLEMENT_MINIMALLY",
+    "NEW",
+    "REMOVE_FROM_EXP3_PATH"
+  ],
+  "item_count": 50,
+  "items": [
+    {
+      "id": "C01",
+      "name": "Fresh identity generator",
+      "source_files": [
+        "src/mineocclude/regime_a.py:637-733 (_candidate_spec, generate_scientific_specs)",
+        "src/mineocclude/regime_a.py:87-109 (simulate_path)",
+        "src/mineocclude/regime_a.py:24-35 (module constants)",
+        "NEW src/mineocclude/experiment_iii/cohort.py"
+      ],
+      "current_behavior": "Deterministic candidate generation exists but hard-codes SPEED_BLOCKS_PER_SECOND=1.5 and MOTION_NOISE_Q as module globals inside simulate_path, defaults frames=260, names identities regime_a_v1_tNN, uses episode_id 51001+serial, and derives seeds from a study manifest hash.",
+      "required_experiment_iii_behavior": "Experiment III-native generator: speed 2.0 and q 0.05 as explicit parameters; frames=180; identities e3_t01..e3_t25 and e3_p90/e3_p91; episode_id 86001+priority_rank (pilots 86901/86902); seeds from EXPERIMENT_III_MASTER_SALT per authority 2.2; ITERATIVE binary64 position recurrence (never vectorized cumsum).",
+      "decision": "PORT",
+      "tests_required": [
+        "A.1 deterministic identity generation",
+        "A.2 RNG stream stability",
+        "A.3 deterministic path reproduction (iterative not cumsum)",
+        "A.4 speed/q/dt correctness"
+      ],
+      "dependency": [],
+      "risk": "MEDIUM - a vectorized cumsum reimplementation is not bit-identical to the A-prime arithmetic the FIR recovery is validated against",
+      "completion_evidence": "cohort_qualification_receipt.json plus production/pilot manifests hashing correctly",
+      "task_graph_node": "I02",
+      "authority_section": "2.2",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C02",
+      "name": "Candidate qualification",
+      "source_files": [
+        "src/mineocclude/regime_a.py:200-243 (stable_hidden_interval)",
+        "src/mineocclude/regime_a.py:637-733 (diversity gate)",
+        "NEW src/mineocclude/experiment_iii/qualification.py"
+      ],
+      "current_behavior": "Qualification uses stable_hidden_interval, a position-interval proxy derived from V1_CALIBRATION hidden bounds plus entry/exit guards, and a between-identity RMS diversity gate of 0.10 blocks. There is no within-identity target-SD gate and no counterfactual-extent gate.",
+      "required_experiment_iii_behavior": "All TWELVE gates of authority 2.4, in order, with the FIRST failing gate logged per rejected candidate (and, for gate 12, the first failing sub-gate AT EACH q). Gate 6 uses counterfactual EXTENT_FULLY_OCCLUDED from C13, not position intervals. Gate 8 (within-identity SD >= 0.10) is NEW and distinct from the existing between-identity gate 9. Gate 3 requires strict non-clamping over the protected prefix. Gate 12 (ALL_Q_PROSPECTIVE_QUALIFICATION) requires the candidate to satisfy gates 1-11 at every frozen q in {0.0125, 0.05, 0.2}, each evaluated on that cell's own regenerated path, and is evaluated BEFORE the cohort is materialized or frozen. Gate 12 is implemented by the CB02 primitive and guarded by CB03; C02 must fail CLOSED (COHORT_ALL_Q_PRIMITIVE_MISSING) if either is unavailable.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.6 within-identity target-variance gate",
+        "A.10 counterfactual present=True",
+        "A.19 historical seed exclusion",
+        "D.2 q=0.05 bit-identity regression",
+        "D.4 all-q qualification (gate 12)",
+        "D.31 gate-12 ordering and cohort-freeze precedence",
+        "gate-ordering and rejection-logging test"
+      ],
+      "dependency": [
+        "C01",
+        "C13",
+        "C14",
+        "CB02",
+        "CB03"
+      ],
+      "risk": "HIGH - conflating the between-identity diversity gate with the within-identity SD gate would silently drop a required Phase 0 constraint",
+      "completion_evidence": "cohort_qualification_receipt.json enumerating every candidate with its first failing gate, plus cohort_all_q_qualification_receipt.json recording per-candidate per-q qualification",
+      "task_graph_node": "I02",
+      "authority_section": "2.4",
+      "status": "NOT_STARTED",
+      "gate_count": 12
+    },
+    {
+      "id": "C03",
+      "name": "Fold creation and inner rotations",
+      "source_files": [
+        "src/mineocclude/regime_a.py:614-634 (fold_assignment)",
+        "src/mineocclude/regime_a_first25_analysis.py:27-70 (inner_fold_assignment)",
+        "NEW src/mineocclude/experiment_iii/folds.py"
+      ],
+      "current_behavior": "fold_assignment already enforces 25 specs, 13/12 direction balance, and the (3,2),(2,3),(3,2),(2,3),(3,2) deal - reusable. inner_fold_assignment produces FIVE inner folds of four and hard-requires exactly 20 identities.",
+      "required_experiment_iii_behavior": "Reuse the outer-fold algorithm on the fresh roster. Replace the inner assignment with FOUR fixed rotations using the E3_INNER_ROTATION_V1 / E3_INNER_REBALANCE_V1 sort keys of authority 2.6.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.5 fold partition",
+        "inner-rotation determinism and balance test",
+        "A.25 fold leakage"
+      ],
+      "dependency": [
+        "C01"
+      ],
+      "risk": "MEDIUM - reusing the five-fold inner splitter would silently violate the frozen four-rotation design",
+      "completion_evidence": "folds.json with 5 outer folds x 4 inner rotations, plus the partition test",
+      "task_graph_node": "I02",
+      "authority_section": "2.6",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C04",
+      "name": "Identity priority order",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/cohort.py"
+      ],
+      "current_behavior": "No concept exists.",
+      "required_experiment_iii_behavior": "Freeze the total order e3_t01 < ... < e3_t25, used ONLY by the deadline fallbacks to select the first N identities. Never reordered by observed performance.",
+      "decision": "NEW",
+      "tests_required": [
+        "priority-order determinism test",
+        "fallback-selection uses priority order only"
+      ],
+      "dependency": [
+        "C01"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "identity_priority_order.json bound in P2",
+      "task_graph_node": "I02",
+      "authority_section": "2.6",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C05",
+      "name": "Wall material parameterization",
+      "source_files": [
+        "fabric/.../server/ArenaBuilder.java:23-31 (wall = Blocks.STONE)",
+        "fabric/.../server/ArenaBuilder.java:211-221 (build loop)",
+        "fabric/.../server/EpisodeConfig.java:30-108"
+      ],
+      "current_behavior": "ArenaBuilder holds `private final BlockState wall = Blocks.STONE.getDefaultState()` and the build loop writes that one material into the exact axis cells. EpisodeConfig carries wall geometry and Scene but has NO block/material identity field.",
+      "required_experiment_iii_behavior": "Add a fail-closed wall-material enum/registry allowlist to the spec and EpisodeConfig; ArenaBuilder reads it. Geometry code stays material-independent. An unsupported registry ID must refuse the episode, never fall back to stone.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "A.8 wall-coordinate invariance under material change",
+        "A.9 exact wall registry ID receipt",
+        "unsupported-ID refusal test"
+      ],
+      "dependency": [],
+      "risk": "MEDIUM - the material seam touches builder, config, command, receipt, validator, and cache key; all must change together",
+      "completion_evidence": "P1 receipt showing all five conditions built with exact block receipts",
+      "task_graph_node": "I03",
+      "authority_section": "4.1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C06",
+      "name": "Condition identity and L0 scene reachability",
+      "source_files": [
+        "fabric/.../server/MineOccludeServer.java:116-134 (startspec arguments)",
+        "fabric/.../server/MineOccludeServer.java:288-326 (startSpecCmd)",
+        "fabric/.../server/EpisodeConfig.java:55-58 (Scene enum)"
+      ],
+      "current_behavior": "startspec takes no material argument, refuses any sceneMode other than NORMAL, and constructs EpisodeConfig with a hard-coded EpisodeConfig.Scene.NORMAL. L0 (Scene.NO_WALL) is therefore UNREACHABLE through the spec path.",
+      "required_experiment_iii_behavior": "startspec accepts condition_id and wall_block_id; L0 maps to Scene.NO_WALL, L1-L4 to Scene.NORMAL with the frozen material. The runtime records the observed scene so the scene receipt can fail closed.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "L0 reaches NO_WALL end-to-end (P1)",
+        "scene receipt mismatch fails closed",
+        "condition->scene mapping table test"
+      ],
+      "dependency": [
+        "C05"
+      ],
+      "risk": "HIGH - silently capturing L0 as NORMAL builds a stone wall and destroys the anchor condition with no error",
+      "completion_evidence": "P1 receipt showing e3_p90__L0 with scene NO_WALL and an all-air wall receipt",
+      "task_graph_node": "I03",
+      "authority_section": "4.1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C07",
+      "name": "Arena-cache condition binding",
+      "source_files": [
+        "fabric/.../server/EpisodeManager.java:1138-1150 (buildArenaIfChanged)"
+      ],
+      "current_behavior": "Cache key is `layoutId|scene|wallOrtho|orthoMin|orthoMax|markerGeomSignature`. It OMITS the wall material, so a stone->glass switch hits the cache and leaves the previous wall standing.",
+      "required_experiment_iii_behavior": "Cache key must include condition_id and wall_block_id. Every material transition forces a full arena rebuild plus remesh settling.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "cache-key includes material (unit)",
+        "material switch forces rebuild (P1)",
+        "stale-wall detection via wall receipt"
+      ],
+      "dependency": [
+        "C05",
+        "C06"
+      ],
+      "risk": "CRITICAL - highest-severity latent defect: would silently produce an entire batch of captures under the wrong condition",
+      "completion_evidence": "P1 receipt showing a rebuild on every material transition; wall receipts with zero mismatches",
+      "task_graph_node": "I04",
+      "authority_section": "8.1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C08",
+      "name": "Wall receipt",
+      "source_files": [
+        "fabric/.../server/EpisodeManager.java:885-925 (wall observation block)"
+      ],
+      "current_behavior": "The receipt hard-codes `declared_block_id = cfg.buildWall() ? \"minecraft:stone\" : \"minecraft:air\"` and compares observed states against `Blocks.STONE`.",
+      "required_experiment_iii_behavior": "declared_block_id is the condition's frozen registry ID; the expected block is resolved from that ID. Zero mismatches and zero unexpected non-air cells required. This is the independent fail-closed guard against a stale cache.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "A.9 exact wall registry ID receipt",
+        "per-cell mismatch detection test",
+        "unexpected non-air detection test"
+      ],
+      "dependency": [
+        "C05",
+        "C07"
+      ],
+      "risk": "HIGH - this receipt is the only independent proof the intended material was actually standing",
+      "completion_evidence": "wall_receipt.json per capture unit with zero mismatches",
+      "task_graph_node": "I04",
+      "authority_section": "3.3",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C09",
+      "name": "RVE calibration implementation",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/rve.py",
+        "NEW scripts/experiment_iii/run_p0_rve_calibration.py",
+        "reference (do NOT couple): src/mineocclude/models/_mineworld_adapter_wave2.py:408-473"
+      ],
+      "current_behavior": "No RVE implementation exists. The repository has a magenta area detector (src/mineocclude/vision/magenta.py), which is a thresholded colour detector and is unsuitable as a continuous evidence axis.",
+      "required_experiment_iii_behavior": "Implement authority 7.3 exactly: sRGB->linear float64, coordinate-wise medians, L0-derived shared support mask with 2px dilation, split-half absent-frame noise, excess energy, L0 normalization, placement and condition medians, background gate. Source RGB only; never model-normalized tensors.",
+      "decision": "NEW",
+      "tests_required": [
+        "A.14 RVE fixture (linearization, energy, normalization)",
+        "A.15 mask fixture",
+        "split-half noise determinism test",
+        "background tolerance gate test"
+      ],
+      "dependency": [],
+      "risk": "MEDIUM - a per-candidate mask or a coupling to model preprocessing would make the metric material-dependent",
+      "completion_evidence": "P0_RVE_TABLE with D/N/E/RVE per (condition, placement, block)",
+      "task_graph_node": "I07",
+      "authority_section": "7.3",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C10",
+      "name": "P0 ABBA capture routine",
+      "source_files": [
+        "NEW scripts/experiment_iii/run_p0_rve_calibration.py",
+        "fabric/.../client/MineOccludeClient.java:279-325 (framebuffer capture + ack)",
+        "fabric/.../server/EpisodeManager.java:163-165 (noon/weather control)"
+      ],
+      "current_behavior": "Framebuffer capture with acknowledgement and stale-frame detection exists. There is no static-placement ABBA present/absent routine.",
+      "required_experiment_iii_behavior": "Nine frozen placements x 14 conditions x 2 ABBA blocks x {present, absent} x >=8 settled frames, with warm-up, remesh settling, fixed noon/weather, zero random ticks, per-frame framebuffer hash, and stale-run rejection. Absent state uses Scene.NO_SHEEP.",
+      "decision": "NEW",
+      "tests_required": [
+        "ABBA order recorded per frame",
+        "settled-frame count enforcement",
+        "stale-run rejection",
+        "placement gross-error gate"
+      ],
+      "dependency": [
+        "C05",
+        "C06",
+        "C09"
+      ],
+      "risk": "MEDIUM - client remesh/timing artifacts are the main threat and are controlled only by settling plus the QA gates",
+      "completion_evidence": "P0_MANIFEST and P0_IMAGE_INVENTORY covering >= 4032 settled frames",
+      "task_graph_node": "I07",
+      "authority_section": "7.2",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C11",
+      "name": "Sheep support masks",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/rve.py",
+        "reference: src/mineocclude/regime_a.py:312-337 (projection, gross-error gate only)"
+      ],
+      "current_behavior": "The repository projects a sheep centre, not a renderer-authoritative silhouette. No support mask exists.",
+      "required_experiment_iii_behavior": "One outcome-independent mask per placement, derived ONCE from the L0 present-minus-absent residual above the frozen L0 noise threshold, unioned across replicate blocks, dilated by 2 pixels, and reused unchanged for every candidate. The projected centre may gate gross placement errors only.",
+      "decision": "NEW",
+      "tests_required": [
+        "A.15 mask fixture",
+        "mask is identical across candidates",
+        "mask degeneracy detection"
+      ],
+      "dependency": [
+        "C09"
+      ],
+      "risk": "HIGH - a per-candidate mask silently makes RVE material-dependent and invalidates the ladder",
+      "completion_evidence": "P0_MASK_INVENTORY with one hashed mask per placement",
+      "task_graph_node": "I07",
+      "authority_section": "7.3",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C12",
+      "name": "Sentinel monitoring",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/sentinels.py"
+      ],
+      "current_behavior": "No drift sentinel exists.",
+      "required_experiment_iii_behavior": "Three frozen sentinel placements measured before and after each condition batch. RVE order must match P0 and each score must fall inside the frozen repeatability envelope. Failure is technical, invalidates only the affected as-yet-unmodeled batch, and permits an exact retry.",
+      "decision": "NEW",
+      "tests_required": [
+        "envelope violation detection",
+        "order violation detection",
+        "batch-scoped invalidation test"
+      ],
+      "dependency": [
+        "C09",
+        "C11"
+      ],
+      "risk": "MEDIUM - an over-tight envelope creates spurious batch invalidation; the envelope must be derived from observed P0 replicate spread",
+      "completion_evidence": "sentinel_receipt.json per batch boundary",
+      "task_graph_node": "I08",
+      "authority_section": "7.9",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C13",
+      "name": "Counterfactual rendered-extent truth",
+      "source_files": [
+        "PORT FROM a5d763a:src/mineocclude/prospective/extent_geometry.py (blob 45889b6bc9ed07129f5fd2f15167b694206eab31)",
+        "NEW src/mineocclude/experiment_iii/extent_geometry.py",
+        "supersedes: src/mineocclude/regime_a.py:245-254, :257-300",
+        "supersedes: fabric/.../server/EpisodeManager.java:434-459 (center ray, diagnostic only)"
+      ],
+      "current_behavior": "The current branch predates the A-prime extent repair. classify_visibility requires geometric occlusion AND magenta not-detected (OCCLUDED_AGREEMENT); the runtime geometricVisible is a single centre-ray test. The A-prime extent module is NOT in the worktree.",
+      "required_experiment_iii_behavior": "Port the A-prime v0.3 module verbatim into an Experiment III-native module. Classify against the ORIGINAL wall footprint with WallGeometry(present=True) for ALL FIVE conditions including L0. Keep centre-ray and magenta as diagnostics only.",
+      "decision": "PORT",
+      "tests_required": [
+        "A.10 counterfactual present=True for L0",
+        "A.11 extent port equivalence (475/475 A-prime WALL labels)",
+        "TARGET_EXTENT_HALF_BLOCKS == 0.8727621336620037",
+        "segment_hits_wall reference agreement"
+      ],
+      "dependency": [],
+      "risk": "CRITICAL - constructing the L0 counterfactual wall with present=False yields zero eligible L0 rows and silently destroys the pairing",
+      "completion_evidence": "aprime_port_receipt.json with blob SHA-1s plus the 475/475 equivalence fixture",
+      "task_graph_node": "I05",
+      "authority_section": "4.5",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C14",
+      "name": "Causal FIR computation and kernel recovery",
+      "source_files": [
+        "PORT FROM a5d763a:src/mineocclude/prospective/development_workflow.py (causal_fir_targets)",
+        "PORT FROM a5d763a:src/mineocclude/prospective/temporal_alignment.py (normalized_kernel + diagnostics)",
+        "RECOVER FROM f2bc2c8:docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+        "NEW src/mineocclude/experiment_iii/fir.py"
+      ],
+      "current_behavior": "No FIR label construction exists on this branch. The literal direction kernels are absent from the repository; they lived only in an uncommitted A-prime Stage-1 decision artifact.",
+      "required_experiment_iii_behavior": "Port the canonical normalized causal sum and complete-history gate. Recover both 9-tap direction kernels by the deterministic least-squares procedure of authority 5.3, subject to all five acceptance gates, then freeze them. Kernel taps MUST be fsum-normalized at load (normalized[k] = taps[k] / math.fsum(taps), accumulated with math.fsum) before any label, H(m), S(tau), gbar or oracle quantity is computed; unnormalized taps pass the 1e-9 label tolerance but fail the 1e-12 S(tau) tolerance of D.6. Blocker: FIR_KERNEL_NOT_NORMALIZED.",
+      "decision": "PORT",
+      "tests_required": [
+        "A.12 FIR arithmetic and complete-history gate",
+        "kernel recovery reproduces 50/50 path hashes",
+        "kernel recovery reproduces 950/950 labels within 1e-12",
+        "aggregate mode lag == 2; support within [0,8]"
+      ],
+      "dependency": [],
+      "risk": "HIGH - without a verified recovery the frozen Phase 0 label definition is unimplementable; refitting from Experiment III data would be a scientific amendment",
+      "completion_evidence": "fir_kernel_recovery_receipt.json with taps, residuals, and verification counts",
+      "task_graph_node": "I06",
+      "authority_section": "5.3",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C15",
+      "name": "Target manifest",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/target_manifest.py",
+        "supersedes: scripts/run_regime_a.py:283-409 (tau-based target construction)"
+      ],
+      "current_behavior": "Targets are derived post-capture from magenta + centre-ray agreement via assign_stable_hidden_tau, and expected targets are a 19-frame run from expected_stable_hidden_onset_frame.",
+      "required_experiment_iii_behavior": "Materialize the 19 target indices and 19 FIR labels PROSPECTIVELY per identity from counterfactual extent plus the recovered kernels, before any capture. Apply them unchanged and identically to all five conditions.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.7 same target rows across all five conditions",
+        "target rows are material-independent",
+        "no magenta or centre-ray input to selection"
+      ],
+      "dependency": [
+        "C13",
+        "C14",
+        "C02"
+      ],
+      "risk": "HIGH - reusing the tau selector for L1-L3 would make eligibility material-dependent",
+      "completion_evidence": "production_identity_manifest.jsonl carrying target indices and labels per identity",
+      "task_graph_node": "I06",
+      "authority_section": "4.6",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C16",
+      "name": "Capture schedule",
+      "source_files": [
+        "NEW scripts/experiment_iii/run_production_capture.py"
+      ],
+      "current_behavior": "The Regime A runner iterates specs in manifest order with no condition dimension.",
+      "required_experiment_iii_behavior": "Five blocks of five identities by outer fold; cyclic five-period Latin condition rotation; ascending priority_rank within a condition block; sentinels at every batch boundary; runtime reordering forbidden.",
+      "decision": "NEW",
+      "tests_required": [
+        "Latin square is balanced (each condition once per block and once per period)",
+        "order determinism test",
+        "runtime reorder detection"
+      ],
+      "dependency": [
+        "C03",
+        "C04",
+        "C12"
+      ],
+      "risk": "MEDIUM - reordering to save rebuild time would break the frozen balancing design",
+      "completion_evidence": "capture_matrix.json with the realized order matching the frozen plan",
+      "task_graph_node": "I04",
+      "authority_section": "8.1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C17",
+      "name": "CURRENT/PREVIOUS token selection",
+      "source_files": [
+        "scripts/run_regime_a.py:929-939 (final span only)",
+        "src/mineocclude/models/mineworld_adapter.py:626-701 (FrameTokenSpan contract)",
+        "src/mineocclude/activations/pool.py:303-383 (select_visual_tokens)",
+        "NEW src/mineocclude/experiment_iii/slices.py"
+      ],
+      "current_behavior": "The runner takes `span = tokenized.frame_token_map.spans[-1]` and serializes only that CURRENT span. There is no PREVIOUS selection. The span contract and full-sequence coverage validator already exist and are reusable.",
+      "required_experiment_iii_behavior": "Select spans[-2] (PREVIOUS, [4858:5194]) and spans[-1] (CURRENT, [5205:5541]) from the SAME forward, excluding action tokens 5194-5204 and 5541-5551, and assert all five semantic conditions of authority 8.4 including frame identity.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "token-slice numeric fixture",
+        "PREVIOUS semantic frame fixture",
+        "CURRENT semantic frame fixture",
+        "A.13 context-age frame-identity verification",
+        "action-token contamination detection"
+      ],
+      "dependency": [],
+      "risk": "HIGH - shape agreement alone cannot distinguish the intended frame; only frame identity can",
+      "completion_evidence": "P1 receipt showing both slices with verified positions and frame identities",
+      "task_graph_node": "I09",
+      "authority_section": "8.4",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C18",
+      "name": "Layer selection",
+      "source_files": [
+        "src/mineocclude/activations/hooks.py:419-528 (ScopedHookManager)",
+        "scripts/run_regime_a.py:925-940 (arrays for layer in range(20))"
+      ],
+      "current_behavior": "The scoped hook manager registers and validates exactly 20 decoder hooks - reusable as-is. The runner opens a memmap for every one of the 20 layers and serializes all of them.",
+      "required_experiment_iii_behavior": "Keep the 20-layer transient registration and validation. Serialize ONLY layers {4,10,19}. Exactly one forward per target row; no extra forward for PREVIOUS or for any layer.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.16 one-forward layer fixture ({4,10,19} from one call)",
+        "forward-count accounting test",
+        "hook registration completeness"
+      ],
+      "dependency": [
+        "C17"
+      ],
+      "risk": "MEDIUM - transient 20-layer retention increases GPU memory; P1 must confirm headroom",
+      "completion_evidence": "extraction receipt showing exactly 2375 forwards and 750 arrays",
+      "task_graph_node": "I09",
+      "authority_section": "8.4",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C19",
+      "name": "Activation serialization",
+      "source_files": [
+        "scripts/run_regime_a.py:925-948 (open_memmap + flush)",
+        "NEW src/mineocclude/experiment_iii/activation_store.py"
+      ],
+      "current_behavior": "Writes one [19,336,2048] float16 .npy per layer via numpy.lib.format.open_memmap, keyed by layer only, with no slice dimension.",
+      "required_experiment_iii_behavior": "One [19,336,2048] little-endian float16 array per (capture, layer, slice) = 6 arrays per capture. Each array binds identity, condition, layer, slice, target rows, hook site, token-position hash, preprocessing identity, checkpoint identity, shape, dtype, byte size, and SHA-256.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.17 tensor shape",
+        "A.18 tensor byte count 26,148,992",
+        "little-endian dtype assertion",
+        "provenance binding completeness"
+      ],
+      "dependency": [
+        "C17",
+        "C18"
+      ],
+      "risk": "MEDIUM - a native-endian write on a big-endian host would silently break the frozen byte contract",
+      "completion_evidence": "extraction inventory with 750 arrays of exactly 26,148,992 bytes",
+      "task_graph_node": "I10",
+      "authority_section": "8.5",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C20",
+      "name": "Tensor inventory and validator",
+      "source_files": [
+        "src/mineocclude/regime_a_execution.py:62-97 (validate_required_inventory)",
+        "src/mineocclude/regime_a_execution.py:100-201 (durable inventory validation)"
+      ],
+      "current_behavior": "validate_required_inventory hard-codes layer_indices == list(range(20)), target_tau == list(range(1,20)), and exactly 20 artifacts per trajectory. Reused unchanged on Experiment III it fails closed but uselessly.",
+      "required_experiment_iii_behavior": "Generalize to 3 layers x 2 slices = 6 arrays per capture, validating every field of authority 8.5. Retain the atomic write, SHA-256, and read-back machinery; simplify the inventory schema.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.28 corrupted artifact rejection",
+        "inventory completeness recomputation",
+        "hash mismatch detection"
+      ],
+      "dependency": [
+        "C19"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "extraction_validation_receipt.json PASS over the full inventory",
+      "task_graph_node": "I10",
+      "authority_section": "8.5",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C21",
+      "name": "Coarse pooling (COARSE_2X6_CONCAT)",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/representations.py",
+        "reference (NOT to be used): src/mineocclude/activations/pool.py:437-556 mean_pool_visual_tokens"
+      ],
+      "current_behavior": "Only a GLOBAL 336-token mean pool exists. The exact Experiment II source commit is not in this object database, so no literal port is possible.",
+      "required_experiment_iii_behavior": "Implement from specification: 14x24 grid -> 2x6 cells of 7x4 tokens, arithmetic mean per hidden dimension, row-major concatenation, output 24,576. Validate with fixtures; make no claim of literal source reuse.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.20 coarse pooling exactness",
+        "A.21 coarse pooling grid orientation (not transposed)",
+        "cell membership is exactly 7x4 and exhaustive"
+      ],
+      "dependency": [],
+      "risk": "HIGH - a transposed 14x24 grid produces plausible-looking but wrong features; only an identity-encoding fixture catches it",
+      "completion_evidence": "feature_config.json plus byte-identical fixture reproduction",
+      "task_graph_node": "I11",
+      "authority_section": "8.7",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C22",
+      "name": "Temporal features",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/representations.py"
+      ],
+      "current_behavior": "No temporal representation exists. Experiment II authored but never evaluated them.",
+      "required_experiment_iii_behavior": "CURRENT_MINUS_PREVIOUS = coarse(CURRENT) - coarse(PREVIOUS), dimension 24,576. TWO_FRAME_CONCAT = concat(coarse(PREVIOUS), coarse(CURRENT)), PREVIOUS first, dimension 49,152.",
+      "decision": "NEW",
+      "tests_required": [
+        "A.22 temporal subtraction",
+        "A.23 temporal concatenation order",
+        "slice-swap detection"
+      ],
+      "dependency": [
+        "C21",
+        "C17"
+      ],
+      "risk": "MEDIUM - a swapped concatenation order is undetectable downstream without a fixture",
+      "completion_evidence": "feature blocks at exactly 24,576 and 49,152 dimensions",
+      "task_graph_node": "I12",
+      "authority_section": "8.7",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C23",
+      "name": "Current-frame pixel baseline",
+      "source_files": [
+        "src/mineocclude/baselines/raw_pixel.py (survey for reuse)",
+        "NEW src/mineocclude/experiment_iii/baselines_pixel.py"
+      ],
+      "current_behavior": "A raw-pixel baseline module exists in the legacy tree but is not bound to the Experiment III frame contract or resize policy.",
+      "required_experiment_iii_behavior": "Source RGB target frame -> resize to 48x28 with frozen area interpolation -> flatten 4,032 -> training-only standardization -> the same grouped nested ridge recipe. All claims carry the phrase 'linear current-frame pixel baseline'.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.24 pixel baseline dimension 4,032",
+        "resize determinism test",
+        "A.25 fold leakage"
+      ],
+      "dependency": [
+        "C25"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "baselines_receipt.json with the pixel baseline present and leakage-free",
+      "task_graph_node": "I13",
+      "authority_section": "8.9.1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C24",
+      "name": "Motion and clock baselines",
+      "source_files": [
+        "src/mineocclude/regime_a.py:450-471 (last_visible, constant_velocity, training_mean)",
+        "NEW src/mineocclude/experiment_iii/baselines_motion.py"
+      ],
+      "current_behavior": "last_visible_position_baseline and training_mean_baseline are directly reusable. constant_velocity_baseline uses a 15-sample window via EFFECTIVE_PRECEDING_STEPS. There is no time-only baseline.",
+      "required_experiment_iii_behavior": "Last-seen and training-mean reused. Constant velocity re-specified to the LAST 10 FIR-aligned pre-occlusion positions. Time-only added on the design [1, direction_sign, a, direction_sign*a]. Oracle baselines must never feed a model feature.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "constant-velocity window is exactly 10",
+        "time-only design matrix test",
+        "oracle-not-a-model-input test",
+        "A.25 fold leakage"
+      ],
+      "dependency": [
+        "C14"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "baselines_receipt.json with all four motion/clock baselines",
+      "task_graph_node": "I14",
+      "authority_section": "8.9",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C25",
+      "name": "Grouped nested ridge",
+      "source_files": [
+        "src/mineocclude/probes/ridge.py:192-223 (fit_ridge)",
+        "src/mineocclude/regime_a_first25_analysis.py:17 (ALPHAS)",
+        "NEW src/mineocclude/experiment_iii/readout.py"
+      ],
+      "current_behavior": "fit_ridge already provides an unpenalized intercept, training-only standardization, and a dual solve when p > n - directly reusable. The legacy ALPHAS tuple has only four values (0.1, 1, 10, 100).",
+      "required_experiment_iii_behavior": "Reuse fit_ridge. Use the five-value alpha grid {0.1, 1, 10, 100, 1000}, five outer identity folds, four inner rotations, identity-macro inner-validation alpha selection, smallest-alpha tie-break, and no held-out tuning.",
+      "decision": "REUSE_UNCHANGED",
+      "tests_required": [
+        "alpha grid has exactly five values",
+        "alpha selected inside outer training only",
+        "smallest-alpha tie-break",
+        "A.25 fold leakage"
+      ],
+      "dependency": [
+        "C03",
+        "C21"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "PREDICTION_LOCK.json with the selected alpha recorded per outer fold",
+      "task_graph_node": "I15",
+      "authority_section": "8.8",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C26",
+      "name": "Prediction locking",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/prediction_lock.py",
+        "NEW scripts/experiment_iii/lock_predictions.py"
+      ],
+      "current_behavior": "No prediction-lock mechanism exists; the legacy analysis computes metrics inline.",
+      "required_experiment_iii_behavior": "Emit exactly one held-out prediction per (identity, condition, row, model) cell, then hash and seal PREDICTION_LOCK.json BEFORE any summary statistic is computed. After the lock nothing upstream may change.",
+      "decision": "NEW",
+      "tests_required": [
+        "A.27 prediction locking order",
+        "duplicate/missing cell detection",
+        "statistics-before-lock refusal"
+      ],
+      "dependency": [
+        "C25",
+        "C23",
+        "C24"
+      ],
+      "risk": "HIGH - this is the irreversible prospective boundary; a statistic computed first silently destroys it",
+      "completion_evidence": "PREDICTION_LOCK.json and PREDICTION_LOCK.sha256, timestamped before any results file",
+      "task_graph_node": "I15",
+      "authority_section": "8.8",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C27",
+      "name": "Statistics",
+      "source_files": [
+        "src/mineocclude/regime_a_first25_analysis.py:78-113 (scalar_metrics)",
+        "src/mineocclude/regime_a_first25_analysis.py:226-251 (bootstrap_intervals)",
+        "src/mineocclude/regime_a.py:571-612 (B=49 null - DO NOT PORT)",
+        "NEW src/mineocclude/experiment_iii/statistics.py"
+      ],
+      "current_behavior": "scalar_metrics already macro-averages per identity and separates pooled metrics; bootstrap_intervals already resamples whole identities at B=10,000. The B=49 derangement null answers a searched-family question Experiment III does not ask.",
+      "required_experiment_iii_behavior": "Reuse the identity-macro metrics and whole-identity bootstrap. Add the three primary estimands, one-sided identity-level t tests, Holm-3, the five secondary families with Holm-2 on temporal, and the L0 control. Do NOT port the B=49 null. Emit no overall pass/fail verdict.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.26 bootstrap identity resampling",
+        "Holm family sizes are exactly 3 and 2",
+        "no success gate emitted",
+        "zero-TSS refusal"
+      ],
+      "dependency": [
+        "C26"
+      ],
+      "risk": "MEDIUM - reintroducing any removed gate silently changes the scientific contract",
+      "completion_evidence": "primary_results.json, temporal_results.json, context_age_results.json",
+      "task_graph_node": "I16",
+      "authority_section": "8.10",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C28",
+      "name": "Result packaging",
+      "source_files": [
+        "NEW scripts/experiment_iii/build_scientific_package.py"
+      ],
+      "current_behavior": "The legacy tree has extensive per-campaign packaging that is not reusable wholesale.",
+      "required_experiment_iii_behavior": "Assemble the terminal evidence package of authority 15.1, with every figure and table traceable to a locked prediction or a receipt, and every claim mapped to a permitted adjudication interpretation.",
+      "decision": "NEW",
+      "tests_required": [
+        "figure traceability test",
+        "package completeness against the artifact inventory",
+        "claim-to-adjudication mapping test"
+      ],
+      "dependency": [
+        "C27"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "scientific_package_manifest.json plus EXPERIMENT_III_CLOSURE_RECEIPT.json",
+      "task_graph_node": "I16",
+      "authority_section": "15.1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C29",
+      "name": "Runtime status surface",
+      "source_files": [
+        "NEW src/mineocclude/experiment_iii/status.py"
+      ],
+      "current_behavior": "No compact live status artifact exists for long-running stages.",
+      "required_experiment_iii_behavior": "Emit the observational status document of LIVE_STATUS_CONTRACT.json for every long-running stage. It must be strictly observational and must never influence scientific behavior.",
+      "decision": "NEW",
+      "tests_required": [
+        "status document schema test",
+        "status is write-only with respect to control flow",
+        "atomic status write test"
+      ],
+      "dependency": [],
+      "risk": "LOW",
+      "completion_evidence": "status.json present and updating during P1 and production",
+      "task_graph_node": "I17",
+      "authority_section": "LIVE_STATUS_CONTRACT.json",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C30",
+      "name": "Recovery and resume handling",
+      "source_files": [
+        "src/mineocclude/regime_a_execution.py:204-312 (A4ExecutionRunner.run)",
+        "src/mineocclude/regime_a.py (AtomicTrajectoryStore, HashChainLedger)",
+        "NEW src/mineocclude/experiment_iii/execution.py"
+      ],
+      "current_behavior": "The A4 runner already implements same-spec partial detection, discard/retry, a hash-chain ledger, and the PLANNED/RUNNING/CAPTURED/VALIDATED/DURABLE/COMPLETE state machine - but its unit is the trajectory and it fuses extraction into the capture loop.",
+      "required_experiment_iii_behavior": "Reuse the ledger, atomic store, and state machine. Change the capture unit to (identity x condition) and separate extraction into its own stage with unit (capture x layer x slice) and the PLANNED/RUNNING/EXTRACTED/VALIDATED/DURABLE/COMPLETE machine. Same-spec resume only.",
+      "decision": "REIMPLEMENT_MINIMALLY",
+      "tests_required": [
+        "A.29 same-spec resume",
+        "A.30 authority/hash drift rejection",
+        "kill-and-restart recomputes nothing already DURABLE (P1)"
+      ],
+      "dependency": [
+        "C16",
+        "C19"
+      ],
+      "risk": "MEDIUM - fusing extraction into capture, as the legacy runner does, would force full recapture after an extraction crash",
+      "completion_evidence": "P1 receipt demonstrating a mid-run kill and clean resume",
+      "task_graph_node": "I18",
+      "authority_section": "8.6",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB01",
+      "name": "Phase 0 Amendment 1 binding",
+      "module": "III-B",
+      "source_files": [
+        "docs/experiment_iii/final_authorities/PHASE0_AMENDMENT_1_BAYESIAN_MODULE_III_B.{md,json}"
+      ],
+      "current_behavior": "No Phase 0 amendment existed; the original design excluded U2/U3.",
+      "required_experiment_iii_behavior": "Bind the hash of the additive prospective amendment into the authority and every III-B artifact.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.1 amendment hash binding"
+      ],
+      "dependency": [],
+      "risk": "LOW",
+      "completion_evidence": "amendment hashes recorded in the machine authority",
+      "task_graph_node": "IB01",
+      "authority_section": "17",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB02",
+      "name": "q-generalized path and qualification primitive (SHARED, gates C02)",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/cohort.py",
+        "src/mineocclude/experiment_iii/qualification.py"
+      ],
+      "current_behavior": "III-A item C01 parameterizes q but generates one cell per identity. generate_noise_schedule already takes q.",
+      "required_experiment_iii_behavior": "Provide generate_path(seed, q) and qualifies(candidate, q) for arbitrary q using the frozen drift-before-noise iterative arithmetic, and qualifies_at_all_q(candidate, Q) evaluating gates 1-11 at every q in Q on each cell's OWN regenerated path. This primitive is a PREREQUISITE of C02/I02 because III-A qualification gate 12 is defined in terms of it. The III-B q-cell manifest EXPANSION moved to CB09.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "D.2 q=0.05 regression",
+        "D.3 innovation pairing",
+        "D.4 all-q qualification",
+        "D.31 gate-12 ordering"
+      ],
+      "dependency": [
+        "C01"
+      ],
+      "risk": "CRITICAL - it touches III-A cohort code AND III-A gate 12 depends on it, so it must be correct before I02 materializes the cohort, not merely before III-A P1",
+      "completion_evidence": "the q=0.05 regression receipt plus cohort_all_q_qualification_receipt.json",
+      "task_graph_node": "IB02",
+      "authority_section": "19.4",
+      "status": "NOT_STARTED",
+      "prerequisite_of": [
+        "C02"
+      ],
+      "superseded_dependency": [
+        "C01",
+        "C02"
+      ],
+      "reordered_by": "FINAL_AUTHORITY_REPAIR_PASS_1 defect B1"
+    },
+    {
+      "id": "CB03",
+      "name": "q=0.05 regression fixture",
+      "module": "III-B",
+      "source_files": [
+        "tests/experiment_iii/test_q_regression.py"
+      ],
+      "current_behavior": "No regression guard exists against a q-generalization defect silently altering III-A.",
+      "required_experiment_iii_behavior": "Prove the generalized generator reproduces the frozen q=0.05 behavior bit-identically, including the real A-prime path hash b5803943e515ea633cc4dd80ddeaf349db5cb99d11980febdc3f13d7f84a56b7, whose full provenance is bound in the machine authority at fir.d2_regression_reference (commit f2bc2c8, prospective_development_authority_v0_3 stage2_locked_manifest.json, sha256 ad718685..., unit a2x_t01_wall, seed 2154560968567132226, start -7.8, LTR, q=0.05). Both negative controls must change the hash.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.2"
+      ],
+      "dependency": [
+        "CB02"
+      ],
+      "risk": "CRITICAL - without it a q-generalization defect could silently alter the III-A cohort at the exact moment gate 12 is evaluated",
+      "completion_evidence": "test passes before I02 materializes the cohort",
+      "task_graph_node": "IB03",
+      "authority_section": "18.2",
+      "status": "NOT_STARTED",
+      "prerequisite_of": [
+        "C02"
+      ],
+      "reordered_by": "FINAL_AUTHORITY_REPAIR_PASS_1 defect B1"
+    },
+    {
+      "id": "CB04",
+      "name": "Innovation-pairing fixture",
+      "module": "III-B",
+      "source_files": [
+        "tests/experiment_iii/test_innovation_pairing.py"
+      ],
+      "current_behavior": "Pairing is generator-native but unguarded.",
+      "required_experiment_iii_behavior": "Assert standard normals are identical across q for a fixed seed and that noise_draw == z*sqrt(q*dt) exactly.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.3"
+      ],
+      "dependency": [
+        "CB02"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "fixture passes",
+      "task_graph_node": "IB04",
+      "authority_section": "18.2",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB05",
+      "name": "Bayesian oracle implementation",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/oracle.py"
+      ],
+      "current_behavior": "No oracle exists.",
+      "required_experiment_iii_behavior": "Implement the EXACT posterior: mu_tau = x[t0] + s*v*dt*(tau - gbar); sigma2_tau = q*dt*sum_{m<tau} H(m)^2. The affine form is FORBIDDEN below tau=8 because it returns negative variance.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.6 oracle exactness",
+        "D.7 affine-form rejection",
+        "D.8 cross-q ratio"
+      ],
+      "dependency": [
+        "CB02"
+      ],
+      "risk": "CRITICAL - the affine form is wrong by up to 1e5 percent at tau=1 and returns negative variance for tau<=4",
+      "completion_evidence": "iii_b_oracle_validation_receipt.json PASS",
+      "task_graph_node": "IB05",
+      "authority_section": "20",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB06",
+      "name": "Oracle fixtures",
+      "module": "III-B",
+      "source_files": [
+        "tests/experiment_iii/test_oracle.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Assert S(tau) matches the frozen table to 1e-12; sigma>0 for all tau in 1..19 at every q; cross-q ratio equals sqrt(q_a/q_b) to 1e-12; no dependence on activations or fitted parameters.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.6",
+        "D.7",
+        "D.8"
+      ],
+      "dependency": [
+        "CB05"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "fixtures pass",
+      "task_graph_node": "IB06",
+      "authority_section": "20.6",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB07",
+      "name": "sigma-target ledger",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/sigma_ledger.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Emit one oracle sigma per (identity, q, tau) cell, hash-bound, derived only from frozen apparatus parameters.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.6"
+      ],
+      "dependency": [
+        "CB05"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "iii_b_sigma_target_ledger.jsonl",
+      "task_graph_node": "IB07",
+      "authority_section": "20",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB08",
+      "name": "VIS6 selector",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/vis_rows.py"
+      ],
+      "current_behavior": "III-A extracts only the 19 occluded rows; no visible-row selector exists.",
+      "required_experiment_iii_behavior": "Select the last 6 consecutive POST-occlusion model frames that are counterfactually EXTENT_FULLY_VISIBLE, clamp-free, and have a complete 16-pair context. Best-effort, not a gate, coverage reported.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.9 VIS6 definition",
+        "D.10 clamp-free requirement"
+      ],
+      "dependency": [
+        "C13"
+      ],
+      "risk": "MEDIUM - a pre-occlusion window is infeasible and a clamped tail window is scientifically void",
+      "completion_evidence": "iii_b_vis_inventory.json with per-cell coverage",
+      "task_graph_node": "IB08",
+      "authority_section": "18.3, 24",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB09",
+      "name": "III-B manifests",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/iii_b_manifest.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Materialize per-(identity,q) cells with their own target window, own VIS window, inherited fold, episode id in 87001-87999, and capture_unit_id {identity}__L4__q{q:.4f}.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.4",
+        "D.5 cross-q fold identity"
+      ],
+      "dependency": [
+        "CB02",
+        "CB08"
+      ],
+      "risk": "MEDIUM",
+      "completion_evidence": "iii_b_q_manifests.jsonl hashed",
+      "task_graph_node": "IB09",
+      "authority_section": "19",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB10",
+      "name": "III-B pilot runner",
+      "module": "III-B",
+      "source_files": [
+        "scripts/experiment_iii/run_iii_b_pilot.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "4 captures, 100 forwards; verify q parameterization, pairing, replay, target support, VIS6, FIR coherence, extraction, oracle generation; one q=0.15 fallback re-pilot on TECHNICAL failure only.",
+      "decision": "NEW",
+      "tests_required": [
+        "group E live pilot"
+      ],
+      "dependency": [
+        "CB09",
+        "CB05"
+      ],
+      "risk": "MEDIUM",
+      "completion_evidence": "iii_b_pilot_receipt.json PASS",
+      "task_graph_node": "IB10",
+      "authority_section": "29.4",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB11",
+      "name": "U2 probe machinery",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/u2.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Pooled-across-q ridge onto oracle sigma on tau 1..15 using the frozen III-A recipe and folds; the three U2 statistics with U2-S2 residualized on the 30 tau-by-direction cells (NOT tau alone); within-identity q permutation null B=9999 for U2-S1; whole-identity bootstrap inversion p-values for U2-S2 and U2-S3; ordinary unadjusted two-sided 95% percentile intervals for effect-size reporting; Holm across exactly 3 p-values (2 at drop LEVEL_1). No interval may be labelled Holm-adjusted.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.11 U2 statistics and the zero-q-sensitivity direction control",
+        "D.12 permutation null",
+        "D.13 Holm family size",
+        "D.33 Holm procedure executability"
+      ],
+      "dependency": [
+        "CB07",
+        "C25"
+      ],
+      "risk": "MEDIUM",
+      "completion_evidence": "iii_b_u2_results.json",
+      "task_graph_node": "IB11",
+      "authority_section": "22",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB12",
+      "name": "Clock and category controls",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/controls_u2.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "All eight frozen controls including the tau-only baseline, the q-only categorical baseline, the analytic oracle reference, the pixel baseline, the permutation null, matched-tau evaluation, the U3 interaction, and the tau>=16 boundary collapse.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.14 all eight controls present",
+        "D.15 wording gate"
+      ],
+      "dependency": [
+        "CB11"
+      ],
+      "risk": "HIGH - without these a clock or category effect is indistinguishable from uncertainty representation",
+      "completion_evidence": "iii_b_controls_report.json",
+      "task_graph_node": "IB12",
+      "authority_section": "23",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB13",
+      "name": "U3 dynamics",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/u3.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Per-identity slope of sigma_hat on tau within each q; the pooled-across-q slope statistic; the q_high minus q_low slope interaction; descriptive slope ratios against the oracle sqrt(q) ratios; whole-identity bootstrap inversion p-values for U3-S1 and U3-S2; Holm across exactly 2; hierarchical on U2. U3-S3 enters no family and is never Holm-corrected.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.16 U3 statistics",
+        "D.17 hierarchy",
+        "D.33 Holm procedure executability"
+      ],
+      "dependency": [
+        "CB11"
+      ],
+      "risk": "MEDIUM",
+      "completion_evidence": "iii_b_u3_results.json",
+      "task_graph_node": "IB13",
+      "authority_section": "26",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB14",
+      "name": "Calibration battery",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/calibration.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Scale agreement with slope/intercept/R2 CIs on RAW sigma_hat; monotonicity on RAW sigma_hat; CONDITIONAL coverage behind the mean gate using sigma_tilde = max(sigma_hat, 1e-4 blocks); both NLL variants with the hybrid primary, also using sigma_tilde; fraction_clipped, count_negative and min_sigma_hat reported for every analysis that uses sigma_tilde; the permissible-language table, with the scale criterion worded as NON-REJECTION of scale mismatch, never as proof of equivalence. The calibration battery enters no Holm family.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.18 scale agreement",
+        "D.19 conditional coverage gate",
+        "D.20 hybrid NLL",
+        "D.32 negative sigma handling"
+      ],
+      "dependency": [
+        "CB11",
+        "C24"
+      ],
+      "risk": "HIGH - coverage must not be reported as a calibration failure when the mean gate fails, and the positivity guard must never leak into U2/U3",
+      "completion_evidence": "iii_b_calibration_report.json",
+      "task_graph_node": "IB14",
+      "authority_section": "27",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB15",
+      "name": "III-B blocker and status integration",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/blockers.py",
+        "src/mineocclude/experiment_iii/status.py"
+      ],
+      "current_behavior": "III-A status surface does not distinguish the two modules.",
+      "required_experiment_iii_behavior": "Add the B_* codes and the III-A/III-B status fields including HOURS_TO_ABSOLUTE_DEADLINE; distinguish CLEAN_SKIP, TECHNICAL_FAIL and SCIENTIFIC_NULL.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "D.21 status schema",
+        "D.22 outcome vocabulary"
+      ],
+      "dependency": [
+        "C29"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "status document validates against the extended contract",
+      "task_graph_node": "IB15",
+      "authority_section": "29.9",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB16",
+      "name": "III-B capture runner integration",
+      "module": "III-B",
+      "source_files": [
+        "scripts/experiment_iii/run_iii_b_capture.py"
+      ],
+      "current_behavior": "The III-A runner has no q dimension.",
+      "required_experiment_iii_behavior": "Capture 50 (identity, q) units at L4 reusing the III-A capture path, receipts, sentinels, ledger and resume; q flows through startspec, which already accepts it.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "D.23 capture unit binding"
+      ],
+      "dependency": [
+        "CB09",
+        "C16"
+      ],
+      "risk": "LOW - the runtime is already q-parameterized",
+      "completion_evidence": "iii_b_capture_matrix.json",
+      "task_graph_node": "IB16",
+      "authority_section": "29",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB17",
+      "name": "III-B extraction",
+      "module": "III-B",
+      "source_files": [
+        "scripts/experiment_iii/run_iii_b_extraction.py"
+      ],
+      "current_behavior": "III-A extraction is fixed to 3 layers and 19 occluded rows.",
+      "required_experiment_iii_behavior": "L19 only, PREVIOUS+CURRENT, over both the 19 occluded rows and the 6 VIS rows; arrays [19,336,2048] and [6,336,2048]; VIS re-inference on the existing III-A L4 q=0.05 captures without recapture.",
+      "decision": "PARAMETERIZE",
+      "tests_required": [
+        "D.24 array shapes and byte sizes"
+      ],
+      "dependency": [
+        "C19",
+        "CB08"
+      ],
+      "risk": "MEDIUM",
+      "completion_evidence": "iii_b_extraction_inventory.json",
+      "task_graph_node": "IB17",
+      "authority_section": "29.1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB18",
+      "name": "III-B result packaging",
+      "module": "III-B",
+      "source_files": [
+        "scripts/experiment_iii/build_iii_b_package.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Belief-state ladder adjudication, III-B closure receipt, and combined III-A + III-B packaging that never blocks III-A closure.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.25 ladder coverage",
+        "D.26 III-A independence"
+      ],
+      "dependency": [
+        "CB13",
+        "CB14"
+      ],
+      "risk": "LOW",
+      "completion_evidence": "iii_b_closure_receipt.json",
+      "task_graph_node": "IB18",
+      "authority_section": "28",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB19",
+      "name": "Launch-gate evaluator",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/launch_gate.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Eight requirements evaluated from time, technical state and resource inputs only; free space read as BYTES and compared against the frozen binary-GiB gates of resources.storage (POOL_WORKING >= 15 GiB; POOL_DURABLE >= 5 GiB only when POOL_DURABLE is a distinct local filesystem); device ids resolved so no pool is double counted; the gate-coherence invariant asserted; receipt emitted. Refuses any scientific-outcome input. Two evaluations only: 12:00 then once at 17:00.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.27 launch-gate inputs are outcome-independent",
+        "D.28 two evaluations only",
+        "B.12 combined-program storage preflight"
+      ],
+      "dependency": [
+        "CB15"
+      ],
+      "risk": "HIGH - an outcome-dependent gate would destroy III-B prospectivity",
+      "completion_evidence": "iii_b_launch_gate_receipt.json",
+      "task_graph_node": "IB19",
+      "authority_section": "29.5",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "CB20",
+      "name": "Drop and deadline evaluator",
+      "module": "III-B",
+      "source_files": [
+        "src/mineocclude/experiment_iii/drop_ladder.py"
+      ],
+      "current_behavior": "None.",
+      "required_experiment_iii_behavior": "Select a drop level from time, technical completion and resources only; enforce the Thursday 20:00 absolute stop; never delay III-A closure.",
+      "decision": "NEW",
+      "tests_required": [
+        "D.29 drop-level inputs",
+        "D.30 absolute stop"
+      ],
+      "dependency": [
+        "CB19"
+      ],
+      "risk": "HIGH - outcome-driven level selection is a scientific violation",
+      "completion_evidence": "iii_b_drop_level_receipt.json",
+      "task_graph_node": "IB20",
+      "authority_section": "29.6, 29.7",
+      "status": "NOT_STARTED"
+    }
+  ],
+  "remove_from_exp3_path": [
+    {
+      "id": "R01",
+      "target": "src/mineocclude/regime_a.py:245-254 classify_visibility",
+      "reason": "OCCLUDED_AGREEMENT requires magenta not-detected; for L1-L3 the target is behind the footprint WITH image evidence, so this selector is material- and outcome-dependent",
+      "blocker_if_present": "TARGET_LEGACY_SELECTOR_PRESENT"
+    },
+    {
+      "id": "R02",
+      "target": "src/mineocclude/regime_a.py:257-300 assign_stable_hidden_tau",
+      "reason": "requires a 19-frame OCCLUDED_AGREEMENT run and assigns tau; superseded by counterfactual extent",
+      "blocker_if_present": "TARGET_LEGACY_SELECTOR_PRESENT"
+    },
+    {
+      "id": "R03",
+      "target": "scripts/run_regime_a.py:283-409 tau-based target construction",
+      "reason": "post-capture target selection from centre-ray plus magenta; superseded by the prospective target manifest",
+      "blocker_if_present": "TARGET_LEGACY_SELECTOR_PRESENT"
+    },
+    {
+      "id": "R04",
+      "target": "src/mineocclude/regime_a.py:571-612 build_null_mappings (B=49)",
+      "reason": "selection-aware derangement null answers a searched-family question Experiment III does not ask",
+      "blocker_if_present": "ANALYSIS_FAMILY_ALTERED"
+    },
+    {
+      "id": "R05",
+      "target": "src/mineocclude/regime_a.py:29 SPEED_BLOCKS_PER_SECOND = 1.5",
+      "reason": "implementation-base default superseded by speed 2.0; must never be authoritative on the Experiment III path",
+      "blocker_if_present": "COHORT_SPEED_VIOLATION"
+    },
+    {
+      "id": "R06",
+      "target": "src/mineocclude/regime_a.py:47 BEST_K_GRID",
+      "reason": "BEST-K is an excluded representation family",
+      "blocker_if_present": "ANALYSIS_FAMILY_ALTERED"
+    },
+    {
+      "id": "R07",
+      "target": "src/mineocclude/activations/pool.py:437-556 mean_pool_visual_tokens",
+      "reason": "global 336-token mean; not the frozen COARSE_2X6_CONCAT representation",
+      "blocker_if_present": "FEATURE_DIMENSION_MISMATCH"
+    },
+    {
+      "id": "R08",
+      "target": "Experiment II lifecycle gate hierarchy",
+      "reason": "recovery-era governance superstructure adds deadline risk without changing scientific validity",
+      "blocker_if_present": null
+    }
+  ],
+  "module_counts": {
+    "III_A": 30,
+    "III_B": 20
+  },
+  "amendment": "PHASE1_AMENDMENT_1_BAYESIAN_MODULE_III_B",
+  "iii_a_items_modified_by_amendment": [],
+  "iii_a_corrections": [
+    {
+      "id": "FIX-1",
+      "target": "authority section 2.4 gate 3",
+      "change": "lane-clamp gate scoped to [0, last_target_row]; the all-frames form was infeasible",
+      "affects_change_matrix_item": "C02",
+      "scientific_value_changed": false
+    },
+    {
+      "id": "FIX-2",
+      "target": "blocker CAPTURE_LANE_CLAMP_ENGAGED",
+      "change": "detection rule scoped to the protected prefix",
+      "affects_change_matrix_item": null,
+      "scientific_value_changed": false
+    },
+    "C02 extended from eleven to TWELVE qualification gates, with gate 12 (all-q prospective qualification) evaluated before cohort materialization and freeze; CB02/CB03 reordered to be prerequisites of C02 rather than dependents of it.",
+    "CB03/D.2 reference provenance bound to a specific commit, manifest, unit and seed so Phase 2 can reconstruct it from the authority package plus the git object database alone."
+  ],
+  "amended_by": "FINAL_AUTHORITY_REPAIR_PASS_2"
+}

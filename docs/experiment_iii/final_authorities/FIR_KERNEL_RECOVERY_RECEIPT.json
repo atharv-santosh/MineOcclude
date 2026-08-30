@@ -1,0 +1,167 @@
+{
+  "schema_version": "mineocclude-experiment-iii-fir-kernel-recovery-v1",
+  "produced_by": "PHASE1_AUTHORITY_CONSTRUCTION",
+  "authority": "docs/experiment_iii/final_authorities/EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md",
+  "authority_section": "5.3",
+  "reason": "Phase 0 requires the frozen direction-specific A-prime causal FIR, but the literal tap values are not committed to this repository. They lived only in an A-prime Stage-1 decision artifact. They are exactly recoverable and independently verifiable from committed artifacts, using no outcome of any kind.",
+  "missing_artifact_sha256": "d00d7730e44200c2406d32475843a69011f3fff5b4cdaaa67167321416b7f6e2",
+  "missing_artifact_role": "A-prime Stage-1 decision carrying the literal kernel taps",
+  "recovery_source": {
+    "commit": "f2bc2c8082e77f9c3f9e089f2fb1a20b11a052a8",
+    "path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json",
+    "manifest_status": "POST_STAGE1_MATERIALIZED_AWAITING_SEPARATE_FREEZE_AND_AUTHORIZATION",
+    "capture_units": 50,
+    "trajectories": 25,
+    "scenes": [
+      "NO_WALL",
+      "WALL"
+    ],
+    "bytes_sha256": "f89c24fe01c18dc19432c425583bec25d3331173b19ef23f95094bd46f0a170e"
+  },
+  "d2_regression_reference_source": {
+    "purpose": "The D.2 q=0.05 bit-identity regression reference. A DIFFERENT manifest from the FIR recovery source above, bound at the same commit.",
+    "commit": "f2bc2c8082e77f9c3f9e089f2fb1a20b11a052a8",
+    "path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_3/stage2_locked_manifest.json",
+    "blob_sha1": "fb93a08ba2d71c28c9929469d9b34bf8fc6de17b",
+    "bytes": 270672,
+    "sha256": "ad718685b33030a0c0de405cd9d3abb737c3f3e9d087ad7c78768fe151855eb8",
+    "unit_id": "a2x_t01_wall",
+    "seed": 2154560968567132226,
+    "start_world_x": -7.8,
+    "direction": "LEFT_TO_RIGHT",
+    "motion_noise_q": 0.05,
+    "expected_path_sha256": "b5803943e515ea633cc4dd80ddeaf349db5cb99d11980febdc3f13d7f84a56b7",
+    "verified_at_repair": true
+  },
+  "procedure": [
+    "Regenerate each unit's 180-frame path with the A-prime generator arithmetic (default_rng(noise_seed).standard_normal(180) * sqrt(q*dt), iterative accumulation with the [-8,8] clamp) and verify its expected_path_sha256.",
+    "Per direction, assemble A h = b with rows [x[t], x[t-1], ..., x[t-8]] and b the materialized expected_causal_fir_target_world_x_blocks labels.",
+    "Solve by least squares over all units of that direction.",
+    "Apply the acceptance gates.",
+    "Re-derive every materialized label from the recovered taps and confirm agreement."
+  ],
+  "kernel_length": 9,
+  "kernel_lags": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "first_fully_resolved_tick": 8,
+  "recovered_kernels": {
+    "LEFT_TO_RIGHT": [
+      0.0552210582,
+      0.0955547802,
+      0.1729033607,
+      0.256237703,
+      0.1725945773,
+      0.1502955787,
+      0.028380577,
+      0.0327627758,
+      0.036049589
+    ],
+    "RIGHT_TO_LEFT": [
+      0.0155128136,
+      0.1420986717,
+      0.3819949723,
+      0.2529919934,
+      0.1314006058,
+      0.0092585384,
+      0.0336603539,
+      0.0330820509,
+      -0.0
+    ]
+  },
+  "normalization": {
+    "rule": "normalized[k] = taps[k] / math.fsum(taps); accumulate with math.fsum",
+    "mandatory_before_any_use": true,
+    "applied_once_at_load": true,
+    "raw_tap_fsum": {
+      "LEFT_TO_RIGHT": 0.9999999999,
+      "RIGHT_TO_LEFT": 1.0
+    },
+    "why": "The taps are published rounded to 10 decimal places. LEFT_TO_RIGHT therefore sums to 1.0e-10 short of unit mass. Unnormalized taps satisfy the 1e-9 label tolerance of A.12 but FAIL the stricter 1e-12 S(tau) oracle tolerance of D.6 by up to 9.29e-10. Normalizing reproduces the frozen H(m), S(tau), gbar and c_direction tables exactly.",
+    "negative_zero_note": "RIGHT_TO_LEFT tap 8 is the exact float -0.0; it is treated as +0.0 and does not violate the nonnegativity acceptance gate.",
+    "max_S_tau_error_if_unnormalized": {
+      "LEFT_TO_RIGHT": 9.289005120649563e-10,
+      "RIGHT_TO_LEFT": 0.0
+    },
+    "verified_at_repair": "normalized cumulative masses reproduce III_B_ORACLE_SPECIFICATION.json cumulative_kernel_mass_H_0_to_8 and S_tau_exact_tau_0_to_19 with maximum absolute difference 0.0"
+  },
+  "diagnostics": {
+    "LEFT_TO_RIGHT": {
+      "design_rows": 494,
+      "design_rank": 9,
+      "max_abs_residual_exact_solution": 2.220446049250313e-15,
+      "tap_sum_exact_solution": 0.9999999999999993,
+      "min_tap_exact_solution": 0.028380577029607057,
+      "group_delay_ticks": 3.339950418233995,
+      "mode_lag": 3,
+      "positive_mass_support": [
+        0,
+        8
+      ],
+      "off_peak_mass": 0.7437622969743762
+    },
+    "RIGHT_TO_LEFT": {
+      "design_rows": 456,
+      "design_rank": 9,
+      "max_abs_residual_exact_solution": 1.7763568394002505e-15,
+      "tap_sum_exact_solution": 0.9999999999999999,
+      "min_tap_exact_solution": -1.1102230246251565e-16,
+      "group_delay_ticks": 2.6704961914,
+      "mode_lag": 2,
+      "positive_mass_support": [
+        0,
+        7
+      ],
+      "off_peak_mass": 0.6180050277
+    }
+  },
+  "aggregate_diagnostics": {
+    "mode_lag": 2,
+    "positive_mass_support": [
+      0,
+      8
+    ],
+    "group_delay_ticks": 3.0052233048169974,
+    "aprime_frozen_forensic_reference_mode_lag": 2,
+    "aprime_frozen_forensic_reference_support": [
+      0,
+      8
+    ]
+  },
+  "verification": {
+    "path_hashes_checked": 50,
+    "path_hashes_reproduced": 50,
+    "labels_checked": 950,
+    "labels_reproduced": 950,
+    "max_abs_label_error_rounded_10dp": 9.029221814671473e-12,
+    "environment": "Python 3.14.6 / NumPy 2.4.3"
+  },
+  "acceptance_gates": {
+    "design_rank_is_9": true,
+    "all_taps_nonnegative_within_1e_9": true,
+    "tap_sum_is_1_within_1e_9": true,
+    "max_abs_residual_le_1e_12": true,
+    "aggregate_mode_lag_is_2": true,
+    "positive_support_within_0_8": true,
+    "all_path_hashes_reproduced": true,
+    "all_labels_reproduced": true,
+    "normalized_H_reproduces_oracle_spec_within_1e_12": true
+  },
+  "acceptance_gates_all_passed": true,
+  "result": "RECOVERED_AND_VERIFIED",
+  "constraints": {
+    "refit_from_experiment_iii_data_allowed": false,
+    "status": "MEASUREMENT_CALIBRATION_INHERITED_FROM_THE_SAME_SPEED_2_0_APPARATUS",
+    "must_be_reproduced_and_bound_at_A1": true,
+    "must_be_bound_in_P2": true,
+    "failure_blocker": "FIR_KERNEL_RECOVERY_FAILED"
+  }
+}
