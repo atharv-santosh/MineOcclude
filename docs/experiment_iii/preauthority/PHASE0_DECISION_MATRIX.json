@@ -1,0 +1,405 @@
+{
+  "schema_version": "mineocclude-experiment-iii-phase0-decision-matrix-v1",
+  "document_role": "PREAUTHORITY_DESIGN_ADJUDICATION_NOT_FINAL_AUTHORITY",
+  "generated_date": "2026-08-30",
+  "repository": {
+    "root": "C:/Users/lollo/MineOcclude-Exp3",
+    "branch": "experiment/exp3-graded-partial-observability",
+    "head_commit_audited": "4c8dd7c1a7e8ff6ac0042361579da27e362996fe",
+    "expected_historical_base_commit": "fa31aaca8af2872663ea81a54d6ed3a51e9f7f0a",
+    "historical_base_is_direct_parent_and_merge_base": true,
+    "tracking_branch": "origin/experiment/exp3-graded-partial-observability",
+    "remote": "https://github.com/atharv-santosh/MineOcclude.git",
+    "worktree_clean_before_temporary_inspection": true,
+    "lineage_changed": false
+  },
+  "preauthority_inputs": [
+    {
+      "filename": "AAKA-Proposal-Final (4).pdf",
+      "bytes": 206801,
+      "sha256": "67b6c8bdb8ee43fbe9ec931c83a2ee980d7c950da88e7b1324360c0f1283dab1"
+    },
+    {
+      "filename": "final-regime-a-prime-canonical-scientific-reconstruction.md",
+      "bytes": 131083,
+      "sha256": "9f6d9fcf89f8a631c5660b8b9854c7f370c47673e35c837f8b1a444618d27277"
+    },
+    {
+      "filename": "MineOcclude_Experiment_II_Final_Scientific_Consolidation.md",
+      "bytes": 102289,
+      "sha256": "7e4c70f59fd2cdb74703567c4db59f91d969c460a3b15f2b657b2c88fe1b5dcd"
+    },
+    {
+      "filename": "MineOcclude_Final_PreSubmission_Experiment_Design.docx",
+      "bytes": 74490,
+      "sha256": "a55a26e15155cce5d98df153b46fdd7059345e335e3a1f599bc2f7eb30dcf33b"
+    },
+    {
+      "filename": "nickb_aaka.pdf",
+      "bytes": 190123,
+      "sha256": "2ffffb12e1ef5d8d9da6d9601886035e35680cb2a3c77c69725044184f8f14f0"
+    }
+  ],
+  "questions": {
+    "Q1": {
+      "decision_key": "IDENTITY_DECISION",
+      "decision": "FRESH_25",
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    },
+    "Q2": {
+      "decision_key": "WALL_PARAMETERIZATION",
+      "decision": "CLEAN_WITH_BOUNDED_CHANGE",
+      "status": "RESOLVED",
+      "confidence": "MEDIUM"
+    },
+    "Q3": {
+      "decision_key": "VISIBILITY_METRIC_DECISION",
+      "decision": "REPLACE_RELV",
+      "replacement": "ROBUST_VISUAL_EVIDENCE_RVE",
+      "status": "RESOLVED",
+      "confidence": "MEDIUM"
+    },
+    "Q4": {
+      "decision_key": "TEMPORAL_EXTRACTION",
+      "decision": "VERIFIED_ONE_FORWARD",
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    },
+    "Q5": {
+      "decision_key": "STATISTICAL_PLAN",
+      "decision": "IDENTITY_LEVEL_THREE_ESTIMAND_PRIMARY_FAMILY",
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    },
+    "Q6": {
+      "decision_key": "EXP2_REUSE_MATRIX",
+      "decision": "BOUNDED_REUSE_NO_LIFECYCLE_WHOLESALE_PORT",
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    },
+    "Q7": {
+      "decision_key": "EXP3_SPEED_BLOCKS_PER_SECOND",
+      "decision": 2.0,
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    },
+    "Q8": {
+      "decision_key": "EXP3_VISIBILITY_SEMANTICS",
+      "decision": "CONDITION_PLUS_COUNTERFACTUAL_EXTENT_PLUS_FROZEN_RVE",
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    },
+    "Q9": {
+      "question": "Can the original executable base directly supply valid Experiment III target semantics?",
+      "decision": "PORT_MINIMAL_A_PRIME_EXTENT_AND_FIR_MEASUREMENT_SUBSET",
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    },
+    "Q10": {
+      "question": "Does the pixel comparator support an unrestricted internal-support-beyond-pixels claim?",
+      "decision": "LIMIT_TO_LINEAR_CURRENT_FRAME_PIXEL_BASELINE_SECONDARY",
+      "status": "RESOLVED",
+      "confidence": "HIGH"
+    }
+  },
+  "additional_material_question_count": 2,
+  "cohort": {
+    "classification": "FRESH_PROSPECTIVE_PRODUCTION_COHORT",
+    "production_identity_count": 25,
+    "left_to_right_count": 13,
+    "right_to_left_count": 12,
+    "outer_fold_count": 5,
+    "identities_per_outer_fold": 5,
+    "historical_t01_t25_role": "EVIDENCE_ONLY_NOT_RECAPTURED_NOT_POOLED",
+    "pilot_identity_count": 2,
+    "pilot_confirmatory_membership": false,
+    "replacement_after_outcomes_allowed": false
+  },
+  "motion": {
+    "speed_blocks_per_second": 2.0,
+    "process_noise_q_blocks_squared_per_second": 0.05,
+    "dt_seconds": 0.05,
+    "capture_hz": 20,
+    "frames_per_capture": 180,
+    "direction_specific_causal_fir": true,
+    "path_and_noise_schedule_shared_across_conditions": true
+  },
+  "visibility_conditions": [
+    {
+      "id": "L0",
+      "wall_present": false,
+      "wall_block_id": "minecraft:air",
+      "role": "FULLY_VISIBLE_ANCHOR"
+    },
+    {
+      "id": "L1",
+      "wall_present": true,
+      "wall_block_id": "P0_SELECTED_ONE_LAYER_STAINED_GLASS_HIGH_RVE",
+      "role": "HIGH_PARTIAL_EVIDENCE"
+    },
+    {
+      "id": "L2",
+      "wall_present": true,
+      "wall_block_id": "P0_SELECTED_ONE_LAYER_STAINED_GLASS_MEDIUM_RVE",
+      "role": "MEDIUM_PARTIAL_EVIDENCE"
+    },
+    {
+      "id": "L3",
+      "wall_present": true,
+      "wall_block_id": "P0_SELECTED_ONE_LAYER_STAINED_GLASS_LOW_RVE",
+      "role": "LOW_MEASURABLE_PARTIAL_EVIDENCE"
+    },
+    {
+      "id": "L4",
+      "wall_present": true,
+      "wall_block_id": "minecraft:stone",
+      "role": "OPAQUE_ANCHOR"
+    }
+  ],
+  "wall": {
+    "parameterization": "CLEAN_WITH_BOUNDED_CHANGE",
+    "layout": "layout_01",
+    "as_built_volume": {
+      "x_interval": [-3.0, 4.0],
+      "z_interval": [2.0, 3.0],
+      "y_interval": [4.0, 7.0]
+    },
+    "block_thickness": 1,
+    "height_blocks": 3,
+    "allowed_partial_family": "ONE_LAYER_FULL_CUBE_MINECRAFT_1_16_5_STAINED_GLASS",
+    "clear_glass_production_eligible": false,
+    "multi_layer_glass_allowed": false,
+    "geometric_fallback_allowed": false,
+    "bounded_p0_test_required": true,
+    "p0_failure_state": "NO_VALID_LADDER_STOP"
+  },
+  "visibility_metric": {
+    "name": "ROBUST_VISUAL_EVIDENCE",
+    "abbreviation": "RVE",
+    "input": "SOURCE_RGB_FRAMES_CONVERTED_TO_LINEAR_LIGHT",
+    "outcome_blind": true,
+    "model_inference_used": false,
+    "support": "L0_PRESENT_MINUS_ABSENT_NOISE_THRESHOLD_MASK_DILATED_2_PIXELS",
+    "excess_energy": "max(sum_mask(norm2(P_linear-A_linear)^2)-absent_split_half_noise_energy,0)",
+    "normalization": "E_condition_placement/E_L0_same_placement",
+    "placement_count": 9,
+    "replicate_order": "TWO_ABBA_BLOCKS_AT_LEAST_8_SETTLED_FRAMES_PER_STATE_PER_BLOCK",
+    "condition_summary": "MEDIAN_OVER_PLACEMENTS",
+    "selection_targets": [0.725, 0.425, 0.165],
+    "selection_zones": {
+      "L1": [0.60, 0.85],
+      "L2": [0.30, 0.55],
+      "L3": [0.08, 0.25]
+    },
+    "minimum_adjacent_median_separation": 0.12,
+    "minimum_ordered_placements_out_of_9": 8,
+    "placement_bootstrap_replicates": 10000,
+    "minimum_l3_excess_energy_to_noise_ratio": 5.0,
+    "maximum_within_placement_replicate_cv": 0.15,
+    "frozen_before_production_inference": true,
+    "target_row_selector": false
+  },
+  "target_eligibility_semantics": {
+    "rule": "EXACT_FROZEN_MANIFEST_ROW_AND_COMPLETE_PATH_FIR_ALIGNMENT_AND_COUNTERFACTUAL_EXTENT_FULLY_OCCLUDED",
+    "rows_per_capture": 19,
+    "selection_order": "FIRST_19_CONSECUTIVE_ELIGIBLE_ROWS_IN_ASCENDING_MODEL_FRAME_ORDER",
+    "material_independent": true,
+    "same_indices_and_labels_across_L0_L4": true,
+    "server_center_ray_is_selector": false,
+    "magenta_detector_is_selector": false,
+    "rve_is_selector": false,
+    "renderer_extent_half_width_blocks": 0.8727621336620037,
+    "context_age_definition": "TICKS_SINCE_LAST_COUNTERFACTUAL_NOT_FULLY_OCCLUDED_ROW",
+    "last_preocclusion_evidence_in_context_when_age_lte": 15,
+    "last_preocclusion_evidence_out_of_context_when_age_gte": 16
+  },
+  "model_extraction": {
+    "model": "MineWorld_700M_16f_FROZEN",
+    "main_checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "vae_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "layers": [4, 10, 19],
+    "hooked_layer_count_transient": 20,
+    "selected_layer_count_persisted": 3,
+    "context_pair_count": 16,
+    "visual_tokens_per_pair": 336,
+    "action_tokens_per_pair": 11,
+    "tokens_per_pair": 347,
+    "sequence_length": 5552,
+    "hidden_width": 2048,
+    "dtype": "float16",
+    "one_forward_per_target_row": true,
+    "temporal_indices": {
+      "PREVIOUS": {
+        "pair_ordinal": 14,
+        "inclusive_start": 4858,
+        "inclusive_end": 5193,
+        "python_start": 4858,
+        "python_stop_exclusive": 5194,
+        "shape": [1, 336, 2048]
+      },
+      "CURRENT": {
+        "pair_ordinal": 15,
+        "inclusive_start": 5205,
+        "inclusive_end": 5540,
+        "python_start": 5205,
+        "python_stop_exclusive": 5541,
+        "shape": [1, 336, 2048]
+      }
+    },
+    "persisted_shape_per_capture_layer_slice": [19, 336, 2048],
+    "preprocessing_change_allowed": false
+  },
+  "representations": [
+    {
+      "name": "CURRENT",
+      "feature_dimension": 24576,
+      "role": "PRIMARY_AT_L19_DESCRIPTIVE_AT_L4_L10"
+    },
+    {
+      "name": "CURRENT_MINUS_PREVIOUS",
+      "feature_dimension": 24576,
+      "role": "SECONDARY_TEMPORAL"
+    },
+    {
+      "name": "TWO_FRAME_CONCAT",
+      "feature_dimension": 49152,
+      "role": "SECONDARY_TEMPORAL"
+    }
+  ],
+  "pooling": {
+    "name": "COARSE_2X6_CONCAT",
+    "source_grid": [14, 24],
+    "coarse_grid": [2, 6],
+    "tokens_per_cell": [7, 4],
+    "cell_count": 12,
+    "hidden_width": 2048,
+    "output_dimension": 24576
+  },
+  "readout": {
+    "primary": "L19_COARSE_2X6_CONCAT_CURRENT_RIDGE",
+    "alpha_grid": [0.1, 1.0, 10.0, 100.0, 1000.0],
+    "outer_folds": 5,
+    "inner_rotations": 4,
+    "grouping_unit": "TRAJECTORY_IDENTITY",
+    "training_only_standardization": true,
+    "unpenalized_intercept": true,
+    "dual_solver_for_high_dimension": true,
+    "reselection_after_outcomes_allowed": false
+  },
+  "baselines": {
+    "linear_current_frame_pixel": {
+      "role": "SECONDARY_LIMITED_COMPARATOR",
+      "source": "RGB",
+      "resize": [48, 28],
+      "feature_count": 4032,
+      "pixel_history": false
+    },
+    "last_seen": true,
+    "constant_velocity_last_k": 10,
+    "training_mean": true,
+    "time_only_terms": ["intercept", "direction_sign", "context_age", "direction_x_context_age"]
+  },
+  "statistics_retained": {
+    "primary_family": [
+      "IDENTITY_LEVEL_RMSE_SLOPE_ON_ONE_MINUS_RVE_ACROSS_L0_L4",
+      "IDENTITY_LEVEL_MEAN_L1_L3_RMSE_MINUS_L0_RMSE",
+      "IDENTITY_LEVEL_L4_RMSE_MINUS_L3_RMSE"
+    ],
+    "primary_hypothesis_direction": "POSITIVE",
+    "primary_tests": "ONE_SIDED_REPEATED_MEASURES_T_TESTS",
+    "primary_multiplicity": "HOLM_ACROSS_3",
+    "bootstrap_replicates": 10000,
+    "bootstrap_unit": "WHOLE_IDENTITY_WITH_ALL_CONDITIONS_ROWS_REPRESENTATIONS",
+    "secondary": [
+      "MINEWORLD_VS_LINEAR_CURRENT_PIXEL_PARTIAL_CONTRAST",
+      "TWO_TEMPORAL_RESCUE_CONTRASTS_HOLM_2",
+      "EXPLICIT_CONTEXT_AGE_BOUNDARY_INTERACTION_DESCRIPTIVE",
+      "LAST_SEEN_CONSTANT_VELOCITY_TRAINING_MEAN_TIME_BASELINES",
+      "L4_L10_DESCRIPTIVE_DEPTH_PANEL"
+    ]
+  },
+  "statistics_removed": [
+    "DISCONTINUITY_RATIO_GE_3",
+    "EXPECTED_OPAQUE_R2_RMSE_REPRODUCTION_GATE",
+    "B_199_PER_CONDITION_DECODER_NULLS",
+    "PIXEL_COMPARISON_IN_PRIMARY_HOLM_FAMILY",
+    "ROW_LEVEL_PSEUDOREPLICATION",
+    "OVERALL_EXPERIMENT_PASS_FAIL_QUALIFICATION",
+    "MLP_STRETCH_RESCUE",
+    "OUTCOME_DEPENDENT_CONDITION_DROPPING"
+  ],
+  "experiment_ii_reuse": [
+    {"component": "multi_layer_hooks", "classification": "ALREADY_PRESENT"},
+    {"component": "layer_index_verification", "classification": "ALREADY_PRESENT"},
+    {"component": "activation_tensor_verification", "classification": "REIMPLEMENT_MINIMALLY"},
+    {"component": "COARSE_2X6_CONCAT", "classification": "REIMPLEMENT_MINIMALLY"},
+    {"component": "CURRENT", "classification": "ALREADY_PRESENT"},
+    {"component": "CURRENT_MINUS_PREVIOUS", "classification": "REIMPLEMENT_MINIMALLY"},
+    {"component": "TWO_FRAME_CONCAT", "classification": "REIMPLEMENT_MINIMALLY"},
+    {"component": "grouped_cv", "classification": "ALREADY_PRESENT"},
+    {"component": "nested_alpha_selection", "classification": "ALREADY_PRESENT"},
+    {"component": "controls", "classification": "REIMPLEMENT_MINIMALLY"},
+    {"component": "identity_bootstrap", "classification": "ALREADY_PRESENT"},
+    {"component": "experiment_ii_selection_aware_permutation", "classification": "DO_NOT_PORT"},
+    {"component": "tensor_durability_checks", "classification": "REIMPLEMENT_MINIMALLY"},
+    {"component": "resume_logic", "classification": "ALREADY_PRESENT"},
+    {"component": "source_freeze_hash_binding", "classification": "PORT_LIGHTLY"},
+    {"component": "huge_lifecycle_gate_hierarchy", "classification": "DO_NOT_PORT"}
+  ],
+  "counts": {
+    "exact_expected_production_capture_count": 125,
+    "expected_pilot_capture_count_excluded": 10,
+    "expected_total_trajectory_capture_count_if_pilot_retained": 135,
+    "expected_production_rows": 2375,
+    "expected_production_forward_count": 2375,
+    "expected_production_logical_tensor_count": 14250,
+    "expected_production_serialized_npy_array_count": 750,
+    "expected_pilot_rows": 190,
+    "expected_pilot_forward_count": 190,
+    "expected_pilot_logical_tensor_count": 1140,
+    "expected_pilot_serialized_npy_array_count": 60,
+    "expected_total_forward_count_if_pilot_retained": 2565,
+    "expected_total_logical_tensor_count_if_pilot_retained": 15390,
+    "expected_total_serialized_npy_array_count_if_pilot_retained": 810
+  },
+  "storage": {
+    "bytes_per_logical_row_layer_slice_tensor": 1376256,
+    "bytes_per_serialized_capture_layer_slice_npy_including_128_byte_header": 26148992,
+    "expected_production_activation_storage_bytes": 19611744000,
+    "expected_production_activation_storage_gib": 18.264859914779663,
+    "expected_pilot_activation_storage_bytes": 1568939520,
+    "expected_total_activation_storage_bytes_if_pilot_retained": 21180683520,
+    "expected_total_activation_storage_gib_if_pilot_retained": 19.726048707962036,
+    "raw_capture_and_metadata_bytes_included": false,
+    "minimum_working_space_gib": 30,
+    "recommended_with_local_mirror_gib": 45
+  },
+  "timing_estimates": {
+    "fresh_generation_and_manifest_person_hours": [2, 4],
+    "production_capture_hours": [6, 13],
+    "production_extraction_hours": [1.5, 4],
+    "cpu_analysis_hours": [2, 4]
+  },
+  "attrition": {
+    "primary_population": "COMPLETE_FIVE_WAY_PAIRED_IDENTITY_SUBSET",
+    "minimum_complete_identities_for_graded_inference": 15,
+    "reactive_condition_drop_allowed": false,
+    "replacement_identity_allowed": false,
+    "retry_same_frozen_unit_allowed_for_technical_failure": true
+  },
+  "readiness": {
+    "state": "READY_FOR_PHASE1_AUTHORITY_CREATION",
+    "authority_creation_ready": true,
+    "implementation_authorized": false,
+    "p0_authorized": false,
+    "p1_authorized": false,
+    "p2_authorized": false,
+    "production_authorized": false,
+    "bounded_future_uncertainties": [
+      "P0_MUST_ESTABLISH_A_VALID_THREE_MATERIAL_RVE_LADDER_OR_STOP",
+      "SPECIFICATION_BASED_COARSE_POOLING_MUST_PASS_PHASE1_FIXTURES"
+    ],
+    "controlling_phase1_input": "docs/experiment_iii/preauthority/MineOcclude_Experiment_III_Phase0_Adjudicated_Design.md"
+  }
+}
