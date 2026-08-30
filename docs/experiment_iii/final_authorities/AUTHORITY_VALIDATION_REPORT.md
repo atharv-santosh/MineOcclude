@@ -4,7 +4,7 @@
 **Repair Pass 1** closing the eight blocking defects of the first independent audit (§13), plus
 **Repair Pass 2** closing the four blocking defects of the second independent audit (§14), plus the
 **Ultimate Closure Pass** closing A1/A2 of the third independent audit (§15)
-**Authority version:** `v1.4`
+**Authority version:** `v1.5`
 **Date:** 2026-08-30
 **Verdict:** `AUTHORITY_INTERNAL_VALIDATION = PASS`
 
@@ -334,22 +334,22 @@ value below was produced by hashing the file on disk, not copied forward.
 
 | SHA-256 | Bytes | Artifact |
 |---|---:|---|
-| `bb47d81257231041dcf3f235f3d16b74a46ce9eb96b8b03469ff197b717033c5` | 103,571 | `BLOCKER_TAXONOMY.json` |
+| `eb0a5a602372cbb1d06f54dbb4a6a1c01994128bd9ed47245dff9881212f3cee` | 103,663 | `BLOCKER_TAXONOMY.json` |
 | `6bf647b3196a38aeec767faffd343ca0241526b0114e1bdda081fb153a5d5c3e` | 62,537 | `EXPECTED_ARTIFACT_INVENTORY.json` |
 | `3df2ee0ca89a0bc4953501dbc46f77f894754cb2b18fdc951b9a46e943597e97` | 82,560 | `EXPERIMENT_III_LIFECYCLE.json` |
-| `b6fd1e09b4a9cc868a28ef522dea3a182f3ba42698bfe490ec14c05c192a5f63` | 206,510 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json` |
-| `993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa` | 238,345 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md` |
-| `68c8c8e03fc1db7cdf498b5f4052ad8be5f34f3ac4a82025ee9dd93e2eb1e0c0` | 48,484 | `EXPERIMENT_III_TEST_PLAN.md` |
+| `f707d5f8264e46c22861707d4caa871cf634da931aa97556eaec31d1df3463a9` | 209,592 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json` |
+| `3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb` | 241,084 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md` |
+| `e720cbe4383dcacab3ede2200d384d51a7acc14c698c547ecdd1f7515a8f458f` | 49,143 | `EXPERIMENT_III_TEST_PLAN.md` |
 | `72dc0633482a31fdf3f825ab19147aa57e8f4b8cbafa9eba696eb76799f365a0` | 6,527 | `FIR_KERNEL_RECOVERY_RECEIPT.json` |
 | `e39d056417447494555979ed43fcfd08671b14cc09b204ec0c4b788251716d97` | 9,255 | `III_B_ORACLE_SPECIFICATION.json` |
 | `e83a8ac34920cd7753c9e49dba3a00a66db7b2fad34663ef0462676f835bcfed` | 24,175 | `III_B_VERIFY_RESOLUTION_RECEIPT.json` |
-| `c6614e8d9576447cc7763b83462952f4fac0d1094501074e48b2f89ed463484b` | 63,925 | `IMPLEMENTATION_CHANGE_MATRIX.json` |
+| `09bfca1ca061e5e494575d1203485ec20d5fdf90e44e2c662fdaf76d37def326` | 64,139 | `IMPLEMENTATION_CHANGE_MATRIX.json` |
 | `c2ecbcc2de3a4a5d400811358a39c8f1427493ba30f3efd1b127862c4ff225b6` | 40,493 | `IMPLEMENTATION_TASK_GRAPH.json` |
 | `ac75d2057e07f6685212580952bedcc3dee75598f3c69b128e7a259e34d25af9` | 14,476 | `LIVE_STATUS_CONTRACT.json` |
 | `7c769f3b5c5bc94d4024d3e81aba51eb60a795ef261a1cb6b24673253f5dc3cb` | 5,305 | `PHASE0_AMENDMENT_1_BAYESIAN_MODULE_III_B.json` |
 | `da32ff953f0734b6de09b3733d54ad72d2fd22266ec51d0eeefe714fee231554` | 9,682 | `PHASE0_AMENDMENT_1_BAYESIAN_MODULE_III_B.md` |
-| `baec468b01cbda10b7f611ea7cfbcea1c7aa44256ce9c55a2d5d95fbabef61aa` | 10,791 | `README.md` |
-| `8e16197dea5c6668f5b3689437659e0d30f2a5e837259a87fbdf774151bd150e` | 33,541 | `RECOVERY_AND_RESUME_RUNBOOK.md` |
+| `65f16ea3f40b50c53641fa2f2f62e527d51063c7a4bc5096e8aa732f1409380e` | 10,834 | `README.md` |
+| `14283d4fe2fcd1f454d85eb93735ec9a2a308dcc10b47ca21b9718ba04e3969f` | 33,542 | `RECOVERY_AND_RESUME_RUNBOOK.md` |
 
 *`AUTHORITY_VALIDATION_REPORT.md` is omitted: it carries this table, so its own hash cannot appear inside it. It is not hash-bound by any other artifact.*
 
@@ -428,7 +428,7 @@ is forbidden once capture exists and is never permitted on the basis of an outco
 and freeze. `IB02` (narrowed to the shared `q`-generalized path and qualification primitive) and
 `IB03` (its bit-identity regression guard) are **prerequisites of `I02`**, both inside `A1`; `I02`
 **fails closed** with `COHORT_ALL_Q_PRIMITIVE_MISSING` if either is absent. A frozen candidate
-index bound of **200 per direction** makes the pre-existing but never-materialized bound executable,
+index bound of **2000 per direction** (raised from 200 by Amendment 2, v1.5) makes the pre-existing but never-materialized bound executable,
 and `COHORT_ALL_Q_QUALIFICATION_INFEASIBLE` defines the prospective repair and resume behaviour —
 continue scanning, or fix a defect and rerun the identical deterministic procedure while no capture
 exists. Outcome-based regeneration is forbidden; the gate reads no MineWorld output. Test `D.31`
@@ -938,3 +938,26 @@ DEADLINE_PLAN_VALIDATED                   = PASS
 
 Per-check output: `final_audit/audit_results.json`. Full independent audit:
 `final_audit/FINAL_PREIMPLEMENTATION_AUDIT.md`.
+
+---
+
+## 16. Authority Amendment 2 (v1.5) — cohort admission feasibility
+
+Prospective §9.2 scientific amendment, raised at `I02` before any cohort, capture, inference or
+scientific outcome existed. Full record:
+[`AUTHORITY_AMENDMENT_2_COHORT_ADMISSION_FEASIBILITY.md`](AUTHORITY_AMENDMENT_2_COHORT_ADMISSION_FEASIBILITY.md).
+
+| | |
+|---|---|
+| Defect | §2.3 + §2.4 gate 9 + §2.4 bound 200 + §2.5 no-phase-offset are jointly infeasible |
+| Root cause | the 200 bound was calibrated on A-prime phase-offset diversity that §2.5 removes |
+| Repair 2a | gate 12 scope = the per-candidate gates (1–8, 10, 11); gate 9 is peer-dependent and evaluated once at the III-A `q` |
+| Repair 2b | candidate index bound 200 → 2000 (Option D), admission order unchanged |
+| Gate 9 threshold | **unchanged at 0.10** |
+| Rejected | lowering gate 9 (A); restoring phase offsets (C); feasible-subset selection (B-prime, tested infeasible at bound 200) |
+| Invalidation | no scientific invalidation; all predecessor-bound receipts rerun and rebound |
+
+```
+AMENDMENT_2_STATUS = PASS
+BLOCKING_DEFECTS   = 0
+```

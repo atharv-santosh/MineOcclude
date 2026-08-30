@@ -362,6 +362,22 @@ outcome.
     output**, no scientific outcome of any kind. It is applied identically whether III-B later
     runs, skips, fails or is dropped, so **the same final III-A cohort exists either way**.
 
+    **Scope of "gates 1–11" under this gate.** *Clarified by Authority Amendment 2 (v1.5).*
+    Gate 12 evaluates the **per-candidate** gates — gates 1–8, 10 and 11 — at every binding `q`.
+    **Gate 9 is excluded from the per-`q` evaluation and is evaluated once, on the production
+    cohort, at the III-A `q = 0.05`.** Gate 9 is a *between-identity* diversity constraint whose
+    verdict depends on which peers have already been admitted; it is therefore not a property of
+    a candidate in isolation and has no well-defined per-candidate rate. This is the scope the
+    authority's own feasibility study already used: §18.4 reports **100.0%** qualification at
+    `q = 0.0125` in both directions and names `LANE_CLAMP_IN_PROTECTED_PREFIX` (gate 3) as the
+    dominant high-`q` rejection — neither statement is definable if a peer-dependent gate is
+    inside the per-`q` evaluation, and the `0.9575` all-`q` rate this gate's ordering argument
+    rests on is likewise a per-candidate rate. Reproduced independently at A1 over 200 candidates
+    per direction: `q = 0.0125` 100.0/100.0, `q = 0.05` 100.0/100.0, `q = 0.15` 95.5/96.0,
+    `q = 0.2` 92.5/94.5, all three binding `q` 93.5% pooled, gate 3 dominant at `q = 0.2`.
+    **Gate 9 is not weakened**: its threshold remains exactly `0.10` blocks and it remains binding
+    in full on the admitted production cohort.
+
     The `q = 0.15` technical fallback (§29.4) is **recorded as a diagnostic column but is not
     binding**: a `q = 0.15` failure never rejects a candidate and never regenerates the cohort.
     If the fallback is later triggered, cells that fail at `0.15` are III-B-local attrition
@@ -373,9 +389,19 @@ outcome.
     nothing. Exhaustion of the frozen candidate index bound is
     `COHORT_ALL_Q_QUALIFICATION_INFEASIBLE`.
 
-**Candidate index bound.** Candidates are scanned in ascending index to a **frozen bound of 200
-per direction**. The expected requirement is ~14–16 per direction, so the bound is more than
-12× the expectation; exhausting it is a genuine terminal signal, not ordinary scanning. The
+**Candidate index bound.** Candidates are scanned in ascending index to a **frozen bound of 2000
+per direction**. *Raised from 200 by Authority Amendment 2 (v1.5).* The superseded 200 was
+justified by an expected requirement of ~14–16 per direction, but that expectation was
+calibrated on historical A-prime between-identity label diversity, which was produced largely by
+the target-window phase offsets `[0,3,6,9,12]` that §2.5 prospectively **removes**. Without those
+offsets every identity's window anchors at the same counterfactual occlusion onset, between-identity
+label spread collapses (measured onset spread 0.27 blocks LTR / 0.35 RTL versus A-prime's 1.27 /
+1.38), and gate 9 rejects far more candidates than the calibration anticipated. The 200 bound was
+therefore an **incorrectly calibrated feasibility ceiling**, not evidence that gate 9 is wrong.
+Measured under the amended rules, the cohort completes at candidate index 460 (LTR) and 328 (RTL).
+The 2000 bound was selected **prospectively, before the extended candidates were inspected**, and is
+deliberately not set to the observed last-needed index. Exhausting it is a genuine terminal signal,
+not ordinary scanning. The
 permitted responses to a gate-12 shortfall are: continue scanning to the bound, or repair an
 implementation defect and rerun the identical deterministic procedure while **no capture of any
 kind exists**. Relaxing gate 12, relaxing gates 1–11 at any `q`, dropping a `q` from the binding
@@ -3379,13 +3405,18 @@ Comparing at equal absolute frame index would be wrong and is forbidden
 
 ### 19.4 Qualification
 
-Each `(identity, q)` cell must satisfy the full frozen III-A qualification set of §2.4 —
-including the corrected lane-clamp gate — evaluated on that cell's own path. An identity is a
-**complete III-B triple** when all three of its `q` cells qualify and capture successfully.
+Each `(identity, q)` cell must satisfy the frozen III-A **per-candidate** qualification set of
+§2.4 — gates 1–8, 10 and 11, including the corrected lane-clamp gate — evaluated on that cell's
+own path. *Scope clarified by Authority Amendment 2 (v1.5):* gate 9 (between-identity diversity)
+is peer-dependent, is not a per-candidate property, and is evaluated once on the production cohort
+at the III-A `q = 0.05`; the per-`q` rates reported in §18.4 are exactly these per-candidate gates.
+An identity is a **complete III-B triple** when all three of its `q` cells qualify and capture
+successfully.
 
-Empirically (§18.4) **95.75%** of candidates qualify at all three `q`. The III-A cohort
-generator therefore requires, at `A1`, that every admitted identity qualifies at **all three
-frozen `q`** — a cheap, outcome-blind, purely geometric extra gate that guarantees III-B is
+Empirically (§18.4) **95.75%** of candidates qualify at all three `q` — a **per-candidate** rate
+over the per-candidate gates, which is why gate 9 is outside its scope (see §2.4 gate 12). The
+III-A cohort generator therefore requires, at `A1`, that every admitted identity qualifies at
+**all three frozen `q`** — a cheap, outcome-blind, purely geometric extra gate that guarantees III-B is
 executable on the frozen cohort. It is **§2.4 qualification gate 12**, and it is **evaluated
 before the cohort is materialized or frozen**.
 

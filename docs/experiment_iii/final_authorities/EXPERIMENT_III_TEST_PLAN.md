@@ -328,7 +328,7 @@ A-prime, or Experiment II.
 qualification, evaluated **before** materialization and freeze — build folds and priority order,
 and assert every artifact of authority §2.7 exists, hashes, and is internally consistent.
 Assert `cohort_all_q_qualification_receipt.json` records, per candidate index, the first failing
-gate **at each frozen `q`**. Assert the candidate scan honours the frozen index bound of 200 per
+gate **at each frozen `q`**. Assert the candidate scan honours the frozen index bound of 2000 per
 direction and that exhausting it raises `COHORT_ALL_Q_QUALIFICATION_INFEASIBLE` rather than
 admitting an unqualified candidate.
 
@@ -506,9 +506,17 @@ is exactly `sqrt(q_a/q_b)` at every tick.
 *Fails:* `B_Q_PAIRING_MISMATCH`.
 
 ### D.4 — All-`q` qualification (III-A qualification **gate 12**)
-Assert the `IB02` primitive evaluates authority §2.4 gates **1–11** at each frozen
-`q ∈ {0.0125, 0.05, 0.2}` on that cell's **own** regenerated path, under the identical frozen
-arithmetic and including the corrected lane-clamp gate.
+Assert the `IB02` primitive evaluates authority §2.4's **per-candidate** gates — **1–8, 10 and
+11** — at each frozen `q ∈ {0.0125, 0.05, 0.2}` on that cell's **own** regenerated path, under
+the identical frozen arithmetic and including the corrected lane-clamp gate.
+
+*Scope amended by Authority Amendment 2 (v1.5).* Assert that gate 9 is **excluded** from the
+per-`q` evaluation and is evaluated once on the production cohort at the III-A `q = 0.05`,
+because it is a peer-dependent between-identity constraint with no per-candidate rate. Assert
+gate 9's threshold is still exactly `0.10` and still binding on the admitted cohort. Assert the
+per-`q` per-candidate rates reproduce §18.4: `100.0%` at `q = 0.0125` in both directions, and
+`LANE_CLAMP_IN_PROTECTED_PREFIX` (gate 3) dominant at `q = 0.2` — neither is definable if a
+peer-dependent gate sits inside the per-`q` evaluation.
 
 Assert every admitted III-A identity in the materialized cohort qualifies at **all three**
 frozen `q`. Include a synthetic candidate that qualifies at `q_mid` but not at `q_high` and

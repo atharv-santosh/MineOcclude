@@ -6,7 +6,7 @@ Every claim below was reconstructed from source, git objects or formulas — not
 
 Fresh 25-identity cohort (13 LTR / 12 RTL), five identity-disjoint outer folds, four inner
 rotations, two permanently excluded pilots. **Twelve** admission gates, gate 12 (all-`q`) evaluated
-**before** materialization and freeze, with a frozen 200/direction candidate bound. Targets are the
+**before** materialization and freeze, with a frozen 2000/direction candidate bound. Targets are the
 first 19 consecutive counterfactually `EXTENT_FULLY_OCCLUDED` rows, identical across `L0`–`L4`;
 selection is material-independent and never reads a rendered frame, a magenta detection or an RVE
 score. FIR labels use the recovered 9-tap direction kernels, **fsum-normalized** — verified to

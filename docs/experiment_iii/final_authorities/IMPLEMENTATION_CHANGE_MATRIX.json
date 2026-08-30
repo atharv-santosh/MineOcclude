@@ -46,7 +46,7 @@
         "NEW src/mineocclude/experiment_iii/qualification.py"
       ],
       "current_behavior": "Qualification uses stable_hidden_interval, a position-interval proxy derived from V1_CALIBRATION hidden bounds plus entry/exit guards, and a between-identity RMS diversity gate of 0.10 blocks. There is no within-identity target-SD gate and no counterfactual-extent gate.",
-      "required_experiment_iii_behavior": "All TWELVE gates of authority 2.4, in order, with the FIRST failing gate logged per rejected candidate (and, for gate 12, the first failing sub-gate AT EACH q). Gate 6 uses counterfactual EXTENT_FULLY_OCCLUDED from C13, not position intervals. Gate 8 (within-identity SD >= 0.10) is NEW and distinct from the existing between-identity gate 9. Gate 3 requires strict non-clamping over the protected prefix. Gate 12 (ALL_Q_PROSPECTIVE_QUALIFICATION) requires the candidate to satisfy gates 1-11 at every frozen q in {0.0125, 0.05, 0.2}, each evaluated on that cell's own regenerated path, and is evaluated BEFORE the cohort is materialized or frozen. Gate 12 is implemented by the CB02 primitive and guarded by CB03; C02 must fail CLOSED (COHORT_ALL_Q_PRIMITIVE_MISSING) if either is unavailable.",
+      "required_experiment_iii_behavior": "All TWELVE gates of authority 2.4, in order, with the FIRST failing gate logged per rejected candidate (and, for gate 12, the first failing sub-gate AT EACH q). Gate 6 uses counterfactual EXTENT_FULLY_OCCLUDED from C13, not position intervals. Gate 8 (within-identity SD >= 0.10) is NEW and distinct from the existing between-identity gate 9. Gate 3 requires strict non-clamping over the protected prefix. Gate 12 (ALL_Q_PROSPECTIVE_QUALIFICATION) requires the candidate to satisfy the per-candidate gates 1-8, 10 and 11 at every frozen q (gate 9 is peer-dependent and is evaluated once on the production cohort at the III-A q) in {0.0125, 0.05, 0.2}, each evaluated on that cell's own regenerated path, and is evaluated BEFORE the cohort is materialized or frozen. Gate 12 is implemented by the CB02 primitive and guarded by CB03; C02 must fail CLOSED (COHORT_ALL_Q_PRIMITIVE_MISSING) if either is unavailable.",
       "decision": "REIMPLEMENT_MINIMALLY",
       "tests_required": [
         "A.6 within-identity target-variance gate",
@@ -69,7 +69,8 @@
       "task_graph_node": "I02",
       "authority_section": "2.4",
       "status": "NOT_STARTED",
-      "gate_count": 12
+      "gate_count": 12,
+      "amended_by": "AUTHORITY_AMENDMENT_2_V1_5"
     },
     {
       "id": "C03",
@@ -812,7 +813,8 @@
         "C01",
         "C02"
       ],
-      "reordered_by": "FINAL_AUTHORITY_REPAIR_PASS_1 defect B1"
+      "reordered_by": "FINAL_AUTHORITY_REPAIR_PASS_1 defect B1",
+      "amended_by": "AUTHORITY_AMENDMENT_2_V1_5"
     },
     {
       "id": "CB03",
@@ -1317,5 +1319,5 @@
     "C02 extended from eleven to TWELVE qualification gates, with gate 12 (all-q prospective qualification) evaluated before cohort materialization and freeze; CB02/CB03 reordered to be prerequisites of C02 rather than dependents of it.",
     "CB03/D.2 reference provenance bound to a specific commit, manifest, unit and seed so Phase 2 can reconstruct it from the authority package plus the git object database alone."
   ],
-  "amended_by": "FINAL_AUTHORITY_REPAIR_PASS_2"
+  "amended_by": "AUTHORITY_AMENDMENT_2_V1_5"
 }

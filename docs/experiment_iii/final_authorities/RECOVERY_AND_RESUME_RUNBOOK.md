@@ -78,7 +78,7 @@ problems.**
    `D.4` and `D.31` green, then rerun `I02`. Nothing is lost. This is a plain sequencing defect.
 2. **`COHORT_ALL_Q_QUALIFICATION_INFEASIBLE`.** Candidates satisfying gates 1–11 at **every**
    frozen `q` ran out. The **only** permitted responses are: continue scanning in ascending
-   candidate index up to the frozen bound of **200 per direction**; or repair an implementation
+   candidate index up to the frozen bound of **2000 per direction**; or repair an implementation
    defect and rerun the identical deterministic procedure while no capture exists. If the bound
    is genuinely exhausted, that is terminal and requires a §9 amendment.
 

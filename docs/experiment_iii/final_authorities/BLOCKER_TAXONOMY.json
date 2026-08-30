@@ -344,7 +344,7 @@
       "code": "COHORT_QUALIFICATION_INFEASIBLE",
       "family": "COHORT_*",
       "stage": "A1",
-      "detection_rule": "Fewer than 13 LEFT_TO_RIGHT or 12 RIGHT_TO_LEFT candidates satisfy all TWELVE gates of authority section 2.4 within the frozen candidate index bound of 200 per direction.",
+      "detection_rule": "Fewer than 13 LEFT_TO_RIGHT or 12 RIGHT_TO_LEFT candidates satisfy all TWELVE gates of authority section 2.4 within the frozen candidate index bound of 2000 per direction.",
       "required_evidence": "cohort_qualification_receipt.json with per-candidate first-failing-gate",
       "severity": "CRITICAL",
       "technical_or_scientific": "SCIENTIFIC",
@@ -2310,7 +2310,7 @@
       "code": "COHORT_ALL_Q_QUALIFICATION_INFEASIBLE",
       "family": "COHORT_*",
       "stage": "A1",
-      "detection_rule": "Gate 12 (ALL_Q_PROSPECTIVE_QUALIFICATION) cannot be satisfied: fewer than 13 LEFT_TO_RIGHT or 12 RIGHT_TO_LEFT candidates satisfy gates 1-11 at EVERY frozen q in {0.0125, 0.05, 0.2} within the frozen candidate index bound of 200 per direction. Also fires if the q-generalized qualification primitive (IB02) or its q=0.05 bit-identity regression fixture (IB03) is absent or failing when I02 attempts cohort materialization, in which case cohort materialization MUST fail closed rather than materialize an unqualified cohort.",
+      "detection_rule": "Gate 12 (ALL_Q_PROSPECTIVE_QUALIFICATION) cannot be satisfied: fewer than 13 LEFT_TO_RIGHT or 12 RIGHT_TO_LEFT candidates satisfy the per-candidate gates 1-8, 10 and 11 at EVERY frozen q (gate 9 being peer-dependent and evaluated once at the III-A q) in {0.0125, 0.05, 0.2} within the frozen candidate index bound of 2000 per direction. Also fires if the q-generalized qualification primitive (IB02) or its q=0.05 bit-identity regression fixture (IB03) is absent or failing when I02 attempts cohort materialization, in which case cohort materialization MUST fail closed rather than materialize an unqualified cohort.",
       "required_evidence": "cohort_all_q_qualification_receipt.json enumerating every candidate index, its seed, and its first failing gate AT EACH q, plus the q=0.05 regression receipt",
       "severity": "CRITICAL",
       "technical_or_scientific": "SCIENTIFIC",
@@ -2321,7 +2321,7 @@
       "outcome_based_regeneration_allowed": false,
       "uses_mineworld_output": false,
       "authority_amendment_required": false,
-      "authority_amendment_required_if": "the frozen candidate index bound of 200 per direction is exhausted without admitting the full cohort",
+      "authority_amendment_required_if": "the frozen candidate index bound of 2000 per direction is exhausted without admitting the full cohort",
       "invalidation_scope": "A1 cohort artifacts only, and only while no capture exists",
       "valid_prior_work_preserved": true,
       "resume_point": "I02 cohort materialization, after IB02 and IB03 are green",
@@ -2464,5 +2464,5 @@
     "INFORMATIONAL": "Recorded for coverage reporting; changes no scientific conclusion."
   },
   "a_scientific_null_is_not_a_technical_blocker": true,
-  "amended_by": "FINAL_AUTHORITY_REPAIR_PASS_2"
+  "amended_by": "AUTHORITY_AMENDMENT_2_V1_5"
 }
