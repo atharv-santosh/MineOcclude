@@ -1,0 +1,57 @@
+{
+  "as_built_wall": {
+    "half": 0.5,
+    "present": true,
+    "wall_axis": "X",
+    "wall_axis_max": 4.0,
+    "wall_axis_min": -3,
+    "wall_ortho": 2.5,
+    "wall_y_max": 7.0,
+    "wall_y_min": 4.0
+  },
+  "authority_binding": {
+    "AUTHORITY_SHA256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+    "MACHINE_AUTHORITY_SHA256": "f707d5f8264e46c22861707d4caa871cf634da931aa97556eaec31d1df3463a9",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "5.1",
+  "camera_eye": [
+    0.5,
+    5.6200000048,
+    -5.5
+  ],
+  "counterfactual_present_for_all_conditions_including_L0": true,
+  "extent_samples_per_axis": 5,
+  "layout": {
+    "lane_max": 8.0,
+    "lane_min": -8.0,
+    "lane_y": 4.0,
+    "layout_id": "layout_01",
+    "wall_axis": "X",
+    "wall_ortho_const": 6.0,
+    "wall_ortho_offset": -4.0,
+    "wall_seg_max": 2.5,
+    "wall_seg_min": -2.5
+  },
+  "ported_items": [
+    "SHEEP_FUR_MODEL_CONSTANTS",
+    "TARGET_EXTENT_HALF_BLOCKS",
+    "derive_target_extent_half_blocks",
+    "WallGeometry",
+    "segment_hits_wall",
+    "classify_extent",
+    "extent_sample_points",
+    "verify_reference_agreement"
+  ],
+  "provenance": {
+    "blob_sha1": "45889b6bc9ed07129f5fd2f15167b694206eab31",
+    "bytes": "16358",
+    "sha256": "d7a9a1acbb560028c66b16416ea1ac1752de20316c905388522baaaf1fa32644",
+    "source_commit": "a5d763a2ed4574c082dce2572ddb97c831929f81",
+    "source_path": "src/mineocclude/prospective/extent_geometry.py"
+  },
+  "reference_march_samples": 64,
+  "schema_version": "mineocclude-experiment-iii-aprime-port-receipt-v1",
+  "target_extent_half_blocks": 0.8727621336620037,
+  "target_extent_recomputed": 0.8727621336620037
+}

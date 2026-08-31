@@ -1,0 +1,23 @@
+{
+  "authority_section": "2.7, 18.2",
+  "checks": {
+    "operand_order_swap_changes_hash": true,
+    "operand_order_swap_matches_frozen_prefix": true,
+    "q_perturbation_changes_hash": true,
+    "reference_path_sha256_reproduced": true
+  },
+  "expected_path_sha256": "b5803943e515ea633cc4dd80ddeaf349db5cb99d11980febdc3f13d7f84a56b7",
+  "implementing_primitive_task": "IB02",
+  "negative_control_noise_first_sha256": "6713929a169500a0a80ad05cde34e92afc8516c654ad0e255cbef9400a056cc3",
+  "negative_control_q_perturbation_sha256": "cacf0071df314c6347ada8647178064fdb18ff2176d284e1831b1c3466f79d68",
+  "observed_path_sha256": "b5803943e515ea633cc4dd80ddeaf349db5cb99d11980febdc3f13d7f84a56b7",
+  "recorded_before": "I02",
+  "reference_q": 0.05,
+  "reference_seed": 2154560968567132226,
+  "reference_start_world_x": -7.8,
+  "reference_unit": "a2x_t01_wall",
+  "regression_guard_task": "IB03",
+  "result": "PASS",
+  "schema_version": "mineocclude-experiment-iii-q-regression-a1-receipt-v1",
+  "test": "D.2"
+}

@@ -1,0 +1,473 @@
+{
+  "a1_tasks_complete": 20,
+  "a1_tasks_total": 20,
+  "a2_started": false,
+  "artifacts_produced": {
+    "docs/experiment_iii/a1_receipts/aprime_port_receipt.json": "f2e029b1cb33c130e327d06264f0213d7224ca0551ae28c49b0f99a29cf57f77",
+    "docs/experiment_iii/a1_receipts/extraction_plan.json": "4b179e01194889c1c068878d31903631835730cb57776426ef19d2d977121781",
+    "docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3",
+    "docs/experiment_iii/a1_receipts/option_d_feasibility_receipt.json": "d8b282b5ee74c2aa6615aa697d5547e1a37f488de18214e29a47de9d1541eb17",
+    "docs/experiment_iii/a1_receipts/p0_manifest.json": "f7b5badb4c0d1c5cea26ab494c96d5a2734c86fe5d67134d01ae0530da881900",
+    "docs/experiment_iii/cohort/cohort_all_q_qualification_receipt.json": "efc8264532847f04970a90f154f8c897fac922e7a9293378a9aa41de62ebb699",
+    "docs/experiment_iii/cohort/cohort_qualification_receipt.json": "5b2d878b47a0eb534a4fc5b5e73b95326eaca4c148ce6be55a0f599cbad721b3",
+    "docs/experiment_iii/cohort/folds.json": "cf72e750024ce5b6ee1c3116125b980c0352174e296cffdfbed99963a580bcd2",
+    "docs/experiment_iii/cohort/historical_seed_exclusion_set.json": "20005d0c01499571b31f2f32435e3d9bc6b788dcd31bd84fda163ed393ef7e44",
+    "docs/experiment_iii/cohort/identity_priority_order.json": "21dac3ddc80d8543ae0e50699b3b71c150a097c8b92148b43e49f4d30df8f520",
+    "docs/experiment_iii/cohort/pilot_identity_manifest.jsonl": "8eb611afd3b750974f9ba1c16f7498fccc3d0de55b3e71a210ce4be0ca0aea9d",
+    "docs/experiment_iii/cohort/production_identity_manifest.jsonl": "336a3baca931652543b8addd9884a2083a9baf0aa30fb6b1908d72d3a4b14c3a",
+    "docs/experiment_iii/cohort/production_identity_manifest.sha256": "e81ff0309601887e5c5dc572635e99712ea29db460045ce2d46c01f2e9a64b60",
+    "docs/experiment_iii/cohort/q_regression_a1_receipt.json": "e2028dc8d8bec266cdbb262c7d812ef6fdc138f889466452d245296ebb710405"
+  },
+  "authority_binding": {
+    "AUTHORITY_SHA256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+    "MACHINE_AUTHORITY_SHA256": "f707d5f8264e46c22861707d4caa871cf634da931aa97556eaec31d1df3463a9",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_freeze_commit": "3fd66eddfce017078b6af2774a381077759b98a0",
+  "authority_version": "v1.5",
+  "candidate_index_bound_per_direction": 2000,
+  "focused_tests": {
+    "command": "python -m pytest tests/experiment_iii/ -q",
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 326,
+    "ran": true,
+    "skipped_or_xfailed": false,
+    "summary": "326 passed in 49.08s"
+  },
+  "predecessor_authority_freeze_commit": "e86347b1275560f18cae79a9a3333d8af757adbe",
+  "predecessor_authority_sha256": "993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa",
+  "resource_policy": {
+    "capture_exists": false,
+    "gpu_used": false,
+    "mineworld_inference_run": false,
+    "p0_executed": false,
+    "p1_executed": false,
+    "p2_executed": false,
+    "production_executed": false,
+    "sagemaker_started": false
+  },
+  "schema_version": "mineocclude-experiment-iii-implementation-completion-v1",
+  "stage": "A1",
+  "static_validation_receipt_written": false,
+  "tasks": [
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "e3_* identities, episode block 86001-86999, fail-closed namespace guard.",
+      "missing_files": [],
+      "name": "Experiment III namespace and schema",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/__init__.py",
+        "src/mineocclude/experiment_iii/authority.py",
+        "src/mineocclude/experiment_iii/errors.py",
+        "src/mineocclude/experiment_iii/namespace.py",
+        "src/mineocclude/experiment_iii/schema.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I01",
+      "tests_written": [
+        "tests/experiment_iii/test_namespace_and_schema.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "PORT",
+      "implementation_note": "Vendored byte-identically from a5d763a (blob 45889b6b...); 475/475 A-prime WALL rows EXTENT_FULLY_OCCLUDED; present=False trap gives 0/475.",
+      "missing_files": [],
+      "name": "Counterfactual extent logic (A-prime port)",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/_aprime_extent_geometry.py",
+        "src/mineocclude/experiment_iii/aprime_reference.py",
+        "src/mineocclude/experiment_iii/extent_geometry.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I05",
+      "tests_written": [
+        "tests/experiment_iii/test_extent_geometry.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "PORT",
+      "implementation_note": "50/50 path hashes, 950/950 labels, rank 9, residual 2.22e-15, aggregate mode lag 2; taps fsum-normalized once at load.",
+      "missing_files": [],
+      "name": "FIR kernel recovery and target manifest",
+      "scripts_added": [
+        "scripts/experiment_iii/recover_fir_kernels.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/fir.py",
+        "src/mineocclude/experiment_iii/target_manifest.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I06",
+      "tests_written": [
+        "tests/experiment_iii/test_fir.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "Iterative binary64, drift before noise; gates 1-11 per (identity,q) cell on its own regenerated path.",
+      "missing_files": [],
+      "name": "q-generalized path and qualification primitive",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/cohort.py",
+        "src/mineocclude/experiment_iii/qualification.py"
+      ],
+      "status": "COMPLETE",
+      "task": "IB02",
+      "tests_written": [
+        "tests/experiment_iii/test_all_q_qualification.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "Reproduces b5803943... bit-identically from the bound v0_3 object; both negative controls fire.",
+      "missing_files": [],
+      "name": "q = 0.05 bit-identity regression fixture",
+      "scripts_added": [],
+      "source_files_changed": [],
+      "status": "COMPLETE",
+      "task": "IB03",
+      "tests_written": [
+        "tests/experiment_iii/test_q_regression.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "REIMPLEMENT_MINIMALLY",
+      "implementation_note": "25 production + 2 pilots materialized under authority v1.5; all twelve gates, gate 12 before materialization and freeze.",
+      "missing_files": [],
+      "name": "Fresh cohort generator and folds",
+      "scripts_added": [
+        "scripts/experiment_iii/bprime_feasibility_study.py",
+        "scripts/experiment_iii/build_cohort.py",
+        "scripts/experiment_iii/option_d_feasibility_scan.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/bprime.py",
+        "src/mineocclude/experiment_iii/cohort_build.py",
+        "src/mineocclude/experiment_iii/folds.py",
+        "src/mineocclude/experiment_iii/historical_seeds.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I02",
+      "tests_written": [
+        "tests/experiment_iii/test_cohort.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ArenaBuilder.java",
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeConfig.java",
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/MineOccludeServer.java",
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/WallCondition.java"
+      ],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "PARAMETERIZE",
+      "implementation_note": "L0 reaches Scene.NO_WALL through startspec; unsupported registry ID refuses the episode instead of defaulting to stone. Fabric compiles.",
+      "missing_files": [],
+      "name": "Wall condition parameterization",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/conditions.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I03",
+      "tests_written": [
+        "tests/experiment_iii/test_conditions_and_schedule.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [
+        "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java"
+      ],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "PARAMETERIZE",
+      "implementation_note": "Arena cache key binds condition_id and wall_block_id (C07); wall receipt carries the exact registry ID; frozen Latin order reproducible.",
+      "missing_files": [],
+      "name": "Wall receipts, cache key, and capture schedule",
+      "scripts_added": [
+        "scripts/experiment_iii/run_production_capture.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/capture_schedule.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I04",
+      "tests_written": [
+        "tests/experiment_iii/test_conditions_and_schedule.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "One forward per target row yields layers {4,10,19} x {PREVIOUS,CURRENT}; all five semantic assertions enforced.",
+      "missing_files": [],
+      "name": "Multi-layer temporal extraction",
+      "scripts_added": [
+        "scripts/experiment_iii/run_extraction.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/extraction.py",
+        "src/mineocclude/experiment_iii/slices.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I09",
+      "tests_written": [
+        "tests/experiment_iii/test_extraction_and_store.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "REIMPLEMENT_MINIMALLY",
+      "implementation_note": "[19,336,2048] little-endian float16, 26,148,992 bytes; inventory generalized to 3 layers x 2 slices.",
+      "missing_files": [],
+      "name": "Tensor serialization, inventory, and validator",
+      "scripts_added": [
+        "scripts/experiment_iii/validate_extraction.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/activation_store.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I10",
+      "tests_written": [
+        "tests/experiment_iii/test_extraction_and_store.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "COARSE_2X6_CONCAT at 24,576 from specification; identity fixture proves the 14x24 grid is not transposed.",
+      "missing_files": [],
+      "name": "Coarse representation",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/representations.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I11",
+      "tests_written": [
+        "tests/experiment_iii/test_representations.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "CURRENT_MINUS_PREVIOUS at 24,576 and TWO_FRAME_CONCAT at 49,152 with PREVIOUS first.",
+      "missing_files": [],
+      "name": "Temporal representations",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/representations.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I12",
+      "tests_written": [
+        "tests/experiment_iii/test_representations.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "REUSE_UNCHANGED",
+      "implementation_note": "probes/ridge.py fit_ridge reused unchanged; five-value alpha grid; identity-macro selection, smallest-alpha tie-break.",
+      "missing_files": [],
+      "name": "Grouped ridge and prediction lock",
+      "scripts_added": [
+        "scripts/experiment_iii/lock_predictions.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/prediction_lock.py",
+        "src/mineocclude/experiment_iii/readout.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I15",
+      "tests_written": [
+        "tests/experiment_iii/test_readout_and_baselines.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "48x28x3 = 4,032 features from raw source RGB with deterministic area interpolation.",
+      "missing_files": [],
+      "name": "Current-frame pixel baseline",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/baselines_pixel.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I13",
+      "tests_written": [
+        "tests/experiment_iii/test_readout_and_baselines.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "REIMPLEMENT_MINIMALLY",
+      "implementation_note": "Constant-velocity window is exactly 10 (legacy 15 not reused); oracle inputs refused as model features.",
+      "missing_files": [],
+      "name": "Motion and clock baselines",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/baselines_motion.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I14",
+      "tests_written": [
+        "tests/experiment_iii/test_readout_and_baselines.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "REIMPLEMENT_MINIMALLY",
+      "implementation_note": "Three primary estimands, Holm-3, Holm-2 temporal, B=10,000 whole identity; no success gate; B=49 null not ported.",
+      "missing_files": [],
+      "name": "Statistics and result packaging",
+      "scripts_added": [
+        "scripts/experiment_iii/build_scientific_package.py",
+        "scripts/experiment_iii/run_primary_analysis.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/statistics.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I16",
+      "tests_written": [
+        "tests/experiment_iii/test_rve_sentinels_status_execution.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "sRGB->linear float64, shared per-placement mask dilated by 2, split-half noise, deterministic triple search with lexicographic tie-break.",
+      "missing_files": [],
+      "name": "RVE and P0 machinery",
+      "scripts_added": [
+        "scripts/experiment_iii/run_p0_rve_calibration.py"
+      ],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/rve.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I07",
+      "tests_written": [
+        "tests/experiment_iii/test_rve_sentinels_status_execution.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "Three frozen placements, order and envelope checks, batch-scoped invalidation; technical never scientific.",
+      "missing_files": [],
+      "name": "Sentinel machinery",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/sentinels.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I08",
+      "tests_written": [
+        "tests/experiment_iii/test_rve_sentinels_status_execution.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "NEW",
+      "implementation_note": "LIVE_STATUS_CONTRACT document, observational only; every blocker validated against the 146-code taxonomy.",
+      "missing_files": [],
+      "name": "Status and blocker framework",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/blockers.py",
+        "src/mineocclude/experiment_iii/status.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I17",
+      "tests_written": [
+        "tests/experiment_iii/test_rve_sentinels_status_execution.py"
+      ]
+    },
+    {
+      "blocker": null,
+      "fabric_files_changed": [],
+      "focused_test_result": "PASS",
+      "focused_tests_run": true,
+      "implementation_decision": "REIMPLEMENT_MINIMALLY",
+      "implementation_note": "Capture unit (identity x condition) and extraction unit (capture x layer x slice) separable; same-spec resume only.",
+      "missing_files": [],
+      "name": "Resume and recovery",
+      "scripts_added": [],
+      "source_files_changed": [
+        "src/mineocclude/experiment_iii/execution.py"
+      ],
+      "status": "COMPLETE",
+      "task": "I18",
+      "tests_written": [
+        "tests/experiment_iii/test_rve_sentinels_status_execution.py"
+      ]
+    }
+  ]
+}

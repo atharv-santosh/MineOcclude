@@ -894,8 +894,8 @@ public final class EpisodeManager {
         wall.addProperty("y_min_block_inclusive", (int) Math.floor(cfg.laneY));
         wall.addProperty("y_max_block_inclusive",
                 (int) Math.floor(cfg.laneY) + ArenaBuilder.WALL_HEIGHT - 1);
-        wall.addProperty("declared_block_id",
-                cfg.buildWall() ? "minecraft:stone" : "minecraft:air");
+        wall.addProperty("condition_id", cfg.condition.id.name());
+        wall.addProperty("declared_block_id", cfg.condition.wallBlockId);
         JsonArray observedNonAir = new JsonArray();
         JsonArray wallMismatches = new JsonArray();
         int wallMatches = 0;
@@ -906,7 +906,7 @@ public final class EpisodeManager {
                         a, Math.floor(cfg.laneY) + h, arena.wallOrthoBlock());
                 BlockState actual = world.getBlockState(pos);
                 Block expectedWall = cfg.buildWall() && a >= wallAxisMin && a <= wallAxisMax
-                        ? Blocks.STONE : Blocks.AIR;
+                        ? cfg.condition.wallState().getBlock() : Blocks.AIR;
                 wallExpected++;
                 if (!actual.isAir()) {
                     observedNonAir.add(blockComparison(pos, expectedWall, actual));
@@ -1141,7 +1141,11 @@ public final class EpisodeManager {
      *  observed as runs of byte-identical captured frames (see FrameCapture's
      *  stale-capture detector) that silently corrupted whole episodes. */
     private void buildArenaIfChanged(ServerWorld world, double orthoMin, double orthoMax) {
-        String key = cfg.layoutId + "|" + cfg.scene + "|" + wallOrtho + "|" + orthoMin + "|" + orthoMax
+        // The material MUST be part of the identity. Omitting it let a
+        // stone->glass switch hit the cache and leave the previous wall standing,
+        // silently capturing a whole batch under the wrong condition.
+        String key = cfg.layoutId + "|" + cfg.scene + "|" + cfg.condition.cacheKeyFragment()
+                + "|" + wallOrtho + "|" + orthoMin + "|" + orthoMax
                 + "|" + ArenaBuilder.markerGeomSignature();
         if (key.equals(lastBuiltArenaKey)) {
             return;

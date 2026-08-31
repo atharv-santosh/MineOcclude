@@ -1,0 +1,79 @@
+{
+  "abba_blocks": [
+    [
+      "P",
+      "A",
+      "A",
+      "P"
+    ],
+    [
+      "A",
+      "P",
+      "P",
+      "A"
+    ]
+  ],
+  "adjacent_separation_min": 0.12,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+    "MACHINE_AUTHORITY_SHA256": "f707d5f8264e46c22861707d4caa871cf634da931aa97556eaec31d1df3463a9",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "7.1-7.8",
+  "bootstrap_replicates": 10000,
+  "candidate_roster": [
+    "minecraft:white_stained_glass",
+    "minecraft:orange_stained_glass",
+    "minecraft:light_blue_stained_glass",
+    "minecraft:yellow_stained_glass",
+    "minecraft:lime_stained_glass",
+    "minecraft:gray_stained_glass",
+    "minecraft:light_gray_stained_glass",
+    "minecraft:cyan_stained_glass",
+    "minecraft:blue_stained_glass",
+    "minecraft:brown_stained_glass",
+    "minecraft:green_stained_glass",
+    "minecraft:black_stained_glass"
+  ],
+  "conditions_measured": 14,
+  "l3_snr_min": 5.0,
+  "ladder_zones": {
+    "L1": [
+      0.6,
+      0.85
+    ],
+    "L2": [
+      0.3,
+      0.55
+    ],
+    "L3": [
+      0.08,
+      0.25
+    ]
+  },
+  "mask_rule": "ONE_PER_PLACEMENT_FROM_L0_SHARED_BY_EVERY_CANDIDATE",
+  "min_settled_frames_per_state_per_block": 8,
+  "opaque_anchor": "minecraft:stone",
+  "p0_executed": false,
+  "placements": 9,
+  "prospective_exclusions": [
+    "minecraft:magenta_stained_glass",
+    "minecraft:pink_stained_glass",
+    "minecraft:purple_stained_glass",
+    "minecraft:red_stained_glass",
+    "minecraft:glass",
+    "minecraft:glass_pane",
+    "minecraft:white_stained_glass_pane"
+  ],
+  "replicate_blocks_per_cell": 2,
+  "replicate_cv_max": 0.15,
+  "roster_size": 12,
+  "schema_version": "mineocclude-experiment-iii-p0-manifest-v1",
+  "selection_rule": "MIN_SQUARED_DISTANCE_THEN_LEXICOGRAPHIC_REGISTRY_ID",
+  "source": "RAW_SOURCE_RGB_640x360_NEVER_MODEL_NORMALIZED",
+  "target_rve_points": [
+    0.725,
+    0.425,
+    0.165
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "admission_order": "STRICTLY_ASCENDING_INDEX_FIRST_QUALIFYING",
+  "authority_binding": {
+    "AUTHORITY_SHA256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+    "MACHINE_AUTHORITY_SHA256": "f707d5f8264e46c22861707d4caa871cf634da931aa97556eaec31d1df3463a9",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "ceiling_selected_prospectively_before_scan": true,
+  "cohort_materialized": false,
+  "diagnostic_ceiling": 2000,
+  "gate_9_threshold": 0.1,
+  "historical_seed_exclusion_sha256": "3430550edb1ebc71a507382971e30ce91417acd5857c755c649075968a7816d5",
+  "master_salt_changed": false,
+  "option_d_feasible": true,
+  "per_direction": {
+    "LEFT_TO_RIGHT": {
+      "admitted_candidate_indices": [
+        0,
+        2,
+        3,
+        11,
+        12,
+        19,
+        31,
+        36,
+        47,
+        59,
+        114,
+        174,
+        232
+      ],
+      "admitted_count": 13,
+      "candidates_scanned": 233,
+      "elapsed_seconds": 39.3,
+      "first_index_at_which_quota_completed": 232,
+      "quota_reached": true,
+      "rejected_count": 220,
+      "rejection_counts_by_first_failing_gate": {
+        "DIRECTION_DIVERSITY": 219,
+        "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX": 1
+      },
+      "required": 13
+    },
+    "RIGHT_TO_LEFT": {
+      "admitted_candidate_indices": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        18,
+        92,
+        103,
+        152,
+        158,
+        178,
+        336
+      ],
+      "admitted_count": 12,
+      "candidates_scanned": 337,
+      "elapsed_seconds": 54.5,
+      "first_index_at_which_quota_completed": 336,
+      "quota_reached": true,
+      "rejected_count": 325,
+      "rejection_counts_by_first_failing_gate": {
+        "ALL_Q_PROSPECTIVE_QUALIFICATION": 1,
+        "DIRECTION_DIVERSITY": 323,
+        "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX": 1
+      },
+      "required": 12
+    }
+  },
+  "phase_offsets": null,
+  "purpose": "Determine whether the UNCHANGED frozen ascending greedy admission reaches 13 LTR / 12 RTL within an extended candidate ceiling.",
+  "q_grid_changed": false,
+  "reads_any_scientific_outcome": false,
+  "schema_version": "mineocclude-experiment-iii-option-d-feasibility-v1",
+  "target_window_rule": "FIRST_19_CONSECUTIVE_ELIGIBLE_ROWS"
+}

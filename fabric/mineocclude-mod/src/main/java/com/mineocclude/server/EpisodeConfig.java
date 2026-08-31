@@ -46,6 +46,10 @@ public final class EpisodeConfig {
     public final double laneY;          // ground height for the sheep
     public final Axis wallAxis;         // which world axis is "along the wall"
     public final Scene scene;           // NORMAL, NO_WALL (positive ctrl), NO_SHEEP (negative ctrl)
+    /** Experiment III condition and wall material. Never null; legacy captures
+     *  carry {@link WallCondition#legacyStone()} so the seam has one source of
+     *  truth and no call site falls back to a hard-coded Blocks.STONE. */
+    public final WallCondition condition;
     public final int hiddenTarget;      // auto-stop after this many hidden frames (0 = fixed length)
     public final int revealTicks;       // post-reveal recording window (0 = stop at hidden target)
     public final int impulseTick;       // scripted one-tick yaw impulse at this recording tick (-1 = none)
@@ -81,6 +85,23 @@ public final class EpisodeConfig {
                          double laneY, Axis wallAxis, Scene scene, int hiddenTarget,
                          int revealTicks, int impulseTick, double impulseYawDeg,
                          boolean lockCamera, String trajectorySpecId, String specHash) {
+        this(layoutId, episodeId, seed, driftV, processQ, hiddenFrames,
+                laneMin, laneMax, startPos, wallSegMin, wallSegMax,
+                wallOrthoConst, wallOrthoOffset, cameraDist, laneY, wallAxis,
+                scene, hiddenTarget, revealTicks, impulseTick, impulseYawDeg,
+                lockCamera, trajectorySpecId, specHash, WallCondition.legacyStone());
+    }
+
+    public EpisodeConfig(String layoutId, long episodeId, long seed,
+                         double driftV, double processQ, int hiddenFrames,
+                         double laneMin, double laneMax, double startPos,
+                         double wallSegMin, double wallSegMax,
+                         double wallOrthoConst, double wallOrthoOffset, double cameraDist,
+                         double laneY, Axis wallAxis, Scene scene, int hiddenTarget,
+                         int revealTicks, int impulseTick, double impulseYawDeg,
+                         boolean lockCamera, String trajectorySpecId, String specHash,
+                         WallCondition condition) {
+        this.condition = condition;
         this.layoutId = layoutId;
         this.episodeId = episodeId;
         this.seed = seed;

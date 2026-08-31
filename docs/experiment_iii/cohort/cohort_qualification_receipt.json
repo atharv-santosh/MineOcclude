@@ -1,0 +1,6252 @@
+{
+  "admission_reads_activations": false,
+  "admission_reads_outcomes": false,
+  "admission_reads_rendered_frames": false,
+  "admissions": [
+    {
+      "candidate_index": 0,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,56] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 38 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [38,57) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.650180 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=None",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 1151080721509912572 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 1151080721509912572 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t01",
+      "seed": 1151080721509912572
+    },
+    {
+      "candidate_index": 2,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,59] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 41 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [41,60) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.555749 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.14708669276875985",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 5920571982069302289 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 5920571982069302289 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t02",
+      "seed": 5920571982069302289
+    },
+    {
+      "candidate_index": 3,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,67] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 49 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [49,68) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.473867 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.10286179570519749",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 7166739038605996134 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 7166739038605996134 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t03",
+      "seed": 7166739038605996134
+    },
+    {
+      "candidate_index": 11,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,58] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 40 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [40,59) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.584977 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.1109765403138848",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 103244024692410362 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 103244024692410362 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t04",
+      "seed": 103244024692410362
+    },
+    {
+      "candidate_index": 12,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,54] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 36 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [36,55) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.777027 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.25614687561670085",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 7738883773481193907 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 7738883773481193907 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t05",
+      "seed": 7738883773481193907
+    },
+    {
+      "candidate_index": 19,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,62] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 44 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [44,63) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.675254 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.12456433960865669",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 3256836827425962066 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 3256836827425962066 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t06",
+      "seed": 3256836827425962066
+    },
+    {
+      "candidate_index": 31,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,60] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 42 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [42,61) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.510652 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.10866847463063893",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 2626534007576612866 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 2626534007576612866 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t07",
+      "seed": 2626534007576612866
+    },
+    {
+      "candidate_index": 36,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,58] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 40 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [40,59) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.592100 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.1035622517377816",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 8858752732413423232 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 8858752732413423232 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t08",
+      "seed": 8858752732413423232
+    },
+    {
+      "candidate_index": 47,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,64] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 46 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [46,65) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.359737 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.167172409756837",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 2711935025605965942 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 2711935025605965942 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t09",
+      "seed": 2711935025605965942
+    },
+    {
+      "candidate_index": 59,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,58] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 40 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [40,59) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.429491 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.12649010920390685",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 6982232726599083300 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 6982232726599083300 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t10",
+      "seed": 6982232726599083300
+    },
+    {
+      "candidate_index": 114,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,61] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 43 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [43,62) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.441016 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.11162291545686161",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 3694684073502805388 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 3694684073502805388 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t11",
+      "seed": 3694684073502805388
+    },
+    {
+      "candidate_index": 174,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,65] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 47 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [47,66) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.653213 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.11804153580575813",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 3560537627501707283 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 3560537627501707283 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t12",
+      "seed": 3560537627501707283
+    },
+    {
+      "candidate_index": 232,
+      "direction": "LEFT_TO_RIGHT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,62] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 44 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [44,63) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.565488 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.10312557607039316",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 7753000022487547090 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 7753000022487547090 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t13",
+      "seed": 7753000022487547090
+    },
+    {
+      "candidate_index": 0,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,50] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 32 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [32,51) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.489970 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=None",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 2685028592706171814 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 2685028592706171814 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t14",
+      "seed": 2685028592706171814
+    },
+    {
+      "candidate_index": 1,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,53] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 35 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [35,54) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.701513 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.331729447052407",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 5460180725308336059 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 5460180725308336059 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t15",
+      "seed": 5460180725308336059
+    },
+    {
+      "candidate_index": 2,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,52] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 34 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [34,53) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.465017 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.1543537696441791",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 5723345278464731447 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 5723345278464731447 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t16",
+      "seed": 5723345278464731447
+    },
+    {
+      "candidate_index": 3,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,51] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 33 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [33,52) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.652608 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.16638913390905435",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 8197286071411377974 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 8197286071411377974 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t17",
+      "seed": 8197286071411377974
+    },
+    {
+      "candidate_index": 5,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,51] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 33 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [33,52) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.591257 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.10061503599188913",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 7942815946242280044 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 7942815946242280044 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t18",
+      "seed": 7942815946242280044
+    },
+    {
+      "candidate_index": 18,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,50] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 32 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [32,51) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.575738 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.11428955788633685",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 4188095816312658672 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 4188095816312658672 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t19",
+      "seed": 4188095816312658672
+    },
+    {
+      "candidate_index": 92,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,53] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 35 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [35,54) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.370427 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.1557982835993136",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 3997225075067289700 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 3997225075067289700 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t20",
+      "seed": 3997225075067289700
+    },
+    {
+      "candidate_index": 103,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,51] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 33 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [33,52) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.797604 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.1333458386909624",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 8041714100286774647 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 8041714100286774647 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t21",
+      "seed": 8041714100286774647
+    },
+    {
+      "candidate_index": 152,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,49] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 31 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [31,50) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.473167 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.10946869039183735",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 5740487968140498805 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 5740487968140498805 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t22",
+      "seed": 5740487968140498805
+    },
+    {
+      "candidate_index": 158,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,48] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 30 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [30,49) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.539595 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.10092048332178685",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 5010283868065394145 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 5010283868065394145 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t23",
+      "seed": 5010283868065394145
+    },
+    {
+      "candidate_index": 178,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,55] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 37 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [37,56) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.657367 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.10367454199041579",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 7814665520095022670 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 7814665520095022670 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t24",
+      "seed": 7814665520095022670
+    },
+    {
+      "candidate_index": 336,
+      "direction": "RIGHT_TO_LEFT",
+      "gates": [
+        {
+          "detail": "frames=180 at 20 Hz",
+          "gate": 1,
+          "name": "FRAME_COVERAGE",
+          "passed": true
+        },
+        {
+          "detail": "speed=2.0 q=0.05 dt=0.05",
+          "gate": 2,
+          "name": "MOTION_IDENTITY",
+          "passed": true
+        },
+        {
+          "detail": "protected prefix [0,51] clamped=False; tail clamped=True (diagnostic)",
+          "gate": 3,
+          "name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+          "passed": true
+        },
+        {
+          "detail": "path and noise hashes reproduce from the seed",
+          "gate": 4,
+          "name": "REPRODUCIBLE_SCHEDULES",
+          "passed": true
+        },
+        {
+          "detail": "first target row 33 >= 8",
+          "gate": 5,
+          "name": "COMPLETE_CAUSAL_FIR_HISTORY",
+          "passed": true
+        },
+        {
+          "detail": "window [33,52) of 19 rows",
+          "gate": 6,
+          "name": "COUNTERFACTUAL_OCCLUSION_RUN",
+          "passed": true
+        },
+        {
+          "detail": "distinct labels=19",
+          "gate": 7,
+          "name": "NONZERO_TARGET_VARIATION",
+          "passed": true
+        },
+        {
+          "detail": "std(labels, ddof=0)=0.478295 >= 0.1",
+          "gate": 8,
+          "name": "MINIMUM_TARGET_SD",
+          "passed": true
+        },
+        {
+          "detail": "min RMS vs admitted same-direction identities=0.11095975853593568",
+          "gate": 9,
+          "name": "DIRECTION_DIVERSITY",
+          "passed": true
+        },
+        {
+          "detail": "seed 5680580193490312000 unique within Experiment III",
+          "gate": 10,
+          "name": "SEED_UNIQUENESS",
+          "passed": true
+        },
+        {
+          "detail": "seed 5680580193490312000 absent from the historical exclusion set",
+          "gate": 11,
+          "name": "HISTORICAL_SEED_EXCLUSION",
+          "passed": true
+        }
+      ],
+      "identity": "e3_t25",
+      "seed": 5680580193490312000
+    }
+  ],
+  "admitted_counts": {
+    "LEFT_TO_RIGHT": 13,
+    "RIGHT_TO_LEFT": 12
+  },
+  "authority_section": "2.4, 2.7",
+  "authority_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+  "candidate_index_bound_per_direction": 2000,
+  "gate_count": 12,
+  "gate_names": [
+    "FRAME_COVERAGE",
+    "MOTION_IDENTITY",
+    "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+    "REPRODUCIBLE_SCHEDULES",
+    "COMPLETE_CAUSAL_FIR_HISTORY",
+    "COUNTERFACTUAL_OCCLUSION_RUN",
+    "NONZERO_TARGET_VARIATION",
+    "MINIMUM_TARGET_SD",
+    "DIRECTION_DIVERSITY",
+    "SEED_UNIQUENESS",
+    "HISTORICAL_SEED_EXCLUSION",
+    "ALL_Q_PROSPECTIVE_QUALIFICATION"
+  ],
+  "generation_order": "STRICTLY_ASCENDING_INDEX_PER_DIRECTION_LTR_THEN_RTL",
+  "master_salt": "87aa30a57ce7113c172e3e1207088d889fef63b4f51447e1a3d19a1d09354d32",
+  "rejected_count": 545,
+  "rejections": [
+    {
+      "candidate_index": 1,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5276912483436174581
+    },
+    {
+      "candidate_index": 4,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3623716980689193867
+    },
+    {
+      "candidate_index": 5,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4410978101127249557
+    },
+    {
+      "candidate_index": 6,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6880918155912524334
+    },
+    {
+      "candidate_index": 7,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4191375626075292130
+    },
+    {
+      "candidate_index": 8,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1038877852089868425
+    },
+    {
+      "candidate_index": 9,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6430172962714916131
+    },
+    {
+      "candidate_index": 10,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8248659792388673162
+    },
+    {
+      "candidate_index": 13,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 951073642426101879
+    },
+    {
+      "candidate_index": 14,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 111276469388584922
+    },
+    {
+      "candidate_index": 15,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4605324995001402866
+    },
+    {
+      "candidate_index": 16,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5005418541643653291
+    },
+    {
+      "candidate_index": 17,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5864034980916948308
+    },
+    {
+      "candidate_index": 18,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8065943214146784451
+    },
+    {
+      "candidate_index": 20,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7704710396326523354
+    },
+    {
+      "candidate_index": 21,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5047223152264407833
+    },
+    {
+      "candidate_index": 22,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2247611905526307334
+    },
+    {
+      "candidate_index": 23,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8943089534916718445
+    },
+    {
+      "candidate_index": 24,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5832250091546449021
+    },
+    {
+      "candidate_index": 25,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3899769098692737859
+    },
+    {
+      "candidate_index": 26,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 620682737263704727
+    },
+    {
+      "candidate_index": 27,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4066174348383620056
+    },
+    {
+      "candidate_index": 28,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 532009436110579605
+    },
+    {
+      "candidate_index": 29,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2126010326824366015
+    },
+    {
+      "candidate_index": 30,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 611377561508095281
+    },
+    {
+      "candidate_index": 32,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1299279027982243712
+    },
+    {
+      "candidate_index": 33,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4269672753412306475
+    },
+    {
+      "candidate_index": 34,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4453554512488493490
+    },
+    {
+      "candidate_index": 35,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3024772339698630630
+    },
+    {
+      "candidate_index": 37,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4823160175040544038
+    },
+    {
+      "candidate_index": 38,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 28804584896488393
+    },
+    {
+      "candidate_index": 39,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5627185917540629520
+    },
+    {
+      "candidate_index": 40,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1120930181461267046
+    },
+    {
+      "candidate_index": 41,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5310727849734610400
+    },
+    {
+      "candidate_index": 42,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5299928668118104972
+    },
+    {
+      "candidate_index": 43,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5295273791824813719
+    },
+    {
+      "candidate_index": 44,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3597867980091452057
+    },
+    {
+      "candidate_index": 45,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4059445775813912328
+    },
+    {
+      "candidate_index": 46,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3294331414675048676
+    },
+    {
+      "candidate_index": 48,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3930828599271320068
+    },
+    {
+      "candidate_index": 49,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5333385212063796086
+    },
+    {
+      "candidate_index": 50,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 340536788973791716
+    },
+    {
+      "candidate_index": 51,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7055456300450314304
+    },
+    {
+      "candidate_index": 52,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1738805738554732624
+    },
+    {
+      "candidate_index": 53,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5877595563338057697
+    },
+    {
+      "candidate_index": 54,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 354964483354015148
+    },
+    {
+      "candidate_index": 55,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4585189701956373244
+    },
+    {
+      "candidate_index": 56,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8454708025682635806
+    },
+    {
+      "candidate_index": 57,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7971186244402431415
+    },
+    {
+      "candidate_index": 58,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5034624649133809381
+    },
+    {
+      "candidate_index": 60,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8718298863210385147
+    },
+    {
+      "candidate_index": 61,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2579344198301729058
+    },
+    {
+      "candidate_index": 62,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6622392008455983893
+    },
+    {
+      "candidate_index": 63,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7289317910932390302
+    },
+    {
+      "candidate_index": 64,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9085160316174076227
+    },
+    {
+      "candidate_index": 65,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7388925430143149146
+    },
+    {
+      "candidate_index": 66,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 808123236734256078
+    },
+    {
+      "candidate_index": 67,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1886438474327055899
+    },
+    {
+      "candidate_index": 68,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2683469576983159845
+    },
+    {
+      "candidate_index": 69,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7862731670066312245
+    },
+    {
+      "candidate_index": 70,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1923222777906467125
+    },
+    {
+      "candidate_index": 71,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4133170466647284354
+    },
+    {
+      "candidate_index": 72,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3600836306179716959
+    },
+    {
+      "candidate_index": 73,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7288124432474051720
+    },
+    {
+      "candidate_index": 74,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 451402877323110231
+    },
+    {
+      "candidate_index": 75,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1967652976361018719
+    },
+    {
+      "candidate_index": 76,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8068982796771795994
+    },
+    {
+      "candidate_index": 77,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3068095029032604527
+    },
+    {
+      "candidate_index": 78,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2947715743561231703
+    },
+    {
+      "candidate_index": 79,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8805532997470758483
+    },
+    {
+      "candidate_index": 80,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1880756097099595889
+    },
+    {
+      "candidate_index": 81,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6121908089228783937
+    },
+    {
+      "candidate_index": 82,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4184479735237138836
+    },
+    {
+      "candidate_index": 83,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4649166733590095355
+    },
+    {
+      "candidate_index": 84,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4499956475771770018
+    },
+    {
+      "candidate_index": 85,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7499261080438465792
+    },
+    {
+      "candidate_index": 86,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 885625449545760839
+    },
+    {
+      "candidate_index": 87,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4904748014868323178
+    },
+    {
+      "candidate_index": 88,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2447880247444085683
+    },
+    {
+      "candidate_index": 89,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 257141308263829922
+    },
+    {
+      "candidate_index": 90,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6281075927424496737
+    },
+    {
+      "candidate_index": 91,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2343383739790201456
+    },
+    {
+      "candidate_index": 92,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1424915313329810508
+    },
+    {
+      "candidate_index": 93,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2590698287917413171
+    },
+    {
+      "candidate_index": 94,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7283347611420637429
+    },
+    {
+      "candidate_index": 95,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3361554528311058677
+    },
+    {
+      "candidate_index": 96,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4267415257071311665
+    },
+    {
+      "candidate_index": 97,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8306415527593759797
+    },
+    {
+      "candidate_index": 98,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4386496384679669434
+    },
+    {
+      "candidate_index": 99,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6311689165967468829
+    },
+    {
+      "candidate_index": 100,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8488212173787282883
+    },
+    {
+      "candidate_index": 101,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 3,
+      "first_failing_gate_name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+      "reached_gate_12": false,
+      "seed": 4228773726869008549
+    },
+    {
+      "candidate_index": 102,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4635224374186655448
+    },
+    {
+      "candidate_index": 103,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6186010323125678067
+    },
+    {
+      "candidate_index": 104,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5391523307196346635
+    },
+    {
+      "candidate_index": 105,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5862027794533399048
+    },
+    {
+      "candidate_index": 106,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4899722313336999848
+    },
+    {
+      "candidate_index": 107,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6229159907356454999
+    },
+    {
+      "candidate_index": 108,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1661120402667277817
+    },
+    {
+      "candidate_index": 109,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3878750048191107384
+    },
+    {
+      "candidate_index": 110,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 910576445025276900
+    },
+    {
+      "candidate_index": 111,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3688332603282950579
+    },
+    {
+      "candidate_index": 112,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3063694240290131164
+    },
+    {
+      "candidate_index": 113,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3306385391397002834
+    },
+    {
+      "candidate_index": 115,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3306183864897041635
+    },
+    {
+      "candidate_index": 116,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8150345394016586015
+    },
+    {
+      "candidate_index": 117,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9052998348699279795
+    },
+    {
+      "candidate_index": 118,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2681493173678441063
+    },
+    {
+      "candidate_index": 119,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2206873984956201236
+    },
+    {
+      "candidate_index": 120,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1288326948229835773
+    },
+    {
+      "candidate_index": 121,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 350548976114476032
+    },
+    {
+      "candidate_index": 122,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8393882378579270546
+    },
+    {
+      "candidate_index": 123,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4443171031558745431
+    },
+    {
+      "candidate_index": 124,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6408224339434202786
+    },
+    {
+      "candidate_index": 125,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3490477498062728930
+    },
+    {
+      "candidate_index": 126,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2754123021831299775
+    },
+    {
+      "candidate_index": 127,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7568998106318351675
+    },
+    {
+      "candidate_index": 128,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 85990458066639014
+    },
+    {
+      "candidate_index": 129,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8258253209322426936
+    },
+    {
+      "candidate_index": 130,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1613046757179830568
+    },
+    {
+      "candidate_index": 131,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2594671428563573344
+    },
+    {
+      "candidate_index": 132,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4343546550676988011
+    },
+    {
+      "candidate_index": 133,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5654096925857881409
+    },
+    {
+      "candidate_index": 134,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4903328583510410716
+    },
+    {
+      "candidate_index": 135,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1912505627747941992
+    },
+    {
+      "candidate_index": 136,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1469477106317833101
+    },
+    {
+      "candidate_index": 137,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8013193962334562525
+    },
+    {
+      "candidate_index": 138,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8071110736588412940
+    },
+    {
+      "candidate_index": 139,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6052485198699098370
+    },
+    {
+      "candidate_index": 140,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 13766052721497236
+    },
+    {
+      "candidate_index": 141,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 61657079166734656
+    },
+    {
+      "candidate_index": 142,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3295545246202393274
+    },
+    {
+      "candidate_index": 143,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2537858302528620566
+    },
+    {
+      "candidate_index": 144,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6148255848997360893
+    },
+    {
+      "candidate_index": 145,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3425305800969638365
+    },
+    {
+      "candidate_index": 146,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1255292789908558717
+    },
+    {
+      "candidate_index": 147,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 569117629055799713
+    },
+    {
+      "candidate_index": 148,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4259232115511592064
+    },
+    {
+      "candidate_index": 149,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8834810142037038335
+    },
+    {
+      "candidate_index": 150,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4110161741003271724
+    },
+    {
+      "candidate_index": 151,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6515561635611458279
+    },
+    {
+      "candidate_index": 152,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9018239212603016387
+    },
+    {
+      "candidate_index": 153,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9183975672265684070
+    },
+    {
+      "candidate_index": 154,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5604990399791477494
+    },
+    {
+      "candidate_index": 155,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6627512610749929298
+    },
+    {
+      "candidate_index": 156,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6505890792647874330
+    },
+    {
+      "candidate_index": 157,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5830143292604568618
+    },
+    {
+      "candidate_index": 158,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7813429542180591020
+    },
+    {
+      "candidate_index": 159,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3765668574492265548
+    },
+    {
+      "candidate_index": 160,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6218500724119775538
+    },
+    {
+      "candidate_index": 161,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9181785243189694632
+    },
+    {
+      "candidate_index": 162,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4812720914832438912
+    },
+    {
+      "candidate_index": 163,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 688978418372116752
+    },
+    {
+      "candidate_index": 164,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3954118369321819704
+    },
+    {
+      "candidate_index": 165,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6565180931704244104
+    },
+    {
+      "candidate_index": 166,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3349171293039319936
+    },
+    {
+      "candidate_index": 167,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2797218094010020872
+    },
+    {
+      "candidate_index": 168,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8602718138289666885
+    },
+    {
+      "candidate_index": 169,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8695718299515914350
+    },
+    {
+      "candidate_index": 170,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 594932149504931438
+    },
+    {
+      "candidate_index": 171,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 434946985941369147
+    },
+    {
+      "candidate_index": 172,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8965888536256044521
+    },
+    {
+      "candidate_index": 173,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6932833114407536316
+    },
+    {
+      "candidate_index": 175,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2096794962393046417
+    },
+    {
+      "candidate_index": 176,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 81291650807650694
+    },
+    {
+      "candidate_index": 177,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1809356919981480712
+    },
+    {
+      "candidate_index": 178,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 470509722007555955
+    },
+    {
+      "candidate_index": 179,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4162204285714054595
+    },
+    {
+      "candidate_index": 180,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4704418852829268884
+    },
+    {
+      "candidate_index": 181,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5311381923756964920
+    },
+    {
+      "candidate_index": 182,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7400047999180085520
+    },
+    {
+      "candidate_index": 183,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4708869515946331078
+    },
+    {
+      "candidate_index": 184,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7761783441283535104
+    },
+    {
+      "candidate_index": 185,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1901998446652255156
+    },
+    {
+      "candidate_index": 186,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3825454001599270959
+    },
+    {
+      "candidate_index": 187,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6954729190730466253
+    },
+    {
+      "candidate_index": 188,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1999612292147955795
+    },
+    {
+      "candidate_index": 189,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 937371778168222704
+    },
+    {
+      "candidate_index": 190,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7422152025574314580
+    },
+    {
+      "candidate_index": 191,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4147618657180557262
+    },
+    {
+      "candidate_index": 192,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3189113340273401365
+    },
+    {
+      "candidate_index": 193,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4013601222691454512
+    },
+    {
+      "candidate_index": 194,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5607433715805693632
+    },
+    {
+      "candidate_index": 195,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5832274770894707616
+    },
+    {
+      "candidate_index": 196,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3116165619025654655
+    },
+    {
+      "candidate_index": 197,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3018347976920176350
+    },
+    {
+      "candidate_index": 198,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1490982296152009546
+    },
+    {
+      "candidate_index": 199,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8399952016659839852
+    },
+    {
+      "candidate_index": 200,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3865157914676844645
+    },
+    {
+      "candidate_index": 201,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 40108977127655186
+    },
+    {
+      "candidate_index": 202,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4029963799701590156
+    },
+    {
+      "candidate_index": 203,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1382507649659898360
+    },
+    {
+      "candidate_index": 204,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8359611225494609090
+    },
+    {
+      "candidate_index": 205,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5543671724409536308
+    },
+    {
+      "candidate_index": 206,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5325904926951008728
+    },
+    {
+      "candidate_index": 207,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4561425711696745014
+    },
+    {
+      "candidate_index": 208,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3959390914655915750
+    },
+    {
+      "candidate_index": 209,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2010818000368123523
+    },
+    {
+      "candidate_index": 210,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1451763661565579922
+    },
+    {
+      "candidate_index": 211,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5066794322377120634
+    },
+    {
+      "candidate_index": 212,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8605263988785242767
+    },
+    {
+      "candidate_index": 213,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8180257457622883835
+    },
+    {
+      "candidate_index": 214,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6883489197113584907
+    },
+    {
+      "candidate_index": 215,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 92004422038173181
+    },
+    {
+      "candidate_index": 216,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6686907968527902873
+    },
+    {
+      "candidate_index": 217,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3589743431103015438
+    },
+    {
+      "candidate_index": 218,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2668690473661158524
+    },
+    {
+      "candidate_index": 219,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9158318407913175442
+    },
+    {
+      "candidate_index": 220,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9156882634689515644
+    },
+    {
+      "candidate_index": 221,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2246701304030834140
+    },
+    {
+      "candidate_index": 222,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5922826973491695969
+    },
+    {
+      "candidate_index": 223,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3660523649221839567
+    },
+    {
+      "candidate_index": 224,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 39702460041855872
+    },
+    {
+      "candidate_index": 225,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4834104900941799915
+    },
+    {
+      "candidate_index": 226,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 592354172507704931
+    },
+    {
+      "candidate_index": 227,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3627336202334096897
+    },
+    {
+      "candidate_index": 228,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 534620346829572890
+    },
+    {
+      "candidate_index": 229,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2752304193008901692
+    },
+    {
+      "candidate_index": 230,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3993503432391184145
+    },
+    {
+      "candidate_index": 231,
+      "direction": "LEFT_TO_RIGHT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3298363702577028789
+    },
+    {
+      "candidate_index": 4,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3923141748901690946
+    },
+    {
+      "candidate_index": 6,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5454843189496703022
+    },
+    {
+      "candidate_index": 7,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7693307427364783071
+    },
+    {
+      "candidate_index": 8,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8878741160756122863
+    },
+    {
+      "candidate_index": 9,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7016567653803821811
+    },
+    {
+      "candidate_index": 10,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7696486544202453832
+    },
+    {
+      "candidate_index": 11,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8266108034403907717
+    },
+    {
+      "candidate_index": 12,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1053752494168510736
+    },
+    {
+      "candidate_index": 13,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3842825987995532527
+    },
+    {
+      "candidate_index": 14,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1339340081566257729
+    },
+    {
+      "candidate_index": 15,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2150091391740162437
+    },
+    {
+      "candidate_index": 16,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2364116253098198112
+    },
+    {
+      "candidate_index": 17,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5254305163046615685
+    },
+    {
+      "candidate_index": 19,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7324372648803168910
+    },
+    {
+      "candidate_index": 20,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6263916218910754839
+    },
+    {
+      "candidate_index": 21,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 499999788796477029
+    },
+    {
+      "candidate_index": 22,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3622660753326216730
+    },
+    {
+      "candidate_index": 23,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4843345279588620487
+    },
+    {
+      "candidate_index": 24,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4025991954649942343
+    },
+    {
+      "candidate_index": 25,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1448243777042205586
+    },
+    {
+      "candidate_index": 26,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4915838187481273732
+    },
+    {
+      "candidate_index": 27,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9116993910592564564
+    },
+    {
+      "candidate_index": 28,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4811202678979999434
+    },
+    {
+      "candidate_index": 29,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2497478982430404774
+    },
+    {
+      "candidate_index": 30,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6171701517027867121
+    },
+    {
+      "candidate_index": 31,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7839908312153671417
+    },
+    {
+      "candidate_index": 32,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5335998569339971298
+    },
+    {
+      "candidate_index": 33,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1419072442796662012
+    },
+    {
+      "candidate_index": 34,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1579295902205577176
+    },
+    {
+      "candidate_index": 35,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5450100419666274750
+    },
+    {
+      "candidate_index": 36,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2003329802494469110
+    },
+    {
+      "candidate_index": 37,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 329982361644970221
+    },
+    {
+      "candidate_index": 38,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6684464036398223810
+    },
+    {
+      "candidate_index": 39,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 703783867309818303
+    },
+    {
+      "candidate_index": 40,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7431064573123613841
+    },
+    {
+      "candidate_index": 41,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2075775967516169197
+    },
+    {
+      "candidate_index": 42,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3839787217320750098
+    },
+    {
+      "candidate_index": 43,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7818858363905633112
+    },
+    {
+      "candidate_index": 44,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4430366862274568721
+    },
+    {
+      "candidate_index": 45,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 320803795766409192
+    },
+    {
+      "candidate_index": 46,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6164942639520993649
+    },
+    {
+      "candidate_index": 47,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4982114072400639819
+    },
+    {
+      "candidate_index": 48,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1780212787292701116
+    },
+    {
+      "candidate_index": 49,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5182001409004231973
+    },
+    {
+      "candidate_index": 50,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6419724180936506552
+    },
+    {
+      "candidate_index": 51,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4069959211325923821
+    },
+    {
+      "candidate_index": 52,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8624711086731078751
+    },
+    {
+      "candidate_index": 53,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7864457070513496938
+    },
+    {
+      "candidate_index": 54,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 905773485535076126
+    },
+    {
+      "candidate_index": 55,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8325367216957889604
+    },
+    {
+      "candidate_index": 56,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 563196978936167087
+    },
+    {
+      "candidate_index": 57,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5291645599607062794
+    },
+    {
+      "candidate_index": 58,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6163399376207621143
+    },
+    {
+      "candidate_index": 59,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4344144525940699604
+    },
+    {
+      "candidate_index": 60,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7810844736818766632
+    },
+    {
+      "candidate_index": 61,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7516021112036884461
+    },
+    {
+      "candidate_index": 62,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6187247325965360454
+    },
+    {
+      "candidate_index": 63,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7370353185262592507
+    },
+    {
+      "candidate_index": 64,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2457558562555172075
+    },
+    {
+      "candidate_index": 65,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1559735017061586526
+    },
+    {
+      "candidate_index": 66,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6237522618665056561
+    },
+    {
+      "candidate_index": 67,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3290069857429782861
+    },
+    {
+      "candidate_index": 68,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8901504670359593387
+    },
+    {
+      "candidate_index": 69,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3560382883684776683
+    },
+    {
+      "candidate_index": 70,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6707926826348427605
+    },
+    {
+      "candidate_index": 71,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8726632350963990476
+    },
+    {
+      "candidate_index": 72,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8346647580332380843
+    },
+    {
+      "candidate_index": 73,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6952061200377357028
+    },
+    {
+      "candidate_index": 74,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8112523278281206007
+    },
+    {
+      "candidate_index": 75,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 396664564902579921
+    },
+    {
+      "candidate_index": 76,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1126482935390280370
+    },
+    {
+      "candidate_index": 77,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8642555416441604605
+    },
+    {
+      "candidate_index": 78,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8385138269429504734
+    },
+    {
+      "candidate_index": 79,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6061786771519179331
+    },
+    {
+      "candidate_index": 80,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6641779361173178261
+    },
+    {
+      "candidate_index": 81,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 517532910036168277
+    },
+    {
+      "candidate_index": 82,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3995026781544365913
+    },
+    {
+      "candidate_index": 83,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7811649743146124021
+    },
+    {
+      "candidate_index": 84,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2390338968705013173
+    },
+    {
+      "candidate_index": 85,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3414154638559215180
+    },
+    {
+      "candidate_index": 86,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8148004048961827190
+    },
+    {
+      "candidate_index": 87,
+      "diagnostic_q_passed": true,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 12,
+      "first_failing_gate_name": "ALL_Q_PROSPECTIVE_QUALIFICATION",
+      "first_failing_sub_gate_per_q": {
+        "0.0125": null,
+        "0.0500": null,
+        "0.2000": 3
+      },
+      "reached_gate_12": true,
+      "seed": 2683800029082938780
+    },
+    {
+      "candidate_index": 88,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7746913090164812055
+    },
+    {
+      "candidate_index": 89,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7123856086147875300
+    },
+    {
+      "candidate_index": 90,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6408785330177241609
+    },
+    {
+      "candidate_index": 91,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3828496926204421105
+    },
+    {
+      "candidate_index": 93,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4587820729326756530
+    },
+    {
+      "candidate_index": 94,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6271648388002825581
+    },
+    {
+      "candidate_index": 95,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7865631543691478622
+    },
+    {
+      "candidate_index": 96,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4858243748012751608
+    },
+    {
+      "candidate_index": 97,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6741448467954368588
+    },
+    {
+      "candidate_index": 98,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1330170494492305265
+    },
+    {
+      "candidate_index": 99,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4569880128596207215
+    },
+    {
+      "candidate_index": 100,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1303832574880141691
+    },
+    {
+      "candidate_index": 101,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7877935872193528773
+    },
+    {
+      "candidate_index": 102,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5854780467266088474
+    },
+    {
+      "candidate_index": 104,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5225594023838487926
+    },
+    {
+      "candidate_index": 105,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 454343834391461747
+    },
+    {
+      "candidate_index": 106,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5626046377570365823
+    },
+    {
+      "candidate_index": 107,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1427533238268915890
+    },
+    {
+      "candidate_index": 108,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 155892780887775452
+    },
+    {
+      "candidate_index": 109,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7706247173372757102
+    },
+    {
+      "candidate_index": 110,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4365525548659769763
+    },
+    {
+      "candidate_index": 111,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2003831148506474687
+    },
+    {
+      "candidate_index": 112,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 881939417146189623
+    },
+    {
+      "candidate_index": 113,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8674489335522545479
+    },
+    {
+      "candidate_index": 114,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8850511041479268955
+    },
+    {
+      "candidate_index": 115,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3245543878230524018
+    },
+    {
+      "candidate_index": 116,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5080945105258453280
+    },
+    {
+      "candidate_index": 117,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1719990551671703036
+    },
+    {
+      "candidate_index": 118,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6439662080937724827
+    },
+    {
+      "candidate_index": 119,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6082118064748853137
+    },
+    {
+      "candidate_index": 120,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3782318102057368936
+    },
+    {
+      "candidate_index": 121,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5759376736265132302
+    },
+    {
+      "candidate_index": 122,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4170757690072948182
+    },
+    {
+      "candidate_index": 123,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4870134176102278242
+    },
+    {
+      "candidate_index": 124,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1190279354981422883
+    },
+    {
+      "candidate_index": 125,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3526754453251374222
+    },
+    {
+      "candidate_index": 126,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 30242921579733808
+    },
+    {
+      "candidate_index": 127,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4122246013913365964
+    },
+    {
+      "candidate_index": 128,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6591053824738357370
+    },
+    {
+      "candidate_index": 129,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 3,
+      "first_failing_gate_name": "NO_LANE_CLAMP_OVER_PROTECTED_PREFIX",
+      "reached_gate_12": false,
+      "seed": 6799555666711646654
+    },
+    {
+      "candidate_index": 130,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 187589539014779929
+    },
+    {
+      "candidate_index": 131,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5436220610190480958
+    },
+    {
+      "candidate_index": 132,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8306209637286915453
+    },
+    {
+      "candidate_index": 133,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5952025383106420890
+    },
+    {
+      "candidate_index": 134,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7827010215639731123
+    },
+    {
+      "candidate_index": 135,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6107893226703780151
+    },
+    {
+      "candidate_index": 136,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2199780646321940411
+    },
+    {
+      "candidate_index": 137,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6868208867174575102
+    },
+    {
+      "candidate_index": 138,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3553821281868249161
+    },
+    {
+      "candidate_index": 139,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6678768152378279191
+    },
+    {
+      "candidate_index": 140,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5266512258788709340
+    },
+    {
+      "candidate_index": 141,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2409624387203633018
+    },
+    {
+      "candidate_index": 142,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6672458637975341565
+    },
+    {
+      "candidate_index": 143,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6183246789667324055
+    },
+    {
+      "candidate_index": 144,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5927908517317324372
+    },
+    {
+      "candidate_index": 145,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 448098544637661476
+    },
+    {
+      "candidate_index": 146,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5335972081951196208
+    },
+    {
+      "candidate_index": 147,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4754144467843579462
+    },
+    {
+      "candidate_index": 148,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1369479229838024506
+    },
+    {
+      "candidate_index": 149,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 381759518575778778
+    },
+    {
+      "candidate_index": 150,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4075635410484984692
+    },
+    {
+      "candidate_index": 151,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4787664290078350634
+    },
+    {
+      "candidate_index": 153,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5252395253061969141
+    },
+    {
+      "candidate_index": 154,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5714061529183923621
+    },
+    {
+      "candidate_index": 155,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3470849823353076906
+    },
+    {
+      "candidate_index": 156,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7150622889748785899
+    },
+    {
+      "candidate_index": 157,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 638509572204755116
+    },
+    {
+      "candidate_index": 159,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5154995352752967114
+    },
+    {
+      "candidate_index": 160,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4743126144616356174
+    },
+    {
+      "candidate_index": 161,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8863987911243489760
+    },
+    {
+      "candidate_index": 162,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7233094451392022030
+    },
+    {
+      "candidate_index": 163,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5535471052778606910
+    },
+    {
+      "candidate_index": 164,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9165585316486740613
+    },
+    {
+      "candidate_index": 165,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 98756210744831023
+    },
+    {
+      "candidate_index": 166,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8971056927159848924
+    },
+    {
+      "candidate_index": 167,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7361901770990863940
+    },
+    {
+      "candidate_index": 168,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6277124985255478689
+    },
+    {
+      "candidate_index": 169,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4541500943454090658
+    },
+    {
+      "candidate_index": 170,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8749429025539442984
+    },
+    {
+      "candidate_index": 171,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2752972904216763811
+    },
+    {
+      "candidate_index": 172,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 728027785666741674
+    },
+    {
+      "candidate_index": 173,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8232276387398097800
+    },
+    {
+      "candidate_index": 174,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5686770328346763904
+    },
+    {
+      "candidate_index": 175,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3243599369929193967
+    },
+    {
+      "candidate_index": 176,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6475718433652306529
+    },
+    {
+      "candidate_index": 177,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2878832609991211719
+    },
+    {
+      "candidate_index": 179,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1659348645259788025
+    },
+    {
+      "candidate_index": 180,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4199636820956100568
+    },
+    {
+      "candidate_index": 181,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2803759161289284363
+    },
+    {
+      "candidate_index": 182,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2260595984654086601
+    },
+    {
+      "candidate_index": 183,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3570362397522361596
+    },
+    {
+      "candidate_index": 184,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 475548652843240678
+    },
+    {
+      "candidate_index": 185,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7195458400301896555
+    },
+    {
+      "candidate_index": 186,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3724400644108353157
+    },
+    {
+      "candidate_index": 187,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 302183996349568713
+    },
+    {
+      "candidate_index": 188,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4987893806433130599
+    },
+    {
+      "candidate_index": 189,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5654139055060143141
+    },
+    {
+      "candidate_index": 190,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7301952022178130365
+    },
+    {
+      "candidate_index": 191,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5818070151092304955
+    },
+    {
+      "candidate_index": 192,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 507616647743500353
+    },
+    {
+      "candidate_index": 193,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 546141077902445972
+    },
+    {
+      "candidate_index": 194,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 487032698740197548
+    },
+    {
+      "candidate_index": 195,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2318661356580400123
+    },
+    {
+      "candidate_index": 196,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 256849990257617769
+    },
+    {
+      "candidate_index": 197,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8052628271075131657
+    },
+    {
+      "candidate_index": 198,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3895801324584021716
+    },
+    {
+      "candidate_index": 199,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 581771157974209991
+    },
+    {
+      "candidate_index": 200,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3462977131956717895
+    },
+    {
+      "candidate_index": 201,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7789042255233392750
+    },
+    {
+      "candidate_index": 202,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1292447855068891571
+    },
+    {
+      "candidate_index": 203,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4816808264237372822
+    },
+    {
+      "candidate_index": 204,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4977318750167959675
+    },
+    {
+      "candidate_index": 205,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5911604688256376008
+    },
+    {
+      "candidate_index": 206,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9202997618167744176
+    },
+    {
+      "candidate_index": 207,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2801470604100272033
+    },
+    {
+      "candidate_index": 208,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4869087142442468538
+    },
+    {
+      "candidate_index": 209,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4062621754048381226
+    },
+    {
+      "candidate_index": 210,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8558375930835378842
+    },
+    {
+      "candidate_index": 211,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5348209450468196733
+    },
+    {
+      "candidate_index": 212,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8907286499717821195
+    },
+    {
+      "candidate_index": 213,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4961591110202262922
+    },
+    {
+      "candidate_index": 214,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 811268902033333854
+    },
+    {
+      "candidate_index": 215,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8535236620214428061
+    },
+    {
+      "candidate_index": 216,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8700204574284018859
+    },
+    {
+      "candidate_index": 217,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2952225297925817851
+    },
+    {
+      "candidate_index": 218,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1450612653259081325
+    },
+    {
+      "candidate_index": 219,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3813687286591588703
+    },
+    {
+      "candidate_index": 220,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5573344602805341246
+    },
+    {
+      "candidate_index": 221,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5994135184498624824
+    },
+    {
+      "candidate_index": 222,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 219853145626972265
+    },
+    {
+      "candidate_index": 223,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4821140725914002700
+    },
+    {
+      "candidate_index": 224,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1075813352058014011
+    },
+    {
+      "candidate_index": 225,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3256484054071300342
+    },
+    {
+      "candidate_index": 226,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2061527870584470596
+    },
+    {
+      "candidate_index": 227,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6237182865919146413
+    },
+    {
+      "candidate_index": 228,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1733333341811378213
+    },
+    {
+      "candidate_index": 229,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 395704454297259929
+    },
+    {
+      "candidate_index": 230,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5431434726226867377
+    },
+    {
+      "candidate_index": 231,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5998107191011037753
+    },
+    {
+      "candidate_index": 232,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4944670180349166716
+    },
+    {
+      "candidate_index": 233,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6294536251799496243
+    },
+    {
+      "candidate_index": 234,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8066520058167105269
+    },
+    {
+      "candidate_index": 235,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2330294630699241485
+    },
+    {
+      "candidate_index": 236,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4459402875938721450
+    },
+    {
+      "candidate_index": 237,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3447385703062088548
+    },
+    {
+      "candidate_index": 238,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9160731524001132209
+    },
+    {
+      "candidate_index": 239,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1824276859498701340
+    },
+    {
+      "candidate_index": 240,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2334667635559130250
+    },
+    {
+      "candidate_index": 241,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7876919288466123288
+    },
+    {
+      "candidate_index": 242,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8106744076593021131
+    },
+    {
+      "candidate_index": 243,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4572435229346610561
+    },
+    {
+      "candidate_index": 244,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7579748400133470836
+    },
+    {
+      "candidate_index": 245,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4724170033050717918
+    },
+    {
+      "candidate_index": 246,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8930781782486789053
+    },
+    {
+      "candidate_index": 247,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5972031302578982561
+    },
+    {
+      "candidate_index": 248,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 94451148073409638
+    },
+    {
+      "candidate_index": 249,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4759137048352333844
+    },
+    {
+      "candidate_index": 250,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4419163594061195683
+    },
+    {
+      "candidate_index": 251,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5474860288637710316
+    },
+    {
+      "candidate_index": 252,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5193554613867533309
+    },
+    {
+      "candidate_index": 253,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8049942723035662259
+    },
+    {
+      "candidate_index": 254,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4465549534578453114
+    },
+    {
+      "candidate_index": 255,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4754008195723730612
+    },
+    {
+      "candidate_index": 256,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1156345286444965195
+    },
+    {
+      "candidate_index": 257,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3165328078175545218
+    },
+    {
+      "candidate_index": 258,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3711402644542252064
+    },
+    {
+      "candidate_index": 259,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1042582856457025815
+    },
+    {
+      "candidate_index": 260,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5660242627884977939
+    },
+    {
+      "candidate_index": 261,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9127174501821830364
+    },
+    {
+      "candidate_index": 262,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6689421855145986120
+    },
+    {
+      "candidate_index": 263,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1161101992157826615
+    },
+    {
+      "candidate_index": 264,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2429423032009099459
+    },
+    {
+      "candidate_index": 265,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2454826088573797742
+    },
+    {
+      "candidate_index": 266,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7496301623687320658
+    },
+    {
+      "candidate_index": 267,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1518404730378320969
+    },
+    {
+      "candidate_index": 268,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2076941689238079628
+    },
+    {
+      "candidate_index": 269,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6063354978529986566
+    },
+    {
+      "candidate_index": 270,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 450537753676902399
+    },
+    {
+      "candidate_index": 271,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 83919910485426533
+    },
+    {
+      "candidate_index": 272,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5681938325102537021
+    },
+    {
+      "candidate_index": 273,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 640514621749140539
+    },
+    {
+      "candidate_index": 274,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5844900766228783660
+    },
+    {
+      "candidate_index": 275,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1468181380375845562
+    },
+    {
+      "candidate_index": 276,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8942329031163768895
+    },
+    {
+      "candidate_index": 277,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7388391616976624411
+    },
+    {
+      "candidate_index": 278,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8284745245100254693
+    },
+    {
+      "candidate_index": 279,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5755655316394176530
+    },
+    {
+      "candidate_index": 280,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1249402143223535431
+    },
+    {
+      "candidate_index": 281,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 448557867054544512
+    },
+    {
+      "candidate_index": 282,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3814473299216909728
+    },
+    {
+      "candidate_index": 283,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6592309906496916971
+    },
+    {
+      "candidate_index": 284,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 712677216848604370
+    },
+    {
+      "candidate_index": 285,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1344380555428886124
+    },
+    {
+      "candidate_index": 286,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7221650665549226715
+    },
+    {
+      "candidate_index": 287,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5397947707120514842
+    },
+    {
+      "candidate_index": 288,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6089089621667912148
+    },
+    {
+      "candidate_index": 289,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5693029063097082192
+    },
+    {
+      "candidate_index": 290,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6636871687678444574
+    },
+    {
+      "candidate_index": 291,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8751803321870205702
+    },
+    {
+      "candidate_index": 292,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2045990301502373126
+    },
+    {
+      "candidate_index": 293,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3310815562533170115
+    },
+    {
+      "candidate_index": 294,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1115759103840521686
+    },
+    {
+      "candidate_index": 295,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3603200563835267655
+    },
+    {
+      "candidate_index": 296,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4289883633821150929
+    },
+    {
+      "candidate_index": 297,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1154638539874141201
+    },
+    {
+      "candidate_index": 298,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4433057894241343446
+    },
+    {
+      "candidate_index": 299,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6376230059520534023
+    },
+    {
+      "candidate_index": 300,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7855153141842786315
+    },
+    {
+      "candidate_index": 301,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5952110300520575161
+    },
+    {
+      "candidate_index": 302,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 138250634555268659
+    },
+    {
+      "candidate_index": 303,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4307733027573823061
+    },
+    {
+      "candidate_index": 304,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8577359770161505143
+    },
+    {
+      "candidate_index": 305,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7511382889270845945
+    },
+    {
+      "candidate_index": 306,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2871664196078882218
+    },
+    {
+      "candidate_index": 307,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5336117654150888010
+    },
+    {
+      "candidate_index": 308,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8888328020472059351
+    },
+    {
+      "candidate_index": 309,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7593910356378676132
+    },
+    {
+      "candidate_index": 310,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7019102688466357888
+    },
+    {
+      "candidate_index": 311,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4030212136196660867
+    },
+    {
+      "candidate_index": 312,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7100814698192799055
+    },
+    {
+      "candidate_index": 313,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1577034155694011733
+    },
+    {
+      "candidate_index": 314,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5828436174276999534
+    },
+    {
+      "candidate_index": 315,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1889988359322491012
+    },
+    {
+      "candidate_index": 316,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9178554222342412452
+    },
+    {
+      "candidate_index": 317,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6481294888554528808
+    },
+    {
+      "candidate_index": 318,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 3897599718736339867
+    },
+    {
+      "candidate_index": 319,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 5825594792561041056
+    },
+    {
+      "candidate_index": 320,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7963439289048455696
+    },
+    {
+      "candidate_index": 321,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2909655721718489822
+    },
+    {
+      "candidate_index": 322,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 7523768929199083822
+    },
+    {
+      "candidate_index": 323,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8418933868950604981
+    },
+    {
+      "candidate_index": 324,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9145027493695066063
+    },
+    {
+      "candidate_index": 325,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6512921556895347561
+    },
+    {
+      "candidate_index": 326,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 1814373769093850869
+    },
+    {
+      "candidate_index": 327,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 573112638513935756
+    },
+    {
+      "candidate_index": 328,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4113682647231681836
+    },
+    {
+      "candidate_index": 329,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 14683168030829184
+    },
+    {
+      "candidate_index": 330,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9093253507774293141
+    },
+    {
+      "candidate_index": 331,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 9162210741303236512
+    },
+    {
+      "candidate_index": 332,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 2633626696126025524
+    },
+    {
+      "candidate_index": 333,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 6290186460848120407
+    },
+    {
+      "candidate_index": 334,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 4103610255921472268
+    },
+    {
+      "candidate_index": 335,
+      "direction": "RIGHT_TO_LEFT",
+      "first_failing_gate": 9,
+      "first_failing_gate_name": "DIRECTION_DIVERSITY",
+      "reached_gate_12": false,
+      "seed": 8315373216399211159
+    }
+  ],
+  "rng_identity": "numpy.random.Generator(PCG64) via numpy.random.default_rng",
+  "schema_version": "mineocclude-experiment-iii-cohort-qualification-receipt-v1"
+}

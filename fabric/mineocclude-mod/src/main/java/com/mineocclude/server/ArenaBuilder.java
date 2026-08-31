@@ -27,7 +27,10 @@ public final class ArenaBuilder {
     // thing.md: superflat world (grass surface) + a 3-block-high STONE wall.
     // The floor is grass to match the surrounding world; only the wall is stone.
     private final BlockState floor = Blocks.GRASS_BLOCK.getDefaultState();
-    private final BlockState wall = Blocks.STONE.getDefaultState();
+    // Experiment III parameterizes the occluder material. The state comes from
+    // the episode's WallCondition, never from a hard-coded Blocks.STONE, so the
+    // builder cannot disagree with the config, the cache key or the receipt.
+    private final BlockState wall;
     private final BlockState air = Blocks.AIR.getDefaultState();
 
     private final double wallOrtho;   // ortho position of the wall plane
@@ -128,6 +131,7 @@ public final class ArenaBuilder {
 
     public ArenaBuilder(EpisodeConfig cfg, double wallOrtho, double orthoMin, double orthoMax) {
         this.cfg = cfg;
+        this.wall = cfg.condition.wallState();
         this.wallOrtho = wallOrtho;
         this.orthoMin = orthoMin;
         this.orthoMax = orthoMax;
@@ -208,9 +212,9 @@ public final class ArenaBuilder {
             world.setBlockState(new BlockPos(b[0], b[1], b[2]), markerStates[m]);
         }
 
-        // 3-high stone wall over the FINITE central segment only, so the sheep
-        // is visible at the lane ends and hidden only behind this segment.
-        // Skipped entirely for the NO_WALL positive control.
+        // 3-high wall of the CONDITION'S material over the FINITE central segment
+        // only, so the sheep is visible at the lane ends and hidden only behind
+        // this segment. Skipped entirely for the NO_WALL anchor (L0).
         if (cfg.buildWall()) {
             int wMin = (int) Math.floor(cfg.wallSegMin);
             int wMax = (int) Math.ceil(cfg.wallSegMax);
