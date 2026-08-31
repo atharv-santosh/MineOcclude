@@ -1,34 +1,26 @@
-"""The nine frozen P0 placements (authority 7.2, completing an A1 obligation).
+"""The nine frozen P0 placements (authority 7.2, 7.10a, 7.10e).
 
-Authority 7.2 freezes the *count* and the *span* -- "**9**, frozen, spanning the
-target corridor; coordinates frozen by A1 and bound in P2" -- and delegates the
-coordinates themselves to A1. The A1 ``p0_manifest.json`` recorded
-``placements: 9`` but never materialised the coordinates, so this module supplies
-them under the authority's own constraint.
-
-**The corridor is not a free choice.** The authority freezes and marks as
-*verified* the counterfactually fully occluded lane interval
-``[-3.49, 4.49]`` (machine authority ``visibility_semantics.
-verified_counterfactual_fully_occluded_lane_interval_blocks``). That interval is
-precisely "the target corridor": the span of lane positions at which the target's
-counterfactual extent is fully behind the wall footprint, which is the region P0
-must characterise and the region every production target row lives in. The nine
-placements are therefore the **endpoint-inclusive uniform partition** of that
-interval:
+Authority Amendment 3 froze the nine scripted Phase 0 calibration positions on
+the frozen sheep lane, ascending world-x:
 
 ```
-x_i = corridor_min + i * (corridor_max - corridor_min) / 8      i = 0..8
+-2.0  -1.5  -1.0  -0.5  0.0  +0.5  +1.0  +1.5  +2.0
 ```
 
-Every value is computed from the frozen interval, never hard-coded, so a change
-to the frozen geometry fails closed rather than silently disagreeing (the same
-rule authority 3.2 imposes on the as-built wall volume). The construction has no
-tunable: nine points, both endpoints included, uniform spacing. It is
-outcome-blind by construction -- it is fixed before any frame is captured and
-depends on no measurement.
+They are **read from the machine authority**, never restated here, so an
+authority edit changes the placements and an implementation edit cannot. The
+digest is recomputed from the records and checked against the frozen
+``placements_sha256``, so a silent coordinate change is
+``PROVENANCE_AUTHORITY_DRIFT`` rather than a quietly different campaign.
 
-The lane's other two coordinates are the frozen sheep lane of authority 3.1
-(``y = 4``, ``z = 6``); a placement never leaves the lane.
+A superseded implementation-side derivation (the endpoint-inclusive uniform
+partition of the occluded corridor, digest ``a3deb1df…``) is retained in the
+authority only as superseded engineering evidence.
+:func:`assert_not_the_superseded_derivation` exists so nothing downstream can
+pick it up by accident: it captured no frame and must never enter P2.
+
+Sentinel selection is the deterministic left/centre/right coverage rule of
+7.10e -- indices 0, 4, 8 -- fixed before any measurement existed.
 """
 
 from __future__ import annotations
@@ -36,26 +28,35 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Any
 
-from mineocclude.experiment_iii.authority import (
-    canonical_sha256,
-    machine_authority,
-)
+from mineocclude.experiment_iii.authority import canonical_sha256, machine_authority
 from mineocclude.experiment_iii.errors import ExperimentIIIError
 
 __all__ = [
     "PLACEMENT_COUNT",
+    "SUPERSEDED_PLACEMENTS_SHA256",
+    "assert_not_the_superseded_derivation",
     "corridor_interval",
     "placement_coordinates",
     "placement_manifest",
     "sentinel_placement_indices",
+    "sentinel_placements",
 ]
 
 #: Authority 7.2 -- nine placements, frozen.
 PLACEMENT_COUNT = 9
 
+#: The derivation Amendment 3 superseded. Named so it can be refused, not used.
+SUPERSEDED_PLACEMENTS_SHA256 = (
+    "a3deb1df619d39ac4f1df1d54c082f61115b9a11bbbcab85b12f799755e03f6e"
+)
+
+
+def _p0() -> dict[str, Any]:
+    return machine_authority()["p0_rve"]
+
 
 def corridor_interval() -> tuple[float, float]:
-    """The frozen, verified counterfactually fully occluded lane interval."""
+    """The verified counterfactually fully occluded lane interval (authority 4.5)."""
     semantics = machine_authority()["visibility_semantics"]
     interval = semantics["verified_counterfactual_fully_occluded_lane_interval_blocks"]
     if len(interval) != 2 or not interval[0] < interval[1]:
@@ -68,68 +69,113 @@ def corridor_interval() -> tuple[float, float]:
 
 @lru_cache(maxsize=1)
 def placement_coordinates() -> tuple[dict[str, Any], ...]:
-    """The nine placements, computed from the frozen corridor.
+    """The nine frozen placements, read from the authority and hash-checked."""
+    p0 = _p0()
+    xs = list(p0["placement_coordinates_lane_x"])
+    if len(xs) != PLACEMENT_COUNT or p0["placements"] != PLACEMENT_COUNT:
+        raise ExperimentIIIError(
+            "AUTHORITY_INTERNAL_INCONSISTENCY",
+            f"authority 7.10a must freeze exactly {PLACEMENT_COUNT} placements; "
+            f"found {len(xs)} coordinates and placements={p0['placements']}",
+        )
+    if xs != sorted(xs):
+        raise ExperimentIIIError(
+            "AUTHORITY_INTERNAL_INCONSISTENCY",
+            f"authority 7.10a freezes ASCENDING_LANE_X order; found {xs}",
+        )
 
-    Endpoint-inclusive uniform partition; the midpoint lands on the lane centre.
-    """
     low, high = corridor_interval()
-    lane = machine_authority()["apparatus"]["sheep_lane"]
-    step = (high - low) / (PLACEMENT_COUNT - 1)
-    placements = []
-    for index in range(PLACEMENT_COUNT):
-        x = low + index * step
-        if not low - 1e-9 <= x <= high + 1e-9:
+    lane_y = float(p0["placement_lane_y"])
+    lane_z = float(p0["placement_lane_z"])
+    records: list[dict[str, Any]] = []
+    for index, x in enumerate(xs):
+        value = float(x)
+        # Every placement must be a genuine occluded-corridor position; a frozen
+        # coordinate outside it would silently measure a partially visible target.
+        if not low <= value <= high:
             raise ExperimentIIIError(
                 "P0_PLACEMENT_GROSS_ERROR",
-                f"placement {index} at x={x} left the frozen corridor [{low}, {high}]",
+                f"placement {index} at x={value} lies outside the verified "
+                f"counterfactually fully occluded corridor [{low}, {high}]",
             )
-        placements.append(
+        records.append(
             {
                 "placement_index": index,
                 "placement_id": f"P{index}",
-                "lane_x": x,
-                "lane_y": float(lane["y"]),
-                "lane_z": float(lane["z"]),
+                "lane_x": value,
+                "lane_y": lane_y,
+                "lane_z": lane_z,
             }
         )
-    return tuple(placements)
+
+    digest = canonical_sha256(records)
+    frozen = str(p0["placements_sha256"])
+    if digest != frozen:
+        raise ExperimentIIIError(
+            "PROVENANCE_AUTHORITY_DRIFT",
+            f"the placement records digest to {digest}, but authority 7.10a "
+            f"freezes {frozen}",
+        )
+    return tuple(records)
 
 
 def sentinel_placement_indices() -> tuple[int, ...]:
-    """The three drift-sentinel placements of authority 7.9.
-
-    Deterministically the first, middle and last placement, so the sentinel set
-    brackets the corridor rather than sampling one end of it.
-    """
-    count = machine_authority()["p0_rve"]["sentinel_placements"]
-    if count != 3:
+    """The three prospectively selected sentinel placements (authority 7.10e)."""
+    p0 = _p0()
+    indices = tuple(int(index) for index in p0["sentinel_placement_indices"])
+    expected = int(p0["sentinel_placements"])
+    if len(indices) != expected:
         raise ExperimentIIIError(
             "AUTHORITY_INTERNAL_INCONSISTENCY",
-            f"authority 7.9 freezes 3 sentinel placements, not {count}",
+            f"authority freezes {expected} sentinel placements, not {len(indices)}",
         )
-    return (0, PLACEMENT_COUNT // 2, PLACEMENT_COUNT - 1)
+    if sorted(indices) != list(indices) or not all(
+        0 <= index < PLACEMENT_COUNT for index in indices
+    ):
+        raise ExperimentIIIError(
+            "AUTHORITY_INTERNAL_INCONSISTENCY",
+            f"sentinel indices must be ascending and within range; got {indices}",
+        )
+    return indices
+
+
+def sentinel_placements() -> tuple[dict[str, Any], ...]:
+    placements = placement_coordinates()
+    return tuple(placements[index] for index in sentinel_placement_indices())
+
+
+def assert_not_the_superseded_derivation(digest: str) -> None:
+    """Refuse the superseded pre-amendment placement derivation."""
+    if digest == SUPERSEDED_PLACEMENTS_SHA256:
+        raise ExperimentIIIError(
+            "PROVENANCE_AUTHORITY_DRIFT",
+            "this is the placement derivation Authority Amendment 3 superseded; "
+            "it captured no frame and may never enter P2",
+        )
 
 
 def placement_manifest() -> dict[str, Any]:
     """The hash-bound placement manifest P2 binds."""
-    low, high = corridor_interval()
-    placements = list(placement_coordinates())
+    p0 = _p0()
+    placements = [dict(record) for record in placement_coordinates()]
     body = {
-        "schema_version": "mineocclude-experiment-iii-p0-placements-v1",
-        "authority_section": "7.2",
+        "schema_version": "mineocclude-experiment-iii-p0-placements-v2",
+        "authority_section": "7.2, 7.10a, 7.10e",
+        "authority_version": machine_authority()["authority_version"],
         "placement_count": PLACEMENT_COUNT,
-        "corridor_source": (
-            "visibility_semantics."
-            "verified_counterfactual_fully_occluded_lane_interval_blocks"
-        ),
-        "corridor_min_blocks": low,
-        "corridor_max_blocks": high,
-        "corridor_span_blocks": high - low,
-        "spacing_blocks": (high - low) / (PLACEMENT_COUNT - 1),
-        "construction": "ENDPOINT_INCLUSIVE_UNIFORM_PARTITION_OF_THE_FROZEN_CORRIDOR",
-        "computed_not_hard_coded": True,
+        "placement_source": p0["placement_source"],
+        "placement_order": p0["placement_order"],
+        "placement_representation": p0["placement_representation"],
+        "read_from_authority_not_restated": True,
         "outcome_blind": True,
+        "corridor_min_blocks": corridor_interval()[0],
+        "corridor_max_blocks": corridor_interval()[1],
+        "all_placements_inside_occluded_corridor": True,
         "sentinel_placement_indices": list(sentinel_placement_indices()),
+        "sentinel_selection_rule": p0["sentinel_selection_rule"],
+        "sentinel_selection_is_outcome_independent": True,
+        "superseded_placements_sha256": SUPERSEDED_PLACEMENTS_SHA256,
+        "superseded_may_enter_p2": False,
         "placements": placements,
     }
     body["placements_sha256"] = canonical_sha256(placements)

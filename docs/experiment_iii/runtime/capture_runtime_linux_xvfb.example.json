@@ -1,0 +1,19 @@
+{
+  "_comment": "Template for the qualified Experiment III capture host: headless Linux, Xvfb + Mesa llvmpipe, no GPU, no MineWorld. Copy, fill in the absolute paths for the host, and pass with --runtime-config. Nothing here is a default: the runner refuses to assume a host path.",
+  "runtime_root": "/REPLACE/ME/mineocclude-runtime",
+  "server_root": "/REPLACE/ME/mineocclude-runtime/server",
+  "client_root": "/REPLACE/ME/mineocclude-runtime/client",
+  "java_executable": "/REPLACE/ME/jdk-17/bin/java",
+  "output_root": "/REPLACE/ME/experiment_iii_out",
+  "display_strategy": "XVFB",
+  "display": ":99",
+  "xvfb_executable": "/usr/bin/Xvfb",
+  "mesa_software_rendering": true,
+  "server_jar": "fabric-server-launch.jar",
+  "server_max_heap": "2G",
+  "client_max_heap": "2G",
+  "server_start_timeout_seconds": 180.0,
+  "client_start_timeout_seconds": 240.0,
+  "command_timeout_seconds": 60.0,
+  "extra_environment": {}
+}

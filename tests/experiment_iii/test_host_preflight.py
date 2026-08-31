@@ -1,9 +1,11 @@
-"""Coverage for the two modules that complete the A1/A3 execution seam.
+"""Coverage for the A3 host preflight engine.
 
-``placements.py`` supplies the nine P0 placement coordinates authority 7.2
-delegates to A1, and ``host_preflight.py`` is the A3 entrypoint's engine. Both
-are load-bearing before any frame is captured, so both are tested here rather
-than discovered at A4.
+``host_preflight.py`` is the A3 entrypoint's engine and is load-bearing before
+any frame is captured, so it is tested here rather than discovered at A4.
+
+The P0 placement coverage that once lived alongside this moved to
+``test_amendment_3_p0_bindings.py`` when Authority Amendment 3 replaced the
+implementation-side corridor derivation with the frozen Phase 0 positions.
 """
 
 from __future__ import annotations
@@ -24,81 +26,10 @@ from mineocclude.experiment_iii.host_preflight import (
     rng_stream_fixture,
     runtime_pins,
 )
-from mineocclude.experiment_iii.placements import (
-    PLACEMENT_COUNT,
-    corridor_interval,
-    placement_coordinates,
-    placement_manifest,
-    sentinel_placement_indices,
-)
 from mineocclude.experiment_iii.storage_preflight import GIB
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 FABRIC_PROJECT = REPOSITORY_ROOT / "fabric" / "mineocclude-mod"
-
-
-# --------------------------------------------------------------------------
-# P0 placements
-# --------------------------------------------------------------------------
-
-
-def test_placement_count_is_nine() -> None:
-    assert PLACEMENT_COUNT == 9
-    assert len(placement_coordinates()) == 9
-
-
-def test_corridor_is_the_frozen_verified_occluded_interval() -> None:
-    """The corridor is read from the authority, never restated here."""
-    low, high = corridor_interval()
-    frozen = machine_authority()["visibility_semantics"][
-        "verified_counterfactual_fully_occluded_lane_interval_blocks"
-    ]
-    assert [low, high] == [float(frozen[0]), float(frozen[1])]
-
-
-def test_placements_span_the_corridor_inclusively_and_uniformly() -> None:
-    low, high = corridor_interval()
-    xs = [p["lane_x"] for p in placement_coordinates()]
-    assert xs[0] == pytest.approx(low)
-    assert xs[-1] == pytest.approx(high)
-    steps = [b - a for a, b in zip(xs, xs[1:])]
-    assert all(step == pytest.approx(steps[0]) for step in steps)
-    assert steps[0] == pytest.approx((high - low) / 8)
-
-
-def test_every_placement_lies_inside_the_frozen_corridor() -> None:
-    low, high = corridor_interval()
-    for placement in placement_coordinates():
-        assert low - 1e-9 <= placement["lane_x"] <= high + 1e-9
-
-
-def test_placements_stay_on_the_frozen_sheep_lane() -> None:
-    lane = machine_authority()["apparatus"]["sheep_lane"]
-    for placement in placement_coordinates():
-        assert placement["lane_y"] == float(lane["y"])
-        assert placement["lane_z"] == float(lane["z"])
-
-
-def test_centre_placement_is_the_lane_centre() -> None:
-    """A structural check on the construction, not a restated constant."""
-    centre = placement_coordinates()[PLACEMENT_COUNT // 2]["lane_x"]
-    low, high = corridor_interval()
-    assert centre == pytest.approx((low + high) / 2)
-
-
-def test_three_sentinel_placements_bracket_the_corridor() -> None:
-    indices = sentinel_placement_indices()
-    assert len(indices) == machine_authority()["p0_rve"]["sentinel_placements"]
-    assert indices == (0, 4, 8)
-
-
-def test_placement_manifest_is_deterministic_and_hash_bound() -> None:
-    first = placement_manifest()
-    second = placement_manifest()
-    assert first["placements_sha256"] == second["placements_sha256"]
-    assert first == second
-    assert first["outcome_blind"] is True
-    assert first["computed_not_hard_coded"] is True
 
 
 # --------------------------------------------------------------------------

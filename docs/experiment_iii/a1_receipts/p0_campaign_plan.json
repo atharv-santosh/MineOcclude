@@ -1,0 +1,4570 @@
+{
+  "abba_blocks": [
+    [
+      "P",
+      "A",
+      "A",
+      "P"
+    ],
+    [
+      "A",
+      "P",
+      "P",
+      "A"
+    ]
+  ],
+  "authority_section": "7.2, 7.10",
+  "conditions_measured": 14,
+  "frames_per_slot": 4,
+  "l0_measured_first": true,
+  "min_settled_frames_per_state_per_block": 8,
+  "min_total_settled_frames": 4032,
+  "ordering": "CONDITION_MAJOR_THEN_PLACEMENT_THEN_BLOCK",
+  "ordering_rationale": "a material change forces an arena rebuild; condition-major ordering performs 14 material transitions rather than up to 252, and makes every transition an explicit liveness probe",
+  "placements": 9,
+  "replicate_blocks": 2,
+  "schema_version": "mineocclude-experiment-iii-p0-campaign-v1",
+  "settled_frames_per_state_per_block": 8,
+  "total_settled_frames": 4032,
+  "unit_count": 252,
+  "units": [
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 0,
+      "placement_index": 0,
+      "unit_id": "L0__p0__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 1,
+      "placement_index": 0,
+      "unit_id": "L0__p0__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 2,
+      "placement_index": 1,
+      "unit_id": "L0__p1__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 3,
+      "placement_index": 1,
+      "unit_id": "L0__p1__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 4,
+      "placement_index": 2,
+      "unit_id": "L0__p2__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 5,
+      "placement_index": 2,
+      "unit_id": "L0__p2__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 6,
+      "placement_index": 3,
+      "unit_id": "L0__p3__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 7,
+      "placement_index": 3,
+      "unit_id": "L0__p3__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 8,
+      "placement_index": 4,
+      "unit_id": "L0__p4__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 9,
+      "placement_index": 4,
+      "unit_id": "L0__p4__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 10,
+      "placement_index": 5,
+      "unit_id": "L0__p5__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 11,
+      "placement_index": 5,
+      "unit_id": "L0__p5__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 12,
+      "placement_index": 6,
+      "unit_id": "L0__p6__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 13,
+      "placement_index": 6,
+      "unit_id": "L0__p6__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 14,
+      "placement_index": 7,
+      "unit_id": "L0__p7__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 15,
+      "placement_index": 7,
+      "unit_id": "L0__p7__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 16,
+      "placement_index": 8,
+      "unit_id": "L0__p8__b0",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L0",
+      "condition_key": "L0",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 17,
+      "placement_index": 8,
+      "unit_id": "L0__p8__b1",
+      "wall_block_id": "minecraft:air"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 18,
+      "placement_index": 0,
+      "unit_id": "minecraft:white_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 19,
+      "placement_index": 0,
+      "unit_id": "minecraft:white_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 20,
+      "placement_index": 1,
+      "unit_id": "minecraft:white_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 21,
+      "placement_index": 1,
+      "unit_id": "minecraft:white_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 22,
+      "placement_index": 2,
+      "unit_id": "minecraft:white_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 23,
+      "placement_index": 2,
+      "unit_id": "minecraft:white_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 24,
+      "placement_index": 3,
+      "unit_id": "minecraft:white_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 25,
+      "placement_index": 3,
+      "unit_id": "minecraft:white_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 26,
+      "placement_index": 4,
+      "unit_id": "minecraft:white_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 27,
+      "placement_index": 4,
+      "unit_id": "minecraft:white_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 28,
+      "placement_index": 5,
+      "unit_id": "minecraft:white_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 29,
+      "placement_index": 5,
+      "unit_id": "minecraft:white_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 30,
+      "placement_index": 6,
+      "unit_id": "minecraft:white_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 31,
+      "placement_index": 6,
+      "unit_id": "minecraft:white_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 32,
+      "placement_index": 7,
+      "unit_id": "minecraft:white_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 33,
+      "placement_index": 7,
+      "unit_id": "minecraft:white_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 34,
+      "placement_index": 8,
+      "unit_id": "minecraft:white_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:white_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 35,
+      "placement_index": 8,
+      "unit_id": "minecraft:white_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:white_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 36,
+      "placement_index": 0,
+      "unit_id": "minecraft:orange_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 37,
+      "placement_index": 0,
+      "unit_id": "minecraft:orange_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 38,
+      "placement_index": 1,
+      "unit_id": "minecraft:orange_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 39,
+      "placement_index": 1,
+      "unit_id": "minecraft:orange_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 40,
+      "placement_index": 2,
+      "unit_id": "minecraft:orange_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 41,
+      "placement_index": 2,
+      "unit_id": "minecraft:orange_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 42,
+      "placement_index": 3,
+      "unit_id": "minecraft:orange_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 43,
+      "placement_index": 3,
+      "unit_id": "minecraft:orange_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 44,
+      "placement_index": 4,
+      "unit_id": "minecraft:orange_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 45,
+      "placement_index": 4,
+      "unit_id": "minecraft:orange_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 46,
+      "placement_index": 5,
+      "unit_id": "minecraft:orange_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 47,
+      "placement_index": 5,
+      "unit_id": "minecraft:orange_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 48,
+      "placement_index": 6,
+      "unit_id": "minecraft:orange_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 49,
+      "placement_index": 6,
+      "unit_id": "minecraft:orange_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 50,
+      "placement_index": 7,
+      "unit_id": "minecraft:orange_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 51,
+      "placement_index": 7,
+      "unit_id": "minecraft:orange_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 52,
+      "placement_index": 8,
+      "unit_id": "minecraft:orange_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:orange_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 53,
+      "placement_index": 8,
+      "unit_id": "minecraft:orange_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:orange_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 54,
+      "placement_index": 0,
+      "unit_id": "minecraft:light_blue_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 55,
+      "placement_index": 0,
+      "unit_id": "minecraft:light_blue_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 56,
+      "placement_index": 1,
+      "unit_id": "minecraft:light_blue_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 57,
+      "placement_index": 1,
+      "unit_id": "minecraft:light_blue_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 58,
+      "placement_index": 2,
+      "unit_id": "minecraft:light_blue_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 59,
+      "placement_index": 2,
+      "unit_id": "minecraft:light_blue_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 60,
+      "placement_index": 3,
+      "unit_id": "minecraft:light_blue_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 61,
+      "placement_index": 3,
+      "unit_id": "minecraft:light_blue_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 62,
+      "placement_index": 4,
+      "unit_id": "minecraft:light_blue_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 63,
+      "placement_index": 4,
+      "unit_id": "minecraft:light_blue_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 64,
+      "placement_index": 5,
+      "unit_id": "minecraft:light_blue_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 65,
+      "placement_index": 5,
+      "unit_id": "minecraft:light_blue_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 66,
+      "placement_index": 6,
+      "unit_id": "minecraft:light_blue_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 67,
+      "placement_index": 6,
+      "unit_id": "minecraft:light_blue_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 68,
+      "placement_index": 7,
+      "unit_id": "minecraft:light_blue_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 69,
+      "placement_index": 7,
+      "unit_id": "minecraft:light_blue_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 70,
+      "placement_index": 8,
+      "unit_id": "minecraft:light_blue_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_blue_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 71,
+      "placement_index": 8,
+      "unit_id": "minecraft:light_blue_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:light_blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 72,
+      "placement_index": 0,
+      "unit_id": "minecraft:yellow_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 73,
+      "placement_index": 0,
+      "unit_id": "minecraft:yellow_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 74,
+      "placement_index": 1,
+      "unit_id": "minecraft:yellow_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 75,
+      "placement_index": 1,
+      "unit_id": "minecraft:yellow_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 76,
+      "placement_index": 2,
+      "unit_id": "minecraft:yellow_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 77,
+      "placement_index": 2,
+      "unit_id": "minecraft:yellow_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 78,
+      "placement_index": 3,
+      "unit_id": "minecraft:yellow_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 79,
+      "placement_index": 3,
+      "unit_id": "minecraft:yellow_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 80,
+      "placement_index": 4,
+      "unit_id": "minecraft:yellow_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 81,
+      "placement_index": 4,
+      "unit_id": "minecraft:yellow_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 82,
+      "placement_index": 5,
+      "unit_id": "minecraft:yellow_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 83,
+      "placement_index": 5,
+      "unit_id": "minecraft:yellow_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 84,
+      "placement_index": 6,
+      "unit_id": "minecraft:yellow_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 85,
+      "placement_index": 6,
+      "unit_id": "minecraft:yellow_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 86,
+      "placement_index": 7,
+      "unit_id": "minecraft:yellow_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 87,
+      "placement_index": 7,
+      "unit_id": "minecraft:yellow_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 88,
+      "placement_index": 8,
+      "unit_id": "minecraft:yellow_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:yellow_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 89,
+      "placement_index": 8,
+      "unit_id": "minecraft:yellow_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:yellow_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 90,
+      "placement_index": 0,
+      "unit_id": "minecraft:lime_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 91,
+      "placement_index": 0,
+      "unit_id": "minecraft:lime_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 92,
+      "placement_index": 1,
+      "unit_id": "minecraft:lime_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 93,
+      "placement_index": 1,
+      "unit_id": "minecraft:lime_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 94,
+      "placement_index": 2,
+      "unit_id": "minecraft:lime_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 95,
+      "placement_index": 2,
+      "unit_id": "minecraft:lime_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 96,
+      "placement_index": 3,
+      "unit_id": "minecraft:lime_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 97,
+      "placement_index": 3,
+      "unit_id": "minecraft:lime_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 98,
+      "placement_index": 4,
+      "unit_id": "minecraft:lime_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 99,
+      "placement_index": 4,
+      "unit_id": "minecraft:lime_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 100,
+      "placement_index": 5,
+      "unit_id": "minecraft:lime_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 101,
+      "placement_index": 5,
+      "unit_id": "minecraft:lime_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 102,
+      "placement_index": 6,
+      "unit_id": "minecraft:lime_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 103,
+      "placement_index": 6,
+      "unit_id": "minecraft:lime_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 104,
+      "placement_index": 7,
+      "unit_id": "minecraft:lime_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 105,
+      "placement_index": 7,
+      "unit_id": "minecraft:lime_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 106,
+      "placement_index": 8,
+      "unit_id": "minecraft:lime_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:lime_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 107,
+      "placement_index": 8,
+      "unit_id": "minecraft:lime_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:lime_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 108,
+      "placement_index": 0,
+      "unit_id": "minecraft:gray_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 109,
+      "placement_index": 0,
+      "unit_id": "minecraft:gray_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 110,
+      "placement_index": 1,
+      "unit_id": "minecraft:gray_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 111,
+      "placement_index": 1,
+      "unit_id": "minecraft:gray_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 112,
+      "placement_index": 2,
+      "unit_id": "minecraft:gray_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 113,
+      "placement_index": 2,
+      "unit_id": "minecraft:gray_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 114,
+      "placement_index": 3,
+      "unit_id": "minecraft:gray_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 115,
+      "placement_index": 3,
+      "unit_id": "minecraft:gray_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 116,
+      "placement_index": 4,
+      "unit_id": "minecraft:gray_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 117,
+      "placement_index": 4,
+      "unit_id": "minecraft:gray_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 118,
+      "placement_index": 5,
+      "unit_id": "minecraft:gray_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 119,
+      "placement_index": 5,
+      "unit_id": "minecraft:gray_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 120,
+      "placement_index": 6,
+      "unit_id": "minecraft:gray_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 121,
+      "placement_index": 6,
+      "unit_id": "minecraft:gray_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 122,
+      "placement_index": 7,
+      "unit_id": "minecraft:gray_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 123,
+      "placement_index": 7,
+      "unit_id": "minecraft:gray_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 124,
+      "placement_index": 8,
+      "unit_id": "minecraft:gray_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:gray_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 125,
+      "placement_index": 8,
+      "unit_id": "minecraft:gray_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 126,
+      "placement_index": 0,
+      "unit_id": "minecraft:light_gray_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 127,
+      "placement_index": 0,
+      "unit_id": "minecraft:light_gray_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 128,
+      "placement_index": 1,
+      "unit_id": "minecraft:light_gray_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 129,
+      "placement_index": 1,
+      "unit_id": "minecraft:light_gray_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 130,
+      "placement_index": 2,
+      "unit_id": "minecraft:light_gray_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 131,
+      "placement_index": 2,
+      "unit_id": "minecraft:light_gray_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 132,
+      "placement_index": 3,
+      "unit_id": "minecraft:light_gray_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 133,
+      "placement_index": 3,
+      "unit_id": "minecraft:light_gray_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 134,
+      "placement_index": 4,
+      "unit_id": "minecraft:light_gray_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 135,
+      "placement_index": 4,
+      "unit_id": "minecraft:light_gray_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 136,
+      "placement_index": 5,
+      "unit_id": "minecraft:light_gray_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 137,
+      "placement_index": 5,
+      "unit_id": "minecraft:light_gray_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 138,
+      "placement_index": 6,
+      "unit_id": "minecraft:light_gray_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 139,
+      "placement_index": 6,
+      "unit_id": "minecraft:light_gray_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 140,
+      "placement_index": 7,
+      "unit_id": "minecraft:light_gray_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 141,
+      "placement_index": 7,
+      "unit_id": "minecraft:light_gray_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 142,
+      "placement_index": 8,
+      "unit_id": "minecraft:light_gray_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:light_gray_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 143,
+      "placement_index": 8,
+      "unit_id": "minecraft:light_gray_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:light_gray_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 144,
+      "placement_index": 0,
+      "unit_id": "minecraft:cyan_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 145,
+      "placement_index": 0,
+      "unit_id": "minecraft:cyan_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 146,
+      "placement_index": 1,
+      "unit_id": "minecraft:cyan_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 147,
+      "placement_index": 1,
+      "unit_id": "minecraft:cyan_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 148,
+      "placement_index": 2,
+      "unit_id": "minecraft:cyan_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 149,
+      "placement_index": 2,
+      "unit_id": "minecraft:cyan_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 150,
+      "placement_index": 3,
+      "unit_id": "minecraft:cyan_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 151,
+      "placement_index": 3,
+      "unit_id": "minecraft:cyan_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 152,
+      "placement_index": 4,
+      "unit_id": "minecraft:cyan_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 153,
+      "placement_index": 4,
+      "unit_id": "minecraft:cyan_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 154,
+      "placement_index": 5,
+      "unit_id": "minecraft:cyan_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 155,
+      "placement_index": 5,
+      "unit_id": "minecraft:cyan_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 156,
+      "placement_index": 6,
+      "unit_id": "minecraft:cyan_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 157,
+      "placement_index": 6,
+      "unit_id": "minecraft:cyan_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 158,
+      "placement_index": 7,
+      "unit_id": "minecraft:cyan_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 159,
+      "placement_index": 7,
+      "unit_id": "minecraft:cyan_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 160,
+      "placement_index": 8,
+      "unit_id": "minecraft:cyan_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:cyan_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 161,
+      "placement_index": 8,
+      "unit_id": "minecraft:cyan_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:cyan_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 162,
+      "placement_index": 0,
+      "unit_id": "minecraft:blue_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 163,
+      "placement_index": 0,
+      "unit_id": "minecraft:blue_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 164,
+      "placement_index": 1,
+      "unit_id": "minecraft:blue_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 165,
+      "placement_index": 1,
+      "unit_id": "minecraft:blue_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 166,
+      "placement_index": 2,
+      "unit_id": "minecraft:blue_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 167,
+      "placement_index": 2,
+      "unit_id": "minecraft:blue_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 168,
+      "placement_index": 3,
+      "unit_id": "minecraft:blue_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 169,
+      "placement_index": 3,
+      "unit_id": "minecraft:blue_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 170,
+      "placement_index": 4,
+      "unit_id": "minecraft:blue_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 171,
+      "placement_index": 4,
+      "unit_id": "minecraft:blue_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 172,
+      "placement_index": 5,
+      "unit_id": "minecraft:blue_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 173,
+      "placement_index": 5,
+      "unit_id": "minecraft:blue_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 174,
+      "placement_index": 6,
+      "unit_id": "minecraft:blue_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 175,
+      "placement_index": 6,
+      "unit_id": "minecraft:blue_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 176,
+      "placement_index": 7,
+      "unit_id": "minecraft:blue_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 177,
+      "placement_index": 7,
+      "unit_id": "minecraft:blue_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 178,
+      "placement_index": 8,
+      "unit_id": "minecraft:blue_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:blue_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 179,
+      "placement_index": 8,
+      "unit_id": "minecraft:blue_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:blue_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 180,
+      "placement_index": 0,
+      "unit_id": "minecraft:brown_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 181,
+      "placement_index": 0,
+      "unit_id": "minecraft:brown_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 182,
+      "placement_index": 1,
+      "unit_id": "minecraft:brown_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 183,
+      "placement_index": 1,
+      "unit_id": "minecraft:brown_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 184,
+      "placement_index": 2,
+      "unit_id": "minecraft:brown_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 185,
+      "placement_index": 2,
+      "unit_id": "minecraft:brown_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 186,
+      "placement_index": 3,
+      "unit_id": "minecraft:brown_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 187,
+      "placement_index": 3,
+      "unit_id": "minecraft:brown_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 188,
+      "placement_index": 4,
+      "unit_id": "minecraft:brown_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 189,
+      "placement_index": 4,
+      "unit_id": "minecraft:brown_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 190,
+      "placement_index": 5,
+      "unit_id": "minecraft:brown_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 191,
+      "placement_index": 5,
+      "unit_id": "minecraft:brown_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 192,
+      "placement_index": 6,
+      "unit_id": "minecraft:brown_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 193,
+      "placement_index": 6,
+      "unit_id": "minecraft:brown_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 194,
+      "placement_index": 7,
+      "unit_id": "minecraft:brown_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 195,
+      "placement_index": 7,
+      "unit_id": "minecraft:brown_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 196,
+      "placement_index": 8,
+      "unit_id": "minecraft:brown_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:brown_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 197,
+      "placement_index": 8,
+      "unit_id": "minecraft:brown_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:brown_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 198,
+      "placement_index": 0,
+      "unit_id": "minecraft:green_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 199,
+      "placement_index": 0,
+      "unit_id": "minecraft:green_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 200,
+      "placement_index": 1,
+      "unit_id": "minecraft:green_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 201,
+      "placement_index": 1,
+      "unit_id": "minecraft:green_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 202,
+      "placement_index": 2,
+      "unit_id": "minecraft:green_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 203,
+      "placement_index": 2,
+      "unit_id": "minecraft:green_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 204,
+      "placement_index": 3,
+      "unit_id": "minecraft:green_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 205,
+      "placement_index": 3,
+      "unit_id": "minecraft:green_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 206,
+      "placement_index": 4,
+      "unit_id": "minecraft:green_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 207,
+      "placement_index": 4,
+      "unit_id": "minecraft:green_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 208,
+      "placement_index": 5,
+      "unit_id": "minecraft:green_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 209,
+      "placement_index": 5,
+      "unit_id": "minecraft:green_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 210,
+      "placement_index": 6,
+      "unit_id": "minecraft:green_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 211,
+      "placement_index": 6,
+      "unit_id": "minecraft:green_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 212,
+      "placement_index": 7,
+      "unit_id": "minecraft:green_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 213,
+      "placement_index": 7,
+      "unit_id": "minecraft:green_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 214,
+      "placement_index": 8,
+      "unit_id": "minecraft:green_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:green_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 215,
+      "placement_index": 8,
+      "unit_id": "minecraft:green_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:green_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 216,
+      "placement_index": 0,
+      "unit_id": "minecraft:black_stained_glass__p0__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 217,
+      "placement_index": 0,
+      "unit_id": "minecraft:black_stained_glass__p0__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 218,
+      "placement_index": 1,
+      "unit_id": "minecraft:black_stained_glass__p1__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 219,
+      "placement_index": 1,
+      "unit_id": "minecraft:black_stained_glass__p1__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 220,
+      "placement_index": 2,
+      "unit_id": "minecraft:black_stained_glass__p2__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 221,
+      "placement_index": 2,
+      "unit_id": "minecraft:black_stained_glass__p2__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 222,
+      "placement_index": 3,
+      "unit_id": "minecraft:black_stained_glass__p3__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 223,
+      "placement_index": 3,
+      "unit_id": "minecraft:black_stained_glass__p3__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 224,
+      "placement_index": 4,
+      "unit_id": "minecraft:black_stained_glass__p4__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 225,
+      "placement_index": 4,
+      "unit_id": "minecraft:black_stained_glass__p4__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 226,
+      "placement_index": 5,
+      "unit_id": "minecraft:black_stained_glass__p5__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 227,
+      "placement_index": 5,
+      "unit_id": "minecraft:black_stained_glass__p5__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 228,
+      "placement_index": 6,
+      "unit_id": "minecraft:black_stained_glass__p6__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 229,
+      "placement_index": 6,
+      "unit_id": "minecraft:black_stained_glass__p6__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 230,
+      "placement_index": 7,
+      "unit_id": "minecraft:black_stained_glass__p7__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 231,
+      "placement_index": 7,
+      "unit_id": "minecraft:black_stained_glass__p7__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 232,
+      "placement_index": 8,
+      "unit_id": "minecraft:black_stained_glass__p8__b0",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L1",
+      "condition_key": "minecraft:black_stained_glass",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 233,
+      "placement_index": 8,
+      "unit_id": "minecraft:black_stained_glass__p8__b1",
+      "wall_block_id": "minecraft:black_stained_glass"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 234,
+      "placement_index": 0,
+      "unit_id": "L4__p0__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 235,
+      "placement_index": 0,
+      "unit_id": "L4__p0__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 236,
+      "placement_index": 1,
+      "unit_id": "L4__p1__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 237,
+      "placement_index": 1,
+      "unit_id": "L4__p1__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 238,
+      "placement_index": 2,
+      "unit_id": "L4__p2__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 239,
+      "placement_index": 2,
+      "unit_id": "L4__p2__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 240,
+      "placement_index": 3,
+      "unit_id": "L4__p3__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": -0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 241,
+      "placement_index": 3,
+      "unit_id": "L4__p3__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 242,
+      "placement_index": 4,
+      "unit_id": "L4__p4__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 0.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 243,
+      "placement_index": 4,
+      "unit_id": "L4__p4__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 244,
+      "placement_index": 5,
+      "unit_id": "L4__p5__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 0.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 245,
+      "placement_index": 5,
+      "unit_id": "L4__p5__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 246,
+      "placement_index": 6,
+      "unit_id": "L4__p6__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 1.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 247,
+      "placement_index": 6,
+      "unit_id": "L4__p6__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 248,
+      "placement_index": 7,
+      "unit_id": "L4__p7__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 1.5,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 249,
+      "placement_index": 7,
+      "unit_id": "L4__p7__b1",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "P",
+        "A",
+        "A",
+        "P"
+      ],
+      "block_index": 0,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 250,
+      "placement_index": 8,
+      "unit_id": "L4__p8__b0",
+      "wall_block_id": "minecraft:stone"
+    },
+    {
+      "abba_order": [
+        "A",
+        "P",
+        "P",
+        "A"
+      ],
+      "block_index": 1,
+      "condition_id": "L4",
+      "condition_key": "L4",
+      "lane_x": 2.0,
+      "lane_y": 4.0,
+      "lane_z": 6.0,
+      "order_index": 251,
+      "placement_index": 8,
+      "unit_id": "L4__p8__b1",
+      "wall_block_id": "minecraft:stone"
+    }
+  ],
+  "units_sha256": "3f0a5d2507797bcf2ff29dd89164f683a7bfdb6970376799b4107846266477b6",
+  "wall_material_transitions": 14
+}

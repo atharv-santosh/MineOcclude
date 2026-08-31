@@ -1,84 +1,89 @@
 {
-  "authority_section": "7.2",
-  "computed_not_hard_coded": true,
-  "construction": "ENDPOINT_INCLUSIVE_UNIFORM_PARTITION_OF_THE_FROZEN_CORRIDOR",
+  "all_placements_inside_occluded_corridor": true,
+  "authority_section": "7.2, 7.10a, 7.10e",
+  "authority_version": "v1.6",
   "corridor_max_blocks": 4.49,
   "corridor_min_blocks": -3.49,
-  "corridor_source": "visibility_semantics.verified_counterfactual_fully_occluded_lane_interval_blocks",
-  "corridor_span_blocks": 7.98,
   "outcome_blind": true,
   "placement_count": 9,
+  "placement_order": "ASCENDING_LANE_X",
+  "placement_representation": "IEEE754_FLOAT64",
+  "placement_source": "PHASE0_SCRIPTED_CALIBRATION_POSITIONS",
   "placements": [
     {
-      "lane_x": -3.49,
+      "lane_x": -2.0,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P0",
       "placement_index": 0
     },
     {
-      "lane_x": -2.4925,
+      "lane_x": -1.5,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P1",
       "placement_index": 1
     },
     {
-      "lane_x": -1.495,
+      "lane_x": -1.0,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P2",
       "placement_index": 2
     },
     {
-      "lane_x": -0.49750000000000005,
+      "lane_x": -0.5,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P3",
       "placement_index": 3
     },
     {
-      "lane_x": 0.5,
+      "lane_x": 0.0,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P4",
       "placement_index": 4
     },
     {
-      "lane_x": 1.4975000000000005,
+      "lane_x": 0.5,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P5",
       "placement_index": 5
     },
     {
-      "lane_x": 2.495,
+      "lane_x": 1.0,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P6",
       "placement_index": 6
     },
     {
-      "lane_x": 3.4924999999999997,
+      "lane_x": 1.5,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P7",
       "placement_index": 7
     },
     {
-      "lane_x": 4.49,
+      "lane_x": 2.0,
       "lane_y": 4.0,
       "lane_z": 6.0,
       "placement_id": "P8",
       "placement_index": 8
     }
   ],
-  "placements_sha256": "a3deb1df619d39ac4f1df1d54c082f61115b9a11bbbcab85b12f799755e03f6e",
-  "schema_version": "mineocclude-experiment-iii-p0-placements-v1",
+  "placements_sha256": "5676aa3371fcc481f89c709d8be81e2b14932f550b94ce44a42b2617420a84b6",
+  "read_from_authority_not_restated": true,
+  "schema_version": "mineocclude-experiment-iii-p0-placements-v2",
   "sentinel_placement_indices": [
     0,
     4,
     8
   ],
-  "spacing_blocks": 0.9975
+  "sentinel_selection_is_outcome_independent": true,
+  "sentinel_selection_rule": "DETERMINISTIC_COVERAGE_LEFT_CENTRE_RIGHT_OF_THE_NINE_FROZEN_PLACEMENTS",
+  "superseded_may_enter_p2": false,
+  "superseded_placements_sha256": "a3deb1df619d39ac4f1df1d54c082f61115b9a11bbbcab85b12f799755e03f6e"
 }

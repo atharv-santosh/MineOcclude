@@ -23,6 +23,7 @@ from typing import Any, Iterable, Mapping, Sequence
 from mineocclude.experiment_iii.authority import (
     BINDING_Q_SET,
     CANDIDATE_INDEX_BOUND_PER_DIRECTION,
+    COHORT_SALT_AUTHORITY_SHA256,
     DIAGNOSTIC_Q_FALLBACK,
     DT_SECONDS,
     FRAMES_PER_CAPTURE,
@@ -312,7 +313,12 @@ def _manifest_row(
         "confirmatory_membership": confirmatory_membership,
         "outer_fold": outer_fold,
         "priority_rank": priority_rank,
-        "authority_sha256": authority_sha256(),
+        # Authority 2.2a: the spec records the authority that ACTUALLY generated
+        # this cohort, not whichever authority happens to be current. Stamping the
+        # floating hash would both make a false provenance claim -- v1.6 did not
+        # generate these identities -- and change every spec_hash, and therefore
+        # the frozen manifest digest, on any later operational amendment.
+        "authority_sha256": COHORT_SALT_AUTHORITY_SHA256,
     }
     body["spec_hash"] = canonical_sha256(body)
     return body

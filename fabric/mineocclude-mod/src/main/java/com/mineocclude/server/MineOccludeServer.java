@@ -3,6 +3,7 @@ package com.mineocclude.server;
 import com.mineocclude.MineOcclude;
 import com.mineocclude.net.CaptureAckPacket;
 import com.mineocclude.net.NetworkingIds;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
@@ -27,6 +28,7 @@ import java.nio.file.Path;
  * Commands (op level 2):
  *   /mineocclude start <layoutId> <episodeId> <seed> <v> <q> <ticks>
  *   /mineocclude startspec <layoutId> <episodeId> <seed> <q> <ticks> <startPos> <specId> <specHash> <conditionId> <wallBlockId>
+ *   /mineocclude p0 <episodeId> <placementX> <ticks> <conditionId> <wallBlockId> <targetPresent>
  *   /mineocclude markergeomstatus
  *   /mineocclude observegeometry <receiptId>
  *   /mineocclude targetstatus
@@ -39,6 +41,8 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
     private static int warmupTicks = 60;
     /** Scene mode for the next start: normal | nowall | nosheep. */
     private static EpisodeConfig.Scene sceneMode = EpisodeConfig.Scene.NORMAL;
+    /** Authority 3.1 freezes layout_01 as the only Experiment III layout. */
+    private static final String P0_LAYOUT_ID = "layout_01";
     /** Hidden-frame target for the next start (0 = record the full tick count). */
     private static int hiddenTarget = 0;
     /** Post-reveal recording window for the next start (0 = stop at hidden target). */
@@ -136,6 +140,21 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
                                 StringArgumentType.getString(ctx, "conditionId"),
                                 StringArgumentType.getString(ctx, "wallBlockId"),
                                 warmupTicks)))))))))))))
+                .then(CommandManager.literal("p0")
+                    .then(CommandManager.argument("episodeId", LongArgumentType.longArg(0))
+                    .then(CommandManager.argument("placementX", DoubleArgumentType.doubleArg())
+                    .then(CommandManager.argument("ticks", IntegerArgumentType.integer(1))
+                    .then(CommandManager.argument("conditionId", StringArgumentType.word())
+                    .then(CommandManager.argument("wallBlockId", StringArgumentType.string())
+                    .then(CommandManager.argument("targetPresent", BoolArgumentType.bool())
+                        .executes(ctx -> p0Cmd(ctx.getSource(),
+                                LongArgumentType.getLong(ctx, "episodeId"),
+                                DoubleArgumentType.getDouble(ctx, "placementX"),
+                                IntegerArgumentType.getInteger(ctx, "ticks"),
+                                StringArgumentType.getString(ctx, "conditionId"),
+                                StringArgumentType.getString(ctx, "wallBlockId"),
+                                BoolArgumentType.getBool(ctx, "targetPresent"),
+                                warmupTicks)))))))))
                 .then(CommandManager.literal("markergeom")
                     .then(CommandManager.argument("nearOrtho", IntegerArgumentType.integer())
                     .then(CommandManager.argument("farOrtho", IntegerArgumentType.integer())
@@ -285,6 +304,78 @@ public final class MineOccludeServer implements DedicatedServerModInitializer {
         } catch (Exception e) {
             MineOcclude.LOG.error("[MineOcclude] start failed", e);
             src.sendError(new LiteralText("start failed: " + e));
+            return 0;
+        }
+    }
+
+    /**
+     * Start one P0 calibration unit: the target held STATIC at a frozen placement
+     * (authority 7.10a), with the condition's wall standing and target presence
+     * an INDEPENDENT axis (authority 7.11).
+     *
+     * <p>This is the command the P0 ABSENT state needs. {@code startspec} derives
+     * the scene from the condition, so it can only ever produce "wall present and
+     * target present" or "no wall and target present". P0 must also capture
+     * "THIS wall material, target absent" for all thirteen wall conditions, and
+     * "no wall, target absent" for L0. The wall material is identical between the
+     * present and absent halves of a cell; were it not, D(c,p,b) would measure
+     * the wall instead of the target and the RVE ladder would be meaningless.
+     *
+     * <p>Motion is zero: drift velocity 0 and process noise 0, so the target
+     * stays exactly at {@code placementX} for the whole unit and the scene is the
+     * static settled scene RVE is defined on.
+     */
+    private static int p0Cmd(ServerCommandSource src, long episodeId, double placementX,
+                             int ticks, String conditionId, String wallBlockId,
+                             boolean targetPresent, int warmup) {
+        MineOcclude.LOG.info("[MineOcclude/P0] /p0 requested: ep={} x={} ticks={} "
+                        + "condition={} wall={} targetPresent={} warmup={}",
+                episodeId, placementX, ticks, conditionId, wallBlockId, targetPresent, warmup);
+        if (manager == null) {
+            src.sendError(new LiteralText("MineOcclude not ready"));
+            return 0;
+        }
+        WallCondition condition;
+        try {
+            condition = WallCondition.of(conditionId, wallBlockId);
+        } catch (IllegalArgumentException error) {
+            src.sendError(new LiteralText("p0 REFUSED: " + error.getMessage()));
+            return 0;
+        }
+        Layouts.Layout layout = Layouts.get(P0_LAYOUT_ID);
+        if (layout == null) {
+            src.sendError(new LiteralText("Unknown layout '" + P0_LAYOUT_ID + "'"));
+            return 0;
+        }
+        if (!Double.isFinite(placementX)
+                || placementX < layout.laneMin || placementX > layout.laneMax) {
+            src.sendError(new LiteralText("p0 placement outside layout lane"));
+            return 0;
+        }
+        try {
+            // Wall presence follows the condition; target presence does not. L0
+            // keeps NO_WALL so it never grows a wall; every other condition keeps
+            // its own material standing in both the present and absent halves.
+            EpisodeConfig cfg = new EpisodeConfig(
+                    P0_LAYOUT_ID, episodeId, episodeId,
+                    0.0, 0.0, ticks,
+                    layout.laneMin, layout.laneMax, placementX,
+                    layout.wallSegMin, layout.wallSegMax,
+                    layout.wallOrthoConst, layout.wallOrthoOffset, layout.cameraDist,
+                    layout.laneY, layout.wallAxis, condition.scene, 0,
+                    0, -1, 0.0, true, "P0_STATIC", "P0", condition, targetPresent);
+            if (!manager.start(cfg, ticks, warmup, null)) {
+                src.sendError(new LiteralText("p0 REFUSED for episode " + episodeId));
+                return 0;
+            }
+            src.sendFeedback(new LiteralText("Armed P0 unit " + episodeId
+                    + " x=" + placementX
+                    + " condition " + condition.id + " wall " + condition.wallBlockId
+                    + " target " + (targetPresent ? "PRESENT" : "ABSENT")), true);
+            return 1;
+        } catch (Exception error) {
+            MineOcclude.LOG.error("[MineOcclude/P0] p0 failed", error);
+            src.sendError(new LiteralText("p0 failed: " + error));
             return 0;
         }
     }

@@ -228,13 +228,14 @@ def test_authority_binding_is_frozen():
     assert bound["PHASE0_DESIGN_SHA256"] == authority.FROZEN_PHASE0_DESIGN_SHA256
 
 
-def test_master_salt_is_derived_from_the_authority_bytes():
+def test_master_salt_is_derived_from_the_pinned_cohort_authority_bytes():
+    """Authority 2.2a — pinned to the authority that materialized the cohort."""
     import hashlib
 
     expected = hashlib.sha256(
         (
             "MINEOCCLUDE_EXPERIMENT_III_V1|"
-            + authority.FROZEN_AUTHORITY_SHA256
+            + authority.COHORT_SALT_AUTHORITY_SHA256
             + "|"
             + authority.FROZEN_PHASE0_DESIGN_SHA256
         ).encode()

@@ -1,8 +1,12 @@
 """Authority binding integrity (A.30) and the successor amendment record.
 
-The master salt is a function of ``AUTHORITY_SHA256``, which is the SHA-256 of the
-canonical markdown's **bytes**. Anything that changes those bytes changes the
-entire candidate stream, so the byte-level properties are tested, not assumed.
+``AUTHORITY_SHA256`` is the SHA-256 of the canonical markdown's **bytes**, so the
+byte-level properties are tested, not assumed.
+
+The master salt derives from ``COHORT_SALT_AUTHORITY_SHA256`` -- the authority
+under which A1 materialized the cohort -- rather than the current authority hash
+(authority 2.2a, Amendment 3g). Before that pinning, any authority edit changed
+the entire candidate stream and therefore the scientific population.
 """
 
 from __future__ import annotations
@@ -18,6 +22,17 @@ AMENDMENT_RECORD = (
     authority.AUTHORITY_ROOT
     / "AUTHORITY_AMENDMENT_2_COHORT_ADMISSION_FEASIBILITY.md"
 )
+AMENDMENT_3_RECORD = (
+    authority.AUTHORITY_ROOT
+    / "AUTHORITY_AMENDMENT_3_P0_OPERATIONAL_COMPLETENESS.md"
+)
+
+
+def test_amendment_3_record_exists_and_declares_prospective_status():
+    assert AMENDMENT_3_RECORD.is_file()
+    text = AMENDMENT_3_RECORD.read_text(encoding="utf-8")
+    assert "Scientific outcomes existed before amendment | **false**" in text
+    assert "P0 frames observed | **0**" in text
 
 
 def test_authority_binding_matches_the_frozen_successor():
@@ -29,21 +44,59 @@ def test_authority_binding_matches_the_frozen_successor():
 
 
 def test_authority_version_is_the_successor():
-    assert authority.AUTHORITY_VERSION == "v1.5"
-    assert authority.machine_authority()["authority_version"] == "v1.5"
+    assert authority.AUTHORITY_VERSION == "v1.6"
+    assert authority.machine_authority()["authority_version"] == "v1.6"
 
 
 def test_predecessor_is_recorded_as_immutable_provenance():
+    """The whole lineage stays addressable: v1.6 <- v1.5 <- v1.4."""
     assert (
         authority.PREDECESSOR_AUTHORITY_FREEZE_COMMIT
-        == "e86347b1275560f18cae79a9a3333d8af757adbe"
+        == "3fd66eddfce017078b6af2774a381077759b98a0"
     )
     assert authority.PREDECESSOR_AUTHORITY_SHA256 == (
+        "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
+    )
+    assert (
+        authority.PREDECESSOR_2_AUTHORITY_FREEZE_COMMIT
+        == "e86347b1275560f18cae79a9a3333d8af757adbe"
+    )
+    assert authority.PREDECESSOR_2_AUTHORITY_SHA256 == (
         "993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa"
     )
     assert (
         authority.PREDECESSOR_AUTHORITY_SHA256 != authority.FROZEN_AUTHORITY_SHA256
     )
+    assert (
+        authority.PREDECESSOR_2_AUTHORITY_SHA256 != authority.PREDECESSOR_AUTHORITY_SHA256
+    )
+
+
+def test_master_salt_is_pinned_to_the_cohort_authority_not_the_current_one():
+    """Authority 2.2a — an operational amendment must not move the cohort.
+
+    Before Amendment 3g the salt read the CURRENT authority hash, so v1.6 would
+    have regenerated a different candidate stream and a different 25-identity
+    cohort out of an edit that changed no scientific decision.
+    """
+    import hashlib
+
+    assert authority.COHORT_SALT_AUTHORITY_SHA256 == (
+        "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
+    )
+    assert authority.COHORT_SALT_AUTHORITY_SHA256 != authority.FROZEN_AUTHORITY_SHA256
+    expected = hashlib.sha256(
+        (
+            "MINEOCCLUDE_EXPERIMENT_III_V1|"
+            + authority.COHORT_SALT_AUTHORITY_SHA256
+            + "|"
+            + authority.phase0_design_sha256()
+        ).encode("utf-8")
+    ).hexdigest()
+    assert authority.master_salt() == expected
+    cohort = authority.machine_authority()["cohort"]
+    assert cohort["master_salt_floats_with_current_authority"] is False
+    assert cohort["cohort_byte_identical_across_v1_5_and_v1_6"] is True
 
 
 @pytest.mark.parametrize(
@@ -70,13 +123,17 @@ def test_authority_artifacts_are_lf_only(name):
     assert payload.count(b"\r\n") == 0, f"{name} contains CRLF line endings"
 
 
-def test_master_salt_derives_from_the_successor_authority_bytes():
+def test_authority_sha256_is_the_markdown_bytes():
     payload = authority.AUTHORITY_MARKDOWN_PATH.read_bytes()
     assert hashlib.sha256(payload).hexdigest() == authority.FROZEN_AUTHORITY_SHA256
+
+
+def test_master_salt_derives_from_the_pinned_cohort_authority_bytes():
+    """Authority 2.2a: derived from immutable digests, never chosen."""
     expected = hashlib.sha256(
         (
             "MINEOCCLUDE_EXPERIMENT_III_V1|"
-            + authority.FROZEN_AUTHORITY_SHA256
+            + authority.COHORT_SALT_AUTHORITY_SHA256
             + "|"
             + authority.FROZEN_PHASE0_DESIGN_SHA256
         ).encode()

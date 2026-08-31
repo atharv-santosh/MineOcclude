@@ -32,6 +32,13 @@ import numpy as np
 
 from mineocclude.experiment_iii.conditions import ELIGIBLE_STAINED_GLASS
 from mineocclude.experiment_iii.errors import ExperimentIIIError
+from mineocclude.experiment_iii.p0_bindings import (
+    background_gate,
+    l0_noise_threshold,
+    p0_bootstrap_seed,
+    sentinel_envelope,
+    split_half_medians,
+)
 
 __all__ = [
     "PLACEMENT_COUNT",
@@ -54,6 +61,11 @@ __all__ = [
     "aggregate_placement",
     "aggregate_condition",
     "background_residual",
+    "background_gate",
+    "l0_noise_threshold",
+    "outside_mask_split_half_noise",
+    "p0_bootstrap_seed",
+    "sentinel_envelope",
     "evaluate_triple",
     "select_ladder",
 ]
@@ -170,17 +182,24 @@ def masked_energy(
 def split_half_noise(
     absent_frames: Sequence[np.ndarray], mask: np.ndarray
 ) -> float:
-    """``N`` — deterministic split-half of the ABSENT frames by capture index."""
-    frames = list(absent_frames)
-    if len(frames) < 2:
-        raise ExperimentIIIError(
-            "P0_TECHNICAL_FAIL",
-            "the split-half noise floor needs at least two absent frames",
-        )
-    midpoint = len(frames) // 2
-    first = robust_median_image(frames[:midpoint])
-    second = robust_median_image(frames[midpoint:])
+    """``N`` — deterministic split-half of the ABSENT frames by capture index.
+
+    Authority 7.3 step 5 says "two halves by ascending capture index" but does
+    not resolve odd ``n``; authority 7.10c does, and is the only frozen
+    resolution, so it governs here too. The halves are exactly balanced and for
+    odd ``n`` the middle frame falls in neither — an unbalanced split would give
+    the two medians different noise scales and bias ``N`` itself.
+    """
+    first, second = split_half_medians(absent_frames)
     return masked_energy(first, second, mask)
+
+
+def outside_mask_split_half_noise(
+    absent_frames: Sequence[np.ndarray], mask: np.ndarray
+) -> float:
+    """``N_out`` — the same split-half noise energy OUTSIDE the mask (7.10d)."""
+    first, second = split_half_medians(absent_frames)
+    return background_residual(first, second, mask)
 
 
 def excess_energy(d: float, n: float) -> float:

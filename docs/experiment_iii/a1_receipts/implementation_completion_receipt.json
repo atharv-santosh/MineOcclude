@@ -6,8 +6,11 @@
     "docs/experiment_iii/a1_receipts/aprime_port_receipt.json": "f2e029b1cb33c130e327d06264f0213d7224ca0551ae28c49b0f99a29cf57f77",
     "docs/experiment_iii/a1_receipts/extraction_plan.json": "4b179e01194889c1c068878d31903631835730cb57776426ef19d2d977121781",
     "docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3",
+    "docs/experiment_iii/a1_receipts/implementation_completion_receipt.json": "ab58513f73e22e516371dff14abe14108d8a6b71267d68dcac31a8c1f9e823f3",
     "docs/experiment_iii/a1_receipts/option_d_feasibility_receipt.json": "d8b282b5ee74c2aa6615aa697d5547e1a37f488de18214e29a47de9d1541eb17",
-    "docs/experiment_iii/a1_receipts/p0_manifest.json": "f7b5badb4c0d1c5cea26ab494c96d5a2734c86fe5d67134d01ae0530da881900",
+    "docs/experiment_iii/a1_receipts/p0_campaign_plan.json": "c5f7a6a2cbe5af2c1a6606d410851e6b3b7eeb411a6729d35c04701321285bbe",
+    "docs/experiment_iii/a1_receipts/p0_manifest.json": "cf057070449ed4806a64482906b9ebb255afb42c4f5407fb7c0941aa1debd8e5",
+    "docs/experiment_iii/a1_receipts/p0_placement_manifest.json": "f854cd861f45fbbf0cbabc8e7721036ebd3928f0e02f91c5e8d0e7667ae6972a",
     "docs/experiment_iii/cohort/cohort_all_q_qualification_receipt.json": "efc8264532847f04970a90f154f8c897fac922e7a9293378a9aa41de62ebb699",
     "docs/experiment_iii/cohort/cohort_qualification_receipt.json": "5b2d878b47a0eb534a4fc5b5e73b95326eaca4c148ce6be55a0f599cbad721b3",
     "docs/experiment_iii/cohort/folds.json": "cf72e750024ce5b6ee1c3116125b980c0352174e296cffdfbed99963a580bcd2",
@@ -19,24 +22,24 @@
     "docs/experiment_iii/cohort/q_regression_a1_receipt.json": "e2028dc8d8bec266cdbb262c7d812ef6fdc138f889466452d245296ebb710405"
   },
   "authority_binding": {
-    "AUTHORITY_SHA256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
-    "MACHINE_AUTHORITY_SHA256": "f707d5f8264e46c22861707d4caa871cf634da931aa97556eaec31d1df3463a9",
+    "AUTHORITY_SHA256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
+    "MACHINE_AUTHORITY_SHA256": "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609",
     "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
   },
   "authority_freeze_commit": "3fd66eddfce017078b6af2774a381077759b98a0",
-  "authority_version": "v1.5",
+  "authority_version": "v1.6",
   "candidate_index_bound_per_direction": 2000,
   "focused_tests": {
     "command": "python -m pytest tests/experiment_iii/ -q",
     "exit_code": 0,
     "failed": 0,
-    "passed": 326,
+    "passed": 592,
     "ran": true,
     "skipped_or_xfailed": false,
-    "summary": "326 passed in 49.08s"
+    "summary": "592 passed in 261.24s (0:04:21)"
   },
-  "predecessor_authority_freeze_commit": "e86347b1275560f18cae79a9a3333d8af757adbe",
-  "predecessor_authority_sha256": "993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa",
+  "predecessor_authority_freeze_commit": "3fd66eddfce017078b6af2774a381077759b98a0",
+  "predecessor_authority_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
   "resource_policy": {
     "capture_exists": false,
     "gpu_used": false,

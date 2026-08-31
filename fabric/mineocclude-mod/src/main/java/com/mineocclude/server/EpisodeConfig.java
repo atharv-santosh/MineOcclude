@@ -59,8 +59,23 @@ public final class EpisodeConfig {
     public enum Axis { X, Z }
     public enum Scene { NORMAL, NO_WALL, NO_SHEEP }
 
+    /**
+     * Experiment III authority 7.11: wall presence and target presence are
+     * INDEPENDENT axes. The single Scene enum cannot express "wall present and
+     * target absent", which is the P0 ABSENT state for 13 of the 14 measured
+     * conditions -- every stained-glass candidate and stone. Collapsing the two
+     * axes would make the absent state remove the wall, so D(c,p,b) would
+     * measure the WALL rather than the target and the whole RVE ladder would be
+     * silently meaningless.
+     *
+     * <p>Wall presence stays with the scene/condition; target presence lives
+     * here. Legacy captures derive it from the scene exactly as before, so no
+     * existing behaviour changes.
+     */
+    public final boolean targetPresent;
+
     public boolean buildWall() { return scene != Scene.NO_WALL; }
-    public boolean spawnSheep() { return scene != Scene.NO_SHEEP; }
+    public boolean spawnSheep() { return targetPresent; }
 
     public EpisodeConfig(String layoutId, long episodeId, long seed,
                          double driftV, double processQ, int hiddenFrames,
@@ -101,7 +116,28 @@ public final class EpisodeConfig {
                          int revealTicks, int impulseTick, double impulseYawDeg,
                          boolean lockCamera, String trajectorySpecId, String specHash,
                          WallCondition condition) {
+        this(layoutId, episodeId, seed, driftV, processQ, hiddenFrames,
+                laneMin, laneMax, startPos, wallSegMin, wallSegMax,
+                wallOrthoConst, wallOrthoOffset, cameraDist, laneY, wallAxis,
+                scene, hiddenTarget, revealTicks, impulseTick, impulseYawDeg,
+                lockCamera, trajectorySpecId, specHash, condition,
+                scene != Scene.NO_SHEEP);
+    }
+
+    /** The full constructor. {@code targetPresent} is the independent target
+     *  axis of authority 7.11; every other overload derives it from the scene,
+     *  preserving legacy behaviour exactly. */
+    public EpisodeConfig(String layoutId, long episodeId, long seed,
+                         double driftV, double processQ, int hiddenFrames,
+                         double laneMin, double laneMax, double startPos,
+                         double wallSegMin, double wallSegMax,
+                         double wallOrthoConst, double wallOrthoOffset, double cameraDist,
+                         double laneY, Axis wallAxis, Scene scene, int hiddenTarget,
+                         int revealTicks, int impulseTick, double impulseYawDeg,
+                         boolean lockCamera, String trajectorySpecId, String specHash,
+                         WallCondition condition, boolean targetPresent) {
         this.condition = condition;
+        this.targetPresent = targetPresent;
         this.layoutId = layoutId;
         this.episodeId = episodeId;
         this.seed = seed;
