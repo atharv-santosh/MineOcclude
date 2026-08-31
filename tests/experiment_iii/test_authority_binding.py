@@ -44,25 +44,25 @@ def test_authority_binding_matches_the_frozen_successor():
 
 
 def test_authority_version_is_the_successor():
-    assert authority.AUTHORITY_VERSION == "v1.6"
-    assert authority.machine_authority()["authority_version"] == "v1.6"
+    assert authority.AUTHORITY_VERSION == "v1.7"
+    assert authority.machine_authority()["authority_version"] == "v1.7"
 
 
 def test_predecessor_is_recorded_as_immutable_provenance():
-    """The whole lineage stays addressable: v1.6 <- v1.5 <- v1.4."""
+    """The whole lineage stays addressable: v1.7 <- v1.6 <- v1.5."""
     assert (
         authority.PREDECESSOR_AUTHORITY_FREEZE_COMMIT
-        == "3fd66eddfce017078b6af2774a381077759b98a0"
+        == "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
     )
     assert authority.PREDECESSOR_AUTHORITY_SHA256 == (
-        "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
+        "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c"
     )
     assert (
         authority.PREDECESSOR_2_AUTHORITY_FREEZE_COMMIT
-        == "e86347b1275560f18cae79a9a3333d8af757adbe"
+        == "3fd66eddfce017078b6af2774a381077759b98a0"
     )
     assert authority.PREDECESSOR_2_AUTHORITY_SHA256 == (
-        "993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa"
+        "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
     )
     assert (
         authority.PREDECESSOR_AUTHORITY_SHA256 != authority.FROZEN_AUTHORITY_SHA256

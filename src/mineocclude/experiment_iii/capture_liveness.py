@@ -41,6 +41,8 @@ from mineocclude.experiment_iii.authority import (
 from mineocclude.experiment_iii.errors import ExperimentIIIError
 
 __all__ = [
+    "DIAGNOSTIC_TRANSITIONS",
+    "GUARANTEED_CHANGE_TRANSITIONS",
     "TRANSITION_KINDS",
     "LivenessProbe",
     "assert_transition_observed",
@@ -51,12 +53,34 @@ __all__ = [
     "verify_unit_liveness",
 ]
 
-#: Authority 7.10f -- the points at which the image must demonstrably change.
+#: Authority 7.10f -- every transition the contract knows about.
 TRANSITION_KINDS = (
     "TARGET_PRESENT_TO_ABSENT",
     "TARGET_ABSENT_TO_PRESENT",
     "WALL_MATERIAL_CHANGE",
-    "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
+)
+
+#: Amendment 4. Transitions whose framebuffer change the authority guarantees
+#: INDEPENDENTLY of the scientific visibility condition being measured. Only these
+#: may return a staleness verdict.
+#:
+#: * the witness runs NO_WALL at a fixed visible calibration position, so its
+#:   change does not depend on any candidate material;
+#: * a wall material change repaints a surface that is directly in view, so its
+#:   change does not depend on whether the target is visible.
+GUARANTEED_CHANGE_TRANSITIONS = (
+    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
+    "WALL_MATERIAL_CHANGE",
+)
+
+#: Amendment 4. Recorded, never a verdict on their own. A correctly rendered
+#: condition may occlude the target, so PRESENT and ABSENT legitimately produce
+#: pixel-identical settled framebuffers; requiring inequality made liveness
+#: conditional on the unknown visibility quantity P0 exists to measure.
+DIAGNOSTIC_TRANSITIONS = (
+    "TARGET_PRESENT_TO_ABSENT",
+    "TARGET_ABSENT_TO_PRESENT",
 )
 
 
@@ -84,6 +108,8 @@ class LivenessProbe:
         after_tick: int,
         before_episode: int | None = None,
         after_episode: int | None = None,
+        before_sequence: int | None = None,
+        after_sequence: int | None = None,
         settled: bool = True,
     ) -> None:
         if kind not in TRANSITION_KINDS:
@@ -98,6 +124,8 @@ class LivenessProbe:
         self.after_tick = int(after_tick)
         self.before_episode = None if before_episode is None else int(before_episode)
         self.after_episode = None if after_episode is None else int(after_episode)
+        self.before_sequence = None if before_sequence is None else int(before_sequence)
+        self.after_sequence = None if after_sequence is None else int(after_sequence)
         self.settled = bool(settled)
 
     @property
@@ -110,9 +138,22 @@ class LivenessProbe:
         therefore compared two unrelated counters: the mandatory probe read
         ``7 -> 7`` and every ABBA target transition read ``7 -> 0``, so a
         correctly captured transition was reported as a world that never
-        advanced. Ordering on the pair restores the intended meaning, and within
-        one capture (equal or absent episodes) it is exactly the old comparison.
+        advanced.
+
+        The order of two separate captures is the order the driver captured them
+        in, which is what the capture SEQUENCE records. It is deliberately NOT the
+        episode id: ids are operator-assigned identities, and the P0 runner
+        numbers the witness at ``slot_0 + 900_000``, so the witness that runs
+        FIRST carries the LARGEST id. Ordering on the id called a correct
+        wall-material transition a world that never advanced, on every unit that
+        builds a wall. Within one capture it is exactly the tick comparison.
         """
+        if (
+            self.before_sequence is not None
+            and self.after_sequence is not None
+            and self.before_sequence != self.after_sequence
+        ):
+            return self.after_sequence > self.before_sequence
         if (
             self.before_episode is not None
             and self.after_episode is not None
@@ -130,6 +171,8 @@ class LivenessProbe:
             "kind": self.kind,
             "before_episode": self.before_episode,
             "after_episode": self.after_episode,
+            "before_capture_sequence": self.before_sequence,
+            "after_capture_sequence": self.after_sequence,
             "before_tick": self.before_tick,
             "after_tick": self.after_tick,
             "before_frame_sha256": self.before_hash,
@@ -141,7 +184,18 @@ class LivenessProbe:
 
 
 def assert_transition_observed(probe: LivenessProbe) -> dict[str, Any]:
-    """The only condition under which repeated bytes are staleness (7.10f)."""
+    """Evaluate one transition under the Amendment 4 successor rule.
+
+    A staleness verdict is available ONLY for a transition whose framebuffer
+    change the authority guarantees independently of the scientific visibility
+    condition being measured. For a scientific target present/absent transition
+    the hashes are recorded and compared, but equality is technical evidence and
+    diagnostics -- never, by itself, ``CAPTURE_STALE_FRAME``.
+
+    The rule is uniform. Nothing here consults the wall material, its expected
+    opacity, the candidate ranking, RVE, the selected ladder or model behaviour:
+    liveness is decided by the witness, not by the measurement.
+    """
     if not probe.tick_advanced:
         raise ExperimentIIIError(
             "TIMING_CARDINALITY_MISMATCH",
@@ -149,14 +203,24 @@ def assert_transition_observed(probe: LivenessProbe) -> dict[str, Any]:
             f"(episode {probe.before_episode} tick {probe.before_tick} -> "
             f"episode {probe.after_episode} tick {probe.after_tick})",
         )
-    if not probe.framebuffer_changed:
+    guaranteed = probe.kind in GUARANTEED_CHANGE_TRANSITIONS
+    if guaranteed and not probe.framebuffer_changed:
         raise ExperimentIIIError(
             "CAPTURE_STALE_FRAME",
-            f"the server tick advanced across {probe.kind} but the settled "
-            f"framebuffer is byte-identical ({probe.before_hash}); the renderer "
-            f"is not presenting the scene",
+            f"the world advanced across {probe.kind}, whose framebuffer change is "
+            f"guaranteed independently of the condition under measurement, but the "
+            f"settled framebuffer is byte-identical ({probe.before_hash}); the "
+            f"renderer is not presenting the scene",
         )
-    return probe.as_dict()
+    report = probe.as_dict()
+    report["change_guaranteed_by_authority"] = guaranteed
+    report["verdict_bearing"] = guaranteed
+    if not guaranteed:
+        report["note"] = (
+            "diagnostic only: equal settled hashes across a scientific "
+            "present/absent transition are not evidence of a stale renderer"
+        )
+    return report
 
 
 def verify_tick_integrity(ticks: Sequence[int], *, expected: int | None = None) -> dict[str, Any]:
@@ -317,21 +381,27 @@ def verify_unit_liveness(
     dimension_report = verify_frame_dimensions(frames)
     tick_report = verify_capture_tick_integrity(frames, expected_total=expected_frames)
 
+    # Amendment 4: the unit's liveness is discharged by the WITNESS, which the
+    # authority requires before every scientific capture unit. The scientific
+    # target transitions are recorded but are not required to be present or to
+    # change, because a condition that occludes the target legitimately produces
+    # none of them at the pixel level.
+    #
     # WALL_MATERIAL_CHANGE is required exactly when the unit actually changed the
-    # material. Excluding it unconditionally -- as this did -- meant the frozen
-    # probe was never demanded of any unit, and a wall left standing at the
-    # previous material would still show present/absent differences and pass every
-    # probe that WAS emitted, corrupting all 18 units of that condition.
-    required = {kind for kind in TRANSITION_KINDS if kind != "WALL_MATERIAL_CHANGE"}
+    # material. Excluding it unconditionally meant the frozen probe was never
+    # demanded of any unit, and a wall left standing at the previous material
+    # would still pass every probe that WAS emitted.
+    required = {"MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS"}
     if material_transition:
         required.add("WALL_MATERIAL_CHANGE")
     observed_kinds = {probe.kind for probe in probes}
     missing = sorted(required - observed_kinds)
-    if "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE" in missing:
+    if "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS" in missing:
         raise ExperimentIIIError(
             "CAPTURE_STALE_FRAME",
-            "authority 7.10f requires a controlled pre-capture liveness probe on "
-            "every unit; none was recorded",
+            "authority 7.10f (Amendment 4) requires a fixed ENGINEERING_ONLY "
+            "pre-capture liveness witness before every scientific capture unit; "
+            "none was recorded",
         )
     if "WALL_MATERIAL_CHANGE" in missing:
         raise ExperimentIIIError(
@@ -355,6 +425,18 @@ def verify_unit_liveness(
         "required_probe_kinds": sorted(required),
         "required_probe_kinds_present": sorted(required & observed_kinds),
         "material_transition_probed": "WALL_MATERIAL_CHANGE" in observed_kinds,
+        "guaranteed_change_transitions": sorted(
+            observed_kinds & set(GUARANTEED_CHANGE_TRANSITIONS)
+        ),
+        "diagnostic_transitions": sorted(observed_kinds & set(DIAGNOSTIC_TRANSITIONS)),
+        # Amendment 4. Recorded so a reader can see the scientific present/absent
+        # comparison was made, and see that it carried no verdict.
+        "scientific_present_absent_equal": [
+            probe["kind"]
+            for probe in probe_reports
+            if not probe["verdict_bearing"] and not probe["framebuffer_changed"]
+        ],
+        "pixel_inequality_is_a_scientific_unit_validity_requirement": False,
         # Diagnostics only. A static settled state legitimately repeats bytes;
         # the withdrawn v1.5 rule treated this as failure and was unsound.
         "distinct_frame_hashes": distinct,

@@ -45,10 +45,46 @@ from mineocclude.experiment_iii.capture_liveness import (
     verify_unit_liveness,
 )
 from mineocclude.experiment_iii.capture_runtime import CaptureRuntime
+from mineocclude.experiment_iii.conditions import AIR
 from mineocclude.experiment_iii.errors import ExperimentIIIError
+from mineocclude.experiment_iii.placements import placement_coordinates
+
+#: Authority 7.10f (Amendment 4). The witness scene is NO_WALL, so its visual
+#: change cannot depend on any candidate material.
+WITNESS_WALL_BLOCK_ID = AIR
+WITNESS_CONDITION_ID = "L0"
+
+#: The fixed authority-bound visible calibration position: the CENTRE of the nine
+#: placements frozen by authority 7.2 (index 4, a frozen sentinel index). It is
+#: authority-bound rather than invented, and with no wall in front of it the
+#: target is visible there by construction -- that is precisely the L0 anchor.
+WITNESS_PLACEMENT_INDEX = 4
+WITNESS_LANE_X = float(placement_coordinates()[WITNESS_PLACEMENT_INDEX]["lane_x"])
+
+
+class _WitnessUnit:
+    """The unit view the witness captures under: NO_WALL, calibration position.
+
+    ``_capture_slot`` reads ``lane_x``, ``condition_id``, ``wall_block_id`` and
+    ``unit_id`` off the unit it is given. The witness must not inherit the
+    scientific unit's material or placement -- that is exactly what made liveness
+    conditional on the measurement -- so it is captured under this fixed view.
+    """
+
+    __slots__ = ("unit_id", "condition_id", "wall_block_id", "lane_x", "abba_order")
+
+    def __init__(self, unit: Any) -> None:
+        self.unit_id = f"{unit.unit_id}::LIVENESS_WITNESS"
+        self.condition_id = WITNESS_CONDITION_ID
+        self.wall_block_id = WITNESS_WALL_BLOCK_ID
+        self.lane_x = WITNESS_LANE_X
+        self.abba_order = ("P", "A", "P")
+
 
 __all__ = [
     "FrameSink",
+    "WITNESS_LANE_X",
+    "WITNESS_WALL_BLOCK_ID",
     "P0SlotResult",
     "capture_p0_unit",
     "p0_slot_command",
@@ -217,10 +253,15 @@ class P0SlotResult:
         slot: Mapping[str, Any],
         episode_id: int,
         frames: Sequence[Mapping[str, Any]],
+        sequence: int = 0,
     ):
         self.slot = dict(slot)
         self.episode_id = episode_id
         self.frames = [dict(frame) for frame in frames]
+        #: Position in the order this unit's captures were actually taken. The
+        #: episode id cannot serve: the P0 runner numbers the witness at
+        #: ``slot_0 + 900_000``, so the capture that runs first has the largest id.
+        self.sequence = int(sequence)
 
     @property
     def settled_hash(self) -> str:
@@ -270,16 +311,24 @@ def prepare_condition(
     wall_block_id: str,
     previous_wall_block_id: str | None,
 ) -> dict[str, Any]:
-    """Announce a material transition so the driver can probe it explicitly."""
-    changed = (
-        previous_wall_block_id is not None and previous_wall_block_id != wall_block_id
-    )
+    """Announce a material transition so the driver can probe it explicitly.
+
+    Amendment 4 changed what "previous" means. The mandatory liveness witness runs
+    NO_WALL immediately before every unit, so the arena a unit rebuilds FROM is
+    always the witness's, never the preceding unit's. A unit therefore changes the
+    material exactly when it declares something other than air, and the probe is
+    bracketed by two real captures -- the witness's last settled frame and the
+    unit's first -- instead of by a hash carried across units.
+    """
+    changed = wall_block_id != AIR
     return {
         "wall_block_id": wall_block_id,
-        "previous_wall_block_id": previous_wall_block_id,
+        "previous_wall_block_id": AIR,
+        "preceding_unit_wall_block_id": previous_wall_block_id,
         "material_changed": changed,
         "forces_arena_rebuild": changed,
         "probe_required": changed,
+        "probed_against": "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS_NO_WALL",
     }
 
 
@@ -292,6 +341,7 @@ def _capture_slot(
     *,
     frames_per_slot: int,
     frame_timeout_seconds: float,
+    sequence: int = 0,
 ) -> P0SlotResult:
     runtime.send(
         p0_slot_command(
@@ -304,7 +354,7 @@ def _capture_slot(
         )
     )
     if runtime.dry_run:
-        return P0SlotResult(slot, episode_id, [])
+        return P0SlotResult(slot, episode_id, [], sequence=sequence)
     sink.wait_for_frames(episode_id, frames_per_slot, timeout=frame_timeout_seconds)
     records = sink.frame_records(episode_id)
     if len(records) < frames_per_slot:
@@ -313,7 +363,7 @@ def _capture_slot(
             f"slot {slot['slot_index']} of {unit.unit_id} produced "
             f"{len(records)} frames, expected {frames_per_slot}",
         )
-    return P0SlotResult(slot, episode_id, records)
+    return P0SlotResult(slot, episode_id, records, sequence=sequence)
 
 
 def capture_p0_unit(
@@ -350,85 +400,83 @@ def capture_p0_unit(
 
     probes: list[LivenessProbe] = []
     pre_capture: dict[str, Any] | None = None
+    witness_results: list[P0SlotResult] = []
 
-    # The controlled pre-capture probe, BEFORE the unit's four measured slots.
-    # It toggles target presence against the unit's own first state, so a frozen
-    # renderer is caught for the price of one probe rather than a whole unit, and
-    # it is an independent observation rather than a restatement of the first
-    # ABBA transition.
+    # Authority 7.10f, Amendment 4 -- the MANDATORY PRE-CAPTURE LIVENESS WITNESS.
+    #
+    # The witness is a fixed ENGINEERING_ONLY observation whose visual change is
+    # guaranteed INDEPENDENTLY of the candidate wall material and of P0
+    # visibility: NO_WALL, the target at a fixed authority-bound visible
+    # calibration position, toggled PRESENT -> ABSENT -> PRESENT. One frozen
+    # configuration, common to every P0 unit.
+    #
+    # It replaces the v1.6 probe, which toggled the target inside the unit's OWN
+    # wall configuration. That made liveness conditional on the very visibility
+    # P0 exists to measure: the nine frozen placements all lie inside the wall
+    # extent, so an occluding condition renders PRESENT and ABSENT identically
+    # and every one of its units was refused on a physically correct observation.
+    #
+    # Its frames are never added to ``all_frames``: they are apparatus evidence,
+    # not measurement, and no scientific consumer may read them.
     if not runtime.dry_run:
-        probe_id = (
+        witness_id = (
             probe_episode_id_for_unit(unit)
             if probe_episode_id_for_unit is not None
             else episode_id_for_slot(unit, 0) + 900_000
         )
-        first_state_present = unit.abba_order[0] == "P"
-        probe_slots = [
-            {
-                "slot_index": -2,
-                "state": "P" if first_state_present else "A",
-                "target_present": first_state_present,
-                "frames": frames_per_slot,
-            },
-            {
-                "slot_index": -1,
-                "state": "A" if first_state_present else "P",
-                "target_present": not first_state_present,
-                "frames": frames_per_slot,
-            },
+        witness_slots = [
+            {"slot_index": -3, "state": "P", "target_present": True,
+             "frames": frames_per_slot},
+            {"slot_index": -2, "state": "A", "target_present": False,
+             "frames": frames_per_slot},
+            {"slot_index": -1, "state": "P", "target_present": True,
+             "frames": frames_per_slot},
         ]
-        probe_results = [
+        witness_unit = _WitnessUnit(unit)
+        witness_results = [
             _capture_slot(
                 runtime,
                 sink,
-                unit,
-                probe_slot,
-                probe_id + offset,
+                witness_unit,
+                witness_slot,
+                witness_id + offset,
                 frames_per_slot=frames_per_slot,
                 frame_timeout_seconds=frame_timeout_seconds,
+                sequence=offset,
             )
-            for offset, probe_slot in enumerate(probe_slots)
+            for offset, witness_slot in enumerate(witness_slots)
         ]
-        probes.append(
-            LivenessProbe(
-                "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
-                before_hash=probe_results[0].settled_hash,
-                after_hash=probe_results[1].settled_hash,
-                before_tick=probe_results[0].last_tick,
-                after_tick=probe_results[1].last_tick,
-                before_episode=probe_results[0].episode_id,
-                after_episode=probe_results[1].episode_id,
-            )
-        )
-        pre_capture = {
-            "kind": "CONTROLLED_TARGET_TOGGLE_BEFORE_MEASURED_SLOTS",
-            "episode_ids": [result.episode_id for result in probe_results],
-            "issued_before_measured_slots": True,
-            "independent_of_abba_transitions": True,
-        }
-
-        # 7.10f / Amendment 3 3f: a material change is proven at the pixel level,
-        # not by the cache key. The cache key is a claim about intent; a stale
-        # wall left standing would still show present/absent differences and pass
-        # every target probe while corrupting all 18 units of the condition.
-        if transition["probe_required"]:
-            if previous_unit_settled_hash is None:
-                raise ExperimentIIIError(
-                    "CAPTURE_STALE_FRAME",
-                    f"{unit.unit_id} changes the wall material from "
-                    f"{transition['previous_wall_block_id']} to "
-                    f"{unit.wall_block_id}, but no settled frame from the previous "
-                    f"material was supplied to probe the transition against",
-                )
+        # Both legs must change: with no wall in front of it, the calibration
+        # target is visible by construction, so PRESENT -> ABSENT -> PRESENT is a
+        # transition the authority guarantees must alter the framebuffer.
+        for before, after in zip(witness_results, witness_results[1:]):
             probes.append(
                 LivenessProbe(
-                    "WALL_MATERIAL_CHANGE",
-                    before_hash=previous_unit_settled_hash,
-                    after_hash=probe_results[0].first_hash,
-                    before_tick=probe_results[0].first_tick - 1,
-                    after_tick=probe_results[0].first_tick,
+                    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
+                    before_hash=before.settled_hash,
+                    after_hash=after.settled_hash,
+                    before_tick=before.last_tick,
+                    after_tick=after.last_tick,
+                    before_episode=before.episode_id,
+                    after_episode=after.episode_id,
+                    before_sequence=before.sequence,
+                    after_sequence=after.sequence,
                 )
             )
+        pre_capture = {
+            "kind": "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
+            "classification": "ENGINEERING_ONLY",
+            "scene": "NO_WALL",
+            "wall_block_id": WITNESS_WALL_BLOCK_ID,
+            "condition_id": WITNESS_CONDITION_ID,
+            "calibration_lane_x": WITNESS_LANE_X,
+            "transition": ["TARGET_PRESENT", "TARGET_ABSENT", "TARGET_PRESENT"],
+            "episode_ids": [result.episode_id for result in witness_results],
+            "issued_before_measured_slots": True,
+            "visual_change_guaranteed_independently_of_wall_material": True,
+            "frozen_configuration_common_to_every_p0_unit": True,
+            "excluded_from_scientific_consumers": True,
+        }
 
     results: list[P0SlotResult] = []
     all_frames: list[dict[str, Any]] = []
@@ -442,11 +490,37 @@ def capture_p0_unit(
             episode_id,
             frames_per_slot=frames_per_slot,
             frame_timeout_seconds=frame_timeout_seconds,
+            # The measured slots continue the sequence the witness started, so a
+            # probe spanning the witness and the first slot orders correctly.
+            sequence=len(witness_results) + slot["slot_index"],
         )
         if not runtime.dry_run:
             time.sleep(settle_seconds)
         all_frames.extend(result.frames)
         results.append(result)
+        # The wall material change is bracketed by the witness's last settled
+        # frame (NO_WALL) and this unit's first measured frame (its material).
+        # Both sides are real captures; the arena cache key is a claim about
+        # intent, not evidence about pixels.
+        if (
+            not runtime.dry_run
+            and transition["probe_required"]
+            and slot["slot_index"] == 0
+            and witness_results
+        ):
+            probes.append(
+                LivenessProbe(
+                    "WALL_MATERIAL_CHANGE",
+                    before_hash=witness_results[-1].settled_hash,
+                    after_hash=result.first_hash,
+                    before_tick=witness_results[-1].last_tick,
+                    after_tick=result.first_tick,
+                    before_episode=witness_results[-1].episode_id,
+                    after_episode=result.episode_id,
+                    before_sequence=witness_results[-1].sequence,
+                    after_sequence=result.sequence,
+                )
+            )
 
     if not runtime.dry_run:
         for index in range(len(results) - 1):
@@ -467,6 +541,8 @@ def capture_p0_unit(
                     after_tick=after.first_tick,
                     before_episode=before.episode_id,
                     after_episode=after.episode_id,
+                    before_sequence=before.sequence,
+                    after_sequence=after.sequence,
                 )
             )
 

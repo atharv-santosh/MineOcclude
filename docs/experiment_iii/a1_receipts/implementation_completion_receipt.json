@@ -29,7 +29,7 @@
     "docs/experiment_iii/a1_receipts/aprime_port_receipt.json": "f2e029b1cb33c130e327d06264f0213d7224ca0551ae28c49b0f99a29cf57f77",
     "docs/experiment_iii/a1_receipts/extraction_plan.json": "4b179e01194889c1c068878d31903631835730cb57776426ef19d2d977121781",
     "docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3",
-    "docs/experiment_iii/a1_receipts/implementation_completion_receipt.json": "e211768539361740f567838e007ea8f000db8cf26b6c154ee44b8657f20a2e0a",
+    "docs/experiment_iii/a1_receipts/implementation_completion_receipt.json": "1027547b0401d720034ab96ae3cd79e319b7906bd3cf822a9f09ac87295abe50",
     "docs/experiment_iii/a1_receipts/option_d_feasibility_receipt.json": "d8b282b5ee74c2aa6615aa697d5547e1a37f488de18214e29a47de9d1541eb17",
     "docs/experiment_iii/a1_receipts/p0_campaign_plan.json": "c5f7a6a2cbe5af2c1a6606d410851e6b3b7eeb411a6729d35c04701321285bbe",
     "docs/experiment_iii/a1_receipts/p0_manifest.json": "b4f0f4540eb0209948d5e7b330d4c05c41c56136029f86e6f694b2fb7f6c3ce0",
@@ -45,25 +45,25 @@
     "docs/experiment_iii/cohort/q_regression_a1_receipt.json": "e2028dc8d8bec266cdbb262c7d812ef6fdc138f889466452d245296ebb710405"
   },
   "authority_binding": {
-    "AUTHORITY_SHA256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
-    "MACHINE_AUTHORITY_SHA256": "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609",
+    "AUTHORITY_SHA256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "MACHINE_AUTHORITY_SHA256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
     "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
   },
-  "authority_freeze_commit": "a1f5dd1a959ff477edbf469cd12bb4db606371ea",
-  "authority_version": "v1.6",
+  "authority_freeze_commit": "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a",
+  "authority_version": "v1.7",
   "candidate_index_bound_per_direction": 2000,
   "completion_criterion": "every listed source, script, fabric and test file exists AND every declared runtime call site references the symbol from production code; a library function with no production call site is NOT complete",
   "focused_tests": {
     "command": "python -m pytest tests/experiment_iii/ -q",
     "exit_code": 0,
     "failed": 0,
-    "passed": 676,
+    "passed": 680,
     "ran": true,
     "skipped_or_xfailed": false,
-    "summary": "676 passed in 282.96s (0:04:42)"
+    "summary": "680 passed in 337.33s (0:05:37)"
   },
-  "predecessor_authority_freeze_commit": "3fd66eddfce017078b6af2774a381077759b98a0",
-  "predecessor_authority_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+  "predecessor_authority_freeze_commit": "a1f5dd1a959ff477edbf469cd12bb4db606371ea",
+  "predecessor_authority_sha256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
   "resource_policy": {
     "capture_exists": false,
     "gpu_used": false,

@@ -106,12 +106,12 @@ PHASE0_DESIGN_PATH = (
 )
 
 #: The frozen authority package, committed at ``AUTHORITY_FREEZE_COMMIT``.
-#: v1.6 (Authority Amendment 3, P0 operational completeness). The predecessor
-#: v1.5 freeze commit remains immutable provenance, as does v1.4's before it.
-FROZEN_AUTHORITY_SHA256 = "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c"
-FROZEN_MACHINE_AUTHORITY_SHA256 = "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609"
+#: v1.7 (Authority Amendment 4, capture liveness successor rule). The predecessor
+#: v1.6 freeze commit remains immutable provenance, as does v1.5's before it.
+FROZEN_AUTHORITY_SHA256 = "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a"
+FROZEN_MACHINE_AUTHORITY_SHA256 = "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788"
 FROZEN_PHASE0_DESIGN_SHA256 = "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
-PREDECESSOR_AUTHORITY_FREEZE_COMMIT = "3fd66eddfce017078b6af2774a381077759b98a0"
+PREDECESSOR_AUTHORITY_FREEZE_COMMIT = "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
 
 #: Authority 2.2a. The master salt is pinned to the authority under which A1
 #: materialized the cohort, so an operational amendment cannot regenerate the
@@ -119,16 +119,14 @@ PREDECESSOR_AUTHORITY_FREEZE_COMMIT = "3fd66eddfce017078b6af2774a381077759b98a0"
 COHORT_SALT_AUTHORITY_SHA256 = (
     "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
 )
-PREDECESSOR_AUTHORITY_SHA256 = "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
-#: v1.4, the predecessor of the predecessor.
-PREDECESSOR_2_AUTHORITY_FREEZE_COMMIT = "e86347b1275560f18cae79a9a3333d8af757adbe"
-PREDECESSOR_2_AUTHORITY_SHA256 = "993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa"
-#: The commit that froze the CURRENT (v1.6) authority package. Amendment 3 was
-#: frozen at a1f5dd1; the earlier value here still named v1.5's freeze, which made
-#: current and predecessor provenance degenerate and would have mis-bound the
-#: first artifact produced on the live capture host. It is asserted against
-#: PREDECESSOR_AUTHORITY_FREEZE_COMMIT so the two can never collapse again.
-AUTHORITY_FREEZE_COMMIT = "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
+PREDECESSOR_AUTHORITY_SHA256 = "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c"
+#: v1.5, the predecessor of the predecessor.
+PREDECESSOR_2_AUTHORITY_FREEZE_COMMIT = "3fd66eddfce017078b6af2774a381077759b98a0"
+PREDECESSOR_2_AUTHORITY_SHA256 = "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
+#: The commit that froze the CURRENT (v1.7) authority package. It is asserted
+#: against PREDECESSOR_AUTHORITY_FREEZE_COMMIT so current and predecessor
+#: provenance can never collapse into one another.
+AUTHORITY_FREEZE_COMMIT = "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a"
 
 if AUTHORITY_FREEZE_COMMIT == PREDECESSOR_AUTHORITY_FREEZE_COMMIT:  # pragma: no cover
     raise RuntimeError(
@@ -137,7 +135,7 @@ if AUTHORITY_FREEZE_COMMIT == PREDECESSOR_AUTHORITY_FREEZE_COMMIT:  # pragma: no
     )
 
 RUN_NAMESPACE = "mineocclude-experiment-iii-v1"
-AUTHORITY_VERSION = "v1.6"
+AUTHORITY_VERSION = "v1.7"
 
 
 # --------------------------------------------------------------------------

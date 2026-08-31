@@ -380,7 +380,7 @@ def _frames(
 
 def _probe(before: str = "aa", after: str = "bb") -> LivenessProbe:
     return LivenessProbe(
-        "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+        "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
         before_hash=before,
         after_hash=after,
         before_tick=0,
@@ -402,19 +402,49 @@ def test_static_scene_with_repeated_bytes_passes() -> None:
     assert report["repeated_bytes_within_static_state_is_stale"] is False
 
 
-def test_frozen_renderer_across_a_transition_fails() -> None:
-    """Ticks advanced, the scene changed, the pixels did not."""
-    with pytest.raises(ExperimentIIIError) as error:
-        assert_transition_observed(
+def test_frozen_renderer_across_a_guaranteed_transition_fails() -> None:
+    """Ticks advanced, a GUARANTEED-change transition ran, the pixels did not.
+
+    Amendment 4 confines the staleness verdict to transitions whose framebuffer
+    change the authority guarantees independently of the condition under
+    measurement -- the witness and a wall material change.
+    """
+    for kind in ("MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS", "WALL_MATERIAL_CHANGE"):
+        with pytest.raises(ExperimentIIIError) as error:
+            assert_transition_observed(
+                LivenessProbe(
+                    kind,
+                    before_hash="same",
+                    after_hash="same",
+                    before_tick=0,
+                    after_tick=4,
+                )
+            )
+        assert error.value.blocker == "CAPTURE_STALE_FRAME"
+
+
+def test_a_scientific_target_transition_with_equal_pixels_is_not_stale() -> None:
+    """Amendment 4: pixel inequality is not a scientific-unit validity requirement.
+
+    A correctly rendered condition may occlude the target, so PRESENT and ABSENT
+    legitimately produce byte-identical settled framebuffers. Requiring inequality
+    made liveness conditional on the unknown visibility quantity P0 exists to
+    measure, and refused all 18 units of the opaque anchor on physically correct
+    observations.
+    """
+    for kind in ("TARGET_PRESENT_TO_ABSENT", "TARGET_ABSENT_TO_PRESENT"):
+        report = assert_transition_observed(
             LivenessProbe(
-                "TARGET_PRESENT_TO_ABSENT",
+                kind,
                 before_hash="same",
                 after_hash="same",
                 before_tick=0,
                 after_tick=4,
             )
         )
-    assert error.value.blocker == "CAPTURE_STALE_FRAME"
+        assert report["framebuffer_changed"] is False
+        assert report["verdict_bearing"] is False
+        assert report["change_guaranteed_by_authority"] is False
 
 
 def test_transition_without_tick_advance_is_a_timing_failure() -> None:
@@ -471,7 +501,52 @@ def test_the_withdrawn_rule_is_recorded_as_withdrawn() -> None:
     contract = liveness_contract()
     assert contract["repeated_bytes_within_one_static_state_is_stale"] is False
     assert contract["frame_hash_alone_is_a_verdict"] is False
-    assert "UNIVERSAL_BYTE_DUPLICATE" in contract["supersedes"]
+    # Amendment 4 supersedes Amendment 3's unconditional target-transition probes.
+    assert "UNCONDITIONAL_TARGET_TRANSITION_PROBES" in contract["supersedes"]
+
+
+def test_the_successor_rule_is_recorded_in_the_authority() -> None:
+    """Amendment 4 is carried by the authority, not restated by the code."""
+    contract = liveness_contract()
+    witness = contract["mandatory_pre_capture_liveness_witness"]
+    assert witness["required_before_every_scientific_capture_unit"] is True
+    assert witness["classification"] == "ENGINEERING_ONLY"
+    assert witness["scene"] == "NO_WALL"
+    assert witness["transition"] == ["TARGET_PRESENT", "TARGET_ABSENT", "TARGET_PRESENT"]
+    assert witness["visual_change_guaranteed_independently_of_wall_material"] is True
+
+    scientific = contract["scientific_unit_present_absent_transitions"]
+    assert scientific["pixel_inequality_is_a_scientific_unit_validity_requirement"] is False
+    assert scientific["equal_settled_hashes_are_capture_stale_frame"] is False
+    assert scientific["applies_uniformly_to_all_scientific_conditions"] is True
+    assert scientific["material_specific_exemption"] is False
+    assert scientific["special_case_for_l4"] is False
+    # Liveness may never be inferred from the measurement.
+    assert set(scientific["liveness_must_not_be_inferred_from"]) == {
+        "MATERIAL_IDENTITY",
+        "EXPECTED_OPACITY",
+        "CANDIDATE_RANKING",
+        "RVE",
+        "SELECTED_LADDER",
+        "MODEL_BEHAVIOR",
+    }
+
+
+def test_witness_artifacts_are_excluded_from_every_scientific_consumer() -> None:
+    separation = liveness_contract()["witness_artifact_separation"]
+    assert separation["classification"] == "ENGINEERING_ONLY"
+    assert separation["measures_scientific_visibility"] is False
+    assert {
+        "P0_RVE_COMPUTATION",
+        "MATERIAL_VALIDITY",
+        "LADDER_SELECTION",
+        "BOOTSTRAP",
+        "SENTINEL_MEASUREMENTS",
+        "P1",
+        "P2_SCIENTIFIC_ARTIFACT_DISCOVERY",
+        "PRODUCTION",
+        "SCIENTIFIC_STATISTICS",
+    } <= set(separation["excluded_from"])
 
 
 # ==========================================================================
@@ -762,7 +837,7 @@ def test_a_transition_bracketed_by_two_captures_counts_as_advanced() -> None:
     that never advanced, and no fixture here had that shape.
     """
     mandatory = LivenessProbe(
-        "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+        "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
         before_hash="a", after_hash="b",
         before_tick=7, after_tick=7,
         before_episode=8_001_050, after_episode=8_001_051,
@@ -780,6 +855,38 @@ def test_a_transition_bracketed_by_two_captures_counts_as_advanced() -> None:
     assert assert_transition_observed(abba)["before_episode"] == 8_001_000
 
 
+def test_capture_order_is_the_sequence_not_the_episode_id() -> None:
+    """The witness runs FIRST but the P0 runner gives it the LARGEST episode id.
+
+    ``run_p0_rve_calibration`` numbers the measured slots ``87000 + …`` and the
+    witness ``slot_0 + 900_000``. Ordering the two sides of a transition on the
+    episode id therefore reported the wall-material change -- witness, then the
+    unit's first measured slot -- as a world that never advanced, which would
+    have refused every P0 unit that builds a wall.
+    """
+    probe = LivenessProbe(
+        "WALL_MATERIAL_CHANGE",
+        before_hash="no-wall", after_hash="wall",
+        before_tick=3, after_tick=0,
+        before_episode=987_000, after_episode=87_000,
+        before_sequence=2, after_sequence=3,
+    )
+    assert probe.tick_advanced is True
+    report = assert_transition_observed(probe)
+    assert report["before_capture_sequence"] == 2
+    assert report["after_capture_sequence"] == 3
+
+    # A capture compared with an EARLIER one is still refused.
+    backwards = LivenessProbe(
+        "WALL_MATERIAL_CHANGE",
+        before_hash="a", after_hash="b",
+        before_tick=0, after_tick=3,
+        before_episode=87_000, after_episode=987_000,
+        before_sequence=3, after_sequence=2,
+    )
+    assert backwards.tick_advanced is False
+
+
 def test_a_frozen_world_inside_one_capture_still_fails() -> None:
     """Per-pair ordering must not weaken the frozen tick guard."""
     frozen = LivenessProbe(
@@ -795,8 +902,9 @@ def test_a_frozen_world_inside_one_capture_still_fails() -> None:
 
 
 def test_an_unchanged_framebuffer_across_captures_is_still_stale() -> None:
+    """Still stale -- but only for a transition the authority guarantees."""
     stale = LivenessProbe(
-        "TARGET_PRESENT_TO_ABSENT",
+        "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
         before_hash="same", after_hash="same",
         before_tick=7, after_tick=0,
         before_episode=1, after_episode=2,

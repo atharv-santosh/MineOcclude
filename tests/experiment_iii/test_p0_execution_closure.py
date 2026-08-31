@@ -586,7 +586,7 @@ def test_a29_a_corrupt_tick_ledger_fails_even_when_the_frame_count_is_right(
             frames=records,
             probes=[
                 LivenessProbe(
-                    "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+                    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
                     before_hash="a",
                     after_hash="b",
                     before_tick=0,
@@ -606,7 +606,7 @@ def test_a29_a_gap_in_the_real_ticks_fails(tmp_path) -> None:
             frames=records,
             probes=[
                 LivenessProbe(
-                    "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+                    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
                     before_hash="a",
                     after_hash="b",
                     before_tick=0,
@@ -717,7 +717,7 @@ def test_a29_actual_written_frame_dimensions_are_validated(tmp_path) -> None:
             frames=records,
             probes=[
                 LivenessProbe(
-                    "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+                    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
                     before_hash="a",
                     after_hash="b",
                     before_tick=0,
@@ -758,7 +758,7 @@ def test_a29_requested_configuration_cannot_substitute_for_observed_evidence() -
             frames=fabricated,
             probes=[
                 LivenessProbe(
-                    "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+                    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
                     before_hash="a",
                     after_hash="b",
                     before_tick=0,
@@ -804,7 +804,7 @@ def test_a15_a_material_transition_requires_the_wall_material_probe(tmp_path) ->
     records = FrameSink(tmp_path).frame_records(87030)
     probes = [
         LivenessProbe(
-            "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+            "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
             before_hash="a",
             after_hash="b",
             before_tick=0,
@@ -829,7 +829,7 @@ def test_a15_the_wall_material_probe_satisfies_the_requirement(tmp_path) -> None
         frames=records,
         probes=[
             LivenessProbe(
-                "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+                "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
                 before_hash="a",
                 after_hash="b",
                 before_tick=0,
@@ -859,7 +859,7 @@ def test_a15_a_stale_wall_across_a_material_change_is_caught(tmp_path) -> None:
             frames=records,
             probes=[
                 LivenessProbe(
-                    "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+                    "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
                     before_hash="a",
                     after_hash="b",
                     before_tick=0,
@@ -884,19 +884,29 @@ def test_a15_the_driver_emits_the_probe_on_a_material_change() -> None:
     assert 'LivenessProbe(\n                    "WALL_MATERIAL_CHANGE"' in source
     assert 'material_transition=bool(transition["probe_required"])' in source
     liveness = (SRC / "capture_liveness.py").read_text(encoding="utf-8")
-    assert 'required = {kind for kind in TRANSITION_KINDS if kind != "WALL_MATERIAL_CHANGE"}' in liveness
+    assert 'required = {"MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS"}' in liveness
     assert 'required.add("WALL_MATERIAL_CHANGE")' in liveness
 
 
 def test_a15_prepare_condition_reports_the_transition() -> None:
+    """Amendment 4: the unit rebuilds from the witness's NO_WALL, not from the
+    preceding unit, so a unit changes the material exactly when it is not air."""
     changed = prepare_condition(
         None, wall_block_id="minecraft:blue_stained_glass", previous_wall_block_id="minecraft:stone"
     )
     assert changed["probe_required"] is True
-    same = prepare_condition(
+    assert changed["previous_wall_block_id"] == "minecraft:air"
+    # Even when the PRECEDING UNIT declared the same material, the witness has
+    # since torn the wall down, so the rebuild is real and must be probed.
+    same_as_preceding = prepare_condition(
         None, wall_block_id="minecraft:stone", previous_wall_block_id="minecraft:stone"
     )
-    assert same["probe_required"] is False
+    assert same_as_preceding["probe_required"] is True
+    # L0 declares air, which is what the witness already left standing.
+    l0 = prepare_condition(
+        None, wall_block_id="minecraft:air", previous_wall_block_id="minecraft:stone"
+    )
+    assert l0["probe_required"] is False
 
 
 # ==========================================================================
@@ -906,7 +916,7 @@ def test_a15_prepare_condition_reports_the_transition() -> None:
 
 def test_a29_the_pre_capture_probe_is_issued_before_the_measured_slots() -> None:
     source = (SRC / "capture_driver.py").read_text(encoding="utf-8")
-    probe_at = source.index('"MANDATORY_PRE_CAPTURE_LIVENESS_PROBE"')
+    probe_at = source.index('"MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS"')
     slots_at = source.index("for slot in unit.slots(frames_per_slot):")
     assert probe_at < slots_at, "the mandatory probe still runs after the ABBA slots"
     assert "results[0].settled_hash,\n                after_hash=results[1]" not in source
@@ -1171,15 +1181,16 @@ def test_a15_a_modeled_batch_escalates_rather_than_being_rewritten(
 # ==========================================================================
 
 
-def test_a30_the_authority_freeze_commit_is_the_v1_6_freeze() -> None:
-    assert AUTHORITY_FREEZE_COMMIT == "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
+def test_a30_the_authority_freeze_commit_is_the_v1_7_freeze() -> None:
+    assert AUTHORITY_FREEZE_COMMIT == "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a"
 
 
 def test_a30_current_and_predecessor_freeze_commits_are_distinct() -> None:
-    """They were degenerate: both held v1.5's freeze."""
+    """They were once degenerate: both held v1.5's freeze."""
     assert AUTHORITY_FREEZE_COMMIT != PREDECESSOR_AUTHORITY_FREEZE_COMMIT
+    # v1.6, the predecessor of the current v1.7 package.
     assert PREDECESSOR_AUTHORITY_FREEZE_COMMIT == (
-        "3fd66eddfce017078b6af2774a381077759b98a0"
+        "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
     )
 
 
@@ -1187,10 +1198,15 @@ def test_a30_the_predecessor_freeze_matches_the_frozen_amendment() -> None:
     """The authority names its own predecessor; source must agree with it."""
     from mineocclude.experiment_iii.authority import machine_authority
 
-    amendment = machine_authority()["authority_amendment_3"]
+    amendment = machine_authority()["authority_amendment_4"]
     assert (
         amendment["predecessor_authority_freeze_commit"]
         == PREDECESSOR_AUTHORITY_FREEZE_COMMIT
+    )
+    # The provenance chain must not collapse: v1.6's own record still names v1.5.
+    previous = machine_authority()["authority_amendment_3"]
+    assert previous["predecessor_authority_freeze_commit"] == (
+        "3fd66eddfce017078b6af2774a381077759b98a0"
     )
 
 
