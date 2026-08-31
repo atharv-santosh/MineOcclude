@@ -362,7 +362,6 @@ def _display_probe() -> dict[str, Any]:
         "platform": system,
         "mechanism": "X11_DISPLAY",
         "display": display,
-        "renderer_qualification": renderer,
         "available": bool(display),
     }
 

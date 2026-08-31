@@ -1,0 +1,19 @@
+{
+  "_comment": "ENGINEERING_ONLY host-qualification variant. Identical to the qualified capture-host config except that every runtime artifact is written into the engineering namespace on the Linux filesystem, outside the repository, where no P0/P1/P2 or production artifact discovery can reach it. The qualified Experiment III capture host: WSL2 Ubuntu 26.04, headless Xvfb + Mesa llvmpipe software rendering, no GPU, no MineWorld. The runtime tree lives on the Linux-native filesystem because Java/Minecraft filesystem locking and latency differ under /mnt/c. Paths are host data, never source.",
+  "runtime_root": "/home/overatedusername/mineocclude-exp3-runtime",
+  "server_root": "/home/overatedusername/mineocclude-exp3-runtime/server",
+  "client_root": "/home/overatedusername/mineocclude-exp3-runtime/client",
+  "java_executable": "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+  "output_root": "/home/overatedusername/mineocclude-exp3-runtime/engineering/host_qualification",
+  "display_strategy": "XVFB",
+  "display": ":99",
+  "xvfb_executable": "/usr/bin/Xvfb",
+  "mesa_software_rendering": true,
+  "server_jar": "fabric-server-launch.jar",
+  "server_max_heap": "2G",
+  "client_max_heap": "2G",
+  "server_start_timeout_seconds": 300.0,
+  "client_start_timeout_seconds": 420.0,
+  "command_timeout_seconds": 60.0,
+  "extra_environment": {}
+}
