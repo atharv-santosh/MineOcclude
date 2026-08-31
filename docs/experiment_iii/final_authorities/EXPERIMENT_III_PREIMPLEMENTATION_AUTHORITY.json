@@ -5202,7 +5202,7 @@
       "TARGET_PRESENT_TO_ABSENT",
       "TARGET_ABSENT_TO_PRESENT",
       "WALL_MATERIAL_CHANGE",
-      "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE"
+      "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS"
     ],
     "stale_rule": "CAPTURE_STALE_FRAME iff the mandatory engineering liveness witness fails, OR tick evidence fails, OR capture completion evidence fails, OR framebuffer dimensions/evidence fail, OR an authority-defined transition whose framebuffer change is independently guaranteed fails to change. A scientific PRESENT/ABSENT transition with equal framebuffers MUST NOT, by itself, emit CAPTURE_STALE_FRAME.",
     "repeated_bytes_within_one_static_state_is_stale": false,
@@ -5273,7 +5273,8 @@
     "transition_probes_recorded_as_diagnostics": [
       "TARGET_PRESENT_TO_ABSENT",
       "TARGET_ABSENT_TO_PRESENT"
-    ]
+    ],
+    "superseded_probe_name_v1_6": "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE"
   },
   "authority_amendment_3": {
     "name": "P0 operational completeness",
