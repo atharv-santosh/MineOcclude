@@ -18,6 +18,7 @@ import pytest
 from mineocclude.experiment_iii.authority import machine_authority
 from mineocclude.experiment_iii.capture_driver import p0_slot_command, startspec_command
 from mineocclude.experiment_iii.capture_liveness import (
+    verify_capture_tick_integrity,
     LivenessProbe,
     assert_transition_observed,
     liveness_contract,
@@ -354,9 +355,18 @@ def test_sentinel_envelope_uses_only_replicate_variation() -> None:
 # ==========================================================================
 
 
-def _frames(count: int, *, hashes: list[str] | None = None, start: int = 0):
+def _frames(
+    count: int,
+    *,
+    hashes: list[str] | None = None,
+    start: int = 0,
+    episode_id: int = 90_000,
+):
     return [
         {
+            # The apparatus keys a frame on (episode_id, server_tick); a record
+            # carrying only the tick is half an identity.
+            "episode_id": episode_id,
             "tick": start + index,
             "frame_sha256": (hashes[index] if hashes else "a" * 64),
             "width": 640,
@@ -689,3 +699,108 @@ def test_present_absent_semantics_are_frozen() -> None:
     assert semantics["wall_material_identical_between_present_and_absent"] is True
     assert semantics["target_presence_is_an_independent_axis"] is True
     assert semantics["candidate_absent"] == "SAME_STAINED_GLASS_MATERIAL_AND_TARGET_ABSENT"
+
+
+def test_a_units_four_captures_each_restart_their_tick_counter() -> None:
+    """The real evidence shape: four captures, each starting again at tick 0.
+
+    ``capture_p0_unit`` concatenates a unit's four ABBA captures before handing
+    them to the liveness contract. The mod restarts ``server_tick`` at 0 for
+    every capture and keys its lockstep gate on ``(episodeId, serverTick)``, so
+    the concatenation repeats 0..n four times. Verifying the bare tick rejected
+    every real unit with "duplicated tick identities"; no synthetic fixture in
+    this file had that shape, so nothing caught it before the apparatus ran.
+    """
+    frames = [
+        frame
+        for slot in range(4)
+        for frame in _frames(8, episode_id=8_000_000 + slot)
+    ]
+    report = verify_capture_tick_integrity(frames, expected_total=32)
+    assert report["captures"] == 4
+    assert report["accepted_frames"] == 32
+    assert report["tick_identity"] == "(episode_id, server_tick)"
+
+    liveness = verify_unit_liveness(
+        frames=frames,
+        probes=[_probe()],
+        process_alive=True,
+        expected_frames=32,
+    )
+    assert liveness["passed"] is True
+    assert liveness["ticks"]["scope"] == "PER_CAPTURE_EPISODE"
+
+
+def test_a_gap_inside_one_capture_still_fails() -> None:
+    """Per-capture scope must not weaken the frozen tick evidence."""
+    frames = [{"episode_id": 1, "tick": tick} for tick in (0, 1, 3, 4)]
+    with pytest.raises(ExperimentIIIError) as error:
+        verify_capture_tick_integrity(frames)
+    assert error.value.blocker == "TIMING_CARDINALITY_MISMATCH"
+
+
+def test_a_duplicate_inside_one_capture_still_fails() -> None:
+    frames = [{"episode_id": 1, "tick": tick} for tick in (0, 1, 1, 2)]
+    with pytest.raises(ExperimentIIIError) as error:
+        verify_capture_tick_integrity(frames)
+    assert error.value.blocker == "TIMING_CARDINALITY_MISMATCH"
+
+
+def test_a_frame_without_its_episode_is_only_half_an_identity() -> None:
+    with pytest.raises(ExperimentIIIError) as error:
+        verify_capture_tick_integrity([{"tick": 0}])
+    assert error.value.blocker == "TIMING_CARDINALITY_MISMATCH"
+
+
+def test_a_transition_bracketed_by_two_captures_counts_as_advanced() -> None:
+    """The real bracket: two captures, each ending at its own tick 7.
+
+    ``capture_p0_unit`` brackets every transition with two SEPARATE captures.
+    The mod restarts ``server_tick`` at 0 per capture, so the mandatory probe
+    read ``7 -> 7`` and every ABBA target transition read ``7 -> 0``. Comparing
+    the bare tick therefore reported a correctly captured transition as a world
+    that never advanced, and no fixture here had that shape.
+    """
+    mandatory = LivenessProbe(
+        "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE",
+        before_hash="a", after_hash="b",
+        before_tick=7, after_tick=7,
+        before_episode=8_001_050, after_episode=8_001_051,
+    )
+    assert mandatory.tick_advanced is True
+    assert assert_transition_observed(mandatory)["framebuffer_changed"] is True
+
+    abba = LivenessProbe(
+        "TARGET_PRESENT_TO_ABSENT",
+        before_hash="a", after_hash="b",
+        before_tick=7, after_tick=0,
+        before_episode=8_001_000, after_episode=8_001_001,
+    )
+    assert abba.tick_advanced is True
+    assert assert_transition_observed(abba)["before_episode"] == 8_001_000
+
+
+def test_a_frozen_world_inside_one_capture_still_fails() -> None:
+    """Per-pair ordering must not weaken the frozen tick guard."""
+    frozen = LivenessProbe(
+        "TARGET_PRESENT_TO_ABSENT",
+        before_hash="a", after_hash="b",
+        before_tick=5, after_tick=5,
+        before_episode=7, after_episode=7,
+    )
+    assert frozen.tick_advanced is False
+    with pytest.raises(ExperimentIIIError) as error:
+        assert_transition_observed(frozen)
+    assert error.value.blocker == "TIMING_CARDINALITY_MISMATCH"
+
+
+def test_an_unchanged_framebuffer_across_captures_is_still_stale() -> None:
+    stale = LivenessProbe(
+        "TARGET_PRESENT_TO_ABSENT",
+        before_hash="same", after_hash="same",
+        before_tick=7, after_tick=0,
+        before_episode=1, after_episode=2,
+    )
+    with pytest.raises(ExperimentIIIError) as error:
+        assert_transition_observed(stale)
+    assert error.value.blocker == "CAPTURE_STALE_FRAME"

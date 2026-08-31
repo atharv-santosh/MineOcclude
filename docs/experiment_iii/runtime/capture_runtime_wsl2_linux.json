@@ -15,5 +15,8 @@
   "server_start_timeout_seconds": 300.0,
   "client_start_timeout_seconds": 420.0,
   "command_timeout_seconds": 60.0,
-  "extra_environment": {}
+  "extra_environment": {
+    "MINEOCCLUDE_AUTOCONNECT": "127.0.0.1:25565",
+    "MINEOCCLUDE_AUTOCONNECT_DELAY_MS": "20000"
+  }
 }

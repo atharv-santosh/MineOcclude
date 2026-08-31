@@ -156,6 +156,13 @@ class FrameSink:
                 )
             records.append(
                 {
+                    # The mod's tick identity is the PAIR (episodeId, serverTick)
+                    # -- EpisodeManager: "(episodeId, serverTick) is complete".
+                    # Every capture restarts its own tick counter at 0, so the
+                    # episode is half of the identity and must travel with the
+                    # frame; dropping it is what made a unit's four captures look
+                    # like one impossible tick sequence.
+                    "episode_id": int(episode_id),
                     "tick": int(row["server_tick"]),
                     "render_frame_idx": int(row["render_frame_idx"]),
                     "tick_queue_depth_at_capture": depth,
@@ -389,6 +396,8 @@ def capture_p0_unit(
                 after_hash=probe_results[1].settled_hash,
                 before_tick=probe_results[0].last_tick,
                 after_tick=probe_results[1].last_tick,
+                before_episode=probe_results[0].episode_id,
+                after_episode=probe_results[1].episode_id,
             )
         )
         pre_capture = {
@@ -456,6 +465,8 @@ def capture_p0_unit(
                     after_hash=after.settled_hash,
                     before_tick=before.last_tick,
                     after_tick=after.first_tick,
+                    before_episode=before.episode_id,
+                    after_episode=after.episode_id,
                 )
             )
 

@@ -64,7 +64,19 @@ DISPLAY_STRATEGIES = ("XVFB", "NATIVE", "HEADLESS_NONE")
 QUALIFIED_DISPLAY_STRATEGIES = ("XVFB",)
 
 _SERVER_READY_MARKERS = ('Done (', 'server ready', 'For help, type "help"')
-_CLIENT_READY_MARKERS = ("joined the game", "Created: 640x360")
+
+#: The observer account ``start_client`` launches, and the line the SERVER logs
+#: when that account's player entity is added.
+#:
+#: Client readiness is deliberately NOT scraped from the client's own console.
+#: The server broadcasts the join the moment the player entity is added, which is
+#: *before* the joining client has finished installing its play handler, so a
+#: client on a software renderer is slow enough to race past its own join message
+#: and never log it. Waiting on the client console therefore timed out against a
+#: client that was in-world and actively rendering. The server is the authority
+#: on who is connected, so the join is observed there.
+_CLIENT_OBSERVER_USERNAME = "E3Observer"
+_CLIENT_JOIN_MARKER = "joined the game"
 
 #: The mod's own refusals, emitted by ``p0Cmd`` on the server console. Python
 #: previously never read the server's reply, so an unsupported registry ID or an
@@ -93,10 +105,34 @@ class _OutputPump:
 
     TAIL = 400
 
-    def __init__(self, process: "subprocess.Popen[bytes]", log_path: Path | None, label: str) -> None:
+    def __init__(
+        self,
+        process: "subprocess.Popen[bytes]",
+        log_path: Path | None,
+        label: str,
+        *,
+        watch: Sequence[str] = (),
+    ) -> None:
         self.process = process
         self.label = label
         self.lines: deque[str] = deque(maxlen=self.TAIL)
+        # Watched markers are recorded as each line streams past. The retained
+        # tail is bounded, and a JVM emits far more than TAIL lines while
+        # starting, so a readiness marker can scroll out of the buffer before a
+        # poller looks at it. Recording at arrival makes the observation
+        # independent of how much output followed it.
+        self._watch = tuple(watch)
+        self._seen: set[str] = set()
+        # Total lines ever drained, which is NOT ``len(self.lines)``: the tail is
+        # a bounded deque, so its length saturates at TAIL and stops being a
+        # usable position. ``send`` takes a cursor before writing a command and
+        # reads back everything after it; with a saturating cursor that read-back
+        # became permanently empty once TAIL lines had been logged, which is a
+        # few hundred episodes into a 252-unit campaign. From that point the
+        # mod's own refusals -- P0_CANDIDATE_ID_UNSUPPORTED, P0_PLACEMENT_GROSS_
+        # ERROR -- and its stale-renderer warnings were silently never seen
+        # again, defeating the very check they were added for.
+        self._total = 0
         self._lock = threading.Lock()
         self._handle = None
         if log_path is not None:
@@ -115,6 +151,10 @@ class _OutputPump:
             text = raw.decode("utf-8", errors="replace").rstrip("\r\n")
             with self._lock:
                 self.lines.append(text)
+                self._total += 1
+                for marker in self._watch:
+                    if marker in text:
+                        self._seen.add(marker)
                 if self._handle is not None:
                     self._handle.write(text + "\n")
                     self._handle.flush()
@@ -124,12 +164,20 @@ class _OutputPump:
             return list(self.lines)
 
     def since(self, marker: int) -> list[str]:
+        """Every line drained after ``marker``, clamped to what the tail kept."""
         with self._lock:
-            return list(self.lines)[marker:]
+            dropped = self._total - len(self.lines)
+            return list(self.lines)[max(0, marker - dropped):]
 
     def cursor(self) -> int:
+        """A monotonic position in the stream, not an index into the tail."""
         with self._lock:
-            return len(self.lines)
+            return self._total
+
+    def saw(self, markers: Sequence[str]) -> bool:
+        """Whether any watched marker has streamed past since the pump began."""
+        with self._lock:
+            return any(marker in self._seen for marker in markers)
 
     def close(self) -> None:
         if self._handle is not None:
@@ -382,17 +430,24 @@ class CaptureRuntime:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
-        self._await_markers(
+        # The pump is installed BEFORE the readiness wait, not after it. Nothing
+        # else reads this pipe, so it MUST be drained or the JVM blocks on write
+        # once the 64 KiB OS buffer fills -- an unexplained stall hours into an
+        # unattended 252-unit campaign, with no blocker code. Draining from the
+        # first line also means no startup output is lost, and the same buffer
+        # answers both "is it ready" and "what did it reply".
+        self._server_pump = _OutputPump(
+            self._server,
+            self._log_path("server"),
+            "server",
+            watch=(*_SERVER_READY_MARKERS, _CLIENT_JOIN_MARKER),
+        )
+        self._await_ready(
+            self._server_pump,
             self._server,
             _SERVER_READY_MARKERS,
             self.config.server_start_timeout_seconds,
             "server",
-        )
-        # From here nothing else reads this pipe, so it MUST be drained or the
-        # JVM blocks on write once the 64 KiB OS buffer fills -- an unexplained
-        # stall hours into an unattended 252-unit campaign, with no blocker code.
-        self._server_pump = _OutputPump(
-            self._server, self._log_path("server"), "server"
         )
         return {"started": True, "pid": self._server.pid}
 
@@ -439,40 +494,74 @@ class CaptureRuntime:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
-        self._await_markers(
-            self._client,
-            _CLIENT_READY_MARKERS,
-            self.config.client_start_timeout_seconds,
-            "client",
-        )
         self._client_pump = _OutputPump(
             self._client, self._log_path("client"), "client"
         )
+        self._await_client_joined(self.config.client_start_timeout_seconds)
         return {"started": True, "pid": self._client.pid}
 
     @staticmethod
-    def _await_markers(
-        process: subprocess.Popen[bytes],
+    def _await_ready(
+        pump: _OutputPump,
+        process: "subprocess.Popen[bytes]",
         markers: Sequence[str],
         timeout: float,
         label: str,
     ) -> None:
+        """Wait for a readiness marker on a drained console, and MEAN the timeout.
+
+        The previous implementation read the pipe itself with a blocking
+        ``stdout.readline()`` and re-evaluated its deadline only when a line
+        arrived. A process that fell silent -- exactly what a joined Minecraft
+        client does -- therefore parked the wait inside ``readline`` forever and
+        the timeout could never fire, so a startup fault presented as an
+        unattended hang with no blocker instead of failing closed. Polling a
+        drained buffer makes the deadline enforceable.
+        """
         deadline = time.monotonic() + timeout
-        assert process.stdout is not None
         while time.monotonic() < deadline:
             if process.poll() is not None:
                 raise ExperimentIIIError(
                     "ENV_RUNTIME_VERSION_MISMATCH",
                     f"the {label} exited during startup with code {process.returncode}",
                 )
-            line = process.stdout.readline()
-            if not line:
-                continue
-            text = line.decode("utf-8", errors="replace")
-            if any(marker in text for marker in markers):
+            if pump.saw(markers):
                 return
+            time.sleep(0.25)
         raise ExperimentIIIError(
             "ENV_RUNTIME_VERSION_MISMATCH", f"{label} startup timed out after {timeout}s"
+        )
+
+    def _await_client_joined(self, timeout: float) -> None:
+        """Observe the client's join on the SERVER console (see the marker note).
+
+        The client cannot witness its own readiness: the server broadcasts the
+        join the moment the player entity is added, before the joining client has
+        installed its play handler, so a client on a software renderer races past
+        its own join message and never logs it. Scraping the client console for
+        it timed out against a client that was in-world and rendering. The server
+        is authoritative about who is connected, so that is what is read.
+        """
+        if self._server_pump is None or self._client is None:
+            raise ExperimentIIIError(
+                "ENV_RUNTIME_VERSION_MISMATCH",
+                "the client cannot be awaited before the server is running",
+            )
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if self._client.poll() is not None:
+                raise ExperimentIIIError(
+                    "ENV_RUNTIME_VERSION_MISMATCH",
+                    f"the client exited during startup with code "
+                    f"{self._client.returncode}",
+                )
+            if self._server_pump.saw((_CLIENT_JOIN_MARKER,)):
+                return
+            time.sleep(0.25)
+        raise ExperimentIIIError(
+            "ENV_RUNTIME_VERSION_MISMATCH",
+            f"client startup timed out after {timeout}s; the server never "
+            f"reported {_CLIENT_OBSERVER_USERNAME} joining the game",
         )
 
     # -- driving -----------------------------------------------------------

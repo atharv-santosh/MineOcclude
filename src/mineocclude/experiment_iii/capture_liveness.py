@@ -82,6 +82,8 @@ class LivenessProbe:
         after_hash: str,
         before_tick: int,
         after_tick: int,
+        before_episode: int | None = None,
+        after_episode: int | None = None,
         settled: bool = True,
     ) -> None:
         if kind not in TRANSITION_KINDS:
@@ -94,10 +96,29 @@ class LivenessProbe:
         self.after_hash = after_hash
         self.before_tick = int(before_tick)
         self.after_tick = int(after_tick)
+        self.before_episode = None if before_episode is None else int(before_episode)
+        self.after_episode = None if after_episode is None else int(after_episode)
         self.settled = bool(settled)
 
     @property
     def tick_advanced(self) -> bool:
+        """Did the world progress between the two settled observations?
+
+        A transition is normally bracketed by two SEPARATE captures, and the mod
+        restarts ``server_tick`` at 0 for each one -- its identity is the pair
+        ``(episodeId, serverTick)``. Comparing the bare tick across captures
+        therefore compared two unrelated counters: the mandatory probe read
+        ``7 -> 7`` and every ABBA target transition read ``7 -> 0``, so a
+        correctly captured transition was reported as a world that never
+        advanced. Ordering on the pair restores the intended meaning, and within
+        one capture (equal or absent episodes) it is exactly the old comparison.
+        """
+        if (
+            self.before_episode is not None
+            and self.after_episode is not None
+            and self.before_episode != self.after_episode
+        ):
+            return self.after_episode > self.before_episode
         return self.after_tick > self.before_tick
 
     @property
@@ -107,6 +128,8 @@ class LivenessProbe:
     def as_dict(self) -> dict[str, Any]:
         return {
             "kind": self.kind,
+            "before_episode": self.before_episode,
+            "after_episode": self.after_episode,
             "before_tick": self.before_tick,
             "after_tick": self.after_tick,
             "before_frame_sha256": self.before_hash,
@@ -122,8 +145,9 @@ def assert_transition_observed(probe: LivenessProbe) -> dict[str, Any]:
     if not probe.tick_advanced:
         raise ExperimentIIIError(
             "TIMING_CARDINALITY_MISMATCH",
-            f"the server tick did not advance across {probe.kind} "
-            f"({probe.before_tick} -> {probe.after_tick})",
+            f"the world did not advance across {probe.kind} "
+            f"(episode {probe.before_episode} tick {probe.before_tick} -> "
+            f"episode {probe.after_episode} tick {probe.after_tick})",
         )
     if not probe.framebuffer_changed:
         raise ExperimentIIIError(
@@ -166,6 +190,62 @@ def verify_tick_integrity(ticks: Sequence[int], *, expected: int | None = None) 
         "monotonic_step_one": True,
         "identities_unique": True,
         "identities_complete": True,
+    }
+
+
+def verify_capture_tick_integrity(
+    frames: Sequence[Mapping[str, Any]], *, expected_total: int | None = None
+) -> dict[str, Any]:
+    """Tick integrity per CAPTURE, which is the scope the apparatus defines.
+
+    ``server_tick`` is episode-relative: the mod restarts the counter at 0 for
+    every capture, and its lockstep gate is keyed on the PAIR
+    ``(episodeId, serverTick)`` -- ``EpisodeManager`` states outright that
+    "(episodeId, serverTick) is complete". A capture unit is four independent
+    captures, so those pairs are complete and unique across a unit.
+
+    The previous implementation projected that identity onto the bare
+    ``server_tick`` and then demanded one globally monotone step-one run across
+    the whole unit. No real unit can satisfy that: slot 1 restarts at 0 while
+    slot 0 already used it, so every unit failed with duplicated identities
+    ``[0, 1, ... ]``. It passed only because every test fed it a single
+    contiguous synthetic run and never the concatenation the driver actually
+    builds. The frozen evidence -- monotone step-one ticks, one accepted frame
+    per expected tick, complete and unique identities -- is unchanged; it is
+    applied to the identity the apparatus emits rather than to half of it.
+    """
+    captures: dict[Any, list[int]] = {}
+    for frame in frames:
+        if "episode_id" not in frame:
+            raise ExperimentIIIError(
+                "TIMING_CARDINALITY_MISMATCH",
+                "a frame record carries no episode_id, so its tick identity is "
+                "only half of (episode_id, server_tick) and cannot be verified",
+            )
+        captures.setdefault(frame["episode_id"], []).append(int(frame["tick"]))
+    if not captures:
+        raise ExperimentIIIError(
+            "TIMING_CARDINALITY_MISMATCH", "a capture unit recorded no ticks"
+        )
+    total = sum(len(ticks) for ticks in captures.values())
+    if expected_total is not None and total != int(expected_total):
+        raise ExperimentIIIError(
+            "TIMING_CARDINALITY_MISMATCH",
+            f"expected {expected_total} accepted frames across the unit, got {total}",
+        )
+    per_capture = {
+        str(episode): verify_tick_integrity(ticks)
+        for episode, ticks in captures.items()
+    }
+    return {
+        "scope": "PER_CAPTURE_EPISODE",
+        "tick_identity": "(episode_id, server_tick)",
+        "captures": len(captures),
+        "accepted_frames": total,
+        "monotonic_step_one": True,
+        "identities_unique": True,
+        "identities_complete": True,
+        "per_capture": per_capture,
     }
 
 
@@ -229,10 +309,13 @@ def verify_unit_liveness(
             "CAPTURE_STALE_FRAME",
             "the capture process did not stay alive for the whole unit",
         )
-    tick_report = verify_tick_integrity(
-        [int(frame["tick"]) for frame in frames], expected=expected_frames
-    )
+    # Order matters. ``verify_frame_dimensions`` is the gate that asks whether
+    # these records are observed physical evidence at all; a record fabricated
+    # from the requested configuration must be refused as CAPTURE_STALE_FRAME by
+    # that gate, not incidentally by a later structural check that happens to
+    # notice the same record is also missing its episode.
     dimension_report = verify_frame_dimensions(frames)
+    tick_report = verify_capture_tick_integrity(frames, expected_total=expected_frames)
 
     # WALL_MATERIAL_CHANGE is required exactly when the unit actually changed the
     # material. Excluding it unconditionally -- as this did -- meant the frozen

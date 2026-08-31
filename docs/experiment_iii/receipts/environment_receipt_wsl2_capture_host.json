@@ -1,0 +1,236 @@
+{
+  "artifact_root_writable": true,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
+    "MACHINE_AUTHORITY_SHA256": "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_drift": false,
+  "authority_freeze_commit": "a1f5dd1a959ff477edbf469cd12bb4db606371ea",
+  "authority_sha256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
+  "authority_version": "v1.6",
+  "authorized_stages": [
+    "A4",
+    "A5_CAPTURE",
+    "A7"
+  ],
+  "authorizes_capture_stages": true,
+  "blocker_taxonomy_available": true,
+  "blocker_taxonomy_code_count": 146,
+  "clock": {
+    "local_iso8601": "2026-08-31T03:43:02.332587-04:00",
+    "monotonic_available": true,
+    "monotonic_sample": 2295.132327636,
+    "timezone": "EDT",
+    "utc_iso8601": "2026-08-31T07:43:02.340127+00:00",
+    "utc_offset_seconds": -14400
+  },
+  "display": {
+    "available": true,
+    "display": ":99",
+    "mechanism": "X11_DISPLAY",
+    "platform": "Linux"
+  },
+  "durability": {
+    "durable_root": "/home/overatedusername/mineocclude-exp3-runtime/durable",
+    "local_mirror_enabled": true,
+    "mode": "LOCAL_MIRROR_SAME_POOL",
+    "round_trip": {
+      "probe_bytes": 112,
+      "readback_sha256": "80559d5bbd162a2f32c882b139b89c0ce17b5f45c2953079931e1e9498561690",
+      "verified": true,
+      "written_sha256": "80559d5bbd162a2f32c882b139b89c0ce17b5f45c2953079931e1e9498561690"
+    }
+  },
+  "fails_closed": true,
+  "host": {
+    "cpu_count": 12,
+    "hostname": "MSI",
+    "machine": "x86_64",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "processor": "",
+    "python": "3.14.4"
+  },
+  "host_role": "LOCAL_CAPTURE_HOST",
+  "implementation_checkpoint_commit": "7e0f27edca64fb60798936b4114d3c3e2b84d9c9",
+  "local_ports": {
+    "25565": {
+      "in_use": false
+    }
+  },
+  "machine_authority_sha256": "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609",
+  "model_identity_checks": {
+    "consequence": "A9 and A10 are NOT authorized by this receipt",
+    "main_checkpoint_sha256_expected": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "reason": "this host does not run A9; the lifecycle scopes the checkpoint, VAE, preprocessing-identity and GPU checks to the host that runs extraction",
+    "status": "NOT_APPLICABLE",
+    "vae_sha256_expected": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "verified": false
+  },
+  "namespace_isolation": {
+    "guard_admits_experiment_iii_root": true,
+    "guard_refuses_historical_root": true
+  },
+  "not_authorized_stages": [
+    "A9",
+    "A10"
+  ],
+  "passed": true,
+  "phase0_design_sha256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+  "renderer_qualification": {
+    "client_root_present": true,
+    "display": ":99",
+    "display_strategy": "XVFB",
+    "gpu_required": false,
+    "java_executable": "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+    "java_present": true,
+    "mineworld_loaded": false,
+    "qualified": true,
+    "reasons": [],
+    "required_fabric_api": "0.42.0+1.16",
+    "required_fabric_loader": "0.15.11",
+    "required_framebuffer": [
+      640,
+      360
+    ],
+    "required_minecraft": "1.16.5",
+    "schema_version": "mineocclude-experiment-iii-capture-host-qualification-v1",
+    "server_root_present": true,
+    "software_rendering": true,
+    "status": "EVALUATED",
+    "system": "Linux",
+    "xvfb": "/usr/bin/Xvfb"
+  },
+  "resource_policy": {
+    "CUDA_USED": false,
+    "GPU_USED": false,
+    "MINEWORLD_INFERENCE_RUN": false,
+    "MINEWORLD_MODEL_LOADED": false,
+    "SAGEMAKER_STARTED": false
+  },
+  "rng_stream_fixture": {
+    "deterministic": true,
+    "domains": [
+      "start_position",
+      "process_noise"
+    ],
+    "note": "derived from the frozen master salt; host-independent by construction",
+    "seeds": {
+      "process_noise": [
+        3699677050291720464,
+        2822585968338083305,
+        4616074568476687800,
+        30592572720232378
+      ],
+      "start_position": [
+        6334839013430736533,
+        4906627682519750958,
+        4579552269970664047,
+        8324043887765601534
+      ]
+    }
+  },
+  "runtime_namespace": "mineocclude-experiment-iii-v1",
+  "runtime_pins": {
+    "capture_hz": 20,
+    "declared_pins": {
+      "fabric_api_version": "0.42.0+1.16",
+      "fabric_loader_version": "0.15.11",
+      "minecraft_version": "1.16.5",
+      "yarn_mappings": "1.16.5+build.10"
+    },
+    "expected_pins": {
+      "fabric_api_version": "0.42.0+1.16",
+      "fabric_loader_version": "0.15.11",
+      "minecraft_version": "1.16.5",
+      "yarn_mappings": "1.16.5+build.10"
+    },
+    "framebuffer_height": 360,
+    "framebuffer_source": "FrameCapture.EXPECTED_W/EXPECTED_H",
+    "framebuffer_width": 640,
+    "frames_per_capture": 180,
+    "mod_jar": {
+      "bytes": 99777,
+      "path": "/mnt/c/Users/lollo/MineOcclude-Exp3/fabric/mineocclude-mod/build/libs/mineocclude-0.1.1.jar",
+      "sha256": "c0ef6d7772307f5589097525ebb8e4186f67daf569efb8970af9a1d7c7741aab"
+    },
+    "pins_match": true,
+    "runtime_root": {
+      "client_present": true,
+      "path": "/home/overatedusername/mineocclude-exp3-runtime",
+      "present": true,
+      "server_present": true
+    },
+    "speed_blocks_per_second": 2.0
+  },
+  "schema_version": "mineocclude-experiment-iii-environment-receipt-v1",
+  "source_closure": {
+    "head_commit": "7e0f27edca64fb60798936b4114d3c3e2b84d9c9",
+    "includes_uncommitted_working_tree": true,
+    "line_ending": "LF",
+    "record_count": 560,
+    "record_format": "<mode> <blob-sha1> <stage>\\t<path>",
+    "roots": [
+      "src",
+      "fabric",
+      "scripts"
+    ],
+    "sort": "ASCENDING_BY_PATH_FIELD_ONLY_AS_RAW_UTF8_BYTES",
+    "source_closure_sha256": "d25be84c1abfb696f0748d92dfa2dce1a20d499464bd2c735a10f55fe41f42de",
+    "stream_bytes": 56221,
+    "trailing_newline": true,
+    "whole_line_sort": false
+  },
+  "stage": "A3",
+  "storage_gate": {
+    "GiB_bytes": 1073741824,
+    "durability_mode": "LOCAL_MIRROR_SAME_POOL",
+    "durable_requirement": "N/A_SAME_POOL_AS_POOL_WORKING",
+    "fails_closed": true,
+    "free_space_read_as": "BYTES",
+    "gate_applied": "A3_COMBINED_PROGRAM_WITH_LOCAL_MIRROR",
+    "gate_threshold_bytes": 68719476736,
+    "gate_threshold_gib": 64.0,
+    "local_mirror_enabled": true,
+    "logical_pool_count": 3,
+    "passed": true,
+    "physical_pool_count": 1,
+    "pool_working_device_id": 2096,
+    "pool_working_free_bytes": 1021715189760,
+    "remote_hashed_round_trip_required": false,
+    "results": {
+      "A3_COMBINED_PROGRAM_WITH_LOCAL_MIRROR": true
+    },
+    "schema_version": "mineocclude-experiment-iii-storage-preflight-v1",
+    "scratch_is_a_distinct_pool": false,
+    "threshold_lowered_to_proceed": false,
+    "unit_convention": "GIB_BINARY",
+    "uses_combined_program_gate": true
+  },
+  "storage_pools": {
+    "POOL_DURABLE": {
+      "device_id": 2096,
+      "free_bytes": 1021715189760,
+      "free_gib": 951.5464210510254,
+      "path": "/home/overatedusername/mineocclude-exp3-runtime/durable",
+      "probed_ancestor": "/home/overatedusername/mineocclude-exp3-runtime/durable",
+      "total_bytes": 1081101176832
+    },
+    "POOL_SCRATCH": {
+      "device_id": 2096,
+      "free_bytes": 1021715189760,
+      "free_gib": 951.5464210510254,
+      "path": "/home/overatedusername/mineocclude-exp3-runtime/scratch",
+      "probed_ancestor": "/home/overatedusername/mineocclude-exp3-runtime/scratch",
+      "total_bytes": 1081101176832
+    },
+    "POOL_WORKING": {
+      "device_id": 2096,
+      "free_bytes": 1021715189760,
+      "free_gib": 951.5464210510254,
+      "path": "/home/overatedusername/mineocclude-exp3-runtime",
+      "probed_ancestor": "/home/overatedusername/mineocclude-exp3-runtime",
+      "total_bytes": 1081101176832
+    }
+  }
+}
