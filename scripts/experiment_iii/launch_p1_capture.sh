@@ -30,8 +30,13 @@ fi
 
 # The display must exist before the client starts. CaptureRuntime starts Xvfb
 # itself when the strategy is XVFB, so nothing is started here.
+#
+# wsl_env.sh is not a convenience. run_p1_pilot.py computes the source closure,
+# which shells out to git, and this checkout is a worktree whose .git file names
+# a Windows gitdir that git inside WSL cannot follow. Without GIT_DIR and
+# GIT_WORK_TREE the pilot dies on SOURCE_CLOSURE_DRIFT before capturing anything.
 tmux new-session -d -s "$SESSION" -c "$REPO" \
-    "source $RUNTIME/venv/bin/activate && \
+    "source $REPO/scripts/experiment_iii/wsl_env.sh && \
      exec python -u scripts/experiment_iii/run_p1_pilot.py \
         --execute \
         --runtime-config '$CONFIG' \
