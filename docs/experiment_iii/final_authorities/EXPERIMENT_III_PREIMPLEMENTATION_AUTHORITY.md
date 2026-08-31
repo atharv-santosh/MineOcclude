@@ -2025,7 +2025,7 @@ envelope     = [ max(centre_p(c) - half_p(c), 0.0) , centre_p(c) + half_p(c) ]
 P0 replicates cannot produce a zero-width envelope that every later production batch would
 fail. The same formula applies to every eligible sentinel; none is fitted individually.
 
-#### 7.10f Capture liveness contract (frozen, replacing the byte-duplicate rule)
+#### 7.10f Capture liveness contract (frozen; successor rule, Amendment 4 v1.7)
 
 The v1.5 rule — "byte-identical consecutive frames beyond the frozen tolerance invalidate the
 block" — is **unsound and is withdrawn**. P0 deliberately captures a static settled scene, and
@@ -2044,16 +2044,61 @@ unit:**
 - every framebuffer read succeeds and is exactly 640 × 360 RGB;
 - every frame hash is recorded as **diagnostic evidence** (never, by itself, a verdict).
 
-**Transition probes.** At every point where the image *must* change, the framebuffer is required
-to demonstrate the transition after settling:
+**Successor rule (Authority Amendment 4, v1.7).** Renderer liveness MUST be established
+independently of the scientific visibility condition being measured. A scientific P0 condition
+MUST NOT be required to demonstrate framebuffer inequality merely because the target changes
+`PRESENT`/`ABSENT` state, because a correctly rendered condition may physically occlude the
+target so that `TARGET_PRESENT` and `TARGET_ABSENT` produce pixel-identical settled
+framebuffers. Framebuffer equality in such a condition is not, by itself, evidence of a stale
+renderer.
 
-- target present → absent, and absent → present;
-- a wall material change;
-- a mandatory controlled pre-capture liveness probe on every unit.
+**Mandatory pre-capture liveness witness.** Before each authority-required scientific capture
+unit, execute a fixed **`ENGINEERING_ONLY`** liveness witness whose visual change is guaranteed
+independently of candidate wall material and of P0 visibility. The witness uses one
+prospectively frozen configuration common to every P0 unit:
+
+| | |
+|---|---|
+| Scene | `NO_WALL` |
+| Target | fixed authority-bound visible calibration position |
+| Transition | `TARGET_PRESENT` → `TARGET_ABSENT` → `TARGET_PRESENT` |
+
+The witness must establish: tick evidence advances correctly; the requested transition is
+acknowledged; the settled framebuffer changes across transitions whose visual effect is
+independently guaranteed; `client_tick.jsonl` validates; `capture_complete.json` validates;
+`drained = true`; `writer_errors = 0`; and the actual framebuffer dimensions validate. Failure
+of the witness emits `CAPTURE_STALE_FRAME` or the corresponding frozen technical blocker.
+
+**Scientific-unit present/absent transitions.** For the subsequent scientific P0 unit,
+`TARGET_PRESENT_TO_ABSENT` and `TARGET_ABSENT_TO_PRESENT` framebuffer hashes remain recorded,
+and their equality or inequality remains useful technical evidence and diagnostics. However:
 
 ```
-CAPTURE_STALE_FRAME  iff  the server tick advanced across a known scene transition
-                          AND the settled framebuffer is byte-identical across it
+PIXEL_INEQUALITY IS NOT A SCIENTIFIC-UNIT VALIDITY REQUIREMENT
+```
+
+unless the controlling authority independently guarantees that the particular transition must
+visibly alter the framebuffer. Therefore equal settled hashes are **not**, by themselves,
+`CAPTURE_STALE_FRAME`. This applies **uniformly to all scientific conditions**: there is no
+material-specific exemption, no special case for `L4`, and no inference from material identity,
+expected opacity, candidate ranking, RVE, the selected ladder or model behaviour when deciding
+whether renderer liveness has been satisfied.
+
+**Separation from scientific evidence.** Mandatory liveness-witness artifacts are
+`ENGINEERING_ONLY` and MUST be excluded from P0 RVE computation, material validity, ladder
+selection, the bootstrap, sentinel measurements, P1, P2 scientific artifact discovery,
+production and every scientific statistic. The witness proves apparatus liveness only; it does
+not measure scientific visibility.
+
+```
+CAPTURE_STALE_FRAME  may be emitted when the mandatory engineering liveness witness
+                     fails; tick evidence fails; capture completion evidence fails;
+                     framebuffer dimensions/evidence fail; or another authority-defined
+                     transition whose framebuffer change is independently guaranteed
+                     fails to change.
+
+                     A scientific PRESENT/ABSENT transition with equal framebuffers
+                     MUST NOT, by itself, emit CAPTURE_STALE_FRAME.
 ```
 
 Within one genuinely static settled state, repeated framebuffer bytes are **not** evidence of

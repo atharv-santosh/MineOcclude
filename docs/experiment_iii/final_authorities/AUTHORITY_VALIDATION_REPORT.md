@@ -4,7 +4,7 @@
 **Repair Pass 1** closing the eight blocking defects of the first independent audit (§13), plus
 **Repair Pass 2** closing the four blocking defects of the second independent audit (§14), plus the
 **Ultimate Closure Pass** closing A1/A2 of the third independent audit (§15)
-**Authority version:** `v1.6`
+**Authority version:** `v1.7`
 **Date:** 2026-08-30
 **Verdict:** `AUTHORITY_INTERNAL_VALIDATION = PASS`
 
@@ -337,8 +337,8 @@ value below was produced by hashing the file on disk, not copied forward.
 | `eb0a5a602372cbb1d06f54dbb4a6a1c01994128bd9ed47245dff9881212f3cee` | 103,663 | `BLOCKER_TAXONOMY.json` |
 | `6bf647b3196a38aeec767faffd343ca0241526b0114e1bdda081fb153a5d5c3e` | 62,537 | `EXPECTED_ARTIFACT_INVENTORY.json` |
 | `3df2ee0ca89a0bc4953501dbc46f77f894754cb2b18fdc951b9a46e943597e97` | 82,560 | `EXPERIMENT_III_LIFECYCLE.json` |
-| `d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609` | 218,921 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json` |
-| `62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c` | 253,586 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md` |
+| `d529523c7e69653fcd47d65ef93a16bf9b4682c26db38688cec6af89e9f52c07` | 218,921 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json` |
+| `c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a` | 253,586 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md` |
 | `e720cbe4383dcacab3ede2200d384d51a7acc14c698c547ecdd1f7515a8f458f` | 49,143 | `EXPERIMENT_III_TEST_PLAN.md` |
 | `72dc0633482a31fdf3f825ab19147aa57e8f4b8cbafa9eba696eb76799f365a0` | 6,527 | `FIR_KERNEL_RECOVERY_RECEIPT.json` |
 | `e39d056417447494555979ed43fcfd08671b14cc09b204ec0c4b788251716d97` | 9,255 | `III_B_ORACLE_SPECIFICATION.json` |
@@ -984,5 +984,28 @@ and zero scientific outcomes** in existence. Full record:
 
 ```
 AMENDMENT_3_STATUS = PASS
+BLOCKING_DEFECTS   = 0
+```
+
+---
+
+## 18. Authority Amendment 4 (v1.7) — capture liveness successor rule
+
+Prospective §9.2 amendment, raised at `A4` entry on a qualified capture host with **zero P0
+frames, zero MineWorld forwards and zero scientific outcomes** in existence.
+
+| | |
+|---|---|
+| Defect | §7.10f required the target present/absent transitions to demonstrate a framebuffer change on every unit, while also recognising that an opaque condition legitimately renders pixel-identical frames with a hidden target |
+| Consequence | the nine frozen placements all lie inside the as-built wall extent, so an opaque wall occludes the target at every placement; **18 of 252** P0 units refused on physically correct observations |
+| 4a | a fixed `ENGINEERING_ONLY` pre-capture liveness witness — `NO_WALL`, fixed visible calibration position, `PRESENT → ABSENT → PRESENT` — runs before each scientific capture unit |
+| 4b | scientific `PRESENT`/`ABSENT` framebuffer equality is **diagnostic only**, never by itself `CAPTURE_STALE_FRAME` |
+| 4c | uniform across conditions: no material-specific exemption, no `L4` special case, no inference from opacity, RVE, ladder or model behaviour |
+| 4d | witness artifacts are `ENGINEERING_ONLY`, excluded from RVE, validity, ladder, bootstrap, sentinels, P1, P2 discovery, production and every statistic |
+| Scientific design | III-A unchanged, III-B unchanged; placements, roster, RVE, zones, selection rule, target geometry, cohort all unchanged |
+| Invalidation | none; no measurement existed |
+
+```
+AMENDMENT_4_STATUS = PASS
 BLOCKING_DEFECTS   = 0
 ```
