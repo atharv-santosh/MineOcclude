@@ -26,6 +26,7 @@ from mineocclude.experiment_iii.host_preflight import (
     rng_stream_fixture,
     runtime_pins,
 )
+from mineocclude.experiment_iii.capture_runtime import RuntimeConfig
 from mineocclude.experiment_iii.storage_preflight import GIB
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -89,6 +90,58 @@ def test_rng_stream_fixture_is_deterministic() -> None:
     assert rng_stream_fixture()["seeds"] == rng_stream_fixture()["seeds"]
 
 
+def _unqualified_runtime(tmp_path: Path) -> RuntimeConfig:
+    return RuntimeConfig.from_mapping(
+        {
+            "runtime_root": str(tmp_path),
+            "java_executable": str(tmp_path / "java"),
+            "output_root": str(tmp_path / "out"),
+            "display_strategy": "NATIVE",
+            "mesa_software_rendering": False,
+        }
+    )
+
+
+def test_an_unqualified_renderer_refuses_the_capture_receipt(tmp_path: Path) -> None:
+    """Authority 7.10f / A3: a display EXISTING is not permission to capture.
+
+    Without this, a receipt could authorize A4/A5/A7 on an interactive
+    compositor whose output no capture receipt can vouch for.
+    """
+    with pytest.raises(ExperimentIIIError) as error:
+        environment_receipt(
+            host_role=HostRole.LOCAL_CAPTURE_HOST,
+            pool_paths={
+                "POOL_WORKING": REPOSITORY_ROOT,
+                "POOL_DURABLE": tmp_path,
+                "POOL_SCRATCH": tmp_path,
+            },
+            durable_root=tmp_path,
+            project=FABRIC_PROJECT,
+            runtime_config=_unqualified_runtime(tmp_path),
+        )
+    assert error.value.blocker == "ENV_DISPLAY_UNAVAILABLE"
+
+
+def test_without_a_runtime_config_no_capture_stage_is_authorized(
+    tmp_path: Path,
+) -> None:
+    """Renderer qualification unestablished authorizes nothing, not everything."""
+    receipt = environment_receipt(
+        host_role=HostRole.LOCAL_CAPTURE_HOST,
+        pool_paths={
+            "POOL_WORKING": REPOSITORY_ROOT,
+            "POOL_DURABLE": tmp_path,
+            "POOL_SCRATCH": tmp_path,
+        },
+        durable_root=tmp_path,
+        project=FABRIC_PROJECT,
+    )
+    assert receipt["renderer_qualification"]["status"] == "NOT_ESTABLISHED"
+    assert receipt["authorized_stages"] == []
+    assert receipt["authorizes_capture_stages"] is False
+
+
 def test_capture_host_receipt_never_authorizes_extraction(tmp_path: Path) -> None:
     """The defect this scoping exists to prevent: a capture-only host that
     silently authorizes A9 because it 'passed' checks it never ran."""
@@ -102,8 +155,8 @@ def test_capture_host_receipt_never_authorizes_extraction(tmp_path: Path) -> Non
         durable_root=tmp_path,
         project=FABRIC_PROJECT,
     )
-    assert receipt["authorized_stages"] == list(CAPTURE_HOST_STAGES)
     assert "A9" not in receipt["authorized_stages"]
+    assert set(receipt["authorized_stages"]) <= set(CAPTURE_HOST_STAGES)
     assert receipt["not_authorized_stages"] == ["A9", "A10"]
     assert receipt["model_identity_checks"]["status"] == "NOT_APPLICABLE"
     assert receipt["model_identity_checks"]["verified"] is False

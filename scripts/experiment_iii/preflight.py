@@ -24,6 +24,7 @@ if str(REPOSITORY_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT / "src"))
 
 from mineocclude.experiment_iii.errors import ExperimentIIIError  # noqa: E402
+from mineocclude.experiment_iii.capture_runtime import RuntimeConfig  # noqa: E402
 from mineocclude.experiment_iii.host_preflight import (  # noqa: E402
     HostRole,
     environment_receipt,
@@ -61,6 +62,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mod-jar", type=Path, default=DEFAULT_MOD_JAR)
     parser.add_argument("--durability-mode", default="LOCAL_MIRROR_SAME_POOL")
     parser.add_argument("--no-local-mirror", action="store_true")
+    parser.add_argument("--runtime-config", type=Path, default=None)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args(argv)
 
@@ -80,6 +82,11 @@ def main(argv: list[str] | None = None) -> int:
             durability_mode=args.durability_mode,
             local_mirror_enabled=not args.no_local_mirror,
             implementation_checkpoint_commit=_head_commit(),
+            runtime_config=(
+                RuntimeConfig.from_json(args.runtime_config)
+                if args.runtime_config
+                else None
+            ),
         )
     except ExperimentIIIError as error:
         print(f"BLOCKER_CODE={error.blocker}", file=sys.stderr)
@@ -96,6 +103,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"HOST_ROLE={receipt['host_role']}")
     print(f"AUTHORIZED_STAGES={','.join(receipt['authorized_stages'])}")
     print(f"NOT_AUTHORIZED_STAGES={','.join(receipt['not_authorized_stages'])}")
+    print(f"RENDERER_QUALIFICATION={receipt['renderer_qualification']['status']}")
+    print(f"AUTHORIZES_CAPTURE_STAGES={str(receipt['authorizes_capture_stages']).lower()}")
     print(f"POOL_WORKING_DEVICE_ID={working['device_id']}")
     print(f"POOL_WORKING_FREE_BYTES={working['free_bytes']}")
     print(f"POOL_WORKING_FREE_GIB={working['free_gib']:.3f}")

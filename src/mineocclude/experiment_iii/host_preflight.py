@@ -54,6 +54,10 @@ from mineocclude.experiment_iii.authority import (
     verify_authority_binding,
 )
 from mineocclude.experiment_iii.blockers import blocker_codes
+from mineocclude.experiment_iii.capture_runtime import (
+    RuntimeConfig,
+    qualify_capture_host,
+)
 from mineocclude.experiment_iii.errors import ExperimentIIIError
 from mineocclude.experiment_iii.namespace import guard_write_path
 from mineocclude.experiment_iii.source_closure import source_closure
@@ -358,6 +362,7 @@ def _display_probe() -> dict[str, Any]:
         "platform": system,
         "mechanism": "X11_DISPLAY",
         "display": display,
+        "renderer_qualification": renderer,
         "available": bool(display),
     }
 
@@ -380,6 +385,7 @@ def environment_receipt(
     local_mirror_enabled: bool = True,
     implementation_checkpoint_commit: str | None = None,
     required_free_ports: Sequence[int] = (25565,),
+    runtime_config: RuntimeConfig | None = None,
 ) -> dict[str, Any]:
     """Run every A3 check applicable to ``host_role`` and return its receipt.
 
@@ -411,6 +417,34 @@ def environment_receipt(
             "ENV_DISPLAY_UNAVAILABLE",
             f"host role {host_role} must render frames but exposes no display surface",
         )
+
+    # A display surface EXISTING is not the same as this host being allowed to
+    # produce scientific frames. A capture host must additionally pass the
+    # renderer qualification of authority 7.10f / capture_runtime; without it a
+    # receipt would authorize A4/A5/A7 on a renderer whose output no capture
+    # receipt can vouch for, which is precisely the fabricated PASS this check
+    # exists to make impossible.
+    renderer: dict[str, Any]
+    if runs_a9:
+        renderer = {"status": "NOT_APPLICABLE", "reason": "this host does not capture"}
+    elif runtime_config is None:
+        renderer = {
+            "status": "NOT_ESTABLISHED",
+            "qualified": False,
+            "reason": (
+                "no capture runtime config was supplied, so renderer qualification "
+                "was never established; this receipt authorizes no capture stage"
+            ),
+        }
+    else:
+        qualification = qualify_capture_host(runtime_config)
+        renderer = {"status": "EVALUATED", **qualification}
+        if not qualification["qualified"]:
+            raise ExperimentIIIError(
+                "ENV_DISPLAY_UNAVAILABLE",
+                "this host is not a qualified Experiment III capture renderer: "
+                + "; ".join(qualification["reasons"]),
+            )
 
     # Namespace isolation: prove the guard actually refuses a historical write
     # on this host rather than trusting that it would.
@@ -471,7 +505,14 @@ def environment_receipt(
         "consequence": "A9 and A10 are NOT authorized by this receipt",
     }
 
-    authorized = list(CAPTURE_HOST_STAGES) if not runs_a9 else list(EXTRACTION_HOST_STAGES)
+    if runs_a9:
+        authorized = list(EXTRACTION_HOST_STAGES)
+    elif renderer.get("qualified"):
+        authorized = list(CAPTURE_HOST_STAGES)
+    else:
+        # Fails closed: every other A3 check may have passed, but an
+        # unqualified or unestablished renderer authorizes nothing.
+        authorized = []
 
     return {
         "schema_version": "mineocclude-experiment-iii-environment-receipt-v1",
@@ -515,6 +556,7 @@ def environment_receipt(
         },
         "runtime_pins": pins,
         "display": display,
+        "renderer_qualification": renderer,
         "local_ports": {
             str(port): {"in_use": _open_local_port(port)} for port in required_free_ports
         },
@@ -532,5 +574,6 @@ def environment_receipt(
         "authorized_stages": authorized,
         "not_authorized_stages": list(EXTRACTION_HOST_STAGES) if not runs_a9 else [],
         "passed": True,
+        "authorizes_capture_stages": bool(authorized) and not runs_a9,
         "fails_closed": True,
     }
