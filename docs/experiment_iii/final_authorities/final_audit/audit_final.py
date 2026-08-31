@@ -1092,7 +1092,7 @@ chk("canonical authority still carries the oracle constants", "3.339950418234" i
 chk("canonical authority still carries the FIR taps", "0.0552210582" in MD)
 chk("canonical authority still carries the frozen q grid",
     "0.0125" in MD and "0.05" in MD and "0.2" in MD)
-chk("README states authority version v1.5", "AUTHORITY_VERSION             = v1.5" in RM)
+chk("README states authority version v1.6", "AUTHORITY_VERSION             = v1.6" in RM)
 chk("README summarizes all eight defects",
     all(("**B%d**" % i) in RM for i in range(1, 9)))
 chk("README states IMPLEMENTATION_AUTHORIZED false",
@@ -1109,7 +1109,7 @@ chk("repair pass lists the non-blocking clarifications",
     len(A["authority_repair_pass"]["non_blocking_clarifications_closed"]) == 8)
 chk("repair pass scope excludes runtime source",
     "NO_RUNTIME_SOURCE" in A["authority_repair_pass"]["scope"])
-chk("authority version is v1.5", A["authority_version"] == "v1.5")
+chk("authority version is v1.6", A["authority_version"] == "v1.6")
 chk("validation report has a section 13", "## 13. The final authority repair pass (v1.2)" in VR)
 chk("validation report records all eight defect verdicts",
     all(("**B%s —" % i) in VR for i in range(1, 9)))
@@ -1469,7 +1469,7 @@ except Exception as _e:
     chk("bound manifest retrievable from git", False, repr(_e))
 
 group("r2_r1_consistency")
-chk("authority version is v1.5", A["authority_version"]=="v1.5")
+chk("authority version is v1.6", A["authority_version"]=="v1.6")
 chk("repair pass 2 recorded", A["authority_repair_pass_2"]["name"]=="FINAL_AUTHORITY_REPAIR_PASS_2")
 chk("repair pass 2 lists four defects", len(A["authority_repair_pass_2"]["defects_closed"])==4)
 chk("repair pass 2 asserts III-A design unchanged", A["authority_repair_pass_2"]["iii_a_scientific_design_changed"] is False)
@@ -1480,7 +1480,7 @@ chk("validation report records all four R verdicts",
     all(("R%d_"%i) in VR for i in range(1,5)))
 chk("validation report records ALL_4_BLOCKERS_RESOLVED","ALL_4_BLOCKERS_RESOLVED               = true" in VR)
 chk("validation report states freeze is still not recommended","AUTHORITY_FREEZE_COMMIT_RECOMMENDED   = false" in VR)
-chk("README states v1.5","AUTHORITY_VERSION             = v1.5" in RM)
+chk("README states v1.6","AUTHORITY_VERSION             = v1.6" in RM)
 chk("README summarizes the four R defects", all(("**R%d**"%i) in RM for i in range(1,5)))
 chk("README tells the reader to start immediately","Start immediately on authorization" in RM)
 

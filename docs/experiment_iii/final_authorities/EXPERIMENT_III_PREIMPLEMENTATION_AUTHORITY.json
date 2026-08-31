@@ -1,7 +1,7 @@
 {
   "schema_version": "mineocclude-experiment-iii-preimplementation-authority-v1",
   "authority_name": "MINEOCCLUDE_EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY",
-  "authority_version": "v1.5",
+  "authority_version": "v1.6",
   "authority_status": "PROSPECTIVE_FROZEN_PREIMPLEMENTATION_AUTHORITY",
   "authority_construction_date": "2026-08-30",
   "authority_repair_date": "2026-08-30",
@@ -310,7 +310,7 @@
       "e3_t25"
     ],
     "rng_algorithm": "numpy.random.Generator(PCG64) via numpy.random.default_rng",
-    "master_salt_formula": "sha256('MINEOCCLUDE_EXPERIMENT_III_V1|' + AUTHORITY_SHA256 + '|' + PHASE0_DESIGN_SHA256)",
+    "master_salt_formula": "sha256('MINEOCCLUDE_EXPERIMENT_III_V1|' + COHORT_SALT_AUTHORITY_SHA256 + '|' + PHASE0_DESIGN_SHA256)",
     "seed_derivation": "int.from_bytes(sha256(f'experiment-iii-v1|{domain}|{MASTER_SALT}|{index}').digest()[:8],'big') & ((1<<63)-1)",
     "candidate_domains": [
       "E3_LEFT_TO_RIGHT",
@@ -459,7 +459,15 @@
       "reference_unit": "a2x_t01_wall (see fir.d2_regression_reference)",
       "reference_provenance_bound": true
     },
-    "candidate_index_bound_superseded_value": 200
+    "candidate_index_bound_superseded_value": 200,
+    "cohort_salt_authority_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+    "cohort_salt_authority_version": "v1.5",
+    "master_salt_pinned_to": "THE_AUTHORITY_UNDER_WHICH_THE_COHORT_WAS_MATERIALIZED",
+    "master_salt_floats_with_current_authority": false,
+    "master_salt_pinning_rationale": "the predecessor formula read the current AUTHORITY_SHA256, so any later amendment would have regenerated a different candidate stream and a different cohort; the salt remains derived, never chosen, because both inputs are immutable published digests",
+    "cohort_byte_identical_across_v1_5_and_v1_6": true,
+    "identity_spec_authority_sha256_field": "COHORT_SALT_AUTHORITY_SHA256",
+    "identity_spec_stamps_the_generating_authority_not_the_current_one": true
   },
   "apparatus": {
     "layout": "layout_01",
@@ -955,7 +963,7 @@
     "minimum_l3_excess_energy_to_noise_ratio": 5.0,
     "minimum_l3_snr_placements_out_of_9": 8,
     "maximum_within_placement_replicate_cv": 0.15,
-    "background_tolerance": "PHASE1_FROZEN_OUTSIDE_MASK_RESIDUAL_TOLERANCE",
+    "background_tolerance": "NOISE_RELATIVE_OUTSIDE_MASK_GATE_V1_6",
     "selection_rule": "minimize squared distance to selection_targets; tie-break lexicographically earliest triple by registry ID (L1 then L2 then L3)",
     "outcomes": [
       "P0_PASS",
@@ -987,6 +995,107 @@
         "SENTINEL_ORDER_VIOLATION",
         "SENTINEL_ENVELOPE_VIOLATION"
       ]
+    },
+    "placement_coordinates_lane_x": [
+      -2.0,
+      -1.5,
+      -1.0,
+      -0.5,
+      0.0,
+      0.5,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "placement_lane_y": 4.0,
+    "placement_lane_z": 6.0,
+    "placement_order": "ASCENDING_LANE_X",
+    "placement_representation": "IEEE754_FLOAT64",
+    "placements_sha256": "5676aa3371fcc481f89c709d8be81e2b14932f550b94ce44a42b2617420a84b6",
+    "placement_source": "PHASE0_SCRIPTED_CALIBRATION_POSITIONS",
+    "superseded_temporary_placements": {
+      "construction": "ENDPOINT_INCLUSIVE_UNIFORM_PARTITION_OF_[-3.49,4.49]",
+      "placements_sha256": "a3deb1df619d39ac4f1df1d54c082f61115b9a11bbbcab85b12f799755e03f6e",
+      "status": "SUPERSEDED_ENGINEERING_EVIDENCE",
+      "may_enter_p2": false,
+      "reason": "an implementation-side prospective derivation made while the Phase 0 scripted positions were not yet materialised in the authority; it never captured a frame"
+    },
+    "bootstrap_seed": 1530570907966297797,
+    "bootstrap_seed_derivation": "int.from_bytes(SHA256(\"MINEOCCLUDE_EXPERIMENT_III_P0_BOOTSTRAP_V1|\" + PHASE0_DESIGN_SHA256).digest()[:8], \"big\") & ((1<<63)-1)",
+    "bootstrap_seed_domain": "MINEOCCLUDE_EXPERIMENT_III_P0_BOOTSTRAP_V1|",
+    "bootstrap_seed_binds_to": "PHASE0_DESIGN_SHA256",
+    "bootstrap_seed_stable_across_operational_amendments": true,
+    "bootstrap_generator": "numpy.random.default_rng",
+    "l0_noise_threshold_rule": {
+      "name": "L0_ABSENT_TECHNICAL_NOISE_ENVELOPE",
+      "frames_consumed": "SETTLED_ABSENT_FRAMES_OF_L0_AT_THAT_PLACEMENT_ONLY",
+      "candidate_frames_consumed": false,
+      "mineworld_output_consumed": false,
+      "split_assignment": "ASCENDING_CAPTURE_INDEX_WITHIN_BLOCK; first=frames[0:n//2], second=frames[n-n//2:n]; for odd n the middle frame is in neither half",
+      "per_half_statistic": "COORDINATE_WISE_MEDIAN",
+      "residual": "n_b(u) = ||median(first)(u) - median(second)(u)||_2^2 summed over channels",
+      "aggregation_over_blocks": "MAX",
+      "aggregation_over_pixels": "MAX",
+      "dtype": "float64",
+      "comparison_operator": "STRICTLY_GREATER_THAN",
+      "tunable_constants": 0,
+      "minimum_frames_per_block": 2,
+      "below_minimum_blocker": "P0_TECHNICAL_FAIL",
+      "zero_threshold_admissible": true,
+      "degenerate_mask_blocker": "RVE_MASK_DEGENERATE",
+      "frozen_before_any_candidate_is_scored": true,
+      "one_threshold_per_placement": true,
+      "shared_by_every_candidate": true
+    },
+    "background_tolerance_rule": {
+      "statistic": "B = sum over u NOT in M_p of ||P_lin - A_lin||_2^2",
+      "reference": "N_out = the same outside-mask energy between that cell's own deterministic split-half ABSENT medians",
+      "reference_population": "THAT_CELLS_OWN_ABSENT_FRAMES",
+      "ratio": 4.0,
+      "pass_operator": "B <= ratio * N_out",
+      "zero_reference_behavior": "N_out == 0 REQUIRES B == 0 EXACTLY; NO EPSILON",
+      "dtype": "float64",
+      "candidate_independent": true,
+      "tuned_from_candidate_ranking": false,
+      "tuned_from_selected_ladder": false,
+      "tuned_from_mineworld_output": false,
+      "may_be_lowered_after_failure": false,
+      "failure_blocker": "RVE_BACKGROUND_TOLERANCE_EXCEEDED"
+    },
+    "sentinel_placement_indices": [
+      0,
+      4,
+      8
+    ],
+    "sentinel_selection_rule": "DETERMINISTIC_COVERAGE_LEFT_CENTRE_RIGHT_OF_THE_NINE_FROZEN_PLACEMENTS",
+    "sentinel_selection_is_outcome_independent": true,
+    "sentinel_envelope_rule": {
+      "centre": "MEDIAN_OVER_P0_REPLICATE_BLOCKS_OF_RVE",
+      "range": "MAX_MINUS_MIN_OVER_P0_REPLICATE_BLOCKS_OF_RVE",
+      "k": 2.0,
+      "floor_fraction_of_centre": 0.15,
+      "floor_source": "THE_ALREADY_FROZEN_REPLICATE_CV_BOUND_OF_7_5",
+      "half_width": "k * max(range, floor_fraction_of_centre * centre)",
+      "envelope": "[max(centre - half_width, 0.0), centre + half_width]",
+      "inputs": "P0_REPLICATE_VARIATION_ONLY",
+      "formula_frozen_before_p0": true,
+      "numeric_envelope_materialized_after_p0": true,
+      "bound_in": "P2",
+      "same_formula_for_every_sentinel": true
+    },
+    "present_absent_scene_semantics": {
+      "absent_state": "Scene.NO_SHEEP",
+      "wall_presence_determined_by": "CONDITION",
+      "target_presence_is_an_independent_axis": true,
+      "wall_material_identical_between_present_and_absent": true,
+      "wall_cells_identical_between_present_and_absent": true,
+      "camera_identical_between_present_and_absent": true,
+      "lighting_identical_between_present_and_absent": true,
+      "only_target_presence_differs": true,
+      "absent_state_removing_or_substituting_the_wall": "ENGINEERING_DEFECT_NOT_A_CONDITION",
+      "l0_absent": "NO_WALL_AND_TARGET_ABSENT",
+      "candidate_absent": "SAME_STAINED_GLASS_MATERIAL_AND_TARGET_ABSENT",
+      "stone_absent": "STONE_WALL_AND_TARGET_ABSENT"
     }
   },
   "p1_pilot": {
@@ -3984,7 +4093,7 @@
       "FINAL_SCIENTIFIC_SUMMARY.md"
     ]
   },
-  "authority_markdown_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+  "authority_markdown_sha256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
   "amendments": [
     {
       "id": "PHASE1_AMENDMENT_1_BAYESIAN_MODULE_III_B",
@@ -5028,8 +5137,8 @@
     "never_delay_iii_a_closure_to_save_iii_b": true,
     "blocker": "B_DEADLINE_DROP"
   },
-  "authority_markdown_bytes": 241084,
-  "authority_markdown_hash_recomputed_by": "AUTHORITY_AMENDMENT_2_V1_5",
+  "authority_markdown_bytes": 253586,
+  "authority_markdown_hash_recomputed_by": "AUTHORITY_AMENDMENT_3_V1_6",
   "authority_closure_pass": {
     "name": "ULTIMATE_AUTHORITY_CLOSURE_PASS",
     "closes": [
@@ -5074,5 +5183,69 @@
     "admission_order_unchanged": "STRICTLY_ASCENDING_INDEX_FIRST_QUALIFYING"
   },
   "authority_markdown_sha256_superseded_v1_4": "993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa",
-  "amended_by": "AUTHORITY_AMENDMENT_2_V1_5"
+  "amended_by": "AUTHORITY_AMENDMENT_3",
+  "capture_liveness_contract": {
+    "schema": "mineocclude-experiment-iii-capture-liveness-v1",
+    "supersedes": "UNIVERSAL_BYTE_DUPLICATE_STALENESS_TOLERANCE",
+    "withdrawn_rule": "byte-identical consecutive frames beyond the frozen tolerance invalidate the block",
+    "withdrawal_reason": "unsound for a deliberately static settled scene (P0) and for an opaque condition with a fully hidden moving target (L4): the correct observation was indistinguishable from a frozen renderer",
+    "required_evidence": [
+      "SERVER_TICK_MONOTONIC_STEP_ONE",
+      "ONE_ACCEPTED_FRAME_PER_EXPECTED_TICK",
+      "TICK_IDENTITIES_COMPLETE_AND_UNIQUE",
+      "CAPTURE_PROCESS_ALIVE",
+      "FRAMEBUFFER_READ_SUCCEEDED",
+      "FRAMEBUFFER_DIMENSIONS_640x360",
+      "FRAME_HASH_RECORDED_AS_DIAGNOSTIC"
+    ],
+    "transition_probes": [
+      "TARGET_PRESENT_TO_ABSENT",
+      "TARGET_ABSENT_TO_PRESENT",
+      "WALL_MATERIAL_CHANGE",
+      "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE"
+    ],
+    "stale_rule": "CAPTURE_STALE_FRAME iff the server tick advanced across a known scene transition AND the settled framebuffer is byte-identical across it",
+    "repeated_bytes_within_one_static_state_is_stale": false,
+    "frame_hash_alone_is_a_verdict": false,
+    "tick_failure_blocker": "TIMING_CARDINALITY_MISMATCH",
+    "stale_blocker": "CAPTURE_STALE_FRAME"
+  },
+  "authority_amendment_3": {
+    "name": "P0 operational completeness",
+    "date": "2026-08-31",
+    "predecessor_authority_version": "v1.5",
+    "predecessor_authority_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+    "predecessor_authority_freeze_commit": "3fd66eddfce017078b6af2774a381077759b98a0",
+    "discovery_stage": "A4_ENTRY_PRE_P0",
+    "prospective": true,
+    "p0_frames_observed": 0,
+    "mineworld_outcomes_observed": 0,
+    "production_outcomes_observed": 0,
+    "scientific_outcomes_existed_before_amendment": false,
+    "cohort_materialized_before_amendment": true,
+    "cohort_changed_by_amendment": false,
+    "statement": "This amendment repairs deferred Phase-1 OPERATIONAL choices before P0 exists. It introduces no new scientific decision: it materialises bindings v1.5 named but never froze, and withdraws one rule that was unsound for the measurement it governed.",
+    "changes": [
+      "3a nine P0 placement coordinates frozen from the Phase 0 scripted calibration positions",
+      "3b P0 bootstrap seed derived from PHASE0_DESIGN_SHA256",
+      "3c L0_noise_threshold_p defined as a tunable-free technical-noise envelope",
+      "3d outside-mask background tolerance defined as a noise-relative gate",
+      "3e sentinel selection frozen prospectively; envelope derivation frozen, numbers materialised after P0",
+      "3f universal byte-duplicate staleness withdrawn, replaced by the capture liveness contract",
+      "3g master salt AND the identity-spec authority stamp pinned to COHORT_SALT_AUTHORITY_SHA256 (v1.5), so an operational amendment cannot regenerate or re-hash the materialized cohort"
+    ],
+    "unchanged": [
+      "the 12-candidate roster and the frozen exclusions",
+      "the RVE formula, its aggregation and its normalization",
+      "the ladder validity zones, separations, SNR and CV bounds",
+      "the deterministic selection rule and tie-break",
+      "B = 10000",
+      "the cohort, folds, target rows, FIR kernels and q grid",
+      "every statistic and analysis family"
+    ],
+    "iii_a_scientific_design_changed": false,
+    "iii_b_scientific_design_changed": false,
+    "cohort_byte_identical_across_the_amendment": true
+  },
+  "authority_markdown_sha256_superseded_v1_5": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
 }

@@ -264,7 +264,7 @@ and is terminal for that analysis run.
 | Parameter | Frozen value |
 |---|---|
 | RNG algorithm | NumPy `Generator(PCG64)` via `numpy.random.default_rng` |
-| Master salt | `EXPERIMENT_III_MASTER_SALT = sha256("MINEOCCLUDE_EXPERIMENT_III_V1|" + AUTHORITY_SHA256 + "|" + PHASE0_DESIGN_SHA256)`, materialized and frozen by A1, bound in P2 |
+| Master salt | `EXPERIMENT_III_MASTER_SALT = sha256("MINEOCCLUDE_EXPERIMENT_III_V1|" + COHORT_SALT_AUTHORITY_SHA256 + "|" + PHASE0_DESIGN_SHA256)`, materialized and frozen by A1, bound in P2. `COHORT_SALT_AUTHORITY_SHA256` is **pinned** to the authority under which the cohort was materialized (v1.5, `3d116d97…`), not to the current authority hash — see §2.2a |
 | Seed derivation | `seed(domain,index) = int.from_bytes(sha256(f"experiment-iii-v1\|{domain}\|{MASTER_SALT}\|{index}").digest()[:8], "big") & ((1<<63)-1)` |
 | Candidate domains | `E3_LEFT_TO_RIGHT`, `E3_RIGHT_TO_LEFT` |
 | Start-position RNG | `default_rng(seed ^ 0xE3E3E3E3)` |
@@ -277,6 +277,36 @@ and is terminal for that analysis run.
 | Path hash | `sha256(numpy.asarray(positions, dtype="<f8").tobytes())` |
 | Noise hash | `sha256(numpy.asarray(noise, dtype="<f8").tobytes())` |
 | Episode ID | `86001 + serial` for production (serial 0…24); `86901`, `86902` for pilots |
+
+**§2.2a Salt pinning (Authority Amendment 3g).** `COHORT_SALT_AUTHORITY_SHA256` is the
+**immutable** hash of the authority under which A1 materialized the cohort:
+
+```
+COHORT_SALT_AUTHORITY_SHA256 = 3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb   (v1.5)
+```
+
+The predecessor formula read the *current* `AUTHORITY_SHA256`, which coupled the scientific
+population to every later edit of the authority document: any amendment, however operational,
+would have produced a different master salt, a different candidate stream, and therefore a
+different 25-identity cohort. Under v1.5 that coupling was latent, because Amendment 2 landed
+before the cohort existed. Once the cohort was materialized it became a live defect, and
+Amendment 3 closes it.
+
+The property §2.2 exists to guarantee is **unchanged**: the salt remains *derived, never
+chosen*. Both of its inputs are immutable published digests, so no one can substitute a salt to
+obtain a more convenient candidate stream — which remains an explicitly forbidden repair. The
+only thing removed is an unintended dependency of the cohort on operational edits. This mirrors
+§7.10b, where the P0 bootstrap seed binds the immutable Phase 0 design digest for the same
+reason.
+
+The same pinning applies to the `authority_sha256` field **inside** each identity spec, which
+feeds `spec_hash`. A spec records the authority that actually generated it; stamping the
+current hash would both assert a false provenance -- v1.6 generated no identity -- and change
+every `spec_hash`, and therefore the frozen manifest digest, on any later operational
+amendment.
+
+The materialized cohort is therefore **byte-identical** across v1.5 and v1.6, and
+`production_identity_manifest.sha256` is unchanged.
 
 **Iterative recurrence is mandatory, and the operand order is load-bearing.** The A-prime path
 generator accumulates position in a Python loop, and Experiment III's FIR-kernel recovery (§5.3)
@@ -537,7 +567,7 @@ Every production capture must emit, and every validator must check:
 | Timing receipt | `len(server_state) == len(client_tick) == len(actions) == len(frames) == 180`; `server_tick == index` on every stream | `TIMING_CARDINALITY_MISMATCH` |
 | Path receipt | replayed positions equal logged `sheep_x` within `1e-9` absolute; recomputed path/noise hashes equal the manifest | `CAPTURE_PATH_HASH_MISMATCH` |
 | Scene receipt | observed `scene` equals the condition's expected scene (§4.1) | `WALL_CONDITION_SCENE_MISMATCH` |
-| Framebuffer receipt | every frame exactly 640 × 360 RGB; no byte-identical stale run beyond the frozen tolerance | `CAPTURE_STALE_FRAME` |
+| Framebuffer receipt | every frame exactly 640 × 360 RGB, read succeeded, hash recorded; the §7.10 **capture liveness contract** satisfied. Repeated framebuffer bytes within one settled static state are **not** by themselves staleness | `CAPTURE_STALE_FRAME` |
 
 The historical replay check at `scripts/run_regime_a.py:283-409` clamps the expected position
 to `[-8, 8]`. Experiment III **retains** the clamp in the replay comparison, because the
@@ -1660,7 +1690,7 @@ own OpenCV channel conversion and resize at
 
 | Parameter | Frozen value |
 |---|---|
-| Placements | **9**, frozen, spanning the target corridor; coordinates frozen by A1 and bound in P2 |
+| Placements | **9**, frozen at world-x `-2.0, -1.5, -1.0, -0.5, 0.0, +0.5, +1.0, +1.5, +2.0` on the frozen sheep lane (`y = 4`, `z = 6`), ascending, §7.10a; bound in P2 |
 | Conditions measured | L0 (no wall) + all **12** candidates + `minecraft:stone` = **14** |
 | Replicate structure | **2 ABBA blocks** per (condition, placement) |
 | States | sheep **present** (`P`) and sheep **absent** (`A`, `Scene.NO_SHEEP`) |
@@ -1669,7 +1699,7 @@ own OpenCV channel conversion and resize at
 | Lighting / weather | fixed noon, weather controlled, **zero random ticks** |
 | Camera | fixed at §3.1; camera lock active |
 | Framebuffer | exactly 640 × 360; framebuffer hash recorded per frame |
-| Staleness | byte-identical consecutive frames beyond the frozen tolerance invalidate the block |
+| Staleness | governed by the §7.10 capture liveness contract. P0 captures a deliberately static settled scene, so repeated framebuffer bytes inside one state are expected and valid; staleness is proven at scene **transitions** |
 
 The sheep is placed statically at each placement; the target is the same adult, AI-disabled,
 silent, persistent, invulnerable magenta sheep as production.
@@ -1705,9 +1735,9 @@ M_p^b  = { u : r(u) > L0_noise_threshold_p }
 M_p    = dilate( union over blocks b of M_p^b , 2 pixels )
 ```
 
-`L0_noise_threshold_p` is derived from the absent-frame split-half noise at that placement and
-frozen by A1. **The same `M_p` is used for every candidate** — a per-candidate mask would make
-the metric material-dependent and is forbidden.
+`L0_noise_threshold_p` is the **L0 absent-frame technical-noise envelope** at that placement, frozen
+by §7.10c before any candidate is scored. **The same `M_p` is used for every candidate** — a
+per-candidate mask would make the metric material-dependent and is forbidden.
 
 The authoritative projected sheep center may gate gross placement errors, and the magenta
 detector may verify target presence, but **neither defines residual magnitude or candidate
@@ -1743,8 +1773,8 @@ condition score V_c            = median over the 9 placements
 reported and used as the L4 evidence coordinate. Uncapped values are retained for QA.
 
 **Step 8 — background gate.** The present/absent residual **outside** `M_p` must not exceed the
-Phase-1-frozen background tolerance; exceeding it is `RVE_BACKGROUND_TOLERANCE_EXCEEDED` and
-invalidates that block.
+noise-relative background tolerance of §7.10d; exceeding it is `RVE_BACKGROUND_TOLERANCE_EXCEEDED`
+and invalidates that block.
 
 ### 7.4 What RVE is and is not
 
@@ -1785,10 +1815,10 @@ A valid ladder is three **distinct** eligible blocks ordered `L1 > L2 > L3` sati
 | Bootstrap | deterministic **10,000**-resample placement bootstrap lower bound **strictly above zero** for **both** adjacent differences |
 | L3 SNR | excess-energy-to-noise ratio `E/N >= 5` at **at least 8** placements |
 | Replicate repeatability | within-placement replicate coefficient of variation `<= 0.15` wherever the mean is nonzero |
-| Background | outside-mask present/absent residual `<=` the Phase-1-frozen background tolerance |
+| Background | outside-mask present/absent residual `<=` `4.0 ×` that cell's own outside-mask absent split-half noise (§7.10d) |
 
-The bootstrap resamples the **9 placements** with replacement, `B = 10,000`, using the
-Phase-1-frozen P0 bootstrap seed bound in P2.
+The bootstrap resamples the **9 placements** with replacement, `B = 10,000`, using the P0
+bootstrap seed derived in §7.10b from the immutable Phase 0 design binding and bound in P2.
 
 **These zones are engineering design constraints, not scientific success criteria.** They exist
 to obtain a well-separated evidence ladder, not to predict or gate a result.
@@ -1836,13 +1866,17 @@ bound in P2 and is the **only** evidence coordinate used by the analysis (§8.10
 ### 7.9 Production drift sentinels
 
 Before **and** after each production condition batch, repeat **three frozen sentinel
-placements** — a fixed subset of the nine P0 placements, frozen by A1 and bound in P2.
+placements** — placement indices `0, 4, 8` of §7.2, i.e. world-x `-2.0`, `0.0`, `+2.0`.
+They are the left, centre and right of the frozen placement set, chosen by the deterministic
+coverage rule of §7.10e **before any P0 measurement exists**, never by which placements later
+looked most stable. Bound in P2.
 
 Requirements:
 
 - The image-only RVE order across the sentinel placements must match P0.
-- Each sentinel score must lie inside the Phase-1-frozen **repeatability envelope**, derived from
-  the P0 replicate spread at those placements and bound in P2.
+- Each sentinel score must lie inside the **repeatability envelope** computed by the frozen
+  derivation of §7.10e from the P0 replicate spread at those placements. The *formula* is frozen
+  now, before P0; the *numeric* envelope is materialised from P0 replicates and bound in P2.
 
 A sentinel failure:
 
@@ -1854,6 +1888,194 @@ A sentinel failure:
 Evidence: `sentinel_receipt.json` per batch boundary, recording placement, condition, measured
 RVE, envelope bounds, order check, and pass/fail. Blockers: `SENTINEL_ORDER_VIOLATION`,
 `SENTINEL_ENVELOPE_VIOLATION`.
+
+### 7.10 P0 operational bindings (Authority Amendment 3, v1.6)
+
+Authority v1.5 deferred six P0 operational choices to a "Phase 1" freeze that was never
+written, leaving `A4` unable to execute: the placement coordinates, the bootstrap seed, the
+mask noise threshold, the background tolerance, the sentinel envelope, and a staleness rule
+that was unsound for a static scene. This section materialises all six. It is raised at `A4`
+entry with **zero P0 frames, zero MineWorld forwards and zero scientific outcomes in
+existence**, so no binding here can have been chosen to favour any material or any result.
+
+Every rule below reads only **L0 and absent-frame technical calibration data**. None reads a
+candidate material's score, a ladder, a MineWorld output, or a decoder error.
+
+#### 7.10a Placements (frozen)
+
+The nine scripted Phase 0 calibration positions, on the frozen sheep lane `y = 4`, `z = 6`, in
+ascending world-x order:
+
+```
+-2.0  -1.5  -1.0  -0.5  0.0  +0.5  +1.0  +1.5  +2.0
+```
+
+Representation is IEEE-754 `float64`; ordering is ascending `lane_x`; index `i` is the
+zero-based position in that ascending order. All nine lie strictly inside the verified
+counterfactually fully occluded lane interval `[-3.49, 4.49]` (§4.5), so every placement is a
+genuine occluded-corridor position.
+
+`P0_PLACEMENTS_SHA256` is the SHA-256 of the canonical JSON (sorted keys, `,`/`:` separators,
+no NaN) of the nine records `{placement_index, placement_id, lane_x, lane_y, lane_z}`:
+
+```
+5676aa3371fcc481f89c709d8be81e2b14932f550b94ce44a42b2617420a84b6
+```
+
+#### 7.10b P0 bootstrap seed (frozen)
+
+The seed is **derived**, never hand-picked, and derived from provenance that predates P0:
+
+```
+seed_bytes        = SHA256("MINEOCCLUDE_EXPERIMENT_III_P0_BOOTSTRAP_V1|" + PHASE0_DESIGN_SHA256)
+P0_BOOTSTRAP_SEED = int.from_bytes(seed_bytes[:8], "big") & ((1 << 63) - 1)
+```
+
+With the immutable `PHASE0_DESIGN_SHA256 =
+be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c` this evaluates to
+
+```
+P0_BOOTSTRAP_SEED = 1530570907966297797
+```
+
+It depends on the **Phase 0 design binding**, not on the current authority hash, so it is
+stable across every later operational amendment. `B = 10,000` is unchanged. The bootstrap
+resamples the nine placements with replacement using `numpy.random.default_rng(seed)`.
+
+#### 7.10c `L0_noise_threshold_p` — the L0 technical-noise envelope (frozen)
+
+One threshold per placement. It consumes **only the L0 absent frames at that placement** and is
+frozen before any candidate is scored.
+
+```
+input       the settled ABSENT frames of condition L0 at placement p, per replicate block b
+linearize   §7.3 step 1, float64 throughout
+split       by ascending capture index within a block; with n frames,
+              first  = frames[0 : n // 2]
+              second = frames[n - n // 2 : n]
+            for odd n the single middle frame is in neither half, so the halves are
+            exactly balanced and the assignment is deterministic
+medians     coordinate-wise median of each half            (float64)
+per-pixel   n_b(u) = || median(first)(u) - median(second)(u) ||_2^2     summed over channels
+pool        N_p(u) = max over replicate blocks b of n_b(u)
+threshold   L0_noise_threshold_p = max over all pixels u of N_p(u)
+compare     a pixel enters the mask iff r(u) > L0_noise_threshold_p   (strict)
+```
+
+The estimator is a **technical-noise envelope**: the largest per-pixel residual ever observed
+between two pure-noise views of the same static absent scene. A pixel therefore enters the
+support mask only if the present/absent residual exceeds every noise magnitude the renderer
+produced anywhere in that scene. It carries **no tunable constant** — no quantile, no
+multiplier, no floor — which is precisely why it cannot be nudged to make a material pass.
+
+Edge cases, frozen:
+
+- `n < 2` settled absent frames in a block: `P0_TECHNICAL_FAIL`, never a relaxed split.
+- A threshold of exactly `0.0` (a perfectly reproducible renderer) is admissible; the strict
+  `>` then admits every pixel carrying any residual at all.
+- An empty or all-pixel mask is `RVE_MASK_DEGENERATE`. It is a technical failure to be
+  reported and retried under the identical procedure, **never** grounds to relax the rule.
+
+#### 7.10d Background tolerance (frozen)
+
+Scale-normalised and noise-relative, so one rule is meaningful at all nine placements rather
+than an arbitrary raw-energy constant. For each `(c, p, b)`:
+
+```
+B(c,p,b)     = sum over u NOT in M_p of || P_lin(c,p,b,u) - A_lin(c,p,b,u) ||_2^2
+N_out(c,p,b) = the same outside-mask energy between that cell's own deterministic
+               split-half ABSENT medians (§7.3 step 5 split, restricted to u not in M_p)
+PASS  iff    B(c,p,b) <= 4.0 * N_out(c,p,b)
+```
+
+`BACKGROUND_TOLERANCE_RATIO = 4.0`, frozen. Derivation: the split-half reference compares two
+medians of `n/2` frames while the present/absent contrast compares two medians of `n` frames,
+so the reference already carries roughly twice the energy of the noise it bounds; a ratio of 4
+therefore leaves about eightfold energy headroom against a false technical failure, while a
+genuine background change (a wrong wall material, a light level, a camera slip) is orders of
+magnitude larger. The reference population is that cell's **own absent frames** — technical
+noise — so the rule is candidate-independent by construction.
+
+Edge case, frozen: when `N_out(c,p,b) == 0` exactly — a perfectly reproducible background — the
+gate becomes `B <= 0`, i.e. outside-mask byte-for-byte identity is required. That is the
+correct reading, not a degenerate one: with demonstrably zero renderer noise, *any* outside-mask
+difference is a real scene change. No epsilon is added.
+
+Once frozen this tolerance is **never raised or lowered** because candidate measurements failed
+it; a failure is `RVE_BACKGROUND_TOLERANCE_EXCEEDED` and invalidates that block.
+
+#### 7.10e Sentinels — prospective selection and envelope derivation (frozen)
+
+**Selection**, deterministic and prospective: the left, centre and right of the frozen placement
+set, i.e. placement indices `0, 4, 8` (world-x `-2.0`, `0.0`, `+2.0`). Selection consumes no
+measurement whatsoever.
+
+**Envelope derivation** — the *formula* is frozen here; the *numbers* can only exist after P0
+and are bound in P2. For sentinel placement `p` and condition `c`, over the P0 replicate blocks:
+
+```
+centre_p(c)  = median over blocks b of RVE(c,p,b)
+range_p(c)   = max over b of RVE(c,p,b) - min over b of RVE(c,p,b)
+half_p(c)    = 2.0 * max( range_p(c), 0.15 * centre_p(c) )
+envelope     = [ max(centre_p(c) - half_p(c), 0.0) , centre_p(c) + half_p(c) ]
+```
+
+`K = 2.0` is a twofold allowance on the observed P0 replicate range. The floor
+`0.15 * centre` reuses the already-frozen replicate-CV bound of §7.5 so that two exactly equal
+P0 replicates cannot produce a zero-width envelope that every later production batch would
+fail. The same formula applies to every eligible sentinel; none is fitted individually.
+
+#### 7.10f Capture liveness contract (frozen, replacing the byte-duplicate rule)
+
+The v1.5 rule — "byte-identical consecutive frames beyond the frozen tolerance invalidate the
+block" — is **unsound and is withdrawn**. P0 deliberately captures a static settled scene, and
+an opaque production condition can legitimately render pixel-identical frames while a fully
+hidden target moves. Under the withdrawn rule the correct observation was indistinguishable
+from a frozen renderer, so the rule would have invalidated valid science and could not have
+detected the failure it was written for.
+
+Liveness is instead proven where it is actually observable. **Required evidence, every capture
+unit:**
+
+- the server tick advances monotonically, by exactly one per recorded step;
+- one accepted frame per expected tick; tick identities complete and unique — no missing tick,
+  no duplicated tick identity;
+- the capture process is alive for the whole unit;
+- every framebuffer read succeeds and is exactly 640 × 360 RGB;
+- every frame hash is recorded as **diagnostic evidence** (never, by itself, a verdict).
+
+**Transition probes.** At every point where the image *must* change, the framebuffer is required
+to demonstrate the transition after settling:
+
+- target present → absent, and absent → present;
+- a wall material change;
+- a mandatory controlled pre-capture liveness probe on every unit.
+
+```
+CAPTURE_STALE_FRAME  iff  the server tick advanced across a known scene transition
+                          AND the settled framebuffer is byte-identical across it
+```
+
+Within one genuinely static settled state, repeated framebuffer bytes are **not** evidence of
+staleness and must not invalidate the block. A tick that fails to advance, or a duplicated or
+missing tick identity, is `TIMING_CARDINALITY_MISMATCH`.
+
+### 7.11 P0 present/absent scene semantics (frozen)
+
+The absent state is `Scene.NO_SHEEP` (§7.2), and it changes **only** target presence:
+
+| Condition | PRESENT | ABSENT |
+|---|---|---|
+| `L0` | no wall, target present | no wall, target absent |
+| each of the 12 candidates | that exact wall material, target present | **that same wall material**, target absent |
+| `minecraft:stone` | stone wall, target present | stone wall, target absent |
+
+Between `P` and `A` of one `(c, p, b)` cell the wall cells, the wall material, the camera pose,
+the lighting and the weather are **identical**; only target presence differs. Any implementation
+in which the absent state removes or substitutes the wall is an **engineering defect**, not a
+condition: it would make `D(c,p,b)` measure the wall rather than the target, silently
+destroying the entire RVE ladder. Wall presence is determined by the condition; target presence
+is an independent axis.
 
 ---
 
