@@ -1,14 +1,14 @@
 {
   "artifact_root_writable": true,
   "authority_binding": {
-    "AUTHORITY_SHA256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
-    "MACHINE_AUTHORITY_SHA256": "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609",
+    "AUTHORITY_SHA256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "MACHINE_AUTHORITY_SHA256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
     "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
   },
   "authority_drift": false,
-  "authority_freeze_commit": "a1f5dd1a959ff477edbf469cd12bb4db606371ea",
-  "authority_sha256": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
-  "authority_version": "v1.6",
+  "authority_freeze_commit": "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a",
+  "authority_sha256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+  "authority_version": "v1.7",
   "authorized_stages": [
     "A4",
     "A5_CAPTURE",
@@ -18,11 +18,11 @@
   "blocker_taxonomy_available": true,
   "blocker_taxonomy_code_count": 146,
   "clock": {
-    "local_iso8601": "2026-08-31T05:56:13.280588-04:00",
+    "local_iso8601": "2026-08-31T11:31:01.962938-04:00",
     "monotonic_available": true,
-    "monotonic_sample": 392.402231842,
+    "monotonic_sample": 34.901837635,
     "timezone": "EDT",
-    "utc_iso8601": "2026-08-31T09:56:13.286639+00:00",
+    "utc_iso8601": "2026-08-31T15:31:01.969230+00:00",
     "utc_offset_seconds": -14400
   },
   "display": {
@@ -37,9 +37,9 @@
     "mode": "LOCAL_MIRROR_SAME_POOL",
     "round_trip": {
       "probe_bytes": 112,
-      "readback_sha256": "80559d5bbd162a2f32c882b139b89c0ce17b5f45c2953079931e1e9498561690",
+      "readback_sha256": "5cf3d03cc42eb25449e7167c7af7ab0b40bea7f05e8f29314d45e586c4d587f1",
       "verified": true,
-      "written_sha256": "80559d5bbd162a2f32c882b139b89c0ce17b5f45c2953079931e1e9498561690"
+      "written_sha256": "5cf3d03cc42eb25449e7167c7af7ab0b40bea7f05e8f29314d45e586c4d587f1"
     }
   },
   "fails_closed": true,
@@ -52,13 +52,13 @@
     "python": "3.14.4"
   },
   "host_role": "LOCAL_CAPTURE_HOST",
-  "implementation_checkpoint_commit": "3bc9189a016ccf483b44275e7138b5127135e512",
+  "implementation_checkpoint_commit": "3f03ecf79683bd7c277c9751be12d7a01f1c8cdc",
   "local_ports": {
     "25565": {
       "in_use": false
     }
   },
-  "machine_authority_sha256": "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609",
+  "machine_authority_sha256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
   "model_identity_checks": {
     "consequence": "A9 and A10 are NOT authorized by this receipt",
     "main_checkpoint_sha256_expected": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
@@ -165,10 +165,10 @@
   },
   "schema_version": "mineocclude-experiment-iii-environment-receipt-v1",
   "source_closure": {
-    "head_commit": "3bc9189a016ccf483b44275e7138b5127135e512",
+    "head_commit": "3f03ecf79683bd7c277c9751be12d7a01f1c8cdc",
     "includes_uncommitted_working_tree": true,
     "line_ending": "LF",
-    "record_count": 560,
+    "record_count": 562,
     "record_format": "<mode> <blob-sha1> <stage>\\t<path>",
     "roots": [
       "src",
@@ -176,8 +176,8 @@
       "scripts"
     ],
     "sort": "ASCENDING_BY_PATH_FIELD_ONLY_AS_RAW_UTF8_BYTES",
-    "source_closure_sha256": "673f82f03b6cf7ad51c7837be806c6cc1622816b0d1fc579e1576a1ba84851d4",
-    "stream_bytes": 56221,
+    "source_closure_sha256": "dafabed3a65510f7672780a58f8bcae3340247fe7e66f96d2670f45593738f1e",
+    "stream_bytes": 56396,
     "trailing_newline": true,
     "whole_line_sort": false
   },
@@ -196,7 +196,7 @@
     "passed": true,
     "physical_pool_count": 1,
     "pool_working_device_id": 2096,
-    "pool_working_free_bytes": 1021547732992,
+    "pool_working_free_bytes": 1021497827328,
     "remote_hashed_round_trip_required": false,
     "results": {
       "A3_COMBINED_PROGRAM_WITH_LOCAL_MIRROR": true
@@ -210,24 +210,24 @@
   "storage_pools": {
     "POOL_DURABLE": {
       "device_id": 2096,
-      "free_bytes": 1021547732992,
-      "free_gib": 951.3904647827148,
+      "free_bytes": 1021497827328,
+      "free_gib": 951.3439865112305,
       "path": "/home/overatedusername/mineocclude-exp3-runtime/durable",
       "probed_ancestor": "/home/overatedusername/mineocclude-exp3-runtime/durable",
       "total_bytes": 1081101176832
     },
     "POOL_SCRATCH": {
       "device_id": 2096,
-      "free_bytes": 1021547732992,
-      "free_gib": 951.3904647827148,
+      "free_bytes": 1021497827328,
+      "free_gib": 951.3439865112305,
       "path": "/home/overatedusername/mineocclude-exp3-runtime/scratch",
       "probed_ancestor": "/home/overatedusername/mineocclude-exp3-runtime/scratch",
       "total_bytes": 1081101176832
     },
     "POOL_WORKING": {
       "device_id": 2096,
-      "free_bytes": 1021547732992,
-      "free_gib": 951.3904647827148,
+      "free_bytes": 1021497827328,
+      "free_gib": 951.3439865112305,
       "path": "/home/overatedusername/mineocclude-exp3-runtime",
       "probed_ancestor": "/home/overatedusername/mineocclude-exp3-runtime",
       "total_bytes": 1081101176832
