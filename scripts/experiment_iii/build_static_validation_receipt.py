@@ -37,6 +37,9 @@ from mineocclude.experiment_iii.authority import (  # noqa: E402
     machine_authority_sha256,
     phase0_design_sha256,
 )
+from mineocclude.experiment_iii.artifact_inventory import (  # noqa: E402
+    stage_exit_check_fs,
+)
 from mineocclude.experiment_iii.source_closure import source_closure  # noqa: E402
 
 TEST_ROOT = REPO / "tests" / "experiment_iii"
@@ -278,7 +281,91 @@ REPAIR_HISTORY = [
     "write_cohort gained an optional namespace_root so B.1 can exercise the real "
     "writer against a temporary tree without touching the materialized cohort.",
     "Dead helpers removed from iii_b_u2 and the Group-D statistics module.",
+    # --- Pre-execution readiness remediation sprint, 2026-08-31 --------------
+    # Closing PRE_EXECUTION_READINESS_AUDIT_v1_6.md. Each of these invalidated
+    # the previous suite result; the run recorded here is the one after the last.
+    "F-01 (BLOCKER): added p0_analysis.py and wired the complete frozen P0 "
+    "analysis into run_p0_rve_calibration.py --execute. The runner captured 252 "
+    "units and returned; seven of A4's eight outputs had no producer and A4's "
+    "exit condition P0_SELECTION_RECEIPT was unreachable. --execute is now one "
+    "transaction through stage closure, and --analyze re-closes A4 from an "
+    "already-captured campaign.",
+    "F-02 (HIGH): capture_p0_unit now emits the frozen WALL_MATERIAL_CHANGE probe "
+    "across a material transition, and verify_unit_liveness requires it when one "
+    "occurred instead of excluding the kind unconditionally.",
+    "F-03 (HIGH): added capture_evidence.py. Frame tick identity now comes from "
+    "the mod's client_tick.jsonl, dimensions from the PNG IHDR chunk, and "
+    "read_succeeded from capture_complete.json. verify_frame_dimensions refuses "
+    "any record not marked OBSERVED_PHYSICAL_EVIDENCE.",
+    "F-04 (HIGH): the untracked v1.5-bound capture_schedule.json naming "
+    "white/lime/blue was removed from the operational capture path and "
+    "dispositioned; run_production_capture.py resolves --ladder through "
+    "p0_analysis.load_selected_ladder, which admits only a genuine A4 "
+    "P0_SELECTED_LADDER at P0_PASS under the current authority.",
+    "F-05 (HIGH): AUTHORITY_FREEZE_COMMIT set to the v1.6 freeze a1f5dd1; it held "
+    "v1.5's freeze, making current and predecessor provenance degenerate. The "
+    "frozen authority was correct and was not modified.",
+    "F-06 (HIGH): both JVM stdout pipes are drained by daemon threads; nothing "
+    "read them after startup, so the campaign would have blocked on a full OS "
+    "pipe buffer with no blocker code.",
+    "F-07/F-12/F-17 (MEDIUM/LOW): the mandatory liveness probe is now a "
+    "controlled toggle issued BEFORE the measured slots; the warmup is actually "
+    "sent; dry-run evidence carries a distinct shape and cannot be persisted as a "
+    "measurement.",
+    "F-08 (MEDIUM): server replies are parsed, so a mod REFUSED response raises "
+    "P0_CANDIDATE_ID_UNSUPPORTED or P0_PLACEMENT_GROSS_ERROR instead of surfacing "
+    "180 s later as TIMING_CARDINALITY_MISMATCH.",
+    "F-09 (MEDIUM): stage_exit_check_fs stats the real filesystem through an "
+    "explicit path-alias table; the previous check compared caller-supplied "
+    "strings and its only test was tautological.",
+    "F-10 (MEDIUM): a failed capture unit is marked ATTEMPTED and the state saved "
+    "before the error propagates, satisfying A4's 'all attempts retained'.",
+    "F-11 (MEDIUM): wait_for_frames waits on capture_complete.json with "
+    "drained=true and writer_errors=0 rather than on a file count.",
+    "F-13/F-14/F-16 (LOW): output_root is honoured for the drained apparatus "
+    "logs; the duplicated COHORT_SALT_AUTHORITY_SHA256 definition was removed; "
+    "the module-scoped cohort skip now fails instead of silently dropping the "
+    "frozen capture-order group.",
+    "I08: sentinels.derive_envelope delegated to p0_bindings.sentinel_envelope. "
+    "It had implemented a 3*stdev envelope, which is not the frozen 7.10e rule "
+    "and would have produced different production invalidations from the same P0 "
+    "data. Added sentinel_envelope_artifact (A4 producer) and "
+    "measure_batch_boundary (production consumer), both fail-closed.",
+    "R-01 (found during remediation, outside the audit): p1_pilot_plan.json was "
+    "bound to authority hash 442f6a6e..., which exists nowhere in the repository, "
+    "while declaring authority_version v1.6. Regenerated under v1.6.",
+    "Added tests/experiment_iii/test_p0_execution_closure.py (73 tests) asserting "
+    "runtime reachability, not just behaviour: every test in it would have failed "
+    "on the audited source state.",
 ]
+
+#: The audit this sprint closed, and the boundary it clears.
+PRE_EXECUTION_REMEDIATION = {
+    "original_audit": (
+        "docs/experiment_iii/audits/PRE_EXECUTION_READINESS_AUDIT_v1_6.md"
+    ),
+    "original_status": "FAIL",
+    "original_findings": {
+        "blocker": 1,
+        "high": 5,
+        "medium": 5,
+        "low": 6,
+        "informational": 4,
+    },
+    "closure_report": (
+        "docs/experiment_iii/audits/PRE_EXECUTION_READINESS_AUDIT_CLOSURE_v1_6.md"
+    ),
+    "authority_changed": False,
+    "authority_change_reason": (
+        "none required; the stale AUTHORITY_FREEZE_COMMIT was in implementation "
+        "source, not inside the frozen authority package, and the frozen v1.6 "
+        "amendment correctly names v1.5 as its predecessor"
+    ),
+    "scientific_decisions_changed": "NONE",
+    "boundary_cleared": "READY_FOR_CAPTURE_HOST_PROVISIONING",
+    "capture_host_provisioned": False,
+    "p0_executed": False,
+}
 
 
 _CHECK_IN_NODE = re.compile(r"test_([abd])(\d+)_", re.IGNORECASE)
@@ -378,6 +465,10 @@ def main() -> int:
             "receipt would not describe a single closure"
         )
 
+    # A1's artifacts must still be on disk at A2 exit, and A2's own receipt is
+    # written below; both are checked against the filesystem rather than against
+    # a list this script supplies to itself.
+    a1_stage_exit = stage_exit_check_fs("A1", REPO)
     suite_hash, suite_files = _test_suite_sha256()
     coverage = _named_check_coverage(collector.rows)
 
@@ -449,7 +540,9 @@ def main() -> int:
             "MINEWORLD_INFERENCE_RUN": False,
             "MINECRAFT_RUN": False,
         },
+        "a1_stage_exit_check": a1_stage_exit,
         "implementation_audit": IMPLEMENTATION_AUDIT,
+        "pre_execution_remediation": PRE_EXECUTION_REMEDIATION,
         "repair_history": REPAIR_HISTORY,
         "full_suite_rerun_after_last_source_change": True,
         "per_test": collector.rows,

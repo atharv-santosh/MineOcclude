@@ -362,6 +362,7 @@ def _frames(count: int, *, hashes: list[str] | None = None, start: int = 0):
             "width": 640,
             "height": 360,
             "read_succeeded": True,
+            "evidence_source": "OBSERVED_PHYSICAL_EVIDENCE",
         }
         for index in range(count)
     ]

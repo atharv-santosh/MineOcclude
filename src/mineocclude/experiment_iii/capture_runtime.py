@@ -35,7 +35,9 @@ import os
 import platform
 import shutil
 import subprocess
+import threading
 import time
+from collections import deque
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -63,6 +65,79 @@ QUALIFIED_DISPLAY_STRATEGIES = ("XVFB",)
 
 _SERVER_READY_MARKERS = ('Done (', 'server ready', 'For help, type "help"')
 _CLIENT_READY_MARKERS = ("joined the game", "Created: 640x360")
+
+#: The mod's own refusals, emitted by ``p0Cmd`` on the server console. Python
+#: previously never read the server's reply, so an unsupported registry ID or an
+#: out-of-lane placement surfaced 180 s later as TIMING_CARDINALITY_MISMATCH --
+#: the wrong blocker, in the wrong place in the recovery runbook.
+_REFUSAL_BLOCKERS = (
+    ("P0_CANDIDATE_ID_UNSUPPORTED", ("unsupported", "unknown block", "not a registry")),
+    ("P0_PLACEMENT_GROSS_ERROR", ("placement", "outside the lane", "out of lane")),
+)
+
+#: The mod's independent stale-renderer detector logs this on consecutive
+#: byte-identical framebuffer reads. It is evidence Python can act on, not noise.
+_STALE_RENDERER_MARKER = "consecutive byte-identical captures"
+
+
+class _OutputPump:
+    """Drain one child process's stdout on a daemon thread, forever.
+
+    Both JVMs are launched with ``stdout=PIPE``. Nothing drained those pipes
+    after the readiness marker, so once the OS pipe buffer filled (typically
+    64 KiB -- minutes into a 252-unit campaign) the writing process would block
+    on ``write`` and the campaign would stall with no blocker, no timeout and no
+    diagnostic. The pump keeps the pipe empty, mirrors everything to a log file,
+    and retains a bounded tail so the driver can read the server's replies.
+    """
+
+    TAIL = 400
+
+    def __init__(self, process: "subprocess.Popen[bytes]", log_path: Path | None, label: str) -> None:
+        self.process = process
+        self.label = label
+        self.lines: deque[str] = deque(maxlen=self.TAIL)
+        self._lock = threading.Lock()
+        self._handle = None
+        if log_path is not None:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            self._handle = log_path.open("a", encoding="utf-8", errors="replace")
+        self._thread = threading.Thread(
+            target=self._run, name=f"mineocclude-{label}-pump", daemon=True
+        )
+        self._thread.start()
+
+    def _run(self) -> None:
+        stream = self.process.stdout
+        if stream is None:
+            return
+        for raw in iter(stream.readline, b""):
+            text = raw.decode("utf-8", errors="replace").rstrip("\r\n")
+            with self._lock:
+                self.lines.append(text)
+                if self._handle is not None:
+                    self._handle.write(text + "\n")
+                    self._handle.flush()
+
+    def snapshot(self) -> list[str]:
+        with self._lock:
+            return list(self.lines)
+
+    def since(self, marker: int) -> list[str]:
+        with self._lock:
+            return list(self.lines)[marker:]
+
+    def cursor(self) -> int:
+        with self._lock:
+            return len(self.lines)
+
+    def close(self) -> None:
+        if self._handle is not None:
+            try:
+                self._handle.close()
+            except Exception:  # pragma: no cover - teardown best effort
+                pass
+            self._handle = None
 
 
 @dataclass
@@ -235,7 +310,10 @@ class CaptureRuntime:
         self._display: subprocess.Popen[bytes] | None = None
         self._server: subprocess.Popen[bytes] | None = None
         self._client: subprocess.Popen[bytes] | None = None
+        self._server_pump: _OutputPump | None = None
+        self._client_pump: _OutputPump | None = None
         self.issued_commands: list[str] = []
+        self.stale_renderer_warnings: list[str] = []
 
     # -- lifecycle ---------------------------------------------------------
 
@@ -310,6 +388,12 @@ class CaptureRuntime:
             self.config.server_start_timeout_seconds,
             "server",
         )
+        # From here nothing else reads this pipe, so it MUST be drained or the
+        # JVM blocks on write once the 64 KiB OS buffer fills -- an unexplained
+        # stall hours into an unattended 252-unit campaign, with no blocker code.
+        self._server_pump = _OutputPump(
+            self._server, self._log_path("server"), "server"
+        )
         return {"started": True, "pid": self._server.pid}
 
     def start_client(self) -> dict[str, Any]:
@@ -361,6 +445,9 @@ class CaptureRuntime:
             self.config.client_start_timeout_seconds,
             "client",
         )
+        self._client_pump = _OutputPump(
+            self._client, self._log_path("client"), "client"
+        )
         return {"started": True, "pid": self._client.pid}
 
     @staticmethod
@@ -390,8 +477,51 @@ class CaptureRuntime:
 
     # -- driving -----------------------------------------------------------
 
-    def send(self, command: str) -> str:
-        """Issue one server command through the stdin pipe."""
+    def _log_path(self, label: str) -> Path:
+        """Where a drained process log lands. ``output_root`` is honoured here.
+
+        The config *requires* ``output_root`` and the P0 runner previously derived
+        everything from ``client_root`` instead, so a host operator who set it saw
+        it have no effect. The apparatus logs are the one artefact belonging to
+        neither game directory, so they are what it names.
+        """
+        return Path(self.config.output_root) / "runtime_logs" / f"{label}.log"
+
+    def read_output(self, label: str = "server") -> list[str]:
+        """The drained tail of a child process's console."""
+        pump = self._server_pump if label == "server" else self._client_pump
+        return pump.snapshot() if pump is not None else []
+
+    def _assert_not_refused(self, command: str, lines: Sequence[str]) -> None:
+        """Raise the mod's OWN blocker when the mod refused the command.
+
+        ``p0Cmd`` returns 0 and prints ``p0 REFUSED: ...`` for an unsupported
+        registry ID or an out-of-lane placement. Nothing read that reply, so a
+        real refusal used to surface 180 s later as TIMING_CARDINALITY_MISMATCH --
+        routing the operator to the wrong entry in the recovery runbook and
+        costing 180 s per occurrence.
+
+        The client's independent stale-renderer detector logs on the same channel;
+        its warnings are retained rather than discarded (they are evidence the
+        Python probes cannot produce).
+        """
+        for line in lines:
+            lowered = line.lower()
+            if _STALE_RENDERER_MARKER in lowered:
+                self.stale_renderer_warnings.append(line.strip())
+            if "refused" not in lowered:
+                continue
+            for blocker, needles in _REFUSAL_BLOCKERS:
+                if any(needle in lowered for needle in needles):
+                    raise ExperimentIIIError(
+                        blocker, f"the mod refused {command!r}: {line.strip()}"
+                    )
+            raise ExperimentIIIError(
+                "P0_TECHNICAL_FAIL", f"the mod refused {command!r}: {line.strip()}"
+            )
+
+    def send(self, command: str, *, await_reply: float = 2.0) -> str:
+        """Issue one server command through the stdin pipe, and read the reply."""
         self.issued_commands.append(command)
         if self.dry_run:
             return command
@@ -399,8 +529,18 @@ class CaptureRuntime:
             raise ExperimentIIIError(
                 "ENV_RUNTIME_VERSION_MISMATCH", "the server is not running"
             )
+        cursor = self._server_pump.cursor() if self._server_pump is not None else 0
         self._server.stdin.write((command + "\n").encode("utf-8"))
         self._server.stdin.flush()
+        if self._server_pump is not None and await_reply > 0:
+            deadline = time.monotonic() + await_reply
+            replies: list[str] = []
+            while time.monotonic() < deadline:
+                replies = self._server_pump.since(cursor)
+                if replies:
+                    break
+                time.sleep(0.05)
+            self._assert_not_refused(command, replies)
         return command
 
     def alive(self) -> bool:
@@ -431,6 +571,10 @@ class CaptureRuntime:
                 except subprocess.TimeoutExpired:
                     process.kill()
             stopped[name] = process.returncode
+        for pump in (self._server_pump, self._client_pump):
+            if pump is not None:
+                pump.close()
+        self._server_pump = self._client_pump = None
         self._server = self._client = self._display = None
         return {"stopped": stopped, "clean": True}
 

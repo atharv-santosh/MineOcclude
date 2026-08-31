@@ -45,6 +45,7 @@ __all__ = [
     "LivenessProbe",
     "assert_transition_observed",
     "liveness_contract",
+    "OBSERVED_EVIDENCE_SOURCE",
     "verify_frame_dimensions",
     "verify_tick_integrity",
     "verify_unit_liveness",
@@ -168,11 +169,28 @@ def verify_tick_integrity(ticks: Sequence[int], *, expected: int | None = None) 
     }
 
 
+#: A frame record may only be scientific evidence if its tick and dimensions were
+#: read from the apparatus. The previous implementation accepted records whose
+#: ``tick`` came from ``enumerate`` and whose ``width``/``height`` came from the
+#: FRAMEBUFFER_* constants, so ``verify_frame_dimensions`` compared the constants
+#: against themselves and ENV_FRAMEBUFFER_SIZE_MISMATCH could never fire.
+OBSERVED_EVIDENCE_SOURCE = "OBSERVED_PHYSICAL_EVIDENCE"
+
+
 def verify_frame_dimensions(frames: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     """Every framebuffer read succeeded and is exactly 640 x 360."""
     count = 0
     for frame in frames:
         count += 1
+        if frame.get("evidence_source") != OBSERVED_EVIDENCE_SOURCE:
+            raise ExperimentIIIError(
+                "CAPTURE_STALE_FRAME",
+                f"the frame at tick {frame.get('tick')} is not marked "
+                f"{OBSERVED_EVIDENCE_SOURCE}; framebuffer dimensions and tick "
+                f"identity must be read from the apparatus (the PNG header and "
+                f"client_tick.jsonl), never restated from the requested "
+                f"configuration",
+            )
         if not frame.get("read_succeeded", True):
             raise ExperimentIIIError(
                 "CAPTURE_STALE_FRAME",
@@ -198,6 +216,7 @@ def verify_unit_liveness(
     probes: Sequence[LivenessProbe],
     process_alive: bool,
     expected_frames: int | None = None,
+    material_transition: bool = False,
 ) -> dict[str, Any]:
     """The whole 7.10f contract for one capture unit.
 
@@ -215,13 +234,28 @@ def verify_unit_liveness(
     )
     dimension_report = verify_frame_dimensions(frames)
 
+    # WALL_MATERIAL_CHANGE is required exactly when the unit actually changed the
+    # material. Excluding it unconditionally -- as this did -- meant the frozen
+    # probe was never demanded of any unit, and a wall left standing at the
+    # previous material would still show present/absent differences and pass every
+    # probe that WAS emitted, corrupting all 18 units of that condition.
     required = {kind for kind in TRANSITION_KINDS if kind != "WALL_MATERIAL_CHANGE"}
+    if material_transition:
+        required.add("WALL_MATERIAL_CHANGE")
     observed_kinds = {probe.kind for probe in probes}
-    if "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE" not in observed_kinds:
+    missing = sorted(required - observed_kinds)
+    if "MANDATORY_PRE_CAPTURE_LIVENESS_PROBE" in missing:
         raise ExperimentIIIError(
             "CAPTURE_STALE_FRAME",
             "authority 7.10f requires a controlled pre-capture liveness probe on "
             "every unit; none was recorded",
+        )
+    if "WALL_MATERIAL_CHANGE" in missing:
+        raise ExperimentIIIError(
+            "CAPTURE_STALE_FRAME",
+            "this unit changed the wall material, and authority 7.10f requires an "
+            "explicit pixel-level WALL_MATERIAL_CHANGE probe across that "
+            "transition; the arena cache key is a claim about intent, not evidence",
         )
     probe_reports = [assert_transition_observed(probe) for probe in probes]
 
@@ -235,7 +269,9 @@ def verify_unit_liveness(
         "framebuffer": dimension_report,
         "probes": probe_reports,
         "probe_kinds_observed": sorted(observed_kinds),
+        "required_probe_kinds": sorted(required),
         "required_probe_kinds_present": sorted(required & observed_kinds),
+        "material_transition_probed": "WALL_MATERIAL_CHANGE" in observed_kinds,
         # Diagnostics only. A static settled state legitimately repeats bytes;
         # the withdrawn v1.5 rule treated this as failure and was unsound.
         "distinct_frame_hashes": distinct,

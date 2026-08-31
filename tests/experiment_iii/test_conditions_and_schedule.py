@@ -290,7 +290,14 @@ def production():
     path = REPOSITORY_ROOT / "docs" / "experiment_iii" / "cohort"
     manifest = path / "production_identity_manifest.jsonl"
     if not manifest.is_file():
-        pytest.skip("cohort not materialized")
+        # A2 forbids a Group A/D skip. The materialized cohort is a REQUIRED A1
+        # artifact, so its absence is a failure -- skipping here would have
+        # silently dropped the whole frozen-capture-order group while the receipt
+        # still read "zero failures", which is the exact shape of AUD-02.
+        raise AssertionError(
+            f"the materialized cohort is a required A1 artifact and is absent: "
+            f"{manifest}"
+        )
     return read_jsonl(manifest)
 
 

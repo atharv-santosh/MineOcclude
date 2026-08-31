@@ -3,6 +3,15 @@
 Evidence-backed rather than asserted: file lists, hashes and the focused-test
 result are gathered by running the suite and hashing the artifacts on disk.
 
+**A task is not complete because its file exists.** The earlier version of this
+script marked a task ``COMPLETE`` whenever every listed file was present, and
+that is how ``I07`` and ``I08`` came to be recorded ``COMPLETE`` with
+``a1_tasks_complete: 20/20`` while the P0 analysis half had **zero production
+call sites**: ``rve.py`` existed, so ``I07`` passed. Each task therefore now
+carries ``wiring`` -- named symbols that must be reachable from a production
+module or script, checked by import and by source inspection, never by a test.
+A module that only tests import does not satisfy a wiring requirement.
+
     python scripts/experiment_iii/build_completion_receipt.py
 """
 
@@ -27,6 +36,9 @@ from mineocclude.experiment_iii.authority import (  # noqa: E402
     PREDECESSOR_AUTHORITY_SHA256,
     sha256_file,
     verify_authority_binding,
+)
+from mineocclude.experiment_iii.artifact_inventory import (  # noqa: E402
+    stage_exit_check_fs,
 )
 from mineocclude.experiment_iii.schema import write_json_atomic  # noqa: E402
 
@@ -116,7 +128,14 @@ TASKS: list[dict[str, object]] = [
         "tests": ["test_conditions_and_schedule.py"],
         "decision": "PARAMETERIZE",
         "note": "Arena cache key binds condition_id and wall_block_id (C07); wall "
-                "receipt carries the exact registry ID; frozen Latin order reproducible.",
+                "receipt carries the exact registry ID; frozen Latin order "
+                "reproducible; the schedule resolves L1/L2/L3 only through a "
+                "genuine A4 P0_SELECTED_LADDER at P0_PASS.",
+        "wiring": {
+            "scripts/experiment_iii/run_production_capture.py": [
+                "load_selected_ladder",
+            ],
+        },
     },
     {
         "id": "I09",
@@ -197,22 +216,71 @@ TASKS: list[dict[str, object]] = [
     {
         "id": "I07",
         "name": "RVE and P0 machinery",
-        "files": ["rve.py"],
+        "files": ["rve.py", "p0_analysis.py", "p0_bindings.py", "capture_evidence.py"],
         "scripts": ["run_p0_rve_calibration.py"],
-        "tests": ["test_rve_sentinels_status_execution.py"],
+        "tests": [
+            "test_rve_sentinels_status_execution.py",
+            "test_p0_execution_closure.py",
+        ],
         "decision": "NEW",
         "note": "sRGB->linear float64, shared per-placement mask dilated by 2, "
                 "split-half noise, deterministic triple search with lexicographic "
-                "tie-break.",
+                "tie-break -- wired end to end: --execute captures the 252 units "
+                "and then closes A4 through P0_SELECTION_RECEIPT in the same "
+                "transaction.",
+        "wiring": {
+            # I07's completion condition is "RVE computable END TO END ... the
+            # deterministic triple search implemented with all nine validity
+            # rules". Every one of these was a zero-call-site library function.
+            "src/mineocclude/experiment_iii/p0_analysis.py": [
+                "srgb_to_linear",
+                "robust_median_image",
+                "placement_mask",
+                "split_half_noise",
+                "excess_energy",
+                "aggregate_placement",
+                "aggregate_condition",
+                "select_ladder",
+                "l0_noise_threshold",
+                "background_gate",
+                "masked_energy",
+                "rve(",
+            ],
+            "scripts/experiment_iii/run_p0_rve_calibration.py": [
+                "analyse_p0",
+                "write_a4_artifacts",
+                "load_unit_frames",
+                "close_p0_stage",
+            ],
+        },
     },
     {
         "id": "I08",
         "name": "Sentinel machinery",
-        "files": ["sentinels.py"],
-        "tests": ["test_rve_sentinels_status_execution.py"],
+        "files": ["sentinels.py", "p0_analysis.py"],
+        "scripts": ["run_p0_rve_calibration.py"],
+        "tests": [
+            "test_rve_sentinels_status_execution.py",
+            "test_p0_execution_closure.py",
+        ],
         "decision": "NEW",
         "note": "Three frozen placements, order and envelope checks, batch-scoped "
-                "invalidation; technical never scientific.",
+                "invalidation; technical never scientific. The envelope is "
+                "produced by A4 as P0_SENTINEL_ENVELOPE and consumed at every "
+                "production condition-batch boundary through "
+                "sentinels.measure_batch_boundary, which fails closed without it.",
+        "wiring": {
+            # I08's completion condition is sentinels "measured at every
+            # condition-batch boundary". sentinels.py was imported by tests only.
+            "src/mineocclude/experiment_iii/p0_analysis.py": [
+                "sentinel_envelope_artifact",
+            ],
+            "src/mineocclude/experiment_iii/sentinels.py": [
+                "measure_batch_boundary",
+                "envelope_from_artifact",
+                "sentinel_envelope(",
+            ],
+        },
     },
     {
         "id": "I17",
@@ -241,6 +309,37 @@ def _hash_map(paths):
         for path in paths
         if path.is_file()
     }
+
+
+def _check_wiring(task: dict) -> tuple[list[dict], list[str]]:
+    """Prove each declared symbol is referenced from a PRODUCTION file.
+
+    Existence is not completion. This reads the named production module or script
+    and requires the symbol to appear in it, so a scientifically correct library
+    with no call site cannot be certified complete -- which is the exact failure
+    the pre-execution audit found in ``I07`` and ``I08``.
+    """
+    records: list[dict] = []
+    unwired: list[str] = []
+    for relative, symbols in (task.get("wiring") or {}).items():
+        path = REPOSITORY_ROOT / relative
+        if "tests/" in relative.replace("\\", "/"):
+            raise SystemExit(
+                f"{task['id']}: a wiring site must be production code, not {relative}"
+            )
+        source = path.read_text(encoding="utf-8") if path.is_file() else ""
+        for symbol in symbols:
+            present = bool(source) and symbol in source
+            records.append(
+                {
+                    "call_site": relative,
+                    "symbol": symbol.rstrip("("),
+                    "reachable_from_production": present,
+                }
+            )
+            if not present:
+                unwired.append(f"{relative}::{symbol}")
+    return records, unwired
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -283,11 +382,12 @@ def main(argv: list[str] | None = None) -> int:
             for path in source_files + script_files + test_files + fabric_files
             if not path.is_file()
         ]
+        wiring_records, unwired = _check_wiring(task)
         tasks.append(
             {
                 "task": task["id"],
                 "name": task["name"],
-                "status": "BLOCKED" if missing else "COMPLETE",
+                "status": "BLOCKED" if (missing or unwired) else "COMPLETE",
                 "implementation_decision": task["decision"],
                 "implementation_note": task["note"],
                 "source_files_changed": sorted(_hash_map(source_files)),
@@ -298,14 +398,31 @@ def main(argv: list[str] | None = None) -> int:
                 "focused_test_result": (
                     "PASS" if focused.get("failed", 1) == 0 else "FAIL"
                 ),
+                "runtime_call_sites": wiring_records,
+                "wiring_verified": not unwired,
+                "unwired_symbols": unwired,
                 "missing_files": missing,
-                "blocker": None if not missing else "SOURCE_CHANGE_INCOMPLETE",
+                "completion_rationale": (
+                    task["note"]
+                    if not (missing or unwired)
+                    else "incomplete; see missing_files / unwired_symbols"
+                ),
+                "blocker": (
+                    None
+                    if not (missing or unwired)
+                    else "SOURCE_CHANGE_INCOMPLETE"
+                ),
             }
         )
 
     artifacts = sorted(
         list((DOCS / "cohort").glob("*")) + list((DOCS / "a1_receipts").glob("*"))
     )
+    # The stage-exit check, against the real filesystem. The inventory exists so
+    # that missing evidence is auto-detectable; run only against caller-supplied
+    # strings it detected nothing. A1 cannot be reported complete while one of its
+    # required artifacts is absent from disk.
+    stage_exit = stage_exit_check_fs("A1", REPOSITORY_ROOT)
     body = {
         "schema_version": "mineocclude-experiment-iii-implementation-completion-v1",
         "stage": "A1",
@@ -317,6 +434,12 @@ def main(argv: list[str] | None = None) -> int:
         "candidate_index_bound_per_direction": CANDIDATE_INDEX_BOUND_PER_DIRECTION,
         "a1_tasks_total": len(TASKS),
         "a1_tasks_complete": sum(1 for row in tasks if row["status"] == "COMPLETE"),
+        "a1_tasks_wiring_verified": sum(1 for row in tasks if row["wiring_verified"]),
+        "completion_criterion": (
+            "every listed source, script, fabric and test file exists AND every "
+            "declared runtime call site references the symbol from production code; "
+            "a library function with no production call site is NOT complete"
+        ),
         "tasks": tasks,
         "focused_tests": focused,
         "resource_policy": {
@@ -330,6 +453,7 @@ def main(argv: list[str] | None = None) -> int:
             "capture_exists": False,
         },
         "artifacts_produced": _hash_map(artifacts),
+        "a1_stage_exit_check": stage_exit,
         "a2_started": False,
         "static_validation_receipt_written": False,
     }

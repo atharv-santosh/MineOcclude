@@ -1,0 +1,28 @@
+{
+  "artifact": "capture_schedule.json",
+  "authority_section": "7.10a disposition pattern; 8.1",
+  "bound_authority_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+  "bound_authority_version": "v1.5 (SUPERSEDED by v1.6)",
+  "bytes": 47383,
+  "capture_units": 125,
+  "captured_any_frame": false,
+  "code_repair": "run_production_capture.py now resolves --ladder through p0_analysis.load_selected_ladder, which admits only a genuine A4 P0_SELECTED_LADDER at P0_PASS bound to the current authority; a v1.5-bound or provisional ladder is refused with P0_CANDIDATE_ID_UNSUPPORTED.",
+  "current_authority_version": "v1.6",
+  "discovered_by": "docs/experiment_iii/audits/PRE_EXECUTION_READINESS_AUDIT_v1_6.md finding F-04",
+  "disposition": "Deleted from the operational capture path. Its identity is retained here as provenance. The bytes are not retained: retaining them would recreate a consumable artifact, and nothing downstream needs them -- it captured no frame.",
+  "may_enter_p1": false,
+  "may_enter_p2": false,
+  "may_enter_production": false,
+  "original_path": "docs/experiment_iii/capture/capture_schedule.json",
+  "provisional_ladder_named": {
+    "L1": "minecraft:white_stained_glass",
+    "L2": "minecraft:lime_stained_glass",
+    "L3": "minecraft:blue_stained_glass"
+  },
+  "purpose": "Amendment 3 3a dispositions the superseded uniform-partition placement derivation as engineering evidence that must not enter P2. This file dispositions the analogous -- and more dangerous -- production capture schedule found untracked at docs/experiment_iii/capture/capture_schedule.json during the v1.6 pre-execution readiness audit.",
+  "reason": "A pre-P0 dry-run output. It names concrete L1/L2/L3 materials across all 25 production identities, but P0 (A4) is what decides those materials and has not run. It sat at run_production_capture.py's DEFAULT_OUT and was untracked, so it was invisible to git, to SOURCE_CLOSURE and to every provenance check. A schedule naming a placeholder material is indistinguishable from a real one.",
+  "removed_from_operational_path": true,
+  "schema_version": "mineocclude-experiment-iii-superseded-artifact-disposition-v1",
+  "sha256": "beceb38f0058dd3ed7a76e1cf0b10dd45ab1ad5ce0f3bb4d51c75f70ec145339",
+  "status": "SUPERSEDED_ENGINEERING_EVIDENCE_QUARANTINED"
+}

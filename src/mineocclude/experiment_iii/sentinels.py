@@ -20,6 +20,8 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 
 from mineocclude.experiment_iii.errors import ExperimentIIIError
+from mineocclude.experiment_iii.p0_bindings import sentinel_envelope
+from mineocclude.experiment_iii.placements import sentinel_placement_indices
 
 __all__ = [
     "SENTINEL_PLACEMENT_COUNT",
@@ -28,8 +30,11 @@ __all__ = [
     "derive_envelope",
     "check_order",
     "check_envelope",
+    "envelope_from_artifact",
     "evaluate_batch_boundary",
     "invalidation_scope",
+    "measure_batch_boundary",
+    "sentinel_envelope_artifact",
 ]
 
 SENTINEL_PLACEMENT_COUNT = 3
@@ -42,12 +47,18 @@ class SentinelEnvelope:
     placements: tuple[int, ...]
     bounds: dict[int, tuple[float, float]]
     p0_order: tuple[int, ...]
+    derivations: dict[int, dict[str, Any]] = field(default_factory=dict)
 
     def as_dict(self) -> dict[str, Any]:
         return {
             "placements": list(self.placements),
             "bounds": {str(k): list(v) for k, v in sorted(self.bounds.items())},
             "p0_order": list(self.p0_order),
+            "derivations": {
+                str(k): v for k, v in sorted(self.derivations.items())
+            },
+            "envelope_rule": "AUTHORITY_7_10E_K_TIMES_MAX_RANGE_OR_FLOOR",
+            "single_implementation_of_record": "p0_bindings.sentinel_envelope",
         }
 
 
@@ -63,11 +74,18 @@ class SentinelReading:
 def derive_envelope(
     placements: Sequence[int],
     p0_replicates: Mapping[int, Sequence[float]],
-    *,
-    tolerance: float = 3.0,
 ) -> SentinelEnvelope:
-    """Derive the envelope from the P0 replicate spread at those placements."""
-    chosen = tuple(sorted(placements))
+    """Derive the envelope from the P0 replicate spread at those placements.
+
+    The arithmetic is **not** written here. Authority 7.10e froze one formula --
+    ``half_width = k * max(range, floor_fraction * centre)`` over the P0 replicate
+    blocks, with ``k`` and the floor read from the machine authority -- and
+    :func:`p0_bindings.sentinel_envelope` is its single implementation of record.
+    An earlier version of this function used a ``3 * stdev`` envelope instead,
+    which is a different rule and would have produced different production
+    invalidations from the same P0 data.
+    """
+    chosen = tuple(sorted(int(placement) for placement in placements))
     if len(chosen) != SENTINEL_PLACEMENT_COUNT:
         raise ExperimentIIIError(
             "SENTINEL_ENVELOPE_VIOLATION",
@@ -76,22 +94,22 @@ def derive_envelope(
         )
     bounds: dict[int, tuple[float, float]] = {}
     medians: dict[int, float] = {}
+    derivations: dict[int, dict[str, Any]] = {}
     for placement in chosen:
-        replicates = np.asarray(
-            [float(value) for value in p0_replicates[placement]], dtype=np.float64
-        )
-        if replicates.size < 2:
+        if placement not in p0_replicates:
             raise ExperimentIIIError(
                 "SENTINEL_ENVELOPE_VIOLATION",
-                f"placement {placement} has too few P0 replicates to derive a spread",
+                f"placement {placement} has no P0 replicate scores; the envelope "
+                f"cannot be derived from data that does not exist",
             )
-        centre = float(np.median(replicates))
-        spread = float(replicates.std(ddof=0))
-        medians[placement] = centre
-        half = max(tolerance * spread, 1e-9)
-        bounds[placement] = (centre - half, centre + half)
+        derived = sentinel_envelope(p0_replicates[placement])
+        medians[placement] = float(derived["centre"])
+        bounds[placement] = (float(derived["lower"]), float(derived["upper"]))
+        derivations[placement] = derived
     order = tuple(sorted(chosen, key=lambda p: (-medians[p], p)))
-    return SentinelEnvelope(placements=chosen, bounds=bounds, p0_order=order)
+    return SentinelEnvelope(
+        placements=chosen, bounds=bounds, p0_order=order, derivations=derivations
+    )
 
 
 def check_order(
@@ -199,3 +217,143 @@ def invalidation_scope(
         "scope": "AFFECTED_UNMODELED_BATCH_ONLY",
         "other_batches_unaffected": True,
     }
+
+
+# --------------------------------------------------------------------------
+# The live path: P0 produces the envelope; production consumes it
+# --------------------------------------------------------------------------
+
+
+def sentinel_envelope_artifact(
+    placement_block_scores: Mapping[int, Sequence[float]],
+    *,
+    authority_binding: Mapping[str, Any],
+    p0_selection_receipt_sha256: str,
+) -> dict[str, Any]:
+    """``P0_SENTINEL_ENVELOPE`` -- the A4 producer for the sentinel envelope.
+
+    Called from the P0 analysis with the per-replicate-block RVE of the ladder's
+    ``L1`` at each of the three frozen sentinel placements. Amendment 3 3e freezes
+    the *formula* before P0 and binds the *numbers* in P2; this emits the numbers
+    the moment P0 replicates exist, and marks them unbound until P2 does so.
+    """
+    frozen = tuple(sentinel_placement_indices())
+    supplied = tuple(sorted(int(key) for key in placement_block_scores))
+    if supplied != frozen:
+        raise ExperimentIIIError(
+            "SENTINEL_ENVELOPE_VIOLATION",
+            f"the sentinel envelope must be derived at the frozen placements "
+            f"{list(frozen)}, not {list(supplied)}; sentinel selection is the "
+            f"deterministic left/centre/right rule of 7.10e and is never chosen "
+            f"from which placements later looked steadiest",
+        )
+    envelope = derive_envelope(frozen, placement_block_scores)
+    return {
+        "schema_version": "mineocclude-experiment-iii-p0-sentinel-envelope-v1",
+        "authority_section": "7.9, 7.10e",
+        "authority_binding": dict(authority_binding),
+        "p0_selection_receipt_sha256": p0_selection_receipt_sha256,
+        "sentinel_placement_indices": list(frozen),
+        "sentinel_selection_rule": (
+            "DETERMINISTIC_COVERAGE_LEFT_CENTRE_RIGHT_OF_THE_NINE_FROZEN_PLACEMENTS"
+        ),
+        "sentinel_selection_is_outcome_independent": True,
+        "envelope": envelope.as_dict(),
+        "inputs": "P0_REPLICATE_VARIATION_ONLY",
+        "derived_from_production_measurement": False,
+        "formula_frozen_before_p0": True,
+        "numeric_envelope_bound_in": "P2",
+        "numeric_envelope_bound": False,
+    }
+
+
+def envelope_from_artifact(artifact: Mapping[str, Any]) -> SentinelEnvelope:
+    """Rehydrate the frozen envelope from ``P0_SENTINEL_ENVELOPE.json``.
+
+    Production may not invent an envelope: without a P0-derived one there is no
+    reference to compare a batch boundary against, and a boundary that cannot
+    fail is not a check. Hence the fail-closed refusals here.
+    """
+    if not isinstance(artifact, Mapping) or "envelope" not in artifact:
+        raise ExperimentIIIError(
+            "SENTINEL_ENVELOPE_VIOLATION",
+            "no P0-derived sentinel envelope was supplied; a batch boundary "
+            "cannot be validated without one",
+        )
+    body = artifact["envelope"]
+    placements = tuple(int(value) for value in body["placements"])
+    frozen = tuple(sentinel_placement_indices())
+    if placements != frozen:
+        raise ExperimentIIIError(
+            "SENTINEL_ENVELOPE_VIOLATION",
+            f"the envelope names placements {list(placements)}, not the frozen "
+            f"{list(frozen)}",
+        )
+    bounds = {
+        int(key): (float(value[0]), float(value[1]))
+        for key, value in body["bounds"].items()
+    }
+    return SentinelEnvelope(
+        placements=placements,
+        bounds=bounds,
+        p0_order=tuple(int(value) for value in body["p0_order"]),
+        derivations={
+            int(key): dict(value)
+            for key, value in (body.get("derivations") or {}).items()
+        },
+    )
+
+
+def measure_batch_boundary(
+    *,
+    batch_index: int,
+    boundary: str,
+    scores: Mapping[int, float],
+    envelope_artifact: Mapping[str, Any] | None,
+    batch_capture_unit_ids: Sequence[str],
+    authority_sha256: str,
+    batch_already_modeled: bool = False,
+) -> dict[str, Any]:
+    """The live production-capture entry point for one condition-batch boundary.
+
+    This is what a capture runner calls before and after each condition batch. It
+    fails closed on a missing envelope, on an envelope bound to a different
+    authority, and on a reading that omits a frozen sentinel placement -- none of
+    which may be waved through, because a sentinel check that cannot fail is not
+    evidence that the apparatus has not drifted.
+    """
+    if boundary not in ("before", "after"):
+        raise ExperimentIIIError(
+            "SENTINEL_ENVELOPE_VIOLATION",
+            f"a sentinel boundary is 'before' or 'after', not {boundary!r}",
+        )
+    if envelope_artifact is None:
+        raise ExperimentIIIError(
+            "SENTINEL_ENVELOPE_VIOLATION",
+            "production capture requires the P0-derived sentinel envelope bound "
+            "in P2; it does not exist, so no batch boundary can be validated",
+        )
+    bound_authority = str(
+        (envelope_artifact.get("authority_binding") or {}).get("AUTHORITY_SHA256", "")
+    )
+    if bound_authority and bound_authority != authority_sha256:
+        raise ExperimentIIIError(
+            "PROVENANCE_AUTHORITY_DRIFT",
+            f"the sentinel envelope was derived under authority {bound_authority} "
+            f"and this capture runs under {authority_sha256}",
+        )
+    envelope = envelope_from_artifact(envelope_artifact)
+    reading = SentinelReading(
+        batch_index=int(batch_index),
+        boundary=boundary,
+        scores={int(key): float(value) for key, value in scores.items()},
+    )
+    receipt = evaluate_batch_boundary(
+        reading,
+        envelope,
+        batch_capture_unit_ids=batch_capture_unit_ids,
+        batch_already_modeled=batch_already_modeled,
+    )
+    receipt["authority_sha256"] = authority_sha256
+    receipt["envelope_source"] = "P0_SENTINEL_ENVELOPE"
+    return receipt

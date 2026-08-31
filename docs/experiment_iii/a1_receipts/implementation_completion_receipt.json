@@ -1,15 +1,38 @@
 {
+  "a1_stage_exit_check": {
+    "exit_permitted": true,
+    "filesystem_backed": true,
+    "present_count": 12,
+    "required_count": 12,
+    "resolved_paths": {
+      "data/experiment_iii/cohort/cohort_qualification_receipt.json": "docs/experiment_iii/cohort/cohort_qualification_receipt.json",
+      "data/experiment_iii/cohort/folds.json": "docs/experiment_iii/cohort/folds.json",
+      "data/experiment_iii/cohort/historical_seed_exclusion_set.json": "docs/experiment_iii/cohort/historical_seed_exclusion_set.json",
+      "data/experiment_iii/cohort/identity_priority_order.json": "docs/experiment_iii/cohort/identity_priority_order.json",
+      "data/experiment_iii/cohort/pilot_identity_manifest.jsonl": "docs/experiment_iii/cohort/pilot_identity_manifest.jsonl",
+      "data/experiment_iii/cohort/production_identity_manifest.jsonl": "docs/experiment_iii/cohort/production_identity_manifest.jsonl",
+      "data/experiment_iii/cohort/production_identity_manifest.sha256": "docs/experiment_iii/cohort/production_identity_manifest.sha256",
+      "data/experiment_iii/provenance/aprime_port_receipt.json": "docs/experiment_iii/a1_receipts/aprime_port_receipt.json",
+      "data/experiment_iii/provenance/fir_kernel_recovery_receipt.json": "docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json",
+      "docs/experiment_iii/receipts/cohort_all_q_qualification_receipt.json": "docs/experiment_iii/cohort/cohort_all_q_qualification_receipt.json",
+      "docs/experiment_iii/receipts/implementation_completion_receipt.json": "docs/experiment_iii/a1_receipts/implementation_completion_receipt.json",
+      "docs/experiment_iii/receipts/q_regression_a1_receipt.json": "docs/experiment_iii/cohort/q_regression_a1_receipt.json"
+    },
+    "root": "C:/Users/lollo/MineOcclude-Exp3",
+    "stage": "A1"
+  },
   "a1_tasks_complete": 20,
   "a1_tasks_total": 20,
+  "a1_tasks_wiring_verified": 20,
   "a2_started": false,
   "artifacts_produced": {
     "docs/experiment_iii/a1_receipts/aprime_port_receipt.json": "f2e029b1cb33c130e327d06264f0213d7224ca0551ae28c49b0f99a29cf57f77",
     "docs/experiment_iii/a1_receipts/extraction_plan.json": "4b179e01194889c1c068878d31903631835730cb57776426ef19d2d977121781",
     "docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3",
-    "docs/experiment_iii/a1_receipts/implementation_completion_receipt.json": "ab58513f73e22e516371dff14abe14108d8a6b71267d68dcac31a8c1f9e823f3",
+    "docs/experiment_iii/a1_receipts/implementation_completion_receipt.json": "5ea563582a7630cde73b1e53a1c39f7008f04c81dc02270d2c9f9a221a122841",
     "docs/experiment_iii/a1_receipts/option_d_feasibility_receipt.json": "d8b282b5ee74c2aa6615aa697d5547e1a37f488de18214e29a47de9d1541eb17",
     "docs/experiment_iii/a1_receipts/p0_campaign_plan.json": "c5f7a6a2cbe5af2c1a6606d410851e6b3b7eeb411a6729d35c04701321285bbe",
-    "docs/experiment_iii/a1_receipts/p0_manifest.json": "cf057070449ed4806a64482906b9ebb255afb42c4f5407fb7c0941aa1debd8e5",
+    "docs/experiment_iii/a1_receipts/p0_manifest.json": "b4f0f4540eb0209948d5e7b330d4c05c41c56136029f86e6f694b2fb7f6c3ce0",
     "docs/experiment_iii/a1_receipts/p0_placement_manifest.json": "f854cd861f45fbbf0cbabc8e7721036ebd3928f0e02f91c5e8d0e7667ae6972a",
     "docs/experiment_iii/cohort/cohort_all_q_qualification_receipt.json": "efc8264532847f04970a90f154f8c897fac922e7a9293378a9aa41de62ebb699",
     "docs/experiment_iii/cohort/cohort_qualification_receipt.json": "5b2d878b47a0eb534a4fc5b5e73b95326eaca4c148ce6be55a0f599cbad721b3",
@@ -26,17 +49,18 @@
     "MACHINE_AUTHORITY_SHA256": "d9de26163df4ca599a5049fb75fd68d010169e53f90aceeb9e4063e60da50609",
     "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
   },
-  "authority_freeze_commit": "3fd66eddfce017078b6af2774a381077759b98a0",
+  "authority_freeze_commit": "a1f5dd1a959ff477edbf469cd12bb4db606371ea",
   "authority_version": "v1.6",
   "candidate_index_bound_per_direction": 2000,
+  "completion_criterion": "every listed source, script, fabric and test file exists AND every declared runtime call site references the symbol from production code; a library function with no production call site is NOT complete",
   "focused_tests": {
     "command": "python -m pytest tests/experiment_iii/ -q",
     "exit_code": 0,
     "failed": 0,
-    "passed": 592,
+    "passed": 669,
     "ran": true,
     "skipped_or_xfailed": false,
-    "summary": "592 passed in 261.24s (0:04:21)"
+    "summary": "669 passed in 290.72s (0:04:50)"
   },
   "predecessor_authority_freeze_commit": "3fd66eddfce017078b6af2774a381077759b98a0",
   "predecessor_authority_sha256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
@@ -56,6 +80,7 @@
   "tasks": [
     {
       "blocker": null,
+      "completion_rationale": "e3_* identities, episode block 86001-86999, fail-closed namespace guard.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -63,6 +88,7 @@
       "implementation_note": "e3_* identities, episode block 86001-86999, fail-closed namespace guard.",
       "missing_files": [],
       "name": "Experiment III namespace and schema",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/__init__.py",
@@ -75,10 +101,13 @@
       "task": "I01",
       "tests_written": [
         "tests/experiment_iii/test_namespace_and_schema.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Vendored byte-identically from a5d763a (blob 45889b6b...); 475/475 A-prime WALL rows EXTENT_FULLY_OCCLUDED; present=False trap gives 0/475.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -86,6 +115,7 @@
       "implementation_note": "Vendored byte-identically from a5d763a (blob 45889b6b...); 475/475 A-prime WALL rows EXTENT_FULLY_OCCLUDED; present=False trap gives 0/475.",
       "missing_files": [],
       "name": "Counterfactual extent logic (A-prime port)",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/_aprime_extent_geometry.py",
@@ -96,10 +126,13 @@
       "task": "I05",
       "tests_written": [
         "tests/experiment_iii/test_extent_geometry.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "50/50 path hashes, 950/950 labels, rank 9, residual 2.22e-15, aggregate mode lag 2; taps fsum-normalized once at load.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -107,6 +140,7 @@
       "implementation_note": "50/50 path hashes, 950/950 labels, rank 9, residual 2.22e-15, aggregate mode lag 2; taps fsum-normalized once at load.",
       "missing_files": [],
       "name": "FIR kernel recovery and target manifest",
+      "runtime_call_sites": [],
       "scripts_added": [
         "scripts/experiment_iii/recover_fir_kernels.py"
       ],
@@ -118,10 +152,13 @@
       "task": "I06",
       "tests_written": [
         "tests/experiment_iii/test_fir.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Iterative binary64, drift before noise; gates 1-11 per (identity,q) cell on its own regenerated path.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -129,6 +166,7 @@
       "implementation_note": "Iterative binary64, drift before noise; gates 1-11 per (identity,q) cell on its own regenerated path.",
       "missing_files": [],
       "name": "q-generalized path and qualification primitive",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/cohort.py",
@@ -138,10 +176,13 @@
       "task": "IB02",
       "tests_written": [
         "tests/experiment_iii/test_all_q_qualification.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Reproduces b5803943... bit-identically from the bound v0_3 object; both negative controls fire.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -149,16 +190,20 @@
       "implementation_note": "Reproduces b5803943... bit-identically from the bound v0_3 object; both negative controls fire.",
       "missing_files": [],
       "name": "q = 0.05 bit-identity regression fixture",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [],
       "status": "COMPLETE",
       "task": "IB03",
       "tests_written": [
         "tests/experiment_iii/test_q_regression.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "25 production + 2 pilots materialized under authority v1.5; all twelve gates, gate 12 before materialization and freeze.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -166,6 +211,7 @@
       "implementation_note": "25 production + 2 pilots materialized under authority v1.5; all twelve gates, gate 12 before materialization and freeze.",
       "missing_files": [],
       "name": "Fresh cohort generator and folds",
+      "runtime_call_sites": [],
       "scripts_added": [
         "scripts/experiment_iii/bprime_feasibility_study.py",
         "scripts/experiment_iii/build_cohort.py",
@@ -181,10 +227,13 @@
       "task": "I02",
       "tests_written": [
         "tests/experiment_iii/test_cohort.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "L0 reaches Scene.NO_WALL through startspec; unsupported registry ID refuses the episode instead of defaulting to stone. Fabric compiles.",
       "fabric_files_changed": [
         "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/ArenaBuilder.java",
         "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeConfig.java",
@@ -197,6 +246,7 @@
       "implementation_note": "L0 reaches Scene.NO_WALL through startspec; unsupported registry ID refuses the episode instead of defaulting to stone. Fabric compiles.",
       "missing_files": [],
       "name": "Wall condition parameterization",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/conditions.py"
@@ -205,19 +255,29 @@
       "task": "I03",
       "tests_written": [
         "tests/experiment_iii/test_conditions_and_schedule.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Arena cache key binds condition_id and wall_block_id (C07); wall receipt carries the exact registry ID; frozen Latin order reproducible; the schedule resolves L1/L2/L3 only through a genuine A4 P0_SELECTED_LADDER at P0_PASS.",
       "fabric_files_changed": [
         "fabric/mineocclude-mod/src/main/java/com/mineocclude/server/EpisodeManager.java"
       ],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
       "implementation_decision": "PARAMETERIZE",
-      "implementation_note": "Arena cache key binds condition_id and wall_block_id (C07); wall receipt carries the exact registry ID; frozen Latin order reproducible.",
+      "implementation_note": "Arena cache key binds condition_id and wall_block_id (C07); wall receipt carries the exact registry ID; frozen Latin order reproducible; the schedule resolves L1/L2/L3 only through a genuine A4 P0_SELECTED_LADDER at P0_PASS.",
       "missing_files": [],
       "name": "Wall receipts, cache key, and capture schedule",
+      "runtime_call_sites": [
+        {
+          "call_site": "scripts/experiment_iii/run_production_capture.py",
+          "reachable_from_production": true,
+          "symbol": "load_selected_ladder"
+        }
+      ],
       "scripts_added": [
         "scripts/experiment_iii/run_production_capture.py"
       ],
@@ -228,10 +288,13 @@
       "task": "I04",
       "tests_written": [
         "tests/experiment_iii/test_conditions_and_schedule.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "One forward per target row yields layers {4,10,19} x {PREVIOUS,CURRENT}; all five semantic assertions enforced.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -239,6 +302,7 @@
       "implementation_note": "One forward per target row yields layers {4,10,19} x {PREVIOUS,CURRENT}; all five semantic assertions enforced.",
       "missing_files": [],
       "name": "Multi-layer temporal extraction",
+      "runtime_call_sites": [],
       "scripts_added": [
         "scripts/experiment_iii/run_extraction.py"
       ],
@@ -250,10 +314,13 @@
       "task": "I09",
       "tests_written": [
         "tests/experiment_iii/test_extraction_and_store.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "[19,336,2048] little-endian float16, 26,148,992 bytes; inventory generalized to 3 layers x 2 slices.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -261,6 +328,7 @@
       "implementation_note": "[19,336,2048] little-endian float16, 26,148,992 bytes; inventory generalized to 3 layers x 2 slices.",
       "missing_files": [],
       "name": "Tensor serialization, inventory, and validator",
+      "runtime_call_sites": [],
       "scripts_added": [
         "scripts/experiment_iii/validate_extraction.py"
       ],
@@ -271,10 +339,13 @@
       "task": "I10",
       "tests_written": [
         "tests/experiment_iii/test_extraction_and_store.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "COARSE_2X6_CONCAT at 24,576 from specification; identity fixture proves the 14x24 grid is not transposed.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -282,6 +353,7 @@
       "implementation_note": "COARSE_2X6_CONCAT at 24,576 from specification; identity fixture proves the 14x24 grid is not transposed.",
       "missing_files": [],
       "name": "Coarse representation",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/representations.py"
@@ -290,10 +362,13 @@
       "task": "I11",
       "tests_written": [
         "tests/experiment_iii/test_representations.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "CURRENT_MINUS_PREVIOUS at 24,576 and TWO_FRAME_CONCAT at 49,152 with PREVIOUS first.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -301,6 +376,7 @@
       "implementation_note": "CURRENT_MINUS_PREVIOUS at 24,576 and TWO_FRAME_CONCAT at 49,152 with PREVIOUS first.",
       "missing_files": [],
       "name": "Temporal representations",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/representations.py"
@@ -309,10 +385,13 @@
       "task": "I12",
       "tests_written": [
         "tests/experiment_iii/test_representations.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "probes/ridge.py fit_ridge reused unchanged; five-value alpha grid; identity-macro selection, smallest-alpha tie-break.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -320,6 +399,7 @@
       "implementation_note": "probes/ridge.py fit_ridge reused unchanged; five-value alpha grid; identity-macro selection, smallest-alpha tie-break.",
       "missing_files": [],
       "name": "Grouped ridge and prediction lock",
+      "runtime_call_sites": [],
       "scripts_added": [
         "scripts/experiment_iii/lock_predictions.py"
       ],
@@ -331,10 +411,13 @@
       "task": "I15",
       "tests_written": [
         "tests/experiment_iii/test_readout_and_baselines.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "48x28x3 = 4,032 features from raw source RGB with deterministic area interpolation.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -342,6 +425,7 @@
       "implementation_note": "48x28x3 = 4,032 features from raw source RGB with deterministic area interpolation.",
       "missing_files": [],
       "name": "Current-frame pixel baseline",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/baselines_pixel.py"
@@ -350,10 +434,13 @@
       "task": "I13",
       "tests_written": [
         "tests/experiment_iii/test_readout_and_baselines.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Constant-velocity window is exactly 10 (legacy 15 not reused); oracle inputs refused as model features.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -361,6 +448,7 @@
       "implementation_note": "Constant-velocity window is exactly 10 (legacy 15 not reused); oracle inputs refused as model features.",
       "missing_files": [],
       "name": "Motion and clock baselines",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/baselines_motion.py"
@@ -369,10 +457,13 @@
       "task": "I14",
       "tests_written": [
         "tests/experiment_iii/test_readout_and_baselines.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Three primary estimands, Holm-3, Holm-2 temporal, B=10,000 whole identity; no success gate; B=49 null not ported.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -380,6 +471,7 @@
       "implementation_note": "Three primary estimands, Holm-3, Holm-2 temporal, B=10,000 whole identity; no success gate; B=49 null not ported.",
       "missing_files": [],
       "name": "Statistics and result packaging",
+      "runtime_call_sites": [],
       "scripts_added": [
         "scripts/experiment_iii/build_scientific_package.py",
         "scripts/experiment_iii/run_primary_analysis.py"
@@ -391,50 +483,171 @@
       "task": "I16",
       "tests_written": [
         "tests/experiment_iii/test_rve_sentinels_status_execution.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "sRGB->linear float64, shared per-placement mask dilated by 2, split-half noise, deterministic triple search with lexicographic tie-break -- wired end to end: --execute captures the 252 units and then closes A4 through P0_SELECTION_RECEIPT in the same transaction.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
       "implementation_decision": "NEW",
-      "implementation_note": "sRGB->linear float64, shared per-placement mask dilated by 2, split-half noise, deterministic triple search with lexicographic tie-break.",
+      "implementation_note": "sRGB->linear float64, shared per-placement mask dilated by 2, split-half noise, deterministic triple search with lexicographic tie-break -- wired end to end: --execute captures the 252 units and then closes A4 through P0_SELECTION_RECEIPT in the same transaction.",
       "missing_files": [],
       "name": "RVE and P0 machinery",
+      "runtime_call_sites": [
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "srgb_to_linear"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "robust_median_image"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "placement_mask"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "split_half_noise"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "excess_energy"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "aggregate_placement"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "aggregate_condition"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "select_ladder"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "l0_noise_threshold"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "background_gate"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "masked_energy"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "rve"
+        },
+        {
+          "call_site": "scripts/experiment_iii/run_p0_rve_calibration.py",
+          "reachable_from_production": true,
+          "symbol": "analyse_p0"
+        },
+        {
+          "call_site": "scripts/experiment_iii/run_p0_rve_calibration.py",
+          "reachable_from_production": true,
+          "symbol": "write_a4_artifacts"
+        },
+        {
+          "call_site": "scripts/experiment_iii/run_p0_rve_calibration.py",
+          "reachable_from_production": true,
+          "symbol": "load_unit_frames"
+        },
+        {
+          "call_site": "scripts/experiment_iii/run_p0_rve_calibration.py",
+          "reachable_from_production": true,
+          "symbol": "close_p0_stage"
+        }
+      ],
       "scripts_added": [
         "scripts/experiment_iii/run_p0_rve_calibration.py"
       ],
       "source_files_changed": [
+        "src/mineocclude/experiment_iii/capture_evidence.py",
+        "src/mineocclude/experiment_iii/p0_analysis.py",
+        "src/mineocclude/experiment_iii/p0_bindings.py",
         "src/mineocclude/experiment_iii/rve.py"
       ],
       "status": "COMPLETE",
       "task": "I07",
       "tests_written": [
+        "tests/experiment_iii/test_p0_execution_closure.py",
         "tests/experiment_iii/test_rve_sentinels_status_execution.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Three frozen placements, order and envelope checks, batch-scoped invalidation; technical never scientific. The envelope is produced by A4 as P0_SENTINEL_ENVELOPE and consumed at every production condition-batch boundary through sentinels.measure_batch_boundary, which fails closed without it.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
       "implementation_decision": "NEW",
-      "implementation_note": "Three frozen placements, order and envelope checks, batch-scoped invalidation; technical never scientific.",
+      "implementation_note": "Three frozen placements, order and envelope checks, batch-scoped invalidation; technical never scientific. The envelope is produced by A4 as P0_SENTINEL_ENVELOPE and consumed at every production condition-batch boundary through sentinels.measure_batch_boundary, which fails closed without it.",
       "missing_files": [],
       "name": "Sentinel machinery",
-      "scripts_added": [],
+      "runtime_call_sites": [
+        {
+          "call_site": "src/mineocclude/experiment_iii/p0_analysis.py",
+          "reachable_from_production": true,
+          "symbol": "sentinel_envelope_artifact"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/sentinels.py",
+          "reachable_from_production": true,
+          "symbol": "measure_batch_boundary"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/sentinels.py",
+          "reachable_from_production": true,
+          "symbol": "envelope_from_artifact"
+        },
+        {
+          "call_site": "src/mineocclude/experiment_iii/sentinels.py",
+          "reachable_from_production": true,
+          "symbol": "sentinel_envelope"
+        }
+      ],
+      "scripts_added": [
+        "scripts/experiment_iii/run_p0_rve_calibration.py"
+      ],
       "source_files_changed": [
+        "src/mineocclude/experiment_iii/p0_analysis.py",
         "src/mineocclude/experiment_iii/sentinels.py"
       ],
       "status": "COMPLETE",
       "task": "I08",
       "tests_written": [
+        "tests/experiment_iii/test_p0_execution_closure.py",
         "tests/experiment_iii/test_rve_sentinels_status_execution.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "LIVE_STATUS_CONTRACT document, observational only; every blocker validated against the 146-code taxonomy.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -442,6 +655,7 @@
       "implementation_note": "LIVE_STATUS_CONTRACT document, observational only; every blocker validated against the 146-code taxonomy.",
       "missing_files": [],
       "name": "Status and blocker framework",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/blockers.py",
@@ -451,10 +665,13 @@
       "task": "I17",
       "tests_written": [
         "tests/experiment_iii/test_rve_sentinels_status_execution.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     },
     {
       "blocker": null,
+      "completion_rationale": "Capture unit (identity x condition) and extraction unit (capture x layer x slice) separable; same-spec resume only.",
       "fabric_files_changed": [],
       "focused_test_result": "PASS",
       "focused_tests_run": true,
@@ -462,6 +679,7 @@
       "implementation_note": "Capture unit (identity x condition) and extraction unit (capture x layer x slice) separable; same-spec resume only.",
       "missing_files": [],
       "name": "Resume and recovery",
+      "runtime_call_sites": [],
       "scripts_added": [],
       "source_files_changed": [
         "src/mineocclude/experiment_iii/execution.py"
@@ -470,7 +688,9 @@
       "task": "I18",
       "tests_written": [
         "tests/experiment_iii/test_rve_sentinels_status_execution.py"
-      ]
+      ],
+      "unwired_symbols": [],
+      "wiring_verified": true
     }
   ]
 }

@@ -37,6 +37,7 @@ from mineocclude.experiment_iii.capture_runtime import (  # noqa: E402
     qualify_capture_host,
 )
 from mineocclude.experiment_iii.errors import ExperimentIIIError  # noqa: E402
+from mineocclude.experiment_iii.p0_analysis import load_selected_ladder  # noqa: E402
 from mineocclude.experiment_iii.schema import read_jsonl, write_json_atomic  # noqa: E402
 
 COHORT = REPOSITORY_ROOT / "docs" / "experiment_iii" / "cohort"
@@ -84,12 +85,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         binding = verify_authority_binding()
-        ladder = (
-            json.loads(args.ladder.read_text(encoding="utf-8"))
-            if args.ladder
-            else None
-        )
-        if ladder is None:
+        if args.ladder is None:
             # build_condition_map refuses an unresolved ladder rather than
             # defaulting L1-L3, which is correct: a schedule naming a placeholder
             # material is indistinguishable from a real one and was exactly how a
@@ -100,6 +96,12 @@ def main(argv: list[str] | None = None) -> int:
                 "materials; pass --ladder P0_SELECTED_LADDER.json once A4 has "
                 "returned P0_PASS",
             )
+        # And refuse a file that merely *looks* like a ladder. Any JSON object
+        # with three keys used to be accepted here, so the artefact that once
+        # contaminated a dry run -- a v1.5-bound schedule naming white/lime/blue --
+        # would have been consumed without complaint. load_selected_ladder admits
+        # only a genuine A4 P0_SELECTED_LADDER at P0_PASS under this authority.
+        ladder = load_selected_ladder(args.ladder)
         conditions = build_condition_map(ladder)
         production = read_jsonl(COHORT / "production_identity_manifest.jsonl")
         schedule = build_capture_schedule(production, conditions)
