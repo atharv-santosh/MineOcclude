@@ -1,4 +1,23 @@
-# AUTHORITY_AMENDMENT_REQUIRED — the opaque `L4` anchor cannot satisfy the 7.10f transition probes
+# RESOLVED — the opaque `L4` anchor cannot satisfy the 7.10f transition probes
+
+> **STATUS: RESOLVED by Authority Amendment 4 (v1.7), the capture liveness
+> successor rule.** Renderer liveness is now established independently of the
+> scientific visibility condition being measured: a fixed `ENGINEERING_ONLY`
+> witness (`NO_WALL`, fixed visible calibration position,
+> `PRESENT → ABSENT → PRESENT`) runs before each scientific capture unit, and a
+> scientific present/absent transition with equal framebuffers is diagnostic
+> only. See
+> [`AUTHORITY_AMENDMENT_4_CAPTURE_LIVENESS_SUCCESSOR_RULE.md`](../final_authorities/AUTHORITY_AMENDMENT_4_CAPTURE_LIVENESS_SUCCESSOR_RULE.md).
+>
+> Verified on the qualified WSL2 host: the `L4` opaque anchor captured 16 frames
+> with **both** target transitions byte-identical, recorded as diagnostics, and
+> the unit passed liveness via the witness. `L0` and a translucent candidate
+> passed alongside it under the same uniform rule.
+>
+> The record below is retained as the discovery evidence.
+
+---
+
 
     RAISED_BY                  = capture-host qualification, WSL2 Ubuntu 26.04 (Xvfb + Mesa llvmpipe)
     CONTROLLING_AUTHORITY      = v1.6 (Amendment 3)
