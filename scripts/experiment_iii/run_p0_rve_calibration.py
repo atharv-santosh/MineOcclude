@@ -23,6 +23,11 @@ from mineocclude.experiment_iii.conditions import (  # noqa: E402
     STONE,
 )
 from mineocclude.experiment_iii.errors import ExperimentIIIError  # noqa: E402
+from mineocclude.experiment_iii.placements import (  # noqa: E402
+    placement_coordinates,
+    placement_manifest,
+    sentinel_placement_indices,
+)
 from mineocclude.experiment_iii.rve import (  # noqa: E402
     ABBA_BLOCKS,
     ADJACENT_SEPARATION_MIN,
@@ -80,11 +85,22 @@ def main(argv: list[str] | None = None) -> int:
         "selection_rule": "MIN_SQUARED_DISTANCE_THEN_LEXICOGRAPHIC_REGISTRY_ID",
         "source": "RAW_SOURCE_RGB_640x360_NEVER_MODEL_NORMALIZED",
         "mask_rule": "ONE_PER_PLACEMENT_FROM_L0_SHARED_BY_EVERY_CANDIDATE",
+        # Authority 7.2 delegates the nine placement coordinates to A1; they are
+        # computed from the frozen occluded-lane corridor, never hand-picked.
+        "placement_coordinates": [dict(p) for p in placement_coordinates()],
+        "sentinel_placement_indices": list(sentinel_placement_indices()),
         "p0_executed": False,
     }
+    placements = placement_manifest()
+    placement_digest = write_json_atomic(
+        args.out / "p0_placement_manifest.json", placements
+    )
+    body["p0_placement_manifest_sha256"] = placement_digest
     digest = write_json_atomic(args.out / "p0_manifest.json", body)
     print(f"PLACEMENTS={PLACEMENT_COUNT}")
     print(f"CONDITIONS_MEASURED={conditions}")
+    print(f"PLACEMENTS_SHA256={placements['placements_sha256']}")
+    print(f"P0_PLACEMENT_MANIFEST_SHA256={placement_digest}")
     print(f"P0_MANIFEST_SHA256={digest}")
     print("P0_EXECUTED=false")
     return 0
