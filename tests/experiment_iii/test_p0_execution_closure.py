@@ -186,7 +186,7 @@ def test_a14_every_frozen_rve_primitive_has_a_production_call_site() -> None:
 
 def test_a14_analysis_selects_the_frozen_ladder(passing_analysis) -> None:
     assert passing_analysis["P0_RESULT"] == "P0_PASS"
-    assert passing_analysis["PRODUCTION_AUTHORIZED"] is True
+    assert passing_analysis["P0_LADDER_ACCEPTED"] is True
     selected = passing_analysis["selection"]["selected"]
     assert {k: selected[k] for k in ("L1", "L2", "L3")} == EXPECTED_LADDER
 
@@ -227,7 +227,7 @@ def test_a14_no_valid_ladder_is_reachable_from_the_analysis() -> None:
     # Authority 7.6 names the outcome P0_NO_VALID_LADDER; that exact string,
     # not a second spelling of it, is what reaches the artifacts and the operator.
     assert analysis["P0_RESULT"] == "P0_NO_VALID_LADDER"
-    assert analysis["PRODUCTION_AUTHORIZED"] is False
+    assert analysis["P0_LADDER_ACCEPTED"] is False
     assert analysis["selection"]["selected"] is None
     # An approximate ladder is never returned in place of a refusal.
     assert "L1" not in analysis["selection"]
@@ -1242,10 +1242,83 @@ def test_a29_stage_exit_check_fails_on_a_missing_artifact(tmp_path) -> None:
     assert error.value.blocker != "PROVENANCE_BINDING_MISSING"
 
 
-def test_a29_a4_cannot_exit_before_p0_has_run() -> None:
+def test_a29_a4_exits_only_with_valid_p0_evidence() -> None:
+    """The live tree has passed P0, so A4 exit is now legitimately permitted.
+
+    This guard was written before P0 ran, when it asserted the *absence* of P0
+    evidence. That assertion is now permanently false and said nothing about the
+    gate. The invariant that survives is the one the gate actually enforces: A4
+    exits when, and only when, every required P0 artifact is really on disk.
+    """
+    report = stage_exit_check_fs("A4", REPOSITORY_ROOT)
+    assert report["exit_permitted"] is True
+    assert report["filesystem_backed"] is True
+    assert report["present_count"] == report["required_count"]
+
+
+def test_a29_a4_cannot_exit_without_p0_evidence(tmp_path) -> None:
+    """Negative half: no P0 evidence on disk -> fail closed with a P0 blocker."""
     with pytest.raises(ExperimentIIIError) as error:
-        stage_exit_check_fs("A4", REPOSITORY_ROOT)
-    assert error.value.blocker in ("P0_TECHNICAL_FAIL", "P0_NO_VALID_LADDER")
+        stage_exit_check_fs("A4", tmp_path)
+    assert error.value.blocker in (
+        "P0_TECHNICAL_FAIL",
+        "P0_NO_VALID_LADDER",
+        "RVE_BOOTSTRAP_LOWER_BOUND_NOT_POSITIVE",
+        "RVE_MASK_DEGENERATE",
+        "SENTINEL_ENVELOPE_VIOLATION",
+    )
+
+
+def test_a29_a4_evidence_must_be_a_real_bound_ladder(tmp_path) -> None:
+    """A file that merely *looks* like a ladder must not resolve L1/L2/L3.
+
+    Presence is necessary but not sufficient: ``load_selected_ladder`` is the
+    binding check, and it must refuse a tampered, unbound, provisional or
+    superseded ladder rather than hand its materials to a capture stage.
+    """
+    genuine = json.loads(
+        (REPOSITORY_ROOT / "docs" / "experiment_iii" / "p0" / "P0_SELECTED_LADDER.json")
+        .read_text(encoding="utf-8")
+    )
+    # The genuine article resolves.
+    good = tmp_path / "good.json"
+    good.write_text(json.dumps(genuine), encoding="utf-8")
+    assert p0_analysis.load_selected_ladder(good)["L1"] == genuine["L1"]
+
+    def refuses(mutate) -> str:
+        body = json.loads(json.dumps(genuine))
+        mutate(body)
+        path = tmp_path / "tampered.json"
+        path.write_text(json.dumps(body), encoding="utf-8")
+        with pytest.raises(ExperimentIIIError) as error:
+            p0_analysis.load_selected_ladder(path)
+        return error.value.blocker
+
+    # Not a passed P0.
+    assert refuses(lambda b: b.__setitem__("P0_RESULT", "P0_TECHNICAL_FAIL")) == (
+        "P0_NO_VALID_LADDER"
+    )
+    # Produced under a different authority.
+    assert (
+        refuses(
+            lambda b: b["provenance"]["authority_binding"].__setitem__(
+                "AUTHORITY_SHA256", "0" * 64
+            )
+        )
+        == "PROVENANCE_AUTHORITY_DRIFT"
+    )
+    # Provisional or superseded evidence.
+    assert refuses(lambda b: b.__setitem__("is_provisional", True)) == (
+        "P0_CANDIDATE_ID_UNSUPPORTED"
+    )
+    # A material outside the frozen twelve-item roster.
+    assert refuses(lambda b: b.__setitem__("L2", "minecraft:stone")) == (
+        "P0_CANDIDATE_ID_UNSUPPORTED"
+    )
+    # Not a ladder at all.
+    assert refuses(lambda b: b.__setitem__("schema_version", "something-else")) == (
+        "P0_CANDIDATE_ID_UNSUPPORTED"
+    )
 
 
 def test_a29_the_stage_exit_check_has_a_production_caller() -> None:
@@ -1289,7 +1362,157 @@ def test_a29_every_a1_artifact_resolves_to_a_real_file() -> None:
 # ==========================================================================
 
 
-def test_a29_this_closure_generated_no_live_evidence() -> None:
+def _p0_evidence_fingerprint() -> dict[str, str]:
+    """Every file of live P0 evidence, by path, with its content hash."""
+    import hashlib
+
     p0 = REPOSITORY_ROOT / "docs" / "experiment_iii" / "p0"
-    assert not (p0 / "P0_SELECTION_RECEIPT.json").exists()
-    assert not (p0 / "P0_SELECTED_LADDER.json").exists()
+    if not p0.is_dir():
+        return {}
+    return {
+        path.relative_to(p0).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(p0.rglob("*"))
+        if path.is_file()
+    }
+
+
+def test_a29_the_closure_path_creates_no_live_p0_evidence(tmp_path) -> None:
+    """The A2/closure path is read-only with respect to scientific P0 evidence.
+
+    This guard used to assert that ``P0_SELECTION_RECEIPT.json`` and
+    ``P0_SELECTED_LADDER.json`` did not exist anywhere in the repository. That
+    was true only while P0 had not run; against the post-P0 live tree it is
+    permanently false, and it never tested the property that matters. The real
+    invariant is that running static validation neither fabricates P0 evidence
+    nor mutates the evidence P0 legitimately produced.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "_build_static_validation_receipt",
+        SCRIPTS / "build_static_validation_receipt.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+
+    before = _p0_evidence_fingerprint()
+    assert before, "the live tree should carry P0 evidence at this point"
+
+    # Exercise the closure path's read-only surface. main() is deliberately not
+    # called: it runs the whole suite, and this test runs inside that suite.
+    module.source_closure()
+    module._test_suite_sha256()
+    stage_exit_check_fs("A1", REPOSITORY_ROOT)
+    stage_exit_check_fs("A2", REPOSITORY_ROOT)
+
+    assert _p0_evidence_fingerprint() == before, (
+        "the closure path mutated live P0 scientific evidence"
+    )
+
+    # And against an isolated root it fabricates nothing at all: the check fails
+    # closed on the absent artifacts rather than creating any of them.
+    with pytest.raises(ExperimentIIIError):
+        stage_exit_check_fs("A1", tmp_path)
+    assert not (tmp_path / "docs" / "experiment_iii" / "p0").exists()
+    assert list(tmp_path.rglob("*")) == []
+
+    # The receipt this path writes is the A2 receipt, never a P0 artifact.
+    assert module.RECEIPT_PATH.parent.name == "receipts"
+    assert "p0" not in module.RECEIPT_PATH.parts
+
+
+# ==========================================================================
+# The ladder verdict is not production authorization (authority A6)
+# ==========================================================================
+
+
+def test_the_ladder_verdict_is_not_named_production_authorized() -> None:
+    """A4 emits a ladder verdict; it must not spell it as the lifecycle gate.
+
+    Authority A6: "Only here, and only on this exit, may PRODUCTION_AUTHORIZED =
+    true ... be emitted." A4 emitting a field of that name -- true, on a passed
+    P0 -- put the two on a collision course in every operator log and every
+    downstream reader. The verdict is now P0_LADDER_ACCEPTED.
+    """
+    from mineocclude.experiment_iii.rve import select_ladder  # noqa: F401
+
+    for module in ("rve.py", "p0_analysis.py"):
+        source = (SRC / module).read_text(encoding="utf-8")
+        emitted = [
+            line
+            for line in source.splitlines()
+            if '"PRODUCTION_AUTHORIZED":' in line
+        ]
+        assert not emitted, f"{module} still emits PRODUCTION_AUTHORIZED: {emitted}"
+
+
+def test_production_authorization_cannot_come_from_a_passed_p0() -> None:
+    """P0_PASS + a valid, accepted ladder still authorizes nothing."""
+    from mineocclude.experiment_iii.p0_analysis import (
+        ladder_accepted,
+        production_authorized,
+    )
+
+    receipt = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "docs"
+            / "experiment_iii"
+            / "p0"
+            / "P0_SELECTION_RECEIPT.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert receipt["P0_RESULT"] == "P0_PASS"
+    assert ladder_accepted(receipt) is True
+    # The strongest possible P0 evidence, and production is still not authorized.
+    assert production_authorized() is False
+    assert production_authorized(receipt) is False
+
+
+def test_the_deprecated_alias_is_read_only() -> None:
+    """The frozen P0 artifacts keep the old key; nothing may write it again."""
+    from mineocclude.experiment_iii.p0_analysis import (
+        DEPRECATED_LADDER_VERDICT_ALIAS,
+        ladder_accepted,
+    )
+
+    assert DEPRECATED_LADDER_VERDICT_ALIAS == "PRODUCTION_AUTHORIZED"
+    # Pre-rename evidence still resolves...
+    assert ladder_accepted({"PRODUCTION_AUTHORIZED": True}) is True
+    # ...post-rename evidence is authoritative where both somehow appear...
+    assert ladder_accepted(
+        {"P0_LADDER_ACCEPTED": False, "PRODUCTION_AUTHORIZED": True}
+    ) is False
+    # ...and a body carrying neither is not accepted by default.
+    assert ladder_accepted({}) is False
+
+
+def test_production_capture_refuses_with_a_valid_p0_ladder_present() -> None:
+    """The end-to-end fail-closed proof: live P0 evidence, production refused.
+
+    This is the regression that matters operationally. The repository holds a
+    genuine P0_PASS ladder; --execute must still refuse, and it must refuse with
+    the P2 blocker rather than anything P0-derived.
+    """
+    import subprocess
+    import sys as _sys
+
+    ladder = REPOSITORY_ROOT / "docs" / "experiment_iii" / "p0" / "P0_SELECTED_LADDER.json"
+    assert ladder.is_file(), "this test is only meaningful against live P0 evidence"
+
+    completed = subprocess.run(
+        [
+            _sys.executable,
+            str(SCRIPTS / "run_production_capture.py"),
+            "--execute",
+            "--ladder",
+            str(ladder),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(REPOSITORY_ROOT),
+    )
+    assert completed.returncode != 0, "production capture must refuse"
+    assert "P2_PREREQUISITE_NOT_PASSED" in completed.stderr
+    assert "PRODUCTION_AUTHORIZED=true" not in completed.stdout

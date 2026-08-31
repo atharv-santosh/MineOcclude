@@ -238,7 +238,7 @@ def test_no_valid_ladder_is_returned_not_an_approximation():
         background_ok=background, bootstrap_seed=17,
     )
     assert result["P0_RESULT"] == "NO_VALID_LADDER"
-    assert result["PRODUCTION_AUTHORIZED"] is False
+    assert result["P0_LADDER_ACCEPTED"] is False
     assert result["selected"] is None
 
 

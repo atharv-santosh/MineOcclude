@@ -466,7 +466,7 @@ def analyse_p0(
 
     return {
         "P0_RESULT": result,
-        "PRODUCTION_AUTHORIZED": bool(selection["PRODUCTION_AUTHORIZED"]),
+        "P0_LADDER_ACCEPTED": bool(selection["P0_LADDER_ACCEPTED"]),
         "selection": selection,
         "validity_records": validity,
         "blockers": blockers,
@@ -706,7 +706,7 @@ def write_a4_artifacts(
         "authority_section": "7.6",
         "provenance": provenance,
         "P0_RESULT": result,
-        "PRODUCTION_AUTHORIZED": bool(analysis["PRODUCTION_AUTHORIZED"]),
+        "P0_LADDER_ACCEPTED": bool(analysis["P0_LADDER_ACCEPTED"]),
         "selection_rule": "MIN_SQUARED_DISTANCE_THEN_LEXICOGRAPHIC_REGISTRY_ID",
         "target_points": list(TARGET_RVE_POINTS),
         "evaluated_triples": selection["evaluated_triples"],
@@ -739,7 +739,7 @@ def write_a4_artifacts(
         "stage": "A4",
         "provenance": provenance,
         "P0_RESULT": result,
-        "PRODUCTION_AUTHORIZED": bool(analysis["PRODUCTION_AUTHORIZED"]),
+        "P0_LADDER_ACCEPTED": bool(analysis["P0_LADDER_ACCEPTED"]),
         "selected_ladder": selection.get("selected"),
         "selection_rule": "MIN_SQUARED_DISTANCE_THEN_LEXICOGRAPHIC_REGISTRY_ID",
         "target_points": list(TARGET_RVE_POINTS),
@@ -846,6 +846,42 @@ def _tie_break_evidence(analysis: Mapping[str, Any]) -> dict[str, Any]:
 # --------------------------------------------------------------------------
 
 
+#: The A4 ladder-search verdict was originally emitted as ``PRODUCTION_AUTHORIZED``.
+#: That name collided with the lifecycle gate of the same name, which authority
+#: A6 permits at exactly one place -- the P2 freeze exit -- and which A4 must
+#: never assert. The field is not frozen by authority: neither the 7.8 artifact
+#: schemas nor EXPECTED_ARTIFACT_INVENTORY.json names it, so it is implementation
+#: output and was renamed to ``P0_LADDER_ACCEPTED``.
+#:
+#: This alias is read-only and exists solely so the *already frozen* P0 evidence
+#: -- produced before the rename and immutable under authority 7.8 -- still
+#: resolves. Nothing writes it, and it never grants production authorization.
+DEPRECATED_LADDER_VERDICT_ALIAS = "PRODUCTION_AUTHORIZED"
+
+
+def ladder_accepted(body: Mapping[str, Any]) -> bool:
+    """Whether A4's ladder search accepted a triple. **Not** a production gate.
+
+    A true value means only that authority 7.5's validity rules admitted a triple
+    and 7.6 selected it. Production remains gated on A6/P2 regardless of what
+    this returns; see :func:`production_authorized`.
+    """
+    if "P0_LADDER_ACCEPTED" in body:
+        return bool(body["P0_LADDER_ACCEPTED"])
+    return bool(body.get(DEPRECATED_LADDER_VERDICT_ALIAS))
+
+
+def production_authorized(*_ignored: Any, **__ignored: Any) -> bool:
+    """Production authorization, which no P0 artifact can ever confer.
+
+    Authority A6: "Only here, and only on this exit, may PRODUCTION_AUTHORIZED =
+    true ... be emitted." A6 is the P2 prospective freeze; it has not run. This
+    function exists so the question has exactly one answer in the codebase and
+    that answer cannot be reached through a ladder verdict.
+    """
+    return False
+
+
 def load_selected_ladder(path: Path) -> dict[str, str]:
     """Load ``P0_SELECTED_LADDER.json`` for P1/P2/production, fail-closed.
 
@@ -877,11 +913,11 @@ def load_selected_ladder(path: Path) -> dict[str, str]:
             f"{path} carries schema {schema!r}; only a real P0_SELECTED_LADDER "
             f"produced by A4 may resolve L1/L2/L3",
         )
-    if str(body.get("P0_RESULT")) != "P0_PASS" or not body.get("PRODUCTION_AUTHORIZED"):
+    if str(body.get("P0_RESULT")) != "P0_PASS" or not ladder_accepted(body):
         raise ExperimentIIIError(
             "P0_NO_VALID_LADDER",
-            f"{path} reports P0_RESULT={body.get('P0_RESULT')!r}; production may "
-            f"only run against a passed P0",
+            f"{path} reports P0_RESULT={body.get('P0_RESULT')!r}; a capture stage "
+            f"may only bind a passed P0's ladder",
         )
     if body.get("is_provisional") or body.get("superseded"):
         raise ExperimentIIIError(

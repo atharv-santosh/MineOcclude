@@ -1,0 +1,22 @@
+{
+  "_comment": "The qualified Experiment III capture host, bound for A5/P1. Identical apparatus to capture_runtime_wsl2_linux.json -- same runtime tree, same JDK, same Xvfb, same Mesa llvmpipe -- and differing in exactly one field: output_root. P0's episodes land in docs/experiment_iii/p0, which is banked immutable scientific evidence under authority 7.8; a P1 episode written there would mutate it. P1 episodes therefore land in their own root and the two stages can never collide.",
+  "runtime_root": "/home/overatedusername/mineocclude-exp3-runtime",
+  "server_root": "/home/overatedusername/mineocclude-exp3-runtime/server",
+  "client_root": "/home/overatedusername/mineocclude-exp3-runtime/client",
+  "java_executable": "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+  "output_root": "/mnt/c/Users/lollo/MineOcclude-Exp3/data/experiment_iii/p1/episodes",
+  "display_strategy": "XVFB",
+  "display": ":99",
+  "xvfb_executable": "/usr/bin/Xvfb",
+  "mesa_software_rendering": true,
+  "server_jar": "fabric-server-launch.jar",
+  "server_max_heap": "2G",
+  "client_max_heap": "2G",
+  "server_start_timeout_seconds": 300.0,
+  "client_start_timeout_seconds": 420.0,
+  "command_timeout_seconds": 60.0,
+  "extra_environment": {
+    "MINEOCCLUDE_AUTOCONNECT": "127.0.0.1:25565",
+    "MINEOCCLUDE_AUTOCONNECT_DELAY_MS": "20000"
+  }
+}

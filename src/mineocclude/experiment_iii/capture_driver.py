@@ -87,6 +87,7 @@ __all__ = [
     "WITNESS_WALL_BLOCK_ID",
     "P0SlotResult",
     "capture_p0_unit",
+    "capture_liveness_witness",
     "p0_slot_command",
     "prepare_condition",
     "startspec_command",
@@ -364,6 +365,87 @@ def _capture_slot(
             f"{len(records)} frames, expected {frames_per_slot}",
         )
     return P0SlotResult(slot, episode_id, records, sequence=sequence)
+
+
+def capture_liveness_witness(
+    runtime: CaptureRuntime,
+    sink: FrameSink,
+    unit: Any,
+    *,
+    witness_episode_id: int,
+    frames_per_slot: int,
+    frame_timeout_seconds: float = 180.0,
+) -> dict[str, Any]:
+    """Amendment 4's MANDATORY pre-capture liveness witness, for any stage.
+
+    The amendment requires this "before each authority-required scientific
+    capture unit" -- not merely before each P0 unit -- and §5 explicitly lists P1
+    among the stages its artifacts must be excluded from, which only means
+    anything if it runs there. A5 therefore issues the same frozen witness P0
+    does, from this one implementation, so the two cannot drift.
+
+    The configuration is fixed and material-independent: NO_WALL, the target at
+    the authority-bound centre calibration placement, toggled
+    PRESENT -> ABSENT -> PRESENT. With no wall in front of it the target is
+    visible by construction, so both legs are transitions whose framebuffer
+    change the authority guarantees -- which is exactly what makes a staleness
+    verdict available here and unavailable from a scientific unit's own
+    present/absent pair.
+
+    Returns the witness record and its probes. The frames are apparatus evidence
+    and are deliberately not returned as capture frames: no scientific consumer
+    may read them.
+    """
+    witness_unit = _WitnessUnit(unit)
+    slots = [
+        {"slot_index": -3, "state": "P", "target_present": True,
+         "frames": frames_per_slot},
+        {"slot_index": -2, "state": "A", "target_present": False,
+         "frames": frames_per_slot},
+        {"slot_index": -1, "state": "P", "target_present": True,
+         "frames": frames_per_slot},
+    ]
+    results = [
+        _capture_slot(
+            runtime,
+            sink,
+            witness_unit,
+            slot,
+            witness_episode_id + offset,
+            frames_per_slot=frames_per_slot,
+            frame_timeout_seconds=frame_timeout_seconds,
+            sequence=offset,
+        )
+        for offset, slot in enumerate(slots)
+    ]
+    probes = [
+        LivenessProbe(
+            "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
+            before_hash=before.settled_hash,
+            after_hash=after.settled_hash,
+            before_tick=before.last_tick,
+            after_tick=after.last_tick,
+            before_episode=before.episode_id,
+            after_episode=after.episode_id,
+            before_sequence=before.sequence,
+            after_sequence=after.sequence,
+        )
+        for before, after in zip(results, results[1:])
+    ]
+    record = {
+        "kind": "MANDATORY_PRE_CAPTURE_LIVENESS_WITNESS",
+        "classification": "ENGINEERING_ONLY",
+        "scene": "NO_WALL",
+        "wall_block_id": WITNESS_WALL_BLOCK_ID,
+        "condition_id": WITNESS_CONDITION_ID,
+        "calibration_lane_x": WITNESS_LANE_X,
+        "transition": ["TARGET_PRESENT", "TARGET_ABSENT", "TARGET_PRESENT"],
+        "episode_ids": [result.episode_id for result in results],
+        "issued_before_measured_slots": True,
+        "visual_change_guaranteed_independently_of_wall_material": True,
+        "excluded_from_scientific_consumers": True,
+    }
+    return {"witness": record, "probes": probes, "results": results}
 
 
 def capture_p0_unit(

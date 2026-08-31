@@ -271,6 +271,7 @@ public final class EpisodeManager {
             this.logger = new ServerStateLogger(episodeDir);
             writeLayoutMarkers(episodeDir);
             writeResetResult(episodeDir);
+            writePhysicalReceipt(episodeDir);
         } catch (IOException e) {
             MineOcclude.LOG.error("[MineOcclude] failed to open state logger", e);
             if (lifecycle != null) lifecycle.fail("state logger open failed: " + e);
@@ -739,6 +740,145 @@ public final class EpisodeManager {
      * markers, camera, or target and without changing reset/capture timing.
      * Receipts are create-only so an earlier observation is never overwritten.
      */
+    /**
+     * Authority 3.3 physical evidence for one capture unit, written at the
+     * instant capture opens.
+     *
+     * <p>This is deliberately NOT {@link #writeGeometryObservation}. That receipt
+     * declares {@code scientific_use: forbidden} because it is an operator
+     * diagnostic that may be taken at any moment, against any lifecycle state,
+     * by hand. Authority 3.3 needs the opposite: a receipt bound to one capture
+     * unit, taken once, at a defined instant, whose contents a validator may
+     * treat as evidence of what actually stood in the world while the frames
+     * were recorded.
+     *
+     * <p>It records what the server observes, never what was requested. The wall
+     * is read cell by cell out of the live world over the full as-built scan
+     * span; the camera pose is read off the player entity; the target flags come
+     * from {@link TargetRetentionPolicy}'s snapshot of the live entity.
+     */
+    private void writePhysicalReceipt(Path episodeDir) throws IOException {
+        ServerWorld world = server.getWorld(World.OVERWORLD);
+        if (world == null) throw new IOException("overworld is unavailable");
+
+        JsonObject root = new JsonObject();
+        root.addProperty("schema_version", "mineocclude-experiment-iii-physical-receipt-v1");
+        root.addProperty("authority_section", "3.3");
+        root.addProperty("observation_only", false);
+        root.addProperty("scientific_use", "required");
+        root.addProperty("episode_id", cfg.episodeId);
+        root.addProperty("layout_id", cfg.layoutId);
+        root.addProperty("condition_id", cfg.condition.id.name());
+        root.addProperty("declared_block_id", cfg.condition.wallBlockId);
+        root.addProperty("scene", cfg.scene.name());
+        root.addProperty("wall_present", cfg.buildWall());
+        root.addProperty("lifecycle_state", lifecycleState());
+        root.addProperty("arena_cache_key", lastBuiltArenaKey);
+
+        int wallAxisMin = (int) Math.floor(cfg.wallSegMin);
+        int wallAxisMax = (int) Math.ceil(cfg.wallSegMax);
+        JsonObject wall = new JsonObject();
+        wall.addProperty("axis", cfg.wallAxis.name());
+        wall.addProperty("declared_axis_min_block_inclusive", wallAxisMin);
+        wall.addProperty("declared_axis_max_block_inclusive", wallAxisMax);
+        wall.addProperty("scan_axis_min_block_inclusive", arena.floorAxisMinBlock());
+        wall.addProperty("scan_axis_max_block_inclusive", arena.floorAxisMaxBlock());
+        wall.addProperty("ortho_block", arena.wallOrthoBlock());
+        wall.addProperty("y_min_block_inclusive", (int) Math.floor(cfg.laneY));
+        wall.addProperty("wall_height", ArenaBuilder.WALL_HEIGHT);
+        JsonArray cells = new JsonArray();
+        int mismatches = 0;
+        int unexpectedNonAir = 0;
+        for (int a = arena.floorAxisMinBlock(); a <= arena.floorAxisMaxBlock(); a++) {
+            for (int h = 0; h < ArenaBuilder.WALL_HEIGHT; h++) {
+                BlockPos pos = arena.observedBlockPos(
+                        a, Math.floor(cfg.laneY) + h, arena.wallOrthoBlock());
+                BlockState actual = world.getBlockState(pos);
+                Block expected = cfg.buildWall() && a >= wallAxisMin && a <= wallAxisMax
+                        ? cfg.condition.wallState().getBlock() : Blocks.AIR;
+                JsonObject cell = new JsonObject();
+                JsonArray xyz = new JsonArray();
+                xyz.add(pos.getX());
+                xyz.add(pos.getY());
+                xyz.add(pos.getZ());
+                cell.add("cell_xyz", xyz);
+                cell.addProperty("expected_block_id", blockId(expected));
+                cell.addProperty("observed_block_id", blockId(actual.getBlock()));
+                boolean matches = actual.getBlock() == expected;
+                cell.addProperty("matches", matches);
+                if (!matches) mismatches++;
+                if (!cfg.buildWall() && !actual.isAir()) unexpectedNonAir++;
+                cells.add(cell);
+            }
+        }
+        wall.addProperty("scanned_cell_count", cells.size());
+        wall.addProperty("mismatch_count", mismatches);
+        wall.addProperty("unexpected_non_air_count", unexpectedNonAir);
+        wall.add("observed_cells", cells);
+        root.add("wall", wall);
+
+        JsonObject camera = new JsonObject();
+        camera.addProperty("lock_camera", cfg.lockCamera);
+        camera.addProperty("canonical_feet_x", camPoseX + 0.5);
+        camera.addProperty("canonical_feet_y", camPoseFeetY);
+        camera.addProperty("canonical_feet_z", camPoseZ + 0.5);
+        camera.addProperty("canonical_yaw_degrees", basePoseYaw);
+        camera.addProperty("canonical_pitch_degrees", 0.0);
+        ServerPlayerEntity player = firstPlayer();
+        if (player == null) {
+            camera.add("observed", JsonNull.INSTANCE);
+        } else {
+            JsonObject observed = new JsonObject();
+            observed.addProperty("feet_x", player.getX());
+            observed.addProperty("feet_y", player.getY());
+            observed.addProperty("feet_z", player.getZ());
+            observed.addProperty("eye_y", player.getEyeY());
+            observed.addProperty("yaw_degrees", (double) player.yaw);
+            observed.addProperty("pitch_degrees", (double) player.pitch);
+            camera.add("observed", observed);
+        }
+        camera.addProperty("fov_status", "not_server_observable");
+        camera.addProperty("fov_evidence_file", "client_authority.json");
+        root.add("camera", camera);
+
+        JsonObject target = new JsonObject();
+        target.addProperty("target_required", cfg.spawnSheep());
+        TargetRetentionPolicy.Snapshot snapshot = cfg.spawnSheep() && sheep != null
+                ? sheep.snapshot()
+                : SheepController.noTargetSnapshot(world);
+        target.addProperty("tagged_target_count", snapshot.taggedTargetCount);
+        target.addProperty("entity_type", snapshot.entityType);
+        target.addProperty("color", snapshot.color);
+        target.addProperty("alive", snapshot.alive);
+        target.addProperty("removed", snapshot.removed);
+        target.addProperty("tagged", snapshot.tagged);
+        target.addProperty("adult", snapshot.adult);
+        target.addProperty("ai_disabled", snapshot.aiDisabled);
+        target.addProperty("silent", snapshot.silent);
+        target.addProperty("persistent", snapshot.persistent);
+        target.addProperty("invulnerable", snapshot.invulnerable);
+        target.addProperty("uuid_matches", snapshot.uuidMatches);
+        target.addProperty("world_matches", snapshot.worldMatches);
+        target.addProperty("target_entity_uuid", sheep == null ? null : sheep.targetUuid());
+        target.addProperty("target_respawn_count", sheep == null ? 0 : sheep.respawnCount());
+        JsonArray problems = new JsonArray();
+        for (String problem : TargetRetentionPolicy.validate(snapshot)) {
+            problems.add(problem);
+        }
+        target.add("problems", problems);
+        target.addProperty("valid", problems.size() == 0);
+        root.add("target", target);
+
+        byte[] bytes = (new GsonBuilder().setPrettyPrinting().create().toJson(root) + "\n")
+                .getBytes(StandardCharsets.UTF_8);
+        Files.write(episodeDir.resolve("physical_receipt.json"), bytes,
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+                StandardOpenOption.WRITE);
+        MineOcclude.LOG.info("[MineOcclude] authority 3.3 physical receipt for episode {}: "
+                + "wall cells={} mismatches={} target_valid={}",
+                cfg.episodeId, cells.size(), mismatches, problems.size() == 0);
+    }
+
     public Path writeGeometryObservation(String receiptId) throws IOException {
         if (!receiptId.matches("[A-Za-z0-9][A-Za-z0-9_-]{0,63}")) {
             throw new IllegalArgumentException(

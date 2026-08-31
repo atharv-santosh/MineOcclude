@@ -370,7 +370,7 @@ def select_ladder(
     if not valid:
         return {
             "P0_RESULT": "NO_VALID_LADDER",
-            "PRODUCTION_AUTHORIZED": False,
+            "P0_LADDER_ACCEPTED": False,
             "evaluated_triples": len(evaluations),
             "selected": None,
             "all_evaluations": evaluations,
@@ -381,7 +381,11 @@ def select_ladder(
     )
     return {
         "P0_RESULT": "P0_PASS",
-        "PRODUCTION_AUTHORIZED": True,
+        # NOT lifecycle production authorization. This says only that the ladder
+        # search found and selected a valid triple (authority 7.7 P0_PASS).
+        # PRODUCTION_AUTHORIZED may be emitted at exactly one place in this
+        # program -- the A6/P2 freeze exit -- and A4 is not it.
+        "P0_LADDER_ACCEPTED": True,
         "evaluated_triples": len(evaluations),
         "selected": {
             "L1": best["triple"][0],

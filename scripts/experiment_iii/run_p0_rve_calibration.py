@@ -57,6 +57,7 @@ from mineocclude.experiment_iii.errors import ExperimentIIIError  # noqa: E402
 from mineocclude.experiment_iii.p0_analysis import (  # noqa: E402
     analyse_p0,
     load_unit_frames,
+    production_authorized,
     write_a4_artifacts,
 )
 from mineocclude.experiment_iii.p0_bindings import p0_bootstrap_seed  # noqa: E402
@@ -355,7 +356,13 @@ def close_p0_stage(
         print(f"{name}_SHA256={digest}")
     print(f"P0_EXECUTED=true")
     print(f"P0_RESULT={result}")
-    print(f"PRODUCTION_AUTHORIZED={str(analysis['PRODUCTION_AUTHORIZED']).lower()}")
+    # The ladder verdict and the lifecycle production gate are two different
+    # things and are printed as two different lines on purpose. A4 answers the
+    # first and can never answer the second: authority A6 permits
+    # PRODUCTION_AUTHORIZED = true at the P2 freeze exit and nowhere else.
+    print(f"P0_LADDER_ACCEPTED={str(analysis['P0_LADDER_ACCEPTED']).lower()}")
+    print(f"PRODUCTION_AUTHORIZED={str(production_authorized()).lower()}")
+    print("PRODUCTION_AUTHORIZATION_STAGE=A6_P2_PROSPECTIVE_FREEZE")
     if result == "P0_PASS":
         selected = analysis["selection"]["selected"]
         for level in ("L1", "L2", "L3"):
