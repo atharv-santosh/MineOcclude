@@ -1,0 +1,107 @@
+{
+  "apparatus_error": "java.nio.file.NoSuchFileException: ./mineocclude_motion_schedules/episode_86901.json at MotionSchedule.load(MotionSchedule.java:66) at MineOccludeServer.startSpecCmd(MineOccludeServer.java:420)",
+  "attempt_ordinal": 1,
+  "authority": {
+    "authority_freeze_commit": "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a",
+    "authority_sha256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "authority_version": "v1.7"
+  },
+  "authority_section": "8.3, 29",
+  "blocker": "TIMING_CARDINALITY_MISMATCH",
+  "failed_at": "2026-09-01T00:04:01Z",
+  "implementation_at_failure": {
+    "checkpoint_commit": "c48a4968b01cc77a5f0db8941cae650b5a670aaf",
+    "source_closure": "681f993dd937b8fd3a19a0dc7ca96f3360656e7cac542bdf1e4ff9cfdfc694f1"
+  },
+  "invalidation_scope": {
+    "capture_root_contents": [],
+    "capture_units_accepted": 0,
+    "capture_units_banked": 0,
+    "p0_evidence_affected": false,
+    "production_identities_touched": 0,
+    "rationale": "No capture unit reached CAPTURED. There was no valid pilot evidence to preserve, invalidate, or mix across source closures.",
+    "scope": "NONE"
+  },
+  "ledger_disposition": {
+    "action": "RETIRED_TO_THIS_ATTEMPT_RECORD",
+    "rationale": "The failed attempt ran under source closure 681f993d, which is no longer the implementation. Continuing its hash chain under 09f5e0f5 would place two source closures in one chain and misrepresent the repaired run as a continuation of the defective one. The records are retained verbatim here so the attempt stays visible, as authority 8.3 requires.",
+    "spec_sha256_note": "The repair added no field to the frozen unit spec, so b35958b9 still identifies e3_p90__L0. The relaunch is a genuine same-spec retry.",
+    "spec_sha256_unchanged": true
+  },
+  "ledger_records_at_failure": [
+    {
+      "authority_sha256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reason": "NOT_STARTED",
+      "record_hash": "9d79144d5a2a72a1f8266bd2a3858a13f27567593775749290959ecd2a2a144b",
+      "retry_same_spec": false,
+      "sequence": 0,
+      "source_closure": "681f993dd937b8fd3a19a0dc7ca96f3360656e7cac542bdf1e4ff9cfdfc694f1",
+      "spec_sha256": "b35958b9f6f7fbba09e45e4f956c4e0314f1a44704e30e4e08860d27dfe63cbd",
+      "state": "PLANNED",
+      "unit_id": "e3_p90__L0"
+    },
+    {
+      "previous_hash": "9d79144d5a2a72a1f8266bd2a3858a13f27567593775749290959ecd2a2a144b",
+      "record_hash": "fcade59349c10f91cab94a1779ede03b7a895078d0f731c5709b8195cc19b7d1",
+      "sequence": 1,
+      "spec_sha256": "b35958b9f6f7fbba09e45e4f956c4e0314f1a44704e30e4e08860d27dfe63cbd",
+      "state": "RUNNING",
+      "unit_id": "e3_p90__L0"
+    }
+  ],
+  "outcome": "FAILED_TECHNICAL",
+  "repaired_in": {
+    "change": "write_motion_schedule serializes the frozen commanded-speed segments before startspec is issued",
+    "checkpoint_commit": "164005cd267ea2638df93b831babb5c0f34bc6d6",
+    "source_closure": "09f5e0f58c12a7ce2e0f6f745c85a2a083444271ddd7d6c02e4fe7fc85529c0d"
+  },
+  "resource_policy": {
+    "CUDA_USED": false,
+    "GPU_USED": false,
+    "MINEWORLD_INFERENCE_RUN": false,
+    "MINEWORLD_MODEL_LOADED": false,
+    "PRODUCTION_IDENTITIES_USED": false,
+    "SAGEMAKER_STARTED": false
+  },
+  "root_cause_blocker": "MOTION_SCHEDULE_ABSENT",
+  "schema_version": "mineocclude-experiment-iii-p1-attempt-record-v1",
+  "session": "exp3-p1-capture-v17",
+  "started_at": "2026-08-31T23:52:28Z",
+  "summary": "The A5 executor issued /mineocclude startspec without first writing the commanded-speed schedule the mod loads synchronously. The server refused the episode, no frames were ever produced, and the driver exhausted its 600s frame timeout.",
+  "teardown": {
+    "clean": true,
+    "orphan_java": 0,
+    "orphan_xvfb": 0,
+    "tmux_session": "GONE"
+  },
+  "what_succeeded_before_the_failure": {
+    "capture_host_qualified": true,
+    "client_started_pid": 639,
+    "liveness_witness": {
+      "classification": "ENGINEERING_ONLY",
+      "episodes": [
+        986901,
+        986902,
+        986903
+      ],
+      "frames_per_leg": 8,
+      "note": "Amendment 4's witness worked: the two legs whose framebuffer change is independently guaranteed did change.",
+      "probes_passed": true,
+      "transition": [
+        "TARGET_PRESENT",
+        "TARGET_ABSENT",
+        "TARGET_PRESENT"
+      ]
+    },
+    "physical_receipt": {
+      "episode": 986903,
+      "note": "The authority 3.3 physical receipt added to EpisodeManager in this sprint was produced correctly by the live apparatus.",
+      "target_valid": true,
+      "wall_cells_scanned": 63,
+      "wall_mismatches": 0
+    },
+    "server_started_pid": 502,
+    "xvfb_started": true
+  }
+}

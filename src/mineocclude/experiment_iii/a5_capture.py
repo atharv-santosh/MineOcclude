@@ -76,6 +76,9 @@ __all__ = [
     "capture_unit_directory",
     "capture_a5_unit",
     "write_motion_schedule",
+    "next_witness_episode_base",
+    "WITNESS_EPISODE_BASE",
+    "WITNESS_LEGS",
     "assemble_unit_inventory",
     "validate_capture_unit",
     "REQUIRED_UNIT_FILES",
@@ -116,10 +119,44 @@ PATH_REPLAY_TOLERANCE = 1e-9
 FRAMEBUFFER_WIDTH = 640
 FRAMEBUFFER_HEIGHT = 360
 
-#: Witness episodes must not collide with the pilot's own 86901/86902, nor with
-#: P0's. The offset keeps them in their own band and makes them obvious in a
-#: directory listing.
-WITNESS_EPISODE_OFFSET = 900_000
+#: Witness episodes live in their own high band, clear of P0's ids and of the
+#: pilot's own 86901/86902.
+#:
+#: They must NEVER be derived from the unit's episode id. The first scheme here
+#: was ``episode_id + 900_000`` plus a leg offset, which gave e3_p90 the ids
+#: 986901/2/3 and e3_p91 986902/3/4 -- overlapping -- and reused the same ids on
+#: every attempt. The mod refuses to overwrite a completed episode ("recollect
+#: under a NEW episode id"), which is a safety property worth keeping rather than
+#: deleting around, so witness ids are allocated monotonically above whatever
+#: already exists in the band.
+WITNESS_EPISODE_BASE = 990_000
+
+#: Legs per witness: PRESENT -> ABSENT -> PRESENT.
+WITNESS_LEGS = 3
+
+
+def next_witness_episode_base(*roots: Path | None) -> int:
+    """The first witness episode id not already used in any apparatus tree.
+
+    Scans for ``episode_<id>`` directories in the witness band across every
+    supplied root -- the client's and the server's -- so a witness never lands on
+    a completed episode, whether from an earlier unit, an earlier attempt, or an
+    earlier run of the whole pilot.
+    """
+    highest = WITNESS_EPISODE_BASE - 1
+    for root in roots:
+        if root is None or not Path(root).is_dir():
+            continue
+        for entry in Path(root).iterdir():
+            if not entry.is_dir() or not entry.name.startswith("episode_"):
+                continue
+            try:
+                episode = int(entry.name.split("_", 1)[1])
+            except (IndexError, ValueError):
+                continue
+            if episode >= WITNESS_EPISODE_BASE:
+                highest = max(highest, episode)
+    return highest + 1
 
 #: Settled frames per witness leg. The witness is a static three-slot toggle, not
 #: a trajectory, so it needs only enough frames to settle and hash.
@@ -342,6 +379,7 @@ def capture_a5_unit(
     previous_wall_block_id: str | None = None,
     server_episode_root: Path | None = None,
     server_run_root: Path | None = None,
+    witness_episode_id: int | None = None,
     witness_frames: int = WITNESS_FRAMES_PER_SLOT,
 ) -> dict[str, Any]:
     """Issue one dynamic capture and return what the apparatus reported.
@@ -378,11 +416,17 @@ def capture_a5_unit(
     # episodes are apparatus evidence and are never banked into the unit.
     witness: dict[str, Any] | None = None
     if not getattr(runtime, "dry_run", False) and witness_frames:
+        if witness_episode_id is None:
+            raise ExperimentIIIError(
+                "CAPTURE_STALE_FRAME",
+                "the liveness witness needs an allocated episode id; deriving one "
+                "from the unit's id collides across identities and across attempts",
+            )
         witness = capture_liveness_witness(
             runtime,
             sink,
             _A5WitnessView(spec),
-            witness_episode_id=spec.episode_id + WITNESS_EPISODE_OFFSET,
+            witness_episode_id=witness_episode_id,
             frames_per_slot=witness_frames,
             frame_timeout_seconds=frame_timeout_seconds,
         )

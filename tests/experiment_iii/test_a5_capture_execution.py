@@ -990,12 +990,57 @@ def test_the_witness_is_material_independent(tmp_path, specs, ladder) -> None:
 def test_witness_episodes_never_collide_with_capture_episodes(
     tmp_path, specs, ladder
 ) -> None:
+    from mineocclude.experiment_iii.a5_capture import WITNESS_EPISODE_BASE
+
     campaign, runtime, sink = _campaign(tmp_path, specs, ladder)
     campaign.run(runtime, sink, warmup_ticks=10)
     captured = {episode for episode, _condition in runtime.captured_episodes}
     assert captured == {86901, 86902}
     assert not (set(runtime.witness_episodes) & captured)
-    assert all(episode >= 900_000 for episode in runtime.witness_episodes)
+    assert all(episode >= WITNESS_EPISODE_BASE for episode in runtime.witness_episodes)
+
+
+def test_witness_episode_ids_are_unique_across_every_unit(
+    tmp_path, specs, ladder
+) -> None:
+    """No witness id may repeat -- within a run or across attempts.
+
+    The first scheme derived them as ``episode_id + 900_000`` plus a leg offset,
+    which gave e3_p90 986901/2/3 and e3_p91 986902/3/4. Those overlap, and they
+    repeat on every attempt. The mod refuses to reuse a completed episode id, so
+    the live pilot stopped on its second launch with
+    "episode 986901 output already exists ... completed episodes are never
+    overwritten".
+    """
+    campaign, runtime, sink = _campaign(tmp_path, specs, ladder)
+    campaign.run(runtime, sink, warmup_ticks=10)
+    ids = runtime.witness_episodes
+    assert len(ids) == 30, "three legs for each of ten units"
+    assert len(set(ids)) == 30, f"witness ids repeat: {sorted(ids)}"
+
+
+def test_a_second_attempt_allocates_fresh_witness_ids(
+    tmp_path, specs, ladder
+) -> None:
+    """A relaunch must not land on the previous attempt's witness episodes."""
+    first, runtime_a, sink_a = _campaign(tmp_path, specs[:2], ladder)
+    first.run(runtime_a, sink_a, warmup_ticks=10)
+    used = set(runtime_a.witness_episodes)
+    assert used
+
+    # A fresh campaign over the same trees, with the ledger cleared so the units
+    # actually re-run rather than being skipped as COMPLETE.
+    (tmp_path / "data" / "experiment_iii" / "p1" / "p1_capture_ledger.jsonl").unlink()
+    import shutil
+
+    shutil.rmtree(tmp_path / "data" / "experiment_iii" / "p1" / "captures")
+    second, runtime_b, sink_b = _campaign(tmp_path, specs[:2], ladder)
+    second.run(runtime_b, sink_b, warmup_ticks=10)
+
+    assert not (used & set(runtime_b.witness_episodes)), (
+        "the second attempt reused a witness episode id the mod would refuse"
+    )
+    assert min(runtime_b.witness_episodes) > max(used)
 
 
 # --------------------------------------------------------------------------

@@ -34,7 +34,9 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 from mineocclude.experiment_iii.a5_capture import (
+    WITNESS_LEGS,
     CaptureUnitSpec,
+    next_witness_episode_base,
     assemble_unit_inventory,
     build_unit_spec,
     capture_a5_unit,
@@ -189,6 +191,10 @@ class PilotCampaign:
         # The server's run directory: where startspec looks for the motion
         # schedule it refuses to run without.
         self.server_run_root = Path(server_run_root) if server_run_root else None
+        #: Allocated lazily on first capture, above every witness episode already
+        #: on disk in either apparatus tree, then advanced per unit. The mod never
+        #: overwrites a completed episode, so a reused id is a hard refusal.
+        self._witness_next: int | None = None
         self.ledger = HashChainLedger(Path(ledger_path), root=self.namespace_root)
         self.status_root = status_root
         self.rve_condition_scores = dict(rve_condition_scores or {})
@@ -243,6 +249,17 @@ class PilotCampaign:
             # results (LIVE_STATUS_CONTRACT). A failure to write one is not a
             # reason to stop capturing.
             pass
+
+    def _allocate_witness_episodes(self, sink: FrameSink) -> int:
+        """Reserve one witness episode id per leg, monotonically."""
+        if self._witness_next is None:
+            self._witness_next = next_witness_episode_base(
+                Path(sink.root),
+                self.server_episode_root,
+            )
+        allocated = self._witness_next
+        self._witness_next += WITNESS_LEGS
+        return allocated
 
     def _server_episode_dir(self, spec: CaptureUnitSpec) -> Path:
         if self.server_episode_root is None:
@@ -349,10 +366,12 @@ class PilotCampaign:
                 self.ledger.append(
                     spec.capture_unit_id, "RUNNING", spec_sha256=spec.spec_sha256
                 )
+                witness_episode_id = self._allocate_witness_episodes(sink)
                 result = capture_a5_unit(
                     runtime,
                     sink,
                     spec,
+                    witness_episode_id=witness_episode_id,
                     warmup_ticks=warmup_ticks,
                     frame_timeout_seconds=frame_timeout_seconds,
                     previous_wall_block_id=previous_material,
