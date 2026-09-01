@@ -1207,8 +1207,8 @@ little-endian; expected byte sizes.
 
 *Analysis* — `COARSE_2X6_CONCAT` and the three representation formulas; the ridge recipe; alpha
 grid `{0.1, 1, 10, 100, 1000}`; the four inner rotations; all five baselines; the three primary
-estimands; every secondary family; bootstrap `B = 10,000`; the analysis bootstrap seed; the Holm
-families; the prediction-lock rule.
+estimands; every secondary family; bootstrap `B = 10,000`; the analysis bootstrap seed of
+§8.10.5a; the Holm families; the prediction-lock rule.
 
 *Operations* — capture order and Latin rotation; retry policy; attrition rule; deadline
 fallbacks and their clock triggers; every stop rule.
@@ -2550,11 +2550,44 @@ All three are hypothesized **positive**: error increases as direct evidence weak
 | Multiplicity | **Holm** across exactly the **three** primary p-values |
 | Bootstrap replicates | `B = 10,000` |
 | Bootstrap unit | **whole identity**, with all five conditions, all rows, all predictions, and all representations kept together |
-| Bootstrap seed | frozen in P2 |
+| Bootstrap seed | **`8258108568742502015`** — derived in §8.10.5a from the immutable Phase 0 design binding, and bound in P2 |
 
 Captures and rows are **never** resampled as independent units. The existing whole-identity
 bootstrap at `src/mineocclude/regime_a_first25_analysis.py:226-251` (`B = 10,000`, resampling
 identities) is the reusable pattern.
+
+#### 8.10.5a III-A analysis bootstrap seed (frozen, Amendment 5)
+
+The seed is **derived, never hand-picked**, from provenance that predates every Experiment III
+measurement, by the same construction §7.10b uses for P0 under its own separation domain:
+
+```
+seed_bytes              = SHA256("MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1|"
+                                 + PHASE0_DESIGN_SHA256)
+ANALYSIS_BOOTSTRAP_SEED = int.from_bytes(seed_bytes[:8], "big") & ((1 << 63) - 1)
+```
+
+With the immutable `PHASE0_DESIGN_SHA256 =
+be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c` the derivation material is
+
+```
+MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1|be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c
+MATERIAL_SHA256         = f29ab1fd6c819e7ff584b6ca9344b6d112fe15a10dbc32ff47bed6536589a895
+ANALYSIS_BOOTSTRAP_SEED = 8258108568742502015
+```
+
+The **domain separation is load-bearing**: `..._ANALYSIS_BOOTSTRAP_V1` and
+`..._P0_BOOTSTRAP_V1` bind the same digest and must never collide, so the analysis bootstrap
+cannot inherit the P0 placement-bootstrap stream. Reusing the P0 seed here is forbidden.
+
+Like the P0 seed, this value depends on the **Phase 0 design binding**, not on the current
+authority hash, so it is stable across every later operational amendment. `B = 10,000` and the
+whole-identity resampling unit are unchanged. The bootstrap resamples whole identities with
+replacement using `numpy.random.default_rng(seed)`.
+
+P2 must bind the concrete integer together with its domain, the Phase 0 design digest and the
+derivation material digest, and must **refuse** a null, an empty string, a non-integer, or any
+placeholder token — `FROZEN_IN_P2`, `TBD`, `TO_BE_DETERMINED`, `PLACEHOLDER`.
 
 #### 8.10.6 Removed gates — do not reintroduce
 

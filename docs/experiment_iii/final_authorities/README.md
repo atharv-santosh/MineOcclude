@@ -7,7 +7,7 @@ hash-bound, and internally audited. Everything elsewhere is provenance, history,
 material.
 
 ```
-AUTHORITY_VERSION             = v1.7  (III-A + Amendment 1 / III-B + repair passes 1-2 + ultimate closure + Amendment 2 cohort admission feasibility + Amendment 3 P0 operational completeness + Amendment 4 capture liveness successor rule)
+AUTHORITY_VERSION             = v1.8  (III-A + Amendment 1 / III-B + repair passes 1-2 + ultimate closure + Amendment 2 cohort admission feasibility + Amendment 3 P0 operational completeness + Amendment 4 capture liveness successor rule + Amendment 5 III-A analysis bootstrap seed)
 AUTHORITY_INTERNAL_VALIDATION = PASS
 IMPLEMENTATION_READY          = true
 IMPLEMENTATION_AUTHORIZED     = false

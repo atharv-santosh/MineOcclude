@@ -4,7 +4,7 @@
 **Repair Pass 1** closing the eight blocking defects of the first independent audit (§13), plus
 **Repair Pass 2** closing the four blocking defects of the second independent audit (§14), plus the
 **Ultimate Closure Pass** closing A1/A2 of the third independent audit (§15)
-**Authority version:** `v1.7`
+**Authority version:** `v1.8`
 **Date:** 2026-08-30
 **Verdict:** `AUTHORITY_INTERNAL_VALIDATION = PASS`
 
@@ -337,8 +337,8 @@ value below was produced by hashing the file on disk, not copied forward.
 | `eb0a5a602372cbb1d06f54dbb4a6a1c01994128bd9ed47245dff9881212f3cee` | 103,663 | `BLOCKER_TAXONOMY.json` |
 | `6bf647b3196a38aeec767faffd343ca0241526b0114e1bdda081fb153a5d5c3e` | 62,537 | `EXPECTED_ARTIFACT_INVENTORY.json` |
 | `3df2ee0ca89a0bc4953501dbc46f77f894754cb2b18fdc951b9a46e943597e97` | 82,560 | `EXPERIMENT_III_LIFECYCLE.json` |
-| `75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788` | 218,921 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json` |
-| `c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a` | 253,586 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md` |
+| `22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b` | 218,921 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.json` |
+| `472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4` | 253,586 | `EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY.md` |
 | `e720cbe4383dcacab3ede2200d384d51a7acc14c698c547ecdd1f7515a8f458f` | 49,143 | `EXPERIMENT_III_TEST_PLAN.md` |
 | `72dc0633482a31fdf3f825ab19147aa57e8f4b8cbafa9eba696eb76799f365a0` | 6,527 | `FIR_KERNEL_RECOVERY_RECEIPT.json` |
 | `e39d056417447494555979ed43fcfd08671b14cc09b204ec0c4b788251716d97` | 9,255 | `III_B_ORACLE_SPECIFICATION.json` |
@@ -1007,5 +1007,31 @@ frames, zero MineWorld forwards and zero scientific outcomes** in existence.
 
 ```
 AMENDMENT_4_STATUS = PASS
+BLOCKING_DEFECTS   = 0
+```
+
+---
+
+## 19. Authority Amendment 5 (v1.8) — III-A analysis bootstrap seed
+
+Prospective §9.2 amendment, raised at the `A6`/`A7` boundary with **zero production captures,
+zero production MineWorld forwards, zero production predictions, zero production statistics and
+zero bootstrap executions** in existence.
+
+| | |
+|---|---|
+| Defect | `A6` requires P2 to bind "the analysis bootstrap seed" and forbids freezing with a placeholder; the machine authority carried the non-concrete token `FROZEN_IN_P2` at `statistics.bootstrap_seed`, and no concrete value or derivation for it existed anywhere in the package |
+| Consequence | P2 could never be completed honestly, and `A7` could never be authorized; the passing predecessor P2 in fact froze the placeholder string |
+| 5a | the III-A analysis bootstrap seed is **derived, never picked**, by the §7.10b construction under its own separation domain `MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1` over the immutable `PHASE0_DESIGN_SHA256` |
+| 5b | `ANALYSIS_BOOTSTRAP_SEED = 8258108568742502015`, material digest `f29ab1fd6c819e7ff584b6ca9344b6d112fe15a10dbc32ff47bed6536589a895` |
+| 5c | domain separation is load-bearing: the analysis bootstrap may **not** inherit the P0 placement-bootstrap stream |
+| 5d | P2 must refuse `null`, `""`, a non-integer, and the tokens `FROZEN_IN_P2`, `TBD`, `TO_BE_DETERMINED`, `PLACEHOLDER` |
+| Scientific design | `B = 10,000`, whole-identity resampling unit, pairing, the three primary estimands, Holm family, secondary families, folds, inner rotations, alpha grid, baselines, features, representations, layers, token slices, target rows, FIR labels, cohort, apparatus, conditions, RVE, capture order, retry, attrition and deadline fallbacks all unchanged |
+| New success gate | none |
+| Cohort invariance | `master_salt` binds `COHORT_SALT_AUTHORITY_SHA256` (v1.5), not the live hash, so the 25-identity cohort, paths, targets and folds are byte-identical across the amendment |
+| Invalidation | receipt currentness only; the predecessor P2 is `SUPERSEDED_BEFORE_PRODUCTION`; P0 and P1 scientific evidence unaffected |
+
+```
+AMENDMENT_5_STATUS = PASS
 BLOCKING_DEFECTS   = 0
 ```

@@ -1,7 +1,7 @@
 {
   "schema_version": "mineocclude-experiment-iii-preimplementation-authority-v1",
   "authority_name": "MINEOCCLUDE_EXPERIMENT_III_PREIMPLEMENTATION_AUTHORITY",
-  "authority_version": "v1.7",
+  "authority_version": "v1.8",
   "authority_status": "PROSPECTIVE_FROZEN_PREIMPLEMENTATION_AUTHORITY",
   "authority_construction_date": "2026-08-30",
   "authority_repair_date": "2026-08-30",
@@ -1581,7 +1581,21 @@
     "primary_interval": "TWO_SIDED_95_IDENTITY_BOOTSTRAP",
     "bootstrap_replicates": 10000,
     "bootstrap_unit": "WHOLE_IDENTITY_WITH_ALL_CONDITIONS_ROWS_PREDICTIONS_REPRESENTATIONS",
-    "bootstrap_seed": "FROZEN_IN_P2",
+    "bootstrap_seed": 8258108568742502015,
+    "bootstrap_seed_derivation": "int.from_bytes(SHA256(\"MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1|\" + PHASE0_DESIGN_SHA256).digest()[:8], \"big\") & ((1<<63)-1)",
+    "bootstrap_seed_domain": "MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1|",
+    "bootstrap_seed_binds_to": "PHASE0_DESIGN_SHA256",
+    "bootstrap_seed_material_sha256": "f29ab1fd6c819e7ff584b6ca9344b6d112fe15a10dbc32ff47bed6536589a895",
+    "bootstrap_seed_stable_across_operational_amendments": true,
+    "bootstrap_seed_frozen_by": "AUTHORITY_AMENDMENT_5_V1_8",
+    "bootstrap_seed_placeholder_tokens_refused": [
+      "FROZEN_IN_P2",
+      "TBD",
+      "TO_BE_DETERMINED",
+      "PLACEHOLDER",
+      "",
+      null
+    ],
     "reusable_bootstrap_pattern": "src/mineocclude/regime_a_first25_analysis.py:226-251",
     "overall_success_gate": null,
     "removed_gates": [
@@ -4093,7 +4107,7 @@
       "FINAL_SCIENTIFIC_SUMMARY.md"
     ]
   },
-  "authority_markdown_sha256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+  "authority_markdown_sha256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
   "amendments": [
     {
       "id": "PHASE1_AMENDMENT_1_BAYESIAN_MODULE_III_B",
@@ -5137,8 +5151,8 @@
     "never_delay_iii_a_closure_to_save_iii_b": true,
     "blocker": "B_DEADLINE_DROP"
   },
-  "authority_markdown_bytes": 256439,
-  "authority_markdown_hash_recomputed_by": "AUTHORITY_AMENDMENT_4_V1_7",
+  "authority_markdown_bytes": 258291,
+  "authority_markdown_hash_recomputed_by": "AUTHORITY_AMENDMENT_5_V1_8",
   "authority_closure_pass": {
     "name": "ULTIMATE_AUTHORITY_CLOSURE_PASS",
     "closes": [
@@ -5183,7 +5197,7 @@
     "admission_order_unchanged": "STRICTLY_ASCENDING_INDEX_FIRST_QUALIFYING"
   },
   "authority_markdown_sha256_superseded_v1_4": "993e5859fa53084889abbc8dda654cd9045dd871258e078cc1afb237f59b4daa",
-  "amended_by": "AUTHORITY_AMENDMENT_4",
+  "amended_by": "AUTHORITY_AMENDMENT_5",
   "capture_liveness_contract": {
     "schema": "mineocclude-experiment-iii-capture-liveness-v2",
     "supersedes": "AMENDMENT_3_UNCONDITIONAL_TARGET_TRANSITION_PROBES",
@@ -5351,5 +5365,33 @@
     "iii_b_scientific_design_changed": false,
     "scientific_invalidation": "NONE_NO_MEASUREMENT_EXISTED"
   },
-  "authority_markdown_sha256_superseded_v1_6": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c"
+  "authority_markdown_sha256_superseded_v1_6": "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c",
+  "authority_amendment_5": {
+    "amendment": "AUTHORITY_AMENDMENT_5_ANALYSIS_BOOTSTRAP_SEED",
+    "authority_version": "v1.8",
+    "predecessor_authority_version": "v1.7",
+    "predecessor_authority_sha256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "predecessor_machine_authority_sha256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
+    "predecessor_authority_freeze_commit": "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a",
+    "classification": "PROSPECTIVE_SCIENTIFIC_DESIGN_CHANGE_SECTION_9_2",
+    "defect": "statistics.bootstrap_seed was the non-concrete token FROZEN_IN_P2, which A6 forbids freezing and for which no derivation existed",
+    "resolution_section": "8.10.5a",
+    "analysis_bootstrap_seed": 8258108568742502015,
+    "analysis_bootstrap_seed_domain": "MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1|",
+    "analysis_bootstrap_seed_material_sha256": "f29ab1fd6c819e7ff584b6ca9344b6d112fe15a10dbc32ff47bed6536589a895",
+    "phase0_design_sha256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+    "bootstrap_replicates_unchanged": 10000,
+    "only_scientific_change": "statistics.bootstrap_seed",
+    "new_success_gate_created": false,
+    "cohort_changed": false,
+    "paths_changed": false,
+    "targets_changed": false,
+    "folds_changed": false,
+    "production_captures_before_amendment": 0,
+    "production_forwards_before_amendment": 0,
+    "production_outcomes_exposed": false,
+    "prospective": true,
+    "adopted_before_first_production_capture": true
+  },
+  "authority_markdown_sha256_superseded_v1_7": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a"
 }
