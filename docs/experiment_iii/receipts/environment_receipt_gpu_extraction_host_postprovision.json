@@ -1,0 +1,233 @@
+{
+  "artifact_root_writable": true,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+    "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_drift": false,
+  "authority_freeze_commit": "043c5301f431d3ec60315ca6ef98caf8d472f010",
+  "authority_sha256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+  "authority_version": "v1.8",
+  "authorized_stages": [
+    "A5_EXTRACTION",
+    "A9",
+    "A10"
+  ],
+  "authorizes_capture_stages": false,
+  "blocker_taxonomy_available": true,
+  "blocker_taxonomy_code_count": 146,
+  "clock": {
+    "local_iso8601": "2026-09-01T16:51:10.346607+00:00",
+    "monotonic_available": true,
+    "monotonic_sample": 48632.929254485,
+    "timezone": "UTC",
+    "utc_iso8601": "2026-09-01T16:51:45.008983+00:00",
+    "utc_offset_seconds": 0
+  },
+  "display": {
+    "available": null,
+    "reason": "this host does not capture; extraction reads banked frames and renders nothing",
+    "status": "NOT_APPLICABLE"
+  },
+  "durability": {
+    "durable_root": "/home/sagemaker-user/MineOcclude-Exp3/data",
+    "local_mirror_enabled": true,
+    "mode": "LOCAL_MIRROR_SAME_POOL",
+    "round_trip": {
+      "probe_bytes": 112,
+      "readback_sha256": "04a3acb565e72f03df67054ca4fea707aa7038b699d95f2c404b6ea88aff1d2c",
+      "verified": true,
+      "written_sha256": "04a3acb565e72f03df67054ca4fea707aa7038b699d95f2c404b6ea88aff1d2c"
+    }
+  },
+  "fails_closed": true,
+  "gpu": {
+    "available": true,
+    "capability": "8.9",
+    "cuda_version": "12.6",
+    "device_count": 1,
+    "device_index": 0,
+    "device_name": "NVIDIA L4",
+    "status": "EVALUATED",
+    "torch_version": "2.6.0+cu126",
+    "total_memory_bytes": 23661248512
+  },
+  "host": {
+    "cpu_count": 4,
+    "hostname": "default",
+    "machine": "x86_64",
+    "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "python": "3.10.20"
+  },
+  "host_role": "GPU_EXTRACTION_HOST",
+  "implementation_checkpoint_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+  "local_ports": {
+    "25565": {
+      "in_use": false
+    }
+  },
+  "machine_authority_sha256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+  "model_identity_checks": {
+    "main_checkpoint": {
+      "bytes": 3798736924,
+      "expected_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "matches": true,
+      "observed_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt"
+    },
+    "main_checkpoint_sha256_expected": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+    "note": "both digests were recomputed from the bytes on this host and matched the authority exactly",
+    "preprocessing_change_allowed": false,
+    "status": "VERIFIED",
+    "vae_checkpoint": {
+      "bytes": 1657555486,
+      "expected_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+      "matches": true,
+      "observed_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+      "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt"
+    },
+    "vae_sha256_expected": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+    "verified": true
+  },
+  "namespace_isolation": {
+    "guard_admits_experiment_iii_root": true,
+    "guard_refuses_historical_root": true
+  },
+  "not_authorized_stages": [],
+  "passed": true,
+  "phase0_design_sha256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+  "renderer_qualification": {
+    "reason": "this host does not capture",
+    "status": "NOT_APPLICABLE"
+  },
+  "resource_policy": {
+    "CUDA_USED": false,
+    "GPU_USED": false,
+    "MINEWORLD_INFERENCE_RUN": false,
+    "MINEWORLD_MODEL_LOADED": false,
+    "SAGEMAKER_STARTED": false
+  },
+  "rng_stream_fixture": {
+    "deterministic": true,
+    "domains": [
+      "start_position",
+      "process_noise"
+    ],
+    "note": "derived from the frozen master salt; host-independent by construction",
+    "seeds": {
+      "process_noise": [
+        3699677050291720464,
+        2822585968338083305,
+        4616074568476687800,
+        30592572720232378
+      ],
+      "start_position": [
+        6334839013430736533,
+        4906627682519750958,
+        4579552269970664047,
+        8324043887765601534
+      ]
+    }
+  },
+  "runtime_namespace": "mineocclude-experiment-iii-v1",
+  "runtime_pins": {
+    "capture_hz": 20,
+    "declared_pins": {
+      "fabric_api_version": "0.42.0+1.16",
+      "fabric_loader_version": "0.15.11",
+      "minecraft_version": "1.16.5",
+      "yarn_mappings": "1.16.5+build.10"
+    },
+    "expected_pins": {
+      "fabric_api_version": "0.42.0+1.16",
+      "fabric_loader_version": "0.15.11",
+      "minecraft_version": "1.16.5",
+      "yarn_mappings": "1.16.5+build.10"
+    },
+    "framebuffer_height": 360,
+    "framebuffer_source": "FrameCapture.EXPECTED_W/EXPECTED_H",
+    "framebuffer_width": 640,
+    "frames_per_capture": 180,
+    "mod_jar": {
+      "bytes": 101587,
+      "path": "/home/sagemaker-user/MineOcclude-Exp3/fabric/mineocclude-mod/build/libs/mineocclude-0.1.1.jar",
+      "sha256": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c"
+    },
+    "pins_match": true,
+    "speed_blocks_per_second": 2.0
+  },
+  "schema_version": "mineocclude-experiment-iii-environment-receipt-v1",
+  "source_closure": {
+    "head_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+    "includes_uncommitted_working_tree": true,
+    "line_ending": "LF",
+    "record_count": 584,
+    "record_format": "<mode> <blob-sha1> <stage>\\t<path>",
+    "roots": [
+      "src",
+      "fabric",
+      "scripts"
+    ],
+    "sort": "ASCENDING_BY_PATH_FIELD_ONLY_AS_RAW_UTF8_BYTES",
+    "source_closure_sha256": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
+    "stream_bytes": 58508,
+    "trailing_newline": true,
+    "whole_line_sort": false
+  },
+  "stage": "A3",
+  "storage_gate": {
+    "GiB_bytes": 1073741824,
+    "durability_mode": "LOCAL_MIRROR_SAME_POOL",
+    "durable_requirement": "N/A_SAME_POOL_AS_POOL_WORKING",
+    "fails_closed": true,
+    "free_space_read_as": "BYTES",
+    "gate_applied": "A3_COMBINED_PROGRAM_WITH_LOCAL_MIRROR",
+    "gate_threshold_bytes": 68719476736,
+    "gate_threshold_gib": 64.0,
+    "local_mirror_enabled": true,
+    "logical_pool_count": 3,
+    "passed": true,
+    "physical_pool_count": 1,
+    "pool_working_device_id": 66309,
+    "pool_working_free_bytes": 391801032704,
+    "remote_hashed_round_trip_required": false,
+    "results": {
+      "A3_COMBINED_PROGRAM_WITH_LOCAL_MIRROR": true
+    },
+    "schema_version": "mineocclude-experiment-iii-storage-preflight-v1",
+    "scratch_is_a_distinct_pool": false,
+    "threshold_lowered_to_proceed": false,
+    "unit_convention": "GIB_BINARY",
+    "uses_combined_program_gate": true
+  },
+  "storage_pools": {
+    "POOL_DURABLE": {
+      "device_id": 66309,
+      "free_bytes": 391801032704,
+      "free_bytes_sampled_from": "/home/sagemaker-user/MineOcclude-Exp3",
+      "free_gib": 364.8931465148926,
+      "path": "/home/sagemaker-user/MineOcclude-Exp3/data",
+      "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3/data",
+      "total_bytes": 536803803136
+    },
+    "POOL_SCRATCH": {
+      "device_id": 66309,
+      "free_bytes": 391801032704,
+      "free_bytes_sampled_from": "/home/sagemaker-user/MineOcclude-Exp3",
+      "free_gib": 364.8931465148926,
+      "path": "/home/sagemaker-user/MineOcclude-Exp3",
+      "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3",
+      "total_bytes": 536803803136
+    },
+    "POOL_WORKING": {
+      "device_id": 66309,
+      "free_bytes": 391801032704,
+      "free_gib": 364.8931465148926,
+      "path": "/home/sagemaker-user/MineOcclude-Exp3",
+      "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3",
+      "total_bytes": 536803803136
+    }
+  }
+}
