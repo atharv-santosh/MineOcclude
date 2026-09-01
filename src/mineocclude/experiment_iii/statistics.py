@@ -24,18 +24,24 @@ refuses to run before the prediction lock is sealed.
 
 from __future__ import annotations
 
+import hashlib
 import math
 from dataclasses import dataclass, field
 from typing import Any, Mapping, Sequence
 
 import numpy as np
 
+from mineocclude.experiment_iii.authority import machine_authority, phase0_design_sha256
 from mineocclude.experiment_iii.errors import ExperimentIIIError
 from mineocclude.experiment_iii.prediction_lock import PredictionLock
 from mineocclude.experiment_iii.schema import ConditionId
 
 __all__ = [
+    "ANALYSIS_BOOTSTRAP_SEED_DOMAIN",
     "BOOTSTRAP_REPLICATES",
+    "BOOTSTRAP_SEED_PLACEHOLDER_TOKENS",
+    "analysis_bootstrap_seed",
+    "assert_concrete_bootstrap_seed",
     "PRIMARY_FAMILY",
     "SECONDARY_FAMILIES",
     "REMOVED_GATES",
@@ -58,6 +64,88 @@ __all__ = [
 ]
 
 BOOTSTRAP_REPLICATES = 10_000
+
+#: Authority 8.10.5a (Amendment 5) -- the analysis seed derivation domain string.
+#: Deliberately distinct from p0_bindings.BOOTSTRAP_SEED_DOMAIN: the two bind the
+#: same Phase 0 digest, so a collision would make the primary identity bootstrap
+#: reuse the P0 placement-bootstrap stream.
+ANALYSIS_BOOTSTRAP_SEED_DOMAIN = "MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1|"
+
+#: Tokens that A6 forbids as a frozen binding. The predecessor P2 froze the first
+#: of these and still reported PASS, which is the defect Amendment 5 and
+#: :func:`assert_concrete_bootstrap_seed` exist to make impossible.
+BOOTSTRAP_SEED_PLACEHOLDER_TOKENS = (
+    "FROZEN_IN_P2",
+    "TBD",
+    "TO_BE_DETERMINED",
+    "PLACEHOLDER",
+    "",
+)
+
+
+def analysis_bootstrap_seed(*, phase0_sha256: str | None = None) -> int:
+    """The frozen III-A analysis bootstrap seed, **derived** and never picked.
+
+    Authority 8.10.5a. Like the P0 seed of 7.10b it binds ``PHASE0_DESIGN_SHA256``
+    -- the immutable Phase 0 design -- rather than the current authority hash, so
+    it is stable across every later operational amendment. Recomputing it here
+    rather than returning a literal means a changed Phase 0 binding is loud.
+    """
+    source = phase0_sha256 or phase0_design_sha256()
+    digest = hashlib.sha256(
+        (ANALYSIS_BOOTSTRAP_SEED_DOMAIN + source).encode("utf-8")
+    ).digest()
+    seed = int.from_bytes(digest[:8], "big") & ((1 << 63) - 1)
+    if phase0_sha256 is None:
+        frozen = machine_authority()["statistics"]["bootstrap_seed"]
+        assert_concrete_bootstrap_seed(frozen)
+        if seed != int(frozen):
+            raise ExperimentIIIError(
+                "PROVENANCE_AUTHORITY_DRIFT",
+                f"the derived analysis bootstrap seed {seed} disagrees with the "
+                f"frozen {frozen}; the Phase 0 design binding has moved",
+            )
+    return seed
+
+
+def assert_concrete_bootstrap_seed(value: Any) -> int:
+    """Refuse a null, a placeholder token, or a non-integer bootstrap seed.
+
+    Authority A6 forbids freezing with a placeholder, a null or a "to be
+    determined", and 8.10.5d names the tokens explicitly. ``bool`` is rejected
+    because it is an ``int`` subclass and ``True`` would otherwise freeze as 1.
+    """
+    if value is None:
+        raise ExperimentIIIError(
+            "P2_BINDING_INCOMPLETE",
+            "the analysis bootstrap seed is null; authority A6 forbids freezing "
+            "with a null and 8.10.5a derives a concrete value",
+        )
+    if isinstance(value, str):
+        raise ExperimentIIIError(
+            "P2_BINDING_INCOMPLETE",
+            f"the analysis bootstrap seed is the string {value!r}; authority A6 "
+            f"forbids freezing with a placeholder and 8.10.5a derives a concrete "
+            f"integer"
+            + (
+                " -- this is exactly the token the superseded P2 froze"
+                if value.strip().upper() in BOOTSTRAP_SEED_PLACEHOLDER_TOKENS
+                else ""
+            ),
+        )
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ExperimentIIIError(
+            "P2_BINDING_MISMATCH",
+            f"the analysis bootstrap seed must be an integer, not "
+            f"{type(value).__name__}",
+        )
+    if not 0 <= value < (1 << 63):
+        raise ExperimentIIIError(
+            "P2_BINDING_MISMATCH",
+            f"the analysis bootstrap seed {value} is outside the frozen "
+            f"non-negative 63-bit range",
+        )
+    return value
 PRIMARY_FAMILY = ("S_i", "Dpartial_i", "Dopaque_i")
 SECONDARY_FAMILIES = (
     "MINEWORLD_VS_LINEAR_CURRENT_PIXEL",

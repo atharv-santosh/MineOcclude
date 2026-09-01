@@ -1,0 +1,36 @@
+{
+  "schema_version": "mineocclude-experiment-iii-supersession-record-v1",
+  "artifact": "P2_FREEZE_PACKAGE.json",
+  "artifact_package_sha256": "a2734b31fb8ac5b4987f2ce13a3ff11328b8589fb93a65d1b702b400eb739687",
+  "artifact_file_sha256": "7b86004531605ddf33b7222f863f76d02ba01aecd337ac9318cc1136597ba5c1",
+  "status": "SUPERSEDED_BEFORE_PRODUCTION",
+  "disposition": "RETAINED_PERMANENTLY_AS_HISTORICAL_EVIDENCE",
+  "bytes_modified": false,
+  "deleted": false,
+  "was_valid_when_built": true,
+  "built_under": {
+    "authority_version": "v1.7",
+    "authority_sha256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "machine_authority_sha256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
+    "authority_freeze_commit": "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a",
+    "source_closure_sha256": "44ce49339014aac6da1127e143f6edb23083c0a9bba80fe1268d425fff960fac",
+    "head_commit": "bc602359072e3e3b6941397feda4916f5bd429f0"
+  },
+  "superseded_by": "AUTHORITY_AMENDMENT_5_V1_8_ANALYSIS_BOOTSTRAP_SEED",
+  "superseded_reason": [
+    "It froze the non-concrete token \"FROZEN_IN_P2\" at bindings.EXTRACTION_ANALYSIS_AND_OPERATIONS.bootstrap_seed, which authority A6 names as a forbidden repair (\"freezing with a placeholder, a null, or a 'to be determined'\"). It reported PASS only because PLACEHOLDER_TOKENS omitted the authority's own deferral token.",
+    "Authority Amendment 5 (v1.8) derives a concrete analysis bootstrap seed, so the successor authority hash differs and every binding to the predecessor authority is stale."
+  ],
+  "production_authorization_usable": false,
+  "production_authorization_ever_exercised": false,
+  "production_captures_executed_under_it": 0,
+  "production_forwards_executed_under_it": 0,
+  "scientific_evidence_invalidation": {
+    "P0_SCIENTIFIC_INVALIDATION_SCOPE": "NONE",
+    "P1_LOCAL_SCIENTIFIC_INVALIDATION_SCOPE": "NONE",
+    "P1_GPU_SCIENTIFIC_INVALIDATION_SCOPE": "NONE",
+    "PRODUCTION_INVALIDATION_SCOPE": "NONE",
+    "note": "This is receipt currentness and authority supersession, not scientific evidence invalidation. No measurement is retracted."
+  },
+  "successor_required_before_production": "a new P2 built under v1.8 at the final source closure, after the final A2 and the required A3 requalification"
+}

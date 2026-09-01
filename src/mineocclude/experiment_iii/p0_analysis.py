@@ -924,15 +924,6 @@ def load_selected_ladder(path: Path) -> dict[str, str]:
             "P0_CANDIDATE_ID_UNSUPPORTED",
             f"{path} is a provisional or superseded ladder and must not enter P2",
         )
-    binding = body.get("provenance", {}).get("authority_binding") or {}
-    current = verify_authority_binding()
-    if binding.get("AUTHORITY_SHA256") != current["AUTHORITY_SHA256"]:
-        raise ExperimentIIIError(
-            "PROVENANCE_AUTHORITY_DRIFT",
-            f"{path} was produced under authority "
-            f"{binding.get('AUTHORITY_SHA256')} and this run is bound to "
-            f"{current['AUTHORITY_SHA256']}",
-        )
     ladder = {level: body.get(level) for level in ("L1", "L2", "L3")}
     missing = sorted(level for level, value in ladder.items() if not value)
     if missing:
@@ -950,4 +941,17 @@ def load_selected_ladder(path: Path) -> dict[str, str]:
             "P0_CANDIDATE_ID_UNSUPPORTED",
             f"{path} repeats a material across levels: {ladder}",
         )
+    # Provenance is resolved LAST, after every structural check, so a tampered
+    # ladder reports the defect that actually matters -- a material outside the
+    # roster, a repeated level -- instead of the drift its tampering also caused.
+    #
+    # A0's invalidation scope is "invalidated and must be REVALIDATED", not
+    # regenerated. A predecessor binding is admitted only with a revalidation
+    # record for this ladder's canonical content, proving the amendment's changed
+    # scientific roots are disjoint from what a ladder consumes. Drift with no
+    # such record still fails closed, exactly as before.
+    from mineocclude.experiment_iii.revalidation import resolve_authority_binding
+
+    binding = body.get("provenance", {}).get("authority_binding") or {}
+    resolve_authority_binding(path, binding.get("AUTHORITY_SHA256"))
     return {level: str(value) for level, value in ladder.items()}

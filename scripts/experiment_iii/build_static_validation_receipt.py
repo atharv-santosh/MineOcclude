@@ -436,13 +436,22 @@ class _Collector:
             if outcome == "failed":
                 outcome = "failed"
             self.counts[outcome] = self.counts.get(outcome, 0) + 1
-            self.rows.append(
-                {
-                    "nodeid": report.nodeid,
-                    "outcome": outcome,
-                    "duration_seconds": round(float(report.duration), 4),
-                }
-            )
+            row: dict[str, object] = {
+                "nodeid": report.nodeid,
+                "outcome": outcome,
+                "duration_seconds": round(float(report.duration), 4),
+            }
+            if outcome == "skipped":
+                # The reason is evidence, not decoration: A2 may only admit a
+                # skip it can name, and the receipt has to carry why.
+                reason = ""
+                longrepr = getattr(report, "longrepr", None)
+                if isinstance(longrepr, tuple) and len(longrepr) == 3:
+                    reason = str(longrepr[2])
+                elif longrepr is not None:
+                    reason = str(longrepr)
+                row["skip_reason"] = reason.removeprefix("Skipped: ")
+            self.rows.append(row)
 
 
 def _test_suite_sha256() -> tuple[str, int]:
@@ -460,23 +469,26 @@ def _test_suite_sha256() -> tuple[str, int]:
     return digest.hexdigest(), len(files)
 
 
+def _checks_for_nodeid(nodeid: str) -> set[str]:
+    """The named checks a test nodeid belongs to, by explicit name then module."""
+    module = nodeid.split("::", 1)[0].split("/")[-1]
+    name = nodeid.split("::", 1)[1] if "::" in nodeid else ""
+    known = set(GROUP_A) | set(GROUP_B) | set(GROUP_D)
+    match = _CHECK_IN_NODE.search(name)
+    if match:
+        candidate = f"{match.group(1).upper()}.{int(match.group(2))}"
+        if candidate in known:
+            return {candidate}
+    return {check for check in _MODULE_CHECKS.get(module, ()) if check in known}
+
+
 def _named_check_coverage(rows: list[dict[str, object]]) -> dict[str, dict[str, object]]:
     coverage: dict[str, dict[str, object]] = {
         check: {"tests": 0, "passed": 0, "failed": 0}
         for check in (*GROUP_A, *GROUP_B, *GROUP_D)
     }
     for row in rows:
-        nodeid = str(row["nodeid"])
-        module = nodeid.split("::", 1)[0].split("/")[-1]
-        name = nodeid.split("::", 1)[1] if "::" in nodeid else ""
-        checks: set[str] = set()
-        match = _CHECK_IN_NODE.search(name)
-        if match:
-            candidate = f"{match.group(1).upper()}.{int(match.group(2))}"
-            if candidate in coverage:
-                checks.add(candidate)
-        if not checks:
-            checks.update(_MODULE_CHECKS.get(module, ()))
+        checks = _checks_for_nodeid(str(row["nodeid"]))
         for check in checks:
             if check not in coverage:
                 continue
@@ -486,6 +498,69 @@ def _named_check_coverage(rows: list[dict[str, object]]) -> dict[str, dict[str, 
             elif row["outcome"] in ("failed", "error"):
                 coverage[check]["failed"] += 1
     return coverage
+
+
+def _skip_accounting(
+    rows: list[dict[str, object]], coverage: dict[str, dict[str, object]]
+) -> dict[str, object]:
+    """Account for every skip against the authority's ACTUAL A2 condition.
+
+    Authority A2 is specific, and the producer was not: PASS is "zero failures,
+    zero errors, **zero group-A skips, zero group-D skips**", and the expected
+    counts say the same. It says nothing about a skip outside those two named
+    groups, because a test that carries no group-A or group-D check is not one
+    of the 75 named checks the stage gates on.
+
+    The producer required ``skipped == 0`` globally, which is stricter than the
+    authority it implements. That is not a safe direction to be wrong in either:
+    it refused an otherwise conformant receipt on any host where a
+    platform-branch test cannot run, which is what forced A2 onto Windows.
+
+    A named check counts as skipped when it has tests and **none of them
+    passed** -- a check with passing coverage elsewhere is covered, whatever a
+    sibling test did. Every other skip is admissible only if it is attributable
+    and recorded by nodeid and reason, so "permitted" can never become a blanket
+    platform exemption.
+    """
+    skipped_rows = [row for row in rows if row["outcome"] == "skipped"]
+    group_a_skipped = sorted(
+        check
+        for check in GROUP_A
+        if coverage[check]["tests"] > 0
+        and coverage[check]["passed"] == 0
+        and coverage[check]["failed"] == 0
+    )
+    group_d_skipped = sorted(
+        check
+        for check in GROUP_D
+        if coverage[check]["tests"] > 0
+        and coverage[check]["passed"] == 0
+        and coverage[check]["failed"] == 0
+    )
+    recorded = [
+        {
+            "nodeid": row["nodeid"],
+            "reason": row.get("skip_reason", ""),
+            "named_checks": sorted(_checks_for_nodeid(str(row["nodeid"]))),
+        }
+        for row in skipped_rows
+    ]
+    return {
+        "authority_condition": (
+            "zero group-A skips, zero group-D skips (A2 PASS); the authority "
+            "sets no global skip bound"
+        ),
+        "total_skipped_tests": len(skipped_rows),
+        "group_a_skipped_checks": group_a_skipped,
+        "group_d_skipped_checks": group_d_skipped,
+        "group_a_skipped_check_count": len(group_a_skipped),
+        "group_d_skipped_check_count": len(group_d_skipped),
+        "permitted_skips": recorded,
+        "every_skip_attributed": all(
+            entry["reason"] for entry in recorded
+        ),
+        "blanket_platform_exemption": False,
+    }
 
 
 def main() -> int:
@@ -521,6 +596,7 @@ def main() -> int:
         }
 
     groups = {"A": group_totals(GROUP_A), "B": group_totals(GROUP_B), "D": group_totals(GROUP_D)}
+    skips = _skip_accounting(collector.rows, coverage)
     total_expected = sum(group["expected"] for group in groups.values())
     total_passed = sum(group["passed"] for group in groups.values())
 
@@ -552,6 +628,7 @@ def main() -> int:
             "groups": groups,
             "per_check": coverage,
         },
+        "skips": skips,
         "pytest": {
             "exit_code": int(exit_code),
             "collected": len(collector.rows),
@@ -584,11 +661,16 @@ def main() -> int:
         "repair_history": REPAIR_HISTORY,
         "full_suite_rerun_after_last_source_change": True,
         "per_test": collector.rows,
+        # Exactly the authority's A2 PASS condition. Not "no skips anywhere":
+        # zero group-A skips and zero group-D skips, with every other skip
+        # named and reasoned in ``skips.permitted_skips``.
         "passed": exit_code == 0
         and collector.counts["failed"] == 0
         and collector.counts["error"] == 0
-        and collector.counts["skipped"] == 0
-        and collector.counts["xfailed"] == 0,
+        and collector.counts["xfailed"] == 0
+        and skips["group_a_skipped_check_count"] == 0
+        and skips["group_d_skipped_check_count"] == 0
+        and skips["every_skip_attributed"],
     }
     RECEIPT_PATH.parent.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(receipt, indent=2, sort_keys=True, allow_nan=False) + "\n"
@@ -596,6 +678,13 @@ def main() -> int:
     print(f"wrote {RECEIPT_PATH.relative_to(REPO).as_posix()}")
     print(f"  passed={receipt['passed']} collected={receipt['pytest']['collected']}")
     print(f"  named checks {total_passed}/{total_expected}")
+    print(
+        f"  skips total={skips['total_skipped_tests']} "
+        f"groupA={skips['group_a_skipped_check_count']} "
+        f"groupD={skips['group_d_skipped_check_count']}"
+    )
+    for entry in skips["permitted_skips"]:
+        print(f"    PERMITTED_SKIP {entry['nodeid']} :: {entry['reason']}")
     print(f"  source closure {closure_after['source_closure_sha256']}")
     return 0 if receipt["passed"] else 1
 

@@ -35,6 +35,20 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 FABRIC_PROJECT = REPOSITORY_ROOT / "fabric" / "mineocclude-mod"
 
 
+def a_display_surface() -> dict[str, object]:
+    """A stand-in display probe for capture-ROLE receipt semantics.
+
+    These tests are about what a capture-host receipt authorizes, not about
+    whether the machine running pytest happens to own a screen. The real probe
+    is the default, and ``test_a_capture_host_without_a_display_is_still_refused``
+    still drives the genuine refusal, so injecting a surface here proves the
+    role scoping without ever asserting that this host has one. A headless CI
+    box and a developer desktop must reach the same verdict about A9.
+    """
+    return {"available": True, "platform": "Linux", "mechanism": "TEST_DOUBLE",
+            "display": ":99"}
+
+
 # --------------------------------------------------------------------------
 # A3 host preflight
 # --------------------------------------------------------------------------
@@ -138,6 +152,7 @@ def test_without_a_runtime_config_no_capture_stage_is_authorized(
         },
         durable_root=tmp_path,
         project=FABRIC_PROJECT,
+        display_probe=a_display_surface,
     )
     assert receipt["renderer_qualification"]["status"] == "NOT_ESTABLISHED"
     assert receipt["authorized_stages"] == []
@@ -156,6 +171,7 @@ def test_capture_host_receipt_never_authorizes_extraction(tmp_path: Path) -> Non
         },
         durable_root=tmp_path,
         project=FABRIC_PROJECT,
+        display_probe=a_display_surface,
     )
     assert "A9" not in receipt["authorized_stages"]
     assert set(receipt["authorized_stages"]) <= set(CAPTURE_HOST_STAGES)
@@ -498,6 +514,7 @@ def test_a_capture_host_authorizes_no_extraction_stage(tmp_path: Path) -> None:
         },
         durable_root=tmp_path,
         project=FABRIC_PROJECT,
+        display_probe=a_display_surface,
     )
     assert "A5_EXTRACTION" not in receipt["authorized_stages"]
     assert receipt["not_authorized_stages"] == ["A5_EXTRACTION", "A9", "A10"]

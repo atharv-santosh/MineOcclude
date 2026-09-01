@@ -157,13 +157,42 @@ def device_identity(path: Path) -> dict[str, Any]:
 
 
 def resolve_host_pools(pool_paths: Mapping[str, Path]) -> dict[str, Any]:
-    """Resolve each gated logical pool to its device id and free bytes."""
+    """Resolve each gated logical pool to its device, then sample each device once.
+
+    The authority's rule is "**no pool double counted**": two logical categories
+    that resolve to one filesystem are one pool. Resolution therefore happens
+    **before** free space is read, and each physical device is sampled exactly
+    once -- every logical pool on that device reports that one reading.
+
+    Sampling per logical pool instead was a race, not a policy. Three pools on
+    one filesystem meant three ``statvfs`` calls at three instants; on any host
+    with live writes the three answers differ by a few hundred KiB, and
+    ``resolve_pools`` -- which correctly requires one device to have one free
+    size -- then raised ``STORAGE_POOL_DOUBLE_COUNTED`` against a host that was
+    not double counting anything. That is what refused every A3 receipt on this
+    Linux host while the identical code passed on a quiescent Windows volume,
+    and it is a defect in the reading, never a reason to relax the gate: a
+    genuine two-devices-counted-as-one is still caught downstream, because the
+    devices differ by id rather than by a transient byte count.
+    """
     missing = [pool for pool in GATED_POOLS if pool not in pool_paths]
     if missing:
         raise ExperimentIIIError(
             "STORAGE_INSUFFICIENT", f"A3 needs a path for every gated pool; missing {missing}"
         )
-    return {pool: device_identity(pool_paths[pool]) for pool in GATED_POOLS}
+    resolved = {pool: device_identity(pool_paths[pool]) for pool in GATED_POOLS}
+    # One reading per device: the first pool to resolve to a device supplies the
+    # free/total bytes for every other pool on it.
+    canonical: dict[int, dict[str, Any]] = {}
+    for pool in GATED_POOLS:
+        entry = resolved[pool]
+        first = canonical.setdefault(entry["device_id"], entry)
+        if first is not entry:
+            entry["free_bytes"] = first["free_bytes"]
+            entry["total_bytes"] = first["total_bytes"]
+            entry["free_gib"] = first["free_gib"]
+            entry["free_bytes_sampled_from"] = first["probed_ancestor"]
+    return resolved
 
 
 def durable_round_trip(durable_root: Path) -> dict[str, Any]:
@@ -542,6 +571,7 @@ def environment_receipt(
     main_checkpoint_path: Path | None = None,
     vae_checkpoint_path: Path | None = None,
     gpu_probe: Callable[[], Mapping[str, Any]] = cuda_probe,
+    display_probe: Callable[[], Mapping[str, Any]] = _display_probe,
 ) -> dict[str, Any]:
     """Run every A3 check applicable to ``host_role`` and return its receipt.
 
@@ -587,7 +617,12 @@ def environment_receipt(
             "available": None,
         }
     else:
-        display = {"status": "EVALUATED", **_display_probe()}
+        # Injectable for the same reason ``gpu_probe`` is: a capture-host unit
+        # test must be able to exercise capture-role receipt semantics on any
+        # host, including a headless one, without the module pretending that
+        # host has a display. The default is the real probe, so the production
+        # path still refuses a genuinely headless capture host below.
+        display = {"status": "EVALUATED", **display_probe()}
         if not display["available"]:
             raise ExperimentIIIError(
                 "ENV_DISPLAY_UNAVAILABLE",

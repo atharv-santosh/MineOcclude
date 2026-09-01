@@ -175,7 +175,17 @@ class PilotCampaign:
         server_run_root: Path | None = None,
         rve_condition_scores: Mapping[str, float] | None = None,
         source_closure: str | None = None,
+        stage: str = STAGE,
+        next_stage: str = NEXT_STAGE,
     ) -> None:
+        # A7 runs this same loop over 125 production units. The engine is what
+        # A5 qualified -- ledger-driven resume, same-spec-only retry, validate
+        # then bank then COMPLETE -- and authority 8.3 gives A5 and A7 the same
+        # unit state machine, so A7 reuses it rather than growing a second
+        # capture engine whose resume semantics nothing has ever demonstrated.
+        # Only the stage labels and the roster differ.
+        self.stage = stage
+        self.next_stage = next_stage
         self.specs = list(specs)
         self.output_root = Path(output_root)
         # ``namespace_root`` is the repository root the write guard measures
@@ -203,10 +213,10 @@ class PilotCampaign:
         self.started = time.time()
         self.errors_seen = 0
         self._status = StatusDocument(
-            stage=STAGE,
+            stage=self.stage,
             program_stage="III_A",
             total_units=len(self.specs),
-            next_stage=NEXT_STAGE,
+            next_stage=self.next_stage,
             iii_a_status="RUNNING",
             iii_b_status="NOT_STARTED",
             authority_sha256=self.binding["AUTHORITY_SHA256"],
@@ -326,7 +336,9 @@ class PilotCampaign:
         on_unit: Callable[[str, str], None] | None = None,
     ) -> dict[str, Any]:
         """Capture every unit that is not already COMPLETE, in frozen order."""
-        self._publish(stage_status="RUNNING", message="pilot campaign started")
+        self._publish(
+            stage_status="RUNNING", message=f"{self.stage} campaign started"
+        )
         previous_material: str | None = None
         skipped: list[str] = []
         captured: list[str] = []

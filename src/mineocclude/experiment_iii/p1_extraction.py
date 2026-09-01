@@ -972,10 +972,19 @@ class P1ExtractionCampaign:
         ledger_path: Path,
         extraction_spec_hash: str,
         namespace_root: Path | None = None,
+        roster_check: Callable[[str], None] = assert_pilot_identity,
+        stage: str = A5_EXTRACTION_STAGE,
     ) -> None:
+        # A9 runs this same loop over 125 production captures. The engine --
+        # shared-forward accounting, per-array ledger states, skip-a-complete-
+        # capture-without-reading-a-frame resume -- is what P1 qualified against
+        # a real MineWorld adapter, and authority 8.6 gives A5 extraction and A9
+        # the same unit of work. A9 therefore swaps the roster gate and the
+        # stage label rather than growing a second extraction engine.
+        self.stage = stage
         self.units = [dict(unit) for unit in units]
         for unit in self.units:
-            assert_pilot_identity(unit["identity"])
+            roster_check(unit["identity"])
         self.output_root = Path(output_root)
         self.namespace_root = Path(namespace_root) if namespace_root else None
         self.ledger = HashChainLedger(Path(ledger_path), root=self.namespace_root)

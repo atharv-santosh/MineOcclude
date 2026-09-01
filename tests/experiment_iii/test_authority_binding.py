@@ -44,24 +44,29 @@ def test_authority_binding_matches_the_frozen_successor():
 
 
 def test_authority_version_is_the_successor():
-    assert authority.AUTHORITY_VERSION == "v1.7"
-    assert authority.machine_authority()["authority_version"] == "v1.7"
+    assert authority.AUTHORITY_VERSION == "v1.8"
+    assert authority.machine_authority()["authority_version"] == "v1.8"
 
 
 def test_predecessor_is_recorded_as_immutable_provenance():
-    """The whole lineage stays addressable: v1.7 <- v1.6 <- v1.5."""
+    """The whole lineage stays addressable: v1.8 <- v1.7 <- v1.6."""
     assert (
         authority.PREDECESSOR_AUTHORITY_FREEZE_COMMIT
-        == "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
+        == "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a"
     )
     assert authority.PREDECESSOR_AUTHORITY_SHA256 == (
-        "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c"
+        "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a"
     )
     assert (
         authority.PREDECESSOR_2_AUTHORITY_FREEZE_COMMIT
-        == "3fd66eddfce017078b6af2774a381077759b98a0"
+        == "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
     )
     assert authority.PREDECESSOR_2_AUTHORITY_SHA256 == (
+        "62519701bbe08f94839b6dab4e612826f902f31c736727e8c268cf738897ab4c"
+    )
+    # v1.5's hash leaves the rolling window but never stops being the cohort
+    # salt: the population is pinned to it forever.
+    assert authority.COHORT_SALT_AUTHORITY_SHA256 == (
         "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
     )
     assert (

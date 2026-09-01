@@ -34,6 +34,7 @@ NOT read as an authorization input here -- only ``P0_RESULT == P0_PASS`` is.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -88,12 +89,18 @@ from mineocclude.experiment_iii.fir import (
     frozen_kernels,
 )
 from mineocclude.experiment_iii.p1_extraction import HOOK_SITE
+from mineocclude.experiment_iii.statistics import (
+    ANALYSIS_BOOTSTRAP_SEED_DOMAIN,
+    analysis_bootstrap_seed,
+    assert_concrete_bootstrap_seed,
+)
 from mineocclude.experiment_iii.schema import TemporalSlice
 from mineocclude.experiment_iii.slices import verify_slice_arithmetic
 
 __all__ = [
     "P2_FREEZE_SCHEMA_VERSION",
     "BINDING_GROUPS",
+    "PLACEHOLDER_PREFIXES",
     "PLACEHOLDER_TOKENS",
     "build_p2_freeze_package",
     "p2_freeze_passed",
@@ -135,8 +142,18 @@ PLACEHOLDER_TOKENS = frozenset(
         "FIXME",
         "XXX",
         "CHANGEME",
+        # The authority's own deferral token. Its absence here is why the
+        # superseded P2 froze ``statistics.bootstrap_seed = "FROZEN_IN_P2"`` and
+        # still reported PASS: the walker had the right shape and an incomplete
+        # vocabulary. Amendment 5 gives that binding a derived value; this entry
+        # makes the class of defect unrepeatable.
+        "FROZEN_IN_P2",
     }
 )
+
+#: A deferral to P2 can never itself be a P2 binding, whatever suffix it carries
+#: (the III-B stream discipline token is ``FROZEN_IN_P2_SAME_STREAM_...``).
+PLACEHOLDER_PREFIXES = ("FROZEN_IN_P2",)
 
 
 # --------------------------------------------------------------------------
@@ -223,7 +240,8 @@ def _reject_placeholders(node: Any, trail: str = "") -> None:
             "forbids freezing with a null",
         )
     if isinstance(node, str):
-        if node.strip().upper() in PLACEHOLDER_TOKENS:
+        token = node.strip().upper()
+        if token in PLACEHOLDER_TOKENS or token.startswith(PLACEHOLDER_PREFIXES):
             raise ExperimentIIIError(
                 "P2_BINDING_INCOMPLETE",
                 f"the freeze binding at {trail} is the placeholder {node!r}; "
@@ -1023,7 +1041,23 @@ def _group_extraction_analysis_and_operations(
             ("statistics", "secondary_families"), verifier
         ),
         "bootstrap_replicates": statistics["bootstrap_replicates"],
-        "bootstrap_seed": statistics["bootstrap_seed"],
+        # Authority 8.10.5a. Derived from the immutable Phase 0 design binding
+        # and cross-checked against the frozen machine authority, rather than
+        # copied out of it: copying is exactly how the placeholder reached the
+        # superseded package.
+        "bootstrap_seed": verifier.check(
+            "analysis.bootstrap_seed",
+            assert_concrete_bootstrap_seed(statistics["bootstrap_seed"]),
+            analysis_bootstrap_seed(),
+            "statistics.analysis_bootstrap_seed() derived from the frozen "
+            "Phase 0 design binding under the 8.10.5a domain",
+        ),
+        "bootstrap_seed_domain": ANALYSIS_BOOTSTRAP_SEED_DOMAIN,
+        "bootstrap_seed_binds_to": "PHASE0_DESIGN_SHA256",
+        "bootstrap_seed_phase0_design_sha256": phase0_design_sha256(),
+        "bootstrap_seed_material_sha256": hashlib.sha256(
+            (ANALYSIS_BOOTSTRAP_SEED_DOMAIN + phase0_design_sha256()).encode("utf-8")
+        ).hexdigest(),
         "bootstrap_unit": statistics["bootstrap_unit"],
         "primary_multiplicity": statistics["primary_multiplicity"],
         "prediction_lock_before_statistics": readout["prediction_lock_before_statistics"],

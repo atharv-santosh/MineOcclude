@@ -1181,16 +1181,29 @@ def test_a15_a_modeled_batch_escalates_rather_than_being_rewritten(
 # ==========================================================================
 
 
-def test_a30_the_authority_freeze_commit_is_the_v1_7_freeze() -> None:
-    assert AUTHORITY_FREEZE_COMMIT == "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a"
+def test_a30_the_authority_freeze_commit_is_the_v1_8_freeze() -> None:
+    assert AUTHORITY_FREEZE_COMMIT == "043c5301f431d3ec60315ca6ef98caf8d472f010"
+
+
+def test_a30_the_freeze_commit_is_a_real_resolved_commit() -> None:
+    """It was once the literal ``AMENDMENT_5_FREEZE_COMMIT_PENDING``.
+
+    A commit cannot contain its own hash, so the repository's two-step
+    convention leaves the constant unresolved between the authority freeze and
+    the implementation commit that records it. Shipping that placeholder into a
+    P2 binding is exactly the class of defect Amendment 5 exists to close.
+    """
+    assert len(AUTHORITY_FREEZE_COMMIT) == 40
+    assert all(character in "0123456789abcdef" for character in AUTHORITY_FREEZE_COMMIT)
+    assert "PENDING" not in AUTHORITY_FREEZE_COMMIT
 
 
 def test_a30_current_and_predecessor_freeze_commits_are_distinct() -> None:
     """They were once degenerate: both held v1.5's freeze."""
     assert AUTHORITY_FREEZE_COMMIT != PREDECESSOR_AUTHORITY_FREEZE_COMMIT
-    # v1.6, the predecessor of the current v1.7 package.
+    # v1.7, the predecessor of the current v1.8 package.
     assert PREDECESSOR_AUTHORITY_FREEZE_COMMIT == (
-        "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
+        "3fe0bc13d18f0002eebb99a2b10ef83e651d6f9a"
     )
 
 
@@ -1198,14 +1211,19 @@ def test_a30_the_predecessor_freeze_matches_the_frozen_amendment() -> None:
     """The authority names its own predecessor; source must agree with it."""
     from mineocclude.experiment_iii.authority import machine_authority
 
-    amendment = machine_authority()["authority_amendment_4"]
+    amendment = machine_authority()["authority_amendment_5"]
     assert (
         amendment["predecessor_authority_freeze_commit"]
         == PREDECESSOR_AUTHORITY_FREEZE_COMMIT
     )
-    # The provenance chain must not collapse: v1.6's own record still names v1.5.
-    previous = machine_authority()["authority_amendment_3"]
+    # The provenance chain must not collapse: v1.7's own record still names v1.6,
+    # and v1.6's still names v1.5.
+    previous = machine_authority()["authority_amendment_4"]
     assert previous["predecessor_authority_freeze_commit"] == (
+        "a1f5dd1a959ff477edbf469cd12bb4db606371ea"
+    )
+    earlier = machine_authority()["authority_amendment_3"]
+    assert earlier["predecessor_authority_freeze_commit"] == (
         "3fd66eddfce017078b6af2774a381077759b98a0"
     )
 
@@ -1492,8 +1510,18 @@ def test_production_capture_refuses_with_a_valid_p0_ladder_present() -> None:
     """The end-to-end fail-closed proof: live P0 evidence, production refused.
 
     This is the regression that matters operationally. The repository holds a
-    genuine P0_PASS ladder; --execute must still refuse, and it must refuse with
-    the P2 blocker rather than anything P0-derived.
+    genuine P0_PASS ladder; --execute must still refuse, and it must refuse on a
+    P2 ground rather than anything P0-derived -- a passed P0 is not production
+    authorization, and ``P0``'s own ``PRODUCTION_AUTHORIZED`` field is never
+    consulted.
+
+    The blocker is now ``P2_BINDING_MISMATCH`` rather than
+    ``P2_PREREQUISITE_NOT_PASSED``, and that change is the point rather than a
+    regression: A7 used to refuse unconditionally because ``--execute`` was
+    unimplemented, so any P2 -- or none -- produced the same message. It now
+    reads the package and names what is wrong with it. The package on disk is the
+    superseded ``a2734b31`` freeze, which binds the placeholder
+    ``bootstrap_seed = "FROZEN_IN_P2"``, so that is what it reports.
     """
     import subprocess
     import sys as _sys
@@ -1514,5 +1542,8 @@ def test_production_capture_refuses_with_a_valid_p0_ladder_present() -> None:
         cwd=str(REPOSITORY_ROOT),
     )
     assert completed.returncode != 0, "production capture must refuse"
-    assert "P2_PREREQUISITE_NOT_PASSED" in completed.stderr
+    assert "BLOCKER_CODE=P2_" in completed.stderr
+    assert "A7_EXECUTED=false" in completed.stderr
+    # The refusal must be about P2, never about P0 evidence being unavailable.
+    assert "P0_CANDIDATE_ID_UNSUPPORTED" not in completed.stderr
     assert "PRODUCTION_AUTHORIZED=true" not in completed.stdout
