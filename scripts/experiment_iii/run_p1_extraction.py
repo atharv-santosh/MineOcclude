@@ -164,6 +164,13 @@ def extraction_plan() -> dict[str, Any]:
 
 
 def _head_commit() -> str:
+    """The complete 40-character HEAD identity, never an abbreviation.
+
+    ``RuntimeLoadRequest`` validates ``mineocclude_revision`` against
+    ``CODE_SHA_LENGTH == 40``, so a short form is refused before the model
+    loads. Truncating here would also make the recorded execution provenance
+    ambiguous, which authority 8.4 does not permit of a scientific run.
+    """
     return subprocess.run(
         ["git", "rev-parse", "HEAD"],
         cwd=REPOSITORY_ROOT,
@@ -230,7 +237,7 @@ def _execute(args: argparse.Namespace, plan: dict[str, Any]) -> int:
         adapter_module.RuntimeLoadRequest(
             schema_version=SCHEMA_VERSION,
             runtime_id=args.runtime_id,
-            mineocclude_revision=_head_commit()[:12],
+            mineocclude_revision=_head_commit(),
             mineworld_source_revision=args.mineworld_source_revision,
             modelscope_asset_revision=args.modelscope_asset_revision,
             mineworld_source_root=Path(args.mineworld_source_root),
