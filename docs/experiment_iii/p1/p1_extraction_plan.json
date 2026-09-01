@@ -1,0 +1,82 @@
+{
+  "arrays": 60,
+  "arrays_per_capture": 6,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "MACHINE_AUTHORITY_SHA256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "6A, 8.4, 8.5",
+  "authority_version": "v1.7",
+  "captures": 10,
+  "expected_dtype": "<f2",
+  "expected_npy_bytes": 26148992,
+  "expected_shape": [
+    19,
+    336,
+    2048
+  ],
+  "expected_total_activation_bytes": 1568939520,
+  "extra_forward_authorized": false,
+  "extraction_spec_hash": "cc8248c4e3adeb4df761c32d9e076016002e3c75c088a0a54752ddd31bc9fce6",
+  "forwards": 190,
+  "inventory_name": "extraction_inventory.json",
+  "is_production_stage": false,
+  "layers": [
+    4,
+    10,
+    19
+  ],
+  "next_authorized_state": "A6",
+  "one_forward_per_target_row": true,
+  "pilot_identities": [
+    "e3_p90",
+    "e3_p91"
+  ],
+  "production_identities_authorized": false,
+  "requires_model_inference_authorized": false,
+  "schema_version": "mineocclude-experiment-iii-p1-extraction-plan-v1",
+  "slice_arithmetic": {
+    "CURRENT": {
+      "excluded_action_inclusive_end": 5551,
+      "excluded_action_inclusive_start": 5541,
+      "inclusive_end": 5540,
+      "inclusive_start": 5205,
+      "pair_index": 15,
+      "python_start": 5205,
+      "python_stop_exclusive": 5541,
+      "shape": [
+        1,
+        336,
+        2048
+      ],
+      "temporal_slice": "CURRENT"
+    },
+    "PREVIOUS": {
+      "excluded_action_inclusive_end": 5204,
+      "excluded_action_inclusive_start": 5194,
+      "inclusive_end": 5193,
+      "inclusive_start": 4858,
+      "pair_index": 14,
+      "python_start": 4858,
+      "python_stop_exclusive": 5194,
+      "shape": [
+        1,
+        336,
+        2048
+      ],
+      "temporal_slice": "PREVIOUS"
+    },
+    "selected_visual_disjoint_from_actions": true,
+    "sequence_length": 5552,
+    "tokens_per_pair": 347
+  },
+  "stage": "A5_EXTRACTION",
+  "target_rows_per_capture": 19,
+  "target_rows_total": 190,
+  "temporal_slices": [
+    "PREVIOUS",
+    "CURRENT"
+  ],
+  "transient_hook_layer_count": 20
+}

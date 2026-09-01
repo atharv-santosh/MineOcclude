@@ -1,9 +1,18 @@
 # Experiment III — P1 GPU Extraction Sprint Runbook
 
-**Stage on arrival:** `A9 — ACTIVATION_EXTRACTION`
+**Stage on arrival:** `A5_EXTRACTION` — the extraction half of frozen `A5 —
+P1_ENGINEERING_PILOT`
 **Controlling authority:** `v1.7` (Amendment 4)
 **Preceding stage:** `A5` P1 local capture — **complete**, ten units banked and durable
 **This sprint does NOT complete P1.** Full P1 requires these 190 forwards and 60 arrays.
+
+> **Not A9.** A9 is *production* extraction — 125 captures, 2,375 forwards, 750 arrays — and its
+> entry requires `A8 == PASS`, the A6 freeze binding and `MODEL_INFERENCE_AUTHORIZED == true`.
+> A5's entry requires `A4 == P0_PASS`, `A3 == PASS on capture **and** extraction hosts` and
+> `P1_AUTHORIZED == true`, and names none of A9's gates — which is exactly how the authority
+> authorizes 190 pilot forwards before P2 while still refusing 2,375 production ones. An earlier
+> revision of this runbook said "stage on arrival: A9"; that pointed the GPU host at a stage it
+> could not legally enter. The entrypoint is `run_p1_extraction.py`, not `run_extraction.py`.
 
 ---
 
@@ -24,15 +33,15 @@ pilot provenance by hand**; every binding is in `P1_GPU_HANDOFF_MANIFEST.json`.
 
 ```
 start SageMaker
-  -> GPU-host A3 (environment preflight, extraction role)
-  -> verify MineWorld checkpoint + VAE + preprocessing identity
+  -> GPU-host A3 (environment preflight, extraction role; hashes the weights)
+  -> receipt must name A5_EXTRACTION among its authorized stages
   -> transfer and verify the P1 handoff bundle
-  -> load MineWorld 700M_16f
+  -> load MineWorld 700M_16f through the frozen adapter boundary
   -> run 190 forwards (one per target row)
-  -> persist 60 arrays
+  -> persist 60 arrays + one extraction_inventory.json per capture
   -> validate arrays and inventory
-  -> complete P1 engineering qualification
-  -> P1 PASS
+  -> build p1_pilot_receipt.json
+  -> P1 FULL PASS
   -> A6 / P2
 ```
 
@@ -49,11 +58,23 @@ GPU environment, and a fabricated GPU receipt is the exact failure mode authorit
 prevent.
 
 ```bash
-python scripts/experiment_iii/preflight.py --host-role EXTRACTION_HOST
+python scripts/experiment_iii/preflight.py \
+    --host-role GPU_EXTRACTION_HOST \
+    --host-id gpu_extraction_host \
+    --main-checkpoint <path to the MineWorld 700M_16f main checkpoint> \
+    --vae-checkpoint <path to the VAE checkpoint>
 ```
 
-Require `passed: true` and the receipt naming `A9` among its authorized stages. A capture-only
-receipt never authorizes A9.
+The role token is `GPU_EXTRACTION_HOST`; `EXTRACTION_HOST` is not a valid choice and an earlier
+revision of this runbook printed it. `--main-checkpoint` and `--vae-checkpoint` are **required**
+on this role: A3 opens those files, computes their real SHA-256 and compares each against the
+authority, and refuses rather than recording a digest it never read.
+
+Require `A3_STATUS=PASS`, `MODEL_IDENTITY_VERIFIED=true`, and `A5_EXTRACTION` among
+`AUTHORIZED_STAGES`. A capture-only receipt never authorizes any extraction stage. Display and
+renderer qualification report `NOT_APPLICABLE` on this role — nothing in extraction renders a
+frame — while the CUDA probe is required and refuses with `ENV_GPU_UNAVAILABLE` if torch reports
+no device.
 
 ---
 
@@ -150,8 +171,14 @@ bytes  26,148,992 per array   (19 x 336 x 2048 x 2 + 128-byte NumPy header)
 total  1,568,939,520 bytes    (1.4612 GiB)
 ```
 
-Path contract: `activations/<capture_unit_id>/layer_<NN>/<SLICE>.npy`, inventory at
-`activations/activation_inventory.json`.
+Path contract: `activations/<capture_unit_id>/layer_<NN>/<SLICE>.npy`, with one inventory per
+capture at `activations/<capture_unit_id>/extraction_inventory.json`.
+
+The inventory filename is `extraction_inventory.json` — the name authority 8.5 and
+`EXPECTED_ARTIFACT_INVENTORY.json` both use. An earlier revision of this runbook said
+`activation_inventory.json`, which is the historical Regime-A name (`scripts/run_regime_a.py`)
+and not this artifact; the producer, the validator and this document now all use the one
+authority name.
 
 Each artifact must bind: identity; condition; layer; temporal slice; the 19 target rows **in
 order**; hook site; token-position hash; preprocessing identity; checkpoint identity; shape;
@@ -163,8 +190,26 @@ dtype exactly little-endian float16; byte size exactly 26,148,992; layer in `{4,
 identities match; target index order matches the manifest exactly.
 
 ```bash
-python scripts/experiment_iii/validate_extraction.py
+python scripts/experiment_iii/run_p1_extraction.py --execute \
+    --a3-receipt docs/experiment_iii/receipts/environment_receipt_gpu_extraction_host.json \
+    --handoff-manifest <unpacked>/P1_GPU_HANDOFF_MANIFEST.json \
+    --captures <unpacked>/captures \
+    --mineworld-source-root <MineWorld checkout> \
+    --model-config <cfg> --main-checkpoint <ckpt> \
+    --vae-config <cfg> --vae-checkpoint <ckpt> \
+    --model-config-sha256 <sha> --vae-config-sha256 <sha> \
+    --environment-report-sha256 <A3 receipt sha> \
+    --mineworld-source-revision <sha> --modelscope-asset-revision <sha>
+
+python scripts/experiment_iii/validate_extraction.py \
+    data/experiment_iii/p1/activations/e3_p90__L0 [... all ten ...]
 ```
+
+`run_p1_extraction.py` drives the real adapter: `create_mineworld_adapter()` →
+`load_runtime` → per target row `validate_trajectory` / `preprocess_frame` /
+`convert_action` / `tokenize_trajectory` → **one** `teacher_forced` call with a
+`ScopedHookManager` over all 20 decoder layers. It counts its own adapter calls and refuses with
+`EXTRACTION_FORWARD_COUNT_EXCESS` if a capture ever issues more than 19.
 
 ---
 
@@ -191,6 +236,17 @@ P1 is complete only when the capture half *and* the extraction half both pass, a
 analysis smoke run produces finite numbers. Then, and only then:
 
 - `p1_pilot_receipt.json` = PASS, enumerating every 6A verification item with its observed value
+
+```bash
+python scripts/experiment_iii/build_p1_pilot_receipt.py \
+    --extraction-host-a3 docs/experiment_iii/receipts/environment_receipt_gpu_extraction_host.json
+```
+
+The receipt binds **two** implementation identities, because P1 genuinely spans two: the closure
+the ten capture units were banked under (read out of the capture ledger) and the closure the GPU
+host extracts under. They are different, and recording one of them as "the" P1 checkpoint would
+be a false provenance claim about bytes already on disk.
+
 - `I22_STATUS` = COMPLETE
 - proceed to `A6` — P2 prospective freeze
 

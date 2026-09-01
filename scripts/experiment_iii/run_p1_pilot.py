@@ -7,9 +7,11 @@ forbids identity replacement, so the cohort would simply shrink.
 
     2 pilot identities x 5 conditions = 10 captures, 19 target rows each = 190
 
-This script owns the **capture** half of P1. Extraction (190 MineWorld forwards,
-60 persisted arrays) belongs to A9 on a GPU host and is not reachable from here;
-nothing in this file loads a model.
+This script owns the **capture** half of P1. The extraction half -- 190 MineWorld
+forwards and 60 persisted arrays -- is the same frozen A5 stage run on the GPU
+extraction host, which is why A5's entry condition names A3 on *both* hosts. Its
+entrypoint is ``run_p1_extraction.py``; it is not A9, which is production
+extraction behind the A6/P2 freeze. Nothing in this file loads a model.
 
     python scripts/experiment_iii/run_p1_pilot.py --plan
     python scripts/experiment_iii/run_p1_pilot.py --execute \

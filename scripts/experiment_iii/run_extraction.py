@@ -1,8 +1,15 @@
-"""I09 — multi-layer temporal extraction driver. CPU/plan only in this build.
+"""I09 — the A9 PRODUCTION extraction driver. CPU/plan only in this build.
 
-Loading MineWorld and running inference is stage A9 and is NOT authorized here.
-Without an injected decoder this reports the frozen extraction plan and the
-verified slice arithmetic, and refuses to run inference.
+A9 is production: 125 captures, 2,375 forwards, 750 arrays. Its lifecycle entry
+requires ``A8 == PASS``, the A6 freeze binding and
+``MODEL_INFERENCE_AUTHORIZED == true``, which only the A6/P2 freeze exit may
+emit. None of those exist, so this program reports the frozen extraction plan
+and the verified slice arithmetic and refuses to run inference.
+
+**This is not the P1 pilot entrypoint.** The A5 engineering pilot -- 10 captures,
+190 forwards, 60 arrays -- is a different stage with a different gate, and lives
+in ``run_p1_extraction.py``. Pointing the pilot at this driver would either
+demand a P2 freeze the pilot does not need or spend production scope on it.
 
     python scripts/experiment_iii/run_extraction.py --plan-only
 """

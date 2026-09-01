@@ -2,10 +2,19 @@
 
 Runs every A3 check applicable to one host and writes that host's
 ``environment_receipt_<host>.json``. The receipt names the stages the host
-authorizes; a capture-only host never authorizes ``A9``/``A10``, because it holds
-no MineWorld weights and this program will not fabricate a check it cannot run.
+authorizes; a capture-only host never authorizes ``A5_EXTRACTION``/``A9``/
+``A10``, because it holds no MineWorld weights and this program will not
+fabricate a check it cannot run.
 
     python scripts/experiment_iii/preflight.py --host-role LOCAL_CAPTURE_HOST
+
+The extraction host must name the weights it will load, because A3 hashes them
+rather than recording a literal:
+
+    python scripts/experiment_iii/preflight.py \
+        --host-role GPU_EXTRACTION_HOST \
+        --main-checkpoint <path to the MineWorld 700M_16f checkpoint> \
+        --vae-checkpoint <path to the VAE checkpoint>
 
 Fails closed: a refused check exits non-zero with its frozen blocker code and
 writes no receipt.
@@ -63,6 +72,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--durability-mode", default="LOCAL_MIRROR_SAME_POOL")
     parser.add_argument("--no-local-mirror", action="store_true")
     parser.add_argument("--runtime-config", type=Path, default=None)
+    parser.add_argument(
+        "--main-checkpoint",
+        type=Path,
+        default=None,
+        help="MineWorld main checkpoint; required for GPU_EXTRACTION_HOST",
+    )
+    parser.add_argument(
+        "--vae-checkpoint",
+        type=Path,
+        default=None,
+        help="MineWorld VAE checkpoint; required for GPU_EXTRACTION_HOST",
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args(argv)
 
@@ -87,6 +108,8 @@ def main(argv: list[str] | None = None) -> int:
                 if args.runtime_config
                 else None
             ),
+            main_checkpoint_path=args.main_checkpoint,
+            vae_checkpoint_path=args.vae_checkpoint,
         )
     except ExperimentIIIError as error:
         print(f"BLOCKER_CODE={error.blocker}", file=sys.stderr)
@@ -104,6 +127,13 @@ def main(argv: list[str] | None = None) -> int:
     print(f"AUTHORIZED_STAGES={','.join(receipt['authorized_stages'])}")
     print(f"NOT_AUTHORIZED_STAGES={','.join(receipt['not_authorized_stages'])}")
     print(f"RENDERER_QUALIFICATION={receipt['renderer_qualification']['status']}")
+    print(f"DISPLAY={receipt['display']['status']}")
+    print(f"GPU={receipt['gpu']['status']}")
+    print(f"MODEL_IDENTITY_CHECKS={receipt['model_identity_checks']['status']}")
+    print(
+        "MODEL_IDENTITY_VERIFIED="
+        f"{str(receipt['model_identity_checks']['verified']).lower()}"
+    )
     print(f"AUTHORIZES_CAPTURE_STAGES={str(receipt['authorizes_capture_stages']).lower()}")
     print(f"POOL_WORKING_DEVICE_ID={working['device_id']}")
     print(f"POOL_WORKING_FREE_BYTES={working['free_bytes']}")

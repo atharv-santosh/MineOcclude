@@ -9,8 +9,16 @@ shape this module:
   and gates the GPU check on ``IF_THIS_HOST_RUNS_A9``. A capture-only host
   therefore cannot verify the MineWorld checkpoint or VAE -- the weights are not
   present -- and the honest receipt is one that records those checks as
-  ``NOT_APPLICABLE`` **and refuses to authorize A9**. Silently passing them, or
-  silently authorizing A9 anyway, is the failure this scoping exists to prevent.
+  ``NOT_APPLICABLE`` **and refuses to authorize any extraction stage**. Silently
+  passing them, or silently authorizing extraction anyway, is the failure this
+  scoping exists to prevent.
+* **The scoping cuts both ways, and used not to.** Display availability and
+  renderer qualification are capture-host requirements; the checkpoint, VAE and
+  CUDA checks are extraction-host requirements. Applying the display gate to
+  both roles made a headless GPU host fail ``ENV_DISPLAY_UNAVAILABLE`` on the
+  way to a receipt that would have recorded the renderer as ``NOT_APPLICABLE``
+  -- the module refusing a host for failing a check it had already decided did
+  not apply. Each gate now runs on exactly the role whose stages need it.
 * **The storage gate is the combined-program gate, in binary GiB.** It is applied
   by :mod:`mineocclude.experiment_iii.storage_preflight`, which owns the
   double-counting and unit rules. This module resolves the *physical* device
@@ -33,7 +41,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from mineocclude.experiment_iii.authority import (
     AUTHORITY_FREEZE_COMMIT,
@@ -64,26 +72,45 @@ from mineocclude.experiment_iii.source_closure import source_closure
 from mineocclude.experiment_iii.storage_preflight import GIB, storage_preflight
 
 __all__ = [
+    "A5_EXTRACTION_STAGE",
     "CAPTURE_HOST_STAGES",
     "EXTRACTION_HOST_STAGES",
     "GATED_POOLS",
     "HostRole",
+    "cuda_probe",
     "device_identity",
     "durable_round_trip",
     "environment_receipt",
     "resolve_host_pools",
     "rng_stream_fixture",
     "runtime_pins",
+    "verify_model_identity",
 ]
 
 
-#: The lifecycle stages a capture-only host may authorize. A9 (extraction) is
-#: deliberately absent: it needs the MineWorld weights and a GPU, neither of
-#: which a capture host is required to hold.
+#: Frozen lifecycle A5 (``P1_ENGINEERING_PILOT``) is executed by two hosts: the
+#: capture host runs ``CAPTURE_10_PILOT_UNITS`` and the extraction host runs
+#: ``EXTRACT_190_FORWARDS``. A5's entry condition is literally "A3 == PASS on
+#: capture **and** extraction hosts", so the extraction half needs a stage token
+#: of its own; without one, A5's own entry condition is unsatisfiable.
+#:
+#: ``A5_EXTRACTION`` is NOT ``A9``. A9 is production extraction (125 captures,
+#: 2,375 forwards, 750 arrays) and its entry additionally requires A8 PASS, the
+#: A6 freeze binding and ``MODEL_INFERENCE_AUTHORIZED``. A5's entry requires
+#: none of those -- it requires ``P1_AUTHORIZED`` -- which is exactly why the
+#: pilot's 190 forwards are authorized before P2 and production's 2,375 are not.
+A5_EXTRACTION_STAGE = "A5_EXTRACTION"
+
+#: The lifecycle stages a capture-only host may authorize. Neither extraction
+#: stage appears: both need the MineWorld weights and a GPU, neither of which a
+#: capture host is required to hold.
 CAPTURE_HOST_STAGES = ("A4", "A5_CAPTURE", "A7")
 
-#: The stages an extraction host authorizes once its own A3 passes.
-EXTRACTION_HOST_STAGES = ("A9", "A10")
+#: The stages an extraction host authorizes once its own A3 passes. The pilot
+#: stage is first because it is the one A5 can reach before P2; A9/A10 remain
+#: gated on their own lifecycle entry conditions, which this receipt does not
+#: and cannot satisfy.
+EXTRACTION_HOST_STAGES = (A5_EXTRACTION_STAGE, "A9", "A10")
 
 #: The three logical storage categories the A3 gate reasons about.
 GATED_POOLS = ("POOL_WORKING", "POOL_DURABLE", "POOL_SCRATCH")
@@ -345,17 +372,42 @@ def _display_probe() -> dict[str, Any]:
 
     A capture host with no display cannot render a frame, so the absence of one
     is ``ENV_DISPLAY_UNAVAILABLE``. The probe is deliberately weak: it proves a
-    surface *exists*, not that a client will render into it, which only a live
-    capture can establish.
+    surface *exists*, not that a client will render into it, which only the
+    renderer qualification below can establish.
+
+    Weak is not the same as vacuous. This function once ended its Windows branch
+    with ``bool(os.environ.get("SESSIONNAME")) or True``, which made
+    ``available`` the constant ``True`` and the whole check unfalsifiable. The
+    Windows branch now asks the window manager for the primary screen extent:
+    a session with no desktop (a service in session 0, for instance) reports
+    zero and is refused, which is the answer the check exists to produce.
     """
     system = platform.system()
     if system == "Windows":
-        available = bool(os.environ.get("SESSIONNAME")) or True
+        session_name = os.environ.get("SESSIONNAME")
+        width = height = 0
+        mechanism = "WINDOWS_SYSTEM_METRICS"
+        try:
+            import ctypes
+
+            user32 = ctypes.windll.user32  # type: ignore[attr-defined]
+            width = int(user32.GetSystemMetrics(0))
+            height = int(user32.GetSystemMetrics(1))
+        except Exception as error:  # pragma: no cover - non-Windows CPython
+            return {
+                "platform": system,
+                "mechanism": "WINDOWS_SYSTEM_METRICS_UNAVAILABLE",
+                "session_name": session_name,
+                "error": str(error),
+                "available": False,
+            }
         return {
             "platform": system,
-            "mechanism": "WINDOWS_INTERACTIVE_SESSION",
-            "session_name": os.environ.get("SESSIONNAME"),
-            "available": available,
+            "mechanism": mechanism,
+            "session_name": session_name,
+            "primary_screen_width": width,
+            "primary_screen_height": height,
+            "available": width > 0 and height > 0,
         }
     display = os.environ.get("DISPLAY")
     return {
@@ -364,6 +416,108 @@ def _display_probe() -> dict[str, Any]:
         "display": display,
         "available": bool(display),
     }
+
+
+def cuda_probe() -> dict[str, Any]:
+    """What CUDA this host actually exposes, asked of torch rather than assumed.
+
+    The lifecycle's A3 pass condition is
+    ``GPU_PRESENT_AND_SUFFICIENT_FOR_A9_IF_THIS_HOST_RUNS_A9``; the blocker is
+    ``ENV_GPU_UNAVAILABLE``. A host that cannot import torch, or whose torch
+    reports no CUDA device, answers ``available: false`` here and is refused by
+    :func:`environment_receipt` -- it does not silently record a GPU it does not
+    have. Nothing in this probe loads MineWorld or runs a kernel.
+    """
+    try:
+        import torch  # type: ignore[import-not-found]
+    except Exception as error:
+        return {
+            "available": False,
+            "reason": f"torch is not importable on this host: {error}",
+        }
+    try:
+        available = bool(torch.cuda.is_available())
+    except Exception as error:  # pragma: no cover - driver-level failure
+        return {"available": False, "reason": f"torch.cuda.is_available() failed: {error}"}
+    if not available:
+        return {
+            "available": False,
+            "torch_version": str(getattr(torch, "__version__", "unknown")),
+            "reason": "torch reports no CUDA device on this host",
+        }
+    index = int(torch.cuda.current_device())
+    properties = torch.cuda.get_device_properties(index)
+    return {
+        "available": True,
+        "torch_version": str(getattr(torch, "__version__", "unknown")),
+        "cuda_version": str(getattr(torch.version, "cuda", "unknown")),
+        "device_count": int(torch.cuda.device_count()),
+        "device_index": index,
+        "device_name": str(properties.name),
+        "capability": f"{properties.major}.{properties.minor}",
+        "total_memory_bytes": int(properties.total_memory),
+    }
+
+
+def verify_model_identity(
+    main_checkpoint_path: Path | None,
+    vae_checkpoint_path: Path | None,
+) -> dict[str, Any]:
+    """Hash the weights this host will actually load and compare them.
+
+    The frozen A3 operations are ``VERIFY_CHECKPOINT_SHA256_a92c311b`` and
+    ``VERIFY_VAE_SHA256_370d06be``, and the forbidden repair is
+    ``PROCEED_WITH_MISMATCHED_CHECKPOINT_OR_VAE``. So this reads the bytes on
+    disk and compares the real digest; the expectation is read from the machine
+    authority, never transcribed here. A path that is absent, is not an ordinary
+    file, or hashes to anything else fails closed with its own blocker code --
+    ``verified`` is only ever ``True`` on an exact match of both.
+    """
+    extraction = machine_authority()["extraction"]
+    expected = {
+        "main_checkpoint": (
+            "main_checkpoint_sha256",
+            "ENV_CHECKPOINT_HASH_MISMATCH",
+            main_checkpoint_path,
+            str(extraction["main_checkpoint_sha256"]),
+        ),
+        "vae_checkpoint": (
+            "vae_sha256",
+            "ENV_VAE_HASH_MISMATCH",
+            vae_checkpoint_path,
+            str(extraction["vae_sha256"]),
+        ),
+    }
+    observed: dict[str, Any] = {}
+    for name, (_field, blocker, path, digest) in expected.items():
+        if path is None:
+            raise ExperimentIIIError(
+                blocker,
+                f"an extraction host must name its {name} so A3 can hash it; "
+                "this preflight will not record a weight identity it never read",
+            )
+        resolved = Path(path).resolve()
+        if not resolved.is_file():
+            raise ExperimentIIIError(
+                blocker,
+                f"the {name} is not an ordinary file on this host: {resolved}",
+            )
+        actual = sha256_file(resolved)
+        if actual != digest:
+            raise ExperimentIIIError(
+                blocker,
+                f"the {name} at {resolved} hashes {actual}; the authority freezes "
+                f"{digest}. That is not a configuration problem, it is a "
+                "different model",
+            )
+        observed[name] = {
+            "path": resolved.as_posix(),
+            "bytes": resolved.stat().st_size,
+            "expected_sha256": digest,
+            "observed_sha256": actual,
+            "matches": True,
+        }
+    return observed
 
 
 def _open_local_port(port: int) -> bool:
@@ -385,6 +539,9 @@ def environment_receipt(
     implementation_checkpoint_commit: str | None = None,
     required_free_ports: Sequence[int] = (25565,),
     runtime_config: RuntimeConfig | None = None,
+    main_checkpoint_path: Path | None = None,
+    vae_checkpoint_path: Path | None = None,
+    gpu_probe: Callable[[], Mapping[str, Any]] = cuda_probe,
 ) -> dict[str, Any]:
     """Run every A3 check applicable to ``host_role`` and return its receipt.
 
@@ -396,7 +553,7 @@ def environment_receipt(
         raise ExperimentIIIError(
             "PROVENANCE_BINDING_MISSING", f"{host_role!r} is not a frozen A3 host role"
         )
-    runs_a9 = host_role == HostRole.GPU_EXTRACTION_HOST
+    runs_extraction = host_role == HostRole.GPU_EXTRACTION_HOST
 
     binding = verify_authority_binding()
     closure = source_closure()
@@ -410,12 +567,33 @@ def environment_receipt(
     )
     durable = durable_round_trip(durable_root)
     pins = runtime_pins(project, runtime_root=runtime_root, mod_jar=mod_jar)
-    display = _display_probe()
-    if not display["available"]:
-        raise ExperimentIIIError(
-            "ENV_DISPLAY_UNAVAILABLE",
-            f"host role {host_role} must render frames but exposes no display surface",
-        )
+
+    # Display and renderer qualification are CAPTURE-host requirements. The
+    # frozen A3 operation list pairs ``VERIFY_DISPLAY_AVAILABILITY`` with the
+    # framebuffer and Minecraft pins -- all apparatus properties -- and nothing
+    # in A5_EXTRACTION/A9 renders a frame: extraction reads banked PNGs and runs
+    # a teacher-forced forward. Applying the display gate to the extraction host
+    # made a headless GPU box fail ``ENV_DISPLAY_UNAVAILABLE`` while the same
+    # receipt went on to declare the renderer ``NOT_APPLICABLE`` -- the module
+    # contradicting itself. The capture-host requirement below is unchanged.
+    display: dict[str, Any]
+    if runs_extraction:
+        display = {
+            "status": "NOT_APPLICABLE",
+            "reason": (
+                "this host does not capture; extraction reads banked frames and "
+                "renders nothing"
+            ),
+            "available": None,
+        }
+    else:
+        display = {"status": "EVALUATED", **_display_probe()}
+        if not display["available"]:
+            raise ExperimentIIIError(
+                "ENV_DISPLAY_UNAVAILABLE",
+                f"host role {host_role} must render frames but exposes no display "
+                "surface",
+            )
 
     # A display surface EXISTING is not the same as this host being allowed to
     # produce scientific frames. A capture host must additionally pass the
@@ -424,7 +602,7 @@ def environment_receipt(
     # receipt can vouch for, which is precisely the fabricated PASS this check
     # exists to make impossible.
     renderer: dict[str, Any]
-    if runs_a9:
+    if runs_extraction:
         renderer = {"status": "NOT_APPLICABLE", "reason": "this host does not capture"}
     elif runtime_config is None:
         renderer = {
@@ -471,40 +649,63 @@ def environment_receipt(
 
     now = datetime.now().astimezone()
     model_checks: dict[str, Any]
-    if runs_a9:
-        # An extraction host must prove the weights it will actually load. This
-        # branch is deliberately unreachable from a capture-only preflight and is
-        # never satisfied by a recorded literal.
+    gpu: dict[str, Any]
+    if runs_extraction:
+        # An extraction host must prove the weights it will actually load. The
+        # operational paths are inputs, the digests are read from the machine
+        # authority, and the comparison is against bytes on this host disk.
+        # Supplying no path is still a refusal -- this branch will not record a
+        # weight identity it never read -- but supplying the real weights now
+        # produces a receipt instead of an unconditional blocker.
+        observed = verify_model_identity(main_checkpoint_path, vae_checkpoint_path)
+        gpu = {"status": "EVALUATED", **dict(gpu_probe())}
+        if not gpu.get("available"):
+            raise ExperimentIIIError(
+                "ENV_GPU_UNAVAILABLE",
+                "an extraction host must expose a CUDA device for the A5/A9 "
+                f"forwards: {gpu.get('reason', 'no CUDA device reported')}",
+            )
         model_checks = {
-            "status": "REQUIRED",
+            "status": "VERIFIED",
+            "main_checkpoint_sha256_expected": machine_authority()["extraction"][
+                "main_checkpoint_sha256"
+            ],
+            "vae_sha256_expected": machine_authority()["extraction"]["vae_sha256"],
+            "main_checkpoint": observed["main_checkpoint"],
+            "vae_checkpoint": observed["vae_checkpoint"],
+            "preprocessing_change_allowed": bool(
+                machine_authority()["extraction"]["preprocessing_change_allowed"]
+            ),
+            "verified": True,
+            "note": (
+                "both digests were recomputed from the bytes on this host and "
+                "matched the authority exactly"
+            ),
+        }
+    else:
+        gpu = {
+            "status": "NOT_APPLICABLE",
+            "reason": "this host runs no forward; the GPU gate is scoped to extraction",
+            "available": None,
+        }
+        model_checks = {
+            "status": "NOT_APPLICABLE",
+            "reason": (
+                "this host runs no extraction stage; the lifecycle scopes the "
+                "checkpoint, VAE, preprocessing-identity and GPU checks to the "
+                "host that runs extraction"
+            ),
             "main_checkpoint_sha256_expected": machine_authority()["extraction"][
                 "main_checkpoint_sha256"
             ],
             "vae_sha256_expected": machine_authority()["extraction"]["vae_sha256"],
             "verified": False,
-            "note": "an extraction host must verify these against the weights on disk",
+            "consequence": (
+                "A5_EXTRACTION, A9 and A10 are NOT authorized by this receipt"
+            ),
         }
-        raise ExperimentIIIError(
-            "ENV_CHECKPOINT_HASH_MISMATCH",
-            "GPU_EXTRACTION_HOST preflight must hash the MineWorld checkpoint and "
-            "VAE on that host; this process holds no weights and will not fabricate "
-            "the result",
-        )
-    model_checks = {
-        "status": "NOT_APPLICABLE",
-        "reason": (
-            "this host does not run A9; the lifecycle scopes the checkpoint, VAE, "
-            "preprocessing-identity and GPU checks to the host that runs extraction"
-        ),
-        "main_checkpoint_sha256_expected": machine_authority()["extraction"][
-            "main_checkpoint_sha256"
-        ],
-        "vae_sha256_expected": machine_authority()["extraction"]["vae_sha256"],
-        "verified": False,
-        "consequence": "A9 and A10 are NOT authorized by this receipt",
-    }
 
-    if runs_a9:
+    if runs_extraction:
         authorized = list(EXTRACTION_HOST_STAGES)
     elif renderer.get("qualified"):
         authorized = list(CAPTURE_HOST_STAGES)
@@ -556,6 +757,7 @@ def environment_receipt(
         "runtime_pins": pins,
         "display": display,
         "renderer_qualification": renderer,
+        "gpu": gpu,
         "local_ports": {
             str(port): {"in_use": _open_local_port(port)} for port in required_free_ports
         },
@@ -571,8 +773,8 @@ def environment_receipt(
             "MINEWORLD_INFERENCE_RUN": False,
         },
         "authorized_stages": authorized,
-        "not_authorized_stages": list(EXTRACTION_HOST_STAGES) if not runs_a9 else [],
+        "not_authorized_stages": list(EXTRACTION_HOST_STAGES) if not runs_extraction else [],
         "passed": True,
-        "authorizes_capture_stages": bool(authorized) and not runs_a9,
+        "authorizes_capture_stages": bool(authorized) and not runs_extraction,
         "fails_closed": True,
     }

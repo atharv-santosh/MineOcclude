@@ -337,6 +337,44 @@ REPAIR_HISTORY = [
     "Added tests/experiment_iii/test_p0_execution_closure.py (73 tests) asserting "
     "runtime reachability, not just behaviour: every test in it would have failed "
     "on the audited source state.",
+    # --- P1 GPU path repair sprint -----------------------------------------
+    # The GPU extraction path was unreachable: A3 could not pass on an
+    # extraction host, and no A5 extraction executor existed. No scientific
+    # value changed and the frozen v1.7 authority was not amended.
+    "BLOCKER A: host_preflight scoped display availability and renderer "
+    "qualification to the CAPTURE host. The gate ran on both roles, so a "
+    "headless GPU host failed ENV_DISPLAY_UNAVAILABLE on its way to a receipt "
+    "that would have recorded the renderer as NOT_APPLICABLE. The Windows "
+    "display branch also ended in 'or True', making the check unfalsifiable; it "
+    "now reads the primary screen extent and can answer False.",
+    "BLOCKER B: the GPU-host A3 model check raised ENV_CHECKPOINT_HASH_MISMATCH "
+    "unconditionally with verified=false, so A5's 'A3 == PASS on the extraction "
+    "host' entry condition was unsatisfiable. verify_model_identity now takes "
+    "the operational checkpoint and VAE paths, requires ordinary files, computes "
+    "real SHA-256 and compares against the authority; naming no path is still a "
+    "refusal. A real CUDA probe was added under ENV_GPU_UNAVAILABLE.",
+    "BLOCKER D: added the A5_EXTRACTION stage token. CAPTURE_HOST_STAGES named "
+    "A5_CAPTURE but EXTRACTION_HOST_STAGES was ('A9','A10'), both production and "
+    "post-P2, so frozen A5's extraction half had no stage any host could "
+    "authorize. A5_EXTRACTION is deliberately NOT A9: A9 keeps its A8 / "
+    "A6_FREEZE_BOUND / MODEL_INFERENCE_AUTHORIZED entry.",
+    "BLOCKER C: added p1_extraction.py and run_p1_extraction.py -- the A5 pilot "
+    "executor. run_extraction.py is left as the A9 production driver. The pilot "
+    "path drives the frozen MineWorldAdapter boundary end to end and issues "
+    "exactly one teacher_forced call per target row, harvesting layers {4,10,19} "
+    "and both temporal slices from that single forward.",
+    "Added p1_receipt.py and build_p1_pilot_receipt.py: A5's exit condition is "
+    "p1_pilot_receipt.json == PASS and no producer existed. The receipt records "
+    "BOTH implementation identities P1 spans -- the capture-side closure read out "
+    "of the capture ledger and the extraction-side closure -- rather than "
+    "claiming one checkpoint produced both halves.",
+    "Reconciled the activation inventory filename on the authority name, "
+    "extraction_inventory.json (authority 8.5 and EXPECTED_ARTIFACT_INVENTORY."
+    "json). activation_inventory.json is the historical Regime-A name; the "
+    "handoff manifest and runbook had it wrong.",
+    "Corrected the non-frozen handoff manifest, runbook and run_p1_pilot "
+    "docstring from A9 to the A5 pilot extraction stage. No scientific value "
+    "changed and no frozen authority artifact was touched.",
 ]
 
 #: The audit this sprint closed, and the boundary it clears.

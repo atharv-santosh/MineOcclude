@@ -23,12 +23,18 @@ from mineocclude.experiment_iii.activation_store import (  # noqa: E402
     validate_extraction_inventory,
 )
 from mineocclude.experiment_iii.errors import ExperimentIIIError  # noqa: E402
+from mineocclude.experiment_iii.p1_extraction import (  # noqa: E402
+    CANONICAL_INVENTORY_NAME,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("roots", nargs="+", type=Path)
-    parser.add_argument("--inventory", default="extraction_inventory.json")
+    # Authority 8.5 and EXPECTED_ARTIFACT_INVENTORY.json name this artifact
+    # ``extraction_inventory.json``. The default is taken from the module that
+    # writes it, so producer and validator cannot drift apart again.
+    parser.add_argument("--inventory", default=CANONICAL_INVENTORY_NAME)
     args = parser.parse_args(argv)
 
     failures = 0

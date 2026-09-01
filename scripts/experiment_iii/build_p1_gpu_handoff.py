@@ -1,4 +1,12 @@
-"""A5 exit / A9 entry — the immutable GPU handoff package for P1 extraction.
+"""A5 capture exit / A5 extraction entry — the GPU handoff for P1 extraction.
+
+The stage on arrival is ``A5_EXTRACTION``, not ``A9``. Frozen lifecycle A5
+(``P1_ENGINEERING_PILOT``) contains both halves of the pilot -- the ten captures
+and the 190 forwards -- and its entry condition names A3 on the *extraction*
+host precisely because the extraction half runs there. A9 is production
+extraction: 125 captures, 2,375 forwards, 750 arrays, entered only after A8 and
+the A6/P2 freeze. Labelling this bundle A9 pointed the GPU host at a stage it
+could not legally enter and whose scope is twelve times larger than the pilot's.
 
 The GPU sprint starts on a host that has never seen this repository's history. It
 needs to know, without reconstructing anything by hand: which authority and
@@ -77,6 +85,15 @@ def _sha256(path: Path) -> str:
 
 def _json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _repository_relative(path: Path) -> str:
+    """A repository-relative path where one exists, an absolute one otherwise."""
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(REPOSITORY_ROOT).as_posix()
+    except ValueError:
+        return resolved.as_posix()
 
 
 def extraction_contract() -> dict[str, Any]:
@@ -179,6 +196,53 @@ def extraction_contract() -> dict[str, Any]:
     }
 
 
+def _capture_implementation(captures: Path) -> dict[str, Any]:
+    """The implementation identity the ten capture units were produced under.
+
+    Read out of the hash-chained capture ledger rather than assumed to be HEAD:
+    the captures were banked at their own checkpoint and the GPU host will
+    extract at a later one, and a manifest that named only the current closure
+    would misdescribe bytes that already exist.
+    """
+    ledger_path = Path(captures).resolve().parent / "p1_capture_ledger.jsonl"
+    if not ledger_path.is_file():
+        raise ExperimentIIIError(
+            "PROVENANCE_BINDING_MISSING",
+            f"the capture ledger is absent at {ledger_path}; the capture-side "
+            "implementation identity cannot be read",
+        )
+    closures: set[str] = set()
+    authorities: set[str] = set()
+    records = 0
+    for line in ledger_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        records += 1
+        record = json.loads(line)
+        if record.get("source_closure"):
+            closures.add(str(record["source_closure"]))
+        if record.get("authority_sha256"):
+            authorities.add(str(record["authority_sha256"]))
+    if len(closures) != 1:
+        raise ExperimentIIIError(
+            "PROVENANCE_AUTHORITY_DRIFT",
+            f"the capture ledger records {len(closures)} source closures; the ten "
+            "P1 units must share one",
+        )
+    return {
+        "role": "LOCAL_CAPTURE_HOST_PRODUCED_THESE_CAPTURES",
+        "source_closure": sorted(closures)[0],
+        "authority_sha256": sorted(authorities)[0] if authorities else None,
+        "ledger_path": _repository_relative(ledger_path),
+        "ledger_sha256": _sha256(ledger_path),
+        "ledger_record_count": records,
+        "note": (
+            "these bytes were captured under this closure and are NOT reproduced "
+            "at the extraction checkpoint"
+        ),
+    }
+
+
 def build_manifest(captures: Path) -> dict[str, Any]:
     binding = verify_authority_binding()
     closure = source_closure()
@@ -254,6 +318,8 @@ def build_manifest(captures: Path) -> dict[str, Any]:
             }
         )
 
+    capture_implementation = _capture_implementation(captures)
+
     contract = extraction_contract()
     if total_rows != contract["expected_forwards"]:
         raise ExperimentIIIError(
@@ -266,8 +332,14 @@ def build_manifest(captures: Path) -> dict[str, Any]:
         "schema_version": "mineocclude-experiment-iii-p1-gpu-handoff-v1",
         "authority_section": "6A, 8.4, 8.5",
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "stage_on_arrival": "A9_ACTIVATION_EXTRACTION",
+        "stage_on_arrival": "A5_EXTRACTION",
+        "stage_on_arrival_lifecycle_state": "A5_P1_ENGINEERING_PILOT",
+        "stage_on_arrival_is_production": False,
+        "requires_model_inference_authorized": False,
+        "requires_p2_freeze": False,
+        "a9_remains_production_only": True,
         "gpu_host_a3_status": "NOT_RUN",
+        "gpu_host_a3_required_authorized_stage": "A5_EXTRACTION",
         "authority": {
             "version": AUTHORITY_VERSION,
             "authority_sha256": binding["AUTHORITY_SHA256"],
@@ -275,7 +347,12 @@ def build_manifest(captures: Path) -> dict[str, Any]:
             "phase0_design_sha256": binding["PHASE0_DESIGN_SHA256"],
             "authority_freeze_commit": AUTHORITY_FREEZE_COMMIT,
         },
+        # P1 spans two implementation identities: the one that captured the
+        # ten units and the one the GPU host will extract under. They are
+        # recorded separately because they are separately true; the pilot
+        # receipt binds both and neither may stand in for the other.
         "implementation": {
+            "role": "GPU_EXTRACTION_HOST_WILL_EXTRACT_UNDER_THIS",
             "checkpoint_commit": closure.get("head_commit"),
             "source_closure": closure["source_closure_sha256"],
             "record_count": closure.get("record_count"),
@@ -283,6 +360,7 @@ def build_manifest(captures: Path) -> dict[str, Any]:
                 "includes_uncommitted_working_tree"
             ),
         },
+        "capture_implementation": capture_implementation,
         "upstream_evidence": {
             "p0_selection_receipt": {
                 "path": selection_path.relative_to(REPOSITORY_ROOT).as_posix(),
@@ -323,7 +401,13 @@ def build_manifest(captures: Path) -> dict[str, Any]:
         "extraction_contract": contract,
         "output_contract": {
             "array_path_pattern": "activations/<capture_unit_id>/layer_<NN>/<SLICE>.npy",
-            "inventory_path": "activations/activation_inventory.json",
+            # Authority 8.5 and EXPECTED_ARTIFACT_INVENTORY.json both name
+            # ``extraction_inventory.json``. ``activation_inventory.json`` is the
+            # historical Regime-A name and is not this artifact.
+            "inventory_path_per_capture": (
+                "activations/<capture_unit_id>/extraction_inventory.json"
+            ),
+            "inventory_name": "extraction_inventory.json",
             "arrays_expected": contract["expected_arrays"],
             "bind_per_artifact": [
                 "identity",
@@ -360,8 +444,19 @@ def build_manifest(captures: Path) -> dict[str, Any]:
             "runbook": "docs/experiment_iii/final_authorities/RECOVERY_AND_RESUME_RUNBOOK.md",
         },
         "validation_entrypoint": {
-            "extraction": "python scripts/experiment_iii/run_extraction.py",
+            "preflight": (
+                "python scripts/experiment_iii/preflight.py --host-role "
+                "GPU_EXTRACTION_HOST --main-checkpoint <ckpt> --vae-checkpoint <vae>"
+            ),
+            "extraction": "python scripts/experiment_iii/run_p1_extraction.py",
             "validation": "python scripts/experiment_iii/validate_extraction.py",
+            "pilot_receipt": (
+                "python scripts/experiment_iii/build_p1_pilot_receipt.py"
+            ),
+            "production_extraction_not_this_stage": (
+                "scripts/experiment_iii/run_extraction.py is the A9 production "
+                "driver and is not the entrypoint for this bundle"
+            ),
             "handoff_selfcheck": (
                 "python scripts/experiment_iii/build_p1_gpu_handoff.py --verify <bundle>"
             ),
