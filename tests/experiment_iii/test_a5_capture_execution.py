@@ -1138,3 +1138,78 @@ def test_a_died_attempt_is_recorded_as_a_retry_not_a_first_attempt(
     assert planned[-1]["retry_same_spec"] is True
     assert campaign.inventory()["completed_units"] == 1
     assert campaign.inventory()["duplicate_accepted_units"] == []
+
+
+# --------------------------------------------------------------------------
+# The noise schedule -- the quiet one
+# --------------------------------------------------------------------------
+
+
+def test_the_noise_schedule_is_written_before_startspec(tmp_path, specs, ladder) -> None:
+    """Its absence does not refuse the episode -- it silently downgrades it.
+
+    The mod logs "no noise schedule ... will use the NON-SCIENTIFIC
+    java.util.Random fallback (smoke tests only)" and captures anyway. The third
+    live launch did exactly that: 180 well-formed frames, every other receipt
+    green, and the path replay off by 1.035 blocks. Nothing but authority 3.3's
+    replay check stood between that and a banked non-scientific unit.
+    """
+    campaign, runtime, sink = _campaign(tmp_path, specs[:1], ladder)
+    campaign.run(runtime, sink, warmup_ticks=10)
+    spec = specs[0]
+    path = (
+        campaign.server_run_root
+        / "mineocclude_schedules"
+        / f"episode_{spec.episode_id}.jsonl"
+    )
+    assert path.is_file(), "the episode would have run on java.util.Random"
+    lines = path.read_text(encoding="utf-8").splitlines()
+    header = json.loads(lines[0])
+    assert header["schedule_format_version"] == "person-c-noise-schedule-v0.1"
+    assert header["producer"] == "numpy.random.Generator"
+    assert header["bit_generator"] == "PCG64"
+    assert header["seed"] == spec.seed
+    assert header["n_draws"] == spec.frames
+    assert len(lines) == spec.frames + 1
+
+
+def test_the_served_noise_equals_the_replayed_noise(tmp_path, specs) -> None:
+    """The schedule the server consumes must be the one the validator replays.
+
+    A divergence here would resurface the 1.035-block failure in a form that
+    looks like apparatus drift rather than a serialization bug, so it is checked
+    rather than assumed -- and the writer itself refuses on mismatch.
+    """
+    from mineocclude.experiment_iii.a5_capture import write_noise_schedule
+
+    for spec in specs:
+        result = write_noise_schedule(tmp_path, spec)
+        assert result["noise_sha256"] == spec.noise_schedule_sha256, spec.capture_unit_id
+        rows = [
+            json.loads(line)
+            for line in result["path"].read_text(encoding="utf-8").splitlines()[1:]
+        ]
+        replayed = spec.replay()[1]
+        assert len(rows) == len(replayed)
+        for index, (row, expected) in enumerate(zip(rows, replayed)):
+            assert row["draw_idx"] == index
+            assert row["noise_draw"] == float(expected)
+
+
+def test_both_schedules_exist_for_every_unit(tmp_path, specs, ladder) -> None:
+    """Ten units, two mandatory schedule files each, all present."""
+    campaign, runtime, sink = _campaign(tmp_path, specs, ladder)
+    campaign.run(runtime, sink, warmup_ticks=10)
+    for spec in specs:
+        motion = (
+            campaign.server_run_root
+            / "mineocclude_motion_schedules"
+            / f"episode_{spec.episode_id}.json"
+        )
+        noise = (
+            campaign.server_run_root
+            / "mineocclude_schedules"
+            / f"episode_{spec.episode_id}.jsonl"
+        )
+        assert motion.is_file(), spec.capture_unit_id
+        assert noise.is_file(), spec.capture_unit_id

@@ -76,6 +76,7 @@ __all__ = [
     "capture_unit_directory",
     "capture_a5_unit",
     "write_motion_schedule",
+    "write_noise_schedule",
     "next_witness_episode_base",
     "WITNESS_EPISODE_BASE",
     "WITNESS_LEGS",
@@ -369,6 +370,72 @@ def write_motion_schedule(server_root: Path, spec: CaptureUnitSpec) -> dict[str,
     return {"path": target, "signed_speed_blocks_per_second": signed_speed, "body": body}
 
 
+
+#: Where the server looks for the immutable per-episode noise schedule, resolved
+#: by EpisodeManager.start. Also not configurable in the mod.
+NOISE_SCHEDULE_DIRECTORY = "mineocclude_schedules"
+
+
+def write_noise_schedule(server_root: Path, spec: CaptureUnitSpec) -> dict[str, Any]:
+    """Serialize the frozen per-tick process-noise draws for the server.
+
+    Without this file the mod does NOT refuse the episode -- it logs a warning
+    and falls back to ``java.util.Random``:
+
+        no noise schedule at ... -- episode N will use the NON-SCIENTIFIC
+        java.util.Random fallback (smoke tests only)
+
+    which is the most dangerous failure mode in this whole path, because the
+    capture still produces 180 well-formed frames and every other receipt passes.
+    The only thing that catches it is authority 3.3's replay check, and it caught
+    it: the first live capture diverged from the replayed path by 1.035 blocks.
+
+    The draws come from ``mineocclude.data.noise_schedule``, the producer the mod
+    names in its own file-format contract (NumPy ``Generator(PCG64)``), and its
+    output is byte-identical to ``experiment_iii.cohort.generate_noise_schedule``
+    for the same (seed, n, q, dt) -- verified, because a divergence between the
+    schedule the server consumes and the schedule the validator replays would
+    reintroduce exactly this failure in a form that looks like apparatus drift.
+    """
+    from mineocclude.data.noise_schedule import (
+        generate_noise_schedule as build_schedule,
+        serialize_schedule,
+    )
+
+    schedule = build_schedule(
+        seed=spec.seed,
+        n_draws=spec.frames,
+        q=spec.motion_noise_q,
+        dt_seconds=spec.dt_seconds,
+    )
+    payload = serialize_schedule(schedule)
+
+    # The schedule the server will consume must equal the one the path receipt
+    # replays. Checked here rather than trusted: this is the seam the fallback
+    # silently slipped through.
+    replayed = spec.replay()[1]
+    produced = np.asarray([row.noise_draw for row in schedule.rows], dtype="<f8")
+    if not np.array_equal(produced, np.asarray(replayed, dtype="<f8")):
+        raise ExperimentIIIError(
+            "CAPTURE_NOISE_HASH_MISMATCH",
+            f"{spec.capture_unit_id}: the serialized noise schedule differs from "
+            f"the replayed schedule; the server would consume draws the validator "
+            f"does not expect",
+        )
+
+    directory = Path(server_root) / NOISE_SCHEDULE_DIRECTORY
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / f"episode_{spec.episode_id}.jsonl"
+    temporary = target.with_name(target.name + ".tmp")
+    temporary.write_bytes(payload)
+    temporary.replace(target)
+    return {
+        "path": target,
+        "n_draws": len(schedule.rows),
+        "noise_sha256": noise_sha256(produced),
+    }
+
+
 def capture_a5_unit(
     runtime: Any,
     sink: FrameSink,
@@ -449,6 +516,15 @@ def capture_a5_unit(
         if server_run_root is not None
         else None
     )
+    # The noise schedule is equally mandatory and fails far more quietly: its
+    # absence downgrades the episode to a non-scientific RNG rather than refusing
+    # it. Written before the command for the same reason -- the server loads both
+    # at start() and never repairs a missing one.
+    noise = (
+        write_noise_schedule(server_run_root, spec)
+        if server_run_root is not None
+        else None
+    )
 
     runtime.send(
         startspec_command(
@@ -491,6 +567,12 @@ def capture_a5_unit(
         "warmup_issued": warmup_issued,
         "dry_run": False,
         "frame_records": records,
+        "noise_schedule": (
+            {"path": noise["path"].as_posix(), "n_draws": noise["n_draws"],
+             "noise_sha256": noise["noise_sha256"]}
+            if noise
+            else None
+        ),
         "motion_schedule": (
             {
                 "path": schedule["path"].as_posix(),
