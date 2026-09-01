@@ -61,6 +61,7 @@ from mineocclude.experiment_iii.conditions import (
     validate_wall_receipt,
 )
 from mineocclude.experiment_iii.cohort import (
+    direction_sign,
     generate_path,
     noise_sha256,
     path_sha256,
@@ -74,6 +75,7 @@ __all__ = [
     "CaptureUnitSpec",
     "capture_unit_directory",
     "capture_a5_unit",
+    "write_motion_schedule",
     "assemble_unit_inventory",
     "validate_capture_unit",
     "REQUIRED_UNIT_FILES",
@@ -277,6 +279,59 @@ def capture_unit_directory(root: Path, spec: CaptureUnitSpec) -> Path:
 # --------------------------------------------------------------------------
 
 
+
+#: The mod's frozen motion-schedule format (MotionSchedule.FORMAT_VERSION).
+MOTION_SCHEDULE_FORMAT_VERSION = "mineocclude-motion-schedule-v0.1"
+
+#: Where the server looks for it: <server run dir>/mineocclude_motion_schedules/
+#: episode_<id>.json, resolved by MineOccludeServer.startSpecCmd. The path is not
+#: configurable in the mod.
+MOTION_SCHEDULE_DIRECTORY = "mineocclude_motion_schedules"
+
+
+def write_motion_schedule(server_root: Path, spec: CaptureUnitSpec) -> dict[str, Any]:
+    """Serialize the unit's frozen commanded-speed schedule for the server.
+
+    ``/mineocclude startspec`` does not synthesize motion. It loads this file and
+    refuses the episode if it is absent, names a different spec, or fails to
+    cover every tick -- which is the correct division of labour: the server will
+    not invent a scientific schedule, and Python does not get to change one at
+    capture time. The mod's own words: "The Python campaign controller serializes
+    the already-frozen P1 segments; the server validates complete, gap-free tick
+    coverage and never synthesizes or repairs a scientific schedule."
+
+    Every value here is already frozen before this runs. Authority 3.1 fixes the
+    speed magnitude at 2.0 blocks/s; the identity manifest fixes the direction,
+    and therefore the sign; the frame count is 180. Experiment III's trajectory is
+    a constant commanded velocity for the whole capture, so that is exactly one
+    segment covering ``[0, frames)``. The per-tick process noise is NOT here: the
+    server draws it from the seed and q, and the replayed path is checked against
+    the server's own logged positions to 1e-9 afterwards.
+    """
+    signed_speed = direction_sign(spec.direction) * spec.speed_blocks_per_second
+    body = {
+        "schedule_format_version": MOTION_SCHEDULE_FORMAT_VERSION,
+        "trajectory_spec_id": spec.capture_unit_id,
+        "spec_hash": spec.identity_spec_hash,
+        "expected_ticks": spec.frames,
+        "segments": [
+            {
+                "start_model_frame_idx": 0,
+                "stop_model_frame_idx_exclusive": spec.frames,
+                "signed_speed_blocks_per_second": signed_speed,
+            }
+        ],
+    }
+    directory = Path(server_root) / MOTION_SCHEDULE_DIRECTORY
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / f"episode_{spec.episode_id}.json"
+    payload = json.dumps(body, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    temporary = target.with_name(target.name + ".tmp")
+    temporary.write_text(payload, encoding="utf-8", newline="\n")
+    temporary.replace(target)
+    return {"path": target, "signed_speed_blocks_per_second": signed_speed, "body": body}
+
+
 def capture_a5_unit(
     runtime: Any,
     sink: FrameSink,
@@ -286,6 +341,7 @@ def capture_a5_unit(
     frame_timeout_seconds: float = 600.0,
     previous_wall_block_id: str | None = None,
     server_episode_root: Path | None = None,
+    server_run_root: Path | None = None,
     witness_frames: int = WITNESS_FRAMES_PER_SLOT,
 ) -> dict[str, Any]:
     """Issue one dynamic capture and return what the apparatus reported.
@@ -342,6 +398,14 @@ def capture_a5_unit(
         if stale is not None and stale.exists():
             shutil.rmtree(stale)
 
+    # The schedule must exist before the command is issued: startspec loads it
+    # synchronously and refuses the episode if it is missing.
+    schedule = (
+        write_motion_schedule(server_run_root, spec)
+        if server_run_root is not None
+        else None
+    )
+
     runtime.send(
         startspec_command(
             layout_id=spec.layout_id,
@@ -383,6 +447,16 @@ def capture_a5_unit(
         "warmup_issued": warmup_issued,
         "dry_run": False,
         "frame_records": records,
+        "motion_schedule": (
+            {
+                "path": schedule["path"].as_posix(),
+                "signed_speed_blocks_per_second": schedule[
+                    "signed_speed_blocks_per_second"
+                ],
+            }
+            if schedule
+            else None
+        ),
         "liveness_witness": witness["witness"] if witness else None,
         "liveness_probes": (
             [probe.as_dict() for probe in witness["probes"]] if witness else []

@@ -149,6 +149,7 @@ def _execute(args, plan: dict, ladder: dict, plan_digest: str) -> int:
         output_root=output_root,
         ledger_path=output_root.parent / "p1_capture_ledger.jsonl",
         server_episode_root=server_episodes,
+        server_run_root=Path(config.server_root),
         rve_condition_scores=scores,
         source_closure=source_closure()["source_closure_sha256"],
     )

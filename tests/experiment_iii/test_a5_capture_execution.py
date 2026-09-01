@@ -415,6 +415,7 @@ def _campaign(tmp_path: Path, specs, ladder) -> tuple[PilotCampaign, FakeRuntime
         status_root=tmp_path / "status_root",
         namespace_root=tmp_path,
         server_episode_root=server_episodes,
+        server_run_root=tmp_path / "runtime" / "server",
         rve_condition_scores=scores,
         source_closure="0" * 64,
     )
@@ -995,3 +996,100 @@ def test_witness_episodes_never_collide_with_capture_episodes(
     assert captured == {86901, 86902}
     assert not (set(runtime.witness_episodes) & captured)
     assert all(episode >= 900_000 for episode in runtime.witness_episodes)
+
+
+# --------------------------------------------------------------------------
+# The motion schedule startspec refuses to run without
+# --------------------------------------------------------------------------
+
+
+def test_the_motion_schedule_is_written_before_startspec(tmp_path, specs, ladder) -> None:
+    """The live pilot's first unit died on exactly this file being absent.
+
+    ``/mineocclude startspec`` loads
+    ``<server run dir>/mineocclude_motion_schedules/episode_<id>.json``
+    synchronously and refuses the episode when it is missing -- the server will
+    not synthesize a scientific schedule. The executor must therefore serialize
+    it first, and it must exist by the time the command is issued.
+    """
+    from mineocclude.experiment_iii.a5_capture import (
+        MOTION_SCHEDULE_FORMAT_VERSION,
+        write_motion_schedule,
+    )
+
+    campaign, runtime, sink = _campaign(tmp_path, specs[:1], ladder)
+    campaign.run(runtime, sink, warmup_ticks=10)
+
+    spec = specs[0]
+    schedule_path = (
+        campaign.server_run_root
+        / "mineocclude_motion_schedules"
+        / f"episode_{spec.episode_id}.json"
+    )
+    assert schedule_path.is_file(), "startspec would have refused this episode"
+    body = json.loads(schedule_path.read_text(encoding="utf-8"))
+    assert body["schedule_format_version"] == MOTION_SCHEDULE_FORMAT_VERSION
+    assert body["trajectory_spec_id"] == spec.capture_unit_id
+    assert body["spec_hash"] == spec.identity_spec_hash
+    assert body["expected_ticks"] == spec.frames
+
+
+def test_the_motion_schedule_covers_every_tick_without_gaps(tmp_path, specs) -> None:
+    """MotionSchedule.load refuses a schedule that does not cover [0, ticks)."""
+    from mineocclude.experiment_iii.a5_capture import write_motion_schedule
+
+    for spec in specs:
+        body = write_motion_schedule(tmp_path, spec)["body"]
+        expected_start = 0
+        for segment in body["segments"]:
+            assert segment["start_model_frame_idx"] == expected_start
+            assert segment["stop_model_frame_idx_exclusive"] > expected_start
+            expected_start = segment["stop_model_frame_idx_exclusive"]
+        assert expected_start == spec.frames, spec.capture_unit_id
+
+
+def test_the_commanded_speed_matches_the_frozen_direction(tmp_path, specs) -> None:
+    """Authority 3.1 freezes 2.0 blocks/s; the manifest freezes the sign.
+
+    A wrong sign would still produce 180 frames and a plausible-looking unit, so
+    this is checked here as well as by the 1e-9 path replay in the receipt.
+    """
+    from mineocclude.experiment_iii.a5_capture import write_motion_schedule
+
+    for spec in specs:
+        body = write_motion_schedule(tmp_path, spec)["body"]
+        speed = body["segments"][0]["signed_speed_blocks_per_second"]
+        assert abs(speed) == 2.0 == spec.speed_blocks_per_second
+        expected_sign = 1.0 if spec.direction == "LEFT_TO_RIGHT" else -1.0
+        assert speed == expected_sign * 2.0, (spec.capture_unit_id, spec.direction)
+
+
+def test_a_died_attempt_is_recorded_as_a_retry_not_a_first_attempt(
+    tmp_path, specs, ladder
+) -> None:
+    """Ledger history with nothing on disk is a discarded partial, not a fresh unit.
+
+    The live pilot produced exactly this state: e3_p90__L0 reached RUNNING and
+    then the driver died with no capture directory. Recovery Runbook step 5 says
+    discard the partial and append PLANNED with retry_same_spec=true; recording
+    it as a first attempt would hide a retry that authority 8.3 requires to stay
+    visible.
+    """
+    campaign, runtime, sink = _campaign(tmp_path, specs[:1], ladder)
+    spec = specs[0]
+    campaign.ledger.append(spec.capture_unit_id, "PLANNED", spec_sha256=spec.spec_sha256)
+    campaign.ledger.append(spec.capture_unit_id, "RUNNING", spec_sha256=spec.spec_sha256)
+
+    decision = campaign.resume_decision(spec)
+    assert decision["action"] == "RECAPTURE"
+    assert decision["reason"] == "DISCARDED_PARTIAL_FROM_RUNNING"
+
+    campaign.run(runtime, sink, warmup_ticks=10)
+    planned = [
+        record
+        for record in campaign.ledger.records
+        if record["unit_id"] == spec.capture_unit_id and record["state"] == "PLANNED"
+    ]
+    assert planned[-1]["retry_same_spec"] is True
+    assert campaign.inventory()["completed_units"] == 1
+    assert campaign.inventory()["duplicate_accepted_units"] == []

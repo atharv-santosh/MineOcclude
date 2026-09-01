@@ -170,6 +170,7 @@ class PilotCampaign:
         status_root: Path | None = None,
         namespace_root: Path | None = None,
         server_episode_root: Path | None = None,
+        server_run_root: Path | None = None,
         rve_condition_scores: Mapping[str, float] | None = None,
         source_closure: str | None = None,
     ) -> None:
@@ -185,6 +186,9 @@ class PilotCampaign:
         self.server_episode_root = (
             Path(server_episode_root) if server_episode_root else None
         )
+        # The server's run directory: where startspec looks for the motion
+        # schedule it refuses to run without.
+        self.server_run_root = Path(server_run_root) if server_run_root else None
         self.ledger = HashChainLedger(Path(ledger_path), root=self.namespace_root)
         self.status_root = status_root
         self.rve_condition_scores = dict(rve_condition_scores or {})
@@ -278,6 +282,13 @@ class PilotCampaign:
             return {"action": "FINISH", "reason": f"RESUME_FROM_{state}"}
         if unit_dir.is_dir():
             return {"action": "RECAPTURE", "reason": "DISCARD_PARTIAL"}
+        if state is not None:
+            # Ledger history but nothing on disk: an attempt that died before it
+            # banked anything. Runbook step 5 -- discard the partial and append
+            # PLANNED with retry_same_spec=true. Recording it as a first attempt
+            # would hide a retry, and authority 8.3 requires every failed attempt
+            # to stay visible in the unit's provenance.
+            return {"action": "RECAPTURE", "reason": f"DISCARDED_PARTIAL_FROM_{state}"}
         return {"action": "CAPTURE", "reason": "NOT_STARTED"}
 
     def _recorded_spec_hash(self, unit_id: str) -> str | None:
@@ -346,6 +357,7 @@ class PilotCampaign:
                     frame_timeout_seconds=frame_timeout_seconds,
                     previous_wall_block_id=previous_material,
                     server_episode_root=self.server_episode_root,
+                    server_run_root=self.server_run_root,
                 )
                 assemble_unit_inventory(
                     sink.episode_dir(spec.episode_id),
