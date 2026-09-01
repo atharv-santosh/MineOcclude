@@ -1,0 +1,90 @@
+A7_P2_PACKAGE_SHA256=0d286ddeb8df06b2584dcaaabc1e6a2cf37d6f6affa6cd62614413f387c18f40
+A7_SOURCE_CLOSURE=a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746
+A7_CAPTURE_HOST_RECEIPT=/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/receipts/environment_receipt_sagemaker_capture_host.json
+A7_EXPECTED_CAPTURES=125
+A7_EXPECTED_FRAMES=22500
+A7_EXPECTED_TARGET_ROWS=2375
+A7_SENTINEL_CHECKS=50
+A7_WALL_MATERIAL_TRANSITIONS=24
+A7_DISPLAY={'started': True, 'strategy': 'XVFB', 'display': ':99'}
+A7_SERVER_PID=5438
+A7_CLIENT_PID=5508
+A7_UNIT=e3_t01__L0 STATE=COMPLETE
+A7_UNIT=e3_t04__L0 STATE=COMPLETE
+A7_UNIT=e3_t07__L0 STATE=COMPLETE
+A7_UNIT=e3_t14__L0 STATE=COMPLETE
+A7_UNIT=e3_t20__L0 STATE=COMPLETE
+A7_UNIT=e3_t01__L1 STATE=COMPLETE
+A7_UNIT=e3_t04__L1 STATE=COMPLETE
+A7_UNIT=e3_t07__L1 STATE=COMPLETE
+A7_UNIT=e3_t14__L1 STATE=COMPLETE
+A7_UNIT=e3_t20__L1 STATE=COMPLETE
+A7_UNIT=e3_t01__L2 STATE=COMPLETE
+A7_UNIT=e3_t04__L2 STATE=COMPLETE
+A7_UNIT=e3_t07__L2 STATE=COMPLETE
+A7_UNIT=e3_t14__L2 STATE=COMPLETE
+A7_UNIT=e3_t20__L2 STATE=COMPLETE
+A7_UNIT=e3_t01__L3 STATE=COMPLETE
+A7_UNIT=e3_t04__L3 STATE=COMPLETE
+A7_UNIT=e3_t07__L3 STATE=COMPLETE
+A7_UNIT=e3_t14__L3 STATE=COMPLETE
+A7_UNIT=e3_t20__L3 STATE=COMPLETE
+A7_UNIT=e3_t01__L4 STATE=COMPLETE
+A7_UNIT=e3_t04__L4 STATE=COMPLETE
+A7_UNIT=e3_t07__L4 STATE=COMPLETE
+A7_UNIT=e3_t14__L4 STATE=COMPLETE
+A7_UNIT=e3_t20__L4 STATE=COMPLETE
+A7_UNIT=e3_t06__L1 STATE=COMPLETE
+A7_UNIT=e3_t09__L1 STATE=COMPLETE
+A7_UNIT=e3_t15__L1 STATE=COMPLETE
+A7_UNIT=e3_t19__L1 STATE=COMPLETE
+A7_UNIT=e3_t23__L1 STATE=COMPLETE
+A7_UNIT=e3_t06__L2 STATE=COMPLETE
+A7_UNIT=e3_t09__L2 STATE=COMPLETE
+A7_UNIT=e3_t15__L2 STATE=COMPLETE
+A7_UNIT=e3_t19__L2 STATE=COMPLETE
+A7_UNIT=e3_t23__L2 STATE=COMPLETE
+A7_UNIT=e3_t06__L3 STATE=COMPLETE
+A7_UNIT=e3_t09__L3 STATE=COMPLETE
+A7_UNIT=e3_t15__L3 STATE=COMPLETE
+A7_UNIT=e3_t19__L3 STATE=COMPLETE
+A7_UNIT=e3_t23__L3 STATE=COMPLETE
+A7_UNIT=e3_t06__L4 STATE=COMPLETE
+A7_UNIT=e3_t09__L4 STATE=COMPLETE
+A7_UNIT=e3_t15__L4 STATE=COMPLETE
+A7_UNIT=e3_t19__L4 STATE=COMPLETE
+A7_UNIT=e3_t23__L4 STATE=COMPLETE
+A7_UNIT=e3_t06__L0 STATE=COMPLETE
+A7_UNIT=e3_t09__L0 STATE=COMPLETE
+A7_UNIT=e3_t15__L0 STATE=COMPLETE
+A7_UNIT=e3_t19__L0 STATE=COMPLETE
+A7_UNIT=e3_t23__L0 STATE=COMPLETE
+A7_UNIT=e3_t02__L2 STATE=COMPLETE
+A7_UNIT=e3_t11__L2 STATE=COMPLETE
+A7_UNIT=e3_t12__L2 STATE=COMPLETE
+A7_UNIT=e3_t16__L2 STATE=COMPLETE
+A7_UNIT=e3_t25__L2 STATE=COMPLETE
+A7_UNIT=e3_t02__L3 STATE=COMPLETE
+Traceback (most recent call last):
+  File "/home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/run_production_capture.py", line 292, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/run_production_capture.py", line 115, in main
+    return _execute(args)
+           ^^^^^^^^^^^^^^
+  File "/home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/run_production_capture.py", line 244, in _execute
+    result = campaign.run(
+             ^^^^^^^^^^^^^
+  File "/home/sagemaker-user/MineOcclude-Exp3/src/mineocclude/experiment_iii/a5_pilot.py", line 382, in run
+    result = capture_a5_unit(
+             ^^^^^^^^^^^^^^^^
+  File "/home/sagemaker-user/MineOcclude-Exp3/src/mineocclude/experiment_iii/a5_capture.py", line 492, in capture_a5_unit
+    witness = capture_liveness_witness(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sagemaker-user/MineOcclude-Exp3/src/mineocclude/experiment_iii/capture_driver.py", line 409, in capture_liveness_witness
+    _capture_slot(
+  File "/home/sagemaker-user/MineOcclude-Exp3/src/mineocclude/experiment_iii/capture_driver.py", line 359, in _capture_slot
+    sink.wait_for_frames(episode_id, frames_per_slot, timeout=frame_timeout_seconds)
+  File "/home/sagemaker-user/MineOcclude-Exp3/src/mineocclude/experiment_iii/capture_driver.py", line 242, in wait_for_frames
+    time.sleep(0.25)
+KeyboardInterrupt

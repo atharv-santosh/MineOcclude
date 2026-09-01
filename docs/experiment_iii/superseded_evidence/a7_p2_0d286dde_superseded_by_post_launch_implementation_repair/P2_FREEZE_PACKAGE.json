@@ -1,0 +1,3599 @@
+{
+  "MODEL_INFERENCE_AUTHORIZED": true,
+  "P2_RESULT": "PASS",
+  "PRODUCTION_AUTHORIZED": true,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+    "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_freeze_commit": "043c5301f431d3ec60315ca6ef98caf8d472f010",
+  "authority_section": "6/A6",
+  "authority_version": "v1.8",
+  "binding_group_count": 7,
+  "binding_groups": [
+    "AUTHORITY_AND_CODE",
+    "ENVIRONMENT",
+    "COHORT",
+    "CONDITIONS_AND_EVIDENCE",
+    "APPARATUS",
+    "MEASUREMENT",
+    "EXTRACTION_ANALYSIS_AND_OPERATIONS"
+  ],
+  "bindings": {
+    "APPARATUS": {
+      "camera_eye": [
+        0.5,
+        5.6200000048,
+        -5.5
+      ],
+      "camera_feet": [
+        0.5,
+        4.0,
+        -5.5
+      ],
+      "camera_fov_degrees": 70,
+      "camera_lock": true,
+      "camera_pitch": 0,
+      "camera_roll": 0,
+      "camera_yaw": 0,
+      "capture_hz": 20,
+      "directions": [
+        "LEFT_TO_RIGHT",
+        "RIGHT_TO_LEFT"
+      ],
+      "dt_seconds": 0.05,
+      "framebuffer": {
+        "height": 360,
+        "width": 640
+      },
+      "frames_per_capture": 180,
+      "layout": {
+        "lane_max": 8.0,
+        "lane_min": -8.0,
+        "lane_y": 4.0,
+        "layout_id": "layout_01",
+        "wall_axis": "X",
+        "wall_ortho_const": 6.0,
+        "wall_ortho_offset": -4.0,
+        "wall_seg_max": 2.5,
+        "wall_seg_min": -2.5
+      },
+      "layout_detail": "layout_01",
+      "lighting": "FIXED_NOON_WEATHER_CONTROLLED_ZERO_RANDOM_TICKS",
+      "process_noise_q_blocks_squared_per_second": 0.05,
+      "required_receipts": [
+        "wall_receipt",
+        "camera_receipt",
+        "target_receipt",
+        "timing_receipt",
+        "path_receipt",
+        "scene_receipt",
+        "framebuffer_receipt"
+      ],
+      "sheep_lane": {
+        "x_interval": [
+          -8,
+          8
+        ],
+        "y": 4,
+        "z": 6
+      },
+      "speed_blocks_per_second": 2.0,
+      "target": "ADULT_AI_DISABLED_SILENT_PERSISTENT_INVULNERABLE_MAGENTA_SHEEP",
+      "wall_height_blocks": 3,
+      "wall_thickness_blocks": 1,
+      "wall_volume": {
+        "x_interval": [
+          -3,
+          4
+        ],
+        "y_interval": [
+          4,
+          7
+        ],
+        "z_interval": [
+          2,
+          3
+        ]
+      }
+    },
+    "AUTHORITY_AND_CODE": {
+      "aprime_port_receipt": {
+        "bytes": 1743,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/a1_receipts/aprime_port_receipt.json",
+        "sha256": "f2e029b1cb33c130e327d06264f0213d7224ca0551ae28c49b0f99a29cf57f77"
+      },
+      "authority_freeze_commit": "043c5301f431d3ec60315ca6ef98caf8d472f010",
+      "authority_sha256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+      "authority_version": "v1.8",
+      "fir_kernel_recovery_receipt": {
+        "bytes": 3866,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json",
+        "sha256": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3"
+      },
+      "head_commit": "95e41c0fc15e68bae93f22a1dc7614c73fd30b62",
+      "machine_authority_sha256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+      "phase0_design_sha256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+      "source_closure": {
+        "head_commit": "95e41c0fc15e68bae93f22a1dc7614c73fd30b62",
+        "includes_uncommitted_working_tree": true,
+        "line_ending": "LF",
+        "record_count": 584,
+        "record_format": "<mode> <blob-sha1> <stage>\\t<path>",
+        "roots": [
+          "src",
+          "fabric",
+          "scripts"
+        ],
+        "sort": "ASCENDING_BY_PATH_FIELD_ONLY_AS_RAW_UTF8_BYTES",
+        "source_closure_sha256": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
+        "stream_bytes": 58508,
+        "trailing_newline": true,
+        "whole_line_sort": false
+      }
+    },
+    "COHORT": {
+      "excluded_pilot_identities": [
+        "e3_p90",
+        "e3_p91"
+      ],
+      "excluded_pilots_not_promotable": true,
+      "folds": {
+        "bytes": 6786,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/cohort/folds.json",
+        "sha256": "cf72e750024ce5b6ee1c3116125b980c0352174e296cffdfbed99963a580bcd2"
+      },
+      "folds_content": {
+        "authority_section": "2.6",
+        "fold_direction_counts_ltr_rtl": [
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "folds": [
+          {
+            "direction_counts": {
+              "LEFT_TO_RIGHT": 3,
+              "RIGHT_TO_LEFT": 2
+            },
+            "held_out_identities": [
+              "e3_t01",
+              "e3_t04",
+              "e3_t07",
+              "e3_t14",
+              "e3_t20"
+            ],
+            "inner_rotations": {
+              "0": [
+                "e3_t03",
+                "e3_t10",
+                "e3_t13",
+                "e3_t19",
+                "e3_t22"
+              ],
+              "1": [
+                "e3_t02",
+                "e3_t06",
+                "e3_t08",
+                "e3_t18",
+                "e3_t25"
+              ],
+              "2": [
+                "e3_t05",
+                "e3_t09",
+                "e3_t15",
+                "e3_t23",
+                "e3_t24"
+              ],
+              "3": [
+                "e3_t11",
+                "e3_t12",
+                "e3_t16",
+                "e3_t17",
+                "e3_t21"
+              ]
+            },
+            "outer_fold": 0,
+            "training_identities": [
+              "e3_t02",
+              "e3_t03",
+              "e3_t05",
+              "e3_t06",
+              "e3_t08",
+              "e3_t09",
+              "e3_t10",
+              "e3_t11",
+              "e3_t12",
+              "e3_t13",
+              "e3_t15",
+              "e3_t16",
+              "e3_t17",
+              "e3_t18",
+              "e3_t19",
+              "e3_t21",
+              "e3_t22",
+              "e3_t23",
+              "e3_t24",
+              "e3_t25"
+            ]
+          },
+          {
+            "direction_counts": {
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 3
+            },
+            "held_out_identities": [
+              "e3_t06",
+              "e3_t09",
+              "e3_t15",
+              "e3_t19",
+              "e3_t23"
+            ],
+            "inner_rotations": {
+              "0": [
+                "e3_t03",
+                "e3_t04",
+                "e3_t10",
+                "e3_t21",
+                "e3_t22"
+              ],
+              "1": [
+                "e3_t01",
+                "e3_t02",
+                "e3_t07",
+                "e3_t14",
+                "e3_t25"
+              ],
+              "2": [
+                "e3_t08",
+                "e3_t12",
+                "e3_t13",
+                "e3_t17",
+                "e3_t24"
+              ],
+              "3": [
+                "e3_t05",
+                "e3_t11",
+                "e3_t16",
+                "e3_t18",
+                "e3_t20"
+              ]
+            },
+            "outer_fold": 1,
+            "training_identities": [
+              "e3_t01",
+              "e3_t02",
+              "e3_t03",
+              "e3_t04",
+              "e3_t05",
+              "e3_t07",
+              "e3_t08",
+              "e3_t10",
+              "e3_t11",
+              "e3_t12",
+              "e3_t13",
+              "e3_t14",
+              "e3_t16",
+              "e3_t17",
+              "e3_t18",
+              "e3_t20",
+              "e3_t21",
+              "e3_t22",
+              "e3_t24",
+              "e3_t25"
+            ]
+          },
+          {
+            "direction_counts": {
+              "LEFT_TO_RIGHT": 3,
+              "RIGHT_TO_LEFT": 2
+            },
+            "held_out_identities": [
+              "e3_t02",
+              "e3_t11",
+              "e3_t12",
+              "e3_t16",
+              "e3_t25"
+            ],
+            "inner_rotations": {
+              "0": [
+                "e3_t01",
+                "e3_t06",
+                "e3_t13",
+                "e3_t17",
+                "e3_t18"
+              ],
+              "1": [
+                "e3_t03",
+                "e3_t04",
+                "e3_t10",
+                "e3_t14",
+                "e3_t23"
+              ],
+              "2": [
+                "e3_t07",
+                "e3_t08",
+                "e3_t19",
+                "e3_t22",
+                "e3_t24"
+              ],
+              "3": [
+                "e3_t05",
+                "e3_t09",
+                "e3_t15",
+                "e3_t20",
+                "e3_t21"
+              ]
+            },
+            "outer_fold": 2,
+            "training_identities": [
+              "e3_t01",
+              "e3_t03",
+              "e3_t04",
+              "e3_t05",
+              "e3_t06",
+              "e3_t07",
+              "e3_t08",
+              "e3_t09",
+              "e3_t10",
+              "e3_t13",
+              "e3_t14",
+              "e3_t15",
+              "e3_t17",
+              "e3_t18",
+              "e3_t19",
+              "e3_t20",
+              "e3_t21",
+              "e3_t22",
+              "e3_t23",
+              "e3_t24"
+            ]
+          },
+          {
+            "direction_counts": {
+              "LEFT_TO_RIGHT": 2,
+              "RIGHT_TO_LEFT": 3
+            },
+            "held_out_identities": [
+              "e3_t03",
+              "e3_t10",
+              "e3_t18",
+              "e3_t22",
+              "e3_t24"
+            ],
+            "inner_rotations": {
+              "0": [
+                "e3_t01",
+                "e3_t07",
+                "e3_t11",
+                "e3_t21",
+                "e3_t23"
+              ],
+              "1": [
+                "e3_t05",
+                "e3_t06",
+                "e3_t13",
+                "e3_t15",
+                "e3_t17"
+              ],
+              "2": [
+                "e3_t02",
+                "e3_t04",
+                "e3_t08",
+                "e3_t20",
+                "e3_t25"
+              ],
+              "3": [
+                "e3_t09",
+                "e3_t12",
+                "e3_t14",
+                "e3_t16",
+                "e3_t19"
+              ]
+            },
+            "outer_fold": 3,
+            "training_identities": [
+              "e3_t01",
+              "e3_t02",
+              "e3_t04",
+              "e3_t05",
+              "e3_t06",
+              "e3_t07",
+              "e3_t08",
+              "e3_t09",
+              "e3_t11",
+              "e3_t12",
+              "e3_t13",
+              "e3_t14",
+              "e3_t15",
+              "e3_t16",
+              "e3_t17",
+              "e3_t19",
+              "e3_t20",
+              "e3_t21",
+              "e3_t23",
+              "e3_t25"
+            ]
+          },
+          {
+            "direction_counts": {
+              "LEFT_TO_RIGHT": 3,
+              "RIGHT_TO_LEFT": 2
+            },
+            "held_out_identities": [
+              "e3_t05",
+              "e3_t08",
+              "e3_t13",
+              "e3_t17",
+              "e3_t21"
+            ],
+            "inner_rotations": {
+              "0": [
+                "e3_t01",
+                "e3_t02",
+                "e3_t10",
+                "e3_t15",
+                "e3_t24"
+              ],
+              "1": [
+                "e3_t07",
+                "e3_t09",
+                "e3_t16",
+                "e3_t22",
+                "e3_t25"
+              ],
+              "2": [
+                "e3_t06",
+                "e3_t12",
+                "e3_t14",
+                "e3_t18",
+                "e3_t23"
+              ],
+              "3": [
+                "e3_t03",
+                "e3_t04",
+                "e3_t11",
+                "e3_t19",
+                "e3_t20"
+              ]
+            },
+            "outer_fold": 4,
+            "training_identities": [
+              "e3_t01",
+              "e3_t02",
+              "e3_t03",
+              "e3_t04",
+              "e3_t06",
+              "e3_t07",
+              "e3_t09",
+              "e3_t10",
+              "e3_t11",
+              "e3_t12",
+              "e3_t14",
+              "e3_t15",
+              "e3_t16",
+              "e3_t18",
+              "e3_t19",
+              "e3_t20",
+              "e3_t22",
+              "e3_t23",
+              "e3_t24",
+              "e3_t25"
+            ]
+          }
+        ],
+        "identities_per_outer_fold": 5,
+        "inner_rotations": 4,
+        "outer_fold_assignment": {
+          "e3_t01": 0,
+          "e3_t02": 2,
+          "e3_t03": 3,
+          "e3_t04": 0,
+          "e3_t05": 4,
+          "e3_t06": 1,
+          "e3_t07": 0,
+          "e3_t08": 4,
+          "e3_t09": 1,
+          "e3_t10": 3,
+          "e3_t11": 2,
+          "e3_t12": 2,
+          "e3_t13": 4,
+          "e3_t14": 0,
+          "e3_t15": 1,
+          "e3_t16": 2,
+          "e3_t17": 4,
+          "e3_t18": 3,
+          "e3_t19": 1,
+          "e3_t20": 0,
+          "e3_t21": 4,
+          "e3_t22": 3,
+          "e3_t23": 1,
+          "e3_t24": 3,
+          "e3_t25": 2
+        },
+        "outer_folds": 5,
+        "schema_version": "mineocclude-experiment-iii-folds-v1"
+      },
+      "identities": [
+        {
+          "candidate_index": 0,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86001,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.8818129576705305,
+            -3.76218190911975,
+            -3.639446800396307,
+            -3.516180315084256,
+            -3.3943330215657728,
+            -3.276244597669281,
+            -3.168162518957751,
+            -3.0669117216152837,
+            -2.9630009665549832,
+            -2.865901251004827,
+            -2.7494975234875345,
+            -2.6355849786769916,
+            -2.5236849441382896,
+            -2.3980138959490875,
+            -2.2750377686327323,
+            -2.1261236723151815,
+            -1.9681421235383565,
+            -1.819154714289995,
+            -1.6763022304492698
+          ],
+          "expected_target_sd_blocks": 0.6501796649579716,
+          "frames": 180,
+          "identity": "e3_t01",
+          "noise_schedule_sha256": "8dd74f912bffc071da9b4f900fe3e4fae6aef9780743b66fff625a7eb664f8e4",
+          "noise_seed": 1151080721509912572,
+          "outer_fold": 0,
+          "path_sha256": "f7d525f90ba678012266152d7552fe778534bee294629328bb714b4a6004331c",
+          "priority_rank": 0,
+          "seed": 1151080721509912572,
+          "spec_hash": "c71231931ae11af70d15ec0429cafe6bc19cd9a7ac836ddb909d73f87885f0a2",
+          "start_world_x": -7.909739518055973,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56
+          ]
+        },
+        {
+          "candidate_index": 2,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86002,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.8448264498277074,
+            -3.738513207548487,
+            -3.6266979251615563,
+            -3.5112877389633685,
+            -3.4033255504978484,
+            -3.3065773123456066,
+            -3.2171111476663405,
+            -3.1264071154674955,
+            -3.041715381030478,
+            -2.962941903033054,
+            -2.889098791200574,
+            -2.8069317598076156,
+            -2.7122685830941355,
+            -2.6097909938989425,
+            -2.4865429681141418,
+            -2.356697620883522,
+            -2.206980646791824,
+            -2.0482881486728983,
+            -1.8992034288278024
+          ],
+          "expected_target_sd_blocks": 0.5557491186624466,
+          "frames": 180,
+          "identity": "e3_t02",
+          "noise_schedule_sha256": "d18688f6d1404f2903ce06d1d7c0851461b4927c9ccf7739375d0582b1c2d934",
+          "noise_seed": 5920571982069302289,
+          "outer_fold": 2,
+          "path_sha256": "76a9d6d8a3f8b698df08d5566061438337baf04016f781f477a621b96a07b991",
+          "priority_rank": 1,
+          "seed": 5920571982069302289,
+          "spec_hash": "17f2ee96709398e77a00c8f194ea7f5fa5e418733e3f66aa88d7b19d85fa24d7",
+          "start_world_x": -7.66630013430514,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59
+          ]
+        },
+        {
+          "candidate_index": 3,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86003,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.7441087323393796,
+            -3.656935064302402,
+            -3.5806543265770507,
+            -3.4999994661057094,
+            -3.4162721746104636,
+            -3.3183927024572824,
+            -3.222918469287301,
+            -3.120108653640704,
+            -3.0229589470710936,
+            -2.933747311622569,
+            -2.849191091844965,
+            -2.7724297471727493,
+            -2.692409064680027,
+            -2.622093274129587,
+            -2.5533503559231785,
+            -2.4712388140051686,
+            -2.3819465815553937,
+            -2.2730247027530117,
+            -2.1791461552469515
+          ],
+          "expected_target_sd_blocks": 0.47386690637319234,
+          "frames": 180,
+          "identity": "e3_t03",
+          "noise_schedule_sha256": "8abdcd940ad482dbdb650dbbac24d388c8d9efc303aa6f7cadbc87d8ec3c3220",
+          "noise_seed": 7166739038605996134,
+          "outer_fold": 3,
+          "path_sha256": "8ff4655cd688176168a27d677cbfdf89a9671bce7e4f071fb7a326ef315458bf",
+          "priority_rank": 2,
+          "seed": 7166739038605996134,
+          "spec_hash": "9c1e7f94c1fc8fff0834db86b1b2b00058ca9a1ec5a3ec516951885efe470feb",
+          "start_world_x": -7.977568740690246,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67
+          ]
+        },
+        {
+          "candidate_index": 11,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86004,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.800279913055952,
+            -3.6763863670569745,
+            -3.553385196421178,
+            -3.4239685296292404,
+            -3.2958493848627657,
+            -3.168871663413808,
+            -3.0471564608669226,
+            -2.937105711412358,
+            -2.8240723863550983,
+            -2.7209345086186225,
+            -2.6176517378959363,
+            -2.5115748015780373,
+            -2.427630484028959,
+            -2.331097260729511,
+            -2.2506152277755445,
+            -2.154896321777556,
+            -2.0580217822837272,
+            -1.9603055597579313,
+            -1.8637936022254926
+          ],
+          "expected_target_sd_blocks": 0.5849765040745246,
+          "frames": 180,
+          "identity": "e3_t04",
+          "noise_schedule_sha256": "fae7bbb674389cc32206dccf1abe8c83dded633b3fa6829f29ee0bee50b6ff5b",
+          "noise_seed": 103244024692410362,
+          "outer_fold": 0,
+          "path_sha256": "d3b4864bd58726c815d062ef5442b54c45d4a7865ccc9b61b32e32c1aa84b328",
+          "priority_rank": 3,
+          "seed": 103244024692410362,
+          "spec_hash": "947fe0b63c3f250a89c0d38e3ec751dd154f0a7f8708ff7b02d30f4e6491f40a",
+          "start_world_x": -7.657666281935313,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58
+          ]
+        },
+        {
+          "candidate_index": 12,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86005,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.829251710810586,
+            -3.6966215571927385,
+            -3.5790804827706366,
+            -3.4688929039724163,
+            -3.3706830914454042,
+            -3.259517100927575,
+            -3.124298715159726,
+            -2.966411855813046,
+            -2.793190640283033,
+            -2.627199867356354,
+            -2.464536683170642,
+            -2.310792858157884,
+            -2.1470847995672733,
+            -1.9850382454019186,
+            -1.834578146910515,
+            -1.7144033808112504,
+            -1.6154156698779012,
+            -1.5221485159865384,
+            -1.4220961518603346
+          ],
+          "expected_target_sd_blocks": 0.7770268080386348,
+          "frames": 180,
+          "identity": "e3_t05",
+          "noise_schedule_sha256": "76067a9c4e719d10a50e57bad52abd46cae3cdef5f66e4fe9945236ae1adb6cc",
+          "noise_seed": 7738883773481193907,
+          "outer_fold": 4,
+          "path_sha256": "5eb825e0a2f96b71840cfc214aa0b4f058b2b0d13b48165c2fd6d25805c313ef",
+          "priority_rank": 4,
+          "seed": 7738883773481193907,
+          "spec_hash": "a66a835e7788284a132a59725ae3b9dc9c5e7719ad6bb21d7d520869a5ab4f62",
+          "start_world_x": -7.754744459942564,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54
+          ]
+        },
+        {
+          "candidate_index": 19,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86006,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.794975018165006,
+            -3.67419858705332,
+            -3.563613629055775,
+            -3.4455164178910525,
+            -3.3321434855219714,
+            -3.21127688895627,
+            -3.077737228604292,
+            -2.9393837077502836,
+            -2.7931418453227894,
+            -2.6596259112599276,
+            -2.546330425253621,
+            -2.4445801743682147,
+            -2.33512415802596,
+            -2.2145910218397895,
+            -2.077858540669734,
+            -1.9470509644020795,
+            -1.825741236563206,
+            -1.711376353395494,
+            -1.6093031746178685
+          ],
+          "expected_target_sd_blocks": 0.6752542860778217,
+          "frames": 180,
+          "identity": "e3_t06",
+          "noise_schedule_sha256": "d589922e1b67bc239695985c9d246263f93a7164ecee8e4e3ccbcb35234d7059",
+          "noise_seed": 3256836827425962066,
+          "outer_fold": 1,
+          "path_sha256": "3c6928cabf202342cc8dedfd411d86dcce3e9a0144c909c098ac06e7f806cf0b",
+          "priority_rank": 5,
+          "seed": 3256836827425962066,
+          "spec_hash": "960f3dbfae15d9dbbcc5753d91b206fcb833b1b0314a17025ccaa3518dbe6074",
+          "start_world_x": -7.775471932550879,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62
+          ]
+        },
+        {
+          "candidate_index": 31,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86007,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.7077278456082094,
+            -3.6234289498669034,
+            -3.5208484413802146,
+            -3.4044000630124094,
+            -3.2895612427444814,
+            -3.1791200604028735,
+            -3.084030981912858,
+            -2.9854721015649357,
+            -2.8912937812251505,
+            -2.8126747507154977,
+            -2.731537175198748,
+            -2.6632401540751123,
+            -2.5908749218292457,
+            -2.5034987092873253,
+            -2.4229028477337016,
+            -2.312118063614776,
+            -2.2048523069305177,
+            -2.0855991698139604,
+            -1.9675948817613
+          ],
+          "expected_target_sd_blocks": 0.5106522384832574,
+          "frames": 180,
+          "identity": "e3_t07",
+          "noise_schedule_sha256": "541b78e22e1e24645bca4235732a3e7acab4efc4dac2a260d55faa156ea8504f",
+          "noise_seed": 2626534007576612866,
+          "outer_fold": 0,
+          "path_sha256": "47e965124a163c42e50302065214299ca54ad0e3ddef2f07d13ff7145e75aa1f",
+          "priority_rank": 6,
+          "seed": 2626534007576612866,
+          "spec_hash": "a01226f993cff4e6fc8e751103c060fd72c73c4c2c73886e023e7a4256cf6d7b",
+          "start_world_x": -7.7206718804158445,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60
+          ]
+        },
+        {
+          "candidate_index": 36,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86008,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.8734842606969635,
+            -3.7540302543232573,
+            -3.64240684447895,
+            -3.531020234527389,
+            -3.4324743850150177,
+            -3.3348175219890526,
+            -3.237653470134513,
+            -3.1279886174343012,
+            -3.0057649909084985,
+            -2.8695676515731043,
+            -2.7388980152496902,
+            -2.615758762671646,
+            -2.506496954739318,
+            -2.41028946046564,
+            -2.318539623017645,
+            -2.2428825501146488,
+            -2.1548314290817547,
+            -2.0712880678385837,
+            -1.9649217024432413
+          ],
+          "expected_target_sd_blocks": 0.5920997332811505,
+          "frames": 180,
+          "identity": "e3_t08",
+          "noise_schedule_sha256": "52cdbbf187dae86401fe9aa0b855215d4b172ecbe3b8fd8cfaa238182c065b02",
+          "noise_seed": 8858752732413423232,
+          "outer_fold": 4,
+          "path_sha256": "0e473c0a9f4392276843118c5d958758c04e7315315ab7bd4c44e36e4af4d410",
+          "priority_rank": 7,
+          "seed": 8858752732413423232,
+          "spec_hash": "d0a69b9beb5e47e9139d5bff45053c16a304bc1c4fdb5df6e6c185b517a1639c",
+          "start_world_x": -7.912184968860205,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58
+          ]
+        },
+        {
+          "candidate_index": 47,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86009,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.755954393156907,
+            -3.6567756003518324,
+            -3.5620148563580885,
+            -3.46685777437831,
+            -3.37844981903662,
+            -3.3067507193178463,
+            -3.236681698227834,
+            -3.1790947775661,
+            -3.1135672412587523,
+            -3.040422066348238,
+            -2.9681140773569616,
+            -2.902982691208693,
+            -2.8509481897148214,
+            -2.801980065634415,
+            -2.760414788601952,
+            -2.720180282872836,
+            -2.6705583045297865,
+            -2.6037307749181857,
+            -2.5232157439672482
+          ],
+          "expected_target_sd_blocks": 0.35973747817424356,
+          "frames": 180,
+          "identity": "e3_t09",
+          "noise_schedule_sha256": "99296a643f2222999959d9fd8d387220dfb449487e16f0b5120a749bb6b74b10",
+          "noise_seed": 2711935025605965942,
+          "outer_fold": 1,
+          "path_sha256": "b70909afc964c21f7cd5802a1a81acf7224c35fdf3a5a8008b20ae9e6f578bb7",
+          "priority_rank": 8,
+          "seed": 2711935025605965942,
+          "spec_hash": "d68b624e495468203f4bb1b34e5c1d447f38397f962c18b09dfbb45c9f759d15",
+          "start_world_x": -7.838434972342893,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ]
+        },
+        {
+          "candidate_index": 59,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86010,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.8847438573751005,
+            -3.761276989941564,
+            -3.6556628572407526,
+            -3.562658178743986,
+            -3.4913549688665584,
+            -3.4377484387482933,
+            -3.3880661065979427,
+            -3.3324990380158006,
+            -3.2815272583448043,
+            -3.2103423596377634,
+            -3.1398090814842137,
+            -3.0631083790322053,
+            -2.9690186923530675,
+            -2.8815073392525075,
+            -2.777045746326872,
+            -2.6810953413156353,
+            -2.5883508111114297,
+            -2.483126372359916,
+            -2.360101173000372
+          ],
+          "expected_target_sd_blocks": 0.4294912093742321,
+          "frames": 180,
+          "identity": "e3_t10",
+          "noise_schedule_sha256": "c03b605ed0b56731589a7bbea3ea5852aa2add7f5c4e706a1f5d68bcec4c9a67",
+          "noise_seed": 6982232726599083300,
+          "outer_fold": 3,
+          "path_sha256": "535f6415e97088f9304e355dda3217d23e38e19e74e89e8f19652e9e41b07a17",
+          "priority_rank": 9,
+          "seed": 6982232726599083300,
+          "spec_hash": "8198fff9bdeaf0ec70f320706433d8ca2a59c171a45e0264dd218a5ea1cb8ffe",
+          "start_world_x": -7.964269600198087,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58
+          ]
+        },
+        {
+          "candidate_index": 114,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86011,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.7443170954315184,
+            -3.6512443681898716,
+            -3.555182108408302,
+            -3.4706715535401105,
+            -3.396009741853224,
+            -3.339357432415942,
+            -3.3001636053956345,
+            -3.2497047678913025,
+            -3.196608387527008,
+            -3.1202932432129042,
+            -3.036007701942537,
+            -2.9455141417044253,
+            -2.849707242567501,
+            -2.7649492911414963,
+            -2.6759955469029317,
+            -2.5796963531906574,
+            -2.460225800908842,
+            -2.3314643625234117,
+            -2.195576518354059
+          ],
+          "expected_target_sd_blocks": 0.44101607242618834,
+          "frames": 180,
+          "identity": "e3_t11",
+          "noise_schedule_sha256": "d14054df9d36a3a097489f5348d208ec6a714bc608be99ae28c7c3529b8ae2a6",
+          "noise_seed": 3694684073502805388,
+          "outer_fold": 2,
+          "path_sha256": "357b9a16410228dea688709cb3725056e7de6dffe5b93bdd4fd86ed970e8f6b2",
+          "priority_rank": 10,
+          "seed": 3694684073502805388,
+          "spec_hash": "d8c339e8cf1bf9fd1828efd029e4ebc372ffeb456d1f2226c88aaee9d64bf8ac",
+          "start_world_x": -7.719023469127728,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61
+          ]
+        },
+        {
+          "candidate_index": 174,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86012,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.7010344169989566,
+            -3.6017711938990877,
+            -3.493829112802475,
+            -3.3567204041198337,
+            -3.207346808661598,
+            -3.0573040807138154,
+            -2.9112164791283663,
+            -2.775824948018542,
+            -2.6532077216275565,
+            -2.5276014404841205,
+            -2.413602220366378,
+            -2.29501740092007,
+            -2.174568918416508,
+            -2.066238310995785,
+            -1.9605702758487982,
+            -1.8850026042808927,
+            -1.8114980273070889,
+            -1.7289929889859945,
+            -1.6446664108965567
+          ],
+          "expected_target_sd_blocks": 0.6532134232413778,
+          "frames": 180,
+          "identity": "e3_t12",
+          "noise_schedule_sha256": "e1a30fc33c9412a72905c956558cefc2712c4c834a5b366e9dec09e5a13b9f87",
+          "noise_seed": 3560537627501707283,
+          "outer_fold": 2,
+          "path_sha256": "745d5557ee7f7b3077043c0cc1a9c9a0d5062e56e47c21888f103fe5bd007700",
+          "priority_rank": 11,
+          "seed": 3560537627501707283,
+          "spec_hash": "48f75bdbf6442db18ecb2f53da807a097604f46944d12411900c3896e73f298e",
+          "start_world_x": -7.899471483980302,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65
+          ]
+        },
+        {
+          "candidate_index": 232,
+          "direction": "LEFT_TO_RIGHT",
+          "episode_id": 86013,
+          "expected_causal_fir_target_world_x_blocks": [
+            -3.8597359810830216,
+            -3.747161940481825,
+            -3.639451848013944,
+            -3.5450707542760753,
+            -3.4632956173431015,
+            -3.4031276782573925,
+            -3.3415268004186025,
+            -3.2914699864437473,
+            -3.2355105026752264,
+            -3.1565926515595706,
+            -3.0710530435946697,
+            -2.9467447274766245,
+            -2.8000771751954963,
+            -2.6499915528996607,
+            -2.477322206207484,
+            -2.337527888251492,
+            -2.195532885114889,
+            -2.084798117482684,
+            -1.9757751302003033
+          ],
+          "expected_target_sd_blocks": 0.565488390879404,
+          "frames": 180,
+          "identity": "e3_t13",
+          "noise_schedule_sha256": "6fd8fdcc8fc182a10630506ae44c018fd5ac2576751d47c5dcf5be94821026ad",
+          "noise_seed": 7753000022487547090,
+          "outer_fold": 4,
+          "path_sha256": "1f8460f281ee26a9e6d3613ef88eaadebfcca0a4f8b40470ebfb3e4aa25280e9",
+          "priority_rank": 12,
+          "seed": 7753000022487547090,
+          "spec_hash": "94317efa14f9e824d0cb3b3b24bf80053aa97a1f49dab2667fc00324fee0d6ce",
+          "start_world_x": -7.838896253632989,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62
+          ]
+        },
+        {
+          "candidate_index": 0,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86014,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.747423886955964,
+            4.641639649254377,
+            4.52866816280859,
+            4.396040130905879,
+            4.263513105672315,
+            4.157933467416663,
+            4.074920268786034,
+            4.003153867498914,
+            3.923666876083663,
+            3.8469964479823755,
+            3.779599181029085,
+            3.7084285994356256,
+            3.6305850356434997,
+            3.546826839477406,
+            3.440281074330931,
+            3.3371918034607773,
+            3.240148099314372,
+            3.1577497235254324,
+            3.0851372462277658
+          ],
+          "expected_target_sd_blocks": 0.48996967341770886,
+          "frames": 180,
+          "identity": "e3_t14",
+          "noise_schedule_sha256": "68510f028522ee67cd33ae892435045d16742b7f356e43d2693fd8f0f76e8cab",
+          "noise_seed": 2685028592706171814,
+          "outer_fold": 0,
+          "path_sha256": "c5865f2febe8d39ef62282bb6ba2c2ad0598fae010cd2c455be6cb2cda732699",
+          "priority_rank": 13,
+          "seed": 2685028592706171814,
+          "spec_hash": "23d8bd258868bea1dc9cc9bec552c864703b8a7170bc8e53caaf4a1ac99621f0",
+          "start_world_x": 7.780591305384416,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50
+          ]
+        },
+        {
+          "candidate_index": 1,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86015,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.824994134067809,
+            4.703463280955375,
+            4.553126693588512,
+            4.406269938933411,
+            4.26737938539173,
+            4.102763046918885,
+            3.9428926248020124,
+            3.794909778375393,
+            3.677982441450736,
+            3.561432235608787,
+            3.444634289459965,
+            3.3176169910459334,
+            3.2039923630511113,
+            3.1230487406470515,
+            3.014035781264063,
+            2.8870470389776623,
+            2.7469598958561625,
+            2.620230146665746,
+            2.5093274667202894
+          ],
+          "expected_target_sd_blocks": 0.7015131001032755,
+          "frames": 180,
+          "identity": "e3_t15",
+          "noise_schedule_sha256": "be29ec3b77eb340e550510a8609ce0e1aa529300d73733526151440138f6017a",
+          "noise_seed": 5460180725308336059,
+          "outer_fold": 1,
+          "path_sha256": "d61b45d428e741c85800b1d643f6601c931efd19d640af5ac2b80b9f98bc7a31",
+          "priority_rank": 14,
+          "seed": 5460180725308336059,
+          "spec_hash": "6fd2a53233c0be3f055f5a2dad03baf16d1b3746ed3426f038d04a41de56b5f7",
+          "start_world_x": 7.727623682090002,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53
+          ]
+        },
+        {
+          "candidate_index": 2,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86016,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.804821347992435,
+            4.681181452897067,
+            4.558876102229336,
+            4.468081765922397,
+            4.382864263763486,
+            4.299394853163128,
+            4.222922035743466,
+            4.147218711916595,
+            4.104935885108805,
+            4.071394693769871,
+            4.02938506878587,
+            3.9464777262271356,
+            3.8296139163755267,
+            3.693498596306827,
+            3.5798227114735974,
+            3.508131313066562,
+            3.4238439936427096,
+            3.2885276201378444,
+            3.1283014278320094
+          ],
+          "expected_target_sd_blocks": 0.46501682583317605,
+          "frames": 180,
+          "identity": "e3_t16",
+          "noise_schedule_sha256": "f769eb816c0a5a18a13a5adf6f733d2ab31d407127d7c2460eb421933ca1bdfc",
+          "noise_seed": 5723345278464731447,
+          "outer_fold": 2,
+          "path_sha256": "f7b7ae7932d9964b763ed2b71af12201c86fce8a03bcca1f87d0193186f54982",
+          "priority_rank": 15,
+          "seed": 5723345278464731447,
+          "spec_hash": "c2b5ebc2b10544dffceb3cfa2ddefe2bb49ecdc6678d9bbb071cef0ae0a0820c",
+          "start_world_x": 7.889528710545852,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52
+          ]
+        },
+        {
+          "candidate_index": 3,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86017,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.795842453610808,
+            4.692470764209325,
+            4.590613197751638,
+            4.5043793307679385,
+            4.385071876692711,
+            4.253003561218367,
+            4.121844635110615,
+            4.000964292078215,
+            3.892758987671075,
+            3.7740059301348783,
+            3.6559740406340753,
+            3.5314645165542253,
+            3.4269681334717417,
+            3.3184788809673718,
+            3.182928473623379,
+            3.040960438488249,
+            2.8983802425386185,
+            2.7816291643599556,
+            2.689047800949541
+          ],
+          "expected_target_sd_blocks": 0.6526080510671435,
+          "frames": 180,
+          "identity": "e3_t17",
+          "noise_schedule_sha256": "859e87a053dd75bba293b0d5f96def35ed0ed3c3a1e79f46298c65b5636a15a7",
+          "noise_seed": 8197286071411377974,
+          "outer_fold": 4,
+          "path_sha256": "4008dde92212a2b53820da480a3fee827b3fdb470ef9e777278dba08c7d1ce7c",
+          "priority_rank": 16,
+          "seed": 8197286071411377974,
+          "spec_hash": "f90dae07a5ca81b617992a864d7d99b01960034abc1abb8e75d5eb7e664d2c1b",
+          "start_world_x": 7.793907988341967,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ]
+        },
+        {
+          "candidate_index": 5,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86018,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.8002139635689085,
+            4.6831215218851625,
+            4.559335309347519,
+            4.418019390128251,
+            4.264807160646977,
+            4.120290036247884,
+            4.0080697425774785,
+            3.911772536766539,
+            3.8286107804469998,
+            3.7120890134731885,
+            3.575724727854132,
+            3.4448037596532255,
+            3.3385344916800945,
+            3.2726795495147427,
+            3.216867540730267,
+            3.1538352117877437,
+            3.0671688409391753,
+            2.9549675783359035,
+            2.8520811948876985
+          ],
+          "expected_target_sd_blocks": 0.5912574393691703,
+          "frames": 180,
+          "identity": "e3_t18",
+          "noise_schedule_sha256": "c5568284cd94219deab47febd317ac0ccbf32c0e6a0459be30469b838fa7321a",
+          "noise_seed": 7942815946242280044,
+          "outer_fold": 3,
+          "path_sha256": "cc7630bc03ef1a1156e5c116c4b5598d70e4973ac54db5af1460a44ba1e70a5d",
+          "priority_rank": 17,
+          "seed": 7942815946242280044,
+          "spec_hash": "c1f6aa94d348063be6ef740957376d8a49e14ee45ffc3bd826811af5a8c61c4a",
+          "start_world_x": 7.9448053239457,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ]
+        },
+        {
+          "candidate_index": 18,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86019,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.751307872807796,
+            4.645650872848337,
+            4.537016997679062,
+            4.436406078928496,
+            4.358515310006961,
+            4.26907692286426,
+            4.1798217679475576,
+            4.095825592438177,
+            4.032831548851385,
+            3.9594331590230984,
+            3.838514721501449,
+            3.6862593256839546,
+            3.547558664774702,
+            3.4107555017958524,
+            3.289104360513341,
+            3.181368870182797,
+            3.0734599006660965,
+            2.967633740279069,
+            2.883929548766427
+          ],
+          "expected_target_sd_blocks": 0.5757377740043594,
+          "frames": 180,
+          "identity": "e3_t19",
+          "noise_schedule_sha256": "06743658a2fbca8969fd9148ca370826f8e545669d33de5ea0d45d31f0cc2802",
+          "noise_seed": 4188095816312658672,
+          "outer_fold": 1,
+          "path_sha256": "974fe2cfebcd109017e5a5f1a05f6e468965adaaa3685e73e0d33aa73b30bc75",
+          "priority_rank": 18,
+          "seed": 4188095816312658672,
+          "spec_hash": "f396b7d86de7d631d41027b0d23c29be620783f2666f858a6e85fb3fa69865fe",
+          "start_world_x": 7.952559737128764,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50
+          ]
+        },
+        {
+          "candidate_index": 92,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86020,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.658387412073496,
+            4.591636453291443,
+            4.534248808146305,
+            4.491138058833971,
+            4.454526584475559,
+            4.410556289817178,
+            4.355514099587604,
+            4.299438333109707,
+            4.252255341703006,
+            4.206938765928236,
+            4.158853637061094,
+            4.06965772950824,
+            3.95498241978921,
+            3.845223769200184,
+            3.7602340529252385,
+            3.7032548308169506,
+            3.6251820045133996,
+            3.5283404062443173,
+            3.433143745411437
+          ],
+          "expected_target_sd_blocks": 0.3704268398420593,
+          "frames": 180,
+          "identity": "e3_t20",
+          "noise_schedule_sha256": "4533fdf41a944b1492c579b4297f473128ac2f2ba0fc5a272c192d954d12526f",
+          "noise_seed": 3997225075067289700,
+          "outer_fold": 0,
+          "path_sha256": "eff6fc7c905216261967aedef98737d2b5703ea55f157ad40b08e1623bf9003d",
+          "priority_rank": 19,
+          "seed": 3997225075067289700,
+          "spec_hash": "43b1d8133e3ce439e1714d64233ae3b7a22ca680838aaf147d2c7bfa305dbd65",
+          "start_world_x": 7.824009605060965,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53
+          ]
+        },
+        {
+          "candidate_index": 103,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86021,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.853808317713259,
+            4.706406707165126,
+            4.567561007999846,
+            4.425820012961136,
+            4.272484549016823,
+            4.137919508239998,
+            4.023473118248127,
+            3.875596629069414,
+            3.6952338187693683,
+            3.5105216472767053,
+            3.3307719861328353,
+            3.171520093124487,
+            3.035620744045444,
+            2.919648830384849,
+            2.7964833545530725,
+            2.676977504842905,
+            2.549662901132033,
+            2.420521909724745,
+            2.2972912921612867
+          ],
+          "expected_target_sd_blocks": 0.797603923422566,
+          "frames": 180,
+          "identity": "e3_t21",
+          "noise_schedule_sha256": "f63a8eac07eb49dbe8875d31c27a66384ea9f7450d87e527eabb0b9678adb8cb",
+          "noise_seed": 8041714100286774647,
+          "outer_fold": 4,
+          "path_sha256": "7f941f40513e992ecc35626e8070837a8fa1dbbac6b853d70dfab0a35b4ce54f",
+          "priority_rank": 20,
+          "seed": 8041714100286774647,
+          "spec_hash": "31fb26ae68b0740fa4bfd31c04e53fc1b0065205dcd10bde5b37260c49fbb89f",
+          "start_world_x": 7.894951114796968,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ]
+        },
+        {
+          "candidate_index": 152,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86022,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.8489804308947,
+            4.7177580460845645,
+            4.5771234320698575,
+            4.473171227173494,
+            4.3710298895320445,
+            4.279853086500058,
+            4.179936083874406,
+            4.086378484109511,
+            3.9651968171763854,
+            3.8458970562624044,
+            3.7392507026210233,
+            3.657415011001292,
+            3.6133771103505685,
+            3.5728731101964266,
+            3.5424626693446823,
+            3.492043040090147,
+            3.436878974471346,
+            3.3518596834950607,
+            3.288036651266143
+          ],
+          "expected_target_sd_blocks": 0.4731665072448317,
+          "frames": 180,
+          "identity": "e3_t22",
+          "noise_schedule_sha256": "47aab945c457ce044a669e7aa146ef2988fcbba1e943ce11219ff79088d67e2a",
+          "noise_seed": 5740487968140498805,
+          "outer_fold": 3,
+          "path_sha256": "ca0cbeee42ee711a35dbef9415d60937d295d999edac5e3190029465b18b8a4f",
+          "priority_rank": 21,
+          "seed": 5740487968140498805,
+          "spec_hash": "7bc5f17214eb90538c582289cc131a32d8345be74efe1a4c67734a66f060a5f0",
+          "start_world_x": 7.746947421338602,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ]
+        },
+        {
+          "candidate_index": 158,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86023,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.837649434434011,
+            4.696303374937555,
+            4.551204959725769,
+            4.413017901119876,
+            4.299288540211288,
+            4.199058863233148,
+            4.081432530997719,
+            3.9540714450590713,
+            3.809733860770368,
+            3.6792936799308693,
+            3.5786434099175137,
+            3.5106755886820933,
+            3.456350862752167,
+            3.3846842234500953,
+            3.313329880115801,
+            3.267183757420407,
+            3.2225572573126984,
+            3.166136023191981,
+            3.0848623610230086
+          ],
+          "expected_target_sd_blocks": 0.5395946003350369,
+          "frames": 180,
+          "identity": "e3_t23",
+          "noise_schedule_sha256": "c86e28575bd82c1c6e3dcdda1c8ca1881705c4599ebe88cc2143098517ff4839",
+          "noise_seed": 5010283868065394145,
+          "outer_fold": 1,
+          "path_sha256": "ed9b4606604f00afedc86331d5126c45fea7f9a10ce9cc79d9031b2fd60a0333",
+          "priority_rank": 22,
+          "seed": 5010283868065394145,
+          "spec_hash": "f99288045d7fff4a617f2e5ff7d0fb53fb4b28c52edb5efb7c07b6f61bf87658",
+          "start_world_x": 7.799213901141571,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48
+          ]
+        },
+        {
+          "candidate_index": 178,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86024,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.709404283080975,
+            4.608172242084094,
+            4.482186569919916,
+            4.355219876166458,
+            4.231496238439738,
+            4.128538363443126,
+            4.034442553248026,
+            3.9449608832302165,
+            3.848834957823232,
+            3.7401832850713714,
+            3.607987872743911,
+            3.4722283155397093,
+            3.35587326738109,
+            3.224083439311332,
+            3.0626417447844028,
+            2.8887267985889364,
+            2.758601328919849,
+            2.661878986390398,
+            2.582218680520984
+          ],
+          "expected_target_sd_blocks": 0.6573665005182353,
+          "frames": 180,
+          "identity": "e3_t24",
+          "noise_schedule_sha256": "6c189c0d6329b4af2197a6b586f158afec4320dbb423956ef10c3c43b56c67b3",
+          "noise_seed": 7814665520095022670,
+          "outer_fold": 3,
+          "path_sha256": "f270103e01860944a701e4a0069cccd16b96ef0efe58e880708ab468a80b8ea2",
+          "priority_rank": 23,
+          "seed": 7814665520095022670,
+          "spec_hash": "70295e689b729ef0a9fc475f01f184f0e735fe18265c470f8cfdab45ce0ea609",
+          "start_world_x": 7.875849981076167,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ]
+        },
+        {
+          "candidate_index": 336,
+          "direction": "RIGHT_TO_LEFT",
+          "episode_id": 86025,
+          "expected_causal_fir_target_world_x_blocks": [
+            4.5935930394270175,
+            4.53226336437617,
+            4.476709338442246,
+            4.426646142428526,
+            4.371984905089371,
+            4.326204169108708,
+            4.272708992940122,
+            4.199770104494938,
+            4.0984221989736485,
+            3.9973397650552958,
+            3.8839154257282265,
+            3.7644054244985727,
+            3.659266925693357,
+            3.5737603714984405,
+            3.4907414309210463,
+            3.391262381643757,
+            3.28558269042571,
+            3.179292350454685,
+            3.0750322154444176
+          ],
+          "expected_target_sd_blocks": 0.4782948910712189,
+          "frames": 180,
+          "identity": "e3_t25",
+          "noise_schedule_sha256": "848699c8615eae831b4070efca94d898b1a693f4073693ec1e3afd978e01f120",
+          "noise_seed": 5680580193490312000,
+          "outer_fold": 2,
+          "path_sha256": "73bb26497b6540bfa1ba0edb55926e95b5560354b1c38b2811b1987ec3454d5e",
+          "priority_rank": 24,
+          "seed": 5680580193490312000,
+          "spec_hash": "b1fcce0ca53ba9239b12584f0b65aa6875bee90ec4c87bc4bb7cd443477b8087",
+          "start_world_x": 7.863642665125628,
+          "tail_clamped_after_target_window": true,
+          "target_model_frame_indices": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ]
+        }
+      ],
+      "identities_per_outer_fold": 5,
+      "identity_priority_order": {
+        "bytes": 1021,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/cohort/identity_priority_order.json",
+        "sha256": "21dac3ddc80d8543ae0e50699b3b71c150a097c8b92148b43e49f4d30df8f520"
+      },
+      "inner_rotations": 4,
+      "left_to_right_count": 13,
+      "manifest_declared_authority_note": "the cohort was materialized under v1.5 and carried forward byte-identically; amendments 2-4 changed no cohort value",
+      "manifest_declared_authority_sha256": [
+        "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
+      ],
+      "outer_folds": 5,
+      "production_identity_count": 25,
+      "production_identity_manifest": {
+        "bytes": 34037,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/cohort/production_identity_manifest.jsonl",
+        "sha256": "336a3baca931652543b8addd9884a2083a9baf0aa30fb6b1908d72d3a4b14c3a"
+      },
+      "right_to_left_count": 12,
+      "target_rows_per_capture": 19
+    },
+    "CONDITIONS_AND_EVIDENCE": {
+      "L0_material": "minecraft:air",
+      "L1_material": "minecraft:white_stained_glass",
+      "L2_material": "minecraft:light_blue_stained_glass",
+      "L3_material": "minecraft:brown_stained_glass",
+      "L4_material": "minecraft:stone",
+      "V_c": {
+        "L0": 1.0,
+        "L1": 0.8130516109415965,
+        "L2": 0.426040140390582,
+        "L3": 0.1857213737234112,
+        "L4": 0.0
+      },
+      "V_c_source": "P0_SELECTED_LADDER.json (L1-L3 measured); L0/L4 are the frozen endpoints of the visibility scale, not measured quantities",
+      "condition_ids": [
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "p0_bootstrap_seed": 1530570907966297797,
+      "p0_result": "P0_PASS",
+      "p0_selected_ladder": {
+        "bytes": 2028,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p0/P0_SELECTED_LADDER.json",
+        "sha256": "ecd301febacbbf31449dc569f133bbcb57e0ec7f14e74b735c5c77afbe82779d"
+      },
+      "p0_selection_receipt": {
+        "bytes": 2915966,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p0/P0_SELECTION_RECEIPT.json",
+        "sha256": "263de5d3e97694c16d5ff6f006c1b385093ae6227e3531c087165e71145ef313"
+      },
+      "p0_sentinel_envelope": {
+        "bytes": 2753,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p0/P0_SENTINEL_ENVELOPE.json",
+        "sha256": "3be3cba3c0ab4a0f531b099cbbd4579fc58397c48a553ffbc0a068ae8f137ff3"
+      },
+      "sentinel_placements": [
+        0,
+        4,
+        8
+      ],
+      "sentinel_repeatability_envelope": {
+        "bounds": {
+          "0": [
+            0.5629882872126879,
+            1.0455496762521348
+          ],
+          "4": [
+            0.521016803594669,
+            0.9676026352472424
+          ],
+          "8": [
+            0.6414138873222917,
+            1.1911972193128273
+          ]
+        },
+        "derivations": {
+          "0": {
+            "centre": 0.8042689817324113,
+            "floor_fraction_of_centre": 0.15,
+            "formula_frozen_before_p0": true,
+            "half_width": 0.2412806945197234,
+            "inputs": "P0_REPLICATE_VARIATION_ONLY",
+            "k": 2.0,
+            "lower": 0.5629882872126879,
+            "replicate_blocks": 2,
+            "replicate_range": 0.03957045877138998,
+            "upper": 1.0455496762521348
+          },
+          "4": {
+            "centre": 0.7443097194209557,
+            "floor_fraction_of_centre": 0.15,
+            "formula_frozen_before_p0": true,
+            "half_width": 0.22329291582628671,
+            "inputs": "P0_REPLICATE_VARIATION_ONLY",
+            "k": 2.0,
+            "lower": 0.521016803594669,
+            "replicate_blocks": 2,
+            "replicate_range": 0.0020086828817582614,
+            "upper": 0.9676026352472424
+          },
+          "8": {
+            "centre": 0.9163055533175595,
+            "floor_fraction_of_centre": 0.15,
+            "formula_frozen_before_p0": true,
+            "half_width": 0.2748916659952678,
+            "inputs": "P0_REPLICATE_VARIATION_ONLY",
+            "k": 2.0,
+            "lower": 0.6414138873222917,
+            "replicate_blocks": 2,
+            "replicate_range": 0.04433180271482473,
+            "upper": 1.1911972193128273
+          }
+        },
+        "envelope_rule": "AUTHORITY_7_10E_K_TIMES_MAX_RANGE_OR_FLOOR",
+        "p0_order": [
+          8,
+          0,
+          4
+        ],
+        "placements": [
+          0,
+          4,
+          8
+        ],
+        "single_implementation_of_record": "p0_bindings.sentinel_envelope"
+      }
+    },
+    "ENVIRONMENT": {
+      "action_conversion_identity": "mineworld_mcdataset_json_action_to_env_action@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746",
+      "capture_host": {
+        "implementation_checkpoint_commit": "95e41c0fc15e68bae93f22a1dc7614c73fd30b62",
+        "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
+        "python": "3.12.13"
+      },
+      "extraction_host": {
+        "cuda_version": "12.6",
+        "gpu_capability": "8.9",
+        "gpu_device_name": "NVIDIA L4",
+        "implementation_checkpoint_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+        "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
+        "python": "3.10.20",
+        "torch_version": "2.6.0+cu126"
+      },
+      "fabric_api_version": "0.42.0+1.16",
+      "fabric_loader_version": "0.15.11",
+      "main_checkpoint_sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+      "minecraft_version": "1.16.5",
+      "mod_jar": {
+        "bytes": 101587,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/fabric/mineocclude-mod/build/libs/mineocclude-0.1.1.jar",
+        "sha256": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c"
+      },
+      "model": "MineWorld_700M_16f_FROZEN",
+      "preprocessing_change_allowed": false,
+      "preprocessing_identity": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+      "vae_sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+      "yarn_mappings": "1.16.5+build.10"
+    },
+    "EXTRACTION_ANALYSIS_AND_OPERATIONS": {
+      "absolute_deadline": {
+        "_frozen_authority_excerpt": "absolute_deadline",
+        "sha256": "baba1d64a0fc0118f0cf0f3eaa2744cc9df081c5fb142e1e0ad6f417b2703b0d",
+        "value": {
+          "ABSOLUTE_EXPERIMENT_DEADLINE": "2026-09-03T20:00 local",
+          "FRIDAY_EXPERIMENT_EXECUTION_PLANNED": false,
+          "at_the_deadline": "NO_NEW_SCIENTIFIC_EXPERIMENT_III_EXECUTION_MAY_BEGIN",
+          "blocker": "B_DEADLINE_DROP",
+          "friday_and_saturday_reserved_for": [
+            "MANUSCRIPT_WRITING",
+            "FIGURES_FROM_LOCKED_RESULTS",
+            "INTERPRETATION",
+            "PAPER_INTEGRATION",
+            "SUBMISSION_PREPARATION"
+          ],
+          "iii_a_must_be": [
+            "RESULT_LOCKED",
+            "TERMINALLY_ADJUDICATED"
+          ],
+          "iii_b_must_be": [
+            "RESULT_LOCKED",
+            "CLEANLY_SKIPPED",
+            "TERMINALLY_ADJUDICATED"
+          ],
+          "never_delay_iii_a_closure_to_save_iii_b": true,
+          "preferred_iii_a_result_lock": "2026-09-02T23:00 local",
+          "preferred_iii_b_result_lock": "2026-09-03T16:00 local"
+        }
+      },
+      "action_tokens_per_pair": 11,
+      "activation_storage": {
+        "_frozen_authority_excerpt": "extraction.storage",
+        "sha256": "7222eea6f8c42291010f81deae4648b618d0e42213917cd98096dd4aa186fd73",
+        "value": {
+          "bound_fields": [
+            "identity",
+            "condition",
+            "layer",
+            "temporal_slice",
+            "target_rows",
+            "hook_site",
+            "token_position_hash",
+            "preprocessing_identity",
+            "checkpoint_identity",
+            "shape",
+            "dtype",
+            "byte_size",
+            "sha256"
+          ],
+          "byte_order": "little-endian",
+          "bytes_per_logical_row_tensor": 1376256,
+          "bytes_per_serialized_npy": 26148992,
+          "dtype": "float16",
+          "npy_header_bytes": 128,
+          "numpy_dtype_string": "<f2",
+          "persisted_shape_per_capture_layer_slice": [
+            19,
+            336,
+            2048
+          ],
+          "validations": [
+            "FINITE",
+            "NONEMPTY",
+            "SHAPE",
+            "DTYPE",
+            "EXPECTED_BYTES",
+            "LAYER",
+            "SLICE",
+            "SOURCE_CAPTURE",
+            "CHECKPOINT",
+            "PREPROCESSING",
+            "TARGET_INDEX_ORDER"
+          ]
+        }
+      },
+      "alpha_grid": [
+        0.1,
+        1.0,
+        10.0,
+        100.0,
+        1000.0
+      ],
+      "alpha_selection_criterion": "IDENTITY_MACRO_INNER_VALIDATION_MEAN_RMSE",
+      "arrays_per_capture": 6,
+      "baselines": {
+        "_frozen_authority_excerpt": "baselines",
+        "sha256": "97148b2623d182c763c897258e86018b72edbc7184ef0697b753c0b8d77febfa",
+        "value": {
+          "constant_velocity": {
+            "extrapolate_to": "TARGET_TICK",
+            "fit": "OLS_ON_TIME_POSITION",
+            "is_model_input": false,
+            "legacy_window_not_to_be_reused": {
+              "location": "src/mineocclude/regime_a.py:456-465",
+              "value": 15
+            },
+            "oracle": true,
+            "window_last_k": 10
+          },
+          "last_seen": {
+            "is_model_input": false,
+            "oracle": true,
+            "rule": "HOLD_FIR_ALIGNED_WORLD_X_FROM_LAST_NOT_FULLY_OCCLUDED_COUNTERFACTUAL_ROW"
+          },
+          "leakage_tests_required": true,
+          "linear_current_frame_pixel": {
+            "capacity_matched": false,
+            "feature_count": 4032,
+            "fit": "SAME_GROUPED_NESTED_RIDGE_RECIPE",
+            "interpolation": "FROZEN_AREA",
+            "pixel_history": false,
+            "required_manuscript_language": "linear current-frame pixel baseline",
+            "resize": [
+              48,
+              28
+            ],
+            "role": "SECONDARY_LIMITED_COMPARATOR",
+            "source": "RGB",
+            "source_detail": "RAW_CAPTURE_PNG_TARGET_FRAME_NOT_MODEL_NORMALIZED",
+            "standardization": "TRAINING_IDENTITIES_ONLY"
+          },
+          "oracle_as_model_input_blocker": "BASELINE_ORACLE_USED_AS_MODEL_INPUT",
+          "time_only": {
+            "design": [
+              "1",
+              "direction_sign",
+              "a",
+              "direction_sign_x_a"
+            ],
+            "scope": "OUTER_TRAINING_ONLY"
+          },
+          "training_mean": {
+            "direction_stratification": "ONLY_IF_PROSPECTIVELY_FROZEN_AND_ESTIMABLE_IN_EVERY_FOLD",
+            "scope": "OUTER_TRAINING_ONLY"
+          }
+        }
+      },
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 8258108568742502015,
+      "bootstrap_seed_binds_to": "PHASE0_DESIGN_SHA256",
+      "bootstrap_seed_domain": "MINEOCCLUDE_EXPERIMENT_III_ANALYSIS_BOOTSTRAP_V1|",
+      "bootstrap_seed_material_sha256": "f29ab1fd6c819e7ff584b6ca9344b6d112fe15a10dbc32ff47bed6536589a895",
+      "bootstrap_seed_phase0_design_sha256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+      "bootstrap_unit": "WHOLE_IDENTITY_WITH_ALL_CONDITIONS_ROWS_PREDICTIONS_REPRESENTATIONS",
+      "capture_order": "FIVE_BLOCKS_OF_FIVE_IDENTITIES_BY_OUTER_FOLD, CYCLIC_LATIN_CONDITION_ROTATION",
+      "capture_state_machine": {
+        "_frozen_authority_excerpt": "production.capture_state_machine",
+        "sha256": "a5ac37b1597c8b785e7fe8565fda827297e7265f13d55db64fee9ffc1025f6ef",
+        "value": [
+          "PLANNED",
+          "RUNNING",
+          "CAPTURED",
+          "VALIDATED",
+          "DURABLE",
+          "COMPLETE_VALIDATED_DURABLE"
+        ]
+      },
+      "coarse_grid": [
+        2,
+        6
+      ],
+      "context_pair_count": 16,
+      "deadline_fallbacks": {
+        "_frozen_authority_excerpt": "deadline_fallbacks",
+        "sha256": "bdc951e6e9b93ed79876db3d03ae963ca8446c03729e7bf93ab53e693230184e",
+        "value": {
+          "clock_triggers": {
+            "LATEST_SAFE_RESULT_LOCK": "2026-09-03T20:00 local",
+            "TARGET_CAPTURE_LAUNCH": "2026-09-01T20:00 local",
+            "TARGET_RESULT_LOCK": "2026-09-02T23:00 local",
+            "TRIGGER_DISASTER": "production capture cannot safely launch by 2026-09-02T22:00 local",
+            "TRIGGER_ONE_DAY_BEHIND": "P2 freeze not complete by 2026-09-01T23:59 local",
+            "TRIGGER_TWO_DAYS_BEHIND": "P2 freeze not complete by 2026-09-02T12:00 local",
+            "all_triggers_are_outcome_independent": true,
+            "implementation_checkpoints_are_now_derived_not_asserted": true,
+            "implementation_checkpoints_moved_to": "deadline_fallbacks.implementation_checkpoints",
+            "implementation_progress_triggers_added_by": "FINAL_AUTHORITY_REPAIR_PASS_1 introduced asserted instants; FINAL_AUTHORITY_REPAIR_PASS_2 replaced them with instants DERIVED as deadline-minus-conservative-tail, each with its quantified implementation and tail savings. See deadline_fallbacks.implementation_checkpoints.",
+            "trigger_evaluation_rule": "Each trigger is evaluated exactly once, at the stated instant, from stage-receipt status and the clock ONLY. Plans escalate MONOTONICALLY: a later trigger may move only to a more reduced plan, never back to a fuller one, and never on the basis of how any result looks. Every evaluation and its inputs are recorded in deadline_decision_receipt.json."
+          },
+          "evidence": "deadline_decision_receipt.json",
+          "implementation_checkpoints": {
+            "checkpoints": {
+              "CP0_III_B_DEFERRAL": {
+                "action_if_milestone_not_met": "DEFER_ALL_III_B_ONLY_IMPLEMENTATION",
+                "band_behaviour": {
+                  "best": "PASS",
+                  "conservative": "TRIP",
+                  "nominal": "PASS"
+                },
+                "derivation": "PHASE2_START reference + 24 h; the earliest instant at which a lag is distinguishable from ordinary variance",
+                "iii_a_plan_unchanged_by_this_checkpoint": true,
+                "implementation_hours_recovered": {
+                  "best": 2.3,
+                  "conservative": 8.0,
+                  "nominal": 4.6
+                },
+                "instant": "2026-08-31T20:00 local",
+                "required_milestone": "task I10 COMPLETE (the extraction and serialization spine)",
+                "tasks_deferred": [
+                  "IB01",
+                  "IB04",
+                  "IB05",
+                  "IB06",
+                  "IB07",
+                  "IB08",
+                  "IB09",
+                  "IB10",
+                  "IB11",
+                  "IB12",
+                  "IB13",
+                  "IB14",
+                  "IB15",
+                  "IB16",
+                  "IB17",
+                  "IB18",
+                  "IB19",
+                  "IB20"
+                ],
+                "tasks_never_deferred": [
+                  "IB02",
+                  "IB03"
+                ],
+                "why_those_are_never_deferred": "They are SHARED_A_B and prospectively mandatory: III-A qualification gate 12 is defined in terms of the IB02 primitive and guarded by the IB03 regression fixture. Deferring them stops III-A."
+              },
+              "CP1_DROP_BELOW_NORMAL": {
+                "action_if_milestone_not_met": "SELECT_PLAN_10_2",
+                "band_behaviour": {
+                  "best": "PASS",
+                  "conservative": "TRIP",
+                  "nominal": "PASS"
+                },
+                "derivation": "ABSOLUTE_EXPERIMENT_DEADLINE minus the NORMAL conservative post-A2 tail (55.00 h)",
+                "implementation_hours_saved": {
+                  "best": 0.5,
+                  "conservative": 1.7,
+                  "nominal": 1.0
+                },
+                "instant": "2026-09-01T13:00 local",
+                "post_a2_tail_hours_saved": {
+                  "best": 2.3,
+                  "conservative": 7.6,
+                  "nominal": 3.92
+                },
+                "realizable_implementation_hours_saved_at_this_instant": {
+                  "best": 0.0,
+                  "conservative": 1.2,
+                  "nominal": 0.0,
+                  "note": "the deletable depth work is built early, so most of the nominal saving is already spent by this instant - the real saving is in the tail"
+                },
+                "required_milestone": "A2 STATIC_VALIDATION == PASS"
+              },
+              "CP2_DROP_BELOW_10_2": {
+                "action_if_milestone_not_met": "SELECT_PLAN_10_3",
+                "band_behaviour": {
+                  "best": "PASS",
+                  "conservative": "TRIP",
+                  "nominal": "PASS"
+                },
+                "derivation": "ABSOLUTE_EXPERIMENT_DEADLINE minus the PLAN_10_2 conservative post-A2 tail (47.40 h)",
+                "implementation_hours_saved": {
+                  "best": 1.8,
+                  "conservative": 5.7,
+                  "nominal": 3.4
+                },
+                "instant": "2026-09-01T20:36 local",
+                "post_a2_tail_hours_saved": {
+                  "best": 3.75,
+                  "conservative": 11.8,
+                  "nominal": 6.28
+                },
+                "required_milestone": "A2 STATIC_VALIDATION == PASS"
+              },
+              "CP3_DISASTER": {
+                "action_if_milestone_not_met": "SELECT_PLAN_10_4_DISASTER",
+                "band_behaviour": {
+                  "best": "PASS",
+                  "conservative": "TRIP",
+                  "nominal": "PASS"
+                },
+                "derivation": "ABSOLUTE_EXPERIMENT_DEADLINE minus the PLAN_10_3 conservative post-A2 tail (43.20 h). Past this instant no frozen plan can capture, extract, analyse and lock before the hard stop.",
+                "instant": "2026-09-02T00:48 local",
+                "required_milestone": "A2 STATIC_VALIDATION == PASS"
+              }
+            },
+            "derived_latest_safe_a2_green": {
+              "NORMAL": {
+                "conservative_post_a2_tail_hours": 55.0,
+                "latest_safe_a2_green_instant": "2026-09-01T13:00 local"
+              },
+              "PLAN_10_2": {
+                "conservative_post_a2_tail_hours": 47.4,
+                "latest_safe_a2_green_instant": "2026-09-01T20:36 local"
+              },
+              "PLAN_10_3": {
+                "conservative_post_a2_tail_hours": 43.2,
+                "latest_safe_a2_green_instant": "2026-09-02T00:48 local"
+              }
+            },
+            "milestone_timeline_at_the_reference_start": {
+              "PHASE2_START": "2026-08-30T20:00 local",
+              "best": {
+                "A1_complete_I18": "2026-08-31T14:00",
+                "A2_green_I20": "2026-08-31T16:42",
+                "I10": "2026-08-31T05:42"
+              },
+              "conservative": {
+                "A1_complete_I18": "2026-09-02T02:06",
+                "A2_green_I20": "2026-09-02T13:00",
+                "I10": "2026-09-01T01:30"
+              },
+              "nominal": {
+                "A1_complete_I18": "2026-09-01T04:30",
+                "A2_green_I20": "2026-09-01T10:24",
+                "I10": "2026-08-31T13:42"
+              }
+            },
+            "rule": {
+              "evaluated_once_each": true,
+              "evidence": "deadline_decision_receipt.json",
+              "inputs": [
+                "WALL_CLOCK",
+                "A2_RECEIPT_STATE",
+                "IMPLEMENTATION_TASK_COMPLETION",
+                "RESOURCES"
+              ],
+              "monotonic_escalation_only": true,
+              "scientific_outcome_is_an_input": false,
+              "statement": "At each checkpoint instant T, if A2 STATIC_VALIDATION is not PASS, select the LARGEST frozen plan P whose CONSERVATIVE post-A2 tail still fits the remaining budget: tail(P, conservative) <= (ABSOLUTE_EXPERIMENT_DEADLINE - T). If no plan qualifies, select PLAN_10_4 DISASTER.",
+              "uses_conservative_tail_deliberately": "The tail is evaluated at CONSERVATIVE, not nominal, so a checkpoint never selects a plan that only closes if execution happens to go well."
+            },
+            "supersedes": {
+              "TRIGGER_IMPLEMENTATION_CHECKPOINT_1": "2026-09-01T12:00 - typed in, not derived",
+              "TRIGGER_IMPLEMENTATION_CHECKPOINT_2": "2026-09-01T20:00 - typed in, not derived",
+              "TRIGGER_IMPLEMENTATION_CHECKPOINT_3": "2026-09-02T08:00 - typed in, not derived",
+              "defect": "The superseded instants were asserted rather than derived, and they selected plans whose implementation savings were never quantified. Each new instant is the deadline minus that plan's own conservative tail."
+            }
+          },
+          "outcome_based_selection_allowed": false,
+          "plans": {
+            "DISASTER": {
+              "archival_analysis_allowed": true,
+              "archival_label_required": "POST_HOC_DEVELOPMENTAL",
+              "fresh_confirmatory_result": false,
+              "implementation_task_set": "N/A - no fresh confirmatory capture is produced",
+              "may_be_presented_as_experiment_iii_primary_cohort": false
+            },
+            "NORMAL": {
+              "activation_bytes": 19611744000,
+              "activation_gib": 18.264859914779663,
+              "analyses": [
+                "PRIMARY",
+                "TEMPORAL",
+                "CONTEXT",
+                "DEPTH"
+              ],
+              "captures": 125,
+              "conditions": 5,
+              "forwards": 2375,
+              "identities": 25,
+              "implementation_task_set": "ALL of I01-I20 plus IB02/IB03",
+              "layers": [
+                4,
+                10,
+                19
+              ],
+              "logical_row_tensors": 14250,
+              "serialized_npy_arrays": 750,
+              "slices": [
+                "CURRENT",
+                "PREVIOUS"
+              ],
+              "target_rows": 2375,
+              "temporal_slices": 2
+            },
+            "ONE_DAY_BEHIND": {
+              "activation_bytes": 5229798400,
+              "activation_gib": 4.87062931060791,
+              "analyses": [
+                "PRIMARY",
+                "TEMPORAL",
+                "CONTEXT"
+              ],
+              "captures": 100,
+              "conditions": 5,
+              "forwards": 1900,
+              "identities": 20,
+              "identity_selection": "FIRST_20_BY_IDENTITY_PRIORITY_ORDER",
+              "implementation_hours_saved": {
+                "best": 0.5,
+                "conservative": 1.7,
+                "nominal": 1.0
+              },
+              "implementation_task_set": "ALL of I01-I20 plus IB02/IB03, MINUS the L4/L10 descriptive-depth portions of I09 and I16 and their group B/D fixtures, when selected before that work is built",
+              "layers": [
+                19
+              ],
+              "logical_row_tensors": 3800,
+              "post_a2_tail_hours_saved": {
+                "best": 2.3,
+                "conservative": 7.6,
+                "nominal": 3.92
+              },
+              "serialized_npy_arrays": 200,
+              "slices": [
+                "CURRENT",
+                "PREVIOUS"
+              ],
+              "target_rows": 1900,
+              "temporal_slices": 2
+            },
+            "TWO_DAYS_BEHIND": {
+              "activation_bytes": 1961174400,
+              "activation_gib": 1.8264859914779663,
+              "analyses": [
+                "PRIMARY",
+                "CONTEXT"
+              ],
+              "captures": 75,
+              "conditions": 5,
+              "forwards": 1425,
+              "identities": 15,
+              "identity_selection": "FIRST_15_BY_IDENTITY_PRIORITY_ORDER",
+              "implementation_hours_saved": {
+                "best": 1.8,
+                "conservative": 5.7,
+                "nominal": 3.4
+              },
+              "implementation_task_set": "the ONE_DAY_BEHIND set MINUS task I12 entirely, the PREVIOUS-span half of I09/C17, the temporal-rescue panel of I16, and the temporal fixtures A.22/A.23/B.5-temporal, when selected before that work is built",
+              "layers": [
+                19
+              ],
+              "logical_row_tensors": 1425,
+              "post_a2_tail_hours_saved": {
+                "best": 3.75,
+                "conservative": 11.8,
+                "nominal": 6.28
+              },
+              "serialized_npy_arrays": 75,
+              "slices": [
+                "CURRENT"
+              ],
+              "target_rows": 1425,
+              "tasks_removed_entirely": [
+                "I12"
+              ],
+              "temporal_slices": 1
+            }
+          },
+          "selected_once_then_frozen": true,
+          "selection_inputs": "TIME_AND_STATUS_ONLY"
+        }
+      },
+      "expected_dtype": "<f2",
+      "expected_npy_bytes": 26148992,
+      "expected_shape": [
+        19,
+        336,
+        2048
+      ],
+      "extra_forward_authorized": false,
+      "hook_site": "decoder_layer_output_residual_stream",
+      "identity_order_within_condition_block": "ASCENDING_PRIORITY_RANK",
+      "identity_replacement_allowed": false,
+      "inner_rotations": 4,
+      "keep_first_technically_valid_attempt": true,
+      "latin_square": [
+        [
+          "L0",
+          "L1",
+          "L2",
+          "L3",
+          "L4"
+        ],
+        [
+          "L1",
+          "L2",
+          "L3",
+          "L4",
+          "L0"
+        ],
+        [
+          "L2",
+          "L3",
+          "L4",
+          "L0",
+          "L1"
+        ],
+        [
+          "L3",
+          "L4",
+          "L0",
+          "L1",
+          "L2"
+        ],
+        [
+          "L4",
+          "L0",
+          "L1",
+          "L2",
+          "L3"
+        ]
+      ],
+      "layers": [
+        4,
+        10,
+        19
+      ],
+      "one_forward_per_target_row": true,
+      "outer_folds": 5,
+      "p1_pilot_receipt": {
+        "bytes": 27067,
+        "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p1/p1_pilot_receipt.json",
+        "sha256": "34fe8fec7200c76e4314f04b330d33864113ee363913b73d16fbc40707e26843"
+      },
+      "p1_pilot_receipt_canonical_sha256": "eed4a1f94df9a7c3e124f0217b215d0f1a6577910bf27229b8c33601e24ef8fa",
+      "pooling": "NON_OVERLAPPING_ARITHMETIC_MEAN_PER_HIDDEN_DIMENSION",
+      "prediction_lock_before_statistics": true,
+      "primary_error_metric": "RMSE",
+      "primary_family_size": 3,
+      "primary_multiplicity": "HOLM_ACROSS_3",
+      "primary_representation": "ROW_MAJOR_OVER_CELLS",
+      "primary_tests": {
+        "_frozen_authority_excerpt": "statistics.primary_tests",
+        "sha256": "ea5dc95bc7a7dadb07bc24e3023ee893ed98224e73e043101be5c662fa378b59",
+        "value": "ONE_SIDED_REPEATED_MEASURES_T_TESTS"
+      },
+      "production_captures": 125,
+      "production_condition_batches": 25,
+      "production_forwards": 2375,
+      "production_logical_row_tensors": 14250,
+      "production_serialized_npy_arrays": 750,
+      "production_target_rows": 2375,
+      "representation_definitions": {
+        "_frozen_authority_excerpt": "representations.definitions",
+        "sha256": "5de289b01a36c932ed01b08289bf2c1df6ac65eb1c7b5a38754e510d0c8d4e72",
+        "value": [
+          {
+            "dimension": 24576,
+            "formula": "coarse(CURRENT)",
+            "name": "CURRENT",
+            "role": "PRIMARY_AT_L19_DESCRIPTIVE_AT_L4_L10"
+          },
+          {
+            "dimension": 24576,
+            "formula": "coarse(CURRENT) - coarse(PREVIOUS)",
+            "name": "CURRENT_MINUS_PREVIOUS",
+            "role": "SECONDARY_TEMPORAL"
+          },
+          {
+            "dimension": 49152,
+            "formula": "concat(coarse(PREVIOUS), coarse(CURRENT))",
+            "name": "TWO_FRAME_CONCAT",
+            "order": "PREVIOUS_FIRST_THEN_CURRENT",
+            "role": "SECONDARY_TEMPORAL"
+          }
+        ]
+      },
+      "required_files_per_unit": [
+        "raw/server_state.jsonl",
+        "raw/client_tick.jsonl",
+        "raw/actions.jsonl",
+        "raw/frame_map.jsonl",
+        "raw/visibility.jsonl",
+        "raw/frames/{000000..000179}.png",
+        "coordinates.jsonl",
+        "wall_receipt.json",
+        "camera_receipt.json",
+        "target_receipt.json",
+        "condition_receipt.json",
+        "capture_completion.json",
+        "durable_receipt.json"
+      ],
+      "retry_may_not_change": [
+        "seed",
+        "path",
+        "direction",
+        "condition",
+        "wall_material",
+        "target_rows",
+        "target_labels",
+        "camera",
+        "timing_policy",
+        "scientific_identity"
+      ],
+      "retry_policy": {
+        "_frozen_authority_excerpt": "production.retry_policy",
+        "sha256": "e9db7981264379097283c27be5adbf4fba24377d2c59397b8aac749ca15bd070",
+        "value": "SAME_FROZEN_UNIT_ONLY"
+      },
+      "secondary_families": {
+        "_frozen_authority_excerpt": "statistics.secondary_families",
+        "sha256": "e28dedec7cece77e02b30f6810c9f05bdc4371d93c6b19ae427364b05ecff0ba",
+        "value": [
+          {
+            "claim_limit": "FROZEN_LINEAR_CURRENT_FRAME_PIXEL_BASELINE_ONLY",
+            "estimand": "mean over c in {L1,L2,L3} of (RMSE_pixel - RMSE_MW), per identity",
+            "id": "A",
+            "interval": "TWO_SIDED_95_IDENTITY_BOOTSTRAP",
+            "name": "MINEWORLD_VS_LINEAR_CURRENT_PIXEL"
+          },
+          {
+            "average_over_conditions": [
+              "L1",
+              "L2",
+              "L3",
+              "L4"
+            ],
+            "contrasts": [
+              "CURRENT_MINUS_PREVIOUS vs CURRENT",
+              "TWO_FRAME_CONCAT vs CURRENT"
+            ],
+            "id": "B",
+            "interval": "TWO_SIDED_95_IDENTITY_BOOTSTRAP",
+            "multiplicity": "HOLM_ACROSS_2",
+            "name": "TEMPORAL_RESCUE",
+            "tests": "TWO_ONE_SIDED_PAIRED_T_TESTS"
+          },
+          {
+            "bins": [
+              [
+                1,
+                5
+              ],
+              [
+                6,
+                10
+              ],
+              [
+                11,
+                15
+              ],
+              [
+                16,
+                19
+              ]
+            ],
+            "causal_forgetting_claim_allowed": false,
+            "id": "C",
+            "interaction": "[(RMSE_L4(16..19) - RMSE_L4(12..15)) - (mean_{L1..L3} RMSE(16..19) - mean_{L1..L3} RMSE(12..15))]",
+            "interval": "TWO_SIDED_95_IDENTITY_BOOTSTRAP",
+            "name": "CONTEXT_BOUNDARY",
+            "role": "MECHANISTIC_CONSISTENCY_EVIDENCE_ONLY"
+          },
+          {
+            "id": "D",
+            "name": "MOTION_AND_CLOCK_BASELINES",
+            "qualification_gate": null,
+            "role": "DESCRIPTIVE_PAIRED_RMSE_DIFFERENCES_WITH_IDENTITY_BOOTSTRAP_INTERVALS"
+          },
+          {
+            "id": "E",
+            "layers": [
+              4,
+              10
+            ],
+            "may_rescue_or_redefine_primary": false,
+            "name": "DEPTH_PANEL",
+            "role": "DESCRIPTIVE_CONDITION_CURVES_AND_SLOPES_ONLY"
+          }
+        ]
+      },
+      "sequence_length": 5552,
+      "temporal_slices": {
+        "CURRENT": {
+          "excluded_action_inclusive_end": 5551,
+          "excluded_action_inclusive_start": 5541,
+          "inclusive_end": 5540,
+          "inclusive_start": 5205,
+          "pair_ordinal": 15,
+          "python_start": 5205,
+          "python_stop_exclusive": 5541,
+          "shape": [
+            1,
+            336,
+            2048
+          ]
+        },
+        "PREVIOUS": {
+          "excluded_action_inclusive_end": 5204,
+          "excluded_action_inclusive_start": 5194,
+          "inclusive_end": 5193,
+          "inclusive_start": 4858,
+          "pair_ordinal": 14,
+          "python_start": 4858,
+          "python_stop_exclusive": 5194,
+          "shape": [
+            1,
+            336,
+            2048
+          ]
+        }
+      },
+      "tokens_per_pair": 347,
+      "training_only_standardization": true,
+      "transient_hook_layer_count": 20,
+      "unpenalized_intercept": true,
+      "visual_tokens_per_pair": 336
+    },
+    "MEASUREMENT": {
+      "extent_samples_per_axis": 5,
+      "fir_kernel_lags": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "fir_kernel_length": 9,
+      "fir_kernels": {
+        "LEFT_TO_RIGHT": [
+          0.0552210582055221,
+          0.09555478020955548,
+          0.17290336071729034,
+          0.25623770302562376,
+          0.17259457731725947,
+          0.15029557871502955,
+          0.02838057700283806,
+          0.03276277580327627,
+          0.03604958900360496
+        ],
+        "RIGHT_TO_LEFT": [
+          0.0155128136,
+          0.1420986717,
+          0.3819949723,
+          0.2529919934,
+          0.1314006058,
+          0.0092585384,
+          0.0336603539,
+          0.0330820509,
+          0.0
+        ]
+      },
+      "fir_label_formula": "label[t] = sum_{lag} taps[lag] * position[t-lag]; require t - len(taps) + 1 >= 0",
+      "fir_normalization": "MANDATORY AND FROZEN: normalized_kernel[k] = taps[k] / math.fsum(taps), accumulated with math.fsum. Taps are nonnegative (RIGHT_TO_LEFT tap 8 is the exact float -0.0 and is treated as +0.0). Normalization is applied ONCE, at load, before any label construction, any H(m), any S(tau), any gbar and any oracle quantity. Unnormalized taps are forbidden.",
+      "fir_normalization_method": "DIVIDE_BY_MATH_FSUM_OF_TAPS_THEN_ACCUMULATE_WITH_MATH_FSUM",
+      "first_fully_resolved_tick": 8,
+      "target_eligibility_rule": "FROZEN_MANIFEST_ROW_MEMBERSHIP AND COUNTERFACTUAL_EXTENT_FULLY_OCCLUDED AND COMPLETE_ALIGNMENT AND COMPLETE_FIR_HISTORY",
+      "target_extent_closed_form": "(7 + sqrt(48.5)) / 16",
+      "target_extent_half_blocks": 0.8727621336620037
+    }
+  },
+  "immutable_after_production_outcomes": true,
+  "missing_bindings": [],
+  "next_authorized_state": "A7",
+  "null_bindings": [],
+  "package_sha256": "0d286ddeb8df06b2584dcaaabc1e6a2cf37d6f6affa6cd62614413f387c18f40",
+  "prerequisites": {
+    "A1_implementation": true,
+    "A2_static_validation": true,
+    "A3_capture_host": true,
+    "A3_extraction_host": true,
+    "A4_p0_visibility_calibration": true,
+    "A5_p1_engineering_pilot": true
+  },
+  "production_captures_executed": 0,
+  "schema_version": "mineocclude-experiment-iii-p2-freeze-v1",
+  "stage": "A6",
+  "stage_name": "P2_PROSPECTIVE_FREEZE",
+  "unverified_bindings": [],
+  "verification": {
+    "check_count": 67,
+    "checks": [
+      {
+        "agrees": true,
+        "binding": "authority.AUTHORITY_SHA256",
+        "expected": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+        "observed": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+        "verified_against": "the machine authority's own recorded markdown digest"
+      },
+      {
+        "agrees": true,
+        "binding": "authority.MACHINE_AUTHORITY_SHA256",
+        "expected": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+        "observed": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+        "verified_against": "the machine authority JSON recomputed from its bytes"
+      },
+      {
+        "agrees": true,
+        "binding": "authority.PHASE0_DESIGN_SHA256",
+        "expected": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+        "observed": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+        "verified_against": "the Phase 0 adjudicated design recomputed from its bytes"
+      },
+      {
+        "agrees": true,
+        "binding": "code.source_closure_sha256",
+        "expected": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
+        "observed": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
+        "verified_against": "source_closure() at freeze time"
+      },
+      {
+        "agrees": true,
+        "binding": "code.head_commit",
+        "expected": "95e41c0fc15e68bae93f22a1dc7614c73fd30b62",
+        "observed": "95e41c0fc15e68bae93f22a1dc7614c73fd30b62",
+        "verified_against": "git rev-parse HEAD at freeze time"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_and_code.aprime_port_receipt",
+        "expected": "f2e029b1cb33c130e327d06264f0213d7224ca0551ae28c49b0f99a29cf57f77",
+        "observed": "f2e029b1cb33c130e327d06264f0213d7224ca0551ae28c49b0f99a29cf57f77",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/a1_receipts/aprime_port_receipt.json"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_and_code.fir_kernel_recovery_receipt",
+        "expected": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3",
+        "observed": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.minecraft_version",
+        "expected": "1.16.5",
+        "observed": "1.16.5",
+        "verified_against": "the capture-host A3 runtime pins against the frozen apparatus"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.fabric_loader_version",
+        "expected": "0.15.11",
+        "observed": "0.15.11",
+        "verified_against": "the capture-host A3 runtime pins against the frozen apparatus"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.fabric_api_version",
+        "expected": "0.42.0+1.16",
+        "observed": "0.42.0+1.16",
+        "verified_against": "the capture-host A3 runtime pins against the frozen apparatus"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.yarn_mappings",
+        "expected": "1.16.5+build.10",
+        "observed": "1.16.5+build.10",
+        "verified_against": "the capture-host A3 runtime pins against the frozen apparatus"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.mod_jar_sha256",
+        "expected": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c",
+        "observed": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c",
+        "verified_against": "the capture-host A3 receipt, which hashed the jar it loaded"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.main_checkpoint_sha256",
+        "expected": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+        "observed": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+        "verified_against": "the extraction-host A3 receipt's observed digest against the authority"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.vae_sha256",
+        "expected": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+        "observed": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+        "verified_against": "the extraction-host A3 receipt's observed digest against the authority"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.preprocessing_identity",
+        "expected": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+        "observed": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+        "verified_against": "the P1 extraction inventories, which recorded the loaded runtime's preprocessing identity, against the frozen adapter constant"
+      },
+      {
+        "agrees": true,
+        "binding": "environment.action_conversion_identity",
+        "expected": "mineworld_mcdataset_json_action_to_env_action@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746",
+        "observed": "mineworld_mcdataset_json_action_to_env_action@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746",
+        "verified_against": "the frozen adapter action-converter constant"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.production_identity_count",
+        "expected": 25,
+        "observed": 25,
+        "verified_against": "the materialized production identity manifest"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.production_manifest_sha256",
+        "expected": "336a3baca931652543b8addd9884a2083a9baf0aa30fb6b1908d72d3a4b14c3a",
+        "observed": "336a3baca931652543b8addd9884a2083a9baf0aa30fb6b1908d72d3a4b14c3a",
+        "verified_against": "the committed .sha256 sidecar against the manifest bytes"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.production_identity_ids",
+        "expected": [
+          "e3_t01",
+          "e3_t02",
+          "e3_t03",
+          "e3_t04",
+          "e3_t05",
+          "e3_t06",
+          "e3_t07",
+          "e3_t08",
+          "e3_t09",
+          "e3_t10",
+          "e3_t11",
+          "e3_t12",
+          "e3_t13",
+          "e3_t14",
+          "e3_t15",
+          "e3_t16",
+          "e3_t17",
+          "e3_t18",
+          "e3_t19",
+          "e3_t20",
+          "e3_t21",
+          "e3_t22",
+          "e3_t23",
+          "e3_t24",
+          "e3_t25"
+        ],
+        "observed": [
+          "e3_t01",
+          "e3_t02",
+          "e3_t03",
+          "e3_t04",
+          "e3_t05",
+          "e3_t06",
+          "e3_t07",
+          "e3_t08",
+          "e3_t09",
+          "e3_t10",
+          "e3_t11",
+          "e3_t12",
+          "e3_t13",
+          "e3_t14",
+          "e3_t15",
+          "e3_t16",
+          "e3_t17",
+          "e3_t18",
+          "e3_t19",
+          "e3_t20",
+          "e3_t21",
+          "e3_t22",
+          "e3_t23",
+          "e3_t24",
+          "e3_t25"
+        ],
+        "verified_against": "the manifest rows against the authority's frozen identity roster"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.left_to_right_count",
+        "expected": 13,
+        "observed": 13,
+        "verified_against": "the manifest's direction column"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.right_to_left_count",
+        "expected": 12,
+        "observed": 12,
+        "verified_against": "the manifest's direction column"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.excluded_pilot_ids",
+        "expected": [
+          "e3_p90",
+          "e3_p91"
+        ],
+        "observed": [
+          "e3_p90",
+          "e3_p91"
+        ],
+        "verified_against": "the pilot identity manifest against the authority's pilot roster"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.manifest_declared_authority_sha256",
+        "expected": [
+          "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
+        ],
+        "observed": [
+          "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb"
+        ],
+        "verified_against": "the production manifest rows, recorded as materialized"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.production_identity_manifest",
+        "expected": "336a3baca931652543b8addd9884a2083a9baf0aa30fb6b1908d72d3a4b14c3a",
+        "observed": "336a3baca931652543b8addd9884a2083a9baf0aa30fb6b1908d72d3a4b14c3a",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/cohort/production_identity_manifest.jsonl"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.folds",
+        "expected": "cf72e750024ce5b6ee1c3116125b980c0352174e296cffdfbed99963a580bcd2",
+        "observed": "cf72e750024ce5b6ee1c3116125b980c0352174e296cffdfbed99963a580bcd2",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/cohort/folds.json"
+      },
+      {
+        "agrees": true,
+        "binding": "cohort.identity_priority_order",
+        "expected": "21dac3ddc80d8543ae0e50699b3b71c150a097c8b92148b43e49f4d30df8f520",
+        "observed": "21dac3ddc80d8543ae0e50699b3b71c150a097c8b92148b43e49f4d30df8f520",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/cohort/identity_priority_order.json"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.L1_registry_id",
+        "expected": "minecraft:white_stained_glass",
+        "observed": "minecraft:white_stained_glass",
+        "verified_against": "the P0 selected ladder against the P0 selection receipt"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.L2_registry_id",
+        "expected": "minecraft:light_blue_stained_glass",
+        "observed": "minecraft:light_blue_stained_glass",
+        "verified_against": "the P0 selected ladder against the P0 selection receipt"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.L3_registry_id",
+        "expected": "minecraft:brown_stained_glass",
+        "observed": "minecraft:brown_stained_glass",
+        "verified_against": "the P0 selected ladder against the P0 selection receipt"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.V_c.L1",
+        "expected": 0.8130516109415965,
+        "observed": 0.8130516109415965,
+        "verified_against": "the frozen P0 selected ladder"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.V_c.L2",
+        "expected": 0.426040140390582,
+        "observed": 0.426040140390582,
+        "verified_against": "the frozen P0 selected ladder"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.V_c.L3",
+        "expected": 0.1857213737234112,
+        "observed": 0.1857213737234112,
+        "verified_against": "the frozen P0 selected ladder"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.sentinel_placements",
+        "expected": [
+          0,
+          4,
+          8
+        ],
+        "observed": [
+          0,
+          4,
+          8
+        ],
+        "verified_against": "the frozen P0 sentinel envelope"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.p0_bootstrap_seed",
+        "expected": 1530570907966297797,
+        "observed": 1530570907966297797,
+        "verified_against": "p0_bindings.p0_bootstrap_seed() derived from the frozen Phase 0 design"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.p0_selection_receipt",
+        "expected": "263de5d3e97694c16d5ff6f006c1b385093ae6227e3531c087165e71145ef313",
+        "observed": "263de5d3e97694c16d5ff6f006c1b385093ae6227e3531c087165e71145ef313",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p0/P0_SELECTION_RECEIPT.json"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.p0_selected_ladder",
+        "expected": "ecd301febacbbf31449dc569f133bbcb57e0ec7f14e74b735c5c77afbe82779d",
+        "observed": "ecd301febacbbf31449dc569f133bbcb57e0ec7f14e74b735c5c77afbe82779d",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p0/P0_SELECTED_LADDER.json"
+      },
+      {
+        "agrees": true,
+        "binding": "conditions.p0_sentinel_envelope",
+        "expected": "3be3cba3c0ab4a0f531b099cbbd4579fc58397c48a553ffbc0a068ae8f137ff3",
+        "observed": "3be3cba3c0ab4a0f531b099cbbd4579fc58397c48a553ffbc0a068ae8f137ff3",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p0/P0_SENTINEL_ENVELOPE.json"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.speed_blocks_per_second",
+        "expected": 2.0,
+        "observed": 2.0,
+        "verified_against": "the implementation constant against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.dt_seconds",
+        "expected": 0.05,
+        "observed": 0.05,
+        "verified_against": "the implementation constant against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.frames_per_capture",
+        "expected": 180,
+        "observed": 180,
+        "verified_against": "the implementation constant against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.capture_hz",
+        "expected": 20,
+        "observed": 20,
+        "verified_against": "the implementation constant against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.process_noise_q",
+        "expected": 0.05,
+        "observed": 0.05,
+        "verified_against": "the implementation constant against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.framebuffer",
+        "expected": [
+          640,
+          360
+        ],
+        "observed": [
+          640,
+          360
+        ],
+        "verified_against": "the implementation constants against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.layout",
+        "expected": {
+          "lane_max": 8.0,
+          "lane_min": -8.0,
+          "lane_y": 4.0,
+          "layout_id": "layout_01",
+          "wall_axis": "X",
+          "wall_ortho_const": 6.0,
+          "wall_ortho_offset": -4.0,
+          "wall_seg_max": 2.5,
+          "wall_seg_min": -2.5
+        },
+        "observed": {
+          "lane_max": 8.0,
+          "lane_min": -8.0,
+          "lane_y": 4.0,
+          "layout_id": "layout_01",
+          "wall_axis": "X",
+          "wall_ortho_const": 6.0,
+          "wall_ortho_offset": -4.0,
+          "wall_seg_max": 2.5,
+          "wall_seg_min": -2.5
+        },
+        "verified_against": "the frozen layout constant"
+      },
+      {
+        "agrees": true,
+        "binding": "apparatus.camera_eye",
+        "expected": [
+          0.5,
+          5.6200000048,
+          -5.5
+        ],
+        "observed": [
+          0.5,
+          5.6200000048,
+          -5.5
+        ],
+        "verified_against": "the frozen camera constant"
+      },
+      {
+        "agrees": true,
+        "binding": "measurement.fir_kernel.LEFT_TO_RIGHT",
+        "expected": [
+          0.0552210582055221,
+          0.09555478020955548,
+          0.17290336071729034,
+          0.25623770302562376,
+          0.17259457731725947,
+          0.15029557871502955,
+          0.02838057700283806,
+          0.03276277580327627,
+          0.03604958900360496
+        ],
+        "observed": [
+          0.0552210582055221,
+          0.09555478020955548,
+          0.17290336071729034,
+          0.25623770302562376,
+          0.17259457731725947,
+          0.15029557871502955,
+          0.02838057700283806,
+          0.03276277580327627,
+          0.03604958900360496
+        ],
+        "verified_against": "fir.frozen_kernels(), recovered under the FIR recovery receipt"
+      },
+      {
+        "agrees": true,
+        "binding": "measurement.fir_kernel.RIGHT_TO_LEFT",
+        "expected": [
+          0.0155128136,
+          0.1420986717,
+          0.3819949723,
+          0.2529919934,
+          0.1314006058,
+          0.0092585384,
+          0.0336603539,
+          0.0330820509,
+          0.0
+        ],
+        "observed": [
+          0.0155128136,
+          0.1420986717,
+          0.3819949723,
+          0.2529919934,
+          0.1314006058,
+          0.0092585384,
+          0.0336603539,
+          0.0330820509,
+          0.0
+        ],
+        "verified_against": "fir.frozen_kernels(), recovered under the FIR recovery receipt"
+      },
+      {
+        "agrees": true,
+        "binding": "measurement.extent_half_width",
+        "expected": 0.8727621336620037,
+        "observed": 0.8727621336620037,
+        "verified_against": "the implementation constant against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "measurement.extent_samples_per_axis",
+        "expected": 5,
+        "observed": 5,
+        "verified_against": "the implementation constant against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "extraction.layers",
+        "expected": [
+          4,
+          10,
+          19
+        ],
+        "observed": [
+          4,
+          10,
+          19
+        ],
+        "verified_against": "the implementation's selected layers against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "extraction.expected_shape",
+        "expected": [
+          19,
+          336,
+          2048
+        ],
+        "observed": [
+          19,
+          336,
+          2048
+        ],
+        "verified_against": "the activation-store shape against the authority's token geometry"
+      },
+      {
+        "agrees": true,
+        "binding": "extraction.slice.PREVIOUS",
+        "expected": [
+          4858,
+          5194
+        ],
+        "observed": [
+          4858,
+          5194
+        ],
+        "verified_against": "the derived slice arithmetic against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "extraction.slice.PREVIOUS.excluded_action_range",
+        "expected": [
+          5194,
+          5204
+        ],
+        "observed": [
+          5194,
+          5204
+        ],
+        "verified_against": "the derived slice arithmetic against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "extraction.slice.CURRENT",
+        "expected": [
+          5205,
+          5541
+        ],
+        "observed": [
+          5205,
+          5541
+        ],
+        "verified_against": "the derived slice arithmetic against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "extraction.slice.CURRENT.excluded_action_range",
+        "expected": [
+          5541,
+          5551
+        ],
+        "observed": [
+          5541,
+          5551
+        ],
+        "verified_against": "the derived slice arithmetic against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "extraction.sequence_length",
+        "expected": 5552,
+        "observed": 5552,
+        "verified_against": "the derived slice arithmetic against the machine authority"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.extraction.storage",
+        "expected": "7222eea6f8c42291010f81deae4648b618d0e42213917cd98096dd4aa186fd73",
+        "observed": "7222eea6f8c42291010f81deae4648b618d0e42213917cd98096dd4aa186fd73",
+        "verified_against": "the machine authority sub-document at extraction.storage, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.representations.definitions",
+        "expected": "5de289b01a36c932ed01b08289bf2c1df6ac65eb1c7b5a38754e510d0c8d4e72",
+        "observed": "5de289b01a36c932ed01b08289bf2c1df6ac65eb1c7b5a38754e510d0c8d4e72",
+        "verified_against": "the machine authority sub-document at representations.definitions, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.baselines",
+        "expected": "97148b2623d182c763c897258e86018b72edbc7184ef0697b753c0b8d77febfa",
+        "observed": "97148b2623d182c763c897258e86018b72edbc7184ef0697b753c0b8d77febfa",
+        "verified_against": "the machine authority sub-document at baselines, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.statistics.primary_tests",
+        "expected": "ea5dc95bc7a7dadb07bc24e3023ee893ed98224e73e043101be5c662fa378b59",
+        "observed": "ea5dc95bc7a7dadb07bc24e3023ee893ed98224e73e043101be5c662fa378b59",
+        "verified_against": "the machine authority sub-document at statistics.primary_tests, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.statistics.secondary_families",
+        "expected": "e28dedec7cece77e02b30f6810c9f05bdc4371d93c6b19ae427364b05ecff0ba",
+        "observed": "e28dedec7cece77e02b30f6810c9f05bdc4371d93c6b19ae427364b05ecff0ba",
+        "verified_against": "the machine authority sub-document at statistics.secondary_families, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "analysis.bootstrap_seed",
+        "expected": 8258108568742502015,
+        "observed": 8258108568742502015,
+        "verified_against": "statistics.analysis_bootstrap_seed() derived from the frozen Phase 0 design binding under the 8.10.5a domain"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.production.retry_policy",
+        "expected": "e9db7981264379097283c27be5adbf4fba24377d2c59397b8aac749ca15bd070",
+        "observed": "e9db7981264379097283c27be5adbf4fba24377d2c59397b8aac749ca15bd070",
+        "verified_against": "the machine authority sub-document at production.retry_policy, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.production.capture_state_machine",
+        "expected": "a5ac37b1597c8b785e7fe8565fda827297e7265f13d55db64fee9ffc1025f6ef",
+        "observed": "a5ac37b1597c8b785e7fe8565fda827297e7265f13d55db64fee9ffc1025f6ef",
+        "verified_against": "the machine authority sub-document at production.capture_state_machine, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.deadline_fallbacks",
+        "expected": "bdc951e6e9b93ed79876db3d03ae963ca8446c03729e7bf93ab53e693230184e",
+        "observed": "bdc951e6e9b93ed79876db3d03ae963ca8446c03729e7bf93ab53e693230184e",
+        "verified_against": "the machine authority sub-document at deadline_fallbacks, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "authority_excerpt.absolute_deadline",
+        "expected": "baba1d64a0fc0118f0cf0f3eaa2744cc9df081c5fb142e1e0ad6f417b2703b0d",
+        "observed": "baba1d64a0fc0118f0cf0f3eaa2744cc9df081c5fb142e1e0ad6f417b2703b0d",
+        "verified_against": "the machine authority sub-document at absolute_deadline, quoted verbatim"
+      },
+      {
+        "agrees": true,
+        "binding": "operations.p1_pilot_receipt",
+        "expected": "34fe8fec7200c76e4314f04b330d33864113ee363913b73d16fbc40707e26843",
+        "observed": "34fe8fec7200c76e4314f04b330d33864113ee363913b73d16fbc40707e26843",
+        "verified_against": "sha256 of the bytes at /home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/p1/p1_pilot_receipt.json"
+      }
+    ],
+    "every_binding_verified_against_a_live_artifact": true,
+    "unverified": []
+  }
+}
