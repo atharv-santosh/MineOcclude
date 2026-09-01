@@ -15,6 +15,7 @@ and damaging exactly one artifact, so a test that passes for the wrong reason
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -99,6 +100,25 @@ def _kwargs(**overrides: Any) -> dict[str, Any]:
 @pytest.fixture(scope="module")
 def package() -> dict[str, Any]:
     return build_p2_freeze_package(**_kwargs())
+
+
+def _producer_env() -> dict[str, str]:
+    """The parent environment with this repository's ``src`` on ``PYTHONPATH``.
+
+    Inherited, not replaced. An env built from scratch drops what the child needs
+    to run at all: on Windows ``SYSTEMROOT``/``WINDIR`` are required for CPython
+    to initialise, and a POSIX ``PATH`` finds no ``git`` -- which the producer
+    shells out to for the source closure. Overlaying one variable keeps the test
+    portable and keeps the subprocess a faithful stand-in for how an operator
+    actually invokes the producer.
+    """
+    env = os.environ.copy()
+    src = str(REPOSITORY_ROOT / "src")
+    inherited = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = (
+        src if not inherited else src + os.pathsep + inherited
+    )
+    return env
 
 
 def _copy(path: Path, tmp_path: Path, name: str) -> Path:
@@ -492,7 +512,7 @@ def test_committed_producer_writes_both_artifacts_and_authorizes(
         cwd=REPOSITORY_ROOT,
         capture_output=True,
         text=True,
-        env={"PYTHONPATH": str(REPOSITORY_ROOT / "src"), "PATH": "/usr/bin:/bin"},
+        env=_producer_env(),
     )
     assert result.returncode == 0, result.stderr
     package_path = out / "P2_FREEZE_PACKAGE.json"
@@ -541,7 +561,7 @@ def test_committed_producer_emits_no_authorization_on_a_failed_freeze(
         cwd=REPOSITORY_ROOT,
         capture_output=True,
         text=True,
-        env={"PYTHONPATH": str(REPOSITORY_ROOT / "src"), "PATH": "/usr/bin:/bin"},
+        env=_producer_env(),
     )
     assert result.returncode == 1
     assert "BLOCKER_CODE=P2_PREREQUISITE_NOT_PASSED" in result.stderr
