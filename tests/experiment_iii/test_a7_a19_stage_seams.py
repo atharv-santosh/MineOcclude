@@ -379,21 +379,48 @@ def test_a15_a16_stages_are_selectable_on_the_named_driver() -> None:
 
 
 def test_a15_refuses_a_bootstrap_seed_that_is_not_the_frozen_one(tmp_path: Path) -> None:
-    """The seed is frozen in P2; a per-run override is not a knob."""
+    """The seed is frozen in P2; a per-run override is not a knob.
+
+    The seed is checked before the lock is even opened, so this refusal does not
+    depend on a lock existing. A14-A16 take no ``--estimands``: each stage
+    derives its own estimands from the sealed lock, which is why that argument is
+    absent here.
+    """
     lock = tmp_path / "lock.json"
     lock.write_text(json.dumps({"cells": [], "feature_block_hashes": {}}), encoding="utf-8")
-    estimands = tmp_path / "estimands.json"
-    estimands.write_text("{}", encoding="utf-8")
     result = run_cli(
         "run_primary_analysis.py",
         "--stage", "temporal",
         "--lock", str(lock),
-        "--estimands", str(estimands),
         "--bootstrap-seed", "12345",
     )
     assert result.returncode == 1
     assert "STATS_BOOTSTRAP_SEED_MISMATCH" in result.stderr
     assert "8258108568742502015" in result.stderr
+
+
+def test_a14_to_a16_take_no_investigator_authored_estimands_file() -> None:
+    """A14's inputs are the lock, the frozen V_c and P2 -- not a hand-written file."""
+    # Asserted by invocation, not by scanning --help: the docstring names the
+    # removed argument on purpose, to record why it is gone.
+    result = run_cli("run_primary_analysis.py", "--stage", "primary",
+                     "--estimands", "/nonexistent.json")
+    assert result.returncode == 2
+    assert "unrecognized arguments: --estimands" in result.stderr
+    assert "--lock" in run_cli("run_primary_analysis.py", "--help").stdout
+
+
+def test_a12_and_a13_are_both_selectable_on_the_named_driver() -> None:
+    """The lifecycle requires A13 between A12 and A14; the driver hosts both."""
+    result = run_cli("lock_predictions.py", "--help")
+    assert result.returncode == 0
+    assert "--stage" in result.stdout
+    for stage in ("lock", "baselines"):
+        assert stage in result.stdout
+    # A12 computes its predictions; it never accepts them as an input.
+    refused = run_cli("lock_predictions.py", "--predictions", "/nonexistent.jsonl")
+    assert refused.returncode == 2
+    assert "unrecognized arguments: --predictions" in refused.stderr
 
 
 def test_a17_adjudication_stage_runs_the_seventeen_row_matrix() -> None:

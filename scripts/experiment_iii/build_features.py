@@ -1,21 +1,28 @@
-"""A11 — feature construction (authority 8.7, lifecycle A11).
+"""A11 — feature construction (authority 8.7, 8.9.1, lifecycle A11).
 
-Builds the three frozen representations and the pixel-baseline features from the
-A9 activation corpus, and hashes every block so A12 can lock predictions against
-features that cannot subsequently move.
+Builds the three frozen representations, the descriptive depth-panel blocks and
+the pixel-baseline features from the A9 activation corpus and the A7 captures,
+**persists every block** where the expected artifact inventory names it, and
+hashes each one so A12 can lock predictions against features that cannot
+subsequently move.
 
     CURRENT               COARSE_2X6_CONCAT of the CURRENT slice      24,576
     CURRENT_MINUS_PREVIOUS  CURRENT - PREVIOUS, coarse-pooled         24,576
     TWO_FRAME_CONCAT      PREVIOUS first, then CURRENT                49,152
-    pixel baseline        48x28 RGB, frozen area interpolation         4,032
+    CURRENT_L04/L10       the 8.12 family E depth panel, descriptive  24,576
+    PIXEL_BASELINE        48x28 RGB, frozen area interpolation         4,032
 
 No representation is chosen here and none is searched: the recipes live in
-``representations.py`` under P2, and this driver only applies them in the frozen
-target-row order. ``FEATURE_POOLING_GRID_TRANSPOSED`` and
-``FEATURE_SLICE_SWAPPED`` exist because the two plausible silent errors are a
+``representations.py`` and ``baselines_pixel.py`` under P2, and this driver only
+applies them in the frozen target-row order. ``FEATURE_POOLING_GRID_TRANSPOSED``
+and ``FEATURE_SLICE_SWAPPED`` exist because the two plausible silent errors are a
 2x6 grid built as 6x2 and a two-frame concat assembled CURRENT-first; both
 produce correctly-shaped, entirely wrong features, so both are checked rather
 than trusted.
+
+The blocks are written, not merely hashed. A11 that only hashed them left A12
+with no feature artifact to fit, which is how A12 came to demand an
+investigator-authored prediction file it was supposed to compute.
 
     python scripts/experiment_iii/build_features.py \\
         --activations data/experiment_iii/production/activations \\
@@ -25,7 +32,6 @@ than trusted.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 from pathlib import Path
@@ -43,22 +49,36 @@ from mineocclude.experiment_iii.authority import (  # noqa: E402
 from mineocclude.experiment_iii.baselines_pixel import (  # noqa: E402
     PIXEL_BASELINE_NAME,
     PIXEL_FEATURE_DIM,
-    pixel_features,
 )
 from mineocclude.experiment_iii.errors import ExperimentIIIError  # noqa: E402
 from mineocclude.experiment_iii.extraction import SELECTED_LAYERS  # noqa: E402
+from mineocclude.experiment_iii.feature_store import (  # noqa: E402
+    BLOCK_DIMENSIONS,
+    DEPTH_PANEL_LAYERS,
+    FEATURE_ROOT,
+    PIXEL_BLOCK,
+    PRIMARY_LAYER,
+    build_activation_blocks,
+    build_pixel_block,
+    store_inventory,
+    unit_id,
+    write_block,
+)
 from mineocclude.experiment_iii.representations import (  # noqa: E402
     COARSE_COLS,
     COARSE_DIMENSION,
     COARSE_ROWS,
     TWO_FRAME_DIMENSION,
-    coarse_2x6_concat,
-    current_minus_previous,
-    two_frame_concat,
 )
-from mineocclude.experiment_iii.schema import write_json_atomic  # noqa: E402
+from mineocclude.experiment_iii.schema import (  # noqa: E402
+    ConditionId,
+    read_jsonl,
+    write_json_atomic,
+)
 
-DEFAULT_OUT = REPOSITORY_ROOT / "docs" / "experiment_iii" / "analysis"
+#: Inventory A11: the feature config is a receipt, not an analysis result.
+DEFAULT_OUT = REPOSITORY_ROOT / "docs" / "experiment_iii" / "receipts"
+COHORT = REPOSITORY_ROOT / "docs" / "experiment_iii" / "cohort"
 
 REPRESENTATIONS = {
     "CURRENT": COARSE_DIMENSION,
@@ -66,55 +86,6 @@ REPRESENTATIONS = {
     "TWO_FRAME_CONCAT": TWO_FRAME_DIMENSION,
     PIXEL_BASELINE_NAME: PIXEL_FEATURE_DIM,
 }
-
-
-def _array_path(root: Path, unit_id: str, layer: int, temporal_slice: str) -> Path:
-    return Path(root) / unit_id / f"layer{layer:02d}_{temporal_slice.lower()}.npy"
-
-
-def _build_unit(
-    activations: Path, unit_id: str, layer: int
-) -> dict[str, np.ndarray]:
-    """The four feature blocks for one capture unit at one layer."""
-    current_path = _array_path(activations, unit_id, layer, "CURRENT")
-    previous_path = _array_path(activations, unit_id, layer, "PREVIOUS")
-    for path in (current_path, previous_path):
-        if not path.is_file():
-            raise ExperimentIIIError(
-                "PROVENANCE_BINDING_MISSING", f"A11 needs {path}, which is absent"
-            )
-    current = np.load(current_path).astype(np.float64)
-    previous = np.load(previous_path).astype(np.float64)
-    if current.shape != previous.shape:
-        raise ExperimentIIIError(
-            "FEATURE_DIMENSION_MISMATCH",
-            f"{unit_id} layer {layer}: CURRENT {current.shape} != PREVIOUS "
-            f"{previous.shape}",
-        )
-    if current.shape[0] != TARGET_ROWS_PER_CAPTURE:
-        raise ExperimentIIIError(
-            "FEATURE_ROW_ORDER_MISMATCH",
-            f"{unit_id} layer {layer} holds {current.shape[0]} rows, the authority "
-            f"freezes {TARGET_ROWS_PER_CAPTURE}",
-        )
-    blocks = {
-        "CURRENT": np.stack([coarse_2x6_concat(row) for row in current]),
-        "CURRENT_MINUS_PREVIOUS": np.stack(
-            [
-                current_minus_previous(row_c, row_p)
-                for row_c, row_p in zip(current, previous)
-            ]
-        ),
-        # PREVIOUS first. Swapping the operands yields the same shape and a
-        # different feature space, which is FEATURE_SLICE_SWAPPED.
-        "TWO_FRAME_CONCAT": np.stack(
-            [
-                two_frame_concat(row_p, row_c)
-                for row_p, row_c in zip(previous, current)
-            ]
-        ),
-    }
-    return blocks
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -137,7 +108,18 @@ def main(argv: list[str] | None = None) -> int:
         default=REPOSITORY_ROOT
         / "data" / "experiment_iii" / "production" / "captures",
     )
-    parser.add_argument("--primary-layer", type=int, default=19)
+    parser.add_argument(
+        "--features",
+        type=Path,
+        default=REPOSITORY_ROOT / FEATURE_ROOT,
+        help="where the persisted feature blocks are written",
+    )
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=COHORT / "production_identity_manifest.jsonl",
+    )
+    parser.add_argument("--primary-layer", type=int, default=PRIMARY_LAYER)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--config-only", action="store_true")
     args = parser.parse_args(argv)
@@ -162,13 +144,17 @@ def main(argv: list[str] | None = None) -> int:
             "authority_section": "8.7",
             "authority_binding": binding,
             "representations": REPRESENTATIONS,
+            "persisted_blocks": dict(BLOCK_DIMENSIONS),
             "primary_representation": "COARSE_2X6_CONCAT",
             "coarse_grid": [COARSE_ROWS, COARSE_COLS],
             "selected_layers": list(SELECTED_LAYERS),
             "primary_layer": args.primary_layer,
+            "depth_panel_layers": list(DEPTH_PANEL_LAYERS),
+            "depth_panel_role": "DESCRIPTIVE_ONLY_MAY_NOT_REPLACE_LAYER_19",
             "rows_per_capture": TARGET_ROWS_PER_CAPTURE,
             "two_frame_order": "PREVIOUS_FIRST_THEN_CURRENT",
             "pixel_baseline": PIXEL_BASELINE_NAME,
+            "feature_root": Path(args.features).as_posix(),
             "feature_search_performed": False,
             "outcome_consulted_to_choose_features": False,
         }
@@ -183,32 +169,48 @@ def main(argv: list[str] | None = None) -> int:
                     f"{args.a8_receipt} is not a passed A8 cohort closure",
                 )
             identities = list(closure["complete_five_way_paired_identities"])
+            manifest = {
+                str(row["identity"]): row for row in read_jsonl(args.manifest)
+            }
             for identity in identities:
-                for condition in ("L0", "L1", "L2", "L3", "L4"):
-                    unit_id = f"{identity}__{condition}"
-                    unit_blocks = _build_unit(
-                        args.activations, unit_id, args.primary_layer
+                if identity not in manifest:
+                    raise ExperimentIIIError(
+                        "PROVENANCE_BINDING_MISSING",
+                        f"{identity} is in the A8 cohort but not in "
+                        f"{args.manifest}",
+                    )
+                target_rows = [
+                    int(index)
+                    for index in manifest[identity]["target_model_frame_indices"]
+                ]
+                for condition in (c.value for c in ConditionId):
+                    unit = unit_id(identity, condition)
+                    unit_blocks = build_activation_blocks(
+                        args.activations, unit, primary_layer=args.primary_layer
+                    )
+                    unit_blocks[PIXEL_BLOCK] = build_pixel_block(
+                        Path(args.captures) / unit, target_rows
                     )
                     for name, matrix in unit_blocks.items():
-                        if matrix.shape[1] != REPRESENTATIONS[name]:
+                        if matrix.shape[1] != BLOCK_DIMENSIONS[name]:
                             raise ExperimentIIIError(
                                 "FEATURE_DIMENSION_MISMATCH",
-                                f"{unit_id} {name} is {matrix.shape[1]}-dimensional, "
-                                f"the authority freezes {REPRESENTATIONS[name]}",
+                                f"{unit} {name} is {matrix.shape[1]}-dimensional, "
+                                f"the authority freezes {BLOCK_DIMENSIONS[name]}",
                             )
                         if not np.all(np.isfinite(matrix)):
                             raise ExperimentIIIError(
                                 "FEATURE_NONFINITE",
-                                f"{unit_id} {name} holds a non-finite value",
+                                f"{unit} {name} holds a non-finite value",
                             )
-                        blocks.setdefault(unit_id, {})[name] = hashlib.sha256(
-                            np.ascontiguousarray(matrix, dtype=np.float64).tobytes()
-                        ).hexdigest()
+                        digest = write_block(args.features, name, unit, matrix)
+                        blocks.setdefault(unit, {})[name] = digest
                     rows_total += TARGET_ROWS_PER_CAPTURE
             config["identities"] = identities
             config["units"] = len(blocks)
         config["rows_per_representation"] = rows_total
         config["feature_block_hashes"] = blocks
+        config["store"] = store_inventory(args.features)
     except (ExperimentIIIError, OSError, KeyError, json.JSONDecodeError) as error:
         blocker = getattr(error, "blocker", "FEATURE_DIMENSION_MISMATCH")
         print(f"BLOCKER_CODE={blocker}", file=sys.stderr)
@@ -223,6 +225,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"A11_COARSE_GRID={COARSE_ROWS}x{COARSE_COLS}")
     print(f"A11_TWO_FRAME_ORDER={config['two_frame_order']}")
     print(f"A11_UNITS={config.get('units', 0)}")
+    print(f"A11_PERSISTED_BLOCKS={len(BLOCK_DIMENSIONS)}")
+    print(f"A11_FEATURE_ROOT={config['feature_root']}")
     print(f"A11_ROWS_PER_REPRESENTATION={config['rows_per_representation']}")
     print(f"A11_FEATURE_CONFIG_SHA256={digest}")
     return 0

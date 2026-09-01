@@ -51,7 +51,8 @@ from mineocclude.experiment_iii.statistics import (  # noqa: E402
     assert_no_success_gate,
 )
 
-DEFAULT_ANALYSIS = REPOSITORY_ROOT / "docs" / "experiment_iii" / "analysis"
+#: Inventory A17/A18/A19 — the canonical results root.
+DEFAULT_ANALYSIS = REPOSITORY_ROOT / "docs" / "experiment_iii" / "results"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -84,10 +85,15 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         binding = verify_authority_binding()
+        # rglob, not glob: the inventory marks the per-estimand bootstrap
+        # outputs under results/bootstrap/ as hash-required A14/A15/A16
+        # artifacts, and a package that did not trace them would claim
+        # completeness it does not have.
         inputs = sorted(
             path
-            for path in args.analysis.glob("*.json")
-            if path.is_file() and path.name != "scientific_package.json"
+            for path in args.analysis.rglob("*.json")
+            if path.is_file()
+            and path.name != "scientific_package_manifest.json"
         )
         package = {
             "schema_version": "mineocclude-experiment-iii-scientific-package-v1",
@@ -99,7 +105,7 @@ def main(argv: list[str] | None = None) -> int:
             "overall_pass_fail_verdict": None,
             "traceability": [
                 {
-                    "artifact": path.name,
+                    "artifact": path.relative_to(args.analysis).as_posix(),
                     "sha256": sha256_file(path),
                     "bytes": path.stat().st_size,
                 }
@@ -113,7 +119,43 @@ def main(argv: list[str] | None = None) -> int:
         print(error.message, file=sys.stderr)
         return 1
 
-    digest = write_json_atomic(args.analysis / "scientific_package.json", package)
+    # Inventory A18 names the manifest, the report, and the two directories
+    # every figure and table must be traceable into.
+    for directory in ("figures", "tables"):
+        (args.analysis / directory).mkdir(parents=True, exist_ok=True)
+    digest = write_json_atomic(
+        args.analysis / "scientific_package_manifest.json", package
+    )
+    report = [
+        "# Experiment III-A statistical report",
+        "",
+        f"Authority `{binding['AUTHORITY_SHA256']}`.",
+        "",
+        "This package carries **no overall pass/fail verdict** at any stage "
+        "(authority 8.10.6).",
+        "",
+        f"Primary family (Holm across exactly {len(PRIMARY_FAMILY)}): "
+        + ", ".join(f"`{name}`" for name in PRIMARY_FAMILY),
+        "",
+        "Secondary families: "
+        + ", ".join(f"`{name}`" for name in SECONDARY_FAMILIES),
+        "",
+        f"Required baseline language: *{PIXEL_BASELINE_NAME}*.",
+        "",
+        "## Traceability",
+        "",
+        "| Artifact | Bytes | SHA256 |",
+        "| --- | ---: | --- |",
+    ]
+    for entry in package["traceability"]:
+        report.append(
+            f"| `{entry['artifact']}` | {entry['bytes']} | `{entry['sha256']}` |"
+        )
+    report.append("")
+    (args.analysis / "STATISTICAL_REPORT.md").write_text(
+        "\n".join(report), encoding="utf-8"
+    )
+    print("A18_STATUS=PASS")
     print(f"PACKAGE_ARTIFACTS={package['artifact_count']}")
     print(f"SCIENTIFIC_PACKAGE_SHA256={digest}")
     print("OVERALL_PASS_FAIL_VERDICT=none")
@@ -183,11 +225,12 @@ def _closure(args) -> int:
     current = binding["AUTHORITY_SHA256"]
     cohort = _read(experiment / "a8" / "cohort_closure_receipt.json")
     p2 = _read(experiment / "p2" / "P2_FREEZE_PACKAGE.json")
-    package = _read(analysis / "scientific_package.json")
+    package = _read(analysis / "scientific_package_manifest.json")
     adjudication = _read(analysis / "adjudication_receipt.json")
-    primary = _read(analysis / "primary_analysis.json")
+    primary = _read(analysis / "primary_results.json")
     temporal = _read(analysis / "temporal_results.json")
     context = _read(analysis / "context_age_results.json")
+    baselines = _read(analysis / "baselines_receipt.json")
     lock = _read(analysis / "PREDICTION_LOCK.json")
 
     def _bound(document) -> bool:
@@ -224,12 +267,22 @@ def _closure(args) -> int:
             "met": bool(lock)
             and bool(primary)
             and primary.get("prediction_lock_sha256")
+            == lock.get("prediction_lock_sha256")
+            and (baselines or {}).get("prediction_lock_sha256")
             == lock.get("prediction_lock_sha256"),
         },
         {
             "id": 5,
             "condition": "PRIMARY_SECONDARY_AND_L0_CONTROL_REPORTED_WITH_FROZEN_MULTIPLICITY_AND_INTERVALS",
-            "met": bool(primary) and bool(temporal) and bool(context),
+            # The L0 control is A13's, and it is named in this condition, so it
+            # is checked here rather than assumed from the primary result.
+            "met": bool(primary)
+            and bool(temporal)
+            and bool(context)
+            and bool(baselines)
+            and bool((baselines or {}).get("l0_interpretability_control"))
+            and primary.get("multiplicity") == "HOLM_ACROSS_3"
+            and int(temporal.get("holm_family_size") or 0) == 2,
         },
         {
             "id": 6,
@@ -268,7 +321,31 @@ def _closure(args) -> int:
         "iii_b_started": False,
     }
     digest = write_json_atomic(
-        experiment / "closure" / "EXPERIMENT_III_CLOSURE_RECEIPT.json", receipt
+        analysis / "EXPERIMENT_III_CLOSURE_RECEIPT.json", receipt
+    )
+    summary = [
+        "# Experiment III — final scientific summary",
+        "",
+        f"Authority `{current}`.",
+        "",
+        f"Closure: **{receipt['closure_kind']}** "
+        f"(`EXPERIMENT_III_COMPLETE={str(receipt['EXPERIMENT_III_COMPLETE']).lower()}`).",
+        "",
+        "Experiment III emits no overall pass/fail verdict and no success gate "
+        "(authority 8.10.6).",
+        "",
+        "## Closure conditions",
+        "",
+    ]
+    for entry in conditions:
+        summary.append(
+            f"- [{'x' if entry['met'] else ' '}] {entry['id']}. {entry['condition']}"
+        )
+    if unmet:
+        summary += ["", "## Unmet", ""] + [f"- {name}" for name in unmet]
+    summary.append("")
+    (analysis / "FINAL_SCIENTIFIC_SUMMARY.md").write_text(
+        "\n".join(summary), encoding="utf-8"
     )
     print(f"A19_CLOSURE_CONDITIONS={len(conditions)}")
     for entry in conditions:

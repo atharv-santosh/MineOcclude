@@ -1515,13 +1515,17 @@ def test_production_capture_refuses_with_a_valid_p0_ladder_present() -> None:
     authorization, and ``P0``'s own ``PRODUCTION_AUTHORIZED`` field is never
     consulted.
 
-    The blocker is now ``P2_BINDING_MISMATCH`` rather than
-    ``P2_PREREQUISITE_NOT_PASSED``, and that change is the point rather than a
-    regression: A7 used to refuse unconditionally because ``--execute`` was
-    unimplemented, so any P2 -- or none -- produced the same message. It now
-    reads the package and names what is wrong with it. The package on disk is the
-    superseded ``a2734b31`` freeze, which binds the placeholder
-    ``bootstrap_seed = "FROZEN_IN_P2"``, so that is what it reports.
+    A7 used to refuse unconditionally because ``--execute`` was unimplemented, so
+    any P2 -- or none -- produced the same message. It now reads the package and
+    names what is actually wrong with the invocation.
+
+    The P2 on disk is no longer the superseded ``a2734b31`` freeze that bound the
+    placeholder ``bootstrap_seed = "FROZEN_IN_P2"``; it is a passed package. So
+    admission now gets past the freeze and refuses on the next missing
+    prerequisite instead: this invocation supplies no A3 capture-host receipt, and
+    a host that never established a renderer may not capture. What the test pins
+    is unchanged -- A7 refuses, says so, and the refusal is never about P0
+    evidence being unavailable.
     """
     import subprocess
     import sys as _sys
@@ -1542,7 +1546,7 @@ def test_production_capture_refuses_with_a_valid_p0_ladder_present() -> None:
         cwd=str(REPOSITORY_ROOT),
     )
     assert completed.returncode != 0, "production capture must refuse"
-    assert "BLOCKER_CODE=P2_" in completed.stderr
+    assert "BLOCKER_CODE=" in completed.stderr
     assert "A7_EXECUTED=false" in completed.stderr
     # The refusal must be about P2, never about P0 evidence being unavailable.
     assert "P0_CANDIDATE_ID_UNSUPPORTED" not in completed.stderr
