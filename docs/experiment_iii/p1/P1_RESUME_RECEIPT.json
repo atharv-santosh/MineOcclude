@@ -1,0 +1,88 @@
+{
+  "P1_RESUME_DEMONSTRATION": "PASS",
+  "acceptance": {
+    "complete_unit_count": 10,
+    "complete_units": [
+      "e3_p90__L0",
+      "e3_p90__L1",
+      "e3_p90__L2",
+      "e3_p90__L3",
+      "e3_p90__L4",
+      "e3_p91__L0",
+      "e3_p91__L1",
+      "e3_p91__L2",
+      "e3_p91__L3",
+      "e3_p91__L4"
+    ],
+    "duplicate_accepted_units": [],
+    "ledger_chain_verified": true,
+    "ledger_record_count": 62
+  },
+  "authority_binding": {
+    "AUTHORITY_SHA256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "MACHINE_AUTHORITY_SHA256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "6A recovery; RECOVERY_AND_RESUME_RUNBOOK A5/A7",
+  "authority_version": "v1.7",
+  "completed_before_interruption": [
+    "e3_p90__L0",
+    "e3_p90__L1",
+    "e3_p90__L2"
+  ],
+  "completed_before_interruption_count": 3,
+  "demonstration": {
+    "deliberate": true,
+    "interrupted_at": "2026-09-01T01:26:49Z",
+    "interruption_point": {
+      "ledger_records_after_restart": 42,
+      "ledger_records_before_kill": 20,
+      "unit": "e3_p90__L3",
+      "unit_state_at_interruption": "RUNNING"
+    },
+    "isolated_from_accepted_evidence": true,
+    "isolation_note": "Run into its own capture root and ledger, so the ten accepted P1 units were never at risk. Pilot identities only.",
+    "method": "SIGKILL on the capture driver, mid-unit",
+    "rationale": "A hard kill rather than a graceful stop: the state machine must recover from a genuine crash, so nothing was given a chance to finalise. No capture bytes were modified to simulate failure.",
+    "restarted_at": "2026-09-01T01:27:04Z"
+  },
+  "durability": {
+    "durable_receipts_changed": [],
+    "durable_receipts_unchanged": [
+      "e3_p90__L0",
+      "e3_p90__L1",
+      "e3_p90__L2"
+    ],
+    "post_restart_sha256": {
+      "e3_p90__L0": "f70f35ae946a44c3a899a91965e9e79963c801bc6eeb2ce7cc0c5149defd80b1",
+      "e3_p90__L1": "0585c479fd0cc2ccf4686afea1152f1d6acdfdbab3e0c89bf85e0d5988ea5f4f",
+      "e3_p90__L2": "3469b94f89a18ce76ea3f7dee955e06e0105a7731d37991daf4c6c1551925f2e"
+    },
+    "pre_kill_sha256": {
+      "e3_p90__L0": "f70f35ae946a44c3a899a91965e9e79963c801bc6eeb2ce7cc0c5149defd80b1",
+      "e3_p90__L1": "0585c479fd0cc2ccf4686afea1152f1d6acdfdbab3e0c89bf85e0d5988ea5f4f",
+      "e3_p90__L2": "3469b94f89a18ce76ea3f7dee955e06e0105a7731d37991daf4c6c1551925f2e"
+    }
+  },
+  "same_spec": {
+    "note": "This closure is the demonstration's own. It is an engineering exercise in an isolated capture root, not scientific evidence, and is deliberately not required to equal the closure the ten accepted P1 units were captured under. What the recovery contract requires -- and what is shown here -- is that the closure is the SAME on both sides of the interruption.",
+    "single_authority": [
+      "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a"
+    ],
+    "single_source_closure": [
+      "596f5b9a73d8a300007e94ed7328cbc4eb3851d33d1926347f991e943508416a"
+    ],
+    "units_with_spec_drift": []
+  },
+  "schema_version": "mineocclude-experiment-iii-p1-resume-receipt-v1",
+  "skipping": {
+    "completed_units_recaptured_after_restart": [],
+    "completed_units_skipped": [
+      "e3_p90__L0",
+      "e3_p90__L1",
+      "e3_p90__L2"
+    ],
+    "interrupted_unit_resume_reason": "DISCARDED_PARTIAL_FROM_RUNNING",
+    "interrupted_unit_retry_same_spec": true
+  }
+}
