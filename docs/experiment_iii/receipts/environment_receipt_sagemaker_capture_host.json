@@ -18,11 +18,11 @@
   "blocker_taxonomy_available": true,
   "blocker_taxonomy_code_count": 146,
   "clock": {
-    "local_iso8601": "2026-09-01T16:49:20.451497+00:00",
+    "local_iso8601": "2026-09-01T21:35:27.931114+00:00",
     "monotonic_available": true,
-    "monotonic_sample": 48488.373616115,
+    "monotonic_sample": 65653.843809857,
     "timezone": "UTC",
-    "utc_iso8601": "2026-09-01T16:49:20.453344+00:00",
+    "utc_iso8601": "2026-09-01T21:35:27.932608+00:00",
     "utc_offset_seconds": 0
   },
   "display": {
@@ -58,7 +58,7 @@
     "python": "3.12.13"
   },
   "host_role": "LOCAL_CAPTURE_HOST",
-  "implementation_checkpoint_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+  "implementation_checkpoint_commit": "ed9b3ee52be824df692c2a8eb5f596cbc41c0c08",
   "local_ports": {
     "25565": {
       "in_use": false
@@ -106,7 +106,7 @@
     "software_rendering": true,
     "status": "EVALUATED",
     "system": "Linux",
-    "xvfb": "/home/sagemaker-user/exp3-capture-toolchain/root/usr/bin/Xvfb"
+    "xvfb": "/home/sagemaker-user/exp3-capture-toolchain/Xvfb-exp3"
   },
   "resource_policy": {
     "CUDA_USED": false,
@@ -162,20 +162,14 @@
       "sha256": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c"
     },
     "pins_match": true,
-    "runtime_root": {
-      "client_present": true,
-      "path": "/home/sagemaker-user/mineocclude-exp3-runtime",
-      "present": true,
-      "server_present": true
-    },
     "speed_blocks_per_second": 2.0
   },
   "schema_version": "mineocclude-experiment-iii-environment-receipt-v1",
   "source_closure": {
-    "head_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+    "head_commit": "ed9b3ee52be824df692c2a8eb5f596cbc41c0c08",
     "includes_uncommitted_working_tree": true,
     "line_ending": "LF",
-    "record_count": 584,
+    "record_count": 586,
     "record_format": "<mode> <blob-sha1> <stage>\\t<path>",
     "roots": [
       "src",
@@ -183,8 +177,8 @@
       "scripts"
     ],
     "sort": "ASCENDING_BY_PATH_FIELD_ONLY_AS_RAW_UTF8_BYTES",
-    "source_closure_sha256": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
-    "stream_bytes": 58508,
+    "source_closure_sha256": "f9fba4b5ef0380f0d6cbff07eae9b04f65cd4b649fe0eb13eaca6046cfd8ba0a",
+    "stream_bytes": 58706,
     "trailing_newline": true,
     "whole_line_sort": false
   },
@@ -203,7 +197,7 @@
     "passed": true,
     "physical_pool_count": 1,
     "pool_working_device_id": 66309,
-    "pool_working_free_bytes": 391741874176,
+    "pool_working_free_bytes": 388836704256,
     "remote_hashed_round_trip_required": false,
     "results": {
       "A3_COMBINED_PROGRAM_WITH_LOCAL_MIRROR": true
@@ -217,26 +211,26 @@
   "storage_pools": {
     "POOL_DURABLE": {
       "device_id": 66309,
-      "free_bytes": 391741874176,
+      "free_bytes": 388836704256,
       "free_bytes_sampled_from": "/home/sagemaker-user/MineOcclude-Exp3",
-      "free_gib": 364.83805084228516,
+      "free_gib": 362.1324005126953,
       "path": "/home/sagemaker-user/MineOcclude-Exp3/data",
       "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3/data",
       "total_bytes": 536803803136
     },
     "POOL_SCRATCH": {
       "device_id": 66309,
-      "free_bytes": 391741874176,
+      "free_bytes": 388836704256,
       "free_bytes_sampled_from": "/home/sagemaker-user/MineOcclude-Exp3",
-      "free_gib": 364.83805084228516,
+      "free_gib": 362.1324005126953,
       "path": "/home/sagemaker-user/MineOcclude-Exp3",
       "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3",
       "total_bytes": 536803803136
     },
     "POOL_WORKING": {
       "device_id": 66309,
-      "free_bytes": 391741874176,
-      "free_gib": 364.83805084228516,
+      "free_bytes": 388836704256,
+      "free_gib": 362.1324005126953,
       "path": "/home/sagemaker-user/MineOcclude-Exp3",
       "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3",
       "total_bytes": 536803803136

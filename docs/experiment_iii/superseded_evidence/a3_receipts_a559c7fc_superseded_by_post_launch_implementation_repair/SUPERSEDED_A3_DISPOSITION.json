@@ -1,0 +1,15 @@
+{
+ "schema_version": "mineocclude-experiment-iii-superseded-artifact-disposition-v1",
+ "artifact": "A3 capture-host and GPU-extraction-host environment receipts",
+ "status": "SUPERSEDED_BY_POST_LAUNCH_IMPLEMENTATION_REPAIR",
+ "authority_section": "A3; 7.10a disposition pattern",
+ "reason": "Both receipts bound the predecessor source closure a559c7fc. The A12/A13/A14 driver repair changed the closure, so each host was re-probed on the new closure. Neither host, apparatus, GPU nor model identity changed; only the closure the receipt attests to.",
+ "predecessor_source_closure": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
+ "successor_source_closure": "f9fba4b5ef0380f0d6cbff07eae9b04f65cd4b649fe0eb13eaca6046cfd8ba0a",
+ "re_probe_was_a_host_check_only": true,
+ "p0_captures_rerun": false,
+ "p1_local_captures_rerun": false,
+ "p1_gpu_forwards_rerun": false,
+ "may_enter_p2": false,
+ "removed_from_operational_path": true
+}

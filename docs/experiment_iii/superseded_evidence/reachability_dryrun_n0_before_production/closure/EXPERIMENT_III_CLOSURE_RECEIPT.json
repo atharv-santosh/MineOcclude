@@ -1,0 +1,66 @@
+{
+  "EXPERIMENT_III_COMPLETE": false,
+  "analysis_bootstrap_seed": 8258108568742502015,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+    "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "15.1",
+  "closure_condition_count": 8,
+  "closure_conditions": [
+    {
+      "condition": "A0_THROUGH_A18_PASS_RECEIPTS_BOUND_TO_SAME_AUTHORITY_SHA256",
+      "id": 1,
+      "met": false
+    },
+    {
+      "condition": "P2_FREEZE_PACKAGE_VERIFIES_AGAINST_EVERY_DOWNSTREAM_ARTIFACT",
+      "id": 2,
+      "met": false
+    },
+    {
+      "condition": "COHORT_CLOSURE_N_COMPLETE_GE_15_WITH_NAMED_BRANCH_OR_EXPLICIT_NO_CLAIM_CLOSURE",
+      "id": 3,
+      "met": true
+    },
+    {
+      "condition": "PREDICTION_LOCK_WRITTEN_BEFORE_ANY_STATISTIC_AND_ALL_NUMBERS_DERIVE_FROM_IT",
+      "id": 4,
+      "met": false
+    },
+    {
+      "condition": "PRIMARY_SECONDARY_AND_L0_CONTROL_REPORTED_WITH_FROZEN_MULTIPLICITY_AND_INTERVALS",
+      "id": 5,
+      "met": false
+    },
+    {
+      "condition": "EVERY_CLAIM_MAPS_TO_A_PERMITTED_ADJUDICATION_INTERPRETATION",
+      "id": 6,
+      "met": true
+    },
+    {
+      "condition": "SCIENTIFIC_PACKAGE_COMPLETE_AND_HASH_CONSISTENT",
+      "id": 7,
+      "met": false
+    },
+    {
+      "condition": "ALL_OPEN_BLOCKERS_RESOLVED_OR_DISCLOSED_AS_LIMITATIONS",
+      "disclosed_limitations": [],
+      "id": 8,
+      "met": true
+    }
+  ],
+  "closure_kind": "NOT_YET_CLOSED",
+  "iii_b_started": false,
+  "overall_pass_fail_verdict": null,
+  "schema_version": "mineocclude-experiment-iii-closure-receipt-v1",
+  "stage": "A19",
+  "unmet_conditions": [
+    "A0_THROUGH_A18_PASS_RECEIPTS_BOUND_TO_SAME_AUTHORITY_SHA256",
+    "P2_FREEZE_PACKAGE_VERIFIES_AGAINST_EVERY_DOWNSTREAM_ARTIFACT",
+    "PREDICTION_LOCK_WRITTEN_BEFORE_ANY_STATISTIC_AND_ALL_NUMBERS_DERIVE_FROM_IT",
+    "PRIMARY_SECONDARY_AND_L0_CONTROL_REPORTED_WITH_FROZEN_MULTIPLICITY_AND_INTERVALS",
+    "SCIENTIFIC_PACKAGE_COMPLETE_AND_HASH_CONSISTENT"
+  ]
+}
