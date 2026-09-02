@@ -112,14 +112,14 @@
         "path": "/home/sagemaker-user/MineOcclude-Exp3/docs/experiment_iii/a1_receipts/fir_kernel_recovery_receipt.json",
         "sha256": "fcf1c30c1516f434a99e9e70282cfe36bd03ee9398cae0c67e8c645fa51d16f3"
       },
-      "head_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+      "head_commit": "a91502ce2cd421721f8c638eaeea013a1fcddaf1",
       "machine_authority_sha256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
       "phase0_design_sha256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
       "source_closure": {
-        "head_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+        "head_commit": "a91502ce2cd421721f8c638eaeea013a1fcddaf1",
         "includes_uncommitted_working_tree": true,
         "line_ending": "LF",
-        "record_count": 584,
+        "record_count": 586,
         "record_format": "<mode> <blob-sha1> <stage>\\t<path>",
         "roots": [
           "src",
@@ -127,8 +127,8 @@
           "scripts"
         ],
         "sort": "ASCENDING_BY_PATH_FIELD_ONLY_AS_RAW_UTF8_BYTES",
-        "source_closure_sha256": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
-        "stream_bytes": 58508,
+        "source_closure_sha256": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+        "stream_bytes": 58706,
         "trailing_newline": true,
         "whole_line_sort": false
       }
@@ -2144,15 +2144,15 @@
     "ENVIRONMENT": {
       "action_conversion_identity": "mineworld_mcdataset_json_action_to_env_action@1.0:7e8d16db01f085481d41d340e5a0b84669b8e163f3338d5fd572731532c52746",
       "capture_host": {
-        "implementation_checkpoint_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
-        "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
-        "python": "3.12.13"
+        "implementation_checkpoint_commit": "4ea2d29ed851bc13705461a88c1f733b1db1ba6e",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "python": "3.14.4"
       },
       "extraction_host": {
         "cuda_version": "12.6",
         "gpu_capability": "8.9",
         "gpu_device_name": "NVIDIA L4",
-        "implementation_checkpoint_commit": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+        "implementation_checkpoint_commit": "ed9b3ee52be824df692c2a8eb5f596cbc41c0c08",
         "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
         "python": "3.10.20",
         "torch_version": "2.6.0+cu126"
@@ -2163,7 +2163,7 @@
       "minecraft_version": "1.16.5",
       "mod_jar": {
         "bytes": 101587,
-        "path": "/home/sagemaker-user/MineOcclude-Exp3/fabric/mineocclude-mod/build/libs/mineocclude-0.1.1.jar",
+        "path": "/home/overatedusername/mineocclude-exp3-runtime/server/mods/mineocclude-0.1.1.jar",
         "sha256": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c"
       },
       "model": "MineWorld_700M_16f_FROZEN",
@@ -2922,7 +2922,7 @@
   "missing_bindings": [],
   "next_authorized_state": "A7",
   "null_bindings": [],
-  "package_sha256": "add0c1bacd3a781b78c697ce973eb72b9b0ea106a5732252768219562aa73ec0",
+  "package_sha256": "f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8",
   "prerequisites": {
     "A1_implementation": true,
     "A2_static_validation": true,
@@ -2963,15 +2963,15 @@
       {
         "agrees": true,
         "binding": "code.source_closure_sha256",
-        "expected": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
-        "observed": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
+        "expected": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+        "observed": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
         "verified_against": "source_closure() at freeze time"
       },
       {
         "agrees": true,
         "binding": "code.head_commit",
-        "expected": "8fab093468b85f0cf5674e590ab088d66dad53b0",
-        "observed": "8fab093468b85f0cf5674e590ab088d66dad53b0",
+        "expected": "a91502ce2cd421721f8c638eaeea013a1fcddaf1",
+        "observed": "a91502ce2cd421721f8c638eaeea013a1fcddaf1",
         "verified_against": "git rev-parse HEAD at freeze time"
       },
       {
