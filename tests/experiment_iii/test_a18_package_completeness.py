@@ -25,7 +25,6 @@ _spec.loader.exec_module(a18)
 REQUIRED = (
     "PREDICTION_LOCK.json", "baselines_receipt.json", "primary_results.json",
     "temporal_results.json", "context_age_results.json",
-    "adjudication_receipt.json",
 )
 
 

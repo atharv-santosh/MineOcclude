@@ -118,10 +118,15 @@ def main(argv: list[str] | None = None) -> int:
         # A19's condition 7 caught it, a stage later. The families named here
         # are the ones A19 then requires, so refusing them now fails closed at
         # the stage that actually assembles the package.
+        # The A12-A16 families only. A17's receipt is deliberately NOT required
+        # here: A19 enforces the adjudication (condition 6) and the supervisor
+        # runs A17 before A18, so demanding it at A18 would add an ordering rule
+        # the authority does not state and would refuse a legitimate isolated
+        # packaging run.
         required = (
             "PREDICTION_LOCK.json", "baselines_receipt.json",
             "primary_results.json", "temporal_results.json",
-            "context_age_results.json", "adjudication_receipt.json",
+            "context_age_results.json",
         )
         absent = [name for name in required
                   if not (args.analysis / name).is_file()]
