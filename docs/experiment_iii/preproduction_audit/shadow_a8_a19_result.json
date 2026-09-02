@@ -1,0 +1,41 @@
+{
+  "schema_version": "mineocclude-experiment-iii-shadow-result-v1",
+  "what_this_is": "the real committed A8-A19 entrypoints run in lifecycle order over a production-SHAPED synthetic corpus, in an isolated repository copy, each stage consuming the actual output of its predecessor. No MineWorld weights were loaded, no production forward was spent, and no number here is a scientific result.",
+  "isolation": "/home/sagemaker-user/exp3-shadow-pipeline (repo copy; the real tree was never written to)",
+  "fixture": "25 production identities x 5 conditions x 180 frames, 19 target rows each; synthetic physics; frames written only at the target rows the pixel baseline reads",
+  "END_TO_END_SHADOW_A8_TO_A19": "PASS",
+  "stages": {
+    "A8":  {"rc": 0, "N_complete": 25, "analysable_units": 125, "analysable_target_rows": 2375, "attrition_branch": "NORMAL", "imputed_cells": 0},
+    "A9":  {"rc": 0, "captures_complete": 125, "arrays": 750, "inventory_stage": "A9",
+            "forwards_this_run": 2337, "skipped_as_already_complete": 2,
+            "terminal_accounting": {"capture_units": 125, "duplicate_units": 0,
+              "sum_forwards_over_units": 2375, "distinct_unit_target_rows": 2375,
+              "one_forward_per_target_row": true, "arrays_on_disk": 750,
+              "duplicate_arrays": 0, "ledger_units": 750, "ledger_COMPLETE": 750}},
+    "A10": {"rc": 0, "captures_checked": 125, "arrays_validated": 750, "captures_failed": 0,
+            "invoked_exactly_as_the_supervisor_does": true, "receipt_written": true},
+    "A11": {"rc": 0, "units": 125, "persisted_blocks": 6, "rows_per_representation": 2375,
+            "dims": {"CURRENT": 24576, "CURRENT_MINUS_PREVIOUS": 24576,
+                     "TWO_FRAME_CONCAT": 49152, "pixel_baseline": 4032},
+            "coarse_grid": "2x6", "two_frame_order": "PREVIOUS_FIRST_THEN_CURRENT"},
+    "A12": {"rc": 0, "prediction_cells": 23750, "cells_arithmetic": "25 identities x 5 conditions x 19 rows x 10 models",
+            "models": 10, "primary_model": "MW_CURRENT",
+            "alpha_grid": [0.1, 1.0, 10.0, 100.0, 1000.0],
+            "sealed_before_statistics": true, "external_predictions_required": false},
+    "A13": {"rc": 0, "baselines": 5, "l0_interpretability_control": "present"},
+    "A14": {"rc": 0, "identities": 25, "multiplicity": "HOLM_ACROSS_3", "external_estimands_required": false},
+    "A15": {"rc": 0, "holm_family_size": 2},
+    "A16": {"rc": 0},
+    "A17": {"rc": 0, "prohibited_claim_present": false},
+    "A18": {"rc": 0, "package_artifacts": 13},
+    "A19": {"rc": 0, "closure_conditions": 8, "unmet_conditions": 0,
+            "EXPERIMENT_III_COMPLETE": true, "iii_b_started": false,
+            "overall_pass_fail_verdict": null}
+  },
+  "defects_this_shadow_found_that_static_review_had_not": [
+    "A10 root semantics (the supervisor's own invocation validated 0 of 750 arrays and exited 1)",
+    "A10 emitted no required receipt",
+    "A10 reported PASS on any corpus size",
+    "A11 read an activation path no stage writes"
+  ]
+}

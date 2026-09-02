@@ -111,6 +111,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"CAPTURE_HOST_QUALIFIED={str(qualification['qualified']).lower()}")
         return 0 if qualification["qualified"] else 1
 
+    # As in A9: --plan-only together with --execute must not quietly become a
+    # production run of 125 captures.
+    if args.execute and "--plan-only" in (argv if argv is not None else sys.argv[1:]):
+        print("BLOCKER_CODE=P2_PREREQUISITE_NOT_PASSED", file=sys.stderr)
+        print("--plan-only and --execute are contradictory; A7 will not spend "
+              "production captures under an explicit plan-only request",
+              file=sys.stderr)
+        return 1
     if args.execute:
         return _execute(args)
 

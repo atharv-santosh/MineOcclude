@@ -103,6 +103,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--device", default="cuda")
     args = parser.parse_args(argv)
 
+    # --plan-only defaults True and execution is selected by --execute, so the
+    # two together are a contradiction. Resolving it towards execution would
+    # spend 2,375 production forwards for an operator who asked for a plan.
+    if args.execute and "--plan-only" in (argv if argv is not None else sys.argv[1:]):
+        print("BLOCKER_CODE=P2_PREREQUISITE_NOT_PASSED", file=sys.stderr)
+        print("--plan-only and --execute are contradictory; A9 will not spend "
+              "production forwards under an explicit plan-only request",
+              file=sys.stderr)
+        return 1
     if args.execute:
         return _execute(args)
     try:

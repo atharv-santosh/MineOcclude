@@ -51,3 +51,48 @@ def test_a_missing_result_family_is_refused(
     err = capsys.readouterr().err
     assert "PACKAGE_ARTIFACT_MISSING" in err
     assert dropped in err
+
+
+# --------------------------------------------------------------------------
+# --plan-only must never resolve towards spending production
+# --------------------------------------------------------------------------
+
+
+def _driver(name: str):
+    spec = importlib.util.spec_from_file_location(
+        f"_drv_{name}", REPOSITORY_ROOT / "scripts/experiment_iii" / name
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.mark.parametrize(
+    "script,what",
+    [("run_production_capture.py", "captures"),
+     ("run_extraction.py", "forwards")],
+)
+def test_plan_only_with_execute_is_refused(script: str, what: str, capsys) -> None:
+    """`--plan-only --execute` used to resolve silently towards execution.
+
+    ``--plan-only`` defaults True and execution is chosen by ``--execute``, so
+    the flag was inert: an operator who passed both got a production run of 125
+    captures or 2,375 forwards.
+    """
+    assert _driver(script).main(["--plan-only", "--execute"]) == 1
+    assert "contradictory" in capsys.readouterr().err
+
+
+def test_plan_only_alone_still_plans() -> None:
+    """A9 plan mode is unaffected: the guard fires only on the contradiction."""
+    assert _driver("run_extraction.py").main(["--plan-only"]) == 0
+
+
+@pytest.mark.parametrize(
+    "script", ["run_production_capture.py", "run_extraction.py"]
+)
+def test_plan_only_alone_is_never_the_contradiction(script: str, capsys) -> None:
+    """A7 plan mode needs --ladder, so it may refuse -- but never as the
+    contradiction, which would mean the guard had swallowed a valid request."""
+    _driver(script).main(["--plan-only"])
+    assert "contradictory" not in capsys.readouterr().err
