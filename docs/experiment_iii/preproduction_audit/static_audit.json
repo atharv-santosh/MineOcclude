@@ -1,0 +1,91 @@
+{
+ "counts": {
+  "IGNORED_AUTHORITY_PARAMETER_COUNT": 0,
+  "PILOT_HARDCODE_PRODUCTION_DEFECTS": 7,
+  "TAUTOLOGICAL_GATE_COUNT": 0,
+  "AMBIGUOUS_EXECUTED_AS_PASS": 0
+ },
+ "findings": {
+  "ignored_authority_parameters": [],
+  "pilot_hardcode_production_defects": [
+   {
+    "file": "src/mineocclude/experiment_iii/a7_production.py",
+    "function": "verify_no_pilot_identity",
+    "line": 257,
+    "token": "PILOT_IDENTITY_IDS",
+    "source": "pilots = sorted(named & set(PILOT_IDENTITY_IDS))"
+   },
+   {
+    "file": "src/mineocclude/experiment_iii/a9_production_extraction.py",
+    "function": "assert_production_identity",
+    "line": 125,
+    "token": "assert_pilot_identity",
+    "source": "The mirror of ``assert_pilot_identity``. A pilot capture extracted under A9"
+   },
+   {
+    "file": "src/mineocclude/experiment_iii/a9_production_extraction.py",
+    "function": "assert_production_identity",
+    "line": 130,
+    "token": "PILOT_IDENTITY_IDS",
+    "source": "if name in set(PILOT_IDENTITY_IDS):"
+   },
+   {
+    "file": "src/mineocclude/experiment_iii/p1_extraction.py",
+    "function": "extract_pilot_capture",
+    "line": 855,
+    "token": "assert_pilot_identity",
+    "source": "A5 passes :func:`assert_pilot_identity` / ``A5_EXTRACTION``; A9 passes"
+   },
+   {
+    "file": "src/mineocclude/experiment_iii/cohort_closure.py",
+    "function": "close_cohort",
+    "line": 122,
+    "token": "PILOT_IDENTITY_IDS",
+    "source": "pilots = sorted(set(manifest_identities) & set(PILOT_IDENTITY_IDS))"
+   },
+   {
+    "file": "src/mineocclude/experiment_iii/cohort_closure.py",
+    "function": "close_cohort",
+    "line": 155,
+    "token": "PILOT_IDENTITY_IDS",
+    "source": "unit for unit in foreign if unit.split(\"__\")[0] in set(PILOT_IDENTITY_IDS)"
+   },
+   {
+    "file": "src/mineocclude/experiment_iii/p2_freeze.py",
+    "function": "_group_cohort",
+    "line": 639,
+    "token": "PILOT_IDENTITY_IDS",
+    "source": "sorted(PILOT_IDENTITY_IDS),"
+   }
+  ],
+  "tautological_gates": [],
+  "ambiguous_executed_as_pass": [
+   {
+    "file": "scripts/experiment_iii/run_extraction.py",
+    "line": 298,
+    "source": "print(\"A9_EXECUTED=true\", file=sys.stderr)",
+    "returns_nonzero_on_this_path": true,
+    "classification": "SAFE_the_driver_still_returns_nonzero"
+   },
+   {
+    "file": "scripts/experiment_iii/run_production_capture.py",
+    "line": 251,
+    "source": "print(\"A7_EXECUTED=true\", file=sys.stderr)",
+    "returns_nonzero_on_this_path": true,
+    "classification": "SAFE_the_driver_still_returns_nonzero"
+   },
+   {
+    "file": "/home/sagemaker-user/exp3-terminal-ops/supervisor/supervise.py",
+    "line": 121,
+    "source": "if \"A7_EXECUTED=true\" not in text:",
+    "classification": "REVIEW_supervisor_reads_an_executed_token"
+   },
+   {
+    "file": "/home/sagemaker-user/exp3-terminal-ops/supervisor/supervise.py",
+    "line": 122,
+    "source": "stop(\"A7\", \"A7 exited without reporting A7_EXECUTED=true\")",
+    "classification": "REVIEW_supervisor_reads_an_executed_token"
+   }
+  ]
+ }
+}

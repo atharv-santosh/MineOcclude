@@ -1,0 +1,145 @@
+{
+ "schema_version": "mineocclude-experiment-iii-producer-consumer-matrix-v1",
+ "purpose": "Every A7-A19 boundary: what the producer actually writes and what the consumer actually reads, verified by running the real entrypoints in the shadow rather than by reading names.",
+ "boundaries": [
+  {
+   "edge": "A7->A8",
+   "producer": "scripts/experiment_iii/run_production_capture.py",
+   "artifact": "data/experiment_iii/production/production_capture_ledger.jsonl + captures/<unit>/durable_receipt.json + docs/experiment_iii/capture/capture_matrix.json",
+   "consumer": "scripts/experiment_iii/validate_capture_cohort.py",
+   "consumer_reads": "--ledger (same path), --capture-root captures/, --manifest cohort/production_identity_manifest.jsonl",
+   "verified": "SHADOW_A8_PASS",
+   "status": "AGREES"
+  },
+  {
+   "edge": "A8->A9",
+   "producer": "scripts/experiment_iii/validate_capture_cohort.py",
+   "artifact": "docs/experiment_iii/a8/cohort_closure_receipt.json",
+   "consumer": "scripts/experiment_iii/run_extraction.py --a8-receipt",
+   "consumer_reads": "complete_five_way_paired_identities, attrition_branch, N_complete, authority_binding",
+   "verified": "SHADOW_A9_ADMITTED_125",
+   "status": "AGREES"
+  },
+  {
+   "edge": "A9->A10",
+   "producer": "scripts/experiment_iii/run_extraction.py",
+   "artifact": "data/experiment_iii/production/activations/<unit>/extraction_inventory.json + <unit>/activations/layer_NN/<SLICE>.npy",
+   "consumer": "scripts/experiment_iii/validate_extraction.py",
+   "consumer_reads": "positional roots, each expected to BE a capture root containing extraction_inventory.json",
+   "verified": "SHADOW_A10_PASS_125_CAPTURES_750_ARRAYS",
+   "status": "AGREES",
+   "defect": "the supervisor passed the activations PARENT directory as one root; A10 validated 0 of 750 arrays and exited 1 -- REPAIRED: the root now expands into capture roots and the frozen counts are gated",
+   "defect_repaired_in": "3ba1a63"
+  },
+  {
+   "edge": "A10->A11",
+   "producer": "scripts/experiment_iii/validate_extraction.py",
+   "artifact": "(none persisted)",
+   "consumer": "scripts/experiment_iii/build_features.py",
+   "consumer_reads": "--activations data/experiment_iii/production/activations (the A9 output root, not an A10 artifact)",
+   "verified": "SHADOW_A10_RECEIPT_WRITTEN",
+   "status": "AGREES",
+   "defect": "A10 persisted no extraction_validation_receipt.json -- REPAIRED",
+   "defect_repaired_in": "3ba1a63"
+  },
+  {
+   "edge": "A11->A12",
+   "producer": "scripts/experiment_iii/build_features.py",
+   "artifact": "docs/experiment_iii/receipts/feature_config.json + feature blocks <capture_unit_id>.npy",
+   "consumer": "scripts/experiment_iii/lock_predictions.py --stage lock",
+   "verified": "SHADOW",
+   "status": "PENDING",
+   "array_path_defect": "A11 resolved <unit>/layer19_current.npy; A9 writes <unit>/activations/layer_19/CURRENT.npy -- REPAIRED in 98140e1 by deriving the path from activation_store.array_relative_path"
+  },
+  {
+   "edge": "A12->A13",
+   "producer": "lock_predictions.py --stage lock",
+   "artifact": "docs/experiment_iii/results/PREDICTION_LOCK.json + .sha256",
+   "consumer": "lock_predictions.py --stage baselines",
+   "verified": "SHADOW",
+   "status": "PENDING"
+  },
+  {
+   "edge": "A13->A14",
+   "producer": "lock_predictions.py --stage baselines",
+   "artifact": "docs/experiment_iii/results/baselines_receipt.json",
+   "consumer": "run_primary_analysis.py --stage primary",
+   "verified": "SHADOW",
+   "status": "PENDING"
+  },
+  {
+   "edge": "A14->A15",
+   "producer": "run_primary_analysis.py --stage primary",
+   "artifact": "docs/experiment_iii/results/primary_results.json",
+   "consumer": "run_primary_analysis.py --stage temporal",
+   "verified": "SHADOW",
+   "status": "PENDING"
+  },
+  {
+   "edge": "A15->A16",
+   "producer": "run_primary_analysis.py --stage temporal",
+   "artifact": "docs/experiment_iii/results/temporal_results.json",
+   "consumer": "run_primary_analysis.py --stage context",
+   "verified": "SHADOW",
+   "status": "PENDING"
+  },
+  {
+   "edge": "A16->A17",
+   "producer": "run_primary_analysis.py --stage context",
+   "artifact": "docs/experiment_iii/results/context_age_results.json",
+   "consumer": "build_scientific_package.py --stage adjudication",
+   "verified": "SHADOW",
+   "status": "PENDING"
+  },
+  {
+   "edge": "A17->A18",
+   "producer": "build_scientific_package.py --stage adjudication",
+   "artifact": "docs/experiment_iii/results/adjudication_receipt.json",
+   "consumer": "build_scientific_package.py --stage package",
+   "verified": "SHADOW",
+   "status": "PENDING"
+  },
+  {
+   "edge": "A18->A19",
+   "producer": "build_scientific_package.py --stage package",
+   "artifact": "docs/experiment_iii/results/scientific_package_manifest.json",
+   "consumer": "build_scientific_package.py --stage closure",
+   "verified": "SHADOW",
+   "status": "PENDING"
+  }
+ ],
+ "findings_summary": {
+  "new_defects_found_during_audit": 3,
+  "new_defects_fixed": 3,
+  "defects": [
+   {
+    "id": "AUD-A10-1",
+    "severity": "PRODUCTION_BLOCKING",
+    "stage": "A10",
+    "finding": "supervisor passed the extraction output root; A10 treated it as one capture root and validated 0/750 arrays, exit 1, after A9 had spent every production forward",
+    "commit": "3ba1a63"
+   },
+   {
+    "id": "AUD-A10-2",
+    "severity": "REQUIRED_ARTIFACT_MISSING",
+    "stage": "A10",
+    "finding": "no extraction_validation_receipt.json although EXPECTED_ARTIFACT_INVENTORY marks it required/hashed/durable before the next stage",
+    "commit": "3ba1a63"
+   },
+   {
+    "id": "AUD-A10-3",
+    "severity": "SILENT_INCOMPLETENESS",
+    "stage": "A10",
+    "finding": "CAPTURES_FAILED=0 read as PASS regardless of corpus size; a near-empty extraction root validated clean",
+    "commit": "3ba1a63"
+   },
+   {
+    "id": "AUD-A11-1",
+    "severity": "PRODUCTION_BLOCKING",
+    "stage": "A11",
+    "finding": "A11 resolved an array path no stage writes (layer19_current.npy); build_features could only fail, after A9 and A10 had both succeeded",
+    "commit": "98140e1"
+   }
+  ]
+ }
+}

@@ -1,0 +1,112 @@
+{
+  "schema_version": "mineocclude-experiment-iii-same-class-audit-v1",
+  "defect_class": "the A10 failure: a CLI given the wrong root type, a cardinality that nothing gates, a required receipt nobody writes, and a supervisor gate that only checks a file exists",
+  "stages": {
+    "A11": {
+      "root_semantics": "PARENT collection root (--activations = the A9 extraction output root); resolves <root>/<unit>/activations/layer_NN/SLICE.npy per unit",
+      "supervisor_passes": "defaults (no argument) -> canonical production roots",
+      "root_type_correct": true,
+      "expected_cardinality": "125 units x 6 persisted blocks; 2375 rows per representation",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "identities come from the A8 closure (gated N_complete>=15); every unit's six arrays must load or PROVENANCE_BINDING_MISSING; per-block dimension and row-count gates (FEATURE_DIMENSION_MISMATCH / FEATURE_ROW_ORDER_MISMATCH)",
+      "required_receipts_emitted": "feature_config.json (canonical, with feature_block_hashes)",
+      "supervisor_gate_exact": "rc==0 AND require_receipt(feature_config.json)",
+      "defect_found": "A11 resolved <unit>/layer19_current.npy, which no stage writes",
+      "repaired_in": "98140e1"
+    },
+    "A12": {
+      "root_semantics": "FILE inputs: --features root, --folds folds.json, --feature-config, --a8-receipt, --manifest, --captures",
+      "supervisor_passes": "--stage lock only; all other paths canonical defaults",
+      "root_type_correct": true,
+      "expected_cardinality": "identities x 5 conditions x 19 rows x |ALL_MODELS| prediction cells; 5 outer folds",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "PredictionLock.assert_complete() requires the exact cell cross-product (PREDICTION_LOCK_MISSING for gaps, PREDICTION_DUPLICATE_CELL for extras); folds must be exactly 5; feature digests must match A11's feature_config or PROVENANCE_BINDING_MISSING",
+      "zero_item_residual_risk": "assert_complete over an EMPTY identity list is vacuously true, but the identity list is the A8 closure's complete_five_way_paired_identities and A8 refuses N_complete<15, so the path is unreachable",
+      "required_receipts_emitted": "PREDICTION_LOCK.json, PREDICTION_LOCK.sha256, prediction_fit_receipt.json",
+      "supervisor_gate_exact": "rc==0 AND PREDICTION_LOCK.json exists AND PREDICTION_LOCK.sha256 exists",
+      "no_investigator_predictions_file": true,
+      "defect_found": null
+    },
+    "A13": {
+      "root_semantics": "FILE: the sealed PREDICTION_LOCK.json plus the frozen baseline set",
+      "supervisor_passes": "--stage baselines",
+      "root_type_correct": true,
+      "expected_cardinality": "exactly 5 frozen baselines; L0 interpretability control; constant-velocity window 10",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "len(BASELINE_MODELS)!=5 refuses; lock reseal mismatch raises PREDICTION_LOCK_AFTER_STATISTICS; oracle condition-invariance checked",
+      "required_receipts_emitted": "baselines_receipt.json",
+      "supervisor_gate_exact": "rc==0 AND require_receipt(baselines_receipt.json,'passed') AND baseline_count==5",
+      "defect_found": null
+    },
+    "A14": {
+      "root_semantics": "FILE: sealed lock + P2 (for frozen V_c)",
+      "supervisor_passes": "--stage primary",
+      "root_type_correct": true,
+      "expected_cardinality": "3 primary tests under Holm; per-identity S_i/Dpartial_i/Dopaque_i; B=10000; seed=8258108568742502015",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "lock reseal verified before any statistic; PRIMARY_MODEL must be present or ANALYSIS_INPUT_NOT_LOCKED; V_c read from P2's CONDITIONS_AND_EVIDENCE binding and missing conditions raise P2_BINDING_INCOMPLETE; a --bootstrap-seed that is not the frozen one raises STATS_BOOTSTRAP_SEED_MISMATCH",
+      "required_receipts_emitted": "primary_results.json",
+      "supervisor_gate_exact": "rc==0 AND primary_results.json exists AND names a prediction_lock_sha256 (tightened this sprint)",
+      "no_investigator_estimands_file": true,
+      "defect_found": null
+    },
+    "A15": {
+      "root_semantics": "FILE: the same sealed lock", "supervisor_passes": "--stage temporal",
+      "root_type_correct": true,
+      "expected_cardinality": "Holm family size exactly 2 over the frozen temporal conditions",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "family-size gate (count!=2 refuses); same lock reseal and seed gates as A14",
+      "required_receipts_emitted": "temporal_results.json",
+      "supervisor_gate_exact": "rc==0 AND temporal_results.json exists AND names a prediction_lock_sha256 (tightened this sprint)",
+      "defect_found": null
+    },
+    "A16": {
+      "root_semantics": "FILE: the same sealed lock", "supervisor_passes": "--stage context",
+      "root_type_correct": true,
+      "expected_cardinality": "exactly 4 frozen context-age bins; boundary windows exactly ((12,15),(16,19))",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "bin-count and boundary-window gates refuse any drift; no dynamically selected bins",
+      "required_receipts_emitted": "context_age_results.json",
+      "supervisor_gate_exact": "rc==0 AND context_age_results.json exists AND names a prediction_lock_sha256 (tightened this sprint)",
+      "defect_found": null
+    },
+    "A17": {
+      "root_semantics": "DIRECTORY: --analysis results root, read for the prior families",
+      "supervisor_passes": "--stage adjudication", "root_type_correct": true,
+      "expected_cardinality": "the frozen 17-row adjudication matrix; every claim mapped",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "a claim outside the frozen matrix refuses; ANALYSIS_ADJUDICATION_MISSING",
+      "required_receipts_emitted": "adjudication_receipt.json",
+      "supervisor_gate_exact": "rc==0 AND receipt exists AND every_claim_maps_to_a_permitted_interpretation is true AND prohibited_claim_present is false (tightened this sprint)",
+      "defect_found": null
+    },
+    "A18": {
+      "root_semantics": "DIRECTORY: --analysis results root, rglob'd for every traceable artifact",
+      "supervisor_passes": "--stage package", "root_type_correct": true,
+      "expected_cardinality": "every A12-A17 family present and hashed; artifact_count > 0",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "REPAIRED THIS SPRINT: an empty results root produced artifact_count=0, a manifest and exit 0; A18 now refuses with PACKAGE_ARTIFACT_MISSING unless PREDICTION_LOCK.json, baselines_receipt.json, primary_results.json, temporal_results.json, context_age_results.json and adjudication_receipt.json are all present, and unless it traced at least one artifact",
+      "required_receipts_emitted": "scientific_package_manifest.json, STATISTICAL_REPORT.md, figures/, tables/",
+      "supervisor_gate_exact": "rc==0 AND manifest exists AND artifact_count>0 (tightened this sprint)",
+      "defect_found": "zero-artifact package passed at A18; only A19 condition 7 caught it, one stage late",
+      "repaired_in": "pending final commit"
+    },
+    "A19": {
+      "root_semantics": "DIRECTORY: --analysis results root; reads every required upstream artifact by name",
+      "supervisor_passes": "--stage closure", "root_type_correct": true,
+      "expected_cardinality": "8 closure conditions, all met",
+      "zero_item_pass_impossible": true,
+      "zero_item_guard": "conditions 1-7 require cohort, P2, package, primary, temporal, context, baselines, lock and adjudication to exist, to be bound to the same AUTHORITY_SHA256, and to agree on prediction_lock_sha256; artifact_count>0; unmet conditions return rc 1 with CLOSURE_CONDITION_UNMET",
+      "required_receipts_emitted": "EXPERIMENT_III_CLOSURE_RECEIPT.json, FINAL_SCIENTIFIC_SUMMARY.md",
+      "supervisor_gate_exact": "rc==0 AND receipt exists AND EXPERIMENT_III_COMPLETE is true (tightened this sprint)",
+      "iii_b_started": false,
+      "defect_found": null
+    }
+  },
+  "rollup": {
+    "ROOT_SEMANTIC_MISMATCHES": [],
+    "ZERO_ITEM_FALSE_PASS_PATHS": [],
+    "REQUIRED_RECEIPTS_NOT_EMITTED": [],
+    "FILE_EXISTS_ONLY_SUPERVISOR_GATES": []
+  }
+}

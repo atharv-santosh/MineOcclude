@@ -113,6 +113,29 @@ def main(argv: list[str] | None = None) -> int:
             ],
             "artifact_count": len(inputs),
         }
+        # A package that traced nothing is not a package. Globbing an empty
+        # results root produced artifact_count=0, a manifest, and exit 0; only
+        # A19's condition 7 caught it, a stage later. The families named here
+        # are the ones A19 then requires, so refusing them now fails closed at
+        # the stage that actually assembles the package.
+        required = (
+            "PREDICTION_LOCK.json", "baselines_receipt.json",
+            "primary_results.json", "temporal_results.json",
+            "context_age_results.json", "adjudication_receipt.json",
+        )
+        absent = [name for name in required
+                  if not (args.analysis / name).is_file()]
+        if absent:
+            raise ExperimentIIIError(
+                "PACKAGE_ARTIFACT_MISSING",
+                f"A18 cannot package a result set missing {absent}; the "
+                f"scientific package must trace every A12-A17 family",
+            )
+        if not inputs:
+            raise ExperimentIIIError(
+                "PACKAGE_ARTIFACT_MISSING",
+                f"A18 traced no artifact under {args.analysis}",
+            )
         assert_no_success_gate(package)
     except ExperimentIIIError as error:
         print(f"BLOCKER_CODE={error.blocker}", file=sys.stderr)
