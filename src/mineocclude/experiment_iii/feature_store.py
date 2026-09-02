@@ -25,6 +25,7 @@ from typing import Any, Iterator, Mapping, Sequence
 
 import numpy as np
 
+from mineocclude.experiment_iii.activation_store import array_relative_path
 from mineocclude.experiment_iii.authority import TARGET_ROWS_PER_CAPTURE
 from mineocclude.experiment_iii.baselines_pixel import (
     PIXEL_FEATURE_DIM,
@@ -115,7 +116,15 @@ def block_digest(matrix: np.ndarray) -> str:
 
 
 def _activation_path(root: Path, capture_unit_id: str, layer: int, slice_name: str) -> Path:
-    return Path(root) / capture_unit_id / f"layer{layer:02d}_{slice_name.lower()}.npy"
+    """Where A9 actually put the array.
+
+    Taken from :func:`~mineocclude.experiment_iii.activation_store.array_relative_path`
+    -- the function the extraction stage writes through and the A10 validator
+    reads through -- rather than re-spelled here. A11 previously formatted its
+    own ``layer19_current.npy``, which no stage has ever written, so the feature
+    build could only fail, and only after A9 had spent every production forward.
+    """
+    return Path(root) / capture_unit_id / array_relative_path(layer, slice_name)
 
 
 def _load_slices(
