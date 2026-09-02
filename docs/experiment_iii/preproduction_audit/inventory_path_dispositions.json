@@ -1,0 +1,65 @@
+{
+  "schema_version": "mineocclude-experiment-iii-inventory-disposition-v1",
+  "question": "EXPECTED_ARTIFACT_INVENTORY.json names a canonical path for every required artifact. Where the real producer writes somewhere else, is that a production defect or a documentation deviation?",
+  "test_applied": "a deviation is a DEFECT only if a consumer opens a path the producer does not write. Where producer and every consumer agree, the pipeline is sound and only the inventory document differs; EXPECTED_ARTIFACT_INVENTORY.json is frozen authority under final_authorities/ and this sprint may not amend it.",
+  "dispositions": [
+    {
+      "artifact": "Cohort closure receipt",
+      "inventory_path": "docs/experiment_iii/receipts/cohort_closure_receipt.json",
+      "actual_producer_path": "docs/experiment_iii/a8/cohort_closure_receipt.json",
+      "producer": "scripts/experiment_iii/validate_capture_cohort.py (DEFAULT_OUT)",
+      "consumers_and_the_path_each_opens": [
+        "run_extraction.py --a8-receipt default -> docs/experiment_iii/a8/",
+        "build_features.py --a8-receipt default -> docs/experiment_iii/a8/",
+        "lock_predictions.py --a8-receipt default -> docs/experiment_iii/a8/",
+        "build_scientific_package.py _closure -> experiment/a8/",
+        "supervisor require_receipt -> D/a8/"
+      ],
+      "producer_consumer_agreement": "UNANIMOUS",
+      "verdict": "DOCUMENTATION_DEVIATION_NOT_A_PRODUCTION_DEFECT",
+      "verified_by": "the real A8 CLI in the shadow wrote it there and the real A9 admitted 125 captures from it"
+    },
+    {
+      "artifact": "Extraction inventory",
+      "inventory_path": "docs/experiment_iii/receipts/extraction_inventory.json",
+      "actual_producer_path": "data/experiment_iii/production/activations/<capture_unit_id>/extraction_inventory.json",
+      "producer": "p1_extraction.extract_pilot_capture via CANONICAL_INVENTORY_NAME",
+      "consumers_and_the_path_each_opens": [
+        "validate_extraction.py --inventory default = CANONICAL_INVENTORY_NAME (imported from the writing module)",
+        "feature_store._activation_path via array_relative_path (same per-capture root)"
+      ],
+      "producer_consumer_agreement": "UNANIMOUS",
+      "note": "the artifact is per-capture and there are 125 of them, so a single docs/receipts/ file could not hold it; the inventory's path_or_pattern is the deviation",
+      "verdict": "DOCUMENTATION_DEVIATION_NOT_A_PRODUCTION_DEFECT",
+      "verified_by": "the real A10 CLI validated 125/125 inventories and 750/750 arrays through the shared constant"
+    },
+    {
+      "artifact": "Activation arrays",
+      "inventory_path": "data/experiment_iii/activations/<capture_unit_id>/layer_<LL>_<slice>.npy",
+      "actual_producer_path": "data/experiment_iii/production/activations/<capture_unit_id>/activations/layer_<LL>/<SLICE>.npy",
+      "producer": "activation_store.array_relative_path",
+      "producer_consumer_agreement": "UNANIMOUS AFTER REPAIR 98140e1 (A11 previously resolved layer19_current.npy, which nothing writes)",
+      "verdict": "WAS_A_PRODUCTION_DEFECT_ON_THE_CONSUMER_SIDE_NOW_REPAIRED; the remaining difference from the inventory string is a documentation deviation"
+    },
+    {
+      "artifact": "Sentinel receipt",
+      "inventory_path": "docs/experiment_iii/production/sentinel_receipt_<batch>.json",
+      "actual_producer_path": "recorded as sentinel_boundaries inside docs/experiment_iii/capture/capture_matrix.json",
+      "producer": "scripts/experiment_iii/run_production_capture.py",
+      "consumers": "none - no code reads a sentinel_receipt_* path",
+      "producer_consumer_agreement": "VACUOUS (no consumer)",
+      "verdict": "DOCUMENTATION_DEVIATION_NOT_A_PRODUCTION_DEFECT; the ten sentinel boundaries are produced and are durable inside capture_matrix.json, itself a required hashed artifact"
+    }
+  ],
+  "rollup": {
+    "INVENTORY_MISSING_ARTIFACTS": [],
+    "INVENTORY_WRONG_PATHS": [
+      "cohort_closure_receipt.json (docs/experiment_iii/a8/ vs receipts/)",
+      "extraction_inventory.json (per-capture vs receipts/)",
+      "activation arrays (production/activations/<unit>/activations/layer_NN/SLICE.npy vs the inventory string)",
+      "sentinel receipt (inside capture_matrix.json vs a standalone file)"
+    ],
+    "INVENTORY_WRONG_PATHS_THAT_BLOCK_PRODUCTION": [],
+    "note": "every entry above is a difference between the frozen inventory DOCUMENT and the implementation; in each case the real producer and every real consumer open the same path, proven by running the real drivers in the shadow. EXPECTED_ARTIFACT_INVENTORY.json is frozen authority and is not amended by this implementation sprint."
+  }
+}
