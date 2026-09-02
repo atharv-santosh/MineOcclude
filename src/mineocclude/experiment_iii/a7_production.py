@@ -50,6 +50,7 @@ from mineocclude.experiment_iii.conditions import build_condition_map
 from mineocclude.experiment_iii.errors import ExperimentIIIError
 from mineocclude.experiment_iii.p2_freeze import (
     P2_FREEZE_SCHEMA_VERSION,
+    p2_bound_source_closure,
     p2_freeze_passed,
     verify_p2_freeze_package,
 )
@@ -146,24 +147,24 @@ def admit_production(
                 f"superseded freeze may never authorize production",
             )
 
+    # The frozen digest comes from the package's own mandatory binding, and
+    # `p2_bound_source_closure` raises if that binding is missing or malformed.
+    # It is never defaulted to the live closure: an absent binding must refuse
+    # production, not silently compare the working tree against itself.
     live_closure = source_closure()["source_closure_sha256"]
-    expected = expected_source_closure or live_closure
-    frozen_closure = (
-        (package.get("bindings") or {})
-        .get("IMPLEMENTATION", {})
-        .get("source_closure_sha256")
-    ) or package.get("source_closure_sha256")
-    if frozen_closure is not None and frozen_closure != expected:
+    frozen_closure = p2_bound_source_closure(package)
+    if live_closure != frozen_closure:
         raise ExperimentIIIError(
             "SOURCE_CLOSURE_DRIFT",
-            f"the P2 package binds source closure {frozen_closure} and this run "
-            f"is {expected}; production must run the code that was frozen",
+            f"the P2 package at {path} binds source closure {frozen_closure} "
+            f"and this working tree is {live_closure}; production must run the "
+            f"code that was frozen",
         )
-    if live_closure != expected:
+    if expected_source_closure is not None and expected_source_closure != frozen_closure:
         raise ExperimentIIIError(
             "SOURCE_CLOSURE_DRIFT",
-            f"the working tree closure {live_closure} is not the expected "
-            f"{expected}",
+            f"the caller expected source closure {expected_source_closure} and "
+            f"the P2 package binds {frozen_closure}",
         )
 
     if package.get("PRODUCTION_AUTHORIZED") is not True:

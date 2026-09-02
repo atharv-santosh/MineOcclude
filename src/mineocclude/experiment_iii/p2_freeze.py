@@ -103,6 +103,7 @@ __all__ = [
     "PLACEHOLDER_PREFIXES",
     "PLACEHOLDER_TOKENS",
     "build_p2_freeze_package",
+    "p2_bound_source_closure",
     "p2_freeze_passed",
     "verify_p2_freeze_package",
 ]
@@ -1275,6 +1276,44 @@ def build_p2_freeze_package(
         {key: value for key, value in package.items() if key != "package_sha256"}
     )
     return package
+
+
+def p2_bound_source_closure(package: Mapping[str, Any]) -> str:
+    """The source closure digest a P2 package actually froze. Fails closed.
+
+    A6 binds the closure at ``bindings.AUTHORITY_AND_CODE.source_closure``. A
+    consumer that reads some *other* path finds nothing, and the tempting
+    recovery -- treat the live closure as the expected one -- turns the gate
+    into ``live == live``, which passes for any working tree at all. That is
+    strictly worse than no check, because it reads as one. So this is the single
+    place that knows where the digest lives, and a binding that is missing,
+    null, or malformed raises rather than returning a substitute.
+    """
+    binding = (package.get("bindings") or {}).get("AUTHORITY_AND_CODE") or {}
+    closure = binding.get("source_closure")
+    if not isinstance(closure, Mapping):
+        raise ExperimentIIIError(
+            "P2_BINDING_INCOMPLETE",
+            "the P2 package binds no AUTHORITY_AND_CODE.source_closure "
+            "structure; production may not be admitted against a freeze that "
+            "never recorded the code it froze",
+        )
+    digest = closure.get("source_closure_sha256")
+    if not isinstance(digest, str) or len(digest) != 64:
+        raise ExperimentIIIError(
+            "P2_BINDING_INCOMPLETE",
+            f"the P2 source-closure binding carries "
+            f"source_closure_sha256={digest!r}, which is not a sha256 digest",
+        )
+    try:
+        int(digest, 16)
+    except ValueError:
+        raise ExperimentIIIError(
+            "P2_BINDING_INCOMPLETE",
+            f"the P2 source-closure binding carries a non-hexadecimal digest "
+            f"{digest!r}",
+        ) from None
+    return digest
 
 
 def p2_freeze_passed(package: Mapping[str, Any]) -> bool:

@@ -839,6 +839,8 @@ def extract_pilot_capture(
     preprocessing_identity: str,
     source_capture_hash: str,
     namespace_root: Path | None = None,
+    roster_check: Callable[[str], None] = assert_pilot_identity,
+    stage: str = A5_EXTRACTION_STAGE,
 ) -> PilotExtractionResult:
     """19 forwards, six ``[19,336,2048]`` arrays, one inventory, all bound.
 
@@ -846,10 +848,18 @@ def extract_pilot_capture(
     :func:`~mineocclude.experiment_iii.extraction.extract_capture`; the byte
     contract and the independent revalidation come from
     :mod:`~mineocclude.experiment_iii.activation_store`. What is added here is
-    the binding: which pilot identity, which condition, which capture, which
-    source frames, and which forward each array came out of.
+    the binding: which identity, which condition, which capture, which source
+    frames, and which forward each array came out of.
+
+    ``roster_check`` and ``stage`` are the *caller's* authority-bound semantics.
+    A5 passes :func:`assert_pilot_identity` / ``A5_EXTRACTION``; A9 passes
+    ``assert_production_identity`` / ``A9``. They are parameters rather than
+    literals because this engine is shared: a hardcoded pilot roster refuses
+    every production identity, and a hardcoded pilot stage seals production
+    evidence under the pilot's stage identity. The defaults keep A5 behaviour
+    for every existing caller.
     """
-    assert_pilot_identity(identity)
+    roster_check(identity)
     rows = [int(value) for value in target_rows]
     if len(rows) != TARGET_ROWS_PER_CAPTURE:
         raise ExperimentIIIError(
@@ -906,7 +916,7 @@ def extract_pilot_capture(
     # which capture, which forwards, and that all six arrays share them.
     inventory["capture_unit_id"] = capture_unit_id
     inventory["source_capture_hash"] = source_capture_hash
-    inventory["stage"] = A5_EXTRACTION_STAGE
+    inventory["stage"] = str(stage)
     inventory["forwards"] = forwards
     inventory["one_forward_per_target_row"] = True
     inventory["shared_forward_set_per_capture"] = forwards
@@ -982,6 +992,10 @@ class P1ExtractionCampaign:
         # the same unit of work. A9 therefore swaps the roster gate and the
         # stage label rather than growing a second extraction engine.
         self.stage = stage
+        #: Retained, not just applied once at construction: the extraction loop
+        #: itself must apply the caller's roster gate, or the outer gate accepts
+        #: an identity the inner engine then refuses.
+        self.roster_check = roster_check
         self.units = [dict(unit) for unit in units]
         for unit in self.units:
             roster_check(unit["identity"])
@@ -1052,6 +1066,8 @@ class P1ExtractionCampaign:
                 preprocessing_identity=preprocessing_identity,
                 source_capture_hash=str(unit["source_capture_hash"]),
                 namespace_root=self.namespace_root,
+                roster_check=self.roster_check,
+                stage=self.stage,
             )
             self.forwards += result.forwards
             self.results.append(result)
@@ -1107,7 +1123,7 @@ class P1ExtractionCampaign:
             )
         completed = [entry for entry in units if entry["complete"]]
         return {
-            "stage": A5_EXTRACTION_STAGE,
+            "stage": self.stage,
             "authority_version": AUTHORITY_VERSION,
             "total_captures": len(self.units),
             "captures_complete": len(completed),
