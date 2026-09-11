@@ -1,0 +1,53 @@
+{
+  "all_baseline_predictions_come_from_the_sealed_lock": true,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+    "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "8.9, 8.11",
+  "baseline_count": 5,
+  "baseline_retuned_after_seeing_result": false,
+  "baselines": [
+    "LINEAR_CURRENT_PIXEL",
+    "LAST_SEEN",
+    "CONSTANT_VELOCITY",
+    "TRAINING_MEAN",
+    "TIME_ONLY"
+  ],
+  "constant_velocity_window": 10,
+  "l0_interpretability_control": {
+    "authority_section": "8.11",
+    "excludes_zero_in_the_favorable_direction": true,
+    "experiment_can_still_close": true,
+    "interpretation": "interpretable",
+    "interval": {
+      "ci_high": 3.4293019104259264,
+      "ci_low": 3.2561915824209584,
+      "note": "intervals report; Holm-adjusted p-values decide",
+      "point_estimate": 3.3447481312810083,
+      "replicates": 10000,
+      "resampling_unit": "WHOLE_IDENTITY",
+      "seed": 8258108568742502015
+    },
+    "on_failure_redefine_representation_allowed": false,
+    "on_failure_replace_identities_allowed": false,
+    "on_failure_retune_allowed": false,
+    "schema_version": "mineocclude-experiment-iii-l0-control-v1",
+    "statistic": "L0_RMSE_IMPROVEMENT_OVER_OUTER_TRAINING_MEAN"
+  },
+  "leakage_tests_passed": true,
+  "legacy_constant_velocity_window_not_reused": 15,
+  "oracle_baselines": [
+    "LAST_SEEN",
+    "CONSTANT_VELOCITY"
+  ],
+  "oracle_baselines_are_model_inputs": false,
+  "oracle_condition_invariance_verified": true,
+  "overall_pass_fail_verdict": null,
+  "passed": true,
+  "prediction_lock_sha256": "2a25bcb01107a2b4e899bf5575c116d86a12400ca3aa5c12e6339f866778ddf9",
+  "required_manuscript_language": "linear current-frame pixel baseline",
+  "schema_version": "mineocclude-experiment-iii-baselines-receipt-v1",
+  "stage": "A13"
+}

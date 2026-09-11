@@ -1,0 +1,149 @@
+{
+  "acceptance_gates": {
+    "aggregate_mode_lag": 2,
+    "design_rank": 9,
+    "labels_reproduced": 950,
+    "max_abs_residual_blocks": 1e-12,
+    "min_tap": -1e-09,
+    "path_hashes_reproduced": 50,
+    "positive_support_within": [
+      0,
+      8
+    ],
+    "tap_sum_tolerance": 1e-09
+  },
+  "acceptance_gates_all_passed": true,
+  "aggregate_diagnostics": {
+    "group_delay_ticks": 3.0052233048169974,
+    "mode_lag": 2,
+    "positive_mass_support": [
+      0,
+      8
+    ]
+  },
+  "authority_binding": {
+    "AUTHORITY_SHA256": "3d116d9713b2c7fa705a194023e271061f712d0693618abbd991efa45437d7fb",
+    "MACHINE_AUTHORITY_SHA256": "f707d5f8264e46c22861707d4caa871cf634da931aa97556eaec31d1df3463a9",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "5.3",
+  "constraints": {
+    "failure_blocker": "FIR_KERNEL_RECOVERY_FAILED",
+    "refit_from_experiment_iii_data_allowed": false
+  },
+  "diagnostics": {
+    "LEFT_TO_RIGHT": {
+      "design_rank": 9,
+      "design_rows": 494,
+      "group_delay_ticks": 3.339950418233995,
+      "max_abs_residual_exact_solution": 2.220446049250313e-15,
+      "min_tap_exact_solution": 0.028380577029607057,
+      "mode_lag": 3,
+      "off_peak_mass": 0.7437622969743762,
+      "positive_mass_support": [
+        0,
+        8
+      ],
+      "tap_sum_exact_solution": 0.9999999999999993
+    },
+    "RIGHT_TO_LEFT": {
+      "design_rank": 9,
+      "design_rows": 456,
+      "group_delay_ticks": 2.6704961914,
+      "max_abs_residual_exact_solution": 1.7763568394002505e-15,
+      "min_tap_exact_solution": -1.1102230246251565e-16,
+      "mode_lag": 2,
+      "off_peak_mass": 0.6180050277,
+      "positive_mass_support": [
+        0,
+        7
+      ],
+      "tap_sum_exact_solution": 1.0
+    }
+  },
+  "first_fully_resolved_tick": 8,
+  "kernel_lags": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "kernel_length": 9,
+  "normalization": {
+    "applied_once_at_load": true,
+    "normalized_kernels": {
+      "LEFT_TO_RIGHT": [
+        0.0552210582055221,
+        0.09555478020955548,
+        0.17290336071729034,
+        0.25623770302562376,
+        0.17259457731725947,
+        0.15029557871502955,
+        0.02838057700283806,
+        0.03276277580327627,
+        0.03604958900360496
+      ],
+      "RIGHT_TO_LEFT": [
+        0.0155128136,
+        0.1420986717,
+        0.3819949723,
+        0.2529919934,
+        0.1314006058,
+        0.0092585384,
+        0.0336603539,
+        0.0330820509,
+        0.0
+      ]
+    },
+    "raw_tap_fsum": {
+      "LEFT_TO_RIGHT": 0.9999999999,
+      "RIGHT_TO_LEFT": 1.0
+    },
+    "rule": "normalized[k] = taps[k] / math.fsum(taps); accumulate with math.fsum"
+  },
+  "produced_by": "A1_IMPLEMENTATION",
+  "recovered_kernels": {
+    "LEFT_TO_RIGHT": [
+      0.0552210582,
+      0.0955547802,
+      0.1729033607,
+      0.256237703,
+      0.1725945773,
+      0.1502955787,
+      0.028380577,
+      0.0327627758,
+      0.036049589
+    ],
+    "RIGHT_TO_LEFT": [
+      0.0155128136,
+      0.1420986717,
+      0.3819949723,
+      0.2529919934,
+      0.1314006058,
+      0.0092585384,
+      0.0336603539,
+      0.0330820509,
+      0.0
+    ]
+  },
+  "recovery_source": {
+    "bytes_sha256": "f89c24fe01c18dc19432c425583bec25d3331173b19ef23f95094bd46f0a170e",
+    "capture_units": 50,
+    "commit": "f2bc2c8082e77f9c3f9e089f2fb1a20b11a052a8",
+    "path": "docs/status/integration/regime_a_prime_qualification_v0_1/prospective_development_authority_v0_4/stage2_locked_manifest.json"
+  },
+  "result": "RECOVERED_AND_VERIFIED",
+  "schema_version": "mineocclude-experiment-iii-fir-kernel-recovery-v1",
+  "verification": {
+    "labels_checked": 950,
+    "labels_reproduced": 950,
+    "max_abs_label_error_rounded_10dp": 9.029221814671473e-12,
+    "path_hashes_checked": 50,
+    "path_hashes_reproduced": 50
+  }
+}

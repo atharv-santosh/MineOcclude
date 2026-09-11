@@ -1,0 +1,97 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-model-provenance-v1",
+ "generated_at_utc": "2026-09-11T03:56:15.033630+00:00",
+ "identity": {
+  "authority_version": "v1.8",
+  "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+  "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+  "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+  "authority_freeze_commit": "043c5301f431d3ec60315ca6ef98caf8d472f010",
+  "source_closure": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+  "p2_package_sha256": "f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8",
+  "prediction_lock_seal": "2a25bcb01107a2b4e899bf5575c116d86a12400ca3aa5c12e6339f866778ddf9"
+ },
+ "redistribution": "Checkpoint binaries are NOT redistributed in this package. Hashes, sizes, paths and acquisition revisions are given so a collaborator can obtain and verify identical bytes.",
+ "main_checkpoint": {
+  "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/700M_16f.ckpt",
+  "bytes": 3798736924,
+  "sha256": "a92c311baf49bbf31338da2caaadc9e4f947b94df8abcf75da350c4ae41319c5",
+  "verified_on_execution_host": true
+ },
+ "vae_checkpoint": {
+  "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/vae.ckpt",
+  "bytes": 1657555486,
+  "sha256": "370d06be427e034476b6b95ba0080a4b48266e876c4776a757b944b87b87d9ab",
+  "verified_on_execution_host": true
+ },
+ "model_config": {
+  "path": "/home/sagemaker-user/MineWorld-Upstream/configs/700M_16f.yaml",
+  "sha256": "e13b3a80fb370547a05852809c2c8f02d05ebe2fce3b3bb2fd1ee54eee78c018"
+ },
+ "vae_config": {
+  "path": "/home/sagemaker-user/MineWorld-Assets-Pinned/checkpoints/vae/config.json",
+  "sha256": "32ca759d5b90f0c5aa5df0e312a81e03dd4d3af68896863c88f910d19f2526cb"
+ },
+ "mineworld_source": {
+  "root": "/home/sagemaker-user/MineWorld-Upstream",
+  "revision": "9f49efbcc68a5f0cf60e78f0abc566eac409282f"
+ },
+ "modelscope_asset_revision": "0dd5561ab317115831badc50e09a6ebe98693d0e",
+ "environment_report_sha256": "b27491bf0c31d52579bbbebd41516a239025882f938894030e041f73bc2cc1a9",
+ "architecture": {
+  "model_class": "LlamaLVM",
+  "transformer_class": "LlamaForCausalLM",
+  "vae_class": "VAE",
+  "decoder_layer_path": "transformer.model.layers",
+  "intermediate_size": 4096,
+  "vocab_size": 8262,
+  "attention_heads": 32,
+  "key_value_heads": 4,
+  "visual_tokens_per_pair": 336,
+  "action_tokens_per_pair": 11,
+  "tokens_per_pair": 347,
+  "context_pairs": 16,
+  "sequence_length": 5552,
+  "hidden_width": 2048,
+  "decoder_layers": 20
+ },
+ "tokenizer": {
+  "status": "NO_SEPARATE_TEXT_TOKENIZER",
+  "note": "MineWorld tokenizes video through the VAE and actions through the pinned action converter; there is no separate tokenizer/vocabulary file to hash. The visual tokenizer IS the VAE checkpoint above (370d06be...), and the action vocabulary is fixed at 11 tokens/pair inside the pinned adapter source, which is covered by the source closure.",
+  "vocab_size": 8262,
+  "action_conversion_identity_bound_at": "P2 (docs/experiment_iii/p2/P2_FREEZE_PACKAGE.json)"
+ },
+ "runtime": {
+  "precision": "float16",
+  "device": "cuda:0",
+  "runtime_id": "experiment-iii-a9-production"
+ },
+ "hooks": {
+  "site": "decoder_layer_output_residual_stream",
+  "transient_registration_layers": 20,
+  "serialized_layers": [
+   4,
+   10,
+   19
+  ],
+  "token_position_hash": "a375e6407c8278c0a06a224bc5e7c992537da34e75587c201f4e6c105fb49d4d",
+  "slices": {
+   "PREVIOUS": {
+    "pair_index": 14,
+    "start": 4858,
+    "stop_exclusive": 5194,
+    "model_frame_offset": 1
+   },
+   "CURRENT": {
+    "pair_index": 15,
+    "start": 5205,
+    "stop_exclusive": 5541,
+    "model_frame_offset": 0
+   }
+  },
+  "forwards_per_target_row": 1,
+  "production_forwards": 2375
+ },
+ "preprocessing_identity": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+ "preprocessing_detail": "legacy_bgr/preprocessing/PREPROCESSING_PROVENANCE.json"
+}

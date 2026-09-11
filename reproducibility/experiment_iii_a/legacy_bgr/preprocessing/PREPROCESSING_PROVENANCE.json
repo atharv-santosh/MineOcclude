@@ -1,0 +1,124 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-preprocessing-provenance-v1",
+ "generated_at_utc": "2026-09-11T03:57:11.573975+00:00",
+ "executed_channel_order_into_mineworld": "BGR",
+ "status": "LEGACY_BGR_AS_AUTHORIZED",
+ "defect": false,
+ "disclosed_and_frozen_by_authority": true,
+ "preprocessing_identity": "mineworld_gradio_step_video_preprocessing@1.0:036fa0b4899285e5499f88581f6e02426a25f732fcc26bd63c0f5b3863a9d9ab",
+ "implementation": {
+  "function": "_preprocess_bgr_frame",
+  "file": "src/mineocclude/models/_mineworld_adapter_wave2.py",
+  "lines": "408-474",
+  "covered_by_source_closure": true
+ },
+ "executed_pipeline": [
+  {
+   "step": 1,
+   "where": "scripts/experiment_iii/run_extraction.py::_load_frame (lines 233-238)",
+   "operation": "PIL.Image.open(path).convert(\"RGB\") -> np.asarray",
+   "result": "uint8 (360, 640, 3) in TRUE SCENE RGB order"
+  },
+  {
+   "step": 2,
+   "where": "_preprocess_bgr_frame",
+   "operation": "cv2.cvtColor(source, cv2.COLOR_BGR2RGB)",
+   "result": "CHANNELS REVERSED. The function assumes a cv2.imread-style BGR input; it was handed true RGB, so this step swaps R and B rather than restoring them."
+  },
+  {
+   "step": 3,
+   "where": "_preprocess_bgr_frame",
+   "operation": "cv2.resize(..., (384, 224), interpolation=cv2.INTER_LINEAR)",
+   "result": "uint8 (224, 384, 3)"
+  },
+  {
+   "step": 4,
+   "where": "_preprocess_bgr_frame",
+   "operation": "transpose(2,0,1).astype(float32) / 255.0",
+   "result": "float32 CHW in [0,1]"
+  },
+  {
+   "step": 5,
+   "where": "_preprocess_bgr_frame",
+   "operation": "(x - 0.5) / 0.5",
+   "result": "float32 CHW in [-1,1], shape (3,224,384)"
+  }
+ ],
+ "empirical_proof": {
+  "performed_on": "2026-09-11",
+  "frame": "data/experiment_iii/production/captures/e3_t01__L2/raw/frames/000040.png",
+  "method": "Replayed the executed _preprocess_bgr_frame on the real A7 frame and compared it bit-for-bit against two references built with steps 3-5 only: one from the true-RGB array and one from the channel-reversed array.",
+  "executed_equals_true_rgb_pipeline": false,
+  "executed_equals_channel_reversed_pipeline": true,
+  "executed_per_channel_means": [
+   0.2195,
+   0.1521,
+   -0.0932
+  ],
+  "true_rgb_per_channel_means": [
+   -0.0932,
+   0.1521,
+   0.2195
+  ],
+  "conclusion": "The tensor MineWorld consumed carries the scene blue channel in slot 0 and the scene red channel in slot 2: BGR."
+ },
+ "affected_components": {
+  "mineworld_model_input": "BGR",
+  "vae_input": "BGR (the VAE receives the same preprocessed tensor)",
+  "activations_layer_04_10_19": "BGR-conditioned",
+  "feature_blocks_CURRENT_CURRENT_L04_CURRENT_L10_CURRENT_MINUS_PREVIOUS_TWO_FRAME_CONCAT": "BGR-conditioned",
+  "pixel_baseline": "TRUE RGB - NOT affected",
+  "capture_serialization": "TRUE RGB - the PNGs on disk are true scene RGB; nothing was written swapped",
+  "p0_rve": "TRUE RGB - authority 7.4 requires source-RGB and forbids coupling to the model preprocessing path",
+  "targets_and_fir_labels": "NOT affected - derived from server-side world coordinates, not pixels",
+  "visualization": "not applicable; no figures were emitted (docs/experiment_iii/results/figures is empty)"
+ },
+ "pixel_baseline_detail": {
+  "loader": "src/mineocclude/experiment_iii/p0_analysis.py::read_frame_rgb",
+  "operation": "PIL.Image.open(path).convert(\"RGB\"); no resize, no channel reorder, no colour management",
+  "consumer": "src/mineocclude/experiment_iii/feature_store.py::build_pixel_block -> baselines_pixel.pixel_features",
+  "channel_order": "RGB",
+  "consequence": "LINEAR_CURRENT_PIXEL sees true scene RGB while every MW_* representation sees BGR. This asymmetry is a property of the executed run and is preserved here, not corrected."
+ },
+ "authority_disposition": {
+  "authority": "Experiment III pre-implementation authority v1.8",
+  "disclosure_path": "p0_rve.measurement_scope_disclosure",
+  "source_channel_order": "RGB",
+  "mineworld_historical_preprocessing_channel_order": "BGR",
+  "rgb_bgr_historical_behavior_change_allowed": false,
+  "forbidden_repair": "FIX_THE_HISTORICAL_RGB_BGR_PREPROCESSING_BEHAVIOR (EXPERIMENT_III_LIFECYCLE.json states[9].forbidden_repairs[5])",
+  "authority_text_sections": [
+   "1369-1371 forbidden repairs",
+   "1684-1686 P0 must not couple to the model preprocessing path",
+   "1786-1796 RVE measurement scope",
+   "2253 Experiment III does not fix or reinterpret the historical RGB/BGR behavior"
+  ],
+  "audit_check_passed": "RVE disclosure names the BGR history (final_authorities/final_audit/audit_results.json)",
+  "rve_statistic_is_channel_permutation_invariant": true,
+  "interpretation": "The BGR ordering was known before production, disclosed in the frozen authority, and deliberately preserved so that every condition passes through identical code. It is a declared scope limitation, not an undetected bug: the RVE ladder orders conditions by SOURCE visual evidence rather than by model-perceived evidence."
+ },
+ "corrected_rgb_outputs": "NONE_FOUND",
+ "corrected_rgb_search": {
+  "filesystem_roots": [
+   "/home/sagemaker-user",
+   "/opt/ml",
+   "/tmp",
+   "/mnt/sagemaker-nvme"
+  ],
+  "name_patterns": [
+   "*corrected*",
+   "*rgb_fix*",
+   "*bgr_fix*",
+   "*channel_fix*",
+   "*color_fix*",
+   "*rgb_rerun*",
+   "*reextract*",
+   "*reprocess*",
+   "*corrected_rgb*"
+  ],
+  "git_scope": "git log --all across every local and remote ref, grepped for RGB, BGR and channel",
+  "git_hits_classification": "every hit belongs to the Experiment-I / Regime-A 66-cell Person A/C/E lineage (e.g. person-a-bgr2rgb-inter-linear-224x384-v1.0), not to Experiment III",
+  "s3_scope": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/ inventoried in full",
+  "result": "No corrected-RGB Experiment III-A extraction, prediction lock, feature block or result exists anywhere on this machine or in S3. None was created by this recovery."
+ }
+}

@@ -1,0 +1,60 @@
+{
+  "arrays_per_capture": 6,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+    "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "8.4",
+  "extra_forward_authorized": false,
+  "forwards_per_capture": 19,
+  "mineworld_inference_run": false,
+  "production_captures": 125,
+  "schema_version": "mineocclude-experiment-iii-extraction-plan-v1",
+  "selected_layers": [
+    4,
+    10,
+    19
+  ],
+  "slice_arithmetic": {
+    "CURRENT": {
+      "excluded_action_inclusive_end": 5551,
+      "excluded_action_inclusive_start": 5541,
+      "inclusive_end": 5540,
+      "inclusive_start": 5205,
+      "pair_index": 15,
+      "python_start": 5205,
+      "python_stop_exclusive": 5541,
+      "shape": [
+        1,
+        336,
+        2048
+      ],
+      "temporal_slice": "CURRENT"
+    },
+    "PREVIOUS": {
+      "excluded_action_inclusive_end": 5204,
+      "excluded_action_inclusive_start": 5194,
+      "inclusive_end": 5193,
+      "inclusive_start": 4858,
+      "pair_index": 14,
+      "python_start": 4858,
+      "python_stop_exclusive": 5194,
+      "shape": [
+        1,
+        336,
+        2048
+      ],
+      "temporal_slice": "PREVIOUS"
+    },
+    "selected_visual_disjoint_from_actions": true,
+    "sequence_length": 5552,
+    "tokens_per_pair": 347
+  },
+  "target_rows_per_capture": 19,
+  "temporal_slices": [
+    "PREVIOUS",
+    "CURRENT"
+  ],
+  "total_forwards": 2375
+}

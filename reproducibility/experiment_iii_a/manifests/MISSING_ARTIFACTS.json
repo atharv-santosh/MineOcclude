@@ -1,0 +1,62 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-missing-artifacts-v1",
+ "generated_at_utc": "2026-09-11T04:05:18.836446+00:00",
+ "missing_artifact_count": 2,
+ "missing": [
+  {
+   "artifact": "numpy version pin at execution time",
+   "category": "dependencies",
+   "status": "NOT_FOUND",
+   "searched": [
+    "all Exp-III environment receipts (A3 capture + GPU hosts)",
+    "P2_FREEZE_PACKAGE.json",
+    "MineWorld-Upstream/requirements.txt",
+    "mineocclude-setup/requirements-mineworld-no-torch.txt",
+    "MineOcclude-Exp3/requirements.txt",
+    "every *.lock / environment*.yml / conda-explicit / pip-freeze on the host",
+    "the P0/P1 transfer bundles",
+    "the full mineocclude/experiment_iii/ S3 prefix",
+    "git log --all"
+   ],
+   "reason": "numpy is a transitive dependency; no requirements file pins it and the A3 receipt schema records only python/torch/CUDA.",
+   "observed_now": "1.26.4 (interpreter that ran A9, read 2026-09-11) - CURRENT_ENVIRONMENT_NOT_EXECUTION_PROVENANCE",
+   "impact": "Bounded. The sealed prediction lock holds the fitted predictions, so all downstream statistics re-derive exactly regardless."
+  },
+  {
+   "artifact": "Pillow version pin at execution time",
+   "category": "dependencies",
+   "status": "NOT_FOUND",
+   "searched": "as above",
+   "reason": "same: transitive, unpinned, not receipted. Pillow decoded the PNGs in _load_frame and read_frame_rgb.",
+   "observed_now": "11.3.0 - CURRENT_ENVIRONMENT_NOT_EXECUTION_PROVENANCE",
+   "impact": "Very low. PNG decoding is lossless and the decoded arrays are pinned downstream by the activation and feature-block hashes, which all verify."
+  }
+ ],
+ "not_missing_but_absent_by_design": [
+  {
+   "artifact": "corrected-RGB outputs",
+   "status": "NOT_FOUND",
+   "reason": "none was ever produced; authority v1.8 forbids the repair that would produce them. None was created by this recovery."
+  },
+  {
+   "artifact": "tokenizer / vocabulary hash",
+   "status": "NOT_APPLICABLE",
+   "reason": "MineWorld has no separate text tokenizer; video tokenization is the VAE (hashed), actions are 11 fixed tokens/pair inside the closure-covered adapter."
+  },
+  {
+   "artifact": "UNCOMMITTED_CHANGES.patch",
+   "status": "NOT_APPLICABLE",
+   "reason": "proven that the executed source had zero uncommitted delta in the three closure roots; there is nothing to patch."
+  },
+  {
+   "artifact": "figures / tables",
+   "status": "NOT_APPLICABLE",
+   "reason": "docs/experiment_iii/results/figures and .../tables are empty; A18 emitted none."
+  },
+  {
+   "artifact": "verbatim P0/P1/P2/A2/A3 shell invocations",
+   "status": "PARTIALLY_RECONSTRUCTED",
+   "reason": "those stages predate the supervisor, so no argv record survives. Their receipts survive in full and the canonical entrypoints are named from committed source; each is labelled RECONSTRUCTED in COMMAND_PROVENANCE.md section 4."
+  }
+ ]
+}

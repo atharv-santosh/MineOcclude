@@ -1,0 +1,44 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-channel-order-manifest-v1",
+ "generated_at_utc": "2026-09-11T03:57:11.573975+00:00",
+ "purpose": "Classify every artifact in this package by the channel order that conditioned it, so legacy-BGR and (hypothetical) corrected-RGB material can never be confused or mixed.",
+ "corrected_rgb_outputs": "NONE_FOUND",
+ "corrected_rgb_directory_created": false,
+ "corrected_rgb_directory_note": "No corrected_rgb/ directory exists in this package because no authentic corrected-RGB artifact exists. An empty directory was deliberately not invented.",
+ "artifacts": [
+  {
+   "path": "prediction_lock/PREDICTION_LOCK.json",
+   "channel_condition": "LEGACY_BGR_MODEL_ROWS_PLUS_TRUE_RGB_PIXEL_ROWS",
+   "detail": "MW_CURRENT, MW_CURRENT_L04, MW_CURRENT_L10, MW_CURRENT_MINUS_PREVIOUS and MW_TWO_FRAME_CONCAT rows are BGR-conditioned. LINEAR_CURRENT_PIXEL rows are true-RGB. LAST_SEEN, CONSTANT_VELOCITY, TIME_ONLY and TRAINING_MEAN are pixel-independent. Targets are pixel-independent."
+  },
+  {
+   "path": "results/*.json",
+   "channel_condition": "LEGACY_BGR",
+   "detail": "every estimand derives from the sealed lock above"
+  },
+  {
+   "path": "analysis_inputs/FEATURE_BLOCK_INDEX.json",
+   "channel_condition": "MIXED_BY_BLOCK",
+   "detail": "PIXEL_BASELINE blocks are true-RGB; the five MW_* blocks are BGR-conditioned"
+  },
+  {
+   "path": "analysis_inputs/ACTIVATION_INDEX.json",
+   "channel_condition": "LEGACY_BGR"
+  },
+  {
+   "path": "(trajectory branch) captures/*/raw/frames/*.png",
+   "channel_condition": "TRUE_RGB",
+   "detail": "the captured PNGs are true scene RGB; the swap happens only at model-input preprocessing time and was never serialized"
+  },
+  {
+   "path": "cohort/EXECUTED_TARGETS.json",
+   "channel_condition": "NOT_PIXEL_DERIVED",
+   "detail": "FIR labels come from server-side world coordinates"
+  },
+  {
+   "path": "provenance/receipts/P0_*.json",
+   "channel_condition": "TRUE_RGB",
+   "detail": "authority 7.4 requires P0/RVE to read source RGB and forbids coupling to the model preprocessing path"
+  }
+ ]
+}

@@ -1,0 +1,296 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-execution-provenance-v1",
+ "generated_at_utc": "2026-09-11T03:56:15.033630+00:00",
+ "identity": {
+  "authority_version": "v1.8",
+  "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+  "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+  "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+  "authority_freeze_commit": "043c5301f431d3ec60315ca6ef98caf8d472f010",
+  "source_closure": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+  "p2_package_sha256": "f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8",
+  "prediction_lock_seal": "2a25bcb01107a2b4e899bf5575c116d86a12400ca3aa5c12e6339f866778ddf9"
+ },
+ "run": {
+  "started_at_utc": "2026-09-02T03:08:28Z",
+  "finished_at_utc": "2026-09-02T05:33:11Z",
+  "supervisor_status": "COMPLETE",
+  "stage_status": "PASS",
+  "errors_seen": 0,
+  "stages": [
+   "A7",
+   "A8",
+   "A9",
+   "A10",
+   "A11",
+   "A12",
+   "A13",
+   "A14",
+   "A15",
+   "A16",
+   "A17",
+   "A18",
+   "A19"
+  ]
+ },
+ "stage_outcomes": {
+  "A7": {
+   "status": "COMPLETE",
+   "completed_units": 125,
+   "target_rows": 2375,
+   "retries": 0,
+   "errors": 0,
+   "elapsed_seconds": 2975.5,
+   "duplicate_accepted_units": 0,
+   "captures_captured_this_run": 125,
+   "display": {
+    "started": true,
+    "strategy": "XVFB",
+    "display": ":99"
+   },
+   "post_stage_validator": "PASS"
+  },
+  "A8": {
+   "status": "PASS",
+   "N_complete": 25,
+   "analysable_units": 125,
+   "analysable_target_rows": 2375,
+   "attrition_branch": "NORMAL",
+   "imputed_cells": 0,
+   "dropped_conditions": 0,
+   "receipt_sha256": "3762eb94ee163225dbfc77425e8e48dec85ec6a922c49b074723970fce5e0a77"
+  },
+  "A9": {
+   "status": "PASS",
+   "forward_budget": 2375,
+   "arrays_complete": 750,
+   "elapsed_seconds": 4730.8,
+   "interpreter": "/home/sagemaker-user/.conda/envs/mineworld/bin/python (3.10.20)"
+  },
+  "A10": {
+   "status": "PASS",
+   "arrays_validated": 750,
+   "captures_checked": 125,
+   "captures_failed": 0,
+   "expected_bytes_per_array": 26148992,
+   "receipt_sha256": "1b2a23dc972dbd6ce36bf24b914241b4426e3f078f2b7c164df398281357a902"
+  },
+  "A11": {
+   "status": "PASS",
+   "feature_config_sha256": "7892b73862a94969ce59d7df506569b7eecd9881be79bc7aa6335e4136e532bd",
+   "blocks_persisted": 6,
+   "blocks_on_disk_per_block": 125
+  },
+  "A12": {
+   "status": "PASS",
+   "prediction_lock_seal": "2a25bcb01107a2b4e899bf5575c116d86a12400ca3aa5c12e6339f866778ddf9",
+   "cells": 23750,
+   "models": 10,
+   "sealed_before_statistics": true,
+   "external_predictions_required": false
+  },
+  "A13": {
+   "status": "PASS",
+   "baseline_count": 5,
+   "oracle_baselines": 2,
+   "leakage_tests_passed": true
+  },
+  "A14": {
+   "status": "PASS",
+   "stage": "primary",
+   "family": [
+    "S_i",
+    "Dpartial_i",
+    "Dopaque_i"
+   ]
+  },
+  "A15": {
+   "status": "PASS",
+   "stage": "temporal",
+   "contrasts": 2
+  },
+  "A16": {
+   "status": "PASS",
+   "stage": "context",
+   "inferential_role": "DESCRIPTIVE_ONLY"
+  },
+  "A17": {
+   "status": "PASS",
+   "stage": "adjudication",
+   "receipt_sha256": "55e612ad191d30c9b1f761b00807e397efe467e9de446c5a172fd7e2cf2542dc"
+  },
+  "A18": {
+   "status": "PASS",
+   "stage": "package",
+   "artifact_count": 13
+  },
+  "A19": {
+   "status": "PASS",
+   "stage": "closure",
+   "EXPERIMENT_III_COMPLETE": true,
+   "closure_conditions_met": 8,
+   "unmet": 0,
+   "disclosed_limitations": 0,
+   "receipt_sha256": "920c8778e19e724a13579db9df22fefddf19f238b99a91751d448907f3f3133d"
+  }
+ },
+ "supervisor_timeline": [
+  {
+   "utc": "2026-09-02T03:08:28Z",
+   "stage": "A7",
+   "event": "waiting for the detached production campaign to finish"
+  },
+  {
+   "utc": "2026-09-02T03:57:28Z",
+   "stage": "A7",
+   "event": "PASS 125/125 units, 2375 target rows"
+  },
+  {
+   "utc": "2026-09-02T03:57:28Z",
+   "stage": "A8",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/validate_capture_cohort.py ..."
+  },
+  {
+   "utc": "2026-09-02T03:57:29Z",
+   "stage": "A8",
+   "event": "exit 0 | COHORT_CLOSURE_RECEIPT_SHA256=3762eb94ee163225dbfc77425e8e48dec85ec6a922c49b074723970fce5e0a77"
+  },
+  {
+   "utc": "2026-09-02T03:57:29Z",
+   "stage": "A8",
+   "event": "receipt cohort_closure_receipt.json satisfies ['passed']"
+  },
+  {
+   "utc": "2026-09-02T03:57:29Z",
+   "stage": "A8",
+   "event": "PASS N_complete=25"
+  },
+  {
+   "utc": "2026-09-02T03:57:29Z",
+   "stage": "A9",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/run_extraction.py --execute --a3-receipt ..."
+  },
+  {
+   "utc": "2026-09-02T05:18:07Z",
+   "stage": "A9",
+   "event": "exit 0 | A9_EXECUTED=true"
+  },
+  {
+   "utc": "2026-09-02T05:18:07Z",
+   "stage": "A10",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/validate_extraction.py /home/sagemaker-user/MineOcclude-Exp3/data/experiment_iii/production/activations --expect-captures ..."
+  },
+  {
+   "utc": "2026-09-02T05:20:35Z",
+   "stage": "A10",
+   "event": "exit 0 | EXTRACTION_VALIDATION_RECEIPT_SHA256=1b2a23dc972dbd6ce36bf24b914241b4426e3f078f2b7c164df398281357a902"
+  },
+  {
+   "utc": "2026-09-02T05:20:35Z",
+   "stage": "A10",
+   "event": "receipt extraction_validation_receipt.json satisfies ['passed']"
+  },
+  {
+   "utc": "2026-09-02T05:20:35Z",
+   "stage": "A11",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/build_features.py ..."
+  },
+  {
+   "utc": "2026-09-02T05:24:01Z",
+   "stage": "A11",
+   "event": "exit 0 | A11_FEATURE_CONFIG_SHA256=7892b73862a94969ce59d7df506569b7eecd9881be79bc7aa6335e4136e532bd"
+  },
+  {
+   "utc": "2026-09-02T05:24:01Z",
+   "stage": "A11",
+   "event": "receipt feature_config.json satisfies []"
+  },
+  {
+   "utc": "2026-09-02T05:24:01Z",
+   "stage": "A12",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/lock_predictions.py --stage lock ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:07Z",
+   "stage": "A12",
+   "event": "exit 0 | A12_EXTERNAL_PREDICTIONS_REQUIRED=false"
+  },
+  {
+   "utc": "2026-09-02T05:33:07Z",
+   "stage": "A13",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/lock_predictions.py --stage baselines ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:07Z",
+   "stage": "A13",
+   "event": "exit 0 | OVERALL_PASS_FAIL_VERDICT=none"
+  },
+  {
+   "utc": "2026-09-02T05:33:07Z",
+   "stage": "A13",
+   "event": "receipt baselines_receipt.json satisfies ['passed']"
+  },
+  {
+   "utc": "2026-09-02T05:33:07Z",
+   "stage": "A14",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/run_primary_analysis.py --stage primary ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:09Z",
+   "stage": "A14",
+   "event": "exit 0 | OVERALL_PASS_FAIL_VERDICT=none"
+  },
+  {
+   "utc": "2026-09-02T05:33:09Z",
+   "stage": "A15",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/run_primary_analysis.py --stage temporal ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A15",
+   "event": "exit 0 | OVERALL_PASS_FAIL_VERDICT=none"
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A16",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/run_primary_analysis.py --stage context ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A16",
+   "event": "exit 0 | OVERALL_PASS_FAIL_VERDICT=none"
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A17",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/build_scientific_package.py --stage adjudication ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A17",
+   "event": "exit 0 | ADJUDICATION_RECEIPT_SHA256=55e612ad191d30c9b1f761b00807e397efe467e9de446c5a172fd7e2cf2542dc"
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A18",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/build_scientific_package.py --stage package ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A18",
+   "event": "exit 0 | OVERALL_PASS_FAIL_VERDICT=none"
+  },
+  {
+   "utc": "2026-09-02T05:33:10Z",
+   "stage": "A19",
+   "event": "RUNNING /home/sagemaker-user/MineOcclude-Exp3/scripts/experiment_iii/build_scientific_package.py --stage closure ..."
+  },
+  {
+   "utc": "2026-09-02T05:33:11Z",
+   "stage": "A19",
+   "event": "exit 0 | CLOSURE_RECEIPT_SHA256=920c8778e19e724a13579db9df22fefddf19f238b99a91751d448907f3f3133d"
+  }
+ ],
+ "overall_pass_fail_verdict": null,
+ "verdict_note": "Experiment III emits no overall pass/fail verdict and no success gate (authority 8.10.6). Closure COMPLETE is a statement about completeness, not outcome."
+}

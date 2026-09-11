@@ -1,0 +1,90 @@
+{
+  "P0_RESULT": "P0_PASS",
+  "authority_binding": {
+    "AUTHORITY_SHA256": "c773d9620e7fde9e72682d24a7515157522064e8c23b7096780a2995b926985a",
+    "MACHINE_AUTHORITY_SHA256": "75bb0acb0f7a5b7121d7754de5db623e56527a454b3bea78ce3ae2047fd43788",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "authority_section": "7.9, 7.10e",
+  "derived_from_condition": "minecraft:white_stained_glass",
+  "derived_from_production_measurement": false,
+  "envelope": {
+    "bounds": {
+      "0": [
+        0.5629882872126879,
+        1.0455496762521348
+      ],
+      "4": [
+        0.521016803594669,
+        0.9676026352472424
+      ],
+      "8": [
+        0.6414138873222917,
+        1.1911972193128273
+      ]
+    },
+    "derivations": {
+      "0": {
+        "centre": 0.8042689817324113,
+        "floor_fraction_of_centre": 0.15,
+        "formula_frozen_before_p0": true,
+        "half_width": 0.2412806945197234,
+        "inputs": "P0_REPLICATE_VARIATION_ONLY",
+        "k": 2.0,
+        "lower": 0.5629882872126879,
+        "replicate_blocks": 2,
+        "replicate_range": 0.03957045877138998,
+        "upper": 1.0455496762521348
+      },
+      "4": {
+        "centre": 0.7443097194209557,
+        "floor_fraction_of_centre": 0.15,
+        "formula_frozen_before_p0": true,
+        "half_width": 0.22329291582628671,
+        "inputs": "P0_REPLICATE_VARIATION_ONLY",
+        "k": 2.0,
+        "lower": 0.521016803594669,
+        "replicate_blocks": 2,
+        "replicate_range": 0.0020086828817582614,
+        "upper": 0.9676026352472424
+      },
+      "8": {
+        "centre": 0.9163055533175595,
+        "floor_fraction_of_centre": 0.15,
+        "formula_frozen_before_p0": true,
+        "half_width": 0.2748916659952678,
+        "inputs": "P0_REPLICATE_VARIATION_ONLY",
+        "k": 2.0,
+        "lower": 0.6414138873222917,
+        "replicate_blocks": 2,
+        "replicate_range": 0.04433180271482473,
+        "upper": 1.1911972193128273
+      }
+    },
+    "envelope_rule": "AUTHORITY_7_10E_K_TIMES_MAX_RANGE_OR_FLOOR",
+    "p0_order": [
+      8,
+      0,
+      4
+    ],
+    "placements": [
+      0,
+      4,
+      8
+    ],
+    "single_implementation_of_record": "p0_bindings.sentinel_envelope"
+  },
+  "formula_frozen_before_p0": true,
+  "inputs": "P0_REPLICATE_VARIATION_ONLY",
+  "numeric_envelope_bound": false,
+  "numeric_envelope_bound_in": "P2",
+  "p0_selection_receipt_sha256": "PENDING_SELECTION_RECEIPT",
+  "schema_version": "mineocclude-experiment-iii-p0-sentinel-envelope-v1",
+  "sentinel_placement_indices": [
+    0,
+    4,
+    8
+  ],
+  "sentinel_selection_is_outcome_independent": true,
+  "sentinel_selection_rule": "DETERMINISTIC_COVERAGE_LEFT_CENTRE_RIGHT_OF_THE_NINE_FROZEN_PLACEMENTS"
+}

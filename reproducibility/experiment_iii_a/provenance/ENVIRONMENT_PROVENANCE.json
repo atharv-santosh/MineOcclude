@@ -1,0 +1,279 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-environment-provenance-v1",
+ "generated_at_utc": "2026-09-11T03:56:15.033630+00:00",
+ "identity": {
+  "authority_version": "v1.8",
+  "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+  "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+  "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c",
+  "authority_freeze_commit": "043c5301f431d3ec60315ca6ef98caf8d472f010",
+  "source_closure": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+  "p2_package_sha256": "f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8",
+  "prediction_lock_seal": "2a25bcb01107a2b4e899bf5575c116d86a12400ca3aa5c12e6339f866778ddf9"
+ },
+ "classification": "RECOVERED_ORIGINAL_FROM_A3_ENVIRONMENT_RECEIPTS",
+ "interpreters": {
+  "capture_and_analysis": {
+   "path": "/opt/conda/bin/python3.12",
+   "used_for": [
+    "A7",
+    "A8",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A15",
+    "A16",
+    "A17",
+    "A18",
+    "A19"
+   ],
+   "note": "the ops launcher and supervisor both invoke this interpreter explicitly"
+  },
+  "extraction": {
+   "path": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+   "python": "3.10.20",
+   "used_for": [
+    "A9"
+   ],
+   "note": "A9 alone runs on the MineWorld environment; supervise.py names it MWPY"
+  }
+ },
+ "gpu_extraction_host": {
+  "host": {
+   "cpu_count": 4,
+   "hostname": "default",
+   "machine": "x86_64",
+   "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
+   "processor": "x86_64",
+   "python": "3.10.20"
+  },
+  "gpu": {
+   "available": true,
+   "capability": "8.9",
+   "cuda_version": "12.6",
+   "device_count": 1,
+   "device_index": 0,
+   "device_name": "NVIDIA L4",
+   "status": "EVALUATED",
+   "torch_version": "2.6.0+cu126",
+   "total_memory_bytes": 23661248512
+  },
+  "clock": {
+   "local_iso8601": "2026-09-01T21:36:09.629952+00:00",
+   "monotonic_available": true,
+   "monotonic_sample": 65739.717598044,
+   "timezone": "UTC",
+   "utc_iso8601": "2026-09-01T21:36:53.806393+00:00",
+   "utc_offset_seconds": 0
+  },
+  "storage_pools": {
+   "POOL_DURABLE": {
+    "free_bytes": 388836716544,
+    "free_bytes_sampled_from": "/home/sagemaker-user/MineOcclude-Exp3",
+    "free_gib": 362.1324119567871,
+    "path": "/home/sagemaker-user/MineOcclude-Exp3/data",
+    "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3/data",
+    "total_bytes": 536803803136
+   },
+   "POOL_SCRATCH": {
+    "free_bytes": 388836716544,
+    "free_bytes_sampled_from": "/home/sagemaker-user/MineOcclude-Exp3",
+    "free_gib": 362.1324119567871,
+    "path": "/home/sagemaker-user/MineOcclude-Exp3",
+    "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3",
+    "total_bytes": 536803803136
+   },
+   "POOL_WORKING": {
+    "free_bytes": 388836716544,
+    "free_gib": 362.1324119567871,
+    "path": "/home/sagemaker-user/MineOcclude-Exp3",
+    "probed_ancestor": "/home/sagemaker-user/MineOcclude-Exp3",
+    "total_bytes": 536803803136
+   }
+  },
+  "durability_mode": "LOCAL_MIRROR_SAME_POOL",
+  "runtime_namespace": "mineocclude-experiment-iii-v1",
+  "host_role": "GPU_EXTRACTION_HOST"
+ },
+ "capture_host": {
+  "host": {
+   "cpu_count": 4,
+   "hostname": "default",
+   "machine": "x86_64",
+   "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
+   "processor": "x86_64",
+   "python": "3.12.13"
+  },
+  "display": {
+   "available": true,
+   "display": ":99",
+   "mechanism": "X11_DISPLAY",
+   "platform": "Linux",
+   "status": "EVALUATED"
+  },
+  "renderer_qualification": {
+   "client_root_present": true,
+   "display": ":99",
+   "display_strategy": "XVFB",
+   "gpu_required": false,
+   "java_executable": "/home/sagemaker-user/.local/jdks/amazon-corretto-17.0.20.8.1-linux-x64/bin/java",
+   "java_present": true,
+   "mineworld_loaded": false,
+   "qualified": true,
+   "reasons": [],
+   "required_fabric_api": "0.42.0+1.16",
+   "required_fabric_loader": "0.15.11",
+   "required_framebuffer": [
+    640,
+    360
+   ],
+   "required_minecraft": "1.16.5",
+   "schema_version": "mineocclude-experiment-iii-capture-host-qualification-v1",
+   "server_root_present": true,
+   "software_rendering": true,
+   "status": "EVALUATED",
+   "system": "Linux",
+   "xvfb": "/home/sagemaker-user/exp3-capture-toolchain/Xvfb-exp3"
+  },
+  "runtime_pins": {
+   "capture_hz": 20,
+   "declared_pins": {
+    "fabric_api_version": "0.42.0+1.16",
+    "fabric_loader_version": "0.15.11",
+    "minecraft_version": "1.16.5",
+    "yarn_mappings": "1.16.5+build.10"
+   },
+   "expected_pins": {
+    "fabric_api_version": "0.42.0+1.16",
+    "fabric_loader_version": "0.15.11",
+    "minecraft_version": "1.16.5",
+    "yarn_mappings": "1.16.5+build.10"
+   },
+   "framebuffer_height": 360,
+   "framebuffer_source": "FrameCapture.EXPECTED_W/EXPECTED_H",
+   "framebuffer_width": 640,
+   "frames_per_capture": 180,
+   "mod_jar": {
+    "bytes": 101587,
+    "path": "/home/sagemaker-user/MineOcclude-Exp3/fabric/mineocclude-mod/build/libs/mineocclude-0.1.1.jar",
+    "sha256": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c"
+   },
+   "pins_match": true,
+   "speed_blocks_per_second": 2.0
+  },
+  "host_role": "LOCAL_CAPTURE_HOST"
+ },
+ "runtime_pins": {
+  "capture_hz": 20,
+  "declared_pins": {
+   "fabric_api_version": "0.42.0+1.16",
+   "fabric_loader_version": "0.15.11",
+   "minecraft_version": "1.16.5",
+   "yarn_mappings": "1.16.5+build.10"
+  },
+  "expected_pins": {
+   "fabric_api_version": "0.42.0+1.16",
+   "fabric_loader_version": "0.15.11",
+   "minecraft_version": "1.16.5",
+   "yarn_mappings": "1.16.5+build.10"
+  },
+  "framebuffer_height": 360,
+  "framebuffer_source": "FrameCapture.EXPECTED_W/EXPECTED_H",
+  "framebuffer_width": 640,
+  "frames_per_capture": 180,
+  "mod_jar": {
+   "bytes": 101587,
+   "path": "/home/sagemaker-user/MineOcclude-Exp3/fabric/mineocclude-mod/build/libs/mineocclude-0.1.1.jar",
+   "sha256": "6513a96701b4087a298cdbae2c68838a7cf9ebefab4f39880a0495ba8b32b55c"
+  },
+  "pins_match": true,
+  "speed_blocks_per_second": 2.0
+ },
+ "execution_verified_versions": {
+  "python": "3.10.20",
+  "torch": "2.6.0+cu126",
+  "cuda": "12.6",
+  "gpu": "NVIDIA L4",
+  "compute_capability": "8.9",
+  "gpu_memory_bytes": 23661248512,
+  "platform": "Linux-6.12.100-125.179.amzn2023.x86_64-x86_64-with-glibc2.39",
+  "cpu_count": 4,
+  "timezone": "UTC",
+  "source": "docs/experiment_iii/receipts/environment_receipt_gpu_extraction_host_postprovision.json"
+ },
+ "interpreter_library_versions_observed_now": {
+  "classification": "CURRENT_ENVIRONMENT_NOT_EXECUTION_PROVENANCE",
+  "note": "Read from the still-present execution interpreter on 2026-09-11. python/torch/CUDA agree with the A3 receipt; numpy/sklearn/cv2/PIL/scipy/torchvision were never pinned in a receipt and are reported as current observation only.",
+  "interpreter": "/home/sagemaker-user/.conda/envs/mineworld/bin/python",
+  "python": "3.10.20",
+  "numpy": "1.26.4",
+  "opencv": "4.11.0",
+  "torch": "2.6.0+cu126",
+  "scikit_learn": "1.6.1",
+  "pillow": "11.3.0",
+  "scipy": "1.15.2",
+  "torchvision": "0.21.0+cu126"
+ },
+ "pip_freeze": "provenance/pip_freeze_mineworld_env_2026-09-11.txt",
+ "dependency_pins": {
+  "classification": "RECOVERED_ORIGINAL_DATED_BEFORE_EXECUTION",
+  "note": "Three dependency files predate the 2026-09-02 run and pin most of the executed stack. Every version they pin agrees exactly with what the execution interpreter still reports today.",
+  "files": [
+   {
+    "path": "provenance/dependency_pins/mineworld_upstream_requirements.txt",
+    "origin": "/home/sagemaker-user/MineWorld-Upstream/requirements.txt",
+    "sha256": "b50aed7fb36fa8c4ffba2e3f9c1fcb16ba94a0e70a2c9c268134a9e2c39081d6",
+    "mtime": "2026-07-24",
+    "tracked_in": "MineWorld-Upstream at the pinned revision 9f49efbcc68a5f0cf60e78f0abc566eac409282f, working tree clean"
+   },
+   {
+    "path": "provenance/dependency_pins/mineocclude_setup_requirements-mineworld-no-torch.txt",
+    "origin": "/home/sagemaker-user/mineocclude-setup/requirements-mineworld-no-torch.txt",
+    "sha256": "1ef8707fbbac9cb25f5da8d3ddf83aea4c40712fec4cb87acfa229c5b7d00ebc",
+    "mtime": "2026-07-24",
+    "purpose": "the set actually installed into the mineworld env, with torch handled separately"
+   },
+   {
+    "path": "provenance/dependency_pins/mineocclude_repo_requirements.txt",
+    "origin": "/home/sagemaker-user/MineOcclude-Exp3/requirements.txt",
+    "sha256": "e8dce1ce38708cd6155c4c1fbde2a7ba3c3609ff1e0502376b1e5b94c3fc83fe",
+    "mtime": "2026-09-01",
+    "purpose": "MineOcclude-specific: Python 3.10 requirement and pyarrow==25.0.0"
+   }
+  ],
+  "pinned_versions": {
+   "torch": "2.6.0",
+   "torchvision": "0.21.0",
+   "opencv-python": "4.11.0.86",
+   "scikit-learn": "1.6.1",
+   "scipy": "1.15.2",
+   "transformers": "4.48.1",
+   "diffusers": "0.32.2",
+   "omegaconf": "2.3.0",
+   "einops": "0.8.1",
+   "gradio": "5.24.0",
+   "attrs": "25.3.0",
+   "torch-fidelity": "0.3.0",
+   "gym": "0.26.2",
+   "gym3": "0.3.3",
+   "pyarrow": "25.0.0",
+   "python": "3.10"
+  },
+  "pinned_versions_agree_with_live_interpreter": true,
+  "unpinned": {
+   "packages": [
+    "numpy",
+    "pillow"
+   ],
+   "observed_now": {
+    "numpy": "1.26.4",
+    "pillow": "11.3.0"
+   },
+   "status": "NOT_PINNED_BY_ANY_DATED_ARTIFACT",
+   "note": "numpy and Pillow are transitive dependencies pinned by no requirements file and recorded by no receipt. They are the only two components of the executed stack whose exact version at run time cannot be proven from an artifact dated on or before 2026-09-02.",
+   "impact": "Bounded. The sealed prediction lock holds the fitted predictions themselves, so every downstream statistic re-derives exactly regardless. Only a from-scratch refit of the A12 ridge models could in principle be sensitive to a numpy build difference."
+  }
+ }
+}

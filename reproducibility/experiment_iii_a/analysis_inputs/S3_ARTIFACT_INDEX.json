@@ -1,0 +1,59 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-s3-artifact-index-v1",
+ "generated_at_utc": "2026-09-11T03:58:12.216045+00:00",
+ "source_closure": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+ "p2_package_sha256": "f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8",
+ "prediction_lock_seal": "2a25bcb01107a2b4e899bf5575c116d86a12400ca3aa5c12e6339f866778ddf9",
+ "bucket": "sagemaker-us-east-1-323206973672",
+ "region": "us-east-1",
+ "never_overwrote_a_predecessor_key": true,
+ "prefixes": [
+  {
+   "prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/final_scientific_package_a19_p2_f0e9d954_lock_2a25bcb0/",
+   "objects": 18,
+   "contains": "the A19 scientific package bound to final P2 f0e9d954 and lock 2a25bcb0",
+   "created_by": "the original run (2026-09-02T05:49Z)",
+   "relation": "FINAL"
+  },
+  {
+   "prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/p2/p2_freeze_final_v1_8_cdee2a8b/",
+   "objects": 3,
+   "contains": "the final P2 freeze package and its A2 static validation receipt",
+   "created_by": "the original run",
+   "relation": "FINAL"
+  },
+  {
+   "prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/p2/",
+   "objects": 19,
+   "contains": "six P2 freeze packages across the run history",
+   "created_by": "the original run",
+   "relation": "MIXED_FINAL_AND_SUPERSEDED"
+  },
+  {
+   "prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/transfer/",
+   "objects": 8,
+   "total_bytes": 2244174493,
+   "contains": "P0/P1 evidence and GPU handoff bundles (pilot-era, not III-A production)",
+   "created_by": "the original run",
+   "relation": "PILOT_SUPPORT"
+  },
+  {
+   "prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/a9_production_activations_p2_f0e9d954_lock_2a25bcb0/",
+   "objects": 876,
+   "total_bytes": 19617105515,
+   "contains": "the 750 A9 production activation arrays, the 125 per-capture extraction_inventory.json files and production_extraction_ledger.jsonl",
+   "created_by": "THIS RECOVERY (2026-09-11) - new prefix, additive, no predecessor key touched",
+   "relation": "FINAL"
+  },
+  {
+   "prefix": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/a11_feature_blocks_p2_f0e9d954_lock_2a25bcb0/",
+   "objects": 750,
+   "total_bytes": 2878368000,
+   "contains": "the 750 A11 feature blocks whose digests are sealed into PREDICTION_LOCK",
+   "created_by": "THIS RECOVERY (2026-09-11) - new prefix, additive, no predecessor key touched",
+   "relation": "FINAL"
+  }
+ ],
+ "capture_corpus_in_s3": false,
+ "capture_corpus_note": "The 22,500 A7 PNG frames are not in S3. They are published on GitHub branch data/experiment-iii-final-trajectories and release exp3a-final-trajectories-v1."
+}
