@@ -25,10 +25,8 @@ Push-Location $replayDirectory
 try {
     & $python (Join-Path $PSScriptRoot 'check_cpu_environment.py') 2>&1 | Out-File 'environment.log' -Encoding utf8
     if ($LASTEXITCODE -ne 0) { throw 'CPU-only environment validation failed' }
-    & $python 'reproduce_all.py' 2>&1 | Out-File 'preserved-studies.log' -Encoding utf8
-    if ($LASTEXITCODE -ne 0) { throw 'Preserved-study CPU replay failed' }
-    & $python 'extension/reproduce.py' 2>&1 | Out-File 'extension.log' -Encoding utf8
-    if ($LASTEXITCODE -ne 0) { throw 'Extension CPU replay failed' }
+    & $python 'reproduce_complete.py' 2>&1 | Out-File 'complete-replay.log' -Encoding utf8
+    if ($LASTEXITCODE -ne 0) { throw 'Complete snapshot CPU replay failed' }
     & $python 'extension/source/make_figures.py' '--root' 'extension' '--output' 'reconstructed-extension-figures' 2>&1 | Out-File 'figures.log' -Encoding utf8
     if ($LASTEXITCODE -ne 0) { throw 'Portable figure reconstruction failed' }
     $timer.Stop()

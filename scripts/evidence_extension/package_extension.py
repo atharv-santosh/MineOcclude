@@ -45,6 +45,9 @@ def main():
     save(ex/'ANONYMIZATION.json',changes)
     copy(Path(__file__).with_name('REPRODUCTION_README.md'),ex/'README.md')
     save(ex/'FILES_SHA256.json',{p.relative_to(ex).as_posix():sha(p) for p in sorted(ex.rglob('*')) if p.is_file()})
+    copy(Path(__file__).with_name('START_HERE.md'),SNAP/'START_HERE.md')
+    copy(Path(__file__).with_name('reproduce_complete.py'),SNAP/'reproduce_complete.py')
+    save(SNAP/'COMPLETE_SNAPSHOT_SHA256.json',{p.relative_to(SNAP).as_posix():sha(p) for p in sorted(SNAP.rglob('*')) if p.is_file()})
     archive=DEST/'mineocclude_evidence_extension_reproduction.zip'
     assert not archive.exists()
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
