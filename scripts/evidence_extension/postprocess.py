@@ -18,7 +18,7 @@ def main():
     for name in ['clean_cpu_replay.ps1','compile_paper.ps1']:
         script=SOURCE/'scripts/evidence_extension'/name
         windows=subprocess.check_output(['wslpath','-w',str(script)],text=True).strip()
-        subprocess.run(['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe','-NoProfile','-File',windows],cwd=SOURCE,check=True)
+        subprocess.run(['/mnt/c/Users/gensa/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/powershell/pwsh.exe','-NoProfile','-File',windows],cwd=SOURCE,check=True)
     save(ROOT/'POSTPROCESS_READY_FOR_REVIEW.json',dict(status='NUMERICAL_REPLAY_CLEAN_PACKAGE_REPLAY_AND_DRAFT_BUILD_COMPLETE',manual_full_pdf_visual_review_required=True,clean_package_replay_required=False,live_overleaf_update_required=True,anonymous_access_not_verified=True))
     print('POSTPROCESS_READY_FOR_MANUAL_REVIEW',flush=True)
 

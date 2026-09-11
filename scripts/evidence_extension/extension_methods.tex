@@ -82,6 +82,8 @@ deterministic conditional on the sampled schedule, with no injected hidden proce
 noise. These trajectories must not be described as unobservable random events.
 
 At 20 Hz, the low-speed parameter is uniform on $[1.4,1.9]$ blocks/s. The
+For the final low-speed reversal arm, the lower bound is 1.6 rather than 1.4,
+following the visibility-admission amendment described below. The
 high-speed parameter is uniform on $[2.8,3.5]$, except that constant-velocity
 high-speed pilots required a bounded revision to $[2.65,2.8]$. Acceleration is
 uniform on $[0.8,1.5]$ blocks/s$^2$, negative for the low variant and positive for
@@ -115,6 +117,17 @@ was extended uniformly for the low-speed velocity arm to first target at or afte
 frame 36. Speeds, entry positions, target-relative paths, sample size, and analysis
 thresholds were retained. Superseded captures and the original protocol lock are
 preserved with a dated amendment; they are not silently pooled into the revision.
+A later low-speed training reversal retained only one prior image above the
+unchanged 20-pixel visibility threshold. Extending its approach by one complete
+12-tick cycle increased this to two, still below the required three. That
+approach-only proposal was not admitted to production. Before any held-out
+capture or probe fitting, the final amendment instead mapped the same latent
+uniform samples to $[1.6,1.9]$ blocks/s for every low-speed reversal and used first
+target 48. Matched entry, reversal phase, sample size, and all thresholds were
+retained; targets were recomputed for the amended physical speeds. Regular pilots,
+explicit 1.6-block/s checks in both directions and layouts, and the original
+failing training identity were validated before resumption. All superseded
+captures and proposals are preserved and excluded from production fitting.
 
 Each layout has separate training-only four-fold family validation. Both variants
 stay in the same fold. The fixed ridge grid and readout are unchanged; there is no

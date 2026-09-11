@@ -47,7 +47,12 @@ Official source: https://github.com/MCG-NJU/VideoMAE .
 Pilot failures and all bounded motion/approach revisions are retained. An initial
 training capture exposed insufficient visible approach; its superseded artifacts
 were archived before a uniform approach amendment and before held-out capture or
-fitting. The original lock and amended lock are both included. Engineering-only
+fitting. A second training-only failure was not resolved by extending the
+approach alone. The final low-speed reversal amendment uses [1.6,1.9] blocks/s,
+the same latent uniforms, a complete-cycle approach extension, and recomputed
+physical targets. Acceptance thresholds and sample counts are unchanged; explicit
+lower-bound checks are included. The original lock and every amended lock are
+included, as is the rejected approach-only proposal. Engineering-only
 captures never enter production fits or reported scientific intervals. The identical-input
 control is explicitly constructed and is not presented as an empirical test of
 successful hidden-future identification.

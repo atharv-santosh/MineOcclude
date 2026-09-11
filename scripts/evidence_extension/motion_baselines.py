@@ -23,7 +23,7 @@ def oracle(r,kind):
     return np.array(fir_labels(forecast,r['target_model_frame_indices'],r['direction']))
 
 def main():
-    assert read(ROOT/'MOTION_ADMISSION.json')['status']=='PASS'
+    assert read(MOTION_ADMISSION)['status']=='PASS'
     rows=read(MOTION_ROSTER)['rows']
     out=ROOT/'motion'
     for layout in ['layout_01','layout_04']:

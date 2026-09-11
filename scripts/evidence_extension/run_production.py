@@ -1,10 +1,11 @@
 from common import *
 import subprocess
+import signal
 import time
 
 def main():
     assert read(MOTION_ADMISSION)['status']=='PASS'
-    assert read(ROOT/'PRODUCTION_FREEZE_V4.json')['roster_sha256']==sha(MOTION_ROSTER)
+    assert read(MOTION_FREEZE)['roster_sha256']==sha(MOTION_ROSTER)
     logs=ROOT/'production_jobs';logs.mkdir(exist_ok=True)
     env=os.environ.copy();env['MINEOCCLUDE_WEIGHTS']='/home/bpcfno/mineocclude-rgb-runtime/weights'
     active=[]
@@ -51,4 +52,7 @@ def main():
                 except subprocess.TimeoutExpired:proc.kill();proc.wait()
             handle.close()
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    def stop_owned_workers(signum,frame):raise KeyboardInterrupt('Controlled supervisor shutdown; preserving all artifacts')
+    signal.signal(signal.SIGTERM,stop_owned_workers)
+    main()

@@ -5,8 +5,27 @@ import numpy as np
 from statistics_core import bootstrap,family_scores,summarize_motion
 from motion_baselines import oracle,design
 from fit_diag import Ridge,predict_frozen
+from motion import make
+from amend_reversal_floor import revise
 
 class Tests(unittest.TestCase):
+    def test_reversal_amendment_preserves_entry_and_other_arms(self):
+        old=make('reversal','layout_04','unit',1,0,True,True,True,True)
+        new=revise(old)
+        self.assertTrue(1.6<=new['speed_blocks_per_second']<=1.9)
+        self.assertEqual(new['target_model_frame_indices'],list(range(48,67)))
+        self.assertAlmostEqual(old['state_positions'][36],new['state_positions'][48],places=10)
+        self.assertTrue(min(new['signed_velocities'])<0<max(new['signed_velocities']))
+        other=make('velocity','layout_01','unit',0,0,True,True,True,True)
+        self.assertEqual(revise(other),other)
+
+    def test_boundary_check_uses_exact_speed_floor(self):
+        old=make('reversal','layout_04','pilot_matched',1,0,True,True,True,True)
+        new=revise(old,True)
+        self.assertEqual(new['speed_blocks_per_second'],1.6)
+        self.assertTrue(new['engineering_boundary_speed'])
+        self.assertIn('pilot_boundary',new['identity'])
+
     def test_prepared_weights_match_live_predictions(self):
         rng=np.random.default_rng(73)
         x=rng.normal(size=(57,12));y=rng.normal(size=57);q=rng.normal(size=(38,12))

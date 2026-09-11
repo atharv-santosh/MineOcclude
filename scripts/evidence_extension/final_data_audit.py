@@ -9,7 +9,7 @@ def main():
     roster=read(MOTION_ROSTER)['rows']
     assert len(roster)==256 and len({r['family_id'] for r in roster})==128
     assert read(MOTION_ADMISSION)['production_roster_sha256']==sha(MOTION_ROSTER)
-    freeze=read(ROOT/'PRODUCTION_FREEZE_V4.json')
+    freeze=read(MOTION_FREEZE)
     assert freeze['roster_sha256']==sha(MOTION_ROSTER)
     assert freeze['analysis_sha256']==sha(Path(__file__).with_name('MOTION_ANALYSIS.md'))
     units={r['identity']+'__'+c for r in roster for c in ['L0','L4']}

@@ -34,6 +34,10 @@ def main():
     p.add_argument('--retest-v2',action='store_true')
     p.add_argument('--retest-v3',action='store_true')
     p.add_argument('--retest-v4',action='store_true')
+    p.add_argument('--retest-v5',action='store_true')
+    p.add_argument('--retest-v6',action='store_true')
+    p.add_argument('--engineering-identity')
+    p.add_argument('--engineering-tag')
     p.add_argument('--worker',type=int,default=0)
     p.add_argument('--workers',type=int,default=1)
     p.add_argument('--parallel-check',action='store_true')
@@ -42,8 +46,12 @@ def main():
     if a.production:
         assert read(MOTION_ADMISSION)['status']=='PASS'
         assert read(MOTION_ADMISSION)['production_roster_sha256']==sha(MOTION_ROSTER)
-    roster=MOTION_ROSTER if a.production else ROOT/('motion_pilot_retests_v4.json' if a.retest_v4 else 'motion_pilot_retests_v3.json' if a.retest_v3 else 'motion_pilot_retests_v2.json' if a.retest_v2 else 'motion_pilots_matched.json' if a.matched else 'motion_pilots.json')
+    roster=MOTION_ROSTER if a.production or a.engineering_identity else ROOT/('motion_pilot_retests_v6.json' if a.retest_v6 else 'motion_pilot_retests_v5.json' if a.retest_v5 else 'motion_pilot_retests_v4.json' if a.retest_v4 else 'motion_pilot_retests_v3.json' if a.retest_v3 else 'motion_pilot_retests_v2.json' if a.retest_v2 else 'motion_pilots_matched.json' if a.matched else 'motion_pilots.json')
     rows=read(roster)['rows']
+    if a.engineering_identity:
+        assert not a.production and a.engineering_tag and a.engineering_tag.replace('_','').replace('-','').isalnum()
+        rows=[r for r in rows if r['identity']==a.engineering_identity]
+        assert len(rows)==1
     if a.parallel_check:
         rows=[r for r in read(ROOT/'motion_pilots_v4.json')['rows'] if r['family']=='velocity' and r['variant']==0 and r['rank']==0]
     if a.regression_check:
@@ -65,7 +73,7 @@ def main():
                 if not a.parallel_check and n%a.workers!=a.worker:continue
                 for c in (['L0','L4'] if n%2==0 else ['L4','L0']):
                     unit=f'{row["identity"]}__{c}'
-                    destination=ROOT/('regression_pilot' if a.regression_check else 'parallel_pilot' if a.parallel_check else 'captures' if a.production else f'pilots_a{a.attempt}')/unit
+                    destination=ROOT/(('engineering/'+a.engineering_tag) if a.engineering_identity else 'regression_pilot' if a.regression_check else 'parallel_pilot' if a.parallel_check else 'captures' if a.production else f'pilots_a{a.attempt}')/unit
                     if (destination/'BANKED.json').exists():
                         assert read(destination/'BANKED.json')['spec_hash']==row['spec_hash']
                         continue
