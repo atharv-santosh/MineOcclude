@@ -27,6 +27,7 @@ def dependencies(root):
                 dep = dep.strip()
                 extension = '.bib' if command == 'bibliography' else '.tex'
                 pending.append(dep if Path(dep).suffix else dep + extension)
+        pending.extend(re.findall(r'\\tablerows\s+([^\s{}]+\.tex)', text))
         for dep in re.findall(r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}', text):
             if not Path(dep).suffix:
                 matches = [dep + ext for ext in ['.pdf', '.png', '.jpg'] if (root / (dep + ext)).is_file()]
