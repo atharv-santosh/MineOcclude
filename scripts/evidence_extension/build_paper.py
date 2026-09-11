@@ -9,6 +9,13 @@ def replace_section(text,start,end,new):
     a=text.index(start);b=text.index(end,a)
     return text[:a]+new+'\n\n'+text[b:]
 
+def update_checklist(checklist,justifications):
+    for heading,justification in justifications.items():
+        pattern=r'(\\item \{\\bf '+re.escape(heading)+r'\}.*?\\item\[\] Justification: )(.+?)(?=\n\n)'
+        checklist,count=re.subn(pattern,lambda match:match.group(1)+justification,checklist,flags=re.S)
+        assert count==1,heading
+    return checklist
+
 def main():
     assert read(ROOT/'PRODUCTION_COMPLETE.json')['status']=='PASS'
     assert read(ROOT/'motion/validation.json')['status']=='PASS'
@@ -158,11 +165,7 @@ MineOcclude separates visual evidence, position accessibility, and trajectory pr
         'Licenses for existing assets': r'MineWorld and Fabric are credited under their respective MIT and Apache-2.0 licenses. VideoMAE-S and its official pretrained source are credited under CC-BY-NC-4.0 and used for noncommercial research. Minecraft game files and pretrained model weights are not redistributed in the compact snapshot. Asset provenance and upstream links are included.',
         'New assets': 'The snapshot documents schemas, exact schedules and splits, preprocessing, model provenance, prediction files, uncertainty calculations, validation, and execution commands. It distinguishes CPU prediction-to-statistics reconstruction from full inference and from the separately pending verification of anonymous distribution.',
     }
-    for heading,justification in justifications.items():
-        pattern=r'(\\item \{\\bf '+re.escape(heading)+r'\}.*?\\item\[\] Justification: )(.+?)(?=\n\n)'
-        checklist,count=re.subn(pattern,lambda match:match.group(1)+justification,checklist,flags=re.S)
-        assert count==1,heading
-    (PAPER/'checklist.tex').write_text(checklist)
+    (PAPER/'checklist.tex').write_text(update_checklist(checklist,justifications))
     print('EXTENSION_PAPER_GENERATED',flush=True)
 
 if __name__=='__main__':main()
