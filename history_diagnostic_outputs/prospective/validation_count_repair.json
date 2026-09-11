@@ -1,0 +1,69 @@
+{
+  "status": "POST_PREDICTION_VALIDATION_CORRECTION_NO_RESULT_CHANGE",
+  "utc": "2026-09-11T16:32:20.538844+00:00",
+  "previous_amendment_sha256": "f4a2913a90b9c48cd8c7ac595d15f38e2823fd4e3f89d9586f4999ebeea555ce",
+  "original_validator_sha256": "b8b9c4ef4abc042370fd107ea547604193ac19cba88ec7be19c936f6fd38a4dd",
+  "repaired_validator_sha256": "2506e7d14891a8d837c6c86dd27d3ee1cc9a2c0944c1694571c1e5a350496d88",
+  "failed_validation_log_sha256": "2235eda8ffe1f953a7559bf467438e836ccc6af3d12746eb0900d44e3e8a840d",
+  "reason": "The first 19-frame consecutive occlusion segment need not be the first isolated fully occluded frame. One recorded trajectory is hidden at frame 39, visible at 40-41, and continuously hidden from 42. Replace an assumed visibility-count formula with exact recorded-visibility checks, retaining the zero-prior-visibility condition at ages 16-19.",
+  "exceptions": [
+    {
+      "unit": "h26_layout_04_test_1_03__L4",
+      "first_target": 42,
+      "earlier_fully_occluded_frames": [
+        39
+      ],
+      "prior_visibility": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ]
+    }
+  ],
+  "unchanged_statistics_sha256": "7398c1ab9a53063b56788b9b3b021735fa20698b659e0d532138d080402c5c4b",
+  "unchanged_predictions": {
+    "BASELINES__layout_01.json": "965719a87e863f2a521d8c46ccab2ed79a37ce83bd1c77182b447663f12b55b6",
+    "BASELINES__layout_04.json": "1cb1f686ab37d43072150bfb1480762f223e6553bca9cd4bca6435159586c531",
+    "MW_300M_MLP__layout_01__L0.json": "5f592543cda3dad9cde89e3c42532449e5bb85c05cb54c8e214ca185cf40b843",
+    "MW_300M_MLP__layout_01__L4.json": "fecb6d41ae497c6a09919cc424982f85af7f696d848f391f6189f3a29ab3dce4",
+    "MW_300M_MLP__layout_04__L0.json": "c02efc4c31bffd32d3d69b65dc76b03e9e33f9638d1cf08b0888cff2fed7c6e4",
+    "MW_300M_MLP__layout_04__L4.json": "6158c561ee68e8f5699e8edb0e3fc8b289b5b6967a18236eb2944e38e122c61e",
+    "MW_300M__layout_01__L0.json": "491b7145ca16f4ad2a50f07cd4df126f7822efc878cd9579208738627b7801ca",
+    "MW_300M__layout_01__L4.json": "d5aae07875a44a90dc0dcfeebd9a4754c1b6d2ddf457b526d3158cd0a574b7da",
+    "MW_300M__layout_04__L0.json": "50cb8960a56092a37dc7f27ed614387b0f22521fc7c3491ce97e277c9bf42263",
+    "MW_300M__layout_04__L4.json": "4baec91f091796d929d611bb361eb714312ca031b4a93a9bb4d1740b73ad22da",
+    "MW_300M__transfer.json": "530a84caa68b4d9717607f375f3040783728496abcc0ae32ede719fdf574fd22",
+    "MW_700M_MLP__layout_01__L0.json": "dfbd2ef9405fcfd1741555b4fc9b39c8906b3f956e4247d0c4b206c6f3a56f65",
+    "MW_700M_MLP__layout_01__L4.json": "597feef11d1f0fbe374e63a99aa723b1f91a78e8b7822bcc4aab6c280f2e5270",
+    "MW_700M_MLP__layout_04__L0.json": "4b881fe8ab019b2179f2bf6cf52ed8a8977845909b903bbbf235c5c43281c2a7",
+    "MW_700M_MLP__layout_04__L4.json": "08b10989b5b0960f4f343047acfbea4c5b7f4f63066606928d9f6559c8ef72f6",
+    "MW_700M__layout_01__L0.json": "2ae66a11f5ba763370740e8850ad3d3d40b5acc6c737735be0247aa297cbe060",
+    "MW_700M__layout_01__L4.json": "e3b69ea2125aecb444375dad8c4b85b84139bf2c86c952af35d1341846e8c34c",
+    "MW_700M__layout_04__L0.json": "793fca35bde3b5cd093cc28531f744b39dd40852839eda3c3f2dbcfc01fdd4e9",
+    "MW_700M__layout_04__L4.json": "0fabd0527c95bfa747a64ff0d457f90870790c3ad46506e5a45071270998885e",
+    "MW_700M__transfer.json": "b7008bb10e29be6a154e14b28d6174bd3696930e1e2010a85135fb12dfd6813e",
+    "PIXEL_CURRENT__layout_01__L0.json": "e09eff26bbe0fba767cafccef46fd6fa949f1e7988914330f52c22833907f0ae",
+    "PIXEL_CURRENT__layout_01__L4.json": "8e3180f95aabf652521f001fefa665b2c336bd7b6d525a6ddd22118f779aa1c7",
+    "PIXEL_CURRENT__layout_04__L0.json": "cf90ff2c788dbaf5a6ce0c500da1edd1f51cc7434b58149a98d26a9d8f71d0af",
+    "PIXEL_CURRENT__layout_04__L4.json": "7bffe98686af6aca37fb9cc1a235308b9b827026431e8fd4014c1a5044b34846",
+    "PIXEL_CURRENT__transfer.json": "45029727cb28e4638877bdb97994ce17e5bee2fbdf7f52e4ea9d532550e30724",
+    "PIXEL_HISTORY16__layout_01__L0.json": "d9728ce78263ea4da521e2cdb3e5e055eb2069993f318a2330b010f0281fa547",
+    "PIXEL_HISTORY16__layout_01__L4.json": "3f06d7d9f9f9055cf2896d3cbe6eb025d384f0b8e340ac2a354227b78615d08a",
+    "PIXEL_HISTORY16__layout_04__L0.json": "930d7be2bc90b111a6503f5a57eaba9d8a578ea1c9ece50deb7f44c656ce28b9",
+    "PIXEL_HISTORY16__layout_04__L4.json": "64739141058f3bfb112965a7233fe5e4f0699c0591b34099ccac776ab23b7672",
+    "PIXEL_HISTORY16__transfer.json": "52ad315bd8d0b3a695aeebf74683aee9da2eac319c31daaa5025eea0dab6b713"
+  },
+  "scope": "No captures, labels, features, estimators, selection decisions, predictions, statistics, or inclusion rules change. No identity is excluded."
+}

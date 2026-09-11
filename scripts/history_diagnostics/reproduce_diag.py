@@ -24,7 +24,10 @@ def main():
     actual=rebuild(root/'predictions')
     expected=json.loads((root/'statistics.json').read_text())
     assert actual==expected,'Numerical reconstruction differs'
-    print(json.dumps(dict(status='PASS',files_verified=len(inventory),prediction_cells=actual['cells'],test_identities=48,statistics_exactly_equal=True,gpu_required=False),indent=2))
+    from optimizer_statistics import rebuild as rebuild_optimizer
+    optimizer=rebuild_optimizer(root/'optimizer_check/predictions',root/'predictions')
+    assert optimizer==json.loads((root/'optimizer_check/statistics.json').read_text())
+    print(json.dumps(dict(status='PASS',files_verified=len(inventory),prediction_cells=actual['cells'],separate_optimizer_check_cells=optimizer['cells'],test_identities=48,statistics_exactly_equal=True,gpu_required=False),indent=2))
 
 
 if __name__=='__main__':

@@ -5,12 +5,13 @@ import re
 import shutil
 import subprocess
 import zipfile
+import importlib.metadata
 
 DEST=SOURCE/'history_diagnostic_outputs'
 SNAP=DEST/'anonymous_reproduction'
 OUT=ROOT/'analysis'
 TEXT_EXT={'.py','.json','.jsonl','.md','.txt','.tex','.bib','.sty','.yaml','.yml','.toml','.xml','.gradle','.properties','.sh','.bat'}
-PRIVATE=re.compile(r'gensa|sahilsinghthefirst|atharv-santosh|/home/bpcfno|[A-Z]:\\+Users\\+[^\\\s"\']+|gh[pousr]_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}',re.I)
+PRIVATE=re.compile(r'gensa|sahilsinghthefirst|atharv-santosh|/home/bpcfno|[A-Z]:\\+Users\\+[^\\\s"\']+|gh[pousr]_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|https?://[^/\s]+:[^/\s]+@',re.I)
 SOURCE_FOLDERS=['scripts/history_diagnostics','scripts/generalization','scripts/rgb_replication','src','fabric/mineocclude-mod/src','fabric/mineocclude-mod/gradle','reproducibility/experiment_iii_a/provenance']
 
 
@@ -61,13 +62,13 @@ def prestage():
 def complete():
     assert read(OUT/'independent_validation.json')['status']=='PASS'
     assert read(OUT/'comparator_replay_validation.json')['status']=='PASS'
-    assert SNAP.exists() and not (SNAP/'diagnostic').exists()
-    d=SNAP/'diagnostic'; d.mkdir()
+    assert SNAP.exists() and not (SNAP/'SNAPSHOT_SHA256.json').exists()
+    d=SNAP/'diagnostic'; d.mkdir(exist_ok=True)
     copy(Path(__file__).parent/'statistics_diag.py',d/'statistics_diag.py')
     copy(Path(__file__).parent/'reproduce_diag.py',d/'reproduce.py')
     for p in (OUT/'predictions').glob('*.json'): copy(p,d/'predictions'/p.name)
     copy(OUT/'statistics.json',d/'statistics.json')
-    for name in ['roster.json','manifest.json','analysis_freeze.json','statistical_source_freeze.json','statistical_source_amendment.json','comparator_audit_freeze.json','capture_admission.json','capture_status.json']:
+    for name in ['roster.json','manifest.json','analysis_freeze.json','statistical_source_freeze.json','statistical_source_amendment.json','comparator_audit_freeze.json','validation_count_repair.json','optimizer_check_freeze.json','capture_admission.json','capture_status.json']:
         copy(ROOT/name,d/'configuration'/name)
     for name in ['PROTOCOL.md','ANALYSIS_FREEZE.md']:
         copy(Path(__file__).parent/name,d/'configuration'/name)
@@ -81,6 +82,13 @@ def complete():
         for p in (OUT/model).glob('*.json'): copy(p,d/'validation'/model/p.name)
     for p in (ROOT/'weights').glob('*provenance.json'): copy(p,d/'validation'/p.name)
     for p in (OUT/'job_logs').glob('*.json'): copy(p,d/'validation/timings'/p.name)
+    copy(OUT/'job_logs/validate_diag.log',d/'validation/original_visibility_count_check_failure.txt')
+    copy(Path(__file__).parent/'optimizer_statistics.py',d/'optimizer_statistics.py')
+    for folder in ['predictions','fits']:
+        for p in (OUT/'optimizer_check'/folder).glob('*.json'):
+            copy(p,d/'optimizer_check'/folder/p.name)
+    for p in (OUT/'optimizer_check').glob('*.json'):
+        copy(p,d/'optimizer_check'/p.name)
     copy(DEST/'diagnostic_figure_data.json',d/'figure_data.json') if (DEST/'diagnostic_figure_data.json').exists() else None
     # Store true input images selected before outcomes, without game binaries.
     provenance=read(OUT/'figure_provenance.json')['actual_capture_panels']
@@ -94,12 +102,14 @@ def complete():
         copy(ROOT/'captures'/unit/'client/frames'/f'{t:06d}.png',d/'examples'/f'{unit}__{t:06d}.png')
     execution=SNAP/'execution_source'
     for folder in SOURCE_FOLDERS:
-        shutil.copytree(SOURCE/folder,execution/folder,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+        shutil.copytree(SOURCE/folder,execution/folder,dirs_exist_ok=True,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
     for name in ['build.gradle','settings.gradle','gradle.properties','gradlew','gradlew.bat']:
         copy(SOURCE/'fabric/mineocclude-mod'/name,execution/'fabric/mineocclude-mod'/name)
     copy(Path(__file__).parent/'PUBLIC_README.md',SNAP/'README.md')
     copy(Path(__file__).parent/'reproduce_all.py',SNAP/'reproduce_all.py')
     (SNAP/'requirements-cpu.txt').write_text('numpy==1.26.4\nmatplotlib==3.10.9\npillow==11.3.0\n')
+    installed=sorted({f"{p.metadata['Name']}=={p.version}" for p in importlib.metadata.distributions()})
+    (d/'validation/requirements-executed.txt').write_text('\n'.join(installed)+'\n')
     changes=sanitize_tree(SNAP)
     # Public execution copies have local-account paths redacted. Keep numerical
     # and exact-execution hash provenance separate from this portable inventory.
@@ -116,6 +126,9 @@ def complete():
         for p in sorted((OUT/'fits').glob('*')):
             if p.suffix in ('.npz','.json'):
                 z.write(p,p.name)
+        for p in sorted((OUT/'optimizer_check/fits').glob('*')):
+            if p.suffix in ('.npz','.json'):
+                z.write(p,'optimizer_check/'+p.name)
     save(DEST/'fitted_readouts_receipt.json',dict(archive=fitted.name,bytes=fitted.stat().st_size,sha256=sha(fitted),scope='Optional fitted probes; feature arrays required for prediction replay. Not needed for the compact statistics rebuild.'))
     print('ANONYMOUS_SNAPSHOT_READY',sum(p.stat().st_size for p in SNAP.rglob('*') if p.is_file()),flush=True)
 

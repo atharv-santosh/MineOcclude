@@ -14,8 +14,16 @@ def main():
         assert sha(Path(__file__).parent/name)==h,('Frozen source changed',name)
     amendment=read(ROOT/'statistical_source_amendment.json')
     assert amendment['original_freeze_sha256']==sha(ROOT/'statistical_source_freeze.json')
+    repair=read(ROOT/'validation_count_repair.json')
+    assert repair['previous_amendment_sha256']==sha(ROOT/'statistical_source_amendment.json')
     for name,h in amendment['current_files'].items():
+        if name=='validate_diag.py':
+            assert h==repair['original_validator_sha256']
+            h=repair['repaired_validator_sha256']
         assert sha(Path(__file__).parent/name)==h,('Statistical source changed after correction',name)
+    assert sha(OUT/'statistics.json')==repair['unchanged_statistics_sha256']
+    for name,h in repair['unchanged_predictions'].items():
+        assert sha(OUT/'predictions'/name)==h
     manifest=read(ROOT/'manifest.json')
     assert manifest['status']=='ALL_192_VERIFIED'
     assert len({json.dumps(v['action_payload'],sort_keys=True) for v in manifest['units'].values()})==1
@@ -103,12 +111,17 @@ def main():
         for model,h in r['features'].items():
             assert sha(OUT/'features'/model/r['phase']/f"{r['unit']}.npy")==h
         if r['phase']=='swapped':
+            recipient=manifest['units'][r['unit']]
+            donor=manifest['units'][r['donor']+'__L4']
             for evidence in r['evidence']:
-                assert evidence['recipient_nonfull_frames']==max(16-evidence['age'],0)
-                assert evidence['donor_nonfull_frames']==max(16-evidence['age'],0)
+                t=evidence['recipient_frame']; td=evidence['donor_frame']
+                assert evidence['recipient_nonfull_frames']==sum(not recipient['fully_occluded'][j] for j in range(t-15,t+1))
+                assert evidence['donor_nonfull_frames']==sum(not donor['fully_occluded'][j] for j in range(td-15,td))
+                assert 0<=evidence['recipient_nonfull_frames']<=max(16-evidence['age'],0)
+                assert 0<=evidence['donor_nonfull_frames']<=max(16-evidence['age'],0)
         receipt_count+=1
     assert receipt_count==864,receipt_count
-    result=dict(status='PASS',prediction_cells=len(cells),feature_receipts=receipt_count,source_freeze='Unchanged',train_test_and_target_joins='PASS',saved_fit_replay_max_error=max(replay_errors),independent_summary_max_error=max(errors),independent_donor_pair_interval_max_error=float(max(bootstrap_errors)),all_action_tokens_constant=True)
+    result=dict(status='PASS',prediction_cells=len(cells),feature_receipts=receipt_count,source_freeze='Estimators and statistics unchanged; documented recorded-visibility validation repair',validation_repair_sha256=sha(ROOT/'validation_count_repair.json'),train_test_and_target_joins='PASS',saved_fit_replay_max_error=max(replay_errors),independent_summary_max_error=max(errors),independent_donor_pair_interval_max_error=float(max(bootstrap_errors)),all_action_tokens_constant=True)
     save(OUT/'independent_validation.json',result)
     print(json.dumps(result,indent=2))
 

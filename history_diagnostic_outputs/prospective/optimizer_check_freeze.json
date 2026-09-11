@@ -1,0 +1,34 @@
+{
+  "status": "SUPPLEMENTARY_TRAINING_DIAGNOSTIC_NOT_ORIGINAL_PREREGISTRATION",
+  "utc": "2026-09-11T16:30:00.854754+00:00",
+  "reason": "All 300M nonlinear training searches reported iteration-limit warnings. No test scores were consulted for this change.",
+  "changes": {
+    "max_iter": [
+      500,
+      10000
+    ],
+    "max_fun": [
+      25000,
+      250000
+    ]
+  },
+  "unchanged": [
+    "architecture",
+    "training-only PCA and scaling",
+    "selected penalty from original training folds",
+    "three seeds",
+    "train/test split",
+    "all test conditions"
+  ],
+  "selection": "Retain both budgets; do not choose between them using test results.",
+  "original_fit_records": {
+    "MW_300M_MLP__layout_04__L4.json": "c402fd6a8c1cc428fd4cc7ccceff72612534691e6f3ff58b6fb256eb72fcd66f",
+    "MW_300M_MLP__layout_01__L0.json": "13d7474a35a789bcfbc01953a8e5b871d78af20508e85db9d7d2f78462caca03",
+    "MW_300M_MLP__layout_01__L4.json": "0d396c1c13cd9dfb7e94e1b111574c96fce1ac1788147d559b6efe8967b4055f",
+    "MW_300M_MLP__layout_04__L0.json": "57b33d23da8c75bbb2aef3bd6cd4b205b1d426d578e072c4fdec5ddf9fcf229f"
+  },
+  "source_sha256": {
+    "optimizer_check.py": "3dd29f1fab3de17985f2bbbc4096eb10c9652aef4a8ec3b830aafff15337bfe1",
+    "optimizer_statistics.py": "c348c8f30e17be8f8e2b84dc20b1ec8b01afa90b5b75f9257f17b0e9ccdb32d2"
+  }
+}

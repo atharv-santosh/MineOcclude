@@ -5,7 +5,7 @@ are included, and no prior prediction is relabeled as a different input conventi
 
 ## Reproduce the reported statistics on a CPU
 
-In a fresh Python 3.10--3.12 environment, from an extracted working copy:
+In a fresh Python 3.10--3.12 environment, from the extracted snapshot:
 
 ```sh
 python -m pip install -r requirements-cpu.txt
@@ -15,9 +15,11 @@ python reproduce_all.py
 The command checks the complete input inventory and reconstructs every supplied
 statistical summary. It needs no GPU, Minecraft installation, model checkpoint,
 activation tensor, network connection, or author account after installation.
-The central-study command also redraws its figures, so use a working copy if
-you want to retain the archive byte-for-byte. Generated PDF metadata may differ
-across machines; numerical summaries are checked exactly.
+Each run creates and prints a separate temporary output directory, leaving the
+supplied snapshot byte-for-byte unchanged. The central-study command also
+redraws its figures there. Generated PDF metadata may differ across machines;
+numerical summaries are checked exactly. The output directory is retained for
+inspection and can be removed when you no longer need those rebuilt files.
 
 ## Contents and independent units
 
@@ -31,6 +33,9 @@ across machines; numerical summaries are checked exactly.
   and 48 untouched test identities across two layouts. Air and stone, two model
   sizes, linear/nonlinear readouts, correct/swapped/removed histories, image
   tracking, and visible-only calibration total 40,128 prediction cells.
+  A separately frozen, training-diagnostic-triggered optimizer-budget check adds
+  7,296 cells. It keeps the selected penalties and all data unchanged and retains
+  the original 500-iteration results alongside the converged refits.
 - `execution_source/`: capture, extraction, fitting, and validation source.
   Local account paths are anonymized, not silently presented as the original
   byte-identical execution source. The adaptation ledger and separate hashes

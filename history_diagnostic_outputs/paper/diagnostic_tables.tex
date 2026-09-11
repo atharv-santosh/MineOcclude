@@ -1,0 +1,141 @@
+\begin{table}[!htbp]\centering\small
+\caption{Pooled test identities: mean identity RMSE in blocks. Air is summarized over ages 1--10. Stone columns retain the prespecified age bins. Each layout has 24 test identities; the pooled table has 48.}
+\begin{tabular}{@{}lrrrrr@{}}\toprule Predictor & Air 1--10 & Stone 1--10 & 11--15 & 16--19 & Stone 1--19\\\midrule
+700M ridge & 0.110 & 1.603 & 2.481 & 2.684 & 2.183\\
+300M ridge & 0.107 & 1.588 & 2.452 & 2.683 & 2.171\\
+700M nonlinear & 0.075 & 1.199 & 2.382 & 2.679 & 2.016\\
+300M nonlinear & 0.075 & 1.315 & 2.389 & 2.679 & 2.047\\
+Current pixels & 0.084 & 3.911 & 3.146 & 2.685 & 3.500\\
+History pixels & 0.077 & 1.915 & 2.632 & 2.685 & 2.419\\
+Image tracker & 0.086 & 2.918 & 3.146 & 2.685 & 2.952\\
+Direction + age & 0.154 & 0.154 & 0.420 & 0.603 & 0.370\\
+Training mean & 3.917 & 3.917 & 3.146 & 2.685 & 3.503\\
+Oracle last-seen & 0.411 & 0.411 & 1.051 & 1.503 & 0.926\\
+Oracle velocity & 0.252 & 0.252 & 0.249 & 0.264 & 0.265\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Original layout: mean identity RMSE in blocks. Air is summarized over ages 1--10. Stone columns retain the prespecified age bins. Each layout has 24 test identities; the pooled table has 48.}
+\begin{tabular}{@{}lrrrrr@{}}\toprule Predictor & Air 1--10 & Stone 1--10 & 11--15 & 16--19 & Stone 1--19\\\midrule
+700M ridge & 0.108 & 1.553 & 2.399 & 2.564 & 2.115\\
+300M ridge & 0.111 & 1.587 & 2.362 & 2.564 & 2.113\\
+700M nonlinear & 0.079 & 1.171 & 2.307 & 2.564 & 1.953\\
+300M nonlinear & 0.074 & 1.360 & 2.364 & 2.564 & 2.017\\
+Current pixels & 0.074 & 3.811 & 3.024 & 2.564 & 3.394\\
+History pixels & 0.068 & 1.933 & 2.595 & 2.564 & 2.321\\
+Image tracker & 0.088 & 2.807 & 3.024 & 2.564 & 2.835\\
+Direction + age & 0.171 & 0.171 & 0.470 & 0.661 & 0.408\\
+Training mean & 3.811 & 3.811 & 3.024 & 2.564 & 3.394\\
+Oracle last-seen & 0.413 & 0.413 & 1.064 & 1.516 & 0.935\\
+Oracle velocity & 0.266 & 0.266 & 0.269 & 0.304 & 0.286\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Changed layout: mean identity RMSE in blocks. Air is summarized over ages 1--10. Stone columns retain the prespecified age bins. Each layout has 24 test identities; the pooled table has 48.}
+\begin{tabular}{@{}lrrrrr@{}}\toprule Predictor & Air 1--10 & Stone 1--10 & 11--15 & 16--19 & Stone 1--19\\\midrule
+700M ridge & 0.111 & 1.653 & 2.563 & 2.804 & 2.252\\
+300M ridge & 0.104 & 1.589 & 2.541 & 2.802 & 2.229\\
+700M nonlinear & 0.070 & 1.226 & 2.457 & 2.793 & 2.079\\
+300M nonlinear & 0.075 & 1.271 & 2.414 & 2.793 & 2.078\\
+Current pixels & 0.094 & 4.011 & 3.268 & 2.807 & 3.606\\
+History pixels & 0.086 & 1.897 & 2.669 & 2.807 & 2.517\\
+Image tracker & 0.084 & 3.030 & 3.268 & 2.807 & 3.069\\
+Direction + age & 0.137 & 0.137 & 0.370 & 0.545 & 0.332\\
+Training mean & 4.023 & 4.023 & 3.268 & 2.807 & 3.613\\
+Oracle last-seen & 0.409 & 0.409 & 1.037 & 1.491 & 0.917\\
+Oracle velocity & 0.239 & 0.239 & 0.230 & 0.225 & 0.245\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{History interventions at ages 1--10, pooled over 48 test identities. Entries are intervened minus correct-history RMSE with 95\% reciprocal-donor-pair bootstrap intervals. Positive values indicate worse decoding after intervention.}
+\begin{tabular}{@{}lrr@{}}\toprule Predictor & Swapped minus correct & Removed minus correct\\\midrule
+700M ridge & $-0.094\;[-0.144,-0.047]$ & $2.314\;[2.068,2.560]$\\
+300M ridge & $-0.074\;[-0.121,-0.031]$ & $2.329\;[2.075,2.574]$\\
+700M nonlinear & $-0.066\;[-0.096,-0.038]$ & $2.714\;[2.471,2.941]$\\
+300M nonlinear & $-0.060\;[-0.094,-0.024]$ & $2.596\;[2.350,2.828]$\\
+Current pixels & $0.000\;[0.000,0.000]$ & $0.000\;[0.000,0.000]$\\
+History pixels & $-0.093\;[-0.125,-0.062]$ & $2.002\;[1.416,2.437]$\\
+Image tracker & $-0.042\;[-0.082,-0.008]$ & $0.998\;[0.924,1.076]$\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Geometry transfer at ages 1--10 on 24 destination test identities. Each cell gives air/stone RMSE. Calibration uses only six predesignated destination-training identities in air.}
+\begin{tabular}{@{}lrrr@{}}\toprule Predictor & Frozen transfer & Visible calibration & Native fit\\\midrule
+700M ridge & 1.934 / 2.675 & 0.271 / 3.177 & 0.111 / 1.653\\
+300M ridge & 1.852 / 2.824 & 0.342 / 4.087 & 0.104 / 1.589\\
+Current pixels & 1.495 / 4.023 & 0.119 / 4.023 & 0.094 / 4.011\\
+History pixels & 7.000 / 49.139 & 0.165 / 75.218 & 0.086 / 1.897\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Swapped-history response, ages 1--10, pooled. Direction agreement is the fraction of target rows where the prediction change has the sign of donor-minus-recipient position, averaged over identities. A zero prediction change is not counted as agreement. All quantities describe the fixed probe, not a discovered circuit.}
+\begin{tabular}{@{}lrrrr@{}}\toprule Predictor & Absolute shift & Agreement & Donor MAE & Recipient MAE\\\midrule
+700M ridge & 2.169 & 0.321 & 1.405 & 1.322\\
+300M ridge & 1.992 & 0.371 & 1.392 & 1.341\\
+700M nonlinear & 1.575 & 0.379 & 0.975 & 0.929\\
+300M nonlinear & 1.722 & 0.412 & 1.089 & 1.046\\
+Current pixels & 0.000 & 0.000 & 3.896 & 3.896\\
+History pixels & 2.483 & 0.292 & 1.546 & 1.476\\
+Image tracker & 3.833 & 0.300 & 2.763 & 2.693\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Complementary correct-history metrics at ages 1--10, pooled over 48 test identities. MAE is in blocks. Trajectory-macro $R^2$ uses the within-trajectory test mean as the denominator reference, not the training-mean predictor.}
+\begin{tabular}{@{}lrrrr@{}}\toprule Predictor & Air MAE & Air $R^2$ & Stone MAE & Stone $R^2$\\\midrule
+700M ridge & 0.093 & 0.517 & 1.403 & -156.823\\
+300M ridge & 0.088 & 0.665 & 1.390 & -158.072\\
+700M nonlinear & 0.063 & 0.887 & 0.969 & -129.988\\
+300M nonlinear & 0.063 & 0.869 & 1.080 & -134.127\\
+Current pixels & 0.067 & 0.882 & 3.896 & -342.419\\
+History pixels & 0.062 & 0.898 & 1.546 & -194.874\\
+Image tracker & 0.078 & 0.912 & 2.763 & -305.175\\
+Direction + age & 0.126 & 0.259 & 0.126 & 0.259\\
+Training mean & 3.903 & -342.588 & 3.903 & -342.588\\
+Oracle last-seen & 0.339 & -0.882 & 0.339 & -0.882\\
+Oracle velocity & 0.245 & 0.054 & 0.245 & 0.054\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Image-tracker observation coverage, pooled over the held-out identities. Fallback uses the training target mean when the fixed detector finds no reliable observation in the supplied 16-frame window. Counts are descriptive repeated rows, not independent samples.}
+\begin{tabular}{@{}llrrrr@{}}\toprule Material & History & Ages & Rows & Fallback fraction & Reliable detections\\\midrule
+Air & correct & 1--10 & 480 & 0.000 & 10.00\\
+Air & correct & 11--15 & 240 & 0.000 & 10.00\\
+Air & correct & 16--19 & 192 & 0.000 & 10.00\\
+Air & correct & 1--19 & 912 & 0.000 & 10.00\\
+Stone & correct & 1--10 & 480 & 0.594 & 1.79\\
+Stone & correct & 11--15 & 240 & 1.000 & 0.00\\
+Stone & correct & 16--19 & 192 & 1.000 & 0.00\\
+Stone & correct & 1--19 & 912 & 0.786 & 0.94\\
+Stone & swapped & 1--10 & 480 & 0.594 & 1.79\\
+Stone & swapped & 11--15 & 240 & 1.000 & 0.00\\
+Stone & swapped & 16--19 & 192 & 1.000 & 0.00\\
+Stone & swapped & 1--19 & 912 & 0.786 & 0.94\\
+Stone & removed & 1--10 & 480 & 1.000 & 0.00\\
+Stone & removed & 11--15 & 240 & 1.000 & 0.00\\
+Stone & removed & 16--19 & 192 & 1.000 & 0.00\\
+Stone & removed & 1--19 & 912 & 1.000 & 0.00\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Nonlinear-probe fitting diagnostics. Warning counts cover all training-fold candidates and the final three-seed ensemble, rather than only the selected model. Warnings are retained; no test outcome changes the optimizer budget.}
+\begin{tabular}{@{}llrrr@{}}\toprule Model & Layout & Material & Selected penalty & Warning messages\\\midrule
+300M nonlinear & layout\_01 & Air & 0.1 & 27\\
+300M nonlinear & layout\_01 & Stone & 0.001 & 27\\
+300M nonlinear & layout\_04 & Air & 0.1 & 27\\
+300M nonlinear & layout\_04 & Stone & 0.1 & 27\\
+700M nonlinear & layout\_01 & Air & 0.1 & 27\\
+700M nonlinear & layout\_01 & Stone & 0.1 & 27\\
+700M nonlinear & layout\_04 & Air & 0.1 & 27\\
+700M nonlinear & layout\_04 & Stone & 0.1 & 27\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Training-diagnostic-triggered optimizer check, pooled over 48 test identities at ages 1--10. Mean identity RMSE in blocks. The selected penalties, architecture, PCA, and three seeds stay fixed; only the final-fit iteration/function-evaluation limits increase. All extended refits converge. The original prospective-budget results remain reported.}
+\begin{tabular}{@{}lrrrr@{}}\toprule Model & Air, 500 & Air, extended & Stone, 500 & Stone, extended\\\midrule
+700M & 0.075 & 0.085 & 1.199 & 1.240\\
+300M & 0.075 & 0.081 & 1.315 & 1.341\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[!htbp]\centering\small
+\caption{Prespecified correct-history predictor contrasts, pooled stone ages 1--10. Values are first-minus-second mean identity RMSE with paired 95\% identity-bootstrap intervals. Negative favors the first predictor; intervals are descriptive and not multiplicity-adjusted.}
+\begin{tabular}{@{}llr@{}}\toprule First & Second & Difference [95\% interval]\\\midrule
+700M ridge & History pixels & $-0.312\;[-0.784,0.013]$\\
+300M ridge & History pixels & $-0.327\;[-0.771,-0.029]$\\
+700M ridge & Direction + age & $1.449\;[1.161,1.752]$\\
+300M ridge & Direction + age & $1.434\;[1.140,1.745]$\\
+700M ridge & Image tracker & $-1.315\;[-1.544,-1.093]$\\
+300M ridge & Image tracker & $-1.330\;[-1.570,-1.101]$\\
+700M nonlinear & 700M ridge & $-0.405\;[-0.495,-0.318]$\\
+300M nonlinear & 300M ridge & $-0.273\;[-0.372,-0.176]$\\
+700M ridge & 300M ridge & $0.015\;[-0.062,0.095]$\\
+\bottomrule\end{tabular}\end{table}
