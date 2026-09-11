@@ -24,6 +24,27 @@ def main():
     def diff(b):return next(r for r in stats['paired_differences'] if r['baseline']==b and r['condition']=='L4' and r['layout']=='pooled' and r['ages']==[1,10])
     def ci(r):return f"$[{r['ci'][0]:.3f},{r['ci'][1]:.3f}]$"
     text=(PREVIOUS/'paper.tex').read_text()
+    metric_start=text.index(r'\subsection{Metrics and inference}')
+    metric_end=text.index(r'\subsection{Prospective history and transfer tests}',metric_start)
+    preserved_metrics=text[metric_start:metric_end].replace(r'\subsection{Metrics and inference}',r'\section{Supplementary central-cohort estimands}').replace(r'\label{sec:inference}',r'\label{app:central-estimands}')
+    text=text[:metric_start]+r'''\subsection{Metrics and inference}
+\label{sec:inference}
+For each identity and condition, RMSE is calculated over its 19 held-out targets;
+we then average across identities. MAE is aggregated similarly. Trajectory $R^2$
+uses each held-out path's own target mean, and macro $R^2$ averages those values.
+These are not pooled-frame scores.
+
+Two-sided 95\% percentile intervals use 10,000 whole-identity bootstrap samples,
+keeping paired conditions and predictors together \citep{efron1993bootstrap}.
+They condition on fitted probes and are descriptive, not simultaneous bounds
+across all comparisons. Single-age plots report absolute error; multi-age bins
+report within-identity RMSE. The new motion study instead resamples paired-variant
+families, as specified below. Exact seeds, evidence-ladder contrasts, and historical
+inference conventions are retained in \autoref{app:central-estimands} and
+\autoref{app:extension}. The development study's nine gates and permutation test
+are provenance, not qualification rules for the central or new motion cohorts.
+
+'''+text[metric_end:]
     begin=text.index(r'\begin{abstract}')+len(r'\begin{abstract}');end=text.index(r'\end{abstract}')
     abstract=f'''Evaluating object-state representations under occlusion requires separating visual evidence, available history, and motion predictability. MineOcclude replays identical Minecraft trajectories across visual conditions with shared evaluation times and aligned continuous position targets. On 25 central identities, a fixed frozen-MineWorld readout with verified RGB inputs reaches 0.083--0.107 blocks RMSE in air and glass and 1.600 under stone. Its stone error is lower than those of matched-history pixels, optical flow, frame differences, and a pretrained VideoMAE-S readout, but unchanged decoders transfer poorly across materials. A fixed-texture opacity intervention separates appearance changes from the material comparison. A prospective extension adds 64 training and 64 held-out paired-motion families across two layouts, including acceleration, stops, and reversals. At ages 1--10, opaque RMSE is {m():.3f} blocks for MineWorld, {m('PIXEL_HISTORY16'):.3f} for history pixels, and {m('META_CUBIC'):.3f} for direction-and-age prediction. These controlled comparisons characterize finite-window position accessibility, not an identified mechanism of persistent object memory.'''
     text=text[:begin]+'\n'+abstract+'\n'+text[end:]
@@ -105,9 +126,10 @@ Identical input histories cannot identify an unobserved randomly chosen future. 
 MineOcclude separates visual evidence, position accessibility, and trajectory predictability through paired captures and grouped evaluation. Verified RGB results are complemented by a full decoder-transfer matrix, stronger matched-history comparators, and a fixed-appearance opacity manipulation. A new held-out paired-motion cohort adds acceleration, stops, and reversals across two layouts. Together, these tests provide a controlled characterization of finite-window readouts while distinguishing native decoding from transfer and motion predictability.''')
     # Keep earlier prospective results intact as a separately labeled appendix.
     pos=text.index(r'\clearpage\n\input{checklist}'.replace('\\n','\n'))
-    appendix='\n\\clearpage\n\\section{Earlier variable-speed diagnostic summary}\n'+olddiagnostic.replace(r'\subsection{Fresh identities and history dependence}',r'\subsection{Preserved results}').replace(r'\label{sec:fresh-results}',r'\label{app:earlier-summary}')+'\n\\clearpage\n\\input{extension_methods}\n\\input{extension_results}\n'
+    appendix='\n\\clearpage\n'+preserved_metrics+'\n\\clearpage\n\\section{Earlier variable-speed diagnostic summary}\n'+olddiagnostic.replace(r'\subsection{Fresh identities and history dependence}',r'\subsection{Preserved results}').replace(r'\label{sec:fresh-results}',r'\label{app:earlier-summary}')+'\n\\clearpage\n\\input{extension_methods}\n\\input{extension_results}\n'
     text=text[:pos]+appendix+text[pos:]
     text=text.replace('Full type-specific, paired-contrast, and transfer results','Full paired-contrast and transfer results')
+    text=text.replace('two sizes of the same MineWorld family, but still one entity and no independent world-model family beyond the VideoMAE comparator.','two sizes of the same MineWorld family, but still one entity. VideoMAE is an encoder comparator, not an independent world-model replication.')
     assert '\u2014' not in text
     (PAPER/'paper.tex').write_text(text)
     shutil.copy2(Path(__file__).with_name('extension_methods.tex'),PAPER/'extension_methods.tex')
@@ -125,6 +147,22 @@ MineOcclude separates visual evidence, position accessibility, and trajectory pr
  doi={10.1007/3-540-45103-X_50}}
 '''
     (PAPER/'references.bib').write_text(bib)
+    checklist=(PAPER/'checklist.tex').read_text()
+    justifications={
+        'Claims': 'The abstract and introduction distinguish the central graded-material study, its reused-identity RGB and comparator analyses, earlier fresh cohorts, and the new 64-training/64-test paired-motion families. Native decoding, unchanged-decoder transfer, and metadata predictability are reported separately. No comparison is presented as identifying a mechanism of persistent object memory.',
+        'Limitations': 'The interpretation subsection explains finite reset windows, remaining differences in resolution and capacity, synthetic versus physical occlusion, limited model and scene breadth, deterministic motion predictability, central-cohort reuse, and conditional intervals. Historical BGR results are kept distinct from verified RGB results.',
+        'Experimental result reproducibility': 'The methods and appendices specify input conventions, checkpoint provenance, alignment filters, exact schedules, family and identity splits, training-only selection, and inferential units. The compact snapshot includes held-out predictions, targets, folds, configurations, hashes, and CPU code that reconstructs the reported statistics without inference. Large activations and model weights are separate inputs for full GPU replication.',
+        'Open access to data and code': 'A local statistical-reproduction snapshot preserves the preceding cohorts and adds transfer, opacity, stronger history comparators, and the paired-motion extension. Anonymous publication of this updated snapshot has not been verified. The existing project link alone does not establish reviewer access to the new artifacts.',
+        'Experimental setting/details': 'The methodology and appendices specify all cohorts, exact input histories, motion schedules, the fixed representation, grouped splits, ridge selection, baseline information, and source-only transfer. Capture-engineering amendments and superseded artifacts are retained; test prediction outcomes were not used to change the analysis.',
+        'Experiment statistical significance': 'Central intervals resample whole identities; new motion intervals resample whole paired-variant families, stratified by layout and motion type. Both use 10,000 draws. The intervals condition on fitted probes, are descriptive, and are not simultaneous bounds across every comparison. The paper distinguishes identity or family averages from pooled frame errors.',
+        'Licenses for existing assets': r'MineWorld and Fabric are credited under their respective MIT and Apache-2.0 licenses. VideoMAE-S and its official pretrained source are credited under CC-BY-NC-4.0 and used for noncommercial research. Minecraft game files and pretrained model weights are not redistributed in the compact snapshot. Asset provenance and upstream links are included.',
+        'New assets': 'The snapshot documents schemas, exact schedules and splits, preprocessing, model provenance, prediction files, uncertainty calculations, validation, and execution commands. It distinguishes CPU prediction-to-statistics reconstruction from full inference and from the separately pending verification of anonymous distribution.',
+    }
+    for heading,justification in justifications.items():
+        pattern=r'(\\item \{\\bf '+re.escape(heading)+r'\}.*?\\item\[\] Justification: )(.+?)(?=\n\n)'
+        checklist,count=re.subn(pattern,lambda match:match.group(1)+justification,checklist,flags=re.S)
+        assert count==1,heading
+    (PAPER/'checklist.tex').write_text(checklist)
     print('EXTENSION_PAPER_GENERATED',flush=True)
 
 if __name__=='__main__':main()

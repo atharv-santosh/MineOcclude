@@ -19,6 +19,16 @@ Those preserved studies additionally use Pillow and Matplotlib as documented in
 their respective readmes. The new script verifies its file inventory and compares
 reconstructed values to the locked results at an absolute tolerance of 1e-8.
 
+With Matplotlib installed, regenerate both extension figures without inference:
+
+```
+python extension/source/make_figures.py --root extension --output reconstructed-extension-figures
+```
+
+Use a new output directory: the generator preserves existing figures rather than
+silently overwriting them. The numerical replay above is the correctness check;
+PDF timestamps are not expected to be byte-identical between machines.
+
 ## Contents and scope
 
 The extension includes row-level held-out predictions, targets, fold membership,
@@ -34,8 +44,11 @@ VideoMAE-S uses the official MCG-NJU VideoMAE pretrained Kinetics-400 small mode
 The upstream license is CC-BY-NC-4.0; this scientific comparison is noncommercial.
 Official source: https://github.com/MCG-NJU/VideoMAE .
 
-Pilot failures and the bounded high-velocity revision are retained. Pilots never
-enter production fits or reported scientific intervals. The identical-input
+Pilot failures and all bounded motion/approach revisions are retained. An initial
+training capture exposed insufficient visible approach; its superseded artifacts
+were archived before a uniform approach amendment and before held-out capture or
+fitting. The original lock and amended lock are both included. Engineering-only
+captures never enter production fits or reported scientific intervals. The identical-input
 control is explicitly constructed and is not presented as an empirical test of
 successful hidden-future identification.
 

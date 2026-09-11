@@ -16,7 +16,9 @@ def export(fig,name):
     plt.close(fig)
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--central-only',action='store_true');a=p.parse_args()
+    global ROOT,PAPER
+    p=argparse.ArgumentParser();p.add_argument('--central-only',action='store_true');p.add_argument('--root',type=Path,default=ROOT);p.add_argument('--output',type=Path,default=PAPER);a=p.parse_args()
+    ROOT=a.root;PAPER=a.output
     plt.rcParams.update({'font.family':'serif','font.serif':['STIXGeneral'],'mathtext.fontset':'stix','font.size':8,'axes.labelsize':8,'axes.titlesize':9,'axes.spines.top':False,'axes.spines.right':False,'pdf.fonttype':42,'ps.fonttype':42})
     if not (PAPER/'transfer_opacity.pdf').exists():
         fig,axes=plt.subplots(1,2,figsize=(5.5,2.55),layout='constrained')
@@ -60,11 +62,11 @@ def main():
         axes[0].barh(y,v,color=colors,height=.65)
         axes[0].errorbar(v,y,xerr=np.maximum(0,np.stack([v-ci[:,0],ci[:,1]-v])),fmt='none',ecolor='black',capsize=2,lw=.7)
         axes[0].set_yticks(y,labels);axes[0].invert_yaxis();axes[0].set_xlabel('RMSE (blocks)')
-        axes[0].set_title('(a) Opaque, ages 1–10',loc='left')
+        axes[0].set_title('(a) Opaque, ages 1-10',loc='left')
         for model,label,color in [('MW_700M','MineWorld','#6a3d9a'),('VIDEOMAE_S','VideoMAE-S','#238b45'),('PIXEL_HISTORY16','History pixels','#d95f02'),('META_CUBIC','Direction + age','#525252')]:
             rs=[get(model,'L4',lo,hi) for lo,hi in [(1,10),(11,15),(16,19)]];v=np.array([r['mean'] for r in rs]);ci=np.array([r['ci'] for r in rs])
             axes[1].errorbar(range(3),v,yerr=np.maximum(0,np.stack([v-ci[:,0],ci[:,1]-v])),color=color,marker='o',markersize=3,capsize=2,lw=1,label=label)
-        axes[1].set_xticks(range(3),['1–10','11–15','16–19']);axes[1].set_xlabel('Occlusion age');axes[1].set_ylabel('RMSE (blocks)');axes[1].set_title('(b) Available-history boundary',loc='left')
+        axes[1].set_xticks(range(3),['1-10','11-15','16-19']);axes[1].set_xlabel('Occlusion age');axes[1].set_ylabel('RMSE (blocks)');axes[1].set_title('(b) Available-history boundary',loc='left')
         axes[1].legend(frameon=False,fontsize=7)
         for ax in axes:ax.grid(axis='x' if ax is axes[0] else 'y',color='.9',lw=.5);ax.set_axisbelow(True)
         export(fig,'matched_motion_results')
