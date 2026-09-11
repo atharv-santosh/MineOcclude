@@ -1,0 +1,56 @@
+{
+  "schema_version": "mineocclude-experiment-iii-supersession-v1",
+  "classification": "SUPERSEDED_BY_POST_PRODUCTION_A9_IMPLEMENTATION_REPAIR",
+  "evidence_status": [
+    "VALID_AT_TIME_OF_EXECUTION",
+    "PRESERVED",
+    "NOT_ELIGIBLE_FOR_FINAL_CONFIRMATORY_ANALYSIS_AFTER_REFREEZE"
+  ],
+  "not_corrupted": true,
+  "authority_version": "v1.8",
+  "authority_changed": false,
+  "authority_binding": {
+    "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+    "MACHINE_AUTHORITY_SHA256": "22f236786013b6bf3d0b702523a2990d145d6b4e0bfb0140ddbefc4e5526613b",
+    "PHASE0_DESIGN_SHA256": "be3ccd97525434659dc39b3be36e6046ceebaeab2a33db81ce18c139e19c8e4c"
+  },
+  "predecessor_source_closure_sha256": "f9fba4b5ef0380f0d6cbff07eae9b04f65cd4b649fe0eb13eaca6046cfd8ba0a",
+  "predecessor_p2_package_sha256": "7d94a1c794cd115fb1e8d17e71944c66608af5f56b172b07e7c1cc865484c9d8",
+  "predecessor_head_commit": "03a1174f44aacc31b54ec67815fad677792136b8",
+  "predecessor_a7": {
+    "status": "PASS",
+    "capture_count": 125,
+    "durable_count": 125,
+    "target_rows": 2375,
+    "identities": 25,
+    "retries": 0,
+    "duplicate_accepted_units": 0,
+    "failed_or_error_records": 0
+  },
+  "predecessor_a8": {
+    "status": "PASS",
+    "N_complete": 25,
+    "analysable_units": 125,
+    "analysable_target_rows": 2375,
+    "attrition_branch": "NORMAL",
+    "imputed_cells": 0,
+    "dropped_conditions": 0
+  },
+  "predecessor_a9": {
+    "status": "FAILED_BEFORE_FIRST_FORWARD",
+    "return_code": 1,
+    "blocker_code": "P1_INCOMPLETE",
+    "forwards": 0,
+    "arrays": 0,
+    "failed_unit": "e3_t01__L0",
+    "ledger_units": 6,
+    "ledger_terminal_complete": 0
+  },
+  "supersession_reason": "A9 production extraction could not run: the qualified P1 extraction engine accepted the injected roster_check and stage and then ignored both, applying the hardcoded A5 pilot roster gate and A5 stage label to production identities. Repairing the shared implementation changes the source closure, and frozen A6 holds that re-freezing after production has begun invalidates every capture bound to the superseded P2 package.",
+  "no_production_outcome_inspected": true,
+  "prediction_lock_created": false,
+  "reuse_policy": "OLD_CAPTURE_REUSE_COUNT must remain 0; predecessor captures may never be grandfathered into the successor P2 cohort",
+  "corpus_manifest": "CORPUS_SHA256_MANIFEST.txt",
+  "corpus_manifest_sha256": "7709b36734e3990c0a501b588f4891f8688d9163a94ae004f968aeb986ad9373",
+  "corpus_file_count": 24516
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "mineocclude-experiment-iii-a-final-trajectory-archives-v1",
+  "release_tag": "exp3a-final-trajectories-v1",
+  "repository": "atharv-santosh/MineOcclude",
+  "repository_visibility": "private",
+  "archive_format": "tar.gz",
+  "archive_root": "captures/",
+  "archive_count": 5,
+  "total_archive_bytes": 1671039048,
+  "reconstitutes": {
+    "file_count": 24500,
+    "byte_count": 1746151209,
+    "frame_count": 22500,
+    "capture_count": 125
+  },
+  "extract_instructions": "Extract every part into data/experiment_iii/final_trajectories/ (tar -xzf <part> -C data/experiment_iii/final_trajectories). The JSON/JSONL files in the archives are byte-identical to the ones already committed in this branch; the 22,500 PNG frames exist only in the archives.",
+  "verification": "sha256sum -c SHA256SUMS.txt (run from data/experiment_iii/final_trajectories/)",
+  "generated_at_utc": "2026-09-11T02:27:06.036240+00:00",
+  "assets": [
+    {
+      "asset": "mineocclude_exp3a_final_trajectories_part1_of_5_e3_t01-t05.tar.gz",
+      "sha256": "c1aecc840586bf1bbe547b5c5f474a9b09d5b4b11b08137d0669cf6348d230c8",
+      "bytes": 334174938,
+      "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-final-trajectories-v1/mineocclude_exp3a_final_trajectories_part1_of_5_e3_t01-t05.tar.gz"
+    },
+    {
+      "asset": "mineocclude_exp3a_final_trajectories_part2_of_5_e3_t06-t10.tar.gz",
+      "sha256": "c25c1226513d93cfe129cb201314ad667bc61a7bc02533b5c5c40e5822f9d992",
+      "bytes": 334178042,
+      "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-final-trajectories-v1/mineocclude_exp3a_final_trajectories_part2_of_5_e3_t06-t10.tar.gz"
+    },
+    {
+      "asset": "mineocclude_exp3a_final_trajectories_part3_of_5_e3_t11-t15.tar.gz",
+      "sha256": "46666261b35a8c899031e43c5ed1d9e24236b38253f82682c7e240e5735b97e5",
+      "bytes": 334228032,
+      "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-final-trajectories-v1/mineocclude_exp3a_final_trajectories_part3_of_5_e3_t11-t15.tar.gz"
+    },
+    {
+      "asset": "mineocclude_exp3a_final_trajectories_part4_of_5_e3_t16-t20.tar.gz",
+      "sha256": "9ec9133282e9c29678cc5520d66d489f690ede5b9a5c984dafc50ec683a59fb1",
+      "bytes": 334232383,
+      "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-final-trajectories-v1/mineocclude_exp3a_final_trajectories_part4_of_5_e3_t16-t20.tar.gz"
+    },
+    {
+      "asset": "mineocclude_exp3a_final_trajectories_part5_of_5_e3_t21-t25.tar.gz",
+      "sha256": "64ee7bd814fb69ea245c792ff3f4ece4f7b37b16d2b858eeb2f482d857c7b074",
+      "bytes": 334225653,
+      "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-final-trajectories-v1/mineocclude_exp3a_final_trajectories_part5_of_5_e3_t21-t25.tar.gz"
+    }
+  ]
+}

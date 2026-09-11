@@ -1,0 +1,5 @@
+# The published corpus must be byte-exact. Disable all text/eol normalisation so
+# that every committed capture artifact hashes identically to the original A7
+# production bytes recorded in SHA256SUMS.txt.
+* -text
+README.md text eol=lf

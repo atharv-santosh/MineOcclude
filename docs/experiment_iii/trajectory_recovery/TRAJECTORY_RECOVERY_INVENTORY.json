@@ -1,0 +1,195 @@
+{
+  "schema_version": "mineocclude-experiment-iii-a-trajectory-recovery-inventory-v1",
+  "generated_at_utc": "2026-09-11T02:29:59.597382+00:00",
+  "objective": "Recover, verify and publish the FINAL Experiment III-A graded-partial-observability production capture corpus.",
+  "dataset_classification": "FINAL_ORIGINAL_CORPUS_RECOVERED",
+  "regeneration_required": false,
+  "regeneration_performed": false,
+  "target_identity": {
+    "authority_version": "v1.8",
+    "AUTHORITY_SHA256": "472eae5eac83a2709808e64aa449a2ffba24a5a12715b4f1645ce88a3094a9f4",
+    "final_implementation_commit": "a91502ce2cd421721f8c638eaeea013a1fcddaf1",
+    "final_implementation_tree": "3846709e257377bbd8a26aefa10621b77a23ae87",
+    "final_source_closure": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+    "final_p2_package_sha256": "f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8"
+  },
+  "search_scope": {
+    "filesystem_roots": [
+      "/home/sagemaker-user",
+      "/opt/ml",
+      "/tmp",
+      "/mnt/sagemaker-nvme"
+    ],
+    "git_repositories_enumerated": [
+      "/home/sagemaker-user/MineOcclude (+9 worktrees)",
+      "/home/sagemaker-user/exp3-shadow-pipeline",
+      "/home/sagemaker-user/MineWorld-Upstream",
+      "/home/sagemaker-user/MineOcclude-Continuation",
+      "/home/sagemaker-user/mineocclude-p11-me/operational",
+      "/home/sagemaker-user/mineocclude-p11-ayman/operational",
+      "/home/sagemaker-user/p11_owner_bootstrap/operational",
+      "/home/sagemaker-user/p11_owner_scientific_branch_173a3ca3",
+      "/home/sagemaker-user/mineocclude-v37*-rehearsal/repo",
+      "/home/sagemaker-user/mineocclude-v4*-qual/repo"
+    ],
+    "untracked_and_ignored_included": true,
+    "auxiliary_roots_inspected": [
+      "exp3-incoming",
+      "exp3-a7-download",
+      "exp3-download",
+      "exp3-p2-handoff",
+      "exp3-p2-ops",
+      "exp3-p2-work",
+      "exp3-p1-ops",
+      "exp3-gpu-scratch",
+      "exp3-terminal-ops",
+      "exp3-a2-windows-transfer",
+      "exp3-capture-toolchain",
+      "mineocclude-exp3-runtime",
+      "exp3-shadow-pipeline"
+    ],
+    "s3_buckets_enumerated": [
+      "s3://sagemaker-us-east-1-323206973672"
+    ],
+    "s3_prefix_inventoried": "s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/",
+    "s3_object_count": 48,
+    "s3_total_bytes": 2249414717,
+    "s3_capture_corpus_present": false,
+    "s3_note": "The Experiment III prefix holds the A19 final scientific package, P2 freeze packages and P0/P1 transfer bundles. It contains no A7 production capture corpus, in any form, compressed or otherwise."
+  },
+  "candidates": [
+    {
+      "id": "FINAL_PRODUCTION",
+      "root": "/home/sagemaker-user/MineOcclude-Exp3/data/experiment_iii/production/captures",
+      "git_status": "untracked working-tree content of worktree MineOcclude-Exp3 (branch exp3-sagemaker-gpu, HEAD 96a045b)",
+      "source_closure": "cdee2a8ba0f6093fc6d9c961718adbee5315e71f1c640bbb1570f0e5b3b10dd0",
+      "p2_package_sha256": "f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8",
+      "capture_count": 125,
+      "identity_count": 25,
+      "condition_count": 5,
+      "identities": "e3_t01..e3_t25",
+      "conditions": [
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "files_per_capture": 196,
+      "file_count": 24500,
+      "frame_count": 22500,
+      "target_rows": 2375,
+      "total_bytes": 1746151209,
+      "receipt_count": 125,
+      "stage_label": "A7",
+      "a7_status": "COMPLETE",
+      "a8_status": "PASS",
+      "a19_closure": "COMPLETE",
+      "mtime_range_utc": [
+        "2026-09-02T03:09:39Z",
+        "2026-09-02T03:57:27Z"
+      ],
+      "durable_receipt_verification": {
+        "files_checked": 24500,
+        "mismatches": 0,
+        "missing": 0,
+        "unlisted_on_disk": 0
+      },
+      "classification": "FINAL",
+      "published": true
+    },
+    {
+      "id": "SUPERSEDED_7d94a1c7",
+      "root": "/home/sagemaker-user/MineOcclude-Exp3/data/experiment_iii/superseded_production/a7_p2_7d94a1c7_superseded_by_post_production_a9_implementation_repair",
+      "source_closure": "f9fba4b5ef0380f0d6cbff07eae9b04f65cd4b649fe0eb13eaca6046cfd8ba0a",
+      "p2_package_sha256": "7d94a1c794cd115fb1e8d17e71944c66608af5f56b172b07e7c1cc865484c9d8",
+      "head_commit": "03a1174f44aacc31b54ec67815fad677792136b8",
+      "capture_count": 125,
+      "identity_count": 25,
+      "condition_count": 5,
+      "file_count": 24500,
+      "corpus_tree_file_count": 24518,
+      "frame_count": 22500,
+      "target_rows": 2375,
+      "total_bytes": 1746160774,
+      "receipt_count": 125,
+      "stage_label": "A7",
+      "mtime_range_utc": [
+        "2026-09-01T21:43:15Z",
+        "2026-09-01T22:32:58Z"
+      ],
+      "classification": "SUPERSEDED_BY_POST_PRODUCTION_A9_IMPLEMENTATION_REPAIR",
+      "evidence_status": [
+        "VALID_AT_TIME_OF_EXECUTION",
+        "PRESERVED",
+        "NOT_ELIGIBLE_FOR_FINAL_CONFIRMATORY_ANALYSIS_AFTER_REFREEZE"
+      ],
+      "published": false,
+      "exclusion_reason": "Different run under a different implementation. Same cardinality as the final cohort (125/22500/2375) but a different total byte count and a different source closure and P2 package. This is the decoy the recovery had to avoid."
+    },
+    {
+      "id": "SUPERSEDED_0d286dde",
+      "root": "/home/sagemaker-user/MineOcclude-Exp3/data/experiment_iii/superseded_production/a7_p2_0d286dde_superseded_by_post_launch_implementation_repair",
+      "source_closure": "a559c7fc5435bd66ed771adb2f367c12105654aae1a76d2e9d133a37786ca746",
+      "p2_package_sha256": "0d286dde (abbreviated in path)",
+      "capture_count": 56,
+      "file_count": 10976,
+      "frame_count": 10080,
+      "total_bytes": 783787954,
+      "stage_label": "A7",
+      "mtime_range_utc": [
+        "2026-09-01T20:08:51Z",
+        "2026-09-01T20:30:48Z"
+      ],
+      "classification": "SUPERSEDED_BY_POST_LAUNCH_IMPLEMENTATION_REPAIR",
+      "published": false,
+      "exclusion_reason": "Partial, aborted predecessor run (56 of 125 units). Not a candidate."
+    },
+    {
+      "id": "SHADOW_PIPELINE_FIXTURE",
+      "root": "/home/sagemaker-user/exp3-shadow-pipeline/data/experiment_iii/production/captures",
+      "source_closure": "shadow",
+      "capture_count": 125,
+      "file_count": 3500,
+      "frame_count": 2375,
+      "total_bytes": 1685419997,
+      "classification": "SYNTHETIC_SHADOW_PIPELINE_FIXTURE",
+      "published": false,
+      "exclusion_reason": "Shadow test harness output. Its ledger records carry the literal source_closure 'shadow'; 19 frames per unit rather than 180. Not production capture bytes."
+    }
+  ],
+  "s3_findings": [
+    {
+      "prefix": "mineocclude/experiment_iii/final_scientific_package_a19_p2_f0e9d954_lock_2a25bcb0/",
+      "contains": "A19 final scientific package (13 artifacts) bound to final P2 f0e9d954",
+      "capture_bytes": false
+    },
+    {
+      "prefix": "mineocclude/experiment_iii/p2/",
+      "contains": "6 P2 freeze packages incl. p2_freeze_final_v1_8_cdee2a8b",
+      "capture_bytes": false
+    },
+    {
+      "prefix": "mineocclude/experiment_iii/transfer/",
+      "contains": "P0/P1 evidence and GPU handoff bundles (P1 pilot, not III-A production)",
+      "capture_bytes": false
+    }
+  ],
+  "publication": {
+    "method": "GITHUB_RELEASE_ASSETS_PLUS_BRANCH_COMMITTED_METADATA",
+    "git_lfs_used": false,
+    "git_lfs_rationale": "git-lfs is not installed on this host (installable from conda-forge/apt) and the GitHub LFS batch endpoint accepts uploads, but the 1.63 GiB corpus exceeds the free 1 GiB LFS storage allowance and would be metered against a 1 GiB/month LFS bandwidth allowance on an account this session does not administer (push permission only, no admin). Exhausting that quota would make the dataset undownloadable and could not be remedied from here. Release assets carry a 2 GiB per-asset limit, are not metered, and were used instead.",
+    "branch": "data/experiment-iii-final-trajectories",
+    "base_commit": "96a045b",
+    "release_tag": "exp3a-final-trajectories-v1",
+    "committed_in_branch": "README, MANIFEST.json, SHA256SUMS.txt (24500 lines), ARCHIVES.json, verify_corpus.sh, provenance receipts, and all 2000 JSON/JSONL capture files byte-exact",
+    "released_as_assets": "5 tar.gz archives carrying all 24500 files including the 22500 PNG frames",
+    "excluded": [
+      "A9 model activations (~19 GiB .npy)",
+      "P1 pilot corpus",
+      "both superseded cohorts",
+      "shadow-pipeline fixture"
+    ]
+  },
+  "blockers": []
+}
