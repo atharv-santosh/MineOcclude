@@ -25,6 +25,10 @@ def main():
         if p.suffix in ('.tex','.bib','.sty','.pdf','.png') and p.name not in ('paper.tex','paper.pdf'):
             if not (PAPER/p.name).exists():shutil.copy2(p,PAPER/p.name)
     stats=read(ROOT/'motion/statistics.json')
+    histories=[r for r in read(ROOT/'motion/final_data_audit.json')['visible_history_by_identity'] if r['partition']=='test']
+    assert len(histories)==128
+    primary_history=[n for r in histories for n in r['visible_prior_counts'][:10]]
+    history_fraction=100*sum(n>0 for n in primary_history)/len(primary_history)
     def m(model='MW_700M',condition='L4',lo=1,hi=10,layout='pooled',source=None):
         s=source or ('METADATA' if model.startswith(('META','ORACLE')) else condition)
         return next(r for r in stats['summaries'] if r['model']==model and r['source']==s and r['condition']==condition and r['layout']==layout and r['ages']==[lo,hi])['rmse']['mean']
@@ -107,6 +111,8 @@ With one fixed overlay texture, native MineWorld RMSE is 0.085, 0.088, 0.093, 0.
     result=f'''\\subsection{{Held-out paired motions}}
 \\label{{sec:fresh-results}}
 On the 64 held-out families, opaque error at ages 1--10 is {m():.3f} blocks for MineWorld, {m('PIXEL_HISTORY16'):.3f} for history pixels, and {m('VIDEOMAE_S'):.3f} for VideoMAE-S (\\autoref{{fig:matched-motion}}). The paired MineWorld-minus-history-pixel difference is {diff('PIXEL_HISTORY16')['mean']:.3f}, interval {ci(diff('PIXEL_HISTORY16'))}; the corresponding difference against VideoMAE-S is {diff('VIDEOMAE_S')['mean']:.3f}, interval {ci(diff('VIDEOMAE_S'))}. These family-based intervals retain both motion variants together.
+
+Among stone windows at ages 1--10, {history_fraction:.1f}\\% retain a prior frame with detected sheep pixels. This measures available image evidence, not its position localizability; all age-bin counts appear in \\autoref{{tab:motion-history-audit}}.
 
 Linear direction/age gives {m('META_LINEAR'):.3f} blocks, cubic direction/age {m('META_CUBIC'):.3f}, and the additional privileged motion-type information {m('META_FAMILY'):.3f}. Oracle constant velocity gives {m('ORACLE_CV'):.3f}. The comparison therefore reports remaining schedule predictability alongside neural accuracy instead of treating varied speed, stops, or reversals as sufficient evidence of memory.
 

@@ -9,6 +9,13 @@ def table(caption,label,headers,rows):
 def main():
     stats=read(ROOT/'motion/statistics.json')
     text=[r'\section{Complete evidence-extension results}',r'\label{app:extension-results}']
+    histories=[r for r in read(ROOT/'motion/final_data_audit.json')['visible_history_by_identity'] if r['partition']=='test']
+    assert len(histories)==128
+    history_rows=[]
+    for lo,hi in [(1,10),(11,15),(16,19)]:
+        counts=[n for r in histories for n in r['visible_prior_counts'][lo-1:hi]]
+        history_rows.append([f'{lo}--{hi}',str(len(counts)),f'{100*sum(n>0 for n in counts)/len(counts):.1f}\\%',f'{sum(counts)/len(counts):.2f}',f'{min(counts)}--{max(counts)}'])
+    text.append(table('Observed input-history audit of the 128 held-out motion variants in stone. A prior frame is counted when the fixed sheep-color detector finds more than 20 sheep-colored pixels. These descriptive input counts do not establish position localizability and are not independent statistical samples. Current scored frames contain no detected sheep pixels.','tab:motion-history-audit',['Ages','Windows','Any prior evidence','Mean frames','Range'],history_rows))
     for source in ['L0','L4']:
         for layout in ['pooled','layout_01','layout_04']:
             rows=[]

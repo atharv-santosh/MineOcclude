@@ -23,7 +23,7 @@ $savedBytecode = $env:PYTHONDONTWRITEBYTECODE
 $env:PYTHONDONTWRITEBYTECODE = '1'
 Push-Location $replayDirectory
 try {
-    & $python '-c' 'import importlib.util; assert importlib.util.find_spec("torch") is None; import numpy, matplotlib, PIL; print("ISOLATED_CPU_ENVIRONMENT", numpy.__version__, matplotlib.__version__, PIL.__version__)' 2>&1 | Out-File 'environment.log' -Encoding utf8
+    & $python (Join-Path $PSScriptRoot 'check_cpu_environment.py') 2>&1 | Out-File 'environment.log' -Encoding utf8
     if ($LASTEXITCODE -ne 0) { throw 'CPU-only environment validation failed' }
     & $python 'reproduce_all.py' 2>&1 | Out-File 'preserved-studies.log' -Encoding utf8
     if ($LASTEXITCODE -ne 0) { throw 'Preserved-study CPU replay failed' }
