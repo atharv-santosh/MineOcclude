@@ -15,6 +15,7 @@ runtime byte stream or an index derived from one, and the derived ones say so in
 | P2 package | `f0e9d954d187acdf2a479683cde40bd89d4cae5a8fabc6b3cefb010f0f99f7a8` |
 | Implementation commit | `a91502ce2cd421721f8c638eaeea013a1fcddaf1` (tree `3846709e…`) |
 | Prediction-lock seal | `2a25bcb01107a2b4e899bf5575c116d86a12400ca3aa5c12e6339f866778ddf9` |
+| Release | `exp3a-reproducibility-v1` (A11 feature blocks, 6 × `tar.gz`, 1.28 GiB) |
 | Run | A7 → A19, 2026-09-02T03:08:28Z → 05:33:11Z, `errors_seen=0`, closure `EXPERIMENT_III_COMPLETE` |
 | Cohort | 25 identities × 5 conditions = 125 captures · 22,500 frames · 2,375 target rows |
 
@@ -47,6 +48,7 @@ reproducibility/experiment_iii_a/
         FEATURE_BLOCK_INDEX.json      750 A11 blocks, hashed, bound to the lock seal
         ACTIVATION_INDEX.json         750 A9 arrays, hashed against A9's own inventories
         S3_ARTIFACT_INDEX.json        every Experiment III S3 object and what it is
+        RELEASE_ASSETS.json           the feature-block release assets, hashed and verified
     legacy_bgr/
         README.md                     the channel-order forensics — read this before results
         CHANNEL_ORDER_MANIFEST.json   every artifact classified by channel condition
@@ -93,19 +95,23 @@ for f in mineocclude_exp3a_final_trajectories_part*.tar.gz; do tar -xzf "$f"; do
 ./verify_corpus.sh        # FULL_CORPUS_VERIFY=OK (24500 files)
 cd -
 
-# (c) the big derived arrays, from the durable S3 archive
-aws s3 sync s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/a11_feature_blocks_p2_f0e9d954_lock_2a25bcb0/ \
-            data/experiment_iii/features/                       #  2.9 GB, 750 arrays
+# (c) the A11 feature blocks -- the direct A12 inputs. No AWS needed.
+gh release download exp3a-reproducibility-v1 -p '*.tar.gz' -D /tmp/fb
+for f in /tmp/fb/mineocclude_exp3a_a11_feature_blocks_*.tar.gz; do
+  tar -xzf "$f" -C data/experiment_iii/
+done                                                    #  2.9 GB unpacked, 750 arrays
+
+# (d) OPTIONAL -- the raw A9 activations, only if you want to re-run A11 itself.
+#     19.6 GB; S3 only, needs credentials for that account.
 aws s3 sync s3://sagemaker-us-east-1-323206973672/mineocclude/experiment_iii/a9_production_activations_p2_f0e9d954_lock_2a25bcb0/ \
-            data/experiment_iii/production/activations/         # 19.6 GB, 876 objects
+            data/experiment_iii/production/activations/
 ```
 
-Step (c) needs credentials for that account. If you do not have them, the package is still
-self-contained for everything except re-running A11/A12 from raw activations: the sealed
-predictions, all targets, all folds and all results are in this branch.
+Steps (a)–(c) need no AWS access at all. Step (d) is only required to re-derive the feature
+blocks from raw residuals; (c) already gives you what A12 consumed.
 
-Re-deriving the statistics needs nothing but `prediction_lock/PREDICTION_LOCK.json` — it carries
-both the prediction and the target for all 23,750 cells.
+Re-deriving the statistics needs neither: `prediction_lock/PREDICTION_LOCK.json` carries both the
+prediction and the target for all 23,750 cells.
 
 ## 4. Verifying what you got
 

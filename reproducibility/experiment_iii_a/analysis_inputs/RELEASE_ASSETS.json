@@ -1,0 +1,84 @@
+{
+ "schema_version": "mineocclude-experiment-iii-a-reproducibility-release-assets-v1",
+ "generated_at_utc": "2026-09-11T04:13:32.995293+00:00",
+ "release_tag": "exp3a-reproducibility-v1",
+ "release_id": 386780800,
+ "release_html_url": "https://github.com/atharv-santosh/MineOcclude/releases/tag/exp3a-reproducibility-v1",
+ "repository": "atharv-santosh/MineOcclude",
+ "repository_visibility": "private",
+ "contains": "the 750 A11 feature blocks, one tar.gz per block, each rooted at features/<BLOCK>/",
+ "uncompressed_bytes": 2878368000,
+ "compressed_bytes": 1280577091,
+ "reconstitutes": {
+  "arrays": 750,
+  "captures": 125,
+  "blocks": 6,
+  "dtype": "float64",
+  "rows_per_array": 19
+ },
+ "extract": "for f in mineocclude_exp3a_a11_feature_blocks_*.tar.gz; do tar -xzf \"$f\" -C data/experiment_iii/; done",
+ "verification": "block_digest of every extracted array equals the value sealed into PREDICTION_LOCK.json feature_block_hashes; verified 750/750 after a full extract round-trip, and every asset re-downloaded from GitHub and re-hashed",
+ "activations_not_released": "The 750 A9 activation arrays (19.6 GB) are not release assets. They are in the S3 archive named in S3_ARTIFACT_INDEX.json and indexed with hashes in ACTIVATION_INDEX.json.",
+ "assets": [
+  {
+   "asset": "mineocclude_exp3a_a11_feature_blocks_CURRENT.tar.gz",
+   "asset_id": 556444669,
+   "bytes": 213279508,
+   "sha256": "17539f4d5b6e1aaa6b4e1d8ed6bdfac873f215d8c373d0fcffc2b15b4bd6e8e8",
+   "api_url": "https://api.github.com/repos/atharv-santosh/MineOcclude/releases/assets/556444669",
+   "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-reproducibility-v1/mineocclude_exp3a_a11_feature_blocks_CURRENT.tar.gz",
+   "block": "CURRENT",
+   "remote_verified": true
+  },
+  {
+   "asset": "mineocclude_exp3a_a11_feature_blocks_CURRENT_L04.tar.gz",
+   "asset_id": 556444807,
+   "bytes": 215823831,
+   "sha256": "8422f8726169924104739781007070393878a527b90bf4229bcec7a2de42f87a",
+   "api_url": "https://api.github.com/repos/atharv-santosh/MineOcclude/releases/assets/556444807",
+   "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-reproducibility-v1/mineocclude_exp3a_a11_feature_blocks_CURRENT_L04.tar.gz",
+   "block": "CURRENT_L04",
+   "remote_verified": true
+  },
+  {
+   "asset": "mineocclude_exp3a_a11_feature_blocks_CURRENT_L10.tar.gz",
+   "asset_id": 556444932,
+   "bytes": 214864312,
+   "sha256": "effd878f5ab7a854fa27df7344e776f35925643d874a906b7da324e0810c94d8",
+   "api_url": "https://api.github.com/repos/atharv-santosh/MineOcclude/releases/assets/556444932",
+   "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-reproducibility-v1/mineocclude_exp3a_a11_feature_blocks_CURRENT_L10.tar.gz",
+   "block": "CURRENT_L10",
+   "remote_verified": true
+  },
+  {
+   "asset": "mineocclude_exp3a_a11_feature_blocks_CURRENT_MINUS_PREVIOUS.tar.gz",
+   "asset_id": 556445117,
+   "bytes": 207139620,
+   "sha256": "ef169ad02b23c5d90cf64cbe775dba9d989e0cb9458d727925e420d454c8a3e5",
+   "api_url": "https://api.github.com/repos/atharv-santosh/MineOcclude/releases/assets/556445117",
+   "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-reproducibility-v1/mineocclude_exp3a_a11_feature_blocks_CURRENT_MINUS_PREVIOUS.tar.gz",
+   "block": "CURRENT_MINUS_PREVIOUS",
+   "remote_verified": true
+  },
+  {
+   "asset": "mineocclude_exp3a_a11_feature_blocks_PIXEL_BASELINE.tar.gz",
+   "asset_id": 556445252,
+   "bytes": 3027104,
+   "sha256": "3717ad297d9fac3b439627c3f3c8de4fade06694433c569e5e28171190bd614a",
+   "api_url": "https://api.github.com/repos/atharv-santosh/MineOcclude/releases/assets/556445252",
+   "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-reproducibility-v1/mineocclude_exp3a_a11_feature_blocks_PIXEL_BASELINE.tar.gz",
+   "block": "PIXEL_BASELINE",
+   "remote_verified": true
+  },
+  {
+   "asset": "mineocclude_exp3a_a11_feature_blocks_TWO_FRAME_CONCAT.tar.gz",
+   "asset_id": 556445274,
+   "bytes": 426442716,
+   "sha256": "f0084798db9dc945354b59f137655b3919df128d53056b35a53089ae0878a42c",
+   "api_url": "https://api.github.com/repos/atharv-santosh/MineOcclude/releases/assets/556445274",
+   "download_url": "https://github.com/atharv-santosh/MineOcclude/releases/download/exp3a-reproducibility-v1/mineocclude_exp3a_a11_feature_blocks_TWO_FRAME_CONCAT.tar.gz",
+   "block": "TWO_FRAME_CONCAT",
+   "remote_verified": true
+  }
+ ]
+}
