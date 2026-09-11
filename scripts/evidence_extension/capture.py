@@ -33,14 +33,26 @@ def main():
     p.add_argument('--matched',action='store_true')
     p.add_argument('--retest-v2',action='store_true')
     p.add_argument('--retest-v3',action='store_true')
+    p.add_argument('--retest-v4',action='store_true')
+    p.add_argument('--worker',type=int,default=0)
+    p.add_argument('--workers',type=int,default=1)
+    p.add_argument('--parallel-check',action='store_true')
+    p.add_argument('--regression-check',action='store_true')
     a=p.parse_args()
     if a.production:
-        assert read(ROOT/'MOTION_ADMISSION.json')['status']=='PASS'
-    roster=MOTION_ROSTER if a.production else ROOT/('motion_pilot_retests_v3.json' if a.retest_v3 else 'motion_pilot_retests_v2.json' if a.retest_v2 else 'motion_pilots_matched.json' if a.matched else 'motion_pilots.json')
+        assert read(MOTION_ADMISSION)['status']=='PASS'
+        assert read(MOTION_ADMISSION)['production_roster_sha256']==sha(MOTION_ROSTER)
+    roster=MOTION_ROSTER if a.production else ROOT/('motion_pilot_retests_v4.json' if a.retest_v4 else 'motion_pilot_retests_v3.json' if a.retest_v3 else 'motion_pilot_retests_v2.json' if a.retest_v2 else 'motion_pilots_matched.json' if a.matched else 'motion_pilots.json')
     rows=read(roster)['rows']
+    if a.parallel_check:
+        rows=[r for r in read(ROOT/'motion_pilots_v4.json')['rows'] if r['family']=='velocity' and r['variant']==0 and r['rank']==0]
+    if a.regression_check:
+        rows=[r for r in read(MOTION_ROSTER)['rows'] if r['identity']=='e26_layout_01_train_velocity_04_v0']
+    assert 0<=a.worker<a.workers and a.workers<=2
+    if a.production and a.workers>1:assert read(ROOT/'PARALLEL_CAPTURE_VALIDATION.json')['status']=='PASS'
     if a.limit: rows=rows[:a.limit]
-    config=RuntimeConfig.from_json(ROOT/'runtime.json')
-    config.output_root=ROOT/f'capture_logs_{"production" if a.production else "pilot"}_{a.attempt}'
+    config=RuntimeConfig.from_json(ROOT/('runtime_worker1.json' if a.worker else 'runtime.json'))
+    config.output_root=ROOT/f'capture_logs_{"parallel_check" if a.parallel_check else "production" if a.production else "pilot"}_{a.attempt}_worker{a.worker}'
     original=driver.write_motion_schedule
     driver.write_motion_schedule=write_schedule
     try:
@@ -50,9 +62,10 @@ def main():
             print('CLIENT',runtime.start_client(),flush=True)
             sink=FrameSink(config.client_root/'mineocclude_client_out')
             for n,row in enumerate(rows):
+                if not a.parallel_check and n%a.workers!=a.worker:continue
                 for c in (['L0','L4'] if n%2==0 else ['L4','L0']):
                     unit=f'{row["identity"]}__{c}'
-                    destination=ROOT/('captures' if a.production else f'pilots_a{a.attempt}')/unit
+                    destination=ROOT/('regression_pilot' if a.regression_check else 'parallel_pilot' if a.parallel_check else 'captures' if a.production else f'pilots_a{a.attempt}')/unit
                     if (destination/'BANKED.json').exists():
                         assert read(destination/'BANKED.json')['spec_hash']==row['spec_hash']
                         continue

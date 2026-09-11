@@ -49,7 +49,7 @@ def main():
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
         for p in sorted(SNAP.rglob('*')):
             if p.is_file():z.write(p,p.relative_to(SNAP))
-    save(DEST/'reproduction_package.json',dict(sha256=sha(archive),bytes=archive.stat().st_size,files=sum(p.is_file() for p in SNAP.rglob('*')),anonymous_host_access='NOT_VERIFIED; owner login required to update existing September 1 snapshot')))
+    save(DEST/'reproduction_package.json',dict(sha256=sha(archive),bytes=archive.stat().st_size,files=sum(p.is_file() for p in SNAP.rglob('*')),anonymous_host_access='NOT_VERIFIED; owner login required to update existing September 1 snapshot'))
     print('EXTENSION_PACKAGE_CREATED',archive,archive.stat().st_size,flush=True)
 
 if __name__=='__main__':main()

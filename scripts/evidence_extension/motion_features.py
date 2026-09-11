@@ -8,8 +8,8 @@ from central_features import store
 from mineocclude.experiment_iii.baselines_pixel import pixel_features
 from mineocclude.experiment_iii.extent_geometry import counterfactual_extent_classes
 
-def info(row,c):
-    base=ROOT/'captures'/f'{row["identity"]}__{c}'
+def info(row,c,base=None):
+    base=base or ROOT/'captures'/f'{row["identity"]}__{c}'
     bank=read(base/'BANKED.json')
     assert bank['spec_hash']==row['spec_hash']
     assert all(sha(base/k)==v for k,v in bank['files'].items())
@@ -40,7 +40,8 @@ def info(row,c):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--mode',choices=['pixels','700M','300M','video'],required=True);p.add_argument('--watch',action='store_true');a=p.parse_args()
     rows=read(MOTION_ROSTER)['rows']
-    assert read(ROOT/'MOTION_ADMISSION.json')['status']=='PASS'
+    assert read(MOTION_ADMISSION)['status']=='PASS'
+    assert read(MOTION_ADMISSION)['production_roster_sha256']==sha(MOTION_ROSTER)
     ext=None; video=None
     if a.mode in ('700M','300M'):
         import features_diag as f

@@ -107,6 +107,7 @@ MineOcclude separates visual evidence, position accessibility, and trajectory pr
     pos=text.index(r'\clearpage\n\input{checklist}'.replace('\\n','\n'))
     appendix='\n\\clearpage\n\\section{Earlier variable-speed diagnostic summary}\n'+olddiagnostic.replace(r'\subsection{Fresh identities and history dependence}',r'\subsection{Preserved results}').replace(r'\label{sec:fresh-results}',r'\label{app:earlier-summary}')+'\n\\clearpage\n\\input{extension_methods}\n\\input{extension_results}\n'
     text=text[:pos]+appendix+text[pos:]
+    text=text.replace('Full type-specific, paired-contrast, and transfer results','Full paired-contrast and transfer results')
     assert '\u2014' not in text
     (PAPER/'paper.tex').write_text(text)
     shutil.copy2(Path(__file__).with_name('extension_methods.tex'),PAPER/'extension_methods.tex')

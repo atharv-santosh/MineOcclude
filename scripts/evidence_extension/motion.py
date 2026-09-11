@@ -18,7 +18,7 @@ def entry_position(layout_id,sign):
         else: outside=mid
     return inside+sign*.001
 
-def make(family, layout_id, partition, rank, variant, matched=False, revised_velocity=False, extended_approach=False):
+def make(family, layout_id, partition, rank, variant, matched=False, revised_velocity=False, extended_approach=False, velocity_approach=False):
     family_id=f'e26_{layout_id}_{partition}_{family}_{rank:02d}'
     seed=int.from_bytes(hashlib.sha256(family_id.encode()).digest()[:7],'big')
     rng=np.random.default_rng(seed)
@@ -69,7 +69,8 @@ def make(family, layout_id, partition, rank, variant, matched=False, revised_vel
     start,path,win=chosen
     if matched:
         matched_choice=None
-        for first in range(42 if extended_approach and family=='stop_resume' and variant==0 else 30,86):
+        minimum_first=42 if extended_approach and family=='stop_resume' and variant==0 else 36 if velocity_approach and family=='velocity' and variant==0 else 30
+        for first in range(minimum_first,86):
             trial_start=entry_position(layout_id,sign)-float(np.sum(velocities[:first+1])*.05)
             if abs(trial_start)>7.5: continue
             shifted=[]; x=trial_start

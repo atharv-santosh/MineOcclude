@@ -2,10 +2,14 @@ from common import *
 import numpy as np
 from PIL import Image
 from audit_pilots import measure
+import argparse
 
 def main():
-    config=read(ROOT/'motion_pilots_v3.json');roster=config['rows']
-    audit=read(ROOT/'pilot_audit_a3_64.json')
+    parser=argparse.ArgumentParser();parser.add_argument('--attempt',type=int,default=3);args=parser.parse_args()
+    attempt=args.attempt
+    config=read(ROOT/f'motion_pilots_v{attempt}.json');roster=config['rows']
+    audit_path=ROOT/f'pilot_audit_a{attempt}_{len(roster)*2}.json'
+    audit=read(audit_path)
     def frames(r):
         unit=r['identity']+'__L4'
         return ROOT/f'pilots_a{config["sources"][unit]}'/unit/'client/frames'
@@ -22,7 +26,8 @@ def main():
         areas={t:measure(base/f'{t:06d}.png')['area'] for t in range(180)}
         counts=[sum(areas[k]>20 for k in range(t-15,t)) for t in row['target_model_frame_indices']]
         histories.append(dict(identity=row['identity'],family=row['family'],visible_prior_counts=counts))
-    if not (ROOT/'PILOT_HISTORY_AUDIT_V3.json').exists():save(ROOT/'PILOT_HISTORY_AUDIT_V3.json',dict(histories=histories))
+    history_path=ROOT/f'PILOT_HISTORY_AUDIT_V{attempt}.json'
+    if not history_path.exists():save(history_path,dict(histories=histories))
     assert all(h['visible_prior_counts'][0]>=3 for h in histories),'Entry window lacks sufficient image evidence'
     pairs=[]
     for family in sorted({r['family_id'] for r in roster}):
@@ -39,8 +44,8 @@ def main():
         contrast=np.array(b['historical_FIR_reference_labels'])-a['historical_FIR_reference_labels']
         pairs.append(dict(family_id=family,history_pixel_mae_by_age=distance,target_contrast_by_age=contrast.tolist()))
     assert all(p['history_pixel_mae_by_age'][0]>.01 for p in pairs),'Matched histories not distinguishable at entry'
-    admission=dict(status='PASS',pilot_capture_count=64,pilot_audit_sha256=sha(ROOT/'pilot_audit_a3_64.json'),production_roster_sha256=sha(MOTION_ROSTER),analysis_sha256=sha(Path(__file__).with_name('MOTION_ANALYSIS.md')),sample_size_reason='Retain prospective 64 training and 64 held-out families; no production outcomes inspected',alignment_max_centered_rmse=max(r['fir_pixel_centered_rmse'] for r in aligned),alignment_max_offset=max(abs(r['fir_pixel_median_offset']) for r in aligned),histories=histories,pairs=pairs,claim_boundary='Distinct informative images at entry are necessary, not proof of exact parameter identification or model memory. Report decreasing observed-history support by age.')
-    save(ROOT/'MOTION_ADMISSION.json',admission)
+    admission=dict(status='PASS',pilot_capture_count=len(roster)*2,pilot_audit_sha256=sha(audit_path),production_roster_sha256=sha(MOTION_ROSTER),analysis_sha256=sha(Path(__file__).with_name('MOTION_ANALYSIS.md')),sample_size_reason='Retain 64 training and 64 held-out families; no fitted production outcomes inspected. Any capture-engineering amendments are separately recorded.',alignment_max_centered_rmse=max(r['fir_pixel_centered_rmse'] for r in aligned),alignment_max_offset=max(abs(r['fir_pixel_median_offset']) for r in aligned),histories=histories,pairs=pairs,claim_boundary='Distinct informative images at entry are necessary, not proof of exact parameter identification or model memory. Report decreasing observed-history support by age.')
+    save(ROOT/('MOTION_ADMISSION.json' if attempt==3 else f'MOTION_ADMISSION_V{attempt}.json'),admission)
     print('MOTION_ADMISSION_PASS',admission['alignment_max_centered_rmse'],flush=True)
 
 if __name__=='__main__':main()
