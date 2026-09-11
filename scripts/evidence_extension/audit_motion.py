@@ -6,14 +6,16 @@ from audit_pilots import measure
 
 def main():
     p=argparse.ArgumentParser(); p.add_argument('--attempt',type=int,default=0); a=p.parse_args()
-    rows=read(ROOT/('motion_pilots_matched.json' if a.attempt==1 else 'motion_pilots.json'))['rows']
+    roster=read(ROOT/(f'motion_pilots_v{a.attempt}.json' if a.attempt>=2 else 'motion_pilots_matched.json' if a.attempt==1 else 'motion_pilots.json'))
+    rows=roster['rows']
     reports=[]
     for row in rows:
         for c in ['L0','L4']:
             unit=f'{row["identity"]}__{c}'
-            base=ROOT/f'pilots_a{a.attempt}'/unit
+            base=ROOT/f'pilots_a{roster.get("sources",{}).get(unit,a.attempt)}'/unit
             if not (base/'BANKED.json').exists(): continue
             bank=read(base/'BANKED.json')
+            assert bank['spec_hash']==row['spec_hash']
             assert all(sha(base/k)==v for k,v in bank['files'].items())
             state=[json.loads(s) for s in (base/'server/server_state.jsonl').read_text().splitlines()]
             ticks=[json.loads(s) for s in (base/'client/client_tick.jsonl').read_text().splitlines()]

@@ -9,6 +9,7 @@ import sys
 SOURCE = Path(__file__).resolve().parents[2]
 ROOT = Path('/home/bpcfno/mineocclude-evidence-extension-20260911')
 OLD = Path('/home/bpcfno/mineocclude-history-diagnostic-20260911')
+MOTION_ROSTER = ROOT/'motion_production_v3.json'
 sys.path.insert(0, str(SOURCE/'src'))
 sys.path.append(str(SOURCE/'scripts/history_diagnostics'))
 sys.path.append(str(SOURCE/'scripts/generalization'))

@@ -3,6 +3,7 @@ import argparse
 import dataclasses
 import shutil
 import time
+import signal
 import numpy as np
 import mineocclude.experiment_iii.a5_capture as driver
 from pilot import CaptureRuntime,RuntimeConfig,FrameSink,CaptureUnitSpec,ConditionSpec,ConditionId
@@ -30,10 +31,12 @@ def main():
     p.add_argument('--limit',type=int)
     p.add_argument('--attempt',type=int,default=0)
     p.add_argument('--matched',action='store_true')
+    p.add_argument('--retest-v2',action='store_true')
+    p.add_argument('--retest-v3',action='store_true')
     a=p.parse_args()
     if a.production:
         assert read(ROOT/'MOTION_ADMISSION.json')['status']=='PASS'
-    roster=ROOT/('motion_production.json' if a.production else ('motion_pilots_matched.json' if a.matched else 'motion_pilots.json'))
+    roster=MOTION_ROSTER if a.production else ROOT/('motion_pilot_retests_v3.json' if a.retest_v3 else 'motion_pilot_retests_v2.json' if a.retest_v2 else 'motion_pilots_matched.json' if a.matched else 'motion_pilots.json')
     rows=read(roster)['rows']
     if a.limit: rows=rows[:a.limit]
     config=RuntimeConfig.from_json(ROOT/'runtime.json')
@@ -55,11 +58,22 @@ def main():
                         continue
                     assert not destination.exists()
                     episode=(12000000 if a.production else 11000000)+a.attempt*10000+n*10+int(c[1:])
-                    assert not sink.episode_dir(episode).exists()
-                    assert not (config.server_root/'mineocclude_out'/f'episode_{episode}').exists()
                     cond=ConditionSpec(ConditionId(c),'NO_WALL' if c=='L0' else 'WALL','minecraft:air' if c=='L0' else 'minecraft:stone',c!='L0','EVIDENCE_EXTENSION')
-                    spec=ScheduledSpec(unit,row['identity'],cond,episode,row['seed'],row['direction'],row['start_world_x'],0.,row['speed_blocks_per_second'],.05,180,row['path_sha256'],row['noise_sha256'],tuple(row['target_model_frame_indices']),row['spec_hash'],row['layout_id'],tuple(row['signed_velocities']),tuple(row['state_positions']))
-                    evidence=driver.capture_a5_unit(runtime,sink,spec,warmup_ticks=60,frame_timeout_seconds=300,server_episode_root=config.server_root/'mineocclude_out',server_run_root=config.server_root,witness_episode_id=episode+3000000)
+                    for retry in range(3):
+                        roots=[sink.root,config.server_root/'mineocclude_out']
+                        witness=episode+3000000
+                        if retry or any((root/f'episode_{episode}').exists() or any((root/f'episode_{witness+k}').exists() for k in range(3)) for root in roots):
+                            episode=driver.next_witness_episode_base(*roots)
+                            witness=episode+1
+                        assert all(not (root/f'episode_{episode}').exists() for root in roots)
+                        spec=ScheduledSpec(unit,row['identity'],cond,episode,row['seed'],row['direction'],row['start_world_x'],0.,row['speed_blocks_per_second'],.05,180,row['path_sha256'],row['noise_sha256'],tuple(row['target_model_frame_indices']),row['spec_hash'],row['layout_id'],tuple(row['signed_velocities']),tuple(row['state_positions']))
+                        try:
+                            evidence=driver.capture_a5_unit(runtime,sink,spec,warmup_ticks=60,frame_timeout_seconds=300,server_episode_root=config.server_root/'mineocclude_out',server_run_root=config.server_root,witness_episode_id=witness)
+                            break
+                        except Exception as error:
+                            save(ROOT/'capture_failures'/f'{unit}_{episode}.json',dict(unit=unit,episode=episode,error=str(error),client_path=str(sink.episode_dir(episode)),server_path=str(config.server_root/'mineocclude_out'/f'episode_{episode}'),disposition='Preserved raw failed attempt; not banked or used scientifically'))
+                            print('CAPTURE_REJECTED',unit,episode,str(error),flush=True)
+                            if retry==2:raise
                     destination.mkdir(parents=True)
                     shutil.copytree(sink.episode_dir(episode),destination/'client')
                     shutil.copytree(config.server_root/'mineocclude_out'/f'episode_{episode}',destination/'server')
@@ -71,4 +85,6 @@ def main():
         driver.write_motion_schedule=original
 
 if __name__=='__main__':
+    def stop_owned_runtime(signum,frame):raise KeyboardInterrupt('Capture supervisor requested shutdown')
+    signal.signal(signal.SIGTERM,stop_owned_runtime)
     main()
