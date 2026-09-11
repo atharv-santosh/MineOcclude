@@ -1,6 +1,8 @@
 """Generate a separate manuscript from validated observed results only."""
 from diag_common import *
 import shutil
+import zipfile
+import re
 
 OUT=ROOT/'analysis'
 PAPER=SOURCE/'history_diagnostic_outputs/paper'
@@ -19,6 +21,7 @@ def block(text,start,end):
 
 def main():
     assert read(OUT/'independent_validation.json')['status']=='PASS'
+    assert read(OUT/'comparator_replay_validation.json')['status']=='PASS'
     stats=read(OUT/'statistics.json')
     lookup={(r['model'],r['setting'],r['condition'],r['phase'],r['layout'],r['ages']):r for r in stats['summaries']}
     def metric(m='MW_700M',c='L4',phase='correct',layout='pooled',ages='1-10',setting='native'):
@@ -33,6 +36,12 @@ def main():
     for p in OLD.iterdir():
         if p.suffix in ('.tex','.bib','.sty','.pdf') and p.name not in ('paper.tex','paper.pdf'):
             shutil.copy2(p,PAPER/p.name)
+    kit=SOURCE/'history_diagnostic_outputs/official_neurips_2026_author_kit.zip'
+    assert sha(kit)=='82473931e3ef710fcd3f4a8cd4119b9de32e56825f90f9e5a6d55f2d01b817d9'
+    with zipfile.ZipFile(kit) as z:
+        (PAPER/'neurips_2026.sty').write_bytes(z.read('neurips_2026.sty'))
+        official_questions=re.findall(r'Question: (.*)',z.read('checklist.tex').decode())
+    save(PAPER.parent/'official_style_receipt.json',dict(status='PASS',source='https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip',author_kit_sha256=sha(kit),style_sha256=sha(PAPER/'neurips_2026.sty'),style_modified=False,official_checklist_questions=16))
     shutil.copy2(Path(__file__).parent/'diagnostic_appendix.tex',PAPER/'diagnostic_appendix.tex')
     text=(OLD/'paper.tex').read_text()
     text=replace_once(text,r'\title{MineOcclude: A Paired Visual-Evidence Benchmark for Object-Position Decoding}',r'\title{MineOcclude: Separating Visual Evidence, History, and Motion Predictability}')
@@ -114,15 +123,24 @@ MineOcclude provides a paired protocol for separating visual evidence, history-d
     text=replace_once(text,'\\clearpage\n\\input{checklist}',extra+'\\clearpage\n\\input{checklist}')
     (PAPER/'paper.tex').write_text(text)
     checklist=(PAPER/'checklist.tex').read_text()
+    current_questions=re.findall(r'Question: (.*)',checklist)
+    assert len(current_questions)==len(official_questions)==16
+    for old,new in zip(current_questions,official_questions):
+        checklist=checklist.replace('Question: '+old,'Question: '+new)
     checklist=checklist.replace('and the 75 newly captured extension identities,','the 75 newly captured extension identities, and the prospective 48-training/48-test split,')
     checklist=checklist.replace('and the fresh 75-identity extension.','the fresh 75-identity extension, and the prospective variable-speed diagnostic.')
     checklist=checklist.replace('linear decodability from causal memory or absent model state.','linear and small nonlinear readouts from causal memory or absent model state.')
+    declaration=checklist.index(r'\item {\bf Declaration of LLM usage}')
+    checklist=checklist[:declaration]+checklist[declaration:].replace(r'\answerNA{}',r'\answerYes{}',1).replace('No LLM served as an experimental predictor or generated the capture images, labels, or reported measurements. Assistance was used for implementation, debugging, and manuscript preparation. Numerical claims are bound to executed model predictions and explicit validation checks; no hypothetical results are included.',
+        'LLM assistance supported the prospective diagnostic design, implementation, analysis scripts, debugging, and manuscript preparation, as disclosed in the diagnostic appendix. It did not generate the capture images, targets, or reported numerical findings. Measurements are bound to executed captures and model predictions with explicit validation checks.')
     (PAPER/'checklist.tex').write_text(checklist)
     timings={p.stem:read(p) for p in (OUT/'job_logs').glob('*.json')}
     capture=read(ROOT/'capture_status.json')
     extract={m:read(OUT/f'{m}_complete.json') for m in ['700M','300M','pixels']}
     compute=f'''\\subsection{{Execution and reproducibility}}
 The new diagnostic uses the same RTX 5090, Ryzen 9 9950X3D, and 64 GB workstation. Production capture takes {capture['elapsed_seconds']/60:.2f} minutes. Streaming 700M, 300M, and pixel-feature jobs finish in {extract['700M']['seconds']/60:.2f}, {extract['300M']['seconds']/60:.2f}, and {extract['pixels']['seconds']/60:.2f} minutes including time waiting for captures, so these are overlapping wall times rather than isolated inference costs. CPU fitting takes {timings['fit_700M']['elapsed_seconds']:.1f}, {timings['fit_300M']['elapsed_seconds']:.1f}, and {timings['fit_pixels']['elapsed_seconds']:.1f} seconds for the respective jobs, also overlapping. All 40,128 prediction cells pass target/split joins, saved-fit replay, and independent arithmetic checks. The compact snapshot includes predictions, targets, splits, fitted selections, protocols, provenance, and a CPU-only statistics rebuild. Full recorded captures are archived separately without Minecraft binaries or model weights. Public access is reported separately from local reconstruction success.
+
+LLM assistance supported the prospective diagnostic design, implementation, analysis scripting, debugging, and manuscript revision. The reported measurements come from executed Minecraft captures and frozen MineWorld forwards, not generated numerical findings. Automated source, split, prediction, and arithmetic checks are supplied with the artifacts; they are not a claim of independent human replication.
 '''
     (PAPER/'diagnostic_compute.tex').write_text(compute)
     print('NEW_MANUSCRIPT_WRITTEN',flush=True)

@@ -11,6 +11,7 @@ SNAP=DEST/'anonymous_reproduction'
 OUT=ROOT/'analysis'
 TEXT_EXT={'.py','.json','.jsonl','.md','.txt','.tex','.bib','.sty','.yaml','.yml','.toml','.xml','.gradle','.properties','.sh','.bat'}
 PRIVATE=re.compile(r'gensa|sahilsinghthefirst|atharv-santosh|/home/bpcfno|[A-Z]:\\+Users\\+[^\\\s"\']+|gh[pousr]_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}',re.I)
+SOURCE_FOLDERS=['scripts/history_diagnostics','scripts/generalization','scripts/rgb_replication','src','fabric/mineocclude-mod/src','fabric/mineocclude-mod/gradle','reproducibility/experiment_iii_a/provenance']
 
 
 def copy(src,dest):
@@ -31,8 +32,8 @@ def sanitize_tree(root):
             continue
         text=p.read_text(errors='strict')
         cleaned=text.replace('/home/bpcfno','/opt/mineocclude').replace('atharv-santosh/MineOcclude','ANONYMOUS/MineOcclude')
-        cleaned=re.sub(r'(?i)[A-Z]:\\+Users\\+(?:gensa|sahilsinghthefirst)',r'C:\\Users\\researcher',cleaned)
-        cleaned=cleaned.replace('sahilsinghthefirst','researcher').replace('gensa','researcher')
+        cleaned=re.sub(r'(?i)[A-Z]:\\+Users\\+[^\\\s"\']+',r'C:\\research',cleaned)
+        cleaned=cleaned.replace('sahilsinghthefirst','researcher').replace('gensa','researcher').replace('atharv-santosh','ANONYMOUS')
         if text!=cleaned:
             original=sha(p); p.write_text(cleaned)
             changes.append(dict(path=str(p.relative_to(root)),original_sha256=original,public_sha256=sha(p),change='Local account/path anonymization only'))
@@ -59,13 +60,14 @@ def prestage():
 
 def complete():
     assert read(OUT/'independent_validation.json')['status']=='PASS'
+    assert read(OUT/'comparator_replay_validation.json')['status']=='PASS'
     assert SNAP.exists() and not (SNAP/'diagnostic').exists()
     d=SNAP/'diagnostic'; d.mkdir()
     copy(Path(__file__).parent/'statistics_diag.py',d/'statistics_diag.py')
     copy(Path(__file__).parent/'reproduce_diag.py',d/'reproduce.py')
     for p in (OUT/'predictions').glob('*.json'): copy(p,d/'predictions'/p.name)
     copy(OUT/'statistics.json',d/'statistics.json')
-    for name in ['roster.json','manifest.json','analysis_freeze.json','statistical_source_freeze.json','statistical_source_amendment.json','capture_admission.json','capture_status.json']:
+    for name in ['roster.json','manifest.json','analysis_freeze.json','statistical_source_freeze.json','statistical_source_amendment.json','comparator_audit_freeze.json','capture_admission.json','capture_status.json']:
         copy(ROOT/name,d/'configuration'/name)
     for name in ['PROTOCOL.md','ANALYSIS_FREEZE.md']:
         copy(Path(__file__).parent/name,d/'configuration'/name)
@@ -73,7 +75,7 @@ def complete():
         for p in (OUT/folder).glob('*'):
             if p.is_file() and (folder!='fits' or p.suffix=='.json'):
                 copy(p,d/folder/p.name)
-    for name in ['independent_validation.json','figure_provenance.json','analysis_complete.json','700M_complete.json','300M_complete.json','pixels_complete.json']:
+    for name in ['independent_validation.json','comparator_replay_validation.json','figure_provenance.json','analysis_complete.json','700M_complete.json','300M_complete.json','pixels_complete.json']:
         copy(OUT/name,d/'validation'/name)
     for model in ['700M','300M']:
         for p in (OUT/model).glob('*.json'): copy(p,d/'validation'/model/p.name)
@@ -91,7 +93,7 @@ def complete():
         t=info['target_model_frame_indices'][0]
         copy(ROOT/'captures'/unit/'client/frames'/f'{t:06d}.png',d/'examples'/f'{unit}__{t:06d}.png')
     execution=SNAP/'execution_source'
-    for folder in ['scripts/history_diagnostics','scripts/generalization','scripts/rgb_replication','src','fabric/mineocclude-mod/src','fabric/mineocclude-mod/gradle','reproducibility/experiment_iii_a/provenance']:
+    for folder in SOURCE_FOLDERS:
         shutil.copytree(SOURCE/folder,execution/folder,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
     for name in ['build.gradle','settings.gradle','gradle.properties','gradlew','gradlew.bat']:
         copy(SOURCE/'fabric/mineocclude-mod'/name,execution/'fabric/mineocclude-mod'/name)
@@ -118,6 +120,16 @@ def complete():
     print('ANONYMOUS_SNAPSHOT_READY',sum(p.stat().st_size for p in SNAP.rglob('*') if p.is_file()),flush=True)
 
 
+def privacy_preflight():
+    import tempfile
+    folder=Path(tempfile.mkdtemp(prefix='public-source-review-',dir=ROOT))
+    for name in SOURCE_FOLDERS:
+        shutil.copytree(SOURCE/name,folder/name,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+    changes=sanitize_tree(folder)
+    save(DEST/'source_privacy_preflight.json',dict(status='PASS',files=sum(p.is_file() for p in folder.rglob('*')),anonymized_files=len(changes),scope='Execution-source staging only; final snapshot is checked separately.'))
+    print('SOURCE_PRIVACY_PREFLIGHT_PASS',len(changes),flush=True)
+
+
 def raw():
     manifest=read(ROOT/'manifest.json')
     assert manifest['status']=='ALL_192_VERIFIED'
@@ -141,5 +153,5 @@ def raw():
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser(); parser.add_argument('mode',choices=['prestage','complete','raw']); a=parser.parse_args()
-    {'prestage':prestage,'complete':complete,'raw':raw}[a.mode]()
+    parser=argparse.ArgumentParser(); parser.add_argument('mode',choices=['prestage','complete','raw','privacy_preflight']); a=parser.parse_args()
+    {'prestage':prestage,'complete':complete,'raw':raw,'privacy_preflight':privacy_preflight}[a.mode]()

@@ -93,6 +93,20 @@ def main():
             vals=[r[k]['mean'] for k in ['absolute_prediction_shift','donor_direction_agreement','swapped_donor_mae','swapped_recipient_mae']]
             table.append(LABELS[r['model']]+' & '+' & '.join(f'{v:.3f}' for v in vals)+r'\\')
     table.append(r'\bottomrule\end{tabular}\end{table}')
+    table += [r'\begin{table}[!htbp]\centering\small',r'\caption{Complementary correct-history metrics at ages 1--10, pooled over 48 test identities. MAE is in blocks. Trajectory-macro $R^2$ uses the within-trajectory test mean as the denominator reference, not the training-mean predictor.}',r'\begin{tabular}{@{}lrrrr@{}}\toprule Predictor & Air MAE & Air $R^2$ & Stone MAE & Stone $R^2$\\\midrule']
+    for m in ORDER:
+        vals=[summary[m,'native',c,'correct','pooled','1-10'][k]['mean'] for c in ['L0','L4'] for k in ['mae','r2']]
+        table.append(LABELS[m]+' & '+' & '.join(f'{v:.3f}' for v in vals)+r'\\')
+    table.append(r'\bottomrule\end{tabular}\end{table}')
+    table += [r'\begin{table}[!htbp]\centering\small',r'\caption{Image-tracker observation coverage, pooled over the held-out identities. Fallback uses the training target mean when the fixed detector finds no reliable observation in the supplied 16-frame window. Counts are descriptive repeated rows, not independent samples.}',r'\begin{tabular}{@{}llrrrr@{}}\toprule Material & History & Ages & Rows & Fallback fraction & Reliable detections\\\midrule']
+    for r in s['tracker_coverage']:
+        table.append(('Air' if r['condition']=='L0' else 'Stone')+' & '+r['phase']+' & '+r['ages'].replace('-','--')+f" & {r['rows']} & {r['fallback_fraction']:.3f} & {r['mean_reliable_detections']:.2f}"+r'\\')
+    table.append(r'\bottomrule\end{tabular}\end{table}')
+    table += [r'\begin{table}[!htbp]\centering\small',r'\caption{Nonlinear-probe fitting diagnostics. Warning counts cover all training-fold candidates and the final three-seed ensemble, rather than only the selected model. Warnings are retained; no test outcome changes the optimizer budget.}',r'\begin{tabular}{@{}llrrr@{}}\toprule Model & Layout & Material & Selected penalty & Warning messages\\\midrule']
+    for p in sorted((OUT/'fits').glob('*_MLP__*.json')):
+        r=read(p)
+        table.append(LABELS[r['model']]+' & '+r['layout'].replace('_',r'\_')+' & '+('Air' if r['condition']=='L0' else 'Stone')+f" & {r['alpha']:g} & {len(r['convergence_warnings'])}"+r'\\')
+    table.append(r'\bottomrule\end{tabular}\end{table}')
     (PAPER/'diagnostic_tables.tex').write_text('\n'.join(table)+'\n')
     print('DIAGNOSTIC_ASSETS_WRITTEN',flush=True)
 
