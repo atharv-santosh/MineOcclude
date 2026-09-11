@@ -1,0 +1,22 @@
+{
+  "utc": "2026-09-11T15:35:05.200908+00:00",
+  "status": "CORRECTED_BEFORE_ANY_TEST_PREDICTION_FILE",
+  "original_freeze_sha256": "21a27a996b991ab08a78cccb9b29b6abfc51658ac9072b82b45e9101682d9257",
+  "original_files": {
+    "statistics_diag.py": "8707a8dbcb3cbdc74963658ad8570d30afe96ca6cf87e540d457b2878abf6ef8",
+    "validate_diag.py": "a39fcc2dcd84a0f9a85235576864fcb0857a72ef299dbdc9d09347a81a80f809",
+    "test_diag.py": "91e941b06c50ea6a5e0610b3e74968aa907357e69ffcc57f81404e478c773e99"
+  },
+  "current_files": {
+    "statistics_diag.py": "dffb729c6e16a90808aba42d6e1187f73ba100b09dca6dd5f388d1e9c3132631",
+    "validate_diag.py": "b8b9c4ef4abc042370fd107ea547604193ac19cba88ec7be19c936f6fd38a4dd",
+    "test_diag.py": "3c261fb631f3382aa9bb2a3a74c72491e7454bac6c70f15ac477173a68f5be78"
+  },
+  "correction": "Expected prediction cardinality corrected from 62016 to 40128. The earlier arithmetic double-counted native-model layout totals. Added a count unit test and validation of this amendment. No estimator, split, outcome, prediction, or statistical formula changed.",
+  "cardinality": {
+    "native_6_models": 21888,
+    "tracker_and_motion": 10944,
+    "transfer_4_models": 7296,
+    "total": 40128
+  }
+}
