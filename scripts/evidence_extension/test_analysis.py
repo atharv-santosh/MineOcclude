@@ -1,9 +1,22 @@
 import unittest
+import tempfile
+from pathlib import Path
 import numpy as np
 from statistics_core import bootstrap,family_scores,summarize_motion
 from motion_baselines import oracle,design
+from fit_diag import Ridge,predict_frozen
 
 class Tests(unittest.TestCase):
+    def test_prepared_weights_match_live_predictions(self):
+        rng=np.random.default_rng(73)
+        x=rng.normal(size=(57,12));y=rng.normal(size=57);q=rng.normal(size=(38,12))
+        model=Ridge(x,y)
+        with tempfile.TemporaryDirectory() as directory:
+            for alpha in [.1,1.,10.,100.,1000.]:
+                path=Path(directory)/f'fit-{alpha}.npz'
+                model.freeze(path,alpha)
+                np.testing.assert_array_equal(model.predict(q,[alpha])[:,0],predict_frozen(path,q))
+
     def test_bootstrap_constant(self):
         self.assertEqual(bootstrap([2.,2.,2.],['a','a','b']),dict(mean=2.,ci=[2.,2.]))
 

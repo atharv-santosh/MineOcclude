@@ -25,6 +25,7 @@ def main():
     for folder in ['predictions','receipts']:
         for p in (ROOT/'motion'/folder).glob('*.json'):copy(p,ex/'motion'/folder/p.name)
     for p in (ROOT/'motion').glob('*.json'):copy(p,ex/'motion'/p.name)
+    for p in (ROOT/'motion/fits').glob('*.selection.json'):copy(p,ex/'motion/fits'/p.name)
     for p in ROOT.glob('*.json'):
         if p.name!='runtime.json':copy(p,ex/'configuration'/p.name)
     for p in Path(__file__).parent.iterdir():
