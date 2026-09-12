@@ -1,0 +1,167 @@
+\section{Evidence-extension design and reproducibility}
+\label{app:extension}
+All extension files are separate from the earlier studies. The original captures,
+predictions, models, and delivered manuscripts are retained. The central transfer,
+baseline, and opacity analyses reuse the 25 central identities and therefore do
+not constitute an independent replication. The new paired-motion study uses an
+independent family split and does not pool its results with the central cohort.
+
+\subsection{Cross-condition decoding}
+For each of the five source materials, we use the original five outer identity
+folds and four inner rotations. The inner mean identity RMSE chooses
+$\alpha\in\{0.1,1,10,100,1000\}$. Constant features are removed using source-training
+data only, and all other features are standardized using source-training means
+and standard deviations. The fitted intercept, coefficients, feature mask, and
+scales are then applied unchanged to the held-out identities in every destination
+material. No destination labels or statistics select or calibrate the decoder.
+The resulting matrix contains 11,875 predictions. The diagonal reproduces the
+earlier corrected-RGB predictions to a maximum absolute difference of
+$2.54\times10^{-12}$ blocks. Transfer penalty subtracts the destination-native
+RMSE from the unchanged source-decoder RMSE, within identity. Intervals resample
+25 identities 10,000 times, seed 94111.
+
+\subsection{Equal-history comparators}
+Frame differences concatenate the current $48\times28\times3$ RGB image with
+15 consecutive differences in the same resized history, giving 64,512 features.
+The optical-flow comparator computes 15 dense Farneb\"ack fields on $96\times56$
+grayscale images, with pyramid scale 0.5, three levels, window 15, three
+iterations, polynomial size 5, sigma 1.2, and flags 0. Fields are area-resized to
+$24\times14$, flattened, and concatenated with the current RGB image, giving
+14,112 features. Both receive the exact same ordered 16 recorded images as
+MineWorld, and neither receives target state, age, direction, or future images.
+
+VideoMAE-S uses the official Kinetics-400 self-supervised 1600-epoch checkpoint
+\citep{tong2022videomae}. Its frozen encoder has 12 blocks, width 384, six heads,
+and tubelet size two. Each of the 16 RGB images is resized bicubically to
+$224\times224$ without cropping and normalized by ImageNet channel statistics.
+With no masking, eight temporal slices of $14\times14$ tokens are averaged in
+time, then adaptively pooled to $2\times6$ spatial cells. The 4,608 features enter
+the same grouped ridge procedure. This baseline matches history and adds a
+pretrained nonlinear encoder, but does not equate architectures, resolution,
+pretraining data, or total capacity. The source revision and exact checkpoint hash
+are distributed in the provenance files; checkpoint loading uses tensor-only
+deserialization. The upstream CC-BY-NC-4.0 license permits the present
+noncommercial research use. Neither model is fine-tuned.
+
+Central baseline intervals use seed 94112 and paired MineWorld-minus-comparator
+differences use seed 94114, each with 10,000 identity draws. These are descriptive,
+pointwise intervals conditional on fitted models, not multiplicity-corrected
+significance tests.
+
+\subsection{Fixed-appearance opacity manipulation}
+The overlay uses a single stone texture from the first predetermined central
+stone capture, frame zero. Its mask is the convex hull of the projected eight
+corners of the as-built wall bounds, using the fixed camera and field of view.
+The mask is defined by wall geometry, not by a target detector or hidden label.
+Every image in the 16-frame history is transformed as
+\[
+I_{\alpha}(u) =
+\begin{cases}
+\operatorname{round}((1-\alpha)I(u)+\alpha W(u)), & u\in M,\\
+I(u), & u\notin M,
+\end{cases}
+\qquad \alpha\in\{0,0.25,0.5,0.75,1\}.
+\]
+The target path, actions, mask, texture, and fitting folds stay fixed. Pixels
+outside the mask are unchanged. The geometric mask covers every detected sheep
+pixel in all 475 scored air frames, and full-opacity frames contain no detected
+sheep pixels. Zero-opacity pixel and MineWorld features are bit-identical to the
+unmodified air features. We report both per-opacity native fits and unchanged
+cross-opacity transfer for MineWorld and history pixels. Residual image energy
+relative to the fixed texture is an implementation diagnostic, not a calibrated
+object-only visibility measure. Alpha blending is a controlled image manipulation,
+not a physically accurate transparent-material renderer.
+
+\subsection{Prospective paired-motion families}
+The new roster contains 128 independent families: 64 training and 64 test.
+Each partition has 32 families per layout, eight per motion type. Directions are
+balanced. Every family contains two variants, and each variant is recorded in
+air and stone, yielding 512 capture units and 9,728 scored rows. The four types
+are constant velocity, acceleration, stop/resume, and reversal. Motion is
+deterministic conditional on the sampled schedule, with no injected hidden process
+noise. These trajectories must not be described as unobservable random events.
+
+At 20 Hz, the low-speed parameter is uniform on $[1.4,1.9]$ blocks/s.
+For the final low-speed reversal arm, the lower bound is 1.6 rather than 1.4,
+following the visibility-admission amendment described below. The
+high-speed parameter is uniform on $[2.8,3.5]$, except that constant-velocity
+high-speed pilots required a bounded revision to $[2.65,2.8]$. Acceleration is
+uniform on $[0.8,1.5]$ blocks/s$^2$, negative for the low variant and positive for
+the high variant, with speed clipped to $[0.25,4.5]$. Stop/resume uses a 12-tick
+period with eight moving and four stopped ticks, phase zero or six, and moving
+speed 1.5 times the sampled parameter. Reversals add a sinusoid of amplitude
+3.8 blocks/s and period 12 ticks to the sampled speed, again with phase zero or
+six. Motion is held still for ticks 0--19 and after tick 109. Exact per-tick
+velocities, positions, start offsets, targets, and seeds are included in the
+prospective roster. Starts are adjusted to match the world position at the first
+full-occlusion target within each direction and layout.
+
+Engineering pilots cover both layouts, both directions, all four motion types,
+and both variants. Admission requires exact schedule replay, complete image/state
+joins, zero queued ticks, drained image writers, correct wall construction,
+visible sheep in air, and no detected sheep pixels in scored stone frames. The
+air-image target check requires centered position discrepancy below 0.15 blocks
+and absolute median offset below 0.30. Two fast right-to-left velocity pilots
+failed: three sheep-colored pixels remained in their first scored stone frame,
+and their offsets were 0.303 and 0.322. Their records are preserved. Eight capture
+units were retested after the bounded velocity revision, leaving every admission
+threshold unchanged. Pilot outputs never enter production fitting or intervals.
+One low-speed stop/resume pilot also lacked visible history at entry. The approach
+for this low-speed arm was extended by a complete 12-tick motion cycle and eight
+capture units were retested. The scored motion phase, speed distribution, and
+admission thresholds were unchanged. Production also checks the visible-history
+count at entry and records counts separately at every scored age.
+An initial training capture subsequently exposed a slower constant-velocity case
+with no visible approach pixels. Before held-out capture or fitting, the approach
+was extended uniformly for the low-speed velocity arm to first target at or after
+frame 36. Speeds, entry positions, target-relative paths, sample size, and analysis
+thresholds were retained. Superseded captures and the original protocol lock are
+preserved with a dated amendment; they are not silently pooled into the revision.
+A later low-speed training reversal retained only one prior image above the
+unchanged 20-pixel visibility threshold. Extending its approach by one complete
+12-tick cycle increased this to two, still below the required three. That
+approach-only proposal was not admitted to production. Before any held-out
+capture or probe fitting, the final amendment instead mapped the same latent
+uniform samples to $[1.6,1.9]$ blocks/s for every low-speed reversal and used first
+target 48. Matched entry, reversal phase, sample size, and all thresholds were
+retained; targets were recomputed for the amended physical speeds. Regular pilots,
+explicit 1.6-block/s checks in both directions and layouts, and the original
+failing training identity were validated before resumption. All superseded
+captures and proposals are preserved and excluded from production fitting.
+
+Each layout has separate training-only four-fold family validation. Both variants
+stay in the same fold. The fixed ridge grid and readout are unchanged; there is no
+test-set model selection. Native air and stone fits are also transferred unchanged
+to the other condition. For this cohort, direction/age OLS is supplemented by
+cubic age terms and their direction interactions. A separately labeled privileged
+comparator additionally receives motion-type indicators and their interactions.
+Oracle last-position and constant-velocity forecasts use only states before full
+occlusion, extending those forecasts through the same causal target filter.
+
+The primary interval is ages 1--10; ages 11--15 and 16--19 are secondary, and the
+all-age summary is retained. RMSE and MAE are calculated within each variant and
+then averaged within family. Bootstrap intervals use 10,000 draws of families,
+stratified by layout and motion type, seed 94113. Paired predictor differences use
+the same family units. Variant contrast RMSE compares
+$(\hat x_{1,t}-\hat x_{0,t})$ with $(x_{1,t}-x_{0,t})$; sign agreement excludes
+zero target contrasts. These analyses test whether predictions distinguish the
+paired motions rather than merely exploiting a common entry position. They are
+not a test of causal use in generated frames.
+
+\subsection{Information-boundary control and artifact access}
+A separately labeled constructed control duplicates the exact observed image
+history and actions while assigning two alternative hidden futures. The input
+hashes and deterministic predictions must be identical. This checks the
+information boundary and absence of target-dependent prediction code; it is not
+a second physical capture or evidence that the model identifies an unobserved
+random branch. In a fully opaque setting with identical observations and actions,
+branch-specific position is not identifiable without an additional cue.
+
+The compact reproduction snapshot contains predictions, targets, folds,
+configuration, exact schedules, analysis code, and validation receipts. Its CPU
+entrypoint reconstructs extension statistics without model weights or GPU access.
+Large raw captures and activation arrays are separate from this compact package.
+Local reconstruction and anonymous distribution are distinct checks: the existing
+anonymous website had not yet been updated to this snapshot at manuscript build
+time. Access must be verified before claiming that the new artifacts are available
+to reviewers.

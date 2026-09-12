@@ -1,0 +1,628 @@
+\documentclass{article}
+\PassOptionsToPackage{numbers,compress}{natbib}
+\usepackage[dblblindworkshop]{neurips_2026}
+\workshoptitle{Physical World AI: Geometry, Characteristics, and Multimodal Sensing}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\makeatletter
+\let\tablerows\@@input
+\renewcommand{\@noticestring}{}
+\patchcmd{\@maketitle}
+  {Anonymous Author(s) \\ Affiliation \\ Address \\ \texttt{email} \\}
+  {Anonymous submission \\}{}{\PackageError{paper}{Anonymous title patch failed}{}}
+\makeatother
+
+\title{MineOcclude: Separating Visual Evidence, History, and Motion Predictability}
+
+\author{Anonymous submission}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Evaluating object-state representations under occlusion requires separating visual evidence, available history, and motion predictability. MineOcclude replays identical Minecraft trajectories across visual conditions with shared evaluation times and aligned continuous position targets. On 25 central identities, a fixed frozen-MineWorld readout with verified RGB inputs reaches 0.083--0.107 blocks RMSE in air and glass and 1.600 under stone. Its stone error is lower than those of matched-history pixels, optical flow, frame differences, and a pretrained VideoMAE-S readout, but unchanged decoders transfer poorly across materials. A fixed-texture opacity intervention separates appearance changes from the material comparison. A prospective extension adds 64 training and 64 held-out paired-motion families across two layouts, including acceleration, stops, and reversals. At ages 1--10, opaque RMSE is 0.768 blocks for MineWorld, 0.635 for history pixels, and 0.211 for direction-and-age prediction. These controlled comparisons characterize finite-window position accessibility, not an identified mechanism of persistent object memory.
+\end{abstract}
+
+\section{Introduction}
+
+Agents must often estimate hidden state from past observations \citep{kaelbling1998planning,hafner2019planet,zheng2026memworld}. World models can support this through learned dynamics and memory \citep{ha2018worldmodels,hafner2020dreamer,laird2025memory}. Interactive models generate visual continuations from pixels and actions \citep{micheli2023transformers,alonso2024diffusion,bruce2024genie,decart2024oasis,guo2025mineworld}, but plausible outputs do not establish which object states remain internally accessible \citep{motamed2025generative,esmati2026invisible}.
+
+Occlusion separates current sensory evidence from prediction based on history or dynamics \citep{riochet2018intphys,weihs2022benchmarking,piloto2022intuitive,garrido2025intuitive,upadhyay2026worldbench}. Visible position can be recovered from an image \citep{chen2023beyond,zhang2026whatdo}; hidden-position estimation instead depends on prior observations or predictive cues \citep{kalman1960new,gordon1993novel,newell2025comotion,shai2024transformers}. Behavioral benchmarks assess prediction or physical plausibility \citep{yi2020clevrer,tung2023physionpp,gu2025geco}, while probes test accessible state \citep{alain2017understanding,li2023emergent,nanda2023emergent,joseph2026interpreting}. Decodability alone does not establish calibration \citep{guo2017calibration,mei2026world}, object-centric structure \citep{battaglia2016interaction,kipf2020contrastive}, or causal use \citep{hewitt2019designing,belinkov2022probing,elazar2021amnesic,geiger2024finding,alam2026causal}. We ask how accurately aligned object position remains linearly accessible as visual evidence is reduced.
+
+MineOcclude pairs the same sheep motion, camera, and actions across visual conditions. Server state supplies wall-parallel world-$x$ targets, aligned to rendered motion with causal finite-impulse-response (FIR) filters. An earlier wall/no-wall cohort selects a spatial readout; the central study evaluates the fixed family on 25 different identities across no wall, three stained-glass materials, and an opaque wall. Verified RGB extraction and a history-matched pixel comparator first refine this study on the same central identities. Further studies test fresh trajectories, changed geometry, input-history substitutions, and a second MineWorld model size. The present extension adds unchanged cross-material transfer, stronger equal-history comparators, a fixed-appearance opacity sweep, and a prospective split of 64 training and 64 held-out paired-motion families with within-trajectory changes.
+
+We make three contributions. First, a paired evidence-manipulation protocol holds realized motion and evaluation times fixed across materials. Second, a controlled evaluation procedure combines continuous aligned targets, measured image evidence, separate development data, and grouped fitting. Third, matched-history comparisons, native context-length tests, and new paired motions distinguish input-history dependence from trajectory predictability; unchanged-decoder transfer and a fixed-texture opacity intervention test whether the same readout survives changes in available evidence. Project documentation is linked through the \href{https://anonymous.4open.science/r/MineOcclude-5503/}{\textcolor{blue!70!black}{anonymous repository}}; reproduction materials are described in \autoref{app:central}.
+
+\section{Related Work}
+
+Learned dynamics models connect perception to planning in latent state spaces \citep{hafner2019planet,hafner2020dreamer,hafner2023mastering,schrittwieser2020muzero}. Object-centric models instead represent entities and interactions explicitly \citep{battaglia2016interaction,watters2017visual,kipf2020contrastive}. 
+Benchmarks such as IntPhys, CLEVRER, PLATO, Physion, Physion++, and WorldBench evaluate object persistence, collisions, latent properties, or diagnostic physical concepts \citep{riochet2018intphys,yi2020clevrer,piloto2022intuitive,weihs2022benchmarking,tung2023physionpp,upadhyay2026worldbench, bear2021physion}. Physics-IQ and related video-model studies further show that perceptual quality and physical validity can diverge \citep{motamed2025generative,garrido2025intuitive,gu2025geco}. MineOcclude complements these benchmarks with paired occlusion and a continuous causal-FIR-aligned server-state target.
+
+Linear probes can reveal accessible variables in intermediate representations \citep{alain2017understanding,li2023emergent,nanda2023emergent,shai2024transformers}. Recent work applies related tools to learned simulators, diffusion models, and video transformers, finding layer- and representation-dependent physical signals \citep{zhang2026whatdo,chen2023beyond,esmati2026invisible,joseph2026interpreting}. Probe results nevertheless depend on capacity, controls, and model selection \citep{hewitt2019designing,belinkov2022probing}. Removal and intervention methods ask the stronger question of whether a representation is used causally \citep{elazar2021amnesic,kim2018interpretability,geiger2024finding}.
+
+The closest state-probing studies use different diagnostic axes. \citet{joseph2026interpreting} use layerwise probes, subspace geometry, patch-level decoding, and attention ablations to analyze physical representations in encoder-based video transformers. \citet{shin2026unobserved} use an action-conditioned visual Shell Game to test hidden-state tracking and extrapolation across swap chains. MineOcclude instead manipulates source-image evidence while holding realized trajectories and evaluation times fixed, then evaluates continuous position with native and transferred readouts in finite reset windows. A frozen VideoMAE comparator adds pretrained video features to the equal-history comparison \citep{tong2022videomae}.
+
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{matched_captures.pdf}
+\par\smallskip
+{\small
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+L0: air & L1: white glass & L2: light-blue glass & L3: brown glass & L4: stone\\
+$V=1$ & $V=0.8131$ & $V=0.4260$ & $V=0.1857$ & $V=0$\\
+\bottomrule
+\end{tabular}
+\par\smallskip
+Shared realized path $\longrightarrow$ common target times + aligned position labels
+\par\smallskip
+Separate development cohort $\longrightarrow$ fixed readout family
+\par
+25 central identities $\longrightarrow$ frozen RGB features $\longrightarrow$ grouped probes
+}
+\caption{Matched central-study captures, showing one identity at the same target time in all five conditions. Each material shares the realized trajectory and 19 evaluation times; $V$ is measured residual visual evidence. Readout selection uses separate development data. The displayed captures are recovered experimental inputs, not generated illustrations.}
+\label{fig:design}
+\end{figure}
+
+\section{Methodology}
+\label{sec:methodology}
+\subsection{Paired cohort and evidence ladder}
+\label{sec:cohort}
+The central study uses 25 identities distinct from development: 13 left-to-right and 12 right-to-left paths. Each is captured in five counterbalanced conditions: air (L0), white glass (L1), light-blue glass (L2), brown glass (L3), and stone (L4). Matched captures share realized object motion, camera state, and actions. The RGB follow-up reuses these recovered captures without replacing any trajectory. The apparatus uses one layout, nominal speed 2.0 blocks/s, and process noise $q=0.05$ blocks$^2$/s at 20 Hz. Path hashes check exact pairing. \autoref{app:central} specifies the generator and calibration; \autoref{fig:design} shows matched inputs.
+
+The 125 captures contain 22,500 source frames. Each 180-frame capture contributes 19 common target times when the full renderer-derived sheep extent would be hidden by the opaque wall. Selection is independent of material-specific decoding outcomes. The 2,375 target rows are repeated observations within 25 identities, distinct from development; no identity is replaced after outcomes are available.
+
+The supervised target is aligned wall-parallel position, not raw same-tick server state:
+\[
+x_{\mathrm{align}}(t)=\sum_{k=0}^{8}h_{d,k}\,x_{\mathrm{server}}(t-k).
+\]
+The frozen direction-specific FIR kernels use only present and past state. They compensate for the timing difference between server updates and rendered motion, which would otherwise contribute alignment error to the decoding score. Their coefficients were inherited from earlier calibration, not fitted to central-study outcomes (\autoref{app:central}). Throughout, position error refers to this aligned target. Renderer geometry independently defines the full object extent and target times.
+
+Residual visual evidence (RVE), $V_c$, measures noise-corrected source-image energy attributable to the sheep relative to air; $O_c=1-V_c$. Present/absent image comparisons use a shared mask, with median aggregation over blocks and nine placements (\autoref{app:central}). Stone yielded zero after noise correction and truncation, not a manually assigned endpoint. This means no positive residual energy was detected by this procedure, not that every possible cue is absent. \autoref{tab:exp3-ladder} gives the values.
+
+RVE is an image-energy coordinate, not a visible-area fraction, an occlusion probability, or MineWorld confidence. For example, 0.186 does not mean that 18.6\% of the object is visible. The glass conditions differ in color and appearance as well as evidence magnitude. We consequently interpret the experiment as a controlled material/evidence ladder, not an isolated intervention on transparency with all other image properties fixed.
+
+\subsection{Frozen MineWorld and feature extraction}
+\label{sec:features}
+MineWorld \texttt{700M\_16f} is frozen throughout \citep{guo2025mineworld}. Each target uses a teacher-forced forward, meaning that the model receives recorded images and actions, including the current recorded image, rather than an autonomous generated continuation. The 16 observations $[t-15,\ldots,t]$ span 0.75 s from first to last timestamp. Visible decoding can therefore use current sensory evidence directly.
+
+The production extraction path calls the adapter separately for each target. Its transformer cache is refreshed before each call, and token positions start again at zero within the window. No absolute target time or oracle coordinate is supplied as a model token. Thus, this path cannot access an observation excluded from the window via a persistent cross-target cache. It is not a test of a continuously running deployed model. A current-pair feature is the final visual-token slice after processing the context, not a single-image model input. The same forward supplies layers 4, 10, and 19; storage dimensions and token offsets are in \autoref{app:central}.
+
+The primary results below use the checkpoint's RGB convention. Source PNGs are decoded as RGB, resized by linear interpolation to $224\times384$, and normalized channelwise to $[-1,1]$. Red/blue test patches were checked at the actual tokenizer encoder input. The earlier extraction swapped red and blue, producing BGR inputs. We preserve those historical predictions and also rerun BGR on the same hardware and software as RGB, changing only that swap. This matched-runtime comparison separates channel order from the runtime change required for the new GPU.
+
+Inference uses float16 without quantization. Frame-token caching was validated against uncached tokenization on 30 representative windows; transformer state is still reset per target. Pooling retains the original binary64 calculation. Runtime validation details are in \autoref{app:central}.
+
+\subsection{Readout selection and grouped fitting}
+\label{sec:readouts}
+Separate development data selected layer-19 coarse pooling from an 11-layer global/coarse screen and a layer-19 refinement including training-only Best-K selection. The chosen family was fixed before evaluating the new cohort. Full development results, including unmet accuracy gates, remain in \autoref{app:exp2-qualification}.
+
+The $14\times24$ visual grid is averaged into $2\times6$ cells, retaining coarse spatial organization. Flattening these pooled vectors produces 24,576 features. Layer 19 remains the primary readout; layers 4 and 10 are secondary depth checks, not candidates for reselection. We additionally fit native one-pair and eight-pair RGB inputs in air and stone, with relative positions and a fresh cache. These use the last actual recorded pairs, not repeated-image padding. Their scope was fixed from runtime measurements before inspecting the new scores.
+
+Ridge regression gives a controlled linear readout \citep{hoerl1970ridge}. Five outer folds hold out complete trajectory identities, and four grouped inner rotations select $\alpha\in\{0.1,1,10,100,1000\}$. Standardization, hyperparameter selection, and fitting use training identities only. Holding related observations together limits dependence leakage, while inner selection separates tuning from outer evaluation \citep{roberts2017crossvalidation,varma2006bias,cawley2010overfitting,varoquaux2018crossvalidation}.
+
+A separate probe measures within-condition accessibility. We additionally fit a complete source-to-destination transfer matrix: every source-fold decoder, including its scaling and selected regularization, is tested unchanged on held-out identities in all five materials. Destination data are never used for tuning or calibration. New RGB, BGR-replay, and baseline predictions are stored separately with the same target and fold identifiers. The primary representation is not reselected. Historical reconstruction and numerical validation are detailed in \autoref{app:central}.
+
+\subsection{Pixel, metadata, and motion comparators}
+\label{sec:baselines}
+Current-pixel ridge uses $48\times28\times3$ area-resized RGB values (4,032 features); history-pixel ridge concatenates the same 16 frames available to MineWorld (64,512 features). Both use the same grouped tuning. All recorded actions are constant no-ops and are omitted after verification. Neither receives age, direction, or oracle state. We add current-image plus ordered frame differences, current-image plus 15 dense Farneb\"ack flow fields \citep{farneback2003two}, and frozen VideoMAE-S features \citep{tong2022videomae}. VideoMAE receives the same 16 RGB images, uses no classification head or fine-tuning, and supplies temporally averaged, coarse spatial features to ridge. Exact dimensions and preprocessing appear in \autoref{app:extension}. These comparisons match history, not all resolutions or estimator capacities.
+
+The training mean is learned from outer-training targets. Direction + age fits ordinary least squares on outer-training rows to $[1,d,a,da]$, where $d=\pm1$ encodes motion direction and $a$ is context age. These privileged metadata test trajectory predictability, not equal-information competition with an image-only observer.
+
+Last-seen holds raw server position at the last non-fully-occluded row. Constant velocity regresses the last ten pre-occlusion raw positions on time and extrapolates. Both use privileged state, are identical across an identity's conditions, and are scored against the aligned target. Oracle positions never enter neural or pixel features (\autoref{tab:baseline-inputs}).
+
+
+
+
+\subsection{Metrics and inference}
+\label{sec:inference}
+For each identity and condition, RMSE is calculated over its 19 held-out targets;
+we then average across identities. MAE is aggregated similarly. Trajectory $R^2$
+uses each held-out path's own target mean, and macro $R^2$ averages those values.
+These are not pooled-frame scores.
+
+Two-sided 95\% percentile intervals use 10,000 whole-identity bootstrap samples,
+keeping paired conditions and predictors together \citep{efron1993bootstrap}.
+They condition on fitted probes and are descriptive, not simultaneous bounds
+across all comparisons. Single-age plots report absolute error; multi-age bins
+report within-identity RMSE. The new motion study instead resamples paired-variant
+families, as specified below. Exact seeds, evidence-ladder contrasts, and historical
+inference conventions are retained in \autoref{app:central-estimands} and
+\autoref{app:extension}. The development study's nine gates and permutation test
+are provenance, not qualification rules for the central or new motion cohorts.
+
+\subsection{Controlled opacity and paired motions}
+\label{sec:fresh-method}
+To separate color and texture from opacity, a fixed stone texture is alpha-blended over the same geometry-defined wall mask in every image of the central air histories. We use $\alpha\in\{0,0.25,0.5,0.75,1\}$, leaving pixels outside the mask unchanged. Shared targets, actions, and folds permit native per-opacity fits and unchanged cross-opacity transfer. This is a synthetic evidence intervention, not a physical glass simulator.
+
+The new motion cohort has 128 independent families, split equally into training and test. Each family contains two variants, captured in both air and stone. Within each split, two layouts and four motion types are balanced: velocity, acceleration, stop/resume, and reversal. Starts are adjusted to match the world position at the first full-occlusion target within direction and layout. The 512 captures use recorded deterministic schedules with visible pre-occlusion motion; they do not ask the model to identify an unobserved random event. Engineering pilots check actual image history, full occlusion, synchronization, and target alignment before production admission.
+
+Four training-only family folds select ridge regularization separately within each layout; both variants remain together. All test families are held out from selection. Primary errors cover ages 1--10, with ages 11--15 and 16--19 reported separately. We average within variant and then within family; 10,000 family-bootstrap draws, stratified by layout and motion type, give descriptive intervals. Paired prediction contrasts test whether decoders distinguish different motions from the same entry position. Linear and cubic direction/age baselines assess residual predictability; a separate privileged baseline adds motion-type indicators. Exact schedules, seeds, pilot revisions, and analysis specifications are in \autoref{app:extension}.
+
+Earlier fresh-cohort, model-size, nonlinear-probe, history-substitution, and geometry-calibration studies remain separately reported in \autoref{app:fresh} and \autoref{app:diagnostic}. Their observations motivate these additions but are not pooled with the new held-out families.
+
+\section{Experiments}
+\label{sec:experiments}
+\subsection{From readout development to a new cohort}
+The separate development cohort selects layer-19 coarse pooling; visible controls establish usable position decoding. The central study then evaluates the fixed family on 25 different identities across five materials. All five conditions are rerun with verified RGB inputs, with historical and same-runtime BGR results preserved in \autoref{app:central}. Transfer, opacity, and stronger comparators refine this central study on the same identities. The paired-motion cohort supplies a separate prospective test.
+
+\subsection{Position decoding across visual evidence}
+\label{sec:graded-results}
+\autoref{tab:exp3-condition} summarizes the corrected-RGB results. The fixed readout recovers position in air and through all three glass materials, with RMSEs of 0.085, 0.083, 0.094, and 0.107 blocks for L0--L3. Their trajectory-macro $R^2$ values range from 0.947 to 0.973. Under stone, RMSE is 1.600 blocks, with a 95\% identity-bootstrap interval of [1.496, 1.702]. The stone identity range, 1.128--2.170 blocks, lies above the glass ranges, whose maximum is 0.197. This is a descriptive comparison across the paired identities, not an additional hypothesis test. \autoref{tab:exp3-condition} reports both pixel baselines alongside the neural readout.
+
+
+
+\begin{table}[!htbp]
+  \caption{Corrected-RGB follow-up: mean identity performance. Errors are in blocks. All image-based predictors use the same targets and grouped folds.}
+  \label{tab:exp3-condition}
+  \centering
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}lrrrrr@{}}
+    \toprule
+    Condition & MW RMSE & MW MAE & MW macro $R^2$ & Current pixels & History pixels \\
+    \midrule
+    \tablerows rgb_condition_rows.tex
+    \bottomrule
+  \end{tabular}
+\end{table}
+The evidence ladder contains a large opaque increment and a smaller partial-obstruction change (\autoref{tab:exp3-primary}). Moving from brown glass to stone increases mean identity error by 1.493 blocks, interval $[1.389,1.594]$. Averaging L1--L3 increases error by 0.0099 blocks relative to air, interval $[0.0021,0.0186]$. These are descriptive estimates in the RGB follow-up, not a reapplication of the historical confirmatory tests.
+
+The slope is 1.059 blocks per unit $O_c$, interval $[0.987,1.130]$. Most of this trend is associated with the opaque endpoint. The glass results should not be interpreted as a calibrated response to transparency: materials also change color and texture, and their errors need not follow a smooth curve in the image-energy coordinate.
+
+
+\subsection{Predictability and pixel comparisons}
+\label{sec:baseline-results}
+Current-frame pixel ridge reaches 0.049--0.054 blocks across L0--L3, below the neural errors. Under stone it reaches 3.424 blocks, matching the training-mean level. Supplying the same 16-image history reduces pixel-ridge error to 1.818 blocks. The MineWorld readout reaches 1.600, a paired advantage of 0.218 blocks, with interval $[0.173,0.265]$. The advantage over current pixels is therefore not solely an artifact of withholding all history from that comparator, although matching history substantially narrows it.
+
+Equal history does not imply equal capacity or equal image resolution. Pixel ridge is linear in downsampled images; the neural readout is linear in pretrained nonlinear features extracted from higher-resolution images. The result supports this particular representation comparison, not superiority over all image-history estimators. In the glass conditions, history-pixel errors vary from 0.060 to 0.180 blocks, and longer input does not uniformly improve a finite-sample ridge fit. The full per-identity predictions are retained rather than selecting a favorable subset.
+
+Metadata and oracle-history predictors assess trajectory predictability given additional information. Under stone, direction-and-age achieves RMSE 0.199399 blocks, constant velocity 0.402907, and last-seen 0.913505. Their lower errors show substantial predictability from timing, direction, and privileged pre-occlusion positions. These inputs are not supplied to the neural probe, so the ranking is not an equal-information contest. It shows why position-decoding accuracy should be interpreted alongside trajectory predictability.
+
+In corrected RGB, stone macro $R^2=-9.324$ despite improvement over the training mean. The constant uses outer-training labels, whereas trajectory $R^2$ compares squared error with variation around each test path's own mean. For example, reducing error from 3.4 to 1.6 blocks improves on the training constant but can still be worse than the much smaller within-path variation. The test-path mean is a retrospective scoring reference, not an input supplied to the probe.
+
+Stronger equal-history comparators reach stone RMSEs of 1.781 for frame differences, 1.757 for optical flow, and 1.767 for VideoMAE-S. The paired MineWorld-minus-comparator differences are $-0.181$ ($[-0.229,-0.136]$), $-0.157$ ($[-0.187,-0.126]$), and $-0.167$ ($[-0.199,-0.134]$), respectively. These central-cohort intervals support a modest advantage over these specified alternatives, not a general memory claim. VideoMAE-S instead reaches 0.068--0.082 in air and glass, so MineWorld is not uniformly the strongest representation.
+
+\subsection{Transfer and appearance-controlled opacity}
+\label{sec:transfer-opacity}
+The full transfer matrix separates a decodable position signal from a shared decoder (\autoref{fig:transfer-opacity}a). An air-trained probe gives 2.424, 2.384, 2.609, and 3.203 blocks on white glass, blue glass, brown glass, and stone, respectively. All off-diagonal cells are worse than the corresponding destination-native fit. Thus the accurate visible fits do not establish a condition-invariant linear mapping. Transfer sensitivity may reflect changed feature distributions rather than loss of every position representation.
+
+With one fixed overlay texture, native MineWorld RMSE is 0.085, 0.088, 0.093, 0.095, and 1.742 as opacity increases from zero to one (\autoref{fig:transfer-opacity}b). History-pixel RMSE at full opacity is 3.304. An unchanged air-trained MineWorld decoder instead degrades to 1.704 at 25\% opacity and 3.226 at full opacity. The native and transferred curves answer different questions: position remains accessible after refitting at partial opacity, but the air decoder is not stable under this appearance change. Pixel-level checks verify exact zero-opacity identity and complete masking of scored sheep pixels at full opacity.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{transfer_opacity.pdf}
+\caption{Central-cohort extensions. (a) Mean identity RMSE for frozen source-condition decoders; rows train and columns test. Color is logarithmic. (b) A fixed texture and mask with varying alpha. Native probes are refitted within training folds at each opacity; the dashed curve keeps the air decoder unchanged. Error bars are 95\% identity-bootstrap intervals conditional on fitted probes.}
+\label{fig:transfer-opacity}
+\end{figure}
+
+\subsection{Context age and decoder depth}
+\label{sec:age}
+Occlusion age $a=1,\ldots,19$ measures 0.05--0.95 s after the last counterfactual non-fully-occluded row. Each 16-pair window contains $\max(16-a,0)$ such rows, but partial visibility does not guarantee localizable evidence. \autoref{tab:exp3-age} gives four prespecified bins. Age, position, and elapsed time covary, so this curve does not identify a forgetting rate in a continuously running model.
+
+In corrected RGB, stone error is 0.428 and 0.369 blocks in the first two bins, then 1.938 at ages 11--15 and 2.603 at ages 16--19. Errors in the visible and glass conditions remain much lower. Thus elevated stone error begins before the last potentially informative pair is removed from the 16-pair window.
+
+
+Native one-, eight-, and sixteen-pair RGB inputs yield stone RMSEs of 3.424, 2.726, and 1.600 blocks, respectively (\autoref{fig:history}; \autoref{tab:context-lengths}). Air errors are 0.107, 0.088, and 0.085. Longer input windows therefore support better decoding in this experiment, but shortening them also changes relative positions and the fitted probe. This comparison does not isolate an internal memory mechanism.
+
+
+
+The secondary depth panel yields a similar condition pattern at layers 4, 10, and 19 (\autoref{tab:exp3-depth}). All three support low-error decoding in L0--L3 and much larger errors in L4. These were fixed secondary probes, not additional candidates for choosing the primary result. Their common pattern does not show that the layers use the same mechanism.
+
+
+
+\subsection{Held-out paired motions}
+\label{sec:fresh-results}
+On the 64 held-out families, opaque error at ages 1--10 is 0.768 blocks for MineWorld, 0.635 for history pixels, and 0.656 for VideoMAE-S (\autoref{fig:matched-motion}). The paired MineWorld-minus-history-pixel difference is 0.133, interval $[0.066,0.205]$; the corresponding difference against VideoMAE-S is 0.112, interval $[0.037,0.187]$. Both intervals favor the comparators: the central-cohort neural advantage does not persist in this motion cohort. These family-based intervals retain both motion variants together.
+
+Among stone windows at ages 1--10, 96.2\% retain a prior frame with detected sheep pixels. This measures available image evidence, not its position localizability; all age-bin counts appear in \autoref{tab:motion-history-audit}.
+
+Linear direction/age gives 0.211 blocks, cubic direction/age 0.211, and the additional privileged motion-type information 0.154. Oracle constant velocity gives 0.328. The comparison therefore reports remaining schedule predictability alongside neural accuracy instead of treating varied speed, stops, or reversals as sufficient evidence of memory.
+
+MineWorld's air error is 0.080. A decoder fitted only in air gives 3.603 under stone, compared with 0.768 after native stone fitting. Opaque native errors in the two layouts are 0.592 and 0.945. Variant-contrast RMSE is 1.176 blocks, with 49.1\% sign agreement, reported descriptively rather than as a qualification test. Across later intervals, pooled MineWorld RMSE is 2.042 at ages 11--15 and 2.435 at ages 16--19. Full paired-contrast and transfer results are retained in \autoref{app:extension-results}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{matched_motion_results.pdf}
+\caption{Prospective paired-motion study, 64 held-out families across two layouts. (a) Opaque-condition errors at ages 1--10. Direction/age and motion type are metadata; oracle velocity uses privileged pre-occlusion state. (b) Errors across the available-history boundary. Intervals resample independent families, preserving paired variants and stratifying by layout and motion type.}
+\label{fig:matched-motion}
+\end{figure}
+
+\subsection{Interpretation and limitations}
+\label{sec:limitations}
+The central study supports accurate visible decoding and a modest opaque-condition advantage over several equal-history representations. That advantage reverses against history pixels and VideoMAE-S on the new paired motions. Together with poor unchanged-decoder transfer, this shows that readout rankings depend on the evaluated condition and cohort. The comparisons characterize finite reset windows, not continuously maintained state or downstream planning.
+
+Breadth now includes two layouts, several motion schedules, earlier higher-speed cohorts, and two sizes of the same MineWorld family, but still one entity. VideoMAE is an encoder comparator, not an independent world-model replication. New captures use software rendering, so comparisons with historical cohorts cannot isolate sampling alone. The opacity overlay controls texture and mask but is synthetic; the glass-material ladder remains visually confounded. Deterministic schedules can remain predictable from metadata. Matching history does not match all input resolutions, pretraining, or estimator capacities. Intervals condition on fitted probes and are not adjusted for all reported comparisons.
+
+Identical input histories cannot identify an unobserved randomly chosen future. A constructed duplicate-input control verifies this information boundary and is not counted as successful hidden-state tracking. Evidence for object memory would require reliable use of informative history, beyond the particular prediction and transfer comparisons reported here. The compact snapshot makes these distinctions reproducible from predictions; anonymous access to the updated snapshot remains a separate submission check.
+
+\section{Conclusion}
+MineOcclude separates visual evidence, position accessibility, and trajectory predictability through paired captures and grouped evaluation. Verified RGB results, unchanged-decoder transfer, and a fixed-appearance opacity manipulation distinguish native decoding from stability across conditions. The held-out paired-motion cohort reverses the central MineWorld advantage over history pixels and VideoMAE-S, while direction and age remain strongly predictive. These results support a controlled comparison of finite-window readouts, not a general claim of persistent object memory.
+
+\clearpage
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+\clearpage
+\appendix
+\section{Central-study measurement and implementation details}
+\label{app:central}
+This appendix specifies the recovered motion, alignment, input windows, measurement rules, and grouped evaluation. The original historical predictions are preserved separately from the new corrected-RGB follow-up and its same-runtime BGR replay.
+
+\subsection{Motion, target alignment, and input window}
+The lane spans $x\in[-8,8]$ at $(y,z)=(4,6)$, with a locked camera at eye position $(0.5,5.6200000048,-5.5)$, zero yaw/pitch/roll, and $70^\circ$ field of view. The wall occupies $[-3,4]\times[4,7]\times[2,3]$ in $(x,y,z)$. Minecraft 1.16.5 renders $640\times360$ frames. Conditions preserve the camera, realized motion, lighting, and action schedule; they differ in wall material.
+
+At $\Delta t=0.05$ s, the executed update is
+\[
+x^{\mathrm{server}}_t=\operatorname{clip}_{[-8,8]}
+ \bigl((x^{\mathrm{server}}_{t-1}+d\,2.0\,\Delta t)+\sqrt{q\Delta t}\,\epsilon_t\bigr),
+\qquad \epsilon_t\sim\mathcal N(0,1),
+\]
+where $d$ is direction and $q=0.05$ blocks$^2$/s.
+
+The generator uses NumPy \texttt{default\_rng(seed).standard\_normal(180)}, scaled by $\sqrt{q\Delta t}$. It accumulates drift before noise in binary64 and clamps each step. The identity seed also seeds innovations. Starting position uses the direction-specific range and \texttt{default\_rng(seed XOR 0xE3E3E3E3)}. Candidate qualification precedes outcomes; the numerical roster and start states are in the recovered manifest. All 22,500 recorded actions were checked: buttons are false, camera increments are zero, and the hotbar value is constant. They map to the same 11 action tokens in every pair. The history-pixel baseline therefore loses no variable action information by omitting constant columns.
+
+The following raw FIR taps, ordered by lag $0,\ldots,8$, are the frozen recovered values:
+\begin{center}
+\small
+\begin{tabular}{rcc}
+\toprule
+Lag & Left-to-right & Right-to-left\\
+\midrule
+0&0.0552210582&0.0155128136\\
+1&0.0955547802&0.1420986717\\
+2&0.1729033607&0.3819949723\\
+3&0.2562377030&0.2529919934\\
+4&0.1725945773&0.1314006058\\
+5&0.1502955787&0.0092585384\\
+6&0.0283805770&0.0336603539\\
+7&0.0327627758&0.0330820509\\
+8&0.0360495890&0.0000000000\\
+\bottomrule
+\end{tabular}
+\end{center}
+At load time, each vector is divided by its \texttt{math.fsum}; historical exact reconstruction also accumulates filtered values with \texttt{math.fsum}. The fresh extension uses the existing FIR helper's binary64 summation; its independently checked difference is below $2\times10^{-15}$ blocks. The recovery receipt reconstructs the taps from the earlier materialized stage-2 aligned labels and regenerated paths, checking 50 path hashes and 950 labels. This recovers inherited measurement calibration, not a fit to III-A decoding outcomes. The raw left-to-right vector sums to 0.9999999999 owing to decimal rounding, so normalization is part of the implementation.
+
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+Schematic target age & Recorded window relative to last non-full row $t_0$ & $t_0$ included?\\
+\midrule
+$a=1$ (0.05 s)&$[t_0-14,\ldots,t_0+1]$&Yes\\
+$a=15$ (0.75 s)&$[t_0,\ldots,t_0+15]$&Yes\\
+$a=16$ (0.80 s)&$[t_0+1,\ldots,t_0+16]$&No\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The timeline describes the input window, not measured forgetting. Before each target forward, the production adapter calls \texttt{refresh\_kvcache()}; positions are consecutive context-relative indices. The input preprocessing is specified in \autoref{sec:features}.
+
+\subsection{Evidence calibration and grouped readouts}
+\begin{table}[!htbp]
+\caption{Central study: measured evidence ladder. $O_c=1-V_c$ is an image-energy complement, not an occlusion probability.}
+\label{tab:exp3-ladder}
+\centering\small
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Condition & Material & RVE $V_c$ & Complement $O_c$\\
+\midrule
+L0 & air/no wall & 1 & 0\\
+L1 & white stained glass & 0.8131 & 0.1869\\
+L2 & light-blue stained glass & 0.4260 & 0.5740\\
+L3 & brown stained glass & 0.1857 & 0.8143\\
+L4 & stone & 0 & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+Calibration uses two present/absent blocks (P--A--A--P and A--P--P--A), with at least eight settled frames per state per block, at nine lane positions $x=-2,-1.5,\ldots,2$, $y=4,z=6$. These are calibration placements, not the 25 experimental identities. Source values $s=v/255$ are linearized as $s/12.92$ for $s\leq0.04045$ and $((s+0.055)/1.055)^{2.4}$ otherwise. Coordinate-wise medians form each state's robust image.
+
+For a shared mask $M$, $D=\sum_{u\in M}\|P(u)-A(u)\|_2^2$, where $P,A$ are median present/absent images. Let $N$ be the same energy between split-half absent-image medians. Excess energy is $E=\max(D-N,0)$; ratios $E_c/E_{\mathrm{L0}}$ are formed within placement and block before median aggregation. This defines $V_c$ and $O_c=1-V_c$.
+
+For each placement, the mask threshold is the maximum squared channel-summed residual over pixels and blocks between two L0 absent-half medians. Pixels with L0 present/absent residual strictly above this threshold are unioned across blocks and dilated by a two-pixel square neighborhood. This one mask is shared across materials. Absent frames are split by ascending capture index into equal first/last halves; an odd middle frame is omitted. Ratios of nonnegative excess energies are formed within block and placement before taking the median over the two blocks and then over the nine placements. The calibration minimum is a protocol requirement; the exact realized image inventory is needed to inspect individual captures.
+
+Each pair contains 336 visual and 11 action tokens. A 16-pair sequence has 5,552 tokens and hidden width 2,048. Its current visual offsets are $[5205{:}5541)$; action tokens are excluded from readout vectors. The recovered historical extraction stored 750 float16 arrays of shape $[19,336,2048]$, approximately 18.26 GiB together. The follow-up instead stores pooled $[19,24576]$ binary64 arrays. Hooks at layers 4, 10, and 19 share a forward. Input-token caching is frame-local and does not cache temporal transformer state.
+
+Outer folds sort identities by (seed, identity ID) within direction and allocate five identities per fold with left/right counts $(3,2),(2,3),(3,2),(2,3),(3,2)$. Four deterministic inner rotations are constructed inside each outer training set. Exact membership is bound by the cohort/fold manifests; every condition and row of an identity stays together. All training-dependent transforms and ridge selection remain inside these splits.
+
+\subsection{Input convention and matched-runtime comparison}
+\label{sec:temporal}
+The original BGR predictions remain useful as an audit trail, but they are not relabeled as corrected inputs. A direct historical-to-new comparison would also change the GPU and PyTorch runtime. We therefore repeat BGR extraction on the RGB runtime with the same checkpoint, precision, frames, actions, pooling, and folds. The only preprocessing difference in that pair of runs is the red/blue channel swap. \autoref{tab:channel-order} reports all three configurations separately.
+
+Under stone, the same-runtime BGR replay gives 1.693 blocks RMSE versus 1.600 for RGB, a paired reduction of 0.093 blocks, interval $[0.040,0.153]$. The channel-order effect is not uniform: RGB reduces white-glass error by 0.014 blocks but increases brown-glass error by 0.021. The historical BGR value of 1.645 is distinct from the new replay. The table therefore distinguishes historical results from the controlled preprocessing comparison.
+
+\begin{table}[!htbp]
+\caption{Predictors receive different information. Server-state targets supervise fitting and scoring but never enter the neural or pixel feature vectors.}
+\label{tab:baseline-inputs}
+\centering\small
+\begin{tabular}{@{}p{0.27\linewidth}p{0.65\linewidth}@{}}
+\toprule
+Predictor & Information supplied\\
+\midrule
+MineWorld current & Recorded visual/action window and pretrained context-dependent features\\
+Pixel ridge & One downsampled source RGB image\\
+History-pixel ridge & The same 16 source RGB images as MineWorld, in time order\\
+Direction + age & Experiment metadata: direction and counterfactual occlusion age\\
+Last-seen & Privileged raw server position at the last non-fully-occluded row\\
+Constant velocity & Ten privileged pre-occlusion raw server positions\\
+Training mean & Outer-training labels only\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[!htbp]
+  \caption{Corrected RGB: descriptive mean identity RMSE by context-age bin (blocks).}
+  \label{tab:exp3-age}
+  \centering
+  \small
+  \begin{tabular}{@{}lrrrrr@{}}
+    \toprule
+    Age & L0 & L1 & L2 & L3 & L4 \\
+    \midrule
+    \tablerows rgb_age_rows.tex
+    \bottomrule
+  \end{tabular}
+\end{table}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{rgb_history_results.pdf}
+\caption{History diagnostics. (a) Mean identity absolute error at each age; one row per identity makes this MAE rather than multi-row RMSE. Shading starts when the last non-fully-occluded observation leaves the input at age 16. (b) Separately fitted native-context RGB probes, with 95\% identity-bootstrap intervals. Context length changes history and relative positions, not an identified memory circuit.}
+\label{fig:history}
+\end{figure}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{rgb_evidence_results.pdf}
+\caption{Corrected-RGB evaluation of the recovered central cohort. (a) Mean identity RMSE with 95\% whole-identity bootstrap intervals; connecting lines only guide the eye between discrete materials. (b) Stone-condition comparison. The history-pixel baseline receives the same 16 images as MineWorld. Direction + age uses experiment metadata; oracle predictors use privileged state history. These inputs are not interchangeable. All intervals condition on fitted probes.}
+\label{fig:graded-results}
+\end{figure}
+\subsection{Additional central results and access}
+\begin{table}[!htbp]
+  \caption{RGB evidence-ladder estimates. Two-sided 95\% paired identity-bootstrap intervals are descriptive, not simultaneous confidence bounds. Units are blocks for $D$ and blocks per unit evidence complement for $S$.}
+  \label{tab:exp3-primary}
+  \centering
+  \small
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    Estimand & Mean & 95\% identity-bootstrap CI \\
+    \midrule
+    $S$ & $1.059$ & $[0.987,1.130]$ \\
+    $D_{\mathrm{partial}}$ & $0.0099$ & $[0.0021,0.0186]$ \\
+    $D_{\mathrm{opaque}}$ & $1.493$ & $[1.389,1.594]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+To evaluate another checkpoint, a researcher would keep the paired captures, aligned targets, and identity splits fixed, select the readout on separate development data, and submit held-out predictions indexed by identity, condition, target time, and predictor. Reporting both image-based and metadata/oracle comparisons then separates position accessibility from trajectory predictability. The prospective diagnostic in \autoref{app:diagnostic} implements this comparison for a second MineWorld model size while keeping its family and input convention fixed.
+
+\begin{table}[!htbp]
+  \caption{Corrected RGB: mean identity RMSE across the fixed depth panel (blocks).}
+  \label{tab:exp3-depth}
+  \centering
+  \small
+  \begin{tabular}{@{}lrrrrr@{}}
+    \toprule
+    Layer & L0 & L1 & L2 & L3 & L4 \\
+    \midrule
+    \tablerows rgb_depth_rows.tex
+    \bottomrule
+  \end{tabular}
+\end{table}
+The original capture and extraction stages took 2,975.5 s and 4,730.8 s, respectively. Recovered receipts identify an NVIDIA L4 with PyTorch 2.6.0/CUDA 12.6 for historical extraction. The follow-up uses one RTX 5090 (32 GB), a Ryzen 9 9950X3D, 64 GB installed host RAM, and a dedicated WSL Python 3.10.21 environment with PyTorch 2.7.1/CUDA 12.8, NumPy 1.26.4, and float16 inference. The full dependency snapshot accompanies the code. These environments differ; only the new RGB/BGR pair controls that difference.
+
+Full RGB and BGR extraction each processes 2,375 targets, taking 504.8 s and 515.3 s after model loading. The 950-target native one- and eight-pair runs take 90.4 s and 137.9 s. Summed fitting time for the 44 new predictor/condition fits is 79.7 s, with CPU fitting overlapping extraction. Production dispatch through final extraction takes 22.7 min including model loads and BGR validation. Peak allocated tensor memory during profiling is 4.45 GiB, excluding display/driver allocations and allocator reservations. Artifact recovery, environment setup, downloads, and initial validation take approximately 37 min separately; manuscript preparation is not counted as GPU compute. These are measured follow-up costs, not a total-project compute claim.
+
+Actual encoder red/blue patch inputs, normalization, dimensions, and interpolation were checked against the reference path. The 30-window validation spans both directions, all five conditions, and early/late ages. Cached and uncached frame tokens matched exactly, as did repeated fresh-cache forwards. Replacing the action tokens following the current visual slice left all three readouts unchanged. Every complete input window was checked against its capture and target indices. Frame-token caching does not carry observations across independent transformer calls.
+
+The complete 125-capture corpus was recovered from five hash-verified archives. All 24,500 files, including 22,500 PNGs, matched their recorded checksums. All 2,375 aligned targets were reconstructed from the recorded coordinates and frozen FIR taps with maximum absolute error zero. The original 4,833,894-byte prediction package passed its raw-file hash and canonical seal; these are distinct checksums. Its 23,750 cells have complete unique identity/condition/row/model keys. Recomputing the original primary means, standard errors, p-values, adjusted p-values, and bootstrap intervals reproduced the recorded values exactly.
+
+The follow-up snapshot includes every new held-out prediction, target, exact fold, selected alpha, feature hash, input configuration, source script, and bootstrap setting. Five genuinely matched central captures supply \autoref{fig:design}. Running \texttt{python scripts/rgb\_replication/reproduce.py} from the extracted snapshot verifies file hashes, rebuilds the statistics, checks equality with the supplied numerical summary, and regenerates figure and table files without a GPU. Full inference additionally requires the verified captures and upstream checkpoint; weights are not redistributed in the compact snapshot. Anonymous public distribution of the new package has not yet been verified.
+
+The optimized ridge implementation was compared with the unmodified reference on this machine. Predictions matched exactly for all five current-pixel and history-pixel conditions and the neural air/stone checks. All 125 regenerated current-pixel feature hashes matched the original feature index. Nevertheless, cross-host pixel refitting was not bitwise identical, with maximum per-row discrepancy 0.049 blocks. Near-constant image columns and floating-point linear algebra can affect fitting and alpha selection. The new baselines therefore use the new runtime consistently, while the original sealed predictions remain the basis for historical reconstruction. Rebuilding statistics from stored predictions does not require reproducing those fitting differences.
+
+\begin{table}[!htbp]
+\caption{Layer-19 mean identity RMSE and channel-order differences (blocks). BGR replay and RGB use the same runtime; historical BGR uses the original L4 runtime. A negative difference favors RGB.}
+\label{tab:channel-order}
+\centering\small
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Condition & Historical BGR & BGR replay & RGB & RGB minus replay & 95\% paired CI\\
+\midrule
+\tablerows rgb_channel_rows.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{Native shorter-context RGB probes. Each context length has a separately fitted grouped probe; the primary remains the 16-pair layer-19 readout.}
+\label{tab:context-lengths}
+\centering\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Context pairs & Air RMSE & Air 95\% CI & Stone RMSE & Stone 95\% CI\\
+\midrule
+\tablerows rgb_context_rows.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+The historical secondary temporal analyses remain available in the recovered package. Current-minus-previous features reduced performance by 0.375919 blocks when averaged over L1--L4; previous/current concatenation changed the mean by 0.000060 blocks. These concern the historical BGR representation, not the new RGB context-length comparison. They are not substituted into the corrected results.
+
+
+\begin{table}[!htbp]
+\caption{Fresh cohorts, 25 identities each. Mean identity RMSE in blocks after within-setting refitting. The last columns give neural minus history-pixel stone RMSE and its paired 95\% bootstrap interval; negative favors the neural readout.}
+\label{tab:fresh}
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Setting & MW air & MW stone & History stone & Difference & 95\% CI\\
+\midrule
+\tablerows fresh_rows.tex
+\bottomrule
+\end{tabular}
+\end{table}
+\section{Fresh-cohort capture and generalization details}
+\label{app:fresh}
+The extension's roster and primary analysis were fixed before neural or pixel decoding outcomes were inspected. It contains 75 new deterministic seeds, disjoint from seeds in historical repository records and from six engineering-pilot identities. Each setting has 13 left-to-right and 12 right-to-left paths. Starts are sampled uniformly at magnitudes 7.3--7.9 blocks on the corresponding side of the lane. The same drift-plus-noise generator uses $q=0.05$, $\Delta t=0.05$ s, and 180 frames. Candidates must provide 19 consecutive counterfactual fully occluded rows after at least 16 input frames, no lane-boundary clamp on target rows, and aligned target standard deviation above 0.10 blocks. These geometry/target-spread checks precede readout outcomes; the roster retains candidate rejections. No failed or unfavorable decoding result is replaced.
+
+The original arrangement has sheep depth $z=6$ and wall depth $[2,3]$. The geometry extension moves the sheep to $z=8$ and wall to $[3,4]$, retaining the same wall-parallel lane and locked eye position $(0.5,5.6200000048,-5.5)$. Thus it changes apparent object scale and occluding geometry together. The speed extension retains the original arrangement but raises drift magnitude from 2.0 to 3.0 blocks/s. All conditions use air or stone; the central glass calibration values are not assigned to these new scenes.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=.82\linewidth]{fresh_captures.pdf}
+\caption{Actual fresh-cohort recordings. Each row shows one identity's air/stone pair at its first selected target time. The same state and time are used within each pair; different rows are different identities and need not have equal position. These are captured Minecraft inputs, not model generations.}
+\label{fig:fresh-captures}
+\end{figure}
+
+An isolated Minecraft 1.16.5/Fabric runtime runs under Xvfb with Mesa llvmpipe software rendering. The original capture mod is rebuilt without source edits. Twelve disjoint engineering captures cover both directions in all three settings and both materials. Mandatory present/absent/present liveness checks, physical receipts, drained writers, exact tick/frame/action joins, image dimensions, camera state, and target identity are verified. Production validation independently regenerates every path and target, checks exact air/stone pairing, and checks the magenta sheep is visible in air and absent in all opaque target images. This pixel check validates the selected geometry; it does not shift target times or replace labels.
+
+The historical direction-specific FIR target definition is retained, not recalibrated on decoding outcomes. On visible pilot images, projected silhouette motion is checked against these labels with centered RMSE below 0.15 blocks and median offset magnitude below 0.30 blocks. Silhouette centers include view-dependent wool geometry, so this is an engineering motion-alignment diagnostic rather than an exact measurement of the rendered entity origin. The observed offsets are not used to modify labels. The admission receipt records this limitation and all pilot checks.
+
+Within each setting, successive admitted identity indices are assigned to five outer folds modulo five. Each condition of an identity stays in the same fold. Four remaining groups provide inner rotations. All 150 captures contribute 19 rows, yielding 2,850 targets and 19,950 primary prediction cells across seven predictors. The source-only transfer analysis uses all 25 fresh original-setting identities after five-fold source-only alpha selection and evaluates 50 destination identities. Its 5,700 cells are kept separately. Destination labels are not used for scaling, fitting, or alpha selection.
+
+Transfer removes exactly constant source-training columns before scaling, including inside each source-validation fold, and freezes that mask for destination prediction. This source-only safeguard was specified before outcomes to avoid spurious weights from round-off in repeated pixel values. The primary within-setting fits retain the historical-compatible implementation. Transfer is consequently a separately documented estimator, not an exact reuse of an outer-fold fit from the primary table.
+
+Higher speed also changes the distance traveled within the fixed 19-age evaluation window and its target spread. The resulting setting-specific errors are not an isolated causal estimate of forgetting rate. Within each air/stone pair, positions and evaluation times remain exactly matched.
+
+\begin{table}[!htbp]
+\caption{Fresh-cohort comparator RMSE after within-setting fitting (blocks). Motion predictors use privileged state or metadata, not the same information as image-based methods.}
+\centering\small
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Setting & Material & Current pixels & Direction/age & Last-seen & Constant velocity\\
+\midrule
+\tablerows fresh_baselines_rows.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{Secondary unchanged-probe transfer RMSE (blocks). Scalers, alpha selection, and probe fitting use only the fresh original-setting cohort. These are not within-setting cross-validation estimates.}
+\centering\small
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Destination & Material & MineWorld & Current pixels & History pixels\\
+\midrule
+\tablerows fresh_transfer_rows.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+Raw server position, rather than the aligned target series, supplies last-seen and constant-velocity inputs. This wording follows the actual historical loader and the fresh implementation; an earlier baseline module docstring called these inputs aligned. The supervised/scored target remains the direction-specific FIR quantity in every condition. This documentation correction does not change historical numerical results.
+
+The compact extension package contains all primary and transfer predictions, exact targets and folds, capture hashes, the frozen protocols, engineering receipts, and CPU-only rebuilding scripts. Hash verification and reconstruction of every reported summary are performed independently of feature extraction. Full refitting additionally needs the captured images and checkpoint; the compact package does not redistribute Minecraft binaries or model weights. Anonymous public distribution still requires a separate release and access check.
+
+On the same RTX 5090 workstation, fresh production capture took 57.47 minutes including runtime startup. RGB extraction processed 2,850 targets plus validation calls in 10.12 minutes including model loading. Pixel features took 111.87 seconds, overlapping neural extraction. Primary and transfer fits, including reference checks, used 93.88 and 4.10 summed seconds, respectively. Peak allocated GPU tensor memory was 4.45 GiB and peak reserved memory was 6.59 GiB. Runtime installation, engineering pilots, manuscript work, and packaging are additional costs. The unmodified capture mod passed all 43 Java tests. Selected Python tests yielded 154 passes and one historical bitwise FIR assertion discrepancy; an independent summation check bounded label differences below $2\times10^{-15}$ blocks. The fresh statistics passed six dedicated tests and a clean NumPy-only reconstruction of all 25,650 prediction cells.
+
+\section{Readout-development provenance}
+\label{app:additional-detail}
+\label{app:exp2-qualification}
+The earlier paired study (Experiment II in the execution records) selected the representation subsequently fixed for the central graded-visibility study (Experiment III-A). It reused 25 trajectories and sampled layers $\{0,2,4,6,8,10,12,14,16,18,19\}$ with global mean and coarse $2\times6$ pooling. Layer-19 refinement compared global, coarse, and Best-K readouts, with $K\in\{1,4,16,64\}$ selected using training identities only. Its nine-gate decision below is not the decision rule for the new-cohort study.
+
+The paired \texttt{NO\_WALL} and \texttt{WALL\_HIDDEN} populations each contained 475 rows, or 19 per identity. The separate \texttt{WALL\_VISIBLE} control contained 846 rows from a different row and target-range population. It tested visible-position decoding in the wall domain, rather than serving as a matched effect-size comparison with the paired populations.
+
+\begin{table}[!htbp]
+\caption{Earlier-study qualification. Stability thresholds apply to group means of $\Delta_A$, in blocks. The follow-up uses the estimates in \autoref{sec:inference}, not this ledger.}
+\label{tab:gates}
+\centering
+\small
+\begin{tabular}{clc}
+\toprule
+Gate & Earlier-study requirement & Finalist\\
+\midrule
+G1 & Provenance, cohort, target, implementation, and leakage checks & Pass\\
+G2 & Mean $\Delta_A>0$ and bootstrap lower bound $>0$ & Pass\\
+G3 & Macro $R^2>0$ and bootstrap lower bound $>0$ & Not met\\
+G4 & RMSE $\leq0.50$ blocks & Not met\\
+G5 & $\geq4/5$ fold means $>0$; every fold mean $>-0.10$ & Pass\\
+G6 & Both direction means $>0$ & Pass\\
+G7 & $\geq4/5$ phase means $\geq0$; every phase mean $>-0.10$ & Pass\\
+G8 & Both visible controls qualify & Pass\\
+G9 & Selection-aware $p_A\leq0.05$ & Pass\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For identity $i$, $\Delta_{A,i}$ is training-mean RMSE minus probe RMSE. The five fold means were $0.38572$, $0.42825$, $0.44047$, $0.38606$, and $0.35533$. Direction means were $0.37864$ and $0.42141$; the available record does not identify their displayed left/right order. Phase means for phases $0,3,6,9,12$ were $1.04799$, $0.64187$, $0.30272$, $-0.00659$, and $0.00985$. These values establish G5--G7 without introducing new thresholds.
+
+The final three-candidate refinement selected layer-19 coarse pooling with mean $\Delta_A=0.3991669$. Each of 49 null draws permuted hidden activation blocks within direction-by-phase groups and reran the reported selection procedure, leaving targets, folds, baselines, age, and visible controls fixed \citep{ojala2010permutation}. The null mean was $0.3845741$ and its maximum $0.3989598$, only $0.0002071$ blocks below the observation. The add-one p-value was $(1+0)/(49+1)=0.02$, its minimum resolution \citep{phipson2010permutation}. The finalist's macro $R^2=-13.8263$ and RMSE $2.0711$ nevertheless failed G3 and G4. The summary identifies three layer-19 refinement candidates but does not establish that the earlier 22-cell layer screen was rerun for each null. We therefore do not claim adjustment for that entire earlier search. These statistics concern development only, not the central three-effect tests.
+
+Extraction for that study involved 1,796 target rows and 11 tensors per forward, giving 19,756 arrays of shape $[336,2048]$ in little-endian float16. The tensor payload totaled 27,189,313,536 bytes (25.32 GiB). The project describes extraction code, configurations, inventories, and integrity manifests separately from this raw corpus. Complete raw-data access and an executable public snapshot still require verification; hashes alone do not establish reproducibility.
+
+The earlier source audit checked model identities, target alignment, tensor integrity, selected features, folds, and the decisive screening/refinement metrics. It did not independently recompute the final selection null, bootstrap intervals, visible-control statistics, or all gate arithmetic. These results provide readout-development provenance rather than independent confirmation of every reported statistic.
+
+The historical development and central studies used the legacy BGR convention. The new RGB follow-up changes the input convention but keeps the selected layer-19 coarse family fixed. Development was not rerun to choose a different layer under RGB. The runtime checks in \autoref{sec:features} establish the new input channel order directly.
+
+
+\clearpage
+\input{diagnostic_appendix}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{history_intervention_inputs.pdf}
+\caption{Actual image-history substitutions for the first predetermined original-layout, left-to-right slow test identity at age 1. Four of the 16 input times are displayed. The swapped row uses its preassigned fast donor for earlier images and the recipient for the current image. The removed row repeats the recipient current image. Images are recorded inputs, not generated illustrations or outcomes selected for visual effect.}
+\label{fig:history-inputs}
+\end{figure}
+\input{diagnostic_tables}
+\input{diagnostic_compute}
+
+
+\clearpage
+\section{Supplementary central-cohort estimands}
+\label{app:central-estimands}
+For identity $i$ and condition $c$, let $R_{ic}$ be RMSE across the 19 held-out target rows. Tables report the mean of these identity-level errors, rather than treating all frames as independent. MAE is aggregated in the same way. Trajectory $R^2$ uses the target mean of each held-out path in its denominator; macro $R^2$ is the average of these trajectory values.
+
+For continuity with the original study, we summarize the evidence ladder using
+\begin{align}
+S_i &= \operatorname{OLSslope}(R_{ic}\ \text{on}\ O_c),\\
+D_{\mathrm{partial},i} &=
+ \tfrac13(R_{i,\mathrm{L1}}+R_{i,\mathrm{L2}}+R_{i,\mathrm{L3}})-R_{i,\mathrm{L0}},\\
+D_{\mathrm{opaque},i} &=R_{i,\mathrm{L4}}-R_{i,\mathrm{L3}}.
+\end{align}
+The slope summarizes the ladder; the remaining effects separate partial obstruction from the opaque increment. Condition-specific paired differences compare RGB with same-runtime BGR and history pixels; negative favors RGB. These follow-up estimates are motivated by earlier findings, not independent confirmatory tests.
+
+Two-sided 95\% percentile intervals use 10,000 identity-bootstrap samples, seed 20260911 \citep{efron1993bootstrap}, carrying paired conditions and predictors together. They condition on fitted probes, exclude refitting uncertainty, and are not simultaneous bounds. No new significance-test family is added. The original Holm tests and bootstrap seed apply only to the reconstructed historical BGR analysis.
+
+Age and depth summaries are descriptive. Single-age plots average absolute error; multi-age bins average within-identity RMSE. Overlapping training folds can induce dependence among held-out errors. Resampling or re-extraction does not create new identities.
+
+The central study does not inherit the development study's nine-gate qualification rule or its 49-draw permutation test. \autoref{app:exp2-qualification} records that procedure solely as readout-development provenance.
+
+
+
+\clearpage
+\section{Earlier variable-speed diagnostic summary}
+\subsection{Preserved results}
+\label{app:earlier-summary}
+The initial 75-identity extension repeats the neural advantage over history pixels in the original setting and at higher speed, but not conclusively under changed geometry. Unchanged geometry transfer also degrades visible decoding, so this sensitivity is not specific to occlusion (\autoref{tab:fresh}; \autoref{app:fresh}). This motivates the separate variable-speed test, where timing and direction no longer imply a single nominal speed.
+
+On its 48 held-out identities, correct-history stone RMSE at ages 1--10 is 1.603 blocks for 700M ridge, 1.588 for 300M ridge, and 1.915 for history pixels (\autoref{fig:diagnostic}). The pooled 700M-minus-pixel difference is -0.312, interval $[-0.784,0.013]$, so this comparison alone does not establish an advantage. Direction-and-age reaches 0.154 without commanded speed: varying speed does not eliminate trajectory predictability. Image tracking reaches 2.918, but falls back to the training mean on 59.4\% of these rows, limiting that comparator.
+
+The nonlinear probes reach 1.199 and 1.315 under the original iteration cap. Training-limit warnings trigger a separate, fixed-configuration optimization check; all extended fits converge, reaching 1.240 and 1.341. Both budgets remain reported in \autoref{app:diagnostic}. This improves on ridge but does not remove the gap to motion metadata.
+
+Replacing history with the current image raises 700M RMSE by 2.314 blocks, interval $[2.068,2.560]$. Swapping matched-direction histories instead changes it by -0.094, donor-pair interval $[-0.144,-0.047]$. Although the absolute prediction shift averages 2.169 blocks, its sign agrees with donor-minus-recipient position on only 32.1\% of rows. Thus input-history sensitivity is not evidence of reliable donor-position tracking. Ages 16--19 and all model responses are retained separately in \autoref{app:diagnostic}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{history_diagnostic_results.pdf}
+\caption{Variable-speed diagnostic, 48 held-out identities at ages 1--10. (a) Correct-history performance; the nonlinear bar uses the converged optimization-check fit, while direction and age are privileged metadata. (b) History substitutions keep the current image fixed. Error bars are 95\% identity-bootstrap intervals. Paired intervention differences use reciprocal-donor-pair intervals, reported in the text.}
+\label{fig:diagnostic}
+\end{figure}
+
+For the 700M probe on changed geometry, frozen-transfer air/stone errors are 1.934/2.675 blocks. Visible-only output calibration gives 0.271/3.177, compared with 0.111/1.653 after native fitting. Calibration recovers much of the visible accuracy but not hidden decoding, so a shared affine output correction is insufficient for this transfer.
+
+
+\clearpage
+\input{extension_methods}
+\input{extension_results}
+\clearpage
+\input{checklist}
+\end{document}

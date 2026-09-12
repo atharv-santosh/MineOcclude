@@ -23,7 +23,7 @@ try {
     $pages = (Get-Content 'paper-layout.txt' -Raw) -split '\f'
     $referencePage = $null
     for ($index=0; $index -lt $pages.Length; $index++) {
-        if ($pages[$index] -match '(?m)^\s*References\s*$') { $referencePage=$index+1; break }
+        if ($pages[$index] -match '(?m)^\s*(?:\d+\s+)?References\s*$') { $referencePage=$index+1; break }
     }
     $log = Get-Content 'paper.log' -Raw
     $report = [ordered]@{

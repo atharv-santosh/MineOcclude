@@ -1,0 +1,272 @@
+\section{Complete evidence-extension results}
+\label{app:extension-results}
+\begin{table}[!htbp]
+\centering\small
+\caption{Observed input-history audit of the 128 held-out motion variants in stone. A prior frame is counted when the fixed sheep-color detector finds more than 20 sheep-colored pixels. These descriptive input counts do not establish position localizability and are not independent statistical samples. Current scored frames contain no detected sheep pixels.}
+\label{tab:motion-history-audit}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Ages & Windows & Any prior evidence & Mean frames & Range\\
+\midrule
+1--10 & 1280 & 96.2\% & 6.90 & 0--15\\
+11--15 & 640 & 35.3\% & 0.70 & 0--5\\
+16--19 & 512 & 0.0\% & 0.00 & 0--0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Native paired-motion RMSE in air, pooled. Columns show age intervals; units are blocks.}
+\label{tab:motion-L0-pooled}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Readout & 1--10 & 11--15 & 16--19 & 1--19\\
+\midrule
+MineWorld & 0.080 & 0.072 & 0.071 & 0.080\\
+Current pixels & 0.077 & 0.060 & 0.082 & 0.079\\
+History pixels & 0.061 & 0.045 & 0.062 & 0.063\\
+Frame differences & 0.137 & 0.122 & 0.173 & 0.152\\
+Optical flow & 0.233 & 0.163 & 0.185 & 0.216\\
+VideoMAE-S & 0.063 & 0.054 & 0.056 & 0.061\\
+Linear direction/age & 0.211 & 0.309 & 0.396 & 0.291\\
+Cubic direction/age & 0.211 & 0.309 & 0.395 & 0.290\\
+Plus motion type & 0.154 & 0.294 & 0.395 & 0.264\\
+Oracle last position & 0.563 & 1.294 & 1.818 & 1.145\\
+Oracle velocity & 0.328 & 0.638 & 0.878 & 0.574\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Native paired-motion RMSE in air, layout 01. Columns show age intervals; units are blocks.}
+\label{tab:motion-L0-layout_01}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Readout & 1--10 & 11--15 & 16--19 & 1--19\\
+\midrule
+MineWorld & 0.082 & 0.072 & 0.072 & 0.081\\
+Current pixels & 0.072 & 0.059 & 0.065 & 0.072\\
+History pixels & 0.066 & 0.045 & 0.059 & 0.066\\
+Frame differences & 0.179 & 0.180 & 0.221 & 0.200\\
+Optical flow & 0.222 & 0.171 & 0.168 & 0.208\\
+VideoMAE-S & 0.063 & 0.057 & 0.059 & 0.063\\
+Linear direction/age & 0.212 & 0.312 & 0.397 & 0.292\\
+Cubic direction/age & 0.212 & 0.311 & 0.396 & 0.292\\
+Plus motion type & 0.152 & 0.292 & 0.394 & 0.262\\
+Oracle last position & 0.565 & 1.300 & 1.828 & 1.151\\
+Oracle velocity & 0.326 & 0.634 & 0.872 & 0.570\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Native paired-motion RMSE in air, layout 04. Columns show age intervals; units are blocks.}
+\label{tab:motion-L0-layout_04}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Readout & 1--10 & 11--15 & 16--19 & 1--19\\
+\midrule
+MineWorld & 0.079 & 0.072 & 0.071 & 0.079\\
+Current pixels & 0.081 & 0.061 & 0.098 & 0.086\\
+History pixels & 0.055 & 0.045 & 0.066 & 0.060\\
+Frame differences & 0.094 & 0.063 & 0.125 & 0.104\\
+Optical flow & 0.244 & 0.156 & 0.203 & 0.225\\
+VideoMAE-S & 0.062 & 0.051 & 0.052 & 0.059\\
+Linear direction/age & 0.210 & 0.306 & 0.395 & 0.289\\
+Cubic direction/age & 0.209 & 0.306 & 0.394 & 0.289\\
+Plus motion type & 0.156 & 0.297 & 0.396 & 0.266\\
+Oracle last position & 0.561 & 1.288 & 1.809 & 1.140\\
+Oracle velocity & 0.330 & 0.642 & 0.885 & 0.578\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Native paired-motion RMSE in stone, pooled. Columns show age intervals; units are blocks.}
+\label{tab:motion-L4-pooled}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Readout & 1--10 & 11--15 & 16--19 & 1--19\\
+\midrule
+MineWorld & 0.768 & 2.042 & 2.435 & 1.685\\
+Current pixels & 3.857 & 2.958 & 2.438 & 3.380\\
+History pixels & 0.635 & 2.270 & 2.438 & 1.718\\
+Frame differences & 0.774 & 2.281 & 2.438 & 1.755\\
+Optical flow & 0.910 & 2.178 & 2.437 & 1.778\\
+VideoMAE-S & 0.656 & 2.256 & 2.438 & 1.712\\
+Linear direction/age & 0.211 & 0.309 & 0.396 & 0.291\\
+Cubic direction/age & 0.211 & 0.309 & 0.395 & 0.290\\
+Plus motion type & 0.154 & 0.294 & 0.395 & 0.264\\
+Oracle last position & 0.563 & 1.294 & 1.818 & 1.145\\
+Oracle velocity & 0.328 & 0.638 & 0.878 & 0.574\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Native paired-motion RMSE in stone, layout 01. Columns show age intervals; units are blocks.}
+\label{tab:motion-L4-layout_01}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Readout & 1--10 & 11--15 & 16--19 & 1--19\\
+\midrule
+MineWorld & 0.592 & 1.911 & 2.318 & 1.547\\
+Current pixels & 3.747 & 2.842 & 2.320 & 3.269\\
+History pixels & 0.731 & 2.283 & 2.320 & 1.691\\
+Frame differences & 0.928 & 2.305 & 2.320 & 1.755\\
+Optical flow & 0.797 & 2.041 & 2.320 & 1.642\\
+VideoMAE-S & 0.632 & 2.181 & 2.320 & 1.641\\
+Linear direction/age & 0.212 & 0.312 & 0.397 & 0.292\\
+Cubic direction/age & 0.212 & 0.311 & 0.396 & 0.292\\
+Plus motion type & 0.152 & 0.292 & 0.394 & 0.262\\
+Oracle last position & 0.565 & 1.300 & 1.828 & 1.151\\
+Oracle velocity & 0.326 & 0.634 & 0.872 & 0.570\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Native paired-motion RMSE in stone, layout 04. Columns show age intervals; units are blocks.}
+\label{tab:motion-L4-layout_04}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Readout & 1--10 & 11--15 & 16--19 & 1--19\\
+\midrule
+MineWorld & 0.945 & 2.174 & 2.552 & 1.823\\
+Current pixels & 3.967 & 3.074 & 2.557 & 3.490\\
+History pixels & 0.539 & 2.257 & 2.557 & 1.745\\
+Frame differences & 0.621 & 2.258 & 2.557 & 1.755\\
+Optical flow & 1.023 & 2.315 & 2.555 & 1.914\\
+VideoMAE-S & 0.680 & 2.331 & 2.557 & 1.784\\
+Linear direction/age & 0.210 & 0.306 & 0.395 & 0.289\\
+Cubic direction/age & 0.209 & 0.306 & 0.394 & 0.289\\
+Plus motion type & 0.156 & 0.297 & 0.396 & 0.266\\
+Oracle last position & 0.561 & 1.288 & 1.809 & 1.140\\
+Oracle velocity & 0.330 & 0.642 & 0.885 & 0.578\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\begin{table}[!htbp]
+\centering\small
+\caption{Primary opaque paired-motion results with 95\% family-bootstrap intervals. Contrast error measures prediction differences between variants against their target differences. Sign agreement is descriptive, not a qualification gate.}
+\label{tab:motion-contrasts}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Readout & RMSE & Interval & Contrast RMSE & Sign\\
+\midrule
+MineWorld & 0.768 & [0.703, 0.837] & 1.176 & 49.1\%\\
+Current pixels & 3.857 & [3.854, 3.860] & 0.265 & 0.0\%\\
+History pixels & 0.635 & [0.582, 0.692] & 1.125 & 43.3\%\\
+Frame differences & 0.774 & [0.716, 0.832] & 1.374 & 37.7\%\\
+Optical flow & 0.910 & [0.816, 1.017] & 1.453 & 43.0\%\\
+VideoMAE-S & 0.656 & [0.604, 0.711] & 1.019 & 45.5\%\\
+Linear direction/age & 0.211 & [0.206, 0.216] & 0.265 & 0.0\%\\
+Cubic direction/age & 0.211 & [0.206, 0.216] & 0.265 & 0.0\%\\
+Plus motion type & 0.154 & [0.149, 0.159] & 0.265 & 0.0\%\\
+Oracle last position & 0.563 & [0.552, 0.575] & 0.304 & 31.6\%\\
+Oracle velocity & 0.328 & [0.319, 0.337] & 0.294 & 78.1\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{MineWorld unchanged-decoder transfer on new held-out motion families, ages 1--10. Rows train and columns test.}
+\label{tab:motion-transfer-MW_700M}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Source & Air & Stone\\
+\midrule
+Air & 0.080 & 3.603\\
+Stone & 5.597 & 0.768\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{History pixels unchanged-decoder transfer on new held-out motion families, ages 1--10. Rows train and columns test.}
+\label{tab:motion-transfer-PIXEL_HISTORY16}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Source & Air & Stone\\
+\midrule
+Air & 0.061 & 11.516\\
+Stone & 233.397 & 0.635\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{VideoMAE-S unchanged-decoder transfer on new held-out motion families, ages 1--10. Rows train and columns test.}
+\label{tab:motion-transfer-VIDEOMAE_S}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Source & Air & Stone\\
+\midrule
+Air & 0.063 & 3.473\\
+Stone & 555.042 & 0.656\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\begin{table}[!htbp]
+\centering\small
+\caption{MineWorld cross-opacity RMSE. Rows give training opacity and columns give test opacity. Fitted scales and coefficients stay unchanged across each row.}
+\label{tab:opacity-OPACITY_MW}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Source & 0 & 0.25 & 0.5 & 0.75 & 1\\
+\midrule
+0.0 & 0.085 & 1.704 & 2.152 & 2.428 & 3.226\\
+0.25 & 1.600 & 0.088 & 1.474 & 2.108 & 3.134\\
+0.5 & 2.140 & 1.439 & 0.093 & 1.295 & 3.079\\
+0.75 & 1.833 & 1.717 & 0.914 & 0.095 & 3.069\\
+1.0 & 3.119 & 2.547 & 2.192 & 4.296 & 1.742\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{History pixels cross-opacity RMSE. Rows give training opacity and columns give test opacity. Fitted scales and coefficients stay unchanged across each row.}
+\label{tab:opacity-OPACITY_PIXELS}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Source & 0 & 0.25 & 0.5 & 0.75 & 1\\
+\midrule
+0.0 & 0.088 & 2.185 & 4.327 & 6.444 & 8.620\\
+0.25 & 3.284 & 0.081 & 3.244 & 6.450 & 9.736\\
+0.5 & 11.595 & 5.760 & 0.078 & 5.708 & 11.542\\
+0.75 & 18.327 & 12.120 & 5.991 & 0.076 & 6.210\\
+1.0 & 3.278 & 3.283 & 3.288 & 3.295 & 3.304\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Complete stronger equal-history comparison on the central cohort. Mean identity RMSE, blocks.}
+\label{tab:stronger-history}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Condition & Frame differences & Optical flow & VideoMAE-S\\
+\midrule
+L0 & 0.433 & 0.143 & 0.068\\
+L1 & 0.183 & 0.278 & 0.082\\
+L2 & 0.141 & 0.281 & 0.080\\
+L3 & 0.142 & 0.294 & 0.078\\
+L4 & 1.781 & 1.757 & 1.767\\
+\bottomrule
+\end{tabular}
+\end{table}
