@@ -1,10 +1,15 @@
-param([int]$SupervisorPid = 410)
+param([int]$SupervisorPid = 410, [int]$PostprocessPid = 0)
 $ErrorActionPreference = 'Stop'
 $sourceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $logPath = Join-Path $sourceRoot 'evidence_extension_outputs\memory_guard.jsonl'
 while ($true) {
     $command = & wsl.exe -d Ubuntu-24.04 -- ps -p $SupervisorPid -o args= 2>$null
-    if ($LASTEXITCODE -ne 0 -or $command -notmatch 'scripts/evidence_extension/run_production.py') { break }
+    $productionActive = $LASTEXITCODE -eq 0 -and $command -match 'scripts/evidence_extension/run_production.py'
+    if (-not $productionActive) {
+        if ($PostprocessPid -le 0) { break }
+        $postprocessCommand = & wsl.exe -d Ubuntu-24.04 -- ps -p $PostprocessPid -o args= 2>$null
+        if ($LASTEXITCODE -ne 0 -or $postprocessCommand -notmatch 'scripts/evidence_extension/postprocess.py') { break }
+    }
     $memory = Get-CimInstance Win32_OperatingSystem
     $freeGiB = $memory.FreePhysicalMemory / 1MB
     $linux = & wsl.exe -d Ubuntu-24.04 -- cat /proc/meminfo
@@ -41,6 +46,7 @@ while ($true) {
             & wsl.exe -d Ubuntu-24.04 -- kill -TERM $SupervisorPid
             throw 'Available host RAM stayed below 3 GiB after cache reclamation. Gracefully stopped only the research supervisor; completed artifacts are preserved.'
         }
+        Write-Warning 'Host RAM remains low during postprocessing after cache reclamation. Check current memory consumers; no unrelated process was stopped.'
     }
     Start-Sleep -Seconds 30
 }
